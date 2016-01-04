@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+
+    <global>
+        <table name="products">
+            <field type="INT( 10 ) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
+            <field type="VARCHAR( 255 ) NULL">productNo</field>
+            <field type="LONGTEXT NULL">data</field>
+        </table>
+
+        <table name="product_fields">
+            <field type="INT( 10 ) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
+            <field type="VARCHAR( 255 ) NOT NULL">name</field>
+        </table>
+
+        <table name="products_cache">
+            <field type="INT( 10 ) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
+            <field type="VARCHAR( 255 ) NULL">productNo</field>
+            <field type="VARCHAR( 255 ) NOT NULL">name</field>
+        </table>
+    </global>
+
+</database>

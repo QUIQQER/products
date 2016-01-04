@@ -1,0 +1,11 @@
+<permissions>
+    <permission name="product.create" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+    <permission name="product.delete" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+    <permission name="product.edit" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+</permissions>
