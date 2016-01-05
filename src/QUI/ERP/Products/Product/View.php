@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This file contains QUI\Products\Product\View
+ * This file contains QUI\ERP\Products\Product\View
  */
-namespace QUI\Products\Product;
+namespace QUI\ERP\Products\Product;
 
 use QUI;
 
@@ -11,9 +11,9 @@ use QUI;
  * Class Controller
  * Product Manager
  *
- * @package QUI\Products\Product
+ * @package QUI\ERP\Products\Product
  */
-class View extends QUI\QDOM implements QUI\Products\Interfaces\Product
+class View extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
 {
     /**
      * @var Modell
@@ -38,11 +38,11 @@ class View extends QUI\QDOM implements QUI\Products\Interfaces\Product
     }
 
     /**
-     * @return QUI\Products\Price
+     * @return QUI\ERP\Products\Price
      */
     public function getPrice()
     {
-        return new QUI\Products\Price(
+        return new QUI\ERP\Products\Price(
             $this->getAttribute('price')
         );
     }

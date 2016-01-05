@@ -1,16 +1,16 @@
 <?php
 
 /**
- * This file contains QUI\Products\Interfaces\Product
+ * This file contains QUI\ERP\Products\Interfaces\Product
  */
-namespace QUI\Products\Interfaces;
+namespace QUI\ERP\Products\Interfaces;
 
-use QUI\Products\Field;
-use QUI\Products\Price;
+use QUI\ERP\Products\Interfaces\Field;
+use QUI\ERP\Products\Price;
 
 /**
  * Interface Product
- * @package QUI\Products
+ * @package QUI\ERP\Products
  */
 interface Product
 {

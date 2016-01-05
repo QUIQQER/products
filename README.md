@@ -39,3 +39,14 @@ Lizenz
 
 Entwickler
 --------
+
+
+```php
+
+// Ein Produkt bekommen
+QUI\ERP\Products\Handler\Products::getProduct( ID );
+
+// Ein Produkt Feld bekommen
+QUI\ERP\Products\Handler\Fields::getField( ID );
+
+```

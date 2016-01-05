@@ -1,13 +1,13 @@
 <?php
 
 /**
- * This file contains QUI\Products\Product\Controller
+ * This file contains QUI\ERP\Products\Product\Controller
  */
-namespace QUI\Products\Handler;
+namespace QUI\ERP\Products\Handler;
 
 /**
  * Class Categories
- * @package QUI\Products\Handler
+ * @package QUI\ERP\Products\Handler
  */
 class Categories
 {

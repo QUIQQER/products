@@ -1,20 +1,20 @@
 <?php
 
 /**
- * This file contains QUI\Products\Product\Controller
+ * This file contains QUI\ERP\Products\Product\Controller
  */
-namespace QUI\Products\Product;
+namespace QUI\ERP\Products\Product;
 
 use QUI;
 
 /**
  * Class Controller
- * Product Manager
+ * - Product data connection
+ *
+ * @package QUI\ERP\Products\Product
  *
  * @example
- *
- *
- * @package QUI\Products\Product
+ * QUI\ERP\Products\Handler\Products::getProduct( ID );
  */
 class Controller
 {
@@ -58,7 +58,7 @@ class Controller
     public function load()
     {
         $result = QUI::getDataBase()->fetch(array(
-            'from' => QUI\Products\Tables::getProductTable(),
+            'from' => QUI\ERP\Products\Tables::getProductTable(),
             'where' => array(
                 'id' => $this->Product->getId()
             )
@@ -68,13 +68,13 @@ class Controller
             throw new QUI\Exception(
                 array('quiqqer/products', 'exception.product.not.found'),
                 404,
-                array('productId' => $this->Product->getId())
+                array('id' => $this->Product->getId())
             );
         }
 
-        foreach ($result[0] as $key => $value) {
-            $this->Product->setAttribute($key, $value);
-        }
+        unset($result[0]['id']);
+
+        $this->Product->setAttributes($result[0]);
     }
 
     /**
@@ -86,7 +86,7 @@ class Controller
 
 
         QUI::getDataBase()->update(
-            QUI\Products\Tables::getProductTable(),
+            QUI\ERP\Products\Tables::getProductTable(),
             array(
                 'productNo' => $this->Product->getAttribute('productNo'),
                 'data' => $this->Product->getFields()
@@ -103,7 +103,7 @@ class Controller
         QUI\Rights\Permission::checkPermission('product.delete');
 
         QUI::getDataBase()->delete(
-            QUI\Products\Tables::getProductTable(),
+            QUI\ERP\Products\Tables::getProductTable(),
             array('id' => $this->Product->getId())
         );
     }

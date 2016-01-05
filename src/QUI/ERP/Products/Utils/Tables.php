@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This file contains QUI\Products\Tables
+ * This file contains QUI\ERP\Products\Tables
  */
-namespace QUI\Products;
+namespace QUI\ERP\Products;
 
 use QUI;
 
