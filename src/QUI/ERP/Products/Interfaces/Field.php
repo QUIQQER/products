@@ -36,14 +36,6 @@ interface Field
      */
     public function getValue();
 
-
-
-    public function getBackendView();
-
-
-
-    public function getFrontendView();
-
     /**
      * Set the field value
      *
@@ -53,11 +45,19 @@ interface Field
     public function setValue($value);
 
     /**
-     * Check the field value
-     * is the value valid?
+     * Check the value
+     * is the value valid for the field type?
      *
      * @param mixed $value
      * @throws \QUI\Exception
      */
-    public function checkValue($value);
+    public static function validate($value);
+
+    /**
+     * Cleanup the value, so the value is valid
+     *
+     * @param mixed $value
+     * @throws \QUI\Exception
+     */
+    public static function cleanup($value);
 }

@@ -19,18 +19,65 @@ class Date extends QUI\ERP\Products\Field\Modell
      * @param mixed $value
      * @throws QUI\Exception
      */
-    public function checkValue($value)
+    public static function validate($value)
     {
-        $value = (string)$value;
+        $dateTime = \DateTime::createFromFormat('m/d/Y', $value);
 
-        if (trim($value) === '') {
+        if ($dateTime === false) {
             throw new QUI\Exception(
                 array('quiqqer/products', 'exception.field.value.not.allowed')
             );
         }
 
-        $value = preg_replace('#[^\d]#i', '', $value);
+        $errors = \DateTime::getLastErrors();
 
-        return (int)$value;
+        if (!empty($errors['warning_count'])) {
+            throw new QUI\Exception(
+                array('quiqqer/products', 'exception.field.value.not.allowed')
+            );
+        }
+    }
+
+    /**
+     * @param mixed $value
+     * @return int - timestamp
+     */
+    public static function cleanup($value)
+    {
+        $Date = new \DateTime($value);
+
+        return $Date->getTimestamp();
+    }
+
+    /**
+     * Return the Backend view
+     */
+    protected function getBackendView()
+    {
+        // TODO: Implement getBackendView() method.
+
+        return new View(array(
+            'value' => '',
+            'title' => '',
+            'prefix' => '',
+            'suffix' => '',
+            'priority' => ''
+        ));
+    }
+
+    /**
+     * Return the frontend view
+     */
+    protected function getFrontendView()
+    {
+        // TODO: Implement getFrontendView() method.
+
+        return new View(array(
+            'value' => '',
+            'title' => '',
+            'prefix' => '',
+            'suffix' => '',
+            'priority' => ''
+        ));
     }
 }

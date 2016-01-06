@@ -46,6 +46,10 @@ abstract class Modell extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fi
     public function __construct($fieldId)
     {
         $this->id = (int)$fieldId;
+
+        if (defined('QUIQQER_BACKEND')) {
+            $this->setAttribute('viewType', 'backend');
+        }
     }
 
     /**
@@ -54,6 +58,37 @@ abstract class Modell extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fi
     protected function getController()
     {
         return new Controller($this);
+    }
+
+    /**
+     * Return the view for the backend
+     *
+     * @return \QUI\ERP\Products\Field\View
+     */
+    abstract protected function getBackendView();
+
+    /**
+     * Return the view for the frontend
+     *
+     * @return \QUI\ERP\Products\Field\View
+     */
+    abstract protected function getFrontendView();
+
+    /**
+     * Return the view
+     *
+     * @return \QUI\ERP\Products\Field\View
+     */
+    public function getView()
+    {
+        switch ($this->getAttribute('viewType')) {
+            case 'backend':
+                return $this->getBackendView();
+                break;
+
+            default:
+                return $this->getFrontendView();
+        }
     }
 
     /**
@@ -92,7 +127,7 @@ abstract class Modell extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fi
      */
     public function setValue($value)
     {
-        $this->checkValue($value);
+        $this->validate($value);
         $this->value = $value;
     }
 
