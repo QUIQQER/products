@@ -1,30 +1,29 @@
 {
-    "name" : "quiqqer/products",
-    "type" : "quiqqer-module",
-    "description" : "",
-    "version" : "dev-master",
-    "license" : "",
-
-    "authors" : [{
-        "name": "Henning Leutz",
-        "email": "leutz@pcsg.de",
-        "homepage": "http://www.pcsg.de",
-        "role": "Developer"
-    }],
-
-    "support" : {
-        "email": "support@pcsg.de",
-        "url": "http://www.pcsg.de"
-    },
-
-    "require": {
-        "php" : ">=5.3",
-        "quiqqer/quiqqer" : "*@dev"
-    },
-
-    "autoload": {
-        "psr-0" : {
-            "QUI" : "src/"
-        }
+  "name": "quiqqer/products",
+  "type": "quiqqer-module",
+  "description": "",
+  "version": "dev-master",
+  "license": "",
+  "authors": [
+    {
+      "name": "Henning Leutz",
+      "email": "leutz@pcsg.de",
+      "homepage": "http://www.pcsg.de",
+      "role": "Developer"
     }
+  ],
+  "support": {
+    "email": "support@pcsg.de",
+    "url": "http://www.pcsg.de"
+  },
+  "require": {
+    "php": ">=5.3",
+    "quiqqer/quiqqer": "*@dev",
+    "quiqqer/discount": "*"
+  },
+  "autoload": {
+    "psr-0": {
+      "QUI": "src/"
+    }
+  }
 }

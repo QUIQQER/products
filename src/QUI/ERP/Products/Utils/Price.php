@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products;
 
 use QUI;
+use QUI\ERP\Discount\Discount;
 
 /**
  * Class Price
@@ -28,7 +29,7 @@ class Price
     /**
      * @var array
      */
-    protected $Discounts;
+    protected $discounts;
 
     /**
      * User
@@ -49,7 +50,7 @@ class Price
         $this->currency = $currency;
 
         $this->User      = $User;
-        $this->Discounts = new QUI\ERP\Discounts\Discounts();
+        $this->discounts = array();
     }
 
     /**
@@ -66,6 +67,7 @@ class Price
      * Return the real price, brutto or netto
      *
      * @return float
+     * @todo mus be implemented
      */
     public function getPrice()
     {
@@ -73,18 +75,42 @@ class Price
     }
 
     /**
-     * @param QUI\ERP\Discounts\Discount $Discount
+     * Add a discount to the price
+     *
+     * @param QUI\ERP\Discount\Discount $Discount
+     * @throws QUI\Exception
      */
-    public function addDiscount(QUI\ERP\Discounts\Discount $Discount)
+    public function addDiscount(Discount $Discount)
     {
+        /* @var $Disc Discount */
+        foreach ($this->discounts as $Disc) {
+            // der gleiche discount kann nur einmal enthalten sein
+            if ($Disc->getId() == $Discount->getId()) {
+                return;
+            }
 
+            if ($Disc->canCombinedWith($Discount) === false) {
+                throw new QUI\Exception(array(
+                    'quiqqer/products',
+                    'exception.discount.not.combinable',
+                    array(
+                        'id1' => $Disc->getId(),
+                        'id2' => $Discount->getId()
+                    )
+                ));
+            }
+        }
+
+        $this->discounts[] = $Discount;
     }
 
     /**
-     * @return array|QUI\ERP\Discounts\Discounts
+     * Return the assigned discounts
+     *
+     * @return array [Discount, Discount, Discount]
      */
     public function getDiscounts()
     {
-        return $this->Discounts;
+        return $this->discounts;
     }
 }
