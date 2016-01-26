@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locales>
+
+    <groups name="quiqqer/products" datatype="php,js">
+        <locale name="menu.erp.title">
+            <de><![CDATA[ERP]]></de>
+            <en><![CDATA[ERP]]></en>
+        </locale>
+        <locale name="menu.erp.products.products.title">
+            <de><![CDATA[Produkte]]></de>
+            <en><![CDATA[Products]]></en>
+        </locale>
+        <locale name="menu.erp.products.categories.title">
+            <de><![CDATA[Kategorien]]></de>
+            <en><![CDATA[Categories]]></en>
+        </locale>
+    </groups>
+
+    <groups name="quiqqer/products" datatype="php,js">
+        <locale name="products.panel.title">
+            <de><![CDATA[Produkte]]></de>
+            <en><![CDATA[Products]]></en>
+        </locale>
+
+
+        <locale name="categories.panel.title">
+            <de><![CDATA[Kategorien]]></de>
+            <en><![CDATA[Categories]]></en>
+        </locale>
+    </groups>
+
+
+
+</locales>

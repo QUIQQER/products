@@ -67,7 +67,7 @@ class Price
      * Return the real price, brutto or netto
      *
      * @return float
-     * @todo mus be implemented
+     * @todo must be implemented
      */
     public function getPrice()
     {

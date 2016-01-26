@@ -1,0 +1,22 @@
+.products-categories-panel-sitemap {
+    background: #fff none repeat scroll 0 0;
+    border-right: 1px solid #bbb;
+    float: left;
+    height: 100%;
+    overflow: auto;
+    position: absolute;
+    top: 0;
+    width: 300px;
+    z-index: 100;
+}
+
+.products-categories-panel-container,
+.products-categories-panel-grid {
+    float: left;
+    height: 100%;
+    width: 100%;
+}
+
+.products-categories-panel-container {
+    padding: 20px;
+}
