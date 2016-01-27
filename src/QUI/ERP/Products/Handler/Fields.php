@@ -35,7 +35,7 @@ class Fields
         }
 
         QUI::getDataBase()->insert(
-            QUI\ERP\Products\Tables::getFieldTable(),
+            QUI\ERP\Products\Tables::getFieldTableName(),
             $data
         );
 
@@ -88,7 +88,7 @@ class Fields
         }
 
         $result = QUI::getDataBase()->fetch(array(
-            'from' => QUI\ERP\Products\Tables::getFieldTable(),
+            'from' => QUI\ERP\Products\Tables::getFieldTableName(),
             'where' => array(
                 'id' => (int)$fieldId
             )
@@ -159,19 +159,24 @@ class Fields
      *
      * @param array $queryParams - query parameter
      *                              $queryParams['where'],
+     *                              $queryParams['where_or'],
      *                              $queryParams['limit']
      *                              $queryParams['order']
      * @return array
      */
     public static function getFields($queryParams = array())
     {
-        $query['from'] = QUI\ERP\Products\Tables::getFieldTable();
+        $query['from'] = QUI\ERP\Products\Tables::getFieldTableName();
 
         $result = array();
         $data   = QUI::getDataBase()->fetch($query);
 
         if (isset($queryParams['where'])) {
             $query['where'] = $queryParams['where'];
+        }
+
+        if (isset($queryParams['where_or'])) {
+            $query['where_or'] = $queryParams['where_or'];
         }
 
         if (isset($queryParams['limit'])) {

@@ -1,40 +1,40 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Field\Controller
+ * This file contains QUI\ERP\Products\Category\Controller
  */
-namespace QUI\ERP\Products\Field;
+namespace QUI\ERP\Products\Category;
 
 use QUI;
 
 /**
  * Class Controller
- * - Field data connection
+ * - Category data connection
  *
- * @package QUI\ERP\Products\Field
+ * @package QUI\ERP\Products\Category
  *
  * @example
- * QUI\ERP\Products\Handler\Field::getField( ID );
+ * QUI\ERP\Products\Handler\Categories::getCategory( ID );
  */
 class Controller
 {
     /**
-     * @var Field
+     * @var Category
      */
     protected $Field;
 
     /**
      * Controller constructor.
-     * @param Field $Field
+     * @param Category $Field
      */
-    public function __construct(Field $Field)
+    public function __construct(Category $Field)
     {
         $this->Field = $Field;
     }
 
     /**
      * Return the Product Modell
-     * @return Field
+     * @return Category
      */
     public function getModell()
     {
@@ -46,10 +46,10 @@ class Controller
      */
     public function save()
     {
-        QUI\Rights\Permission::checkPermission('field.edit');
+        QUI\Rights\Permission::checkPermission('category.edit');
 
         QUI::getDataBase()->update(
-            QUI\ERP\Products\Tables::getFieldTableName(),
+            QUI\ERP\Products\Tables::getCategoryTableName(),
             array('name' => $this->Field->getAttribute('name')),
             array('id' => $this->Field->getId())
         );
@@ -60,10 +60,10 @@ class Controller
      */
     public function delete()
     {
-        QUI\Rights\Permission::checkPermission('field.delete');
+        QUI\Rights\Permission::checkPermission('category.delete');
 
         QUI::getDataBase()->delete(
-            QUI\ERP\Products\Tables::getFieldTableName(),
+            QUI\ERP\Products\Tables::getCategoryTableName(),
             array('id' => $this->Field->getId())
         );
     }

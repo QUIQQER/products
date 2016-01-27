@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Product\Modell
+ * This file contains QUI\ERP\Products\Product\Product
  */
 namespace QUI\ERP\Products\Product;
 
@@ -9,14 +9,14 @@ use QUI;
 
 /**
  * Class Controller
- * Product Manager
+ * Product Modell
  *
  * @package QUI\ERP\Products\Product
  *
  * @example
  * QUI\ERP\Products\Handler\Products::getProduct( ID );
  */
-class Modell extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
+class Product extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
 {
     /**
      * Product-ID
@@ -35,6 +35,10 @@ class Modell extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
     {
         $this->id = (int)$pid;
         $this->getController()->load();
+
+        if (defined('QUIQQER_BACKEND')) {
+            $this->setAttribute('viewType', 'backend');
+        }
     }
 
     /**
@@ -46,15 +50,29 @@ class Modell extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
     }
 
     /**
-     * @return View
+     * @return ViewFrontend
      */
     public function getView()
     {
-        return new View($this);
+        switch ($this->getAttribute('viewType')) {
+            case 'backend':
+                return $this->getViewBackend();
+
+            default:
+                return $this->getViewFrontend();
+        }
     }
 
     /**
-     * @return View
+     * @return ViewFrontend
+     */
+    public function getViewFrontend()
+    {
+        return new ViewFrontend($this);
+    }
+
+    /**
+     * @return ViewBackend
      */
     public function getViewBackend()
     {
@@ -75,7 +93,8 @@ class Modell extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
     public function getPrice()
     {
         return new QUI\ERP\Products\Price(
-            $this->getAttribute('price')
+            $this->getAttribute('price'),
+            QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
     }
 

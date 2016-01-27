@@ -11,7 +11,7 @@ use QUI;
  * Class Price
  * @package QUI\ERP\Products\Field
  */
-class BoolType extends QUI\ERP\Products\Field\Modell
+class BoolType extends QUI\ERP\Products\Field\Field
 {
 
 }

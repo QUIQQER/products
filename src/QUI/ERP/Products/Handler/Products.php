@@ -23,7 +23,7 @@ class Products
 
     /**
      * @param integer $pid - Product-ID
-     * @return QUI\ERP\Products\Product\Modell
+     * @return QUI\ERP\Products\Product\Product
      *
      * @throw QUI\Exception
      */
@@ -33,7 +33,7 @@ class Products
             return self::$list[$pid];
         }
 
-        $Product          = new QUI\ERP\Products\Product\Modell($pid);
+        $Product          = new QUI\ERP\Products\Product\Product($pid);
         self::$list[$pid] = $Product;
 
         return $Product;
@@ -45,7 +45,7 @@ class Products
      * @param array $fields - optional, list of fields
      * @param string $productNo - optional, own product number
      *
-     * @return QUI\ERP\Products\Product\Modell
+     * @return QUI\ERP\Products\Product\Product
      */
     public static function createProduct($fields = array(), $productNo = '')
     {
@@ -53,7 +53,7 @@ class Products
 
 
         QUI::getDataBase()->insert(
-            QUI\ERP\Products\Tables::getProductTable(),
+            QUI\ERP\Products\Tables::getProductTableName(),
             array(
                 'productNo' => $productNo,
                 'data' => $fields
@@ -71,19 +71,24 @@ class Products
      *
      * @param array $queryParams - query parameter
      *                              $queryParams['where'],
+     *                              $queryParams['where_or'],
      *                              $queryParams['limit']
      *                              $queryParams['order']
      * @return array
      */
     public static function getProducts($queryParams = array())
     {
-        $query['from'] = QUI\ERP\Products\Tables::getProductTable();
+        $query['from'] = QUI\ERP\Products\Tables::getProductTableName();
 
         $result = array();
         $data   = QUI::getDataBase()->fetch($query);
 
         if (isset($queryParams['where'])) {
             $query['where'] = $queryParams['where'];
+        }
+
+        if (isset($queryParams['where_or'])) {
+            $query['where_or'] = $queryParams['where_or'];
         }
 
         if (isset($queryParams['limit'])) {

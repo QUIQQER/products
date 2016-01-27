@@ -19,22 +19,22 @@ use QUI;
 class Controller
 {
     /**
-     * @var Modell
+     * @var Product
      */
     protected $Product;
 
     /**
      * Controller constructor.
-     * @param Modell $Product
+     * @param Product $Product
      */
-    public function __construct(Modell $Product)
+    public function __construct(Product $Product)
     {
         $this->Product = $Product;
     }
 
     /**
      * Return the Product Modell
-     * @return Modell
+     * @return Product
      */
     public function getModell()
     {
@@ -58,7 +58,7 @@ class Controller
     public function load()
     {
         $result = QUI::getDataBase()->fetch(array(
-            'from' => QUI\ERP\Products\Tables::getProductTable(),
+            'from' => QUI\ERP\Products\Tables::getProductTableName(),
             'where' => array(
                 'id' => $this->Product->getId()
             )
@@ -86,7 +86,7 @@ class Controller
 
 
         QUI::getDataBase()->update(
-            QUI\ERP\Products\Tables::getProductTable(),
+            QUI\ERP\Products\Tables::getProductTableName(),
             array(
                 'productNo' => $this->Product->getAttribute('productNo'),
                 'data' => $this->Product->getFields()
@@ -103,7 +103,7 @@ class Controller
         QUI\Rights\Permission::checkPermission('product.delete');
 
         QUI::getDataBase()->delete(
-            QUI\ERP\Products\Tables::getProductTable(),
+            QUI\ERP\Products\Tables::getProductTableName(),
             array('id' => $this->Product->getId())
         );
     }

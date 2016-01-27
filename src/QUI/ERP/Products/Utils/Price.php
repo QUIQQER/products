@@ -22,9 +22,9 @@ class Price
 
     /**
      * Price currency
-     * @var string
+     * @var QUI\ERP\Currency\Currency
      */
-    protected $currency;
+    protected $Currency;
 
     /**
      * @var array
@@ -41,13 +41,13 @@ class Price
      * Price constructor.
      *
      * @param float $nettoPrice
-     * @param string $currency
+     * @param QUI\ERP\Currency\Currency $Currency
      * @param QUI\Users\User|boolean $User - optional, if no user, session user are used
      */
-    public function __construct($nettoPrice, $currency, $User = false)
+    public function __construct($nettoPrice, QUI\ERP\Currency\Currency $Currency, $User = false)
     {
         $this->netto    = $nettoPrice;
-        $this->currency = $currency;
+        $this->Currency = $Currency;
 
         $this->User      = $User;
         $this->discounts = array();

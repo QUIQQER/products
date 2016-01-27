@@ -13,18 +13,18 @@ use QUI;
  *
  * @package QUI\ERP\Products\Product
  */
-class View extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
+class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
 {
     /**
-     * @var Modell
+     * @var Product
      */
     protected $Product;
 
     /**
      * View constructor.
-     * @param Modell $Product
+     * @param Product $Product
      */
-    public function __construct(Modell $Product)
+    public function __construct(Product $Product)
     {
         $this->Product = $Product;
     }
@@ -43,7 +43,8 @@ class View extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
     public function getPrice()
     {
         return new QUI\ERP\Products\Price(
-            $this->getAttribute('price')
+            $this->getAttribute('price'),
+            QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
     }
 }

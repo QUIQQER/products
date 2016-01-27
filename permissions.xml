@@ -8,4 +8,14 @@
     <permission name="product.edit" type="bool">
         <defaultvalue>1</defaultvalue>
     </permission>
+
+    <permission name="category.create" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+    <permission name="category.delete" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
+    <permission name="category.edit" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
 </permissions>

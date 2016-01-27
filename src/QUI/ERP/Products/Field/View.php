@@ -9,6 +9,7 @@ use QUI;
 
 /**
  * Class View
+ *
  * @package QUI\ERP\Products\Field
  */
 class View
