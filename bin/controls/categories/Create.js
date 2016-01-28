@@ -304,16 +304,16 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
 
                 var parentId = self.getAttribute('parentId');
 
-                Categories.createChild(parentId).then(function (categoryId) {
+                Categories.createChild(parentId).then(function (childData) {
 
                     self.$TitleTranslate.setAttribute(
                         'var',
-                        'products.category.' + categoryId + '.title'
+                        'products.category.' + childData.id + '.title'
                     );
 
                     self.$DescTranslate.setAttribute(
                         'var',
-                        'products.category.' + categoryId + '.description'
+                        'products.category.' + childData.id + '.description'
                     );
 
                     require([
