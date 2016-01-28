@@ -1,0 +1,53 @@
+
+.category-create {
+    float: left;
+    height: 100%;
+    position: relative;
+    width: 100%;
+}
+
+.category-create-container {
+    float: left;
+    height: calc(100% - 50px);
+    position: relative;
+    width: 100%;
+}
+
+.category-create-buttons {
+    border-top: 1px solid #dedede;
+    clear: both;
+    float: left;
+    height: 50px;
+    padding: 10px;
+    position: relative;
+    text-align: center;
+    width: 100%;
+}
+
+.category-create-sheet {
+    float: left;
+    height: 100%;
+    left: 0;
+    overflow: auto;
+    opacity: 0;
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.category-create-text-title {
+    float: left;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.category-create-text-title .field-container-item {
+    width: 140px;
+}
+
+.category-create-parentSelect-description,
+.category-create-text-description {
+    float: left;
+    width: 100%;
+}

@@ -1,5 +1,18 @@
 /**
+ * Category panel
  *
+ * @module package/quiqqer/products/bin/controls/categories/Panel
+ * @author www.pcsg.de (Henning Leutz)
+ *
+ * @require qui/QUI
+ * @require qui/controls/desktop/Panel
+ * @require qui/controls/buttons/Button
+ * @require qui/controls/windows/Confirm
+ * @require qui/controls/sitemap/Map
+ * @require qui/controls/sitemap/Item
+ * @require controls/grid/Grid
+ * @require Locale
+ * @require css!package/quiqqer/products/bin/controls/categories/Panel.css
  */
 define('package/quiqqer/products/bin/controls/categories/Panel', [
 
@@ -11,13 +24,18 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
     'qui/controls/sitemap/Item',
     'controls/grid/Grid',
     'Locale',
+    'package/quiqqer/products/bin/classes/Categories',
+    'package/quiqqer/products/bin/controls/categories/Sitemap',
+    'package/quiqqer/products/bin/controls/categories/Create',
 
     'css!package/quiqqer/products/bin/controls/categories/Panel.css'
 
-], function (QUI, QUIPanel, QUIButton, QUIConfirm, QUISitemap, QUISitemapItem, Grid, QUILocale) {
+], function (QUI, QUIPanel, QUIButton, QUIConfirm, QUISitemap, QUISitemapItem,
+             Grid, QUILocale, Handler, CategoryMap, CreateCategory) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    var lg         = 'quiqqer/products',
+        Categories = new Handler();
 
     return new Class({
 
@@ -25,10 +43,13 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
         Type   : 'package/quiqqer/products/bin/controls/categories/Panel',
 
         Binds: [
+            'refresh',
             '$onCreate',
             '$onInject',
             '$onResize',
-            'toggleSitemap'
+            'toggleSitemap',
+            'createChild',
+            'updateChild'
         ],
 
         initialize: function (options) {
@@ -59,7 +80,22 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          * refresh the panel
          */
         refresh: function () {
+            var self = this;
+
             this.parent();
+            this.Loader.show();
+
+            var Item = this.$Sitemap.getActive(),
+                id   = Item.getAttribute('value');
+
+            Categories.getChildren(id).then(function (gridData) {
+
+                self.$Grid.setData({
+                    data: gridData
+                });
+
+                self.Loader.hide();
+            });
         },
 
         /**
@@ -67,8 +103,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          */
         $onCreate: function () {
 
-            var self    = this,
-                Content = this.getContent();
+            var Content = this.getContent();
 
             Content.setStyles({
                 padding: 0
@@ -130,15 +165,12 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
             this.$SitemapFX = moofx(this.$SitemapContainer);
 
-            this.$Sitemap = new QUISitemap().inject(this.$SitemapContainer);
+            this.$Sitemap = new CategoryMap({
+                events: {
+                    onClick: this.refresh
+                }
+            }).inject(this.$SitemapContainer);
 
-            this.$Sitemap.appendChild(
-                new QUISitemapItem({
-                    text: 'Kategorien',
-                    id  : 0,
-                    icon: 'fa fa-shopping-basket'
-                })
-            );
 
             this.$GridContainer = new Element('div', {
                 'class': 'products-categories-panel-container'
@@ -162,11 +194,23 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     dataType : 'text',
                     width    : 200
                 }, {
-                    header   : QUILocale.get(lg, 'products.categories.grid.fields'),
-                    dataIndex: 'fields',
+                    header   : QUILocale.get('quiqqer/system', 'description'),
+                    dataIndex: 'description',
+                    dataType : 'text',
+                    width    : 200
+                }, {
+                    header   : 'Zugehörige Seite',
+                    dataIndex: 'site',
                     dataType : 'text',
                     width    : 200
                 }]
+            });
+
+            this.$Grid.addEvents({
+                onDblClick: function () {
+
+                    this.$Grid.getSelectedData()[0];
+                }
             });
         },
 
@@ -175,17 +219,24 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          */
         $onInject: function () {
             this.resize();
-            this.refresh();
+            this.$Sitemap.firstChild().click();
         },
 
         /**
          * event : on resize
          */
         $onResize: function () {
-            var size = this.$GridContainer.getSize();
+            var size   = this.$GridContainer.getSize(),
+                Button = this.getButtons('sitemap'),
+                active = Button.isActive();
+
+            if (active) {
+                this.$Grid.setWidth(size.x - 340);
+            } else {
+                this.$Grid.setWidth(size.x - 40);
+            }
 
             this.$Grid.setHeight(size.y - 40);
-            this.$Grid.setWidth(size.x - 40);
             this.$Grid.resize();
         },
 
@@ -195,35 +246,70 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
         toggleSitemap: function () {
             return new Promise(function () {
 
-                var self   = this,
-                    Button = this.getButtons('sitemap'),
-                    status = Button.isActive(),
-                    size   = this.$GridContainer.getSize();
+                var Button = this.getButtons('sitemap'),
+                    status = Button.isActive();
 
                 if (status === false) {
 
-                    this.$GridFX.animate({
-                        paddingLeft: 320
-                    }, {
-                        duration: 200
-                    });
-
-                    this.$Grid.setWidth(size.x - 340).then(function () {
-                        self.$SitemapFX.animate({
-                            opacity: 1,
-                            width  : 300
-                        }, {
-                            duration: 200,
-                            callback: function () {
-                                Button.setActive();
-                            }
-                        });
+                    this.openSitemap().then(function () {
+                        Button.setActive();
                     });
 
                     return;
                 }
 
-                this.$SitemapFX.animate({
+                this.closeSitemap().then(function () {
+                    Button.setNormal();
+                });
+
+            }.bind(this));
+        },
+
+        /**
+         * open the sitemap
+         *
+         * @returns {Promise}
+         */
+        openSitemap: function () {
+            var self = this;
+
+            return new Promise(function (resolve) {
+
+                var size = self.$GridContainer.getSize();
+
+                self.$GridFX.animate({
+                    paddingLeft: 320
+                }, {
+                    duration: 200
+                });
+
+                self.$Grid.setWidth(size.x - 340).then(function () {
+                    self.$SitemapFX.animate({
+                        opacity: 1,
+                        width  : 300
+                    }, {
+                        duration: 200,
+                        callback: function () {
+                            resolve();
+                        }
+                    });
+                });
+            });
+        },
+
+        /**
+         * close the sitemap
+         *
+         * @returns {Promise}
+         */
+        closeSitemap: function () {
+            var self = this;
+
+            return new Promise(function (resolve) {
+
+                var size = self.$GridContainer.getSize();
+
+                self.$SitemapFX.animate({
                     opacity: 0,
                     width  : 0
                 }, {
@@ -237,11 +323,78 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
                         self.$Grid.setWidth(size.x - 40);
 
-                        Button.setNormal();
+                        resolve();
                     }
                 });
+            });
+        },
 
-            }.bind(this));
+        /**
+         * Opens the create child dialog
+         */
+        createChild: function () {
+            var self     = this,
+                Active   = self.$Sitemap.getActive(),
+                parentId = '';
+
+            if (Active) {
+                parentId = Active.getAttribute('value');
+            }
+
+            this.closeSitemap().then(function () {
+
+                self.createSheet({
+                    title  : QUILocale.get(lg, 'categories.window.create.title'),
+                    text   : QUILocale.get(lg, 'categories.window.create.text'),
+                    buttons: false,
+                    events : {
+                        onShow: function (Sheet) {
+                            new CreateCategory({
+                                parentId: parentId,
+                                events  : {
+                                    onCancel : function () {
+                                        Sheet.hide();
+                                    },
+                                    onSubmit : function () {
+                                        self.Loader.show();
+                                    },
+                                    onSuccess: function () {
+                                        Sheet.hide();
+                                        self.refresh();
+                                    }
+                                }
+                            }).inject(Sheet.getContent());
+                        }
+                    }
+                }).show();
+
+            });
+        },
+
+        /**
+         * opens the edit dialog
+         *
+         * @param {Number} childId - Category-ID
+         */
+        updateChild: function (childId) {
+            var self = this;
+
+            self.Loader.show();
+
+            this.createSheet({
+                events: {
+                    onShow: function (Sheet) {
+
+                        Sheet.getContent().set({
+                            styles: {
+                                padding: 20
+                            }
+                        });
+
+                        self.Loader.hide();
+                    }
+                }
+            }).show();
         }
     });
 });

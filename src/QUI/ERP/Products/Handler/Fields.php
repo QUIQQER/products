@@ -22,7 +22,7 @@ class Fields
      * Create a new field
      *
      * @param array $attributes - field attributes
-     * @return QUI\ERP\Products\Field\Modell
+     * @return QUI\ERP\Products\Field\Field
      */
     public static function createField($attributes = array())
     {
@@ -35,7 +35,7 @@ class Fields
         }
 
         QUI::getDataBase()->insert(
-            QUI\ERP\Products\Tables::getFieldTableName(),
+            QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             $data
         );
 
@@ -77,7 +77,7 @@ class Fields
      * Return a field
      *
      * @param integer $fieldId - Field-ID
-     * @return QUI\ERP\Products\Field\Modell
+     * @return QUI\ERP\Products\Field\Field
      *
      * @throws QUI\Exception
      */
@@ -88,7 +88,7 @@ class Fields
         }
 
         $result = QUI::getDataBase()->fetch(array(
-            'from' => QUI\ERP\Products\Tables::getFieldTableName(),
+            'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             'where' => array(
                 'id' => (int)$fieldId
             )
@@ -166,7 +166,7 @@ class Fields
      */
     public static function getFields($queryParams = array())
     {
-        $query['from'] = QUI\ERP\Products\Tables::getFieldTableName();
+        $query['from'] = QUI\ERP\Products\Utils\Tables::getFieldTableName();
 
         $result = array();
         $data   = QUI::getDataBase()->fetch($query);

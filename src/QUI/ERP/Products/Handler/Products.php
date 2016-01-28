@@ -53,7 +53,7 @@ class Products
 
 
         QUI::getDataBase()->insert(
-            QUI\ERP\Products\Tables::getProductTableName(),
+            QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
                 'productNo' => $productNo,
                 'data' => $fields
@@ -61,6 +61,23 @@ class Products
         );
 
         $newId = QUI::getDataBase()->getPDO()->lastInsertId();
+
+        // translation - title
+        try {
+            QUI\Translator::addUserVar(
+                'quiqqer/products',
+                'products.product.' . $newId . '.title',
+                array(
+                    'datatype' => 'js,php'
+                )
+            );
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addInfo($Exception->getMessage());
+
+            QUI::getMessagesHandler()->addAttention(
+                $Exception->getMessage()
+            );
+        }
 
         return self::getProduct($newId);
     }
@@ -78,7 +95,7 @@ class Products
      */
     public static function getProducts($queryParams = array())
     {
-        $query['from'] = QUI\ERP\Products\Tables::getProductTableName();
+        $query['from'] = QUI\ERP\Products\Utils\Tables::getProductTableName();
 
         $result = array();
         $data   = QUI::getDataBase()->fetch($query);

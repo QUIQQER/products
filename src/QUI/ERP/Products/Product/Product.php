@@ -88,6 +88,27 @@ class Product extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
     }
 
     /**
+     * Return the title / name of the category
+     *
+     * @param QUI\Locale|Boolean $Locale - optional
+     * @return string
+     */
+    public function getTitle($Locale = false)
+    {
+        if (!$Locale) {
+            return QUI::getLocale()->get(
+                'quiqqer/products',
+                'products.product.' . $this->getId() . '.title'
+            );
+        }
+
+        return $Locale->get(
+            'quiqqer/products',
+            'products.product.' . $this->getId() . '.title'
+        );
+    }
+
+    /**
      * @return QUI\ERP\Products\Price
      */
     public function getPrice()

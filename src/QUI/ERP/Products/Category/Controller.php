@@ -21,15 +21,15 @@ class Controller
     /**
      * @var Category
      */
-    protected $Field;
+    protected $Modell;
 
     /**
      * Controller constructor.
-     * @param Category $Field
+     * @param Category $Modell
      */
-    public function __construct(Category $Field)
+    public function __construct(Category $Modell)
     {
-        $this->Field = $Field;
+        $this->Modell = $Modell;
     }
 
     /**
@@ -38,7 +38,7 @@ class Controller
      */
     public function getModell()
     {
-        return $this->Field;
+        return $this->Modell;
     }
 
     /**
@@ -49,22 +49,32 @@ class Controller
         QUI\Rights\Permission::checkPermission('category.edit');
 
         QUI::getDataBase()->update(
-            QUI\ERP\Products\Tables::getCategoryTableName(),
-            array('name' => $this->Field->getAttribute('name')),
-            array('id' => $this->Field->getId())
+            QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+            array('name' => $this->getModell()->getAttribute('name')),
+            array('id' => $this->getModell()->getId())
         );
     }
 
     /**
      * Delete the complete field
+     * ID 0 cant be deleted
      */
     public function delete()
     {
+        if ($this->getModell()->getId() === 0) {
+            return;
+        }
+
         QUI\Rights\Permission::checkPermission('category.delete');
 
         QUI::getDataBase()->delete(
-            QUI\ERP\Products\Tables::getCategoryTableName(),
-            array('id' => $this->Field->getId())
+            QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+            array('id' => $this->Modell->getId())
+        );
+
+        QUI\Translator::delete(
+            'quiqqer/products',
+            'products.category.' . $this->getModell()->getId() . '.title'
         );
     }
 }

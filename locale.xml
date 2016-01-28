@@ -16,7 +16,7 @@
         </locale>
     </groups>
 
-    <groups name="quiqqer/products" datatype="php,js">
+    <groups name="quiqqer/products" datatype="js">
         <locale name="products.panel.title">
             <de><![CDATA[Produkte]]></de>
             <en><![CDATA[Products]]></en>
@@ -27,8 +27,26 @@
             <de><![CDATA[Kategorien]]></de>
             <en><![CDATA[Categories]]></en>
         </locale>
-    </groups>
 
+        <locale name="products.categories.grid.fields">
+            <de><![CDATA[Felder]]></de>
+            <en><![CDATA[Fields]]></en>
+        </locale>
+
+        <locale name="categories.window.create.title">
+            <de><![CDATA[Neue Kategorie anlegen]]></de>
+            <en><![CDATA[Create a new category]]></en>
+        </locale>
+        <locale name="categories.window.create.text">
+            <de><![CDATA[Neue Kategorie anlegen]]></de>
+            <en><![CDATA[Create a new category]]></en>
+        </locale>
+        <locale name="categories.window.create.information">
+            <de><![CDATA[Nach dem Anlegen der Kategorie können Sie der Kategory Felder zu weisen.]]></de>
+            <en><![CDATA[After creating the category, you can assign fields to it.]]></en>
+        </locale>
+
+    </groups>
 
 
 </locales>
