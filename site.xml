@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+    <types>
+
+        <!-- Kategorien -->
+        <type type="types/category" icon="fa fa-shopping-basket">
+            <locale group="quiqqer/products" var="admin.types.category"/>
+            <desc>
+                <locale group="quiqqer/products" var="admin.types.category.desc"/>
+            </desc>
+
+            <attributes>
+                <attribute>quiqqer.products.settings.categoryId</attribute>
+            </attributes>
+
+            <settings>
+                <category name="category-settings">
+                    <settings>
+                        <title>
+                            <locale group="quiqqer/products" var="quiqqer.products.category.settings.title"/>
+                        </title>
+
+                        <input conf="quiqqer.products.settings.categoryId" type="number">
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.sitetypes.list.settings.max"/>
+                            </text>
+                        </input>
+                    </settings>
+                </category>
+            </settings>
+        </type>
+
+    </types>
+</site>

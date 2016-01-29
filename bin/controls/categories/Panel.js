@@ -95,6 +95,22 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     data: gridData
                 });
 
+                var Delete = self.getButtons('delete'),
+                    Edit   = self.getButtons('edit');
+
+                Delete.disable();
+                Edit.disable();
+
+                Delete.setAttribute(
+                    'text',
+                    QUILocale.get('quiqqer/system', 'delete')
+                );
+
+                Edit.setAttribute(
+                    'text',
+                    QUILocale.get('quiqqer/system', 'edit')
+                );
+
                 self.Loader.hide();
             });
         },
@@ -137,10 +153,11 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                 name     : 'edit',
                 text     : QUILocale.get('quiqqer/system', 'edit'),
                 textimage: 'icon-edit fa fa-edit',
+                disabled : true,
                 events   : {
                     onClick: function () {
                         self.updateChild(
-                            self.$Sitemap.getActive().getAttribute('value')
+                            self.$Grid.getSelectedData()[0].id
                         );
                     }
                 }
@@ -154,10 +171,11 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                 name     : 'delete',
                 text     : QUILocale.get('quiqqer/system', 'delete'),
                 textimage: 'icon-trashcan fa fa-trashcan',
+                disabled : true,
                 events   : {
                     onClick: function () {
                         self.deleteChild(
-                            self.$Sitemap.getActive().getAttribute('value')
+                            self.$Grid.getSelectedData()[0].id
                         );
                     }
                 }
@@ -219,7 +237,25 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             this.$Grid.addEvents({
                 onDblClick: function () {
                     self.updateChild(
-                        self.$Grid.getSelectedData()[0]
+                        self.$Grid.getSelectedData()[0].id
+                    );
+                },
+                onClick   : function () {
+                    var selected = self.$Grid.getSelectedData()[0],
+                        Delete   = self.getButtons('delete'),
+                        Edit     = self.getButtons('edit');
+
+                    Delete.enable();
+                    Edit.enable();
+
+                    Delete.setAttribute(
+                        'text',
+                        QUILocale.get('quiqqer/system', 'delete') + ' (#' + selected.id + ')'
+                    );
+
+                    Edit.setAttribute(
+                        'text',
+                        QUILocale.get('quiqqer/system', 'edit') + ' (#' + selected.id + ')'
                     );
                 }
             });
@@ -301,6 +337,9 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     }, {
                         duration: 200,
                         callback: function () {
+
+                            self.getButtons('sitemap').setActive();
+
                             resolve();
                         }
                     });
@@ -333,6 +372,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                         });
 
                         self.$Grid.setWidth(size.x - 40);
+                        self.getButtons('sitemap').setNormal();
 
                         resolve();
                     }
@@ -393,22 +433,26 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
         updateChild: function (childId) {
             var self = this;
 
-            self.Loader.show();
+            this.closeSitemap().then(function () {
 
-            this.createSheet({
-                events: {
-                    onShow: function (Sheet) {
+                self.Loader.show();
 
-                        Sheet.getContent().set({
-                            styles: {
-                                padding: 20
-                            }
-                        });
+                self.createSheet({
+                    events: {
+                        onShow: function (Sheet) {
 
-                        self.Loader.hide();
+                            Sheet.getContent().set({
+                                styles: {
+                                    padding: 20
+                                }
+                            });
+
+                            self.Loader.hide();
+                        }
                     }
-                }
-            }).show();
+                }).show();
+
+            });
         },
 
         /**
