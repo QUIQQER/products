@@ -49,7 +49,8 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             '$onResize',
             'toggleSitemap',
             'createChild',
-            'updateChild'
+            'updateChild',
+            'deleteChild'
         ],
 
         initialize: function (options) {
@@ -103,7 +104,8 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          */
         $onCreate: function () {
 
-            var Content = this.getContent();
+            var self    = this,
+                Content = this.getContent();
 
             Content.setStyles({
                 padding: 0
@@ -136,7 +138,11 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                 text     : QUILocale.get('quiqqer/system', 'edit'),
                 textimage: 'icon-edit fa fa-edit',
                 events   : {
-                    onClick: this.updateChild
+                    onClick: function () {
+                        self.updateChild(
+                            self.$Sitemap.getActive().getAttribute('value')
+                        );
+                    }
                 }
             });
 
@@ -145,11 +151,15 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             });
 
             this.addButton({
-                name     : 'edit',
+                name     : 'delete',
                 text     : QUILocale.get('quiqqer/system', 'delete'),
                 textimage: 'icon-trashcan fa fa-trashcan',
                 events   : {
-                    onClick: this.deletChild
+                    onClick: function () {
+                        self.deleteChild(
+                            self.$Sitemap.getActive().getAttribute('value')
+                        );
+                    }
                 }
             });
 
@@ -208,8 +218,9 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
             this.$Grid.addEvents({
                 onDblClick: function () {
-
-                    this.$Grid.getSelectedData()[0];
+                    self.updateChild(
+                        self.$Grid.getSelectedData()[0]
+                    );
                 }
             });
         },
@@ -348,7 +359,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     text   : QUILocale.get(lg, 'categories.window.create.text'),
                     buttons: false,
                     events : {
-                        onShow: function (Sheet) {
+                        onShow : function (Sheet) {
                             new CreateCategory({
                                 parentId: parentId,
                                 events  : {
@@ -364,6 +375,9 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                                     }
                                 }
                             }).inject(Sheet.getContent());
+                        },
+                        onClose: function (Sheet) {
+                            Sheet.destroy();
                         }
                     }
                 }).show();
@@ -395,6 +409,45 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     }
                 }
             }).show();
+        },
+
+        /**
+         * Delete the category
+         *
+         * @param {Number} categoryId
+         */
+        deleteChild: function (categoryId) {
+            var self = this;
+
+            new QUIConfirm({
+                title      : QUILocale.get(lg, 'categories.window.delete.title'),
+                text       : QUILocale.get(lg, 'categories.window.delete.text'),
+                information: QUILocale.get(lg, 'categories.window.delete.information', {
+                    id: categoryId
+                }),
+                autoclose  : false,
+                maxHeight  : 300,
+                maxWidth   : 450,
+                icon       : 'fa fa-trashcan',
+                texticon   : 'fa fa-trashcan',
+                events     : {
+                    onSubmit: function (Win) {
+                        Win.Loader.show();
+                        Categories.deleteChild(categoryId).then(function () {
+                            Win.close();
+
+                            var First  = self.$Sitemap.firstChild(),
+                                Active = self.$Sitemap.getActive();
+
+                            if (Active && Active.getAttribute('value') !== '') {
+                                Active.destroy();
+                            }
+
+                            First.click();
+                        });
+                    }
+                }
+            }).open();
         }
     });
 });

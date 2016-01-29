@@ -287,7 +287,7 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
          * cancel the creation
          */
         cancel: function () {
-
+            this.fireEvent('cancel');
         },
 
         /**

@@ -129,7 +129,7 @@ define('package/quiqqer/products/bin/classes/Categories', [
          */
         deleteChild: function (categoryId) {
             return new Promise(function (resolve, reject) {
-                Ajax.get('package_quiqqer_products_ajax_categories_deleteChild', resolve, {
+                Ajax.post('package_quiqqer_products_ajax_categories_deleteChild', resolve, {
                     'package' : 'quiqqer/products',
                     onError   : reject,
                     categoryId: categoryId
@@ -162,7 +162,7 @@ define('package/quiqqer/products/bin/classes/Categories', [
          */
         update: function (categoryId, data) {
             return new Promise(function (resolve, reject) {
-                Ajax.get('package_quiqqer_products_ajax_categories_update', resolve, {
+                Ajax.post('package_quiqqer_products_ajax_categories_update', resolve, {
                     'package' : 'quiqqer/products',
                     onError   : reject,
                     categoryId: categoryId,

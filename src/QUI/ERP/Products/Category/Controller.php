@@ -67,14 +67,43 @@ class Controller
 
         QUI\Rights\Permission::checkPermission('category.delete');
 
-        QUI::getDataBase()->delete(
-            QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
-            array('id' => $this->Modell->getId())
-        );
+        // get children ids
+        $ids = array();
 
-        QUI\Translator::delete(
-            'quiqqer/products',
-            'products.category.' . $this->getModell()->getId() . '.title'
-        );
+        $recursiveHelper = function ($parentId) use (&$ids, &$recursiveHelper) {
+            try {
+                $Category = QUI\ERP\Products\Handler\Categories::getCategory($parentId);
+                $children = $Category->getChildren();
+
+                $ids[] = $Category->getId();
+
+                /* @var $Child QUI\ERP\Products\Category\Category */
+                foreach ($children as $Child) {
+                    $recursiveHelper($Child->getId(), $ids, $recursiveHelper);
+                }
+
+            } catch (QUI\Exception $Exception) {
+            }
+        };
+
+        $recursiveHelper($this->Modell->getId());
+
+        foreach ($ids as $id) {
+            $id = (int)$id;
+
+            if (!$id) {
+                continue;
+            }
+
+            QUI::getDataBase()->delete(
+                QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+                array('id' => $id)
+            );
+
+            QUI\Translator::delete(
+                'quiqqer/products',
+                'products.category.' . $id . '.title'
+            );
+        }
     }
 }
