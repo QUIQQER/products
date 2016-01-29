@@ -19,13 +19,14 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
     'qui/QUI',
     'qui/controls/Control',
     'qui/controls/buttons/Button',
+    'Locale',
     'package/quiqqer/products/bin/classes/Categories',
     'package/quiqqer/products/bin/controls/categories/Sitemap',
     'package/quiqqer/translator/bin/controls/Create',
 
     'css!package/quiqqer/products/bin/controls/categories/Create.css'
 
-], function (QUI, QUIControl, QUIButton,
+], function (QUI, QUIControl, QUIButton, QUILocale,
              Handler, CategorySitemap, TranslationCreate) {
     "use strict";
 
@@ -103,7 +104,6 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
                 'group' : 'quiqqer/products',
                 editable: true
             });
-
 
             return Elm;
         },

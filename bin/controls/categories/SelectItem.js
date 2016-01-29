@@ -4,11 +4,12 @@
 define('package/quiqqer/products/bin/controls/categories/SelectItem', [
 
     'qui/controls/Control',
+    'Locale',
     'package/quiqqer/products/bin/classes/Categories',
 
-    'css!package/quiqqer/discount/bin/controls/SelectItem.css'
+    'css!package/quiqqer/products/bin/controls/categories/SelectItem.css'
 
-], function (QUIControl, Handler) {
+], function (QUIControl, QUILocale, Handler) {
     "use strict";
 
     var Categories = new Handler();
@@ -22,7 +23,7 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
         ],
 
         options: {
-            id: false
+            categoryId: false
         },
 
         initialize: function (options) {
@@ -75,9 +76,18 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
             });
 
             Categories.getChild(
-                this.getAttribute('id')
+                this.getAttribute('categoryId')
             ).then(function (data) {
-                console.log(data);
+
+                var locale = QUILocale.get(
+                    'quiqqer/products',
+                    'products.category.' + data.id + '.title'
+                );
+
+                self.$Text.set({
+                    html: '#' + data.id + ' - ' + locale
+                });
+
             }).catch(function () {
                 self.$Icon.removeClass('fa-percent');
                 self.$Icon.addClass('fa-bolt');

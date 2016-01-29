@@ -160,7 +160,7 @@ define('package/quiqqer/products/bin/classes/Categories', [
          * @param {Object} data - Category attributes
          * @returns {Promise}
          */
-        update: function (categoryId, data) {
+        updateChild: function (categoryId, data) {
             return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_categories_update', resolve, {
                     'package' : 'quiqqer/products',

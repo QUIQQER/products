@@ -28,22 +28,41 @@
             <en><![CDATA[Categories]]></en>
         </locale>
 
-        <locale name="products.categories.grid.fields">
-            <de><![CDATA[Felder]]></de>
-            <en><![CDATA[Fields]]></en>
+        <locale name="products.categories.grid.assigned.sites">
+            <de><![CDATA[Zugehörige Seite]]></de>
+            <en><![CDATA[Assigned sites]]></en>
         </locale>
 
-        <locale name="categories.window.create.title">
-            <de><![CDATA[Neue Kategorie anlegen]]></de>
-            <en><![CDATA[Create a new category]]></en>
+        <locale name="categories.update.title">
+            <de><![CDATA[Kategorie bearbeiten: [title]]]></de>
+            <en><![CDATA[Edit category: [title]]]></en>
         </locale>
-        <locale name="categories.window.create.text">
+
+        <locale name="categories.window.delete.title">
+            <de><![CDATA[Kategorie löschen]]></de>
+            <en><![CDATA[Delete category]]></en>
+        </locale>
+        <locale name="categories.window.delete.text">
+            <de><![CDATA[Möchten Sie die Kategorie #[categoryId] wirklich löschen?]]></de>
+            <en><![CDATA[Do you really want to delete the category #[categoryId]?]]></en>
+        </locale>
+        <locale name="categories.window.delete.information">
+            <de><![CDATA[Die Kategorie und alle Unterkategorien werden unwiderruflich gelöscht.]]></de>
+            <en><![CDATA[The category and all subcategories will be deleted irrevocably.]]></en>
+        </locale>
+
+        <locale name="categories.create.title">
             <de><![CDATA[Neue Kategorie anlegen]]></de>
             <en><![CDATA[Create a new category]]></en>
         </locale>
         <locale name="categories.window.create.information">
             <de><![CDATA[Nach dem Anlegen der Kategorie können Sie der Kategory Felder zu weisen.]]></de>
             <en><![CDATA[After creating the category, you can assign fields to it.]]></en>
+        </locale>
+
+        <locale name="control.select.search.categories.placeholder">
+            <de><![CDATA[Suche nach einer Produktkategorie...]]></de>
+            <en><![CDATA[Search for a product category...]]></en>
         </locale>
 
     </groups>

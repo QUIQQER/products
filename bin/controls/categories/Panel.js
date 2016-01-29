@@ -227,7 +227,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     dataType : 'text',
                     width    : 200
                 }, {
-                    header   : 'Zugehörige Seite',
+                    header   : QUILocale.get(lg, 'products.categories.grid.assigned.sites'),
                     dataIndex: 'site',
                     dataType : 'text',
                     width    : 200
@@ -395,8 +395,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             this.closeSitemap().then(function () {
 
                 self.createSheet({
-                    title  : QUILocale.get(lg, 'categories.window.create.title'),
-                    text   : QUILocale.get(lg, 'categories.window.create.text'),
+                    title  : QUILocale.get(lg, 'categories.create.title'),
                     buttons: false,
                     events : {
                         onShow : function (Sheet) {
@@ -428,9 +427,9 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
         /**
          * opens the edit dialog
          *
-         * @param {Number} childId - Category-ID
+         * @param {Number} categoryId - Category-ID
          */
-        updateChild: function (childId) {
+        updateChild: function (categoryId) {
             var self = this;
 
             this.closeSitemap().then(function () {
@@ -438,16 +437,36 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                 self.Loader.show();
 
                 self.createSheet({
-                    events: {
+                    title  : QUILocale.get(lg, 'categories.update.title', {
+                        title: QUILocale.get(lg, 'products.category.' + categoryId + '.title')
+                    }),
+                    buttons: false,
+                    events : {
                         onShow: function (Sheet) {
 
                             Sheet.getContent().set({
                                 styles: {
-                                    padding: 20
+                                    padding: 0
                                 }
                             });
 
-                            self.Loader.hide();
+                            require([
+                                'package/quiqqer/products/bin/controls/categories/Update'
+                            ], function (Update) {
+                                new Update({
+                                    categoryId: categoryId,
+                                    events    : {
+                                        onLoaded: function () {
+                                            self.Loader.hide();
+                                        },
+                                        onCancel: function () {
+                                            Sheet.hide().then(function () {
+                                                Sheet.destroy();
+                                            });
+                                        }
+                                    }
+                                }).inject(Sheet.getContent());
+                            });
                         }
                     }
                 }).show();
@@ -465,7 +484,9 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
             new QUIConfirm({
                 title      : QUILocale.get(lg, 'categories.window.delete.title'),
-                text       : QUILocale.get(lg, 'categories.window.delete.text'),
+                text       : QUILocale.get(lg, 'categories.window.delete.text', {
+                    categoryId: categoryId
+                }),
                 information: QUILocale.get(lg, 'categories.window.delete.information', {
                     id: categoryId
                 }),

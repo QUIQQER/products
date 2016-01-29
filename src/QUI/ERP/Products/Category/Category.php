@@ -249,6 +249,17 @@ class Category extends QUI\QDOM
     }
 
     /**
+     * Return all sites which assigned the category
+     *
+     * @param QUI\Projects\Project $Project
+     * @return array
+     */
+    public function getSites(QUI\Projects\Project $Project)
+    {
+
+    }
+
+    /**
      * saves the field
      */
     public function save()

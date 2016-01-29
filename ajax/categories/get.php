@@ -7,21 +7,18 @@
 /**
  * Returns a category
  *
- * @param string $id - Category-ID
+ * @param string $categoryId - Category-ID
  *
  * @return array
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_get',
-    function ($id) {
+    function ($categoryId) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $Category   = $Categories->getCategory($id);
-        $attributes = $Category->getAttributes();
+        $Category   = $Categories->getCategory($categoryId);
 
-        $attributes['title'] = $Category->getTitle();
-
-        return $attributes;
+        return $Category->getAttributes();
     },
-    array('id'),
+    array('categoryId'),
     'Permission::checkAdminUser'
 );

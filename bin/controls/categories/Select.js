@@ -6,11 +6,12 @@
  *
  * @require qui/controls/Control
  * @require qui/controls/buttons/Button
- * @require package/quiqqer/discount/bin/controls/DiscountDisplay
+ * @require package/quiqqer/products/bin/controls/categories/SelectItem
+ * @require package/quiqqer/products/bin/classes/Categories
  * @require Ajax
  * @require Locale
  *
- * @event onAddDiscount [ this, id ]
+ * @event onAddCategory [ this, id ]
  */
 define('package/quiqqer/products/bin/controls/categories/Select', [
 
@@ -21,9 +22,9 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
     'Ajax',
     'Locale',
 
-    'css!package/quiqqer/discount/bin/controls/Select.css'
+    'css!package/quiqqer/products/bin/controls/categories/Select.css'
 
-], function (QUIControl, QUIButton, SelectItem, Handler, Ajax, Locale) {
+], function (QUIControl, QUIButton, SelectItem, Handler, Ajax, QUILocale) {
     "use strict";
 
     var lg         = 'quiqqer/products';
@@ -90,8 +91,10 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 return this.$Elm;
             }
 
+            var self = this;
+
             this.$Elm = new Element('div', {
-                'class'     : 'qui-discount-list',
+                'class'     : 'qui-products-categories-list',
                 'data-quiid': this.getId()
             });
 
@@ -123,12 +126,12 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
 
             this.$List = new Element('div', {
-                'class': 'qui-discount-list-list'
+                'class': 'qui-products-categories-list-list'
             }).inject(this.$Elm);
 
             this.$Search = new Element('input', {
-                'class'    : 'qui-discount-list-search',
-                placeholder: Locale.get(lg, 'control.select.search.placeholder'),
+                'class'    : 'qui-products-categories-list-search',
+                placeholder: QUILocale.get(lg, 'control.select.search.categories.placeholder'),
                 events     : {
                     keyup: function (event) {
                         if (event.key === 'down') {
@@ -158,11 +161,33 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 icon  : 'icon-search fa fa-search',
                 styles: {
                     width: 50
+                },
+                events: {
+                    onClick: function (Btn) {
+
+                        Btn.setAttribute('icon', 'fa fa-spinner fa-spin');
+
+                        require([
+                            'package/quiqqer/products/bin/controls/categories/search/Window'
+                        ], function (Window) {
+                            new Window({
+                                autoclose: true,
+                                events   : {
+                                    onSubmit: function (Win, categorieId) {
+                                        self.addCategory(categorieId);
+                                    }
+                                }
+                            }).open();
+
+                            Btn.setAttribute('icon', 'icon-search fa fa-search');
+                        });
+
+                    }
                 }
             }).inject(this.$Elm);
 
             this.$DropDown = new Element('div', {
-                'class': 'qui-discount-list-dropdown',
+                'class': 'qui-products-categories-list-dropdown',
                 styles : {
                     display: 'none',
                     top    : this.$Search.getPosition().y + this.$Search.getSize().y,
@@ -195,7 +220,9 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
             // load values
             if (this.$Input.value || this.$Input.value !== '') {
-                this.addCategory(this.$Input.value);
+                this.$Input.value.split(',').each(function (categoryId) {
+                    self.addCategory(categoryId);
+                });
             }
 
             return this.$Elm;
@@ -262,38 +289,31 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         },
 
         /**
-         * trigger a users search and open a discount dropdown for selection
+         * trigger a users search and open a category dropdown for selection
          *
          * @method package/quiqqer/products/bin/controls/categories/Select#search
          */
         search: function () {
 
-            var value = this.$Search.value;
+            var self  = this,
+                value = this.$Search.value;
 
             Categories.search({
                 order: 'ASC',
                 limit: 5
             }).then(function (result) {
-                console.log(result);
-            });
 
-            return;
-
-            Ajax.get('ajax_usersgroups_search', function (result, Request) {
-                var i, len, nam, type, Entry,
+                var i, id, len, nam, entry, Entry,
                     func_mousedown, func_mouseover,
 
-                    data     = result.data,
-                    value    = Request.getAttribute('value'),
-                    Elm      = Request.getAttribute('Elm'),
-                    DropDown = Elm.$DropDown;
+                    DropDown = self.$DropDown;
 
 
                 DropDown.set('html', '');
 
-                if (!data.length) {
+                if (!result || !result.length) {
                     new Element('div', {
-                        html  : Locale.get('quiqqer/system', 'usersAndGroups.no.results'),
+                        html  : QUILocale.get(lg, 'control.select.no.results'),
                         styles: {
                             'float': 'left',
                             'clear': 'both',
@@ -309,30 +329,31 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 func_mousedown = function (event) {
                     var Elm = event.target;
 
-                    if (!Elm.hasClass('qui-discount-list-dropdown-entry')) {
-                        Elm = Elm.getParent('.qui-discount-list-dropdown-entry');
+                    if (!Elm.hasClass('qui-products-categories-list-dropdown-entry')) {
+                        Elm = Elm.getParent('.qui-products-categories-list-dropdown-entry');
                     }
 
-                    this.add(
-                        Elm.get('data-id'),
-                        Elm.get('data-type')
-                    );
-
-                }.bind(Elm);
+                    self.addCategory(Elm.get('data-id'));
+                };
 
                 func_mouseover = function () {
                     this.getParent().getElements(
-                        '.qui-discount-list-dropdown-entry-hover'
+                        '.qui-products-categories-list-dropdown-entry-hover'
                     ).removeClass(
-                        'qui-discount-list-dropdown-entry-hover'
+                        'qui-products-categories-list-dropdown-entry-hover'
                     );
 
-                    this.addClass('qui-discount-list-dropdown-entry-hover');
+                    this.addClass('qui-products-categories-list-dropdown-entry-hover');
                 };
 
                 // create
-                for (i = 0, len = data.length; i < len; i++) {
-                    nam = data[i].username || data[i].name;
+                for (i = 0, len = result.length; i < len; i++) {
+
+                    entry = result[i];
+                    id    = entry.id;
+
+                    nam = '#' + id + ' - ';
+                    nam = nam + QUILocale.get(lg, 'products.category.' + id + '.title');
 
                     if (value) {
                         nam = nam.toString().replace(
@@ -341,54 +362,17 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                         );
                     }
 
-
-                    type = 'group';
-
-                    if (data[i].username) {
-                        type = 'user';
-                    }
-
                     Entry = new Element('div', {
-                        html       : '<span>' + nam + ' (' + data[i].id + ')</span>',
-                        'class'    : 'box-sizing qui-discount-list-dropdown-entry',
-                        'data-id'  : data[i].id,
-                        'data-name': data[i].username || data[i].name,
-                        'data-type': type,
-                        events     : {
+                        html     : '<span class="fa fa-percent"></span>' +
+                                   '<span>' + nam + ' (' + id + ')</span>',
+                        'class'  : 'box-sizing qui-products-categories-list-dropdown-entry',
+                        'data-id': id,
+                        events   : {
                             mousedown : func_mousedown,
                             mouseenter: func_mouseover
                         }
                     }).inject(DropDown);
-
-                    if (type == 'group') {
-                        new Element('span', {
-                            'class': 'icon-group',
-                            styles : {
-                                marginRight: 5
-                            }
-                        }).inject(Entry, 'top');
-                    } else {
-                        new Element('span', {
-                            'class': 'icon-user',
-                            styles : {
-                                marginRight: 5
-                            }
-                        }).inject(Entry, 'top');
-                    }
-
                 }
-            }, {
-                Elm   : this,
-                value : this.$Search.value,
-                params: JSON.encode({
-                    order         : 'ASC',
-                    limit         : 5,
-                    page          : 1,
-                    search        : true,
-                    searchSettings: {
-                        userSearchString: this.$Search.value
-                    }
-                })
             });
         },
 
@@ -405,15 +389,16 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 return this;
             }
 
-            new SelectItem(id, {
-                events: {
+            new SelectItem({
+                categoryId: id,
+                events    : {
                     onDestroy: this.$onCategoryDestroy
                 }
             }).inject(this.$List);
 
             this.$values.push(id);
 
-            this.fireEvent('addDiscount', [this, id]);
+            this.fireEvent('addCategory', [this, id]);
             this.$refreshValues();
 
             return this;
@@ -431,20 +416,20 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             }
 
             var Active = this.$DropDown.getElement(
-                '.qui-discount-list-dropdown-entry-hover'
+                '.qui-products-categories-list-dropdown-entry-hover'
             );
 
             // Last Element
             if (!Active) {
                 this.$DropDown.getLast().addClass(
-                    'qui-discount-list-dropdown-entry-hover'
+                    'qui-products-categories-list-dropdown-entry-hover'
                 );
 
                 return this;
             }
 
             Active.removeClass(
-                'qui-discount-list-dropdown-entry-hover'
+                'qui-products-categories-list-dropdown-entry-hover'
             );
 
             if (!Active.getPrevious()) {
@@ -453,7 +438,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             }
 
             Active.getPrevious().addClass(
-                'qui-discount-list-dropdown-entry-hover'
+                'qui-products-categories-list-dropdown-entry-hover'
             );
         },
 
@@ -469,20 +454,20 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             }
 
             var Active = this.$DropDown.getElement(
-                '.qui-discount-list-dropdown-entry-hover'
+                '.qui-products-categories-list-dropdown-entry-hover'
             );
 
             // First Element
             if (!Active) {
                 this.$DropDown.getFirst().addClass(
-                    'qui-discount-list-dropdown-entry-hover'
+                    'qui-products-categories-list-dropdown-entry-hover'
                 );
 
                 return this;
             }
 
             Active.removeClass(
-                'qui-discount-list-dropdown-entry-hover'
+                'qui-products-categories-list-dropdown-entry-hover'
             );
 
             if (!Active.getNext()) {
@@ -491,7 +476,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             }
 
             Active.getNext().addClass(
-                'qui-discount-list-dropdown-entry-hover'
+                'qui-products-categories-list-dropdown-entry-hover'
             );
 
             return this;
@@ -508,11 +493,11 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             }
 
             var Active = this.$DropDown.getElement(
-                '.qui-discount-list-dropdown-entry-hover'
+                '.qui-products-categories-list-dropdown-entry-hover'
             );
 
             if (Active) {
-                this.addDiscount(Active.get('data-id'));
+                this.addCategory(Active.get('data-id'));
             }
 
             this.$Input.value = '';
@@ -548,12 +533,12 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         /**
          * event : if a user or a groupd would be destroyed
          *
-         * @method package/quiqqer/products/bin/controls/categories/Select#$onDiscountDestroy
+         * @method package/quiqqer/products/bin/controls/categories/Select#$onCategoryDestroy
          * @param {Object} Item - package/quiqqer/products/bin/controls/categories/Select
          */
         $onCategoryDestroy: function (Item) {
             this.$values = this.$values.erase(
-                Item.getDiscount().getId()
+                Item.getAttribute('categoryId')
             );
 
             this.$refreshValues();
