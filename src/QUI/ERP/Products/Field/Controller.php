@@ -49,7 +49,7 @@ class Controller
         QUI\Rights\Permission::checkPermission('field.edit');
 
         QUI::getDataBase()->update(
-            QUI\ERP\Products\Tables::getFieldTableName(),
+            QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             array('name' => $this->Field->getAttribute('name')),
             array('id' => $this->Field->getId())
         );
@@ -63,7 +63,7 @@ class Controller
         QUI\Rights\Permission::checkPermission('field.delete');
 
         QUI::getDataBase()->delete(
-            QUI\ERP\Products\Tables::getFieldTableName(),
+            QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             array('id' => $this->Field->getId())
         );
     }

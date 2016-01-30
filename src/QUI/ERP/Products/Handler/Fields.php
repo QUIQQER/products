@@ -41,6 +41,32 @@ class Fields
 
         $newId = QUI::getDataBase()->getPDO()->lastInsertId();
 
+        // translation - title
+        try {
+            $current      = QUI::getLocale()->getCurrent();
+            $languageData = array(
+                'datatype' => 'js,php'
+            );
+
+            if (!empty($title)) {
+                $languageData[$current] = $title;
+            }
+
+            QUI\Translator::addUserVar(
+                'quiqqer/products',
+                'products.field.' . $newId . '.title',
+                $languageData
+            );
+
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addInfo($Exception->getMessage());
+
+            QUI::getMessagesHandler()->addAttention(
+                $Exception->getMessage()
+            );
+        }
+
+
         return self::getField($newId);
     }
 

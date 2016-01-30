@@ -52,6 +52,39 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             var self = this;
 
+            this.$GridContainer = new Element('div', {
+                'class': 'products-categories-panel-container'
+            }).inject(Content);
+
+            var GridContainer = new Element('div', {
+                'class': 'products-categories-panel-grid'
+            }).inject(this.$GridContainer);
+
+            this.$Grid = new Grid(GridContainer, {
+                pagination : true,
+                columnModel: [{
+                    header   : QUILocale.get('quiqqer/system', 'id'),
+                    dataIndex: 'id',
+                    dataType : 'number',
+                    width    : 60
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'title'),
+                    dataIndex: 'title',
+                    dataType : 'text',
+                    width    : 200
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'description'),
+                    dataIndex: 'description',
+                    dataType : 'text',
+                    width    : 200
+                }, {
+                    header   : QUILocale.get(lg, 'products.categories.grid.assigned.sites'),
+                    dataIndex: 'site',
+                    dataType : 'text',
+                    width    : 200
+                }]
+            });
+
 
         },
 

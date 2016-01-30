@@ -21,6 +21,39 @@ class Categories
     private static $list = array();
 
     /**
+     * Return the number of the children
+     *
+     * @param array $queryParams - query params (where, where_or)
+     * @return integer
+     */
+    public function countCategories($queryParams = array())
+    {
+        $query = array(
+            'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+            'count' => array(
+                'select' => 'id',
+                'as' => 'count'
+            )
+        );
+
+        if (isset($queryParams['where'])) {
+            $query['where'] = $queryParams['where'];
+        }
+
+        if (isset($queryParams['where_or'])) {
+            $query['where_or'] = $queryParams['where_or'];
+        }
+
+        $data = QUI::getDataBase()->fetch($query);
+
+        if (isset($data[0]) && isset($data[0]['count'])) {
+            return (int)$data[0]['count'];
+        }
+
+        return 0;
+    }
+
+    /**
      * @return array
      */
     public static function getChildAttributes()
@@ -142,7 +175,9 @@ class Categories
      */
     public static function getCategories($queryParams = array())
     {
-        $query['from'] = QUI\ERP\Products\Utils\Tables::getCategoryTableName();
+        $query = array(
+            'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName()
+        );
 
         if (isset($queryParams['where'])) {
             $query['where'] = $queryParams['where'];

@@ -59,7 +59,8 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
         initialize: function (options) {
 
             this.setAttributes({
-                title: QUILocale.get(lg, 'categories.panel.title')
+                title: QUILocale.get(lg, 'categories.panel.title'),
+                icon : 'fa-sitemap'
             });
 
             this.parent(options);
@@ -93,11 +94,12 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             var Item = this.$Sitemap.getActive(),
                 id   = Item.getAttribute('value');
 
-            Categories.getChildren(id).then(function (gridData) {
+            Categories.getList({
+                perPage: this.$Grid.options.perPage,
+                page   : this.$Grid.options.page
+            }).then(function (gridData) {
 
-                self.$Grid.setData({
-                    data: gridData
-                });
+                self.$Grid.setData(gridData);
 
                 var Delete = self.getButtons('delete'),
                     Edit   = self.getButtons('edit');
@@ -230,6 +232,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             }).inject(this.$GridContainer);
 
             this.$Grid = new Grid(GridContainer, {
+                pagination : true,
                 columnModel: [{
                     header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
@@ -276,7 +279,8 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                         'text',
                         QUILocale.get('quiqqer/system', 'edit') + ' (#' + selected.id + ')'
                     );
-                }
+                },
+                onRefresh : this.refresh
             });
 
 

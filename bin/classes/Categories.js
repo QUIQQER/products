@@ -87,11 +87,21 @@ define('package/quiqqer/products/bin/classes/Categories', [
         },
 
         /**
+         * Return categories for a grid
          *
+         * @param {Object} params - Grid params
          * @returns {Promise}
          */
-        getList: function () {
-            return this.search();
+        getList: function (params) {
+            params = params || {};
+
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_categories_list', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    params   : JSON.encode(params)
+                });
+            });
         },
 
         /**

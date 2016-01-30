@@ -4,21 +4,28 @@
           name="erp"
           icon="icon-sun"
     >
-        <locale group="quiqqer/products" var="menu.erp.title" />
+        <locale group="quiqqer/products" var="menu.erp.title"/>
     </item>
     <item parent="/extras/erp/"
           name="products"
           require="package/quiqqer/products/bin/controls/products/Panel"
           icon="fa fa-shopping-bag"
     >
-        <locale group="quiqqer/products" var="menu.erp.products.products.title" />
+        <locale group="quiqqer/products" var="menu.erp.products.products.title"/>
     </item>
     <item parent="/extras/erp/"
           name="categories"
           require="package/quiqqer/products/bin/controls/categories/Panel"
-          icon="fa fa-shopping-basket"
+          icon="fa fa-sitemap"
     >
-        <locale group="quiqqer/products" var="menu.erp.products.categories.title" />
+        <locale group="quiqqer/products" var="menu.erp.products.categories.title"/>
+    </item>
+    <item parent="/extras/erp/"
+          name="fields"
+          require="package/quiqqer/products/bin/controls/fields/Panel"
+          icon="fa fa-file-text-o"
+    >
+        <locale group="quiqqer/products" var="menu.erp.products.fields.title"/>
     </item>
 
 </menu>
