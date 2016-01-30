@@ -476,7 +476,9 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             var self   = this,
                 Active = self.$Sitemap.getActive();
 
-            if (typeof parentId === 'undefined') {
+            if (typeof parentId === 'undefined' ||
+                typeof parentId === 'object') {
+
                 if (Active) {
                     parentId = Active.getAttribute('value');
                 } else {
