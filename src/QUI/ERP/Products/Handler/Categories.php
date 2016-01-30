@@ -21,6 +21,18 @@ class Categories
     private static $list = array();
 
     /**
+     * @return array
+     */
+    public static function getChildAttributes()
+    {
+        return array(
+            'id',
+            'parentId',
+            'fields'
+        );
+    }
+
+    /**
      * @param integer $id
      * @return QUI\ERP\Products\Category\Category
      *

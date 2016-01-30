@@ -11,6 +11,7 @@
  * @require package/quiqqer/products/bin/classes/Categories
  *
  * @event onClick [this, id, Item]
+ * @event onChildContextMenu [this, Item, event]
  */
 define('package/quiqqer/products/bin/controls/categories/Sitemap', [
 
@@ -18,9 +19,10 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
     'qui/controls/Control',
     'qui/controls/sitemap/Map',
     'qui/controls/sitemap/Item',
+    'qui/utils/Functions',
     'package/quiqqer/products/bin/classes/Categories'
 
-], function (QUI, QUIControl, QUISitemap, QUISitemapItem, Handler) {
+], function (QUI, QUIControl, QUISitemap, QUISitemapItem, QUIFunctionUtils, Handler) {
     "use strict";
 
     var Categories = new Handler();
@@ -58,10 +60,24 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
          * @return {HTMLDivElement}
          */
         create: function () {
-            var Elm = this.parent();
+            var self = this,
+                Elm  = this.parent();
+
+            var showContextMenu = QUIFunctionUtils.debounce(function () {
+                self.fireEvent('childContextMenu', [self, this.Item, this.event]);
+            }, 200, true);
 
             this.$Sitemap = new QUISitemap({
-                name: 'map'
+                name  : 'map',
+                events: {
+                    onChildContextMenu: function (Map, Item, event) {
+                        showContextMenu.bind({
+                            Map  : Map,
+                            Item : Item,
+                            event: event
+                        })();
+                    }
+                }
             }).inject(Elm);
 
             this.$Sitemap.appendChild(

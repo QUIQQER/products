@@ -36,7 +36,7 @@ define('package/quiqqer/products/bin/controls/categories/search/Window', [
         options: {
             maxHeight: 600,
             maxWidth : 400,
-            icon     : 'fa fa-percent',
+            icon     : 'fa fa-shopping-basket',
             title    : 'Kategorie-Auswahl',
             autoclose: false,
 

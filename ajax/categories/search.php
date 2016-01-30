@@ -33,6 +33,20 @@ QUI::$Ajax->registerFunction(
             $query['limit'] = $params['limit'];
         }
 
+        $allowedFields = $Categories->getChildAttributes();
+        $allowedFields = array_flip($allowedFields);
+
+        foreach ($fields as $field => $value) {
+            if (!isset($allowedFields[$field]) && $field != 'id') {
+                continue;
+            }
+
+            $query['where_or'][$field] = array(
+                'type' => '%LIKE%',
+                'value' => $value
+            );
+        }
+
         // search
         $data = $Categories->getCategories($query);
 

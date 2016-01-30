@@ -22,6 +22,8 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
     'qui/controls/windows/Confirm',
     'qui/controls/sitemap/Map',
     'qui/controls/sitemap/Item',
+    'qui/controls/contextmenu/Menu',
+    'qui/controls/contextmenu/Item',
     'controls/grid/Grid',
     'Locale',
     'package/quiqqer/products/bin/classes/Categories',
@@ -31,6 +33,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
     'css!package/quiqqer/products/bin/controls/categories/Panel.css'
 
 ], function (QUI, QUIPanel, QUIButton, QUIConfirm, QUISitemap, QUISitemapItem,
+             QUIContextMenu, QUIContextItem,
              Grid, QUILocale, Handler, CategoryMap, CreateCategory) {
     "use strict";
 
@@ -64,8 +67,9 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             this.$Grid    = null;
             this.$Sitemap = null;
 
-            this.$GridContainer    = null;
-            this.$SitemapContainer = null;
+            this.$GridContainer      = null;
+            this.$SitemapContainer   = null;
+            this.$SitemapContextMenu = null;
 
             this.$SitemapFX = null;
             this.$GridFX    = null;
@@ -130,7 +134,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             // buttons
             this.addButton({
                 name  : 'sitemap',
-                image : 'icon-sitemap fa fa-sitemap',
+                image : 'fa fa-sitemap',
                 events: {
                     onClick: this.toggleSitemap
                 }
@@ -143,7 +147,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             this.addButton({
                 name     : 'add',
                 text     : QUILocale.get('quiqqer/system', 'add'),
-                textimage: 'icon-plus fa fa-plus',
+                textimage: 'fa fa-plus',
                 events   : {
                     onClick: this.createChild
                 }
@@ -152,7 +156,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             this.addButton({
                 name     : 'edit',
                 text     : QUILocale.get('quiqqer/system', 'edit'),
-                textimage: 'icon-edit fa fa-edit',
+                textimage: 'fa fa-edit',
                 disabled : true,
                 events   : {
                     onClick: function () {
@@ -170,7 +174,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             this.addButton({
                 name     : 'delete',
                 text     : QUILocale.get('quiqqer/system', 'delete'),
-                textimage: 'icon-trashcan fa fa-trashcan',
+                textimage: 'fa fa-trash',
                 disabled : true,
                 events   : {
                     onClick: function () {
@@ -195,7 +199,22 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
             this.$Sitemap = new CategoryMap({
                 events: {
-                    onClick: this.refresh
+                    onClick           : this.refresh,
+                    onChildContextMenu: function (CatMap, Item, event) {
+                        if (Item.getAttribute('value') === '') {
+                            return;
+                        }
+
+                        event.stop();
+
+                        self.$SitemapContextMenu.setPosition(
+                            event.page.x,
+                            event.page.y
+                        );
+
+                        self.$SitemapContextMenu.setAttribute('Category', Item);
+                        self.$SitemapContextMenu.show();
+                    }
                 }
             }).inject(this.$SitemapContainer);
 
@@ -259,6 +278,74 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     );
                 }
             });
+
+
+            this.$SitemapContextMenu = new QUIContextMenu({
+                events: {
+                    onShow: function () {
+                        var Menu     = self.$SitemapContextMenu,
+                            Category = Menu.getAttribute('Category');
+
+                        Menu.setTitle(Category.getAttribute('text'));
+                        Menu.refresh();
+                        Menu.focus();
+                    },
+                    onBlur: function () {
+                        self.$SitemapContextMenu.hide();
+                    }
+                }
+            }).inject(document.body);
+
+            this.$SitemapContextMenu.appendChild(
+                new QUIContextItem({
+                    name  : 'add',
+                    text  : 'Unterkategorie hinzufügen',
+                    icon  : 'fa fa-plus',
+                    events: {
+                        onClick: function () {
+                            var Menu     = self.$SitemapContextMenu,
+                                Category = Menu.getAttribute('Category');
+
+                            self.createChild(
+                                Category.getAttribute('value')
+                            );
+                        }
+                    }
+                })
+            ).appendChild(
+                new QUIContextItem({
+                    name  : 'edit',
+                    text  : QUILocale.get('quiqqer/system', 'edit'),
+                    icon  : 'fa fa-edit',
+                    events: {
+                        onClick: function () {
+                            var Menu     = self.$SitemapContextMenu,
+                                Category = Menu.getAttribute('Category');
+
+                            self.updateChild(
+                                Category.getAttribute('value')
+                            );
+                        }
+                    }
+                })
+            ).appendChild(
+                new QUIContextItem({
+                    name  : 'delete',
+                    text  : QUILocale.get('quiqqer/system', 'delete'),
+                    icon  : 'fa fa-trash',
+                    events: {
+                        onClick: function () {
+                            var Menu     = self.$SitemapContextMenu,
+                                Category = Menu.getAttribute('Category');
+
+                            self.deleteChild(
+                                Category.getAttribute('value')
+                            );
+                        }
+                    }
+                })
+            );
+
         },
 
         /**
@@ -382,15 +469,21 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
         /**
          * Opens the create child dialog
+         *
+         * @param {Number|String} [parentId] - Parent-ID
          */
-        createChild: function () {
-            var self     = this,
-                Active   = self.$Sitemap.getActive(),
-                parentId = '';
+        createChild: function (parentId) {
+            var self   = this,
+                Active = self.$Sitemap.getActive();
 
-            if (Active) {
-                parentId = Active.getAttribute('value');
+            if (typeof parentId === 'undefined') {
+                if (Active) {
+                    parentId = Active.getAttribute('value');
+                } else {
+                    parentId = '';
+                }
             }
+
 
             this.closeSitemap().then(function () {
 
