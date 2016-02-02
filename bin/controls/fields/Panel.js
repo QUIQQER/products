@@ -349,7 +349,39 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
          * @param {Number} fieldId
          */
         deleteChild: function (fieldId) {
+            var self = this;
 
+            new QUIConfirm({
+                title      : QUILocale.get(lg, 'fields.window.delete.title'),
+                text       : QUILocale.get(lg, 'fields.window.delete.text', {
+                    fieldId: fieldId
+                }),
+                information: QUILocale.get(lg, 'fields.window.delete.information', {
+                    id: fieldId
+                }),
+                autoclose  : false,
+                maxHeight  : 300,
+                maxWidth   : 450,
+                icon       : 'fa fa-trashcan',
+                texticon   : 'fa fa-trashcan',
+                events     : {
+                    onSubmit: function (Win) {
+                        Win.Loader.show();
+                        Categories.deleteChild(categoryId).then(function () {
+                            Win.close();
+
+                            var First  = self.$Sitemap.firstChild(),
+                                Active = self.$Sitemap.getActive();
+
+                            if (Active && Active.getAttribute('value') !== '') {
+                                Active.destroy();
+                            }
+
+                            First.click();
+                        });
+                    }
+                }
+            }).open();
         }
     });
 });

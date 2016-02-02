@@ -125,12 +125,28 @@ class Categories
             $parentId = 0;
         }
 
-        QUI::getDataBase()->insert(
-            QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
-            array(
-                'parentId' => $parentId
-            )
-        );
+        $result = QUI::getDataBase()->fetch(array(
+            'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+            'limit' => 1
+        ));
+
+        if (empty($result)) {
+            QUI::getDataBase()->insert(
+                QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+                array(
+                    'parentId' => $parentId,
+                    'id' => 1
+                )
+            );
+        } else {
+            QUI::getDataBase()->insert(
+                QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+                array(
+                    'parentId' => $parentId
+                )
+            );
+        }
+
 
         $newId = QUI::getDataBase()->getPDO()->lastInsertId();
 
