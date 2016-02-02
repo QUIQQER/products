@@ -23,6 +23,7 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
     'qui/controls/buttons/Switch',
     'Locale',
     'package/quiqqer/products/bin/classes/Categories',
+    'package/quiqqer/products/bin/classes/Fields',
     'package/quiqqer/products/bin/controls/categories/Sitemap',
     'package/quiqqer/translator/bin/controls/Update',
 
@@ -30,10 +31,11 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
     'css!package/quiqqer/products/bin/controls/categories/Update.css'
 
 ], function (QUI, QUIControl, QUIButton, QUISwitch, QUILocale,
-             Handler, CategorySitemap, Translation, template) {
+             Handler, FieldsHandler, CategorySitemap, Translation, template) {
     "use strict";
 
     var Categories = new Handler();
+    var Fields     = new FieldsHandler();
 
     return new Class({
 
@@ -59,6 +61,9 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
             this.$TitlesTranslation     = null;
             this.$CategoriesTranslation = null;
 
+            this.$FieldButtons = null;
+            this.$FieldTable   = null;
+
             this.addEvents({
                 onInject: this.$onInject
             });
@@ -81,39 +86,66 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
                 }
             });
 
-            this.$Id         = Elm.getElement('.field-id');
-            this.$Titles     = Elm.getElement('.category-title');
-            this.$Categories = Elm.getElement('.category-description');
-            this.$Buttons    = Elm.getElement('.category-update-buttons');
+            this.$Id           = Elm.getElement('.field-id');
+            this.$Titles       = Elm.getElement('.category-title');
+            this.$Categories   = Elm.getElement('.category-description');
+            this.$Buttons      = Elm.getElement('.category-update-buttons');
+            this.$FieldButtons = Elm.getElement('.category-update-fields-buttons');
+            this.$FieldTable   = Elm.getElement('.category-update-fields tbody');
+
+            this.$FieldButtons.setStyle('padding', 4);
+
+
+            //new QUIButton({
+            //    name  : 'cancel',
+            //    text  : QUILocale.get('quiqqer/system', 'close'),
+            //    events: {
+            //        onClick: function () {
+            //            self.cancel();
+            //        }
+            //    },
+            //    styles: {
+            //        'float'    : 'none',
+            //        marginRight: 20
+            //    }
+            //}).inject(this.$Buttons);
+            //
+            //new QUIButton({
+            //    name  : 'save',
+            //    text  : QUILocale.get('quiqqer/system', 'save'),
+            //    events: {
+            //        onClick: function () {
+            //
+            //        }
+            //    },
+            //    styles: {
+            //        'float': 'none'
+            //    }
+            //}).inject(this.$Buttons);
 
 
             new QUIButton({
-                name  : 'cancel',
-                text  : QUILocale.get('quiqqer/system', 'close'),
-                events: {
-                    onClick: function () {
-                        self.cancel();
-                    }
+                text     : 'Feld hinzufügen',
+                textimage: 'fa fa-plus',
+                styles   : {
+                    'float': 'right'
                 },
-                styles: {
-                    'float'    : 'none',
-                    marginRight: 20
-                }
-            }).inject(this.$Buttons);
-
-            new QUIButton({
-                name  : 'save',
-                text  : QUILocale.get('quiqqer/system', 'save'),
-                events: {
+                events   : {
                     onClick: function () {
-
+                        require([
+                            'package/quiqqer/products/bin/controls/fields/Window'
+                        ], function (Win) {
+                            new Win({
+                                events: {
+                                    onSubmit: function (Win, value) {
+                                        self.addField(value);
+                                    }
+                                }
+                            }).open();
+                        });
                     }
-                },
-                styles: {
-                    'float': 'none'
                 }
-            }).inject(this.$Buttons);
-
+            }).inject(this.$FieldButtons);
 
             return Elm;
         },
@@ -177,10 +209,35 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
         },
 
         /**
-         * Cancel
+         * Add a field to the category
+         *
+         * @param {Number} fieldId - Field-ID
          */
-        cancel: function () {
-            this.fireEvent('cancel', [this]);
+        addField: function (fieldId) {
+            var self = this;
+
+            Fields.getChild(fieldId).then(function (data) {
+
+                console.log(self.$FieldTable);
+
+                var Row = new Element('tr', {
+                    html: '<td>' +
+                          '<label class="field-container">' +
+                          '<span class="field-container-item">' +
+                          data.title +
+                          '</span>' +
+                          '<div class="field-container-field">' +
+                          '</div>' +
+                          '<div class="field-container-item category-update-field-publish"></div>' +
+                          '</label>' +
+                          '</td>'
+                });
+
+
+                Row.inject(self.$FieldTable);
+
+                console.log(data);
+            });
         }
     });
 });

@@ -6,9 +6,12 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
- * @require package/quiqqer/products/bin/classes/Categories
- *
- * @require css!package/quiqqer/products/bin/controls/categories/Update.css
+ * @require qui/controls/buttons/Button
+ * @require Locale
+ * @require package/quiqqer/products/bin/classes/Fields
+ * @require package/quiqqer/translator/bin/controls/Update
+ * @require text!package/quiqqer/products/bin/controls/fields/Create.html
+ * @require css!package/quiqqer/products/bin/controls/fields/Update.css
  *
  * @event onLoaded
  */
@@ -80,7 +83,6 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 'group': 'quiqqer/products',
                 'var'  : 'products.field.' + id + '.title'
             }).inject(Elm.getElement('.field-title'));
-
 
             Promise.all([
                 Fields.getChild(id),

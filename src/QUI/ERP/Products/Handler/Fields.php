@@ -57,7 +57,7 @@ class Fields
             }
         }
 
-        
+
         if (!isset($data['type'])) {
             throw new QUI\Exception(array(
                 'quiqqer/products',

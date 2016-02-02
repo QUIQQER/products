@@ -91,8 +91,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             this.parent();
             this.Loader.show();
 
-            var Item = this.$Sitemap.getActive(),
-                id   = Item.getAttribute('value');
+            var Item = this.$Sitemap.getActive();
 
             Categories.getList({
                 perPage: this.$Grid.options.perPage,
