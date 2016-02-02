@@ -25,13 +25,12 @@
             <field type="BIGINT( 20 ) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
             <field type="VARCHAR( 255 ) NOT NULL">name</field>
             <field type="VARCHAR( 255 ) NOT NULL">type</field>
-            <field type="TEXT">search_type</field>
+            <field type="VARCHAR( 255 ) NULL">search_type</field>
             <field type="TEXT DEFAULT ''">prefix</field>
             <field type="TEXT DEFAULT ''">suffix</field>
             <field type="INT DEFAULT 0">priority</field>
 
             <primary>id</primary>
-            <index>search_type</index>
             <auto_increment>id</auto_increment>
         </table>
 
