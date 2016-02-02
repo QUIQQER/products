@@ -78,5 +78,11 @@ class Controller
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             array('id' => $this->Field->getId())
         );
+
+        // delete the locale
+        QUI\Translator::delete(
+            'quiqqer/products',
+            'products.field.' . $this->Field->getId() . '.title'
+        );
     }
 }

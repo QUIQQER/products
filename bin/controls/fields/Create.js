@@ -116,13 +116,13 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                     suffix     : Form.elements.suffix.value,
                     priority   : Form.elements.priority.value
                 }).then(function (data) {
-                    console.warn(data);
-                    self.$TitleTranslate.setAttribute(
+
+                    self.$Translation.setAttribute(
                         'var',
                         'products.field.' + data.id + '.title'
                     );
 
-                    this.$Translation.save().then(function () {
+                    self.$Translation.save().then(function () {
                         resolve();
                     }).catch(reject);
                 });

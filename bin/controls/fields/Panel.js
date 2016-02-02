@@ -367,17 +367,10 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                 events     : {
                     onSubmit: function (Win) {
                         Win.Loader.show();
-                        Categories.deleteChild(categoryId).then(function () {
+
+                        Fields.deleteChild(fieldId).then(function () {
                             Win.close();
-
-                            var First  = self.$Sitemap.firstChild(),
-                                Active = self.$Sitemap.getActive();
-
-                            if (Active && Active.getAttribute('value') !== '') {
-                                Active.destroy();
-                            }
-
-                            First.click();
+                            self.refresh();
                         });
                     }
                 }

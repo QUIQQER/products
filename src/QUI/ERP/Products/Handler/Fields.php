@@ -57,8 +57,7 @@ class Fields
             }
         }
 
-        QUI\System\Log::writeRecursive($data);
-
+        
         if (!isset($data['type'])) {
             throw new QUI\Exception(array(
                 'quiqqer/products',

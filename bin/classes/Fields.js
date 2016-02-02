@@ -126,19 +126,27 @@ define('package/quiqqer/products/bin/classes/Fields', [
          */
         deleteChild: function (fieldId) {
             return new Promise(function (resolve, reject) {
-
+                Ajax.post('package_quiqqer_products_ajax_fields_deleteChild', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    fieldId  : fieldId
+                });
             });
         },
 
         /**
          * Delete multible fields
          *
-         * @param {Array} fieldId - array of Field-IDs
+         * @param {Array} fieldIds - array of Field-IDs
          * @returns {Promise}
          */
-        deleteChildren: function (fieldId) {
+        deleteChildren: function (fieldIds) {
             return new Promise(function (resolve, reject) {
-
+                Ajax.post('package_quiqqer_products_ajax_fields_deleteChildren', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    fieldIds : JSON.encode(fieldIds)
+                });
             });
         },
 

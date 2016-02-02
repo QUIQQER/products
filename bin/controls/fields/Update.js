@@ -138,9 +138,9 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                         suffix     : Form.elements.suffix.value,
                         priority   : Form.elements.priority.value
                     }
-                ).then(function (data) {
-                    resolve();
-                }).catch(reject);
+                ).then(function () {
+                    return self.$Translation.save();
+                }).then(resolve()).catch(reject);
             });
         }
     });

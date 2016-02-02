@@ -102,11 +102,19 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * saves the field
+     * saves / update the field
      */
     public function save()
     {
         $this->getController()->save();
+    }
+
+    /**
+     * Delete the field
+     */
+    public function delete()
+    {
+        $this->getController()->delete();
     }
 
     /**
@@ -179,9 +187,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     {
         $type = $this->getType();
         $type = str_replace('QUI\ERP\Products\Field\Types\\', '', $type);
-
-
-        QUI\System\Log::writeRecursive($type);
 
         $attributes          = parent::getAttributes();
         $attributes['id']    = $this->getId();
