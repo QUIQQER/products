@@ -52,17 +52,44 @@ define('package/quiqqer/products/bin/classes/Fields', [
          */
         getChild: function (fieldId) {
             return new Promise(function (resolve, reject) {
-
+                Ajax.get('package_quiqqer_products_ajax_fields_get', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    fieldId  : fieldId
+                });
             });
         },
 
         /**
          * Return all fields
          *
+         * @param {String} params - Grid params
          * @returns {Promise}
          */
-        getList: function () {
-            return this.search();
+        getList: function (params) {
+            params = params || {};
+
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_fields_list', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    params   : JSON.encode(params)
+                });
+            });
+        },
+
+        /**
+         * Return all field types
+         *
+         * @returns {Promise}
+         */
+        getFieldTypes: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_fields_getFieldTypes', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            });
         },
 
         /**
@@ -73,7 +100,21 @@ define('package/quiqqer/products/bin/classes/Fields', [
          */
         createChild: function (params) {
             return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_fields_create', function (result) {
 
+                    require([
+                        'package/quiqqer/translator/bin/classes/Translator'
+                    ], function (Translator) {
+                        new Translator().refreshLocale().then(function () {
+                            resolve(result);
+                        });
+                    });
+
+                }, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    params   : JSON.encode(params)
+                });
             });
         },
 
@@ -102,14 +143,19 @@ define('package/quiqqer/products/bin/classes/Fields', [
         },
 
         /**
-         * Save a field
+         * Save / Update a field
          *
          * @param {Number} fieldId
-         * @param {Object} data - Field attributes
+         * @param {Object} params - Field attributes
          */
-        update: function (fieldId, data) {
+        updateChild: function (fieldId, params) {
             return new Promise(function (resolve, reject) {
-
+                Ajax.post('package_quiqqer_products_ajax_fields_update', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    fieldId  : fieldId,
+                    params   : JSON.encode(params)
+                });
             });
         }
     });

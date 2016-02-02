@@ -19,19 +19,58 @@ class Fields
     protected static $list = array();
 
     /**
+     * Return the child attributes
+     *
+     * @return array
+     */
+    public static function getChildAttributes()
+    {
+        return array(
+            'name',
+            'type',
+            'search_type',
+            'prefix',
+            'suffix',
+            'priority'
+        );
+    }
+
+    /**
      * Create a new field
      *
      * @param array $attributes - field attributes
      * @return QUI\ERP\Products\Field\Field
+     *
+     * @throws QUI\Exception
      */
     public static function createField($attributes = array())
     {
         QUI\Rights\Permission::checkPermission('field.create');
 
-        $data = array();
+        $data          = array();
+        $allowedFields = self::getChildAttributes();
+        $allowedTypes  = self::getFieldTypes();
 
-        if (isset($attributes['name'])) {
-            $data['name'] = $attributes['name'];
+        foreach ($allowedFields as $allowed) {
+            if (isset($attributes[$allowed])) {
+                $data[$allowed] = $attributes[$allowed];
+            }
+        }
+
+        QUI\System\Log::writeRecursive($data);
+
+        if (!isset($data['type'])) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.fields.type.not.allowed'
+            ));
+        }
+
+        if (!in_array($data['type'], $allowedTypes)) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.fields.type.not.allowed'
+            ));
         }
 
         QUI::getDataBase()->insert(
@@ -40,31 +79,6 @@ class Fields
         );
 
         $newId = QUI::getDataBase()->getPDO()->lastInsertId();
-
-        // translation - title
-        try {
-            $current      = QUI::getLocale()->getCurrent();
-            $languageData = array(
-                'datatype' => 'js,php'
-            );
-
-            if (!empty($title)) {
-                $languageData[$current] = $title;
-            }
-
-            QUI\Translator::addUserVar(
-                'quiqqer/products',
-                'products.field.' . $newId . '.title',
-                $languageData
-            );
-
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addInfo($Exception->getMessage());
-
-            QUI::getMessagesHandler()->addAttention(
-                $Exception->getMessage()
-            );
-        }
 
 
         return self::getField($newId);
@@ -128,10 +142,12 @@ class Fields
             );
         }
 
+        $data = $result[0];
+
         // exists the type?
-        $dir   = dirname(dirname(__FILE__)) . 'Field/Types/';
-        $file  = $dir . $result[0]['type'] . '.php';
-        $class = 'QUI\ERP\Products\Field\Types\\' . $result[0]['type'];
+        $dir   = dirname(dirname(__FILE__)) . '/Field/Types/';
+        $file  = $dir . $data['type'] . '.php';
+        $class = 'QUI\ERP\Products\Field\Types\\' . $data['type'];
 
         if (!file_exists($file)) {
             throw new QUI\Exception(
@@ -139,7 +155,8 @@ class Fields
                 404,
                 array(
                     'id' => (int)$fieldId,
-                    'type' => $result[0]['type']
+                    'type' => $data['type'],
+                    'file' => $file
                 )
             );
         }
@@ -150,13 +167,13 @@ class Fields
                 404,
                 array(
                     'id' => (int)$fieldId,
-                    'type' => $result[0]['type'],
+                    'type' => $data['type'],
                     'class' => $class
                 )
             );
         }
 
-        /* @var $Field QUI\ERP\Products\Interfaces\Field */
+        /* @var $Field QUI\ERP\Products\Field\Field */
         $Field = new $class($fieldId);
 
         if (!QUI\ERP\Products\Utils\Fields::isField($Field)) {
@@ -165,14 +182,29 @@ class Fields
                 404,
                 array(
                     'id' => (int)$fieldId,
-                    'type' => $result[0]['type'],
+                    'type' => $data['type'],
                     'class' => $class
                 )
             );
         }
 
-        $Field->setName($result[0]['name']);
+        $Field->setAttributes($result[0]);
 
+        if (empty($data['priority'])) {
+            $data['priority'] = 0;
+        }
+
+        if (empty($data['prefix'])) {
+            $data['prefix'] = '';
+        }
+
+        if (empty($data['suffix'])) {
+            $data['suffix'] = '';
+        }
+
+        $Field->setAttribute('priority', $data['priority']);
+        $Field->setAttribute('prefix', $data['prefix']);
+        $Field->setAttribute('suffix', $data['suffix']);
 
         self::$list[$fieldId] = $Field;
 
@@ -192,10 +224,9 @@ class Fields
      */
     public static function getFields($queryParams = array())
     {
-        $query['from'] = QUI\ERP\Products\Utils\Tables::getFieldTableName();
-
-        $result = array();
-        $data   = QUI::getDataBase()->fetch($query);
+        $query = array(
+            'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName()
+        );
 
         if (isset($queryParams['where'])) {
             $query['where'] = $queryParams['where'];
@@ -213,13 +244,54 @@ class Fields
             $query['order'] = $queryParams['order'];
         }
 
+        $result = array();
+        $data   = QUI::getDataBase()->fetch($query);
+
         foreach ($data as $entry) {
             try {
                 $result[] = self::getField($entry['id']);
             } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException(
+                    $Exception,
+                    QUI\System\Log::LEVEL_DEBUG,
+                    $Exception->getContext()
+                );
             }
         }
 
         return $result;
+    }
+
+    /**
+     * Return the number of the fields
+     *
+     * @param array $queryParams - query params (where, where_or)
+     * @return integer
+     */
+    public static function countFields($queryParams = array())
+    {
+        $query = array(
+            'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+            'count' => array(
+                'select' => 'id',
+                'as' => 'count'
+            )
+        );
+
+        if (isset($queryParams['where'])) {
+            $query['where'] = $queryParams['where'];
+        }
+
+        if (isset($queryParams['where_or'])) {
+            $query['where_or'] = $queryParams['where_or'];
+        }
+
+        $data = QUI::getDataBase()->fetch($query);
+
+        if (isset($data[0]) && isset($data[0]['count'])) {
+            return (int)$data[0]['count'];
+        }
+
+        return 0;
     }
 }

@@ -171,6 +171,27 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Return the attributes
+     *
+     * @return array
+     */
+    public function getAttributes()
+    {
+        $type = $this->getType();
+        $type = str_replace('QUI\ERP\Products\Field\Types\\', '', $type);
+
+
+        QUI\System\Log::writeRecursive($type);
+
+        $attributes          = parent::getAttributes();
+        $attributes['id']    = $this->getId();
+        $attributes['title'] = $this->getTitle();
+        $attributes['type']  = $type;
+
+        return $attributes;
+    }
+
+    /**
      * @return array
      */
     public function toProductArray()

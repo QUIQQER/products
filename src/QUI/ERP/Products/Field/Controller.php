@@ -48,9 +48,21 @@ class Controller
     {
         QUI\Rights\Permission::checkPermission('field.edit');
 
+        $allowedAttributes = QUI\ERP\Products\Handler\Fields::getChildAttributes();
+
+        $data = array();
+
+        foreach ($allowedAttributes as $attribute) {
+            if ($this->Field->getAttribute($attribute)) {
+                $data[$attribute] = $this->Field->getAttribute($attribute);
+            } else {
+                $data[$attribute] = '';
+            }
+        }
+
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
-            array('name' => $this->Field->getAttribute('name')),
+            $data,
             array('id' => $this->Field->getId())
         );
     }

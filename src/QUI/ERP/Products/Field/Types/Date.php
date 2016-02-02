@@ -3,7 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\Year
  */
-namespace QUI\ERP\Products\Field;
+namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 

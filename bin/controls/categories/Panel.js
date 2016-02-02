@@ -508,8 +508,10 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                                         self.Loader.show();
                                     },
                                     onSuccess: function () {
-                                        Sheet.hide();
-                                        self.refresh();
+                                        Sheet.hide().then(function () {
+                                            Sheet.destroy();
+                                            self.refresh();
+                                        });
                                     }
                                 }
                             }).inject(Sheet.getContent());

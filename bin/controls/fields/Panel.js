@@ -3,6 +3,16 @@
  *
  * @module package/quiqqer/products/bin/controls/fields/Panel
  * @author www.pcsg.de (Henning Leutz)
+ *
+ * @require qui/QUI
+ * @require qui/controls/desktop/Panel
+ * @require qui/controls/buttons/Button
+ * @require qui/controls/windows/Confirm
+ * @require controls/grid/Grid
+ * @require Locale
+ * @require package/quiqqer/products/bin/classes/Fields
+ * @require package/quiqqer/products/bin/controls/fields/Create
+ * @require css!package/quiqqer/products/bin/controls/fields/Panel.css
  */
 define('package/quiqqer/products/bin/controls/fields/Panel', [
 
@@ -13,10 +23,13 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
     'controls/grid/Grid',
     'Locale',
     'package/quiqqer/products/bin/classes/Fields',
+    'package/quiqqer/products/bin/controls/fields/Create',
+    'package/quiqqer/products/bin/controls/fields/Update',
 
     'css!package/quiqqer/products/bin/controls/fields/Panel.css'
 
-], function (QUI, QUIPanel, QUIButton, QUIConfirm, Grid, QUILocale, Handler) {
+], function (QUI, QUIPanel, QUIButton, QUIConfirm, Grid, QUILocale,
+             Handler, CreateField, UpdateField) {
     "use strict";
 
     var lg     = 'quiqqer/products',
@@ -28,7 +41,10 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
         Type   : 'package/quiqqer/products/bin/controls/fields/Panel',
 
         Binds: [
+            'refresh',
             'createChild',
+            'deleteChild',
+            'updateChild',
             '$onCreate',
             '$onInject',
             '$onResize'
@@ -69,6 +85,8 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
 
         /**
          * Refresh the panel
+         *
+         * @return {Promise}
          */
         refresh: function () {
             var self = this;
@@ -76,10 +94,17 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
             this.Loader.show();
             this.parent();
 
-            Fields.getList().then(function (data) {
-                self.$Grid.setData({
-                    data: data
-                });
+            return Fields.getList({
+                perPage: this.$Grid.options.perPage,
+                page   : this.$Grid.options.page
+            }).then(function (data) {
+                self.$Grid.setData(data);
+
+                var Delete = self.getButtons('delete'),
+                    Edit   = self.getButtons('edit');
+
+                Delete.disable();
+                Edit.disable();
 
                 self.Loader.hide();
             });
@@ -159,7 +184,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                     width    : 200
                 }, {
                     header   : 'Feld-Typ',
-                    dataIndex: 'fieldtype',
+                    dataIndex: 'type',
                     dataType : 'text',
                     width    : 200
                 }, {
@@ -184,19 +209,146 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                     width    : 200
                 }]
             });
+
+            this.$Grid.addEvents({
+                onRefresh : this.refresh,
+                onClick   : function () {
+                    var Delete = self.getButtons('delete'),
+                        Edit   = self.getButtons('edit');
+
+                    Delete.enable();
+                    Edit.enable();
+
+                },
+                onDblClick: function () {
+                    self.updateChild(
+                        self.$Grid.getSelectedData()[0].id
+                    );
+                }
+            });
         },
 
         /**
          * event : on inject
          */
         $onInject: function () {
-            this.$onResize().then(function () {
-                this.refresh();
-            }.bind(this));
+            var self = this;
+
+            this.$onResize();
+
+            this.refresh().then(function () {
+                self.Loader.hide();
+            });
         },
 
-
+        /**
+         * Opens the create child dialog
+         */
         createChild: function () {
+
+            var self = this;
+
+            this.Loader.show();
+
+            this.createSheet({
+                title : QUILocale.get(lg, 'fields.create.title'),
+                events: {
+                    onShow : function (Sheet) {
+
+                        Sheet.getContent().setStyle('padding', 20);
+
+                        var Field = new CreateField({
+                            events: {
+                                onLoaded: function () {
+                                    self.Loader.hide();
+                                }
+                            }
+                        }).inject(Sheet.getContent());
+
+                        Sheet.addButton(
+                            new QUIButton({
+                                text     : QUILocale.get('quiqqer/system', 'save'),
+                                textimage: 'fa fa-save',
+                                events   : {
+                                    onClick: function () {
+                                        self.Loader.show();
+
+                                        Field.submit().then(function () {
+                                            Sheet.hide().then(function () {
+                                                Sheet.destroy();
+                                                self.refresh();
+                                            });
+                                        });
+                                    }
+                                }
+                            })
+                        );
+                    },
+                    onClose: function (Sheet) {
+                        Sheet.destroy();
+                    }
+                }
+            }).show();
+        },
+
+        /**
+         * Opens the delete child dialog
+         *
+         * @param {Number} fieldId
+         */
+        updateChild: function (fieldId) {
+
+            var self = this;
+
+            this.Loader.show();
+
+            this.createSheet({
+                title : QUILocale.get(lg, 'fields.update.title', {
+                    fieldId: fieldId
+                }),
+                events: {
+                    onShow: function (Sheet) {
+
+                        Sheet.getContent().setStyle('padding', 20);
+
+                        var Field = new UpdateField({
+                            fieldId: fieldId,
+                            events : {
+                                onLoaded: function () {
+                                    self.Loader.hide();
+                                }
+                            }
+                        }).inject(Sheet.getContent());
+
+                        Sheet.addButton(
+                            new QUIButton({
+                                text     : QUILocale.get('quiqqer/system', 'save'),
+                                textimage: 'fa fa-save',
+                                events   : {
+                                    onClick: function () {
+                                        self.Loader.show();
+
+                                        Field.submit().then(function () {
+                                            Sheet.hide().then(function () {
+                                                Sheet.destroy();
+                                                self.refresh();
+                                            });
+                                        });
+                                    }
+                                }
+                            })
+                        );
+                    }
+                }
+            }).show();
+        },
+
+        /**
+         * Opens the delete dialog
+         *
+         * @param {Number} fieldId
+         */
+        deleteChild: function (fieldId) {
 
         }
     });

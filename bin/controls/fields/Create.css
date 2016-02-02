@@ -1,0 +1,17 @@
+
+.field-create {
+    float: left;
+    height: 100%;
+    position: relative;
+    width: 100%;
+}
+
+.field-create .field-container-item {
+    width: 140px;
+}
+
+.category-create-container {
+    float: left;
+    height: 100%;
+    width: 100%;
+}

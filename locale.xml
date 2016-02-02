@@ -18,6 +18,53 @@
             <de><![CDATA[Produktfelder]]></de>
             <en><![CDATA[Product fields]]></en>
         </locale>
+
+        <!-- Feldtypen -->
+        <locale name="fieldtype.IntType">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+        <locale name="fieldtype.Select">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+        <locale name="fieldtype.FloatType">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+        <locale name="fieldtype.InputMultiLang">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+        <locale name="fieldtype.TextareaMultiLang">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+        <locale name="fieldtype.Standard">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+        <locale name="fieldtype.Price">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+        <locale name="fieldtype.Textarea">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+        <locale name="fieldtype.Input">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+        <locale name="fieldtype.Date">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+        <locale name="fieldtype.BoolType">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
@@ -73,6 +120,17 @@
             <de><![CDATA[Suche nach einer Produktkategorie...]]></de>
             <en><![CDATA[Search for a product category...]]></en>
         </locale>
+
+        <locale name="fields.create.title">
+            <de><![CDATA[Neues Produktfeld hinzufügen]]></de>
+            <en><![CDATA[Create a new product field]]></en>
+        </locale>
+
+        <locale name="fields.update.title">
+            <de><![CDATA[Produktfeld bearbeiten]]></de>
+            <en><![CDATA[Update a new product field]]></en>
+        </locale>
+
 
     </groups>
 
