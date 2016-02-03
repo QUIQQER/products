@@ -52,13 +52,16 @@ class Controller
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($this->getModell()->getFields() as $Field) {
-            $fields[] = $Field->getAttributes();
+            $attributes                 = $Field->getAttributes();
+            $attributes['publicStatus'] = $Field->getAttribute('publicStatus') ? 1 : 0;
+            $attributes['searchStatus'] = $Field->getAttribute('searchStatus') ? 1 : 0;
+
+            $fields[] = $attributes;
         }
 
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             array(
-                'name' => $this->getModell()->getAttribute('name'),
                 'fields' => json_encode($fields)
             ),
             array('id' => $this->getModell()->getId())

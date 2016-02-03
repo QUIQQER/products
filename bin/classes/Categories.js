@@ -167,16 +167,16 @@ define('package/quiqqer/products/bin/classes/Categories', [
          * Save a category
          *
          * @param {Number} categoryId - Category-ID
-         * @param {Object} data - Category attributes
+         * @param {Object} params - Category attributes
          * @returns {Promise}
          */
-        updateChild: function (categoryId, data) {
+        updateChild: function (categoryId, params) {
             return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_categories_update', resolve, {
                     'package' : 'quiqqer/products',
                     onError   : reject,
                     categoryId: categoryId,
-                    data      : JSON.encode(data)
+                    params    : JSON.encode(params)
                 });
             });
         }

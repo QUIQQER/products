@@ -148,7 +148,6 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
             );
 
             this.$FieldTable = new Grid(FieldContainer, {
-                pagination : true,
                 buttons    : [{
                     text     : 'Feld hinzufügen',
                     textimage: 'fa fa-plus',
@@ -215,8 +214,28 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
 
                 self.$Id.set('html', '#' + data.id);
 
-                // fields
-                console.log(data);
+                var i, len, field;
+
+                var fieldGridData = [];
+
+                for (i = 0, len = data.fields.length; i < len; i++) {
+                    field = data.fields[i];
+
+                    fieldGridData.push({
+                        id          : field.id,
+                        title       : QUILocale.get(lg, 'products.field.' + field.id + '.title'),
+                        publicStatus: new QUISwitch({
+                            status: field.publicStatus
+                        }),
+                        searchStatus: new QUISwitch({
+                            status: field.searchStatus
+                        })
+                    });
+                }
+
+                self.$FieldTable.setData({
+                    data: fieldGridData
+                });
 
 
                 // resize
@@ -256,7 +275,26 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
                     self.$TitlesTranslation.save(),
                     self.$CategoriesTranslation.save()
                 ]).then(function () {
-                    Categories.updateChild(categoryId).then(resolve, reject);
+
+                    var data = self.$FieldTable.getData();
+
+                    // fields
+                    var i, len, field;
+                    var fields = [];
+
+                    for (i = 0, len = data.length; i < len; i++) {
+                        field = data[i];
+
+                        fields.push({
+                            id          : field.id,
+                            publicStatus: field.publicStatus.getStatus(),
+                            searchStatus: field.searchStatus.getStatus()
+                        });
+                    }
+
+                    Categories.updateChild(categoryId, {
+                        fields: fields
+                    }).then(resolve, reject);
 
                 }, reject);
             });

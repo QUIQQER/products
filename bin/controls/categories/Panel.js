@@ -29,12 +29,13 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
     'package/quiqqer/products/bin/classes/Categories',
     'package/quiqqer/products/bin/controls/categories/Sitemap',
     'package/quiqqer/products/bin/controls/categories/Create',
+    'package/quiqqer/products/bin/controls/categories/Update',
 
     'css!package/quiqqer/products/bin/controls/categories/Panel.css'
 
 ], function (QUI, QUIPanel, QUIButton, QUIConfirm, QUISitemap, QUISitemapItem,
              QUIContextMenu, QUIContextItem,
-             Grid, QUILocale, Handler, CategoryMap, CreateCategory) {
+             Grid, QUILocale, Handler, CategoryMap, CreateCategory, UpdateCategory) {
     "use strict";
 
     var lg         = 'quiqqer/products',
@@ -84,6 +85,8 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
         /**
          * refresh the panel
+         *
+         * @return {Promise}
          */
         refresh: function () {
             var self = this;
@@ -91,9 +94,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             this.parent();
             this.Loader.show();
 
-            var Item = this.$Sitemap.getActive();
-
-            Categories.getList({
+            return Categories.getList({
                 perPage: this.$Grid.options.perPage,
                 page   : this.$Grid.options.page
             }).then(function (gridData) {
@@ -536,11 +537,10 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                 self.Loader.show();
 
                 self.createSheet({
-                    title  : QUILocale.get(lg, 'categories.update.title', {
+                    title : QUILocale.get(lg, 'categories.update.title', {
                         title: QUILocale.get(lg, 'products.category.' + categoryId + '.title')
                     }),
-                    buttons: false,
-                    events : {
+                    events: {
                         onShow: function (Sheet) {
 
                             Sheet.getContent().set({
@@ -549,23 +549,39 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                                 }
                             });
 
-                            require([
-                                'package/quiqqer/products/bin/controls/categories/Update'
-                            ], function (Update) {
-                                new Update({
-                                    categoryId: categoryId,
-                                    events    : {
-                                        onLoaded: function () {
-                                            self.Loader.hide();
-                                        },
-                                        onCancel: function () {
-                                            Sheet.hide().then(function () {
-                                                Sheet.destroy();
+                            var Update = new UpdateCategory({
+                                categoryId: categoryId,
+                                events    : {
+                                    onLoaded: function () {
+                                        self.Loader.hide();
+                                    },
+                                    onCancel: function () {
+                                        Sheet.hide().then(function () {
+                                            Sheet.destroy();
+                                        });
+                                    }
+                                }
+                            }).inject(Sheet.getContent());
+
+                            Sheet.addButton(
+                                new QUIButton({
+                                    text     : QUILocale.get('quiqqer/system', 'save'),
+                                    textimage: 'fa fa-save',
+                                    events   : {
+                                        onClick: function () {
+                                            self.Loader.show();
+
+                                            Update.save().then(function () {
+                                                return Sheet.hide();
+                                            }).then(function () {
+                                                return self.refresh();
+                                            }).then(function () {
+                                                self.Loader.hide();
                                             });
                                         }
                                     }
-                                }).inject(Sheet.getContent());
-                            });
+                                })
+                            );
                         }
                     }
                 }).show();
