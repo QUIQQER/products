@@ -1,11 +1,13 @@
 <div class="category-create-container">
     <form>
 
+        {{{contentText}}}
+
         <table class="data-table data-table-flexbox">
             <thead>
             <tr>
                 <th>
-                    Feldeinstellungen
+                    {{tableHeader}}
                 </th>
             </tr>
             </thead>
@@ -15,9 +17,9 @@
                 <td>
                     <label class="field-container">
                         <span class="field-container-item">
-                            Titel
+                            {{fieldTitle}}
                         </span>
-                        <div class="field-container-field field-title"></div>
+                        <span class="field-container-field field-title"></span>
                     </label>
                 </td>
             </tr>
@@ -25,7 +27,7 @@
                 <td>
                     <label class="field-container">
                         <span class="field-container-item">
-                            Feld-Typ
+                            {{fieldType}}
                         </span>
                         <select class="field-container-field" name="fieldtype"></select>
                     </label>
@@ -35,7 +37,7 @@
                 <td>
                     <label class="field-container">
                         <span class="field-container-item">
-                            Priorität
+                            {{fieldPriority}}
                         </span>
                         <input class="field-container-field" type="number" name="priority"/>
                     </label>
@@ -45,7 +47,7 @@
                 <td>
                     <label class="field-container">
                         <span class="field-container-item">
-                            Präfix
+                            {{fieldPrefix}}
                         </span>
                         <input class="field-container-field" type="text" name="prefix"/>
                     </label>
@@ -55,7 +57,7 @@
                 <td>
                     <label class="field-container">
                         <span class="field-container-item">
-                            Suffix
+                            {{fieldSuffix}}
                         </span>
                         <input class="field-container-field" type="text" name="suffix"/>
                     </label>
@@ -65,7 +67,7 @@
                 <td>
                     <label class="field-container">
                         <span class="field-container-item">
-                            Search-Typ
+                            {{fieldSearchtype}}
                         </span>
                         <input class="field-container-field" type="text" name="searchtype"/>
                     </label>

@@ -20,16 +20,18 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
     'qui/QUI',
     'qui/controls/Control',
     'Locale',
+    'Mustache',
     'package/quiqqer/products/bin/classes/Fields',
     'package/quiqqer/translator/bin/controls/Update',
 
     'text!package/quiqqer/products/bin/controls/fields/Create.html',
-    'css!package/quiqqer/products/bin/controls/fields/Update.css'
+    'css!package/quiqqer/products/bin/controls/fields/Create.css'
 
-], function (QUI, QUIControl, QUILocale, Handler, Translation, template) {
+], function (QUI, QUIControl, QUILocale, Mustache, Handler, Translation, template) {
     "use strict";
 
-    var Fields = new Handler();
+    var lg     = 'quiqqer/products',
+        Fields = new Handler();
 
     return new Class({
 
@@ -64,7 +66,16 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
             Elm.set({
                 'class': 'field-create',
-                html   : template
+                html   : Mustache.render(template, {
+                    contentText    : '',
+                    tableHeader    : QUILocale.get(lg, 'control.field.create.header'),
+                    fieldTitle     : QUILocale.get('quiqqer/system', 'title'),
+                    fieldType      : QUILocale.get(lg, 'fieldtype'),
+                    fieldPriority  : QUILocale.get(lg, 'priority'),
+                    fieldPrefix    : QUILocale.get(lg, 'prefix'),
+                    fieldSuffix    : QUILocale.get(lg, 'suffix'),
+                    fieldSearchtype: QUILocale.get(lg, 'searchtype')
+                })
             });
 
             return Elm;

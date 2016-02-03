@@ -30,6 +30,7 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
     'qui/controls/buttons/Button',
     'qui/controls/buttons/Switch',
     'Locale',
+    'Mustache',
     'controls/grid/Grid',
     'package/quiqqer/products/bin/classes/Categories',
     'package/quiqqer/products/bin/classes/Fields',
@@ -39,7 +40,7 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
     'text!package/quiqqer/products/bin/controls/categories/Update.html',
     'css!package/quiqqer/products/bin/controls/categories/Update.css'
 
-], function (QUI, QUIControl, QUIButton, QUISwitch, QUILocale, Grid,
+], function (QUI, QUIControl, QUIButton, QUISwitch, QUILocale, Mustache, Grid,
              Handler, FieldsHandler, CategorySitemap, Translation, template) {
     "use strict";
 
@@ -93,7 +94,14 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
 
             Elm.set({
                 'class': 'category-update',
-                html   : template,
+                html   : Mustache.render(template, {
+                    textData       : QUILocale.get('quiqqer/system', 'data'),
+                    textId         : QUILocale.get('quiqqer/system', 'id'),
+                    textTitle      : QUILocale.get('quiqqer/system', 'title'),
+                    textDescription: QUILocale.get('quiqqer/system', 'description'),
+                    textFields     : QUILocale.get(lg, 'control.category.update.title.fields'),
+                    textSites      : QUILocale.get(lg, 'control.category.update.title.sites')
+                }),
                 styles : {
                     opacity: 0,
                     padding: 20
@@ -149,7 +157,7 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
 
             this.$FieldTable = new Grid(FieldContainer, {
                 buttons    : [{
-                    text     : 'Feld hinzufügen',
+                    text     : QUILocale.get(lg, 'category.update.field.grid.button.add'),
                     textimage: 'fa fa-plus',
                     events   : {
                         onClick: function () {
@@ -310,15 +318,13 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
             var self = this;
 
             return new Promise(function (resolve) {
-                Fields.getChild(fieldId).then(function (data) {
+                Fields.getChild(fieldId).then(function () {
                     self.$FieldTable.addRow({
                         id          : fieldId,
                         title       : QUILocale.get(lg, 'products.field.' + fieldId + '.title'),
                         publicStatus: new QUISwitch(),
                         searchStatus: new QUISwitch()
                     });
-
-                    //console.log(data);
 
                     resolve();
                 });

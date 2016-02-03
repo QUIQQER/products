@@ -129,6 +129,15 @@
             <en><![CDATA[The category and all subcategories will be deleted irrevocably.]]></en>
         </locale>
 
+        <locale name="control.field.create.content" html="true">
+            <de><![CDATA[Füllen Sie bitte alle Felder korrekt aus um ein neues Produktfeld anzulegen.]]></de>
+            <en><![CDATA[Please fill in all fields correctly to create a new product field.]]></en>
+        </locale>
+        <locale name="control.field.create.header">
+            <de><![CDATA[Feldeinstellungen]]></de>
+            <en><![CDATA[Field settings]]></en>
+        </locale>
+
         <locale name="categories.create.title">
             <de><![CDATA[Neue Kategorie anlegen]]></de>
             <en><![CDATA[Create a new category]]></en>
@@ -141,6 +150,19 @@
         <locale name="control.select.search.categories.placeholder">
             <de><![CDATA[Suche nach einer Produktkategorie...]]></de>
             <en><![CDATA[Search for a product category...]]></en>
+        </locale>
+
+        <locale name="control.category.update.title.fields">
+            <de><![CDATA[Feld Zuweisungen]]></de>
+            <en><![CDATA[Field assignments]]></en>
+        </locale>
+        <locale name="control.category.update.title.sites">
+            <de><![CDATA[Seiten Zuweisungen]]></de>
+            <en><![CDATA[Site assignments]]></en>
+        </locale>
+        <locale name="category.update.field.grid.button.add">
+            <de><![CDATA[Feld hinzufügen]]></de>
+            <en><![CDATA[Add a field]]></en>
         </locale>
 
         <locale name="fields.create.title">
