@@ -48,15 +48,27 @@ class Controller
     {
         QUI\Rights\Permission::checkPermission('category.edit');
 
+        $fields = array();
+
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        foreach ($this->getModell()->getFields() as $Field) {
+            $fields[] = $Field->getAttributes();
+        }
+
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
-            array('name' => $this->getModell()->getAttribute('name')),
+            array(
+                'name' => $this->getModell()->getAttribute('name'),
+                'fields' => json_encode($fields)
+            ),
             array('id' => $this->getModell()->getId())
         );
+
+        QUI\ERP\Products\Handler\Categories::clearCache($this->getModell()->getId());
     }
 
     /**
-     * Delete the complete field
+     * Delete the complete category with sub categories
      * ID 0 cant be deleted
      */
     public function delete()
@@ -104,6 +116,8 @@ class Controller
                 'quiqqer/products',
                 'products.category.' . $id . '.title'
             );
+
+            QUI\ERP\Products\Handler\Categories::clearCache($id);
         }
     }
 }

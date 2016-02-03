@@ -6,9 +6,11 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
- * @require package/quiqqer/products/bin/classes/Categories
- *
- * @require css!package/quiqqer/products/bin/controls/categories/Create.css
+ * @require Locale
+ * @require package/quiqqer/products/bin/classes/Fields
+ * @require package/quiqqer/translator/bin/controls/Create
+ * @require text!package/quiqqer/products/bin/controls/fields/Create.html
+ * @require css!package/quiqqer/products/bin/controls/fields/Create.css
  *
  * @event onLoaded
  */

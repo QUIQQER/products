@@ -21,6 +21,32 @@ class Categories
     private static $list = array();
 
     /**
+     * Clears the category cache
+     *
+     * @param bool|integer $categoryId - optional, Category-ID,
+     *                                   if false => complete categories cache is cleared
+     */
+    public static function clearCache($categoryId = false)
+    {
+        if ($categoryId === false) {
+            QUI\Cache\Manager::clear('quiqqer/products/categories/');
+        } else {
+            QUI\Cache\Manager::clear(self::getCacheName($categoryId));
+        }
+    }
+
+    /**
+     * Returns the cache name of a category
+     *
+     * @param integer $categoryId
+     * @return string
+     */
+    public static function getCacheName($categoryId)
+    {
+        return 'quiqqer/products/categories/' . (int)$categoryId;
+    }
+
+    /**
      * Return the number of the children
      *
      * @param array $queryParams - query params (where, where_or)
@@ -80,27 +106,34 @@ class Categories
         $categoryData = array();
 
         if ($id !== 0) {
-            $data = QUI::getDataBase()->fetch(array(
-                'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
-                'where' => array(
-                    'id' => $id
-                )
-            ));
+            try {
+                $categoryData = QUI\Cache\Manager::get(self::getCacheName($id));
 
-            if (!isset($data[0])) {
-                throw new QUI\Exception(
-                    array(
-                        'quiqqer/products',
-                        'exception.category.not.found'
-                    ),
-                    404,
-                    array(
-                        'categoryId' => $id
+            } catch (QUI\Exception $Eception) {
+                $data = QUI::getDataBase()->fetch(array(
+                    'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+                    'where' => array(
+                        'id' => $id
                     )
-                );
-            }
+                ));
 
-            $categoryData = $data[0];
+                if (!isset($data[0])) {
+                    throw new QUI\Exception(
+                        array(
+                            'quiqqer/products',
+                            'exception.category.not.found'
+                        ),
+                        404,
+                        array(
+                            'categoryId' => $id
+                        )
+                    );
+                }
+
+                $categoryData = $data[0];
+
+                QUI\Cache\Manager::set(self::getCacheName($id), $categoryData);
+            }
         }
 
         $Product         = new QUI\ERP\Products\Category\Category($id, $categoryData);

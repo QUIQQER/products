@@ -183,27 +183,27 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                     dataType : 'text',
                     width    : 200
                 }, {
-                    header   : 'Feld-Typ',
+                    header   : QUILocale.get(lg, 'fieldtype'),
                     dataIndex: 'type',
                     dataType : 'text',
                     width    : 200
                 }, {
-                    header   : 'Priorität',
+                    header   : QUILocale.get(lg, 'priority'),
                     dataIndex: 'priority',
                     dataType : 'text',
                     width    : 100
                 }, {
-                    header   : 'Präfix',
+                    header   : QUILocale.get(lg, 'prefix'),
                     dataIndex: 'prefix',
                     dataType : 'text',
                     width    : 100
                 }, {
-                    header   : 'Suffix',
+                    header   : QUILocale.get(lg, 'suffix'),
                     dataIndex: 'suffix',
                     dataType : 'text',
                     width    : 100
                 }, {
-                    header   : 'Such-Typ',
+                    header   : QUILocale.get(lg, 'searchtype'),
                     dataIndex: 'searchtype',
                     dataType : 'text',
                     width    : 200

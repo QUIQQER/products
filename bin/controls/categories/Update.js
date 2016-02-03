@@ -6,8 +6,16 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require qui/controls/buttons/Button
+ * @require qui/controls/buttons/Switch
+ * @require Locale
+ * @require controls/grid/Grid
  * @require package/quiqqer/products/bin/classes/Categories
- *
+ * @require package/quiqqer/products/bin/classes/Fields
+ * @require package/quiqqer/products/bin/controls/categories/Sitemap
+ * @require package/quiqqer/translator/bin/controls/Update
+ * @require text!package/quiqqer/products/bin/controls/categories/Update.html
+ * @require css!package/quiqqer/products/bin/controls/categories/Update.css
  * @require css!package/quiqqer/products/bin/controls/categories/Create.css
  *
  * @event onCancel
@@ -22,6 +30,7 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
     'qui/controls/buttons/Button',
     'qui/controls/buttons/Switch',
     'Locale',
+    'controls/grid/Grid',
     'package/quiqqer/products/bin/classes/Categories',
     'package/quiqqer/products/bin/classes/Fields',
     'package/quiqqer/products/bin/controls/categories/Sitemap',
@@ -30,10 +39,11 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
     'text!package/quiqqer/products/bin/controls/categories/Update.html',
     'css!package/quiqqer/products/bin/controls/categories/Update.css'
 
-], function (QUI, QUIControl, QUIButton, QUISwitch, QUILocale,
+], function (QUI, QUIControl, QUIButton, QUISwitch, QUILocale, Grid,
              Handler, FieldsHandler, CategorySitemap, Translation, template) {
     "use strict";
 
+    var lg         = 'quiqqer/products';
     var Categories = new Handler();
     var Fields     = new FieldsHandler();
 
@@ -61,8 +71,11 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
             this.$TitlesTranslation     = null;
             this.$CategoriesTranslation = null;
 
-            this.$FieldButtons = null;
-            this.$FieldTable   = null;
+            this.$FieldTable = null;
+            this.$SideTable  = null;
+
+            this.$fields = {};
+            this.$sites  = [];
 
             this.addEvents({
                 onInject: this.$onInject
@@ -82,70 +95,101 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
                 'class': 'category-update',
                 html   : template,
                 styles : {
+                    opacity: 0,
                     padding: 20
                 }
             });
 
-            this.$Id           = Elm.getElement('.field-id');
-            this.$Titles       = Elm.getElement('.category-title');
-            this.$Categories   = Elm.getElement('.category-description');
-            this.$Buttons      = Elm.getElement('.category-update-buttons');
-            this.$FieldButtons = Elm.getElement('.category-update-fields-buttons');
-            this.$FieldTable   = Elm.getElement('.category-update-fields tbody');
-
-            this.$FieldButtons.setStyle('padding', 4);
+            this.$Id         = Elm.getElement('.field-id');
+            this.$Titles     = Elm.getElement('.category-title');
+            this.$Categories = Elm.getElement('.category-description');
+            this.$Buttons    = Elm.getElement('.category-update-buttons');
 
 
-            //new QUIButton({
-            //    name  : 'cancel',
-            //    text  : QUILocale.get('quiqqer/system', 'close'),
-            //    events: {
-            //        onClick: function () {
-            //            self.cancel();
-            //        }
-            //    },
-            //    styles: {
-            //        'float'    : 'none',
-            //        marginRight: 20
-            //    }
-            //}).inject(this.$Buttons);
-            //
-            //new QUIButton({
-            //    name  : 'save',
-            //    text  : QUILocale.get('quiqqer/system', 'save'),
-            //    events: {
-            //        onClick: function () {
-            //
-            //        }
-            //    },
-            //    styles: {
-            //        'float': 'none'
-            //    }
-            //}).inject(this.$Buttons);
-
-
-            new QUIButton({
-                text     : 'Feld hinzufügen',
-                textimage: 'fa fa-plus',
-                styles   : {
-                    'float': 'right'
-                },
-                events   : {
-                    onClick: function () {
-                        require([
-                            'package/quiqqer/products/bin/controls/fields/Window'
-                        ], function (Win) {
-                            new Win({
-                                events: {
-                                    onSubmit: function (Win, value) {
-                                        self.addField(value);
-                                    }
-                                }
-                            }).open();
-                        });
-                    }
+            var SiteContainer = new Element('div', {
+                styles: {
+                    width: '100%'
                 }
-            }).inject(this.$FieldButtons);
+            }).inject(
+                Elm.getElement('.category-update-site-table')
+            );
+
+            this.$SideTable = new Grid(SiteContainer, {
+                columnModel: [{
+                    header   : QUILocale.get('quiqqer/system', 'id'),
+                    dataIndex: 'id',
+                    dataType : 'number',
+                    width    : 100
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'project'),
+                    dataIndex: 'project',
+                    dataType : 'text',
+                    width    : 100
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'language'),
+                    dataIndex: 'lang',
+                    dataType : 'QUI',
+                    width    : 100
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'title'),
+                    dataIndex: 'title',
+                    dataType : 'QUI',
+                    width    : 300
+                }]
+            });
+
+
+            var FieldContainer = new Element('div', {
+                styles: {
+                    width: '100%'
+                }
+            }).inject(
+                Elm.getElement('.category-update-fields-table')
+            );
+
+            this.$FieldTable = new Grid(FieldContainer, {
+                pagination : true,
+                buttons    : [{
+                    text     : 'Feld hinzufügen',
+                    textimage: 'fa fa-plus',
+                    events   : {
+                        onClick: function () {
+                            require([
+                                'package/quiqqer/products/bin/controls/fields/Window'
+                            ], function (Win) {
+                                new Win({
+                                    events: {
+                                        onSubmit: function (Win, value) {
+                                            self.addField(value);
+                                        }
+                                    }
+                                }).open();
+                            });
+                        }
+                    }
+                }],
+                columnModel: [{
+                    header   : QUILocale.get('quiqqer/system', 'id'),
+                    dataIndex: 'id',
+                    dataType : 'number',
+                    width    : 60
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'title'),
+                    dataIndex: 'title',
+                    dataType : 'text',
+                    width    : 200
+                }, {
+                    header   : QUILocale.get(lg, 'category.update.field.grid.publicStatus'),
+                    dataIndex: 'publicStatus',
+                    dataType : 'QUI',
+                    width    : 100
+                }, {
+                    header   : QUILocale.get(lg, 'category.update.field.grid.searchStatus'),
+                    dataIndex: 'searchStatus',
+                    dataType : 'QUI',
+                    width    : 100
+                }]
+            });
 
             return Elm;
         },
@@ -172,17 +216,29 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
                 self.$Id.set('html', '#' + data.id);
 
                 // fields
-                var publish = self.getElm().getElements(
-                    '.category-update-field-publish'
-                );
-
-                for (var i = 0, len = publish.length; i < len; i++) {
-                    new QUISwitch().inject(publish[i]);
-                }
-
                 console.log(data);
 
-                self.fireEvent('loaded');
+
+                // resize
+                var size = self.getElm().getSize();
+
+                Promise.all([
+                    self.$SideTable.setWidth(size.x - 60),
+                    self.$SideTable.setHeight(200),
+                    self.$FieldTable.setWidth(size.x - 60),
+                    self.$FieldTable.setHeight(300)
+                ]).then(function () {
+                    self.$SideTable.resize();
+                    self.$FieldTable.resize();
+
+                    moofx(self.getElm()).animate({
+                        opacity: 1
+                    }, {
+                        callback: function () {
+                            self.fireEvent('loaded');
+                        }
+                    });
+                });
             });
         },
 
@@ -196,7 +252,6 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
                 categoryId = this.getAttribute('categoryId');
 
             return new Promise(function (resolve, reject) {
-
                 Promise.all([
                     self.$TitlesTranslation.save(),
                     self.$CategoriesTranslation.save()
@@ -204,7 +259,6 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
                     Categories.updateChild(categoryId).then(resolve, reject);
 
                 }, reject);
-
             });
         },
 
@@ -212,31 +266,24 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
          * Add a field to the category
          *
          * @param {Number} fieldId - Field-ID
+         * @return {Promise}
          */
         addField: function (fieldId) {
             var self = this;
 
-            Fields.getChild(fieldId).then(function (data) {
+            return new Promise(function (resolve) {
+                Fields.getChild(fieldId).then(function (data) {
+                    self.$FieldTable.addRow({
+                        id          : fieldId,
+                        title       : QUILocale.get(lg, 'products.field.' + fieldId + '.title'),
+                        publicStatus: new QUISwitch(),
+                        searchStatus: new QUISwitch()
+                    });
 
-                console.log(self.$FieldTable);
+                    //console.log(data);
 
-                var Row = new Element('tr', {
-                    html: '<td>' +
-                          '<label class="field-container">' +
-                          '<span class="field-container-item">' +
-                          data.title +
-                          '</span>' +
-                          '<div class="field-container-field">' +
-                          '</div>' +
-                          '<div class="field-container-item category-update-field-publish"></div>' +
-                          '</label>' +
-                          '</td>'
+                    resolve();
                 });
-
-
-                Row.inject(self.$FieldTable);
-
-                console.log(data);
             });
         }
     });

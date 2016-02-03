@@ -1,9 +1,15 @@
 /**
+ * Field select window
+ * User can select a field
+ *
  * @module package/quiqqer/products/bin/controls/fields/Window
  * @author www.pcsg.de (Henning Leutz)
  *
  * @require qui/QUI
  * @require qui/controls/windows/Confirm
+ * @require Locale
+ * @require controls/grid/Grid
+ * @require package/quiqqer/products/bin/classes/Fields
  */
 define('package/quiqqer/products/bin/controls/fields/Window', [
 
@@ -27,7 +33,8 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
         Binds: [
             '$onOpen',
             '$onResize',
-            'refresh'
+            'refresh',
+            'submit'
         ],
 
         options: {
@@ -83,27 +90,27 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
                     dataType : 'text',
                     width    : 200
                 }, {
-                    header   : 'Feld-Typ',
+                    header   : QUILocale.get(lg, 'fieldtype'),
                     dataIndex: 'type',
                     dataType : 'text',
                     width    : 200
                 }, {
-                    header   : 'Priorität',
+                    header   : QUILocale.get(lg, 'priority'),
                     dataIndex: 'priority',
                     dataType : 'text',
                     width    : 100
                 }, {
-                    header   : 'Präfix',
+                    header   : QUILocale.get(lg, 'prefix'),
                     dataIndex: 'prefix',
                     dataType : 'text',
                     width    : 100
                 }, {
-                    header   : 'Suffix',
+                    header   : QUILocale.get(lg, 'suffix'),
                     dataIndex: 'suffix',
                     dataType : 'text',
                     width    : 100
                 }, {
-                    header   : 'Such-Typ',
+                    header   : QUILocale.get(lg, 'searchtype'),
                     dataIndex: 'searchtype',
                     dataType : 'text',
                     width    : 200
@@ -111,7 +118,8 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
             });
 
             this.$Grid.addEvents({
-                onRefresh: this.refresh
+                onRefresh : this.refresh,
+                onDblClick: this.submit
             });
 
             this.refresh().then(function () {

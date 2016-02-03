@@ -19,6 +19,29 @@
             <en><![CDATA[Product fields]]></en>
         </locale>
 
+
+        <locale name="fieldtype">
+            <de><![CDATA[Feld-Typ]]></de>
+            <en><![CDATA[Field type]]></en>
+        </locale>
+        <locale name="priority">
+            <de><![CDATA[Priorität]]></de>
+            <en><![CDATA[Priority]]></en>
+        </locale>
+        <locale name="prefix">
+            <de><![CDATA[Präfix]]></de>
+            <en><![CDATA[Prefix]]></en>
+        </locale>
+        <locale name="suffix">
+            <de><![CDATA[Suffix]]></de>
+            <en><![CDATA[Suffix]]></en>
+        </locale>
+        <locale name="searchtype">
+            <de><![CDATA[Such-Typ]]></de>
+            <en><![CDATA[Search type]]></en>
+        </locale>
+
+
         <!-- Feldtypen -->
         <locale name="fieldtype.IntType">
             <de><![CDATA[]]></de>
@@ -78,7 +101,6 @@
             <en><![CDATA[Product fields]]></en>
         </locale>
 
-
         <locale name="categories.panel.title">
             <de><![CDATA[Kategorien]]></de>
             <en><![CDATA[Categories]]></en>
@@ -136,6 +158,14 @@
             <en><![CDATA[Add category]]></en>
         </locale>
 
+        <locale name="category.update.field.grid.publicStatus">
+            <de><![CDATA[Öffentlich]]></de>
+            <en><![CDATA[Public]]></en>
+        </locale>
+        <locale name="category.update.field.grid.searchStatus">
+            <de><![CDATA[Suche]]></de>
+            <en><![CDATA[Search]]></en>
+        </locale>
 
     </groups>
 

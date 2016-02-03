@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Category;
 
 use QUI;
+use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Class Category
@@ -33,9 +34,19 @@ class Category extends QUI\QDOM
     protected $parentId;
 
     /**
-     * @var
+     * @var array
      */
-    protected $fields;
+    protected $fields = array();
+
+    /**
+     * @var array
+     */
+    protected $sites = array();
+
+    /**
+     * @var null|QUI\Projects\Site
+     */
+    protected $defaultSites = array();
 
     /**
      * Modell constructor.
@@ -49,7 +60,53 @@ class Category extends QUI\QDOM
         $this->id       = (int)$categoryId;
 
         if (isset($data['fields'])) {
+            $fields = json_decode($data['fields'], true);
 
+            if (!is_array($fields)) {
+                $fields = array();
+            }
+
+            foreach ($fields as $field) {
+                try {
+                    $Field = Fields::getField($field['id']);
+
+                    $this->fields[] = $Field;
+
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::writeException(
+                        $Exception,
+                        QUI\System\Log::LEVEL_DEBUG
+                    );
+                }
+            }
+        }
+
+        if (isset($data['sites'])) {
+            $sites = json_decode($data['sites'], true);
+
+            if (!is_array($sites)) {
+                $sites = array();
+            }
+
+
+            foreach ($sites as $siteData) {
+                try {
+                    $Project = QUI::getProject($siteData['project'], $siteData['lang']);
+                    $Site    = $Project->get($siteData['id']);
+
+                    if ($siteData['standard'] == 1) {
+                        $this->defaultSites[$Project->getName()][$Project->getLang()] = $Site;
+                    }
+
+                    $this->sites[] = $Site;
+
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::writeException(
+                        $Exception,
+                        QUI\System\Log::LEVEL_DEBUG
+                    );
+                }
+            }
         }
 
         if (isset($data['parentId'])) {
@@ -245,7 +302,24 @@ class Category extends QUI\QDOM
      */
     public function getSite(QUI\Projects\Project $Project)
     {
+        $defaults = $this->defaultSites;
+        $name     = $Project->getName();
+        $lang     = $Project->getLang();
 
+        if (isset($defaults[$name]) && isset($defaults[$name][$lang])) {
+            return $defaults[$name][$lang];
+        }
+
+        $sites = $this->getSites($Project);
+
+        if (isset($sites[0])) {
+            return $sites[0];
+        }
+
+        throw new QUI\Exception(array(
+            'quiqqer/products',
+            'exception.category.has.no.site'
+        ));
     }
 
     /**
@@ -256,7 +330,37 @@ class Category extends QUI\QDOM
      */
     public function getSites(QUI\Projects\Project $Project)
     {
+        $sites  = array();
+        $id     = $this->getId();
+        $result = $this->sites;
 
+        $projectName = $Project->getName();
+        $projectLang = $Project->getLang();
+
+        /* @var $Site QUI\Projects\Site */
+        foreach ($result as $Site) {
+            if ($Site->getProject()->getName() != $projectName) {
+                continue;
+            }
+
+            if ($Site->getProject()->getLang() != $projectLang) {
+                continue;
+            }
+
+            if ($Site->getAttribute('quiqqer.products.settings.categoryId') == $id) {
+                $sites[] = $Site;
+            }
+        }
+
+        return $sites;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFields()
+    {
+        return $this->fields;
     }
 
     /**
