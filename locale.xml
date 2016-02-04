@@ -180,6 +180,25 @@
             <en><![CDATA[Add category]]></en>
         </locale>
 
+        <locale name="fields.window.delete.title">
+            <de><![CDATA[Feld löschen]]></de>
+            <en><![CDATA[Delete the field]]></en>
+        </locale>
+        <locale name="fields.window.delete.title">
+            <de><![CDATA[Möchten Sie das Produktfeld #[fieldId] wirklich löschen?]]></de>
+            <en><![CDATA[Do you really want to delete the field #[fieldId]?]]></en>
+        </locale>
+        <locale name="fields.window.delete.description">
+            <de><![CDATA[
+                Das Feld wird unwiderruflich gelöscht und alle Beziehungen
+                zu Produkten und Kategorien gehen verloren.
+            ]]></de>
+            <en><![CDATA[
+                The field will be permanently deleted and all relations
+                 with products and categories will be lost.
+            ]]></en>
+        </locale>
+
         <locale name="category.update.field.grid.publicStatus">
             <de><![CDATA[Öffentlich]]></de>
             <en><![CDATA[Public]]></en>

@@ -357,7 +357,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                     fieldId: fieldId
                 }),
                 information: QUILocale.get(lg, 'fields.window.delete.information', {
-                    id: fieldId
+                    fieldId: fieldId
                 }),
                 autoclose  : false,
                 maxHeight  : 300,
