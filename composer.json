@@ -21,6 +21,11 @@
     "quiqqer/quiqqer": "*@dev",
     "quiqqer/discount": "*"
   },
+  "suggest": {
+    "quiqqer/areas": "Area management",
+    "quiqqer/currency": "Provided currency calculation and a automtatic cron to get the Euro foreign exchange reference rates.",
+    "quiqqer/tax": "VAT management"
+  },
   "autoload": {
     "psr-0": {
       "QUI": "src/"

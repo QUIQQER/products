@@ -1,16 +1,32 @@
 Produktverwaltung
 ========
 
-
+Erstellen Sie Ihren Shop mit den QUIQQER Produkten. 
+QUIQQER Produkte sind flexible Produkte welche flexible Eigenschaften besitzen können.
 
 Paketname:
 
     quiqqer/products
 
 
+ERP Stack
+----
+
+Wir empfehlen weitere Pakete zu installieren:
+
+- quiqqer/areas
+- quiqqer/currency
+- quiqqer/discount
+- quiqqer/products
+- quiqqer/tax
+
+
 Features (Funktionen)
 --------
 
+- Produktkategorien
+- Produktfelder
+- Produktverwaltung
 
 Installation
 ------------
