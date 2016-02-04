@@ -49,11 +49,21 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Return products for a grid
          *
+         * @param {String} params - Grid params
          * @returns {Promise}
          */
-        getList: function () {
-            return this.search();
+        getList: function (params) {
+            params = params || {};
+
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_list', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    params   : JSON.encode(params)
+                });
+            });
         },
 
         /**

@@ -133,4 +133,39 @@ class Products
     {
         self::getProduct($pid)->delete();
     }
+
+
+    /**
+     * Return the number of the products
+     * Count products
+     *
+     * @param array $queryParams - query params (where, where_or)
+     * @return integer
+     */
+    public static function countProducts($queryParams = array())
+    {
+        $query = array(
+            'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            'count' => array(
+                'select' => 'id',
+                'as' => 'count'
+            )
+        );
+
+        if (isset($queryParams['where'])) {
+            $query['where'] = $queryParams['where'];
+        }
+
+        if (isset($queryParams['where_or'])) {
+            $query['where_or'] = $queryParams['where_or'];
+        }
+
+        $data = QUI::getDataBase()->fetch($query);
+
+        if (isset($data[0]) && isset($data[0]['count'])) {
+            return (int)$data[0]['count'];
+        }
+
+        return 0;
+    }
 }

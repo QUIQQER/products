@@ -61,7 +61,7 @@ define('package/quiqqer/products/bin/classes/Fields', [
         },
 
         /**
-         * Return all fields
+         * Return fields for a grid
          *
          * @param {String} params - Grid params
          * @returns {Promise}
