@@ -22,10 +22,12 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
     'Locale',
     'package/quiqqer/products/bin/classes/Products',
     'package/quiqqer/products/bin/controls/products/Create',
+    'package/quiqqer/products/bin/controls/products/Product',
 
     'css!package/quiqqer/products/bin/controls/products/Panel.css'
 
-], function (QUI, QUIPanel, QUIButton, QUIConfirm, Grid, QUILocale, Handler, CreateProduct) {
+], function (QUI, QUIPanel, QUIButton, QUIConfirm, Grid, QUILocale,
+             Handler, CreateProduct, ProductPanel) {
     "use strict";
 
     var lg       = 'quiqqer/products',
@@ -266,12 +268,14 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
         },
 
         /**
-         * Opens the delete child dialog
+         * Opens the product panel
          *
          * @param {Number} productId
          */
         updateChild: function (productId) {
-
+            new ProductPanel({
+                productId: productId
+            }).inject(this.getParent());
         },
 
         /**
