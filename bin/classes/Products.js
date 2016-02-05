@@ -44,7 +44,11 @@ define('package/quiqqer/products/bin/classes/Products', [
          */
         getChild: function (productId) {
             return new Promise(function (resolve, reject) {
-
+                Ajax.get('package_quiqqer_products_ajax_products_get', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    productId: productId
+                });
             });
         },
 
@@ -69,12 +73,33 @@ define('package/quiqqer/products/bin/classes/Products', [
         /**
          * Create a new product
          *
-         * @params {Array} [params] - product attributes
+         * @params {Array} categories - id list of categories
+         * @params {Array} [fields] - product fields
+         * @params {Array} [productNo] - product number
          * @returns {Promise}
          */
-        createChild: function (params) {
-            return new Promise(function (resolve, reject) {
+        createChild: function (categories, fields, productNo) {
+            productNo = productNo || '';
+            fields    = fields || {};
 
+            return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_products_create', function (result) {
+
+                    require([
+                        'package/quiqqer/translator/bin/classes/Translator'
+                    ], function (Translator) {
+                        new Translator().refreshLocale().then(function () {
+                            resolve(result);
+                        });
+                    });
+
+                }, {
+                    'package' : 'quiqqer/products',
+                    onError   : reject,
+                    categories: JSON.encode(categories),
+                    fields    : JSON.encode(fields),
+                    productNo : productNo
+                });
             });
         },
 
@@ -86,19 +111,27 @@ define('package/quiqqer/products/bin/classes/Products', [
          */
         deleteChild: function (productId) {
             return new Promise(function (resolve, reject) {
-
+                Ajax.post('package_quiqqer_products_ajax_products_deleteChild', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    productId: productId
+                });
             });
         },
 
         /**
          * Delete multible products
          *
-         * @param {Array} productId - array of Product-IDs
+         * @param {Array} productIds - array of Product-IDs
          * @returns {Promise}
          */
-        deleteChildren: function (productId) {
+        deleteChildren: function (productIds) {
             return new Promise(function (resolve, reject) {
-
+                Ajax.post('package_quiqqer_products_ajax_products_deleteChildren', resolve, {
+                    'package' : 'quiqqer/products',
+                    onError   : reject,
+                    productIds: JSON.encode(productIds)
+                });
             });
         },
 

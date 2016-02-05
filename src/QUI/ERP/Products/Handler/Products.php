@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Handler;
 
 use QUI;
+use QUI\ERP\Products\Category\Category;
 
 /**
  * Class Products
@@ -42,21 +43,62 @@ class Products
     /**
      * Create a new Product
      *
+     * @param array $categories - list of category IDs or category Objects
      * @param array $fields - optional, list of fields
      * @param string $productNo - optional, own product number
      *
      * @return QUI\ERP\Products\Product\Product
+     *
+     * @throws QUI\Exception
      */
-    public static function createProduct($fields = array(), $productNo = '')
+    public static function createProduct($categories = array(), $fields = array(), $productNo = '')
     {
         QUI\Rights\Permission::checkPermission('product.create');
+
+        $categoryids = array();
+
+        foreach ($categories as $Category) {
+            if (!is_object($Category)) {
+                try {
+                    $Category      = Categories::getCategory($Category);
+                    $categoryids[] = $Category->getId();
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::addWarning($Exception->getMessage());
+                }
+
+                continue;
+            }
+
+            if (Categories::isCategory($Category)) {
+                /* @var $Category Category */
+                $categoryids[] = $Category->getId();
+                continue;
+            }
+
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.products.no.category'
+            ));
+        }
+
+        if (!count($categoryids)) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.products.no.category.given'
+            ));
+        }
+
+        if (!is_string($productNo)) {
+            $productNo = '';
+        }
 
 
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
                 'productNo' => $productNo,
-                'data' => $fields
+                'data' => json_encode($fields),
+                'categories' => ',' . implode($categories, ',') . ','
             )
         );
 

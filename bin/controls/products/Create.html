@@ -1,9 +1,60 @@
-<div>
-    <div class="quiqqer-products-create-category sheet">
-        <h1>Stammdaten des Produktes</h1>
+<form>
+    <h1>Produkt anlegen</h1>
 
+    <table class="data-table data-table-flexbox">
+        <thead>
+        <tr>
+            <th>
+                Stammdaten
+            </th>
+        </tr>
+        </thead>
 
-    </div>
+        <tbody>
+        <tr class="odd">
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{productTitle}}
+                    </span>
+                    <span class="field-container-field product-title"></span>
+                </label>
+            </td>
+        </tr>
+        <tr class="even">
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{productNo}}
+                    </span>
+                    <input class="field-container-field" type="text" name="productNo"/>
+                </label>
+            </td>
+        </tr>
+        <tr class="even">
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item">
+                        {{productCategories}}
+                    </span>
+                    <span class="field-container-field field-container-field-no-padding product-categories"></span>
+                </label>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
+    <table class="data-table data-table-flexbox">
+        <thead>
+        <tr>
+            <th>
+                Standardfelder
+            </th>
+        </tr>
+        </thead>
 
-</div>
+        <tbody>
+        </tbody>
+    </table>
+
+</form>

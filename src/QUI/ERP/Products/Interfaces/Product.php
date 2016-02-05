@@ -52,6 +52,11 @@ interface Product
     public function getAttribute($name);
 
     /**
+     * @param \QUI\ERP\Products\Interfaces\Field $Field
+     */
+    public function addField(Field $Field);
+
+    /**
      * Set an attribute of the product
      *
      * @param string $name - name of the attribute

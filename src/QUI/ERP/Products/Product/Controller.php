@@ -43,7 +43,8 @@ class Controller
 
     /**
      * Return the Product View
-     * @return View
+     *
+     * @return ViewBackend|ViewFrontend
      */
     public function getView()
     {
@@ -58,7 +59,7 @@ class Controller
     public function load()
     {
         $result = QUI::getDataBase()->fetch(array(
-            'from' => QUI\ERP\Products\Tables::getProductTableName(),
+            'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
             'where' => array(
                 'id' => $this->Product->getId()
             )
@@ -86,7 +87,7 @@ class Controller
 
 
         QUI::getDataBase()->update(
-            QUI\ERP\Products\Tables::getProductTableName(),
+            QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
                 'productNo' => $this->Product->getAttribute('productNo'),
                 'data' => $this->Product->getFields()
@@ -103,7 +104,7 @@ class Controller
         QUI\Rights\Permission::checkPermission('product.delete');
 
         QUI::getDataBase()->delete(
-            QUI\ERP\Products\Tables::getProductTableName(),
+            QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array('id' => $this->Product->getId())
         );
     }

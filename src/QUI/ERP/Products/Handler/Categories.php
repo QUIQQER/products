@@ -143,6 +143,25 @@ class Categories
     }
 
     /**
+     * Is the Object a category?
+     *
+     * @param mixed $Category
+     * @return boolean
+     */
+    public static function isCategory($Category)
+    {
+        if (!is_object($Category)) {
+            return false;
+        }
+
+        if (get_class($Category) === 'QUI\ERP\Products\Category\Category') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Create a new category
      *
      * @param integer $parentId - optional, ID of the parent

@@ -41,6 +41,15 @@
             <en><![CDATA[Search type]]></en>
         </locale>
 
+        <locale name="productNo">
+            <de><![CDATA[Produkt-Nummer]]></de>
+            <en><![CDATA[Product-No]]></en>
+        </locale>
+        <locale name="productCategories">
+            <de><![CDATA[Produkt-Kategorien]]></de>
+            <en><![CDATA[Product categories]]></en>
+        </locale>
+
 
         <!-- Feldtypen -->
         <locale name="fieldtype.IntType">

@@ -12,6 +12,13 @@ namespace QUI\ERP\Products\Interfaces;
 interface Field
 {
     /**
+     * Return the field id
+     *
+     * @return integer
+     */
+    public function getId();
+
+    /**
      * Return the field for the product as an array
      * @return array
      */

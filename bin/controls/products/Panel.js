@@ -159,7 +159,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             // grid
             this.$GridContainer = new Element('div', {
-                'class': 'products-categories-panel-container'
+                'class': 'products-categories-panel-grid-container'
             }).inject(Content);
 
             var GridContainer = new Element('div', {
@@ -228,13 +228,14 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
                         Sheet.getContent().setStyle('padding', 20);
 
-                        var Field = new CreateProduct({
+                        var Product = new CreateProduct({
                             events: {
                                 onLoaded: function () {
                                     self.Loader.hide();
                                 }
                             }
                         }).inject(Sheet.getContent());
+
 
                         Sheet.addButton(
                             new QUIButton({
@@ -244,11 +245,13 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                                     onClick: function () {
                                         self.Loader.show();
 
-                                        Field.submit().then(function () {
+                                        Product.submit().then(function () {
                                             Sheet.hide().then(function () {
                                                 Sheet.destroy();
                                                 self.refresh();
                                             });
+                                        }).catch(function () {
+                                            self.Loader.hide();
                                         });
                                     }
                                 }
@@ -279,7 +282,29 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
         deleteChild: function (productId) {
             var self = this;
 
-
+            new QUIConfirm({
+                title      : QUILocale.get(lg, 'products.window.delete.title'),
+                text       : QUILocale.get(lg, 'products.window.delete.text', {
+                    productId: productId
+                }),
+                information: QUILocale.get(lg, 'products.window.delete.information', {
+                    productId: productId
+                }),
+                autoclose  : false,
+                maxHeight  : 300,
+                maxWidth   : 450,
+                icon       : 'fa fa-trashcan',
+                texticon   : 'fa fa-trashcan',
+                events     : {
+                    onSubmit: function (Win) {
+                        Win.Loader.show();
+                        Products.deleteChild(productId).then(function () {
+                            Win.close();
+                            self.refresh();
+                        });
+                    }
+                }
+            }).open();
         }
     });
 });

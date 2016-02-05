@@ -36,6 +36,14 @@ class Fields
     }
 
     /**
+     * @return array
+     */
+    public function getStandardFields()
+    {
+        // TODO: Implement getFrontendView() method.
+    }
+
+    /**
      * Create a new field
      *
      * @param array $attributes - field attributes

@@ -243,6 +243,17 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         },
 
         /**
+         * Return the current value, list of categories
+         *
+         * @return {String}
+         */
+        getValue: function () {
+            console.log(this.$Input);
+            console.log(this.$values);
+            return this.$Input.value;
+        },
+
+        /**
          * fire the search
          *
          * @method package/quiqqer/products/bin/controls/categories/Select#fireSearch
@@ -415,6 +426,10 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 return this;
             }
 
+            if (!this.$DropDown.getFirst()) {
+                return this;
+            }
+
             var Active = this.$DropDown.getElement(
                 '.qui-products-categories-list-dropdown-entry-hover'
             );
@@ -450,6 +465,10 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
          */
         down: function () {
             if (!this.$DropDown) {
+                return this;
+            }
+
+            if (!this.$DropDown.getFirst()) {
                 return this;
             }
 
@@ -500,7 +519,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 this.addCategory(Active.get('data-id'));
             }
 
-            this.$Input.value = '';
             this.search();
         },
 

@@ -1,0 +1,14 @@
+
+.product-create {
+    float: left;
+    height: 100%;
+    position: relative;
+    width: 100%;
+}
+
+.product-create .field-container-item {
+    width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

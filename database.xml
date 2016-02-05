@@ -5,6 +5,7 @@
         <table name="products">
             <field type="BIGINT( 10 ) NOT NULL AUTO_INCREMENT">id</field>
             <field type="VARCHAR( 255 ) NULL">productNo</field>
+            <field type="TEXT">categories</field>
             <field type="LONGTEXT NULL">data</field>
 
             <primary>id</primary>
