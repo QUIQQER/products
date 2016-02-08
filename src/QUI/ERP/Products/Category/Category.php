@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Category\Modell
+ * This file contains QUI\ERP\Products\Category\Model
  */
 namespace QUI\ERP\Products\Category;
 
@@ -10,7 +10,7 @@ use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Class Category
- * Category Modell
+ * Category Model
  *
  * @package QUI\ERP\Products\Category
  *
@@ -55,7 +55,7 @@ class Category extends QUI\QDOM
     protected $data = array();
 
     /**
-     * Modell constructor.
+     * Model constructor.
      *
      * @param integer $categoryId
      * @param array $data - optional, category data

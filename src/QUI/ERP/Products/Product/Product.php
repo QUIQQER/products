@@ -10,7 +10,7 @@ use QUI\ERP\Products\Interfaces\Field;
 
 /**
  * Class Controller
- * Product Modell
+ * Product Model
  *
  * @package QUI\ERP\Products\Product
  *
@@ -31,7 +31,7 @@ class Product extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
     protected $fields = array();
 
     /**
-     * Modell constructor
+     * Model constructor
      *
      * @param integer $pid
      *

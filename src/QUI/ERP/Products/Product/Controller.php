@@ -33,7 +33,7 @@ class Controller
     }
 
     /**
-     * Return the Product Modell
+     * Return the Product Model
      * @return Product
      */
     public function getModel()
@@ -52,7 +52,7 @@ class Controller
     }
 
     /**
-     * Load the data for the modell
+     * Load the data for the model
      *
      * @throws QUI\Exception
      */

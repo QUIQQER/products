@@ -25,7 +25,7 @@ class Controller
 
     /**
      * Controller constructor.
-     * @param Category $Modell
+     * @param Category $Model
      */
     public function __construct(Category $Model)
     {
@@ -33,7 +33,7 @@ class Controller
     }
 
     /**
-     * Return the Product Modell
+     * Return the Product Model
      * @return Category
      */
     public function getModel()

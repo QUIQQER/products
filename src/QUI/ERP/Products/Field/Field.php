@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Field\Modell
+ * This file contains QUI\ERP\Products\Field\Model
  */
 namespace QUI\ERP\Products\Field;
 
@@ -54,7 +54,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $value = '';
 
     /**
-     * Modell constructor.
+     * Model constructor.
      *
      * @param integer $fieldId
      * @param array $params - optional, field params (system, require, standard)

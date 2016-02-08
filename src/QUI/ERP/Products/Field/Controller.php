@@ -33,7 +33,7 @@ class Controller
     }
 
     /**
-     * Return the Product Modell
+     * Return the Product Model
      * @return Field
      */
     public function getModel()
