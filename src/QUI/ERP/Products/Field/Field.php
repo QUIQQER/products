@@ -25,6 +25,21 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $id;
 
     /**
+     * @var bool
+     */
+    protected $system = false;
+
+    /**
+     * @var bool
+     */
+    protected $standard = false;
+
+    /**
+     * @var bool
+     */
+    protected $require = false;
+
+    /**
      * Field-Name
      *
      * @var string
@@ -42,13 +57,33 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Modell constructor.
      *
      * @param integer $fieldId
+     * @param array $params - optional, field params (system, require, standard)
      */
-    public function __construct($fieldId)
+    public function __construct($fieldId, $params = array())
     {
         $this->id = (int)$fieldId;
 
         if (defined('QUIQQER_BACKEND')) {
             $this->setAttribute('viewType', 'backend');
+        }
+
+        // field types
+        if (isset($params['system'])
+            && (is_bool($params['system']) || is_int($params['system']))
+        ) {
+            $this->system = $params['system'] ? true : false;
+        }
+
+        if (isset($params['required'])
+            && (is_bool($params['required']) || is_int($params['required']))
+        ) {
+            $this->require = $params['required'] ? true : false;
+        }
+
+        if (isset($params['standard'])
+            && (is_bool($params['standard']) || is_int($params['standard']))
+        ) {
+            $this->standard = $params['standard'] ? true : false;
         }
     }
 
@@ -205,5 +240,31 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             'id' => (string)$this->getId(),
             'value' => $this->getValue()
         );
+    }
+
+    /**
+     * Is the field a system field?
+     *
+     * @return boolean
+     */
+    public function isSystem()
+    {
+        return $this->system;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStandard()
+    {
+        return $this->standard;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isRequired()
+    {
+        return $this->require;
     }
 }

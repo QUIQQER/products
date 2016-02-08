@@ -36,7 +36,7 @@ class Controller
      * Return the Product Modell
      * @return Product
      */
-    public function getModell()
+    public function getModel()
     {
         return $this->Product;
     }
@@ -48,7 +48,7 @@ class Controller
      */
     public function getView()
     {
-        return $this->getModell()->getView();
+        return $this->getModel()->getView();
     }
 
     /**

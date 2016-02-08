@@ -3,13 +3,14 @@
 
     <global>
         <table name="products">
-            <field type="BIGINT( 10 ) NOT NULL AUTO_INCREMENT">id</field>
-            <field type="VARCHAR( 255 ) NULL">productNo</field>
+            <field type="BIGINT(10) NOT NULL AUTO_INCREMENT">id</field>
+            <field type="BIGINT(20)">category</field>
             <field type="TEXT">categories</field>
-            <field type="LONGTEXT NULL">data</field>
+            <field type="LONGTEXT NULL">fieldData</field>
+            <field type="TINYINT(1)">active</field>
+            <field type="BIGINT(10) NULL">parent</field>
 
             <primary>id</primary>
-            <index>productNo</index>
             <auto_increment>id</auto_increment>
         </table>
 
@@ -31,9 +32,16 @@
             <field type="TEXT">prefix</field>
             <field type="TEXT">suffix</field>
             <field type="INT NOT NULL DEFAULT 0">priority</field>
+            <field type="TINYINT(1) NOT NULL DEFAULT 0">systemField</field>
+            <field type="TINYINT(1) NOT NULL DEFAULT 0">standardField</field>
+            <field type="TINYINT(1) NOT NULL DEFAULT 0">requiredField</field>
+            <field type="TEXT">options</field>
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
+            <index>systemField</index>
+            <index>standardField</index>
+            <index>requiredField</index>
         </table>
 
         <table name="products_cache">

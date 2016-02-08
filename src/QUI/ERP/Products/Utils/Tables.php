@@ -19,6 +19,11 @@ class Tables
     const PRODUCTS = 'products';
 
     /**
+     * Products table
+     */
+    const PRODUCTS_CACHE = 'products_cache';
+
+    /**
      * Field table
      */
     const FIELDS = 'product_fields';
@@ -36,6 +41,14 @@ class Tables
     public static function getProductTableName()
     {
         return QUI::getDBTableName(self::PRODUCTS);
+    }
+
+    /**
+     * @return string
+     */
+    public static function getProductCacheTableName()
+    {
+        return QUI::getDBTableName(self::PRODUCTS_CACHE);
     }
 
     /**
@@ -57,4 +70,5 @@ class Tables
     {
         return QUI::getDBTableName(self::CATEGORIES);
     }
+
 }

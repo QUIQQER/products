@@ -93,6 +93,34 @@ define('package/quiqqer/products/bin/classes/Fields', [
         },
 
         /**
+         * Return all field types
+         *
+         * @returns {Promise}
+         */
+        getSystemFields: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_fields_getSystemFields', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
+         * Return all field types
+         *
+         * @returns {Promise}
+         */
+        getStandardFields: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_fields_getStandardFields', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
          * Create a new field
          *
          * @params {Array} [params] - field attributes

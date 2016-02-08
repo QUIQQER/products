@@ -13,6 +13,22 @@ use QUI;
  */
 class Fields
 {
+    const FIELD_PRICE = 1;
+
+    const FIELD_TAX = 2;
+
+    const FIELD_PRODUCT = 3;
+
+    const FIELD_TITLE = 4;
+
+    const FIELD_SHORT_DESC = 5;
+
+    const FIELD_CONTENT = 6;
+
+    const FIELD_SUPPLIER = 7;
+
+    const FIELD_MANUFACTURER = 8;
+
     /**
      * @var array
      */
@@ -36,11 +52,31 @@ class Fields
     }
 
     /**
+     * Return all standard fields
+     *
      * @return array
      */
     public function getStandardFields()
     {
-        // TODO: Implement getFrontendView() method.
+        return $this->getFields(array(
+            'where' => array(
+                'standardField' => 1
+            )
+        ));
+    }
+
+    /**
+     * Return all system fields
+     *
+     * @return array
+     */
+    public function getSystemFields()
+    {
+        return $this->getFields(array(
+            'where' => array(
+                'systemField' => 1
+            )
+        ));
     }
 
     /**
@@ -80,12 +116,62 @@ class Fields
             ));
         }
 
+        // exist an id with 1000? field-id begin at 1000
+        $result = QUI::getDataBase()->fetch(array(
+            'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+            'where' => array(
+                'id' => array(
+                    'type' => '>=',
+                    'value' => 1000
+                )
+            ),
+            'limit' => 1
+        ));
+
+        if (!isset($result[0])) {
+            $data['id'] = 1000;
+        }
+
+
+        // @todo create field permissions -> view und edit
+
+
+        // @todo cache table columns anlegen -> f1, f2, f3
+        // @todo max 1000 columns prüfen
+
+
+        // insert field data
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             $data
         );
 
         $newId = QUI::getDataBase()->getPDO()->lastInsertId();
+
+
+        // add language var, if not exists
+        $localeGroup = 'quiqqer/products';
+        $localeVar   = 'products.field.' . $newId . '.title';
+
+        try {
+            $data = QUI\Translator::get($localeGroup, $localeVar);
+
+            if (!isset($data[0])) {
+                QUI\Translator::addUserVar($localeGroup, $localeVar, array());
+            }
+
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addNotice($Exception->getMessage(), array(
+                'trace' => $Exception->getTrace()
+            ));
+        }
+
+
+        // add cache colum
+        QUI::getDataBase()->table()->addColumn(
+            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            array('F' . $newId)
+        );
 
 
         return self::getField($newId);

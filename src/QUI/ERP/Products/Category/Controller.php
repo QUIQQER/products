@@ -21,24 +21,24 @@ class Controller
     /**
      * @var Category
      */
-    protected $Modell;
+    protected $Model;
 
     /**
      * Controller constructor.
      * @param Category $Modell
      */
-    public function __construct(Category $Modell)
+    public function __construct(Category $Model)
     {
-        $this->Modell = $Modell;
+        $this->Model = $Model;
     }
 
     /**
      * Return the Product Modell
      * @return Category
      */
-    public function getModell()
+    public function getModel()
     {
-        return $this->Modell;
+        return $this->Model;
     }
 
     /**
@@ -51,7 +51,7 @@ class Controller
         $fields = array();
 
         /* @var $Field QUI\ERP\Products\Field\Field */
-        foreach ($this->getModell()->getFields() as $Field) {
+        foreach ($this->getModel()->getFields() as $Field) {
             $attributes                 = $Field->getAttributes();
             $attributes['publicStatus'] = $Field->getAttribute('publicStatus') ? 1 : 0;
             $attributes['searchStatus'] = $Field->getAttribute('searchStatus') ? 1 : 0;
@@ -64,10 +64,10 @@ class Controller
             array(
                 'fields' => json_encode($fields)
             ),
-            array('id' => $this->getModell()->getId())
+            array('id' => $this->getModel()->getId())
         );
 
-        QUI\ERP\Products\Handler\Categories::clearCache($this->getModell()->getId());
+        QUI\ERP\Products\Handler\Categories::clearCache($this->getModel()->getId());
     }
 
     /**
@@ -76,7 +76,7 @@ class Controller
      */
     public function delete()
     {
-        if ($this->getModell()->getId() === 0) {
+        if ($this->getModel()->getId() === 0) {
             return;
         }
 
@@ -101,7 +101,7 @@ class Controller
             }
         };
 
-        $recursiveHelper($this->Modell->getId());
+        $recursiveHelper($this->Model->getId());
 
         foreach ($ids as $id) {
             $id = (int)$id;

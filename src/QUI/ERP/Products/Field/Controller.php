@@ -36,7 +36,7 @@ class Controller
      * Return the Product Modell
      * @return Field
      */
-    public function getModell()
+    public function getModel()
     {
         return $this->Field;
     }
@@ -83,6 +83,12 @@ class Controller
         QUI\Translator::delete(
             'quiqqer/products',
             'products.field.' . $this->Field->getId() . '.title'
+        );
+
+        // delete column
+        QUI::getDataBase()->table()->deleteColumn(
+            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            array('F' . $this->Field->getId())
         );
     }
 }
