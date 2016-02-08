@@ -116,6 +116,19 @@ class Fields
             ));
         }
 
+        // cache colum check
+        $columns = QUI::getDataBase()->table()->getColumns(
+            QUI\ERP\Products\Utils\Tables::getProductCacheTableName()
+        );
+
+        if (count($columns) > 1000) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.products.column.maxSize'
+            ));
+        }
+
+
         // exist an id with 1000? field-id begin at 1000
         $result = QUI::getDataBase()->fetch(array(
             'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
@@ -134,10 +147,9 @@ class Fields
 
 
         // @todo create field permissions -> view und edit
+        QUI::getPermissionManager()->addPermission(array(
 
-
-        // @todo cache table columns anlegen -> f1, f2, f3
-        // @todo max 1000 columns prüfen
+        ));
 
 
         // insert field data
@@ -167,12 +179,11 @@ class Fields
         }
 
 
-        // add cache colum
+        // create new cache column
         QUI::getDataBase()->table()->addColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             array('F' . $newId)
         );
-
 
         return self::getField($newId);
     }

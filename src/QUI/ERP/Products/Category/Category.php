@@ -76,14 +76,6 @@ class Category extends QUI\QDOM
     }
 
     /**
-     * @return Controller
-     */
-    protected function getController()
-    {
-        return new Controller($this);
-    }
-
-    /**
      * Return the title / name of the category
      *
      * @param QUI\Locale|Boolean $Locale - optional
@@ -445,7 +437,28 @@ class Category extends QUI\QDOM
      */
     public function save()
     {
-        $this->getController()->save();
+        QUI\Rights\Permission::checkPermission('category.edit');
+
+        $fields = array();
+
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        foreach ($this->getFields() as $Field) {
+            $attributes                 = $Field->getAttributes();
+            $attributes['publicStatus'] = $Field->getAttribute('publicStatus') ? 1 : 0;
+            $attributes['searchStatus'] = $Field->getAttribute('searchStatus') ? 1 : 0;
+
+            $fields[] = $attributes;
+        }
+
+        QUI::getDataBase()->update(
+            QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+            array(
+                'fields' => json_encode($fields)
+            ),
+            array('id' => $this->getId())
+        );
+
+        QUI\ERP\Products\Handler\Categories::clearCache($this->getId());
     }
 
     /**
@@ -457,6 +470,51 @@ class Category extends QUI\QDOM
             return;
         }
 
-        $this->getController()->delete();
+        if ($this->getId() === 0) {
+            return;
+        }
+
+        QUI\Rights\Permission::checkPermission('category.delete');
+
+        // get children ids
+        $ids = array();
+
+        $recursiveHelper = function ($parentId) use (&$ids, &$recursiveHelper) {
+            try {
+                $Category = QUI\ERP\Products\Handler\Categories::getCategory($parentId);
+                $children = $Category->getChildren();
+
+                $ids[] = $Category->getId();
+
+                /* @var $Child QUI\ERP\Products\Category\Category */
+                foreach ($children as $Child) {
+                    $recursiveHelper($Child->getId(), $ids, $recursiveHelper);
+                }
+
+            } catch (QUI\Exception $Exception) {
+            }
+        };
+
+        $recursiveHelper($this->getId());
+
+        foreach ($ids as $id) {
+            $id = (int)$id;
+
+            if (!$id) {
+                continue;
+            }
+
+            QUI::getDataBase()->delete(
+                QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+                array('id' => $id)
+            );
+
+            QUI\Translator::delete(
+                'quiqqer/products',
+                'products.category.' . $id . '.title'
+            );
+
+            QUI\ERP\Products\Handler\Categories::clearCache($id);
+        }
     }
 }

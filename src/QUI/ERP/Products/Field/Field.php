@@ -88,14 +88,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * @return Controller
-     */
-    protected function getController()
-    {
-        return new Controller($this);
-    }
-
-    /**
      * Return the view for the backend
      *
      * @return \QUI\ERP\Products\Field\View
@@ -141,7 +133,25 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function save()
     {
-        $this->getController()->save();
+        QUI\Rights\Permission::checkPermission('field.edit');
+
+        $allowedAttributes = QUI\ERP\Products\Handler\Fields::getChildAttributes();
+
+        $data = array();
+
+        foreach ($allowedAttributes as $attribute) {
+            if ($this->getAttribute($attribute)) {
+                $data[$attribute] = $this->getAttribute($attribute);
+            } else {
+                $data[$attribute] = '';
+            }
+        }
+
+        QUI::getDataBase()->update(
+            QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+            $data,
+            array('id' => $this->getId())
+        );
     }
 
     /**
@@ -149,7 +159,24 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function delete()
     {
-        $this->getController()->delete();
+        QUI\Rights\Permission::checkPermission('field.delete');
+
+        QUI::getDataBase()->delete(
+            QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+            array('id' => $this->getId())
+        );
+
+        // delete the locale
+        QUI\Translator::delete(
+            'quiqqer/products',
+            'products.field.' . $this->getId() . '.title'
+        );
+
+        // delete column
+        QUI::getDataBase()->table()->deleteColumn(
+            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            array('F' . $this->getId())
+        );
     }
 
     /**
