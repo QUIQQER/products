@@ -12,6 +12,7 @@
  * @require Locale
  *
  * @event onAddCategory [ this, id ]
+ * @event onChange [ this ]
  */
 define('package/quiqqer/products/bin/controls/categories/Select', [
 
@@ -248,8 +249,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
          * @return {String}
          */
         getValue: function () {
-            console.log(this.$Input);
-            console.log(this.$values);
             return this.$Input.value;
         },
 
@@ -546,6 +545,8 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             this.$Input.fireEvent('change', [{
                 target: this.$Input
             }]);
+
+            this.fireEvent('change', [this]);
         },
 
         /**

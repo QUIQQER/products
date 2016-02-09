@@ -9,7 +9,7 @@ namespace QUI\ERP\Products\Product;
  * Class ViewAdmin
  * @package QUI\ERP\Products\Product
  */
-class ViewBackend extends View
+class ViewBackend extends ViewFrontend
 {
 
 }

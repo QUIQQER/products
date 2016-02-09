@@ -13,7 +13,7 @@ use QUI;
  *
  * @package QUI\ERP\Products\Product
  */
-class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
+class ViewFrontend extends QUI\QDOM
 {
     /**
      * @var Product
@@ -22,9 +22,9 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
     /**
      * View constructor.
-     * @param Product $Product
+     * @param Modell $Product
      */
-    public function __construct(Product $Product)
+    public function __construct(Modell $Product)
     {
         $this->Product = $Product;
     }

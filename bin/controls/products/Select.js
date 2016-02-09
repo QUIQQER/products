@@ -11,6 +11,7 @@
  * @require Locale
  *
  * @event onAddDiscount [ this, id ]
+ * @event onChange [ this ]
  */
 define('package/quiqqer/products/bin/controls/products/Select', [
 
@@ -538,6 +539,8 @@ define('package/quiqqer/products/bin/controls/products/Select', [
             this.$Input.fireEvent('change', [{
                 target: this.$Input
             }]);
+
+            this.fireEvent('change', [this]);
         },
 
         /**

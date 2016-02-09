@@ -1,7 +1,7 @@
 <form>
     <h1>Produkt anlegen</h1>
 
-    <table class="data-table data-table-flexbox">
+    <table class="data-table data-table-flexbox product-data">
         <thead>
         <tr>
             <th>
@@ -11,7 +11,7 @@
         </thead>
 
         <tbody>
-        <tr class="odd">
+        <tr>
             <td>
                 <label class="field-container">
                     <span class="field-container-item" title="{{productTitle}}">
@@ -21,7 +21,7 @@
                 </label>
             </td>
         </tr>
-        <tr class="even">
+        <tr>
             <td>
                 <label class="field-container">
                     <span class="field-container-item" title="{{productNo}}">
@@ -31,7 +31,7 @@
                 </label>
             </td>
         </tr>
-        <tr class="even">
+        <tr>
             <td>
                 <label class="field-container">
                     <span class="field-container-item" title="{{productCategories}}">
@@ -41,14 +41,13 @@
                 </label>
             </td>
         </tr>
-        <tr class="even" style="display: none">
+        <tr style="display: none">
             <td>
                 <label class="field-container">
                     <span class="field-container-item" title="{{productCategory}}">
                         {{productCategory}}
                     </span>
-                    <select class="field-container-field" name="product-category" disabled>
-                    </select>
+                    <select class="field-container-field" name="product-category"></select>
                 </label>
             </td>
         </tr>
