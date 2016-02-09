@@ -560,6 +560,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 Item.getAttribute('categoryId')
             );
 
+            this.fireEvent('delete', [this, Item]);
             this.$refreshValues();
         },
 

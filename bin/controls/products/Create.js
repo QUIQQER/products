@@ -85,6 +85,16 @@ define('package/quiqqer/products/bin/controls/products/Create', [
 
             this.$Categories = new CategoriesSelect({
                 events: {
+                    onDelete: function (Select, Item) {
+                        var categoryId = Item.getAttribute('categoryId');
+                        var Option     = ProductCategory.getElement(
+                            '[value="' + categoryId + '"]'
+                        );
+
+                        if (Option) {
+                            Option.destroy();
+                        }
+                    },
                     onChange: function () {
                         var ids = self.$Categories.getValue();
                         var Row = ProductCategory.getParent('tr');
@@ -117,14 +127,6 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                             return;
                         }
 
-                        Row.setStyles({
-                            display : 'inline',
-                            'float' : 'left',
-                            height  : 0,
-                            overflow: 'hidden',
-                            position: 'relative'
-                        });
-
                         var i, len, id;
 
                         for (i = 0, len = ids.length; i < len; i++) {
@@ -138,6 +140,18 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                                 html : QUILocale.get(lg, 'products.category.' + id + '.title')
                             }).inject(ProductCategory);
                         }
+
+                        if (Row.getStyle('display') == 'table-row') {
+                            return;
+                        }
+
+                        Row.setStyles({
+                            display : 'inline',
+                            'float' : 'left',
+                            height  : 0,
+                            overflow: 'hidden',
+                            position: 'relative'
+                        });
 
                         moofx(Row).animate({
                             height : 50,
@@ -192,7 +206,8 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 for (i = 0, len = diffFields.length; i < len; i++) {
                     new Element('tr', {
                         html: Mustache.render(templateField, {
-                            fieldTitle: QUILocale.get(lg, 'products.field.' + diffFields[i].id + '.title')
+                            fieldTitle: QUILocale.get(lg, 'products.field.' + diffFields[i].id + '.title'),
+                            fieldName : 'field-' + diffFields[i].id
                         })
                     }).inject(StandardFields);
                 }
@@ -201,7 +216,8 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 for (i = 0, len = systemFields.length; i < len; i++) {
                     new Element('tr', {
                         html: Mustache.render(templateField, {
-                            fieldTitle: QUILocale.get(lg, 'products.field.' + systemFields[i].id + '.title')
+                            fieldTitle: QUILocale.get(lg, 'products.field.' + systemFields[i].id + '.title'),
+                            fieldName : 'field-' + systemFields[i].id
                         })
                     }).inject(Data);
                 }
