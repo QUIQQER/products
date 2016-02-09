@@ -7,6 +7,8 @@ namespace QUI\ERP\Products;
 
 use QUI;
 use QUI\Package\Package;
+use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Handler\Products;
 
 /**
  * Class EventHandling
@@ -38,7 +40,11 @@ class EventHandling
                 'priority' => '',
                 'systemField' => 1,
                 'standardField' => 1,
-                'requiredField' => 1
+                'requiredField' => 1,
+                'titles' => array(
+                    'de' => 'Preis',
+                    'en' => 'Price'
+                )
             ),
             // MwSt ID
             array(
@@ -49,7 +55,11 @@ class EventHandling
                 'priority' => '',
                 'systemField' => 1,
                 'standardField' => 1,
-                'requiredField' => 1
+                'requiredField' => 1,
+                'titles' => array(
+                    'de' => 'Mehrwertsteuer',
+                    'en' => 'Tax'
+                )
             ),
             // Artikel Nummer
             array(
@@ -60,7 +70,11 @@ class EventHandling
                 'priority' => '',
                 'systemField' => 1,
                 'standardField' => 1,
-                'requiredField' => 1
+                'requiredField' => 1,
+                'titles' => array(
+                    'de' => 'Artikel Nummer',
+                    'en' => 'Artikel No.'
+                )
             ),
             // Title
             array(
@@ -75,6 +89,10 @@ class EventHandling
                 'options' => array(
                     'maxLength' => 255,
                     'minLength' => 3
+                ),
+                'titles' => array(
+                    'de' => 'Titel',
+                    'en' => 'Title'
                 )
             ),
             // Short Desc
@@ -90,6 +108,10 @@ class EventHandling
                 'options' => array(
                     'maxLength' => 255,
                     'minLength' => 3
+                ),
+                'titles' => array(
+                    'de' => 'Kurzbeschreibung',
+                    'en' => 'Short description'
                 )
             ),
             // Content
@@ -104,6 +126,10 @@ class EventHandling
                 'requiredField' => 1,
                 'options' => array(
                     'html' => 1
+                ),
+                'titles' => array(
+                    'de' => 'Inhalt',
+                    'en' => 'Content'
                 )
             ),
             // Lieferant
@@ -118,6 +144,10 @@ class EventHandling
                 'requiredField' => 0,
                 'options' => array(
                     'html' => 1
+                ),
+                'titles' => array(
+                    'de' => 'Lieferant',
+                    'en' => 'Supplier'
                 )
             ),
             // Hersteller
@@ -132,6 +162,10 @@ class EventHandling
                 'requiredField' => 0,
                 'options' => array(
                     'html' => 1
+                ),
+                'titles' => array(
+                    'de' => 'Hersteller',
+                    'en' => 'Manufacturer'
                 )
             )
         );
@@ -148,14 +182,22 @@ class EventHandling
                 continue;
             }
 
-            if (isset($field['options'])) {
-                $field['options'] = json_encode($field['options']);
+            try {
+                Fields::createField($field);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addAlert($Exception->getMessage());
             }
 
-            QUI::getDataBase()->insert(
-                QUI\ERP\Products\Utils\Tables::getFieldTableName(),
-                $field
-            );
+
+//
+//            if (isset($field['options'])) {
+//                $field['options'] = json_encode($field['options']);
+//            }
+//
+//            QUI::getDataBase()->insert(
+//                QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+//                $field
+//            );
         }
     }
 }

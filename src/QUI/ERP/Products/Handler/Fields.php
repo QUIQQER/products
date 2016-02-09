@@ -128,28 +128,45 @@ class Fields
             ));
         }
 
-
-        // exist an id with 1000? field-id begin at 1000
-        $result = QUI::getDataBase()->fetch(array(
-            'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
-            'where' => array(
-                'id' => array(
-                    'type' => '>=',
-                    'value' => 1000
+        // id checking
+        if (isset($attributes['id'])) {
+            $result = QUI::getDataBase()->fetch(array(
+                'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+                'where' => array(
+                    'id' => $attributes['id']
                 )
-            ),
-            'limit' => 1
-        ));
+            ));
 
-        if (!isset($result[0])) {
-            $data['id'] = 1000;
+            if (isset($result[0])) {
+                throw new QUI\Exception(array(
+                    'quiqqer/products',
+                    'exception.id.already.exists'
+                ));
+            }
+
+            $data['id'] = $attributes['id'];
+
+        } else {
+            // exist an id with 1000? field-id begin at 1000
+            $result = QUI::getDataBase()->fetch(array(
+                'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+                'where' => array(
+                    'id' => array(
+                        'type' => '>=',
+                        'value' => 1000
+                    )
+                ),
+                'limit' => 1
+            ));
+
+            if (!isset($result[0])) {
+                $data['id'] = 1000;
+            }
         }
 
 
         // @todo create field permissions -> view und edit
-        QUI::getPermissionManager()->addPermission(array(
-
-        ));
+        QUI::getPermissionManager()->addPermission(array());
 
 
         // insert field data
@@ -158,7 +175,11 @@ class Fields
             $data
         );
 
-        $newId = QUI::getDataBase()->getPDO()->lastInsertId();
+        if (isset($data['id'])) {
+            $newId = $data['id'];
+        } else {
+            $newId = QUI::getDataBase()->getPDO()->lastInsertId();
+        }
 
 
         // add language var, if not exists
@@ -166,10 +187,15 @@ class Fields
         $localeVar   = 'products.field.' . $newId . '.title';
 
         try {
-            $data = QUI\Translator::get($localeGroup, $localeVar);
+            $data  = QUI\Translator::get($localeGroup, $localeVar);
+            $texts = array();
+
+            if (isset($attributes['titles'])) {
+                $texts = $attributes['titles'];
+            }
 
             if (!isset($data[0])) {
-                QUI\Translator::addUserVar($localeGroup, $localeVar, array());
+                QUI\Translator::addUserVar($localeGroup, $localeVar, $texts);
             }
 
         } catch (QUI\Exception $Exception) {
@@ -178,11 +204,10 @@ class Fields
             ));
         }
 
-
         // create new cache column
         QUI::getDataBase()->table()->addColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            array('F' . $newId)
+            array('F' . $newId => 'text')
         );
 
         return self::getField($newId);
