@@ -7,6 +7,7 @@ namespace QUI\ERP\Products\Handler;
 
 use QUI;
 use QUI\ERP\Products\Category\Category;
+use QUI\ERP\Products\Field\Field;
 
 /**
  * Class Products
@@ -44,7 +45,7 @@ class Products
      * Create a new Product
      *
      * @param array $categories - list of category IDs or category Objects
-     * @param array $fields - optional, list of fields
+     * @param array $fields - optional, list of fields (Field, Field, Field)
      * @param string $productNo - optional, own product number
      *
      * @return QUI\ERP\Products\Product\Product
@@ -55,6 +56,7 @@ class Products
     {
         QUI\Rights\Permission::checkPermission('product.create');
 
+        // categories
         $categoryids = array();
 
         foreach ($categories as $Category) {
@@ -88,6 +90,19 @@ class Products
             ));
         }
 
+        // fields
+        $fieldData = array();
+
+        /* @var $Field Field */
+        foreach ($fields as $Field) {
+            if ($Field->isRequired()) {
+                $Field->validate($Field->getValue());
+            }
+
+            $fieldData = $Field->toProductArray();
+        }
+
+
         if (!is_string($productNo)) {
             $productNo = '';
         }
@@ -97,7 +112,7 @@ class Products
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
                 'productNo' => $productNo,
-                'data' => json_encode($fields),
+                'data' => json_encode($fieldData),
                 'categories' => ',' . implode($categories, ',') . ','
             )
         );

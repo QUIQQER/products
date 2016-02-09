@@ -205,20 +205,24 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 // standard felder
                 for (i = 0, len = diffFields.length; i < len; i++) {
                     new Element('tr', {
-                        html: Mustache.render(templateField, {
+                        'class'       : 'field',
+                        html          : Mustache.render(templateField, {
                             fieldTitle: QUILocale.get(lg, 'products.field.' + diffFields[i].id + '.title'),
                             fieldName : 'field-' + diffFields[i].id
-                        })
+                        }),
+                        'data-fieldid': diffFields[i].id
                     }).inject(StandardFields);
                 }
 
                 // systemfields
                 for (i = 0, len = systemFields.length; i < len; i++) {
                     new Element('tr', {
-                        html: Mustache.render(templateField, {
+                        'class'       : 'field',
+                        html          : Mustache.render(templateField, {
                             fieldTitle: QUILocale.get(lg, 'products.field.' + systemFields[i].id + '.title'),
                             fieldName : 'field-' + systemFields[i].id
-                        })
+                        }),
+                        'data-fieldid': systemFields[i].id
                     }).inject(Data);
                 }
 
@@ -237,11 +241,18 @@ define('package/quiqqer/products/bin/controls/products/Create', [
 
             return new Promise(function (resolve, reject) {
                 var categories = self.$Categories.getValue().trim().split(','),
-                    fields     = [],
                     ProductNo  = Elm.getElement('[name="productNo"]');
 
-                console.log(self.$Categories.getValue().trim());
-                console.log(categories);
+                var fieldList = Elm.getElements('.field');
+
+                var fields = fieldList.map(function (Row) {
+                    var fieldId = Row.get('data-fieldid');
+
+                    return {
+                        fieldId: fieldId,
+                        value  : Row.getElement('input').value
+                    };
+                });
 
                 if (!categories.length) {
                     QUI.getMessageHandler().then(function (MH) {

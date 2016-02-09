@@ -4,6 +4,9 @@
  * This file contains package_quiqqer_products_ajax_products_create
  */
 
+use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Handler\Products;
+
 /**
  * Create a new product
  *
@@ -19,8 +22,20 @@ QUI::$Ajax->registerFunction(
         $fields     = json_decode($fields, true);
         $categories = json_decode($categories, true);
 
-        $Products = new QUI\ERP\Products\Handler\Products();
-        $Product  = $Products->createProduct($categories, $fields, $productNo);
+        $fieldList = array();
+
+        foreach ($fields as $fieldData) {
+            try {
+                $Field = Fields::getField($fieldData['fieldId']);
+                $Field->setValue($fieldData['value']);
+
+                $fieldList[] = $Field;
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
+        $Products = new Products();
+        $Product  = $Products->createProduct($categories, $fieldList, $productNo);
 
         return $Product->getAttributes();
     },
