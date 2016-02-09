@@ -47,7 +47,10 @@ class Fields
             'search_type',
             'prefix',
             'suffix',
-            'priority'
+            'priority',
+            'standardField',
+            'systemField',
+            'requiredField'
         );
     }
 
@@ -193,6 +196,9 @@ class Fields
             if (isset($attributes['titles'])) {
                 $texts = $attributes['titles'];
             }
+
+            $texts['datatype'] = 'php,js';
+            $texts['html']     = 1;
 
             if (!isset($data[0])) {
                 QUI\Translator::addUserVar($localeGroup, $localeVar, $texts);

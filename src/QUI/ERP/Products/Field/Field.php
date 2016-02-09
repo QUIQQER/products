@@ -175,7 +175,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         // delete column
         QUI::getDataBase()->table()->deleteColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            array('F' . $this->getId())
+            'F' . $this->getId()
         );
     }
 
