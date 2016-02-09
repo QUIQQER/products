@@ -28,7 +28,7 @@ class Fields
 
             /* @var $Field QUI\ERP\Products\Interfaces\Field */
             try {
-                self::checkField($Field);
+                self::validateField($Field);
 
                 $result[] = $Field->toProductArray();
 
@@ -59,12 +59,14 @@ class Fields
     }
 
     /**
+     * Validate the value of the field
+     *
      * @param QUI\ERP\Products\Interfaces\Field $Field
      * @throws QUI\Exception
      */
-    public static function checkField(QUI\ERP\Products\Interfaces\Field $Field)
+    public static function validateField(QUI\ERP\Products\Interfaces\Field $Field)
     {
-        $Field->checkValue(
+        $Field->validate(
             $Field->getValue()
         );
     }

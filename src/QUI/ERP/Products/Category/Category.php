@@ -336,10 +336,8 @@ class Category extends QUI\QDOM
             return $this->sites;
         }
 
-        QUI\System\Log::writeRecursive(get_class($Project));
-
-        if (get_class($Project)) {
-
+        if (get_class($Project) !== 'QUI\Projects\Project') {
+            return array();
         }
 
         $sites  = array();

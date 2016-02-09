@@ -14,7 +14,7 @@
         <tr class="odd">
             <td>
                 <label class="field-container">
-                    <span class="field-container-item">
+                    <span class="field-container-item" title="{{productTitle}}">
                         {{productTitle}}
                     </span>
                     <span class="field-container-field product-title"></span>
@@ -24,7 +24,7 @@
         <tr class="even">
             <td>
                 <label class="field-container">
-                    <span class="field-container-item">
+                    <span class="field-container-item" title="{{productNo}}">
                         {{productNo}}
                     </span>
                     <input class="field-container-field" type="text" name="productNo"/>
@@ -34,17 +34,28 @@
         <tr class="even">
             <td>
                 <label class="field-container">
-                    <span class="field-container-item">
+                    <span class="field-container-item" title="{{productCategories}}">
                         {{productCategories}}
                     </span>
                     <span class="field-container-field field-container-field-no-padding product-categories"></span>
                 </label>
             </td>
         </tr>
+        <tr class="even" style="display: none">
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item" title="{{productCategory}}">
+                        {{productCategory}}
+                    </span>
+                    <select class="field-container-field" name="product-category" disabled>
+                    </select>
+                </label>
+            </td>
+        </tr>
         </tbody>
     </table>
 
-    <table class="data-table data-table-flexbox">
+    <table class="data-table data-table-flexbox product-standardfield">
         <thead>
         <tr>
             <th>

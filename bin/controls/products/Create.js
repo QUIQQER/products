@@ -22,17 +22,21 @@ define('package/quiqqer/products/bin/controls/products/Create', [
     'Locale',
     'Mustache',
     'package/quiqqer/products/bin/classes/Products',
+    'package/quiqqer/products/bin/classes/Fields',
     'package/quiqqer/translator/bin/controls/Create',
     'package/quiqqer/products/bin/controls/categories/Select',
 
     'text!package/quiqqer/products/bin/controls/products/Create.html',
+    'text!package/quiqqer/products/bin/controls/products/CreateField.html',
     'css!package/quiqqer/products/bin/controls/products/Create.css'
 
-], function (QUI, QUIControl, QUILocale, Mustache, Handler, Translation, CategoriesSelect, template) {
+], function (QUI, QUIControl, QUILocale, Mustache, Handler, FieldHandler, Translation, CategoriesSelect,
+             template, templateField) {
     "use strict";
 
     var lg       = 'quiqqer/products',
-        Products = new Handler();
+        Products = new Handler(),
+        Fields   = new FieldHandler();
 
     return new Class({
 
@@ -68,7 +72,8 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 html   : Mustache.render(template, {
                     productTitle     : QUILocale.get('quiqqer/system', 'title'),
                     productNo        : QUILocale.get(lg, 'productNo'),
-                    productCategories: QUILocale.get(lg, 'productCategories')
+                    productCategories: QUILocale.get(lg, 'productCategories'),
+                    productCategory  : QUILocale.get(lg, 'productCategory')
                 })
             });
 
@@ -76,7 +81,13 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 group: 'quiqqer/products'
             }).inject(Elm.getElement('.product-title'));
 
-            this.$Categories = new CategoriesSelect().inject(
+            this.$Categories = new CategoriesSelect({
+                events: {
+                    onChange: function () {
+
+                    }
+                }
+            }).inject(
                 Elm.getElement('.product-categories')
             );
 
@@ -87,7 +98,37 @@ define('package/quiqqer/products/bin/controls/products/Create', [
          * event : on inject
          */
         $onInject: function () {
-            this.fireEvent('loaded');
+            var self = this;
+
+            var StandardFields = this.getElm().getElement('.product-standardfield tbody');
+
+            Promise.all([
+                Fields.getSystemFields(),
+                Fields.getStandardFields()
+            ]).then(function (result) {
+                var systemFields   = result[0],
+                    standardFields = result[1];
+
+                var diffFields = standardFields.filter(function (value) {
+                    for (var i = 0, len = systemFields.length; i < len; i++) {
+                        if (value.id === systemFields[i].id) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+
+                // standard felder
+                for (var i = 0, len = diffFields.length; i < len; i++) {
+                    new Element('tr', {
+                        html: Mustache.render(templateField, {
+                            fieldTitle: QUILocale.get(lg, 'products.field.' + diffFields[i].id + '.title')
+                        })
+                    }).inject(StandardFields);
+                }
+
+                self.fireEvent('loaded');
+            });
         },
 
         /**

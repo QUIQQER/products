@@ -17,7 +17,7 @@ use QUI\ERP\Products\Interfaces\Field;
  * @example
  * QUI\ERP\Products\Handler\Products::getProduct( ID );
  */
-class Product extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
+class Product extends QUI\QDOM
 {
     /**
      * Product-ID
@@ -40,19 +40,29 @@ class Product extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
     public function __construct($pid)
     {
         $this->id = (int)$pid;
-        $this->getController()->load();
+
+        $result = QUI::getDataBase()->fetch(array(
+            'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            'where' => array(
+                'id' => $this->getId()
+            )
+        ));
+
+        if (!isset($result[0])) {
+            throw new QUI\Exception(
+                array('quiqqer/products', 'exception.product.not.found'),
+                404,
+                array('id' => $this->getId())
+            );
+        }
+
+        unset($result[0]['id']);
+
+        $this->setAttributes($result[0]);
 
         if (defined('QUIQQER_BACKEND')) {
             $this->setAttribute('viewType', 'backend');
         }
-    }
-
-    /**
-     * @return Controller
-     */
-    protected function getController()
-    {
-        return new Controller($this);
     }
 
     /**
@@ -144,7 +154,17 @@ class Product extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
      */
     public function save()
     {
-        $this->getController()->save();
+        QUI\Rights\Permission::checkPermission('product.edit');
+
+
+        QUI::getDataBase()->update(
+            QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            array(
+                'productNo' => $this->getAttribute('productNo'),
+                'data' => $this->getFields()
+            ),
+            array('id' => $this->getId())
+        );
     }
 
     /**
@@ -152,20 +172,17 @@ class Product extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
      */
     public function delete()
     {
-        $this->getController()->delete();
+        QUI\Rights\Permission::checkPermission('product.delete');
+
+        QUI::getDataBase()->delete(
+            QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            array('id' => $this->getId())
+        );
     }
 
     /**
      * Field methods
      */
-
-    /**
-     * @param Field $Field
-     */
-    public function addField(Field $Field)
-    {
-        $this->fields[$Field->getId()] = $Field;
-    }
 
     /**
      * Return the product fields

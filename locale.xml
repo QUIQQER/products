@@ -49,7 +49,10 @@
             <de><![CDATA[Produkt-Kategorien]]></de>
             <en><![CDATA[Product categories]]></en>
         </locale>
-
+        <locale name="productCategory">
+            <de><![CDATA[Produkt-Hauptkategorie]]></de>
+            <en><![CDATA[Product main category]]></en>
+        </locale>
 
         <!-- Feldtypen -->
         <locale name="fieldtype.IntType">
