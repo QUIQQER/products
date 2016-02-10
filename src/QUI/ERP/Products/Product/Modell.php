@@ -146,6 +146,19 @@ class Modell extends QUI\QDOM
         $attributes['id']    = $this->getId();
         $attributes['title'] = $this->getTitle();
 
+        // fields
+        $fields    = array();
+        $fieldList = $this->getFields();
+
+        /* @var $Field Field */
+        foreach ($fieldList as $Field) {
+            $fields[] = $Field->toProductArray();
+        }
+
+        if (!empty($fields)) {
+            $attributes['fields'] = $fields;
+        }
+
         return $attributes;
     }
 

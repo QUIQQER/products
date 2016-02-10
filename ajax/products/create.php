@@ -12,13 +12,11 @@ use QUI\ERP\Products\Handler\Products;
  *
  * @param string $categories - JSON categories
  * @param string $fields - JSON fields
- * @param string $productNo - Several product number
- *
  * @return array
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_create',
-    function ($categories, $fields, $productNo) {
+    function ($categories, $fields) {
         $fields     = json_decode($fields, true);
         $categories = json_decode($categories, true);
 
@@ -35,10 +33,10 @@ QUI::$Ajax->registerFunction(
         }
 
         $Products = new Products();
-        $Product  = $Products->createProduct($categories, $fieldList, $productNo);
+        $Product  = $Products->createProduct($categories, $fieldList);
 
         return $Product->getAttributes();
     },
-    array('categories', 'fields', 'productNo'),
+    array('categories', 'fields'),
     'Permission::checkAdminUser'
 );

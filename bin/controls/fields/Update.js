@@ -132,7 +132,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
                 FieldRequired.checked = fieldData.isRequired;
                 FieldSystem.checked   = fieldData.isSystem;
-                FieldStandard.checked = fieldData.isStandard;
+                FieldStandard.checked = fieldData.standard;
 
                 self.fireEvent('loaded');
             });

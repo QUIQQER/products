@@ -76,6 +76,11 @@ define('package/quiqqer/products/bin/classes/Categories', [
             });
         },
 
+        /**
+         *
+         * @param categoryId
+         * @returns {*}
+         */
         getPath: function (categoryId) {
             return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_categories_path', resolve, {
@@ -100,6 +105,24 @@ define('package/quiqqer/products/bin/classes/Categories', [
                     'package': 'quiqqer/products',
                     onError  : reject,
                     params   : JSON.encode(params)
+                });
+            });
+        },
+
+        /**
+         * Return all fields from the categories
+         *
+         * @param {Array} categoryIds - List of category IDs
+         * @returns {Promise}
+         */
+        getFields: function (categoryIds) {
+            categoryIds = categoryIds || {};
+
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_categories_getFields', resolve, {
+                    'package'  : 'quiqqer/products',
+                    onError    : reject,
+                    categoryIds: JSON.encode(categoryIds)
                 });
             });
         },

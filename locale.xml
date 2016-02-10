@@ -25,8 +25,8 @@
             <en><![CDATA[Field type]]></en>
         </locale>
         <locale name="priority">
-            <de><![CDATA[Priorität]]></de>
-            <en><![CDATA[Priority]]></en>
+            <de><![CDATA[Sortierung]]></de>
+            <en><![CDATA[Sorting]]></en>
         </locale>
         <locale name="prefix">
             <de><![CDATA[Präfix]]></de>
@@ -79,6 +79,26 @@
             <en><![CDATA[Standard fields are automatically assigned to each product.]]></en>
         </locale>
 
+        <locale name="productMasterData">
+            <de><![CDATA[Stammdaten]]></de>
+            <en><![CDATA[Master data]]></en>
+        </locale>
+        <locale name="productDefaultFields">
+            <de><![CDATA[Standardfelder]]></de>
+            <en><![CDATA[Default fields]]></en>
+        </locale>
+
+
+        <locale name="products.product.panel.category.images">
+            <de><![CDATA[Produktbilder]]></de>
+            <en><![CDATA[Product images]]></en>
+        </locale>
+
+        <locale name="products.product.panel.category.files">
+            <de><![CDATA[Produktdateien]]></de>
+            <en><![CDATA[Product files]]></en>
+        </locale>
+
 
         <!-- Feldtypen -->
         <locale name="fieldtype.IntType">
@@ -125,6 +145,13 @@
             <de><![CDATA[]]></de>
             <en><![CDATA[]]></en>
         </locale>
+
+        <!-- exceptions -->
+        <locale name="exception.field.is.invalid">
+            <de><![CDATA[Bitte füllen Sie das Feld "[fieldtitle]" korrekt aus.]]></de>
+            <en><![CDATA[Please fill in the "[fieldtitle]" field correctly.]]></en>
+        </locale>
+
 
     </groups>
 
@@ -245,6 +272,10 @@
             <de><![CDATA[Suche]]></de>
             <en><![CDATA[Search]]></en>
         </locale>
+
+
+        <!-- produkte -->
+
 
     </groups>
 

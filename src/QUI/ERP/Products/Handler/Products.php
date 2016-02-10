@@ -46,13 +46,12 @@ class Products
      *
      * @param array $categories - list of category IDs or category Objects
      * @param array $fields - optional, list of fields (Field, Field, Field)
-     * @param string $productNo - optional, own product number
      *
      * @return QUI\ERP\Products\Product\Product
      *
      * @throws QUI\Exception
      */
-    public static function createProduct($categories = array(), $fields = array(), $productNo = '')
+    public static function createProduct($categories = array(), $fields = array())
     {
         QUI\Rights\Permission::checkPermission('product.create');
 
@@ -95,7 +94,20 @@ class Products
 
         /* @var $Field Field */
         foreach ($fields as $Field) {
+            $value = $Field->getValue();
+
             if ($Field->isRequired()) {
+                if (empty($value)) {
+                    throw new QUI\Exception(array(
+                        'quiqqer/products',
+                        'exception.field.is.invalid',
+                        array(
+                            'fieldId' => $Field->getId(),
+                            'fieldtitle' => $Field->getTitle()
+                        )
+                    ));
+                }
+
                 $Field->validate($Field->getValue());
             }
 
@@ -103,15 +115,9 @@ class Products
         }
 
 
-        if (!is_string($productNo)) {
-            $productNo = '';
-        }
-
-
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
-                'productNo' => $productNo,
                 'data' => json_encode($fieldData),
                 'categories' => ',' . implode($categories, ',') . ','
             )

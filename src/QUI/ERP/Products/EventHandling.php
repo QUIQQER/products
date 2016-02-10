@@ -57,7 +57,7 @@ class EventHandling
                 'standardField' => 1,
                 'requiredField' => 1,
                 'titles' => array(
-                    'de' => 'Mehrwertsteuer',
+                    'de' => 'MwSt.',
                     'en' => 'Tax'
                 )
             ),

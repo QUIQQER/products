@@ -75,12 +75,10 @@ define('package/quiqqer/products/bin/classes/Products', [
          *
          * @params {Array} categories - id list of categories
          * @params {Array} [fields] - product fields
-         * @params {Array} [productNo] - product number
          * @returns {Promise}
          */
-        createChild: function (categories, fields, productNo) {
-            productNo = productNo || '';
-            fields    = fields || {};
+        createChild: function (categories, fields) {
+            fields = fields || {};
 
             return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_create', function (result) {
@@ -97,8 +95,7 @@ define('package/quiqqer/products/bin/classes/Products', [
                     'package' : 'quiqqer/products',
                     onError   : reject,
                     categories: JSON.encode(categories),
-                    fields    : JSON.encode(fields),
-                    productNo : productNo
+                    fields    : JSON.encode(fields)
                 });
             });
         },

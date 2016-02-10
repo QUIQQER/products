@@ -70,10 +70,11 @@ define('package/quiqqer/products/bin/controls/products/Create', [
             Elm.set({
                 'class': 'product-create',
                 html   : Mustache.render(template, {
-                    productTitle     : QUILocale.get('quiqqer/system', 'title'),
-                    productNo        : QUILocale.get(lg, 'productNo'),
-                    productCategories: QUILocale.get(lg, 'productCategories'),
-                    productCategory  : QUILocale.get(lg, 'productCategory')
+                    productTitle        : QUILocale.get('quiqqer/system', 'title'),
+                    productCategories   : QUILocale.get(lg, 'productCategories'),
+                    productCategory     : QUILocale.get(lg, 'productCategory'),
+                    productDefaultFields: QUILocale.get(lg, 'productDefaultFields'),
+                    productMasterData   : QUILocale.get(lg, 'productMasterData')
                 })
             });
 
@@ -241,9 +242,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
 
             return new Promise(function (resolve, reject) {
                 var categories = self.$Categories.getValue().trim().split(','),
-                    ProductNo  = Elm.getElement('[name="productNo"]');
-
-                var fieldList = Elm.getElements('.field');
+                    fieldList  = Elm.getElements('.field');
 
                 var fields = fieldList.map(function (Row) {
                     var fieldId = Row.get('data-fieldid');
@@ -265,11 +264,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                     return reject('No categories');
                 }
 
-                Products.createChild(
-                    categories,
-                    fields,
-                    ProductNo.value
-                ).then(resolve).catch(reject);
+                Products.createChild(categories, fields).then(resolve).catch(reject);
             });
         }
     });

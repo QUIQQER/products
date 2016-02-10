@@ -383,6 +383,8 @@ class Fields
 
         if (isset($queryParams['order'])) {
             $query['order'] = $queryParams['order'];
+        } else {
+            $query['order'] = 'priority';
         }
 
         $result = array();
@@ -394,7 +396,7 @@ class Fields
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException(
                     $Exception,
-                    QUI\System\Log::LEVEL_DEBUG,
+                    QUI\System\Log::LEVEL_NOTICE,
                     $Exception->getContext()
                 );
             }
