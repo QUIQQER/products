@@ -308,8 +308,14 @@ class Fields
             );
         }
 
+        $fieldData = array(
+            'system' => (int)$data['systemField'],
+            'required' => (int)$data['requiredField'],
+            'standard' => (int)$data['standardField']
+        );
+
         /* @var $Field QUI\ERP\Products\Field\Field */
-        $Field = new $class($fieldId);
+        $Field = new $class($fieldId, $fieldData);
 
         if (!QUI\ERP\Products\Utils\Fields::isField($Field)) {
             throw new QUI\Exception(
@@ -323,7 +329,7 @@ class Fields
             );
         }
 
-        $Field->setAttributes($result[0]);
+        $Field->setAttributes($data);
 
         if (empty($data['priority'])) {
             $data['priority'] = 0;

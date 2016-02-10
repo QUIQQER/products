@@ -98,6 +98,31 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                 perPage: this.$Grid.options.perPage,
                 page   : this.$Grid.options.page
             }).then(function (data) {
+
+                var ElmOk = new Element('span', {
+                    'class': 'fa fa-check'
+                });
+
+                var ElmFalse = new Element('span', {
+                    'class': 'fa fa-remove'
+                });
+
+                data.data.each(function (value, key) {
+                    if (value.isStandard) {
+                        data.data[key].isStandard = ElmOk.clone();
+                    } else {
+                        data.data[key].isStandard = ElmFalse.clone();
+                    }
+
+                    if (value.isRequired) {
+                        data.data[key].isRequired = ElmOk.clone();
+                    } else {
+                        data.data[key].isRequired = ElmFalse.clone();
+                    }
+
+                    value.fieldtype = QUILocale.get(lg, 'fieldtype.' + value.type);
+                });
+
                 self.$Grid.setData(data);
 
                 var Delete = self.getButtons('delete'),
@@ -184,7 +209,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                     width    : 200
                 }, {
                     header   : QUILocale.get(lg, 'fieldtype'),
-                    dataIndex: 'type',
+                    dataIndex: 'fieldtype',
                     dataType : 'text',
                     width    : 200
                 }, {
@@ -203,10 +228,15 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                     dataType : 'text',
                     width    : 100
                 }, {
-                    header   : QUILocale.get(lg, 'searchtype'),
-                    dataIndex: 'searchtype',
-                    dataType : 'text',
-                    width    : 200
+                    header   : QUILocale.get(lg, 'standardField'),
+                    dataIndex: 'isStandard',
+                    dataType : 'node',
+                    width    : 60
+                }, {
+                    header   : QUILocale.get(lg, 'requiredField'),
+                    dataIndex: 'isRequired',
+                    dataType : 'node',
+                    width    : 60
                 }]
             });
 

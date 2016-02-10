@@ -67,14 +67,20 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
             Elm.set({
                 'class': 'field-create',
                 html   : Mustache.render(template, {
-                    contentText    : '',
-                    tableHeader    : QUILocale.get(lg, 'control.field.create.header'),
-                    fieldTitle     : QUILocale.get('quiqqer/system', 'title'),
-                    fieldType      : QUILocale.get(lg, 'fieldtype'),
-                    fieldPriority  : QUILocale.get(lg, 'priority'),
-                    fieldPrefix    : QUILocale.get(lg, 'prefix'),
-                    fieldSuffix    : QUILocale.get(lg, 'suffix'),
-                    fieldSearchtype: QUILocale.get(lg, 'searchtype')
+                    contentText      : '',
+                    tableHeader      : QUILocale.get(lg, 'control.field.create.header'),
+                    fieldTitle       : QUILocale.get('quiqqer/system', 'title'),
+                    fieldType        : QUILocale.get(lg, 'fieldtype'),
+                    fieldPriority    : QUILocale.get(lg, 'priority'),
+                    fieldPrefix      : QUILocale.get(lg, 'prefix'),
+                    fieldSuffix      : QUILocale.get(lg, 'suffix'),
+                    fieldSearchtype  : QUILocale.get(lg, 'searchtype'),
+                    fieldRequired    : QUILocale.get(lg, 'requiredField'),
+                    fieldRequiredDesc: QUILocale.get(lg, 'requiredFieldDesc'),
+                    fieldSystem      : QUILocale.get(lg, 'systemField'),
+                    fieldSystemDesc  : QUILocale.get(lg, 'systemFieldDesc'),
+                    fieldStandard    : QUILocale.get(lg, 'standardField'),
+                    fieldStandardDesc: QUILocale.get(lg, 'standardFieldDesc')
                 })
             });
 
@@ -105,7 +111,10 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     FieldPriority   = Elm.getElement('[name="priority"]'),
                     FieldPrefix     = Elm.getElement('[name="prefix"]'),
                     FieldSuffix     = Elm.getElement('[name="suffix"]'),
-                    FieldSearchType = Elm.getElement('[name="searchtype"]');
+                    FieldSearchType = Elm.getElement('[name="searchtype"]'),
+                    FieldRequired   = Elm.getElement('[name="required"]'),
+                    FieldSystem     = Elm.getElement('[name="system"]'),
+                    FieldStandard   = Elm.getElement('[name="standard"]');
 
                 for (var i = 0, len = fieldTypes.length; i < len; i++) {
                     new Element('option', {
@@ -113,13 +122,17 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                         value: fieldTypes[i]
                     }).inject(FieldTypes);
                 }
-
+                console.log(fieldData);
                 // set data to the form
                 FieldTypes.value      = fieldData.type;
                 FieldPriority.value   = fieldData.priority;
                 FieldPrefix.value     = fieldData.prefix;
                 FieldSuffix.value     = fieldData.suffix;
                 FieldSearchType.value = fieldData.search_type;
+
+                FieldRequired.checked = fieldData.isRequired;
+                FieldSystem.checked   = fieldData.isSystem;
+                FieldStandard.checked = fieldData.isStandard;
 
                 self.fireEvent('loaded');
             });

@@ -52,6 +52,27 @@ interface Field
     public function setValue($value);
 
     /**
+     * Is the field a system field?
+     *
+     * @return boolean
+     */
+    public function isSystem();
+
+    /**
+     * Is the field a standard field?
+     *
+     * @return bool
+     */
+    public function isStandard();
+
+    /**
+     * Is the field a required field?
+     *
+     * @return boolean
+     */
+    public function isRequired();
+
+    /**
      * Check the value
      * is the value valid for the field type?
      *

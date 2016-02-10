@@ -156,12 +156,23 @@ class Modell extends QUI\QDOM
     {
         QUI\Rights\Permission::checkPermission('product.edit');
 
+        $fieldData = array();
+        $fields    = $this->getFields();
+
+        /* @var $Field Field */
+        foreach ($fields as $Field) {
+            if ($Field->isRequired()) {
+                $Field->validate($Field->getValue());
+            }
+
+            $fieldData = $Field->toProductArray();
+        }
 
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
                 'productNo' => $this->getAttribute('productNo'),
-                'data' => $this->getFields()
+                'data' => json_encode($fieldData)
             ),
             array('id' => $this->getId())
         );

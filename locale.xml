@@ -54,6 +54,32 @@
             <en><![CDATA[Product main category]]></en>
         </locale>
 
+        <locale name="requiredField">
+            <de><![CDATA[Pflichtfeld]]></de>
+            <en><![CDATA[Required field]]></en>
+        </locale>
+        <locale name="requiredFieldDesc">
+            <de><![CDATA[Dieses Feld muss beim Anlegen eines Produktes ausgefüllt werden.]]></de>
+            <en><![CDATA[This field must be filled out to create a new product.]]></en>
+        </locale>
+        <locale name="systemField">
+            <de><![CDATA[Systemfeld]]></de>
+            <en><![CDATA[System field]]></en>
+        </locale>
+        <locale name="systemFieldDesc">
+            <de><![CDATA[Ein vom System bereitgestelltest Feld. Diese Felder sind nicht löschbar.]]></de>
+            <en><![CDATA[A provided field by the system. These fields can not be deleted.]]></en>
+        </locale>
+        <locale name="standardField">
+            <de><![CDATA[Standardfeld]]></de>
+            <en><![CDATA[Standard field]]></en>
+        </locale>
+        <locale name="standardFieldDesc">
+            <de><![CDATA[Standardfelder sind jedem Produkt automatisch zugewiesen.]]></de>
+            <en><![CDATA[Standard fields are automatically assigned to each product.]]></en>
+        </locale>
+
+
         <!-- Feldtypen -->
         <locale name="fieldtype.IntType">
             <de><![CDATA[]]></de>

@@ -156,10 +156,19 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
     /**
      * Delete the field
+     *
+     * @throws QUI\Exception
      */
     public function delete()
     {
         QUI\Rights\Permission::checkPermission('field.delete');
+
+        if ($this->isSystem()) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exceptions.system.fields.cant.be.deleted'
+            ));
+        }
 
         QUI::getDataBase()->delete(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
@@ -254,6 +263,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['id']    = $this->getId();
         $attributes['title'] = $this->getTitle();
         $attributes['type']  = $type;
+
+        $attributes['isRequired'] = $this->isRequired();
+        $attributes['isStandard'] = $this->isStandard();
+        $attributes['isSystem']   = $this->isSystem();
 
         return $attributes;
     }
