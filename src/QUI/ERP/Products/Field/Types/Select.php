@@ -24,6 +24,15 @@ class Select extends QUI\ERP\Products\Field\Field
     }
 
     /**
+     * @return string
+     */
+    public function getJavaScriptControl()
+    {
+        // TODO: Implement getFrontendView() method.
+        return '';
+    }
+
+    /**
      * Check the value
      * is the value valid for the field type?
      *

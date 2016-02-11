@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Field\Types\Tax
+ * This file contains QUI\ERP\Products\Field\Types\Vat
  */
 namespace QUI\ERP\Products\Field\Types;
 
@@ -11,7 +11,7 @@ use QUI;
  * Class FloatType
  * @package QUI\ERP\Products\Field
  */
-class Tax extends QUI\ERP\Products\Field\Field
+class Vat extends QUI\ERP\Products\Field\Field
 {
     public function getBackendView()
     {
@@ -21,6 +21,14 @@ class Tax extends QUI\ERP\Products\Field\Field
     public function getFrontendView()
     {
         // TODO: Implement getFrontendView() method.
+    }
+
+    /**
+     * @return string
+     */
+    public function getJavaScriptControl()
+    {
+        return 'package/quiqqer/products/bin/controls/fields/types/Vat';
     }
 
     /**

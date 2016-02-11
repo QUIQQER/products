@@ -49,7 +49,7 @@ class EventHandling
             // MwSt ID
             array(
                 'id' => 2,
-                'type' => 'Tax',
+                'type' => 'Vat',
                 'prefix' => '',
                 'suffix' => '',
                 'priority' => '',
@@ -58,7 +58,7 @@ class EventHandling
                 'requiredField' => 1,
                 'titles' => array(
                     'de' => 'MwSt.',
-                    'en' => 'Tax'
+                    'en' => 'Vat'
                 )
             ),
             // Artikel Nummer

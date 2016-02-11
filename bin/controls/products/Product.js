@@ -27,6 +27,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'package/quiqqer/products/bin/classes/Products',
     'package/quiqqer/products/bin/classes/Categories',
     'package/quiqqer/products/bin/classes/Fields',
+    'package/quiqqer/products/bin/controls/categories/Select',
 
     'text!package/quiqqer/products/bin/controls/products/ProductData.html',
     'text!package/quiqqer/products/bin/controls/products/CreateField.html',
@@ -34,7 +35,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
 ], function (QUI, QUIPanel, QUIButton, QUIConfirm, Grid, QUILocale, Mustache,
              Translation, ProductHandler, CategoriesHandler, FieldsHandler,
-             templateProductData, templateField) {
+             CategorySelect, templateProductData, templateField) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -71,8 +72,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             this.parent(options);
 
-            this.$data        = {};
-            this.$Translation = null;
+            this.$data           = {};
+            this.$Translation    = null;
+            this.$CategorySelect = null;
 
             this.$Data  = null;
             this.$Media = null;
@@ -174,7 +176,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     'var'  : 'products.product.' + productId + '.title'
                 }).inject(Content.getElement('.product-title'));
 
+                // categories
+                self.$CategorySelect = new CategorySelect().inject(
+                    Content.getElement('.product-categories')
+                );
 
+                // fields
                 var Data = Content.getElement('.product-data tbody');
 
                 var StandardFields = Content.getElement(
@@ -187,6 +194,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 categories.push(parseInt(self.$data.category));
                 categories = categories.filter(function (item) {
                     return item !== '';
+                });
+
+                categories.each(function (categoryId) {
+                    self.$CategorySelect.addCategory(categoryId);
                 });
 
                 // Felderaufbau
@@ -202,18 +213,24 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         standardFields   = result[2];
 
                     for (i = 0, len = systemFields.length; i < len; i++) {
+
+                        console.log(systemFields[i]);
+
                         new Element('tr', {
                             'class'       : 'field',
                             html          : Mustache.render(templateField, {
                                 fieldTitle: QUILocale.get(lg, 'products.field.' + systemFields[i].id + '.title'),
-                                fieldName : 'field-' + systemFields[i].id
+                                fieldName : 'field-' + systemFields[i].id,
+                                control   : systemFields[i].jsControl
                             }),
                             'data-fieldid': systemFields[i].id
                         }).inject(Data);
                     }
 
-                    self.Loader.hide();
-                    self.getCategory('data').click();
+                    QUI.parse().then(function () {
+                        self.Loader.hide();
+                        self.getCategory('data').click();
+                    });
                 });
             });
         },
@@ -316,8 +333,40 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @returns {Promise}
          */
         update: function () {
-            return new Promise(function () {
+            var self = this,
+                Elm  = self.getElm();
 
+            self.Loader.show();
+
+            return new Promise(function (resolve, reject) {
+
+                if (!self.$Translation) {
+                    return reject('Translation not found');
+                }
+
+                self.$Translation.save().then(function () {
+
+                    resolve();
+
+                }).catch(reject);
+
+
+                return;
+
+                var Form = Elm.getElement('form');
+
+                Products.updateChild(
+                    self.getAttribute('fieldId'),
+                    {
+                        type       : Form.elements.fieldtype.value,
+                        search_type: Form.elements.searchtype.value,
+                        prefix     : Form.elements.prefix.value,
+                        suffix     : Form.elements.suffix.value,
+                        priority   : Form.elements.priority.value
+                    }
+                ).then(function () {
+                    return self.$Translation.save();
+                }).then(resolve()).catch(reject);
             });
         }
     });

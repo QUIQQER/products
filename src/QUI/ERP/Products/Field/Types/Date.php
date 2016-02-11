@@ -50,6 +50,15 @@ class Date extends QUI\ERP\Products\Field\Field
     }
 
     /**
+     * @return string
+     */
+    public function getJavaScriptControl()
+    {
+        // TODO: Implement getFrontendView() method.
+        return '';
+    }
+
+    /**
      * Return the Backend view
      */
     protected function getBackendView()

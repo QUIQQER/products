@@ -102,6 +102,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     abstract protected function getFrontendView();
 
     /**
+     * Return the name of the JavaScript Control for the field
+     *
+     * @return string
+     */
+    abstract public function getJavaScriptControl();
+
+    /**
      * Return the view
      *
      * @return \QUI\ERP\Products\Field\View
@@ -267,6 +274,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['isRequired'] = $this->isRequired();
         $attributes['isStandard'] = $this->isStandard();
         $attributes['isSystem']   = $this->isSystem();
+        $attributes['jsControl']  = $this->getJavaScriptControl();
 
         return $attributes;
     }
