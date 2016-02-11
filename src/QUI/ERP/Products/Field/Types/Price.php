@@ -28,8 +28,7 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     public function getJavaScriptControl()
     {
-        // TODO: Implement getFrontendView() method.
-        return '';
+        return 'package/quiqqer/products/bin/controls/fields/types/Price';
     }
 
     /**
