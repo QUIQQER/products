@@ -62,7 +62,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             productId: false
         },
 
-
         initialize: function (options) {
 
             this.setAttributes({
@@ -212,10 +211,18 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         systemFields     = result[1],
                         standardFields   = result[2];
 
+                    var diffFields = standardFields.filter(function (value) {
+                        for (var i = 0, len = systemFields.length; i < len; i++) {
+                            if (value.id === systemFields[i].id) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    });
+
+                    
+                    // systemfields
                     for (i = 0, len = systemFields.length; i < len; i++) {
-
-                        console.log(systemFields[i]);
-
                         new Element('tr', {
                             'class'       : 'field',
                             html          : Mustache.render(templateField, {
@@ -226,6 +233,20 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             'data-fieldid': systemFields[i].id
                         }).inject(Data);
                     }
+
+                    // standard felder
+                    for (i = 0, len = diffFields.length; i < len; i++) {
+                        new Element('tr', {
+                            'class'       : 'field',
+                            html          : Mustache.render(templateField, {
+                                fieldTitle: QUILocale.get(lg, 'products.field.' + diffFields[i].id + '.title'),
+                                fieldName : 'field-' + diffFields[i].id,
+                                control   : diffFields[i].jsControl
+                            }),
+                            'data-fieldid': diffFields[i].id
+                        }).inject(StandardFields);
+                    }
+
 
                     QUI.parse().then(function () {
                         self.Loader.hide();
