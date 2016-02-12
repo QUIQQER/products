@@ -9,7 +9,6 @@
  * @require Locale
  * @require Mustache
  * @require package/quiqqer/products/bin/classes/Products
- * @require package/quiqqer/translator/bin/controls/Create
  * @require text!package/quiqqer/products/bin/controls/products/Create.html
  * @require css!package/quiqqer/products/bin/controls/products/Create.css
  *
@@ -23,14 +22,13 @@ define('package/quiqqer/products/bin/controls/products/Create', [
     'Mustache',
     'package/quiqqer/products/bin/classes/Products',
     'package/quiqqer/products/bin/classes/Fields',
-    'package/quiqqer/translator/bin/controls/Create',
     'package/quiqqer/products/bin/controls/categories/Select',
 
     'text!package/quiqqer/products/bin/controls/products/Create.html',
     'text!package/quiqqer/products/bin/controls/products/CreateField.html',
     'css!package/quiqqer/products/bin/controls/products/Create.css'
 
-], function (QUI, QUIControl, QUILocale, Mustache, Handler, FieldHandler, Translation, CategoriesSelect,
+], function (QUI, QUIControl, QUILocale, Mustache, Handler, FieldHandler, CategoriesSelect,
              template, templateField) {
     "use strict";
 
@@ -50,8 +48,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Translation = null;
-            this.$Categories  = null;
+            this.$Categories = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -70,7 +67,6 @@ define('package/quiqqer/products/bin/controls/products/Create', [
             Elm.set({
                 'class': 'product-create',
                 html   : Mustache.render(template, {
-                    productTitle        : QUILocale.get('quiqqer/system', 'title'),
                     productCategories   : QUILocale.get(lg, 'productCategories'),
                     productCategory     : QUILocale.get(lg, 'productCategory'),
                     productDefaultFields: QUILocale.get(lg, 'productDefaultFields'),
@@ -79,10 +75,6 @@ define('package/quiqqer/products/bin/controls/products/Create', [
             });
 
             var ProductCategory = Elm.getElement('[name="product-category"]');
-
-            this.$Translation = new Translation({
-                group: 'quiqqer/products'
-            }).inject(Elm.getElement('.product-title'));
 
             this.$Categories = new CategoriesSelect({
                 events: {

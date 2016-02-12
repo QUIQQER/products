@@ -28,10 +28,6 @@ QUI::$Ajax->registerFunction(
             $result[] = $Field->getAttributes();
         }
 
-        usort($result, function ($a, $b) {
-            return $a['title'] > $b['title'];
-        });
-
         return $Grid->parseResult($result, $Fields->countFields());
     },
     array('params'),

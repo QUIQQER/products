@@ -7,6 +7,7 @@ namespace QUI\ERP\Products\Product;
 
 use QUI;
 use QUI\ERP\Products\Interfaces\Field;
+use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Class Controller
@@ -112,16 +113,33 @@ class Modell extends QUI\QDOM
     public function getTitle($Locale = false)
     {
         if (!$Locale) {
-            return QUI::getLocale()->get(
-                'quiqqer/products',
-                'products.product.' . $this->getId() . '.title'
-            );
+            $Locale = QUI::getLocale();
         }
 
-        return $Locale->get(
-            'quiqqer/products',
-            'products.product.' . $this->getId() . '.title'
+        $current = $Locale->getCurrent();
+
+        try {
+            $Field = $this->getField(Fields::FIELD_TITLE);
+            $data  = $Field->getValue();
+
+            if (isset($data[$current])) {
+                return $data[$current];
+            }
+        } catch (QUI\Exception $Exception) {
+        }
+
+        QUI\System\Log::addWarning(
+            QUI::getLocale()->get(
+                'quiqqer/products',
+                'warning.product.have.no.title'
+            ),
+            array(
+                'lang' => $current,
+                'id' => $this->getId()
+            )
         );
+
+        return '#' . $this->getId();
     }
 
     /**
@@ -219,10 +237,37 @@ class Modell extends QUI\QDOM
     }
 
     /**
-     * @param Field $Field
+     * Return the field
+     *
+     * @param integer $fieldId
+     * @return Field
+     * @throws QUI\Exception
      */
-    public function getFieldValue(Field $Field)
+    public function getField($fieldId)
     {
-        // TODO: Implement getFieldValue() method.
+        if (isset($this->fields[$fieldId])) {
+            return $this->fields[$fieldId];
+        }
+
+        throw new QUI\Exception(array(
+            'quiqqer/products',
+            'exception.field.not.found',
+            array(
+                'fieldId' => $fieldId,
+                'productId' => $this->getId()
+            )
+        ));
+    }
+
+    /**
+     * Return the field value
+     *
+     * @param integer $fieldId
+     * @return mixed
+     * @throws QUI\Exception
+     */
+    public function getFieldValue($fieldId)
+    {
+        return $this->getField($fieldId)->getValue();
     }
 }

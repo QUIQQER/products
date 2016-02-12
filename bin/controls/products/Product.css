@@ -6,6 +6,14 @@
     width: 100%;
 }
 
+.product-update-data {
+    left: 0;
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
 .product-update .field-container-item {
     width: 140px;
     overflow: hidden;
@@ -13,10 +21,11 @@
     white-space: nowrap;
 }
 
-.product-update-data {
-    left: 0;
-    padding: 20px;
-    position: absolute;
-    top: 0;
-    width: 100%;
+.product-update .field-container-item:first-child {
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.product-data .field-container-item:last-child .fa {
+    font-size: 14px;
 }

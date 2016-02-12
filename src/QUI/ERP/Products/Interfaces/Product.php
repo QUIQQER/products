@@ -29,12 +29,20 @@ interface Product
     public function getFields();
 
     /**
+     * Return the field
+     *
+     * @param integer $fieldId
+     * @return Field
+     */
+    public function getField($fieldId);
+
+    /**
      * Return the field attribute / value of the product
      *
-     * @param Field $Field
-     * @return array
+     * @param integer $fieldId
+     * @return mixed
      */
-    public function getFieldValue(Field $Field);
+    public function getFieldValue($fieldId);
 
     /**
      * Return the price object of the product

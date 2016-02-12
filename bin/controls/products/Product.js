@@ -23,7 +23,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'controls/grid/Grid',
     'Locale',
     'Mustache',
-    'package/quiqqer/translator/bin/controls/Update',
     'package/quiqqer/products/bin/classes/Products',
     'package/quiqqer/products/bin/classes/Categories',
     'package/quiqqer/products/bin/classes/Fields',
@@ -34,7 +33,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'css!package/quiqqer/products/bin/controls/products/Product.css'
 
 ], function (QUI, QUIPanel, QUIButton, QUIConfirm, Grid, QUILocale, Mustache,
-             Translation, ProductHandler, CategoriesHandler, FieldsHandler,
+             ProductHandler, CategoriesHandler, FieldsHandler,
              CategorySelect, templateProductData, templateField) {
     "use strict";
 
@@ -54,6 +53,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             'openData',
             'openImages',
             'openFiles',
+            'openField',
             '$onCreate',
             '$onInject'
         ],
@@ -71,10 +71,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             this.parent(options);
 
-            this.$data           = {};
-            this.$Translation    = null;
             this.$CategorySelect = null;
+            this.$FieldContainer = null;
 
+            this.$data  = {};
             this.$Data  = null;
             this.$Media = null;
             this.$Files = null;
@@ -114,24 +114,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     onClick: this.openData
                 }
             });
-
-            this.addCategory({
-                name  : 'images',
-                text  : QUILocale.get(lg, 'products.product.panel.category.images'),
-                icon  : 'fa fa-picture-o',
-                events: {
-                    onClick: this.openImages
-                }
-            });
-
-            this.addCategory({
-                name  : 'files',
-                text  : QUILocale.get(lg, 'products.product.panel.category.files'),
-                icon  : 'fa fa-file-text',
-                events: {
-                    onClick: this.openFiles
-                }
-            });
         },
 
         /**
@@ -151,8 +133,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 Content.addClass('product-update');
 
                 var dataTemplate = Mustache.render(templateProductData, {
-                    productTitle        : QUILocale.get('quiqqer/system', 'title'),
-                    productNo           : QUILocale.get(lg, 'productNo'),
                     productCategories   : QUILocale.get(lg, 'productCategories'),
                     productCategory     : QUILocale.get(lg, 'productCategory'),
                     productDefaultFields: QUILocale.get(lg, 'productDefaultFields'),
@@ -160,20 +140,18 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 });
 
                 Content.set({
-                    html: '<div class="product-update-data">' + dataTemplate + '</div>' +
-                          '<div class="product-update-media"></div>' +
-                          '<div class="product-update-files"></div>'
+                    html: '<div class="product-update-data sheet">' + dataTemplate + '</div>' +
+                          '<div class="product-update-field sheet"></div>' +
+                          '<div class="product-update-media sheet"></div>' +
+                          '<div class="product-update-files sheet"></div>'
                 });
 
                 self.$Data  = Content.getElement('.product-update-data');
                 self.$Media = Content.getElement('.product-update-media');
                 self.$Files = Content.getElement('.product-update-files');
 
+                self.$FieldContainer = Content.getElement('.product-update-field');
 
-                self.$Translation = new Translation({
-                    'group': 'quiqqer/products',
-                    'var'  : 'products.product.' + productId + '.title'
-                }).inject(Content.getElement('.product-title'));
 
                 // categories
                 self.$CategorySelect = new CategorySelect().inject(
@@ -207,9 +185,20 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 ]).then(function (result) {
                     var i, len;
 
-                    var categoriesFields = result[0],
+                    var fieldList        = [],
+                        categoriesFields = result[0],
                         systemFields     = result[1],
                         standardFields   = result[2];
+
+                    var complete = [].append(categoriesFields)
+                        .append(systemFields)
+                        .append(standardFields);
+
+                    for (i = 0, len = complete.length; i < len; i++) {
+                        fieldList[complete[i].id] = complete[i];
+                    }
+
+                    self.$createCategories(fieldList.clean());
 
                     var diffFields = standardFields.filter(function (value) {
                         for (var i = 0, len = systemFields.length; i < len; i++) {
@@ -220,7 +209,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         return true;
                     });
 
-                    
+
                     // systemfields
                     for (i = 0, len = systemFields.length; i < len; i++) {
                         new Element('tr', {
@@ -257,6 +246,53 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         },
 
         /**
+         *
+         * @param fields
+         */
+        $createCategories: function (fields) {
+            var self = this;
+
+            var fieldClick = function (Btn) {
+                self.openField(Btn.getAttribute('field'));
+            };
+
+            for (var i = 0, len = fields.length; i < len; i++) {
+                if (fields[i].type != 'TextareaMultiLang') {
+                    continue;
+                }
+
+                this.addCategory({
+                    name   : 'images',
+                    text   : fields[i].title,
+                    icon   : 'fa fa-picture-o',
+                    fieldId: fields[i].id,
+                    field  : fields[i],
+                    events : {
+                        onClick: fieldClick
+                    }
+                });
+            }
+
+            this.addCategory({
+                name  : 'images',
+                text  : QUILocale.get(lg, 'products.product.panel.category.images'),
+                icon  : 'fa fa-picture-o',
+                events: {
+                    onClick: this.openImages
+                }
+            });
+
+            this.addCategory({
+                name  : 'files',
+                text  : QUILocale.get(lg, 'products.product.panel.category.files'),
+                icon  : 'fa fa-file-text',
+                events: {
+                    onClick: this.openFiles
+                }
+            });
+        },
+
+        /**
          * Return the product data
          *
          * @returns {Promise}
@@ -271,26 +307,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @return {Promise}
          */
         openData: function () {
-            var self = this;
-
-            return new Promise(function (resolve) {
-
-                moofx([self.$Media, self.$Files]).animate({
-                    opacity: 0,
-                    top    : -20
-                }, {
-                    duration: 200,
-                    callback: function () {
-                        moofx(self.$Data).animate({
-                            opacity: 1,
-                            top    : 0
-                        }, {
-                            duration: 200,
-                            callback: resolve
-                        });
-                    }
-                });
-            });
+            return this.$hideCategories().then(function () {
+                return this.$showCategory(this.$Data);
+            }.bind(this));
         },
 
         /**
@@ -299,26 +318,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @return {Promise}
          */
         openImages: function () {
-            var self = this;
-
-            return new Promise(function (resolve) {
-
-                moofx([self.$Data, self.$Files]).animate({
-                    opacity: 0,
-                    top    : -20
-                }, {
-                    duration: 200,
-                    callback: function () {
-                        moofx(self.$Media).animate({
-                            opacity: 1,
-                            top    : 0
-                        }, {
-                            duration: 200,
-                            callback: resolve
-                        });
-                    }
-                });
-            });
+            return this.$hideCategories().then(function () {
+                return this.$showCategory(this.$Media);
+            }.bind(this));
         },
 
         /**
@@ -327,24 +329,34 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @return {Promise}
          */
         openFiles: function () {
+            return this.$hideCategories().then(function () {
+                return this.$showCategory(this.$Files);
+            }.bind(this));
+        },
+
+        /**
+         * Open a textarea field
+         *
+         * @param {Object} fielddData
+         */
+        openField: function (fielddData) {
             var self = this;
 
-            return new Promise(function (resolve) {
+            self.$FieldContainer.set('html', '');
 
-                moofx([self.$Data, self.$Media]).animate({
-                    opacity: 0,
-                    top    : -20
-                }, {
-                    duration: 200,
-                    callback: function () {
-                        moofx(self.$Files).animate({
-                            opacity: 1,
-                            top    : 0
-                        }, {
-                            duration: 200,
-                            callback: resolve
-                        });
-                    }
+            return this.$hideCategories().then(function () {
+                return self.$showCategory(self.$FieldContainer);
+            }).then(function () {
+                self.Loader.show();
+
+                require(['Editors'], function (Editors) {
+                    Editors.getEditor().then(function (Editor) {
+
+                        new Editor().inject(self.$FieldContainer);
+                        
+                        self.Loader.hide();
+                    });
+
                 });
             });
         },
@@ -361,15 +373,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             return new Promise(function (resolve, reject) {
 
-                if (!self.$Translation) {
-                    return reject('Translation not found');
-                }
 
-                self.$Translation.save().then(function () {
-
-                    resolve();
-
-                }).catch(reject);
+                resolve();
 
 
                 return;
@@ -385,9 +390,58 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         suffix     : Form.elements.suffix.value,
                         priority   : Form.elements.priority.value
                     }
-                ).then(function () {
-                    return self.$Translation.save();
-                }).then(resolve()).catch(reject);
+                ).then(resolve()).catch(reject);
+            });
+        },
+
+        /**
+         * Close all categories
+         *
+         * @returns {Promise}
+         */
+        $hideCategories: function () {
+            var nodes = this.getContent().getElements('.sheet');
+
+            return new Promise(function (resolve) {
+                moofx(nodes).animate({
+                    opacity: 0,
+                    top    : -20
+                }, {
+                    duration: 200,
+                    callback: function () {
+                        nodes.setStyles({
+                            position: 'absolute',
+                            display : 'none',
+                            opacity : 0
+                        });
+
+                        resolve();
+                    }
+                });
+            }.bind(this));
+        },
+
+        /**
+         * Show a category
+         *
+         * @param {HTMLDivElement} Node
+         * @returns {Promise}
+         */
+        $showCategory: function (Node) {
+            return new Promise(function (resolve) {
+                Node.setStyles({
+                    position: null,
+                    display : null,
+                    opacity : 0
+                });
+
+                moofx(Node).animate({
+                    opacity: 1,
+                    top    : 0
+                }, {
+                    duration: 200,
+                    callback: resolve
+                });
             });
         }
     });

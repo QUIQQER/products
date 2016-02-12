@@ -384,7 +384,7 @@ class Fields
         if (isset($queryParams['order'])) {
             $query['order'] = $queryParams['order'];
         } else {
-            $query['order'] = 'priority';
+            $query['order'] = 'priority ASC';
         }
 
         $result = array();

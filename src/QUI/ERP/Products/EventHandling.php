@@ -37,7 +37,7 @@ class EventHandling
                 'type' => 'Price',
                 'prefix' => '',
                 'suffix' => '',
-                'priority' => '',
+                'priority' => 5,
                 'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 1,
@@ -52,7 +52,7 @@ class EventHandling
                 'type' => 'Vat',
                 'prefix' => '',
                 'suffix' => '',
-                'priority' => '',
+                'priority' => 6,
                 'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 1,
@@ -67,7 +67,7 @@ class EventHandling
                 'type' => 'Input',
                 'prefix' => '',
                 'suffix' => '',
-                'priority' => '',
+                'priority' => 4,
                 'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 1,
@@ -82,7 +82,7 @@ class EventHandling
                 'type' => 'InputMultiLang',
                 'prefix' => '',
                 'suffix' => '',
-                'priority' => '',
+                'priority' => 1,
                 'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 1,
@@ -101,7 +101,7 @@ class EventHandling
                 'type' => 'InputMultiLang',
                 'prefix' => '',
                 'suffix' => '',
-                'priority' => '',
+                'priority' => 2,
                 'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 1,
@@ -120,7 +120,7 @@ class EventHandling
                 'type' => 'TextareaMultiLang',
                 'prefix' => '',
                 'suffix' => '',
-                'priority' => '',
+                'priority' => 3,
                 'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 1,
@@ -138,7 +138,7 @@ class EventHandling
                 'type' => 'GroupList',
                 'prefix' => '',
                 'suffix' => '',
-                'priority' => '',
+                'priority' => 7,
                 'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
@@ -156,7 +156,7 @@ class EventHandling
                 'type' => 'GroupList',
                 'prefix' => '',
                 'suffix' => '',
-                'priority' => '',
+                'priority' => 8,
                 'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
@@ -179,6 +179,20 @@ class EventHandling
             ));
 
             if (isset($result[0])) {
+                if ($field['id'] > 1000) {
+                    continue;
+                }
+
+                QUI::getDataBase()->update(
+                    QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+                    array(
+                        'type' => $field['type'],
+                        'prefix' => $field['prefix'],
+                        'suffix' => $field['suffix'],
+                        'priority' => $field['priority']
+                    ),
+                    array('id' => $field['id'])
+                );
                 continue;
             }
 

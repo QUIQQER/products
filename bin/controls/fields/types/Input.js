@@ -1,5 +1,5 @@
 /**
- * @module package/quiqqer/products/bin/controls/fields/types/Input
+ * @module package/quiqqer/products/bin/controls/fields/types/FloatType
  * @author www.pcsg.de (Henning Leutz)
  *
  * @require qui/QUI
