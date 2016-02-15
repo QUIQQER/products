@@ -32,6 +32,18 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
     }
 
     /**
+     * @param mixed $value
+     */
+    public function setValue($value)
+    {
+        if (is_string($value)) {
+            $value = json_decode($value, true);
+        }
+
+        parent::setValue($value);
+    }
+
+    /**
      * Check the value
      * is the value valid for the field type?
      *
@@ -40,7 +52,23 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      */
     public static function validate($value)
     {
-        // TODO: Implement validate() method.
+        if (!is_array($value)) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.inputMultiLang.invalid'
+            ));
+        }
+
+        $keys = array_keys($value);
+
+        foreach ($keys as $lang) {
+            if (!is_string($lang) || strlen($lang) != 2) {
+                throw new QUI\Exception(array(
+                    'quiqqer/products',
+                    'exception.field.inputMultiLang.invalid'
+                ));
+            }
+        }
     }
 
     /**

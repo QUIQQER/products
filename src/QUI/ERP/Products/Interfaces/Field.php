@@ -39,6 +39,14 @@ interface Field
     public function getName();
 
     /**
+     * Return the title / name of the field
+     *
+     * @param \QUI\Locale|Boolean $Locale - optional
+     * @return string
+     */
+    public function getTitle($Locale = false);
+
+    /**
      * @return mixed
      */
     public function getValue();

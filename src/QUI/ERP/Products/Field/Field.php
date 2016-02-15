@@ -199,6 +199,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Set the field name
      *
      * @param string $name
+     * @deprecated maybe? ... getTitle makes more sense
      */
     public function setName($name)
     {
@@ -236,7 +237,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * Return the title / name of the category
+     * Return the title of the field
+     * The title are from the user and translated
      *
      * @param QUI\Locale|Boolean $Locale - optional
      * @return string

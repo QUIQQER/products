@@ -155,6 +155,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 var fields     = data[0],
                     categories = data[1];
 
+                if (typeOf(fields) !== 'array') {
+                    fields = [];
+                }
+
+                if (typeOf(categories) !== 'array') {
+                    categories = [];
+                }
+
+
                 Content.addClass('product-update');
 
                 var dataTemplate = Mustache.render(templateProductData, {
@@ -273,8 +282,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                     fields.each(function (field) {
                         var Input = Form.elements['field-' + field.id];
-                        
+
                         if (typeof Input !== 'undefined') {
+                            if (typeOf(field.value) !== 'string') {
+                                field.value = JSON.encode(field.value);
+                            }
+
                             Input.value = field.value;
                         }
                     });

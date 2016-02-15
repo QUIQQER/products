@@ -67,6 +67,10 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
 
             this.$Input = Elm;
 
+
+            console.log(Elm.value);
+
+
             QUIAjax.get('ajax_system_getAvailableLanguages', function (languages) {
 
                 var i, len, flag, lang, LangContainer, InputField;
@@ -141,6 +145,7 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
                 });
 
                 self.$Button.addEvent('click', self.toggle);
+                self.refreshData();
             });
         },
 
@@ -226,15 +231,14 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
          * Updates the data to the input field
          */
         refreshData: function () {
-            var fields = this.$Container.getElements('input').map(function (Field) {
-                var result = {};
+            var result = {};
+            var fields = this.$Container.getElements('input');
 
+            fields.each(function (Field) {
                 result[Field.name] = Field.value;
-
-                return result;
             });
 
-            this.$Input.value = JSON.encode(fields);
+            this.$Input.value = JSON.encode(result);
         }
     });
 });

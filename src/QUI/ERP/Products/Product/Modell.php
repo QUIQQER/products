@@ -166,6 +166,8 @@ class Modell extends QUI\QDOM
             $Field = $this->getField(Fields::FIELD_TITLE);
             $data  = $Field->getValue();
 
+            QUI\System\Log::writeRecursive($data);
+
             if (isset($data[$current])) {
                 return $data[$current];
             }
@@ -253,7 +255,27 @@ class Modell extends QUI\QDOM
         /* @var $Field Field */
         foreach ($fields as $Field) {
             if ($Field->isRequired()) {
-                $Field->validate($Field->getValue());
+                try {
+                    $Field->validate($Field->getValue());
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::addDebug(
+                        $Exception->getMessage(),
+                        array(
+                            'id' => $Field->getId(),
+                            'title' => $Field->getTitle()
+                        )
+                    );
+
+
+                    throw new QUI\Exception(array(
+                        'quiqqer/products',
+                        'exception.field.inputMultiLang.invalid',
+                        array(
+                            'id' => $Field->getId(),
+                            'title' => $Field->getTitle()
+                        )
+                    ));
+                }
             }
 
             $fieldData[] = $Field->toProductArray();

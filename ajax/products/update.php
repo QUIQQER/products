@@ -28,12 +28,25 @@ QUI::$Ajax->registerFunction(
                 $fieldId = (int)str_replace('field-', '', $fieldId);
                 $Field   = $Fields->getField($fieldId);
             } catch (QUI\Exception $Exception) {
-                \QUI\System\Log::addNotice('Field not found #' . $fieldId);
+                QUI\System\Log::addNotice('Field not found #' . $fieldId);
                 continue;
             }
 
-            $Field->setValue($field);
-            $Product->addField($Field);
+            try {
+                $Field->setValue($field);
+                $Product->addField($Field);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug(
+                    $Exception->getMessage(),
+                    array(
+                        'id' => $Field->getId(),
+                        'title' => $Field->getTitle(),
+                        'data' => $field
+                    )
+                );
+
+                throw $Exception;
+            }
         }
 
         // categories
