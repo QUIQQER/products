@@ -72,6 +72,50 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * Return the field data
+         *
+         * @param {Number} fieldId - ID of the field
+         * @returns {Promise}
+         */
+        getField: function (fieldId) {
+            return new Promise(function (resolve, reject) {
+
+                if (typeof fieldId === 'undefined') {
+                    return reject('No field given');
+                }
+
+                if (this.$loaded) {
+                    var field = this.$data.fields.filter(function (item) {
+                        return (item.id == fieldId);
+                    });
+
+                    if (field.length) {
+                        return resolve(field[0]);
+                    }
+
+                    return reject('Field not found');
+                }
+
+                this.refresh().then(function () {
+                    this.getField(fieldId).then(resolve);
+                }.bind(this)).catch(reject);
+
+            }.bind(this));
+        },
+
+        /**
+         * Return the field value
+         *
+         * @param {Number} fieldId - ID of the field
+         * @returns {Promise}
+         */
+        getFieldValue: function (fieldId) {
+            return this.getField(fieldId).then(function (field) {
+                return field.value;
+            });
+        },
+
+        /**
          * Return the categories of the product
          *
          * @returns {Promise}

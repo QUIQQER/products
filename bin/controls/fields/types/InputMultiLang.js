@@ -67,10 +67,6 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
 
             this.$Input = Elm;
 
-
-            console.log(Elm.value);
-
-
             QUIAjax.get('ajax_system_getAvailableLanguages', function (languages) {
 
                 var i, len, flag, lang, LangContainer, InputField;

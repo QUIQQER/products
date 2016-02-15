@@ -93,10 +93,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             });
         },
 
-        refresh: function () {
-            this.parent();
-        },
-
         /**
          * event : on create
          */
@@ -356,7 +352,27 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @returns {Promise}
          */
         loadData: function () {
-            return this.$Product.refresh();
+            return this.$Product.refresh().then(function () {
+                return this.$Product.getFieldValue(4); // title
+
+            }.bind(this)).then(function (field) {
+
+                var title   = '',
+                    current = QUILocale.getCurrent();
+
+                if (current in field) {
+                    title = field[current];
+                }
+
+                this.setAttributes({
+                    title: QUILocale.get(lg, 'products.product.panel.title', {
+                        product: title
+                    })
+                });
+
+                this.refresh();
+
+            }.bind(this));
         },
 
         /**

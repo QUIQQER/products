@@ -161,6 +161,11 @@
             <en><![CDATA[Products]]></en>
         </locale>
 
+        <locale name="products.product.panel.title">
+            <de><![CDATA[Produkt: [product]]]></de>
+            <en><![CDATA[Product: [product]]]></en>
+        </locale>
+
         <locale name="products.fields.panel.title">
             <de><![CDATA[Produktfelder]]></de>
             <en><![CDATA[Product fields]]></en>
