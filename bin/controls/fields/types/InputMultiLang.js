@@ -6,6 +6,7 @@
  * @require qui/controls/Control
  * @require Ajax
  * @require Locale
+ * @require css!package/quiqqer/products/bin/controls/fields/types/InputMultiLang.css
  */
 define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
 
@@ -60,19 +61,28 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
                 'class': 'field-container-field'
             }).inject(Elm, 'after');
 
-            this.$Input = new Element('input', {
-                type: 'hidden',
-                name: Elm.get('data-name')
-            }).inject(Elm, 'after');
+            this.$Container.addClass(
+                'quiqqer-products-field-inputmultilang__minimize'
+            );
 
-
-            Elm.destroy();
+            this.$Input = Elm;
 
             QUIAjax.get('ajax_system_getAvailableLanguages', function (languages) {
 
-                var i, len, lang, LangContainer, InputField;
+                var i, len, flag, lang, LangContainer, InputField;
                 var current = QUILocale.getCurrent(),
                     data    = JSON.decode(Elm.value);
+
+                // php <-> js -> array / object conversion fix
+                if (typeOf(data) === 'array') {
+                    var newData = {};
+
+                    Array.each(data, function (o) {
+                        Object.merge(newData, o);
+                    });
+
+                    data = newData;
+                }
 
                 if (!data) {
                     data = {};
@@ -97,14 +107,17 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
 
                 for (i = 0, len = languages.length; i < len; i++) {
                     lang = languages[i];
+                    flag = path + lang + '.png';
 
                     LangContainer = new Element('div', {
                         'class': 'quiqqer-products-field-inputmultilang-entry',
-                        html   : '<img src="' + path + lang + '.png" />' +
-                                 '<input type="text" name="' + lang + '" />'
+                        html   : '<input type="text" name="' + lang + '" />'
                     }).inject(self.$Container);
 
                     InputField = LangContainer.getElement('input');
+                    InputField.setStyles({
+                        backgroundImage: "url('" + flag + "')"
+                    });
 
                     if (i > 0) {
                         LangContainer.setStyles({
@@ -151,6 +164,10 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
                     '.quiqqer-products-field-inputmultilang-entry'
                 );
 
+            this.$Container.removeClass(
+                'quiqqer-products-field-inputmultilang__minimize'
+            );
+
             var First = list.shift();
 
             list.setStyles({
@@ -159,17 +176,18 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
             });
 
             moofx(First).animate({
-                height: 40
+                height: 34
             });
 
             moofx(list).animate({
-                height : 40,
+                height : 34,
                 opacity: 1
             }, {
                 duration: 200,
                 callback: function () {
-                    self.$Button.getElement('span').addClass('fa-arrow-circle-o-down');
-                    self.$Button.getElement('span').removeClass('fa-arrow-circle-o-right');
+                    self.$Button.getElement('span')
+                        .addClass('fa-arrow-circle-o-down')
+                        .removeClass('fa-arrow-circle-o-right');
                 }
             });
         },
@@ -193,8 +211,13 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
             }, {
                 duration: 200,
                 callback: function () {
-                    self.$Button.getElement('span').removeClass('fa-arrow-circle-o-down');
-                    self.$Button.getElement('span').addClass('fa-arrow-circle-o-right');
+                    self.$Container.addClass(
+                        'quiqqer-products-field-inputmultilang__minimize'
+                    );
+
+                    self.$Button.getElement('span')
+                        .removeClass('fa-arrow-circle-o-down')
+                        .addClass('fa-arrow-circle-o-right');
                 }
             });
         },
@@ -204,7 +227,8 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
          */
         refreshData: function () {
             var fields = this.$Container.getElements('input').map(function (Field) {
-                var result         = {};
+                var result = {};
+
                 result[Field.name] = Field.value;
 
                 return result;

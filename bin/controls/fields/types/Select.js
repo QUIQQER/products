@@ -37,7 +37,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Select', [
 
             new Element('select', {
                 'class': 'field-container-field',
-                name   : Elm.get('data-name')
+                name   : Elm.name
             }).inject(Elm, 'after');
 
             Elm.destroy();

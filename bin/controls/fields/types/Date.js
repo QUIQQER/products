@@ -35,13 +35,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Date', [
         $onImport: function () {
             var Elm = this.getElm();
 
-            new Element('input', {
-                'class': 'field-container-field',
-                type   : 'date',
-                name   : Elm.get('data-name')
-            }).inject(Elm, 'after');
-
-            Elm.destroy();
+            Elm.addClass('field-container-field');
+            Elm.type = 'date';
         }
     });
 });

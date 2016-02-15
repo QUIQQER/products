@@ -25,6 +25,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'Locale',
     'Mustache',
     'package/quiqqer/products/bin/classes/Products',
+    'package/quiqqer/products/bin/classes/Product',
     'package/quiqqer/products/bin/classes/Categories',
     'package/quiqqer/products/bin/classes/Fields',
     'package/quiqqer/products/bin/controls/categories/Select',
@@ -34,7 +35,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'css!package/quiqqer/products/bin/controls/products/Product.css'
 
 ], function (QUI, QUIPanel, QUIButton, QUIConfirm, QUIFormUtils, Grid, QUILocale, Mustache,
-             ProductHandler, CategoriesHandler, FieldsHandler,
+             ProductHandler, Product, CategoriesHandler, FieldsHandler,
              CategorySelect, templateProductData, templateField) {
     "use strict";
 
@@ -74,6 +75,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             this.$CategorySelect = null;
             this.$FieldContainer = null;
+
+            this.$Product = new Product({
+                id: this.getAttribute('productId')
+            });
 
             this.$data  = {};
             this.$Data  = null;
@@ -126,16 +131,29 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }
 
             this.$injected = true;
-
-            var self      = this,
-                productId = this.getAttribute('productId');
-
             this.Loader.show();
 
-            this.loadData().then(function (productData) {
-                self.$data = productData;
+            var i, len;
 
-                var Content = self.getContent();
+            var self    = this,
+                Content = self.getContent();
+
+            // load product data
+            this.loadData().then(function () {
+
+                // get product data
+                return Promise.all([
+                    self.$Product.getFields(),
+                    self.$Product.getCategories()
+                ]).then(function (result) {
+                    return result;
+                });
+
+                // render
+            }).then(function (data) {
+
+                var fields     = data[0],
+                    categories = data[1];
 
                 Content.addClass('product-update');
 
@@ -153,38 +171,32 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                           '<div class="product-update-files sheet"></div>'
                 });
 
-                self.$Data  = Content.getElement('.product-update-data');
-                self.$Media = Content.getElement('.product-update-media');
-                self.$Files = Content.getElement('.product-update-files');
+                this.$Data  = Content.getElement('.product-update-data');
+                this.$Media = Content.getElement('.product-update-media');
+                this.$Files = Content.getElement('.product-update-files');
 
-                self.$FieldContainer = Content.getElement('.product-update-field');
-
+                this.$FieldContainer = Content.getElement('.product-update-field');
 
                 // categories
-                self.$CategorySelect = new CategorySelect({
+                this.$CategorySelect = new CategorySelect({
                     name: 'categories'
                 }).inject(
                     Content.getElement('.product-categories')
                 );
 
+                categories.each(function (categoryId) {
+                    self.$CategorySelect.addCategory(categoryId);
+                });
+
+
                 // fields
-                var Data = Content.getElement('.product-data tbody');
+                var field,
+                    Data = Content.getElement('.product-data tbody');
 
                 var StandardFields = Content.getElement(
                     '.product-standardfield tbody'
                 );
 
-
-                var categories = self.$data.categories.split(',');
-
-                categories.push(parseInt(self.$data.category));
-                categories = categories.filter(function (item) {
-                    return item !== '';
-                });
-
-                categories.each(function (categoryId) {
-                    self.$CategorySelect.addCategory(categoryId);
-                });
 
                 // Felderaufbau
                 Promise.all([
@@ -192,7 +204,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     Fields.getSystemFields(),
                     Fields.getStandardFields()
                 ]).then(function (result) {
-                    var i, len;
 
                     var fieldList        = [],
                         categoriesFields = result[0],
@@ -221,36 +232,61 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                     // systemfields
                     for (i = 0, len = systemFields.length; i < len; i++) {
+                        field = systemFields[i];
+
+                        if (field.type == 'TextareaMultiLang') {
+                            continue;
+                        }
+
                         new Element('tr', {
                             'class'       : 'field',
                             html          : Mustache.render(templateField, {
-                                fieldTitle: QUILocale.get(lg, 'products.field.' + systemFields[i].id + '.title'),
-                                fieldName : 'field-' + systemFields[i].id,
-                                control   : systemFields[i].jsControl
+                                fieldTitle: QUILocale.get(lg, 'products.field.' + field.id + '.title'),
+                                fieldName : 'field-' + field.id,
+                                control   : field.jsControl
                             }),
-                            'data-fieldid': systemFields[i].id
+                            'data-fieldid': field.id
                         }).inject(Data);
                     }
 
                     // standard felder
                     for (i = 0, len = diffFields.length; i < len; i++) {
+                        field = diffFields[i];
+
+                        if (field.type == 'TextareaMultiLang') {
+                            continue;
+                        }
+
                         new Element('tr', {
                             'class'       : 'field',
                             html          : Mustache.render(templateField, {
-                                fieldTitle: QUILocale.get(lg, 'products.field.' + diffFields[i].id + '.title'),
-                                fieldName : 'field-' + diffFields[i].id,
-                                control   : diffFields[i].jsControl
+                                fieldTitle: QUILocale.get(lg, 'products.field.' + field.id + '.title'),
+                                fieldName : 'field-' + field.id,
+                                control   : field.jsControl
                             }),
-                            'data-fieldid': diffFields[i].id
+                            'data-fieldid': field.id
                         }).inject(StandardFields);
                     }
 
+                    // field values
+                    var Form = Content.getElement('form');
+
+                    fields.each(function (field) {
+                        var Input = Form.elements['field-' + field.id];
+                        
+                        if (typeof Input !== 'undefined') {
+                            Input.value = field.value;
+                        }
+                    });
 
                     QUI.parse().then(function () {
                         self.Loader.hide();
                         self.getCategory('data').click();
                     });
                 });
+
+            }.bind(this)).catch(function () {
+                self.destroy();
             });
         },
 
@@ -307,7 +343,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @returns {Promise}
          */
         loadData: function () {
-            return Products.getChild(this.getAttribute('productId'));
+            return this.$Product.refresh();
         },
 
         /**

@@ -53,7 +53,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
             //vat select
             var Select = new Element('select', {
                 'class': 'field-container-field',
-                'html' : '<option value=""></option>'
+                'html' : '<option value=""></option>',
+                name   : Elm.name
             }).inject(Elm, 'after');
 
 
