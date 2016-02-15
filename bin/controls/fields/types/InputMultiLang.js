@@ -32,6 +32,7 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
 
             this.$Container = null;
             this.$Button    = null;
+            this.$Input     = null;
 
             this.addEvents({
                 onImport: this.$onImport
@@ -59,7 +60,7 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
                 'class': 'field-container-field'
             }).inject(Elm, 'after');
 
-            new Element('input', {
+            this.$Input = new Element('input', {
                 type: 'hidden',
                 name: Elm.get('data-name')
             }).inject(Elm, 'after');
@@ -69,9 +70,9 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
 
             QUIAjax.get('ajax_system_getAvailableLanguages', function (languages) {
 
-                var i, len, lang, LangContainer;
+                var i, len, lang, LangContainer, InputField;
                 var current = QUILocale.getCurrent(),
-                    data    = JSON.encode(Elm.value);
+                    data    = JSON.decode(Elm.value);
 
                 if (!data) {
                     data = {};
@@ -90,6 +91,10 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
                     return 0;
                 });
 
+                var onChange = function () {
+                    self.refreshData();
+                };
+
                 for (i = 0, len = languages.length; i < len; i++) {
                     lang = languages[i];
 
@@ -99,6 +104,8 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
                                  '<input type="text" name="' + lang + '" />'
                     }).inject(self.$Container);
 
+                    InputField = LangContainer.getElement('input');
+
                     if (i > 0) {
                         LangContainer.setStyles({
                             display: 'none',
@@ -107,8 +114,10 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
                     }
 
                     if (lang in data) {
-                        LangContainer.getElement('input').value = data[lang];
+                        InputField.value = data[lang];
                     }
+
+                    InputField.addEvent('change', onChange);
                 }
 
                 self.$Button.set({
@@ -188,6 +197,20 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
                     self.$Button.getElement('span').addClass('fa-arrow-circle-o-right');
                 }
             });
+        },
+
+        /**
+         * Updates the data to the input field
+         */
+        refreshData: function () {
+            var fields = this.$Container.getElements('input').map(function (Field) {
+                var result         = {};
+                result[Field.name] = Field.value;
+
+                return result;
+            });
+
+            this.$Input.value = JSON.encode(fields);
         }
     });
 });

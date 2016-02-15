@@ -20,6 +20,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'qui/controls/desktop/Panel',
     'qui/controls/buttons/Button',
     'qui/controls/windows/Confirm',
+    'qui/utils/Form',
     'controls/grid/Grid',
     'Locale',
     'Mustache',
@@ -32,7 +33,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'text!package/quiqqer/products/bin/controls/products/CreateField.html',
     'css!package/quiqqer/products/bin/controls/products/Product.css'
 
-], function (QUI, QUIPanel, QUIButton, QUIConfirm, Grid, QUILocale, Mustache,
+], function (QUI, QUIPanel, QUIButton, QUIConfirm, QUIFormUtils, Grid, QUILocale, Mustache,
              ProductHandler, CategoriesHandler, FieldsHandler,
              CategorySelect, templateProductData, templateField) {
     "use strict";
@@ -79,6 +80,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             this.$Media = null;
             this.$Files = null;
 
+            this.$injected = false;
+
             this.addEvents({
                 onCreate: this.$onCreate,
                 onInject: this.$onInject
@@ -99,9 +102,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 textimage: 'fa fa-save',
                 text     : QUILocale.get('quiqqer/system', 'save'),
                 events   : {
-                    onClick: function () {
-
-                    }
+                    onClick: this.update
                 }
             });
 
@@ -120,6 +121,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * event : on inject
          */
         $onInject: function () {
+            if (this.$injected) {
+                return;
+            }
+
+            this.$injected = true;
+
             var self      = this,
                 productId = this.getAttribute('productId');
 
@@ -154,7 +161,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
 
                 // categories
-                self.$CategorySelect = new CategorySelect().inject(
+                self.$CategorySelect = new CategorySelect({
+                    name: 'categories'
+                }).inject(
                     Content.getElement('.product-categories')
                 );
 
@@ -352,8 +361,13 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 require(['Editors'], function (Editors) {
                     Editors.getEditor().then(function (Editor) {
 
-                        new Editor().inject(self.$FieldContainer);
-                        
+                        self.$FieldContainer.setStyles({
+                            height: '100%'
+                        });
+
+                        console.log(fielddData);
+
+                        Editor.inject(self.$FieldContainer);
                         self.Loader.hide();
                     });
 
@@ -373,24 +387,36 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             return new Promise(function (resolve, reject) {
 
-
-                resolve();
-
-
-                return;
-
                 var Form = Elm.getElement('form');
+                var data = QUIFormUtils.getFormData(Form);
+
+                // fields
+                var fields = Object.filter(data, function (value, key) {
+                    return (key.indexOf('field-') >= 0);
+                });
+
+                var categories = data.categories.split(',');
+
+                categories = categories.filter(function (item) {
+                    return item !== '';
+                });
+
+
+                console.log(data);
+                console.log(fields);
 
                 Products.updateChild(
-                    self.getAttribute('fieldId'),
-                    {
-                        type       : Form.elements.fieldtype.value,
-                        search_type: Form.elements.searchtype.value,
-                        prefix     : Form.elements.prefix.value,
-                        suffix     : Form.elements.suffix.value,
-                        priority   : Form.elements.priority.value
-                    }
-                ).then(resolve()).catch(reject);
+                    self.getAttribute('productId'),
+                    categories,
+                    data['product-category'],
+                    fields
+                ).then(function () {
+                    self.Loader.hide();
+                    resolve();
+                }).catch(function () {
+                    self.Loader.hide();
+                    reject();
+                });
             });
         },
 

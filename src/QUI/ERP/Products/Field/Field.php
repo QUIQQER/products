@@ -257,19 +257,29 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Return the field type
+     *
+     * @return mixed|string
+     */
+    public function getType()
+    {
+        $type = parent::getType();
+        $type = str_replace('QUI\ERP\Products\Field\Types\\', '', $type);
+
+        return $type;
+    }
+
+    /**
      * Return the attributes
      *
      * @return array
      */
     public function getAttributes()
     {
-        $type = $this->getType();
-        $type = str_replace('QUI\ERP\Products\Field\Types\\', '', $type);
-
         $attributes          = parent::getAttributes();
         $attributes['id']    = $this->getId();
         $attributes['title'] = $this->getTitle();
-        $attributes['type']  = $type;
+        $attributes['type']  = $this->getType();
 
         $attributes['isRequired'] = $this->isRequired();
         $attributes['isStandard'] = $this->isStandard();
@@ -286,7 +296,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     {
         return array(
             'id' => (string)$this->getId(),
-            'value' => $this->getValue()
+            'value' => $this->getValue(),
+            'type' => $this->getType()
         );
     }
 

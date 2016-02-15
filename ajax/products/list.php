@@ -25,7 +25,10 @@ QUI::$Ajax->registerFunction(
 
         /* @var $Product \QUI\ERP\Products\Product\Product */
         foreach ($data as $Product) {
-            $result[] = $Product->getAttributes();
+            $attributes          = $Product->getAttributes();
+            $attributes['title'] = $Product->getTitle();
+
+            $result[] = $attributes;
         }
 
         usort($result, function ($a, $b) {

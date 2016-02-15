@@ -251,6 +251,30 @@ class Fields
     /**
      * Return a field
      *
+     * @param string $type - wanted field type
+     * @param integer $fieldId - ID of the field
+     * @param array $fieldParams - optional,  Params of the field
+     * @return QUI\ERP\Products\Field\Field
+     *
+     * @throws QUI\Exception
+     */
+    public static function getFieldByType($type, $fieldId, $fieldParams = array())
+    {
+        $class = 'QUI\ERP\Products\Field\Types\\' . $type;
+
+        if (class_exists($class)) {
+            return new $class($fieldId, $fieldParams);
+        }
+
+        throw new QUI\Exception(array(
+            'quiqqer/products',
+            'exception.field.not.found'
+        ));
+    }
+
+    /**
+     * Return a field
+     *
      * @param integer $fieldId - Field-ID
      * @return QUI\ERP\Products\Field\Field
      *
@@ -259,7 +283,7 @@ class Fields
     public static function getField($fieldId)
     {
         if (isset(self::$list[$fieldId])) {
-            return self::$list[$fieldId];
+            return self::$list[$fieldId]; // @todo maybe with (clone) ??
         }
 
         $result = QUI::getDataBase()->fetch(array(

@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Product;
 use QUI;
 use QUI\ERP\Products\Interfaces\Field;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Category\Category;
 
 /**
  * Class Controller
@@ -30,6 +31,16 @@ class Modell extends QUI\QDOM
      * @var array
      */
     protected $fields = array();
+
+    /**
+     * @var array
+     */
+    protected $categories = array();
+
+    /**
+     * @var null
+     */
+    protected $Category = null;
 
     /**
      * Model constructor
@@ -60,6 +71,39 @@ class Modell extends QUI\QDOM
         unset($result[0]['id']);
 
         $this->setAttributes($result[0]);
+
+        // categories
+        $categories = explode(',', trim($result[0]['categories'], ','));
+
+        if (is_array($categories)) {
+            foreach ($categories as $categoryId) {
+                try {
+                    $Category = QUI\ERP\Products\Handler\Categories::getCategory($categoryId);
+
+                    $this->categories[$Category->getId()] = $Category;
+                } catch (QUI\Exception $Exception) {
+                }
+            }
+        }
+
+        // fields
+        $fields = json_decode($result[0]['fieldData'], true);
+
+        if (!is_array($fields)) {
+            $fields = array();
+        }
+
+        foreach ($fields as $field) {
+            try {
+                $Field = Fields::getFieldByType($field['type'], $field['id']);
+                $Field->setValue($field['value']);
+
+                $this->fields[$Field->getId()] = $Field;
+
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
 
         if (defined('QUIQQER_BACKEND')) {
             $this->setAttribute('viewType', 'backend');
@@ -160,9 +204,8 @@ class Modell extends QUI\QDOM
      */
     public function getAttributes()
     {
-        $attributes          = parent::getAttributes();
-        $attributes['id']    = $this->getId();
-        $attributes['title'] = $this->getTitle();
+        $attributes       = parent::getAttributes();
+        $attributes['id'] = $this->getId();
 
         // fields
         $fields    = array();
@@ -177,18 +220,35 @@ class Modell extends QUI\QDOM
             $attributes['fields'] = $fields;
         }
 
+        // categories
+        $categories = array();
+        $catList    = $this->getCategories();
+
+        /* @var $Category Category */
+        foreach ($catList as $Category) {
+            $categories[] = $Category->getId();
+        }
+
+        if (!empty($categories)) {
+            $attributes['categories'] = implode(',', $categories);
+        }
+
+
         return $attributes;
     }
 
     /**
-     * save the data
+     * save / update the product data
      */
     public function save()
     {
         QUI\Rights\Permission::checkPermission('product.edit');
 
-        $fieldData = array();
-        $fields    = $this->getFields();
+        $fieldData    = array();
+        $categoryData = array();
+
+        $fields     = $this->getFields();
+        $categories = $this->getCategories();
 
         /* @var $Field Field */
         foreach ($fields as $Field) {
@@ -196,14 +256,27 @@ class Modell extends QUI\QDOM
                 $Field->validate($Field->getValue());
             }
 
-            $fieldData = $Field->toProductArray();
+            $fieldData[] = $Field->toProductArray();
+        }
+
+        /* @var $Category Category */
+        foreach ($categories as $Category) {
+            $categoryData[] = $Category->getId();
+        }
+
+        $mainCategory = '';
+        $Category     = $this->getCategory();
+
+        if ($Category) {
+            $mainCategory = $Category->getId();
         }
 
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
-                'productNo' => $this->getAttribute('productNo'),
-                'data' => json_encode($fieldData)
+                'categories' => ',' . implode(',', $categoryData) . ',',
+                'category' => $mainCategory,
+                'fieldData' => json_encode($fieldData)
             ),
             array('id' => $this->getId())
         );
@@ -269,5 +342,57 @@ class Modell extends QUI\QDOM
     public function getFieldValue($fieldId)
     {
         return $this->getField($fieldId)->getValue();
+    }
+
+    /**
+     * Category methods
+     */
+
+    /**
+     * Return the product categories
+     *
+     * @return array
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * Return the main category
+     *
+     * @return Category|null
+     */
+    public function getCategory()
+    {
+        if (is_null($this->Category)) {
+            $categories = $this->getCategories();
+
+            if (isset($categories[0])) {
+                return $categories[0];
+            }
+        }
+
+        return $this->Category;
+    }
+
+    /**
+     * Remove the product from all categories
+     */
+    public function clearCategories()
+    {
+        $this->categories = array();
+    }
+
+    /**
+     * Remove the product from the category
+     *
+     * @param integer $categoryId
+     */
+    public function removeCategory($categoryId)
+    {
+        if (isset($this->categories[$categoryId])) {
+            unset($this->categories[$categoryId]);
+        }
     }
 }

@@ -136,11 +136,21 @@ define('package/quiqqer/products/bin/classes/Products', [
          * Save a product
          *
          * @param {Number} productId
-         * @param {Object} data - Product attributes
+         * @param {Object} categories - Product categories
+         * @param {Number} categoryId - ID of the main category
+         * @param {Object} fields - Product field data {field-ID : value, field-ID : value}
+         * @return {Promise}
          */
-        update: function (productId, data) {
+        updateChild: function (productId, categories, categoryId, fields) {
             return new Promise(function (resolve, reject) {
-
+                Ajax.post('package_quiqqer_products_ajax_products_update', resolve, {
+                    'package' : 'quiqqer/products',
+                    onError   : reject,
+                    productId : productId,
+                    categories: JSON.encode(categories),
+                    categoryId: categoryId,
+                    fields    : JSON.encode(fields)
+                });
             });
         }
     });
