@@ -2,7 +2,7 @@
 <menu>
     <item parent="/extras/"
           name="erp"
-          icon="icon-sun"
+          icon="fa fa-sun-o"
     >
         <locale group="quiqqer/products" var="menu.erp.title"/>
     </item>

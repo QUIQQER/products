@@ -42,7 +42,7 @@ define('package/quiqqer/products/bin/controls/categories/search/Window', [
 
             cancel_button: {
                 text     : QUILocale.get('quiqqer/system', 'cancel'),
-                textimage: 'icon-remove fa fa-remove'
+                textimage: 'fa fa-remove'
             },
             ok_button    : {
                 text     : QUILocale.get('quiqqer/system', 'accept'),
