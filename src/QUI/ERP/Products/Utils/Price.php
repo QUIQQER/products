@@ -3,7 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Price
  */
-namespace QUI\ERP\Products;
+namespace QUI\ERP\Products\Utils;
 
 use QUI;
 use QUI\ERP\Discount\Discount;

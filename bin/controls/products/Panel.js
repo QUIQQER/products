@@ -11,6 +11,9 @@
  * @require controls/grid/Grid
  * @require Locale
  * @require package/quiqqer/products/bin/classes/Products
+ * @require package/quiqqer/products/bin/controls/products/Create
+ * @require package/quiqqer/products/bin/controls/products/Product
+ * @require css!package/quiqqer/products/bin/controls/products/Panel.css
  */
 define('package/quiqqer/products/bin/controls/products/Panel', [
 
@@ -185,6 +188,11 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                     dataIndex: 'description',
                     dataType : 'text',
                     width    : 200
+                }, {
+                    header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
+                    dataIndex: 'price',
+                    dataType : 'text',
+                    width    : 100
                 }]
             });
 

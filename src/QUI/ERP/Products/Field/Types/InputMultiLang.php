@@ -75,10 +75,32 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @return array
      */
     public static function cleanup($value)
     {
-        // TODO: Implement cleanup() method.
+        $languages = QUI\Translator::getAvailableLanguages();
+
+        if (!is_array($value)) {
+            return array_fill_keys($languages, '');
+        }
+
+        $result = array();
+
+        foreach ($value as $key => $val) {
+            if (!is_string($key) || strlen($key) != 2) {
+                continue;
+            }
+
+            $result[$key] = $val;
+        }
+
+        foreach ($languages as $lang) {
+            if (!isset($result[$lang])) {
+                $result[$lang] = '';
+            }
+        }
+
+        return $result;
     }
 }

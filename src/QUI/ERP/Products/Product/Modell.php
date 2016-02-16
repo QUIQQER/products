@@ -149,38 +149,26 @@ class Modell extends QUI\QDOM
     }
 
     /**
-     * Return the title / name of the category
+     * Return the title / name of the product
      *
      * @param QUI\Locale|Boolean $Locale - optional
      * @return string
      */
     public function getTitle($Locale = false)
     {
-        if (!$Locale) {
-            $Locale = QUI::getLocale();
-        }
+        $result = $this->getLanguageFieldValue(Fields::FIELD_TITLE, $Locale);
 
-        $current = $Locale->getCurrent();
-
-        try {
-            $Field = $this->getField(Fields::FIELD_TITLE);
-            $data  = $Field->getValue();
-
-            QUI\System\Log::writeRecursive($data);
-
-            if (isset($data[$current])) {
-                return $data[$current];
-            }
-        } catch (QUI\Exception $Exception) {
+        if ($result) {
+            return $result;
         }
 
         QUI\System\Log::addWarning(
             QUI::getLocale()->get(
                 'quiqqer/products',
-                'warning.product.have.no.title'
+                'warning.product.have.no.title',
+                array('id' => $this->getId())
             ),
             array(
-                'lang' => $current,
                 'id' => $this->getId()
             )
         );
@@ -189,12 +177,99 @@ class Modell extends QUI\QDOM
     }
 
     /**
-     * @return QUI\ERP\Products\Price
+     * Return the title / name of the category
+     *
+     * @param QUI\Locale|Boolean $Locale - optional
+     * @return string
+     */
+    public function getDescription($Locale = false)
+    {
+        $result = $this->getLanguageFieldValue(Fields::FIELD_SHORT_DESC, $Locale);
+
+        if ($result) {
+            return $result;
+        }
+
+        QUI\System\Log::addWarning(
+            QUI::getLocale()->get(
+                'quiqqer/products',
+                'warning.product.have.no.description',
+                array('id' => $this->getId())
+            ),
+            array(
+                'id' => $this->getId()
+            )
+        );
+
+        return '#' . $this->getId();
+    }
+
+    /**
+     * @param QUI\Locale|Boolean $Locale - optional
+     * @return string
+     */
+    public function getContent($Locale = false)
+    {
+        $result = $this->getLanguageFieldValue(Fields::FIELD_CONTENT, $Locale);
+
+        if ($result) {
+            return $result;
+        }
+
+        QUI\System\Log::addWarning(
+            QUI::getLocale()->get(
+                'quiqqer/products',
+                'warning.product.have.no.content',
+                array('id' => $this->getId())
+            ),
+            array(
+                'id' => $this->getId()
+            )
+        );
+
+        return '#' . $this->getId();
+    }
+
+    /**
+     * Return the value of an language field
+     *
+     * @param integer $Field - optional
+     * @param QUI\Locale|Boolean $Locale - optional
+     *
+     * @return string|boolean
+     */
+    protected function getLanguageFieldValue($Field, $Locale = false)
+    {
+        if (!$Locale) {
+            $Locale = QUI::getLocale();
+        }
+
+        $current = $Locale->getCurrent();
+
+        try {
+            $Field = $this->getField($Field);
+            $data  = $Field->getValue();
+
+            if (isset($data[$current])) {
+                return $data[$current];
+            }
+        } catch (QUI\Exception $Exception) {
+        }
+
+        return false;
+    }
+
+    /**
+     * Return the price
+     *
+     * @return QUI\ERP\Products\Utils\Price
      */
     public function getPrice()
     {
-        return new QUI\ERP\Products\Price(
-            $this->getAttribute('price'),
+        $price = $this->getFieldValue(Fields::FIELD_PRICE);
+
+        return new QUI\ERP\Products\Utils\Price(
+            $price,
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
     }

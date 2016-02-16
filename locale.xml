@@ -164,6 +164,10 @@
             <de><![CDATA[Produkt: [product]]]></de>
             <en><![CDATA[Product: [product]]]></en>
         </locale>
+        <locale name="products.product.panel.grid.nettoprice">
+            <de><![CDATA[Nettopreis]]></de>
+            <en><![CDATA[netto price]]></en>
+        </locale>
 
         <locale name="products.fields.panel.title">
             <de><![CDATA[Produktfelder]]></de>

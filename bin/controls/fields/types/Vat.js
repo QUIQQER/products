@@ -57,21 +57,22 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
                 name   : Elm.name
             }).inject(Elm, 'after');
 
-
-            Elm.destroy();
-
             Tax.getList().then(function (result) {
                 var i, len, html, value;
 
                 for (i = 0, len = result.length; i < len; i++) {
                     html  = result[i].groupTitle + ' : ' + result[i].title;
-                    value = result[i].groupId + ':' + result[i].id;
+                    value = result[i].id;
 
                     new Element('option', {
                         html : html,
                         value: value
                     }).inject(Select);
                 }
+
+                Select.value = Elm.value;
+
+                Elm.destroy();
 
                 Loader.set(
                     'html',

@@ -93,7 +93,7 @@ interface Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @return mixed
      */
     public static function cleanup($value);
 }

@@ -40,17 +40,28 @@ class Vat extends QUI\ERP\Products\Field\Field
      */
     public static function validate($value)
     {
-        // TODO: Implement validate() method.
+        if (!is_numeric($value)) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.inputMultiLang.invalid'
+            ));
+        }
+
+        // exists tax?
+        $value = self::cleanup($value);
+        $Taxes = new QUI\ERP\Tax\Handler();
+
+        $Taxes->getTaxType($value);
     }
 
     /**
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @return integer
      */
     public static function cleanup($value)
     {
-        // TODO: Implement cleanup() method.
+        return (int)$value;
     }
 }
