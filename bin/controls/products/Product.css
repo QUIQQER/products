@@ -6,6 +6,14 @@
     width: 100%;
 }
 
+.product-update .sheet {
+    left: 0;
+    height: 100%;
+    padding: 20px;
+    position: absolute;
+    width: 100%;
+}
+
 .product-update-data {
     left: 0;
     padding: 20px;
@@ -23,7 +31,7 @@
 
 .product-update .field-container-item:first-child {
     font-size: 12px;
-    line-height: 20px;
+    line-height: 30px;
 }
 
 .product-data .field-container-item:last-child .fa {

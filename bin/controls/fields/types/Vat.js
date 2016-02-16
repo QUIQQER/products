@@ -19,7 +19,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
 
     return new Class({
         Extends: QUIControl,
-        Type   : '',
+        Type   : 'package/quiqqer/products/bin/controls/fields/types/Vat',
 
         Binds: [
             '$onImport'
@@ -45,8 +45,9 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
                 'class': 'field-container-item',
                 html   : '<span class="fa fa-spinner fa-spin"></span>',
                 styles : {
-                    textAlign: 'center',
-                    width    : 50
+                    lineHeight: 30,
+                    textAlign : 'center',
+                    width     : 50
                 }
             }).inject(Elm, 'after');
 

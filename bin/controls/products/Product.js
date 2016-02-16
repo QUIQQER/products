@@ -8,11 +8,19 @@
  * @require qui/controls/desktop/Panel
  * @require qui/controls/buttons/Button
  * @require qui/controls/windows/Confirm
- * @require controls/grid/Grid
+ * @require qui/utils/Form
  * @require Locale
+ * @require controls/grid/Grid
+ * @require controls/projects/project/media/FolderViewer
  * @require Mustache
  * @require package/quiqqer/products/bin/classes/Products
- * @require text!package/quiqqer/products/bin/controls/products/Product.html
+ * @require package/quiqqer/products/bin/classes/Product
+ * @require package/quiqqer/products/bin/classes/Categories
+ * @require package/quiqqer/products/bin/classes/Fields
+ * @require package/quiqqer/products/bin/controls/categories/Select
+ * @require text!package/quiqqer/products/bin/controls/products/ProductData.html
+ * @require text!package/quiqqer/products/bin/controls/products/CreateField.html
+ * @require css!package/quiqqer/products/bin/controls/products/Product.css
  */
 define('package/quiqqer/products/bin/controls/products/Product', [
 
@@ -21,8 +29,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'qui/controls/buttons/Button',
     'qui/controls/windows/Confirm',
     'qui/utils/Form',
-    'controls/grid/Grid',
     'Locale',
+    'controls/grid/Grid',
+    'controls/projects/project/media/FolderViewer',
     'Mustache',
     'package/quiqqer/products/bin/classes/Products',
     'package/quiqqer/products/bin/classes/Product',
@@ -34,7 +43,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'text!package/quiqqer/products/bin/controls/products/CreateField.html',
     'css!package/quiqqer/products/bin/controls/products/Product.css'
 
-], function (QUI, QUIPanel, QUIButton, QUIConfirm, QUIFormUtils, Grid, QUILocale, Mustache,
+], function (QUI, QUIPanel, QUIButton, QUIConfirm, QUIFormUtils, QUILocale,
+             Grid, FolderViewer, Mustache,
              ProductHandler, Product, CategoriesHandler, FieldsHandler,
              CategorySelect, templateProductData, templateField) {
     "use strict";
@@ -76,6 +86,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             this.$CategorySelect = null;
             this.$FieldContainer = null;
 
+            this.$FileViewer  = null;
+            this.$ImageViewer = null;
+
             this.$Product = new Product({
                 id: this.getAttribute('productId')
             });
@@ -91,6 +104,22 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 onCreate: this.$onCreate,
                 onInject: this.$onInject
             });
+        },
+
+        /**
+         * unserialize import
+         *
+         * @param {Object} data
+         * @return {Object} this (package/quiqqer/products/bin/controls/products/Product)
+         */
+        unserialize: function (data) {
+            this.setAttributes(data.attributes);
+
+            this.$Product = new Product({
+                id: this.getAttribute('productId')
+            });
+
+            return this;
         },
 
         /**
@@ -149,7 +178,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }).then(function (data) {
 
                 var fields     = data[0],
-                    categories = data[1];
+                    categories = data[1],
+                    folderId   = false;
 
                 if (typeOf(fields) !== 'array') {
                     fields = [];
@@ -181,6 +211,18 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 this.$Files = Content.getElement('.product-update-files');
 
                 this.$FieldContainer = Content.getElement('.product-update-field');
+                console.log(fields);
+                // viewer
+                this.$FileViewer = new FolderViewer({
+                    folderId: folderId,
+                    filetype: ['file']
+                }).inject(this.$Files);
+
+                this.$ImageViewer = new FolderViewer({
+                    folderId: folderId,
+                    filetype: ['image']
+                }).inject(this.$Media);
+
 
                 // categories
                 this.$CategorySelect = new CategorySelect({
@@ -239,6 +281,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     for (i = 0, len = systemFields.length; i < len; i++) {
                         field = systemFields[i];
 
+                        // dont show media folder field
+                        if (field.id === 10) {
+                            continue;
+                        }
+
                         if (field.type == 'TextareaMultiLang') {
                             continue;
                         }
@@ -294,7 +341,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     });
                 });
 
-            }.bind(this)).catch(function () {
+            }.bind(this)).catch(function (err) {
+                console.error(err);
+
                 self.destroy();
             });
         },
@@ -421,8 +470,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             return this.$hideCategories().then(function () {
                 return self.$showCategory(self.$FieldContainer);
             }).then(function () {
-                self.Loader.show();
-
                 require(['Editors'], function (Editors) {
                     Editors.getEditor().then(function (Editor) {
 
@@ -433,7 +480,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         console.log(fielddData);
 
                         Editor.inject(self.$FieldContainer);
-                        self.Loader.hide();
                     });
 
                 });
@@ -501,9 +547,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     duration: 200,
                     callback: function () {
                         nodes.setStyles({
-                            position: 'absolute',
-                            display : 'none',
-                            opacity : 0
+                            display: 'none',
+                            opacity: 0
                         });
 
                         resolve();

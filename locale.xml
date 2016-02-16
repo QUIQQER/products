@@ -3,8 +3,8 @@
 
     <groups name="quiqqer/products" datatype="php,js">
         <locale name="menu.erp.title">
-            <de><![CDATA[ERP]]></de>
-            <en><![CDATA[ERP]]></en>
+            <de><![CDATA[Shop]]></de>
+            <en><![CDATA[Shop]]></en>
         </locale>
         <locale name="menu.erp.products.products.title">
             <de><![CDATA[Produkte]]></de>
@@ -42,8 +42,8 @@
         </locale>
 
         <locale name="productNo">
-            <de><![CDATA[Produkt-Nummer]]></de>
-            <en><![CDATA[Product-No]]></en>
+            <de><![CDATA[Artikel-Nummer]]></de>
+            <en><![CDATA[Article-No]]></en>
         </locale>
         <locale name="productCategories">
             <de><![CDATA[Produkt-Kategorien]]></de>

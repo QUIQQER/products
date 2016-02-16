@@ -32,3 +32,7 @@
 .quiqqer-products-field-inputmultilang__minimize .quiqqer-products-field-inputmultilang-entry {
     border-bottom: 0;
 }
+
+.quiqqer-products-field-inputmultilang-button .fa {
+    margin-top: 8px;
+}

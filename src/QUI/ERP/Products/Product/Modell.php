@@ -492,4 +492,43 @@ class Modell extends QUI\QDOM
             unset($this->categories[$categoryId]);
         }
     }
+
+    /**
+     * Image / File methods
+     */
+
+
+    public function getMediaFolder()
+    {
+
+    }
+
+
+    public function getImage()
+    {
+
+    }
+
+    /**
+     * Return all images for the product
+     *
+     * @return array
+     */
+    public function getImages()
+    {
+
+
+        return array();
+    }
+
+    /**
+     * Return all files for the product
+     * @return array
+     */
+    public function getFiles()
+    {
+
+
+        return array();
+    }
 }

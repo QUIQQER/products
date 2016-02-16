@@ -1,11 +1,11 @@
 /**
- * @module package/quiqqer/products/bin/controls/fields/types/Input
+ * @module package/quiqqer/products/bin/controls/fields/types/Folder
  * @author www.pcsg.de (Henning Leutz)
  *
  * @require qui/QUI
  * @require qui/controls/Control
  */
-define('package/quiqqer/products/bin/controls/fields/types/Input', [
+define('package/quiqqer/products/bin/controls/fields/types/Folder', [
 
     'qui/QUI',
     'qui/controls/Control'
@@ -15,7 +15,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Input', [
 
     return new Class({
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/Input',
+        Type   : 'package/quiqqer/products/bin/controls/fields/types/Folder',
 
         Binds: [
             '$onImport'

@@ -17,7 +17,7 @@ class Fields
 
     const FIELD_TAX = 2;
 
-    const FIELD_PRODUCT = 3;
+    const FIELD_PRODUCT_NO = 3;
 
     const FIELD_TITLE = 4;
 
@@ -28,6 +28,10 @@ class Fields
     const FIELD_SUPPLIER = 7;
 
     const FIELD_MANUFACTURER = 8;
+
+    const FIELD_IMAGE = 9;
+
+    const FIELD_IMAGE_FOLDER = 10;
 
     /**
      * @var array

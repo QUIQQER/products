@@ -28,4 +28,12 @@
         <locale group="quiqqer/products" var="menu.erp.products.fields.title"/>
     </item>
 
+    <item parent="/apps/"
+          name="products"
+          require="package/quiqqer/products/bin/controls/products/Panel"
+          icon="fa fa-shopping-bag"
+    >
+        <locale group="quiqqer/products" var="menu.erp.products.products.title"/>
+    </item>
+
 </menu>

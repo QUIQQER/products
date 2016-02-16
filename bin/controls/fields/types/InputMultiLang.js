@@ -49,7 +49,7 @@ define('package/quiqqer/products/bin/controls/fields/types/InputMultiLang', [
                 path = URL_BIN_DIR + '16x16/flags/';
 
             this.$Button = new Element('span', {
-                'class': 'field-container-item',
+                'class': 'field-container-item quiqqer-products-field-inputmultilang-button',
                 html   : '<span class="fa fa-spinner fa-spin"></span>',
                 styles : {
                     textAlign: 'center',

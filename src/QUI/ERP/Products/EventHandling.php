@@ -33,7 +33,7 @@ class EventHandling
         $standardFields = array(
             // Preis
             array(
-                'id' => 1,
+                'id' => Fields::FIELD_PRICE,
                 'type' => 'Price',
                 'prefix' => '',
                 'suffix' => '',
@@ -48,7 +48,7 @@ class EventHandling
             ),
             // MwSt ID
             array(
-                'id' => 2,
+                'id' => Fields::FIELD_TAX,
                 'type' => 'Vat',
                 'prefix' => '',
                 'suffix' => '',
@@ -63,7 +63,7 @@ class EventHandling
             ),
             // Artikel Nummer
             array(
-                'id' => 3,
+                'id' => Fields::FIELD_PRODUCT_NO,
                 'type' => 'Input',
                 'prefix' => '',
                 'suffix' => '',
@@ -78,7 +78,7 @@ class EventHandling
             ),
             // Title
             array(
-                'id' => 4,
+                'id' => Fields::FIELD_TITLE,
                 'type' => 'InputMultiLang',
                 'prefix' => '',
                 'suffix' => '',
@@ -97,7 +97,7 @@ class EventHandling
             ),
             // Short Desc
             array(
-                'id' => 5,
+                'id' => Fields::FIELD_SHORT_DESC,
                 'type' => 'InputMultiLang',
                 'prefix' => '',
                 'suffix' => '',
@@ -116,7 +116,7 @@ class EventHandling
             ),
             // Content
             array(
-                'id' => 6,
+                'id' => Fields::FIELD_CONTENT,
                 'type' => 'TextareaMultiLang',
                 'prefix' => '',
                 'suffix' => '',
@@ -134,11 +134,11 @@ class EventHandling
             ),
             // Lieferant
             array(
-                'id' => 7,
+                'id' => Fields::FIELD_SUPPLIER,
                 'type' => 'GroupList',
                 'prefix' => '',
                 'suffix' => '',
-                'priority' => 7,
+                'priority' => 9,
                 'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
@@ -152,11 +152,11 @@ class EventHandling
             ),
             // Hersteller
             array(
-                'id' => 8,
+                'id' => Fields::FIELD_MANUFACTURER,
                 'type' => 'GroupList',
                 'prefix' => '',
                 'suffix' => '',
-                'priority' => 8,
+                'priority' => 10,
                 'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
@@ -166,6 +166,36 @@ class EventHandling
                 'titles' => array(
                     'de' => 'Hersteller',
                     'en' => 'Manufacturer'
+                )
+            ),
+            // Produkt Bild
+            array(
+                'id' => Fields::FIELD_IMAGE,
+                'type' => 'Image',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 7,
+                'systemField' => 1,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'titles' => array(
+                    'de' => 'Produktbild',
+                    'en' => 'Product image'
+                )
+            ),
+            // Produkt mediaordner
+            array(
+                'id' => Fields::FIELD_IMAGE_FOLDER,
+                'type' => 'Folder',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 8,
+                'systemField' => 1,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'titles' => array(
+                    'de' => 'Media-Ordner',
+                    'en' => 'Media folder'
                 )
             )
         );
