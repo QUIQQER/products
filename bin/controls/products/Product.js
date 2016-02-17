@@ -67,7 +67,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             'openFiles',
             'openField',
             '$onCreate',
-            '$onInject'
+            '$onInject',
+            '$onFolderCreated'
         ],
 
         options: {
@@ -178,8 +179,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }).then(function (data) {
 
                 var fields     = data[0],
-                    categories = data[1],
-                    folderId   = false;
+                    categories = data[1];
 
                 if (typeOf(fields) !== 'array') {
                     fields = [];
@@ -210,17 +210,28 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 this.$Media = Content.getElement('.product-update-media');
                 this.$Files = Content.getElement('.product-update-files');
 
+                Content.getElements('.sheet').setStyles({
+                    display: 'none'
+                });
+
                 this.$FieldContainer = Content.getElement('.product-update-field');
                 console.log(fields);
+
                 // viewer
                 this.$FileViewer = new FolderViewer({
-                    folderId: folderId,
-                    filetype: ['file']
+                    folderId: false,
+                    filetype: ['file'],
+                    events  : {
+                        onFolderCreated: this.$onFolderCreated
+                    }
                 }).inject(this.$Files);
 
                 this.$ImageViewer = new FolderViewer({
-                    folderId: folderId,
-                    filetype: ['image']
+                    folderId: false,
+                    filetype: ['image'],
+                    events  : {
+                        onFolderCreated: this.$onFolderCreated
+                    }
                 }).inject(this.$Media);
 
 
@@ -283,6 +294,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                         // dont show media folder field
                         if (field.id === 10) {
+                            new Element('input', {
+                                type          : 'hidden',
+                                'data-fieldid': field.id,
+                                name          : 'field-' + field.id
+                            }).inject(self.getElm().getElement('form'));
                             continue;
                         }
 
@@ -332,25 +348,30 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             }
 
                             Input.value = field.value;
+
+                            if (field.id == 10) {
+                                self.$FileViewer.setAttribute('folderUrl', field.value);
+                                self.$ImageViewer.setAttribute('folderUrl', field.value);
+                            }
                         }
                     });
 
                     QUI.parse().then(function () {
-                        self.Loader.hide();
                         self.getCategory('data').click();
+                        self.Loader.hide();
                     });
                 });
 
             }.bind(this)).catch(function (err) {
                 console.error(err);
-
                 self.destroy();
             });
         },
 
         /**
+         * Create panel categories
          *
-         * @param fields
+         * @param {Object} fields
          */
         $createCategories: function (fields) {
             var self = this;
@@ -365,7 +386,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
 
                 this.addCategory({
-                    name   : 'images',
+                    name   : 'field-' + fields[i].id,
                     text   : fields[i].title,
                     icon   : 'fa fa-picture-o',
                     fieldId: fields[i].id,
@@ -430,6 +451,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @return {Promise}
          */
         openData: function () {
+            if (this.getCategory('data').isActive()) {
+                return Promise.resolve();
+            }
+
             return this.$hideCategories().then(function () {
                 return this.$showCategory(this.$Data);
             }.bind(this));
@@ -441,7 +466,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @return {Promise}
          */
         openImages: function () {
+            if (this.getCategory('images').isActive()) {
+                return Promise.resolve();
+            }
+
             return this.$hideCategories().then(function () {
+
+                this.$ImageViewer.refresh();
+
                 return this.$showCategory(this.$Media);
             }.bind(this));
         },
@@ -452,7 +484,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @return {Promise}
          */
         openFiles: function () {
+            if (this.getCategory('files').isActive()) {
+                return Promise.resolve();
+            }
+
             return this.$hideCategories().then(function () {
+
+                this.$FileViewer.refresh();
+
                 return this.$showCategory(this.$Files);
             }.bind(this));
         },
@@ -484,6 +523,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 });
             });
+        },
+
+        /**
+         * Alias for update
+         *
+         * @returns {Promise}
+         */
+        save: function () {
+            return this.update();
         },
 
         /**
@@ -578,6 +626,29 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     duration: 200,
                     callback: resolve
                 });
+            });
+        },
+
+        /**
+         * event : on folder created, if the product hadnt a media folder
+         *
+         * @param {Object} Viewer
+         * @param {Object} Folder
+         */
+        $onFolderCreated: function (Viewer, Folder) {
+            var self = this;
+
+            this.Loader.show();
+
+            var Form  = this.getContent().getElement('form'),
+                Input = Form.elements['field-10'];
+
+            Input.value = Folder.getUrl();
+
+            this.update().then(function () {
+                self.$ImageViewer.refresh();
+                self.$FileViewer.refresh();
+                self.Loader.hide();
             });
         }
     });
