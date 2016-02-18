@@ -19,6 +19,21 @@
             <en><![CDATA[Product fields]]></en>
         </locale>
 
+        <locale name="settings.window.products.folder">
+            <de><![CDATA[Produktbilder]]></de>
+            <en><![CDATA[Product images]]></en>
+        </locale>
+        <locale name="settings.window.products.folder.desc">
+            <de><![CDATA[
+            Geben Sie den Hauptordner für Produktbilder an.
+            Unter diesen Ordner wird für jedes Produkt ein Ordner für Produktbilder angelegt
+            ]]></de>
+            <en><![CDATA[
+            Specify the main folder for product images.
+            Under this folder, a folder for product images is created for each product
+            ]]></en>
+        </locale>
+
 
         <locale name="fieldtype">
             <de><![CDATA[Feld-Typ]]></de>

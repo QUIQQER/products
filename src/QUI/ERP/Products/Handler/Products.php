@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Handler;
 use QUI;
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Field\Field;
+use QUI\Projects\Media\Utils as FolderUtils;
 
 /**
  * Class Products
@@ -22,6 +23,40 @@ class Products
      * @var array
      */
     private static $list = array();
+
+    /**
+     * Return the main media folder
+     *
+     * @return QUI\Projects\Media\Folder
+     * @throws QUI\Exception
+     */
+    public static function getParentMediaFolder()
+    {
+        $Config    = QUI::getPackage('quiqqer/products')->getConfig();
+        $folderUrl = $Config->get('products', 'folder');
+
+        if (empty($folderUrl)) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.products.media.folder.missing'
+            ));
+        }
+
+        try {
+            $Folder = FolderUtils::getMediaItemByUrl($folderUrl);
+
+            if (FolderUtils::isFolder($Folder)) {
+                return $Folder;
+            }
+
+        } catch (QUI\Exception $Exception) {
+        }
+
+        throw new QUI\Exception(array(
+            'quiqqer/products',
+            'exception.products.media.folder.missing'
+        ));
+    }
 
     /**
      * @param integer $pid - Product-ID

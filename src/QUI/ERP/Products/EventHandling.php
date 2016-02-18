@@ -185,7 +185,7 @@ class EventHandling
             ),
             // Produkt mediaordner
             array(
-                'id' => Fields::FIELD_IMAGE_FOLDER,
+                'id' => Fields::FIELD_FOLDER,
                 'type' => 'Folder',
                 'prefix' => '',
                 'suffix' => '',

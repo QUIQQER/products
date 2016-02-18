@@ -9,6 +9,7 @@ use QUI;
 use QUI\ERP\Products\Interfaces\Field;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Category\Category;
+use QUI\Projects\Media\Utils as MediaUtils;
 
 /**
  * Class Controller
@@ -497,38 +498,70 @@ class Modell extends QUI\QDOM
      * Image / File methods
      */
 
-
+    /**
+     * Return the product media folder
+     *
+     * @return QUI\Projects\Media\Folder
+     * @throws QUI\Exception
+     */
     public function getMediaFolder()
     {
+        $folderUrl = $this->getFieldValue(Fields::FIELD_FOLDER);
+        $Folder    = MediaUtils::getMediaItemByUrl($folderUrl);
 
+        if (MediaUtils::isFolder($Folder)) {
+            return $Folder;
+        }
+
+        throw new QUI\Exception(array(
+            'quiqqer/products',
+            'exception.products.media.folder.missing'
+        ));
     }
 
-
+    /**
+     * Return the main product image
+     *
+     * @return QUI\Projects\Media\Image
+     * @throws QUI\Exception
+     */
     public function getImage()
     {
+        $value = $this->getFieldValue(Fields::FIELD_IMAGE);
+        $Image = MediaUtils::getImageByUrl($value);
 
+        return $Image;
     }
 
     /**
      * Return all images for the product
      *
+     * @param array $params - optional, select params
      * @return array
      */
-    public function getImages()
+    public function getImages($params = array())
     {
+        try {
+            return $this->getMediaFolder()->getImages($params);
 
-
-        return array();
+        } catch (QUI\Exception $Exception) {
+            return array();
+        }
     }
 
     /**
      * Return all files for the product
+     *
+     * @param array $params - optional, select params
      * @return array
      */
-    public function getFiles()
+    public function getFiles($params)
     {
+        try {
+            return $this->getMediaFolder()->getFiles($params);
 
-
-        return array();
+        } catch (QUI\Exception $Exception) {
+            return array();
+        }
     }
 }

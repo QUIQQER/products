@@ -31,7 +31,7 @@ class Fields
 
     const FIELD_IMAGE = 9;
 
-    const FIELD_IMAGE_FOLDER = 10;
+    const FIELD_FOLDER = 10;
 
     /**
      * @var array
