@@ -86,6 +86,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             this.$CategorySelect = null;
             this.$FieldContainer = null;
+            this.$currentField   = null;
 
             this.$FileViewer  = null;
             this.$ImageViewer = null;
@@ -94,10 +95,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 id: this.getAttribute('productId')
             });
 
-            this.$data  = {};
-            this.$Data  = null;
-            this.$Media = null;
-            this.$Files = null;
+            this.$data   = {};
+            this.$Data   = null;
+            this.$Media  = null;
+            this.$Files  = null;
+            this.$Editor = null;
 
             this.$injected = false;
 
@@ -189,7 +191,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     categories = [];
                 }
 
+                fields.each(function (Field) {
+                    self.$data[Field.id] = Field;
+                });
 
+                // DOM
                 Content.addClass('product-update');
 
                 var dataTemplate = Mustache.render(templateProductData, {
@@ -215,14 +221,13 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 });
 
                 this.$FieldContainer = Content.getElement('.product-update-field');
-                console.log(fields);
 
                 // viewer
                 this.$FileViewer = new FolderViewer({
                     folderId: false,
                     filetype: ['file'],
                     events  : {
-                        onFolderCreated: this.$onFolderCreated
+                        onFolderCreated: self.$onFolderCreated
                     }
                 }).inject(this.$Files);
 
@@ -230,7 +235,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     folderId: false,
                     filetype: ['image'],
                     events  : {
-                        onFolderCreated: this.$onFolderCreated
+                        onFolderCreated: self.$onFolderCreated
                     }
                 }).inject(this.$Media);
 
@@ -303,6 +308,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         }
 
                         if (field.type == 'TextareaMultiLang') {
+
                             continue;
                         }
 
@@ -377,7 +383,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             var self = this;
 
             var fieldClick = function (Btn) {
-                self.openField(Btn.getAttribute('field'));
+                self.openField(Btn.getAttribute('fieldId'));
             };
 
             for (var i = 0, len = fields.length; i < len; i++) {
@@ -456,6 +462,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }
 
             return this.$hideCategories().then(function () {
+
+                if (this.$Editor) {
+                    this.$Editor.destroy();
+                    this.$Editor = null;
+                }
+
                 return this.$showCategory(this.$Data);
             }.bind(this));
         },
@@ -471,6 +483,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }
 
             return this.$hideCategories().then(function () {
+
+                if (this.$Editor) {
+                    this.$Editor.destroy();
+                    this.$Editor = null;
+                }
 
                 this.$ImageViewer.refresh();
 
@@ -490,6 +507,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             return this.$hideCategories().then(function () {
 
+                if (this.$Editor) {
+                    this.$Editor.destroy();
+                    this.$Editor = null;
+                }
+
                 this.$FileViewer.refresh();
 
                 return this.$showCategory(this.$Files);
@@ -499,28 +521,35 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         /**
          * Open a textarea field
          *
-         * @param {Object} fielddData
+         * @param {Object} fieldId
          */
-        openField: function (fielddData) {
+        openField: function (fieldId) {
             var self = this;
 
             self.$FieldContainer.set('html', '');
 
+            var Field = this.$data[fieldId];
+
             return this.$hideCategories().then(function () {
                 return self.$showCategory(self.$FieldContainer);
             }).then(function () {
+                self.$currentField = fieldId;
+
                 require(['Editors'], function (Editors) {
                     Editors.getEditor().then(function (Editor) {
+
+                        self.$Editor = Editor;
 
                         self.$FieldContainer.setStyles({
                             height: '100%'
                         });
 
-                        console.log(fielddData);
+                        if (Field && "value" in Field) {
+                            Editor.setContent(Field.value);
+                        }
 
                         Editor.inject(self.$FieldContainer);
                     });
-
                 });
             });
         },
@@ -539,10 +568,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @returns {Promise}
          */
         update: function () {
-            var self = this,
-                Elm  = self.getElm();
+            var self     = this,
+                Elm      = self.getElm(),
+                selfData = this.$data;
 
-            self.Loader.show();
+            this.Loader.show();
+            this.$saveEditorContent();
 
             return new Promise(function (resolve, reject) {
 
@@ -560,9 +591,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     return item !== '';
                 });
 
-
-                console.log(data);
-                console.log(fields);
+                // content fields
+                Object.each(selfData, function (entry) {
+                    if (entry.type == 'TextareaMultiLang') {
+                        fields['field-' + entry.id] = entry.value;
+                    }
+                });
 
                 Products.updateChild(
                     self.getAttribute('productId'),
@@ -587,6 +621,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         $hideCategories: function () {
             var nodes = this.getContent().getElements('.sheet');
 
+            //  storage content fields
+            this.$saveEditorContent();
+
             return new Promise(function (resolve) {
                 moofx(nodes).animate({
                     opacity: 0,
@@ -603,6 +640,18 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
                 });
             }.bind(this));
+        },
+
+        /**
+         * storage the content fields
+         */
+        $saveEditorContent: function () {
+            if (this.$Editor) {
+                var currentField = this.$currentField,
+                    content      = this.$Editor.getContent();
+
+                this.$data[currentField].value = content;
+            }
         },
 
         /**
