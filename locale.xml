@@ -167,6 +167,12 @@
             <en><![CDATA[Please fill in the "[fieldtitle]" field correctly.]]></en>
         </locale>
 
+        <!-- controls -->
+        <locale name="control.products-watchlist-button-text">
+            <de><![CDATA[Merkzettel]]></de>
+            <en><![CDATA[Watchlist]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/products" datatype="js">

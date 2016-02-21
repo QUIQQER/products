@@ -26,6 +26,8 @@ class Button extends QUI\Control
             'data-qui' => 'package/quiqqer/products/bin/controls/watchlist/Button'
         ));
 
+        $this->addCSSClass('qui-products-watchlist-button');
+
         parent::__construct($attributes);
     }
 
@@ -37,10 +39,11 @@ class Button extends QUI\Control
     public function getBody()
     {
         $Locale = QUI::getLocale();
+        $text   = $Locale->get('quiqqer/products', 'control.products-watchlist-button-text');
 
         return '
-            <span class="fa fa-spinner fa-spin"></span>
-            <span class="text">Merkzettel</span>
+            <span class="qui-products-watchlist-button-icon fa fa-spinner fa-spin"></span>
+            <span class="qui-products-watchlist-button-text">' . $text . '</span>
         ';
     }
 }

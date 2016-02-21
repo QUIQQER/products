@@ -43,8 +43,8 @@ define('package/quiqqer/products/bin/controls/watchlist/Button', [
         $onImport: function () {
             var Elm = this.getElm();
 
-            this.$Icon = Elm.getElement('.fa');
-            this.$Text = Elm.getElement('.text');
+            this.$Icon = Elm.getElement('.qui-products-watchlist-button-icon');
+            this.$Text = Elm.getElement('.qui-products-watchlist-button-text');
 
             Elm.addEvent('click', function () {
                 new WatchlistWindow().open();
