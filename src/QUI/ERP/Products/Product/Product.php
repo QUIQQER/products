@@ -19,7 +19,7 @@ use QUI\ERP\Products\Handler\Categories;
  * @example
  * QUI\ERP\Products\Handler\Products::getProduct( ID );
  */
-class Product extends Modell implements QUI\ERP\Products\Interfaces\Product
+class Product extends Model implements QUI\ERP\Products\Interfaces\Product
 {
     /**
      * Add a field to the product

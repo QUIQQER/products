@@ -20,7 +20,7 @@ use QUI\Projects\Media\Utils as MediaUtils;
  * @example
  * QUI\ERP\Products\Handler\Products::getProduct( ID );
  */
-class Modell extends QUI\QDOM
+class Model extends QUI\QDOM
 {
     /**
      * Product-ID

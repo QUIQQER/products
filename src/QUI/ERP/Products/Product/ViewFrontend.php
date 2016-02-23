@@ -22,9 +22,9 @@ class ViewFrontend extends QUI\QDOM
 
     /**
      * View constructor.
-     * @param Modell $Product
+     * @param Model $Product
      */
-    public function __construct(Modell $Product)
+    public function __construct(Model $Product)
     {
         $this->Product = $Product;
     }
@@ -38,11 +38,11 @@ class ViewFrontend extends QUI\QDOM
     }
 
     /**
-     * @return QUI\ERP\Products\Price
+     * @return QUI\ERP\Products\Utils\Price
      */
     public function getPrice()
     {
-        return new QUI\ERP\Products\Price(
+        return new QUI\ERP\Products\Utils\Price(
             $this->getAttribute('price'),
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
