@@ -16,6 +16,7 @@
  */
 define('package/quiqqer/products/bin/controls/categories/Select', [
 
+    'qui/QUI',
     'qui/controls/Control',
     'qui/controls/buttons/Button',
     'package/quiqqer/products/bin/controls/categories/SelectItem',
@@ -25,7 +26,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
     'css!package/quiqqer/products/bin/controls/categories/Select.css'
 
-], function (QUIControl, QUIButton, SelectItem, Handler, Ajax, QUILocale) {
+], function (QUI, QUIControl, QUIButton, SelectItem, Handler, Ajax, QUILocale) {
     "use strict";
 
     var lg         = 'quiqqer/products';
@@ -218,6 +219,15 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 }
             }
 
+            if (this.getAttribute('max') == 1) {
+                this.$Search.setStyle('display', 'none');
+
+                this.$List.setStyles({
+                    border: 'none',
+                    height: 31,
+                    width : 'calc(100% - 50px)'
+                });
+            }
 
             // load values
             if (this.$Input.value || this.$Input.value !== '') {
@@ -397,6 +407,21 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
             if (!id || id === '') {
                 return this;
+            }
+
+            var max = this.getAttribute('max');
+
+            if (max == 1) {
+                // max = 1 -> overwrites the old
+                this.$values = [];
+
+                QUI.Controls.getControlsInElement(this.$List).each(function (Entry) {
+                    Entry.destroy();
+                });
+            }
+
+            if (this.$values.length > max) {
+                return;
             }
 
             new SelectItem({

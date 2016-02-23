@@ -166,7 +166,7 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
                 Item.removeIcon('fa-shopping-basket');
                 Item.addIcon('fa fa-spinner fa-spin');
 
-                Categories.getChildren(categoryId).then(function (data) {
+                Categories.getChildren(categoryId || 0).then(function (data) {
 
                     var i, len, entry;
 
@@ -189,7 +189,10 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
 
                     Item.removeIcon('fa-spinner');
                     Item.addIcon('fa fa-shopping-basket');
-                    Item.open();
+
+                    if (data.length) {
+                        Item.open();
+                    }
 
                     resolve();
                 });

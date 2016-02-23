@@ -2,6 +2,15 @@
 <locales>
 
     <groups name="quiqqer/products" datatype="php,js">
+        <locale name="package.title">
+            <de><![CDATA[QUIQQER - Shop - Produkte]]></de>
+            <en><![CDATA[QUIQQER - Shop - Products]]></en>
+        </locale>
+        <locale name="admin.types.category">
+            <de><![CDATA[Produktkategorie]]></de>
+            <en><![CDATA[Product category]]></en>
+        </locale>
+
         <locale name="menu.erp.title">
             <de><![CDATA[Shop]]></de>
             <en><![CDATA[Shop]]></en>
@@ -308,5 +317,17 @@
 
     </groups>
 
+
+    <groups name="quiqqer/products" datatype="php">
+        <locale name="quiqqer.products.category.settings.title">
+            <de><![CDATA[Shop Einstellungen]]></de>
+            <en><![CDATA[Shop settings]]></en>
+        </locale>
+
+        <locale name="quiqqer.products.settings.categoryId">
+            <de><![CDATA[Produktkategorie]]></de>
+            <en><![CDATA[Product category]]></en>
+        </locale>
+    </groups>
 
 </locales>

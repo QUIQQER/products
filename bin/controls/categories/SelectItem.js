@@ -1,5 +1,13 @@
 /**
  * Country select item
+ *
+ * @module package/quiqqer/products/bin/controls/categories/SelectItem
+ * @author www.pcsg.de (Henning Leutz)
+ *
+ * @require qui/controls/Control
+ * @require Locale
+ * @require package/quiqqer/products/bin/classes/Categories
+ * @require css!package/quiqqer/products/bin/controls/categories/SelectItem.css
  */
 define('package/quiqqer/products/bin/controls/categories/SelectItem', [
 
@@ -49,7 +57,7 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
 
             Elm.set({
                 'class': 'quiqqer-category-selectItem smooth',
-                html   : '<span class="quiqqer-category-selectItem-icon fa fa-percent"></span>' +
+                html   : '<span class="quiqqer-category-selectItem-icon fa fa-sitemap"></span>' +
                          '<span class="quiqqer-category-selectItem-text">&nbsp;</span>' +
                          '<span class="quiqqer-category-selectItem-destroy fa fa-remove"></span>'
             });
@@ -85,7 +93,7 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
                 );
 
                 self.$Text.set({
-                    html: '#' + data.id + ' - ' + locale
+                    html: locale + ' (#' + data.id + ')'
                 });
 
             }).catch(function () {

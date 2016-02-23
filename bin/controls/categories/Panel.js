@@ -494,8 +494,9 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             this.closeSitemap().then(function () {
 
                 self.createSheet({
-                    title : QUILocale.get(lg, 'categories.create.title'),
-                    events: {
+                    title  : QUILocale.get(lg, 'categories.create.title'),
+                    buttons: false,
+                    events : {
                         onShow : function (Sheet) {
                             new CreateCategory({
                                 parentId: parentId,

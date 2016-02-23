@@ -9,6 +9,10 @@ use QUI;
 
 /**
  * Class Select
+ *
+ * Im Feld kann direkt eine Auswahl angelegt werden
+ * Nicht wie im GroupList oder in Auswahllisten
+ *
  * @package QUI\ERP\Products\Field
  */
 class Select extends QUI\ERP\Products\Field\Field

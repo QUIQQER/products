@@ -9,6 +9,15 @@ use QUI;
 
 /**
  * Class GroupList
+ *
+ * Beschreibung des GroupList Typs:
+ * In diesem Feld ist es Möglich eine Gruppe auszuwählen.
+ * Wenn dieser Typ einem Produkt zugewiesen ist,
+ * kann nun aus der zugewiesenen Gruppe ein benutzer ausgewählt werden-
+ * Nutzbar zB. für Hersteller und Lieferanten
+ *
+ * D.h. Hersteller und Lieferanten sind Benutzer
+ *
  * @package QUI\ERP\Products\Field
  */
 class GroupList extends QUI\ERP\Products\Field\Field

@@ -20,9 +20,12 @@
                             <locale group="quiqqer/products" var="quiqqer.products.category.settings.title"/>
                         </title>
 
-                        <input conf="quiqqer.products.settings.categoryId" type="number">
+                        <input conf="quiqqer.products.settings.categoryId" type="number"
+                               data-qui="package/quiqqer/products/bin/controls/categories/Select"
+                               data-qui-options-max="1"
+                        >
                             <text>
-                                <locale group="quiqqer/products" var="quiqqer.sitetypes.list.settings.max"/>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.categoryId"/>
                             </text>
                         </input>
                     </settings>
