@@ -260,7 +260,13 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                                                 Sheet.destroy();
                                                 self.refresh();
                                             });
-                                        }).catch(function () {
+                                        }).catch(function (err) {
+                                            if (typeOf(err) == 'string') {
+                                                QUI.getMessageHandler().then(function (MH) {
+                                                    MH.addError(err);
+                                                });
+                                            }
+
                                             self.Loader.hide();
                                         });
                                     }

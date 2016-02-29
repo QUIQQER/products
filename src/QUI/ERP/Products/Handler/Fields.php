@@ -272,7 +272,11 @@ class Fields
 
         throw new QUI\Exception(array(
             'quiqqer/products',
-            'exception.field.not.found'
+            'exception.field.not.found',
+            array(
+                'fieldType' => $type,
+                'fieldId' => $fieldId
+            )
         ));
     }
 

@@ -175,6 +175,14 @@
             <de><![CDATA[Bitte füllen Sie das Feld "[fieldtitle]" korrekt aus.]]></de>
             <en><![CDATA[Please fill in the "[fieldtitle]" field correctly.]]></en>
         </locale>
+        <locale name="exception.field.not.found" html="1">
+            <de><![CDATA[Das Feld "[fieldType]" #[fieldId] wurde nicht gefunden.]]></de>
+            <en><![CDATA[Field "[fieldType]" #[fieldId] not found.]]></en>
+        </locale>
+        <locale name="exception.field.inputMultiLang.invalid">
+            <de><![CDATA[Das Feld "[fieldType]" #[fieldId] wurde nicht gefunden.]]></de>
+            <en><![CDATA[Field "[fieldType]" #[fieldId] not found.]]></en>
+        </locale>
 
         <!-- controls -->
         <locale name="control.products-watchlist-button-text">
@@ -212,6 +220,10 @@
         <locale name="products.categories.grid.assigned.sites">
             <de><![CDATA[Zugehörige Seite]]></de>
             <en><![CDATA[Assigned sites]]></en>
+        </locale>
+        <locale name="products.create.title">
+            <de><![CDATA[Produkt anlegen]]></de>
+            <en><![CDATA[Create product]]></en>
         </locale>
 
         <locale name="categories.update.title">
@@ -313,6 +325,10 @@
 
 
         <!-- produkte -->
+        <locale name="message.product.create.missing.category">
+            <de><![CDATA[Bitte geben Sie dem Produkt eine Produkt-Kategorie]]></de>
+            <en><![CDATA[Please assign a product category to the product]]></en>
+        </locale>
 
 
     </groups>

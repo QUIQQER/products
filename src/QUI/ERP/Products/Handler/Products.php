@@ -146,14 +146,13 @@ class Products
                 $Field->validate($Field->getValue());
             }
 
-            $fieldData = $Field->toProductArray();
+            $fieldData[] = $Field->toProductArray();
         }
-
 
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
-                'data' => json_encode($fieldData),
+                'fieldData' => json_encode($fieldData),
                 'categories' => ',' . implode($categories, ',') . ','
             )
         );

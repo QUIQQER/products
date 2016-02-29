@@ -524,11 +524,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {Object} fieldId
          */
         openField: function (fieldId) {
-            var self = this;
+            var self  = this,
+                Field = this.$data[fieldId];
 
             self.$FieldContainer.set('html', '');
-
-            var Field = this.$data[fieldId];
 
             return this.$hideCategories().then(function () {
                 return self.$showCategory(self.$FieldContainer);
@@ -606,9 +605,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 ).then(function () {
                     self.Loader.hide();
                     resolve();
-                }).catch(function () {
+                }).catch(function (err) {
                     self.Loader.hide();
-                    reject();
+                    reject(err);
                 });
             });
         },
@@ -647,10 +646,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          */
         $saveEditorContent: function () {
             if (this.$Editor) {
-                var currentField = this.$currentField,
-                    content      = this.$Editor.getContent();
+                var currentField = this.$currentField;
 
-                this.$data[currentField].value = content;
+                this.$data[currentField].value = this.$Editor.getContent();
             }
         },
 

@@ -50,12 +50,16 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @throws \QUI\Exception
      */
-    public static function validate($value)
+    public function validate($value)
     {
         if (!is_array($value)) {
             throw new QUI\Exception(array(
                 'quiqqer/products',
-                'exception.field.inputMultiLang.invalid'
+                'exception.field.inputMultiLang.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle()
+                )
             ));
         }
 
@@ -65,7 +69,10 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
             if (!is_string($lang) || strlen($lang) != 2) {
                 throw new QUI\Exception(array(
                     'quiqqer/products',
-                    'exception.field.inputMultiLang.invalid'
+                    'exception.field.inputMultiLang.invalid',
+                    array(
+                        'fieldId' => self::getId()
+                    )
                 ));
             }
         }

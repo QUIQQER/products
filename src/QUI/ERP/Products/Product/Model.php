@@ -95,6 +95,17 @@ class Model extends QUI\QDOM
         }
 
         foreach ($fields as $field) {
+            if (!isset($field['type']) &&
+                !isset($field['id']) &&
+                !isset($field['value'])
+            ) {
+                continue;
+            }
+
+            if (!isset($field['type'])) {
+                $field['type'] = 'Standard';
+            }
+
             try {
                 $Field = Fields::getFieldByType($field['type'], $field['id']);
                 $Field->setValue($field['value']);

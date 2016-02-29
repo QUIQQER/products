@@ -25,10 +25,22 @@ QUI::$Ajax->registerFunction(
 
         /* @var $Product \QUI\ERP\Products\Product\Product */
         foreach ($data as $Product) {
-            $attributes                = $Product->getAttributes();
-            $attributes['title']       = $Product->getTitle();
-            $attributes['description'] = $Product->getDescription();
-            $attributes['price']       = $Product->getPrice()->getNetto();
+            $attributes = $Product->getAttributes();
+
+            try {
+                $attributes['title'] = $Product->getTitle();
+            } catch (QUI\Exception $Exception) {
+            }
+
+            try {
+                $attributes['description'] = $Product->getDescription();
+            } catch (QUI\Exception $Exception) {
+            }
+
+            try {
+                $attributes['price'] = $Product->getPrice()->getNetto();
+            } catch (QUI\Exception $Exception) {
+            }
 
             $result[] = $attributes;
         }

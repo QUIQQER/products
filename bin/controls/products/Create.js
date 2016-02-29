@@ -18,6 +18,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
 
     'qui/QUI',
     'qui/controls/Control',
+    'qui/utils/Form',
     'Locale',
     'Mustache',
     'package/quiqqer/products/bin/classes/Products',
@@ -28,7 +29,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
     'text!package/quiqqer/products/bin/controls/products/CreateField.html',
     'css!package/quiqqer/products/bin/controls/products/Create.css'
 
-], function (QUI, QUIControl, QUILocale, Mustache, Handler, FieldHandler, CategoriesSelect,
+], function (QUI, QUIControl, QUIFormUtils, QUILocale, Mustache, Handler, FieldHandler, CategoriesSelect,
              template, templateField) {
     "use strict";
 
@@ -182,7 +183,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 Fields.getSystemFields(),
                 Fields.getStandardFields()
             ]).then(function (result) {
-                var i, len;
+                var i, len, field;
                 var systemFields   = result[0],
                     standardFields = result[1];
 
@@ -197,29 +198,55 @@ define('package/quiqqer/products/bin/controls/products/Create', [
 
                 // standard felder
                 for (i = 0, len = diffFields.length; i < len; i++) {
+                    field = diffFields[i];
+
+                    if (field.type == 'TextareaMultiLang') {
+                        continue;
+                    }
+
+                    // dont show media folder field
+                    if (field.id === 10) {
+                        continue;
+                    }
+
                     new Element('tr', {
                         'class'       : 'field',
                         html          : Mustache.render(templateField, {
-                            fieldTitle: QUILocale.get(lg, 'products.field.' + diffFields[i].id + '.title'),
-                            fieldName : 'field-' + diffFields[i].id
+                            fieldTitle: QUILocale.get(lg, 'products.field.' + field.id + '.title'),
+                            fieldName : 'field-' + field.id,
+                            control   : field.jsControl
                         }),
-                        'data-fieldid': diffFields[i].id
+                        'data-fieldid': field.id
                     }).inject(StandardFields);
                 }
 
                 // systemfields
                 for (i = 0, len = systemFields.length; i < len; i++) {
+                    field = systemFields[i];
+
+                    if (field.type == 'TextareaMultiLang') {
+                        continue;
+                    }
+
+                    // dont show media folder field
+                    if (field.id === 10) {
+                        continue;
+                    }
+
                     new Element('tr', {
                         'class'       : 'field',
                         html          : Mustache.render(templateField, {
-                            fieldTitle: QUILocale.get(lg, 'products.field.' + systemFields[i].id + '.title'),
-                            fieldName : 'field-' + systemFields[i].id
+                            fieldTitle: QUILocale.get(lg, 'products.field.' + field.id + '.title'),
+                            fieldName : 'field-' + field.id,
+                            control   : field.jsControl
                         }),
-                        'data-fieldid': systemFields[i].id
+                        'data-fieldid': field.id
                     }).inject(Data);
                 }
 
-                self.fireEvent('loaded');
+                QUI.parse(self.getElm()).then(function () {
+                    self.fireEvent('loaded');
+                });
             });
         },
 
@@ -233,22 +260,19 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 Elm  = this.getElm();
 
             return new Promise(function (resolve, reject) {
-                var categories = self.$Categories.getValue().trim().split(','),
-                    fieldList  = Elm.getElements('.field');
+                var categories = self.$Categories.getValue().trim().split(',');
+                var Form       = Elm.getElement('form');
+                var data       = QUIFormUtils.getFormData(Form);
 
-                var fields = fieldList.map(function (Row) {
-                    var fieldId = Row.get('data-fieldid');
-
-                    return {
-                        fieldId: fieldId,
-                        value  : Row.getElement('input').value
-                    };
+                // fields
+                var fields = Object.filter(data, function (value, key) {
+                    return (key.indexOf('field-') >= 0);
                 });
 
                 if (!categories.length) {
                     QUI.getMessageHandler().then(function (MH) {
                         MH.addAttention(
-                            'Bitte geben Sie dem Produkt eine Produkt-Kategorie',
+                            QUILocale.get(lg, 'message.product.create.missing.category'),
                             Elm.getElement('.product-categories')
                         );
                     });

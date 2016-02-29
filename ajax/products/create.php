@@ -22,10 +22,12 @@ QUI::$Ajax->registerFunction(
 
         $fieldList = array();
 
-        foreach ($fields as $fieldData) {
+        foreach ($fields as $fieldId => $fieldData) {
             try {
-                $Field = Fields::getField($fieldData['fieldId']);
-                $Field->setValue($fieldData['value']);
+                $fieldId = (int)str_replace('field-', '', $fieldId);
+
+                $Field = Fields::getField($fieldId);
+                $Field->setValue($fieldData);
 
                 $fieldList[] = $Field;
             } catch (QUI\Exception $Exception) {
