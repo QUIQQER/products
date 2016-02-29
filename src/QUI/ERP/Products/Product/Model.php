@@ -9,6 +9,7 @@ use QUI;
 use QUI\ERP\Products\Interfaces\Field;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Category\Category;
+use QUI\ERP\Products\Handler\Categories;
 use QUI\Projects\Media\Utils as MediaUtils;
 
 /**
@@ -84,6 +85,16 @@ class Model extends QUI\QDOM
                     $this->categories[$Category->getId()] = $Category;
                 } catch (QUI\Exception $Exception) {
                 }
+            }
+        }
+
+        // main category
+        $mainCategory = $this->getAttribute('category');
+
+        if ($mainCategory) {
+            try {
+                $this->Category = Categories::getCategory($mainCategory);
+            } catch (QUI\Exception $Exception) {
             }
         }
 
@@ -295,6 +306,11 @@ class Model extends QUI\QDOM
     {
         $attributes       = parent::getAttributes();
         $attributes['id'] = $this->getId();
+
+        if ($this->getCategory()) {
+            $attributes['category'] = $this->getCategory()->getId();
+        }
+
 
         // fields
         $fields    = array();

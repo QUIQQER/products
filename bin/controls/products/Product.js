@@ -195,6 +195,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     self.$data[Field.id] = Field;
                 });
 
+                console.log(self.$data);
+
                 // DOM
                 Content.addClass('product-update');
 
@@ -247,8 +249,34 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 this.$CategorySelect = new CategorySelect({
                     name  : 'categories',
                     events: {
-                        onChange: function () {
+                        onDelete: function (Select, Item) {
+                            var categoryId = Item.getAttribute('categoryId');
+                            var Option     = self.$MainCategory.getElement(
+                                '[value="' + categoryId + '"]'
+                            );
 
+                            if (Option) {
+                                Option.destroy();
+                            }
+                        },
+                        onChange: function () {
+                            var ids = self.$CategorySelect.getValue();
+
+                            if (ids === '') {
+                                ids = [];
+                            } else {
+                                ids = ids.split(',');
+                            }
+
+                            ids.each(function (id) {
+                                if (self.$MainCategory.getElement('[value="' + id + '"]')) {
+                                    return;
+                                }
+                                new Element('option', {
+                                    value: id,
+                                    html : QUILocale.get(lg, 'products.category.' + id + '.title')
+                                }).inject(self.$MainCategory);
+                            });
                         }
                     }
                 }).inject(
@@ -260,12 +288,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     this.$MainCategory.set('html', '');
                 }
 
-                categories.each(function (categoryId) {
-                    self.$CategorySelect.addCategory(categoryId);
+                categories.each(function (id) {
+                    self.$CategorySelect.addCategory(id);
+
+                    if (self.$MainCategory.getElement('[value="' + id + '"]')) {
+                        return;
+                    }
 
                     new Element('option', {
-                        value: categoryId,
-                        html : QUILocale.get(lg, 'products.category.' + categoryId + '.title')
+                        value: id,
+                        html : QUILocale.get(lg, 'products.category.' + id + '.title')
                     }).inject(self.$MainCategory);
                 });
 
@@ -277,7 +309,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 var StandardFields = Content.getElement(
                     '.product-standardfield tbody'
                 );
-
 
                 // Felderaufbau
                 Promise.all([

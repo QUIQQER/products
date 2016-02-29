@@ -420,7 +420,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 });
             }
 
-            if (this.$values.length > max) {
+            if (max && this.$values.length > max) {
                 return;
             }
 
