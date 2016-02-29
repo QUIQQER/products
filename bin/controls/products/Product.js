@@ -197,7 +197,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     self.$data[Field.id] = Field;
                 });
 
-                
+
                 // DOM
                 Content.addClass('product-update');
 
