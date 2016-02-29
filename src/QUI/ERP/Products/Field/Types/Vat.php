@@ -38,7 +38,7 @@ class Vat extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @throws \QUI\Exception
      */
-    public static function validate($value)
+    public function validate($value)
     {
         if (!is_numeric($value)) {
             throw new QUI\Exception(array(
@@ -60,7 +60,7 @@ class Vat extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @return integer
      */
-    public static function cleanup($value)
+    public function cleanup($value)
     {
         return (int)$value;
     }

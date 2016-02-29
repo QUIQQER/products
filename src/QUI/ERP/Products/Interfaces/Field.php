@@ -87,7 +87,7 @@ interface Field
      * @param mixed $value
      * @throws \QUI\Exception
      */
-    public static function validate($value);
+    public function validate($value);
 
     /**
      * Cleanup the value, so the value is valid
@@ -95,5 +95,5 @@ interface Field
      * @param mixed $value
      * @return mixed
      */
-    public static function cleanup($value);
+    public function cleanup($value);
 }

@@ -38,7 +38,7 @@ class BoolType extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @throws \QUI\Exception
      */
-    public static function validate($value)
+    public function validate($value)
     {
         // TODO: Implement validate() method.
     }
@@ -47,10 +47,12 @@ class BoolType extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
+     * @return mixed
      * @throws \QUI\Exception
      */
-    public static function cleanup($value)
+    public function cleanup($value)
     {
         // TODO: Implement cleanup() method.
+        return $value;
     }
 }

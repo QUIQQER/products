@@ -19,7 +19,7 @@ class Date extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @throws QUI\Exception
      */
-    public static function validate($value)
+    public function validate($value)
     {
         $dateTime = \DateTime::createFromFormat('m/d/Y', $value);
 
@@ -42,7 +42,7 @@ class Date extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @return int - timestamp
      */
-    public static function cleanup($value)
+    public function cleanup($value)
     {
         $Date = new \DateTime($value);
 

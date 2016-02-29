@@ -36,7 +36,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
             var Elm = this.getElm();
 
             Elm.addClass('field-container-field');
-            Elm.type = 'text';
+            Elm.type        = 'text';
+            Elm.placeholder = '1.000,00';
         }
     });
 });

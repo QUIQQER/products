@@ -71,7 +71,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
                     'quiqqer/products',
                     'exception.field.inputMultiLang.invalid',
                     array(
-                        'fieldId' => self::getId()
+                        'fieldId' => $this->getId()
                     )
                 ));
             }
@@ -84,7 +84,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @return array
      */
-    public static function cleanup($value)
+    public function cleanup($value)
     {
         $languages = QUI\Translator::getAvailableLanguages();
 

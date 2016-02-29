@@ -77,7 +77,7 @@ class EventHandling
                 'priority' => 6,
                 'systemField' => 1,
                 'standardField' => 1,
-                'requiredField' => 1,
+                'requiredField' => 0,
                 'titles' => array(
                     'de' => 'MwSt.',
                     'en' => 'Vat'
@@ -92,7 +92,7 @@ class EventHandling
                 'priority' => 4,
                 'systemField' => 1,
                 'standardField' => 1,
-                'requiredField' => 1,
+                'requiredField' => 0,
                 'titles' => array(
                     'de' => 'Artikel Nummer',
                     'en' => 'Artikel No.'
@@ -126,7 +126,7 @@ class EventHandling
                 'priority' => 2,
                 'systemField' => 1,
                 'standardField' => 1,
-                'requiredField' => 1,
+                'requiredField' => 0,
                 'options' => array(
                     'maxLength' => 255,
                     'minLength' => 3
@@ -145,7 +145,7 @@ class EventHandling
                 'priority' => 3,
                 'systemField' => 1,
                 'standardField' => 1,
-                'requiredField' => 1,
+                'requiredField' => 0,
                 'options' => array(
                     'html' => 1
                 ),
