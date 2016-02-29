@@ -55,10 +55,11 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
         if (!is_array($value)) {
             throw new QUI\Exception(array(
                 'quiqqer/products',
-                'exception.field.inputMultiLang.invalid',
+                'exception.field.invalid',
                 array(
                     'fieldId' => $this->getId(),
-                    'fieldTitle' => $this->getTitle()
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType' => $this->getType()
                 )
             ));
         }
@@ -69,9 +70,11 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
             if (!is_string($lang) || strlen($lang) != 2) {
                 throw new QUI\Exception(array(
                     'quiqqer/products',
-                    'exception.field.inputMultiLang.invalid',
+                    'exception.field.invalid',
                     array(
-                        'fieldId' => $this->getId()
+                        'fieldId' => $this->getId(),
+                        'fieldTitle' => $this->getTitle(),
+                        'fieldType' => $this->getType()
                     )
                 ));
             }

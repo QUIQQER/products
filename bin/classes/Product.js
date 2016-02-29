@@ -128,7 +128,14 @@ define('package/quiqqer/products/bin/classes/Product', [
                 if (self.$loaded) {
                     var categories = self.$data.categories.split(',');
 
-                    categories.push(parseInt(self.$data.category));
+                    categories.each(function (value, index) {
+                        categories[index] = parseInt(value);
+                    });
+
+                    if (self.$data.category && !categories.contains(parseInt(self.$data.category))) {
+                        categories.push(parseInt(self.$data.category));
+                    }
+
                     categories = categories.filter(function (item) {
                         return item !== '';
                     });

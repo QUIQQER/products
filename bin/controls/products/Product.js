@@ -216,6 +216,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 this.$Media = Content.getElement('.product-update-media');
                 this.$Files = Content.getElement('.product-update-files');
 
+                this.$MainCategoryRow = Content.getElement('.product-mainCategory');
+                this.$MainCategory    = Content.getElement('[name="product-category"]');
+
                 Content.getElements('.sheet').setStyles({
                     display: 'none'
                 });
@@ -242,13 +245,28 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 // categories
                 this.$CategorySelect = new CategorySelect({
-                    name: 'categories'
+                    name  : 'categories',
+                    events: {
+                        onChange: function () {
+
+                        }
+                    }
                 }).inject(
                     Content.getElement('.product-categories')
                 );
 
+                if (categories.length) {
+                    this.$MainCategoryRow.setStyle('display', null);
+                    this.$MainCategory.set('html', '');
+                }
+
                 categories.each(function (categoryId) {
                     self.$CategorySelect.addCategory(categoryId);
+
+                    new Element('option', {
+                        value: categoryId,
+                        html : QUILocale.get(lg, 'products.category.' + categoryId + '.title')
+                    }).inject(self.$MainCategory);
                 });
 
 

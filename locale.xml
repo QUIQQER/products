@@ -179,15 +179,33 @@
             <de><![CDATA[Das Feld "[fieldType]" #[fieldId] wurde nicht gefunden.]]></de>
             <en><![CDATA[Field "[fieldType]" #[fieldId] not found.]]></en>
         </locale>
-        <locale name="exception.field.inputMultiLang.invalid">
-            <de><![CDATA[Das Feld "[fieldType]" #[fieldId] wurde nicht gefunden.]]></de>
-            <en><![CDATA[Field "[fieldType]" #[fieldId] not found.]]></en>
+        <locale name="exception.field.invalid">
+            <de><![CDATA[
+                Nicht erlaubter Inhalt für das Feld: #[fieldId] [fieldTitle]. Bitte korrigieren Sie die Eingabe.
+                ]]></de>
+            <en><![CDATA[
+                Illegal content for the field: #[fieldId] [fieldTitle]. Please correct the entry.
+            ]]></en>
         </locale>
 
         <!-- controls -->
         <locale name="control.products-watchlist-button-text">
             <de><![CDATA[Merkzettel]]></de>
             <en><![CDATA[Watchlist]]></en>
+        </locale>
+
+        <!-- produkte -->
+        <locale name="message.product.create.missing.category">
+            <de><![CDATA[Bitte geben Sie dem Produkt eine Produkt-Kategorie.]]></de>
+            <en><![CDATA[Please assign a product category to the product.]]></en>
+        </locale>
+        <locale name="product.successfully.saved">
+            <de><![CDATA[Produkt wurde gespeichert.]]></de>
+            <en><![CDATA[Product has been saved.]]></en>
+        </locale>
+        <locale name="message.set.maincategory.error">
+            <de><![CDATA[Fehler beim Setzen der Hauptkategorie. Es wurde keine Hauptkategorie angegeben.]]></de>
+            <en><![CDATA[Failed to set the main category. There was no main category specified.]]></en>
         </locale>
 
     </groups>
@@ -322,14 +340,6 @@
             <de><![CDATA[Suche]]></de>
             <en><![CDATA[Search]]></en>
         </locale>
-
-
-        <!-- produkte -->
-        <locale name="message.product.create.missing.category">
-            <de><![CDATA[Bitte geben Sie dem Produkt eine Produkt-Kategorie]]></de>
-            <en><![CDATA[Please assign a product category to the product]]></en>
-        </locale>
-
 
     </groups>
 

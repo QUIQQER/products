@@ -327,6 +327,15 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Alias for save()
+     * @throws QUI\Exception
+     */
+    public function update()
+    {
+        $this->save();
+    }
+
+    /**
      * save / update the product data
      */
     public function save()
@@ -341,28 +350,32 @@ class Model extends QUI\QDOM
 
         /* @var $Field Field */
         foreach ($fields as $Field) {
-            if ($Field->isRequired()) {
-                try {
-                    $Field->validate($Field->getValue());
-                } catch (QUI\Exception $Exception) {
-                    QUI\System\Log::addDebug(
-                        $Exception->getMessage(),
-                        array(
-                            'id' => $Field->getId(),
-                            'title' => $Field->getTitle()
-                        )
-                    );
+            if (!$Field->isRequired()) {
+                $fieldData[] = $Field->toProductArray();
+                continue;
+            }
+
+            try {
+                $Field->validate($Field->getValue());
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug(
+                    $Exception->getMessage(),
+                    array(
+                        'id' => $Field->getId(),
+                        'title' => $Field->getTitle()
+                    )
+                );
 
 
-                    throw new QUI\Exception(array(
-                        'quiqqer/products',
-                        'exception.field.inputMultiLang.invalid',
-                        array(
-                            'id' => $Field->getId(),
-                            'title' => $Field->getTitle()
-                        )
-                    ));
-                }
+                throw new QUI\Exception(array(
+                    'quiqqer/products',
+                    'exception.field.invalid',
+                    array(
+                        'fieldId' => $this->getId(),
+                        'fieldTitle' => $this->getTitle(),
+                        'fieldType' => $this->getType()
+                    )
+                ));
             }
 
             $fieldData[] = $Field->toProductArray();
