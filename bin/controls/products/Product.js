@@ -172,7 +172,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 // get product data
                 return Promise.all([
                     self.$Product.getFields(),
-                    self.$Product.getCategories()
+                    self.$Product.getCategories(),
+                    self.$Product.getCategory()
                 ]).then(function (result) {
                     return result;
                 });
@@ -181,7 +182,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }).then(function (data) {
 
                 var fields     = data[0],
-                    categories = data[1];
+                    categories = data[1],
+                    category   = data[2];
 
                 if (typeOf(fields) !== 'array') {
                     fields = [];
@@ -195,8 +197,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     self.$data[Field.id] = Field;
                 });
 
-                console.log(self.$data);
-
+                
                 // DOM
                 Content.addClass('product-update');
 
@@ -300,6 +301,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         html : QUILocale.get(lg, 'products.category.' + id + '.title')
                     }).inject(self.$MainCategory);
                 });
+
+                self.$MainCategory.value = category;
 
 
                 // fields

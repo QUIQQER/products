@@ -41,7 +41,7 @@ define('package/quiqqer/products/bin/classes/Product', [
             return new Promise(function (resolve, reject) {
 
                 Handler.getChild(this.getAttribute('id')).then(function (data) {
-
+                    console.warn(data);
                     this.$loaded = true;
                     this.$data   = data;
 
