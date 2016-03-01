@@ -255,4 +255,22 @@ class EventHandling
             }
         }
     }
+
+    /**
+     * Event on machine category site save
+     *
+     * @param \QUI\Projects\Site\Edit $Site
+     */
+    public static function onSiteSave($Site)
+    {
+        // register path
+        if ($Site->getAttribute('active') &&
+            $Site->getAttribute('type') == 'quiqqer/products:types/category'
+        ) {
+            $url = $Site->getLocation();
+            $url = str_replace(QUI\Rewrite::URL_DEFAULT_SUFFIX, '', $url);
+
+            QUI::getRewrite()->registerPath($url . '/*', $Site);
+        }
+    }
 }

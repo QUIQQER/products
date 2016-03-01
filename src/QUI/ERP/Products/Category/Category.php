@@ -129,15 +129,27 @@ class Category extends QUI\QDOM
 
     /**
      * Return category url
+     * Return the category url of a binded site from the project
      *
+     * @param QUI\Projects\Project|boolean $Project - optional, default = global project
      * @return string
      */
-    public function getUrl()
+    public function getUrl($Project = false)
     {
-        $result = '';
+        if (!$Project) {
+            $Project = QUI::getRewrite()->getProject();
+        }
 
+        try {
+            $Site = $this->getSite($Project);
 
-        return $result;
+            return $Site->getUrlRewritten();
+
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
+
+        return '';
     }
 
     /**
@@ -177,18 +189,8 @@ class Category extends QUI\QDOM
      */
     public function getAttributes()
     {
-        $sites  = array();
-        $fields = array();
-
-        $siteList = $this->getSites();
+        $fields   = array();
         $fieldist = $this->getFields();
-
-        /* @var $Site QUI\Projects\Site */
-        foreach ($siteList as $projectName => $projectData) {
-            foreach ($projectData as $projectLang => $Site) {
-                $sites[$projectName][$projectLang] = $Site->getId();
-            }
-        }
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($fieldist as $Field) {
@@ -201,7 +203,7 @@ class Category extends QUI\QDOM
         $attributes['title']         = $this->getTitle();
         $attributes['description']   = $this->getDescription();
         $attributes['countChildren'] = $this->countChildren();
-        $attributes['sites']         = $sites;
+        $attributes['sites']         = $this->getSites();
         $attributes['fields']        = $fields;
 
         return $attributes;
@@ -277,13 +279,17 @@ class Category extends QUI\QDOM
     /**
      * Return the category site
      *
-     * @param QUI\Projects\Project $Project
+     * @param QUI\Projects\Project|boolean $Project
      * @return QUI\Projects\Site
      *
      * @throws QUI\Exception
      */
-    public function getSite(QUI\Projects\Project $Project)
+    public function getSite($Project = false)
     {
+        if (!$Project) {
+            $Project = QUI::getRewrite()->getProject();
+        }
+
         $defaults = $this->defaultSites;
         $name     = $Project->getName();
         $lang     = $Project->getLang();
@@ -312,45 +318,20 @@ class Category extends QUI\QDOM
      */
     public function getSites($Project = false)
     {
-        if (is_null($this->sites)) {
-            $this->sites = array();
-
-            $data = $this->data;
-
-            if (isset($data['sites'])) {
-                $sites = json_decode($data['sites'], true);
-
-                if (!is_array($sites)) {
-                    $sites = array();
-                }
-
-                foreach ($sites as $siteData) {
-                    try {
-                        $Project = QUI::getProject($siteData['project'], $siteData['lang']);
-                        $Site    = $Project->get($siteData['id']);
-
-                        if ($siteData['standard'] == 1) {
-                            $this->defaultSites[$Project->getName()][$Project->getLang()] = $Site;
-                        }
-
-                        $this->sites[] = $Site;
-
-                    } catch (QUI\Exception $Exception) {
-                        QUI\System\Log::writeException(
-                            $Exception,
-                            QUI\System\Log::LEVEL_DEBUG
-                        );
-                    }
-                }
-            }
-        }
-
-        if ($Project === false) {
+        if (!is_null($this->sites) && !$Project) {
             return $this->sites;
         }
 
-        if (get_class($Project) !== 'QUI\Projects\Project') {
-            return array();
+        if (isset($this->data['sites'])) {
+            // @todo load from data
+        }
+
+        if (is_null($this->sites)) {
+            $this->refreshSiteBinds();
+        }
+
+        if (!$Project) {
+            return $this->sites;
         }
 
         $sites  = array();
@@ -360,8 +341,8 @@ class Category extends QUI\QDOM
         $projectName = $Project->getName();
         $projectLang = $Project->getLang();
 
-        /* @var $Site QUI\Projects\Site */
         foreach ($result as $Site) {
+            /* @var $Site QUI\Projects\Site */
             if ($Site->getProject()->getName() != $projectName) {
                 continue;
             }
@@ -376,6 +357,44 @@ class Category extends QUI\QDOM
         }
 
         return $sites;
+    }
+
+    /**
+     * refresh the internal sites bind
+     *
+     * @return array
+     */
+    public function refreshSiteBinds()
+    {
+        // must be cached or set it at the site save event
+        $projects = QUI::getProjectManager()->getProjectList();
+        $result   = array();
+        $id       = $this->getId();
+
+        foreach ($projects as $Project) {
+            /* @var $Project QUI\Projects\Project */
+            $sites = $Project->getSites(array(
+                'where' => array(
+                    'type' => 'quiqqer/products:types/category'
+                )
+            ));
+
+            $idList = array();
+
+            foreach ($sites as $Site) {
+                /* @var $Site QUI\Projects\Site */
+                if ($Site->getAttribute('quiqqer.products.settings.categoryId') == $id) {
+                    $result[] = $Site;
+                    $idList[] = $Site->getId();
+                }
+            }
+
+            $this->data['sites'][$Project->getName()][$Project->getLang()] = $idList;
+        }
+
+        $this->sites = $result;
+
+        return $this->sites;
     }
 
     /**
@@ -467,10 +486,12 @@ class Category extends QUI\QDOM
 
     /**
      * saves the field
+     *
+     * @param boolean|QUI\Interfaces\Users\User $User
      */
-    public function save()
+    public function save($User = false)
     {
-        QUI\Rights\Permission::checkPermission('category.edit');
+        QUI\Rights\Permission::checkPermission('category.edit', $User);
 
         $fields = array();
 
@@ -496,8 +517,10 @@ class Category extends QUI\QDOM
 
     /**
      * delete the complete product
+     *
+     * @param boolean|QUI\Interfaces\Users\User $User
      */
-    public function delete()
+    public function delete($User = false)
     {
         if ($this->getId() === 0) {
             return;
@@ -507,7 +530,7 @@ class Category extends QUI\QDOM
             return;
         }
 
-        QUI\Rights\Permission::checkPermission('category.delete');
+        QUI\Rights\Permission::checkPermission('category.delete', $User);
 
         // get children ids
         $ids = array();

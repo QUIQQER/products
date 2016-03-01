@@ -11,6 +11,7 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\Projects\Media\Utils as MediaUtils;
+use QUI\Utils\Security\Orthos;
 
 /**
  * Class Controller
@@ -178,11 +179,35 @@ class Model extends QUI\QDOM
     public function getUrl()
     {
         $Category = $this->getCategory();
-        $url      = $Category->getUrl();
 
+        if (!$Category) {
+            return '';
+        }
+
+        $Site = $Category->getSite();
+
+        $url = $Site->getUrlRewritten(array(
+            0 => $this->getUrlName(),
+            'paramAsSites' => true
+        ));
 
         return $url;
     }
+
+    /**
+     * Return name for rewrite url
+     *
+     * @return string
+     */
+    public function getUrlName()
+    {
+        $parts   = array();
+        $parts[] = Orthos::urlEncodeString($this->getTitle());
+        $parts[] = $this->getId();
+
+        return urlencode(implode(QUI\Rewrite::URL_PARAM_SEPERATOR, $parts));
+    }
+
 
     /**
      * Return the title / name of the product
