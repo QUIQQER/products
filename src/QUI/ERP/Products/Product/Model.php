@@ -567,10 +567,28 @@ class Model extends QUI\QDOM
      */
     public function getImage()
     {
-        $value = $this->getFieldValue(Fields::FIELD_IMAGE);
-        $Image = MediaUtils::getImageByUrl($value);
+        try {
+            $value = $this->getFieldValue(Fields::FIELD_IMAGE);
+            $Image = MediaUtils::getImageByUrl($value);
 
-        return $Image;
+            return $Image;
+        } catch (QUI\Exception $Exception) {
+            $Project     = QUI::getRewrite()->getProject();
+            $Media       = $Project->getMedia();
+            $Placeholder = $Media->getPlaceholderImage();
+
+            if ($Placeholder) {
+                return $Placeholder;
+            }
+        }
+
+        throw new QUI\Exception(array(
+            'quiqqer/products',
+            'exception.product.no.image',
+            array(
+                'productId' => $this->getId()
+            )
+        ));
     }
 
     /**

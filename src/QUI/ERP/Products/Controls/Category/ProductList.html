@@ -1,0 +1,25 @@
+<div class="quiqqer-products-productList-sort">
+    <div class="grid-50 mobile-grid-50 grid-parent quiqqer-products-productList-sort-sorting">
+        Sortieren nach...
+    </div>
+    <div class="grid-50 mobile-grid-50 grid-parent quiqqer-products-productList-sort-display">
+        <span class="fa fa-list-ul button"></span>
+        <span class="fa fa-th-large button"></span>
+        <span class="fa fa-th button"></span>
+    </div>
+</div>
+
+<div class="quiqqer-products-productList-products">
+    {foreach from=$products item=Product}
+    <article class="quiqqer-products-productList-products-product grid-33 mobile-grid-100">
+        <a href="" title="{$Product->getTitle()|escape:" html"}">
+        {image image=$Product->getImage() title=$Product->getTitle()}
+        <header>{$Product->getTitle()}</header>
+        </a>
+    </article>
+    {foreachelse}
+    <div class="quiqqer-products-productList-sort__noProducts">
+        In der Kategorie sind keine Produkte enthalten
+    </div>
+    {/foreach}
+</div>

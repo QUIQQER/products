@@ -194,9 +194,6 @@ class Products
     {
         $query['from'] = QUI\ERP\Products\Utils\Tables::getProductTableName();
 
-        $result = array();
-        $data   = QUI::getDataBase()->fetch($query);
-
         if (isset($queryParams['where'])) {
             $query['where'] = $queryParams['where'];
         }
@@ -212,6 +209,13 @@ class Products
         if (isset($queryParams['order'])) {
             $query['order'] = $queryParams['order'];
         }
+
+        if (isset($queryParams['debug'])) {
+            $query['debug'] = $queryParams['debug'];
+        }
+
+        $result = array();
+        $data   = QUI::getDataBase()->fetch($query);
 
         foreach ($data as $entry) {
             try {

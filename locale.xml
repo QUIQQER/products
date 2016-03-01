@@ -187,6 +187,10 @@
                 Illegal content for the field: #[fieldId] [fieldTitle]. Please correct the entry.
             ]]></en>
         </locale>
+        <locale name="exception.product.no.image">
+            <de><![CDATA[Das Produkt #[productId] besitzt kein Bild.]]></de>
+            <en><![CDATA[The product #[productId] has no image.]]></en>
+        </locale>
 
         <!-- controls -->
         <locale name="control.products-watchlist-button-text">

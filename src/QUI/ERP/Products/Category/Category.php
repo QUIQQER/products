@@ -366,6 +366,28 @@ class Category extends QUI\QDOM
     }
 
     /**
+     * Products
+     */
+
+    /**
+     * Return all products from the category
+     *
+     * @return array
+     */
+    public function getProducts()
+    {
+        return QUI\ERP\Products\Handler\Products::getProducts(array(
+            'where' => array(
+                'categories' => array(
+                    'type' => '%LIKE%',
+                    'value' => ',' . $this->getId() . ','
+                )
+            ),
+            'limit' => 20
+        ));
+    }
+
+    /**
      * Fields
      */
 

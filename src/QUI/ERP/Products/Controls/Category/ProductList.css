@@ -1,0 +1,79 @@
+.quiqqer-products-productList-sort {
+    border-color: #f1f1f1;
+    border-style: solid;
+    border-width: 1px 0;
+    display: inline-block;
+    width: 100%
+}
+
+.quiqqer-products-productList-sort-sorting {
+    font-size: 16px;
+    line-height: 20px;
+    padding: 10px !important;
+}
+
+.quiqqer-products-productList-sort-display {
+    border: none;
+    line-height: 20px;
+    text-align: right;
+}
+
+.quiqqer-products-productList-sort-display .button {
+    border: none;
+    line-height: 20px !important;
+    padding: 10px !important;
+}
+
+.quiqqer-products-productList-sort__noProducts {
+    opacity: 0.5;
+    padding: 40px;
+    text-align: center;
+}
+
+/** Produkte
+ ================================================= */
+
+.quiqqer-products-productList-products-product {
+    height: 180px;
+    margin-top: 20px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+}
+
+.quiqqer-products-productList-products-product a {
+    display: block;
+    border: 1px solid #dfe4e4;
+    height: 100%;
+    position: relative;
+    width: 100%;
+}
+
+.quiqqer-products-productList-products-product header {
+    background: #dfe4e4;
+    bottom: 0;
+    float: left;
+    line-height: 30px;
+    overflow: hidden;
+    padding: 0 10px;
+    position: absolute;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    z-index: 2;
+}
+
+.quiqqer-products-productList-products-product img {
+    float: left;
+    transition: all 1s ease;
+    -webkit-transition: all 1s ease;
+    z-index: 1;
+}
+
+.quiqqer-products-productList-products-product img:hover {
+    transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+    transition: all 2s ease;
+    -webkit-transition: all 2s ease;
+}
+
