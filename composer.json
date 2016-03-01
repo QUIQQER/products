@@ -24,7 +24,8 @@
   "suggest": {
     "quiqqer/areas": "Area management",
     "quiqqer/currency": "Provided currency calculation and a automtatic cron to get the Euro foreign exchange reference rates.",
-    "quiqqer/tax": "VAT management"
+    "quiqqer/tax": "VAT management",
+    "npm-asset\/mustache": "2.*"
   },
   "autoload": {
     "psr-0": {
