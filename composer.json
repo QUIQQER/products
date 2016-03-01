@@ -21,7 +21,7 @@
     "quiqqer/quiqqer": "*@dev",
     "quiqqer/discount": "*",
     "npm-asset/mustache": "2.*",
-    "quiqqer/currency": "*"
+    "quiqqer/currency": "dev-dev"
   },
   "suggest": {
     "quiqqer/areas": "Area management",
