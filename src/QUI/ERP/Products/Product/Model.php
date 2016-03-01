@@ -172,6 +172,19 @@ class Model extends QUI\QDOM
     }
 
     /**
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        $Category = $this->getCategory();
+        $url      = $Category->getUrl();
+
+
+        return $url;
+    }
+
+    /**
      * Return the title / name of the product
      *
      * @param QUI\Locale|Boolean $Locale - optional
@@ -507,7 +520,7 @@ class Model extends QUI\QDOM
             $categories = $this->getCategories();
 
             if (isset($categories[0])) {
-                return $categories[0];
+                $this->Category = $categories[0];
             }
         }
 

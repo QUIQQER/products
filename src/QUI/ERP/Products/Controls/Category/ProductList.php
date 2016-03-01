@@ -55,9 +55,22 @@ class ProductList extends QUI\Control
 
 
         $Engine->assign(array(
-            'products' => $products
+            'products' => $products,
+            'children' => $this->getSite()->getNavigation()
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/ProductList.html');
+    }
+
+    /**
+     * @return mixed|QUI\Projects\Site
+     */
+    protected function getSite()
+    {
+        if ($this->getAttribute('Site')) {
+            return $this->getAttribute('Site');
+        }
+
+        return QUI::getRewrite()->getSite();
     }
 }

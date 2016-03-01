@@ -1,3 +1,14 @@
+{if count($children)}
+<div class="quiqqer-products-productList-categories">
+    {foreach from=$children item=Category}
+    <a href="{url site=$Category}">
+        {$Category->getAttribute('title')}
+        <span class="fa fa-angle-right"></span>
+    </a>
+    {/foreach}
+</div>
+{/if}
+
 <div class="quiqqer-products-productList-sort">
     <div class="grid-50 mobile-grid-50 grid-parent quiqqer-products-productList-sort-sorting">
         Sortieren nach...

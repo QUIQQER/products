@@ -30,6 +30,33 @@
     text-align: center;
 }
 
+/** Sub-Kategorien
+ ================================================= */
+
+.quiqqer-products-productList-categories {
+    display: block;
+    float: left;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+.quiqqer-products-productList-categories a {
+    border: 1px solid #f1f1f1;
+    display: inline-block;
+    padding: 10px 0;
+    text-align: center;
+    width: calc(50% - 12px);
+}
+
+.quiqqer-products-productList-categories a:hover {
+    background: #cdd4d5;
+    color: #1d1d1b;
+}
+
+.quiqqer-products-productList-categories a:nth-child(odd) {
+    margin-right: 20px;
+}
+
 /** Produkte
  ================================================= */
 

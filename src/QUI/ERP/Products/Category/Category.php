@@ -128,6 +128,19 @@ class Category extends QUI\QDOM
     }
 
     /**
+     * Return category url
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        $result = '';
+
+
+        return $result;
+    }
+
+    /**
      * Return the Id of the parent category
      * Category 0 has no parent => returns false
      *
