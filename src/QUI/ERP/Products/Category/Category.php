@@ -404,11 +404,15 @@ class Category extends QUI\QDOM
     /**
      * Return all products from the category
      *
+     * @param array $params - query parameter
+     *                              $queryParams['limit']
+     *                              $queryParams['order']
+     *                              $queryParams['debug']
      * @return array
      */
-    public function getProducts()
+    public function getProducts($params = array())
     {
-        return QUI\ERP\Products\Handler\Products::getProducts(array(
+        $query = array(
             'where' => array(
                 'categories' => array(
                     'type' => '%LIKE%',
@@ -416,7 +420,21 @@ class Category extends QUI\QDOM
                 )
             ),
             'limit' => 20
-        ));
+        );
+
+        if (isset($params['limit'])) {
+            $query['limit'] = $params['limit'];
+        }
+
+        if (isset($params['order'])) {
+            $query['order'] = $params['order'];
+        }
+
+        if (isset($params['debug'])) {
+            $query['debug'] = $params['debug'];
+        }
+
+        return QUI\ERP\Products\Handler\Products::getProducts($query);
     }
 
     /**

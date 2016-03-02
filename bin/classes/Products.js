@@ -8,20 +8,42 @@
  * @require qui/QUI
  * @require qui/classes/DOM
  * @require Ajax
+ * @require package/quiqqer/products/bin/classes/Product
  */
 define('package/quiqqer/products/bin/classes/Products', [
 
     'qui/QUI',
     'qui/classes/DOM',
-    'Ajax'
+    'Ajax',
+    'package/quiqqer/products/bin/classes/Product'
 
-], function (QUI, QUIDOM, Ajax) {
+], function (QUI, QUIDOM, Ajax, Product) {
     "use strict";
 
     return new Class({
 
         Extends: QUIDOM,
         Type   : 'package/quiqqer/products/bin/classes/Products',
+
+        initialize: function () {
+            this.$products = {};
+        },
+
+        /**
+         * Return a product
+         *
+         * @param {Number} productId - Product ID
+         * @return {Object} package/quiqqer/products/bin/classes/Product
+         */
+        get: function (productId) {
+            if (!(productId in this.$products)) {
+                this.$products[productId] = new Product({
+                    id: productId
+                });
+            }
+
+            return this.$products[productId];
+        },
 
         /**
          * Search products

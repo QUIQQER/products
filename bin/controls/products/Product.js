@@ -33,10 +33,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'controls/grid/Grid',
     'controls/projects/project/media/FolderViewer',
     'Mustache',
-    'package/quiqqer/products/bin/classes/Products',
+    'package/quiqqer/products/bin/Products',
     'package/quiqqer/products/bin/classes/Product',
-    'package/quiqqer/products/bin/classes/Categories',
-    'package/quiqqer/products/bin/classes/Fields',
+    'package/quiqqer/products/bin/Categories',
+    'package/quiqqer/products/bin/Fields',
     'package/quiqqer/products/bin/controls/categories/Select',
 
     'text!package/quiqqer/products/bin/controls/products/ProductData.html',
@@ -45,15 +45,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
 ], function (QUI, QUIPanel, QUIButton, QUIConfirm, QUIFormUtils, QUILocale,
              Grid, FolderViewer, Mustache,
-             ProductHandler, Product, CategoriesHandler, FieldsHandler,
+             Products, Product, Categories, Fields,
              CategorySelect, templateProductData, templateField) {
     "use strict";
 
     var lg = 'quiqqer/products';
-
-    var Products   = new ProductHandler(),
-        Categories = new CategoriesHandler(),
-        Fields     = new FieldsHandler();
 
     return new Class({
 

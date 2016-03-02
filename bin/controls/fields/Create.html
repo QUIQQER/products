@@ -29,7 +29,7 @@
                         <span class="field-container-item">
                             {{fieldType}}
                         </span>
-                        <select class="field-container-field" name="fieldtype"></select>
+                        <select class="field-container-field" name="type"></select>
                     </label>
                 </td>
             </tr>
@@ -69,7 +69,7 @@
                         <span class="field-container-item">
                             {{fieldSearchtype}}
                         </span>
-                        <input class="field-container-field" type="text" name="searchtype"/>
+                        <input class="field-container-field" type="text" name="search_type"/>
                     </label>
                 </td>
             </tr>
@@ -80,7 +80,7 @@
                             {{fieldRequired}}
                         </span>
                         <span class="field-container-field">
-                            <input type="checkbox" name="required"/>
+                            <input type="checkbox" name="requiredField"/>
                             {{fieldRequiredDesc}}
                         </span>
                     </label>
@@ -93,7 +93,7 @@
                             {{fieldStandard}}
                         </span>
                         <span class="field-container-field">
-                            <input type="checkbox" name="standard"/>
+                            <input type="checkbox" name="standardField"/>
                             {{fieldStandardDesc}}
                         </span>
                     </label>
@@ -106,7 +106,7 @@
                             {{fieldSystem}}
                         </span>
                         <span class="field-container-field">
-                            <input type="checkbox" name="system" disabled/>
+                            <input type="checkbox" name="systemField" disabled/>
                             {{fieldSystemDesc}}
                         </span>
                     </label>
@@ -114,6 +114,5 @@
             </tr>
             </tbody>
         </table>
-
     </form>
 </div>
