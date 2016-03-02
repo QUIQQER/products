@@ -6,13 +6,13 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
- * @require package/quiqqer/products/bin/controls/watchlist/Window
+ * @require package/quiqqer/products/bin/controls/frontend/watchlist/Window
  */
-define('package/quiqqer/products/bin/controls/watchlist/Button', [
+define('package/quiqqer/products/bin/controls/frontend/watchlist/Button', [
 
     'qui/QUI',
     'qui/controls/Control',
-    'package/quiqqer/products/bin/controls/watchlist/Window'
+    'package/quiqqer/products/bin/controls/frontend/watchlist/Window'
 
 ], function (QUI, QUIControl, WatchlistWindow) {
 
@@ -23,7 +23,7 @@ define('package/quiqqer/products/bin/controls/watchlist/Button', [
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/watchlist/Button',
+        Type   : 'package/quiqqer/products/bin/controls/frontend/watchlist/Button',
 
         Binds: [
             '$onImport'
@@ -47,6 +47,7 @@ define('package/quiqqer/products/bin/controls/watchlist/Button', [
             this.$Text = Elm.getElement('.qui-products-watchlist-button-text');
 
             Elm.addEvent('click', function () {
+                return;
                 new WatchlistWindow().open();
             });
 

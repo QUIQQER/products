@@ -23,7 +23,7 @@ class Button extends QUI\Control
     {
         $this->setAttributes(array(
             'nodeName' => 'button',
-            'data-qui' => 'package/quiqqer/products/bin/controls/watchlist/Button'
+            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/watchlist/Button'
         ));
 
         $this->addCSSClass('qui-products-watchlist-button');

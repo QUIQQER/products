@@ -20,8 +20,6 @@ if ($siteUrl != $_REQUEST['_url']) {
     try {
         $Product = QUI\ERP\Products\Handler\Products::getProduct($refNo);
 
-        $Site->setAttribute('title', $Product->getTitle());
-
         $Engine->assign(array(
             'Product' => new QUI\ERP\Products\Controls\Products\Product(array(
                 'Product' => $Product
