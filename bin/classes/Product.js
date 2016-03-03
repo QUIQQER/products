@@ -31,6 +31,15 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * Return the Product-ID
+         *
+         * @returns {Number|Boolean}
+         */
+        getId: function () {
+            return this.getAttribute('id');
+        },
+
+        /**
          * Refresh the product data
          *
          * @returns {Promise}
@@ -40,8 +49,8 @@ define('package/quiqqer/products/bin/classes/Product', [
 
                 require([
                     'package/quiqqer/products/bin/Products'
-                ], function (Handler) {
-                    Handler.getChild(this.getAttribute('id')).then(function (data) {
+                ], function (Products) {
+                    Products.getChild(this.getAttribute('id')).then(function (data) {
                         console.warn(data);
                         this.$loaded = true;
                         this.$data   = data;

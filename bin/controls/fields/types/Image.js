@@ -4,14 +4,17 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require qui/utils/String
+ * @require controls/projects/project/media/Popup
  */
 define('package/quiqqer/products/bin/controls/fields/types/Image', [
 
     'qui/QUI',
     'qui/controls/Control',
+    'qui/utils/String',
     'controls/projects/project/media/Popup'
 
-], function (QUI, QUIControl, MediaPopup) {
+], function (QUI, QUIControl, QUIStringUtils, MediaPopup) {
     "use strict";
 
     return new Class({
@@ -22,6 +25,10 @@ define('package/quiqqer/products/bin/controls/fields/types/Image', [
             '$onImport',
             'openMedia'
         ],
+
+        options: {
+            productFolder: false
+        },
 
         initialize: function (options) {
             this.parent(options);
@@ -63,13 +70,32 @@ define('package/quiqqer/products/bin/controls/fields/types/Image', [
          * opens the media
          */
         openMedia: function () {
-            var self  = this,
-                value = this.$Input.value;
+            var self    = this,
+                value   = this.$Input.value,
+                fileid  = false,
+                project = false;
 
-            console.log(value);
+            var productFolder = this.getAttribute('productFolder'),
+                urlParams     = {};
+
+            if (value === '' && productFolder) {
+                urlParams = QUIStringUtils.getUrlParams(productFolder);
+            } else if (value !== '') {
+                urlParams = QUIStringUtils.getUrlParams(value);
+            }
+
+            if ("id" in urlParams) {
+                fileid = urlParams.id;
+            }
+
+            if ("project" in urlParams) {
+                project = urlParams.project;
+            }
 
             new MediaPopup({
-                events: {
+                fileid : fileid,
+                project: project,
+                events : {
                     onSubmit: function (Window, imageData) {
                         self.$Input.value = imageData.url;
                     }

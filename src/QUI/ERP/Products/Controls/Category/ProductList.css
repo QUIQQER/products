@@ -75,11 +75,14 @@
     float: left;
     width: 100%;
 }
+
 .quiqqer-products-productList-products-product a {
     display: block;
     border: 1px solid #dfe4e4;
     height: 100%;
+    overflow: hidden;
     position: relative;
+    text-align: center;
     width: 100%;
 }
 
@@ -98,18 +101,20 @@
 }
 
 .quiqqer-products-productList-products-product img {
-    float: left;
+    /*float: left;*/
     left: 0;
-    position: absolute;
+    /*position: absolute;*/
+    max-height: 100%;
+    max-width: 100%;
     transition: all 1s ease;
     -webkit-transition: all 1s ease;
     z-index: 1;
 }
 
 .quiqqer-products-productList-products-product img:hover {
-    transform: scale(1.2);
-    -webkit-transform: scale(1.2);
-    transition: all 2s ease;
-    -webkit-transition: all 2s ease;
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    transition: all 1s ease;
+    -webkit-transition: all 1s ease;
 }
 

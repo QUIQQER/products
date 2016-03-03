@@ -46,6 +46,37 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Return the parent media folder for the products
+         * @returns {Promise}
+         */
+        getParentFolder: function () {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_products_getParentFolder', function (result) {
+
+                    if (!result) {
+                        return resolve(false);
+                    }
+
+                    require(['Projects'], function (Projects) {
+                        var Project = Projects.get(result.project),
+                            Media   = Project.getMedia();
+
+                        Media.get(result.id).then(resolve).catch(function () {
+                            resolve(false);
+                        });
+                    }, function () {
+                        resolve(false);
+                    });
+                }, {
+                    'package': 'quiqqer/products',
+                    onError  : function () {
+                        resolve(false);
+                    }
+                });
+            });
+        },
+
+        /**
          * Search products
          *
          * @param {Object} [params] - query params

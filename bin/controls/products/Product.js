@@ -169,7 +169,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 return Promise.all([
                     self.$Product.getFields(),
                     self.$Product.getCategories(),
-                    self.$Product.getCategory()
+                    self.$Product.getCategory(),
+                    Products.getParentFolder()
                 ]).then(function (result) {
                     return result;
                 });
@@ -179,7 +180,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 var fields     = data[0],
                     categories = data[1],
-                    category   = data[2];
+                    category   = data[2],
+                    Folder     = data[3];
 
                 if (typeOf(fields) !== 'array') {
                     fields = [];
@@ -226,17 +228,21 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 // viewer
                 this.$FileViewer = new FolderViewer({
-                    folderId: false,
-                    filetype: ['file'],
-                    events  : {
+                    folderId     : false,
+                    Parent       : Folder,
+                    newFolderName: this.$Product.getId(),
+                    filetype     : ['file'],
+                    events       : {
                         onFolderCreated: self.$onFolderCreated
                     }
                 }).inject(this.$Files);
 
                 this.$ImageViewer = new FolderViewer({
-                    folderId: false,
-                    filetype: ['image'],
-                    events  : {
+                    folderId     : false,
+                    Parent       : Folder,
+                    newFolderName: this.$Product.getId(),
+                    filetype     : ['image'],
+                    events       : {
                         onFolderCreated: self.$onFolderCreated
                     }
                 }).inject(this.$Media);
@@ -391,7 +397,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
 
                     // field values
-                    var Form = Content.getElement('form');
+                    var Form          = Content.getElement('form'),
+                        productFolder = false;
 
                     fields.each(function (field) {
                         var Input = Form.elements['field-' + field.id];
@@ -403,15 +410,33 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                             Input.value = field.value;
 
-                            if (field.id == 10) {
+                            if (field.id == Fields.FIELD_FOLDER) {
                                 self.$FileViewer.setAttribute('folderUrl', field.value);
                                 self.$ImageViewer.setAttribute('folderUrl', field.value);
+
+                                productFolder = field.value;
                             }
                         }
                     });
 
                     QUI.parse().then(function () {
                         self.getCategory('data').click();
+
+                        // image fields
+                        var images = self.getElm().getElements(
+                            '[data-qui="package/quiqqer/products/bin/controls/fields/types/Image"]'
+                        );
+
+                        images.each(function (Input) {
+                            var quiId   = Input.get('data-quiid'),
+                                Control = QUI.Controls.getById(quiId);
+
+                            if (Control) {
+                                Control.setAttribute('productFolder', productFolder);
+                            }
+                        });
+
+
                         self.Loader.hide();
                     });
                 });
