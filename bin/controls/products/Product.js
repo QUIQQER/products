@@ -352,7 +352,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         field = systemFields[i];
 
                         // dont show media folder field
-                        if (field.id === 10) {
+                        if (field.id == Fields.FIELD_FOLDER) {
                             new Element('input', {
                                 type          : 'hidden',
                                 'data-fieldid': field.id,
@@ -721,6 +721,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             if (this.$Editor) {
                 var currentField = this.$currentField;
 
+                if (!(currentField in this.$data)) {
+                    this.$data[currentField] = {};
+                }
+
                 this.$data[currentField].value = this.$Editor.getContent();
             }
         },
@@ -766,8 +770,39 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             Input.value = Folder.getUrl();
 
             this.update().then(function () {
+                return self.$Product.refresh();
+            }).then(function () {
+                return self.$Product.getFields();
+            }).then(function (productField) {
+
+                var folder = productField.filter(function (field) {
+                    return field.id == Fields.FIELD_FOLDER;
+                });
+
+                if (!folder.length) {
+                    return self.Loader.hide();
+                }
+
+                self.$FileViewer.setAttribute('folderUrl', folder[0].value);
+                self.$ImageViewer.setAttribute('folderUrl', folder[0].value);
+
                 self.$ImageViewer.refresh();
                 self.$FileViewer.refresh();
+
+                // image fields
+                var images = self.getElm().getElements(
+                    '[data-qui="package/quiqqer/products/bin/controls/fields/types/Image"]'
+                );
+
+                images.each(function (Input) {
+                    var quiId   = Input.get('data-quiid'),
+                        Control = QUI.Controls.getById(quiId);
+
+                    if (Control) {
+                        Control.setAttribute('productFolder', folder[0].value);
+                    }
+                });
+
                 self.Loader.hide();
             });
         }

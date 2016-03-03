@@ -51,7 +51,6 @@ define('package/quiqqer/products/bin/classes/Product', [
                     'package/quiqqer/products/bin/Products'
                 ], function (Products) {
                     Products.getChild(this.getAttribute('id')).then(function (data) {
-                        console.warn(data);
                         this.$loaded = true;
                         this.$data   = data;
 
