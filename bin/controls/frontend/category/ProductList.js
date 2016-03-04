@@ -7,12 +7,15 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require Ajax
+ * @require html5tooltips
  */
 define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
     'qui/QUI',
     'qui/controls/Control',
-    'Ajax'
+    'Ajax',
+    'html5tooltips'
 
 ], function (QUI, QUIControl, Ajax) {
 
@@ -26,16 +29,18 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         Type   : 'package/quiqqer/products/bin/controls/frontend/category/ProductList',
 
         Binds: [
-            '$onInject',
-            'galleryView',
+            'galeryView',
             'detailView',
             'listView',
-            'next'
+            'next',
+            '$hideMoreButton',
+            '$showMoreButton',
+            '$onInject'
         ],
 
         options: {
             categoryId: false,
-            view      : 'gallery',
+            view      : 'galery',
             sort      : false
         },
 
@@ -43,7 +48,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.parent(options);
 
             this.$ButtonDetails = null;
-            this.$ButtonGallery = null;
+            this.$ButtonGalery  = null;
             this.$ButtonList    = null;
 
             this.$BarSort     = null;
@@ -62,7 +67,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * event : on inject
          */
         $onInject: function () {
-            console.log('inject');
+
         },
 
         /**
@@ -72,7 +77,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             var Elm = this.getElm();
 
             this.$ButtonDetails = Elm.getElement('.quiqqer-products-productList-sort-display-details');
-            this.$ButtonGallery = Elm.getElement('.quiqqer-products-productList-sort-display-gallery');
+            this.$ButtonGalery  = Elm.getElement('.quiqqer-products-productList-sort-display-galery');
             this.$ButtonList    = Elm.getElement('.quiqqer-products-productList-sort-display-list');
             this.$Container     = Elm.getElement('.quiqqer-products-productList-products');
 
@@ -87,15 +92,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             // events
             this.$ButtonDetails.addEvent('click', this.detailView);
-            this.$ButtonGallery.addEvent('click', this.galleryView);
+            this.$ButtonGalery.addEvent('click', this.galeryView);
             this.$ButtonList.addEvent('click', this.listView);
 
             switch (this.getAttribute('view')) {
                 case 'details':
                     this.$ButtonDetails.addClass('active');
                     break;
-                case 'gallery':
-                    this.$ButtonGallery.addClass('active');
+                case 'galery':
+                    this.$ButtonGalery.addClass('active');
                     break;
                 case 'list':
                     this.$ButtonList.addClass('active');
@@ -107,15 +112,23 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$parseElements(Elm);
 
-            this.$More.addEvent('click', this.next);
+            this.$More.addEvent('click', function () {
+                if (!this.$More.hasClass('disabled')) {
+                    this.next();
+                }
+            }.bind(this));
+
             this.$More.removeClass('disabled');
         },
 
         /**
+         * Render the next products
          *
+         * @return {Promise}
          */
         next: function () {
-            var size    = this.$More.getSize(),
+            var self    = this,
+                size    = this.$More.getSize(),
                 LastRow = this.getElm().getElement('[data-row]:last-child'),
                 nextRow = LastRow.get('data-row').toInt() + 1;
 
@@ -127,46 +140,55 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 width   : size.x
             });
 
-            this.$MoreFX.animate({
-                color: 'transparent'
-            }, {
-                duration: 250,
-                callback: function () {
+            return new Promise(function (resolve) {
 
-                    var oldButtonText = this.$More.get('text');
+                self.$MoreFX.animate({
+                    color: 'transparent'
+                }, {
+                    duration: 250,
+                    callback: function () {
+                        var oldButtonText = self.$More.get('text');
 
-                    this.$More.set('html', '<span class="fa fa-spinner fa-spin"></span>');
-                    this.$More.setStyle('color', null);
-                    this.$More.addClass('loading');
+                        self.$More.set('html', '<span class="fa fa-spinner fa-spin"></span>');
+                        self.$More.setStyle('color', null);
+                        self.$More.addClass('loading');
 
-                    this.$loadData(nextRow).then(function () {
+                        self.$loadData(nextRow).then(function (data) {
 
-                        this.$More.set({
-                            html  : oldButtonText,
-                            styles: {
-                                width: null
+                            self.$More.set({
+                                html  : oldButtonText,
+                                styles: {
+                                    width: null
+                                }
+                            });
+
+                            if (data.more === false) {
+                                self.$hideMoreButton();
+                            } else {
+                                self.$showMoreButton();
                             }
+
+                            //this.$More.removeClass('disabled');
+                            self.$More.removeClass('loading');
+
+                            resolve();
+
                         });
+                    }
+                });
 
-                        this.$More.removeClass('disabled');
-                        this.$More.removeClass('loading');
-
-                    }.bind(this));
-
-                }.bind(this)
             });
-
         },
 
         /**
-         * Change to gallery view
+         * Change to galery view
          *
          * @return {Promise}
          */
-        galleryView: function () {
+        galeryView: function () {
             this.resetButtons();
-            this.$ButtonGallery.addClass('active');
-            this.setAttribute('view', 'gallery');
+            this.$ButtonGalery.addClass('active');
+            this.setAttribute('view', 'galery');
 
             return this.$clearContainer().then(this.$loadData.bind(this));
         },
@@ -202,7 +224,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          */
         resetButtons: function () {
             this.$ButtonDetails.removeClass('active');
-            this.$ButtonGallery.removeClass('active');
+            this.$ButtonGalery.removeClass('active');
             this.$ButtonList.removeClass('active');
         },
 
@@ -223,8 +245,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             return new Promise(function (resolve) {
 
                 Ajax.get('package_quiqqer_products_ajax_controls_categories_productList', function (result) {
+
+                    if (result.more === false) {
+                        self.$hideMoreButton();
+                    } else {
+                        self.$showMoreButton();
+                    }
+
                     var Ghost = new Element('div', {
-                        html: result
+                        html: result.html
                     });
 
                     var Row = Ghost.getElement('[data-row]');
@@ -258,7 +287,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                 Row.getPosition().y - 100
                             ).chain(function () {
                                 self.$Container.setStyle('height', null);
-                                resolve();
+                                resolve(result);
                             });
                         }
                     });
@@ -281,7 +310,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         $parseElements: function (Node) {
             var self    = this,
                 Details = Node.getElements(
-                    '.quiqqer-products-productGallery-products-product-details'
+                    '.quiqqer-products-productGalery-products-product-details'
                 );
 
             Details.addEvent('click', function (event) {
@@ -366,6 +395,45 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }).delay(delay);
 
             });
+        },
+
+        /**
+         * hide the more button
+         *
+         * @return {Promise}
+         */
+        $hideMoreButton: function () {
+            this.$More.addClass('disabled');
+            this.$More.setStyle('cursor', 'default');
+
+            return new Promise(function (resolve) {
+                this.$MoreFX.animate({
+                    opacity: 0
+                }, {
+                    duration: 200,
+                    callback: resolve
+                });
+            }.bind(this));
+        },
+
+        /**
+         * shows the more button
+         *
+         * @return {Promise}
+         */
+        $showMoreButton: function () {
+            return new Promise(function (resolve) {
+                this.$MoreFX.animate({
+                    opacity: 1
+                }, {
+                    duration: 200,
+                    callback: function () {
+                        this.$More.removeClass('disabled');
+                        this.$More.setStyle('cursor', null);
+                        resolve();
+                    }.bind(this)
+                });
+            }.bind(this));
         },
 
         /**

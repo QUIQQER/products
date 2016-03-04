@@ -192,7 +192,9 @@ class Products
      */
     public static function getProducts($queryParams = array())
     {
-        $query['from'] = QUI\ERP\Products\Utils\Tables::getProductTableName();
+        $query = array(
+            'from' => QUI\ERP\Products\Utils\Tables::getProductTableName()
+        );
 
         if (isset($queryParams['where'])) {
             $query['where'] = $queryParams['where'];

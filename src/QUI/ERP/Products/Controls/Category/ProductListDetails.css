@@ -21,7 +21,7 @@
 .quiqqer-productList-product-detail-text {
     float: left;
     padding: 0 10px;
-    width: calc(100% - 300px);
+    width: calc(100% - 280px);
 }
 
 .quiqqer-productList-product-detail-price {
@@ -31,7 +31,7 @@
 .quiqqer-productList-product-detail-price,
 .quiqqer-productList-product-detail-buttons {
     float: left;
-    width: 100px;
+    width: 80px;
 }
 
 .quiqqer-productList-product-detail-buttons {

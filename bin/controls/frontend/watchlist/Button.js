@@ -53,7 +53,7 @@ define('package/quiqqer/products/bin/controls/frontend/watchlist/Button', [
 
             this.$Icon.removeClass('fa-spinner');
             this.$Icon.removeClass('fa-spin');
-            this.$Icon.addClass('fa-list-alt');
+            this.$Icon.addClass(' fa-file-text-o');
         }
     });
 });

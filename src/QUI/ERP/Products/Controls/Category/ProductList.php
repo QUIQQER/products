@@ -31,11 +31,11 @@ class ProductList extends QUI\Control
             'categoryId' => false,
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/category/ProductList',
             'data-cid' => false,
-            'view' => 'gallery' // gallery, list, detail
+            'view' => 'galery' // galery, list, detail
         ));
 
         $this->addCSSFile(dirname(__FILE__) . '/ProductList.css');
-        $this->addCSSFile(dirname(__FILE__) . '/ProductListGallery.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductListGalery.css');
         $this->addCSSFile(dirname(__FILE__) . '/ProductListDetails.css');
         $this->addCSSFile(dirname(__FILE__) . '/ProductListList.css');
 
@@ -73,7 +73,7 @@ class ProductList extends QUI\Control
      * Return the row html
      *
      * @param integer $rowNumber
-     * @return string
+     * @return array [html, more]
      * @throws QUI\Exception
      */
     public function getRow($rowNumber)
@@ -83,7 +83,11 @@ class ProductList extends QUI\Control
         $rowNumber = (int)$rowNumber;
 
         if (!$Category) {
-            return '';
+            return array(
+                'html' => '',
+                'count' => 0,
+                'more' => false
+            );
         }
 
         switch ($this->getAttribute('view')) {
@@ -98,16 +102,23 @@ class ProductList extends QUI\Control
                 break;
 
             default:
-            case 'gallery':
+            case 'galery':
                 $max        = 3;
-                $productTpl = dirname(__FILE__) . '/ProductListGallery.html';
+                $productTpl = dirname(__FILE__) . '/ProductListGalery.html';
                 break;
         }
 
-        $start    = $rowNumber * $max;
+        $more  = true;
+        $start = $rowNumber * $max;
+        $count = $Category->countProducts();
+
         $products = $Category->getProducts(array(
             'limit' => $start . ',' . $max
         ));
+
+        if ($start + $max >= $count) {
+            $more = false;
+        }
 
         $Engine->assign(array(
             'products' => $products,
@@ -115,7 +126,11 @@ class ProductList extends QUI\Control
             'productTpl' => $productTpl
         ));
 
-        return $Engine->fetch(dirname(__FILE__) . '/ProductListRow.html');
+        return array(
+            'html' => $Engine->fetch(dirname(__FILE__) . '/ProductListRow.html'),
+            'count' => $count,
+            'more' => $more
+        );
     }
 
     /**

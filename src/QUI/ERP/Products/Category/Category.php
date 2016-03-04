@@ -438,6 +438,23 @@ class Category extends QUI\QDOM
     }
 
     /**
+     * Return the number of the products in the category
+     *
+     * @return integer
+     */
+    public function countProducts()
+    {
+        return QUI\ERP\Products\Handler\Products::countProducts(array(
+            'where' => array(
+                'categories' => array(
+                    'type' => '%LIKE%',
+                    'value' => ',' . $this->getId() . ','
+                )
+            )
+        ));
+    }
+
+    /**
      * Fields
      */
 

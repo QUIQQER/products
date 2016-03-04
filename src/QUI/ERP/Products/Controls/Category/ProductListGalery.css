@@ -1,4 +1,4 @@
-.quiqqer-products-productGallery-products-product {
+.quiqqer-products-productGalery-products-product {
     height: 180px;
     margin-top: 20px;
     overflow: hidden;
@@ -6,7 +6,7 @@
     text-align: center;
 }
 
-.quiqqer-products-productGallery-products-product a {
+.quiqqer-products-productGalery-products-product a {
     display: block;
     border: 1px solid #dfe4e4;
     height: 100%;
@@ -16,7 +16,7 @@
     width: 100%;
 }
 
-.quiqqer-products-productGallery-products-product header {
+.quiqqer-products-productGalery-products-product header {
     background: #dfe4e4;
     bottom: 0;
     float: left;
@@ -30,7 +30,7 @@
     z-index: 2;
 }
 
-.quiqqer-products-productGallery-products-product-details {
+.quiqqer-products-productGalery-products-product-details {
     bottom: 0;
     height: 30px;
     position: absolute;
@@ -38,12 +38,12 @@
     width: 30px;
 }
 
-.quiqqer-products-productGallery-products-product-details:hover {
+.quiqqer-products-productGalery-products-product-details:hover {
     background: #f1f1f1;
     color: #1D1D1B;
 }
 
-.quiqqer-products-productGallery-products-product img {
+.quiqqer-products-productGalery-products-product img {
     /*float: left;*/
     left: 0;
     /*position: absolute;*/
@@ -54,7 +54,7 @@
     z-index: 1;
 }
 
-.quiqqer-products-productGallery-products-product img:hover {
+.quiqqer-products-productGalery-products-product img:hover {
     transform: scale(1.1);
     -webkit-transform: scale(1.1);
     transition: all 1s ease;
