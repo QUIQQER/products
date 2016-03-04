@@ -39,6 +39,10 @@ class Product extends QUI\Control
     {
         $Engine = QUI::getTemplateManager()->getEngine();
 
+        $Engine->assign(array(
+            'Product' => $this->getAttribute('Product')
+        ));
+
         return $Engine->fetch(dirname(__FILE__) . '/Product.html');
     }
 

@@ -35,6 +35,9 @@ class ProductList extends QUI\Control
         ));
 
         $this->addCSSFile(dirname(__FILE__) . '/ProductList.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductListGallery.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductListDetails.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductListList.css');
 
         parent::__construct($attributes);
     }
@@ -85,12 +88,12 @@ class ProductList extends QUI\Control
 
         switch ($this->getAttribute('view')) {
             case 'list':
-                $max        = 5;
+                $max        = 10;
                 $productTpl = dirname(__FILE__) . '/ProductListList.html';
                 break;
 
-            case 'details':
-                $max        = 10;
+            case 'detail':
+                $max        = 5;
                 $productTpl = dirname(__FILE__) . '/ProductListDetails.html';
                 break;
 

@@ -71,7 +71,21 @@ class Price
      */
     public function getPrice()
     {
+        $netto = $this->getNetto();
+        $price = $netto;
 
+
+        return $price;
+    }
+
+    /**
+     * Return the price for the view / displaying
+     *
+     * @return string
+     */
+    public function getDisplayPrice()
+    {
+        return $this->Currency->format($this->getPrice());
     }
 
     /**

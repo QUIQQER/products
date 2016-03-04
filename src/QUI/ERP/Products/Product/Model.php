@@ -92,7 +92,7 @@ class Model extends QUI\QDOM
         // main category
         $mainCategory = $this->getAttribute('category');
 
-        if ($mainCategory) {
+        if ($mainCategory !== false) {
             try {
                 $this->Category = Categories::getCategory($mainCategory);
             } catch (QUI\Exception $Exception) {
