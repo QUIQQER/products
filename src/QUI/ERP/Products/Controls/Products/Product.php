@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Controls\Products;
 
 use QUI;
+use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Class Button
@@ -37,10 +38,54 @@ class Product extends QUI\Control
      */
     public function getBody()
     {
-        $Engine = QUI::getTemplateManager()->getEngine();
+        /* @var $Product QUI\ERP\Products\Product\Product */
+        $Engine  = QUI::getTemplateManager()->getEngine();
+        $Product = $this->getAttribute('Product');
+        $Gallery = new QUI\Gallery\Controls\Slider();
+        $fields  = array();
+
+        // galery
+        $PlaceholderImage = $this->getProject()->getMedia()->getPlaceholderImage();
+
+        if ($PlaceholderImage) {
+            $Gallery->setAttribute(
+                'placeholderimage',
+                $PlaceholderImage->getSizeCacheUrl()
+            );
+
+            $Gallery->setAttribute('placeholdercolor', '#fff');
+        }
+
+        try {
+            $Gallery->setAttribute('folderId', $Product->getFieldValue(Fields::FIELD_FOLDER));
+        } catch (QUI\Exception $Exception) {
+        }
+
+        $Gallery->setAttribute('height', '400px');
+        $Gallery->setAttribute('data-qui-options-show-controls-always', 0);
+        $Gallery->setAttribute('data-qui-options-show-title-always', 0);
+        $Gallery->setAttribute('data-qui-options-show-title', 0);
+        $Gallery->setAttribute('data-qui-options-preview', 1);
+        $Gallery->setAttribute('data-qui-options-preview-outside', 1);
+        $Gallery->setAttribute('data-qui-options-imagefit', 1);
+
+        // fields
+        $displayedFields = array(
+            Fields::FIELD_PRODUCT_NO
+        );
+
+        foreach ($displayedFields as $field) {
+            try {
+                $fields[] = $Product->getField($field);
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
 
         $Engine->assign(array(
-            'Product' => $this->getAttribute('Product')
+            'Product' => $this->getAttribute('Product'),
+            'Gallery' => $Gallery,
+            'fields' => $fields
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/Product.html');

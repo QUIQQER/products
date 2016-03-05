@@ -1,0 +1,114 @@
+.product-galery {
+    padding-right: 10px;
+}
+
+.product-galery .quiqqer-gallery-slider {
+    border: 1px solid #f1f1f1;
+}
+
+/** Produktdaten
+ =========================================== */
+
+.product-data {
+    padding-left: 10px;
+}
+
+.product-data h1 {
+    font-size: 24px;
+    line-height: 30px;
+    margin-bottom: 10px !important;
+}
+
+/** Felder
+ =========================================== */
+
+.product-data-fields {
+    border-top: 1px solid #f1f1f1;
+    clear: both;
+    float: left;
+    margin-top: 20px;
+    padding: 20px 0;
+    width: 100%;
+}
+
+.product-data-fields-title,
+.product-data-fields-value {
+    font-size: 14px;
+    text-align: left;
+}
+
+.product-data-fields-title {
+    font-weight: bold;
+}
+
+/** Liste
+ =========================================== */
+
+.product-data-fieldlist {
+    border-top: 1px solid #f1f1f1;
+    clear: both;
+    float: left;
+    padding: 20px 0;
+    width: 100%;
+}
+
+/** Preis
+ =========================================== */
+
+.product-data-price {
+    border-top: 1px solid #f1f1f1;
+    clear: both;
+    float: left;
+    padding: 20px 0;
+    width: 100%;
+}
+
+.product-data-price-display {
+    clear: both;
+    color: #e91d2c;
+    float: left;
+    font-size: 60px;
+    font-weight: 700;
+    line-height: 80px;
+    text-align: right;
+    width: 100%;
+}
+
+/** Extradaten
+ =========================================== */
+
+.product-data-actionButtons {
+    clear: both;
+    float: left;
+    padding: 20px 0;
+    width: 100%;
+}
+
+.product-data-actionButtons-watchlist {
+    float: left;
+    font-size: 12px !important;
+    margin-right: 10px;
+    padding: 10px !important;
+    text-align: center;
+    width: calc(50% - 10px);
+}
+
+.product-data-actionButtons-watchlist input {
+    margin-right: 10px;
+    width: 30px;
+}
+
+.product-data-actionButtons-request {
+    float: left;
+    font-size: 12px !important;
+    margin-left: 10px;
+    padding: 10px !important;
+    text-align: center;
+    width: calc(50% - 10px);
+}
+
+/** Extradaten
+ =========================================== */
+
+/** Details
+ =========================================== */

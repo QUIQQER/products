@@ -1,4 +1,47 @@
-<h1>{$Product->getTitle()}</h1>
-<div>
-    {$Product->getDescription()}
+<div class="grid-100 mobile-grid-100 grid-parent">
+
+    <div class="grid-50 mobile-grid-100 grid-parent product-galery">
+        {$Gallery->create()}
+    </div>
+
+    <div class="grid-50 mobile-grid-100 grid-parent product-data">
+        <h1>{$Product->getTitle()}</h1>
+        <div>
+            {$Product->getDescription()}
+        </div>
+
+        <div class="product-data-fields">
+            {foreach $fields as $Field}
+            <div class="grid-50 mobile-grid-50 grid-parent product-data-fields-title">
+                {$Field->getTitle()}:
+            </div>
+            <div class="grid-50 mobile-grid-50 grid-parent product-data-fields-value">
+                {$Field->getValue()}
+            </div>
+            {/foreach}
+        </div>
+
+        <div class="product-data-fieldlist">
+            Listen
+        </div>
+
+        <div class="product-data-price">
+            <div class=""></div>
+            <div class="product-data-price-display">
+                {$Product->getPrice()->getDisplayPrice()}
+            </div>
+        </div>
+
+        <div class="product-data-actionButtons">
+            <div class="product-data-actionButtons-watchlist button">
+                <input type="number" value="1" title="Anzahl" />
+                Zur Merkliste
+            </div>
+
+            <div class="product-data-actionButtons-request button">
+                Angebot anfordern
+            </div>
+        </div>
+    </div>
+
 </div>

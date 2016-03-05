@@ -58,7 +58,8 @@ class ProductList extends QUI\Control
 
         $rows = array(
             $this->getRow(0),
-            $this->getRow(1)
+            $this->getRow(1),
+            $this->getRow(2)
         );
 
         $Engine->assign(array(

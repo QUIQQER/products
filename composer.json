@@ -19,9 +19,10 @@
   "require": {
     "php": ">=5.3",
     "quiqqer/quiqqer": "*@dev",
-    "quiqqer/discount": "*",
+    "quiqqer/discount": "*@dev",
     "npm-asset/mustache": "2.*",
-    "quiqqer/currency": "dev-dev"
+    "quiqqer/currency": "dev-dev",
+    "quiqqer/slider": "*@dev"
   },
   "suggest": {
     "quiqqer/areas": "Area management",
