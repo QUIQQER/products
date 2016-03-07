@@ -7,6 +7,9 @@ $url = pathinfo($url);
 
 // check machine url
 if ($siteUrl != $_REQUEST['_url']) {
+    /**
+     * Product
+     */
     $baseName = str_replace(
         QUI\Rewrite::getDefaultSuffix(),
         '',
@@ -26,11 +29,16 @@ if ($siteUrl != $_REQUEST['_url']) {
             ))
         ));
 
+        $Site->setAttribute('content-header', false);
+
     } catch (QUI\Exception $Exception) {
         QUI::getRewrite()->showErrorHeader(404);
     }
 
 } else {
+    /**
+     * Category display
+     */
     $ProductList = new QUI\ERP\Products\Controls\Category\ProductList(array(
         'categoryId' => $Site->getAttribute('quiqqer.products.settings.categoryId')
     ));

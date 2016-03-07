@@ -66,9 +66,12 @@ class Product extends QUI\Control
         $Gallery->setAttribute('data-qui-options-show-controls-always', 0);
         $Gallery->setAttribute('data-qui-options-show-title-always', 0);
         $Gallery->setAttribute('data-qui-options-show-title', 0);
+        $Gallery->setAttribute('data-qui-options-imagefit', 1);
+
         $Gallery->setAttribute('data-qui-options-preview', 1);
         $Gallery->setAttribute('data-qui-options-preview-outside', 1);
-        $Gallery->setAttribute('data-qui-options-imagefit', 1);
+        $Gallery->setAttribute('data-qui-options-preview-background-color', '#fff');
+        $Gallery->setAttribute('data-qui-options-preview-color', '#ddd');
 
         // fields
         $displayedFields = array(
@@ -82,11 +85,17 @@ class Product extends QUI\Control
             }
         }
 
+        // pricedisplay
+        $PriceDisplay = new QUI\ERP\Products\Controls\Price(array(
+            'Price' => $Product->getPrice()
+        ));
+
 
         $Engine->assign(array(
             'Product' => $this->getAttribute('Product'),
             'Gallery' => $Gallery,
-            'fields' => $fields
+            'fields' => $fields,
+            'PriceDisplay' => $PriceDisplay
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/Product.html');

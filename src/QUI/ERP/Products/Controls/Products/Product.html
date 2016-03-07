@@ -26,10 +26,7 @@
         </div>
 
         <div class="product-data-price">
-            <div class=""></div>
-            <div class="product-data-price-display">
-                {$Product->getPrice()->getDisplayPrice()}
-            </div>
+            {$PriceDisplay->create()}
         </div>
 
         <div class="product-data-actionButtons">
