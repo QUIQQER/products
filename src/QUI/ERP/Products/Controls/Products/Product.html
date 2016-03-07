@@ -1,4 +1,4 @@
-<div class="grid-100 mobile-grid-100 grid-parent">
+<article class="grid-100 mobile-grid-100 grid-parent">
 
     <div class="grid-50 mobile-grid-100 grid-parent product-galery">
         {$Gallery->create()}
@@ -34,7 +34,7 @@
 
         <div class="product-data-actionButtons">
             <div class="product-data-actionButtons-watchlist button">
-                <input type="number" value="1" title="Anzahl" />
+                <input type="number" value="1" title="Anzahl"/>
                 Zur Merkliste
             </div>
 
@@ -44,4 +44,25 @@
         </div>
     </div>
 
-</div>
+
+    <div class="product-data-more">
+        <div class="product-data-more-tabs">
+            <div class="product-data-more-tabs-tab active" data-type="description">
+                Beschreibung
+            </div>
+            <div class="product-data-more-tabs-tab" data-type="details">
+                Details
+            </div>
+        </div>
+        <div class="product-data-more-sheets">
+            <div class="product-data-more-sheet" data-type="description">
+                {$Product->getDescription()}
+            </div>
+
+            <div class="product-data-more-sheet hide" data-type="details">
+                {$Product->getDescription()}
+            </div>
+        </div>
+    </div>
+
+</article>

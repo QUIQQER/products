@@ -94,7 +94,7 @@ class EventHandling
                 'standardField' => 1,
                 'requiredField' => 0,
                 'titles' => array(
-                    'de' => 'Artikel Nummer',
+                    'de' => 'Art. Nr.',
                     'en' => 'Artikel No.'
                 )
             ),

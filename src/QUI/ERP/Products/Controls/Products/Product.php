@@ -23,7 +23,8 @@ class Product extends QUI\Control
     public function __construct($attributes = array())
     {
         $this->setAttributes(array(
-            'Product' => false
+            'Product' => false,
+            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/Product'
         ));
 
         $this->addCSSFile(dirname(__FILE__) . '/Product.css');
