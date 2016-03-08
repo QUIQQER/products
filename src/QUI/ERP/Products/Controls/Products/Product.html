@@ -30,14 +30,8 @@
         </div>
 
         <div class="product-data-actionButtons">
-            <div class="product-data-actionButtons-watchlist button">
-                <input type="number" value="1" title="Anzahl"/>
-                Zur Merkliste
-            </div>
-
-            <div class="product-data-actionButtons-request button">
-                Angebot anfordern
-            </div>
+            {$WatchlistButton->create()}
+            {$OfferButton->create()}
         </div>
     </div>
 

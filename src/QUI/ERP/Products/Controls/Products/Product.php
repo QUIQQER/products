@@ -7,6 +7,8 @@ namespace QUI\ERP\Products\Controls\Products;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Controls\Watchlist\ButtonAdd as WatchlistButton;
+use QUI\ERP\Products\Controls\Offer\Button as OfferButton;
 
 /**
  * Class Button
@@ -95,7 +97,13 @@ class Product extends QUI\Control
             'Product' => $this->getAttribute('Product'),
             'Gallery' => $Gallery,
             'fields' => $fields,
-            'PriceDisplay' => $PriceDisplay
+            'PriceDisplay' => $PriceDisplay,
+            'WatchlistButton' => new WatchlistButton(array(
+                'Product' => $Product
+            )),
+            'OfferButton' => new OfferButton(array(
+                'Product' => $Product
+            ))
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/Product.html');

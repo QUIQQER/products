@@ -1,0 +1,7 @@
+.product-offer-button {
+    float: left;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

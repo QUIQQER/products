@@ -1,0 +1,15 @@
+
+.product-watchlist-add {
+    float: left;
+    overflow: hidden;
+    padding: 9px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.product-watchlist-add input {
+    margin-right: 10px;
+    line-height: 26px;
+    text-align: center;
+    width: 40px;
+}
