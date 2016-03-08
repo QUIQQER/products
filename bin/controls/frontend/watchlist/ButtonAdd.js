@@ -6,17 +6,17 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require package/quiqqer/products/bin/Watchlist
  */
 define('package/quiqqer/products/bin/controls/frontend/watchlist/ButtonAdd', [
 
     'qui/QUI',
-    'qui/controls/Control'
+    'qui/controls/Control',
+    'package/quiqqer/products/bin/Watchlist'
 
-], function (QUI, QUIControl) {
+], function (QUI, QUIControl, Watchlist) {
 
     "use strict";
-
-    var lg = 'quiqqer/products';
 
     return new Class({
 
@@ -25,13 +25,19 @@ define('package/quiqqer/products/bin/controls/frontend/watchlist/ButtonAdd', [
 
         Binds: [
             '$onImport',
-            '$onInject'
+            '$onInject',
+            '$addProductToWatchlist'
         ],
+
+        options: {
+            productId: false
+        },
 
         initialize: function (options) {
             this.parent(options);
 
-            this.$pid = null;
+            this.$Input = null;
+            this.$Text  = null;
 
             this.addEvents({
                 onImport: this.$onImport,
@@ -50,12 +56,12 @@ define('package/quiqqer/products/bin/controls/frontend/watchlist/ButtonAdd', [
                 return;
             }
 
-            this.$pid = pid;
+            this.setAttribute('productId', pid);
 
-            Elm.addEvent('click', function() {
+            this.$Input = Elm.getElement('input');
+            this.$Text  = Elm.getElement('.text');
 
-            });
-
+            Elm.addEvent('click', this.$addProductToWatchlist);
             Elm.disabled = false;
         },
 
@@ -64,6 +70,84 @@ define('package/quiqqer/products/bin/controls/frontend/watchlist/ButtonAdd', [
          */
         $onInject: function () {
 
+        },
+
+        /**
+         * add the product to the watchlist
+         */
+        $addProductToWatchlist: function () {
+            this.getElm().disabled = true;
+
+            this.$Text.setStyles({
+                visibility: 'hidden'
+            });
+
+            var self  = this,
+                count = 0,
+                size  = this.getElm().getSize();
+
+            if (this.$Input) {
+                this.$Input.setStyles({
+                    opacity   : 0,
+                    visibility: 'hidden'
+                });
+
+                count = this.$Input.value.toInt();
+            }
+
+            if (!count) {
+                count = 0;
+            }
+
+            var Loader = new Element('div', {
+                html  : '<span class="fa fa-spinner fa-spin"></span>',
+                styles: {
+                    fontSize  : (size.y / 3).round(),
+                    height    : '100%',
+                    left      : 0,
+                    lineHeight: size.y,
+                    position  : 'absolute',
+                    textAlign : 'center',
+                    top       : 0,
+                    width     : '100%'
+                }
+            }).inject(this.getElm());
+
+            Watchlist.addProduct(
+                this.getAttribute('productId'),
+                count
+            ).then(function () {
+                var Span = Loader.getElement('span');
+
+                Span.removeClass('fa-spinner');
+                Span.removeClass('fa-spin');
+
+                Span.addClass('success');
+                Span.addClass('fa-check');
+
+                (function () {
+                    Loader.destroy();
+
+                    self.getElm().disabled = false;
+
+                    if (self.$Input) {
+
+                        self.$Input.setStyle('visibility', null);
+
+                        moofx(self.$Input).animate({
+                            opacity: 1
+                        });
+                    }
+
+                    self.$Text.setStyle('visibility', null);
+
+                    moofx(self.$Text).animate({
+                        opacity: 1
+                    });
+
+                }).delay(1000);
+
+            }.bind(this));
         }
     });
 });

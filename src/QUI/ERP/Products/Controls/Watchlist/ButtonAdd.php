@@ -47,6 +47,15 @@ class ButtonAdd extends QUI\Control
             $Product = $this->getAttribute('Product');
 
             $this->setAttribute('data-pid', $Product->getId());
+            
+            $this->setAttribute('title', QUI::getLocale()->get(
+                'quiqqer/products',
+                'control.button.addToWatchlist',
+                array(
+                    'productId' => $Product->getId(),
+                    'product' => $Product->getTitle(),
+                )
+            ));
         }
 
         $html = '';
@@ -55,7 +64,7 @@ class ButtonAdd extends QUI\Control
             $html .= '<input type="number" value="1" title="Anzahl"/>';
         }
 
-        $html .= 'Zur Merkliste';
+        $html .= '<span class="text">Zur Merkliste</span>';
 
         return $html;
     }

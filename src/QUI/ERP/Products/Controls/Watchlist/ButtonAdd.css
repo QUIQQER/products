@@ -3,6 +3,7 @@
     float: left;
     overflow: hidden;
     padding: 9px;
+    position: relative;
     text-overflow: ellipsis;
     white-space: nowrap;
 }

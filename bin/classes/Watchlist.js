@@ -7,6 +7,8 @@
  * @require qui/QUI
  * @require qui/classes/DOM
  * @require Ajax
+ *
+ * @event onRefresh
  */
 define('package/quiqqer/products/bin/classes/Watchlist', [
 
@@ -23,12 +25,26 @@ define('package/quiqqer/products/bin/classes/Watchlist', [
         Type   : 'package/quiqqer/products/bin/classes/Watchlist',
 
         initialize: function () {
-
+            this.$products = {};
         },
 
-        addProduct: function (pid, count) {
-            return new Promise(function (resolve, reject) {
+        /**
+         *
+         * @param {Number} productId - ID of the product
+         * @param {Number} [count]
+         * @returns {Promise}
+         */
+        addProduct: function (productId, count) {
+            count = parseInt(count) || 1;
 
+            if (!count) {
+                count = 1;
+            }
+
+            return new Promise(function (resolve, reject) {
+                (function () {
+                    resolve();
+                }).delay(1000);
             });
         }
     });
