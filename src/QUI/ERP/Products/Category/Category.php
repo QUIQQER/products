@@ -262,6 +262,56 @@ class Category extends QUI\QDOM
     }
 
     /**
+     * Get all products (active AND inactive) of this category
+     *
+     * @param bool $asObjects (optional) - true: return array with Product objects
+     *                                      false: return array with product ids only [default: true]
+     * @return array
+     */
+    public function getAllProducts($asObjects = true)
+    {
+        return QUI\ERP\Products\Handler\Products::getProducts(array(
+            'where' => array(
+                'category' => $this->id
+            )
+        ), $asObjects);
+    }
+
+    /**
+     * Get all active products of this category
+     *
+     * @param bool $asObjects (optional) - true: return array with Product objects
+     *                                      false: return array with product ids only [default: true]
+     * @return array
+     */
+    public function getActiveProducts($asObjects = true)
+    {
+        return QUI\ERP\Products\Handler\Products::getProducts(array(
+            'where' => array(
+                'category' => $this->id,
+                'active' => 1
+            )
+        ), $asObjects);
+    }
+
+    /**
+     * Get all inactive products of this category
+     *
+     * @param bool $asObjects (optional) - true: return array with Product objects
+     *                                      false: return array with product ids only [default: true]
+     * @return array
+     */
+    public function getInactiveProducts($asObjects = true)
+    {
+        return QUI\ERP\Products\Handler\Products::getProducts(array(
+            'where' => array(
+                'category' => $this->id,
+                'active' => 0
+            )
+        ), $asObjects);
+    }
+
+    /**
      * Return the category site
      *
      * @param QUI\Projects\Project $Project

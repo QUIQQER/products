@@ -143,6 +143,28 @@ class Categories
     }
 
     /**
+     * Checks if a category exists
+     *
+     * @param integer $categoryId - category id
+     * @return bool
+     * @throws QUI\Exception
+     */
+    public static function existsCategory($categoryId)
+    {
+        try {
+            self::getCategory($categoryId);
+        } catch (QUI\Exception $Exception) {
+            if ($Exception->getCode() === 404) {
+                return false;
+            }
+
+            throw $Exception;
+        }
+
+        return true;
+    }
+
+    /**
      * Is the Object a category?
      *
      * @param mixed $Category

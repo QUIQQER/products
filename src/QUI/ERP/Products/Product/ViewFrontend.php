@@ -47,4 +47,16 @@ class ViewFrontend extends QUI\QDOM
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
     }
+
+    /**
+     * Get value of field
+     *
+     * @param integer $fieldId
+     * @param bool $affixes (optional) - append suffix and prefix if defined [default: false]
+     * @return mixed - formatted field value
+     */
+    public function getFieldValue($fieldId, $affixes = false)
+    {
+
+    }
 }
