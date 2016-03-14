@@ -195,11 +195,35 @@ class Products
      *                              $queryParams['where_or'],
      *                              $queryParams['limit']
      *                              $queryParams['order']
-     * @param bool $asObjects (optional) - true: return array with Product objects
-     *                                      false: return array with product ids only [default: true]
      * @return array
      */
-    public static function getProducts($queryParams = array(), $asObjects = true)
+    public static function getProducts($queryParams = array())
+    {
+        $result = array();
+        $data   = self::getProductIds($queryParams);
+
+        foreach ($data as $id) {
+            try {
+                $result[] = self::getProduct($id);
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return a list of product ids
+     * if $queryParams is empty, all fields are returned
+     *
+     * @param array $queryParams - query parameter
+     *                              $queryParams['where'],
+     *                              $queryParams['where_or'],
+     *                              $queryParams['limit']
+     *                              $queryParams['order']
+     * @return array
+     */
+    public static function getProductIds($queryParams = array())
     {
         $query = array(
             'from' => QUI\ERP\Products\Utils\Tables::getProductTableName()
@@ -230,11 +254,7 @@ class Products
 
         foreach ($data as $entry) {
             try {
-                if ($asObjects) {
-                    $result[] = self::getProduct($entry['id']);
-                } else {
-                    $result[] = $entry['id'];
-                }
+                $result[] = $entry['id'];
             } catch (QUI\Exception $Exception) {
             }
         }

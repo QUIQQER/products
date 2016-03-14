@@ -276,55 +276,55 @@ class Category extends QUI\QDOM
         return 0;
     }
 
-    /**
-     * Get all products (active AND inactive) of this category
-     *
-     * @param bool $asObjects (optional) - true: return array with Product objects
-     *                                      false: return array with product ids only [default: true]
-     * @return array
-     */
-    public function getAllProducts($asObjects = true)
-    {
-        return QUI\ERP\Products\Handler\Products::getProducts(array(
-            'where' => array(
-                'category' => $this->id
-            )
-        ), $asObjects);
-    }
-
-    /**
-     * Get all active products of this category
-     *
-     * @param bool $asObjects (optional) - true: return array with Product objects
-     *                                      false: return array with product ids only [default: true]
-     * @return array
-     */
-    public function getActiveProducts($asObjects = true)
-    {
-        return QUI\ERP\Products\Handler\Products::getProducts(array(
-            'where' => array(
-                'category' => $this->id,
-                'active' => 1
-            )
-        ), $asObjects);
-    }
-
-    /**
-     * Get all inactive products of this category
-     *
-     * @param bool $asObjects (optional) - true: return array with Product objects
-     *                                      false: return array with product ids only [default: true]
-     * @return array
-     */
-    public function getInactiveProducts($asObjects = true)
-    {
-        return QUI\ERP\Products\Handler\Products::getProducts(array(
-            'where' => array(
-                'category' => $this->id,
-                'active' => 0
-            )
-        ), $asObjects);
-    }
+//    /**
+//     * Get all products (active AND inactive) of this category
+//     *
+//     * @param bool $asObjects (optional) - true: return array with Product objects
+//     *                                      false: return array with product ids only [default: true]
+//     * @return array
+//     */
+//    public function getAllProducts($asObjects = true)
+//    {
+//        return QUI\ERP\Products\Handler\Products::getProducts(array(
+//            'where' => array(
+//                'category' => $this->id
+//            )
+//        ), $asObjects);
+//    }
+//
+//    /**
+//     * Get all active products of this category
+//     *
+//     * @param bool $asObjects (optional) - true: return array with Product objects
+//     *                                      false: return array with product ids only [default: true]
+//     * @return array
+//     */
+//    public function getActiveProducts($asObjects = true)
+//    {
+//        return QUI\ERP\Products\Handler\Products::getProducts(array(
+//            'where' => array(
+//                'category' => $this->id,
+//                'active' => 1
+//            )
+//        ), $asObjects);
+//    }
+//
+//    /**
+//     * Get all inactive products of this category
+//     *
+//     * @param bool $asObjects (optional) - true: return array with Product objects
+//     *                                      false: return array with product ids only [default: true]
+//     * @return array
+//     */
+//    public function getInactiveProducts($asObjects = true)
+//    {
+//        return QUI\ERP\Products\Handler\Products::getProducts(array(
+//            'where' => array(
+//                'category' => $this->id,
+//                'active' => 0
+//            )
+//        ), $asObjects);
+//    }
 
     /**
      * Return the category site
@@ -455,6 +455,7 @@ class Category extends QUI\QDOM
      * Return all products from the category
      *
      * @param array $params - query parameter
+     *                              $queryParams['where']
      *                              $queryParams['limit']
      *                              $queryParams['order']
      *                              $queryParams['debug']
@@ -463,14 +464,65 @@ class Category extends QUI\QDOM
     public function getProducts($params = array())
     {
         $query = array(
-            'where' => array(
-                'categories' => array(
-                    'type' => '%LIKE%',
-                    'value' => ',' . $this->getId() . ','
-                )
-            ),
             'limit' => 20
         );
+
+        $where = array(
+            'categories' => array(
+                'type' => '%LIKE%',
+                'value' => ',' . $this->getId() . ','
+            )
+        );
+
+        if (isset($params['where'])) {
+            $where = array_merge($where, $params['where']);
+        }
+
+        $query['where'] = $where;
+
+        if (isset($params['limit'])) {
+            $query['limit'] = $params['limit'];
+        }
+
+        if (isset($params['order'])) {
+            $query['order'] = $params['order'];
+        }
+
+        if (isset($params['debug'])) {
+            $query['debug'] = $params['debug'];
+        }
+
+        return QUI\ERP\Products\Handler\Products::getProducts($query);
+    }
+
+    /**
+     * Return all product ids from the category
+     *
+     * @param array $params - query parameter
+     *                              $queryParams['where']
+     *                              $queryParams['limit']
+     *                              $queryParams['order']
+     *                              $queryParams['debug']
+     * @return array
+     */
+    public function getProductIds($params = array())
+    {
+        $query = array(
+            'limit' => 20
+        );
+
+        $where = array(
+            'categories' => array(
+                'type' => '%LIKE%',
+                'value' => ',' . $this->getId() . ','
+            )
+        );
+
+        if (isset($params['where'])) {
+            $where = array_merge($where, $params['where']);
+        }
+
+        $query['where'] = $where;
 
         if (isset($params['limit'])) {
             $query['limit'] = $params['limit'];
