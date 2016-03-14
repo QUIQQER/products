@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\View;
 
 /**
  * Class Price
@@ -62,14 +63,12 @@ class Date extends QUI\ERP\Products\Field\Field
      */
     protected function getBackendView()
     {
-        // TODO: Implement getBackendView() method.
-
         return new View(array(
-            'value' => '',
-            'title' => '',
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
             'prefix' => '',
             'suffix' => '',
-            'priority' => ''
+            'priority' => $this->getAttribute('priority')
         ));
     }
 
@@ -78,14 +77,12 @@ class Date extends QUI\ERP\Products\Field\Field
      */
     protected function getFrontendView()
     {
-        // TODO: Implement getFrontendView() method.
-
         return new View(array(
-            'value' => '',
-            'title' => '',
-            'prefix' => '',
-            'suffix' => '',
-            'priority' => ''
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
         ));
     }
 }

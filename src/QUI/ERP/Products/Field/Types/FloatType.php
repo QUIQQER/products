@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\View;
 
 /**
  * Class FloatType
@@ -15,12 +16,24 @@ class FloatType extends QUI\ERP\Products\Field\Field
 {
     public function getBackendView()
     {
-        // TODO: Implement getBackendView() method.
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => '',
+            'suffix' => '',
+            'priority' => $this->getAttribute('priority')
+        ));
     }
 
     public function getFrontendView()
     {
-        // TODO: Implement getFrontendView() method.
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
     }
 
     /**
@@ -48,12 +61,20 @@ class FloatType extends QUI\ERP\Products\Field\Field
      *
      * @param mixed $value
      * @return mixed
-     * @throws \QUI\Exception
      */
     public function cleanup($value)
     {
-        // TODO: Implement cleanup() method.
+        $value = (string)$value;
 
-        return $value;
+        if (trim($value) === '') {
+            return 0.0;
+        }
+
+        if (mb_strpos($value, ',') !== false) {
+            $value = preg_replace('#[^\d,]#i', '', $value);
+            $value = str_replace(',', '.', $value);
+        }
+
+        return round((float)$value, 5);
     }
 }
