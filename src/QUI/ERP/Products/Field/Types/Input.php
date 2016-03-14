@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\View;
 
 /**
  * Class Input
@@ -15,12 +16,24 @@ class Input extends QUI\ERP\Products\Field\Field
 {
     public function getBackendView()
     {
-        // TODO: Implement getBackendView() method.
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
     }
 
     public function getFrontendView()
     {
-        // TODO: Implement getFrontendView() method.
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
     }
 
     /**
@@ -40,17 +53,35 @@ class Input extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        // TODO: Implement validate() method.
+        if (!is_string($value)
+            && !is_numeric($value))
+        {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType' => $this->getType()
+                )
+            ));
+        }
     }
 
     /**
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @return mixed
      */
     public function cleanup($value)
     {
-        // TODO: Implement cleanup() method.
+        if (!is_string($value)
+            && !is_numeric($value))
+        {
+            return null;
+        }
+
+        return (string)$value;
     }
 }

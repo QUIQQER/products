@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\View;
 
 /**
  * Class Price
@@ -13,14 +14,33 @@ use QUI;
  */
 class Price extends QUI\ERP\Products\Field\Field
 {
+    /**
+     * Official currency code (i.e. EUR)
+     *
+     * @var string
+     */
+    protected $currencyCode = null;
+
     public function getBackendView()
     {
-        // TODO: Implement getBackendView() method.
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
     }
 
     public function getFrontendView()
     {
-        // TODO: Implement getFrontendView() method.
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
     }
 
     /**
@@ -47,10 +67,11 @@ class Price extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @return mixed
      */
     public function cleanup($value)
     {
         // TODO: Implement cleanup() method.
+        return $value;
     }
 }

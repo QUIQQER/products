@@ -19,14 +19,16 @@ class FloatType extends QUI\ERP\Products\Field\Field
         return new View(array(
             'value' => $this->cleanup($this->getValue()),
             'title' => $this->getTitle(),
-            'prefix' => '',
-            'suffix' => '',
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
 
     public function getFrontendView()
     {
+        // @TODO value formatierung aus settings (nachkommastellen, separatoren)
+
         return new View(array(
             'value' => $this->cleanup($this->getValue()),
             'title' => $this->getTitle(),
@@ -64,17 +66,47 @@ class FloatType extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
+        // @TODO diese beiden Werte aus Settings nehmen (s. Price)
+        $decimalSeperator = '.';
+        $thousandsSeperator = ',';
+
+        if (is_float($value)) {
+            return round($value, 4);
+        }
+
         $value = (string)$value;
+        $value = preg_replace('#[^\d,.]#i', '', $value);
 
         if (trim($value) === '') {
-            return 0.0;
+            return null;
         }
 
-        if (mb_strpos($value, ',') !== false) {
-            $value = preg_replace('#[^\d,]#i', '', $value);
-            $value = str_replace(',', '.', $value);
+        $decimal   = mb_strpos($value, $decimalSeperator);
+        $thousands = mb_strpos($value, $thousandsSeperator);
+
+        if ($thousands === false && $decimal === false) {
+            return round(floatval($value), 4);
         }
 
-        return round((float)$value, 5);
+        if ($thousands !== false && $decimal === false) {
+            if (mb_substr($value, -4, 1) === $decimalSeperator) {
+                $value = str_replace($thousandsSeperator, '', $value);
+            }
+        }
+
+        if ($thousands === false && $decimal !== false) {
+            $value = str_replace(
+                $decimalSeperator,
+                '.',
+                $value
+            );
+        }
+
+        if ($thousands !== false && $decimal !== false) {
+            $value = str_replace($decimalSeperator, '', $value);
+            $value = str_replace($thousandsSeperator, '.', $value);
+        }
+
+        return round(floatval($value), 4);
     }
 }

@@ -7,6 +7,7 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 use QUI\ERP\Products\Field\View;
+use QUI\ERP\Products\Handler\Products as ProductsHandler;
 
 /**
  * Class Price
@@ -64,10 +65,10 @@ class Date extends QUI\ERP\Products\Field\Field
     protected function getBackendView()
     {
         return new View(array(
-            'value' => $this->cleanup($this->getValue()),
+            'value' => ProductsHandler::getLocale()->formatDate($this->getValue()),
             'title' => $this->getTitle(),
-            'prefix' => '',
-            'suffix' => '',
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -78,7 +79,7 @@ class Date extends QUI\ERP\Products\Field\Field
     protected function getFrontendView()
     {
         return new View(array(
-            'value' => $this->cleanup($this->getValue()),
+            'value' => ProductsHandler::getLocale()->formatDate($this->getValue()),
             'title' => $this->getTitle(),
             'prefix' => $this->getAttribute('prefix'),
             'suffix' => $this->getAttribute('suffix'),

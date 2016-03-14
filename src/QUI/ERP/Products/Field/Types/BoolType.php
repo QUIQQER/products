@@ -19,8 +19,8 @@ class BoolType extends QUI\ERP\Products\Field\Field
         return new View(array(
             'value' => $this->cleanup($this->getValue()),
             'title' => $this->getTitle(),
-            'prefix' => '',
-            'suffix' => '',
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -53,16 +53,29 @@ class BoolType extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        if (!is_bool($value)) {
-            throw new QUI\Exception(array(
-                'quiqqer/products',
-                'exception.field.invalid',
-                array(
-                    'fieldId' => $this->getId(),
-                    'fieldTitle' => $this->getTitle(),
-                    'fieldType' => $this->getType()
-                )
-            ));
+        switch ($value) {
+            case true:
+            case false:
+            case 1:
+            case 0:
+            case '1':
+            case '0':
+            case 'true':
+            case 'false':
+            case 'TRUE':
+            case 'FALSE':
+                break;
+
+            default:
+                throw new QUI\Exception(array(
+                    'quiqqer/products',
+                    'exception.field.invalid',
+                    array(
+                        'fieldId' => $this->getId(),
+                        'fieldTitle' => $this->getTitle(),
+                        'fieldType' => $this->getType()
+                    )
+                ));
         }
     }
 
@@ -74,6 +87,16 @@ class BoolType extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        return $value == true;
+        switch ($value) {
+            case true:
+            case 1:
+            case '1':
+            case 'true':
+            case 'TRUE':
+                return 1;
+
+            default:
+                return 0;
+        }
     }
 }

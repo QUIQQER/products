@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\View;
 
 /**
  * Class IntType
@@ -15,12 +16,24 @@ class IntType extends QUI\ERP\Products\Field\Field
 {
     public function getBackendView()
     {
-        // TODO: Implement getBackendView() method.
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
     }
 
     public function getFrontendView()
     {
-        // TODO: Implement getFrontendView() method.
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
     }
 
     /**
@@ -40,17 +53,51 @@ class IntType extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        // TODO: Implement validate() method.
+        if (!is_numeric($value)) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType' => $this->getType()
+                )
+            ));
+        }
+
+        if (is_integer($value)) {
+            return;
+        }
+
+        // check if float value
+        $value = (string)$value;
+        $_value = preg_replace('#[^\d]#i', '', $value);
+
+        if ($value != $_value) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType' => $this->getType()
+                )
+            ));
+        }
     }
 
     /**
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @return mixed
      */
     public function cleanup($value)
     {
-        // TODO: Implement cleanup() method.
+        if (!is_numeric($value)) {
+            return null;
+        }
+
+        return (int)$value;
     }
 }
