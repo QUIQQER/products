@@ -24,6 +24,16 @@ use QUI;
  */
 class GroupList extends QUI\ERP\Products\Field\Field
 {
+    public function __construct($fieldId, array $params)
+    {
+        $this->setAttributes(array(
+            'groupId' => false,
+            'multipleUsers' => true
+        ));
+
+        parent::__construct($fieldId, $params);
+    }
+
     public function getBackendView()
     {
         // TODO: Implement getBackendView() method.
