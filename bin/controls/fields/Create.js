@@ -100,7 +100,7 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
 
             Fields.getFieldTypes().then(function (fieldTypes) {
 
-                var FieldTypes = Elm.getElement('[name="fieldtype"]');
+                var FieldTypes = Elm.getElement('[name="type"]');
 
                 for (var i = 0, len = fieldTypes.length; i < len; i++) {
                     new Element('option', {
@@ -131,11 +131,14 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                 var Form = Elm.getElement('form');
 
                 Fields.createChild({
-                    type       : Form.elements.fieldtype.value,
-                    search_type: Form.elements.searchtype.value,
-                    prefix     : Form.elements.prefix.value,
-                    suffix     : Form.elements.suffix.value,
-                    priority   : Form.elements.priority.value
+                    type         : Form.elements.type.value,
+                    search_type  : Form.elements.search_type.value,
+                    prefix       : Form.elements.prefix.value,
+                    suffix       : Form.elements.suffix.value,
+                    priority     : Form.elements.priority.value,
+                    standardField: Form.elements.standardField.checked ? 1 : 0,
+                    systemField  : 0,
+                    requiredField: Form.elements.requiredField.checked ? 1 : 0
                 }).then(function (data) {
 
                     self.$Translation.setAttribute(

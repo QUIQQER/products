@@ -38,6 +38,16 @@ class Price
     protected $User;
 
     /**
+     * @var string
+     */
+    protected $decimalSeperator = ',';
+
+    /**
+     * @var string
+     */
+    protected $thousandsSeperator = '.';
+
+    /**
      * Price constructor.
      *
      * @param float $nettoPrice
@@ -60,7 +70,7 @@ class Price
      */
     public function getNetto()
     {
-        return $this->netto;
+        return $this->validatePrice($this->netto);
     }
 
     /**
@@ -71,7 +81,20 @@ class Price
      */
     public function getPrice()
     {
+        $netto = $this->getNetto();
+        $price = $this->validatePrice($netto);
 
+        return $price;
+    }
+
+    /**
+     * Return the price for the view / displaying
+     *
+     * @return string
+     */
+    public function getDisplayPrice()
+    {
+        return $this->Currency->format($this->getPrice());
     }
 
     /**
@@ -112,5 +135,57 @@ class Price
     public function getDiscounts()
     {
         return $this->discounts;
+    }
+
+    /**
+     * calculation
+     */
+
+    /**
+     * Validates a price value
+     *
+     * @param number|string $value
+     * @return float
+     */
+    protected function validatePrice($value)
+    {
+        if (is_float($value)) {
+            return round($value, 4);
+        }
+
+        $value = (string)$value;
+        $value = preg_replace('#[^\d,.]#i', '', $value);
+
+        if (trim($value) === '') {
+            return null;
+        }
+
+        $decimal   = mb_strpos($value, $this->decimalSeperator);
+        $thousands = mb_strpos($value, $this->thousandsSeperator);
+
+        if ($thousands === false && $decimal === false) {
+            return round(floatval($value), 4);
+        }
+
+        if ($thousands !== false && $decimal === false) {
+            if (mb_substr($value, -4, 1) === $this->thousandsSeperator) {
+                $value = str_replace($this->thousandsSeperator, '', $value);
+            }
+        }
+
+        if ($thousands === false && $decimal !== false) {
+            $value = str_replace(
+                $this->decimalSeperator,
+                '.',
+                $value
+            );
+        }
+
+        if ($thousands !== false && $decimal !== false) {
+            $value = str_replace($this->thousandsSeperator, '', $value);
+            $value = str_replace($this->decimalSeperator, '.', $value);
+        }
+
+        return round(floatval($value), 4);
     }
 }

@@ -11,6 +11,7 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\Projects\Media\Utils as MediaUtils;
+use QUI\Utils\Security\Orthos;
 
 /**
  * Class Controller
@@ -91,7 +92,7 @@ class Model extends QUI\QDOM
         // main category
         $mainCategory = $this->getAttribute('category');
 
-        if ($mainCategory) {
+        if ($mainCategory !== false) {
             try {
                 $this->Category = Categories::getCategory($mainCategory);
             } catch (QUI\Exception $Exception) {
@@ -170,6 +171,43 @@ class Model extends QUI\QDOM
     {
         return $this->id;
     }
+
+    /**
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        $Category = $this->getCategory();
+
+        if (!$Category) {
+            return '';
+        }
+
+        $Site = $Category->getSite();
+
+        $url = $Site->getUrlRewritten(array(
+            0 => $this->getUrlName(),
+            'paramAsSites' => true
+        ));
+
+        return $url;
+    }
+
+    /**
+     * Return name for rewrite url
+     *
+     * @return string
+     */
+    public function getUrlName()
+    {
+        $parts   = array();
+        $parts[] = Orthos::urlEncodeString($this->getTitle());
+        $parts[] = $this->getId();
+
+        return urlencode(implode(QUI\Rewrite::URL_PARAM_SEPERATOR, $parts));
+    }
+
 
     /**
      * Return the title / name of the product
@@ -507,7 +545,7 @@ class Model extends QUI\QDOM
             $categories = $this->getCategories();
 
             if (isset($categories[0])) {
-                return $categories[0];
+                $this->Category = $categories[0];
             }
         }
 
@@ -567,10 +605,28 @@ class Model extends QUI\QDOM
      */
     public function getImage()
     {
-        $value = $this->getFieldValue(Fields::FIELD_IMAGE);
-        $Image = MediaUtils::getImageByUrl($value);
+        try {
+            $value = $this->getFieldValue(Fields::FIELD_IMAGE);
+            $Image = MediaUtils::getImageByUrl($value);
 
-        return $Image;
+            return $Image;
+        } catch (QUI\Exception $Exception) {
+            $Project     = QUI::getRewrite()->getProject();
+            $Media       = $Project->getMedia();
+            $Placeholder = $Media->getPlaceholderImage();
+
+            if ($Placeholder) {
+                return $Placeholder;
+            }
+        }
+
+        throw new QUI\Exception(array(
+            'quiqqer/products',
+            'exception.product.no.image',
+            array(
+                'productId' => $this->getId()
+            )
+        ));
     }
 
     /**

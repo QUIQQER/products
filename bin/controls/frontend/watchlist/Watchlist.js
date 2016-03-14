@@ -11,11 +11,11 @@
  * @require qui/controls/windows/Confirm
  * @require qui/utils/Functions
  * @require Locale
- * @require css!package/machines/bin/site/controls/Watchlist.css
+ * @require css!package/quiqqer/products/bin/controls/frontend/watchlist/Watchlist.css
  *
  * @event onLoad [this]
  */
-define('package/quiqqer/products/bin/controls/watchlist/Watchlist', [
+define('package/quiqqer/products/bin/controls/frontend/watchlist/Watchlist', [
 
     'qui/QUI',
     'qui/controls/Control',
@@ -28,7 +28,7 @@ define('package/quiqqer/products/bin/controls/watchlist/Watchlist', [
     'qui/utils/System',
     'Locale',
 
-    'css!package/quiqqer/products/bin/controls/watchlist/Watchlist.css'
+    'css!package/quiqqer/products/bin/controls/frontend/watchlist/Watchlist.css'
 
 ], function (QUI, QUIControl, QUIButton, QUISelect, QUILoader, QUIConfirm, QUIPopup, QUIFunctionUtils, QUISystemUtils, QUILocale) {
 
@@ -40,7 +40,7 @@ define('package/quiqqer/products/bin/controls/watchlist/Watchlist', [
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/watchlist/Watchlist',
+        Type   : 'package/quiqqer/products/bin/controls/frontend/watchlist/Watchlist',
 
         Binds: [
             'refresh',

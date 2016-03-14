@@ -25,6 +25,13 @@ class Products
     private static $list = array();
 
     /**
+     * Global Product Locale
+     *
+     * @var null
+     */
+    private static $Locale = null;
+
+    /**
      * Return the main media folder
      *
      * @return QUI\Projects\Media\Folder
@@ -194,10 +201,9 @@ class Products
      */
     public static function getProducts($queryParams = array(), $asObjects = true)
     {
-        $query['from'] = QUI\ERP\Products\Utils\Tables::getProductTableName();
-
-        $result = array();
-        $data   = QUI::getDataBase()->fetch($query);
+        $query = array(
+            'from' => QUI\ERP\Products\Utils\Tables::getProductTableName()
+        );
 
         if (isset($queryParams['where'])) {
             $query['where'] = $queryParams['where'];
@@ -214,6 +220,13 @@ class Products
         if (isset($queryParams['order'])) {
             $query['order'] = $queryParams['order'];
         }
+
+        if (isset($queryParams['debug'])) {
+            $query['debug'] = $queryParams['debug'];
+        }
+
+        $result = array();
+        $data   = QUI::getDataBase()->fetch($query);
 
         foreach ($data as $entry) {
             try {
@@ -270,5 +283,30 @@ class Products
         }
 
         return 0;
+    }
+
+    /**
+     * Set global projects locale
+     *
+     * @param QUI\Locale $Locale
+     */
+    public static function setLocale(QUI\Locale $Locale)
+    {
+        self::$Locale = $Locale;
+    }
+
+    /**
+     * Return global projects locale
+     *
+     * @return QUI\Locale
+     */
+    public static function getLocale()
+    {
+        if (!self::$Locale) {
+            self::$Locale = new QUI\Locale();
+            self::$Locale->setCurrent(QUI::getLocale()->getCurrent());
+        }
+
+        return self::$Locale;
     }
 }

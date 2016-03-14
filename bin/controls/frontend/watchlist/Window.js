@@ -8,12 +8,12 @@
  * @require package/hklused/machines/bin/site/controls/Watchlist
  * @require Locale
  */
-define('package/quiqqer/products/bin/controls/watchlist/Window', [
+define('package/quiqqer/products/bin/controls/frontend/watchlist/Window', [
 
     'qui/QUI',
     'qui/controls/Control',
     'qui/controls/windows/Confirm',
-    'package/quiqqer/products/bin/controls/watchlist/Watchlist',
+    'package/quiqqer/products/bin/controls/frontend/watchlist/Watchlist',
     'Locale'
 
 ], function (QUI, QUIControl, QUIConfirm, WatchlistControl, QUILocale) {
@@ -24,7 +24,7 @@ define('package/quiqqer/products/bin/controls/watchlist/Window', [
     return new Class({
 
         Extends: QUIConfirm,
-        Type   : 'package/quiqqer/products/bin/controls/watchlist/Window',
+        Type   : 'package/quiqqer/products/bin/controls/frontend/watchlist/Window',
 
         Binds: [
             '$onOpen',

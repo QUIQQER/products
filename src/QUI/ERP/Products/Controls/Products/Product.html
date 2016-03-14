@@ -1,0 +1,59 @@
+<article class="grid-100 mobile-grid-100 grid-parent">
+
+    <div class="grid-50 mobile-grid-100 grid-parent product-galery">
+        {$Gallery->create()}
+    </div>
+
+    <div class="grid-50 mobile-grid-100 grid-parent product-data">
+        <h1>{$Product->getTitle()}</h1>
+        <div>
+            {$Product->getDescription()}
+        </div>
+
+        <div class="product-data-fields">
+            {foreach $fields as $Field}
+            <div class="grid-50 mobile-grid-50 grid-parent product-data-fields-title">
+                {$Field->getTitle()}:
+            </div>
+            <div class="grid-50 mobile-grid-50 grid-parent product-data-fields-value">
+                {$Field->getValue()}
+            </div>
+            {/foreach}
+        </div>
+
+        <div class="product-data-fieldlist">
+            Listen
+        </div>
+
+        <div class="product-data-price">
+            {$PriceDisplay->create()}
+        </div>
+
+        <div class="product-data-actionButtons">
+            {$WatchlistButton->create()}
+            {$OfferButton->create()}
+        </div>
+    </div>
+
+
+    <div class="product-data-more">
+        <div class="product-data-more-tabs">
+            <div class="product-data-more-tabs-tab active" data-type="description">
+                Beschreibung
+            </div>
+            <div class="product-data-more-tabs-tab" data-type="details">
+                Details
+            </div>
+        </div>
+        <div class="product-data-more-sheets">
+            <div class="product-data-more-sheet" data-type="description">
+                {$Product->getDescription()}
+            </div>
+
+            <div class="product-data-more-sheet hide" data-type="details">
+                {$Product->getDescription()}
+            </div>
+        </div>
+    </div>
+
+</article>

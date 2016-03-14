@@ -4,18 +4,16 @@
  *
  * @require qui/QUI
  * @require qui/classes/DOM
- * @require package/quiqqer/products/bin/classes/Products
+ *
+ * @event onRefresh [this]
  */
 define('package/quiqqer/products/bin/classes/Product', [
 
     'qui/QUI',
-    'qui/classes/DOM',
-    'package/quiqqer/products/bin/classes/Products'
+    'qui/classes/DOM'
 
-], function (QUI, QUIDOM, ProductHandler) {
+], function (QUI, QUIDOM) {
     "use strict";
-
-    var Handler = new ProductHandler();
 
     return new Class({
         Extends: QUIDOM,
@@ -33,6 +31,15 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * Return the Product-ID
+         *
+         * @returns {Number|Boolean}
+         */
+        getId: function () {
+            return this.getAttribute('id');
+        },
+
+        /**
          * Refresh the product data
          *
          * @returns {Promise}
@@ -40,14 +47,19 @@ define('package/quiqqer/products/bin/classes/Product', [
         refresh: function () {
             return new Promise(function (resolve, reject) {
 
-                Handler.getChild(this.getAttribute('id')).then(function (data) {
+                require([
+                    'package/quiqqer/products/bin/Products'
+                ], function (Products) {
+                    Products.getChild(this.getAttribute('id')).then(function (data) {
+                        this.$loaded = true;
+                        this.$data   = data;
 
-                    this.$loaded = true;
-                    this.$data   = data;
+                        resolve(this);
 
-                    resolve(this);
+                        this.fireEvent('refresh', [this]);
 
-                }.bind(this)).catch(reject);
+                    }.bind(this)).catch(reject);
+                }.bind(this));
 
             }.bind(this));
         },

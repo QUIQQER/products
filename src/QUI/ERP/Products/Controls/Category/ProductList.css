@@ -1,0 +1,88 @@
+.quiqqer-products-productList-sort {
+    border-color: #f1f1f1;
+    border-style: solid;
+    border-width: 1px 0;
+    display: inline-block;
+    height: 40px;
+    overflow: hidden;
+    width: 100%
+}
+
+.quiqqer-products-productList-sort-sorting {
+    font-size: 16px;
+    line-height: 20px;
+    padding: 10px !important;
+}
+
+.quiqqer-products-productList-sort-display {
+    border: none;
+    line-height: 20px;
+    text-align: right;
+}
+
+.quiqqer-products-productList-sort-display .button {
+    border: none;
+    line-height: 20px !important;
+    padding: 10px !important;
+}
+
+.quiqqer-products-productList-sort__noProducts {
+    opacity: 0.5;
+    padding: 40px;
+    text-align: center;
+}
+
+/** Sub-Kategorien
+ ================================================= */
+
+.quiqqer-products-productList-categories {
+    display: block;
+    float: left;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+.quiqqer-products-productList-categories a {
+    border: 1px solid #f1f1f1;
+    display: inline-block;
+    float: left;
+    padding: 10px 0;
+    text-align: center;
+    width: calc(50% - 10px);
+}
+
+.quiqqer-products-productList-categories a:hover {
+    background: #cdd4d5;
+    color: #1d1d1b;
+}
+
+.quiqqer-products-productList-categories a:nth-child(odd) {
+    margin-right: 20px;
+}
+
+/** Produkte
+ ================================================= */
+
+.quiqqer-products-productList-products {
+    float: left;
+    width: 100%;
+}
+
+.quiqqer-products-productList-products-more {
+    text-align: center;
+}
+
+.quiqqer-products-productList-products-more .button {
+    clear: both;
+    cursor: pointer;
+    display: inline-block;
+    margin: 20px auto;
+    text-align: center;
+    width: calc(33% - 20px);
+}
+
+.quiqqer-products-productList-products-product-row {
+    clear: both;
+    float: left;
+    width: 100%;
+}

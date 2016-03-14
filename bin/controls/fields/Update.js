@@ -6,7 +6,7 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
- * @require qui/controls/buttons/Button
+ * @require qui/utils/Form
  * @require Locale
  * @require package/quiqqer/products/bin/classes/Fields
  * @require package/quiqqer/translator/bin/controls/Update
@@ -19,6 +19,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
     'qui/QUI',
     'qui/controls/Control',
+    'qui/utils/Form',
     'Locale',
     'Mustache',
     'package/quiqqer/products/bin/classes/Fields',
@@ -27,7 +28,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
     'text!package/quiqqer/products/bin/controls/fields/Create.html',
     'css!package/quiqqer/products/bin/controls/fields/Create.css'
 
-], function (QUI, QUIControl, QUILocale, Mustache, Handler, Translation, template) {
+], function (QUI, QUIControl, QUIFormUtils, QUILocale, Mustache, Handler, Translation, template) {
     "use strict";
 
     var lg     = 'quiqqer/products',
@@ -107,14 +108,14 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
             ]).then(function (result) {
                 var fieldTypes      = result[1],
                     fieldData       = result[0],
-                    FieldTypes      = Elm.getElement('[name="fieldtype"]'),
+                    FieldTypes      = Elm.getElement('[name="type"]'),
                     FieldPriority   = Elm.getElement('[name="priority"]'),
                     FieldPrefix     = Elm.getElement('[name="prefix"]'),
                     FieldSuffix     = Elm.getElement('[name="suffix"]'),
-                    FieldSearchType = Elm.getElement('[name="searchtype"]'),
-                    FieldRequired   = Elm.getElement('[name="required"]'),
-                    FieldSystem     = Elm.getElement('[name="system"]'),
-                    FieldStandard   = Elm.getElement('[name="standard"]');
+                    FieldSearchType = Elm.getElement('[name="search_type"]'),
+                    FieldRequired   = Elm.getElement('[name="requiredField"]'),
+                    FieldSystem     = Elm.getElement('[name="systemField"]'),
+                    FieldStandard   = Elm.getElement('[name="standardField"]');
 
                 for (var i = 0, len = fieldTypes.length; i < len; i++) {
                     new Element('option', {
@@ -122,7 +123,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                         value: fieldTypes[i]
                     }).inject(FieldTypes);
                 }
-                console.log(fieldData);
+
                 // set data to the form
                 FieldTypes.value      = fieldData.type;
                 FieldPriority.value   = fieldData.priority;
@@ -153,18 +154,18 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     return reject('Translation not found');
                 }
 
-                var Form = Elm.getElement('form');
+                var Form    = Elm.getElement('form'),
+                    fieldId = self.getAttribute('fieldId');
 
-                Fields.updateChild(
-                    self.getAttribute('fieldId'),
-                    {
-                        type       : Form.elements.fieldtype.value,
-                        search_type: Form.elements.searchtype.value,
-                        prefix     : Form.elements.prefix.value,
-                        suffix     : Form.elements.suffix.value,
-                        priority   : Form.elements.priority.value
-                    }
-                ).then(function () {
+                Fields.updateChild(fieldId, {
+                    type         : Form.elements.type.value,
+                    search_type  : Form.elements.search_type.value,
+                    prefix       : Form.elements.prefix.value,
+                    suffix       : Form.elements.suffix.value,
+                    priority     : Form.elements.priority.value,
+                    standardField: Form.elements.standardField.checked ? 1 : 0,
+                    requiredField: Form.elements.requiredField.checked ? 1 : 0
+                }).then(function () {
                     return self.$Translation.save();
                 }).then(resolve()).catch(reject);
             });

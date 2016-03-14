@@ -1,0 +1,49 @@
+{if count($children)}
+<div class="quiqqer-products-productList-categories">
+    {foreach from=$children item=Category}
+    <a href="{url site=$Category}">
+        {$Category->getAttribute('title')}
+        <span class="fa fa-angle-right"></span>
+    </a>
+    {/foreach}
+</div>
+{/if}
+
+<div class="quiqqer-products-productList-sort">
+    <noscript>
+        Bitte aktivieren Sie JavaScript.
+    </noscript>
+
+    <div class="grid-50 mobile-grid-50 grid-parent quiqqer-products-productList-sort-sorting" style="display: none">
+        Sortieren nach...
+    </div>
+    <div class="grid-50 mobile-grid-50 grid-parent quiqqer-products-productList-sort-display" style="display: none">
+        <span class="fa fa-th button quiqqer-products-productList-sort-display-galery"
+              data-tooltip="Gallerie"
+        ></span>
+        <span class="fa fa-list-ul button quiqqer-products-productList-sort-display-details"
+              data-tooltip="Details"
+        ></span>
+        <span class="fa fa-align-justify button quiqqer-products-productList-sort-display-list"
+              data-tooltip="Liste"
+        ></span>
+    </div>
+</div>
+
+<div class="quiqqer-products-productList-products">
+    {foreach from=$rows item=row}
+    {$row.html}
+    {foreachelse}
+    <div class="quiqqer-products-productList-sort__noProducts">
+        In der Kategorie sind keine Produkte enthalten
+    </div>
+    {/foreach}
+
+</div>
+{if count($row)}
+<div class="quiqqer-products-productList-products-more">
+    <div class="button disabled">
+        Mehr laden
+    </div>
+</div>
+{/if}
