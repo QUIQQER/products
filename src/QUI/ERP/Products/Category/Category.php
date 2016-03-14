@@ -536,7 +536,7 @@ class Category extends QUI\QDOM
             $query['debug'] = $params['debug'];
         }
 
-        return QUI\ERP\Products\Handler\Products::getProducts($query);
+        return QUI\ERP\Products\Handler\Products::getProductIds($query);
     }
 
     /**
