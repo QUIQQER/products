@@ -16,8 +16,11 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
 {
     public function getBackendView()
     {
+        $translations = $this->cleanup($this->getValue());
+        $lang = QUI\ERP\Products\Handler\Products::getLocale()->getCurrent();
+
         return new View(array(
-            'value' => $this->cleanup($this->getValue()),
+            'value' => $translations[$lang],
             'title' => $this->getTitle(),
             'prefix' => $this->getAttribute('prefix'),
             'suffix' => $this->getAttribute('suffix'),
@@ -27,8 +30,11 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
 
     public function getFrontendView()
     {
+        $translations = $this->cleanup($this->getValue());
+        $lang = QUI\ERP\Products\Handler\Products::getLocale()->getCurrent();
+
         return new View(array(
-            'value' => $this->cleanup($this->getValue()),
+            'value' => $translations[$lang],
             'title' => $this->getTitle(),
             'prefix' => $this->getAttribute('prefix'),
             'suffix' => $this->getAttribute('suffix'),

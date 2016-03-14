@@ -191,6 +191,38 @@
             <de><![CDATA[Das Produkt #[productId] besitzt kein Bild.]]></de>
             <en><![CDATA[The product #[productId] has no image.]]></en>
         </locale>
+        <locale name="exception.field.grouplist.user.limit.reached">
+            <de><![CDATA[
+                Nicht erlaubter Inhalt für das Feld: #[fieldId] [fieldTitle]. Diesem Feld kann nur ein Benutzer zugeordnet werden. Bitte korrigieren Sie die Eingabe.
+                ]]></de>
+            <en><![CDATA[
+                Illegal content for the field: #[fieldId] [fieldTitle]. Only one user can be assigned to this field. Please correct the entry.
+            ]]></en>
+        </locale>
+        <locale name="exception.field.grouplist.user.not.in.group">
+            <de><![CDATA[
+                Der Benutzer #[userId] ist nicht in der Gruppe #[groupId] und kann somit diesem Feld nicht als Wert zugewiesen werden.
+                ]]></de>
+            <en><![CDATA[
+                User #[userId] is not in group #[groupId] and thus cannot be assigned as a field value.
+            ]]></en>
+        </locale>
+        <locale name="exception.field.grouplist.invalid.userId">
+            <de><![CDATA[
+                Die Benutzer-ID enthält einen nicht-numerischen Wert.
+                ]]></de>
+            <en><![CDATA[
+                The user id contains a non-numeric value.
+            ]]></en>
+        </locale>
+        <locale name="exception.field.unexptected.error">
+            <de><![CDATA[
+                Fehler bei Zuweisung des Inhalts für das Feld: #[fieldId] [fieldTitle]: [errorMsg]. Bitte korrigieren Sie die Eingabe.
+                ]]></de>
+            <en><![CDATA[
+                An error occurred while assigning a vlaue to this field: #[fieldId] [fieldTitle]: [errorMsg]. Please correct the entry.
+            ]]></en>
+        </locale>
 
         <!-- controls -->
         <locale name="control.products-watchlist-button-text">

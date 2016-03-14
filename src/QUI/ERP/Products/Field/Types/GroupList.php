@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\View;
 
 /**
  * Class GroupList
@@ -27,7 +28,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
     public function __construct($fieldId, array $params)
     {
         $this->setAttributes(array(
-            'groupId' => false,
+            'groupId'       => false,
             'multipleUsers' => true
         ));
 
@@ -36,12 +37,24 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
     public function getBackendView()
     {
-        // TODO: Implement getBackendView() method.
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
     }
 
     public function getFrontendView()
     {
-        // TODO: Implement getFrontendView() method.
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
     }
 
     /**
@@ -61,7 +74,75 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        // TODO: Implement validate() method.
+        $groupId       = $this->getAttribute('groupId');
+        $multipleUsers = $this->getAttribute('multipleUsers');
+        $checkIds      = array();
+
+        if (is_array($value)) {
+            if (count($value) > 1
+                && !$multipleUsers
+            ) {
+                throw new QUI\Exception(array(
+                    'quiqqer/products',
+                    'exception.field.grouplist.user.limit.reached',
+                    array(
+                        'fieldId'    => $this->getId(),
+                        'fieldTitle' => $this->getTitle()
+                    )
+                ));
+            }
+
+            $checkIds = $value;
+        } else {
+            if (!is_numeric($value)) {
+                throw new QUI\Exception(array(
+                    'quiqqer/products',
+                    'exception.field.invalid',
+                    array(
+                        'fieldId'    => $this->getId(),
+                        'fieldTitle' => $this->getTitle()
+                    )
+                ));
+            }
+
+            $checkIds[] = $value;
+        }
+
+        try {
+            foreach ($checkIds as $userId) {
+                if (!is_numeric($userId)) {
+                    throw new QUI\Exception(array(
+                        'quiqqer/products',
+                        'exception.field.grouplist.invalid.userId'
+                    ));
+                }
+
+                $User = QUI::getUsers()->get($userId);
+                $userGroups = $User->getGroups(false);
+
+                if (!in_array($groupId, $userGroups)) {
+                    throw new QUI\Exception(array(
+                        'quiqqer/products',
+                        'exception.field.grouplist.user.not.in.group',
+                        array(
+                            'userId'  => $this->getId(),
+                            'groupId' => $this->getTitle()
+                        )
+                    ));
+                }
+            }
+
+        } catch (QUI\Exception $Exception) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.unexptected.error',
+                array(
+                    'fieldId'    => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'errorMsg'   => $Exception->getMessage()
+                )
+            ));
+        }
     }
 
     /**
@@ -73,8 +154,42 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        // TODO: Implement cleanup() method.
+        $groupId       = $this->getAttribute('groupId');
+        $multipleUsers = $this->getAttribute('multipleUsers');
+        $checkIds      = array();
+        $userIds       = array();
 
-        return $value;
+        if (is_array($value)) {
+            if (count($value) > 1
+                && !$multipleUsers
+            ) {
+                $checkIds = array_shift($value);
+            } else {
+                $checkIds = $value;
+            }
+        } else {
+            $checkIds[] = $value;
+        }
+
+        foreach ($checkIds as $userId) {
+            try {
+                $User = QUI::getUsers()->get($userId);
+                $userGroups = $User->getGroups(false);
+            } catch (QUI\Exception $Exception) {
+                continue;
+            }
+
+            if (!is_numeric($groupId)) {
+                continue;
+            }
+
+            if (!in_array($groupId, $userGroups)) {
+                continue;
+            }
+
+            $userIds[] = $userId;
+        }
+
+        return $userIds;
     }
 }
