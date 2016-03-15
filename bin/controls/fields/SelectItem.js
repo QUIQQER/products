@@ -82,7 +82,9 @@ define('package/quiqqer/products/bin/controls/fields/SelectItem', [
             Fields.getChild(
                 this.getAttribute('id')
             ).then(function (data) {
-                console.log(data);
+
+                self.$Text.set('html', data.title);
+
             }).catch(function () {
                 self.$Icon.removeClass('fa-file-text-o');
                 self.$Icon.addClass('fa-bolt');

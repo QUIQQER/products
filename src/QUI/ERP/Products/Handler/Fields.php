@@ -414,19 +414,38 @@ class Fields
         }
 
         if (!isset($queryParams['order'])) {
-            $query['order'] = 'priority ASC';
+            $queryParams['order'] = 'priority ASC';
         }
 
-        switch ($query['order']) {
+        switch ($queryParams['order']) { // bad solution
             case 'name':
+            case 'name ASC':
+            case 'name DESC':
             case 'type':
+            case 'type ASC':
+            case 'type DESC':
             case 'search_type':
+            case 'search_type ASC':
+            case 'search_type DESC':
             case 'prefix':
+            case 'prefix ASC':
+            case 'prefix DESC':
             case 'suffix':
+            case 'suffix ASC':
+            case 'suffix DESC':
             case 'priority':
+            case 'priority ASC':
+            case 'priority DESC':
             case 'standardField':
+            case 'standardField ASC':
+            case 'standardField DESC':
             case 'systemField':
+            case 'systemField ASC':
+            case 'systemField DESC':
             case 'requiredField':
+            case 'requiredField ASC':
+            case 'requiredField DESC':
+                $query['order'] = $queryParams['order'];
                 break;
 
             default:

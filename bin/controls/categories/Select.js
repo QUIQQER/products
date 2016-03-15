@@ -19,6 +19,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
     'qui/QUI',
     'qui/controls/Control',
     'qui/controls/buttons/Button',
+    'qui/utils/Elements',
     'package/quiqqer/products/bin/controls/categories/SelectItem',
     'package/quiqqer/products/bin/classes/Categories',
     'Ajax',
@@ -26,7 +27,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
     'css!package/quiqqer/products/bin/controls/categories/Select.css'
 
-], function (QUI, QUIControl, QUIButton, SelectItem, Handler, Ajax, QUILocale) {
+], function (QUI, QUIControl, QUIButton, QUIElementUtils, SelectItem, Handler, Ajax, QUILocale) {
     "use strict";
 
     var lg         = 'quiqqer/products';
@@ -279,7 +280,8 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 styles: {
                     display: '',
                     top    : this.$Search.getPosition().y + this.$Search.getSize().y,
-                    left   : this.$Search.getPosition().x
+                    left   : this.$Search.getPosition().x,
+                    zIndex : QUIElementUtils.getComputedZIndex(this.$Input)
                 }
             });
 
@@ -321,6 +323,9 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             Categories.search({
                 order: 'ASC',
                 limit: 5
+            }, {
+                id    : value,
+                fields: value
             }).then(function (result) {
 
                 var i, id, len, nam, entry, Entry,
