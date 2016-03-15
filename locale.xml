@@ -334,6 +334,11 @@
             <en><![CDATA[Add a field]]></en>
         </locale>
 
+        <locale name="control.select.search.field.placeholder">
+            <de><![CDATA[Suche nach einem Produktfeld...]]></de>
+            <en><![CDATA[Search for a product field...]]></en>
+        </locale>
+
         <locale name="fields.create.title">
             <de><![CDATA[Neues Produktfeld hinzufügen]]></de>
             <en><![CDATA[Create a new product field]]></en>

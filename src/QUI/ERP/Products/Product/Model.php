@@ -405,6 +405,9 @@ class Model extends QUI\QDOM
         /* @var $Field Field */
         foreach ($fields as $Field) {
             if (!$Field->isRequired()) {
+                $data = $Field->toProductArray();
+
+
                 $fieldData[] = $Field->toProductArray();
                 continue;
             }
@@ -412,7 +415,7 @@ class Model extends QUI\QDOM
             try {
                 $Field->validate($Field->getValue());
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addDebug(
+                QUI\System\Log::addWarning(
                     $Exception->getMessage(),
                     array(
                         'id' => $Field->getId(),

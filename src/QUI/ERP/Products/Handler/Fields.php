@@ -413,11 +413,26 @@ class Fields
             $query['limit'] = $queryParams['limit'];
         }
 
-        if (isset($queryParams['order'])) {
-            $query['order'] = $queryParams['order'];
-        } else {
+        if (!isset($queryParams['order'])) {
             $query['order'] = 'priority ASC';
         }
+
+        switch ($query['order']) {
+            case 'name':
+            case 'type':
+            case 'search_type':
+            case 'prefix':
+            case 'suffix':
+            case 'priority':
+            case 'standardField':
+            case 'systemField':
+            case 'requiredField':
+                break;
+
+            default:
+                $query['order'] = 'priority ASC';
+        }
+
 
         $result = array();
         $data   = QUI::getDataBase()->fetch($query);
