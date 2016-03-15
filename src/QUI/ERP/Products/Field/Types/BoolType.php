@@ -54,16 +54,10 @@ class BoolType extends QUI\ERP\Products\Field\Field
     public function validate($value)
     {
         switch ($value) {
-            case true:
-            case false:
             case 1:
             case 0:
             case '1':
             case '0':
-            case 'true':
-            case 'false':
-            case 'TRUE':
-            case 'FALSE':
                 break;
 
             default:
