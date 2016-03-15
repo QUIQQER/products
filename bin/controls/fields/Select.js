@@ -386,6 +386,9 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
          * @return {Object} this (package/quiqqer/products/bin/controls/field/Select)
          */
         addField: function (id) {
+            if (id === '' || !id) {
+                return this;
+            }
 
             new SelectItem({
                 id    : id,
@@ -415,6 +418,10 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
             }
 
             ids.each(function (id) {
+                if (id === '' || !id) {
+                    return;
+                }
+
                 new SelectItem({
                     id    : id,
                     events: {
@@ -566,10 +573,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
          * @param {Object} Item - package/quiqqer/products/bin/controls/fields/SelectItem
          */
         $onSelectDestroy: function (Item) {
-            this.$values = this.$values.erase(
-                Item.getField().getId()
-            );
-
+            this.$values = this.$values.erase(Item.getAttribute('id'));
             this.$refreshValues();
         },
 
