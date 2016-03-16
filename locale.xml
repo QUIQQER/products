@@ -224,12 +224,6 @@
             ]]></en>
         </locale>
 
-        <!-- controls -->
-        <locale name="control.products-watchlist-button-text">
-            <de><![CDATA[Merkzettel]]></de>
-            <en><![CDATA[Watchlist]]></en>
-        </locale>
-
         <!-- produkte -->
         <locale name="message.product.create.missing.category">
             <de><![CDATA[Bitte geben Sie dem Produkt eine Produkt-Kategorie.]]></de>
