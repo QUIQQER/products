@@ -23,7 +23,16 @@ class Date extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        $dateTime = \DateTime::createFromFormat('m/d/Y', $value);
+        $dateTime = true;
+
+        try {
+            new \DateTime($value);
+
+        } catch (\Exception $Exception) {
+            $dateTime = false;
+        }
+
+//        $dateTime = \DateTime::createFromFormat('m/d/Y', $value);
 
         if ($dateTime === false) {
             throw new QUI\Exception(
@@ -46,7 +55,11 @@ class Date extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        $Date = new \DateTime($value);
+        try {
+            $Date = new \DateTime($value);
+        } catch (\Exception $Exception) {
+            $Date = new \DateTime();
+        }
 
         return $Date->getTimestamp();
     }
