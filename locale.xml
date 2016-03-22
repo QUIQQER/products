@@ -223,6 +223,14 @@
                 An error occurred while assigning a vlaue to this field: #[fieldId] [fieldTitle]: [errorMsg]. Please correct the entry.
             ]]></en>
         </locale>
+        <locale name="exception.product.no.not.found">
+            <de><![CDATA[
+                Das Produkt mit der Produkt-Nr. #[productNo] wurde nicht gefunden.
+                ]]></de>
+            <en><![CDATA[
+                The product with product no. #[productNo] was not found.
+            ]]></en>
+        </locale>
 
         <!-- controls -->
         <locale name="control.products-watchlist-button-text">

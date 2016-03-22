@@ -9,6 +9,7 @@ use QUI;
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Field\Field;
 use QUI\Projects\Media\Utils as FolderUtils;
+use QUI\ERP\Products\Utils\Tables as TablesUtils;
 
 /**
  * Class Products
@@ -84,6 +85,59 @@ class Products
     }
 
     /**
+     * Get product by product no
+     *
+     * @param string $productNo - Product-No
+     * @return QUI\ERP\Products\Product\Product
+     * @throws QUI\Exception
+     */
+    public static function getProductByProductNo($productNo)
+    {
+        try {
+            $result = QUI::getDataBase()->fetch(array(
+                'select' => array(
+                    'id'
+                ),
+                'from'   => TablesUtils::getProductCacheTableName(),
+                'where'  => array(
+                    'productNo' => $productNo
+                ),
+                'limit'  => 1
+            ));
+        } catch (QUI\Exception $Exception) {
+            // TODO: mit Mor besprechen
+            QUI\System\Log::addError(
+                $Exception->getMessage()
+            );
+
+            throw new QUI\Exception(
+                array(
+                    'quiqqer/products',
+                    'exception.get.product.by.no.error'
+                ),
+                $Exception->getCode(),
+                array(
+                    'productNo' => $productNo
+                )
+            );
+        }
+
+        if (empty($result)
+            || !isset($result[0]['id'])
+        ) {
+            throw new QUI\Exception(
+                array('quiqqer/products', 'exception.product.no.not.found'),
+                404,
+                array(
+                    'productNo' => $productNo
+                )
+            );
+        }
+
+        return self::getProduct($result[0]['id']);
+    }
+
+    /**
      * Create a new Product
      *
      * @param array $categories - list of category IDs or category Objects
@@ -93,8 +147,10 @@ class Products
      *
      * @throws QUI\Exception
      */
-    public static function createProduct($categories = array(), $fields = array())
-    {
+    public static function createProduct(
+        $categories = array(),
+        $fields = array()
+    ) {
         QUI\Rights\Permission::checkPermission('product.create');
 
         // categories
@@ -134,8 +190,17 @@ class Products
         // fields
         $fieldData = array();
 
-        /* @var $Field Field */
+        /* @var $Field Field|integer */
         foreach ($fields as $Field) {
+            if (!is_object($Field)) {
+                try {
+                    $Field = Fields::getField($Field);
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::addWarning($Exception->getMessage());
+                    continue;
+                }
+            }
+
             $value = $Field->getValue();
 
             if ($Field->isRequired()) {
@@ -144,7 +209,7 @@ class Products
                         'quiqqer/products',
                         'exception.field.is.invalid',
                         array(
-                            'fieldId' => $Field->getId(),
+                            'fieldId'    => $Field->getId(),
                             'fieldtitle' => $Field->getTitle()
                         )
                     ));
@@ -159,7 +224,7 @@ class Products
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
-                'fieldData' => json_encode($fieldData),
+                'fieldData'  => json_encode($fieldData),
                 'categories' => ',' . implode($categories, ',') . ','
             )
         );
@@ -281,10 +346,10 @@ class Products
     public static function countProducts($queryParams = array())
     {
         $query = array(
-            'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
             'count' => array(
                 'select' => 'id',
-                'as' => 'count'
+                'as'     => 'count'
             )
         );
 
