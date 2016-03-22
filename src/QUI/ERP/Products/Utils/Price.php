@@ -138,6 +138,16 @@ class Price
     }
 
     /**
+     * Return the currency from the price
+     *
+     * @return QUI\ERP\Currency\Currency
+     */
+    public function getCurrency()
+    {
+        return $this->Currency;
+    }
+
+    /**
      * calculation
      */
 

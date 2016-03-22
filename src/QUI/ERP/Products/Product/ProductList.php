@@ -19,11 +19,35 @@ class ProductList
     protected $products = array();
 
     /**
+     * Doublicate entries allowed?
+     * Default = false
+     * @var bool
+     */
+    public $duplicate = false;
+
+    /**
+     * ProductList constructor.
+     *
+     * @param array $params - optional, list settings
+     */
+    public function __construct($params = array())
+    {
+        if (isset($params['duplicate'])) {
+            $this->duplicate = (boolean)$params['duplicate'];
+        }
+    }
+
+    /**
      * Add a product to the list
      * @param QUI\ERP\Products\Interfaces\Product $Product
      */
     public function addProduct(QUI\ERP\Products\Interfaces\Product $Product)
     {
+        if ($this->duplicate) {
+            $this->products[] = $Product;
+            return;
+        }
+
         $this->products[$Product->getId()] = $Product;
     }
 
