@@ -35,6 +35,25 @@ define('package/quiqqer/products/bin/classes/Fields', [
         FIELD_FOLDER      : 10,
 
         /**
+         * Return the allowed field attributes
+         *
+         * @returns {Array}
+         */
+        getChildAttributes: function () {
+            return [
+                'name',
+                'type',
+                'search_type',
+                'prefix',
+                'suffix',
+                'priority',
+                'standardField',
+                'systemField',
+                'requiredField'
+            ];
+        },
+
+        /**
          * Search fields
          *
          * @param {Object} [params] - query params
@@ -45,11 +64,25 @@ define('package/quiqqer/products/bin/classes/Fields', [
             params = params || {};
             fields = fields || {};
 
+            // check if fields are allowed
+            var i, len, field;
+
+            var fieldList = {},
+                allowed   = this.getChildAttributes();
+
+            for (i = 0, len = allowed.length; i < len; i++) {
+                field = allowed[i];
+
+                if (field in fields) {
+                    fieldList[field] = fields[field];
+                }
+            }
+
             return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_fields_search', resolve, {
                     'package': 'quiqqer/products',
                     onError  : reject,
-                    fields   : JSON.encode(fields),
+                    fields   : JSON.encode(fieldList),
                     params   : JSON.encode(params)
                 });
             });

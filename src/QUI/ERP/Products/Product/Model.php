@@ -345,6 +345,12 @@ class Model extends QUI\QDOM
         $attributes       = parent::getAttributes();
         $attributes['id'] = $this->getId();
 
+        /* @var $Price QUI\ERP\Products\Utils\Price */
+        $Price = $this->getPrice();
+
+        $attributes['price_netto']    = $Price->getNetto();
+        $attributes['price_currency'] = $Price->getCurrency()->getCode();
+
         if ($this->getCategory()) {
             $attributes['category'] = $this->getCategory()->getId();
         }
@@ -404,15 +410,19 @@ class Model extends QUI\QDOM
 
         /* @var $Field Field */
         foreach ($fields as $Field) {
+            $value = $Field->getValue();
+
             if (!$Field->isRequired()) {
+                $Field->validate($value);
+
                 $fieldData[] = $Field->toProductArray();
                 continue;
             }
 
             try {
-                $Field->validate($Field->getValue());
+                $Field->validate($value);
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addDebug(
+                QUI\System\Log::addWarning(
                     $Exception->getMessage(),
                     array(
                         'id' => $Field->getId(),
@@ -420,7 +430,19 @@ class Model extends QUI\QDOM
                     )
                 );
 
+                throw new QUI\Exception(array(
+                    'quiqqer/products',
+                    'exception.field.invalid',
+                    array(
+                        'fieldId' => $this->getId(),
+                        'fieldTitle' => $this->getTitle(),
+                        'fieldType' => $this->getType()
+                    )
+                ));
+            }
 
+
+            if (empty($value)) {
                 throw new QUI\Exception(array(
                     'quiqqer/products',
                     'exception.field.invalid',

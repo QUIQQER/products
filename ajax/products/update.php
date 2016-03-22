@@ -33,10 +33,11 @@ QUI::$Ajax->registerFunction(
             }
 
             try {
-                $Field->setValue($field);
-                $Product->addField($Field);
+                $ProductField = $Product->getField($Field->getId());
+                $ProductField->validate($field);
+
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addDebug(
+                QUI\System\Log::addNotice(
                     $Exception->getMessage(),
                     array(
                         'id' => $Field->getId(),

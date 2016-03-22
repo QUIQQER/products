@@ -25,16 +25,24 @@ use QUI\ERP\Products\Field\View;
  */
 class GroupList extends QUI\ERP\Products\Field\Field
 {
+    /**
+     * GroupList constructor.
+     * @param int $fieldId
+     * @param array $params
+     */
     public function __construct($fieldId, array $params)
     {
         $this->setAttributes(array(
-            'groupId'       => false,
+            'groupId' => false,
             'multipleUsers' => true
         ));
 
         parent::__construct($fieldId, $params);
     }
 
+    /**
+     * @return View
+     */
     public function getBackendView()
     {
         return new View(array(
@@ -46,6 +54,9 @@ class GroupList extends QUI\ERP\Products\Field\Field
         ));
     }
 
+    /**
+     * @return View
+     */
     public function getFrontendView()
     {
         return new View(array(
@@ -74,6 +85,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
+        if (empty($value)) {
+            return;
+        }
+
         $groupId       = $this->getAttribute('groupId');
         $multipleUsers = $this->getAttribute('multipleUsers');
         $checkIds      = array();
@@ -86,7 +101,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                     'quiqqer/products',
                     'exception.field.grouplist.user.limit.reached',
                     array(
-                        'fieldId'    => $this->getId(),
+                        'fieldId' => $this->getId(),
                         'fieldTitle' => $this->getTitle()
                     )
                 ));
@@ -99,7 +114,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                     'quiqqer/products',
                     'exception.field.invalid',
                     array(
-                        'fieldId'    => $this->getId(),
+                        'fieldId' => $this->getId(),
                         'fieldTitle' => $this->getTitle()
                     )
                 ));
@@ -117,7 +132,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                     ));
                 }
 
-                $User = QUI::getUsers()->get($userId);
+                $User       = QUI::getUsers()->get($userId);
                 $userGroups = $User->getGroups(false);
 
                 if (!in_array($groupId, $userGroups)) {
@@ -125,7 +140,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                         'quiqqer/products',
                         'exception.field.grouplist.user.not.in.group',
                         array(
-                            'userId'  => $this->getId(),
+                            'userId' => $this->getId(),
                             'groupId' => $this->getTitle()
                         )
                     ));
@@ -137,9 +152,9 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.unexptected.error',
                 array(
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'errorMsg'   => $Exception->getMessage()
+                    'errorMsg' => $Exception->getMessage()
                 )
             ));
         }
@@ -173,7 +188,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         foreach ($checkIds as $userId) {
             try {
-                $User = QUI::getUsers()->get($userId);
+                $User       = QUI::getUsers()->get($userId);
                 $userGroups = $User->getGroups(false);
             } catch (QUI\Exception $Exception) {
                 continue;

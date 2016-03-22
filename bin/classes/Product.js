@@ -40,6 +40,21 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * Return the product attributes
+         *
+         * @returns {Object}
+         */
+        getAttributes: function () {
+            if (!this.$data) {
+                this.$data = {};
+            }
+
+            this.$data.id = this.getId();
+
+            return this.$data;
+        },
+
+        /**
          * Refresh the product data
          *
          * @returns {Promise}
@@ -50,6 +65,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                 require([
                     'package/quiqqer/products/bin/Products'
                 ], function (Products) {
+
                     Products.getChild(this.getAttribute('id')).then(function (data) {
                         this.$loaded = true;
                         this.$data   = data;

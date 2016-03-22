@@ -1,0 +1,26 @@
+
+.discount-search {
+    position: relative;
+}
+
+.discount-search-searchContainer {
+    left: 0;
+    height: 100%;
+    opacity: 0;
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.discount-search-resultContainer {
+    left: 0;
+    height: 100%;
+    opacity: 0;
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 9;
+}

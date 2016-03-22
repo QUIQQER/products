@@ -71,6 +71,10 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
+        if (is_string($value)) {
+            $value = json_decode($value, true);
+        }
+
         if (!is_array($value)) {
             throw new QUI\Exception(array(
                 'quiqqer/products',

@@ -6,7 +6,7 @@
 namespace QUI\ERP\Products\Interfaces;
 
 use QUI\ERP\Products\Interfaces\Field;
-use QUI\ERP\Products\Price;
+use QUI\ERP\Products\Utils\Price;
 
 /**
  * Interface Product

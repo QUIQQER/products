@@ -232,12 +232,6 @@
             ]]></en>
         </locale>
 
-        <!-- controls -->
-        <locale name="control.products-watchlist-button-text">
-            <de><![CDATA[Merkzettel]]></de>
-            <en><![CDATA[Watchlist]]></en>
-        </locale>
-
         <!-- produkte -->
         <locale name="message.product.create.missing.category">
             <de><![CDATA[Bitte geben Sie dem Produkt eine Produkt-Kategorie.]]></de>
@@ -340,6 +334,11 @@
         <locale name="category.update.field.grid.button.add">
             <de><![CDATA[Feld hinzufügen]]></de>
             <en><![CDATA[Add a field]]></en>
+        </locale>
+
+        <locale name="control.select.search.field.placeholder">
+            <de><![CDATA[Suche nach einem Produktfeld...]]></de>
+            <en><![CDATA[Search for a product field...]]></en>
         </locale>
 
         <locale name="fields.create.title">

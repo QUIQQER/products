@@ -7,7 +7,7 @@ namespace QUI\ERP\Products\Controls\Products;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
-use QUI\ERP\Products\Controls\Watchlist\ButtonAdd as WatchlistButton;
+use QUI\ERP\Watchlist\Controls\ButtonAdd as WatchlistButton;
 use QUI\ERP\Products\Controls\Offer\Button as OfferButton;
 
 /**
