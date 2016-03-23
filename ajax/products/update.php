@@ -35,6 +35,7 @@ QUI::$Ajax->registerFunction(
             try {
                 $ProductField = $Product->getField($Field->getId());
                 $ProductField->validate($field);
+                $ProductField->setValue($field);
 
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addNotice(

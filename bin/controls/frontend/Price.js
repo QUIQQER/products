@@ -49,7 +49,8 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
         create: function () {
             this.$Elm = new Element('span', {
                 'data-qui'  : 'package/quiqqer/products/bin/controls/frontend/Price',
-                'data-quiid': this.getId()
+                'data-quiid': this.getId(),
+                'class'     : 'quiqqer-price'
             });
 
             return this.$Elm;
@@ -62,6 +63,8 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
             if (Elm.get('data-currency')) {
                 this.setAttribute('currency', Elm.get('data-currency'));
             }
+
+            Elm.addClass('quiqqer-price');
 
             this.setPrice(Elm.get('data-price'));
         },
@@ -80,10 +83,6 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          */
         setPrice: function (price) {
             this.setAttribute('price', price);
-
-            if (!this.getAttribute('price')) {
-                return;
-            }
 
             Currency.convertWithSign(
                 this.getAttribute('price'),

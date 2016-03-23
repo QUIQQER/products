@@ -55,7 +55,7 @@ define('package/quiqqer/products/bin/controls/products/Select', [
 
         options: {
             max     : false, // max entries
-            multible: true,  // select more than one entry?
+            multiple: true,  // select more than one entry?
             name    : '',    // string
             styles  : false, // object
             label   : false  // text string or a <label> DOMNode Element
@@ -260,6 +260,15 @@ define('package/quiqqer/products/bin/controls/products/Select', [
             this.cancelSearch();
             this.$DropDown.setStyle('display', 'none');
             this.$Search.value = '';
+        },
+
+        /**
+         * Return the value
+         *
+         * @returns {String}
+         */
+        getValue: function () {
+            return this.$Input.value;
         },
 
         /**
