@@ -4,9 +4,6 @@
  * This file contains package_quiqqer_products_ajax_products_getParentId
  */
 
-use QUI\ERP\Products\Handler\Fields;
-use QUI\ERP\Products\Handler\Products;
-
 /**
  * Create a new product
  *
@@ -33,7 +30,5 @@ QUI::$Ajax->registerFunction(
             QUI\System\Log::addDebug($Exception->getMessage());
             return false;
         }
-    },
-    array(),
-    'Permission::checkAdminUser'
+    }
 );
