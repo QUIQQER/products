@@ -245,6 +245,8 @@ class EventHandling
                     ),
                     array('id' => $field['id'])
                 );
+
+                Fields::setFieldTranslations($field['id'], $field);
                 continue;
             }
 

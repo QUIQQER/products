@@ -190,8 +190,28 @@ class Fields
 
 
         // add language var, if not exists
+        self::setFieldTranslations($newId, $attributes);
+
+        // create new cache column
+        QUI::getDataBase()->table()->addColumn(
+            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            array('F' . $newId => 'text')
+        );
+
+        return self::getField($newId);
+    }
+
+    /**
+     * Set the field translations of a field
+     * but only if there is no translation
+     *
+     * @param $fieldId
+     * @param $attributes
+     */
+    public static function setFieldTranslations($fieldId, $attributes)
+    {
         $localeGroup = 'quiqqer/products';
-        $localeVar   = 'products.field.' . $newId . '.title';
+        $localeVar   = 'products.field.' . $fieldId . '.title';
 
         try {
             $data  = QUI\Translator::get($localeGroup, $localeVar);
@@ -213,14 +233,6 @@ class Fields
                 'trace' => $Exception->getTrace()
             ));
         }
-
-        // create new cache column
-        QUI::getDataBase()->table()->addColumn(
-            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            array('F' . $newId => 'text')
-        );
-
-        return self::getField($newId);
     }
 
     /**
