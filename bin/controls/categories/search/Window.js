@@ -39,6 +39,7 @@ define('package/quiqqer/products/bin/controls/categories/search/Window', [
             icon     : 'fa fa-shopping-basket',
             title    : 'Kategorie-Auswahl',
             autoclose: false,
+            multiple : false,
 
             cancel_button: {
                 text     : QUILocale.get('quiqqer/system', 'cancel'),
@@ -74,21 +75,24 @@ define('package/quiqqer/products/bin/controls/categories/search/Window', [
             Content.set('html', '');
             Content.addClass('discount-search');
 
-            this.$Sitemap = new Sitemap().inject(Content);
+            this.$Sitemap = new Sitemap({
+                multiple: this.getAttribute('multiple')
+            }).inject(Content);
         },
 
         /**
          * Submit
          */
         submit: function () {
-            if (!this.$Sitemap.getActive()) {
+            if (!this.$Sitemap.getSelected().length) {
                 return;
             }
 
-            this.fireEvent(
-                'submit',
-                [this, this.$Sitemap.getActive().getAttribute('value')]
-            );
+            var values = this.$Sitemap.getSelected().map(function (Item) {
+                return Item.getAttribute('value');
+            });
+
+            this.fireEvent('submit', [this, values]);
 
             if (this.getAttribute('autoclose')) {
                 this.close();

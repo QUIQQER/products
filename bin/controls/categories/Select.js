@@ -175,9 +175,12 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                         ], function (Window) {
                             new Window({
                                 autoclose: true,
+                                multiple : self.getAttribute('multiple'),
                                 events   : {
-                                    onSubmit: function (Win, categorieId) {
-                                        self.addCategory(categorieId);
+                                    onSubmit: function (Win, categorieIds) {
+                                        categorieIds.each(function (categorieId) {
+                                            self.addCategory(categorieId);
+                                        });
                                     }
                                 }
                             }).open();
@@ -388,7 +391,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                     }
 
                     Entry = new Element('div', {
-                        html     : '<span class="fa fa-percent"></span>' +
+                        html     : '<span class="fa fa-sitemap"></span>' +
                                    '<span>' + nam + ' (' + id + ')</span>',
                         'class'  : 'box-sizing qui-products-categories-list-dropdown-entry',
                         'data-id': id,

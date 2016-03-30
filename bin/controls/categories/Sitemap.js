@@ -41,7 +41,8 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
         ],
 
         options: {
-            selectedId: false
+            selectedId: false,
+            multiple  : false
         },
 
         initialize: function (options) {
@@ -68,8 +69,9 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
             }, 200, true);
 
             this.$Sitemap = new QUISitemap({
-                name  : 'map',
-                events: {
+                name    : 'map',
+                multiple: this.getAttribute('multiple'),
+                events  : {
                     onChildContextMenu: function (Map, Item, event) {
                         showContextMenu.bind({
                             Map  : Map,
@@ -177,7 +179,7 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
                         new QUISitemapItem({
                             text       : entry.title,
                             value      : entry.id,
-                            icon       : 'fa fa-shopping-basket',
+                            icon       : 'fa fa-sitemap',
                             hasChildren: parseInt(entry.countChildren),
                             events     : {
                                 onOpen : self.$onItemOpen,
@@ -219,12 +221,12 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
         },
 
         /**
-         * Return the active item
+         * Return the selected item(s)
          *
-         * @returns {Object}
+         * @returns {array}
          */
-        getActive: function () {
-            return this.$Sitemap.getSelectedChildren()[0];
+        getSelected: function () {
+            return this.$Sitemap.getSelectedChildren();
         },
 
         /**

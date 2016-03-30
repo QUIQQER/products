@@ -73,6 +73,10 @@
     width: 100%;
 }
 
+.qui-products-categories-list-dropdown-entry .fa {
+    margin-right: 10px;
+}
+
 .qui-products-categories-list-dropdown-entry-hover {
     background: #2F8FC6;
     color: #FFFFFF;
