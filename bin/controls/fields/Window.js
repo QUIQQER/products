@@ -39,7 +39,8 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
 
         options: {
             maxHeight: 600,
-            maxWidth : 800
+            maxWidth : 800,
+            multiple : false
         },
 
         initialize: function (options) {
@@ -78,8 +79,9 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
             var Container = new Element('div').inject(Content);
 
             this.$Grid = new Grid(Container, {
-                pagination : true,
-                columnModel: [{
+                pagination       : true,
+                multipleSelection: this.getAttribute('multiple'),
+                columnModel      : [{
                     header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
                     dataType : 'number',

@@ -174,6 +174,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                         ], function (Window) {
                             new Window({
                                 autoclose: true,
+                                multiple : self.getAttribute('multiple'),
                                 events   : {
                                     onSubmit: function (Win, fieldIds) {
                                         self.addFields(fieldIds);

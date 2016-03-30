@@ -44,6 +44,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
             icon     : 'fa fa-file-text-o',
             title    : 'Feld-Auswahl',
             autoclose: false,
+            multiple : false,
 
             cancel_button: {
                 text     : QUILocale.get('quiqqer/system', 'cancel'),
@@ -151,8 +152,9 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
             }).inject(Content);
 
             this.$Grid = new Grid(GridContainer, {
-                pagination : true,
-                columnModel: [{
+                pagination       : true,
+                multipleSelection: this.getAttribute('multiple'),
+                columnModel      : [{
                     header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
                     dataType : 'number',
