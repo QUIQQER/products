@@ -42,6 +42,7 @@ class Price extends QUI\Control
         $Price = $this->getAttribute('Price');
 
         $this->setAttribute('data-qui-options-price', $Price->getNetto());
+        $this->setAttribute('data-qui-options-currency', $Price->getCurrency()->getCode());
 
         return $Price->getDisplayPrice();
     }

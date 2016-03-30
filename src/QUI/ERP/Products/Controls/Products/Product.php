@@ -99,12 +99,16 @@ class Product extends QUI\Control
             'fields' => $fields,
             'PriceDisplay' => $PriceDisplay,
             'WatchlistButton' => new WatchlistButton(array(
-                'Product' => $Product
+                'Product' => $Product,
+                'width' => 'calc(50% - 5px)'
             )),
             'OfferButton' => new OfferButton(array(
-                'Product' => $Product
+                'Product' => $Product,
+                'width' => 'calc(50% - 5px)'
             ))
         ));
+
+        $Engine->assign('buttonsHtml', $Engine->fetch(dirname(__FILE__) . '/Product.Buttons.html'));
 
         return $Engine->fetch(dirname(__FILE__) . '/Product.html');
     }

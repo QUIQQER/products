@@ -24,13 +24,14 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
         Type   : 'package/quiqqer/products/bin/controls/frontend/Price',
 
         Binds: [
+            'refresh',
             '$onImport',
             '$onInject'
         ],
 
         options: {
             price   : 0, // float
-            currency: 'EUR'
+            currency: false
         },
 
         initialize: function (options) {
@@ -57,16 +58,32 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
         },
 
         /**
+         * Refresh the display
+         */
+        refresh: function () {
+            Currency.convertWithSign(
+                this.getAttribute('price'),
+                this.getAttribute('currency')
+            ).then(function (result) {
+                this.getElm().set('html', result);
+            }.bind(this), function () {
+            });
+        },
+
+        /**
          * event : on import
          */
         $onImport: function (self, Elm) {
-            if (Elm.get('data-currency')) {
-                this.setAttribute('currency', Elm.get('data-currency'));
+
+            Currency.addEvent('onChange', this.refresh);
+
+            if (Elm.get('data-qui-options-currency')) {
+                this.setAttribute('currency', Elm.get('data-qui-options-currency'));
             }
 
             Elm.addClass('quiqqer-price');
 
-            this.setPrice(Elm.get('data-price'));
+            this.setPrice(Elm.get('data-qui-options-price'));
         },
 
         /**
@@ -83,15 +100,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          */
         setPrice: function (price) {
             this.setAttribute('price', price);
-
-            Currency.convertWithSign(
-                this.getAttribute('price'),
-                this.getAttribute('currency')
-            ).then(function (result) {
-                this.getElm().set('html', result);
-            }.bind(this), function () {
-
-            });
+            this.refresh();
         }
     });
 });
