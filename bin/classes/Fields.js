@@ -165,6 +165,20 @@ define('package/quiqqer/products/bin/classes/Fields', [
         },
 
         /**
+         * Return the extra settings for special field types
+         *
+         * @returns {Promise}
+         */
+        getFieldTypeSettings: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_fields_getFieldTypeSettings', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
          * Create a new field
          *
          * @params {Array} [params] - field attributes

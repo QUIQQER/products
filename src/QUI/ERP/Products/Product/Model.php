@@ -508,6 +508,26 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Return all fields from the specific type
+     *
+     * @param string $type - field type (eq: ProductAttributeList, Price ...)
+     * @return array
+     */
+    public function getFieldsByType($type)
+    {
+        $result = array();
+
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        foreach ($this->fields as $Field) {
+            if ($Field->getType() == $type) {
+                $result[] = $Field;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Return the field
      *
      * @param integer $fieldId

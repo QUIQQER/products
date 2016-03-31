@@ -13,8 +13,8 @@ use QUI;
  * Beschreibung:
  * Dies ist die Auswahlliste
  *
- * Auswahlliste ist ein Felde welches dem Besucher verschiedenen Auswahleigenschaften zur Verfügung stellt.
- * Eine Auswahl kann den Preis des Produktes verändern-
+ * Auswahlliste ist ein Feld welches dem Besucher verschiedenen Auswahleigenschaften zur Verfügung stellt.
+ * Eine Auswahl kann den Preis des Produktes verändern
  *
  * Beispiel:
  * Oberfläche
@@ -26,5 +26,76 @@ use QUI;
  */
 class ProductAttributeList extends QUI\ERP\Products\Field\Field
 {
+    /**
+     * ProductAttributeList constructor.
+     * @param int $fieldId
+     * @param array $params
+     */
+    public function __construct($fieldId, array $params)
+    {
+        $this->setAttributes(array(
+            'options' => array(),
+        ));
 
+        parent::__construct($fieldId, $params);
+    }
+
+    /**
+     *
+     */
+    public function getBackendView()
+    {
+        // TODO: Implement getBackendView() method.
+    }
+
+    /**
+     *
+     */
+    public function getFrontendView()
+    {
+        // TODO: Implement getFrontendView() method.
+    }
+
+    /**
+     * @return string
+     */
+    public function getJavaScriptControl()
+    {
+        return 'package/quiqqer/products/bin/controls/fields/types/ProductAttributeList';
+    }
+
+    /**
+     * @return string
+     */
+    public function getJavaScriptSettings()
+    {
+        return 'package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings';
+    }
+
+    /**
+     * Check the value
+     * is the value valid for the field type?
+     *
+     * @param mixed $value
+     * @throws \QUI\Exception
+     */
+    public function validate($value)
+    {
+        // TODO: Implement validate() method.
+    }
+
+    /**
+     * Cleanup the value, so the value is valid
+     *
+     * @param mixed $value
+     * @throws \QUI\Exception
+     * @return array
+     */
+    public function cleanup($value)
+    {
+        $list = array();
+
+
+        return $list;
+    }
 }

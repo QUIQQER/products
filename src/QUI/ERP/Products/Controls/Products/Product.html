@@ -21,9 +21,16 @@
             {/foreach}
         </div>
 
+        {if count($productAttributeList)}
         <div class="product-data-fieldlist">
-            Listen
+            {foreach $productAttributeList as $Field}
+            <div class="product-data-field">
+                <div class="product-data-field-title">{$Field->getTitle()}</div>
+                <div class="product-data-field-values">---</div>
+            </div>
+            {/foreach}
         </div>
+        {/if}
 
         <div class="product-data-price">
             {$PriceDisplay->create()}

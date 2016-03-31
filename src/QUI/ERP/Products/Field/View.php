@@ -15,7 +15,7 @@ use QUI;
 class View
 {
     /**
-     * @var string
+     * @var string|array|mixed
      */
     protected $value = '';
 

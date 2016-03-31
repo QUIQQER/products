@@ -104,10 +104,14 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
             Promise.all([
                 Fields.getChild(id),
-                Fields.getFieldTypes()
+                Fields.getFieldTypes(),
+                Fields.getFieldTypeSettings()
             ]).then(function (result) {
+                var i, len, settings;
+
                 var fieldTypes      = result[1],
                     fieldData       = result[0],
+                    fieldSettings   = result[2],
                     FieldTypes      = Elm.getElement('[name="type"]'),
                     FieldPriority   = Elm.getElement('[name="priority"]'),
                     FieldPrefix     = Elm.getElement('[name="prefix"]'),
@@ -117,10 +121,17 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     FieldSystem     = Elm.getElement('[name="systemField"]'),
                     FieldStandard   = Elm.getElement('[name="standardField"]');
 
-                for (var i = 0, len = fieldTypes.length; i < len; i++) {
+                for (i = 0, len = fieldTypes.length; i < len; i++) {
+                    settings = '';
+
+                    if (fieldTypes[i] in fieldSettings) {
+                        settings = fieldSettings[fieldTypes[i]];
+                    }
+
                     new Element('option', {
-                        html : QUILocale.get('quiqqer/products', 'fieldtype.' + fieldTypes[i]),
-                        value: fieldTypes[i]
+                        html           : QUILocale.get(lg, 'fieldtype.' + fieldTypes[i]),
+                        value          : fieldTypes[i],
+                        'data-settings': settings
                     }).inject(FieldTypes);
                 }
 
@@ -134,6 +145,14 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 FieldRequired.checked = fieldData.isRequired;
                 FieldSystem.checked   = fieldData.isSystem;
                 FieldStandard.checked = fieldData.standard;
+
+                var loadSettings = function () {
+                    self.$loadSettings(this);
+                }.bind(FieldTypes);
+
+                FieldTypes.addEvent('change', loadSettings);
+
+                loadSettings();
 
                 self.fireEvent('loaded');
             });
@@ -169,6 +188,112 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     return self.$Translation.save();
                 }).then(resolve()).catch(reject);
             });
+        },
+
+        /**
+         * Load the extra settings from a field type
+         *
+         * @param {HTMLSelectElement} FieldTypes
+         */
+        $loadSettings: function (FieldTypes) {
+            var Option   = FieldTypes.getElement('[value="' + FieldTypes.value + '"]'),
+                settings = Option.get('data-settings');
+
+            var TableNode = FieldTypes.getParent('table'),
+                Cell      = TableNode.getElement('.extra-settings');
+
+            FieldTypes.disabled = true;
+
+            if (settings === '') {
+                var Container = Cell.getFirst('div');
+
+                if (!Container) {
+                    FieldTypes.disabled = false;
+                    FieldTypes.focus();
+                    return;
+                }
+
+                moofx([Container, Cell]).animate({
+                    height : 0,
+                    opacity: 0,
+                    margin : 0,
+                    padding: 0
+                }, {
+                    duration: 200,
+                    callback: function () {
+                        Cell.set('html', '');
+
+                        Cell.setStyles({
+                            display: 'none',
+                            padding: null
+                        });
+
+                        FieldTypes.disabled = false;
+                        FieldTypes.focus();
+                    }
+                });
+
+                return;
+            }
+
+            Cell.set({
+                html  : '<span class="fa fa-spinner fa-spin"></span>',
+                styles: {
+                    display: null
+                }
+            });
+
+            require([settings], function (Control) {
+                moofx(Cell).animate({
+                    opacity: 0
+                }, {
+                    duration: 200,
+                    callback: function () {
+                        Cell.set({
+                            html  : '',
+                            styles: {
+                                height: Cell.getSize().y
+                            }
+                        });
+
+                        var Container = new Element('div', {
+                            styles: {
+                                'float' : 'left',
+                                height  : 0,
+                                overflow: 'hidden',
+                                opacity : 0,
+                                width   : '100%'
+                            }
+                        }).inject(Cell);
+
+                        Cell.setStyle('opacity', 1);
+
+                        new Control().inject(Container);
+
+                        moofx(Container).animate({
+                            height : Container.getScrollSize().y,
+                            opacity: 1
+                        }, {
+                            duration: 200,
+                            callback: function () {
+                                FieldTypes.disabled = false;
+                                FieldTypes.focus();
+                            }
+                        });
+                    }
+                });
+
+            }, function () {
+                Cell.set({
+                    html  : '',
+                    styles: {
+                        display: 'none'
+                    }
+                });
+
+                FieldTypes.disabled = false;
+            });
+
         }
     });
 });

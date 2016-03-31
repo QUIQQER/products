@@ -87,6 +87,7 @@ class Product extends QUI\Control
             }
         }
 
+
         // pricedisplay
         $PriceDisplay = new QUI\ERP\Products\Controls\Price(array(
             'Price' => $Product->getPrice()
@@ -97,6 +98,7 @@ class Product extends QUI\Control
             'Product' => $this->getAttribute('Product'),
             'Gallery' => $Gallery,
             'fields' => $fields,
+            'productAttributeList' => $Product->getFieldsByType('ProductAttributeList'),
             'PriceDisplay' => $PriceDisplay,
             'WatchlistButton' => new WatchlistButton(array(
                 'Product' => $Product,
