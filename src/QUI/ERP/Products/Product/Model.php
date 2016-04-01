@@ -122,6 +122,10 @@ class Model extends QUI\QDOM
                 $Field = Fields::getFieldByType($field['type'], $field['id']);
                 $Field->setValue($field['value']);
 
+                if (isset($field['unassigned'])) {
+                    $Field->setUnassignedStatus($field['unassigned']);
+                }
+
                 $this->fields[$Field->getId()] = $Field;
 
             } catch (QUI\Exception $Exception) {
@@ -451,8 +455,10 @@ class Model extends QUI\QDOM
             $value = $Field->getValue();
 
             $Field->setUnassignedStatus(
-                isset($categoryFields[$Field->getId()])
+                !isset($categoryFields[$Field->getId()])
             );
+
+            QUI\System\Log::writeRecursive($Field->toProductArray());
 
             if (!$Field->isRequired()) {
                 $Field->validate($value);

@@ -93,11 +93,18 @@ class Product extends QUI\Control
             'Price' => $Product->getPrice()
         ));
 
+        // attribute list fields
+        $attributeListFields = $Product->getFieldsByType('ProductAttributeList');
+        $attributeListFields = array_filter($attributeListFields, function ($Field) {
+            /* @var $Field QUI\ERP\Products\Interfaces\Field */
+            return !$Field->isUnassigned();
+        });
+
         $Engine->assign(array(
             'Product' => $this->getAttribute('Product'),
             'Gallery' => $Gallery,
             'fields' => $fields,
-            'productAttributeList' => $Product->getFieldsByType('ProductAttributeList'),
+            'productAttributeList' => $attributeListFields,
             'PriceDisplay' => $PriceDisplay,
             'WatchlistButton' => new WatchlistButton(array(
                 'Product' => $Product,
