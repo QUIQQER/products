@@ -1,0 +1,25 @@
+.quiqqer-products-attributeList-entry-create .field-container {
+    margin-bottom: 10px;
+}
+
+.quiqqer-products-attributeList-entry-create .field-attributeList-title input {
+    max-width: 300px;
+    width: 100%;
+}
+
+.quiqqer-products-attributeList-entry-create .field-container-item {
+    width: 180px;
+}
+
+.quiqqer-products-attributeList-entry-create .field-attributeList-price input {
+    float: left;
+    max-width: 300px;
+    width: 66.666%;
+}
+
+.quiqqer-products-attributeList-entry-create .field-attributeList-price select {
+    float: left;
+    margin-left: 5px;
+    max-width: 300px;
+    width: calc(33% - 5px);
+}

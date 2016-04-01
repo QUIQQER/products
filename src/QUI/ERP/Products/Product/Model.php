@@ -408,9 +408,51 @@ class Model extends QUI\QDOM
         $fields     = $this->getFields();
         $categories = $this->getCategories();
 
+        $categoryFields = array();
+
         /* @var $Field Field */
+        /* @var $Category Category */
+
+        // get category field data
+        foreach ($categories as $Category) {
+            $categoryData[] = $Category->getId();
+            $categoryFields = $Category->getFields();
+
+            foreach ($categoryFields as $Field) {
+                $categoryFields[$Field->getId()] = true;
+            }
+        }
+
+        // helper function
+        $isFieldIdInArray = function ($fieldId, $array) {
+            /* @var $Field Field */
+            foreach ($array as $Field) {
+                if ($Field->getId() == $fieldId) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        // look if the product miss some category fields
+        foreach ($categoryFields as $fieldId => $val) {
+            if ($isFieldIdInArray($fieldId, $fields) === false) {
+                $CategoryField = $Category->getField($fieldId);
+
+                if ($CategoryField) {
+                    $fields[] = $CategoryField;
+                }
+            }
+        }
+
+        // generate the product field data
         foreach ($fields as $Field) {
             $value = $Field->getValue();
+
+            $Field->setUnassignedStatus(
+                isset($categoryFields[$Field->getId()])
+            );
 
             if (!$Field->isRequired()) {
                 $Field->validate($value);
@@ -457,11 +499,7 @@ class Model extends QUI\QDOM
             $fieldData[] = $Field->toProductArray();
         }
 
-        /* @var $Category Category */
-        foreach ($categories as $Category) {
-            $categoryData[] = $Category->getId();
-        }
-
+        // set main category
         $mainCategory = '';
         $Category     = $this->getCategory();
 

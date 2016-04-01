@@ -409,6 +409,19 @@
             <en><![CDATA[Search]]></en>
         </locale>
 
+        <locale name="fields.control.productAttributeListSettings.grid.discountSurcharge">
+            <de><![CDATA[Auf/Abschlag]]></de>
+            <en><![CDATA[Discount/surcharge]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeListSettings.grid.currencyPercentType">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeListSettings.grid.price">
+            <de><![CDATA[Preis]]></de>
+            <en><![CDATA[Price]]></en>
+        </locale>
+
     </groups>
 
 

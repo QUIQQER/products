@@ -40,6 +40,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $require = false;
 
     /**
+     * @var bool
+     */
+    protected $unassigned = false;
+
+    /**
      * Field-Name
      *
      * @var string
@@ -209,6 +214,28 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Is the field unassigned?
+     *
+     * @return bool
+     */
+    public function isUnassigned()
+    {
+        return $this->unassigned;
+    }
+
+    /**
+     * Set the unassigned status
+     *
+     * @param bool $status
+     */
+    public function setUnassignedStatus($status)
+    {
+        if (is_bool($status)) {
+            $this->unassigned = $status;
+        }
+    }
+
+    /**
      * Set the field name
      *
      * @param string $name
@@ -312,7 +339,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         return array(
             'id' => (string)$this->getId(),
             'value' => $this->getValue(),
-            'type' => $this->getType()
+            'type' => $this->getType(),
+            'unassigned' => $this->isUnassigned()
         );
     }
 

@@ -622,6 +622,26 @@ class Category extends QUI\QDOM
     }
 
     /**
+     * Return a category field
+     *
+     * @param integer $fieldId - Field-ID
+     * @return QUI\ERP\Products\Field\Field
+     */
+    public function getField($fieldId)
+    {
+        $fields = $this->getFields();
+
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        foreach ($fields as $Field) {
+            if ($Field->getId() == $fieldId) {
+                return $Field;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * saves the field
      *
      * @param boolean|QUI\Interfaces\Users\User $User

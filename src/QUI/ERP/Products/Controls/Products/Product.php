@@ -93,7 +93,6 @@ class Product extends QUI\Control
             'Price' => $Product->getPrice()
         ));
 
-
         $Engine->assign(array(
             'Product' => $this->getAttribute('Product'),
             'Gallery' => $Gallery,

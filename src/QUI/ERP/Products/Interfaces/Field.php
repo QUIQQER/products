@@ -96,4 +96,22 @@ interface Field
      * @return mixed
      */
     public function cleanup($value);
+
+    /**
+     * Deleted
+     */
+
+    /**
+     * Is the field unassigned
+     *
+     * @return boolean
+     */
+    public function isUnassigned();
+
+    /**
+     * Set the unassigned field status
+     *
+     * @param boolean $status
+     */
+    public function setUnassignedStatus($status);
 }
