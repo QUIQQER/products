@@ -54,7 +54,8 @@ class Fields
             'priority',
             'standardField',
             'systemField',
-            'requiredField'
+            'requiredField',
+            'options'
         );
     }
 

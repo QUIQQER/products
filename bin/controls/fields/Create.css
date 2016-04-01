@@ -19,3 +19,7 @@
     height: 100%;
     width: 100%;
 }
+
+.field-options {
+    position: relative;
+}

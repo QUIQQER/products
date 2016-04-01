@@ -72,6 +72,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     tableHeader      : QUILocale.get(lg, 'control.field.create.header'),
                     fieldTitle       : QUILocale.get('quiqqer/system', 'title'),
                     fieldType        : QUILocale.get(lg, 'fieldtype'),
+                    fieldOptions     : QUILocale.get(lg, 'fieldoptions'),
                     fieldPriority    : QUILocale.get(lg, 'priority'),
                     fieldPrefix      : QUILocale.get(lg, 'prefix'),
                     fieldSuffix      : QUILocale.get(lg, 'suffix'),
@@ -113,6 +114,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     fieldData       = result[0],
                     fieldSettings   = result[2],
                     FieldTypes      = Elm.getElement('[name="type"]'),
+                    FieldOptions    = Elm.getElement('[name="options"]'),
                     FieldPriority   = Elm.getElement('[name="priority"]'),
                     FieldPrefix     = Elm.getElement('[name="prefix"]'),
                     FieldSuffix     = Elm.getElement('[name="suffix"]'),
@@ -137,6 +139,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
                 // set data to the form
                 FieldTypes.value      = fieldData.type;
+                FieldOptions.value    = fieldData.options;
                 FieldPriority.value   = fieldData.priority;
                 FieldPrefix.value     = fieldData.prefix;
                 FieldSuffix.value     = fieldData.suffix;
@@ -176,6 +179,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 var Form    = Elm.getElement('form'),
                     fieldId = self.getAttribute('fieldId');
 
+                // trigger update
                 Fields.updateChild(fieldId, {
                     type         : Form.elements.type.value,
                     search_type  : Form.elements.search_type.value,
@@ -183,7 +187,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     suffix       : Form.elements.suffix.value,
                     priority     : Form.elements.priority.value,
                     standardField: Form.elements.standardField.checked ? 1 : 0,
-                    requiredField: Form.elements.requiredField.checked ? 1 : 0
+                    requiredField: Form.elements.requiredField.checked ? 1 : 0,
+                    options      : Form.elements.options.value
                 }).then(function () {
                     return self.$Translation.save();
                 }).then(resolve()).catch(reject);
@@ -196,24 +201,27 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
          * @param {HTMLSelectElement} FieldTypes
          */
         $loadSettings: function (FieldTypes) {
-            var Option   = FieldTypes.getElement('[value="' + FieldTypes.value + '"]'),
+            var self     = this,
+                Option   = FieldTypes.getElement('[value="' + FieldTypes.value + '"]'),
                 settings = Option.get('data-settings');
 
-            var TableNode = FieldTypes.getParent('table'),
-                Cell      = TableNode.getElement('.extra-settings');
+            var Form        = FieldTypes.getParent('form'),
+                FormOptions = Form.elements.options,
+                Container   = Form.getElement('.field-options'),
+                Cell        = Container.getParent('td'),
+                Label       = Cell.getElement('label');
+
+            if (!FormOptions) {
+                FormOptions = new Element('input', {
+                    type: 'hidden',
+                    name: 'options'
+                }).inject(Container);
+            }
 
             FieldTypes.disabled = true;
 
             if (settings === '') {
-                var Container = Cell.getFirst('div');
-
-                if (!Container) {
-                    FieldTypes.disabled = false;
-                    FieldTypes.focus();
-                    return;
-                }
-
-                moofx([Container, Cell]).animate({
+                moofx([Container, Cell, Label]).animate({
                     height : 0,
                     opacity: 0,
                     margin : 0,
@@ -221,11 +229,15 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 }, {
                     duration: 200,
                     callback: function () {
-                        Cell.set('html', '');
-
                         Cell.setStyles({
                             display: 'none',
                             padding: null
+                        });
+
+                        Container.getChildren().each(function (Child) {
+                            if (Child != FormOptions) {
+                                Child.destroy();
+                            }
                         });
 
                         FieldTypes.disabled = false;
@@ -236,43 +248,68 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 return;
             }
 
-            Cell.set({
-                html  : '<span class="fa fa-spinner fa-spin"></span>',
-                styles: {
-                    display: null
+            var Loader = new Element('span', {
+                'class': 'fa fa-spinner fa-spin',
+                styles : {
+                    left    : 10,
+                    position: 'absolute',
+                    top     : 10
                 }
+            }).inject(Container);
+
+            Label.setStyles({
+                display : null,
+                height  : 0,
+                overflow: 'hidden',
+                position: 'relative'
             });
 
-            require([settings], function (Control) {
-                moofx(Cell).animate({
-                    opacity: 0
-                }, {
-                    duration: 200,
-                    callback: function () {
-                        Cell.set({
-                            html  : '',
-                            styles: {
-                                height: Cell.getSize().y
-                            }
+            Cell.setStyles({
+                display : null,
+                overflow: 'hidden',
+                padding : null
+            });
+
+            moofx([Label, Cell, Container]).animate({
+                height : 40,
+                opacity: 1
+            }, {
+                duration: 200,
+                callback: function () {
+                    require([settings], function (Control) {
+
+                        Label.setStyles({
+                            height  : Label.getSize().y,
+                            position: null
                         });
 
-                        var Container = new Element('div', {
-                            styles: {
-                                'float' : 'left',
-                                height  : 0,
-                                overflow: 'hidden',
-                                opacity : 0,
-                                width   : '100%'
-                            }
-                        }).inject(Cell);
+                        Cell.setStyles({
+                            height: null
+                        });
 
-                        Cell.setStyle('opacity', 1);
+                        Container.setStyles({
+                            height : null,
+                            opacity: null,
+                            margin : null,
+                            padding: null,
+                            width  : Container.getSize().x
+                        });
 
-                        new Control().inject(Container);
+                        Loader.destroy();
 
-                        moofx(Container).animate({
-                            height : Container.getScrollSize().y,
-                            opacity: 1
+                        new Control({
+                            fieldId: self.getAttribute('fieldId')
+                        }).imports(FormOptions);
+
+                        var height   = Container.getScrollSize().y,
+                            computed = Container.getComputedSize();
+
+                        height = height +
+                                 computed['padding-top'] +
+                                 computed['padding-bottom'];
+
+                        moofx(Label).animate({
+                            height: height
                         }, {
                             duration: 200,
                             callback: function () {
@@ -280,18 +317,12 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                                 FieldTypes.focus();
                             }
                         });
-                    }
-                });
 
-            }, function () {
-                Cell.set({
-                    html  : '',
-                    styles: {
-                        display: 'none'
-                    }
-                });
 
-                FieldTypes.disabled = false;
+                    }, function () {
+                        FieldTypes.disabled = false;
+                    });
+                }
             });
 
         }

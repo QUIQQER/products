@@ -48,6 +48,10 @@
             <de><![CDATA[Feld-Typ]]></de>
             <en><![CDATA[Field type]]></en>
         </locale>
+        <locale name="fieldoptions">
+            <de><![CDATA[Feld-Optionen]]></de>
+            <en><![CDATA[Field options]]></en>
+        </locale>
         <locale name="priority">
             <de><![CDATA[Sortierung]]></de>
             <en><![CDATA[Sorting]]></en>

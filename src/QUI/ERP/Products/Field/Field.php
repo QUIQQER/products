@@ -137,6 +137,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
     /**
      * saves / update the field
+     *
+     * @todo value check
      */
     public function save()
     {
@@ -151,6 +153,17 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 $data[$attribute] = $this->getAttribute($attribute);
             } else {
                 $data[$attribute] = '';
+            }
+        }
+
+        // options json check
+        if (isset($data['options'])) {
+            $options = json_decode($data['options'], true);
+
+            if ($options) {
+                $data['options'] = json_encode($options);
+            } else {
+                $data['options'] = '';
             }
         }
 
