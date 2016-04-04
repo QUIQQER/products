@@ -574,8 +574,13 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
                                             Update.save().then(function () {
                                                 return Sheet.hide();
+
                                             }).then(function () {
                                                 return self.refresh();
+
+                                            }).then(function () {
+                                                return self.setFieldsToAllProducts(categoryId);
+
                                             }).then(function () {
                                                 self.Loader.hide();
                                             });
@@ -629,6 +634,36 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     }
                 }
             }).open();
+        },
+
+        /**
+         * Update all product fields with the category id fields
+         *
+         * @param {Number} categoryId
+         * @returns {Promise}
+         */
+        setFieldsToAllProducts: function (categoryId) {
+            return new Promise(function (resolve) {
+                new QUIConfirm({
+                    icon       : 'fa fa-object-group',
+                    texticon   : false,
+                    title      : 'Feld Einstellungen auf alle Produkte übernehmen',
+                    text       : 'Möchten Sie die Felder der Kategorie [category] auf alle Produkte in der Kategorie anwenden?',
+                    information: 'Alle Feld Einstellungen werden auf alle Produkte in der Kategorie angwendet. ' +
+                                 'Es werden nur Felder, welche in der Kategorie sind, auf die Produkte überschrieben.' +
+                                 'Etwaige Einstellungen in den Produkten werden somit überschrieben.',
+                    maxHeight  : 400,
+                    maxWidth   : 600,
+                    events     : {
+                        onSubmit: function () {
+                            Categories.setFieldsToAllProducts(categoryId).then(resolve);
+                        },
+                        onCancel: function () {
+                            resolve();
+                        }
+                    }
+                }).open();
+            });
         }
     });
 });

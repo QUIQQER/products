@@ -52,14 +52,14 @@
     width: 100%;
 }
 
-.product-data-field {
+.product-data-fieldlist .quiqqer-product-field {
     clear: both;
     float: left;
     width: 100%;
 }
 
-.product-data-field-title,
-.product-data-field-values {
+.product-data-fieldlist .quiqqer-product-field-title,
+.product-data-fieldlist .quiqqer-product-field-value {
     float: left;
     width: 50%;
 }

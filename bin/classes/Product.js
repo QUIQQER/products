@@ -195,6 +195,21 @@ define('package/quiqqer/products/bin/classes/Product', [
                 }.bind(this)).catch(reject);
 
             }.bind(this));
+        },
+
+        /**
+         * Return the caluclated product price
+         *
+         * @returns {Promise}
+         */
+        getPrice: function () {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_product_calc', resolve, {
+                    'package' : 'quiqqer/watchlist',
+                    productId : this.getId(),
+                    attributes: this.getAttributes()
+                });
+            }.bind(this));
         }
     });
 });

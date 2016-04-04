@@ -47,6 +47,8 @@ class Product extends QUI\Control
         $Gallery = new QUI\Gallery\Controls\Slider();
         $fields  = array();
 
+        $this->setAttribute('data-productid', $Product->getId());
+
         // galery
         $PlaceholderImage = $this->getProject()->getMedia()->getPlaceholderImage();
 

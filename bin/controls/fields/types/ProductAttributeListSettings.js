@@ -162,7 +162,11 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             this.$Input = Node;
             this.$Elm   = this.create();
 
-            this.$data = JSON.decode(this.$Input.value);
+            try {
+                this.$data = JSON.decode(this.$Input.value);
+            } catch (e) {
+                console.error(e);
+            }
 
             if (!this.$data) {
                 this.$data = [];

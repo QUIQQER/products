@@ -191,15 +191,35 @@ define('package/quiqqer/products/bin/classes/Categories', [
          *
          * @param {Number} categoryId - Category-ID
          * @param {Object} params - Category attributes
+         * @param {Boolean} [updateProductFields] - Update all fields from the products, too
          * @returns {Promise}
          */
-        updateChild: function (categoryId, params) {
+        updateChild: function (categoryId, params, updateProductFields) {
+            updateProductFields = updateProductFields || false;
+
             return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_categories_update', resolve, {
-                    'package' : 'quiqqer/products',
-                    onError   : reject,
-                    categoryId: categoryId,
-                    params    : JSON.encode(params)
+                    'package'          : 'quiqqer/products',
+                    onError            : reject,
+                    categoryId         : categoryId,
+                    params             : JSON.encode(params),
+                    updateProductFields: updateProductFields
+                });
+            });
+        },
+
+        /**
+         * Update all product fields with the category id fields
+         *
+         * @param {Number} categoryId
+         * @returns {Promise}
+         */
+        setFieldsToAllProducts: function (categoryId) {
+            return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_categories_setFieldsToAllProducts', resolve, {
+                    'package'          : 'quiqqer/products',
+                    onError            : reject,
+                    categoryId         : categoryId
                 });
             });
         }

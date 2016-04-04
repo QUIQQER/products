@@ -13,7 +13,13 @@
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_update',
-    function ($categoryId, $params) {
+    function ($categoryId, $params, $updateProductFields) {
+        if (!isset($updateProductFields)) {
+            $updateProductFields = false;
+        }
+
+        $updateProductFields = (bool)$updateProductFields;
+
         $Categories = new QUI\ERP\Products\Handler\Categories();
         $Fields     = new QUI\ERP\Products\Handler\Fields();
         $Category   = $Categories->getCategory($categoryId);
@@ -36,7 +42,11 @@ QUI::$Ajax->registerFunction(
 
         $Category->setAttributes($params);
         $Category->save();
+
+        if ($updateProductFields) {
+            $Category->setFieldsToAllProducts();
+        }
     },
-    array('categoryId', 'params'),
+    array('categoryId', 'params', 'updateProductFields'),
     'Permission::checkAdminUser'
 );

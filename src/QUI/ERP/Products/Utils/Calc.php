@@ -42,7 +42,8 @@ class Calc
      */
     public static function getProductPrice(Product $Product)
     {
-        $Price = $Product->getPrice();
+        $Price  = $Product->getPrice();
+        $fields = $Product->getFields();
 
         // @todo muss richtig implementiert werden
         if (method_exists($Product, 'getQuantity')) {

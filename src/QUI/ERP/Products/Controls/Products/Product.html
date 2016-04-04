@@ -25,10 +25,7 @@
         <div class="product-data-fieldlist">
             {foreach $productAttributeList as $Field}
             {if !$Field->isUnassigned()}
-            <div class="product-data-field">
-                <div class="product-data-field-title">{$Field->getTitle()}</div>
-                <div class="product-data-field-values">---</div>
-            </div>
+                {$Field->getView()->create()}
             {/if}
             {/foreach}
         </div>

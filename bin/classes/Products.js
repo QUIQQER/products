@@ -46,6 +46,23 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Calculate the product price
+         *
+         * @param {Number} productId - Product ID
+         * @param {Object} fields - Fields with values {field: value, field: value ..., field: value}
+         * @returns {Promise}
+         */
+        calcPrice: function (productId, fields) {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_products_calc', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: productId,
+                    fields   : JSON.encode(fields)
+                });
+            });
+        },
+
+        /**
          * Return the parent media folder for the products
          * @returns {Promise}
          */

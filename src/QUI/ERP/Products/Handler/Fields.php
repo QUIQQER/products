@@ -388,9 +388,14 @@ class Fields
             $data['suffix'] = '';
         }
 
+        if (empty($data['options'])) {
+            $data['options'] = '';
+        }
+
         $Field->setAttribute('priority', $data['priority']);
         $Field->setAttribute('prefix', $data['prefix']);
         $Field->setAttribute('suffix', $data['suffix']);
+        $Field->setOptions($data['options']);
 
         self::$list[$fieldId] = $Field;
 

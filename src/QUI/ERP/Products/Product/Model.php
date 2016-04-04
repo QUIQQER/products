@@ -48,7 +48,7 @@ class Model extends QUI\QDOM
     /**
      * Model constructor
      *
-     * @param integer $pid
+     * @param integer $pid - Product-ID
      *
      * @throws QUI\Exception
      */
@@ -121,6 +121,10 @@ class Model extends QUI\QDOM
             try {
                 $Field = Fields::getFieldByType($field['type'], $field['id']);
                 $Field->setValue($field['value']);
+
+                if (isset($field['options'])) {
+                    $Field->setOptions($field['options']);
+                }
 
                 if (isset($field['unassigned'])) {
                     $Field->setUnassignedStatus($field['unassigned']);

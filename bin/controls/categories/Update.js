@@ -272,7 +272,7 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
         /**
          * Save the category
          *
-         * @returns {Object}
+         * @returns {Promise}
          */
         save: function () {
             var self       = this,

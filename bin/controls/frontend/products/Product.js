@@ -46,6 +46,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
             this.$Tabbar = null;
             this.$tabs   = null;
             this.$Touch  = null;
+            this.$Price  = null;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -64,7 +65,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * event : on import
          */
         $onImport: function () {
-            var Elm = this.getElm();
+            var self = this,
+                Elm  = this.getElm();
+
+            this.setAttribute('productId', Elm.get('data-productid'));
 
             this.$Tabbar       = Elm.getElement('.product-data-more-tabs');
             this.$Sheets       = Elm.getElement('.product-data-more-sheets');
@@ -94,6 +98,62 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                     this.nextTab();
                 }
             }.bind(this));
+
+
+            QUI.parse(Elm).then(function () {
+                // price
+                var Price = Elm.getElement('.quiqqer-price"');
+
+                this.$Price = QUI.Controls.getById(Price.get('data-quiid'));
+
+                // field events
+                var fields = this.getFieldControls();
+
+                fields.each(function (Control) {
+                    Control.addEvent('onChange', function () {
+                        self.calcPrice();
+                    });
+                });
+
+            }.bind(this));
+        },
+
+        /**
+         * Return all field controls in the product
+         *
+         * @return {Array}
+         */
+        getFieldControls: function () {
+            var controls = QUI.Controls.getControlsInElement(this.getElm());
+
+            return controls.filter(function (Control) {
+                if (!('isField' in Control)) {
+                    return false;
+                }
+
+                return Control.isField();
+            });
+        },
+
+        /**
+         * Calculate the product price
+         *
+         * @returns {Promise}
+         */
+        calcPrice: function () {
+            var fields    = this.getFieldControls(),
+                fieldData = fields.map(function (Field) {
+                    var data = {};
+
+                    data[Field.getFieldId()] = Field.getValue();
+
+                    return data;
+                });
+
+            Products.calcPrice(this.getAttribute('productId'), fieldData).then(function (price) {
+                console.warn(price);
+            });
+
         },
 
         /**

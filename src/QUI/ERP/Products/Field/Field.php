@@ -45,6 +45,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $unassigned = false;
 
     /**
+     * @var array
+     */
+    protected $options = array();
+
+    /**
      * Field-Name
      *
      * @var string
@@ -90,6 +95,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         ) {
             $this->standard = $params['standard'] ? true : false;
         }
+
+        if (isset($params['options'])) {
+            $this->setOptions($params['options']);
+        }
     }
 
     /**
@@ -97,14 +106,36 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return \QUI\ERP\Products\Field\View
      */
-    abstract protected function getBackendView();
+    protected function getBackendView()
+    {
+        return new View(array(
+            'id' => $this->getId(),
+            'value' => $this->getValue(),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority'),
+            'options' => $this->getOptions()
+        ));
+    }
 
     /**
      * Return the view for the frontend
      *
      * @return \QUI\ERP\Products\Field\View
      */
-    abstract protected function getFrontendView();
+    protected function getFrontendView()
+    {
+        return new View(array(
+            'id' => $this->getId(),
+            'value' => $this->getValue(),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority'),
+            'options' => $this->getOptions()
+        ));
+    }
 
     /**
      * Return the name of the JavaScript Control for the field
@@ -162,14 +193,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         }
 
         // options json check
-        if (isset($data['options'])) {
-            $options = json_decode($data['options'], true);
+        $data['options'] = '';
+        $options         = json_encode($this->getOptions());
 
-            if ($options) {
-                $data['options'] = json_encode($options);
-            } else {
-                $data['options'] = '';
-            }
+        if ($options) {
+            $data['options'] = json_encode($options);
         }
 
         QUI::getDataBase()->update(
@@ -259,6 +287,20 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * @param array|string $options - field options
+     */
+    public function setOptions($options)
+    {
+        if (is_string($options)) {
+            $options = json_decode($options, true);
+        }
+
+        if (is_array($options)) {
+            $this->options = $options;
+        }
+    }
+
+    /**
      * Return the field name
      *
      * @return string
@@ -274,6 +316,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @return array|string
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 
     /**
@@ -318,10 +368,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getAttributes()
     {
-        $attributes          = parent::getAttributes();
-        $attributes['id']    = $this->getId();
-        $attributes['title'] = $this->getTitle();
-        $attributes['type']  = $this->getType();
+        $attributes            = parent::getAttributes();
+        $attributes['id']      = $this->getId();
+        $attributes['title']   = $this->getTitle();
+        $attributes['type']    = $this->getType();
+        $attributes['options'] = $this->getOptions();
 
         $attributes['isRequired'] = $this->isRequired();
         $attributes['isStandard'] = $this->isStandard();
@@ -340,7 +391,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             'id' => (string)$this->getId(),
             'value' => $this->getValue(),
             'type' => $this->getType(),
-            'unassigned' => $this->isUnassigned()
+            'unassigned' => $this->isUnassigned(),
+            'options' => $this->getOptions()
         );
     }
 

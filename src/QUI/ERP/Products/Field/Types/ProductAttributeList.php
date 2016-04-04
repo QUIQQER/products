@@ -28,6 +28,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\Field
 {
     /**
      * ProductAttributeList constructor.
+     *
      * @param int $fieldId
      * @param array $params
      */
@@ -41,19 +42,21 @@ class ProductAttributeList extends QUI\ERP\Products\Field\Field
     }
 
     /**
+     * Return the FrontendView
      *
-     */
-    public function getBackendView()
-    {
-        // TODO: Implement getBackendView() method.
-    }
-
-    /**
-     *
+     * @return ProductAttributeListFrontendView
      */
     public function getFrontendView()
     {
-        // TODO: Implement getFrontendView() method.
+        return new ProductAttributeListFrontendView(array(
+            'id' => $this->getId(),
+            'value' => $this->getValue(),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority'),
+            'options' => $this->getOptions()
+        ));
     }
 
     /**

@@ -321,6 +321,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
                     }, function (err) {
                         console.error(err);
+                        console.error(arguments);
                         FieldTypes.disabled = false;
                     });
                 }

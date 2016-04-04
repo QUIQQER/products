@@ -7,6 +7,8 @@ namespace QUI\ERP\Products\Category;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Product\Product;
 
 /**
  * Class Category
@@ -492,7 +494,7 @@ class Category extends QUI\QDOM
             $query['debug'] = $params['debug'];
         }
 
-        return QUI\ERP\Products\Handler\Products::getProducts($query);
+        return Products::getProducts($query);
     }
 
     /**
@@ -536,7 +538,7 @@ class Category extends QUI\QDOM
             $query['debug'] = $params['debug'];
         }
 
-        return QUI\ERP\Products\Handler\Products::getProductIds($query);
+        return Products::getProductIds($query);
     }
 
     /**
@@ -546,7 +548,7 @@ class Category extends QUI\QDOM
      */
     public function countProducts()
     {
-        return QUI\ERP\Products\Handler\Products::countProducts(array(
+        return Products::countProducts(array(
             'where' => array(
                 'categories' => array(
                     'type' => '%LIKE%',
@@ -554,6 +556,24 @@ class Category extends QUI\QDOM
                 )
             )
         ));
+    }
+
+    /**
+     * Set all field settings to all products in the category
+     */
+    public function setFieldsToAllProducts()
+    {
+        $productIds = $this->getProductIds();
+        $fields     = $this->getFields();
+
+        foreach ($productIds as $productId) {
+            $Product = new Product($productId);
+
+            foreach ($fields as $Field) {
+                $Product->addField($Field);
+                $Product->save();
+            }
+        }
     }
 
     /**
@@ -584,6 +604,10 @@ class Category extends QUI\QDOM
                         $Field = Fields::getField($field['id']);
                         $Field->setAttribute('publicStatus', $field['publicStatus']);
                         $Field->setAttribute('searchStatus', $field['searchStatus']);
+
+                        if (isset($field['options'])) {
+                            $Field->setOptions($field['options']);
+                        }
 
                         $this->fields[] = $Field;
 
@@ -657,6 +681,7 @@ class Category extends QUI\QDOM
             $attributes                 = $Field->getAttributes();
             $attributes['publicStatus'] = $Field->getAttribute('publicStatus') ? 1 : 0;
             $attributes['searchStatus'] = $Field->getAttribute('searchStatus') ? 1 : 0;
+            $attributes['options']      = $Field->getOptions();
 
             $fields[] = $attributes;
         }

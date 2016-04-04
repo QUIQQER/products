@@ -20,6 +20,11 @@ class View
     protected $value = '';
 
     /**
+     * @var string|int
+     */
+    protected $id = '';
+
+    /**
      * @var string
      */
     protected $title = '';
@@ -40,12 +45,21 @@ class View
     protected $priority = 0;
 
     /**
+     * @var array
+     */
+    protected $options = array();
+
+    /**
      * View constructor
      *
      * @param array $data
      */
     public function __construct($data = array())
     {
+        if (isset($data['id'])) {
+            $this->id = $data['id'];
+        }
+
         if (isset($data['value'])) {
             $this->value = $data['value'];
         }
@@ -65,6 +79,18 @@ class View
         if (isset($data['priority'])) {
             $this->priority = (int)$data['priority'];
         }
+
+        if (isset($data['options']) && is_array($data['options'])) {
+            $this->options = $data['options'];
+        }
+    }
+
+    /**
+     * @return string|int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -105,5 +131,26 @@ class View
     public function getPriority()
     {
         return $this->priority;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * Return the html
+     *
+     * @return string
+     */
+    public function create()
+    {
+        return '<div class="quiqqer-product-field">
+            <div class="quiqqer-product-field-title">' . $this->getTitle() . '</div>
+            <div class="quiqqer-product-field-value">' . $this->getValue() . '</div>
+        </div>';
     }
 }
