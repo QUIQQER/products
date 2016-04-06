@@ -47,6 +47,11 @@ class Product extends QUI\Control
         $Gallery = new QUI\Gallery\Controls\Slider();
         $fields  = array();
 
+        if ($Product instanceof QUI\ERP\Products\Product\Product) {
+            $Product = $Product->getView();
+        }
+
+        /* @var $Product QUI\ERP\Products\Product\UniqueProduct */
         $this->setAttribute('data-productid', $Product->getId());
 
         // galery

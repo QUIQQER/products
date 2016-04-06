@@ -161,7 +161,7 @@ class Model extends QUI\QDOM
      */
     public function getViewFrontend()
     {
-        return new ViewFrontend($this);
+        return new ViewFrontend($this->createUniqueProduct());
     }
 
     /**
@@ -169,7 +169,20 @@ class Model extends QUI\QDOM
      */
     public function getViewBackend()
     {
-        return new ViewBackend($this);
+        return new ViewBackend($this->createUniqueProduct());
+    }
+
+    /**
+     * Return the product as unique product
+     *
+     * @return UniqueProduct
+     */
+    public function createUniqueProduct()
+    {
+        return new UniqueProduct(
+            $this->getId(),
+            $this->getAttributes()
+        );
     }
 
     /**
@@ -302,12 +315,12 @@ class Model extends QUI\QDOM
     /**
      * Return the value of an language field
      *
-     * @param integer $Field - optional
+     * @param integer $field - optional
      * @param QUI\Locale|Boolean $Locale - optional
      *
      * @return string|boolean
      */
-    protected function getLanguageFieldValue($Field, $Locale = false)
+    protected function getLanguageFieldValue($field, $Locale = false)
     {
         if (!$Locale) {
             $Locale = QUI::getLocale();
@@ -316,7 +329,7 @@ class Model extends QUI\QDOM
         $current = $Locale->getCurrent();
 
         try {
-            $Field = $this->getField($Field);
+            $Field = $this->getField($field);
             $data  = $Field->getValue();
 
             if (isset($data[$current])) {

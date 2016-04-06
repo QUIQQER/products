@@ -55,4 +55,14 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\Product
 
         $this->Category = $Category;
     }
+
+    /**
+     * Return
+     */
+    public function getPriceFactors()
+    {
+        $result = array();
+
+        return $result;
+    }
 }

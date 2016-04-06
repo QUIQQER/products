@@ -64,6 +64,10 @@
     width: 50%;
 }
 
+.product-data-fieldlist .quiqqer-product-field-value select {
+    width: 100%;
+}
+
 /** Preis
  =========================================== */
 

@@ -9,15 +9,8 @@ namespace QUI\ERP\Products\Interfaces;
  * Interface Field
  * @package QUI\ERP\Products\Interfaces
  */
-interface Field
+interface Field extends UniqueField
 {
-    /**
-     * Return the field id
-     *
-     * @return integer
-     */
-    public function getId();
-
     /**
      * Return the field for the product as an array
      * @return array
@@ -32,53 +25,12 @@ interface Field
     public function setName($value);
 
     /**
-     * Return the field name
-     *
-     * @return mixed
-     */
-    public function getName();
-
-    /**
-     * Return the title / name of the field
-     *
-     * @param \QUI\Locale|Boolean $Locale - optional
-     * @return string
-     */
-    public function getTitle($Locale = false);
-
-    /**
-     * @return mixed
-     */
-    public function getValue();
-
-    /**
      * Set the field value
      *
      * @param mixed $value
      * @throws \QUI\Exception;
      */
     public function setValue($value);
-
-    /**
-     * Is the field a system field?
-     *
-     * @return boolean
-     */
-    public function isSystem();
-
-    /**
-     * Is the field a standard field?
-     *
-     * @return bool
-     */
-    public function isStandard();
-
-    /**
-     * Is the field a required field?
-     *
-     * @return boolean
-     */
-    public function isRequired();
 
     /**
      * Check the value
@@ -100,13 +52,6 @@ interface Field
     /**
      * Deleted
      */
-
-    /**
-     * Is the field unassigned
-     *
-     * @return boolean
-     */
-    public function isUnassigned();
 
     /**
      * Set the unassigned field status

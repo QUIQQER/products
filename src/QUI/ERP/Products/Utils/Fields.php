@@ -16,6 +16,8 @@ class Fields
     /**
      * @param array $fields
      * @return array
+     *
+     * @todo wer hat diese methode gebaut? ToJson = return string, wieso array?
      */
     public static function parseFieldsToJson($fields = array())
     {

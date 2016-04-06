@@ -24,7 +24,7 @@ use QUI;
  *
  * @package QUI\ERP\Products\Field\Types
  */
-class ProductAttributeList extends QUI\ERP\Products\Field\Field
+class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
 {
     /**
      * ProductAttributeList constructor.
@@ -39,6 +39,18 @@ class ProductAttributeList extends QUI\ERP\Products\Field\Field
         ));
 
         parent::__construct($fieldId, $params);
+    }
+
+    /**
+     * @return QUI\ERP\Products\Utils\Price
+     */
+    public function getPrice()
+    {
+        $options  = $this->getOptions();
+        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $Price    = new QUI\ERP\Products\Utils\Price(0, $Currency);
+
+        return $Price;
     }
 
     /**

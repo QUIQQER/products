@@ -18,6 +18,9 @@ QUI::$Ajax->registerFunction(
         $Field  = $Fields->getField($fieldId);
         $params = json_decode($params, true);
 
+        if (isset($params['options'])) {
+            $Field->setOptions($params['options']);
+        }
 
         $Field->setAttributes($params);
         $Field->save();

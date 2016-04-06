@@ -13,7 +13,7 @@ use QUI;
  *
  * @package QUI\ERP\Products\Product
  */
-class ViewBackend extends QUI\QDOM
+class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
 {
     /**
      * @var Product
@@ -22,9 +22,9 @@ class ViewBackend extends QUI\QDOM
 
     /**
      * View constructor.
-     * @param Model $Product
+     * @param UniqueProduct $Product
      */
-    public function __construct(Model $Product)
+    public function __construct(UniqueProduct $Product)
     {
         $this->Product = $Product;
     }
@@ -35,6 +35,24 @@ class ViewBackend extends QUI\QDOM
     public function getId()
     {
         return $this->Product->getId();
+    }
+
+    /**
+     * @param bool $Locale
+     * @return string
+     */
+    public function getTitle($Locale = false)
+    {
+        return $this->Product->getTitle($Locale);
+    }
+
+    /**
+     * @param bool $Locale
+     * @return string
+     */
+    public function getDescription($Locale = false)
+    {
+        return $this->Product->getTitle($Locale);
     }
 
     /**

@@ -137,9 +137,16 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     }).inject(FieldTypes);
                 }
 
+                // options
+                var options = fieldData.options;
+
+                if (typeOf(options) != 'string') {
+                    options = JSON.encode(options);
+                }
+
                 // set data to the form
                 FieldTypes.value      = fieldData.type;
-                FieldOptions.value    = fieldData.options;
+                FieldOptions.value    = options;
                 FieldPriority.value   = fieldData.priority;
                 FieldPrefix.value     = fieldData.prefix;
                 FieldSuffix.value     = fieldData.suffix;

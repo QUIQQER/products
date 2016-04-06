@@ -12,133 +12,22 @@ use QUI;
  *
  * @package QUI\ERP\Products\Field
  */
-class View
+class View extends UniqueField
 {
     /**
-     * @var string|array|mixed
-     */
-    protected $value = '';
-
-    /**
-     * @var string|int
-     */
-    protected $id = '';
-
-    /**
-     * @var string
-     */
-    protected $title = '';
-
-    /**
-     * @var string
-     */
-    protected $prefix = '';
-
-    /**
-     * @var string
-     */
-    protected $suffix = '';
-
-    /**
-     * @var integer
-     */
-    protected $priority = 0;
-
-    /**
-     * @var array
-     */
-    protected $options = array();
-
-    /**
-     * View constructor
+     * View constructor.
      *
-     * @param array $data
+     * @param array $params
      */
-    public function __construct($data = array())
+    public function __construct(array $params)
     {
-        if (isset($data['id'])) {
-            $this->id = $data['id'];
+        $fieldId = false;
+
+        if ($params['id']) {
+            $fieldId = $params['id'];
         }
 
-        if (isset($data['value'])) {
-            $this->value = $data['value'];
-        }
-
-        if (isset($data['title'])) {
-            $this->title = $data['title'];
-        }
-
-        if (isset($data['prefix'])) {
-            $this->prefix = $data['prefix'];
-        }
-
-        if (isset($data['suffix'])) {
-            $this->suffix = $data['suffix'];
-        }
-
-        if (isset($data['priority'])) {
-            $this->priority = (int)$data['priority'];
-        }
-
-        if (isset($data['options']) && is_array($data['options'])) {
-            $this->options = $data['options'];
-        }
-    }
-
-    /**
-     * @return string|int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPrefix()
-    {
-        return $this->prefix;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSuffix()
-    {
-        return $this->suffix;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPriority()
-    {
-        return $this->priority;
-    }
-
-    /**
-     * @return array
-     */
-    public function getOptions()
-    {
-        return $this->options;
+        parent::__construct($fieldId, $params);
     }
 
     /**

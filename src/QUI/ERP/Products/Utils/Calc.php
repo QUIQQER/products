@@ -5,8 +5,9 @@
  */
 namespace QUI\ERP\Products\Utils;
 
-use QUI\ERP\Products\Interfaces\Product;
+use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\Interfaces\Users\User;
+use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Class Calc
@@ -35,23 +36,29 @@ class Calc
     /**
      * Calculate the product price
      *
-     * @param Product $Product
+     * @param UniqueProduct $Product
      * @return double|float|integer
      *
      * @todo muss richtig implementiert werden
      */
-    public static function getProductPrice(Product $Product)
+    public static function getProductPrice(UniqueProduct $Product)
     {
-        $Price  = $Product->getPrice();
-        $fields = $Product->getFields();
+        $price  = $Product->getFieldValue(Fields::FIELD_PRICE);
+        $prices = $Product->getPriceFactors();
+
+        // methode vom grundpreis berechnen
+
 
         // @todo muss richtig implementiert werden
         if (method_exists($Product, 'getQuantity')) {
             $quantity = $Product->getQuantity();
-            return $Price->getNetto() * $quantity;
+            return $price * $quantity;
         }
 
 
-        return $Price->getNetto();
+        return new \QUI\ERP\Products\Utils\Price(
+            $price,
+            \QUI\ERP\Currency\Handler::getDefaultCurrency()
+        );
     }
 }

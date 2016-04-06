@@ -13,18 +13,19 @@ use QUI;
  *
  * @package QUI\ERP\Products\Product
  */
-class ViewFrontend extends QUI\QDOM
+class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
 {
     /**
-     * @var Product
+     * @var UniqueProduct
      */
     protected $Product;
 
     /**
      * View constructor.
-     * @param Model $Product
+     *
+     * @param UniqueProduct $Product
      */
-    public function __construct(Model $Product)
+    public function __construct(UniqueProduct $Product)
     {
         $this->Product = $Product;
     }
@@ -38,14 +39,29 @@ class ViewFrontend extends QUI\QDOM
     }
 
     /**
+     * @param bool $Locale
+     * @return string
+     */
+    public function getTitle($Locale = false)
+    {
+        return $this->Product->getTitle($Locale);
+    }
+
+    /**
+     * @param bool $Locale
+     * @return string
+     */
+    public function getDescription($Locale = false)
+    {
+        return $this->Product->getTitle($Locale);
+    }
+
+    /**
      * @return QUI\ERP\Products\Utils\Price
      */
     public function getPrice()
     {
-        return new QUI\ERP\Products\Utils\Price(
-            $this->getAttribute('price'),
-            QUI\ERP\Currency\Handler::getDefaultCurrency()
-        );
+        return QUI\ERP\Products\Utils\Calc::getProductPrice($this->Product);
     }
 
     /**
@@ -57,6 +73,38 @@ class ViewFrontend extends QUI\QDOM
      */
     public function getFieldValue($fieldId, $affixes = false)
     {
+        return $this->Product->getFieldValue($fieldId);
+    }
 
+    /**
+     * Return all fields from the wanted type
+     *
+     * @param string $type
+     * @return array
+     */
+    public function getFieldsByType($type)
+    {
+        return $this->Product->getFieldsByType($type);
+    }
+
+    /**
+     * Return the the wanted field
+     *
+     * @param int $fieldId
+     * @return false|QUI\ERP\Products\Field\UniqueField|QUI\ERP\Products\Interfaces\Field
+     */
+    public function getField($fieldId)
+    {
+        return $this->Product->getField($fieldId);
+    }
+
+    /**
+     * Return all fields
+     *
+     * @return array
+     */
+    public function getFields()
+    {
+        return $this->Product->getFields();
     }
 }

@@ -138,6 +138,23 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Create a unique field with the current field data
+     *
+     * @return UniqueField
+     */
+    public function createUniqueField()
+    {
+        return new UniqueField($this->getId(), array(
+            'value' => $this->getValue(),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority'),
+            'options' => $this->getOptions()
+        ));
+    }
+
+    /**
      * Return the name of the JavaScript Control for the field
      *
      * @return string
@@ -172,6 +189,20 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Change the price of the product
+     * Returns the price object
+     *
+     * @return QUI\ERP\Products\Utils\Price
+     */
+    public function getPrice()
+    {
+        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $Price    = new QUI\ERP\Products\Utils\Price(0, $Currency);
+
+        return $Price;
+    }
+
+    /**
      * saves / update the field
      *
      * @todo value check
@@ -194,9 +225,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         // options json check
         $data['options'] = '';
-        $options         = json_encode($this->getOptions());
+        $options         = $this->getOptions();
 
-        if ($options) {
+        if (!empty($options)) {
             $data['options'] = json_encode($options);
         }
 
@@ -261,6 +292,16 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         if (is_bool($status)) {
             $this->unassigned = $status;
         }
+    }
+
+    /**
+     * Is the field a custom field?
+     *
+     * @return bool
+     */
+    public function isCustomField()
+    {
+        return $this instanceof QUI\ERP\Products\Field\CustomField;
     }
 
     /**
@@ -368,12 +409,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getAttributes()
     {
-        $attributes            = parent::getAttributes();
-        $attributes['id']      = $this->getId();
-        $attributes['title']   = $this->getTitle();
-        $attributes['type']    = $this->getType();
-        $attributes['options'] = $this->getOptions();
-
+        $attributes               = parent::getAttributes();
+        $attributes['id']         = $this->getId();
+        $attributes['title']      = $this->getTitle();
+        $attributes['type']       = $this->getType();
+        $attributes['options']    = $this->getOptions();
+        $attributes['custom']     = $this->isCustomField();
+        $attributes['unassigned'] = $this->isUnassigned();
         $attributes['isRequired'] = $this->isRequired();
         $attributes['isStandard'] = $this->isStandard();
         $attributes['isSystem']   = $this->isSystem();
@@ -387,13 +429,12 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function toProductArray()
     {
-        return array(
-            'id' => (string)$this->getId(),
-            'value' => $this->getValue(),
-            'type' => $this->getType(),
-            'unassigned' => $this->isUnassigned(),
-            'options' => $this->getOptions()
-        );
+        $attributes          = $this->getAttributes();
+        $attributes['value'] = $this->getValue();
+
+        unset($attributes['jsControl']);
+
+        return $attributes;
     }
 
     /**

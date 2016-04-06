@@ -605,7 +605,7 @@ class Category extends QUI\QDOM
                         $Field->setAttribute('publicStatus', $field['publicStatus']);
                         $Field->setAttribute('searchStatus', $field['searchStatus']);
 
-                        if (isset($field['options'])) {
+                        if (isset($field['options']) && !empty($field['options'])) {
                             $Field->setOptions($field['options']);
                         }
 

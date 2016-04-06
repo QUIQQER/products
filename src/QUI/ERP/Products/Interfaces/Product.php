@@ -22,6 +22,22 @@ interface Product
     public function getId();
 
     /**
+     * Return the translated title
+     *
+     * @param bool $Locale
+     * @return string
+     */
+    public function getTitle($Locale = false);
+
+    /**
+     * Return the translated description
+     *
+     * @param bool $Locale
+     * @return string
+     */
+    public function getDescription($Locale = false);
+
+    /**
      * Return all fields
      *
      * @return array
@@ -45,6 +61,14 @@ interface Product
     public function getFieldValue($fieldId);
 
     /**
+     * Return all fields from the wanted type
+     *
+     * @param string $type
+     * @return array
+     */
+    public function getFieldsByType($type);
+
+    /**
      * Return the price object of the product
      *
      * @return Price
@@ -58,17 +82,4 @@ interface Product
      * @return mixed
      */
     public function getAttribute($name);
-
-    /**
-     * @param \QUI\ERP\Products\Interfaces\Field $Field
-     */
-    public function addField(Field $Field);
-
-    /**
-     * Set an attribute of the product
-     *
-     * @param string $name - name of the attribute
-     * @param mixed $value - value
-     */
-    public function setAttribute($name, $value);
 }

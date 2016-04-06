@@ -32,7 +32,7 @@ QUI::$Ajax->registerFunction(
             }
         }
 
-        return \QUI\ERP\Products\Utils\Calc::getProductPrice($Product);
+        return QUI\ERP\Products\Utils\Calc::getProductPrice($Product);
     },
     array('productId', 'fields')
 );

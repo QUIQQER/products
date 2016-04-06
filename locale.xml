@@ -360,6 +360,22 @@
             <de><![CDATA[Feld hinzufügen]]></de>
             <en><![CDATA[Add a field]]></en>
         </locale>
+        <locale name="category.update.field.grid.button.delete">
+            <de><![CDATA[Feld entfernen]]></de>
+            <en><![CDATA[Remove the field]]></en>
+        </locale>
+        <locale name="category.update.field.window.delete.title">
+            <de><![CDATA[Feld entfernen?]]></de>
+            <en><![CDATA[Remove the field?]]></en>
+        </locale>
+        <locale name="category.update.field.window.delete.text">
+            <de><![CDATA[Möchten Sie das Feld wirklich entfernen?]]></de>
+            <en><![CDATA[Do you realy want to temove the field?]]></en>
+        </locale>
+        <locale name="category.update.field.window.delete.information">
+            <de><![CDATA[Das Feld wird komplett aus der Kategorie entfernt.]]></de>
+            <en><![CDATA[The field will be removed from the category]]></en>
+        </locale>
 
         <locale name="control.select.search.field.placeholder">
             <de><![CDATA[Suche nach einem Produktfeld...]]></de>

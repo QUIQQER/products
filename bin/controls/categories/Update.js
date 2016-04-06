@@ -29,6 +29,7 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
     'qui/controls/Control',
     'qui/controls/buttons/Button',
     'qui/controls/buttons/Switch',
+    'qui/controls/windows/Confirm',
     'Locale',
     'Mustache',
     'controls/grid/Grid',
@@ -40,7 +41,7 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
     'text!package/quiqqer/products/bin/controls/categories/Update.html',
     'css!package/quiqqer/products/bin/controls/categories/Update.css'
 
-], function (QUI, QUIControl, QUIButton, QUISwitch, QUILocale, Mustache, Grid,
+], function (QUI, QUIControl, QUIButton, QUISwitch, QUIConfirm, QUILocale, Mustache, Grid,
              Handler, FieldsHandler, CategorySitemap, Translation, template) {
     "use strict";
 
@@ -157,6 +158,7 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
 
             this.$FieldTable = new Grid(FieldContainer, {
                 buttons    : [{
+                    name     : 'add',
                     text     : QUILocale.get(lg, 'category.update.field.grid.button.add'),
                     textimage: 'fa fa-plus',
                     events   : {
@@ -172,6 +174,33 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
                                     }
                                 }).open();
                             });
+                        }
+                    }
+                }, {
+                    type: 'seperator'
+                }, {
+                    name     : 'delete',
+                    text     : QUILocale.get(lg, 'category.update.field.grid.button.delete'),
+                    textimage: 'fa fa-trash',
+                    disabled : true,
+                    events   : {
+                        onClick: function () {
+                            new QUIConfirm({
+                                icon       : 'fa fa-trash',
+                                texticon   : 'fa fa-trash',
+                                title      : QUILocale.get(lg, 'category.update.field.window.delete.title'),
+                                text       : QUILocale.get(lg, 'category.update.field.window.delete.text'),
+                                information: QUILocale.get(lg, 'category.update.field.window.delete.information'),
+                                maxHeight  : 300,
+                                maxWidth   : 450,
+                                events     : {
+                                    onSubmit: function () {
+                                        self.$FieldTable.deleteRows(
+                                            self.$FieldTable.getSelectedIndices()
+                                        );
+                                    }
+                                }
+                            }).open();
                         }
                     }
                 }],
@@ -196,6 +225,21 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
                     dataType : 'QUI',
                     width    : 100
                 }]
+            });
+
+            this.$FieldTable.addEvents({
+                onClick: function () {
+                    var selected = self.$FieldTable.getSelectedIndices(),
+                        Delete   = self.$FieldTable.getButtons().filter(function (Btn) {
+                            return Btn.getAttribute('name') == 'delete';
+                        })[0];
+
+                    if (selected.length) {
+                        Delete.enable();
+                    } else {
+                        Delete.disable();
+                    }
+                }
             });
 
             return Elm;
