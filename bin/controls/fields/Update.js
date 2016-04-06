@@ -1,5 +1,5 @@
 /**
- * Category sitemap
+ * Control for update a field
  *
  * @module package/quiqqer/products/bin/controls/categories/Create
  * @author www.pcsg.de (Henning Leutz)

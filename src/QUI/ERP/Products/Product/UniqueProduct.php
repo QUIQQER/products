@@ -20,6 +20,16 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     /**
      * @var array
      */
+    protected $categories = array();
+
+    /**
+     * @var null|QUI\ERP\Products\Category\Category
+     */
+    protected $Category = null;
+
+    /**
+     * @var array
+     */
     protected $fields = array();
 
     /**
@@ -32,8 +42,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     {
         $this->id = $pid;
 
+//        var_dump($attributes);
+
         // fields
         $this->parseFieldsFromAttributes($attributes);
+        $this->parseCategoriesFromAttributes($attributes);
         return;
 
         /* @var $Field QUI\ERP\Products\Field\Field */
@@ -90,6 +103,33 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
+     * @param array $attributes
+     */
+    protected function parseCategoriesFromAttributes($attributes = array())
+    {
+        if (!isset($attributes['categories'])) {
+            return;
+        }
+    }
+
+    /**
+     * @param array $attributes
+     */
+    protected function parseCategoryFromAttributes($attributes = array())
+    {
+        if (!isset($attributes['category'])) {
+            return;
+        }
+
+        try {
+            $this->Category = QUI\ERP\Products\Handler\Categories::getCategory(
+                $attributes['category']
+            );
+        } catch (QUI\Exception $Exception) {
+        }
+    }
+
+    /**
      * @return array
      */
     public function getPriceFactors()
@@ -133,6 +173,10 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $Title   = $this->getField(Fields::FIELD_TITLE);
         $values  = $Title->getValue();
 
+        if (is_string($values)) {
+            return $values;
+        }
+
         return isset($values[$current]) ? $values[$current] : '';
     }
 
@@ -151,6 +195,33 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $current = $Locale->getCurrent();
         $Title   = $this->getField(Fields::FIELD_SHORT_DESC);
         $values  = $Title->getValue();
+
+        if (is_string($values)) {
+            return $values;
+        }
+
+        return isset($values[$current]) ? $values[$current] : '';
+    }
+
+    /**
+     * Return the translated content
+     *
+     * @param bool $Locale
+     * @return string
+     */
+    public function getContent($Locale = false)
+    {
+        if (!$Locale) {
+            $Locale = QUI::getLocale();
+        }
+
+        $current = $Locale->getCurrent();
+        $Title   = $this->getField(Fields::FIELD_CONTENT);
+        $values  = $Title->getValue();
+
+        if (is_string($values)) {
+            return $values;
+        }
 
         return isset($values[$current]) ? $values[$current] : '';
     }
@@ -229,5 +300,25 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         }
 
         return false;
+    }
+
+    /**
+     * Return the main catgory
+     *
+     * @return QUI\ERP\Products\Handler\Categories
+     */
+    public function getCategory()
+    {
+        return $this->Category;
+    }
+
+    /**
+     * Return the product categories
+     *
+     * @return array
+     */
+    public function getCategories()
+    {
+        return $this->categories;
     }
 }

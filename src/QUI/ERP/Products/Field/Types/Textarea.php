@@ -13,16 +13,6 @@ use QUI;
  */
 class Textarea extends QUI\ERP\Products\Field\Field
 {
-    public function getBackendView()
-    {
-        // TODO: Implement getBackendView() method.
-    }
-
-    public function getFrontendView()
-    {
-        // TODO: Implement getFrontendView() method.
-    }
-
     /**
      * @return string
      */
@@ -47,10 +37,10 @@ class Textarea extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @return string
      */
     public function cleanup($value)
     {
-        // TODO: Implement cleanup() method.
+        return $value;
     }
 }

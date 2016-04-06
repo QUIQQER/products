@@ -136,6 +136,19 @@ class Model extends QUI\QDOM
             }
         }
 
+        // check if all standard fiels are available
+        $standardFields = Fields::getFields(array(
+            'where' => array(
+                'systemField' => 1
+            )
+        ));
+
+        /* @var $Field Field */
+        foreach ($standardFields as $Field) {
+            if (!isset($this->fields[$Field->getId()])) {
+                $this->fields[$Field->getId()] = $Field;
+            }
+        }
 
         if (defined('QUIQQER_BACKEND')) {
             $this->setAttribute('viewType', 'backend');
@@ -231,7 +244,7 @@ class Model extends QUI\QDOM
 
 
     /**
-     * Return the title / name of the product
+     * Return the title of the product
      *
      * @param QUI\Locale|Boolean $Locale - optional
      * @return string
@@ -259,7 +272,7 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * Return the title / name of the category
+     * Return the description of the product
      *
      * @param QUI\Locale|Boolean $Locale - optional
      * @return string
@@ -331,6 +344,10 @@ class Model extends QUI\QDOM
         try {
             $Field = $this->getField($field);
             $data  = $Field->getValue();
+
+            if (is_string($data)) {
+                return $data;
+            }
 
             if (isset($data[$current])) {
                 return $data[$current];
@@ -474,8 +491,6 @@ class Model extends QUI\QDOM
             $Field->setUnassignedStatus(
                 !isset($categoryFields[$Field->getId()])
             );
-
-            QUI\System\Log::writeRecursive($Field->toProductArray());
 
             if (!$Field->isRequired()) {
                 $Field->validate($value);

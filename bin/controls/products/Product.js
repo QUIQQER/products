@@ -1,5 +1,5 @@
 /**
- * Product management
+ * Edit and manage one product
  *
  * @module package/quiqqer/products/bin/controls/products/Product
  * @author www.pcsg.de (Henning Leutz)
@@ -195,7 +195,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     self.$data[Field.id] = Field;
                 });
 
-
                 // DOM
                 Content.addClass('product-update');
 
@@ -361,8 +360,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             continue;
                         }
 
-                        if (field.type == 'TextareaMultiLang') {
-
+                        if (field.type == 'TextareaMultiLang' ||
+                            field.type == 'Textarea') {
                             continue;
                         }
 
@@ -381,7 +380,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     for (i = 0, len = diffFields.length; i < len; i++) {
                         field = diffFields[i];
 
-                        if (field.type == 'TextareaMultiLang') {
+                        if (field.type == 'TextareaMultiLang' ||
+                            field.type == 'Textarea') {
                             continue;
                         }
 
@@ -460,7 +460,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             };
 
             for (var i = 0, len = fields.length; i < len; i++) {
-                if (fields[i].type != 'TextareaMultiLang') {
+                if (fields[i].type != 'TextareaMultiLang' &&
+                    fields[i].type != 'Textarea') {
                     continue;
                 }
 
@@ -665,11 +666,13 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 // content fields
                 Object.each(selfData, function (entry) {
-                    if (entry.type == 'TextareaMultiLang') {
+                    if (entry.type == 'TextareaMultiLang' || entry.type == 'Textarea') {
+                        console.warn(entry);
+
                         fields['field-' + entry.id] = entry.value;
                     }
                 });
-
+                console.warn(selfData);
                 Products.updateChild(
                     self.getAttribute('productId'),
                     categories,

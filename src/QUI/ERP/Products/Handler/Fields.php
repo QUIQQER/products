@@ -237,6 +237,17 @@ class Fields
     }
 
     /**
+     * Return the cachename of a field
+     *
+     * @param $fieldId
+     * @return string
+     */
+    public static function getFieldCacheName($fieldId)
+    {
+        return 'quiqqer/products/fields/field/' . $fieldId . '/';
+    }
+
+    /**
      * Return all available Fields
      *
      * @return array
@@ -307,22 +318,31 @@ class Fields
             return self::$list[$fieldId]; // @todo maybe with (clone) ??
         }
 
-        $result = QUI::getDataBase()->fetch(array(
-            'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
-            'where' => array(
-                'id' => (int)$fieldId
-            )
-        ));
-
-        if (!isset($result[0])) {
-            throw new QUI\Exception(
-                array('quiqqer/products', 'exception.field.not.found'),
-                404,
-                array('id' => (int)$fieldId)
+        try {
+            $data = QUI\Cache\Manager::get(
+                QUI\ERP\Products\Handler\Fields::getFieldCacheName($fieldId)
             );
+        } catch (QUI\Exception $Exception) {
+            $result = QUI::getDataBase()->fetch(array(
+                'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+                'where' => array(
+                    'id' => (int)$fieldId
+                ),
+                'limit' => 1
+            ));
+
+
+            if (!isset($result[0])) {
+                throw new QUI\Exception(
+                    array('quiqqer/products', 'exception.field.not.found'),
+                    404,
+                    array('id' => (int)$fieldId)
+                );
+            }
+
+            $data = $result[0];
         }
 
-        $data = $result[0];
 
         // exists the type?
         $dir   = dirname(dirname(__FILE__)) . '/Field/Types/';
@@ -403,7 +423,7 @@ class Fields
     }
 
     /**
-     * Return a list of fields
+     * Return a list of field ids
      * if $queryParams is empty, all fields are returned
      *
      * @param array $queryParams - query parameter
@@ -413,9 +433,10 @@ class Fields
      *                              $queryParams['order']
      * @return array
      */
-    public static function getFields($queryParams = array())
+    public static function getFieldIds($queryParams = array())
     {
         $query = array(
+            'select' => 'id',
             'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName()
         );
 
@@ -470,9 +491,24 @@ class Fields
                 $query['order'] = 'priority ASC';
         }
 
+        return QUI::getDataBase()->fetch($query);
+    }
 
+    /**
+     * Return a list of fields
+     * if $queryParams is empty, all fields are returned
+     *
+     * @param array $queryParams - query parameter
+     *                              $queryParams['where'],
+     *                              $queryParams['where_or'],
+     *                              $queryParams['limit']
+     *                              $queryParams['order']
+     * @return array
+     */
+    public static function getFields($queryParams = array())
+    {
         $result = array();
-        $data   = QUI::getDataBase()->fetch($query);
+        $data   = self::getFieldIds($queryParams);
 
         foreach ($data as $entry) {
             try {

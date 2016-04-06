@@ -236,6 +236,12 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $data,
             array('id' => $this->getId())
         );
+
+        // set cache
+        QUI\Cache\Manager::set(
+            QUI\ERP\Products\Handler\Fields::getFieldCacheName($this->getId()),
+            $data
+        );
     }
 
     /**

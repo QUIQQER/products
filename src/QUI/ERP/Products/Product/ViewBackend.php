@@ -56,6 +56,15 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
+     * @param bool $Locale
+     * @return string
+     */
+    public function getContent($Locale = false)
+    {
+        return $this->Product->getContent($Locale);
+    }
+
+    /**
      * @return QUI\ERP\Products\Utils\Price
      */
     public function getPrice()

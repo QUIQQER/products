@@ -136,6 +136,7 @@
     border: 1px solid #f1f1f1;
     float: left;
     height: 300px;
+    overflow: auto;
     position: relative;
     width: 100%;
 }

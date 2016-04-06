@@ -5,6 +5,7 @@
  */
 namespace QUI\ERP\Products\Interfaces;
 
+use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Interfaces\Field;
 use QUI\ERP\Products\Utils\Price;
 
@@ -36,6 +37,14 @@ interface Product
      * @return string
      */
     public function getDescription($Locale = false);
+
+    /**
+     * Return the translated content
+     *
+     * @param bool $Locale
+     * @return string
+     */
+    public function getContent($Locale = false);
 
     /**
      * Return all fields
@@ -82,4 +91,18 @@ interface Product
      * @return mixed
      */
     public function getAttribute($name);
+
+    /**
+     * Return the main category
+     *
+     * @return Category|null
+     */
+    public function getCategory();
+
+    /**
+     * Return the product categories
+     *
+     * @return array
+     */
+    public function getCategories();
 }

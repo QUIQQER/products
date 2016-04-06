@@ -57,6 +57,15 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     }
 
     /**
+     * @param bool $Locale
+     * @return string
+     */
+    public function getContent($Locale = false)
+    {
+        return $this->Product->getContent($Locale);
+    }
+
+    /**
      * @return QUI\ERP\Products\Utils\Price
      */
     public function getPrice()
@@ -106,5 +115,25 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     public function getFields()
     {
         return $this->Product->getFields();
+    }
+    
+    /**
+     * Return the main catgory
+     *
+     * @return QUI\ERP\Products\Category\Category
+     */
+    public function getCategory()
+    {
+        return $this->Product->getCategory();
+    }
+
+    /**
+     * Return the product categories
+     *
+     * @return array
+     */
+    public function getCategories()
+    {
+        return $this->Product->getCategories();
     }
 }

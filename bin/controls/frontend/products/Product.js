@@ -86,6 +86,17 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 click     : this.$tabClick
             });
 
+            // calc tab height
+            this.$Sheets.setStyles({
+                overflow: 'hidden'
+            });
+
+            moofx(this.$Sheets).animate({
+                height: this.$Sheets.getScrollSize().y + 10
+            }, {
+                duration: 200
+            });
+
             this.$Touch = new Hammer(this.$TabContainer);
 
             this.$Touch.on('swipe', function (ev) {
