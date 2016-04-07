@@ -64,6 +64,19 @@ class Price
     }
 
     /**
+     * Return the price as array notation
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'price' => $this->getNetto(),
+            'currency' => $this->getCurrency()->getCode(),
+            'display' => $this->getDisplayPrice()
+        );
+    }
+
+    /**
      * Return the netto price
      *
      * @return float

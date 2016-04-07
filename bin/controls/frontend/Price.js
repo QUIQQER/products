@@ -65,16 +65,17 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
                 this.getAttribute('price'),
                 this.getAttribute('currency')
             ).then(function (result) {
-                this.getElm().set('html', result);
-            }.bind(this), function () {
-            });
+                    this.getElm().set('html', result);
+                }.bind(this),
+                function () {
+                }
+            );
         },
 
         /**
          * event : on import
          */
         $onImport: function (self, Elm) {
-
             Currency.addEvent('onChange', this.refresh);
 
             if (Elm.get('data-qui-options-currency')) {
@@ -97,9 +98,27 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          * Set the price for the display
          *
          * @param {Number} price
+         * @param {String} [CurrencyCode]
          */
-        setPrice: function (price) {
+        setPrice: function (price, CurrencyCode) {
+            CurrencyCode = CurrencyCode || false;
+
+            if (this.getAttribute('currency')) {
+                CurrencyCode = this.getAttribute('currency');
+            }
+
             this.setAttribute('price', price);
+            this.setAttribute('currency', CurrencyCode);
+            this.refresh();
+        },
+
+        /**
+         * Set the currency for the display
+         *
+         * @param {String} CurrencyCode
+         */
+        setCurrency: function (CurrencyCode) {
+            this.setAttrbute('currency', CurrencyCode);
             this.refresh();
         }
     });

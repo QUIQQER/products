@@ -51,8 +51,11 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         $html .= "<select name=\"{$name}\" value=\"{$value}\"
                     data-field=\"{$id}\"
                     data-qui=\"package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeList\"
-                    disabled=\"disabled\">
-                    ";
+                    disabled=\"disabled\">";
+
+        if ($value === '') {
+            $html .= '<option value=""></option>';
+        }
 
         foreach ($options as $key => $option) {
             $text  = '';

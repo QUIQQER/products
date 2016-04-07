@@ -3,9 +3,9 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
-use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Field\UniqueField;
+use QUI\ERP\Products\Handler\Categories;
 
 /**
  * Class UniqueProduct
@@ -33,6 +33,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected $fields = array();
 
     /**
+     * @var array
+     */
+    protected $attributes = array();
+
+    /**
      * UniqueProduct constructor.
      *
      * @param integer $pid - Product ID
@@ -40,52 +45,31 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function __construct($pid, $attributes = array())
     {
-        $this->id = $pid;
-
-//        var_dump($attributes);
+        $this->id         = $pid;
+        $this->attributes = $attributes;
 
         // fields
         $this->parseFieldsFromAttributes($attributes);
         $this->parseCategoriesFromAttributes($attributes);
-        return;
 
-        /* @var $Field QUI\ERP\Products\Field\Field */
+        // generate the price factors
+        $fields = $this->getFields();
+
+//        var_dump($fields);
+
+        /* @var $Field QUI\ERP\Products\Field\UniqueField */
         foreach ($fields as $Field) {
-            $this->fields[] = $Field->createUniqueField();
-
-            $params = array(
-                'value' => $Field->getValue(),
-                'type' => $Field->getType(),
-                'customfield' => $Field->isCustomField()
-            );
-
-            if ($Field->isCustomField()) {
-                $this->setAttribute('field-' . $Field->getId(), $params);
+            if (!$Field->isCustomField()) {
                 continue;
             }
 
-            $value   = $Field->getValue();
-            $fieldId = $Field->getId();
-
-            if (isset($attributes[$fieldId])) {
-                $value = $attributes[$fieldId];
-            }
-
-            $Field->validate($value);
-
-            $params['value'] = $value;
-
-            $this->setAttribute('field-' . $Field->getId(), $params);
-
-
-            // calc eigenschaften
-
-
+//            $options = $Field->getOptions();
+//            $value   = $Field->getValue();
         }
     }
 
     /**
-     * Parse field data
+     * Parse the field data
      *
      * @param array $attributes - product attributes
      */
@@ -98,11 +82,17 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $fields = $attributes['fields'];
 
         foreach ($fields as $field) {
-            $this->fields[] = new UniqueField($field['id'], $field);
+            $Field = new UniqueField($field['id'], $field);
+
+            if ($Field->isCustomField() || $Field->isSystem()) {
+                $this->fields[] = $Field;
+            }
         }
     }
 
     /**
+     * Parse the category data
+     *
      * @param array $attributes
      */
     protected function parseCategoriesFromAttributes($attributes = array())
@@ -110,6 +100,18 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         if (!isset($attributes['categories'])) {
             return;
         }
+
+        $list       = array();
+        $categories = explode(',', $attributes['categories']);
+
+        foreach ($categories as $cid) {
+            try {
+                $list[] = Categories::getCategory($cid);
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
+        $this->categories = $list;
     }
 
     /**
@@ -234,8 +236,10 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function getField($fieldId)
     {
+        $fields = $this->getFields();
+
         /* @var $Field QUI\ERP\Products\Field\UniqueField */
-        foreach ($this->fields as $Field) {
+        foreach ($fields as $Field) {
             if ($Field->getId() == $fieldId) {
                 return $Field;
             }
@@ -263,6 +267,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $fields = $this->getFields();
         $result = array();
 
+        /* @var $Field QUI\ERP\Products\Field\UniqueField */
         foreach ($fields as $Field) {
             if ($Field && $Field->getType() == $type) {
                 $result[] = $Field;
@@ -305,10 +310,23 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     /**
      * Return the main catgory
      *
-     * @return QUI\ERP\Products\Handler\Categories
+     * @return QUI\ERP\Products\Handler\Categories|null
      */
     public function getCategory()
     {
+        if ($this->Category) {
+            return $this->Category;
+        }
+
+        if (!isset($this->attributes['category'])) {
+            return $this->Category;
+        }
+
+        try {
+            $this->Category = Categories::getCategory($this->attributes['category']);
+        } catch (QUI\Exception $Exception) {
+        }
+
         return $this->Category;
     }
 

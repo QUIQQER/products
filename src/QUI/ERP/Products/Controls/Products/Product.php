@@ -102,6 +102,7 @@ class Product extends QUI\Control
 
         // attribute list fields
         $attributeListFields = $Product->getFieldsByType('ProductAttributeList');
+
         $attributeListFields = array_filter($attributeListFields, function ($Field) {
             /* @var $Field QUI\ERP\Products\Interfaces\Field */
             return !$Field->isUnassigned();

@@ -42,18 +42,6 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     }
 
     /**
-     * @return QUI\ERP\Products\Utils\Price
-     */
-    public function getPrice()
-    {
-        $options  = $this->getOptions();
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
-        $Price    = new QUI\ERP\Products\Utils\Price(0, $Currency);
-
-        return $Price;
-    }
-
-    /**
      * Return the FrontendView
      *
      * @return ProductAttributeListFrontendView
@@ -96,7 +84,32 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      */
     public function validate($value)
     {
-        // TODO: Implement validate() method.
+//        if (!is_numeric($value)) {
+//            throw new QUI\Exception(array(
+//                'quiqqer/products',
+//                'exception.field.invalid',
+//                array(
+//                    'fieldId' => $this->getId(),
+//                    'fieldTitle' => $this->getTitle(),
+//                    'fieldType' => $this->getType()
+//                )
+//            ));
+//        }
+//
+//        $value   = (int)$value;
+//        $options = $this->getOptions();
+//
+//        if (!isset($options[$value])) {
+//            throw new QUI\Exception(array(
+//                'quiqqer/products',
+//                'exception.field.invalid',
+//                array(
+//                    'fieldId' => $this->getId(),
+//                    'fieldTitle' => $this->getTitle(),
+//                    'fieldType' => $this->getType()
+//                )
+//            ));
+//        }
     }
 
     /**
@@ -108,9 +121,6 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      */
     public function cleanup($value)
     {
-        $list = array();
 
-
-        return $list;
     }
 }

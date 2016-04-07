@@ -99,6 +99,23 @@ class Model extends QUI\QDOM
             }
         }
 
+
+        // field list from the system
+        $fieldlist = array();
+
+        $systemfields = Fields::getFields(array(
+            'where_or' => array(
+                'systemField' => 1,
+                'standardField' => 1,
+                'requiredField' => 1
+            )
+        ));
+
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        foreach ($systemfields as $Field) {
+            $fieldlist[$Field->getId()] = $Field;
+        }
+
         // fields
         $fields = json_decode($result[0]['fieldData'], true);
 
@@ -119,7 +136,16 @@ class Model extends QUI\QDOM
             }
 
             try {
-                $Field = Fields::getFieldByType($field['type'], $field['id']);
+                $fieldId = $field['id'];
+                $data    = $field;
+
+                if (isset($fieldlist[$fieldId])) {
+                    $data['standard'] = $fieldlist[$fieldId]->isStandard();
+                    $data['required'] = $fieldlist[$fieldId]->isRequired();
+                    $data['system']   = $fieldlist[$fieldId]->isSystem();
+                }
+
+                $Field = Fields::getFieldByType($field['type'], $field['id'], $data);
                 $Field->setValue($field['value']);
 
                 if (isset($field['options'])) {
@@ -136,17 +162,16 @@ class Model extends QUI\QDOM
             }
         }
 
-        // check if all standard fiels are available
-        $standardFields = Fields::getFields(array(
-            'where' => array(
-                'systemField' => 1
-            )
-        ));
 
-        /* @var $Field Field */
-        foreach ($standardFields as $Field) {
+        // all standard fields must be in the product
+        foreach ($systemfields as $Field) {
+            if (!$Field->isStandard()) {
+                continue;
+            }
+
             if (!isset($this->fields[$Field->getId()])) {
                 $this->fields[$Field->getId()] = $Field;
+                continue;
             }
         }
 
@@ -454,9 +479,9 @@ class Model extends QUI\QDOM
         // get category field data
         foreach ($categories as $Category) {
             $categoryData[] = $Category->getId();
-            $categoryFields = $Category->getFields();
+            $catFields      = $Category->getFields();
 
-            foreach ($categoryFields as $Field) {
+            foreach ($catFields as $Field) {
                 $categoryFields[$Field->getId()] = true;
             }
         }
@@ -488,9 +513,14 @@ class Model extends QUI\QDOM
         foreach ($fields as $Field) {
             $value = $Field->getValue();
 
-            $Field->setUnassignedStatus(
-                !isset($categoryFields[$Field->getId()])
-            );
+            // @todo muss alle categorien prüfen
+            if (!$Field->isSystem()) {
+                $Field->setUnassignedStatus(
+                    !isset($categoryFields[$Field->getId()])
+                );
+            } else {
+                $Field->setUnassignedStatus(false);
+            }
 
             if (!$Field->isRequired()) {
                 $Field->validate($value);

@@ -152,19 +152,20 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * @returns {Promise}
          */
         calcPrice: function () {
-            var fields    = this.getFieldControls(),
-                fieldData = fields.map(function (Field) {
-                    var data = {};
+            var self      = this,
+                fields    = this.getFieldControls(),
+                fieldData = [];
 
-                    data[Field.getFieldId()] = Field.getValue();
-
-                    return data;
+            for (var i = 0, len = fields.length; i < len; i++) {
+                fieldData.push({
+                    fieldId: fields[i].getFieldId(),
+                    value  : fields[i].getValue()
                 });
+            }
 
-            Products.calcPrice(this.getAttribute('productId'), fieldData).then(function (price) {
-                console.warn(price);
+            Products.calcPrice(this.getAttribute('productId'), fieldData).then(function (result) {
+                self.$Price.setPrice(result.price, result.currency);
             });
-
         },
 
         /**
@@ -344,14 +345,14 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             if (activeIndex < targetIndex) {
                 return Promise.all([
-                    this.$hideTabToLeft(TargetSheet),
-                    this.$showFromRight(ActiveSheet)
+                    this.$hideTabToLeft(ActiveSheet),
+                    this.$showFromRight(TargetSheet)
                 ]);
             }
 
             return Promise.all([
-                this.$hideTabToRight(TargetSheet),
-                this.$showFromLeft(ActiveSheet)
+                this.$hideTabToRight(ActiveSheet),
+                this.$showFromLeft(TargetSheet)
             ]);
         }
     });

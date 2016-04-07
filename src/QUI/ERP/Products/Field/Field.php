@@ -108,15 +108,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     protected function getBackendView()
     {
-        return new View(array(
-            'id' => $this->getId(),
-            'value' => $this->getValue(),
-            'title' => $this->getTitle(),
-            'prefix' => $this->getAttribute('prefix'),
-            'suffix' => $this->getAttribute('suffix'),
-            'priority' => $this->getAttribute('priority'),
-            'options' => $this->getOptions()
-        ));
+        return new View($this->getAttributes());
     }
 
     /**
@@ -126,15 +118,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     protected function getFrontendView()
     {
-        return new View(array(
-            'id' => $this->getId(),
-            'value' => $this->getValue(),
-            'title' => $this->getTitle(),
-            'prefix' => $this->getAttribute('prefix'),
-            'suffix' => $this->getAttribute('suffix'),
-            'priority' => $this->getAttribute('priority'),
-            'options' => $this->getOptions()
-        ));
+        return new View($this->getAttributes());
     }
 
     /**
@@ -144,14 +128,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function createUniqueField()
     {
-        return new UniqueField($this->getId(), array(
-            'value' => $this->getValue(),
-            'title' => $this->getTitle(),
-            'prefix' => $this->getAttribute('prefix'),
-            'suffix' => $this->getAttribute('suffix'),
-            'priority' => $this->getAttribute('priority'),
-            'options' => $this->getOptions()
-        ));
+        return new UniqueField($this->getId(), $this->getAttributes());
     }
 
     /**

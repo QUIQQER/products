@@ -5,9 +5,12 @@
  */
 namespace QUI\ERP\Products\Utils;
 
+use QUI;
 use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\Interfaces\Users\User;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Utils\Price;
+use QUI\ERP\Currency\Handler as Currencies;
 
 /**
  * Class Calc
@@ -37,7 +40,7 @@ class Calc
      * Calculate the product price
      *
      * @param UniqueProduct $Product
-     * @return double|float|integer
+     * @return Price
      *
      * @todo muss richtig implementiert werden
      */
@@ -56,9 +59,6 @@ class Calc
         }
 
 
-        return new \QUI\ERP\Products\Utils\Price(
-            $price,
-            \QUI\ERP\Currency\Handler::getDefaultCurrency()
-        );
+        return new Price($price, Currencies::getDefaultCurrency());
     }
 }

@@ -20,19 +20,32 @@ QUI::$Ajax->registerFunction(
         $fields  = json_decode($fields, true);
         $Product = Products::getProduct($productId);
 
-        foreach ($fields as $fieldId => $value) {
+        foreach ($fields as $field) {
             try {
+                if (!isset($field['fieldId']) ||
+                    !isset($field['value'])
+                ) {
+                    continue;
+                }
+
+                $fieldId    = $field['fieldId'];
+                $fieldValue = $field['value'];
+
                 $Field = Fields::getField($fieldId);
-                $Field->setValue($value);
+                $Field->setValue($fieldValue);
 
                 $Product->addField($Field);
 
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeException($Exception, \QUI\System\Log::LEVEL_WARNING);
+                QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_WARNING);
             }
         }
 
-        return QUI\ERP\Products\Utils\Calc::getProductPrice($Product);
+        $Price = QUI\ERP\Products\Utils\Calc::getProductPrice(
+            $Product->createUniqueProduct()
+        );
+
+        return $Price->toArray();
     },
     array('productId', 'fields')
 );

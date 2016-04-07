@@ -75,17 +75,17 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
     /**
      * @var bool
      */
-    protected $system = false;
+    protected $isSystem = false;
 
     /**
      * @var bool
      */
-    protected $standard = false;
+    protected $isStandard = false;
 
     /**
      * @var bool
      */
-    protected $require = false;
+    protected $isRequire = false;
 
     /**
      * @var bool
@@ -287,7 +287,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
      */
     public function isSystem()
     {
-        return $this->system;
+        return $this->isSystem;
     }
 
     /**
@@ -295,7 +295,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
      */
     public function isStandard()
     {
-        return $this->standard;
+        return $this->isStandard;
     }
 
     /**
@@ -303,6 +303,6 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
      */
     public function isRequired()
     {
-        return $this->require;
+        return $this->isRequire;
     }
 }
