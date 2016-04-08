@@ -342,6 +342,14 @@
             <de><![CDATA[Nach dem Anlegen der Kategorie können Sie der Kategory Felder zu weisen.]]></de>
             <en><![CDATA[After creating the category, you can assign fields to it.]]></en>
         </locale>
+        <locale name="categories.window.fieldtype.filter">
+            <de><![CDATA[Feldtyp-Filter]]></de>
+            <en><![CDATA[Fieldtype filter]]></en>
+        </locale>
+        <locale name="categories.window.fieldtype.filter.showAll">
+            <de><![CDATA[Alle anzeigen]]></de>
+            <en><![CDATA[Show all]]></en>
+        </locale>
 
         <locale name="control.select.search.categories.placeholder">
             <de><![CDATA[Suche nach einer Produktkategorie...]]></de>
@@ -393,8 +401,8 @@
         </locale>
 
         <locale name="fields.window.confirm.title">
-            <de><![CDATA[Kategorie hinzufügen]]></de>
-            <en><![CDATA[Add category]]></en>
+            <de><![CDATA[Feld hinzufügen]]></de>
+            <en><![CDATA[Add field]]></en>
         </locale>
 
         <locale name="fields.window.delete.title">
@@ -424,8 +432,12 @@
             <de><![CDATA[Suche]]></de>
             <en><![CDATA[Search]]></en>
         </locale>
+        <locale name="category.update.window.addField.title">
+            <de><![CDATA[Zur Kategorie hinzufügen]]></de>
+            <en><![CDATA[Add to the category]]></en>
+        </locale>
 
-        <locale name="fields.control.productAttributeListSettings.grid.discountSurcharge">
+        <locale name="fields.control.productAttributeListSettings.grid.type">
             <de><![CDATA[Auf/Abschlag]]></de>
             <en><![CDATA[Discount/surcharge]]></en>
         </locale>
@@ -433,9 +445,37 @@
             <de><![CDATA[]]></de>
             <en><![CDATA[]]></en>
         </locale>
-        <locale name="fields.control.productAttributeListSettings.grid.price">
+        <locale name="fields.control.productAttributeListSettings.grid.sum">
             <de><![CDATA[Preis]]></de>
             <en><![CDATA[Price]]></en>
+        </locale>
+
+        <locale name="fields.control.productAttributeList.remove.window.title">
+            <de><![CDATA[Eintrag aus der Auswahlliste entfernen?]]></de>
+            <en><![CDATA[Remove item from the list?]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeList.remove.window.text">
+            <de><![CDATA[Möchten Sie folgende Einträge wirklich löschen?]]></de>
+            <en><![CDATA[Do you really want to delete the following entries?]]></en>
+        </locale>
+
+        <locale name="fields.control.productAttributeList.edit.window.title">
+            <de><![CDATA[Eintrag aus der Auswahlliste editieren]]></de>
+            <en><![CDATA[Edit entry from the list]]></en>
+        </locale>
+
+        <locale name="fields.control.productAttributeList.add.window.title">
+            <de><![CDATA[Eintrag aus der Auswahlliste hinzufügen]]></de>
+            <en><![CDATA[Add entry from the list]]></en>
+        </locale>
+
+        <locale name="fields.control.productAttributeList.create.priceTitle">
+            <de><![CDATA[Preis Auf / Abschlag]]></de>
+            <en><![CDATA[Price on / discount]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeList.create.deduction">
+            <de><![CDATA[Abschlag]]></de>
+            <en><![CDATA[Deduction]]></en>
         </locale>
 
     </groups>

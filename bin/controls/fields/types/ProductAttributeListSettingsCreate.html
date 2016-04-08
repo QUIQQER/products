@@ -1,18 +1,20 @@
 <form class="quiqqer-products-attributeList-entry-create">
     <label class="field-container field-attributeList-title">
-        <span class="field-container-item">Title</span>
+        <span class="field-container-item">
+            {{title}}
+        </span>
         <input type="hidden" name="title"/>
     </label>
 
     <label class="field-container field-attributeList-price">
         <span class="field-container-item">
-            Preis Auf / Abschlag
+            {{priceTitle}}
         </span>
         <span class="field-container-field">
-            <input type="number" name="price"/>
+            <input type="number" name="sum"/>
 
-            <select name="discount">
-                <option value="">Abschlag</option>
+            <select name="type">
+                <option value="">{{deduction}}</option>
                 <option value="percent">%</option>
             </select>
         </span>

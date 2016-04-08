@@ -167,6 +167,7 @@ define('package/quiqqer/products/bin/controls/categories/Update', [
                                 'package/quiqqer/products/bin/controls/fields/Window'
                             ], function (Win) {
                                 new Win({
+                                    title : QUILocale.get(lg, 'category.update.window.addField.title'),
                                     events: {
                                         onSubmit: function (Win, value) {
                                             self.addField(value);

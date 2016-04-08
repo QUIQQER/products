@@ -38,21 +38,20 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
         ],
 
         options: {
-            maxHeight: 600,
-            maxWidth : 800,
-            multiple : false
+            maxHeight      : 600,
+            maxWidth       : 800,
+            multiple       : false,
+            title          : QUILocale.get(lg, 'fields.window.confirm.title'),
+            icon           : 'fa fa-plus',
+            fieldTypeFilter: false
         },
 
         initialize: function (options) {
 
             this.parent(options);
 
-            this.setAttributes({
-                title: QUILocale.get(lg, 'fields.window.confirm.title'),
-                icon : 'fa fa-plus'
-            });
-
-            this.$Grid = null;
+            this.$Grid            = null;
+            this.$FieldTypeFilter = null;
 
             this.addEvents({
                 onOpen  : this.$onOpen,
@@ -81,6 +80,10 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
             this.$Grid = new Grid(Container, {
                 pagination       : true,
                 multipleSelection: this.getAttribute('multiple'),
+                buttons          : [{
+                    text: QUILocale.get(lg, 'categories.window.fieldtype.filter'),
+                    name: 'select'
+                }],
                 columnModel      : [{
                     header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
@@ -123,6 +126,30 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
                 onRefresh : this.refresh,
                 onDblClick: this.submit
             });
+
+            this.$FieldTypeFilter = self.$Grid.getButtons().filter(function (Btn) {
+                return Btn.getAttribute('name') == 'select';
+            })[0];
+
+            this.$FieldTypeFilter.addEvent('change', function (Btn, ContextItem) {
+                var value = ContextItem.getAttribute('value');
+
+                if (value === '') {
+                    self.$FieldTypeFilter.setAttribute(
+                        'text',
+                        QUILocale.get(lg, 'categories.window.fieldtype.filter')
+                    );
+                } else {
+                    self.$FieldTypeFilter.setAttribute(
+                        'text',
+                        QUILocale.get(lg, 'fieldtype.' + value)
+                    );
+                }
+
+                self.setAttribute('fieldTypeFilter', value);
+                self.refresh();
+            });
+
 
             this.refresh().then(function () {
                 return self.$onResize();
@@ -168,10 +195,50 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
         refresh: function () {
             var self = this;
 
-            return Fields.getList({
-                perPage: this.$Grid.options.perPage,
-                page   : this.$Grid.options.page
-            }).then(function (gridData) {
+            return Promise.all([
+                Fields.getFieldTypes(),
+                Fields.getList({
+                    perPage: this.$Grid.options.perPage,
+                    page   : this.$Grid.options.page,
+                    type   : this.getAttribute('fieldTypeFilter')
+                })
+            ]).then(function (result) {
+                var fieldTypes = result[0],
+                    gridData   = result[1];
+
+                var value = self.$FieldTypeFilter.getAttribute('value');
+
+                fieldTypes.sort(function (a, b) {
+                    var aText = QUILocale.get(lg, 'fieldtype.' + a);
+                    var bText = QUILocale.get(lg, 'fieldtype.' + b);
+
+                    if (aText > bText) {
+                        return 1;
+                    }
+                    if (aText < bText) {
+                        return -1;
+                    }
+
+                    return 0;
+                });
+
+                self.$FieldTypeFilter.getContextMenu(function (Menu) {
+                    Menu.setAttribute('maxHeight', 300);
+                    Menu.clear();
+                });
+
+                self.$FieldTypeFilter.appendChild({
+                    text : QUILocale.get(lg, 'categories.window.fieldtype.filter.showAll'),
+                    value: ''
+                });
+
+                for (var i = 0, len = fieldTypes.length; i < len; i++) {
+                    self.$FieldTypeFilter.appendChild({
+                        text : QUILocale.get(lg, 'fieldtype.' + fieldTypes[i]),
+                        value: fieldTypes[i]
+                    });
+                }
+
                 self.$Grid.setData(gridData);
             });
         },

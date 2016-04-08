@@ -123,13 +123,13 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     dataType : 'string',
                     width    : 200
                 }, {
-                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.price'),
-                    dataIndex: 'price',
+                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.sum'),
+                    dataIndex: 'sum',
                     dataType : 'number',
                     width    : 100
                 }, {
-                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.discountType'),
-                    dataIndex: 'discount',
+                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.type'),
+                    dataIndex: 'type',
                     dataType : 'node',
                     width    : 60
                 }]
@@ -163,7 +163,28 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             this.$Elm   = this.create();
 
             try {
-                this.$data = JSON.decode(this.$Input.value);
+                var data   = JSON.decode(this.$Input.value),
+                    result = [];
+
+                // parse data
+                for (var i = 0, len = data.length; i < len; i++) {
+                    if (!("title" in data[i])) {
+                        continue;
+                    }
+
+                    if (!("sum" in data[i])) {
+                        continue;
+                    }
+
+                    if (!("type" in data[i])) {
+                        continue;
+                    }
+
+                    result.push(data[i]);
+                }
+
+                this.$data = result;
+
             } catch (e) {
                 console.error(e);
             }
@@ -213,7 +234,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * refresh the grid data dispaly
          */
         refresh: function () {
-            var i, len, entry, langTitle, discount;
+            var i, len, entry, langTitle, type;
             var data = [];
 
             var currentLang = QUILocale.getCurrent();
@@ -225,11 +246,11 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     continue;
                 }
 
-                if (!("price" in entry)) {
+                if (!("sum" in entry)) {
                     continue;
                 }
 
-                if (!("discount" in entry)) {
+                if (!("type" in entry)) {
                     continue;
                 }
 
@@ -240,15 +261,15 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 }
 
                 // currency percent
-                switch (entry.discount) {
+                switch (entry.type) {
                     case 'percent':
-                        discount = new Element('span', {
+                        type = new Element('span', {
                             'class': 'fa fa-percent'
                         });
                         break;
 
                     default:
-                        discount = new Element('span', {
+                        type = new Element('span', {
                             'class': 'fa fa-money'
                         });
                         break;
@@ -256,9 +277,9 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
 
 
                 data.push({
-                    title   : langTitle,
-                    price   : entry.price,
-                    discount: discount
+                    title: langTitle,
+                    sum  : entry.sum,
+                    type : type
                 });
             }
 
@@ -278,14 +299,18 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             var self = this;
 
             new QUIConfirm({
-                title    : 'Eintrag für die Auswahlliste hinzufügen',
+                title    : QUILocale.get(lg, 'fields.control.productAttributeList.add.window.title'),
                 icon     : 'fa fa-plus',
                 texticon : false,
                 maxHeight: 300,
                 maxWidth : 450,
                 events   : {
                     onOpen  : function (Win) {
-                        Win.getContent().set('html', Mustache.render(templateCreate));
+                        Win.getContent().set('html', Mustache.render(templateCreate, {
+                            title     : QUILocale.get('quiqqer/system', 'title'),
+                            priceTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
+                            deduction : QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction')
+                        }));
 
                         var Form = Win.getContent().getElement('form');
 
@@ -299,8 +324,8 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
 
                         self.add(
                             Title.getData(),
-                            Form.elements.price.value,
-                            Form.elements.discount.value
+                            Form.elements.sum.value,
+                            Form.elements.type.value
                         );
                     }
                 }
@@ -325,19 +350,23 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 data = this.$data[index];
 
             new QUIConfirm({
-                title    : 'Eintrag aus der Auswahlliste editieren',
+                title    : QUILocale.get(lg, 'fields.control.productAttributeList.edit.window.title'),
                 icon     : 'fa fa-edit',
                 maxHeight: 300,
                 maxWidth : 450,
                 events   : {
                     onOpen  : function (Win) {
-                        Win.getContent().set('html', Mustache.render(templateCreate));
+                        Win.getContent().set('html', Mustache.render(templateCreate, {
+                            title     : QUILocale.get('quiqqer/system', 'title'),
+                            priceTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
+                            deduction : QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction')
+                        }));
 
                         var Form = Win.getContent().getElement('form');
 
-                        Form.elements.title.value    = JSON.encode(data.title);
-                        Form.elements.price.value    = data.price;
-                        Form.elements.discount.value = data.discount;
+                        Form.elements.title.value = JSON.encode(data.title);
+                        Form.elements.sum.value   = data.sum;
+                        Form.elements.type.value  = data.type;
 
                         new InputMultiLang().imports(Form.elements.title);
                     },
@@ -350,8 +379,8 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                         self.edit(
                             index,
                             Title.getData(),
-                            Form.elements.price.value,
-                            Form.elements.discount.value
+                            Form.elements.sum.value,
+                            Form.elements.type.value
                         );
                     }
                 }
@@ -375,10 +404,10 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             }
 
             new QUIConfirm({
-                title      : 'Eintrag aus der Auswahlliste entfernen?',
+                title      : QUILocale.get(lg, 'fields.control.productAttributeList.remove.window.title'),
                 icon       : 'fa fa-trash',
                 texticon   : 'fa fa-trash',
-                text       : 'Möchten Sie folgende Einträge wirklich löschen?',
+                text       : QUILocale.get(lg, 'fields.control.productAttributeList.remove.window.text'),
                 information: titles.join(','),
                 maxHeight  : 300,
                 maxWidth   : 450,
@@ -400,14 +429,14 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
         /**
          *
          * @param {Object|String} title
-         * @param {Number} price
-         * @param {String} discount
+         * @param {Number} sum
+         * @param {String} type
          */
-        add: function (title, price, discount) {
+        add: function (title, sum, type) {
             this.$data.push({
-                title   : title,
-                price   : price,
-                discount: discount
+                title: title,
+                sum  : sum,
+                type : type
             });
 
             this.refresh();
@@ -459,14 +488,14 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          *
          * @param {Number} index
          * @param {Object|String} title
-         * @param {Number} price
-         * @param {String} discount
+         * @param {Number} sum
+         * @param {String} type
          */
-        edit: function (index, title, price, discount) {
+        edit: function (index, title, sum, type) {
             this.$data[index] = {
-                title   : title,
-                price   : price,
-                discount: discount
+                title: title,
+                sum  : sum,
+                type : type
             };
 
             this.refresh();

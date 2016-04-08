@@ -16,12 +16,16 @@ QUI::$Ajax->registerFunction(
     function ($params) {
         $Fields = new QUI\ERP\Products\Handler\Fields();
         $result = array();
+        $params = json_decode($params, true);
 
-        $Grid = new QUI\Utils\Grid();
+        $Grid  = new QUI\Utils\Grid();
+        $query = $Grid->parseDBParams($params);
 
-        $data = $Fields->getFields(
-            $Grid->parseDBParams(json_decode($params, true))
-        );
+        if (isset($params['type']) && !empty($params['type'])) {
+            $query['where']['type'] = $params['type'];
+        }
+
+        $data = $Fields->getFields($query);
 
         /* @var $Field \QUI\ERP\Products\Field\Field */
         foreach ($data as $Field) {

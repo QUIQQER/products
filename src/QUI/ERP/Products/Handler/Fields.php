@@ -267,6 +267,10 @@ class Fields
         $result = array();
 
         foreach ($files as $file) {
+            if (strpos($file, 'View') !== false) {
+                continue;
+            }
+
             $file     = pathinfo($file);
             $result[] = $file['filename'];
         }
