@@ -96,7 +96,7 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
                     width    : 200
                 }, {
                     header   : QUILocale.get(lg, 'fieldtype'),
-                    dataIndex: 'type',
+                    dataIndex: 'typeText',
                     dataType : 'text',
                     width    : 200
                 }, {
@@ -119,6 +119,9 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
                     dataIndex: 'searchtype',
                     dataType : 'text',
                     width    : 200
+                }, {
+                    dataIndex: 'type',
+                    dataType : 'hidden'
                 }]
             });
 
@@ -203,10 +206,9 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
                     type   : this.getAttribute('fieldTypeFilter')
                 })
             ]).then(function (result) {
+                var i, len;
                 var fieldTypes = result[0],
                     gridData   = result[1];
-
-                var value = self.$FieldTypeFilter.getAttribute('value');
 
                 fieldTypes.sort(function (a, b) {
                     var aText = QUILocale.get(lg, 'fieldtype.' + a);
@@ -232,11 +234,18 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
                     value: ''
                 });
 
-                for (var i = 0, len = fieldTypes.length; i < len; i++) {
+                for (i = 0, len = fieldTypes.length; i < len; i++) {
                     self.$FieldTypeFilter.appendChild({
                         text : QUILocale.get(lg, 'fieldtype.' + fieldTypes[i]),
                         value: fieldTypes[i]
                     });
+                }
+
+                for (i = 0, len = gridData.data.length; i < len; i++) {
+                    gridData.data[i].typeText = QUILocale.get(
+                        lg,
+                        'fieldtype.' + gridData.data[i].type
+                    );
                 }
 
                 self.$Grid.setData(gridData);
