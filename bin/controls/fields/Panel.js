@@ -215,7 +215,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                 }, {
                     header   : QUILocale.get(lg, 'priority'),
                     dataIndex: 'priority',
-                    dataType : 'text',
+                    dataType : 'number',
                     width    : 100
                 }, {
                     header   : QUILocale.get(lg, 'prefix'),

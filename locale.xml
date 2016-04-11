@@ -48,6 +48,10 @@
             <de><![CDATA[Feld-Typ]]></de>
             <en><![CDATA[Field type]]></en>
         </locale>
+        <locale name="workingTitle">
+            <de><![CDATA[Arbeitstitel]]></de>
+            <en><![CDATA[Working title]]></en>
+        </locale>
         <locale name="fieldoptions">
             <de><![CDATA[Feld-Optionen]]></de>
             <en><![CDATA[Field options]]></en>

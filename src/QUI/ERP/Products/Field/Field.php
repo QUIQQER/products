@@ -248,6 +248,44 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             'products.field.' . $this->getId() . '.title'
         );
 
+        QUI\Translator::delete(
+            'quiqqer/products',
+            'products.field.' . $this->getId() . '.workingtitle'
+        );
+
+        // delete column
+        QUI::getDataBase()->table()->deleteColumn(
+            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            'F' . $this->getId()
+        );
+    }
+
+    /**
+     * Delete the field
+     *
+     * @throws QUI\Exception
+     */
+    public function deleteSystemField()
+    {
+        QUI\Rights\Permission::checkPermission('field.delete');
+        QUI\Rights\Permission::checkPermission('field.delete.systemfield');
+
+        QUI::getDataBase()->delete(
+            QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+            array('id' => $this->getId())
+        );
+
+        // delete the locale
+        QUI\Translator::delete(
+            'quiqqer/products',
+            'products.field.' . $this->getId() . '.title'
+        );
+
+        QUI\Translator::delete(
+            'quiqqer/products',
+            'products.field.' . $this->getId() . '.workingtitle'
+        );
+
         // delete column
         QUI::getDataBase()->table()->deleteColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
@@ -360,15 +398,30 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     public function getTitle($Locale = false)
     {
         if (!$Locale) {
-            return QUI::getLocale()->get(
-                'quiqqer/products',
-                'products.field.' . $this->getId() . '.title'
-            );
+            $Locale = QUI::getLocale();
         }
 
         return $Locale->get(
             'quiqqer/products',
             'products.field.' . $this->getId() . '.title'
+        );
+    }
+
+    /**
+     * Return the working title
+     *
+     * @param QUI\Locale|Boolean $Locale - optional
+     * @return string
+     */
+    public function getWorkingTitle($Locale = false)
+    {
+        if (!$Locale) {
+            $Locale = QUI::getLocale();
+        }
+
+        return $Locale->get(
+            'quiqqer/products',
+            'products.field.' . $this->getId() . '.workingtitle'
         );
     }
 
@@ -392,17 +445,18 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getAttributes()
     {
-        $attributes               = parent::getAttributes();
-        $attributes['id']         = $this->getId();
-        $attributes['title']      = $this->getTitle();
-        $attributes['type']       = $this->getType();
-        $attributes['options']    = $this->getOptions();
-        $attributes['custom']     = $this->isCustomField();
-        $attributes['unassigned'] = $this->isUnassigned();
-        $attributes['isRequired'] = $this->isRequired();
-        $attributes['isStandard'] = $this->isStandard();
-        $attributes['isSystem']   = $this->isSystem();
-        $attributes['jsControl']  = $this->getJavaScriptControl();
+        $attributes                 = parent::getAttributes();
+        $attributes['id']           = $this->getId();
+        $attributes['title']        = $this->getTitle();
+        $attributes['workingtitle'] = $this->getWorkingTitle();
+        $attributes['type']         = $this->getType();
+        $attributes['options']      = $this->getOptions();
+        $attributes['custom']       = $this->isCustomField();
+        $attributes['unassigned']   = $this->isUnassigned();
+        $attributes['isRequired']   = $this->isRequired();
+        $attributes['isStandard']   = $this->isStandard();
+        $attributes['isSystem']     = $this->isSystem();
+        $attributes['jsControl']    = $this->getJavaScriptControl();
 
         return $attributes;
     }

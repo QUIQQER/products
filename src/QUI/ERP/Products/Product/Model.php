@@ -267,7 +267,6 @@ class Model extends QUI\QDOM
         return urlencode(implode(QUI\Rewrite::URL_PARAM_SEPERATOR, $parts));
     }
 
-
     /**
      * Return the title of the product
      *

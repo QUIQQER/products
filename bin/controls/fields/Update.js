@@ -50,7 +50,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Translation = null;
+            this.$Translation  = null;
+            this.$WorkingTitle = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -71,6 +72,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     contentText      : '',
                     tableHeader      : QUILocale.get(lg, 'control.field.create.header'),
                     fieldTitle       : QUILocale.get('quiqqer/system', 'title'),
+                    fieldWorkingTitle: QUILocale.get(lg, 'workingTitle'),
                     fieldType        : QUILocale.get(lg, 'fieldtype'),
                     fieldOptions     : QUILocale.get(lg, 'fieldoptions'),
                     fieldPriority    : QUILocale.get(lg, 'priority'),
@@ -102,6 +104,11 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 'group': 'quiqqer/products',
                 'var'  : 'products.field.' + id + '.title'
             }).inject(Elm.getElement('.field-title'));
+
+            this.$WorkingTitle = new Translation({
+                'group': 'quiqqer/products',
+                'var'  : 'products.field.' + id + '.workingtitle'
+            }).inject(Elm.getElement('.field-workingtitle'));
 
             Promise.all([
                 Fields.getChild(id),
@@ -198,6 +205,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     options      : Form.elements.options.value
                 }).then(function () {
                     return self.$Translation.save();
+                }).then(function () {
+                    return self.$WorkingTitle.save();
                 }).then(resolve()).catch(reject);
             });
         },
