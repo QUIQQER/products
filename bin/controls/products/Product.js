@@ -307,7 +307,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
 
                 // fields
-                var field,
+                var field, title,
                     Data = Content.getElement('.product-data tbody');
 
                 var StandardFields = Content.getElement(
@@ -365,10 +365,17 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             continue;
                         }
 
+
+                        title = QUILocale.get(lg, 'products.field.' + field.id + '.title');
+
+                        if (QUILocale.exists(lg, 'products.field.' + field.id + '.workingtitle')) {
+                            title = QUILocale.get(lg, 'products.field.' + field.id + '.workingtitle');
+                        }
+
                         new Element('tr', {
                             'class'       : 'field',
                             html          : Mustache.render(templateField, {
-                                fieldTitle: QUILocale.get(lg, 'products.field.' + field.id + '.title'),
+                                fieldTitle: title,
                                 fieldName : 'field-' + field.id,
                                 control   : field.jsControl
                             }),
@@ -385,10 +392,17 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             continue;
                         }
 
+
+                        title = QUILocale.get(lg, 'products.field.' + field.id + '.title');
+
+                        if (QUILocale.exists(lg, 'products.field.' + field.id + '.workingtitle')) {
+                            title = QUILocale.get(lg, 'products.field.' + field.id + '.workingtitle');
+                        }
+
                         new Element('tr', {
                             'class'       : 'field',
                             html          : Mustache.render(templateField, {
-                                fieldTitle: QUILocale.get(lg, 'products.field.' + field.id + '.title'),
+                                fieldTitle: title,
                                 fieldName : 'field-' + field.id,
                                 control   : field.jsControl
                             }),
@@ -672,7 +686,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         fields['field-' + entry.id] = entry.value;
                     }
                 });
-                console.warn(selfData);
+
                 Products.updateChild(
                     self.getAttribute('productId'),
                     categories,

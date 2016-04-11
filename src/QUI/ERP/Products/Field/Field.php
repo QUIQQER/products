@@ -415,14 +415,18 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getWorkingTitle($Locale = false)
     {
+        $var   = 'products.field.' . $this->getId() . '.workingtitle';
+        $group = 'quiqqer/products';
+
         if (!$Locale) {
             $Locale = QUI::getLocale();
         }
 
-        return $Locale->get(
-            'quiqqer/products',
-            'products.field.' . $this->getId() . '.workingtitle'
-        );
+        if ($Locale->exists($group, $var)) {
+            return $Locale->get($group, $var);
+        }
+
+        return $this->getTitle();
     }
 
     /**
