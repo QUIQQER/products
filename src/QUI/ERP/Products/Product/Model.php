@@ -551,7 +551,7 @@ class Model extends QUI\QDOM
             }
 
 
-            if (empty($value)) {
+            if ($value === '') {
                 throw new QUI\Exception(array(
                     'quiqqer/products',
                     'exception.field.invalid',

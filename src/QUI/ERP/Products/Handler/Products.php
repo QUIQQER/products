@@ -204,7 +204,7 @@ class Products
             $value = $Field->getValue();
 
             if ($Field->isRequired()) {
-                if (empty($value) && $value !== 0) {
+                if ($value === '') {
                     throw new QUI\Exception(array(
                         'quiqqer/products',
                         'exception.field.is.invalid',
