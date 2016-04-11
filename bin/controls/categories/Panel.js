@@ -478,8 +478,16 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          */
         createChild: function (parentId) {
             var self   = this,
-                Active = self.$Sitemap.getActive();
+                Active = null;
 
+            if (self.$Sitemap) {
+                var selected = self.$Sitemap.getSelected();
+
+                if (selected.length) {
+                    Active = selected[0];
+                }
+            }
+            
             if (typeof parentId === 'undefined' ||
                 typeof parentId === 'object') {
 
