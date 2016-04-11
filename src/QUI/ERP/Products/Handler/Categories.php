@@ -191,11 +191,11 @@ class Categories
      *
      * @return QUI\ERP\Products\Product\Product
      */
-    public static function createCategory($parentId, $title = '')
+    public static function createCategory($parentId = null, $title = '')
     {
         QUI\Rights\Permission::checkPermission('category.create');
 
-        if (!$parentId) {
+        if (is_null($parentId)) {
             $parentId = 0;
         }
 
