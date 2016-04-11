@@ -33,6 +33,8 @@ class Fields
 
     const FIELD_FOLDER = 10;
 
+    const FIELD_WORKING_TITLE = 11;
+
     /**
      * @var array
      */
@@ -109,7 +111,6 @@ class Fields
             }
         }
 
-
         if (!isset($data['type'])) {
             throw new QUI\Exception(array(
                 'quiqqer/products',
@@ -172,10 +173,12 @@ class Fields
             }
         }
 
+        if (isset($data['options']) && is_array($data['options'])) {
+            $data['options'] = json_encode($data['options']);
+        }
 
         // @todo create field permissions -> view und edit
         QUI::getPermissionManager()->addPermission(array());
-
 
         // insert field data
         QUI::getDataBase()->insert(
@@ -214,12 +217,37 @@ class Fields
         $localeGroup = 'quiqqer/products';
         $localeVar   = 'products.field.' . $fieldId . '.title';
 
+        // title
         try {
             $data  = QUI\Translator::get($localeGroup, $localeVar);
             $texts = array();
 
             if (isset($attributes['titles'])) {
                 $texts = $attributes['titles'];
+            }
+
+            $texts['datatype'] = 'php,js';
+            $texts['html']     = 1;
+
+            if (!isset($data[0])) {
+                QUI\Translator::addUserVar($localeGroup, $localeVar, $texts);
+            }
+
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addNotice($Exception->getMessage(), array(
+                'trace' => $Exception->getTrace()
+            ));
+        }
+
+        $localeVar   = 'products.field.' . $fieldId . '.workingtitle';
+
+        // working title
+        try {
+            $data  = QUI\Translator::get($localeGroup, $localeVar);
+            $texts = array();
+
+            if (isset($attributes['workingtitles'])) {
+                $texts = $attributes['workingtitles'];
             }
 
             $texts['datatype'] = 'php,js';

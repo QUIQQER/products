@@ -23,16 +23,17 @@ define('package/quiqqer/products/bin/classes/Fields', [
         Extends: QUIDOM,
         Type   : 'package/quiqqer/products/bin/classes/Fields',
 
-        FIELD_PRICE       : 1,
-        FIELD_TAX         : 2,
-        FIELD_PRODUCT_NO  : 3,
-        FIELD_TITLE       : 4,
-        FIELD_SHORT_DESC  : 5,
-        FIELD_CONTENT     : 6,
-        FIELD_SUPPLIER    : 7,
-        FIELD_MANUFACTURER: 8,
-        FIELD_IMAGE       : 9,
-        FIELD_FOLDER      : 10,
+        FIELD_PRICE        : 1,
+        FIELD_TAX          : 2,
+        FIELD_PRODUCT_NO   : 3,
+        FIELD_TITLE        : 4,
+        FIELD_SHORT_DESC   : 5,
+        FIELD_CONTENT      : 6,
+        FIELD_SUPPLIER     : 7,
+        FIELD_MANUFACTURER : 8,
+        FIELD_IMAGE        : 9,
+        FIELD_FOLDER       : 10,
+        FIELD_WORKING_TITLE: 11,
 
         /**
          * Return the allowed field attributes

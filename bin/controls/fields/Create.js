@@ -46,7 +46,8 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Translation = null;
+            this.$Translation  = null;
+            this.$WorkingTitle = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -69,6 +70,7 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                                        '</div>',
                     tableHeader      : QUILocale.get(lg, 'control.field.create.header'),
                     fieldTitle       : QUILocale.get('quiqqer/system', 'title'),
+                    fieldWorkingTitle: QUILocale.get(lg, 'workingTitle'),
                     fieldType        : QUILocale.get(lg, 'fieldtype'),
                     fieldPriority    : QUILocale.get(lg, 'priority'),
                     fieldPrefix      : QUILocale.get(lg, 'prefix'),
@@ -97,6 +99,10 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
             this.$Translation = new Translation({
                 group: 'quiqqer/products'
             }).inject(Elm.getElement('.field-title'));
+
+            this.$WorkingTitle = new Translation({
+                group: 'quiqqer/products'
+            }).inject(Elm.getElement('.field-workingtitle'));
 
             Fields.getFieldTypes().then(function (fieldTypes) {
 
@@ -146,7 +152,14 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                         'products.field.' + data.id + '.title'
                     );
 
+                    self.$WorkingTitle.setAttribute(
+                        'var',
+                        'products.field.' + data.id + '.workingtitle'
+                    );
+
                     self.$Translation.save().then(function () {
+                        return self.$WorkingTitle.save();
+                    }).then(function () {
                         resolve();
                     }).catch(reject);
                 });

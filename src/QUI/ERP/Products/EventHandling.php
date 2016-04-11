@@ -256,6 +256,37 @@ class EventHandling
                 QUI\System\Log::addAlert($Exception->getMessage());
             }
         }
+
+        // prüfen welche system felder nicht mehr existieren
+        $systemFields = Fields::getFieldIds(array(
+            'where' => array(
+                'systemField' => 1
+            )
+        ));
+
+        $fieldInStandardFields = function ($fieldId) use ($standardFields) {
+            foreach ($standardFields as $fieldData) {
+                if ($fieldId == $fieldData['id']) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        foreach ($systemFields as $systemFieldsId) {
+            $fieldId = (int)$systemFieldsId['id'];
+
+            if ($fieldInStandardFields($fieldId)) {
+                continue;
+            }
+
+            try {
+                $Field = Fields::getField($fieldId);
+                $Field->deleteSystemField();
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_WARNING);
+            }
+        }
     }
 
     /**
