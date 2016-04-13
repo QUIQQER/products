@@ -231,23 +231,6 @@ class Products
 
         $newId = QUI::getDataBase()->getPDO()->lastInsertId();
 
-        // translation - title
-        try {
-            QUI\Translator::addUserVar(
-                'quiqqer/products',
-                'products.product.' . $newId . '.title',
-                array(
-                    'datatype' => 'js,php'
-                )
-            );
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addInfo($Exception->getMessage());
-
-            QUI::getMessagesHandler()->addAttention(
-                $Exception->getMessage()
-            );
-        }
-
         return self::getProduct($newId);
     }
 
