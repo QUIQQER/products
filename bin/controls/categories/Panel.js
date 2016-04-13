@@ -26,6 +26,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
     'qui/controls/contextmenu/Item',
     'controls/grid/Grid',
     'Locale',
+    'package/quiqqer/products/bin/controls/categories/Category',
     'package/quiqqer/products/bin/classes/Categories',
     'package/quiqqer/products/bin/controls/categories/Sitemap',
     'package/quiqqer/products/bin/controls/categories/Create',
@@ -35,7 +36,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
 ], function (QUI, QUIPanel, QUIButton, QUIConfirm, QUISitemap, QUISitemapItem,
              QUIContextMenu, QUIContextItem,
-             Grid, QUILocale, Handler, CategoryMap, CreateCategory, UpdateCategory) {
+             Grid, QUILocale, CategoryPanel, Handler, CategoryMap, CreateCategory, UpdateCategory) {
     "use strict";
 
     var lg         = 'quiqqer/products',
@@ -487,7 +488,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     Active = selected[0];
                 }
             }
-            
+
             if (typeof parentId === 'undefined' ||
                 typeof parentId === 'object') {
 
@@ -539,6 +540,11 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          * @param {Number} categoryId - Category-ID
          */
         updateChild: function (categoryId) {
+            new CategoryPanel({
+                categoryId: categoryId
+            }).inject(this.getParent());
+
+            return;
             var self = this;
 
             this.closeSitemap().then(function () {

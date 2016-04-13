@@ -311,6 +311,11 @@
             <en><![CDATA[Create product]]></en>
         </locale>
 
+        <locale name="category.panel.title">
+            <de><![CDATA[Kategorie: [title]]]></de>
+            <en><![CDATA[Category: [title]]]></en>
+        </locale>
+
         <locale name="categories.update.title">
             <de><![CDATA[Kategorie bearbeiten: [title]]]></de>
             <en><![CDATA[Edit category: [title]]]></en>

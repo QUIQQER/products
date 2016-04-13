@@ -217,9 +217,27 @@ define('package/quiqqer/products/bin/classes/Categories', [
         setFieldsToAllProducts: function (categoryId) {
             return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_categories_setFieldsToAllProducts', resolve, {
-                    'package'          : 'quiqqer/products',
-                    onError            : reject,
-                    categoryId         : categoryId
+                    'package' : 'quiqqer/products',
+                    onError   : reject,
+                    categoryId: categoryId
+                });
+            });
+        },
+
+        /**
+         * Return the products form a category for a grid
+         *
+         * @param {Number} categoryId - Category-ID
+         * @param {Object} params - Category attributes
+         * @returns {Promise}
+         */
+        getProductList: function (categoryId, params) {
+            return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_categories_getProductsFromCategory', resolve, {
+                    'package' : 'quiqqer/products',
+                    onError   : reject,
+                    categoryId: categoryId,
+                    params    : JSON.encode(params)
                 });
             });
         }

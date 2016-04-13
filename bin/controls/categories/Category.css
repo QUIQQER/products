@@ -1,0 +1,17 @@
+.category-data,
+.category-sites,
+.category-products {
+    display: none;
+    left: 0;
+    padding: 20px;
+    position: absolute;
+    top: 0;
+}
+
+
+/** Fields
+ ============================================== */
+
+.category-data .field-container-item {
+    width: 140px;
+}
