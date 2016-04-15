@@ -339,7 +339,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     for (i = 0, len = complete.length; i < len; i++) {
                         fieldList[complete[i].id] = complete[i];
                     }
-console.log(fieldList);
+
                     self.$createCategories(fieldList.clean());
 
                     var diffFields = standardFields.filter(function (value) {
