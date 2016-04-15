@@ -389,10 +389,64 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Return the suffix
+     *
+     * @param QUI\Locale|bool $Locale
+     * @return string|bool
+     */
+    public function getSuffix($Locale = false)
+    {
+        if (!$Locale) {
+            $Locale = QUI::getLocale();
+        }
+
+        $current = $Locale->getCurrent();
+        $suffix  = $this->getAttribute('suffix');
+        $suffix  = json_decode($suffix, true);
+
+        if (!is_array($suffix)) {
+            return $this->getAttribute('suffix');
+        }
+
+        if (isset($suffix[$current])) {
+            return $suffix[$current];
+        }
+
+        return $this->getAttribute('suffix');
+    }
+
+    /**
+     * Return the prefix
+     *
+     * @param QUI\Locale|bool $Locale
+     * @return string|bool
+     */
+    public function getPrefix($Locale = false)
+    {
+        if (!$Locale) {
+            $Locale = QUI::getLocale();
+        }
+
+        $current = $Locale->getCurrent();
+        $prefix  = $this->getAttribute('prefix');
+        $prefix  = json_decode($prefix, true);
+
+        if (!is_array($prefix)) {
+            return $this->getAttribute('prefix');
+        }
+
+        if (isset($prefix[$current])) {
+            return $prefix[$current];
+        }
+
+        return $this->getAttribute('prefix');
+    }
+
+    /**
      * Return the title of the field
      * The title are from the user and translated
      *
-     * @param QUI\Locale|Boolean $Locale - optional
+     * @param QUI\Locale|bool $Locale - optional
      * @return string
      */
     public function getTitle($Locale = false)

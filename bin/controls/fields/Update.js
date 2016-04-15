@@ -22,13 +22,14 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
     'qui/utils/Form',
     'Locale',
     'Mustache',
+    'controls/lang/InputMultiLang',
     'package/quiqqer/products/bin/classes/Fields',
     'package/quiqqer/translator/bin/controls/Update',
 
     'text!package/quiqqer/products/bin/controls/fields/Create.html',
     'css!package/quiqqer/products/bin/controls/fields/Create.css'
 
-], function (QUI, QUIControl, QUIFormUtils, QUILocale, Mustache, Handler, Translation, template) {
+], function (QUI, QUIControl, QUIFormUtils, QUILocale, Mustache, InputMultiLang, Handler, Translation, template) {
     "use strict";
 
     var lg     = 'quiqqer/products',
@@ -52,6 +53,9 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
             this.$Translation  = null;
             this.$WorkingTitle = null;
+
+            this.$Suffix = null;
+            this.$Prefix = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -95,7 +99,6 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
          * event : on inject
          */
         $onInject: function () {
-
             var self = this,
                 Elm  = self.getElm(),
                 id   = this.getAttribute('fieldId');
@@ -167,12 +170,22 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     self.$loadSettings(this);
                 }.bind(FieldTypes);
 
+
+                this.$Prefix = new InputMultiLang().imports(
+                    Elm.getElement('[name="prefix"]')
+                );
+
+                this.$Suffix = new InputMultiLang().imports(
+                    Elm.getElement('[name="suffix"]')
+                );
+
+
                 FieldTypes.addEvent('change', loadSettings);
 
                 loadSettings();
 
                 self.fireEvent('loaded');
-            });
+            }.bind(this));
         },
 
         /**

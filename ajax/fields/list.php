@@ -29,7 +29,12 @@ QUI::$Ajax->registerFunction(
 
         /* @var $Field \QUI\ERP\Products\Field\Field */
         foreach ($data as $Field) {
-            $result[] = $Field->getAttributes();
+            $attributes = $Field->getAttributes();
+
+            $attributes['suffix'] = $Field->getSuffix();
+            $attributes['prefix'] = $Field->getPrefix();
+
+            $result[] = $attributes;
         }
 
         return $Grid->parseResult($result, $Fields->countFields());
