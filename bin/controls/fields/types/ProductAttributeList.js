@@ -36,8 +36,6 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeList'
             var Elm = this.getElm();
 
             Elm.addClass('field-container-field');
-
-            console.log(123);
         }
     });
 });

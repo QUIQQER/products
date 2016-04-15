@@ -342,7 +342,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                     self.$createCategories(fieldList.clean());
 
-                    var diffFields = standardFields.filter(function (value) {
+                    var diffFields = complete.filter(function (value) {
                         for (var i = 0, len = systemFields.length; i < len; i++) {
                             if (value.id === systemFields[i].id) {
                                 return false;
@@ -395,6 +395,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                         if (field.type == 'TextareaMultiLang' ||
                             field.type == 'Textarea') {
+                            continue;
+                        }
+
+                        // wenn es ein feld ist, welcher der kunde ausfüllen muss
+                        // nicht anzeigen
+                        if (field.custom) {
                             continue;
                         }
 
