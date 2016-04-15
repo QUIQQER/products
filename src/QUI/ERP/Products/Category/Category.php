@@ -666,6 +666,14 @@ class Category extends QUI\QDOM
     }
 
     /**
+     * Clear the fields in the category
+     */
+    public function clearFields()
+    {
+        $this->fields = array();
+    }
+
+    /**
      * saves the field
      *
      * @param boolean|QUI\Interfaces\Users\User $User

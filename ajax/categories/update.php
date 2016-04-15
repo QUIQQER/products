@@ -24,8 +24,10 @@ QUI::$Ajax->registerFunction(
         $Fields     = new QUI\ERP\Products\Handler\Fields();
         $Category   = $Categories->getCategory($categoryId);
         $params     = json_decode($params, true);
-
+        
         if (isset($params['fields'])) {
+            $Category->clearFields();
+
             foreach ($params['fields'] as $fieldData) {
                 try {
                     $Field = $Fields->getField($fieldData['id']);

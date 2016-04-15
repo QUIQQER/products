@@ -315,10 +315,46 @@
             <de><![CDATA[Kategorie: [title]]]></de>
             <en><![CDATA[Category: [title]]]></en>
         </locale>
+        <locale name="category.panel.button.data">
+            <de><![CDATA[Daten]]></de>
+            <en><![CDATA[Data]]></en>
+        </locale>
+        <locale name="category.panel.button.sites">
+            <de><![CDATA[Zugewiesene Seiten]]></de>
+            <en><![CDATA[Assigned sites]]></en>
+        </locale>
+        <locale name="category.panel.button.products">
+            <de><![CDATA[Zugewiesene Produkte]]></de>
+            <en><![CDATA[Assigned products]]></en>
+        </locale>
+        <locale name="category.panel.button.products.add">
+            <de><![CDATA[Produkt hinzufügen]]></de>
+            <en><![CDATA[Add product]]></en>
+        </locale>
 
-        <locale name="categories.update.title">
-            <de><![CDATA[Kategorie bearbeiten: [title]]]></de>
-            <en><![CDATA[Edit category: [title]]]></en>
+        <locale name="category.panel.window.recursiveFields.title">
+            <de><![CDATA[Feld Einstellungen auf alle Produkte übernehmen]]></de>
+            <en><![CDATA[Take field settings to all products]]></en>
+        </locale>
+        <locale name="category.panel.window.recursiveFields.text">
+            <de><![CDATA[
+                Möchten Sie die Felder der Kategorie [category] auf alle Produkte in der Kategorie anwenden?
+            ]]></de>
+            <en><![CDATA[
+                Would you like to apply the category [category] fields on all products in the category?
+            ]]></en>
+        </locale>
+        <locale name="category.panel.window.recursiveFields.information" html="true">
+            <de><![CDATA[
+                 Alle Feld Einstellungen werden auf alle Produkte in der Kategorie angewendet.<br />
+                 Es werden nur Felder, welche in der Kategorie sind, auf die Produkte überschrieben.<br />
+                 Etwaige Einstellungen in den Produkten werden somit überschrieben.
+            ]]></de>
+            <en><![CDATA[
+                All field settings are applied to all products in this category.<br />
+                It will be overwritten only fields, which are in the category of the products.<br />
+                Any settings in the products would be overwritten.
+            ]]></en>
         </locale>
 
         <locale name="categories.window.delete.title">
