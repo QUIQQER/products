@@ -10,9 +10,10 @@
 define('package/quiqqer/products/bin/classes/Product', [
 
     'qui/QUI',
-    'qui/classes/DOM'
+    'qui/classes/DOM',
+    'Ajax'
 
-], function (QUI, QUIDOM) {
+], function (QUI, QUIDOM, Ajax) {
     "use strict";
 
     return new Class({
@@ -28,6 +29,22 @@ define('package/quiqqer/products/bin/classes/Product', [
 
             this.$data   = null;
             this.$loaded = false;
+        },
+
+        /**
+         * Add a field to the product
+         *
+         * @param {Number}  fieldId
+         * @return {Promise}
+         */
+        addField: function (fieldId) {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_products_addField', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
+                    fieldId  : fieldId
+                });
+            }.bind(this));
         },
 
         /**
@@ -205,7 +222,7 @@ define('package/quiqqer/products/bin/classes/Product', [
         getPrice: function () {
             return new Promise(function (resolve) {
                 Ajax.get('package_quiqqer_products_ajax_product_calc', resolve, {
-                    'package' : 'quiqqer/watchlist',
+                    'package' : 'quiqqer/products',
                     productId : this.getId(),
                     attributes: this.getAttributes()
                 });

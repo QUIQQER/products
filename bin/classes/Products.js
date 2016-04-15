@@ -108,6 +108,7 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Return the data of a product
          *
          * @param {number} productId
          * @returns {Promise}

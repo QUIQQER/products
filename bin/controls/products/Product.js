@@ -37,6 +37,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'package/quiqqer/products/bin/classes/Product',
     'package/quiqqer/products/bin/Categories',
     'package/quiqqer/products/bin/Fields',
+    'package/quiqqer/products/bin/controls/fields/Window',
     'package/quiqqer/products/bin/controls/categories/Select',
 
     'text!package/quiqqer/products/bin/controls/products/ProductData.html',
@@ -45,7 +46,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
 ], function (QUI, QUIPanel, QUIButton, QUIConfirm, QUIFormUtils, QUILocale,
              Grid, FolderViewer, Mustache,
-             Products, Product, Categories, Fields,
+             Products, Product, Categories, Fields, FieldWindow,
              CategorySelect, templateProductData, templateField) {
     "use strict";
 
@@ -64,7 +65,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             'openField',
             '$onCreate',
             '$onInject',
-            '$onFolderCreated'
+            '$onFolderCreated',
+            'openAddFieldDialog'
         ],
 
         options: {
@@ -135,23 +137,27 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
             });
 
-            // categories
-            this.addCategory({
-                name  : 'data',
-                text  : QUILocale.get('quiqqer/system', 'data'),
-                icon  : 'fa fa-shopping-bag',
+            this.addButton({
+                name  : 'fieldAdd',
+                icon  : 'fa fa-file-text-o',
+                title : 'Feld hinzufügen',
                 events: {
-                    onClick: this.openData
+                    onClick: this.openAddFieldDialog
+                },
+                styles: {
+                    'float': 'right'
                 }
             });
         },
 
         /**
          * event : on inject
+         *
+         * @return {Promise}
          */
         $onInject: function () {
             if (this.$injected) {
-                return;
+                return Promise.resolve();
             }
 
             this.$injected = true;
@@ -163,7 +169,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 Content = self.getContent();
 
             // load product data
-            this.loadData().then(function () {
+            return this.loadData().then(function () {
 
                 // get product data
                 return Promise.all([
@@ -333,7 +339,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     for (i = 0, len = complete.length; i < len; i++) {
                         fieldList[complete[i].id] = complete[i];
                     }
-
+console.log(fieldList);
                     self.$createCategories(fieldList.clean());
 
                     var diffFields = standardFields.filter(function (value) {
@@ -472,6 +478,17 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             var fieldClick = function (Btn) {
                 self.openField(Btn.getAttribute('fieldId'));
             };
+
+            this.getCategoryBar().clear();
+
+            this.addCategory({
+                name  : 'data',
+                text  : QUILocale.get('quiqqer/system', 'data'),
+                icon  : 'fa fa-shopping-bag',
+                events: {
+                    onClick: this.openData
+                }
+            });
 
             for (var i = 0, len = fields.length; i < len; i++) {
                 if (fields[i].type != 'TextareaMultiLang' &&
@@ -681,8 +698,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 // content fields
                 Object.each(selfData, function (entry) {
                     if (entry.type == 'TextareaMultiLang' || entry.type == 'Textarea') {
-                        console.warn(entry);
-
                         fields['field-' + entry.id] = entry.value;
                     }
                 });
@@ -700,6 +715,36 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     reject(err);
                 });
             });
+        },
+
+        /**
+         * Add a field to the product
+         *
+         * @param {Number} fieldId
+         * @returns {*|Promise|Object}
+         */
+        addField: function (fieldId) {
+            return this.$Product.addField(fieldId).then(function () {
+                this.$injected = false;
+                return this.$onInject();
+            }.bind(this));
+        },
+
+        /**
+         * open add field dialog
+         */
+        openAddFieldDialog: function () {
+            new FieldWindow({
+                events: {
+                    onSubmit: function (Win, value) {
+                        Win.Loader.show();
+
+                        this.addField(value).then(function () {
+                            Win.close();
+                        });
+                    }.bind(this)
+                }
+            }).open();
         },
 
         /**
