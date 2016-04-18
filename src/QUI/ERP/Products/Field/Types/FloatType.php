@@ -55,7 +55,21 @@ class FloatType extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        // TODO: Implement validate() method.
+        if (is_null($value)) {
+            return;
+        }
+
+        if (!is_float($value)) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType' => $this->getType()
+                )
+            ));
+        }
     }
 
     /**

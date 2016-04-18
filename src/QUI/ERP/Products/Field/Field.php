@@ -50,6 +50,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $options = array();
 
     /**
+     * Is this Field searchable?
+     *
+     * @var bool
+     */
+    protected $searchable = true;
+
+    /**
      * Field-Name
      *
      * @var string
@@ -556,5 +563,15 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     public function isRequired()
     {
         return $this->require;
+    }
+
+    /**
+     *
+     *
+     * @return bool
+     */
+    public function isSearchable()
+    {
+       return $this->searchable;
     }
 }

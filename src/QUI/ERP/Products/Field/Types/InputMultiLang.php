@@ -14,6 +14,28 @@ use QUI\ERP\Products\Field\View;
  */
 class InputMultiLang extends QUI\ERP\Products\Field\Field
 {
+    public function getBackendView()
+    {
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
+    }
+
+    public function getFrontendView()
+    {
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
+    }
+
     /**
      * @return string
      */

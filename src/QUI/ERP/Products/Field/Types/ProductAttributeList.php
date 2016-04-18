@@ -26,6 +26,8 @@ use QUI;
  */
 class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
 {
+    protected $searchable = false;
+
     /**
      * ProductAttributeList constructor.
      *

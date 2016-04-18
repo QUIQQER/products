@@ -56,8 +56,6 @@ class BoolType extends QUI\ERP\Products\Field\Field
         switch ($value) {
             case 1:
             case 0:
-            case '1':
-            case '0':
                 break;
 
             default:

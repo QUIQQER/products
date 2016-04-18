@@ -13,6 +13,8 @@ use QUI;
  */
 class Vat extends QUI\ERP\Products\Field\Field
 {
+    protected $searchable = false;
+
     public function getBackendView()
     {
         // TODO: Implement getBackendView() method.
@@ -40,10 +42,6 @@ class Vat extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        if (empty($value)) {
-            return;
-        }
-
         if (!is_numeric($value)) {
             throw new QUI\Exception(array(
                 'quiqqer/products',
@@ -60,7 +58,19 @@ class Vat extends QUI\ERP\Products\Field\Field
         $value = self::cleanup($value);
         $Taxes = new QUI\ERP\Tax\Handler();
 
-        $Taxes->getTaxType($value);
+        try {
+            $Taxes->getTaxType($value);
+        } catch (QUI\Exception $Exception) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType' => $this->getType()
+                )
+            ));
+        }
     }
 
     /**

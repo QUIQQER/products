@@ -59,31 +59,7 @@ class IntType extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        if (empty($value)) {
-            return;
-        }
-
-        if (!is_numeric($value)) {
-            throw new QUI\Exception(array(
-                'quiqqer/products',
-                'exception.field.invalid',
-                array(
-                    'fieldId' => $this->getId(),
-                    'fieldTitle' => $this->getTitle(),
-                    'fieldType' => $this->getType()
-                )
-            ));
-        }
-
-        if (is_integer($value)) {
-            return;
-        }
-
-        // check if float value
-        $value  = (string)$value;
-        $_value = preg_replace('#[^\d]#i', '', $value);
-
-        if ($value != $_value) {
+        if (!is_integer($value)) {
             throw new QUI\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
@@ -104,10 +80,6 @@ class IntType extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        if (!is_numeric($value)) {
-            return null;
-        }
-
         return (int)$value;
     }
 }

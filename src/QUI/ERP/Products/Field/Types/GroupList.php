@@ -25,6 +25,8 @@ use QUI\ERP\Products\Field\View;
  */
 class GroupList extends QUI\ERP\Products\Field\Field
 {
+    protected $searchable = false;
+
     /**
      * GroupList constructor.
      * @param int $fieldId

@@ -27,25 +27,34 @@ class Date extends QUI\ERP\Products\Field\Field
 
         try {
             new \DateTime($value);
-
         } catch (\Exception $Exception) {
             $dateTime = false;
         }
 
-//        $dateTime = \DateTime::createFromFormat('m/d/Y', $value);
-
         if ($dateTime === false) {
-            throw new QUI\Exception(
-                array('quiqqer/products', 'exception.field.value.not.allowed')
-            );
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType' => $this->getType()
+                )
+            ));
         }
 
         $errors = \DateTime::getLastErrors();
 
         if (!empty($errors['warning_count'])) {
-            throw new QUI\Exception(
-                array('quiqqer/products', 'exception.field.value.not.allowed')
-            );
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType' => $this->getType()
+                )
+            ));
         }
     }
 

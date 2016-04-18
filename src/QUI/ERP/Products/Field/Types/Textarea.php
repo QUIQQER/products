@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\View;
 
 /**
  * Class Textarea
@@ -13,6 +14,28 @@ use QUI;
  */
 class Textarea extends QUI\ERP\Products\Field\Field
 {
+    public function getBackendView()
+    {
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
+    }
+
+    public function getFrontendView()
+    {
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
+    }
+
     /**
      * @return string
      */
@@ -30,7 +53,21 @@ class Textarea extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        // TODO: Implement validate() method.
+        if (is_null($value)) {
+            return;
+        }
+
+        if (!is_string($value)) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType' => $this->getType()
+                )
+            ));
+        }
     }
 
     /**
@@ -41,6 +78,12 @@ class Textarea extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        return $value;
+        if (!is_string($value)
+            && !is_numeric($value)
+        ) {
+            return null;
+        }
+
+        return (string)$value;
     }
 }

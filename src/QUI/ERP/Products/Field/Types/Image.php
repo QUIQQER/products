@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\Projects\Media\Utils as MediaUtils;
 
 /**
  * Class Input
@@ -13,14 +14,28 @@ use QUI;
  */
 class Image extends QUI\ERP\Products\Field\Field
 {
+    protected $searchable = false;
+
     public function getBackendView()
     {
-        // TODO: Implement getBackendView() method.
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
     }
 
     public function getFrontendView()
     {
-        // TODO: Implement getFrontendView() method.
+        return new View(array(
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
+            'priority' => $this->getAttribute('priority')
+        ));
     }
 
     /**
@@ -40,7 +55,27 @@ class Image extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        // TODO: Implement validate() method.
+        if (is_null($value)) {
+            return;
+        }
+
+        try {
+            $MediaItem = MediaUtils::getMediaItemByUrl($value);
+
+            if (!MediaUtils::isImage($MediaItem)) {
+                throw new QUI\Exception();
+            }
+        } catch (QUI\Exception $Exception) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType' => $this->getType()
+                )
+            ));
+        }
     }
 
     /**
@@ -51,6 +86,16 @@ class Image extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        // TODO: Implement cleanup() method.
+        try {
+            $MediaItem = MediaUtils::getMediaItemByUrl($value);
+        } catch (QUI\Exception $Exception) {
+            return null;
+        }
+
+        if (!MediaUtils::isImage($MediaItem)) {
+            return null;
+        }
+
+        return $MediaItem->getUrl();
     }
 }

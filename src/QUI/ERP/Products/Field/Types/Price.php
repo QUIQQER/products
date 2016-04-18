@@ -23,6 +23,8 @@ class Price extends QUI\ERP\Products\Field\Field
 
     public function getBackendView()
     {
+        // TODO: Hier aus display-price aus Price-Klasse verwenden?
+
         return new View(array(
             'value' => $this->cleanup($this->getValue()),
             'title' => $this->getTitle(),
@@ -34,8 +36,13 @@ class Price extends QUI\ERP\Products\Field\Field
 
     public function getFrontendView()
     {
+        $Price = new QUI\ERP\Products\Utils\Price(
+            $this->cleanup($this->getValue()),
+            QUI\ERP\Currency\Handler::getDefaultCurrency()
+        );
+
         return new View(array(
-            'value' => $this->cleanup($this->getValue()),
+            'value' => $Price->getDisplayPrice(),
             'title' => $this->getTitle(),
             'prefix' => $this->getAttribute('prefix'),
             'suffix' => $this->getAttribute('suffix'),
@@ -60,18 +67,74 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        // TODO: Implement validate() method.
+        if (is_null($value)) {
+            return;
+        }
+
+        if (!is_float($value)) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType' => $this->getType()
+                )
+            ));
+        }
     }
 
     /**
      * Cleanup the value, so the value is valid
+     *
+     * Precision: 8 (important for currencies like BitCoin)
      *
      * @param mixed $value
      * @return mixed
      */
     public function cleanup($value)
     {
-        // TODO: Implement cleanup() method.
-        return $value;
+        // @TODO diese beiden Werte aus Settings nehmen
+        $decimalSeperator = '.';
+        $thousandsSeperator = ',';
+
+        if (is_float($value)) {
+            return round($value, 8);
+        }
+
+        $value = (string)$value;
+        $value = preg_replace('#[^\d,.]#i', '', $value);
+
+        if (trim($value) === '') {
+            return null;
+        }
+
+        $decimal   = mb_strpos($value, $decimalSeperator);
+        $thousands = mb_strpos($value, $thousandsSeperator);
+
+        if ($thousands === false && $decimal === false) {
+            return round(floatval($value), 8);
+        }
+
+        if ($thousands !== false && $decimal === false) {
+            if (mb_substr($value, -8, 1) === $decimalSeperator) {
+                $value = str_replace($thousandsSeperator, '', $value);
+            }
+        }
+
+        if ($thousands === false && $decimal !== false) {
+            $value = str_replace(
+                $decimalSeperator,
+                '.',
+                $value
+            );
+        }
+
+        if ($thousands !== false && $decimal !== false) {
+            $value = str_replace($decimalSeperator, '', $value);
+            $value = str_replace($thousandsSeperator, '.', $value);
+        }
+
+        return round(floatval($value), 8);
     }
 }

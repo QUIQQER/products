@@ -53,9 +53,11 @@ class Input extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        if (!is_string($value)
-            && !is_numeric($value)
-        ) {
+        if (is_null($value)) {
+            return;
+        }
+
+        if (!is_string($value)) {
             throw new QUI\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
