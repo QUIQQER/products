@@ -222,6 +222,25 @@ define('package/quiqqer/products/bin/classes/Products', [
                     fields    : JSON.encode(fields)
                 });
             });
+        },
+
+        /**
+         * Opens a product panel
+         *
+         * @param {number} productId
+         */
+        openPanel: function(productId) {
+            require([
+                'package/quiqqer/products/bin/controls/products/Product',
+                'utils/Panels'
+            ], function (ProductPanel, Panels) {
+                var PPanel = new ProductPanel({
+                    productId: productId,
+                    '#id'    : productId
+                });
+
+                Panels.openPanelInTasks(PPanel);
+            });
         }
     });
 });
