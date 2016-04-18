@@ -14,6 +14,9 @@ use QUI\ERP\Products\Field\View;
  */
 class IntType extends QUI\ERP\Products\Field\Field
 {
+    /**
+     * @return View
+     */
     public function getBackendView()
     {
         return new View(array(
@@ -25,6 +28,9 @@ class IntType extends QUI\ERP\Products\Field\Field
         ));
     }
 
+    /**
+     * @return View
+     */
     public function getFrontendView()
     {
         return new View(array(
@@ -53,6 +59,10 @@ class IntType extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
+        if (empty($value)) {
+            return;
+        }
+
         if (!is_numeric($value)) {
             throw new QUI\Exception(array(
                 'quiqqer/products',
@@ -70,7 +80,7 @@ class IntType extends QUI\ERP\Products\Field\Field
         }
 
         // check if float value
-        $value = (string)$value;
+        $value  = (string)$value;
         $_value = preg_replace('#[^\d]#i', '', $value);
 
         if ($value != $_value) {

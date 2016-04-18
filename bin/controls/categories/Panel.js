@@ -30,13 +30,12 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
     'package/quiqqer/products/bin/classes/Categories',
     'package/quiqqer/products/bin/controls/categories/Sitemap',
     'package/quiqqer/products/bin/controls/categories/Create',
-    'package/quiqqer/products/bin/controls/categories/Update',
 
     'css!package/quiqqer/products/bin/controls/categories/Panel.css'
 
 ], function (QUI, QUIPanel, QUIButton, QUIConfirm, QUISitemap, QUISitemapItem,
              QUIContextMenu, QUIContextItem,
-             Grid, QUILocale, CategoryPanel, Handler, CategoryMap, CreateCategory, UpdateCategory) {
+             Grid, QUILocale, CategoryPanel, Handler, CategoryMap, CreateCategory) {
     "use strict";
 
     var lg         = 'quiqqer/products',
@@ -543,70 +542,6 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             new CategoryPanel({
                 categoryId: categoryId
             }).inject(this.getParent());
-
-            return;
-            var self = this;
-
-            this.closeSitemap().then(function () {
-
-                self.Loader.show();
-
-                self.createSheet({
-                    title : QUILocale.get(lg, 'categories.update.title', {
-                        title: QUILocale.get(lg, 'products.category.' + categoryId + '.title')
-                    }),
-                    events: {
-                        onShow: function (Sheet) {
-
-                            Sheet.getContent().set({
-                                styles: {
-                                    padding: 0
-                                }
-                            });
-
-                            var Update = new UpdateCategory({
-                                categoryId: categoryId,
-                                events    : {
-                                    onLoaded: function () {
-                                        self.Loader.hide();
-                                    },
-                                    onCancel: function () {
-                                        Sheet.hide().then(function () {
-                                            Sheet.destroy();
-                                        });
-                                    }
-                                }
-                            }).inject(Sheet.getContent());
-
-                            Sheet.addButton(
-                                new QUIButton({
-                                    text     : QUILocale.get('quiqqer/system', 'save'),
-                                    textimage: 'fa fa-save',
-                                    events   : {
-                                        onClick: function () {
-                                            self.Loader.show();
-
-                                            Update.save().then(function () {
-                                                return Sheet.hide();
-
-                                            }).then(function () {
-                                                return self.refresh();
-
-                                            }).then(function () {
-                                                return self.setFieldsToAllProducts(categoryId);
-
-                                            }).then(function () {
-                                                self.Loader.hide();
-                                            });
-                                        }
-                                    }
-                                })
-                            );
-                        }
-                    }
-                }).show();
-
-            });
         },
 
         /**
@@ -648,36 +583,6 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     }
                 }
             }).open();
-        },
-
-        /**
-         * Update all product fields with the category id fields
-         *
-         * @param {Number} categoryId
-         * @returns {Promise}
-         */
-        setFieldsToAllProducts: function (categoryId) {
-            return new Promise(function (resolve) {
-                new QUIConfirm({
-                    icon       : 'fa fa-object-group',
-                    texticon   : false,
-                    title      : 'Feld Einstellungen auf alle Produkte übernehmen',
-                    text       : 'Möchten Sie die Felder der Kategorie [category] auf alle Produkte in der Kategorie anwenden?',
-                    information: 'Alle Feld Einstellungen werden auf alle Produkte in der Kategorie angwendet. ' +
-                                 'Es werden nur Felder, welche in der Kategorie sind, auf die Produkte überschrieben.' +
-                                 'Etwaige Einstellungen in den Produkten werden somit überschrieben.',
-                    maxHeight  : 400,
-                    maxWidth   : 600,
-                    events     : {
-                        onSubmit: function () {
-                            Categories.setFieldsToAllProducts(categoryId).then(resolve);
-                        },
-                        onCancel: function () {
-                            resolve();
-                        }
-                    }
-                }).open();
-            });
         }
     });
 });

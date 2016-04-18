@@ -20,13 +20,14 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
     'qui/controls/Control',
     'Locale',
     'Mustache',
+    'controls/lang/InputMultiLang',
     'package/quiqqer/products/bin/classes/Fields',
     'package/quiqqer/translator/bin/controls/Create',
 
     'text!package/quiqqer/products/bin/controls/fields/Create.html',
     'css!package/quiqqer/products/bin/controls/fields/Create.css'
 
-], function (QUI, QUIControl, QUILocale, Mustache, Handler, Translation, template) {
+], function (QUI, QUIControl, QUILocale, Mustache, InputMultiLang, Handler, Translation, template) {
     "use strict";
 
     var lg     = 'quiqqer/products',
@@ -103,6 +104,14 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
             this.$WorkingTitle = new Translation({
                 group: 'quiqqer/products'
             }).inject(Elm.getElement('.field-workingtitle'));
+
+            this.$Prefix = new InputMultiLang().imports(
+                Elm.getElement('[name="prefix"]')
+            );
+
+            this.$Suffix = new InputMultiLang().imports(
+                Elm.getElement('[name="suffix"]')
+            );
 
             Fields.getFieldTypes().then(function (fieldTypes) {
 

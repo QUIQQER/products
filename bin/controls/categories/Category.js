@@ -1,4 +1,7 @@
 /**
+ * Category panel
+ * Edit / update the category
+ *
  * @module package/quiqqer/products/bin/controls/categories/Category
  * @author www.pcsg.de (Henning Leutz)
  *
@@ -107,7 +110,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             this.addCategory({
                 name  : 'data',
                 image : 'fa fa-file-o',
-                text  : 'Daten',
+                text  : QUILocale.get(lg, 'category.panel.button.data'),
                 events: {
                     onClick: this.openData
                 }
@@ -116,7 +119,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             this.addCategory({
                 name  : 'sites',
                 image : 'fa fa-files-o',
-                text  : 'Seiten Zuweisungen',
+                text  : QUILocale.get(lg, 'category.panel.button.sites'),
                 events: {
                     onClick: this.openSites
                 }
@@ -125,7 +128,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             this.addCategory({
                 name  : 'products',
                 image : 'fa fa-shopping-bag',
-                text  : 'Produkte',
+                text  : QUILocale.get(lg, 'category.panel.button.products'),
                 events: {
                     onClick: this.openProducts
                 }
@@ -188,22 +191,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     disabled : true,
                     events   : {
                         onClick: function () {
-                            new QUIConfirm({
-                                icon       : 'fa fa-trash',
-                                texticon   : 'fa fa-trash',
-                                title      : QUILocale.get(lg, 'category.update.field.window.delete.title'),
-                                text       : QUILocale.get(lg, 'category.update.field.window.delete.text'),
-                                information: QUILocale.get(lg, 'category.update.field.window.delete.information'),
-                                maxHeight  : 300,
-                                maxWidth   : 450,
-                                events     : {
-                                    onSubmit: function () {
-                                        self.$FieldTable.deleteRows(
-                                            self.$FieldTable.getSelectedIndices()
-                                        );
-                                    }
-                                }
-                            }).open();
+                            self.openRemoveFieldDialog();
                         }
                     }
                 }],
@@ -306,6 +294,10 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
                 this.$grids.Products = new Grid(ProductContainer, {
                     pagination : true,
+                    buttons    : [{
+                        text     : QUILocale.get(lg, 'category.panel.button.products.add'),
+                        textimage: 'fa fa-plus'
+                    }],
                     columnModel: [{
                         header   : QUILocale.get('quiqqer/system', 'id'),
                         dataIndex: 'id',
@@ -455,6 +447,65 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 }.bind(this));
         },
 
+        /**
+         * opens the field removing dialog
+         */
+        openRemoveFieldDialog: function () {
+            var self = this;
+
+            new QUIConfirm({
+                icon       : 'fa fa-trash',
+                texticon   : 'fa fa-trash',
+                title      : QUILocale.get(lg, 'category.update.field.window.delete.title'),
+                text       : QUILocale.get(lg, 'category.update.field.window.delete.text'),
+                information: QUILocale.get(lg, 'category.update.field.window.delete.information'),
+                maxHeight  : 300,
+                maxWidth   : 450,
+                events     : {
+                    onSubmit: function () {
+                        self.removeFields(self.$grids.Fields.getSelectedIndices());
+                    }
+                }
+            }).open();
+        },
+
+        /**
+         * Update all product fields with the category id fields
+         *
+         * @returns {Promise}
+         */
+        openRecursiveDialog: function () {
+            var categoryId = this.getAttribute('categoryId');
+
+            return new Promise(function (resolve) {
+                new QUIConfirm({
+                    icon       : 'fa fa-object-group',
+                    texticon   : false,
+                    title      : QUILocale.get(lg, 'category.panel.window.recursiveFields.title'),
+                    information: QUILocale.get(lg, 'category.panel.window.recursiveFields.information'),
+
+                    text: QUILocale.get(lg, 'category.panel.window.recursiveFields.text', {
+                        category: categoryId
+                    }),
+
+                    maxHeight: 400,
+                    maxWidth : 600,
+                    autoclose: false,
+                    events   : {
+                        onSubmit: function (Win) {
+                            Win.Loader.show();
+                            Categories.setFieldsToAllProducts(categoryId).then(function () {
+                                Win.close();
+                                resolve();
+                            });
+                        },
+                        onCancel: function () {
+                            resolve();
+                        }
+                    }
+                }).open();
+            });
+        },
 
         /**
          * Show the container
@@ -508,6 +559,8 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
         /**
          * save the category
+         *
+         * @return {Promise}
          */
         save: function () {
             this.Loader.show();
@@ -539,6 +592,8 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     Categories.updateChild(categoryId, {
                         fields: fields
                     }).then(function () {
+                        return self.refresh();
+                    }).then(function () {
                         self.Loader.hide();
                         resolve();
                     }, function () {
@@ -547,6 +602,46 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     });
                 });
             });
+        },
+
+        /**
+         * Add a field to the category
+         *
+         * @param {Number} fieldId - Field-ID
+         * @return {Promise}
+         */
+        addField: function (fieldId) {
+            var self = this;
+
+            return new Promise(function (resolve, reject) {
+                Fields.getChild(fieldId).then(function () {
+                    self.$grids.Fields.addRow({
+                        id          : fieldId,
+                        title       : QUILocale.get(lg, 'products.field.' + fieldId + '.title'),
+                        publicStatus: new QUISwitch(),
+                        searchStatus: new QUISwitch()
+                    });
+
+                    self.save().then(function () {
+                        resolve();
+                        self.openRecursiveDialog();
+                    }, reject);
+                });
+            });
+        },
+
+        /**
+         * Remove a field from the category
+         *
+         * @param {Array} fields
+         * @return {Promise}
+         */
+        removeFields: function (fields) {
+            this.$grids.Fields.deleteRows(fields);
+            console.log(this.$grids.Fields.getData());
+            return this.save().then(function () {
+                this.openRecursiveDialog();
+            }.bind(this));
         }
     });
 });
