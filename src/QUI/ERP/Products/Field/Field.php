@@ -280,6 +280,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             'F' . $this->getId()
         );
+
+        // delete cache
+        QUI\Cache\Manager::clear(
+            QUI\ERP\Products\Handler\Fields::getFieldCacheName($this->getId())
+        );
     }
 
     /**
@@ -308,10 +313,17 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             'products.field.' . $this->getId() . '.workingtitle'
         );
 
+
         // delete column
         QUI::getDataBase()->table()->deleteColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             'F' . $this->getId()
+        );
+
+
+        // delete cache
+        QUI\Cache\Manager::clear(
+            QUI\ERP\Products\Handler\Fields::getFieldCacheName($this->getId())
         );
     }
 

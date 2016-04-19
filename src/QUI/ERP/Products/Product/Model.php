@@ -100,22 +100,6 @@ class Model extends QUI\QDOM
         }
 
 
-        // field list from the system
-        $fieldlist = array();
-
-        $systemfields = Fields::getFields(array(
-            'where_or' => array(
-                'systemField' => 1,
-                'standardField' => 1,
-                'requiredField' => 1
-            )
-        ));
-
-        /* @var $Field QUI\ERP\Products\Field\Field */
-        foreach ($systemfields as $Field) {
-            $fieldlist[$Field->getId()] = $Field;
-        }
-
         // fields
         $fields = json_decode($result[0]['fieldData'], true);
 
@@ -124,36 +108,20 @@ class Model extends QUI\QDOM
         }
 
         foreach ($fields as $field) {
-            if (!isset($field['type']) &&
-                !isset($field['id']) &&
-                !isset($field['value'])
-            ) {
+            if (!isset($field['id']) && !isset($field['value'])) {
                 continue;
             }
 
-            if (!isset($field['type'])) {
-                $field['type'] = 'Standard';
-            }
-
             try {
-                $fieldId = $field['id'];
-                $data    = $field;
-
-                if (isset($fieldlist[$fieldId])) {
-                    $data['standard'] = $fieldlist[$fieldId]->isStandard();
-                    $data['required'] = $fieldlist[$fieldId]->isRequired();
-                    $data['system']   = $fieldlist[$fieldId]->isSystem();
-                }
-
-                $Field = Fields::getFieldByType($field['type'], $field['id'], $data);
+                $Field = Fields::getField($field['id']);
                 $Field->setValue($field['value']);
-
-                if (isset($field['options'])) {
-                    $Field->setOptions($field['options']);
-                }
 
                 if (isset($field['unassigned'])) {
                     $Field->setUnassignedStatus($field['unassigned']);
+                }
+
+                if (isset($field['ownField'])) {
+                    $Field->setOwnFieldStatus($field['ownField']);
                 }
 
                 $this->fields[$Field->getId()] = $Field;
@@ -163,7 +131,18 @@ class Model extends QUI\QDOM
         }
 
 
-        // all standard fields must be in the product
+        // all standard system fields must be in the product
+
+        // field list from the system
+        $systemfields = Fields::getFields(array(
+            'where_or' => array(
+                'systemField' => 1,
+                'standardField' => 1,
+                'requiredField' => 1
+            )
+        ));
+
+        /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($systemfields as $Field) {
             if (!$Field->isStandard()) {
                 continue;

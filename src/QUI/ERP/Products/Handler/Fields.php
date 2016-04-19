@@ -197,12 +197,30 @@ class Fields
         self::setFieldTranslations($newId, $attributes);
 
         // create new cache column
-        QUI::getDataBase()->table()->addColumn(
-            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            array('F' . $newId => 'text')
-        );
+        self::createCacheColumn('F' . $newId);
 
         return self::getField($newId);
+    }
+
+    /**
+     * @param string $columnName
+     * @param string $columnType - default = text
+     * @throws \Exception
+     */
+    public static function createCacheColumn($columnName, $columnType = 'text')
+    {
+        $DBTable   = QUI::getDataBase()->table();
+        $tableName = QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
+
+        if ($DBTable->existColumnInTable($tableName, $columnName)) {
+            return;
+        }
+
+        QUI::getDataBase()->table()->addColumn(
+            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            array($columnName => $columnType)
+        );
+
     }
 
     /**
@@ -239,7 +257,7 @@ class Fields
             ));
         }
 
-        $localeVar   = 'products.field.' . $fieldId . '.workingtitle';
+        $localeVar = 'products.field.' . $fieldId . '.workingtitle';
 
         // working title
         try {
@@ -347,7 +365,7 @@ class Fields
     public static function getField($fieldId)
     {
         if (isset(self::$list[$fieldId])) {
-            return self::$list[$fieldId]; // @todo maybe with (clone) ??
+            return clone self::$list[$fieldId];
         }
 
         try {

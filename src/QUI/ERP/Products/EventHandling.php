@@ -246,6 +246,8 @@ class EventHandling
                     array('id' => $field['id'])
                 );
 
+
+                Fields::createCacheColumn('F' . $field['id']);
                 Fields::setFieldTranslations($field['id'], $field);
                 continue;
             }

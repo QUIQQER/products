@@ -12,6 +12,10 @@
  * @require qui/controls/sitemap/Item
  * @require controls/grid/Grid
  * @require Locale
+ * @require package/quiqqer/products/bin/controls/categories/Category
+ * @require package/quiqqer/products/bin/classes/Categories
+ * @require package/quiqqer/products/bin/controls/categories/Sitemap
+ * @require package/quiqqer/products/bin/controls/categories/Create
  * @require css!package/quiqqer/products/bin/controls/categories/Panel.css
  */
 define('package/quiqqer/products/bin/controls/categories/Panel', [
