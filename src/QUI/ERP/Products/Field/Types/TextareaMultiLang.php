@@ -53,25 +53,39 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        if (empty($value)) {
-            return;
+        if (!is_string($value)
+            && !is_array($value)) {
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new QUI\Exception(array(
+                    'quiqqer/products',
+                    'exception.field.invalid',
+                    array(
+                        'fieldId' => $this->getId(),
+                        'fieldTitle' => $this->getTitle(),
+                        'fieldType' => $this->getType()
+                    )
+                ));
+            }
         }
 
         if (is_string($value)) {
             $value = json_decode($value, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new QUI\Exception(array(
+                    'quiqqer/products',
+                    'exception.field.invalid',
+                    array(
+                        'fieldId' => $this->getId(),
+                        'fieldTitle' => $this->getTitle(),
+                        'fieldType' => $this->getType()
+                    )
+                ));
+            }
         }
 
-        if (!is_string($value)
-            && !is_numeric($value)) {
-            throw new QUI\Exception(array(
-                'quiqqer/products',
-                'exception.field.invalid',
-                array(
-                    'fieldId' => $this->getId(),
-                    'fieldTitle' => $this->getTitle(),
-                    'fieldType' => $this->getType()
-                )
-            ));
+        if (empty($value)) {
+            return;
         }
 
         $keys = array_keys($value);
@@ -126,5 +140,23 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
         }
 
         return $result;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        if (empty($this->value)) {
+            return true;
+        }
+
+        foreach ($this->value as $l => $v) {
+            if (!empty($v)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

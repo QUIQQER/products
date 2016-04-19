@@ -137,4 +137,12 @@ class Price extends QUI\ERP\Products\Field\Field
 
         return round(floatval($value), 8);
     }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return !is_float($this->value);
+    }
 }

@@ -482,11 +482,9 @@ class Model extends QUI\QDOM
         }
 
         // generate the product field data
+        /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($fields as $Field) {
             $value = $Field->getValue();
-
-            \QUI\System\Log::writeRecursive($Field->getId());
-            \QUI\System\Log::writeRecursive($value);
 
             // @todo muss alle categorien prüfen
             if (!$Field->isSystem()) {
@@ -526,22 +524,19 @@ class Model extends QUI\QDOM
                 ));
             }
 
-
-            if ($value === '') {
+            if ($Field->isEmpty()) {
                 throw new QUI\Exception(array(
                     'quiqqer/products',
-                    'exception.field.invalid',
+                    'exception.field.required.but.empty',
                     array(
-                        'fieldId'    => $this->getId(),
-                        'fieldTitle' => $this->getTitle(),
-                        'fieldType'  => $this->getType()
+                        'fieldId'    => $Field->getId(),
+                        'fieldTitle' => $Field->getTitle(),
+                        'fieldType'  => $Field->getType()
                     )
                 ));
             }
 
             $fieldData[] = $Field->toProductArray();
-
-            \QUI\System\Log::writeRecursive("don");
         }
 
         // set main category
@@ -590,6 +585,12 @@ class Model extends QUI\QDOM
         /** @var Field $Field */
         foreach ($fields as $Field) {
             $data['F' . $Field->getId()] = $Field->getValue();
+        }
+
+        foreach ($data as $k => $v) {
+            if (is_array($v)) {
+                $data[$k] = json_encode($v);
+            }
         }
 
         QUI::getDataBase()->update(

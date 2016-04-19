@@ -216,6 +216,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
             $userIds[] = $userId;
         }
 
+        if (empty($userIds)) {
+            return null;
+        }
+
         return $userIds;
     }
 }

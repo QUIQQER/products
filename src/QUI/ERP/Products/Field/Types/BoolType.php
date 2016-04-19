@@ -99,4 +99,14 @@ class BoolType extends QUI\ERP\Products\Field\Field
                 return 0;
         }
     }
+
+    /**
+     * Boolean value can never be empty
+     *
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return false;
+    }
 }

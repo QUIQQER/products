@@ -216,6 +216,14 @@
                 Illegal content for the field: #[fieldId] [fieldTitle]. Please correct the entry.
             ]]></en>
         </locale>
+        <locale name="exception.field.required.but.empty">
+            <de><![CDATA[
+                Nicht erlaubter Inhalt für das Feld: #[fieldId] [fieldTitle]. Das Feld ist ein Pflichtfeld und darf nicht leer sein.
+                ]]></de>
+            <en><![CDATA[
+                Illegal content for the field: #[fieldId] [fieldTitle]. The field is required and must not be empty.
+            ]]></en>
+        </locale>
         <locale name="exception.product.no.image">
             <de><![CDATA[Das Produkt #[productId] besitzt kein Bild.]]></de>
             <en><![CDATA[The product #[productId] has no image.]]></en>

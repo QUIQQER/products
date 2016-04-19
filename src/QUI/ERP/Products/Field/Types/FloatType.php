@@ -123,4 +123,12 @@ class FloatType extends QUI\ERP\Products\Field\Field
 
         return round(floatval($value), 4);
     }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return !is_float($this->value);
+    }
 }

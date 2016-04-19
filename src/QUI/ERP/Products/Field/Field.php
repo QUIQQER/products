@@ -598,12 +598,28 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function toProductArray()
     {
-        $attributes['id']         = $this->getId();
-        $attributes['value']      = $this->getValue();
+        $attributes['id'] = $this->getId();
+
+        if ($this->isEmpty()) {
+            $attributes['value'] = '';
+        } else {
+            $attributes['value'] = $this->getValue();
+        }
+
         $attributes['unassigned'] = $this->isUnassigned();
         $attributes['ownField']   = $this->isOwnField();
 
         return $attributes;
+    }
+
+    /**
+     * Is the value of this value an empty value?
+     *
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return empty($this->value);
     }
 
     /**
@@ -633,7 +649,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     *
+     * Is this field allowed as a searchable field?
      *
      * @return bool
      */
