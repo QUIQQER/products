@@ -1,0 +1,25 @@
+.quiqqer-products-field-grouplist-multipleUsers {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    float: left;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+.quiqqer-products-field-grouplist-multipleUsers label {
+    width: 100% !important;
+}
+
+.quiqqer-products-field-grouplist-groupValue {
+    clear: both;
+    float: left;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.quiqqer-products-field-grouplist-groupValue-title {
+    clear: both;
+    float: left;
+    padding: 10px 0 5px 4px;
+    width: 100%;
+}
