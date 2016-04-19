@@ -234,16 +234,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * Updates the cache table with current product data
-     *
-     * @return void
-     */
-    protected function updateCache()
-    {
-
-    }
-
-    /**
      * Delete the field
      *
      * @throws QUI\Exception

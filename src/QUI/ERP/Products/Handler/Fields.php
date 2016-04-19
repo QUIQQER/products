@@ -197,7 +197,7 @@ class Fields
         self::setFieldTranslations($newId, $attributes);
 
         // create new cache column
-        self::createCacheColumn('F' . $newId);
+        self::createFieldCacheColumn($newId);
 
         return self::getField($newId);
     }
@@ -220,7 +220,65 @@ class Fields
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             array($columnName => $columnType)
         );
+    }
 
+    /**
+     * Create cache table column for a field
+     *
+     * @param integer $fieldId
+     */
+    public static function createFieldCacheColumn($fieldId)
+    {
+        $Field = self::getField($fieldId);
+
+        switch ($Field->getType()) {
+            case 'BoolType':
+                $type = 'TINYINT(1)';
+                break;
+
+            case 'Date':
+                $type = 'INT(11)';
+                break;
+
+            case 'FloatType':
+            case 'Price':
+                $type = 'DOUBLE';
+                break;
+
+            case 'Image':
+            case 'Folder':
+                $type = 'BIGINT(20)';
+                break;
+
+            case 'GroupList':
+                $type = 'LONGTEXT';
+                break;
+
+            case 'Input':
+            case 'InputMultiLang':
+            case 'Url':
+                $type = 'TEXT';
+                break;
+
+            case 'IntType':
+                $type = 'BIGINT';
+                break;
+
+            case 'ProductAttributeList':
+            case 'Textare':
+            case 'TextareaMultiLang':
+                $type = 'LONGTEXT';
+                break;
+
+            case 'Vat':
+                $type = 'SMALLINT';
+                break;
+
+            default:
+                $type = 'LONGTEXT';
+        }
+
+        self::createCacheColumn('F' . $Field->getId(), $type);
     }
 
     /**

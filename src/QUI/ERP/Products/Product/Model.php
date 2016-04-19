@@ -396,7 +396,6 @@ class Model extends QUI\QDOM
             $attributes['category'] = $this->getCategory()->getId();
         }
 
-
         // fields
         $fields    = array();
         $fieldList = $this->getFields();
@@ -422,7 +421,6 @@ class Model extends QUI\QDOM
         if (!empty($categories)) {
             $attributes['categories'] = implode(',', $categories);
         }
-
 
         return $attributes;
     }
@@ -562,6 +560,16 @@ class Model extends QUI\QDOM
             ),
             array('id' => $this->getId())
         );
+    }
+
+    /**
+     * Updates the cache table with current product data
+     *
+     * @return void
+     */
+    protected function updateCache()
+    {
+        
     }
 
     /**
