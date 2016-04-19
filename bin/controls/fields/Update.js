@@ -181,6 +181,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
 
                 FieldTypes.addEvent('change', loadSettings);
+                FieldTypes.disabled = true;
 
                 loadSettings();
 
@@ -247,7 +248,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 }).inject(Container);
             }
 
-            FieldTypes.disabled = true;
+            //FieldTypes.disabled = true;
 
             if (settings === '') {
                 moofx([Container, Cell, Label]).animate({
@@ -269,7 +270,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                             }
                         });
 
-                        FieldTypes.disabled = false;
+                        //FieldTypes.disabled = false;
                         FieldTypes.focus();
                     }
                 });
@@ -342,16 +343,15 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                         }, {
                             duration: 200,
                             callback: function () {
-                                FieldTypes.disabled = false;
+                                //FieldTypes.disabled = false;
                                 FieldTypes.focus();
                             }
                         });
 
-
                     }, function (err) {
                         console.error(err);
                         console.error(arguments);
-                        FieldTypes.disabled = false;
+                        //FieldTypes.disabled = false;
                     });
                 }
             });
