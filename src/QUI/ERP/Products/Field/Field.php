@@ -45,6 +45,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $unassigned = false;
 
     /**
+     * @var bool
+     */
+    protected $ownField = false;
+
+    /**
      * @var array
      */
     protected $options = array();
@@ -311,6 +316,28 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Is the field a own field from the product?
+     *
+     * @return bool
+     */
+    public function isOwnField()
+    {
+        return $this->ownField;
+    }
+
+    /**
+     * Set the own field status
+     *
+     * @param bool $status
+     */
+    public function setOwnFieldStatus($status)
+    {
+        if (is_bool($status)) {
+            $this->ownField = $status;
+        }
+    }
+
+    /**
      * Is the field unassigned?
      *
      * @return bool
@@ -544,6 +571,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['id']         = $this->getId();
         $attributes['value']      = $this->getValue();
         $attributes['unassigned'] = $this->isUnassigned();
+        $attributes['ownField']   = $this->isOwnField();
 
         return $attributes;
     }
