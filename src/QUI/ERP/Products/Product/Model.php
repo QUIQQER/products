@@ -136,7 +136,8 @@ class Model extends QUI\QDOM
         // field list from the system
         $systemfields = Fields::getFields(array(
             'where_or' => array(
-                'systemField' => 1
+                'systemField' => 1,
+                'standardField' => 1
             )
         ));
 
