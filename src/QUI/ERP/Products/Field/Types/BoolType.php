@@ -55,7 +55,15 @@ class BoolType extends QUI\ERP\Products\Field\Field
     {
         switch ($value) {
             case 1:
+            case '1':
+            case true:
+            case 'TRUE':
+            case 'true':
             case 0:
+            case '0':
+            case false:
+            case 'FALSE':
+            case 'false':
                 break;
 
             default:
@@ -80,11 +88,11 @@ class BoolType extends QUI\ERP\Products\Field\Field
     public function cleanup($value)
     {
         switch ($value) {
-            case true:
             case 1:
             case '1':
-            case 'true':
+            case true:
             case 'TRUE':
+            case 'true':
                 return 1;
 
             default:

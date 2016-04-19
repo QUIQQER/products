@@ -485,6 +485,9 @@ class Model extends QUI\QDOM
         foreach ($fields as $Field) {
             $value = $Field->getValue();
 
+            \QUI\System\Log::writeRecursive($Field->getId());
+            \QUI\System\Log::writeRecursive($value);
+
             // @todo muss alle categorien prüfen
             if (!$Field->isSystem()) {
                 $Field->setUnassignedStatus(
@@ -516,9 +519,9 @@ class Model extends QUI\QDOM
                     'quiqqer/products',
                     'exception.field.invalid',
                     array(
-                        'fieldId'    => $this->getId(),
-                        'fieldTitle' => $this->getTitle(),
-                        'fieldType'  => $this->getType()
+                        'fieldId'    => $Field->getId(),
+                        'fieldTitle' => $Field->getTitle(),
+                        'fieldType'  => $Field->getType()
                     )
                 ));
             }
@@ -537,6 +540,8 @@ class Model extends QUI\QDOM
             }
 
             $fieldData[] = $Field->toProductArray();
+
+            \QUI\System\Log::writeRecursive("don");
         }
 
         // set main category

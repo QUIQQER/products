@@ -53,11 +53,16 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
+        if (empty($value)) {
+            return;
+        }
+
         if (is_string($value)) {
             $value = json_decode($value, true);
         }
 
-        if (!is_array($value)) {
+        if (!is_string($value)
+            && !is_numeric($value)) {
             throw new QUI\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
@@ -114,6 +119,10 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
             if (!isset($result[$lang])) {
                 $result[$lang] = '';
             }
+        }
+
+        if (empty($result)) {
+            return null;
         }
 
         return $result;
