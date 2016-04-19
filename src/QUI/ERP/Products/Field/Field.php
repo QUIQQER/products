@@ -229,6 +229,16 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Updates the cache table with current product data
+     *
+     * @return void
+     */
+    protected function updateCache()
+    {
+
+    }
+
+    /**
      * Delete the field
      *
      * @throws QUI\Exception
@@ -531,10 +541,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function toProductArray()
     {
-        $attributes          = $this->getAttributes();
-        $attributes['value'] = $this->getValue();
-
-        unset($attributes['jsControl']);
+        $attributes['id']         = $this->getId();
+        $attributes['value']      = $this->getValue();
+        $attributes['unassigned'] = $this->isUnassigned();
 
         return $attributes;
     }
@@ -572,6 +581,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function isSearchable()
     {
-       return $this->searchable;
+        return $this->searchable;
     }
 }
