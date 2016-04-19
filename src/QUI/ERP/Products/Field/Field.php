@@ -419,6 +419,19 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Set a field option
+     *
+     * @param string $option - option name
+     * @param mixed $value - option value
+     */
+    public function setOption($option, $value)
+    {
+        if (is_string($option)) {
+            $this->options[$option] = $value;
+        }
+    }
+
+    /**
      * Return the field name
      *
      * @return string
@@ -442,6 +455,21 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     public function getOptions()
     {
         return $this->options;
+    }
+
+    /**
+     * Return the value of the option, if the option exists
+     *
+     * @param string $option - option name
+     * @return mixed
+     */
+    public function getOption($option)
+    {
+        if (isset($this->options[$option])) {
+            return $this->options[$option];
+        }
+
+        return false;
     }
 
     /**

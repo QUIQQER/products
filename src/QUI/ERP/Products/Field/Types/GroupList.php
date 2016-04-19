@@ -25,6 +25,9 @@ use QUI\ERP\Products\Field\View;
  */
 class GroupList extends QUI\ERP\Products\Field\Field
 {
+    /**
+     * @var bool
+     */
     protected $searchable = false;
 
     /**
@@ -34,8 +37,8 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function __construct($fieldId, array $params)
     {
-        $this->setAttributes(array(
-            'groupId' => false,
+        $this->setOptions(array(
+            'groupIds' => false,
             'multipleUsers' => true
         ));
 
@@ -76,6 +79,14 @@ class GroupList extends QUI\ERP\Products\Field\Field
     public function getJavaScriptControl()
     {
         return 'package/quiqqer/products/bin/controls/fields/types/GroupList';
+    }
+
+    /**
+     * @return string
+     */
+    public function getJavaScriptSettings()
+    {
+        return 'package/quiqqer/products/bin/controls/fields/types/GroupListSettings';
     }
 
     /**
@@ -171,15 +182,13 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        $groupId       = $this->getAttribute('groupId');
-        $multipleUsers = $this->getAttribute('multipleUsers');
+        $groupId       = $this->getOption('groupId');
+        $multipleUsers = $this->getOption('multipleUsers');
         $checkIds      = array();
         $userIds       = array();
 
         if (is_array($value)) {
-            if (count($value) > 1
-                && !$multipleUsers
-            ) {
+            if (count($value) > 1 && !$multipleUsers) {
                 $checkIds = array_shift($value);
             } else {
                 $checkIds = $value;

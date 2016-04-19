@@ -241,6 +241,10 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 Cell        = Container.getParent('td'),
                 Label       = Cell.getElement('label');
 
+            if (!Label) {
+                Label = Cell.getElement('.field-container');
+            }
+
             if (!FormOptions) {
                 FormOptions = new Element('input', {
                     type: 'hidden',
