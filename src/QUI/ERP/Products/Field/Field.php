@@ -391,7 +391,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     public function setValue($value)
     {
         $this->validate($value);
-        $this->value = $value;
+        $this->value = $this->cleanup($value);
     }
 
     /**
