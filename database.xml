@@ -47,7 +47,8 @@
         <table name="products_cache">
             <field type="BIGINT( 10 ) NOT NULL">id</field>
             <field type="VARCHAR( 255 ) NULL">productNo</field>
-            <field type="VARCHAR( 255 ) NOT NULL">name</field>
+            <field type="VARCHAR( 255 ) NOT NULL">title</field>
+            <field type="BIGINT(20) NULL">category</field>
         </table>
     </global>
 
