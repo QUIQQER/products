@@ -136,18 +136,12 @@ class Model extends QUI\QDOM
         // field list from the system
         $systemfields = Fields::getFields(array(
             'where_or' => array(
-                'systemField' => 1,
-                'standardField' => 1,
-                'requiredField' => 1
+                'systemField' => 1
             )
         ));
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($systemfields as $Field) {
-            if (!$Field->isStandard()) {
-                continue;
-            }
-
             if (!isset($this->fields[$Field->getId()])) {
                 $this->fields[$Field->getId()] = $Field;
                 continue;
@@ -569,7 +563,7 @@ class Model extends QUI\QDOM
      */
     protected function updateCache()
     {
-        
+
     }
 
     /**
