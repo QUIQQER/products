@@ -57,7 +57,7 @@ class Model extends QUI\QDOM
         $this->id = (int)$pid;
 
         $result = QUI::getDataBase()->fetch(array(
-            'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
             'where' => array(
                 'id' => $this->getId()
             )
@@ -220,7 +220,7 @@ class Model extends QUI\QDOM
         $Site = $Category->getSite();
 
         $url = $Site->getUrlRewritten(array(
-            0 => $this->getUrlName(),
+            0              => $this->getUrlName(),
             'paramAsSites' => true
         ));
 
@@ -277,7 +277,8 @@ class Model extends QUI\QDOM
      */
     public function getDescription($Locale = false)
     {
-        $result = $this->getLanguageFieldValue(Fields::FIELD_SHORT_DESC, $Locale);
+        $result = $this->getLanguageFieldValue(Fields::FIELD_SHORT_DESC,
+            $Locale);
 
         if ($result) {
             return $result;
@@ -506,7 +507,7 @@ class Model extends QUI\QDOM
                 QUI\System\Log::addWarning(
                     $Exception->getMessage(),
                     array(
-                        'id' => $Field->getId(),
+                        'id'    => $Field->getId(),
                         'title' => $Field->getTitle()
                     )
                 );
@@ -515,9 +516,9 @@ class Model extends QUI\QDOM
                     'quiqqer/products',
                     'exception.field.invalid',
                     array(
-                        'fieldId' => $this->getId(),
+                        'fieldId'    => $this->getId(),
                         'fieldTitle' => $this->getTitle(),
-                        'fieldType' => $this->getType()
+                        'fieldType'  => $this->getType()
                     )
                 ));
             }
@@ -528,9 +529,9 @@ class Model extends QUI\QDOM
                     'quiqqer/products',
                     'exception.field.invalid',
                     array(
-                        'fieldId' => $this->getId(),
+                        'fieldId'    => $this->getId(),
                         'fieldTitle' => $this->getTitle(),
-                        'fieldType' => $this->getType()
+                        'fieldType'  => $this->getType()
                     )
                 ));
             }
@@ -550,21 +551,49 @@ class Model extends QUI\QDOM
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
                 'categories' => ',' . implode(',', $categoryData) . ',',
-                'category' => $mainCategory,
-                'fieldData' => json_encode($fieldData)
+                'category'   => $mainCategory,
+                'fieldData'  => json_encode($fieldData)
             ),
             array('id' => $this->getId())
         );
+
+        $this->updateCache();
     }
 
     /**
      * Updates the cache table with current product data
      *
      * @return void
+     * @throws QUI\Exception
      */
     protected function updateCache()
     {
+        $data = array(
+            'id'        => $this->getId(),
+            'productNo' => $this->getFieldValue(Fields::FIELD_PRODUCT_NO),
+            'title'     => $this->getFieldValue(Fields::FIELD_TITLE)
+        );
 
+        $Category = $this->getCategory();
+
+        if ($Category) {
+            $data['category'] = $Category->getId();
+        }
+
+        $fields = $this->getFields();
+
+        /** @var Field $Field */
+        foreach ($fields as $Field) {
+            $data['F' . $Field->getId()] = $Field->getValue();
+        }
+
+        QUI::getDataBase()->update(
+            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            $data,
+            array(
+                'id' => $this->getId()
+            )
+        );
     }
 
     /**
@@ -631,7 +660,7 @@ class Model extends QUI\QDOM
             'quiqqer/products',
             'exception.field.not.found',
             array(
-                'fieldId' => $fieldId,
+                'fieldId'   => $fieldId,
                 'productId' => $this->getId()
             )
         ));
