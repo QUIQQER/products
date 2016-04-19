@@ -241,7 +241,9 @@ class EventHandling
                         'type' => $field['type'],
                         'prefix' => $field['prefix'],
                         'suffix' => $field['suffix'],
-                        'priority' => $field['priority']
+                        'priority' => $field['priority'],
+                        'systemField' => $field['systemField'],
+                        'standardField' => $field['standardField']
                     ),
                     array('id' => $field['id'])
                 );
