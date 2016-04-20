@@ -98,12 +98,15 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
+        QUI\System\Log::writeRecursive('#########');
+        QUI\System\Log::writeRecursive($value);
+
         if (empty($value)) {
             return;
         }
 
-        $groupId       = $this->getAttribute('groupId');
-        $multipleUsers = $this->getAttribute('multipleUsers');
+        $groupId       = $this->getOption('groupId');
+        $multipleUsers = $this->getOption('multipleUsers');
         $checkIds      = array();
 
         if (is_array($value)) {
