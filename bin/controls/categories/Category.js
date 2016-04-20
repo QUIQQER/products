@@ -281,8 +281,9 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     });
 
                     if (!field.searchable) {
-                        Status.setSilentOff();
-                        Status.disable();
+                        Status.setSilentOff().then(function () {
+                            this.disable();
+                        }.bind(Status));
                     }
 
                     fieldGridData.push({
