@@ -270,11 +270,20 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
 
                 // fields
-                var field;
+                var field, Status;
                 var fieldGridData = [];
 
                 for (var i = 0, len = this.$data.fields.length; i < len; i++) {
                     field = this.$data.fields[i];
+
+                    Status = new QUISwitch({
+                        status: field.searchStatus
+                    });
+
+                    if (!field.searchable) {
+                        Status.setSilentOff();
+                        Status.disable();
+                    }
 
                     fieldGridData.push({
                         id          : field.id,
@@ -282,9 +291,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                         publicStatus: new QUISwitch({
                             status: field.publicStatus
                         }),
-                        searchStatus: new QUISwitch({
-                            status: field.searchStatus
-                        })
+                        searchStatus: Status
                     });
                 }
 

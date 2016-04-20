@@ -589,6 +589,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['isStandard']   = $this->isStandard();
         $attributes['isSystem']     = $this->isSystem();
         $attributes['jsControl']    = $this->getJavaScriptControl();
+        $attributes['searchable']   = $this->isSearchable();
 
         return $attributes;
     }
