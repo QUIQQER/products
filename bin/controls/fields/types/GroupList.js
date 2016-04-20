@@ -6,6 +6,7 @@
  * @require qui/controls/Control
  * @require controls/users/Entry
  * @require controls/users/search/Window
+ * @require package/quiqqer/products/bin/Fields
  */
 define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
 
@@ -67,12 +68,16 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
 
 
             this.$Display = new Element('div', {
-                'class': 'field-container-field'
+                'class': 'field-container-field',
+                styles : {
+                    padding: 0
+                }
             }).wraps(Elm);
 
             this.$Input   = Elm;
             this.$fieldId = this.$Input.get('name').replace('field-', '').toInt();
 
+            // get field settings
             Fields.getChild(this.$fieldId).then(function (fieldData) {
 
                 this.$allowedGroups = [];
@@ -85,12 +90,7 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
                     this.$Button.addClass('disabled');
                 }
 
-                console.log(fieldData);
-
                 try {
-
-                    console.warn(Elm.value);
-
                     var data = JSON.decode(Elm.value);
 
                     Elm.value = '';
@@ -153,8 +153,6 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
             this.$uids = this.$uids.filter(function (entry) {
                 return entry != uid;
             });
-
-            console.log(this.$uids);
 
             this.$updateInput();
         },
