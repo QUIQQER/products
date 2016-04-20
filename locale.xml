@@ -238,10 +238,10 @@
         </locale>
         <locale name="exception.field.grouplist.user.not.in.group">
             <de><![CDATA[
-                Der Benutzer #[userId] ist nicht in der Gruppe #[groupId] und kann somit diesem Feld nicht als Wert zugewiesen werden.
+                Der Benutzer <b>[username] ([userId])</b> ist nicht in der Gruppe <i>[groups]</i> und kann somit diesem Feld nicht als Wert zugewiesen werden.
                 ]]></de>
             <en><![CDATA[
-                User #[userId] is not in group #[groupId] and thus cannot be assigned as a field value.
+                User <b>[username] ([userId])</b> is not in group <i>[groupId]</i> and thus cannot be assigned as a field value.
             ]]></en>
         </locale>
         <locale name="exception.field.grouplist.invalid.userId">

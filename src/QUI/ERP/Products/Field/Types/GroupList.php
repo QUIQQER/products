@@ -98,49 +98,62 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        QUI\System\Log::writeRecursive('#########');
-        QUI\System\Log::writeRecursive($value);
-
         if (empty($value)) {
             return;
         }
 
-        $groupId       = $this->getOption('groupId');
+        $groupIds      = $this->getOption('groupIds');
         $multipleUsers = $this->getOption('multipleUsers');
-        $checkIds      = array();
+        $userIds       = array();
 
-        if (is_array($value)) {
-            if (count($value) > 1
-                && !$multipleUsers
-            ) {
-                throw new QUI\Exception(array(
-                    'quiqqer/products',
-                    'exception.field.grouplist.user.limit.reached',
-                    array(
-                        'fieldId' => $this->getId(),
-                        'fieldTitle' => $this->getTitle()
-                    )
-                ));
+        if (is_numeric($userIds)) {
+            $userIds = array((int)$userIds);
+
+        } elseif (is_string($value)) {
+            $userIds = json_decode($value, true);
+
+            if (!is_array($userIds) && !is_numeric($userIds)) {
+                $userIds = array();
             }
 
-            $checkIds = $value;
-        } else {
-            if (!is_numeric($value)) {
-                throw new QUI\Exception(array(
-                    'quiqqer/products',
-                    'exception.field.invalid',
-                    array(
-                        'fieldId' => $this->getId(),
-                        'fieldTitle' => $this->getTitle()
-                    )
-                ));
-            }
-
-            $checkIds[] = $value;
+        } elseif (is_array($value)) {
+            $userIds = $value;
         }
 
+        if (count($userIds) > 1 && !$multipleUsers) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.grouplist.user.limit.reached',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle()
+                )
+            ));
+        }
+
+        if (empty($userIds)) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle()
+                )
+            ));
+        }
+
+        $isUserInGroups = function ($userGroups) use ($groupIds) {
+            foreach ($userGroups as $userGroup) {
+                if (!in_array($userGroup, $groupIds)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+
         try {
-            foreach ($checkIds as $userId) {
+            foreach ($userIds as $userId) {
                 if (!is_numeric($userId)) {
                     throw new QUI\Exception(array(
                         'quiqqer/products',
@@ -151,13 +164,14 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 $User       = QUI::getUsers()->get($userId);
                 $userGroups = $User->getGroups(false);
 
-                if (!in_array($groupId, $userGroups)) {
+                if (!$isUserInGroups($userGroups)) {
                     throw new QUI\Exception(array(
                         'quiqqer/products',
                         'exception.field.grouplist.user.not.in.group',
                         array(
-                            'userId' => $this->getId(),
-                            'groupId' => $this->getTitle()
+                            'userId' => $User->getId(),
+                            'username' => $User->getUsername(),
+                            'groups' => implode(',', $groupIds)
                         )
                     ));
                 }
@@ -185,44 +199,61 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        $groupId       = $this->getOption('groupId');
+        $groupIds      = $this->getOption('groupIds');
         $multipleUsers = $this->getOption('multipleUsers');
-        $checkIds      = array();
         $userIds       = array();
+        $result        = array();
 
-        if (is_array($value)) {
-            if (count($value) > 1 && !$multipleUsers) {
-                $checkIds = array_shift($value);
-            } else {
-                $checkIds = $value;
+        if (is_numeric($userIds)) {
+            $userIds = array((int)$userIds);
+
+        } elseif (is_string($value)) {
+            $userIds = json_decode($value, true);
+
+            if (!is_array($userIds) && !is_numeric($userIds)) {
+                $userIds = array();
             }
-        } else {
-            $checkIds[] = $value;
+
+        } elseif (is_array($value)) {
+            $userIds = $value;
         }
 
-        foreach ($checkIds as $userId) {
-            try {
-                $User       = QUI::getUsers()->get($userId);
-                $userGroups = $User->getGroups(false);
-            } catch (QUI\Exception $Exception) {
-                continue;
-            }
-
-            if (!is_numeric($groupId)) {
-                continue;
-            }
-
-            if (!in_array($groupId, $userGroups)) {
-                continue;
-            }
-
-            $userIds[] = $userId;
+        if (count($userIds) > 1 && !$multipleUsers) {
+            return array();
         }
 
         if (empty($userIds)) {
-            return null;
+            return array();
         }
 
-        return $userIds;
+        $isUserInGroups = function ($userGroups) use ($groupIds) {
+            foreach ($userGroups as $userGroup) {
+                if (!in_array($userGroup, $groupIds)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+
+        try {
+            foreach ($userIds as $userId) {
+                if (!is_numeric($userId)) {
+                    continue;
+                }
+
+                $User       = QUI::getUsers()->get($userId);
+                $userGroups = $User->getGroups(false);
+
+                if ($isUserInGroups($userGroups)) {
+                    $result[] = $User->getId();
+                }
+            }
+
+        } catch (QUI\Exception $Exception) {
+            return array();
+        }
+
+        return $result;
     }
 }

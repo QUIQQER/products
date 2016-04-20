@@ -707,6 +707,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         fields['field-' + entry.id] = entry.value;
                     }
                 });
+console.warn(fields);
 
                 Products.updateChild(
                     self.getAttribute('productId'),

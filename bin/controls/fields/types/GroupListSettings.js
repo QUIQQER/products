@@ -26,16 +26,14 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
         Type   : 'package/quiqqer/products/bin/controls/fields/types/GroupListSettings',
 
         Binds: [
-            'openAddDialog',
-            'openEditDialog',
-            'openRemoveDialog',
+            'update',
             '$onInject',
-            '$onImport',
-            '$buttonReset'
+            '$onImport'
         ],
 
         options: {
-            fieldId: false
+            groupIds     : false,
+            multipleUsers: true
         },
 
         initialize: function (options) {
@@ -44,6 +42,8 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
             this.$Groups = null;
             this.$Input  = null;
             this.$data   = [];
+
+            this.$MultipleUsers = null;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -65,6 +65,9 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
                 }
             });
 
+
+            this.$MultipleUsers = this.$Elm.getElement('[name="multipleUsers"]');
+
             return this.$Elm;
         },
 
@@ -72,14 +75,39 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
          * event : on inject
          */
         $onInject: function () {
-            this.$Input = this.getElm().getElement('[name="groupIds"]');
+            // build group id select
+            var GroupIdsInput = this.$Elm.getElement('[name="groupIds"]');
 
             this.$Groups = new GroupsInput({
                 styles: {
                     height: 200
+                },
+                events: {
+                    onChange: this.update
                 }
-            }).inject(this.$Input.getParent());
+            }).inject(GroupIdsInput.getParent());
 
+            var Parent  = GroupIdsInput.getParent('.field-container-field');
+            var Options = GroupIdsInput.getParent('.field-options');
+
+            if (Parent) {
+                Parent.addClass('field-container-field-no-padding');
+            }
+
+            if (Options) {
+                Options.addClass('field-container-field-no-padding');
+            }
+
+            var groups = this.getAttribute('groupIds');
+
+            if (groups) {
+                groups.each(function (groupId) {
+                    this.$Groups.addGroup(groupId);
+                }.bind(this));
+            }
+
+
+            this.$MultipleUsers.checked = this.getAttribute('multipleUsers');
             this.refresh();
         },
 
@@ -94,15 +122,21 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
             this.$Elm   = this.create();
 
             try {
-                this.$data = JSON.decode(this.$Input.value);
+                var data = JSON.decode(this.$Input.value);
+
+                if ("multipleUsers" in data) {
+                    this.setAttribute('multipleUsers', data.multipleUsers);
+                }
+
+                if ("groupIds" in data) {
+                    this.setAttribute('groupIds', data.groupIds);
+                }
 
             } catch (e) {
                 console.error(e);
             }
 
-            if (!this.$data) {
-                this.$data = [];
-            }
+            this.$MultipleUsers.addEvent('change', this.update);
 
             this.$Elm.wraps(this.$Input);
             this.$onInject();
@@ -119,7 +153,18 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
          * Set the data to the input
          */
         update: function () {
-            this.$Input.value = JSON.encode(this.$data);
+            var groups = [];
+
+            if (this.$Groups.getValue()) {
+                groups = this.$Groups.getValue();
+                groups = groups.toString();
+                groups = groups.split(',');
+            }
+
+            this.$Input.value = JSON.encode({
+                groupIds     : groups,
+                multipleUsers: this.$MultipleUsers.checked
+            });
         }
     });
 });

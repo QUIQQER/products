@@ -72,6 +72,8 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 Products: null
             };
 
+            this.$injected = false;
+
             this.$ContainerData     = null;
             this.$ContainerSites    = null;
             this.$ContainerProducts = null;
@@ -240,6 +242,13 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
          * event: on inject
          */
         $onInject: function () {
+
+            if (this.$injected) {
+                return;
+            }
+
+            this.$injected = true;
+
             var self                = this,
                 categoryId          = this.getAttribute('categoryId'),
                 Content             = this.getContent(),

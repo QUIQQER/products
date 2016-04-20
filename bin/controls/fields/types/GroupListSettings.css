@@ -1,8 +1,6 @@
 .quiqqer-products-field-grouplist-multipleUsers {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     float: left;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
+    padding: 10px;
     width: 100%;
 }
 
@@ -10,16 +8,21 @@
     width: 100% !important;
 }
 
+.quiqqer-products-field-grouplist-groupValue.field-container-field {
+    display: block;
+}
+
 .quiqqer-products-field-grouplist-groupValue {
     clear: both;
     float: left;
-    margin-bottom: 20px;
     width: 100%;
 }
 
 .quiqqer-products-field-grouplist-groupValue-title {
+    background: rgba(0, 0, 0, 0.05);
     clear: both;
     float: left;
-    padding: 10px 0 5px 4px;
+    margin-top: 10px;
+    padding: 10px;
     width: 100%;
 }

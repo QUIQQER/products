@@ -165,7 +165,7 @@ class EventHandling
                 'standardField' => 1,
                 'requiredField' => 0,
                 'options' => array(
-                    'html' => 1
+                    'multipleUsers' => false
                 ),
                 'titles' => array(
                     'de' => 'Lieferant',
@@ -183,7 +183,7 @@ class EventHandling
                 'standardField' => 1,
                 'requiredField' => 0,
                 'options' => array(
-                    'html' => 1
+                    'multipleUsers' => false
                 ),
                 'titles' => array(
                     'de' => 'Hersteller',
