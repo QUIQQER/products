@@ -482,6 +482,7 @@ class Model extends QUI\QDOM
         }
 
         // generate the product field data
+        /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($fields as $Field) {
             $value = $Field->getValue();
 
@@ -516,22 +517,21 @@ class Model extends QUI\QDOM
                     'quiqqer/products',
                     'exception.field.invalid',
                     array(
-                        'fieldId'    => $this->getId(),
-                        'fieldTitle' => $this->getTitle(),
-                        'fieldType'  => $this->getType()
+                        'fieldId'    => $Field->getId(),
+                        'fieldTitle' => $Field->getTitle(),
+                        'fieldType'  => $Field->getType()
                     )
                 ));
             }
 
-
-            if ($value === '') {
+            if ($Field->isEmpty()) {
                 throw new QUI\Exception(array(
                     'quiqqer/products',
-                    'exception.field.invalid',
+                    'exception.field.required.but.empty',
                     array(
-                        'fieldId'    => $this->getId(),
-                        'fieldTitle' => $this->getTitle(),
-                        'fieldType'  => $this->getType()
+                        'fieldId'    => $Field->getId(),
+                        'fieldTitle' => $Field->getTitle(),
+                        'fieldType'  => $Field->getType()
                     )
                 ));
             }
@@ -585,6 +585,12 @@ class Model extends QUI\QDOM
         /** @var Field $Field */
         foreach ($fields as $Field) {
             $data['F' . $Field->getId()] = $Field->getValue();
+        }
+
+        foreach ($data as $k => $v) {
+            if (is_array($v)) {
+                $data[$k] = json_encode($v);
+            }
         }
 
         QUI::getDataBase()->update(

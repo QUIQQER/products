@@ -53,11 +53,12 @@ class Textarea extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        if (is_null($value)) {
+        if (empty($value)) {
             return;
         }
 
-        if (!is_string($value)) {
+        if (!is_string($value)
+            && !is_numeric($value)) {
             throw new QUI\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',

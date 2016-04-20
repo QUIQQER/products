@@ -59,7 +59,11 @@ class IntType extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        if (!is_integer($value)) {
+        if (empty($value)) {
+            return;
+        }
+
+        if (!is_numeric($value)) {
             throw new QUI\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',

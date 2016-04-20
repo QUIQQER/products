@@ -23,6 +23,10 @@ class Date extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
+        if (empty($value)) {
+            return;
+        }
+
         $dateTime = true;
 
         try {

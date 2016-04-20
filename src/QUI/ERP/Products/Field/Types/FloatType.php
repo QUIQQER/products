@@ -55,11 +55,11 @@ class FloatType extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        if (is_null($value)) {
+        if (empty($value)) {
             return;
         }
 
-        if (!is_float($value)) {
+        if (!is_numeric($value)) {
             throw new QUI\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
@@ -122,5 +122,13 @@ class FloatType extends QUI\ERP\Products\Field\Field
         }
 
         return round(floatval($value), 4);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return !is_float($this->value);
     }
 }
