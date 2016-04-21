@@ -23,9 +23,9 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     /**
      * View constructor.
      *
-     * @param UniqueProduct $Product
+     * @param Model $Product
      */
-    public function __construct(UniqueProduct $Product)
+    public function __construct(Model $Product)
     {
         $this->Product = $Product;
     }
@@ -70,7 +70,9 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getPrice()
     {
-        return QUI\ERP\Products\Utils\Calc::getProductPrice($this->Product);
+        return QUI\ERP\Products\Utils\Calc::getProductPrice(
+            $this->Product->createUniqueProduct()
+        );
     }
 
     /**
@@ -116,7 +118,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     {
         return $this->Product->getFields();
     }
-    
+
     /**
      * Return the main catgory
      *

@@ -51,6 +51,7 @@ class Product extends QUI\Control
             $Product = $Product->getView();
         }
 
+
         /* @var $Product QUI\ERP\Products\Product\UniqueProduct */
         $this->setAttribute('data-productid', $Product->getId());
 
@@ -88,9 +89,8 @@ class Product extends QUI\Control
         );
 
         foreach ($displayedFields as $field) {
-            try {
+            if ($Product->getField($field)) {
                 $fields[] = $Product->getField($field);
-            } catch (QUI\Exception $Exception) {
             }
         }
 
@@ -109,7 +109,7 @@ class Product extends QUI\Control
         });
 
         $Engine->assign(array(
-            'Product' => $this->getAttribute('Product'),
+            'Product' => $Product,
             'Gallery' => $Gallery,
             'fields' => $fields,
             'productAttributeList' => $attributeListFields,

@@ -22,9 +22,9 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
 
     /**
      * View constructor.
-     * @param UniqueProduct $Product
+     * @param Model $Product
      */
-    public function __construct(UniqueProduct $Product)
+    public function __construct(Model $Product)
     {
         $this->Product = $Product;
     }

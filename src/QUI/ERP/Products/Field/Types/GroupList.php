@@ -102,8 +102,8 @@ class GroupList extends QUI\ERP\Products\Field\Field
         $multipleUsers = $this->getOption('multipleUsers');
         $userIds       = array();
 
-        if (is_numeric($userIds)) {
-            $userIds = array((int)$userIds);
+        if (is_numeric($value)) {
+            $userIds = array((int)$value);
 
         } elseif (is_string($value)) {
             $userIds = json_decode($value, true);
@@ -200,8 +200,8 @@ class GroupList extends QUI\ERP\Products\Field\Field
         $userIds       = array();
         $result        = array();
 
-        if (is_numeric($userIds)) {
-            $userIds = array((int)$userIds);
+        if (is_numeric($value)) {
+            $userIds = array((int)$value);
 
         } elseif (is_string($value)) {
             $userIds = json_decode($value, true);
