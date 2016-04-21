@@ -7,6 +7,7 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 use QUI\ERP\Products\Field\View;
+use QUI\ERP\Products\Handler\Search;
 
 /**
  * Class Price
@@ -110,5 +111,17 @@ class BoolType extends QUI\ERP\Products\Field\Field
     public function isEmpty()
     {
         return false;
+    }
+
+    /**
+     * Get all available search types
+     *
+     * @return array
+     */
+    public function getSearchTypes()
+    {
+        return array(
+            Search::SEARCHTYPE_BOOL
+        );
     }
 }

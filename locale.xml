@@ -291,6 +291,58 @@
             <en><![CDATA[Failed to set the main category. There was no main category specified.]]></en>
         </locale>
 
+        <!-- crons -->
+        <locale name="cron.updateProductCache.title">
+            <de><![CDATA[Produkt-Cache aktualisieren]]></de>
+            <en><![CDATA[Update Product Cache]]></en>
+        </locale>
+        <locale name="cron.updateProductCache.description">
+            <de><![CDATA[Aktualisiert die Cache-Tabelle für alle Produkte im System]]></de>
+            <en><![CDATA[Updates the cache table for all products in the system]]></en>
+        </locale>
+
+        <!-- searchtypes -->
+        <locale name="searchtype.1.title">
+            <de><![CDATA[Text-Eingabefeld]]></de>
+            <en><![CDATA[Text input field]]></en>
+        </locale>
+        <locale name="searchtype.2.title">
+            <de><![CDATA[2 Dropdown-Menüs - von/bis]]></de>
+            <en><![CDATA[2 dropdown lists - from/to]]></en>
+        </locale>
+        <locale name="searchtype.4.title">
+            <de><![CDATA[1 Dropdown-Menü - Einfach-Auswahl]]></de>
+            <en><![CDATA[1 dropdown list - single choice]]></en>
+        </locale>
+        <locale name="searchtype.6.title">
+            <de><![CDATA[Mehrfach-Auswahl]]></de>
+            <en><![CDATA[Multiple choice]]></en>
+        </locale>
+        <locale name="searchtype.7.title">
+            <de><![CDATA[Ja/Nein Auswahl]]></de>
+            <en><![CDATA[Yes/No choice]]></en>
+        </locale>
+        <locale name="searchtype.8.title">
+            <de><![CDATA[Wert/kein Wert Auswahl]]></de>
+            <en><![CDATA[Value/No value choice]]></en>
+        </locale>
+        <locale name="searchtype.9.title">
+            <de><![CDATA[Datums-Auswahl]]></de>
+            <en><![CDATA[Date picker]]></en>
+        </locale>
+        <locale name="searchtype.10.title">
+            <de><![CDATA[Datumsbereich-Auswahl]]></de>
+            <en><![CDATA[Date range picker]]></en>
+        </locale>
+        <locale name="searchtype.3.title">
+            <de><![CDATA[2 Dropdown-Menüs - von/bis + Individuelle Eingabe]]></de>
+            <en><![CDATA[2 dropdown lists - from/to + Individual input]]></en>
+        </locale>
+        <locale name="searchtype.5.title">
+            <de><![CDATA[1 Dropdown-Menü - Einfach-Auswahl  + Individuelle Eingabe]]></de>
+            <en><![CDATA[1 dropdown list - single choice  + Individual input]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
@@ -537,6 +589,10 @@
         <locale name="fields.control.productAttributeList.create.deduction">
             <de><![CDATA[Abschlag]]></de>
             <en><![CDATA[Deduction]]></en>
+        </locale>
+        <locale name="fieldtype.not.searchable">
+            <de><![CDATA[Felder dieses Feld-Typs sind nicht durchsuchbar.]]></de>
+            <en><![CDATA[Fields of this field type are not searchable.]]></en>
         </locale>
 
     </groups>

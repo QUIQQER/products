@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Field\Types;
 use QUI;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Products as ProductsHandler;
+use QUI\ERP\Products\Handler\Search;
 
 /**
  * Class Price
@@ -113,5 +114,18 @@ class Date extends QUI\ERP\Products\Field\Field
             'suffix' => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
+    }
+
+    /**
+     * Get all available search types
+     *
+     * @return array
+     */
+    public function getSearchTypes()
+    {
+        return array(
+            Search::SEARCHTYPE_DATE,
+            Search::SEARCHTYPE_DATERANGE
+        );
     }
 }

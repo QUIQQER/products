@@ -7,6 +7,7 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 use QUI\ERP\Products\Field\View;
+use QUI\ERP\Products\Handler\Search;
 
 /**
  * Class Textarea
@@ -86,5 +87,21 @@ class Textarea extends QUI\ERP\Products\Field\Field
         }
 
         return (string)$value;
+    }
+
+    /**
+     * Get all available search types
+     *
+     * @return array
+     */
+    public function getSearchTypes()
+    {
+        return array(
+            Search::SEARCHTYPE_TEXT,
+            Search::SEARCHTYPE_SELECTSINGLE,
+            Search::SEARCHTYPE_SELECTMULTI,
+            Search::SEARCHTYPE_HASVALUE,
+            Search::SEARCHTYPE_INPUTSELECTSINGLE
+        );
     }
 }

@@ -7,6 +7,7 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 use QUI\ERP\Products\Field\View;
+use Hklused\Machines\Purchase\Search;
 
 /**
  * Class FloatType

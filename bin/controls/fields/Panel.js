@@ -107,6 +107,8 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                     'class': 'fa fa-remove'
                 });
 
+                console.log(data);
+
                 data.data.each(function (value, key) {
                     if (value.isStandard) {
                         data.data[key].isStandard = ElmOk.clone();
@@ -120,7 +122,17 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                         data.data[key].isRequired = ElmFalse.clone();
                     }
 
-                    value.fieldtype = QUILocale.get(lg, 'fieldtype.' + value.type);
+                    value.fieldtype = QUILocale.get(
+                        lg,
+                        'fieldtype.' + value.type
+                    );
+
+                    if (value.search_type != '') {
+                        value.search_type = QUILocale.get(
+                            lg,
+                            'searchtype.' + value.search_type + '.title'
+                        );
+                    }
                 });
 
                 self.$Grid.setData(data);
@@ -210,6 +222,11 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                 }, {
                     header   : QUILocale.get(lg, 'fieldtype'),
                     dataIndex: 'fieldtype',
+                    dataType : 'text',
+                    width    : 200
+                }, {
+                    header   : QUILocale.get(lg, 'searchtype'),
+                    dataIndex: 'search_type',
                     dataType : 'text',
                     width    : 200
                 }, {

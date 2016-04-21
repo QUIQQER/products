@@ -566,7 +566,7 @@ class Model extends QUI\QDOM
      * @return void
      * @throws QUI\Exception
      */
-    protected function updateCache()
+    public function updateCache()
     {
         $data = array(
             'id' => $this->getId(),

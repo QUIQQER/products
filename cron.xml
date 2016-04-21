@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<crons>
+
+    <cron exec="\QUI\ERP\Products\Crons::updateProductCache">
+        <title>
+            <locale group="quiqqer/products" var="cron.updateProductCache.title" />
+        </title>
+        <description>
+            <locale group="quiqqer/products" var="cron.updateProductCache.description" />
+        </description>
+    </cron>
+
+</crons>

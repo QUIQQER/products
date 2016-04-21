@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Field;
 
 use QUI;
+use QUI\ERP\Products\Handler\Search;
 
 /**
  * Class Field
@@ -81,6 +82,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @var string
      */
     protected $columnType = 'LONGTEXT';
+
+    /**
+     * @var array
+     */
+    protected $searchTypes = array(
+
+    );
 
     /**
      * Model constructor.
@@ -586,6 +594,20 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     public function getColumnType()
     {
         return $this->columnType;
+    }
+
+    /**
+     * Get all available search types for this field
+     *
+     * @return array
+     */
+    public function getSearchTypes()
+    {
+        if (!$this->isSearchable()) {
+            return array();
+        }
+
+        return Search::getAllSearchTypes();
     }
 
     /**
