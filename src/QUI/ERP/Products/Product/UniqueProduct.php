@@ -63,6 +63,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
                 continue;
             }
 
+
 //            $options = $Field->getOptions();
 //            $value   = $Field->getValue();
         }
@@ -84,9 +85,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         foreach ($fields as $field) {
             $Field = new UniqueField($field['id'], $field);
 
-            if ($Field->isCustomField() || $Field->isSystem()) {
-                $this->fields[] = $Field;
-            }
+            $this->fields[] = $Field;
+
+//            if ($Field->isCustomField() || $Field->isSystem()) {
+//                $this->fields[] = $Field;
+//            }
         }
     }
 
@@ -173,7 +176,12 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $current = $Locale->getCurrent();
         $Title   = $this->getField(Fields::FIELD_TITLE);
-        $values  = $Title->getValue();
+
+        if (!$Title) {
+            return '';
+        }
+
+        $values = $Title->getValue();
 
         if (is_string($values)) {
             return $values;
@@ -219,7 +227,12 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $current = $Locale->getCurrent();
         $Title   = $this->getField(Fields::FIELD_CONTENT);
-        $values  = $Title->getValue();
+
+        if (!$Title) {
+            return '';
+        }
+
+        $values = $Title->getValue();
 
         if (is_string($values)) {
             return $values;

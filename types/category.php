@@ -32,6 +32,7 @@ if ($siteUrl != $_REQUEST['_url']) {
         $Site->setAttribute('content-header', false);
 
     } catch (QUI\Exception $Exception) {
+        QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);
         QUI::getRewrite()->showErrorHeader(404);
     }
 
