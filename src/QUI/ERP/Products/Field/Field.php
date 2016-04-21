@@ -617,12 +617,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     {
         $attributes['id'] = $this->getId();
 
-        if ($this->isEmpty()) {
-            $attributes['value'] = '';
-        } else {
-            $attributes['value'] = $this->getValue();
-        }
-
+        $attributes['value']      = $this->getValue();
         $attributes['unassigned'] = $this->isUnassigned();
         $attributes['ownField']   = $this->isOwnField();
 
