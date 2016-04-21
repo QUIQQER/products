@@ -411,7 +411,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         }
 
         if (is_array($options)) {
-            $this->options = $options;
+            foreach ($options as $key => $value) {
+                $this->setOption($key, $value);
+            }
         }
     }
 
