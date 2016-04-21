@@ -686,10 +686,9 @@ class Category extends QUI\QDOM
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($this->getFields() as $Field) {
-            $attributes                 = $Field->getAttributes();
+            $attributes['id']           = $Field->getId();
             $attributes['publicStatus'] = $Field->getAttribute('publicStatus') ? 1 : 0;
             $attributes['searchStatus'] = $Field->getAttribute('searchStatus') ? 1 : 0;
-            $attributes['options']      = $Field->getOptions();
 
             $fields[] = $attributes;
         }
@@ -762,5 +761,24 @@ class Category extends QUI\QDOM
 
             QUI\ERP\Products\Handler\Categories::clearCache($id);
         }
+    }
+
+    /**
+     * Get all fields that are set as searchable for this category
+     *
+     * @return array
+     */
+    public function getSearchFields()
+    {
+        $searchFields = array();
+        $fields       = $this->getFields();
+
+        foreach ($fields as $Field) {
+            if ($Field->getAttribute('searchStatus')) {
+                $searchFields[] = $Field;
+            }
+        }
+
+        return $searchFields;
     }
 }

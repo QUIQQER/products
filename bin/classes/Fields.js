@@ -138,14 +138,14 @@ define('package/quiqqer/products/bin/classes/Fields', [
         },
 
         /**
-         * Return all field types
+         * Return search types for specific field
          *
          * @param {number} fieldId
          * @returns {Promise}
          */
-        getSearchTypes: function (fieldId) {
+        getSearchTypesForField: function (fieldId) {
             return new Promise(function (resolve, reject) {
-                Ajax.get('package_quiqqer_products_ajax_fields_getSearchTypes', resolve, {
+                Ajax.get('package_quiqqer_products_ajax_fields_getSearchTypesForField', resolve, {
                     'package': 'quiqqer/products',
                     fieldId  : fieldId,
                     onError  : reject

@@ -117,7 +117,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 Fields.getChild(id),
                 Fields.getFieldTypes(),
                 Fields.getFieldTypeSettings(),
-                Fields.getSearchTypes(id)
+                Fields.getSearchTypesForField(id)
             ]).then(function (result) {
                 var i, len, settings;
 

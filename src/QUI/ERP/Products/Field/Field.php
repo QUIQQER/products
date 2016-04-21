@@ -605,7 +605,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             return array();
         }
 
-        return Search::getAllSearchTypes();
+        return Search::getSearchTypes();
     }
 
     /**

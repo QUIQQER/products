@@ -16,23 +16,23 @@ class Search
     /**
      * Search types
      */
-    const SEARCHTYPE_TEXT              = 1;
-    const SEARCHTYPE_SELECTRANGE       = 2;
-    const SEARCHTYPE_INPUTSELECTRANGE  = 3;
-    const SEARCHTYPE_SELECTSINGLE      = 4;
-    const SEARCHTYPE_INPUTSELECTSINGLE = 5;
-    const SEARCHTYPE_SELECTMULTI       = 6;
-    const SEARCHTYPE_BOOL              = 7;
-    const SEARCHTYPE_HASVALUE          = 8;
-    const SEARCHTYPE_DATE              = 9;
-    const SEARCHTYPE_DATERANGE         = 10;
+    const SEARCHTYPE_TEXT              = 'text';
+    const SEARCHTYPE_SELECTRANGE       = 'selectRange';
+    const SEARCHTYPE_INPUTSELECTRANGE  = 'inputSelectRange';
+    const SEARCHTYPE_SELECTSINGLE      = 'selectSingle';
+    const SEARCHTYPE_INPUTSELECTSINGLE = 'inputSelectSingle';
+    const SEARCHTYPE_SELECTMULTI       = 'selectMulti';
+    const SEARCHTYPE_BOOL              = 'bool';
+    const SEARCHTYPE_HASVALUE          = 'hasValue';
+    const SEARCHTYPE_DATE              = 'date';
+    const SEARCHTYPE_DATERANGE         = 'dateRange';
 
     /**
      * Get all available search types
      *
      * @return array
      */
-    public static function getAllSearchTypes()
+    public static function getSearchTypes()
     {
         return array(
             self::SEARCHTYPE_TEXT,
@@ -48,4 +48,19 @@ class Search
         );
     }
 
+    /**
+     * Get search data for search control
+     *
+     * @param string $lang (optional) - if ommitted language of session user is used
+     * @param integer $categoryId (optional) - search data for specific category
+     */
+    public static function getSearchData($lang = null, $categoryId = null)
+    {
+        
+    }
+
+    protected static function getSearchValues($lang, $categoryId = null)
+    {
+
+    }
 }
