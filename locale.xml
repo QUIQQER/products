@@ -291,6 +291,16 @@
             <en><![CDATA[Failed to set the main category. There was no main category specified.]]></en>
         </locale>
 
+        <!-- crons -->
+        <locale name="cron.updateProductCache.title">
+            <de><![CDATA[Produkt-Cache aktualisieren]]></de>
+            <en><![CDATA[Update Product Cache]]></en>
+        </locale>
+        <locale name="cron.updateProductCache.description">
+            <de><![CDATA[Aktualisiert die Cache-Tabelle für alle Produkte im System]]></de>
+            <en><![CDATA[Updates the cache table for all products in the system]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
