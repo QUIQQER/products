@@ -15,6 +15,7 @@ use QUI\ERP\Products\Field\View;
  */
 class Folder extends QUI\ERP\Products\Field\Field
 {
+    protected $columnType = 'BIGINT(20)';
     protected $searchable = false;
     
     public function getBackendView()

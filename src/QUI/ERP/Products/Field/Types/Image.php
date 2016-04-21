@@ -14,6 +14,7 @@ use QUI\Projects\Media\Utils as MediaUtils;
  */
 class Image extends QUI\ERP\Products\Field\Field
 {
+    protected $columnType = 'BIGINT(20)';
     protected $searchable = false;
 
     public function getBackendView()

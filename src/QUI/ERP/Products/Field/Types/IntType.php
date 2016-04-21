@@ -14,6 +14,8 @@ use QUI\ERP\Products\Field\View;
  */
 class IntType extends QUI\ERP\Products\Field\Field
 {
+    protected $columnType = 'BIGINT';
+
     /**
      * @return View
      */

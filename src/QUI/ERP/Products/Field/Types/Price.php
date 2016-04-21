@@ -14,6 +14,8 @@ use QUI\ERP\Products\Field\View;
  */
 class Price extends QUI\ERP\Products\Field\Field
 {
+    protected $columnType = 'DOUBLE';
+
     /**
      * Official currency code (i.e. EUR)
      *

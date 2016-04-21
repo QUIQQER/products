@@ -14,6 +14,8 @@ use QUI\ERP\Products\Field\View;
  */
 class InputMultiLang extends QUI\ERP\Products\Field\Field
 {
+    protected $columnType = 'TEXT';
+
     public function getBackendView()
     {
         return new View(array(

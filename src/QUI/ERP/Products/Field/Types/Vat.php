@@ -13,6 +13,7 @@ use QUI;
  */
 class Vat extends QUI\ERP\Products\Field\Field
 {
+    protected $columnType = 'SMALLINT';
     protected $searchable = false;
 
     public function getBackendView()

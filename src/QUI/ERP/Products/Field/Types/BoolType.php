@@ -14,6 +14,8 @@ use QUI\ERP\Products\Field\View;
  */
 class BoolType extends QUI\ERP\Products\Field\Field
 {
+    protected $columnType = 'TINYINT(1)';
+
     public function getBackendView()
     {
         return new View(array(

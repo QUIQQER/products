@@ -14,6 +14,8 @@ use QUI\ERP\Products\Field\View;
  */
 class FloatType extends QUI\ERP\Products\Field\Field
 {
+    protected $columnType = 'DOUBLE';
+
     public function getBackendView()
     {
         return new View(array(

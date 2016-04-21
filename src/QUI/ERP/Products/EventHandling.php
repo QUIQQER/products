@@ -248,9 +248,14 @@ class EventHandling
                     array('id' => $field['id'])
                 );
 
-
-                Fields::createFieldCacheColumn($field['id']);
                 Fields::setFieldTranslations($field['id'], $field);
+
+                try {
+                    Fields::createFieldCacheColumn($field['id']);
+                } catch (QUI\Exception $Exception) {
+                    // nothing, operation may not be allowed depending on field type
+                }
+
                 continue;
             }
 

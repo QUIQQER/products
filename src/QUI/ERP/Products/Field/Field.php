@@ -76,6 +76,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $value = '';
 
     /**
+     * Column type for database table (cache column)
+     *
+     * @var string
+     */
+    protected $columnType = 'LONGTEXT';
+
+    /**
      * Model constructor.
      *
      * @param integer $fieldId
@@ -568,6 +575,15 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $type = str_replace('QUI\ERP\Products\Field\Types\\', '', $type);
 
         return $type;
+    }
+
+    /**
+     * Return column type for database column (cache table)
+     *
+     */
+    public function getColumnType()
+    {
+        return $this->columnType;
     }
 
     /**

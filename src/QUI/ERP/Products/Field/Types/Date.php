@@ -15,6 +15,8 @@ use QUI\ERP\Products\Handler\Products as ProductsHandler;
  */
 class Date extends QUI\ERP\Products\Field\Field
 {
+    protected $columnType = 'INT(11)';
+
     /**
      * Validates a year value
      *

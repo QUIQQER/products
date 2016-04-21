@@ -14,6 +14,7 @@ use QUI\ERP\Products\Field\View;
  */
 class Url extends QUI\ERP\Products\Field\Field
 {
+    protected $columnType = 'TEXT';
     protected $searchable = false;
 
     public function getBackendView()

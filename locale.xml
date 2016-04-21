@@ -268,6 +268,14 @@
                 The product with product no. #[productNo] was not found.
             ]]></en>
         </locale>
+        <locale name="exception.field.cache.column.not.allowed">
+            <de><![CDATA[
+                Für das Feld #[fieldId] [fieldTitle] kann keine Spalte in der Cache-Tabelle erstellt werden, da der Feld-Typ dieses Felds als nicht durchsuchbar deklariert ist.
+                ]]></de>
+            <en><![CDATA[
+                A cache table column for field #[fieldId] [fieldTitle] cannot be created because the field type of this field is marked as not searchable.
+            ]]></en>
+        </locale>
 
         <!-- produkte -->
         <locale name="message.product.create.missing.category">
