@@ -7,6 +7,7 @@ namespace QUI\ERP\Products\Field;
 
 use QUI;
 use QUI\ERP\Products\Handler\Search;
+use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Class Field
@@ -86,9 +87,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * @var array
      */
-    protected $searchTypes = array(
-
-    );
+    protected $searchTypes = array();
 
     /**
      * Model constructor.
@@ -215,7 +214,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     {
         QUI\Rights\Permission::checkPermission('field.edit');
 
-        $allowedAttributes = QUI\ERP\Products\Handler\Fields::getChildAttributes();
+        $allowedAttributes = Fields::getChildAttributes();
 
         $data = array();
 
@@ -243,7 +242,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         // set cache
         QUI\Cache\Manager::set(
-            QUI\ERP\Products\Handler\Fields::getFieldCacheName($this->getId()),
+            Fields::getFieldCacheName($this->getId()),
             $data
         );
     }
@@ -288,7 +287,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         // delete cache
         QUI\Cache\Manager::clear(
-            QUI\ERP\Products\Handler\Fields::getFieldCacheName($this->getId())
+            Fields::getFieldCacheName($this->getId())
         );
     }
 
@@ -328,7 +327,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         // delete cache
         QUI\Cache\Manager::clear(
-            QUI\ERP\Products\Handler\Fields::getFieldCacheName($this->getId())
+            Fields::getFieldCacheName($this->getId())
         );
     }
 
@@ -419,7 +418,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         }
 
         if (is_array($options)) {
-            $this->options = $options;
+            foreach ($options as $key => $value) {
+                $this->setOption($key, $value);
+            }
         }
     }
 
@@ -434,6 +435,35 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         if (is_string($option)) {
             $this->options[$option] = $value;
         }
+    }
+
+    /**
+     * set an attribute
+     *
+     * @param string $name - name of the attribute
+     * @param string|boolean|array|object $val - value of the attribute
+     * @return Field
+     */
+    public function setAttribute($name, $val)
+    {
+        switch ($name) {
+            case 'name':
+            case 'type':
+            case 'search_type':
+            case 'prefix':
+            case 'suffix':
+            case 'priority':
+            case 'standardField':
+            case 'systemField':
+            case 'requiredField':
+                $val = QUI\Utils\Security\Orthos::clear($val);
+                break;
+
+            default:
+                return $this;
+        }
+
+        return parent::setAttribute($name, $val);
     }
 
     /**
