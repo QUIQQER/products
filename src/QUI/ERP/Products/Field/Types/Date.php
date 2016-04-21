@@ -114,4 +114,17 @@ class Date extends QUI\ERP\Products\Field\Field
             'priority' => $this->getAttribute('priority')
         ));
     }
+
+    /**
+     * Get all available search types
+     *
+     * @return array
+     */
+    public function getSearchTypes()
+    {
+        return array(
+            Search::SEARCHTYPE_DATE,
+            Search::SEARCHTYPE_DATERANGE
+        );
+    }
 }

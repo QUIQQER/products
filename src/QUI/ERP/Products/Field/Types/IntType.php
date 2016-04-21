@@ -7,6 +7,7 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 use QUI\ERP\Products\Field\View;
+use QUI\ERP\Products\Handler\Search;
 
 /**
  * Class IntType
@@ -86,6 +87,25 @@ class IntType extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
+        if (!is_numeric($value)) {
+            return null;
+        }
+
         return (int)$value;
+    }
+
+    /**
+     * Get all available search types
+     *
+     * @return array
+     */
+    public function getSearchTypes()
+    {
+        return array(
+            Search::SEARCHTYPE_TEXT,
+            Search::SEARCHTYPE_SELECTRANGE,
+            Search::SEARCHTYPE_HASVALUE,
+            Search::SEARCHTYPE_INPUTSELECTRANGE
+        );
     }
 }

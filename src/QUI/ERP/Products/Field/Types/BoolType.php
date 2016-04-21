@@ -111,4 +111,16 @@ class BoolType extends QUI\ERP\Products\Field\Field
     {
         return false;
     }
+
+    /**
+     * Get all available search types
+     *
+     * @return array
+     */
+    public function getSearchTypes()
+    {
+        return array(
+            Search::SEARCHTYPE_BOOL
+        );
+    }
 }

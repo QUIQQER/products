@@ -147,4 +147,19 @@ class Price extends QUI\ERP\Products\Field\Field
     {
         return !is_float($this->value);
     }
+
+    /**
+     * Get all available search types
+     *
+     * @return array
+     */
+    public function getSearchTypes()
+    {
+        return array(
+            Search::SEARCHTYPE_TEXT,
+            Search::SEARCHTYPE_SELECTRANGE,
+            Search::SEARCHTYPE_HASVALUE,
+            Search::SEARCHTYPE_INPUTSELECTRANGE
+        );
+    }
 }
