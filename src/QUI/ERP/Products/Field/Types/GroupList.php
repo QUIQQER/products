@@ -310,7 +310,6 @@ class GroupList extends QUI\ERP\Products\Field\Field
             Search::SEARCHTYPE_SELECTSINGLE,
             Search::SEARCHTYPE_SELECTMULTI,
             Search::SEARCHTYPE_HASVALUE,
-            Search::SEARCHTYPE_INPUTSELECTRANGE,
             Search::SEARCHTYPE_INPUTSELECTSINGLE
         );
     }
