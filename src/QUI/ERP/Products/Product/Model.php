@@ -593,6 +593,25 @@ class Model extends QUI\QDOM
             }
         }
 
+        // test if cache entry exists first
+        $result = QUI::getDataBase()->fetch(array(
+            'from'  => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            'where' => array(
+                'id' => $this->getId()
+            )
+        ));
+
+        if (empty($result)) {
+            $data['id'] = $this->id;
+
+            QUI::getDataBase()->insert(
+                QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+                $data
+            );
+
+            return;
+        }
+
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             $data,
