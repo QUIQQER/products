@@ -256,4 +256,49 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         return $result;
     }
+
+    /**
+     * Return all users in from the groups
+     *
+     * @return array
+     */
+    public function getUsers()
+    {
+        $groups = $this->getGroups();
+        $result = array();
+
+        /* @var $Group QUI\Groups\Group */
+        /* @var $User QUI\Users\User */
+        foreach ($groups as $Group) {
+            $users = $Group->getUsers();
+
+            foreach ($users as $User) {
+                $result[$User->getId()] = $User;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return the groups in the group list
+     *
+     * @return array
+     */
+    public function getGroups()
+    {
+        $Groups   = QUI::getGroups();
+        $groupIds = $this->getOption('groupIds');
+        $result   = array();
+
+        foreach ($groupIds as $groupId) {
+            try {
+                $result[] = $Groups->get($groupId);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);
+            }
+        }
+
+        return $result;
+    }
 }
