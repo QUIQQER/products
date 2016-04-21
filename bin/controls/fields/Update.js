@@ -116,13 +116,15 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
             Promise.all([
                 Fields.getChild(id),
                 Fields.getFieldTypes(),
-                Fields.getFieldTypeSettings()
+                Fields.getFieldTypeSettings(),
+                Fields.getSearchTypes(id)
             ]).then(function (result) {
                 var i, len, settings;
 
                 var fieldTypes      = result[1],
                     fieldData       = result[0],
                     fieldSettings   = result[2],
+                    searchTypes     = result[3],
                     FieldTypes      = Elm.getElement('[name="type"]'),
                     FieldOptions    = Elm.getElement('[name="options"]'),
                     FieldPriority   = Elm.getElement('[name="priority"]'),
@@ -145,6 +147,20 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                         value          : fieldTypes[i],
                         'data-settings': settings
                     }).inject(FieldTypes);
+                }
+
+                if (!searchTypes.length) {
+                    new Element('span', {
+                        'class': 'field-container-field',
+                        html   : QUILocale.get(lg, 'fieldtype.not.searchable')
+                    }).replaces(FieldSearchType);
+                } else {
+                    for (i = 0, len = searchTypes.length; i < len; i++) {
+                        new Element('option', {
+                            html  : QUILocale.get(lg, 'searchtype.' + searchTypes[i] + '.title'),
+                            value : searchTypes[i]
+                        }).inject(FieldSearchType);
+                    }
                 }
 
                 // options

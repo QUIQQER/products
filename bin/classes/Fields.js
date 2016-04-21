@@ -140,6 +140,22 @@ define('package/quiqqer/products/bin/classes/Fields', [
         /**
          * Return all field types
          *
+         * @param {number} fieldId
+         * @returns {Promise}
+         */
+        getSearchTypes: function (fieldId) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_fields_getSearchTypes', resolve, {
+                    'package': 'quiqqer/products',
+                    fieldId  : fieldId,
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
+         * Return all field types
+         *
          * @returns {Promise}
          */
         getSystemFields: function () {

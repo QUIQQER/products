@@ -548,6 +548,10 @@
             <de><![CDATA[Abschlag]]></de>
             <en><![CDATA[Deduction]]></en>
         </locale>
+        <locale name="fieldtype.not.searchable">
+            <de><![CDATA[Felder dieses Feld-Typs sind nicht durchsuchbar.]]></de>
+            <en><![CDATA[Fields of this field type are not searchable.]]></en>
+        </locale>
 
     </groups>
 
