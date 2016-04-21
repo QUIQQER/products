@@ -214,7 +214,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     {
         QUI\Rights\Permission::checkPermission('field.edit');
 
-        $allowedAttributes = QUI\ERP\Products\Handler\Fields::getChildAttributes();
+        $allowedAttributes = Fields::getChildAttributes();
 
         $data = array();
 
@@ -242,7 +242,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         // set cache
         QUI\Cache\Manager::set(
-            QUI\ERP\Products\Handler\Fields::getFieldCacheName($this->getId()),
+            Fields::getFieldCacheName($this->getId()),
             $data
         );
     }
@@ -287,7 +287,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         // delete cache
         QUI\Cache\Manager::clear(
-            QUI\ERP\Products\Handler\Fields::getFieldCacheName($this->getId())
+            Fields::getFieldCacheName($this->getId())
         );
     }
 
@@ -327,7 +327,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         // delete cache
         QUI\Cache\Manager::clear(
-            QUI\ERP\Products\Handler\Fields::getFieldCacheName($this->getId())
+            Fields::getFieldCacheName($this->getId())
         );
     }
 
