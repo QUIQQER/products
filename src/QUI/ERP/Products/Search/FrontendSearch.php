@@ -16,13 +16,17 @@ use QUI\ERP\Products\Handler\Fields;
  */
 class FrontendSearch extends Search
 {
+    const SITETYPE_SEARCH   = 'quiqqer/products:types/search';
+    const SITETYPE_CATEGORY = 'quiqqer/products:types/category';
+
     /**
      * All site types eligible for frontend search
      *
      * @var array
      */
     protected $eligibleSiteTypes = array(
-        'quiqqer/products:types/category' => true
+        self::SITETYPE_CATEGORY => true,
+        self::SITETYPE_SEARCH   => true
     );
 
     /**
@@ -42,9 +46,16 @@ class FrontendSearch extends Search
     /**
      * The frontend Site where the search is conducted
      *
-     * @var null
+     * @var QUI\Projects\Site
      */
     protected $Site = null;
+
+    /**
+     * Site type of frontend search/category site
+     *
+     * @var string
+     */
+    protected $siteType = null;
 
     /**
      * FrontendSearch constructor.
@@ -67,7 +78,8 @@ class FrontendSearch extends Search
             ));
         }
 
-        $this->Site = $Site;
+        $this->Site     = $Site;
+        $this->siteType = $type;
     }
 
     /**
@@ -90,6 +102,15 @@ class FrontendSearch extends Search
      */
     public function getSearchableFields()
     {
-        
+        switch ($this->siteType) {
+            case self::SITETYPE_CATEGORY:
+                $categoryId = $this->Site->getAttribute(
+                    'quiqqer.products.settings.categoryId'
+                );
+                break;
+
+            default:
+                $fields = Fields::get
+        }
     }
 }
