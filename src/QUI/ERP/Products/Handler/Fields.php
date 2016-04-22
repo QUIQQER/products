@@ -57,6 +57,7 @@ class Fields
             'standardField',
             'systemField',
             'requiredField',
+            'publicField',
             'options'
         );
     }
@@ -140,7 +141,7 @@ class Fields
         // id checking
         if (isset($attributes['id'])) {
             $result = QUI::getDataBase()->fetch(array(
-                'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+                'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                 'where' => array(
                     'id' => $attributes['id']
                 )
@@ -158,10 +159,10 @@ class Fields
         } else {
             // exist an id with 1000? field-id begin at 1000
             $result = QUI::getDataBase()->fetch(array(
-                'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+                'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                 'where' => array(
                     'id' => array(
-                        'type'  => '>=',
+                        'type' => '>=',
                         'value' => 1000
                     )
                 ),
@@ -241,7 +242,7 @@ class Fields
                 'quiqqer/products',
                 'exception.field.cache.column.not.allowed',
                 array(
-                    'fieldId'    => $fieldId,
+                    'fieldId' => $fieldId,
                     'fieldTitle' => $Field->getTitle()
                 )
             ));
@@ -379,7 +380,7 @@ class Fields
             'exception.field.not.found',
             array(
                 'fieldType' => $type,
-                'fieldId'   => $fieldId
+                'fieldId' => $fieldId
             )
         ));
     }
@@ -404,7 +405,7 @@ class Fields
             );
         } catch (QUI\Exception $Exception) {
             $result = QUI::getDataBase()->fetch(array(
-                'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+                'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                 'where' => array(
                     'id' => (int)$fieldId
                 ),
@@ -434,7 +435,7 @@ class Fields
                 array('quiqqer/products', 'exception.field.type.not.found'),
                 404,
                 array(
-                    'id'   => (int)$fieldId,
+                    'id' => (int)$fieldId,
                     'type' => $data['type'],
                     'file' => $file
                 )
@@ -446,15 +447,15 @@ class Fields
                 array('quiqqer/products', 'exception.field.class.not.found'),
                 404,
                 array(
-                    'id'    => (int)$fieldId,
-                    'type'  => $data['type'],
+                    'id' => (int)$fieldId,
+                    'type' => $data['type'],
                     'class' => $class
                 )
             );
         }
 
         $fieldData = array(
-            'system'   => (int)$data['systemField'],
+            'system' => (int)$data['systemField'],
             'required' => (int)$data['requiredField'],
             'standard' => (int)$data['standardField']
         );
@@ -467,8 +468,8 @@ class Fields
                 array('quiqqer/products', 'exception.field.is.no.field'),
                 404,
                 array(
-                    'id'    => (int)$fieldId,
-                    'type'  => $data['type'],
+                    'id' => (int)$fieldId,
+                    'type' => $data['type'],
                     'class' => $class
                 )
             );
@@ -517,7 +518,7 @@ class Fields
     {
         $query = array(
             'select' => 'id',
-            'from'   => QUI\ERP\Products\Utils\Tables::getFieldTableName()
+            'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName()
         );
 
         if (isset($queryParams['where'])) {
@@ -614,10 +615,10 @@ class Fields
     public static function countFields($queryParams = array())
     {
         $query = array(
-            'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+            'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             'count' => array(
                 'select' => 'id',
-                'as'     => 'count'
+                'as' => 'count'
             )
         );
 

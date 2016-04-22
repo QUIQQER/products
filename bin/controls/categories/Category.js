@@ -119,8 +119,17 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             });
 
             this.addCategory({
+                name  : 'products',
+                image : 'fa fa-shopping-bag',
+                text  : QUILocale.get(lg, 'category.panel.button.products'),
+                events: {
+                    onClick: this.openProducts
+                }
+            });
+
+            this.addCategory({
                 name  : 'sites',
-                image : 'fa fa-files-o',
+                image : 'fa fa-file-text-o',
                 text  : QUILocale.get(lg, 'category.panel.button.sites'),
                 events: {
                     onClick: this.openSites
@@ -128,11 +137,11 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             });
 
             this.addCategory({
-                name  : 'products',
-                image : 'fa fa-shopping-bag',
-                text  : QUILocale.get(lg, 'category.panel.button.products'),
+                name  : 'sites',
+                image : 'fa fa-files-o',
+                text  : QUILocale.get(lg, 'category.panel.button.fields'),
                 events: {
-                    onClick: this.openProducts
+                    onClick: this.openSites
                 }
             });
 

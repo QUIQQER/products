@@ -82,7 +82,9 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                     fieldSystem      : QUILocale.get(lg, 'systemField'),
                     fieldSystemDesc  : QUILocale.get(lg, 'systemFieldDesc'),
                     fieldStandard    : QUILocale.get(lg, 'standardField'),
-                    fieldStandardDesc: QUILocale.get(lg, 'standardFieldDesc')
+                    fieldStandardDesc: QUILocale.get(lg, 'standardFieldDesc'),
+                    fieldPublic      : QUILocale.get(lg, 'publicField'),
+                    fieldPublicDesc  : QUILocale.get(lg, 'publicFieldDesc')
                 })
             });
 
@@ -153,6 +155,7 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                     priority     : Form.elements.priority.value,
                     standardField: Form.elements.standardField.checked ? 1 : 0,
                     systemField  : 0,
+                    publicField  : Form.elements.publicField.checked ? 1 : 0,
                     requiredField: Form.elements.requiredField.checked ? 1 : 0
                 }).then(function (data) {
 

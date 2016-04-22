@@ -95,42 +95,60 @@
                     </label>
                 </td>
             </tr>
+            </tbody>
+        </table>
+
+        <table class="data-table data-table-flexbox">
+            <tbody>
             <tr>
                 <td>
                     <label class="field-container">
-                        <span class="field-container-item">
-                            {{fieldRequired}}
-                        </span>
-                        <span class="field-container-field">
-                            <input type="checkbox" name="requiredField"/>
-                            {{fieldRequiredDesc}}
-                        </span>
+                    <span class="field-container-item">
+                        {{fieldPublic}}
+                    </span>
+                    <span class="field-container-field">
+                        <input type="checkbox" name="publicField"/>
+                        {{fieldPublicDesc}}
+                    </span>
                     </label>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label class="field-container">
-                        <span class="field-container-item">
-                            {{fieldStandard}}
-                        </span>
-                        <span class="field-container-field">
-                            <input type="checkbox" name="standardField"/>
-                            {{fieldStandardDesc}}
-                        </span>
+                    <span class="field-container-item">
+                        {{fieldRequired}}
+                    </span>
+                    <span class="field-container-field">
+                        <input type="checkbox" name="requiredField"/>
+                        {{fieldRequiredDesc}}
+                    </span>
                     </label>
                 </td>
             </tr>
             <tr>
                 <td>
                     <label class="field-container">
-                        <span class="field-container-item">
-                            {{fieldSystem}}
-                        </span>
-                        <span class="field-container-field">
-                            <input type="checkbox" name="systemField" disabled/>
-                            {{fieldSystemDesc}}
-                        </span>
+                    <span class="field-container-item">
+                        {{fieldStandard}}
+                    </span>
+                    <span class="field-container-field">
+                        <input type="checkbox" name="standardField"/>
+                        {{fieldStandardDesc}}
+                    </span>
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="field-container">
+                    <span class="field-container-item">
+                        {{fieldSystem}}
+                    </span>
+                    <span class="field-container-field">
+                        <input type="checkbox" name="systemField" disabled/>
+                        {{fieldSystemDesc}}
+                    </span>
                     </label>
                 </td>
             </tr>

@@ -88,7 +88,9 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     fieldSystem      : QUILocale.get(lg, 'systemField'),
                     fieldSystemDesc  : QUILocale.get(lg, 'systemFieldDesc'),
                     fieldStandard    : QUILocale.get(lg, 'standardField'),
-                    fieldStandardDesc: QUILocale.get(lg, 'standardFieldDesc')
+                    fieldStandardDesc: QUILocale.get(lg, 'standardFieldDesc'),
+                    fieldPublic      : QUILocale.get(lg, 'publicField'),
+                    fieldPublicDesc  : QUILocale.get(lg, 'publicFieldDesc')
                 })
             });
 
@@ -133,6 +135,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     FieldSearchType = Elm.getElement('[name="search_type"]'),
                     FieldRequired   = Elm.getElement('[name="requiredField"]'),
                     FieldSystem     = Elm.getElement('[name="systemField"]'),
+                    FieldPublic     = Elm.getElement('[name="publicField"]'),
                     FieldStandard   = Elm.getElement('[name="standardField"]');
 
                 for (i = 0, len = fieldTypes.length; i < len; i++) {
@@ -157,8 +160,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 } else {
                     for (i = 0, len = searchTypes.length; i < len; i++) {
                         new Element('option', {
-                            html  : QUILocale.get(lg, 'searchtype.' + searchTypes[i] + '.title'),
-                            value : searchTypes[i]
+                            html : QUILocale.get(lg, 'searchtype.' + searchTypes[i] + '.title'),
+                            value: searchTypes[i]
                         }).inject(FieldSearchType);
                     }
                 }
@@ -181,6 +184,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 FieldRequired.checked = fieldData.isRequired;
                 FieldSystem.checked   = fieldData.isSystem;
                 FieldStandard.checked = fieldData.standard;
+                FieldPublic.checked   = fieldData.isPublic;
 
                 var loadSettings = function () {
                     self.$loadSettings(this);
@@ -232,6 +236,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     priority     : Form.elements.priority.value,
                     standardField: Form.elements.standardField.checked ? 1 : 0,
                     requiredField: Form.elements.requiredField.checked ? 1 : 0,
+                    publicField  : Form.elements.publicField.checked ? 1 : 0,
                     options      : Form.elements.options.value
                 }).then(function () {
                     return self.$Translation.save();

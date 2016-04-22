@@ -94,6 +94,14 @@
             <de><![CDATA[Dieses Feld muss beim Anlegen eines Produktes ausgefüllt werden.]]></de>
             <en><![CDATA[This field must be filled out to create a new product.]]></en>
         </locale>
+        <locale name="publicField">
+            <de><![CDATA[Öffentliches Feld]]></de>
+            <en><![CDATA[Public field]]></en>
+        </locale>
+        <locale name="publicFieldDesc">
+            <de><![CDATA[Öffentliche Felder werden öffentlich angezeigt. Besucher Ihrer Seite können dieses Feld sehen.]]></de>
+            <en><![CDATA[Public fields are displayed publicly. Visitors of your page can see this field.]]></en>
+        </locale>
         <locale name="systemField">
             <de><![CDATA[Systemfeld]]></de>
             <en><![CDATA[System field]]></en>
@@ -379,13 +387,23 @@
             <en><![CDATA[Create product]]></en>
         </locale>
 
+        <locale name="product.fields.administration">
+            <de><![CDATA[Feldverwaltung]]></de>
+            <en><![CDATA[Field admnistration]]></en>
+        </locale>
+        <locale name="product.fields.add.field">
+            <de><![CDATA[Feld hinzufügen]]></de>
+            <en><![CDATA[Add field]]></en>
+        </locale>
+
+
         <locale name="category.panel.title">
             <de><![CDATA[Kategorie: [title]]]></de>
             <en><![CDATA[Category: [title]]]></en>
         </locale>
         <locale name="category.panel.button.data">
-            <de><![CDATA[Daten]]></de>
-            <en><![CDATA[Data]]></en>
+            <de><![CDATA[Informationen]]></de>
+            <en><![CDATA[Information]]></en>
         </locale>
         <locale name="category.panel.button.sites">
             <de><![CDATA[Zugewiesene Seiten]]></de>
@@ -394,6 +412,10 @@
         <locale name="category.panel.button.products">
             <de><![CDATA[Zugewiesene Produkte]]></de>
             <en><![CDATA[Assigned products]]></en>
+        </locale>
+        <locale name="category.panel.button.fields">
+            <de><![CDATA[Zugewiesene Felder]]></de>
+            <en><![CDATA[Assigned fields]]></en>
         </locale>
         <locale name="category.panel.button.products.add">
             <de><![CDATA[Produkt hinzufügen]]></de>
