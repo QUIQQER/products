@@ -1,13 +1,14 @@
 .category-data,
 .category-sites,
+.category-fields,
 .category-products {
     display: none;
     left: 0;
     padding: 20px;
     position: absolute;
     top: 0;
+    width: 100%;
 }
-
 
 /** Fields
  ============================================== */

@@ -67,9 +67,9 @@ class Fields
      *
      * @return array
      */
-    public function getStandardFields()
+    public static function getStandardFields()
     {
-        return $this->getFields(array(
+        return self::getFields(array(
             'where' => array(
                 'standardField' => 1
             )
@@ -81,9 +81,9 @@ class Fields
      *
      * @return array
      */
-    public function getSystemFields()
+    public static function getSystemFields()
     {
-        return $this->getFields(array(
+        return self::getFields(array(
             'where' => array(
                 'systemField' => 1
             )

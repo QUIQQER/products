@@ -128,6 +128,22 @@ define('package/quiqqer/products/bin/classes/Categories', [
         },
 
         /**
+         * Return stats information from the category
+         *
+         * @param {Number} categoryId
+         * @returns {Promise}
+         */
+        getInformation: function (categoryId) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_categories_getInformation', resolve, {
+                    'package' : 'quiqqer/products',
+                    onError   : reject,
+                    categoryId: categoryId
+                });
+            });
+        },
+
+        /**
          * Create a new category
          *
          * @params {Number} parentId - Parent-ID
