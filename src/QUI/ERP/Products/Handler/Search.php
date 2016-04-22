@@ -48,13 +48,23 @@ class Search
         );
     }
 
+    public static function getFrontendSearch()
+    {
+
+    }
+
+    public static function getBackendSearch()
+    {
+        
+    }
+
     /**
-     * Get search data for search control
+     * Get search data for searchable fields (used in search control)
      *
-     * @param string $lang (optional) - if ommitted language of session user is used
+     * @param string $lang - language for field names and values
      * @param integer $categoryId (optional) - search data for specific category
      */
-    public static function getSearchData($lang = null, $categoryId = null)
+    public static function getSearchFieldsData($lang, $categoryId = null)
     {
         
     }

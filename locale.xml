@@ -608,6 +608,13 @@
             <de><![CDATA[Produktkategorie]]></de>
             <en><![CDATA[Product category]]></en>
         </locale>
+
+        <!-- FrontendSearch -->
+        <locale name="exception.frontendsearch.site.type.not.eligible">
+            <de><![CDATA[Die Seite #[siteId] ist mit der Frontend Produkt-Suche nicht kompatibel, da der Seiten-Typ nicht passt.]]></de>
+            <en><![CDATA[The site #[siteId] is not compatible with the frontend product search because the site type ist not eligible.]]></en>
+        </locale>
+
     </groups>
 
 </locales>
