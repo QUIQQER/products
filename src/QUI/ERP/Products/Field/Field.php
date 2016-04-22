@@ -52,6 +52,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $ownField = false;
 
     /**
+     * @var bool
+     */
+    protected $public = true;
+
+    /**
      * @var array
      */
     protected $options = array();
@@ -342,6 +347,16 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Is the field a public field
+     *
+     * @return bool
+     */
+    public function isPublic()
+    {
+        return $this->public;
+    }
+
+    /**
      * Set the own field status
      *
      * @param bool $status
@@ -456,6 +471,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             case 'standardField':
             case 'systemField':
             case 'requiredField':
+            case 'publicField':
                 $val = QUI\Utils\Security\Orthos::clear($val);
                 break;
 
@@ -658,6 +674,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['isSystem']     = $this->isSystem();
         $attributes['jsControl']    = $this->getJavaScriptControl();
         $attributes['searchable']   = $this->isSearchable();
+        $attributes['public']       = $this->isPublic();
 
         return $attributes;
     }

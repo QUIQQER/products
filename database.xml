@@ -35,6 +35,7 @@
             <field type="TINYINT(1) NOT NULL DEFAULT 0">systemField</field>
             <field type="TINYINT(1) NOT NULL DEFAULT 0">standardField</field>
             <field type="TINYINT(1) NOT NULL DEFAULT 0">requiredField</field>
+            <field type="TINYINT(1) NOT NULL DEFAULT 0">publicField</field>
             <field type="TEXT">options</field>
 
             <primary>id</primary>

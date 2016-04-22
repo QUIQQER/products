@@ -107,8 +107,6 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                     'class': 'fa fa-remove'
                 });
 
-                console.log(data);
-
                 data.data.each(function (value, key) {
                     if (value.isStandard) {
                         data.data[key].isStandard = ElmOk.clone();

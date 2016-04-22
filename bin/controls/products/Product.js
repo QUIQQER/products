@@ -66,7 +66,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             '$onCreate',
             '$onInject',
             '$onFolderCreated',
-            'openAddFieldDialog'
+            'openAddFieldDialog',
+            'openFieldAdministration'
         ],
 
         options: {
@@ -88,6 +89,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             this.$FileViewer  = null;
             this.$ImageViewer = null;
+
+            this.$FieldAdministration = null;
 
             this.$Product = new Product({
                 id: this.getAttribute('productId')
@@ -137,17 +140,17 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
             });
 
-            this.addButton({
-                name  : 'fieldAdd',
-                icon  : 'fa fa-file-text-o',
-                title : 'Feld hinzufügen',
-                events: {
-                    onClick: this.openAddFieldDialog
-                },
-                styles: {
-                    'float': 'right'
-                }
-            });
+            //this.addButton({
+            //    name  : 'fieldAdd',
+            //    icon  : 'fa fa-file-text-o',
+            //    title : 'Feld hinzufügen',
+            //    events: {
+            //        onClick: this.openAddFieldDialog
+            //    },
+            //    styles: {
+            //        'float': 'right'
+            //    }
+            //});
         },
 
         /**
@@ -215,12 +218,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     html: '<div class="product-update-data sheet">' + dataTemplate + '</div>' +
                           '<div class="product-update-field sheet"></div>' +
                           '<div class="product-update-media sheet"></div>' +
-                          '<div class="product-update-files sheet"></div>'
+                          '<div class="product-update-files sheet"></div>' +
+                          '<div class="product-update-fieldadministration sheet"></div>'
                 });
 
                 this.$Data  = Content.getElement('.product-update-data');
                 this.$Media = Content.getElement('.product-update-media');
                 this.$Files = Content.getElement('.product-update-files');
+
+                this.$FieldAdministration = Content.getElement('.product-update-fieldadministration');
 
                 this.$MainCategoryRow = Content.getElement('.product-mainCategory');
                 this.$MainCategory    = Content.getElement('[name="product-category"]');
@@ -230,6 +236,21 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 });
 
                 this.$FieldContainer = Content.getElement('.product-update-field');
+
+                // data
+                new QUIButton({
+                    text  : QUILocale.get(lg, 'product.fields.administration'),
+                    styles: {
+                        display: 'block',
+                        'float': 'none',
+                        margin : '0 auto 20px',
+                        width  : 200
+                    },
+                    events: {
+                        onClick: this.openFieldAdministration
+                    }
+                }).inject(this.$Data);
+
 
                 // viewer
                 this.$FileViewer = new FolderViewer({
@@ -573,12 +594,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }
 
             return this.$hideCategories().then(function () {
-
-                if (this.$Editor) {
-                    this.$Editor.destroy();
-                    this.$Editor = null;
-                }
-
                 return this.$showCategory(this.$Data);
             }.bind(this));
         },
@@ -594,12 +609,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }
 
             return this.$hideCategories().then(function () {
-
-                if (this.$Editor) {
-                    this.$Editor.destroy();
-                    this.$Editor = null;
-                }
-
                 this.$ImageViewer.refresh();
 
                 return this.$showCategory(this.$Media);
@@ -617,12 +626,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }
 
             return this.$hideCategories().then(function () {
-
-                if (this.$Editor) {
-                    this.$Editor.destroy();
-                    this.$Editor = null;
-                }
-
                 this.$FileViewer.refresh();
 
                 return this.$showCategory(this.$Files);
@@ -643,14 +646,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             return this.$hideCategories().then(function () {
                 return self.$showCategory(self.$FieldContainer);
             }).then(function () {
-                self.$currentField = fieldId;
+                this.$currentField = fieldId;
 
                 require(['Editors'], function (Editors) {
                     Editors.getEditor().then(function (Editor) {
 
-                        self.$Editor = Editor;
+                        this.$Editor = Editor;
 
-                        self.$FieldContainer.setStyles({
+                        this.$FieldContainer.setStyles({
                             height: '100%'
                         });
 
@@ -658,10 +661,89 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             Editor.setContent(Field.value);
                         }
 
-                        Editor.inject(self.$FieldContainer);
-                    });
+                        Editor.inject(this.$FieldContainer);
+                    }.bind(this));
                 });
-            });
+            }.bind(this));
+        },
+
+        /**
+         *
+         */
+        openFieldAdministration: function () {
+
+            return this.$hideCategories().then(function () {
+
+                var GridContainer = new Element('div', {
+                    styles: {
+                        'float': 'left',
+                        height : '100%',
+                        width  : '100%'
+                    }
+                }).inject(this.$FieldAdministration);
+
+                this.$Grid = new Grid(GridContainer, {
+                    pagination : true,
+                    buttons    : [{
+                        text  : QUILocale.get(lg, 'product.fields.add.field'),
+                        events: {
+                            onClick: this.openAddFieldDialog
+                        }
+                    }],
+                    columnModel: [{
+                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        dataIndex: 'id',
+                        dataType : 'number',
+                        width    : 60
+                    }, {
+                        header   : QUILocale.get('quiqqer/system', 'title'),
+                        dataIndex: 'title',
+                        dataType : 'text',
+                        width    : 200
+                    }, {
+                        header   : QUILocale.get(lg, 'fieldtype'),
+                        dataIndex: 'fieldtype',
+                        dataType : 'text',
+                        width    : 200
+                    }, {
+                        header   : QUILocale.get(lg, 'priority'),
+                        dataIndex: 'priority',
+                        dataType : 'number',
+                        width    : 100
+                    }, {
+                        header   : QUILocale.get(lg, 'prefix'),
+                        dataIndex: 'prefix',
+                        dataType : 'text',
+                        width    : 100
+                    }, {
+                        header   : QUILocale.get(lg, 'suffix'),
+                        dataIndex: 'suffix',
+                        dataType : 'text',
+                        width    : 100
+                    }, {
+                        header   : QUILocale.get(lg, 'standardField'),
+                        dataIndex: 'isStandard',
+                        dataType : 'node',
+                        width    : 60
+                    }, {
+                        header   : QUILocale.get(lg, 'requiredField'),
+                        dataIndex: 'isRequired',
+                        dataType : 'node',
+                        width    : 60
+                    }]
+                });
+
+                var size = this.$FieldAdministration.measure(function () {
+                    return this.getSize();
+                });
+
+                this.$Grid.setHeight(size.y - 40).then(function () {
+                    return this.$showCategory(this.$FieldAdministration);
+                }.bind(this)).then(function () {
+                    this.$Grid.resize();
+                }.bind(this));
+
+            }.bind(this));
         },
 
         /**
@@ -707,7 +789,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         fields['field-' + entry.id] = entry.value;
                     }
                 });
-console.warn(fields);
+                console.warn(fields);
 
                 Products.updateChild(
                     self.getAttribute('productId'),
@@ -772,13 +854,23 @@ console.warn(fields);
                 }, {
                     duration: 200,
                     callback: function () {
+
+                        if (this.$Editor) {
+                            this.$Editor.destroy();
+                            this.$Editor = null;
+                        }
+
+                        if (this.$FieldAdministration) {
+                            this.$FieldAdministration.set('html', '');
+                        }
+
                         nodes.setStyles({
                             display: 'none',
                             opacity: 0
                         });
 
                         resolve();
-                    }
+                    }.bind(this)
                 });
             }.bind(this));
         },
