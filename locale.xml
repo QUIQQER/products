@@ -99,7 +99,8 @@
             <en><![CDATA[Public field]]></en>
         </locale>
         <locale name="publicFieldDesc">
-            <de><![CDATA[Öffentliche Felder werden öffentlich angezeigt. Besucher Ihrer Seite können dieses Feld sehen.]]></de>
+            <de>
+                <![CDATA[Öffentliche Felder werden öffentlich angezeigt. Besucher Ihrer Seite können dieses Feld sehen.]]></de>
             <en><![CDATA[Public fields are displayed publicly. Visitors of your page can see this field.]]></en>
         </locale>
         <locale name="systemField">
@@ -406,8 +407,8 @@
             <en><![CDATA[Information]]></en>
         </locale>
         <locale name="category.panel.button.sites">
-            <de><![CDATA[Zugewiesene Seiten]]></de>
-            <en><![CDATA[Assigned sites]]></en>
+            <de><![CDATA[Verbundene Seiten]]></de>
+            <en><![CDATA[Related sites]]></en>
         </locale>
         <locale name="category.panel.button.products">
             <de><![CDATA[Zugewiesene Produkte]]></de>
