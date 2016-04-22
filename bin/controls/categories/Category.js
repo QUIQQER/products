@@ -73,7 +73,8 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 Products: null
             };
 
-            this.$injected = false;
+            this.$injected     = false;
+            this.$informations = {};
 
             this.$ContainerData     = null;
             this.$ContainerSites    = null;
@@ -150,12 +151,16 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             // html
             Content.set({
                 html: Mustache.render(template, {
-                    textData       : QUILocale.get('quiqqer/system', 'data'),
-                    textId         : QUILocale.get('quiqqer/system', 'id'),
-                    textTitle      : QUILocale.get('quiqqer/system', 'title'),
-                    textDescription: QUILocale.get('quiqqer/system', 'description'),
-                    textFields     : QUILocale.get(lg, 'control.category.update.title.fields'),
-                    textSites      : QUILocale.get(lg, 'control.category.update.title.sites')
+                    textData           : QUILocale.get('quiqqer/system', 'data'),
+                    textId             : QUILocale.get('quiqqer/system', 'id'),
+                    textTitle          : QUILocale.get('quiqqer/system', 'title'),
+                    textDescription    : QUILocale.get('quiqqer/system', 'description'),
+                    textFields         : QUILocale.get(lg, 'control.category.update.title.fields'),
+                    textSites          : QUILocale.get(lg, 'control.category.update.title.sites'),
+                    textInformation    : QUILocale.get(lg, 'control.category.update.title.information'),
+                    textProductCount   : QUILocale.get(lg, 'control.category.update.title.countProducts'),
+                    textFieldCount     : QUILocale.get(lg, 'control.category.update.title.countFields'),
+                    textCategoriesCount: QUILocale.get(lg, 'control.category.update.title.countCategories')
                 })
             });
 
@@ -268,8 +273,12 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 }).inject(TranslateCategories);
 
 
+                Content.getElement('.category-count-products').set('html', this.$informations.products);
+                Content.getElement('.category-count-fields').set('html', this.$informations.fields);
+                Content.getElement('.category-count-categories').set('html', this.$informations.categories);
+
                 // fields
-                var field, Status;
+                var field;
                 var fieldGridData = [];
 
                 for (var i = 0, len = this.$data.fields.length; i < len; i++) {
@@ -404,7 +413,11 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                         title: data.title
                     }));
 
-                    resolve(data);
+                    Categories.getInformation(categoryId).then(function (informations) {
+                        this.$informations = informations;
+
+                        resolve(data);
+                    }.bind(this));
 
                 }.bind(this));
             }.bind(this));

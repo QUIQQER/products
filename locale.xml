@@ -499,6 +499,23 @@
             <de><![CDATA[Seiten Zuweisungen]]></de>
             <en><![CDATA[Site assignments]]></en>
         </locale>
+        <locale name="control.category.update.title.information">
+            <de><![CDATA[Kategorie Informationen]]></de>
+            <en><![CDATA[Category information]]></en>
+        </locale>
+        <locale name="control.category.update.title.countProducts">
+            <de><![CDATA[Anzahl Produkte]]></de>
+            <en><![CDATA[Number of products]]></en>
+        </locale>
+        <locale name="control.category.update.title.countFields">
+            <de><![CDATA[Anzahl Felder]]></de>
+            <en><![CDATA[Number of fields]]></en>
+        </locale>
+        <locale name="control.category.update.title.countCategories">
+            <de><![CDATA[Anzahl Kategorien]]></de>
+            <en><![CDATA[Number of categories]]></en>
+        </locale>
+
         <locale name="category.update.field.grid.button.add">
             <de><![CDATA[Feld hinzufügen]]></de>
             <en><![CDATA[Add a field]]></en>
