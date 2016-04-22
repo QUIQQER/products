@@ -54,6 +54,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             'openData',
             'openSites',
             'openProducts',
+            'openFields',
             'save',
             '$onCreate',
             '$onInject'
@@ -77,6 +78,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             this.$ContainerData     = null;
             this.$ContainerSites    = null;
             this.$ContainerProducts = null;
+            this.$ContainerFields   = null;
 
             this.$data = {};
 
@@ -137,11 +139,11 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             });
 
             this.addCategory({
-                name  : 'sites',
+                name  : 'fields',
                 image : 'fa fa-files-o',
                 text  : QUILocale.get(lg, 'category.panel.button.fields'),
                 events: {
-                    onClick: this.openSites
+                    onClick: this.openFields
                 }
             });
 
@@ -160,6 +162,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             this.$ContainerData     = Content.getElement('.category-data');
             this.$ContainerSites    = Content.getElement('.category-sites');
             this.$ContainerProducts = Content.getElement('.category-products');
+            this.$ContainerFields   = Content.getElement('.category-fields');
 
             var Id = Content.getElement('.field-id');
 
@@ -167,12 +170,9 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 styles: {
                     width: '100%'
                 }
-            }).inject(
-                Content.getElement('.category-update-fields-table')
-            );
+            }).inject(this.$ContainerFields);
 
             this.$grids.Fields = new Grid(FieldContainer, {
-                height     : 300,
                 buttons    : [{
                     name     : 'add',
                     text     : QUILocale.get(lg, 'category.update.field.grid.button.add'),
@@ -216,16 +216,6 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     dataIndex: 'title',
                     dataType : 'text',
                     width    : 200
-                }, {
-                    header   : QUILocale.get(lg, 'category.update.field.grid.publicStatus'),
-                    dataIndex: 'publicStatus',
-                    dataType : 'QUI',
-                    width    : 100
-                }, {
-                    header   : QUILocale.get(lg, 'category.update.field.grid.searchStatus'),
-                    dataIndex: 'searchStatus',
-                    dataType : 'QUI',
-                    width    : 100
                 }]
             });
 
@@ -285,23 +275,9 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 for (var i = 0, len = this.$data.fields.length; i < len; i++) {
                     field = this.$data.fields[i];
 
-                    Status = new QUISwitch({
-                        status: field.searchStatus
-                    });
-
-                    if (!field.searchable) {
-                        Status.setSilentOff().then(function () {
-                            this.disable();
-                        }.bind(Status));
-                    }
-
                     fieldGridData.push({
-                        id          : field.id,
-                        title       : QUILocale.get(lg, 'products.field.' + field.id + '.title'),
-                        publicStatus: new QUISwitch({
-                            status: field.publicStatus
-                        }),
-                        searchStatus: Status
+                        id   : field.id,
+                        title: QUILocale.get(lg, 'products.field.' + field.id + '.title')
                     });
                 }
 
@@ -394,9 +370,8 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     size  = this.getContent().getSize();
 
                 if (this.$grids.Fields) {
-                    proms.push(
-                        this.$grids.Fields.setWidth(size.x - 80)
-                    );
+                    proms.push(this.$grids.Fields.setWidth(size.x - 40));
+                    proms.push(this.$grids.Fields.setHeight(size.y - 40));
                 }
 
                 if (this.$grids.Products) {
@@ -470,6 +445,20 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 .then(function () {
                     this.$grids.Products.refresh();
                     return this.$showContainer(this.$ContainerProducts);
+                }.bind(this));
+        },
+
+        /**
+         * Show the category fields
+         */
+        openFields: function () {
+            this.getCategory('fields').setActive();
+
+            return this.$hideContainer()
+                .then(this.resize)
+                .then(function () {
+                    this.$grids.Products.refresh();
+                    return this.$showContainer(this.$ContainerFields);
                 }.bind(this));
         },
 
@@ -566,7 +555,8 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 moofx([
                     this.$ContainerData,
                     this.$ContainerSites,
-                    this.$ContainerProducts
+                    this.$ContainerProducts,
+                    this.$ContainerFields
                 ]).animate({
                     opacity: 0,
                     top    : -50
@@ -576,6 +566,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                         this.$ContainerData.setStyle('display', 'none');
                         this.$ContainerSites.setStyle('display', 'none');
                         this.$ContainerProducts.setStyle('display', 'none');
+                        this.$ContainerFields.setStyle('display', 'none');
 
                         resolve();
                     }.bind(this)
