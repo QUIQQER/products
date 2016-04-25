@@ -752,8 +752,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 });
 
                 var switchStatusChange = function (Switch) {
-                    console.log(Switch.getStatus());
-                };
+                    var fieldId = Switch.getAttribute('fieldId'),
+                        status  = Switch.getStatus();
+
+                    Switch.disable();
+
+                    this.$Product.setPublicStatusFromField(fieldId, status).then(function () {
+                        Switch.enable();
+                    });
+
+                }.bind(this);
 
                 var refresh = function () {
                     this.$Product.getFields().then(function (fields) {
@@ -762,10 +770,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                         for (i = 0, len = fields.length; i < len; i++) {
                             entry = fields[i];
-
+                            
                             data.push({
                                 visible        : new QUISwitch({
                                     fieldId: entry.id,
+                                    status : entry.isPublic,
                                     events : {
                                         onChange: switchStatusChange
                                     }

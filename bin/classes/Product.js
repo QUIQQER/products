@@ -64,6 +64,24 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * Set the public status from a product field
+         *
+         * @param {Number}  fieldId
+         * @param {Boolean}  status
+         * @return {Promise}
+         */
+        setPublicStatusFromField: function (fieldId, status) {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_products_setPublicStatusFromField', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
+                    fieldId  : fieldId,
+                    status   : status
+                });
+            }.bind(this));
+        },
+
+        /**
          * Return the Product-ID
          *
          * @returns {Number|Boolean}

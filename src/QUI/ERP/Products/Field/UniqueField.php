@@ -67,12 +67,14 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
 
     /**
      * is customfield?
+     * Custom field is a field, which can be filled by the visitors
      *
      * @var bool
      */
     protected $custom;
 
     /**
+     * Field from the system, like price
      * @var bool
      */
     protected $isSystem = false;
@@ -88,6 +90,8 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
     protected $isRequire = false;
 
     /**
+     * a field in the product, but not in any category from the product
+     *
      * @var bool
      */
     protected $unassigned = false;

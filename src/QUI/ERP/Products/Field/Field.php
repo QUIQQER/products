@@ -343,6 +343,29 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Is the field a public field
+     * is the field visible at the product view
+     *
+     * @return bool
+     */
+    public function isPublic()
+    {
+        return $this->public;
+    }
+
+    /**
+     * Set the public field status
+     *
+     * @param bool $status
+     */
+    public function setPublicStatus($status)
+    {
+        if (is_bool($status)) {
+            $this->public = $status;
+        }
+    }
+
+    /**
      * Is the field a own field from the product?
      *
      * @return bool
@@ -350,16 +373,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     public function isOwnField()
     {
         return $this->ownField;
-    }
-
-    /**
-     * Is the field a public field
-     *
-     * @return bool
-     */
-    public function isPublic()
-    {
-        return $this->public;
     }
 
     /**
@@ -687,6 +700,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Return the field attributes for a product
+     *
      * @return array
      */
     public function toProductArray()
@@ -696,6 +711,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['value']      = $this->getValue();
         $attributes['unassigned'] = $this->isUnassigned();
         $attributes['ownField']   = $this->isOwnField();
+        $attributes['isPublic']   = $this->isPublic();
 
         return $attributes;
     }

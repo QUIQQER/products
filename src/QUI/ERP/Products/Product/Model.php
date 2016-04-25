@@ -124,6 +124,10 @@ class Model extends QUI\QDOM
                     $Field->setOwnFieldStatus($field['ownField']);
                 }
 
+                if (isset($field['isPublic'])) {
+                    $Field->setPublicStatus($field['isPublic']);
+                }
+
                 $this->fields[$Field->getId()] = $Field;
 
             } catch (QUI\Exception $Exception) {
