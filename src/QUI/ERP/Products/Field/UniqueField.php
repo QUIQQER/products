@@ -250,6 +250,17 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
     }
 
     /**
+     * Return the value in dependence of a locale (language)
+     *
+     * @param bool $Locale
+     * @return array|string
+     */
+    public function getValueByLocale($Locale = false)
+    {
+        return $this->getValue();
+    }
+
+    /**
      * @return array|string
      */
     public function getOptions()

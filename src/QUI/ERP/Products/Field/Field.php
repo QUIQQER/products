@@ -457,9 +457,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $options = json_decode($options, true);
         }
 
-        QUI\System\Log::writeRecursive('##################');
-        QUI\System\Log::writeRecursive($options);
-
         if (is_array($options)) {
             foreach ($options as $key => $value) {
                 $this->setOption($key, $value);
@@ -696,7 +693,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return integer|false - search type id oder false if none set
      */
-    public function getSearchType() {
+    public function getSearchType()
+    {
         return $this->getAttribute('search_type');
     }
 
