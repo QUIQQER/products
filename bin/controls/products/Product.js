@@ -770,7 +770,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                         for (i = 0, len = fields.length; i < len; i++) {
                             entry = fields[i];
-                            
+
                             data.push({
                                 visible        : new QUISwitch({
                                     fieldId: entry.id,

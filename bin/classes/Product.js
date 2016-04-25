@@ -72,11 +72,13 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         setPublicStatusFromField: function (fieldId, status) {
             return new Promise(function (resolve) {
-                Ajax.get('package_quiqqer_products_ajax_products_setPublicStatusFromField', resolve, {
+                Ajax.get('package_quiqqer_products_ajax_products_setPublicStatusFromField', function () {
+                    this.refresh().then(resolve);
+                }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
                     fieldId  : fieldId,
-                    status   : status
+                    status   : status ? 1 : 0
                 });
             }.bind(this));
         },

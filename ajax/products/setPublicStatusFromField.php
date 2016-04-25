@@ -9,6 +9,7 @@
  *
  * @param integer $productId - product-ID
  * @param integer $fieldId - Field-ID
+ * @param integer $status - Field publix status 0 or 1, true or false
  * @return boolean
  */
 QUI::$Ajax->registerFunction(

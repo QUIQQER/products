@@ -142,6 +142,10 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
             'ownField'
         );
 
+        if (!isset($params['isPublic'])) {
+            $this->public = true;
+        }
+
         foreach ($attributes as $attribute) {
             if (!isset($params[$attribute])) {
                 continue;
