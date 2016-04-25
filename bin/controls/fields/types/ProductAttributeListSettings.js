@@ -167,23 +167,25 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     result = [];
 
                 // parse data
-                for (var i = 0, len = data.length; i < len; i++) {
-                    if (!("title" in data[i])) {
-                        continue;
+                if ("entries" in data) {
+                    for (var i = 0, len = data.entries.length; i < len; i++) {
+                        if (!("title" in data.entries[i])) {
+                            continue;
+                        }
+
+                        if (!("sum" in data.entries[i])) {
+                            continue;
+                        }
+
+                        if (!("type" in data.entries[i])) {
+                            continue;
+                        }
+
+                        result.push(data.entries[i]);
                     }
 
-                    if (!("sum" in data[i])) {
-                        continue;
-                    }
-
-                    if (!("type" in data[i])) {
-                        continue;
-                    }
-
-                    result.push(data[i]);
+                    this.$data = result;
                 }
-
-                this.$data = result;
 
             } catch (e) {
                 console.error(this.$Input.value);
@@ -424,10 +426,9 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * Set the data to the input
          */
         update: function () {
-            console.log(this.$data);
-            console.log(JSON.encode(this.$data));
-
-            this.$Input.value = JSON.encode(this.$data);
+            this.$Input.value = JSON.encode({
+                entries: this.$data
+            });
         },
 
         /**

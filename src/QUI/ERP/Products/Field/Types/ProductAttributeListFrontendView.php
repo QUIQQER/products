@@ -57,7 +57,13 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $html .= '<option value=""></option>';
         }
 
-        foreach ($options as $key => $option) {
+        $entries = array();
+
+        if (isset($options['entries'])) {
+            $entries = $options['entries'];
+        }
+
+        foreach ($entries as $key => $option) {
             $text  = '';
             $title = $option['title'];
 
