@@ -542,6 +542,16 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Return value for use in product search cache
+     *
+     * @return string
+     */
+    public function getSearchCacheValue()
+    {
+        return $this->getValue();
+    }
+
+    /**
      * @return array|string
      */
     public function getOptions()
