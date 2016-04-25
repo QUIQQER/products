@@ -682,6 +682,15 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Get search type of this field
+     *
+     * @return integer|false - search type id oder false if none set
+     */
+    public function getSearchType() {
+        return $this->getAttribute('search_type');
+    }
+
+    /**
      * Get all available search types for this field
      *
      * @return array

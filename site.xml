@@ -11,6 +11,7 @@
 
             <attributes>
                 <attribute>quiqqer.products.settings.categoryId</attribute>
+                <attribute>quiqqer.products.settings.searchFieldIds</attribute>
             </attributes>
 
             <settings>

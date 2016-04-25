@@ -57,7 +57,7 @@ class Model extends QUI\QDOM
         $this->id = (int)$pid;
 
         $result = QUI::getDataBase()->fetch(array(
-            'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
             'where' => array(
                 'id' => $this->getId()
             )
@@ -140,7 +140,7 @@ class Model extends QUI\QDOM
         // field list from the system
         $systemfields = Fields::getFields(array(
             'where_or' => array(
-                'systemField' => 1,
+                'systemField'   => 1,
                 'standardField' => 1
             )
         ));
@@ -224,7 +224,7 @@ class Model extends QUI\QDOM
         $Site = $Category->getSite();
 
         $url = $Site->getUrlRewritten(array(
-            0 => $this->getUrlName(),
+            0              => $this->getUrlName(),
             'paramAsSites' => true
         ));
 
@@ -514,7 +514,7 @@ class Model extends QUI\QDOM
                 QUI\System\Log::addWarning(
                     $Exception->getMessage(),
                     array(
-                        'id' => $Field->getId(),
+                        'id'    => $Field->getId(),
                         'title' => $Field->getTitle()
                     )
                 );
@@ -523,9 +523,9 @@ class Model extends QUI\QDOM
                     'quiqqer/products',
                     'exception.field.invalid',
                     array(
-                        'fieldId' => $Field->getId(),
+                        'fieldId'    => $Field->getId(),
                         'fieldTitle' => $Field->getTitle(),
-                        'fieldType' => $Field->getType()
+                        'fieldType'  => $Field->getType()
                     )
                 ));
             }
@@ -535,9 +535,9 @@ class Model extends QUI\QDOM
                     'quiqqer/products',
                     'exception.field.required.but.empty',
                     array(
-                        'fieldId' => $Field->getId(),
+                        'fieldId'    => $Field->getId(),
                         'fieldTitle' => $Field->getTitle(),
-                        'fieldType' => $Field->getType()
+                        'fieldType'  => $Field->getType()
                     )
                 ));
             }
@@ -557,8 +557,8 @@ class Model extends QUI\QDOM
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
                 'categories' => ',' . implode(',', $categoryData) . ',',
-                'category' => $mainCategory,
-                'fieldData' => json_encode($fieldData)
+                'category'   => $mainCategory,
+                'fieldData'  => json_encode($fieldData)
             ),
             array('id' => $this->getId())
         );
@@ -575,9 +575,10 @@ class Model extends QUI\QDOM
     public function updateCache()
     {
         $data = array(
-            'id' => $this->getId(),
+            'id'        => $this->getId(),
             'productNo' => $this->getFieldValue(Fields::FIELD_PRODUCT_NO),
-            'title' => $this->getFieldValue(Fields::FIELD_TITLE)
+            'title'     => $this->getFieldValue(Fields::FIELD_TITLE),
+            'active'    => $this->getAttribute('active') ? 1 : 0
         );
 
         $Category = $this->getCategory();
@@ -601,7 +602,7 @@ class Model extends QUI\QDOM
 
         // test if cache entry exists first
         $result = QUI::getDataBase()->fetch(array(
-            'from' => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            'from'  => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             'where' => array(
                 'id' => $this->getId()
             )
@@ -691,7 +692,7 @@ class Model extends QUI\QDOM
             'quiqqer/products',
             'exception.field.not.found',
             array(
-                'fieldId' => $fieldId,
+                'fieldId'   => $fieldId,
                 'productId' => $this->getId()
             )
         ));

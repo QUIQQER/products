@@ -50,6 +50,7 @@
             <field type="VARCHAR( 255 ) NULL">productNo</field>
             <field type="VARCHAR( 255 ) NOT NULL">title</field>
             <field type="BIGINT(20) NULL">category</field>
+            <field type="TINYINT(1)">active</field>
         </table>
     </global>
 
