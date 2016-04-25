@@ -85,4 +85,11 @@ interface UniqueField
      * @return boolean
      */
     public function isUnassigned();
+
+    /**
+     * Is the field an own field
+     *
+     * @return boolean
+     */
+    public function isOwnField();
 }

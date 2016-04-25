@@ -672,7 +672,7 @@ class Model extends QUI\QDOM
      * Return the field
      *
      * @param integer $fieldId
-     * @return Field
+     * @return QUI\ERP\Products\Field\Field
      * @throws QUI\Exception
      */
     public function getField($fieldId)

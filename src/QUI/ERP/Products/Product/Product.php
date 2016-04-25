@@ -32,6 +32,26 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\Product
     }
 
     /**
+     * Add a field to the product
+     *
+     * @param Field $Field
+     * @throws QUI\Exception
+     */
+    public function removeField(Field $Field)
+    {
+        if (!$Field->isOwnField()) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.only.ownFields.deletable'
+            ));
+        }
+
+        if (isset($this->fields[$Field->getId()])) {
+            unset($this->fields[$Field->getId()]);
+        }
+    }
+
+    /**
      * Add the product to a category
      *
      * @param Category $Category

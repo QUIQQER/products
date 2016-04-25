@@ -635,8 +635,33 @@
             <en><![CDATA[Fields of this field type are not searchable.]]></en>
         </locale>
 
+        <locale name="product.fields.grid.visible">
+            <de><![CDATA[sichtbar]]></de>
+            <en><![CDATA[visible]]></en>
+        </locale>
+        <locale name="product.fields.remove.field">
+            <de><![CDATA[Feld entfernen]]></de>
+            <en><![CDATA[Remove field]]></en>
+        </locale>
+        <locale name="product.fields.remove.window.title">
+            <de><![CDATA[Feld entfernen]]></de>
+            <en><![CDATA[Remove field]]></en>
+        </locale>
+        <locale name="product.fields.remove.window.text">
+            <de><![CDATA[Feld aus dem Produkt entfernen?]]></de>
+            <en><![CDATA[Remove the field from the product?]]></en>
+        </locale>
+        <locale name="product.fields.remove.window.information" html="true">
+            <de><![CDATA[
+                Das Feld #[fieldId] wird aus dem Produkt entfernt. <br />
+                Gegebenenfalls kann dies aber von einer Kategorien vererbt werden.
+                ]]></de>
+            <en><![CDATA[
+                The field #[fieldId] would be removed from the product. <br />
+                Possibly, this can also be inherited from a category.
+                ]]></en>
+        </locale>
     </groups>
-
 
     <groups name="quiqqer/products" datatype="php">
         <locale name="quiqqer.products.category.settings.title">
@@ -647,6 +672,11 @@
         <locale name="quiqqer.products.settings.categoryId">
             <de><![CDATA[Produktkategorie]]></de>
             <en><![CDATA[Product category]]></en>
+        </locale>
+
+        <locale name="exception.only.ownFields.deletable">
+            <de><![CDATA[Nur eigene Felder können von einem Produkt entfernt werden.]]></de>
+            <en><![CDATA[Only own fields can be removed from a product.]]></en>
         </locale>
     </groups>
 

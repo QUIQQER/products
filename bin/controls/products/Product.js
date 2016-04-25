@@ -27,6 +27,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'qui/QUI',
     'qui/controls/desktop/Panel',
     'qui/controls/buttons/Button',
+    'qui/controls/buttons/Switch',
     'qui/controls/windows/Confirm',
     'qui/utils/Form',
     'Locale',
@@ -44,7 +45,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'text!package/quiqqer/products/bin/controls/products/CreateField.html',
     'css!package/quiqqer/products/bin/controls/products/Product.css'
 
-], function (QUI, QUIPanel, QUIButton, QUIConfirm, QUIFormUtils, QUILocale,
+], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIConfirm, QUIFormUtils, QUILocale,
              Grid, FolderViewer, Mustache,
              Products, Product, Categories, Fields, FieldWindow,
              CategorySelect, templateProductData, templateField) {
@@ -690,12 +691,30 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         events: {
                             onClick: this.openAddFieldDialog
                         }
+                    }, {
+                        type: 'seperator'
+                    }, {
+                        name    : 'remove',
+                        text    : QUILocale.get(lg, 'product.fields.remove.field'),
+                        disabled: true,
+                        events  : {
+                            onClick: function () {
+                                this.openDeleteFieldDialog(
+                                    this.$Grid.getSelectedData()[0].id
+                                );
+                            }.bind(this)
+                        }
                     }],
                     columnModel: [{
-                        header   : '',
-                        dataIndex: 'deleteButton',
+                        header   : QUILocale.get(lg, 'product.fields.grid.visible'),
+                        dataIndex: 'visible',
                         dataType : 'QUI',
                         width    : 60
+                    }, {
+                        header   : '&nbsp;',
+                        dataIndex: 'ownFieldDisplay',
+                        dataType : 'node',
+                        width    : 30
                     }, {
                         header   : QUILocale.get('quiqqer/system', 'id'),
                         dataIndex: 'id',
@@ -726,34 +745,44 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         dataIndex: 'suffix',
                         dataType : 'text',
                         width    : 100
+                    }, {
+                        dataIndex: 'ownField',
+                        dataType : 'hidden'
                     }]
                 });
 
+                var switchStatusChange = function (Switch) {
+                    console.log(Switch.getStatus());
+                };
+
                 var refresh = function () {
                     this.$Product.getFields().then(function (fields) {
-                        var i, len, entry, deleteButton;
+                        var i, len, entry;
                         var data = [];
 
                         for (i = 0, len = fields.length; i < len; i++) {
                             entry = fields[i];
 
-                            deleteButton = '';
-
-                            if (entry.ownField) {
-                                deleteButton = new QUIButton({
-                                    icon: 'fa fa-trash'
-                                });
-                            }
-
                             data.push({
-                                deleteButton: deleteButton,
-
-                                id       : entry.id,
-                                title    : entry.workingtitle || entry.title,
-                                fieldtype: entry.type,
-                                priority : entry.priority,
-                                suffix   : entry.suffix,
-                                prefix   : entry.prefix
+                                visible        : new QUISwitch({
+                                    fieldId: entry.id,
+                                    events : {
+                                        onChange: switchStatusChange
+                                    }
+                                }),
+                                id             : entry.id,
+                                title          : entry.workingtitle || entry.title,
+                                fieldtype      : entry.type,
+                                priority       : entry.priority,
+                                suffix         : entry.suffix,
+                                prefix         : entry.prefix,
+                                ownField       : entry.ownField,
+                                ownFieldDisplay: new Element('div', {
+                                    'class': 'fa fa-user',
+                                    styles : {
+                                        color: entry.ownField ? '' : '#dddddd'
+                                    }
+                                })
                             });
                         }
 
@@ -765,7 +794,19 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }.bind(this);
 
                 this.$Grid.addEvents({
-                    onRefresh: refresh
+                    onRefresh: refresh,
+                    onClick  : function () {
+                        var selected = this.$Grid.getSelectedData()[0],
+                            Remove   = this.$Grid.getButtons().filter(function (Btn) {
+                                return Btn.getAttribute('name') == 'remove';
+                            })[0];
+
+                        if (selected.ownField) {
+                            Remove.enable();
+                        } else {
+                            Remove.disable();
+                        }
+                    }.bind(this)
                 });
 
                 var size = this.$FieldAdministration.measure(function () {
@@ -855,6 +896,19 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         },
 
         /**
+         * Add a field to the product
+         *
+         * @param {Number} fieldId
+         * @returns {*|Promise|Object}
+         */
+        removeField: function (fieldId) {
+            return this.$Product.removeField(fieldId).then(function () {
+                this.$injected = false;
+                return this.$onInject();
+            }.bind(this));
+        },
+
+        /**
          * open add field dialog
          */
         openAddFieldDialog: function () {
@@ -864,6 +918,34 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         Win.Loader.show();
 
                         this.addField(value).then(function () {
+                            Win.close();
+                        });
+                    }.bind(this)
+                }
+            }).open();
+        },
+
+        /**
+         * Opens the delete dialog
+         *
+         * @param {Number} fieldId
+         */
+        openDeleteFieldDialog: function (fieldId) {
+            new QUIConfirm({
+                icon       : 'fa fa-trash',
+                texticon   : 'fa fa-trash',
+                title      : QUILocale.get(lg, 'product.fields.remove.window.title'),
+                text       : QUILocale.get(lg, 'product.fields.remove.window.text'),
+                information: QUILocale.get(lg, 'product.fields.remove.window.information', {
+                    fieldId: fieldId
+                }),
+                maxHeight  : 300,
+                maxWidth   : 450,
+                events     : {
+                    onSubmit: function (Win) {
+                        Win.Loader.show();
+
+                        this.removeField(fieldId).then(function () {
                             Win.close();
                         });
                     }.bind(this)

@@ -48,6 +48,22 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * Remove a ownField field from the product
+         *
+         * @param {Number}  fieldId
+         * @return {Promise}
+         */
+        removeField: function (fieldId) {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_products_removeField', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
+                    fieldId  : fieldId
+                });
+            }.bind(this));
+        },
+
+        /**
          * Return the Product-ID
          *
          * @returns {Number|Boolean}
