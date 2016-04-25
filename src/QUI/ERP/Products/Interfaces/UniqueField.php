@@ -92,4 +92,12 @@ interface UniqueField
      * @return boolean
      */
     public function isOwnField();
+
+    /**
+     * Is the field public
+     * is the field visible by visitors
+     *
+     * @return boolean
+     */
+    public function isPublic();
 }
