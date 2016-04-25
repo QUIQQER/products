@@ -21,6 +21,7 @@ QUI::$Ajax->registerFunction(
         $Field   = $Fields->getField($fieldId);
 
         $Field->setUnassignedStatus(false);
+        $Field->setOwnFieldStatus(true);
 
         $Product->addField($Field);
         $Product->save();

@@ -673,13 +673,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['workingtitle'] = $this->getWorkingTitle();
         $attributes['type']         = $this->getType();
         $attributes['options']      = $this->getOptions();
+        $attributes['jsControl']    = $this->getJavaScriptControl();
         $attributes['custom']       = $this->isCustomField();
         $attributes['unassigned']   = $this->isUnassigned();
         $attributes['isRequired']   = $this->isRequired();
         $attributes['isStandard']   = $this->isStandard();
         $attributes['isSystem']     = $this->isSystem();
         $attributes['isPublic']     = $this->isPublic();
-        $attributes['jsControl']    = $this->getJavaScriptControl();
         $attributes['searchable']   = $this->isSearchable();
 
         return $attributes;
