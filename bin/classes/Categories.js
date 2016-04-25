@@ -128,9 +128,25 @@ define('package/quiqqer/products/bin/classes/Categories', [
         },
 
         /**
+         * Return all sites from the category
+         *
+         * @param {Number} categoryId - Category-ID
+         * @returns {Promise}
+         */
+        getSites: function (categoryId) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_categories_getSites', resolve, {
+                    'package' : 'quiqqer/products',
+                    onError   : reject,
+                    categoryId: categoryId
+                });
+            });
+        },
+
+        /**
          * Return stats information from the category
          *
-         * @param {Number} categoryId
+         * @param {Number} categoryId - Category-ID
          * @returns {Promise}
          */
         getInformation: function (categoryId) {

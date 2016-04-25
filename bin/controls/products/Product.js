@@ -1,5 +1,5 @@
 /**
- * Edit and manage one product
+ * Edit and manage one product - Product Panel
  *
  * @module package/quiqqer/products/bin/controls/products/Product
  * @author www.pcsg.de (Henning Leutz)
@@ -589,7 +589,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @return {Promise}
          */
         openData: function () {
-            if (this.getCategory('data').isActive()) {
+            if (this.getCategory('data').isActive()
+                && !this.$FieldAdministration.getStyle('opacity')) {
                 return Promise.resolve();
             }
 
@@ -691,6 +692,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         }
                     }],
                     columnModel: [{
+                        header   : '',
+                        dataIndex: 'deleteButton',
+                        dataType : 'QUI',
+                        width    : 60
+                    }, {
                         header   : QUILocale.get('quiqqer/system', 'id'),
                         dataIndex: 'id',
                         dataType : 'number',
@@ -720,17 +726,46 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         dataIndex: 'suffix',
                         dataType : 'text',
                         width    : 100
-                    }, {
-                        header   : QUILocale.get(lg, 'standardField'),
-                        dataIndex: 'isStandard',
-                        dataType : 'node',
-                        width    : 60
-                    }, {
-                        header   : QUILocale.get(lg, 'requiredField'),
-                        dataIndex: 'isRequired',
-                        dataType : 'node',
-                        width    : 60
                     }]
+                });
+
+                var refresh = function () {
+                    this.$Product.getFields().then(function (fields) {
+                        var i, len, entry, deleteButton;
+                        var data = [];
+
+                        for (i = 0, len = fields.length; i < len; i++) {
+                            entry = fields[i];
+
+                            deleteButton = '';
+
+                            if (entry.ownField) {
+                                deleteButton = new QUIButton({
+                                    icon: 'fa fa-trash'
+                                });
+                            }
+
+                            data.push({
+                                deleteButton: deleteButton,
+
+                                id       : entry.id,
+                                title    : entry.workingtitle || entry.title,
+                                fieldtype: entry.type,
+                                priority : entry.priority,
+                                suffix   : entry.suffix,
+                                prefix   : entry.prefix
+                            });
+                        }
+
+                        this.$Grid.setData({
+                            data: data
+                        });
+
+                    }.bind(this));
+                }.bind(this);
+
+                this.$Grid.addEvents({
+                    onRefresh: refresh
                 });
 
                 var size = this.$FieldAdministration.measure(function () {
@@ -738,6 +773,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 });
 
                 this.$Grid.setHeight(size.y - 40).then(function () {
+                    this.$Grid.refresh();
                     return this.$showCategory(this.$FieldAdministration);
                 }.bind(this)).then(function () {
                     this.$Grid.resize();
@@ -789,7 +825,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         fields['field-' + entry.id] = entry.value;
                     }
                 });
-                console.warn(fields);
 
                 Products.updateChild(
                     self.getAttribute('productId'),

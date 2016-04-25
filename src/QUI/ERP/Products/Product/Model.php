@@ -398,7 +398,7 @@ class Model extends QUI\QDOM
 
         /* @var $Field Field */
         foreach ($fieldList as $Field) {
-            $fields[] = $Field->toProductArray();
+            $fields[] = array_merge($Field->toProductArray(), $Field->getAttributes());
         }
 
         if (!empty($fields)) {

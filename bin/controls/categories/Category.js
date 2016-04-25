@@ -30,6 +30,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
     'Locale',
     'Mustache',
     'controls/grid/Grid',
+    'package/quiqqer/products/bin/controls/products/Product',
     'package/quiqqer/products/bin/Categories',
     'package/quiqqer/products/bin/Fields',
     'package/quiqqer/products/bin/controls/categories/Sitemap',
@@ -39,7 +40,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
     'css!package/quiqqer/products/bin/controls/categories/Category.css'
 
 ], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIConfirm, QUILocale, Mustache, Grid,
-             Categories, Fields, CategorySitemap, Translation, template) {
+             ProductPanel, Categories, Fields, CategorySitemap, Translation, template) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -345,7 +346,63 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 };
 
                 this.$grids.Products.addEvents({
-                    refresh: refreshGrid
+                    refresh   : refreshGrid,
+                    onDblClick: function () {
+                        new ProductPanel({
+                            productId: self.$grids.Products.getSelectedData()[0].id
+                        }).inject(self.getParent());
+                    }
+                });
+
+                // sites
+                var refreshSiteGrid = function () {
+                    return new Promise(function (resolve, reject) {
+                        Categories.getSites(categoryId).then(function (result) {
+                            self.$grids.Sites.setData({
+                                data: result
+                            });
+                        }).then(resolve, reject);
+                    });
+                };
+
+                var SitesContainer = new Element('div', {
+                    styles: {
+                        height: '100%',
+                        width : '100%'
+                    }
+                }).inject(this.$ContainerSites);
+
+                this.$grids.Sites = new Grid(SitesContainer, {
+                    columnModel: [{
+                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        dataIndex: 'id',
+                        dataType : 'number',
+                        width    : 60
+                    }, {
+                        header   : QUILocale.get('quiqqer/system', 'project'),
+                        dataIndex: 'project',
+                        dataType : 'text',
+                        width    : 200
+                    }, {
+                        header   : QUILocale.get('quiqqer/system', 'language'),
+                        dataIndex: 'lang',
+                        dataType : 'text',
+                        width    : 100
+                    }]
+                });
+
+                this.$grids.Sites.addEvents({
+                    refresh   : refreshSiteGrid,
+                    onDblClick: function () {
+                        var data    = self.$grids.Sites.getSelectedData()[0],
+                            project = data.project,
+                            lang    = data.lang,
+                            id      = data.id;
+
+                        require(['utils/Panels'], function (Utils) {
+                            Utils.openSitePanel(project, lang, id);
+                        });
+                    }
                 });
 
 
@@ -386,6 +443,11 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 if (this.$grids.Products) {
                     proms.push(this.$grids.Products.setWidth(size.x - 40));
                     proms.push(this.$grids.Products.setHeight(size.y - 40));
+                }
+
+                if (this.$grids.Sites) {
+                    proms.push(this.$grids.Sites.setWidth(size.x - 40));
+                    proms.push(this.$grids.Sites.setHeight(size.y - 40));
                 }
 
                 if (!proms.length) {
@@ -443,6 +505,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             this.getCategory('sites').setActive();
 
             return this.$hideContainer().then(function () {
+                this.$grids.Sites.refresh();
                 return this.$showContainer(this.$ContainerSites);
             }.bind(this));
         },
@@ -470,7 +533,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             return this.$hideContainer()
                 .then(this.resize)
                 .then(function () {
-                    this.$grids.Products.refresh();
+                    this.$grids.Fields.refresh();
                     return this.$showContainer(this.$ContainerFields);
                 }.bind(this));
         },
@@ -668,7 +731,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
          */
         removeFields: function (fields) {
             this.$grids.Fields.deleteRows(fields);
-            console.log(this.$grids.Fields.getData());
+
             return this.save().then(function () {
                 this.openRecursiveDialog();
             }.bind(this));
