@@ -24,7 +24,7 @@
         {if count($productAttributeList)}
         <div class="product-data-fieldlist">
             {foreach $productAttributeList as $Field}
-            {if !$Field->isUnassigned()}
+            {if $Field->isPublic()}
                 {$Field->getView()->create()}
             {/if}
             {/foreach}

@@ -48,6 +48,42 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * Remove a ownField field from the product
+         *
+         * @param {Number}  fieldId
+         * @return {Promise}
+         */
+        removeField: function (fieldId) {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_products_removeField', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
+                    fieldId  : fieldId
+                });
+            }.bind(this));
+        },
+
+        /**
+         * Set the public status from a product field
+         *
+         * @param {Number}  fieldId
+         * @param {Boolean}  status
+         * @return {Promise}
+         */
+        setPublicStatusFromField: function (fieldId, status) {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_products_setPublicStatusFromField', function () {
+                    this.refresh().then(resolve);
+                }.bind(this), {
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
+                    fieldId  : fieldId,
+                    status   : status ? 1 : 0
+                });
+            }.bind(this));
+        },
+
+        /**
          * Return the Product-ID
          *
          * @returns {Number|Boolean}

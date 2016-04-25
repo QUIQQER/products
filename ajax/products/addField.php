@@ -6,10 +6,10 @@
 
 /**
  * Add a field to a product
+ * - change the field to an own field
  *
- * @param string $params - JSON query params
- *
- * @return array
+ * @param integer $productId - product-ID
+ * @param integer $fieldId - Field-ID
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_addField',

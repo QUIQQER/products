@@ -124,6 +124,10 @@ class Model extends QUI\QDOM
                     $Field->setOwnFieldStatus($field['ownField']);
                 }
 
+                if (isset($field['isPublic'])) {
+                    $Field->setPublicStatus((bool)$field['isPublic']);
+                }
+
                 $this->fields[$Field->getId()] = $Field;
 
             } catch (QUI\Exception $Exception) {
@@ -277,8 +281,10 @@ class Model extends QUI\QDOM
      */
     public function getDescription($Locale = false)
     {
-        $result = $this->getLanguageFieldValue(Fields::FIELD_SHORT_DESC,
-            $Locale);
+        $result = $this->getLanguageFieldValue(
+            Fields::FIELD_SHORT_DESC,
+            $Locale
+        );
 
         if ($result) {
             return $result;
@@ -673,7 +679,7 @@ class Model extends QUI\QDOM
      * Return the field
      *
      * @param integer $fieldId
-     * @return Field
+     * @return QUI\ERP\Products\Field\Field
      * @throws QUI\Exception
      */
     public function getField($fieldId)

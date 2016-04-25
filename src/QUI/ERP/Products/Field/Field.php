@@ -343,19 +343,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * Is the field a own field from the product?
-     *
-     * @return bool
-     */
-    public function isOwnField()
-    {
-        return $this->ownField;
-    }
-
-    /**
      * Is the field a public field
+     * is the field visible at the product view
      *
-     * @return bool
+     * @return boolean
      */
     public function isPublic()
     {
@@ -363,21 +354,47 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Set the public field status
+     *
+     * @param boolean $status
+     */
+    public function setPublicStatus($status)
+    {
+        if (!is_bool($status)) {
+            $status = (bool)$status;
+        }
+
+        $this->public = $status;
+    }
+
+    /**
+     * Is the field a own field from the product?
+     *
+     * @return boolean
+     */
+    public function isOwnField()
+    {
+        return $this->ownField;
+    }
+
+    /**
      * Set the own field status
      *
-     * @param bool $status
+     * @param boolean $status
      */
     public function setOwnFieldStatus($status)
     {
-        if (is_bool($status)) {
-            $this->ownField = $status;
+        if (!is_bool($status)) {
+            $status = (bool)$status;
         }
+
+        $this->ownField = $status;
     }
 
     /**
      * Is the field unassigned?
      *
-     * @return bool
+     * @return boolean
      */
     public function isUnassigned()
     {
@@ -387,19 +404,21 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Set the unassigned status
      *
-     * @param bool $status
+     * @param boolean $status
      */
     public function setUnassignedStatus($status)
     {
-        if (is_bool($status)) {
-            $this->unassigned = $status;
+        if (!is_bool($status)) {
+            $status = (bool)$status;
         }
+
+        $this->unassigned = $status;
     }
 
     /**
      * Is the field a custom field?
      *
-     * @return bool
+     * @return boolean
      */
     public function isCustomField()
     {
@@ -690,11 +709,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['isSystem']     = $this->isSystem();
         $attributes['isPublic']     = $this->isPublic();
         $attributes['searchable']   = $this->isSearchable();
+        $attributes['ownField']     = $this->isOwnField();
 
         return $attributes;
     }
 
     /**
+     * Return the field attributes for a product
+     *
      * @return array
      */
     public function toProductArray()
@@ -704,6 +726,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['value']      = $this->getValue();
         $attributes['unassigned'] = $this->isUnassigned();
         $attributes['ownField']   = $this->isOwnField();
+        $attributes['isPublic']   = $this->isPublic();
 
         return $attributes;
     }

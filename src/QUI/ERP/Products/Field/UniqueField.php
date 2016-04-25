@@ -67,30 +67,48 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
 
     /**
      * is customfield?
+     * Custom field is a field, which can be filled by the visitors
      *
-     * @var bool
+     * @var boolean
      */
     protected $custom;
 
     /**
+     * is field public
+     * field which is visble by the visitors, too
+     *
+     * @var boolean
+     */
+    protected $public = false;
+
+    /**
+     * Field from the system, like price
      * @var bool
      */
     protected $isSystem = false;
 
     /**
-     * @var bool
+     * @var boolean
      */
     protected $isStandard = false;
 
     /**
-     * @var bool
+     * @var boolean
      */
     protected $isRequire = false;
 
     /**
-     * @var bool
+     * a field in the product, but not in any category from the product
+     *
+     * @var boolean
      */
     protected $unassigned = false;
+
+    /**
+     * Is the field a product own field
+     * @var boolean
+     */
+    protected $ownField = false;
 
     /**
      * @var array
@@ -117,10 +135,16 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
             'isRequired',
             'isStandard',
             'isSystem',
+            'isPublic',
             'custom',
             'unassigned',
-            'value'
+            'value',
+            'ownField'
         );
+
+        if (!isset($params['isPublic'])) {
+            $this->public = true;
+        }
 
         foreach ($attributes as $attribute) {
             if (!isset($params[$attribute])) {
@@ -270,6 +294,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
             'isRequired' => $this->isRequired(),
             'isStandard' => $this->isStandard(),
             'isSystem' => $this->isSystem(),
+            'isPublic' => $this->isPublic(),
 
             'prefix' => $this->prefix,
             'suffix' => $this->suffix,
@@ -291,7 +316,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function isStandard()
     {
@@ -304,5 +329,21 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
     public function isRequired()
     {
         return $this->isRequire;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isOwnField()
+    {
+        return $this->ownField;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPublic()
+    {
+        return $this->public;
     }
 }
