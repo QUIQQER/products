@@ -68,6 +68,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             '$onInject',
             '$onFolderCreated',
             'openAddFieldDialog',
+            'openAttributeList',
             'openFieldAdministration'
         ],
 
@@ -90,8 +91,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             this.$FileViewer  = null;
             this.$ImageViewer = null;
+            this.$Grid        = null;
 
             this.$FieldAdministration = null;
+            this.$AttributeList       = null;
 
             this.$Product = new Product({
                 id: this.getAttribute('productId')
@@ -140,18 +143,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     onClick: this.update
                 }
             });
-
-            //this.addButton({
-            //    name  : 'fieldAdd',
-            //    icon  : 'fa fa-file-text-o',
-            //    title : 'Feld hinzufügen',
-            //    events: {
-            //        onClick: this.openAddFieldDialog
-            //    },
-            //    styles: {
-            //        'float': 'right'
-            //    }
-            //});
         },
 
         /**
@@ -220,7 +211,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                           '<div class="product-update-field sheet"></div>' +
                           '<div class="product-update-media sheet"></div>' +
                           '<div class="product-update-files sheet"></div>' +
-                          '<div class="product-update-fieldadministration sheet"></div>'
+                          '<div class="product-update-fieldadministration sheet"></div>' +
+                          '<div class="product-update-attributelist sheet"></div>'
                 });
 
                 this.$Data  = Content.getElement('.product-update-data');
@@ -228,6 +220,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 this.$Files = Content.getElement('.product-update-files');
 
                 this.$FieldAdministration = Content.getElement('.product-update-fieldadministration');
+                this.$AttributeList       = Content.getElement('.product-update-attributelist');
 
                 this.$MainCategoryRow = Content.getElement('.product-mainCategory');
                 this.$MainCategory    = Content.getElement('[name="product-category"]');
@@ -553,6 +546,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     onClick: this.openFiles
                 }
             });
+
+            this.addCategory({
+                name  : 'attributelist',
+                text  : QUILocale.get(lg, 'products.product.panel.category.attributelist'),
+                icon  : 'fa fa-file-text-o',
+                events: {
+                    onClick: this.openAttributeList
+                }
+            });
         },
 
         /**
@@ -670,7 +672,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         },
 
         /**
-         *
+         * opens the field administration
          */
         openFieldAdministration: function () {
 
@@ -822,9 +824,112 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     return this.getSize();
                 });
 
-                this.$Grid.setHeight(size.y - 40).then(function () {
+                return this.$Grid.setHeight(size.y - 40).then(function () {
                     this.$Grid.refresh();
                     return this.$showCategory(this.$FieldAdministration);
+                }.bind(this)).then(function () {
+                    this.$Grid.resize();
+                }.bind(this));
+
+            }.bind(this));
+        },
+
+        /**
+         * opens the attribute list display
+         *
+         * @return {Promise}
+         */
+        openAttributeList: function () {
+            return this.$hideCategories().then(function () {
+
+                var GridContainer = new Element('div', {
+                    styles: {
+                        'float': 'left',
+                        height : '100%',
+                        width  : '100%'
+                    }
+                }).inject(this.$AttributeList);
+
+                this.$Grid = new Grid(GridContainer, {
+                    pagination : true,
+                    columnModel: [{
+                        header   : QUILocale.get(lg, 'product.fields.grid.visible'),
+                        dataIndex: 'visible',
+                        dataType : 'QUI',
+                        width    : 60
+                    }, {
+                        header   : QUILocale.get(lg, 'product.fields.grid.calcPriority'),
+                        dataIndex: 'calcPriority',
+                        dataType : 'number',
+                        width    : 60
+                    }, {
+                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        dataIndex: 'id',
+                        dataType : 'number',
+                        width    : 60
+                    }, {
+                        header   : QUILocale.get('quiqqer/system', 'title'),
+                        dataIndex: 'title',
+                        dataType : 'text',
+                        width    : 200
+                    }]
+                });
+
+                var switchStatusChange = function (Switch) {
+                    var fieldId = Switch.getAttribute('fieldId'),
+                        status  = Switch.getStatus();
+
+                    Switch.disable();
+
+                    this.$Product.setPublicStatusFromField(fieldId, status).then(function () {
+                        Switch.enable();
+                    });
+                }.bind(this);
+
+
+                var refresh = function () {
+                    this.$Product.getFields().then(function (fields) {
+                        var i, len, entry;
+                        var data = [];
+
+                        for (i = 0, len = fields.length; i < len; i++) {
+                            entry = fields[i];
+
+                            if (entry.type != 'ProductAttributeList') {
+                                continue;
+                            }
+
+                            data.push({
+                                visible     : new QUISwitch({
+                                    fieldId: entry.id,
+                                    events : {
+                                        onChange: switchStatusChange
+                                    }
+                                }),
+                                calcPriority: 0,
+                                id          : entry.id,
+                                title       : entry.workingtitle || entry.title
+                            });
+                        }
+
+                        this.$Grid.setData({
+                            data: data
+                        });
+
+                    }.bind(this));
+                }.bind(this);
+
+                this.$Grid.addEvents({
+                    onRefresh: refresh
+                });
+
+                var size = this.$AttributeList.measure(function () {
+                    return this.getSize();
+                });
+
+                return this.$Grid.setHeight(size.y - 40).then(function () {
+                    this.$Grid.refresh();
+                    return this.$showCategory(this.$AttributeList);
                 }.bind(this)).then(function () {
                     this.$Grid.resize();
                 }.bind(this));
@@ -984,6 +1089,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         if (this.$Editor) {
                             this.$Editor.destroy();
                             this.$Editor = null;
+                        }
+
+                        if (this.$Grid) {
+                            this.$Grid.destroy();
                         }
 
                         if (this.$FieldAdministration) {

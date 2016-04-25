@@ -240,11 +240,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         // options json check
         $data['options'] = '';
         $options         = $this->getOptions();
-
+        QUI\System\Log::writeRecursive($options);
         if (!empty($options)) {
             $data['options'] = json_encode($options);
         }
-
+        QUI\System\Log::writeRecursive($data);
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             $data,
@@ -457,6 +457,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $options = json_decode($options, true);
         }
 
+        QUI\System\Log::writeRecursive('##################');
+        QUI\System\Log::writeRecursive($options);
+
         if (is_array($options)) {
             foreach ($options as $key => $value) {
                 $this->setOption($key, $value);
@@ -490,8 +493,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             case 'name':
             case 'type':
             case 'search_type':
-            case 'prefix':
-            case 'suffix':
             case 'priority':
             case 'standardField':
             case 'systemField':
@@ -500,6 +501,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 $val = QUI\Utils\Security\Orthos::clear($val);
                 break;
 
+            case 'prefix':
+            case 'suffix':
+                $val = json_encode(json_decode($val, true));
+                break;
             default:
                 return $this;
         }
@@ -523,6 +528,17 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Return the value in dependence of a locale (language)
+     *
+     * @param bool $Locale
+     * @return array|string
+     */
+    public function getValueByLocale($Locale = false)
+    {
+        return $this->getValue();
     }
 
     /**

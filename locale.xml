@@ -139,7 +139,10 @@
             <de><![CDATA[Produktdateien]]></de>
             <en><![CDATA[Product files]]></en>
         </locale>
-
+        <locale name="products.product.panel.category.attributelist">
+            <de><![CDATA[Auswahllisten]]></de>
+            <en><![CDATA[Select lists]]></en>
+        </locale>
 
         <!-- Feldtypen -->
         <locale name="fieldtype.IntType">
@@ -638,6 +641,10 @@
         <locale name="product.fields.grid.visible">
             <de><![CDATA[sichtbar]]></de>
             <en><![CDATA[visible]]></en>
+        </locale>
+        <locale name="product.fields.grid.calcPriority">
+            <de><![CDATA[Berechnungs Priorität]]></de>
+            <en><![CDATA[Calculating priority]]></en>
         </locale>
         <locale name="product.fields.remove.field">
             <de><![CDATA[Feld entfernen]]></de>

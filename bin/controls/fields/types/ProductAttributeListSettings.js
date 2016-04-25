@@ -186,6 +186,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 this.$data = result;
 
             } catch (e) {
+                console.error(this.$Input.value);
                 console.error(e);
             }
 
@@ -423,6 +424,9 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * Set the data to the input
          */
         update: function () {
+            console.log(this.$data);
+            console.log(JSON.encode(this.$data));
+
             this.$Input.value = JSON.encode(this.$data);
         },
 

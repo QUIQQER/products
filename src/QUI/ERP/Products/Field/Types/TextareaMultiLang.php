@@ -15,6 +15,9 @@ use QUI\ERP\Products\Handler\Search;
  */
 class TextareaMultiLang extends QUI\ERP\Products\Field\Field
 {
+    /**
+     * @return View
+     */
     public function getBackendView()
     {
         return new View(array(
@@ -26,6 +29,9 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
         ));
     }
 
+    /**
+     * @return View
+     */
     public function getFrontendView()
     {
         return new View(array(
@@ -46,6 +52,36 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
     }
 
     /**
+     * Return the field value by a locale language
+     *
+     *
+     * @param bool|QUI\Locale $Locale
+     * @return mixed
+     */
+    public function getValueByLocale($Locale = false)
+    {
+        if (!$Locale) {
+            $Locale = QUI::getLocale();
+        }
+
+        $current = $Locale->getCurrent();
+        $value   = $this->getValue();
+
+        try {
+            if (is_string($value)) {
+                return $value;
+            }
+
+            if (isset($value[$current])) {
+                return $value[$current];
+            }
+        } catch (QUI\Exception $Exception) {
+        }
+
+        return $value;
+    }
+
+    /**
      * Check the value
      * is the value valid for the field type?
      *
@@ -55,7 +91,8 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
     public function validate($value)
     {
         if (!is_string($value)
-            && !is_array($value)) {
+            && !is_array($value)
+        ) {
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new QUI\Exception(array(
                     'quiqqer/products',

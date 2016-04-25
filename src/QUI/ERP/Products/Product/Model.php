@@ -334,7 +334,7 @@ class Model extends QUI\QDOM
      * Return the value of an language field
      *
      * @param integer $field - optional
-     * @param QUI\Locale|Boolean $Locale - optional
+     * @param QUI\Locale|boolean $Locale - optional
      *
      * @return string|boolean
      */

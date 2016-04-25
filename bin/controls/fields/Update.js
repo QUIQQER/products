@@ -224,13 +224,18 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     return reject('Translation not found');
                 }
 
-                var Form    = Elm.getElement('form'),
-                    fieldId = self.getAttribute('fieldId');
+                var Form        = Elm.getElement('form'),
+                    fieldId     = self.getAttribute('fieldId'),
+                    search_type = '';
+
+                if (typeof Form.elements.search_type !== 'undefined') {
+                    search_type = Form.elements.search_type.value;
+                }
 
                 // trigger update
                 Fields.updateChild(fieldId, {
                     type         : Form.elements.type.value,
-                    search_type  : Form.elements.search_type.value,
+                    search_type  : search_type,
                     prefix       : Form.elements.prefix.value,
                     suffix       : Form.elements.suffix.value,
                     priority     : Form.elements.priority.value,

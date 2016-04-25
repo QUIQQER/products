@@ -44,6 +44,14 @@ interface UniqueField
     public function getValue();
 
     /**
+     * Return the value in dependence of a locale (language)
+     *
+     * @param \QUI\Locale|boolean $Locale - optional
+     * @return mixed
+     */
+    public function getValueByLocale($Locale = false);
+
+    /**
      * Return the view
      *
      * @return View

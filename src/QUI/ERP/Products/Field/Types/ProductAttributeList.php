@@ -126,6 +126,6 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      */
     public function cleanup($value)
     {
-
+        return $value;
     }
 }
