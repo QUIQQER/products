@@ -681,6 +681,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['isSystem']     = $this->isSystem();
         $attributes['isPublic']     = $this->isPublic();
         $attributes['searchable']   = $this->isSearchable();
+        $attributes['ownField']     = $this->isOwnField();
 
         return $attributes;
     }

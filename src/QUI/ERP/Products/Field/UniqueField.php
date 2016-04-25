@@ -93,6 +93,12 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
     protected $unassigned = false;
 
     /**
+     * Is the field a product own field
+     * @var bool
+     */
+    protected $ownField = false;
+
+    /**
      * @var array
      */
     protected $options = array();
@@ -119,7 +125,8 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
             'isSystem',
             'custom',
             'unassigned',
-            'value'
+            'value',
+            'ownField'
         );
 
         foreach ($attributes as $attribute) {
@@ -304,5 +311,13 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
     public function isRequired()
     {
         return $this->isRequire;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOwnField()
+    {
+        return $this->ownField;
     }
 }
