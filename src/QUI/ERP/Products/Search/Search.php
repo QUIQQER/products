@@ -7,6 +7,7 @@ namespace QUI\ERP\Products\Search;
 
 use QUI;
 use QUI\ERP\Products\Utils\Tables;
+use QUI\ERP\Products\Handler\Search as SearchHandler;
 
 /**
  * Class Search
@@ -35,6 +36,19 @@ abstract class Search extends QUI\QDOM
      * @var string
      */
     protected $lang = null;
+
+    /**
+     * All search types that need cached values
+     *
+     * @var array
+     */
+    protected $searchTypesWithValues = array(
+        SearchHandler::SEARCHTYPE_INPUTSELECTRANGE,
+        SearchHandler::SEARCHTYPE_INPUTSELECTSINGLE,
+        SearchHandler::SEARCHTYPE_SELECTMULTI,
+        SearchHandler::SEARCHTYPE_SELECTRANGE,
+        SearchHandler::SEARCHTYPE_SELECTSINGLE
+    );
 
     /**
      * Return all fields that are used in the search
@@ -77,7 +91,7 @@ abstract class Search extends QUI\QDOM
         );
 
         if (!is_null($catId)) {
-            $params['where']['category_id'] = (int)$catId;
+            $params['where']['category'] = (int)$catId;
         }
 
         if ($activeProductsOnly) {
@@ -113,7 +127,7 @@ abstract class Search extends QUI\QDOM
 
         return $uniqueEntries;
     }
-\QUI\System\Log::writeRecursive();
+
     /**
      * Filters all fields that are not eligible for use in search
      *
@@ -127,7 +141,7 @@ abstract class Search extends QUI\QDOM
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($fields as $Field) {
             if ($Field->isSearchable()
-                && $Field->getAttribute('publicField')
+                && $Field->isPublic()
                 && $Field->getSearchType()
             ) {
                 $eligibleFields[] = $Field;

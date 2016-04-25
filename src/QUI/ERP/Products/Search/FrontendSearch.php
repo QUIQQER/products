@@ -9,6 +9,7 @@ use QUI;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Categories;
+use QUI\ERP\Products\Search\Cache as SearchCache;
 
 /**
  * Class Search
@@ -66,6 +67,7 @@ class FrontendSearch extends Search
         }
 
         $this->Site     = $Site;
+        $this->lang     = $Site->getAttribute('lang');
         $this->siteType = $type;
     }
 
@@ -83,31 +85,75 @@ class FrontendSearch extends Search
          * 4. array mit such-informationen zurückgeben
          */
 
-        $cname = 'quiqqer/products/search/fieldvalues/' . $Field->getId();
+        $cname = 'products/search/fieldvalues/'
+                 . $this->Site->getId() . '/' . $this->lang;
 
         try {
-            return QUI\Cache\Manager::get($cname);
+            return SearchCache::get($cname);
         } catch (QUI\Exception $Exception) {
             // nothing, retrieve values
         }
 
+        $parseFields    = array();
         $searchFields   = array();
         $searchFieldIds = $this->Site->getAttribute(
             'quiqqer.products.settings.searchFieldIds'
         );
 
         if (!$searchFieldIds) {
-            return $searchFields;
+            return $parseFields;
         }
 
         $searchFieldIds = json_decode($searchFieldIds, true);
 
-        foreach ($searchFieldIds as $fieldId) {
-            $Field          = Fields::getField($fieldId);
-            $searchFields[] = $Field;
+        // TODO richtiges Array-Format abchecken [mit Hen besprechen]
+
+        foreach ($searchFieldIds as $fieldId => $search) {
+            if (!$search) {
+                continue;
+            }
+
+            $Field         = Fields::getField($fieldId);
+            $parseFields[] = $Field;
         }
 
-        $searchFields = $this->filterEligibleSearchFields($searchFields);
+        $parseFields = $this->filterEligibleSearchFields($searchFields);
+        $catId       = null;
+
+        switch ($this->siteType) {
+            case self::SITETYPE_CATEGORY:
+                $catId = $this->Site->getAttribute(
+                    'quiqqer.products.settings.categoryId'
+                );
+
+                if (!$catId) {
+                    $catId = null;
+                }
+                break;
+        }
+
+        /** @var QUI\ERP\Products\Field\Field $Field */
+        foreach ($parseFields as $Field) {
+            $searchFieldData = array(
+                'id'         => $Field->getId(),
+                'searchType' => $Field->getSearchType()
+            );
+
+            if (in_array($Field->getSearchType(),
+                $this->searchTypesWithValues)) {
+                $searchFieldData['values'] = $this->getValuesFromField(
+                    $Field,
+                    true,
+                    $catId
+                );
+            }
+
+            $searchFields[] = $searchFieldData;
+        }
+
+        SearchCache::set($cname, $searchFields);
+
+        return $searchFields;
     }
 
     /**

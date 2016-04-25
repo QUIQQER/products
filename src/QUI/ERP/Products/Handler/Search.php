@@ -6,6 +6,9 @@
 namespace QUI\ERP\Products\Handler;
 
 use QUI;
+use Stash;
+use QUI\ERP\Products\Utils\Package as PackageUtils;
+use QUI\ERP\Products\Search\FrontendSearch;
 
 /**
  * Class Fields
@@ -48,29 +51,21 @@ class Search
         );
     }
 
-    public static function getFrontendSearch()
+    /**
+     * Get FrontendSearch
+     *
+     * @param QUI\Projects\Site $Site - Search Site or Category Site
+     * @param array $searchParams (optional) - search parameters for product search
+     * @return FrontendSearch
+     * @throws QUI\Exception
+     */
+    public static function getFrontendSearch($Site, $searchParams = null)
     {
-
+        return new FrontendSearch($Site, $searchParams);
     }
 
     public static function getBackendSearch()
     {
-        
-    }
-
-    /**
-     * Get search data for searchable fields (used in search control)
-     *
-     * @param string $lang - language for field names and values
-     * @param integer $categoryId (optional) - search data for specific category
-     */
-    public static function getSearchFieldsData($lang, $categoryId = null)
-    {
-        
-    }
-
-    protected static function getSearchValues($lang, $categoryId = null)
-    {
-
+        // TODO
     }
 }
