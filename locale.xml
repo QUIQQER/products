@@ -518,6 +518,9 @@
         <locale name="control.category.update.title.countCategories">
             <de><![CDATA[Anzahl Kategorien]]></de>
             <en><![CDATA[Number of categories]]></en>
+        </locale><locale name="control.category.update.title.parent">
+            <de><![CDATA[Eltern Kategorie]]></de>
+            <en><![CDATA[Parent category]]></en>
         </locale>
 
         <locale name="category.update.field.grid.button.add">

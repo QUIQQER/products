@@ -449,7 +449,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 field.value = JSON.encode(field.value);
                             }
 
-                            Input.value = field.value || '';
+                            Input.value = field.value;
 
                             if (field.id == Fields.FIELD_FOLDER) {
                                 self.$FileViewer.setAttribute('folderUrl', field.value);
@@ -900,15 +900,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             }
 
                             data.push({
-                                visible     : new QUISwitch({
-                                    fieldId: entry.id,
-                                    events : {
+                                visible: new QUISwitch({
+                                    fieldId     : entry.id,
+                                    events      : {
                                         onChange: switchStatusChange
                                     }
                                 }),
                                 calcPriority: 0,
-                                id          : entry.id,
-                                title       : entry.workingtitle || entry.title
+                                id     : entry.id,
+                                title  : entry.workingtitle || entry.title
                             });
                         }
 

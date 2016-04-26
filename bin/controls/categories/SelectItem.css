@@ -1,5 +1,4 @@
 .quiqqer-category-selectItem {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     clear: both;
     cursor: default;
     float: left;
@@ -11,6 +10,10 @@
 
 .quiqqer-category-selectItem:hover {
     background: rgba(0, 0, 0, 0.1);
+}
+
+.quiqqer-category-selectItem + .quiqqer-category-selectItem {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .quiqqer-category-selectItem-icon {

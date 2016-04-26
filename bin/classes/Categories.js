@@ -257,6 +257,24 @@ define('package/quiqqer/products/bin/classes/Categories', [
         },
 
         /**
+         * Set a new parent ID to a category
+         *
+         * @param {Number}  categoryId
+         * @param {Number}  parentId
+         * @return {Promise}
+         */
+        setParent: function (categoryId, parentId) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_categories_setParent', resolve, {
+                    'package' : 'quiqqer/products',
+                    categoryId: categoryId,
+                    parentId  : parentId,
+                    onError   : reject
+                });
+            }.bind(this));
+        },
+
+        /**
          * Return the products form a category for a grid
          *
          * @param {Number} categoryId - Category-ID

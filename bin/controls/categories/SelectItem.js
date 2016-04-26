@@ -8,16 +8,21 @@
  * @require Locale
  * @require package/quiqqer/products/bin/classes/Categories
  * @require css!package/quiqqer/products/bin/controls/categories/SelectItem.css
+ *
+ * @event onClick
+ * @event onDestroy
+ * @event onChange [self, value]
  */
 define('package/quiqqer/products/bin/controls/categories/SelectItem', [
 
     'qui/controls/Control',
     'Locale',
+    'package/quiqqer/products/bin/controls/categories/search/Window',
     'package/quiqqer/products/bin/classes/Categories',
 
     'css!package/quiqqer/products/bin/controls/categories/SelectItem.css'
 
-], function (QUIControl, QUILocale, Handler) {
+], function (QUIControl, QUILocale, CategorySearch, Handler) {
     "use strict";
 
     var Categories = new Handler();
@@ -31,7 +36,9 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
         ],
 
         options: {
-            categoryId: false
+            categoryId: false,
+            removeable: true,
+            editable  : false
         },
 
         initialize: function (options) {
@@ -66,22 +73,53 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
             this.$Text    = Elm.getElement('.quiqqer-category-selectItem-text');
             this.$Destroy = Elm.getElement('.quiqqer-category-selectItem-destroy');
 
+            if (this.getAttribute('removeable') === false) {
+                this.$Destroy.setStyle('display', 'none');
+            }
+
             this.$Destroy.addEvent('click', function () {
                 self.destroy();
+            });
+
+            if (this.getAttribute('editable')) {
+                Elm.setStyle('cursor', 'pointer');
+                Elm.addEvent('click', function () {
+                    self.openEditDialog();
+                });
+            }
+
+            Elm.addEvent('click', function () {
+                self.fireEvent('click', [self]);
             });
 
             return Elm;
         },
 
-        /**
-         * event : on inject
-         */
-        $onInject: function () {
-            var self = this;
-
+        loading: function () {
             this.$Text.set({
                 html: '<span class="fa fa-spinner fa-spin"></span>'
             });
+        },
+
+        /**
+         * Refresh the display
+         */
+        refresh: function () {
+            var self = this;
+
+            this.loading();
+
+            if (this.getAttribute('categoryId') === 0) {
+
+                self.$Text.set({
+                    html: QUILocale.get(
+                        'quiqqer/products',
+                        'products.category.no.parent'
+                    )
+                });
+
+                return;
+            }
 
             Categories.getChild(
                 this.getAttribute('categoryId')
@@ -101,6 +139,45 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
                 self.$Icon.addClass('fa-bolt');
                 self.$Text.set('html', '...');
             });
+        },
+
+        /**
+         * event : on inject
+         */
+        $onInject: function () {
+            this.refresh();
+        },
+
+        /**
+         * open the edit dialog - category search
+         */
+        openEditDialog: function () {
+            if (!this.getAttribute('editable')) {
+                return;
+            }
+
+            var categoryId = this.getAttribute('categoryId');
+
+            new CategorySearch({
+                events: {
+                    onSubmit: function (Win, values) {
+                        if (values[0] == categoryId) {
+                            return;
+                        }
+
+                        Win.close();
+
+                        if (values[0] === '') {
+                            values[0] = 0;
+                        }
+
+                        this.setAttribute('categoryId', parseInt(values[0]));
+                        this.refresh();
+
+                        this.fireEvent('onChange', [this, parseInt(values[0])]);
+                    }.bind(this)
+                }
+            }).open();
         }
     });
 });
