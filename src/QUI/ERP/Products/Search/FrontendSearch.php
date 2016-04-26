@@ -141,7 +141,7 @@ class FrontendSearch extends Search
 
             if (in_array($Field->getSearchType(),
                 $this->searchTypesWithValues)) {
-                $searchFieldData['values'] = $this->getValuesFromField(
+                $searchFieldData['searchdata'] = $this->getValuesFromField(
                     $Field,
                     true,
                     $catId

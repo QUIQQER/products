@@ -51,6 +51,9 @@
             <field type="VARCHAR( 255 ) NOT NULL">title</field>
             <field type="BIGINT(20) NULL">category</field>
             <field type="TINYINT(1)">active</field>
+            <field type="VARCHAR(2) NOT NULL">lang</field>
+
+            <primary>id,lang</primary>
         </table>
     </global>
 

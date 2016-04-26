@@ -31,6 +31,13 @@ class Search
     const SEARCHTYPE_DATERANGE         = 'dateRange';
 
     /**
+     * Data types for search values
+     */
+    const SEARCHDATATYPE_TEXT    = 1;
+    const SEARCHDATATYPE_NUMERIC = 2;
+    const SEARCHDATATYPE_JSON    = 3;
+
+    /**
      * Get all available search types
      *
      * @return array

@@ -15,6 +15,8 @@ use QUI\ERP\Products\Handler\Search;
  */
 class Textarea extends QUI\ERP\Products\Field\Field
 {
+    protected $searchDataType = Search::SEARCHDATATYPE_TEXT;
+
     public function getBackendView()
     {
         return new View(array(

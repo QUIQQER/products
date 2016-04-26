@@ -26,6 +26,8 @@ use QUI\ERP\Products\Handler\Search;
  */
 class GroupList extends QUI\ERP\Products\Field\Field
 {
+    protected $searchDataType = Search::SEARCHDATATYPE_TEXT;
+
     /**
      * GroupList constructor.
      * @param int $fieldId
@@ -256,11 +258,13 @@ class GroupList extends QUI\ERP\Products\Field\Field
     /**
      * Return value for use in product search cache
      *
+     * @param QUI\Locale $Locale
      * @return string
      */
-    public function getSearchCacheValue()
+    public function getSearchCacheValue($Locale)
     {
         if ($this->isEmpty()) {
+            \QUI\System\Log::writeRecursive("is empty");
             return null;
         }
 
@@ -269,6 +273,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         foreach ($userIds as $userId) {
             $searchValues[] = QUI::getUsers()->get($userId)->getName();
+        }
+
+        if (count($searchValues) === 1) {
+            return $searchValues[0];
         }
 
         return ',' . implode(',', $searchValues) . ',';

@@ -95,6 +95,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $searchTypes = array();
 
     /**
+     * Searchdata type for values of this field
+     *
+     * @var int
+     */
+    protected $searchDataType = false;
+
+    /**
      * Model constructor.
      *
      * @param integer $fieldId
@@ -530,10 +537,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the value in dependence of a locale (language)
      *
-     * @param bool $Locale
+     * @param QUI\Locale $Locale (optional)
      * @return array|string
      */
-    public function getValueByLocale($Locale = false)
+    public function getValueByLocale($Locale = null)
     {
         return $this->getValue();
     }
@@ -541,15 +548,16 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return value for use in product search cache
      *
+     * @param QUI\Locale $Locale
      * @return string
      */
-    public function getSearchCacheValue()
+    public function getSearchCacheValue($Locale)
     {
         if ($this->isEmpty()) {
             return null;
         }
 
-        return $this->getValue();
+        return $this->getValueByLocale($Locale);
     }
 
     /**
@@ -714,6 +722,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         }
 
         return Search::getSearchTypes();
+    }
+
+    /**
+     *
+     */
+    public function getSearchDataType()
+    {
+        return $this->searchDataType;
     }
 
     /**

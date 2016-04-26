@@ -15,7 +15,8 @@ use QUI\ERP\Products\Handler\Search;
  */
 class Price extends QUI\ERP\Products\Field\Field
 {
-    protected $columnType = 'DOUBLE';
+    protected $columnType     = 'DOUBLE';
+    protected $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
 
     /**
      * Official currency code (i.e. EUR)
@@ -29,10 +30,10 @@ class Price extends QUI\ERP\Products\Field\Field
         // TODO: Hier aus display-price aus Price-Klasse verwenden?
 
         return new View(array(
-            'value' => $this->cleanup($this->getValue()),
-            'title' => $this->getTitle(),
-            'prefix' => $this->getAttribute('prefix'),
-            'suffix' => $this->getAttribute('suffix'),
+            'value'    => $this->cleanup($this->getValue()),
+            'title'    => $this->getTitle(),
+            'prefix'   => $this->getAttribute('prefix'),
+            'suffix'   => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -45,10 +46,10 @@ class Price extends QUI\ERP\Products\Field\Field
         );
 
         return new View(array(
-            'value' => $Price->getDisplayPrice(),
-            'title' => $this->getTitle(),
-            'prefix' => $this->getAttribute('prefix'),
-            'suffix' => $this->getAttribute('suffix'),
+            'value'    => $Price->getDisplayPrice(),
+            'title'    => $this->getTitle(),
+            'prefix'   => $this->getAttribute('prefix'),
+            'suffix'   => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -79,9 +80,9 @@ class Price extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
-                    'fieldId' => $this->getId(),
+                    'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType' => $this->getType()
+                    'fieldType'  => $this->getType()
                 )
             ));
         }
@@ -98,7 +99,7 @@ class Price extends QUI\ERP\Products\Field\Field
     public function cleanup($value)
     {
         // @TODO diese beiden Werte aus Settings nehmen
-        $decimalSeperator = '.';
+        $decimalSeperator   = '.';
         $thousandsSeperator = ',';
 
         if (is_float($value)) {

@@ -15,6 +15,8 @@ use QUI\ERP\Products\Handler\Search;
  */
 class TextareaMultiLang extends QUI\ERP\Products\Field\Field
 {
+    protected $searchDataType = Search::SEARCHDATATYPE_TEXT;
+
     /**
      * @return View
      */

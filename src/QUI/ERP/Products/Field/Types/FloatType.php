@@ -15,15 +15,16 @@ use QUI\ERP\Products\Handler\Search;
  */
 class FloatType extends QUI\ERP\Products\Field\Field
 {
-    protected $columnType = 'DOUBLE';
+    protected $columnType     = 'DOUBLE';
+    protected $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
 
     public function getBackendView()
     {
         return new View(array(
-            'value' => $this->cleanup($this->getValue()),
-            'title' => $this->getTitle(),
-            'prefix' => $this->getAttribute('prefix'),
-            'suffix' => $this->getAttribute('suffix'),
+            'value'    => $this->cleanup($this->getValue()),
+            'title'    => $this->getTitle(),
+            'prefix'   => $this->getAttribute('prefix'),
+            'suffix'   => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -33,10 +34,10 @@ class FloatType extends QUI\ERP\Products\Field\Field
         // @TODO value formatierung aus settings (nachkommastellen, separatoren)
 
         return new View(array(
-            'value' => $this->cleanup($this->getValue()),
-            'title' => $this->getTitle(),
-            'prefix' => $this->getAttribute('prefix'),
-            'suffix' => $this->getAttribute('suffix'),
+            'value'    => $this->cleanup($this->getValue()),
+            'title'    => $this->getTitle(),
+            'prefix'   => $this->getAttribute('prefix'),
+            'suffix'   => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -67,9 +68,9 @@ class FloatType extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
-                    'fieldId' => $this->getId(),
+                    'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType' => $this->getType()
+                    'fieldType'  => $this->getType()
                 )
             ));
         }
@@ -84,7 +85,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
     public function cleanup($value)
     {
         // @TODO diese beiden Werte aus Settings nehmen (s. Price)
-        $decimalSeperator = '.';
+        $decimalSeperator   = '.';
         $thousandsSeperator = ',';
 
         if (is_float($value)) {
@@ -148,15 +149,5 @@ class FloatType extends QUI\ERP\Products\Field\Field
             Search::SEARCHTYPE_HASVALUE,
             Search::SEARCHTYPE_INPUTSELECTRANGE
         );
-    }
-
-    /**
-     * Return value for use in product search cache
-     *
-     * @return string
-     */
-    public function getSearchCacheValue()
-    {
-        return $this->getValue();
     }
 }

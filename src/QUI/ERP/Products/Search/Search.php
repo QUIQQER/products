@@ -98,6 +98,45 @@ abstract class Search extends QUI\QDOM
             $params['where']['active'] = 1;
         }
 
+        // special queries depending on search type
+        switch ($Field->getSearchDataType()) {
+            case SearchHandler::SEARCHDATATYPE_NUMERIC:
+
+                switch ($Field->getSearchType()) {
+                    case SearchHandler::SEARCHTYPE_SELECTSINGLE:
+                    case SearchHandler::SEARCHTYPE_INPUTSELECTSINGLE:
+                    case SearchHandler::SEARCHTYPE_SELECTRANGE:
+                    case SearchHandler::SEARCHTYPE_INPUTSELECTRANGE:
+                        // todo min max
+                        break;
+
+                    default:
+                        // todo exception?
+                }
+
+                break;
+
+            case SearchHandler::SEARCHDATATYPE_TEXT:
+
+                switch ($Field->getSearchType()) {
+                    case SearchHandler::SEARCHTYPE_SELECTSINGLE:
+                    case SearchHandler::SEARCHTYPE_INPUTSELECTSINGLE:
+                        // todo group by
+                        break;
+
+                    case SearchHandler::SEARCHTYPE_SELECTMULTI:
+                        // todo all values
+                        break;
+
+                    default:
+                }
+
+                break;
+
+            default:
+                // TODO: Exception?
+        }
+
         try {
             $result = QUI::getDataBase()->fetch($params);
         } catch (QUI\Exception $Exception) {
