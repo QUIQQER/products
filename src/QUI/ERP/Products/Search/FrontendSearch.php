@@ -78,13 +78,6 @@ class FrontendSearch extends Search
      */
     public function getSearchFields()
     {
-        /**
-         * 1. Feld-IDs aus Such-/Kategorie-Seite holen
-         * 2. Ggf. mit eligible fields abgleichen
-         * 3. search values für jedes feld holen (aus cache oder neu)
-         * 4. array mit such-informationen zurückgeben
-         */
-
         $cname = 'products/search/fieldvalues/'
                  . $this->Site->getId() . '/' . $this->lang;
 
@@ -132,6 +125,9 @@ class FrontendSearch extends Search
                 break;
         }
 
+        $Locale = new QUI\Locale();
+        $Locale->setCurrent($this->lang);
+
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($parseFields as $Field) {
             $searchFieldData = array(
@@ -139,13 +135,21 @@ class FrontendSearch extends Search
                 'searchType' => $Field->getSearchType()
             );
 
-            if (in_array($Field->getSearchType(),
-                $this->searchTypesWithValues)) {
-                $searchFieldData['searchdata'] = $this->getValuesFromField(
-                    $Field,
-                    true,
-                    $catId
-                );
+            if (in_array($Field->getSearchType(), $this->searchTypesWithValues))
+            {
+                $searchValues = $this->getValuesFromField($Field, true, $catId);
+                $searchData   = array();
+
+                foreach ($searchValues as $val) {
+                    $Field->setValue($val);
+
+                    $searchData[] = array(
+                        'label' => $Field->getValueByLocale($Locale),
+                        'value' => $val
+                    );
+                }
+
+                $searchFieldData['searchData'] = $searchData;
             }
 
             $searchFields[] = $searchFieldData;

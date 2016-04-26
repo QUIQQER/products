@@ -76,7 +76,7 @@ abstract class Search extends QUI\QDOM
      * @return array - unique field values
      * @throws QUI\Exception
      */
-    protected static function getValuesFromField(
+    protected function getValuesFromField(
         $Field,
         $activeProductsOnly = true,
         $catId = null
@@ -85,9 +85,11 @@ abstract class Search extends QUI\QDOM
         $column = 'F' . $Field->id;
 
         $params = array(
-            'select' => array($column),
+            'select' => array(),
             'from'   => Tables::getProductCacheTableName(),
-            'where'  => array()
+            'where'  => array(
+                'lang' => $this->lang
+            )
         );
 
         if (!is_null($catId)) {
@@ -107,11 +109,13 @@ abstract class Search extends QUI\QDOM
                     case SearchHandler::SEARCHTYPE_INPUTSELECTSINGLE:
                     case SearchHandler::SEARCHTYPE_SELECTRANGE:
                     case SearchHandler::SEARCHTYPE_INPUTSELECTRANGE:
-                        // todo min max
-                        break;
 
-                    default:
-                        // todo exception?
+                        $params['select'] = array(
+                            'MIN(' . $column . ')',
+                            'MAX(' . $column . ')'
+                        );
+
+                        break;
                 }
 
                 break;
@@ -121,20 +125,20 @@ abstract class Search extends QUI\QDOM
                 switch ($Field->getSearchType()) {
                     case SearchHandler::SEARCHTYPE_SELECTSINGLE:
                     case SearchHandler::SEARCHTYPE_INPUTSELECTSINGLE:
-                        // todo group by
+
+                        $params['select'] = array($column);
+                        $params['group']  = $column;
+
                         break;
 
                     case SearchHandler::SEARCHTYPE_SELECTMULTI:
-                        // todo all values
-                        break;
 
-                    default:
+                        $params['select'] = array($column);
+
+                        break;
                 }
 
                 break;
-
-            default:
-                // TODO: Exception?
         }
 
         try {
@@ -149,22 +153,35 @@ abstract class Search extends QUI\QDOM
             return array();
         }
 
-        foreach ($result as $row) {
-            if (empty($row[$column])) {
-                continue;
-            }
-
-            // TODO: Relevanten Wert aus Feld holen (sprachabhängig?)
-
-            $values[] = $row[$column];
+        if (empty($result)) {
+            return $values;
         }
 
-        $uniqueEntries = array_unique($values);
-        $uniqueEntries = array_values($uniqueEntries);
+        switch ($Field->getSearchDataType()) {
+            case SearchHandler::SEARCHDATATYPE_NUMERIC:
+                $values = $Field->calculateValueRange(
+                    $result[0]['MAX(' . $column . ')'],
+                    $result[0]['MIN(' . $column . ')']
+                );
+                break;
 
-        sort($uniqueEntries);
+            case SearchHandler::SEARCHDATATYPE_TEXT:
+                foreach ($result as $row) {
+                    if (empty($row[$column])) {
+                        continue;
+                    }
 
-        return $uniqueEntries;
+                    $values[] = $row[$column];
+                }
+                break;
+        }
+
+//        $uniqueEntries = array_unique($values);
+//        $uniqueEntries = array_values($uniqueEntries);
+
+        sort($values);
+
+        return $values;
     }
 
     /**
