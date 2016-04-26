@@ -149,4 +149,14 @@ class FloatType extends QUI\ERP\Products\Field\Field
             Search::SEARCHTYPE_INPUTSELECTRANGE
         );
     }
+
+    /**
+     * Return value for use in product search cache
+     *
+     * @return string
+     */
+    public function getSearchCacheValue()
+    {
+        return $this->getValue();
+    }
 }

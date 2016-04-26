@@ -545,6 +545,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getSearchCacheValue()
     {
+        if ($this->isEmpty()) {
+            return null;
+        }
+
         return $this->getValue();
     }
 
