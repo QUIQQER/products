@@ -445,6 +445,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         var Input = Form.elements['field-' + field.id];
 
                         if (typeof Input !== 'undefined') {
+                            console.log(field);
+
                             if (typeOf(field.value) !== 'string') {
                                 field.value = JSON.encode(field.value);
                             }
