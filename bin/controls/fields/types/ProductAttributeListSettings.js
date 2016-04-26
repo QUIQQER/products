@@ -28,6 +28,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
         Type   : 'package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings',
 
         Binds: [
+            'update',
             'openAddDialog',
             'openEditDialog',
             'openRemoveDialog',
@@ -43,9 +44,15 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
         initialize: function (options) {
             this.parent(options);
 
-            this.$Grid  = null;
             this.$Input = null;
             this.$data  = [];
+
+            this.$Grid      = null;
+            this.$Priority  = null;
+            this.$CalcBasis = null;
+
+            // price container
+            this.$PriceCalc = null;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -73,16 +80,38 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * event : on inject
          */
         $onInject: function () {
+            var Parent = this.$Elm.getParent('.field-options');
+
+            if (Parent) {
+                Parent.setStyle('padding', 0);
+            }
+
+            new Element('div', {
+                'class': 'quiqqer-products-attributeList-settings-title',
+                html   : 'Listen Einträge',
+                styles : {
+                    marginTop: 20
+                }
+            }).inject(this.$Elm);
+
+            var Width = new Element('div', {
+                styles: {
+                    'float': 'left',
+                    margin : 10,
+                    width  : 'calc(100% - 20px)'
+                }
+            }).inject(this.$Elm);
 
             var Container = new Element('div', {
                 styles: {
                     'float': 'left',
-                    height : 300
+                    height : 300,
+                    width  : '100%'
                 }
-            }).inject(this.$Elm);
+            }).inject(Width);
 
             var self = this,
-                size = this.$Elm.getSize();
+                size = Width.getSize();
 
             this.$Grid = new Grid(Container, {
                 buttons    : [{
@@ -149,6 +178,37 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 }
             });
 
+            this.$PriceCalc = new Element('div', {
+                'class': 'quiqqer-products-attributeList-settings',
+                html   : '<div class="quiqqer-products-attributeList-settings-title">' +
+                         '     Zur Preisberechnung' +
+                         '</div>' +
+                         '<div class="quiqqer-products-attributeList-settings-priority">' +
+                         '     <label>' +
+                         '         <span class="quiqqer-products-attributeList-settings-text">' +
+                         '             Priorität:' +
+                         '         </span>' +
+                         '         <input type="number" name="price_priority"' +
+                         '                class="quiqqer-products-attributeList-settings-input" />' +
+                         '     </label>' +
+                         '</div>' +
+                         '<div class="quiqqer-products-attributeList-settings-calcbasis">' +
+                         '     <label>' +
+                         '         <span class="quiqqer-products-attributeList-settings-text">' +
+                         '             Berechnungsgrundlage:' +
+                         '         </span>' +
+                         '         <select type="text" name="price_calculation_basis" ' +
+                         '                 class="quiqqer-products-attributeList-settings-input">' +
+                         '              <option value="netto">Netto</option>' +
+                         '              <option value="calculated_price">Kalkulierte Preis</option>' +
+                         '          </select>' +
+                         '     </label>' +
+                         '</div>'
+            }).inject(this.$Elm, 'top');
+
+            this.$Priority  = this.$PriceCalc.getElement('[name="price_priority"]');
+            this.$CalcBasis = this.$PriceCalc.getElement('[name="price_calculation_basis"]');
+
             this.refresh();
         },
 
@@ -162,9 +222,11 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             this.$Input = Node;
             this.$Elm   = this.create();
 
+            var data   = {},
+                result = [];
+
             try {
-                var data   = JSON.decode(this.$Input.value),
-                    result = [];
+                data = JSON.decode(this.$Input.value);
 
                 // parse data
                 if ("entries" in data) {
@@ -198,6 +260,18 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
 
             this.$Elm.wraps(this.$Input);
             this.$onInject();
+
+
+            if ("priority" in data) {
+                this.$Priority.value = data.priority;
+            }
+
+            if ("calculation_basis" in data) {
+                this.$CalcBasis.value = data.calculation_basis;
+            }
+
+            this.$Priority.addEvent('change', this.update);
+            this.$CalcBasis.addEvent('change', this.update);
         },
 
         /**
@@ -427,11 +501,16 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          */
         update: function () {
             this.$Input.value = JSON.encode({
-                entries: this.$data
+                entries          : this.$data,
+                priority         : this.$Priority.value,
+                calculation_basis: this.$CalcBasis.value
             });
+
+            console.log(this.$Input.value);
         },
 
         /**
+         * Add an entry
          *
          * @param {Object|String} title
          * @param {Number} sum
