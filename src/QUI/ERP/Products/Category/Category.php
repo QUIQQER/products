@@ -170,6 +170,28 @@ class Category extends QUI\QDOM
     }
 
     /**
+     * Set a new parent to the category
+     *
+     * @param integer $parentId
+     * @throws QUI\Exception
+     */
+    public function setParentId($parentId)
+    {
+        $parentId = (int)$parentId;
+
+        if ($parentId == $this->getId()) {
+            return;
+        }
+
+        // exists the category?
+        if ($parentId !== 0) {
+            QUI\ERP\Products\Handler\Categories::getCategory($parentId);
+        }
+
+        $this->parentId = $parentId;
+    }
+
+    /**
      * Return the the parent category
      * Category 0 has no parent => returns false
      *
@@ -206,6 +228,7 @@ class Category extends QUI\QDOM
         $attributes['description']   = $this->getDescription();
         $attributes['countChildren'] = $this->countChildren();
         $attributes['sites']         = $this->getSites();
+        $attributes['parent']        = $this->getParentId();
         $attributes['fields']        = $fields;
 
         return $attributes;
@@ -696,7 +719,8 @@ class Category extends QUI\QDOM
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             array(
-                'fields' => json_encode($fields)
+                'fields' => json_encode($fields),
+                'parentId' => $this->getParentId()
             ),
             array('id' => $this->getId())
         );

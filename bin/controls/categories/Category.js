@@ -156,6 +156,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     textId             : QUILocale.get('quiqqer/system', 'id'),
                     textTitle          : QUILocale.get('quiqqer/system', 'title'),
                     textDescription    : QUILocale.get('quiqqer/system', 'description'),
+                    textParent         : QUILocale.get(lg, 'control.category.update.title.parent'),
                     textFields         : QUILocale.get(lg, 'control.category.update.title.fields'),
                     textSites          : QUILocale.get(lg, 'control.category.update.title.sites'),
                     textInformation    : QUILocale.get(lg, 'control.category.update.title.information'),
@@ -277,6 +278,27 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 Content.getElement('.category-count-products').set('html', this.$informations.products);
                 Content.getElement('.category-count-fields').set('html', this.$informations.fields);
                 Content.getElement('.category-count-categories').set('html', this.$informations.categories);
+
+                // parent
+                require([
+                    'package/quiqqer/products/bin/controls/categories/SelectItem'
+                ], function (SelectItem) {
+
+                    new SelectItem({
+                        categoryId: this.$data.parent || 0,
+                        removeable: false,
+                        editable  : true,
+                        events    : {
+                            onChange: function (Itm, value) {
+                                Itm.loading();
+                                Categories.setParent(categoryId, value).then(function () {
+                                    Itm.refresh();
+                                });
+                            }
+                        }
+                    }).inject(Content.getElement('.category-parent'));
+
+                }.bind(this));
 
                 // fields
                 var field;
