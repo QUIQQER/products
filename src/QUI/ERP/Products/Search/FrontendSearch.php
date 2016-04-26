@@ -76,7 +76,7 @@ class FrontendSearch extends Search
      *
      * @return array
      */
-    public function getSearchFields()
+    public function getSearchFieldData()
     {
         $cname = 'products/search/fieldvalues/'
                  . $this->Site->getId() . '/' . $this->lang;
@@ -87,31 +87,9 @@ class FrontendSearch extends Search
             // nothing, retrieve values
         }
 
-        $parseFields    = array();
-        $searchFields   = array();
-        $searchFieldIds = $this->Site->getAttribute(
-            'quiqqer.products.settings.searchFieldIds'
-        );
-
-        if (!$searchFieldIds) {
-            return $parseFields;
-        }
-
-        $searchFieldIds = json_decode($searchFieldIds, true);
-
-        // TODO richtiges Array-Format abchecken [mit Hen besprechen]
-
-        foreach ($searchFieldIds as $fieldId => $search) {
-            if (!$search) {
-                continue;
-            }
-
-            $Field         = Fields::getField($fieldId);
-            $parseFields[] = $Field;
-        }
-
-        $parseFields = $this->filterEligibleSearchFields($searchFields);
-        $catId       = null;
+        $searchFieldData = array();
+        $parseFields     = $this->getSearchFields();
+        $catId           = null;
 
         switch ($this->siteType) {
             case self::SITETYPE_CATEGORY:
@@ -129,14 +107,16 @@ class FrontendSearch extends Search
         $Locale->setCurrent($this->lang);
 
         /** @var QUI\ERP\Products\Field\Field $Field */
-        foreach ($parseFields as $Field) {
-            $searchFieldData = array(
+        foreach ($parseFields as $fieldId => $search) {
+            $Field = Fields::getField($fieldId);
+
+            $searchFieldDataContent = array(
                 'id'         => $Field->getId(),
                 'searchType' => $Field->getSearchType()
             );
 
-            if (in_array($Field->getSearchType(), $this->searchTypesWithValues))
-            {
+            if (in_array($Field->getSearchType(),
+                $this->searchTypesWithValues)) {
                 $searchValues = $this->getValuesFromField($Field, true, $catId);
                 $searchData   = array();
 
@@ -149,15 +129,63 @@ class FrontendSearch extends Search
                     );
                 }
 
-                $searchFieldData['searchData'] = $searchData;
+                $searchFieldDataContent['searchData'] = $searchData;
             }
 
-            $searchFields[] = $searchFieldData;
+            $searchFieldData[] = $searchFieldDataContent;
         }
 
-        SearchCache::set($cname, $searchFields);
+        SearchCache::set($cname, $searchFieldData);
 
-        return $searchFields;
+        return $searchFieldData;
+    }
+
+    /**
+     * Return all fields that can be used in this search with search status (active/inactive)
+     *
+     * @return array
+     */
+    public function getSearchFields()
+    {
+        $searchFields   = array();
+        $searchFieldIds = $this->Site->getAttribute(
+            'quiqqer.products.settings.searchFieldIds'
+        );
+
+        $eligibleFields = $this->getEligibleSearchFields();
+
+        if (!$searchFieldIds) {
+            $searchFieldIds = array();
+        } else {
+            $searchFieldIds = json_decode($searchFieldIds, true);
+        }
+
+        /** @var QUI\ERP\Products\Field\Field $Field */
+        foreach ($eligibleFields as $Field) {
+            if (!isset($searchFieldIds[$Field->getId()])) {
+                $searchFields[$Field->getId()] = false;
+                continue;
+            }
+
+            $searchFields[$Field->getId()] = boolval(
+                $searchFieldIds[$Field->getId()]
+            );
+        }
+    }
+
+    /**
+     * Set fields that are searchable
+     *
+     * @param array $searchFields
+     * @return array - search fields
+     */
+    public function setSearchFields($searchFields)
+    {
+        $eligibleFields = $this->getEligibleSearchFields();
+
+        foreach ($searchFields as $fieldId => $search) {
+
+        }
     }
 
     /**

@@ -51,11 +51,26 @@ abstract class Search extends QUI\QDOM
     );
 
     /**
-     * Return all fields that are used in the search
+     * Return all fields with values and labels (used for building search control)
+     *
+     * @return array
+     */
+    abstract public function getSearchFieldData();
+
+    /**
+     * Return all fields that can be used in this search with search status (active/inactive)
      *
      * @return array
      */
     abstract public function getSearchFields();
+
+    /**
+     * Set fields that are searchable
+     *
+     * @param array $searchFields
+     * @return array - search fields
+     */
+    abstract public function setSearchFields($searchFields);
 
     /**
      * Return all fields that are searchable
