@@ -210,6 +210,15 @@
             <en><![CDATA[Group assignment]]></en>
         </locale>
 
+        <locale name="fieldtype.ProductAttributeList.calcBasis.netto">
+            <de><![CDATA[Netto]]></de>
+            <en><![CDATA[Netto]]></en>
+        </locale>
+        <locale name="fieldtype.ProductAttributeList.calcBasis.calculated_price">
+            <de><![CDATA[Aktueller Preis]]></de>
+            <en><![CDATA[Current price]]></en>
+        </locale>
+
 
         <!-- exceptions -->
         <locale name="exception.field.is.invalid">
@@ -518,7 +527,8 @@
         <locale name="control.category.update.title.countCategories">
             <de><![CDATA[Anzahl Kategorien]]></de>
             <en><![CDATA[Number of categories]]></en>
-        </locale><locale name="control.category.update.title.parent">
+        </locale>
+        <locale name="control.category.update.title.parent">
             <de><![CDATA[Eltern Kategorie]]></de>
             <en><![CDATA[Parent category]]></en>
         </locale>
@@ -646,9 +656,22 @@
             <en><![CDATA[visible]]></en>
         </locale>
         <locale name="product.fields.grid.calcPriority">
+            <de><![CDATA[Priorität]]></de>
+            <en><![CDATA[Priority]]></en>
+        </locale>
+        <locale name="product.fields.grid.calcPriority.desc">
             <de><![CDATA[Berechnungs Priorität]]></de>
             <en><![CDATA[Calculating priority]]></en>
         </locale>
+        <locale name="product.fields.grid.calcBasis">
+            <de><![CDATA[Grundlage]]></de>
+            <en><![CDATA[Basis]]></en>
+        </locale>
+        <locale name="product.fields.grid.calcBasis.desc">
+            <de><![CDATA[Berechnungs Grundlage]]></de>
+            <en><![CDATA[Calculation casis]]></en>
+        </locale>
+
         <locale name="product.fields.remove.field">
             <de><![CDATA[Feld entfernen]]></de>
             <en><![CDATA[Remove field]]></en>
@@ -671,6 +694,11 @@
                 Possibly, this can also be inherited from a category.
                 ]]></en>
         </locale>
+
+        <locale name="products.category.no.parent">
+            <de><![CDATA[Die Kategorie besitzt keine übergeordnete Kategorie]]></de>
+            <en><![CDATA[The category has no parent category]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="php">
@@ -686,12 +714,16 @@
 
         <!-- FrontendSearch -->
         <locale name="exception.frontendsearch.site.type.not.eligible">
-            <de><![CDATA[Die Seite #[siteId] ist mit der Frontend Produkt-Suche nicht kompatibel, da der Seiten-Typ nicht passt.]]></de>
-            <en><![CDATA[The site #[siteId] is not compatible with the frontend product search because the site type ist not eligible.]]></en>
+            <de>
+                <![CDATA[Die Seite #[siteId] ist mit der Frontend Produkt-Suche nicht kompatibel, da der Seiten-Typ nicht passt.]]></de>
+            <en>
+                <![CDATA[The site #[siteId] is not compatible with the frontend product search because the site type ist not eligible.]]></en>
         </locale>
         <locale name="attention.frontendsearch.category.site.no.category">
-            <de><![CDATA[Die Produkt-Kategorie-Seite #[siteId] ist noch keiner Produkt-Kategorie zugeordnet. Daher sind nur Standard-Felder durchsuchbar.]]></de>
-            <en><![CDATA[The product category site #[siteId] is not assigned to a product category yet. Thus only standard fields are searchable.]]></en>
+            <de>
+                <![CDATA[Die Produkt-Kategorie-Seite #[siteId] ist noch keiner Produkt-Kategorie zugeordnet. Daher sind nur Standard-Felder durchsuchbar.]]></de>
+            <en>
+                <![CDATA[The product category site #[siteId] is not assigned to a product category yet. Thus only standard fields are searchable.]]></en>
         </locale>
 
         <locale name="exception.only.ownFields.deletable">

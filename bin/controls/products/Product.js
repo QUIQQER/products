@@ -854,6 +854,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 this.$Grid = new Grid(GridContainer, {
                     pagination : true,
+                    sortOn     : 'calcPriority',
                     columnModel: [{
                         header   : QUILocale.get(lg, 'product.fields.grid.visible'),
                         dataIndex: 'visible',
@@ -861,9 +862,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         width    : 60
                     }, {
                         header   : QUILocale.get(lg, 'product.fields.grid.calcPriority'),
+                        title    : QUILocale.get(lg, 'product.fields.grid.calcPriority.desc'),
                         dataIndex: 'calcPriority',
-                        dataType : 'number',
+                        dataType : 'string',
                         width    : 60
+                    }, {
+                        header   : QUILocale.get(lg, 'product.fields.grid.calcBasis'),
+                        title    : QUILocale.get(lg, 'product.fields.grid.calcBasis.desc'),
+                        dataIndex: 'calcBasis',
+                        dataType : 'string',
+                        width    : 100
                     }, {
                         header   : QUILocale.get('quiqqer/system', 'id'),
                         dataIndex: 'id',
@@ -891,7 +899,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 var refresh = function () {
                     this.$Product.getFields().then(function (fields) {
-                        var i, len, entry;
+                        var i, len, entry,
+                            options, calculation_basis, priority;
                         var data = [];
 
                         for (i = 0, len = fields.length; i < len; i++) {
@@ -901,16 +910,44 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 continue;
                             }
 
+                            calculation_basis = '';
+                            priority          = '';
+
+                            options = entry.options;
+
+                            if ("calculation_basis" in options) {
+                                switch (options.calculation_basis) {
+                                    case 'netto':
+                                        calculation_basis = QUILocale.get(
+                                            lg,
+                                            'fieldtype.ProductAttributeList.calcBasis.netto'
+                                        );
+                                        break;
+
+                                    case 'calculated_price':
+                                        calculation_basis = QUILocale.get(
+                                            lg,
+                                            'fieldtype.ProductAttributeList.calcBasis.calculated_price'
+                                        );
+                                        break;
+                                }
+                            }
+
+                            if ("priority" in options) {
+                                priority = options.priority;
+                            }
+
                             data.push({
-                                visible: new QUISwitch({
-                                    fieldId     : entry.id,
-                                    events      : {
+                                visible     : new QUISwitch({
+                                    fieldId: entry.id,
+                                    events : {
                                         onChange: switchStatusChange
                                     }
                                 }),
-                                calcPriority: 0,
-                                id     : entry.id,
-                                title  : entry.workingtitle || entry.title
+                                calcPriority: priority,
+                                calcBasis   : calculation_basis,
+                                id          : entry.id,
+                                title       : entry.workingtitle || entry.title
                             });
                         }
 

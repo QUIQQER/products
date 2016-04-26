@@ -23,3 +23,47 @@
     max-width: 300px;
     width: calc(33% - 5px);
 }
+
+.quiqqer-products-attributeList-settings,
+.quiqqer-products-attributeList-settings-title,
+.quiqqer-products-attributeList-settings-priority,
+.quiqqer-products-attributeList-settings-calcbasis {
+    clear: both;
+    float: left;
+    width: 100%
+}
+
+.quiqqer-products-attributeList-settings-title {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 10px;
+}
+
+.quiqqer-products-attributeList-settings-priority,
+.quiqqer-products-attributeList-settings-calcbasis {
+    border-bottom: 1px solid rgba(147, 128, 108, 0.25);
+    padding: 10px;
+}
+
+.quiqqer-products-attributeList-settings-priority label,
+.quiqqer-products-attributeList-settings-calcbasis label {
+    cursor: pointer;
+    width: 100% !important;
+}
+
+.quiqqer-products-attributeList-settings-text {
+    float: left;
+    line-height: 12px;
+    padding: 10px;
+    width: 200px;
+}
+
+.quiqqer-products-attributeList-settings-input {
+    float: left;
+    height: 32px;
+    margin: 0;
+    width: calc(100% - 200px);
+}
+
+.quiqqer-products-attributeList-settings-title {
+
+}
