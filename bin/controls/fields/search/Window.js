@@ -46,6 +46,10 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
             autoclose: false,
             multiple : false,
 
+            // search function function(value, params) @return Promise;
+            // resolve( [fieldData, fieldData, fieldData] )
+            search: false,
+
             cancel_button: {
                 text     : QUILocale.get('quiqqer/system', 'cancel'),
                 textimage: 'fa fa-remove'
@@ -99,10 +103,29 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
 
             this.Loader.show();
 
-            return Fields.getList({
-                perPage: this.$Grid.options.perPage,
-                page   : this.$Grid.options.page
-            }).then(function (data) {
+
+            var Search = Promise.resolve(false);
+
+            if (typeof this.getAttribute('search') === 'function') {
+                Search = this.getAttribute('search')(false, {
+                    perPage: this.$Grid.options.perPage,
+                    page   : this.$Grid.options.page
+                });
+
+            } else {
+                Search = Fields.getList({
+                    perPage: this.$Grid.options.perPage,
+                    page   : this.$Grid.options.page
+                });
+            }
+
+
+            return Search.then(function (data) {
+                console.warn(data);
+                // if no grid array, create a grid array
+                if (!("data" in data)) {
+                    data = {data: data};
+                }
 
                 var ElmOk = new Element('span', {
                     'class': 'fa fa-check'

@@ -106,6 +106,22 @@ define('package/quiqqer/products/bin/classes/Fields', [
         },
 
         /**
+         * Return multiple fields
+         *
+         * @param {array} fieldIds - list of field IDs
+         * @returns {Promise}
+         */
+        getChildren: function (fieldIds) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_fields_getChildren', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    fieldIds : JSON.encode(fieldIds)
+                });
+            });
+        },
+
+        /**
          * Return fields for a grid
          *
          * @param {String} params - Grid params
