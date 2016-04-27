@@ -56,11 +56,13 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
         ],
 
         options: {
+            disabled: false,
             max     : false, // max entries
             multiple: true,  // select more than one entry?
             name    : '',    // string
             styles  : false, // object
-            label   : false  // text string or a <label> DOMNode Element
+            label   : false, // text string or a <label> DOMNode Element
+            search  : false  // search function function(value, params) @return Promise
         },
 
         initialize: function (options, Input) {
@@ -175,6 +177,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                             new Window({
                                 autoclose: true,
                                 multiple : self.getAttribute('multiple'),
+                                search   : self.getAttribute('search'),
                                 events   : {
                                     onSubmit: function (Win, fieldIds) {
                                         self.addFields(fieldIds);
@@ -225,6 +228,10 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 this.addProduct(this.$Input.value);
             }
 
+            if (this.getAttribute('disabled')) {
+                this.disable();
+            }
+
             return this.$Elm;
         },
 
@@ -240,6 +247,26 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
             this.$Elm = null;
             this.create();
+        },
+
+        /**
+         * Disable the control
+         */
+        disable: function () {
+            this.setAttribute('disabled', true);
+            this.$Elm.addClass('disabled');
+            this.$SearchButton.disable();
+            this.$Search.set('disabled', true);
+        },
+
+        /**
+         * Enable the control
+         */
+        enable: function () {
+            this.setAttribute('disabled', false);
+            this.$Elm.removeClass('disabled');
+            this.$SearchButton.enable();
+            this.$Search.set('disabled', false);
         },
 
         /**
@@ -307,14 +334,25 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
             var self  = this,
                 value = this.$Search.value;
 
-            Fields.search({
-                order: 'ASC',
-                limit: 5
-            }, {
-                name: value,
-                type: value
-            }).then(function (result) {
+            var Search = Promise.resolve(false);
 
+            if (typeof this.getAttribute('search') === 'function') {
+                Search = this.getAttribute('search')(value, {
+                    order: 'ASC',
+                    limit: 5
+                });
+
+            } else {
+                Search = Fields.search({
+                    order: 'ASC',
+                    limit: 5
+                }, {
+                    name: value,
+                    type: value
+                });
+            }
+
+            Search.then(function (result) {
                 var i, id, len, nam, entry, Entry,
                     func_mousedown, func_mouseover,
 
