@@ -11,15 +11,14 @@ use \QUI\ERP\Products\Handler\Search as SearchHandler;
  *
  * @param array $searchFields
  * @param integer $siteId
- * @param string $projectName
- * @param string $projectLang
+ * @param string $project
  *
  * @return array - searchfields after set
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_search_frontend_setSearchFields',
-    function ($searchFields, $siteId, $projectName, $projectLang) {
-        $Project = QUI::getProject($projectName, $projectLang);
+    function ($searchFields, $siteId, $project) {
+        $Project = QUI::getProjectManager()->decode($project);
         $Site    = $Project->get($siteId);
 
         $FrontEndSearch = SearchHandler::getFrontendSearch($Site);
@@ -29,6 +28,6 @@ QUI::$Ajax->registerFunction(
 
         return $FrontEndSearch->setSearchFields($searchFields);
     },
-    array('searchFields', 'siteId', 'projectName', 'projectLang'),
+    array('searchFields', 'siteId', 'project'),
     'Permission::checkAdminUser'
 );
