@@ -248,7 +248,10 @@ class Fields
             ));
         }
 
-        self::createCacheColumn('F' . $Field->getId(), $Field->getColumnType());
+        self::createCacheColumn(
+            Search::getSearchFieldColumnName($Field),
+            $Field->getColumnType()
+        );
     }
 
     /**

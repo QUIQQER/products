@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Product\Product
+ * This file contains QUI\ERP\Products\Product\Model
  */
 namespace QUI\ERP\Products\Product;
 
@@ -13,6 +13,7 @@ use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Products;
 use QUI\Projects\Media\Utils as MediaUtils;
 use QUI\Utils\Security\Orthos;
+use QUI\ERP\Products\Handler\Search as SearchHandler;
 
 /**
  * Class Controller
@@ -614,7 +615,8 @@ class Model extends QUI\QDOM
 
         /** @var Field $Field */
         foreach ($fields as $Field) {
-            $data['F' . $Field->getId()] = $Field->getSearchCacheValue($Locale);
+            $fieldColumnName = SearchHandler::getSearchFieldColumnName($Field);
+            $data[$fieldColumnName] = $Field->getSearchCacheValue($Locale);
         }
 
         foreach ($data as $k => $v) {

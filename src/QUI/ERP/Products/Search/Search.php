@@ -107,7 +107,7 @@ abstract class Search extends QUI\QDOM
         $catId = null
     ) {
         $values = array();
-        $column = 'F' . $Field->id;
+        $column = SearchHandler::getSearchFieldColumnName($Field);
 
         $params = array(
             'select' => array(),
@@ -230,5 +230,31 @@ abstract class Search extends QUI\QDOM
         }
 
         return $eligibleFields;
+    }
+
+    /**
+     * Checks if the currently logged in user is allowed to search a category field
+     *
+     * @param QUI\ERP\Products\Field\Field $Field
+     * @param QUI\Users\User $User (optional)
+     * @return bool
+     */
+    protected function canSearchField($Field, $User = null)
+    {
+        $viewPermission = $Field->hasViewPermission($User);
+
+        if (!$viewPermission) {
+            return false;
+        }
+
+        $eligibleFields = $this->getEligibleSearchFields();
+
+        foreach ($eligibleFields as $EligibleField) {
+            if ($Field->getId() === $EligibleField->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -74,4 +74,15 @@ class Search
     {
         // TODO
     }
+
+    /**
+     * Get column name for search fields
+     *
+     * @param QUI\ERP\Products\Field\Field $Field
+     * @return string
+     */
+    public static function getSearchFieldColumnName($Field)
+    {
+        return 'F' .  $Field->getId();
+    }
 }

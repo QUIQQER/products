@@ -10,6 +10,7 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Search\Cache as SearchCache;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
+use QUI\ERP\Products\Handler\Search as SearchHandler;
 
 /**
  * Class Search
@@ -93,8 +94,8 @@ class FrontendSearch extends Search
 
         $sql .= " FROM " . TablesUtils::getProductCacheTableName();
 
-        if (isset($searchData['category']) &&
-            !empty($searchData['category'])
+        if (isset($searchParams['category']) &&
+            !empty($searchParams['category'])
         ) {
             $where = array(
                 'category = :category'
@@ -102,39 +103,34 @@ class FrontendSearch extends Search
 
             $binds = array(
                 'category' => array(
-                    'value' => (int)$searchData['category'],
+                    'value' => (int)$searchParams['category'],
                     'type'  => \PDO::PARAM_INT
                 )
             );
         }
 
-        if (!isset($searchData['fields'])) {
+        if (!isset($searchParams['fields'])) {
             throw new QUI\Exception(
                 'Wrong search parameters.',
                 400
             );
         }
 
-        foreach ($searchData['fields'] as $fieldId => $data) {
+        foreach ($searchParams['fields'] as $fieldId => $data) {
             if (empty($data)) {
                 continue;
             }
 
-            if (isset($searchData['category_id'])
-                && !empty($searchData['category_id'])
-            ) {
-                if (!self::canSearchField($fieldId,
-                    $searchData['category_id'])
-                ) {
-                    continue;
-                }
-            } else {
-                if (!self::canSearchField($fieldId)) {
-                    continue;
-                }
+            $Field = Fields::getField($fieldId);
+
+            if (!$this->canSearchField($Field)) {
+                continue;
             }
 
-            $field = 'hklfield_' . $fieldId;
+            $fieldColumn = SearchHandler::getSearchFieldColumnName($Field);
+
+            $where[]             = $this->getFieldSearchWhere($Field, $data);
+            $binds[$fieldColumn] = $this->getFieldSearchBind($Field, $data);
 
             // single value search type
             if (isset($data['like'])) {
@@ -149,17 +145,6 @@ class FrontendSearch extends Search
                     'value' => "%" . $Field->validate($data['like']) . "%",
                     'type'  => \PDO::PARAM_STR
                 );
-
-                continue;
-            }
-
-            // hasValue search type
-            if (isset($data['hasValue'])) {
-                if ($data['hasValue']) {
-                    $where[] = $field . ' IS NOT NULL';
-                } else {
-                    $where[] = $field . ' IS NULL';
-                }
 
                 continue;
             }
@@ -244,18 +229,18 @@ class FrontendSearch extends Search
             $sql .= " AND " . implode(" AND ", $where);
         }
 
-        if (isset($searchData['sortOn']) &&
-            !empty($searchData['sortOn'])
+        if (isset($searchParams['sortOn']) &&
+            !empty($searchParams['sortOn'])
         ) {
             $order = "ORDER BY " . QUI\Utils\Security\Orthos::clear(
-                    $searchData['sortOn']
+                    $searchParams['sortOn']
                 );
 
-            if (isset($searchData['sortBy']) &&
-                !empty($searchData['sortBy'])
+            if (isset($searchParams['sortBy']) &&
+                !empty($searchParams['sortBy'])
             ) {
                 $order .= " " . QUI\Utils\Security\Orthos::clear(
-                        $searchData['sortBy']
+                        $searchParams['sortBy']
                     );
             } else {
                 $order .= " ASC";
@@ -279,10 +264,10 @@ class FrontendSearch extends Search
 
         // do not set limit if count is requested (for pagination purposes)
         if (!$countOnly && !$noLimit) {
-            if (isset($searchData['limit']) &&
-                !empty($searchData['limit'])
+            if (isset($searchParams['limit']) &&
+                !empty($searchParams['limit'])
             ) {
-                $Pagination = new QUI\Bricks\Controls\Pagination($searchData);
+                $Pagination = new QUI\Bricks\Controls\Pagination($searchParams);
                 $sqlParams  = $Pagination->getSQLParams();
                 $sql .= " LIMIT " . $sqlParams['limit'];
             } else {
@@ -374,18 +359,18 @@ class FrontendSearch extends Search
             if (in_array($Field->getSearchType(),
                 $this->searchTypesWithValues)) {
                 $searchValues = $this->getValuesFromField($Field, true, $catId);
-                $searchData   = array();
+                $searchParams = array();
 
                 foreach ($searchValues as $val) {
                     $Field->setValue($val);
 
-                    $searchData[] = array(
+                    $searchParams[] = array(
                         'label' => $Field->getValueByLocale($Locale),
                         'value' => $val
                     );
                 }
 
-                $searchFieldDataContent['searchData'] = $searchData;
+                $searchFieldDataContent['searchData'] = $searchParams;
             }
 
             $searchFieldData[] = $searchFieldDataContent;
@@ -394,6 +379,173 @@ class FrontendSearch extends Search
         SearchCache::set($cname, $searchFieldData);
 
         return $searchFieldData;
+    }
+
+    /**
+     * Get where condition for a specific field for search execution
+     *
+     * @param QUI\ERP\Products\Field\Field $Field
+     * @param string|array|bool $value
+     * @return string - WHERE clause for this field
+     * @throws QUI\Exception
+     */
+    protected function getFieldSearchWhere($Field, $value)
+    {
+        $column = '`' . SearchHandler::getSearchFieldColumnName($Field) . '`';
+
+        switch ($Field->getSearchType()) {
+            case SearchHandler::SEARCHTYPE_HASVALUE:
+                if (boolval($value)) {
+                    $where = $column . ' IS NOT NULL';
+                } else {
+                    $where = $column . ' IS NULL';
+                }
+                break;
+
+            case SearchHandler::SEARCHTYPE_BOOL:
+                if (boolval($value)) {
+                    $where = $column . ' = 1';
+                } else {
+                    $where = $column . ' = 0';
+                }
+                break;
+
+            case SearchHandler::SEARCHTYPE_SELECTSINGLE:
+            case SearchHandler::SEARCHTYPE_INPUTSELECTSINGLE:
+                if (!is_string($value)) {
+                    throw new QUI\Exception(array(
+                        'quiqqer/products',
+                        'exception.search.value.invalid',
+                        array(
+                            'fieldId'    => $Field->getId(),
+                            'fieldTitle' => $Field->getTitle()
+                        )
+                    ));
+                }
+
+                $where = $column . ' = :' . $value;
+                break;
+
+            case SearchHandler::SEARCHTYPE_SELECTRANGE:
+            case SearchHandler::SEARCHTYPE_INPUTSELECTRANGE:
+            case SearchHandler::SEARCHTYPE_DATERANGE:
+                if (!is_array($value)) {
+                    throw new QUI\Exception(array(
+                        'quiqqer/products',
+                        'exception.search.value.invalid',
+                        array(
+                            'fieldId'    => $Field->getId(),
+                            'fieldTitle' => $Field->getTitle()
+                        )
+                    ));
+                }
+
+                $from = false;
+                $to   = false;
+
+                if (isset($value['from'])) {
+                    $from = $value['from'];
+
+                    if (!is_string($from)
+                        || !is_numeric($from)
+                    ) {
+                        throw new QUI\Exception(array(
+                            'quiqqer/products',
+                            'exception.search.value.invalid',
+                            array(
+                                'fieldId'    => $Field->getId(),
+                                'fieldTitle' => $Field->getTitle()
+                            )
+                        ));
+                    }
+                }
+
+                if (isset($value['to'])) {
+                    $to = $value['to'];
+
+                    if (!is_string($to)
+                        || !is_numeric($to)
+                    ) {
+                        throw new QUI\Exception(array(
+                            'quiqqer/products',
+                            'exception.search.value.invalid',
+                            array(
+                                'fieldId'    => $Field->getId(),
+                                'fieldTitle' => $Field->getTitle()
+                            )
+                        ));
+                    }
+                }
+
+                if ($from !== false && $to !== false) {
+                    if ($from > $to) {
+                        $_from = $from;
+                        $from  = $to;
+                        $to    = $_from;
+                    }
+                }
+
+                $where = array();
+
+                if ($from !== false) {
+                    $where[] = $column . ' >= :' . $column . 'From';
+                }
+
+                if ($to !== false) {
+                    $where[] = $column . ' <= :' . $column . 'To';
+                }
+
+                $where = implode(' AND ', $where);
+                break;
+
+            case SearchHandler::SEARCHTYPE_DATE:
+                if (!is_string($value)
+                    && !is_numeric($value)
+                ) {
+                    throw new QUI\Exception(array(
+                        'quiqqer/products',
+                        'exception.search.value.invalid',
+                        array(
+                            'fieldId'    => $Field->getId(),
+                            'fieldTitle' => $Field->getTitle()
+                        )
+                    ));
+                }
+
+                $where = $column . ' = :' . $value;
+                break;
+
+            case SearchHandler::SEARCHTYPE_SELECTMULTI:
+                if (!is_array($value)) {
+                    throw new QUI\Exception(array(
+                        'quiqqer/products',
+                        'exception.search.value.invalid',
+                        array(
+                            'fieldId'    => $Field->getId(),
+                            'fieldTitle' => $Field->getTitle()
+                        )
+                    ));
+                }
+
+                
+                break;
+
+            default:
+                $where = $column . ' LIKE :' . $value;
+        }
+
+        return $where;
+    }
+
+    /**
+     * Get bind options for a specific field for search execution
+     *
+     * @param $Field
+     * @param string|array|bool $value
+     */
+    protected function getFieldSearchBind($Field, $value)
+    {
+
     }
 
     /**
