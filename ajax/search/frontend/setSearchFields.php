@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains package_quiqqer_products_ajax_fields_create
+ * This file contains package_quiqqer_products_ajax_search_frontend_setSearchFields
  */
 
 use \QUI\ERP\Products\Handler\Search as SearchHandler;
