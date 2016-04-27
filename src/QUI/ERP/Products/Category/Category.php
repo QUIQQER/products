@@ -611,18 +611,30 @@ class Category extends QUI\QDOM
     public function getFields()
     {
         if (is_null($this->fields)) {
-            $this->fields = array();
+            $fields = array();
+            $data   = $this->data;
 
-            $data = $this->data;
+            $standardFields = Fields::getStandardFields();
+
+            $isFieldInArray = function ($Field, $array = array()) {
+                /* @var QUI\ERP\Products\Field\Field $Field */
+                /* @var QUI\ERP\Products\Field\Field $Entry */
+                foreach ($array as $Entry) {
+                    if ($Entry->getId() == $Field->getId()) {
+                        return true;
+                    }
+                }
+                return false;
+            };
 
             if (isset($data['fields'])) {
-                $fields = json_decode($data['fields'], true);
+                $jsonData = json_decode($data['fields'], true);
 
-                if (!is_array($fields)) {
-                    $fields = array();
+                if (!is_array($jsonData)) {
+                    $jsonData = array();
                 }
 
-                foreach ($fields as $field) {
+                foreach ($jsonData as $field) {
                     try {
                         $Field = Fields::getField($field['id']);
                         $Field->setAttribute('publicStatus', $field['publicStatus']);
@@ -632,7 +644,7 @@ class Category extends QUI\QDOM
                             $Field->setOptions($field['options']);
                         }
 
-                        $this->fields[] = $Field;
+                        $fields[] = $Field;
 
                     } catch (QUI\Exception $Exception) {
                         QUI\System\Log::writeException(
@@ -642,6 +654,15 @@ class Category extends QUI\QDOM
                     }
                 }
             }
+
+            // add standard fields to the array
+            foreach ($standardFields as $Field) {
+                if (!$isFieldInArray($Field, $fields)) {
+                    $fields[] = $Field;
+                }
+            }
+
+            $this->fields = $fields;
         }
 
         return $this->fields;
