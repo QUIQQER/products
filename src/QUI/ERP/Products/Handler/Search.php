@@ -7,7 +7,6 @@ namespace QUI\ERP\Products\Handler;
 
 use QUI;
 use Stash;
-use QUI\ERP\Products\Utils\Package as PackageUtils;
 use QUI\ERP\Products\Search\FrontendSearch;
 
 /**
