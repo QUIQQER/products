@@ -16,7 +16,7 @@ use QUI\ERP\Products\Handler\Products;
 class Crons
 {
     /**
-     * Time for one product to update its cache
+     * Time for one product to update its cache (seconds)
      */
     const PRODUCT_CACHE_UPDATE_TIME = 3;
 
