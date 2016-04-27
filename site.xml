@@ -21,12 +21,20 @@
                             <locale group="quiqqer/products" var="quiqqer.products.category.settings.title"/>
                         </title>
 
-                        <input conf="quiqqer.products.settings.categoryId" type="number"
+                        <input conf="quiqqer.products.settings.categoryId"
                                data-qui="package/quiqqer/products/bin/controls/categories/Select"
                                data-qui-options-max="1"
                         >
                             <text>
                                 <locale group="quiqqer/products" var="quiqqer.products.settings.categoryId"/>
+                            </text>
+                        </input>
+
+                        <input conf="quiqqer.products.settings.searchFieldIds" type="hidden"
+                               data-qui="package/quiqqer/products/bin/controls/search/FieldSelect"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.searchFieldIds"/>
                             </text>
                         </input>
                     </settings>

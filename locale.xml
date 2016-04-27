@@ -711,6 +711,10 @@
             <de><![CDATA[Produktkategorie]]></de>
             <en><![CDATA[Product category]]></en>
         </locale>
+        <locale name="quiqqer.products.settings.searchFieldIds">
+            <de><![CDATA[Suchfelder]]></de>
+            <en><![CDATA[Search fields]]></en>
+        </locale>
 
         <!-- FrontendSearch -->
         <locale name="exception.frontendsearch.site.type.not.eligible">

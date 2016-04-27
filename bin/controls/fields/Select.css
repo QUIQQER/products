@@ -28,10 +28,16 @@
     width: 100%;
 }
 
+.qui-fields-list.disabled .qui-fields-list-list,
+.qui-fields-list.disabled .qui-fields-list-search {
+    background: rgba(239, 239, 239, 0.5);
+    border-color: rgba(239, 239, 239, 0.5);
+}
+
 .qui-fields-list-search {
     clear: both;
     float: left;
-    width: calc(100% - 50px);
+    width: calc(100% - 50px) !important;
 }
 
 .field-container-field > .qui-fields-list {
