@@ -62,7 +62,10 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
             name    : '',    // string
             styles  : false, // object
             label   : false, // text string or a <label> DOMNode Element
-            search  : false  // search function function(value, params) @return Promise
+
+            // search function function(value, params) @return Promise;
+            // resolve( [fieldData, fieldData, fieldData] )
+            search: false
         },
 
         initialize: function (options, Input) {

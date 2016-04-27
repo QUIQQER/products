@@ -9,6 +9,7 @@ use QUI;
 use QUI\Package\Package;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Handler\Search;
 
 /**
  * Class EventHandling
@@ -63,6 +64,7 @@ class EventHandling
                 'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 1,
+                'search_type' => Search::SEARCHTYPE_INPUTSELECTRANGE,
                 'titles' => array(
                     'de' => 'Preis',
                     'en' => 'Price'
@@ -78,6 +80,7 @@ class EventHandling
                 'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'search_type' => '',
                 'titles' => array(
                     'de' => 'MwSt.',
                     'en' => 'Vat'
@@ -93,6 +96,7 @@ class EventHandling
                 'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'search_type' => Search::SEARCHTYPE_TEXT,
                 'titles' => array(
                     'de' => 'Art. Nr.',
                     'en' => 'Artikel No.'
@@ -108,6 +112,7 @@ class EventHandling
                 'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 1,
+                'search_type' => Search::SEARCHTYPE_TEXT,
                 'options' => array(
                     'maxLength' => 255,
                     'minLength' => 3
@@ -127,6 +132,7 @@ class EventHandling
                 'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'search_type' => Search::SEARCHTYPE_TEXT,
                 'options' => array(
                     'maxLength' => 255,
                     'minLength' => 3
@@ -146,6 +152,7 @@ class EventHandling
                 'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'search_type' => Search::SEARCHTYPE_TEXT,
                 'options' => array(
                     'html' => 1
                 ),
@@ -164,6 +171,7 @@ class EventHandling
                 'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'search_type' => Search::SEARCHTYPE_INPUTSELECTSINGLE,
                 'options' => array(
                     'multipleUsers' => false
                 ),
@@ -182,6 +190,7 @@ class EventHandling
                 'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'search_type' => Search::SEARCHTYPE_INPUTSELECTSINGLE,
                 'options' => array(
                     'multipleUsers' => false
                 ),
@@ -200,6 +209,7 @@ class EventHandling
                 'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'search_type' => '',
                 'titles' => array(
                     'de' => 'Produktbild',
                     'en' => 'Product image'
@@ -215,6 +225,7 @@ class EventHandling
                 'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'search_type' => '',
                 'titles' => array(
                     'de' => 'Media-Ordner',
                     'en' => 'Media folder'
@@ -243,7 +254,8 @@ class EventHandling
                         'suffix' => $field['suffix'],
                         'priority' => $field['priority'],
                         'systemField' => $field['systemField'],
-                        'standardField' => $field['standardField']
+                        'standardField' => $field['standardField'],
+                        'search_type' => $field['search_type']
                     ),
                     array('id' => $field['id'])
                 );
