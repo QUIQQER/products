@@ -62,13 +62,12 @@ class Search
      * Get FrontendSearch
      *
      * @param QUI\Projects\Site $Site - Search Site or Category Site
-     * @param array $searchParams (optional) - search parameters for product search
      * @return FrontendSearch
      * @throws QUI\Exception
      */
-    public static function getFrontendSearch($Site, $searchParams = null)
+    public static function getFrontendSearch($Site)
     {
-        return new FrontendSearch($Site, $searchParams);
+        return new FrontendSearch($Site);
     }
 
     public static function getBackendSearch()

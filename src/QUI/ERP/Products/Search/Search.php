@@ -24,11 +24,11 @@ abstract class Search extends QUI\QDOM
     protected $searchFields = null;
 
     /**
-     * All fields that are searchable
+     * All fields that are eligible for search
      *
      * @var array
      */
-    protected $searchableFields = null;
+    protected $eligibleFields = null;
 
     /**
      * Search language
@@ -81,6 +81,16 @@ abstract class Search extends QUI\QDOM
      * @return array
      */
     abstract public function getEligibleSearchFields();
+
+    /**
+     * Execute product search
+     *
+     * @param array $searchParams - search parameters
+     * @param bool $countOnly (optional) - return count of search results only [default: false]
+     * @return array - product ids
+     * @throws QUI\Exception
+     */
+    abstract public function search($searchParams, $countOnly = false);
 
     /**
      * Gets all unique field values for a specific Field

@@ -14,18 +14,20 @@ use \QUI\ERP\Products\Handler\Search as SearchHandler;
  * @param string $projectName
  * @param string $projectLang
  *
- * @return array
+ * @return array - searchfields after set
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_search_frontend_setSearchFields',
-    function ($searchFields, $siteId, $projectName, $projectLang)
-    {
+    function ($searchFields, $siteId, $projectName, $projectLang) {
         $Project = QUI::getProject($projectName, $projectLang);
         $Site    = $Project->get($siteId);
 
         $FrontEndSearch = SearchHandler::getFrontendSearch($Site);
+        $searchFields   = \QUI\Utils\Security\Orthos::clearArray(
+            json_decode($searchFields, true)
+        );
 
-        return $FrontEndSearch->getEligibleSearchFields();
+        return $FrontEndSearch->setSearchFields($searchFields);
     },
     array('searchFields', 'siteId', 'projectName', 'projectLang'),
     'Permission::checkAdminUser'
