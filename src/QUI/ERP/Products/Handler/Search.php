@@ -7,7 +7,6 @@ namespace QUI\ERP\Products\Handler;
 
 use QUI;
 use Stash;
-use QUI\ERP\Products\Utils\Package as PackageUtils;
 use QUI\ERP\Products\Search\FrontendSearch;
 
 /**
@@ -73,5 +72,16 @@ class Search
     public static function getBackendSearch()
     {
         // TODO
+    }
+
+    /**
+     * Get column name for search fields
+     *
+     * @param QUI\ERP\Products\Field\Field $Field
+     * @return string
+     */
+    public static function getSearchFieldColumnName($Field)
+    {
+        return 'F' .  $Field->getId();
     }
 }

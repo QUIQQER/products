@@ -729,6 +729,15 @@
             <en>
                 <![CDATA[The product category site #[siteId] is not assigned to a product category yet. Thus only standard fields are searchable.]]></en>
         </locale>
+        <locale name="exception.search.value.invalid">
+            <de><![CDATA[Der Such-Wert, der für Feld [fieldTitle] #[fieldId] übergeben wurde, ist ungültig und kann für die Suche nicht verwertet werden.]]></de>
+            <en><![CDATA[The search value that was given for field [fieldTitle] #[fieldId] is invalid and cannot be used for searching.]]></en>
+        </locale>
+        <locale name="exception.search.field.unknown.searchtype">
+            <de><![CDATA[Der Such-Typ, der für Feld [fieldTitle] #[fieldId] übergeben wurde, ist ungültig. Das Feld kann für die Suche nicht verwertet werden.]]></de>
+            <en><![CDATA[The search type that was given for field [fieldTitle] #[fieldId] is invalid. The field cannot be used for searching.]]></en>
+        </locale>
+
 
         <locale name="exception.only.ownFields.deletable">
             <de><![CDATA[Nur eigene Felder können von einem Produkt entfernt werden.]]></de>

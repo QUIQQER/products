@@ -300,7 +300,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         // delete column
         QUI::getDataBase()->table()->deleteColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            'F' . $this->getId()
+            Search::getSearchFieldColumnName($this)
         );
 
         // delete cache
@@ -339,7 +339,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         // delete column
         QUI::getDataBase()->table()->deleteColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            'F' . $this->getId()
+            Search::getSearchFieldColumnName($this)
         );
 
 
@@ -863,5 +863,17 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         }
 
         return $range;
+    }
+
+    /**
+     * Checks if a user has view permission for this field
+     *
+     * @param QUI\Users\User $User
+     * @return bool
+     */
+    public function hasViewPermission($User = null)
+    {
+        // @todo
+        return true;
     }
 }
