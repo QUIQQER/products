@@ -36,7 +36,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
     public function __construct($fieldId, array $params)
     {
         $this->setOptions(array(
-            'groupIds'      => false,
+            'groupIds' => false,
             'multipleUsers' => true
         ));
 
@@ -49,10 +49,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
     public function getBackendView()
     {
         return new View(array(
-            'value'    => $this->cleanup($this->getValue()),
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -63,10 +63,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
     public function getFrontendView()
     {
         return new View(array(
-            'value'    => $this->cleanup($this->getValue()),
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -123,7 +123,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.grouplist.user.limit.reached',
                 array(
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle()
                 )
             ));
@@ -134,7 +134,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle()
                 )
             ));
@@ -167,9 +167,9 @@ class GroupList extends QUI\ERP\Products\Field\Field
                         'quiqqer/products',
                         'exception.field.grouplist.user.not.in.group',
                         array(
-                            'userId'   => $User->getId(),
+                            'userId' => $User->getId(),
                             'username' => $User->getUsername(),
-                            'groups'   => implode(',', $groupIds)
+                            'groups' => implode(',', $groupIds)
                         )
                     ));
                 }
@@ -180,9 +180,9 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.unexptected.error',
                 array(
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'errorMsg'   => $Exception->getMessage()
+                    'errorMsg' => $Exception->getMessage()
                 )
             ));
         }
@@ -261,10 +261,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
      * @param QUI\Locale $Locale
      * @return string
      */
-    public function getSearchCacheValue($Locale)
+    public function getSearchCacheValue($Locale = null)
     {
         if ($this->isEmpty()) {
-            \QUI\System\Log::writeRecursive("is empty");
+            QUI\System\Log::writeRecursive("is empty");
             return null;
         }
 

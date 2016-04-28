@@ -548,10 +548,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return value for use in product search cache
      *
-     * @param QUI\Locale $Locale
+     * @param QUI\Locale|null $Locale
      * @return string
      */
-    public function getSearchCacheValue($Locale)
+    public function getSearchCacheValue($Locale = null)
     {
         if ($this->isEmpty()) {
             return null;
@@ -746,14 +746,16 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['type']         = $this->getType();
         $attributes['options']      = $this->getOptions();
         $attributes['jsControl']    = $this->getJavaScriptControl();
-        $attributes['custom']       = $this->isCustomField();
-        $attributes['unassigned']   = $this->isUnassigned();
-        $attributes['isRequired']   = $this->isRequired();
-        $attributes['isStandard']   = $this->isStandard();
-        $attributes['isSystem']     = $this->isSystem();
-        $attributes['isPublic']     = $this->isPublic();
-        $attributes['searchable']   = $this->isSearchable();
-        $attributes['ownField']     = $this->isOwnField();
+        $attributes['searchvalue']  = $this->getSearchCacheValue();
+
+        $attributes['custom']     = $this->isCustomField();
+        $attributes['unassigned'] = $this->isUnassigned();
+        $attributes['isRequired'] = $this->isRequired();
+        $attributes['isStandard'] = $this->isStandard();
+        $attributes['isSystem']   = $this->isSystem();
+        $attributes['isPublic']   = $this->isPublic();
+        $attributes['searchable'] = $this->isSearchable();
+        $attributes['ownField']   = $this->isOwnField();
 
         return $attributes;
     }
@@ -849,7 +851,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 $i   = 10;
 
                 while ($value < $i) {
-                    $i   *= 10;
+                    $i *= 10;
                     $add *= 10;
                 }
 

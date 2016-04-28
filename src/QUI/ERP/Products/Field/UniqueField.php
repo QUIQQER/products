@@ -74,6 +74,13 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
     protected $custom;
 
     /**
+     * search cache value
+     *
+     * @var string
+     */
+    protected $searchvalue;
+
+    /**
      * is field public
      * field which is visble by the visitors, too
      *
@@ -139,7 +146,8 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
             'custom',
             'unassigned',
             'value',
-            'ownField'
+            'ownField',
+            'searchvalue'
         );
 
         if (!isset($params['isPublic'])) {
@@ -266,6 +274,15 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
     public function getOptions()
     {
         return $this->options;
+    }
+
+    /**
+     * @param QUI\Locale $Locale
+     * @return string
+     */
+    public function getSearchCacheValue($Locale)
+    {
+        return $this->searchvalue;
     }
 
     /**
