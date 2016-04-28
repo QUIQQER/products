@@ -264,7 +264,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
     public function getSearchCacheValue($Locale = null)
     {
         if ($this->isEmpty()) {
-            QUI\System\Log::writeRecursive("is empty");
+            QUI\System\Log::write("getSearchCacheValue is empty");
             return null;
         }
 

@@ -54,7 +54,7 @@ interface UniqueField
     /**
      * Return value for use in product search cache
      *
-     * @param \QUI\Locale $Locale
+     * @param \QUI\Locale|null $Locale
      * @return string
      */
     public function getSearchCacheValue($Locale = null);

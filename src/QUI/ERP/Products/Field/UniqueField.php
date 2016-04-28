@@ -280,7 +280,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
      * @param QUI\Locale $Locale
      * @return string
      */
-    public function getSearchCacheValue($Locale)
+    public function getSearchCacheValue($Locale = null)
     {
         return $this->searchvalue;
     }
