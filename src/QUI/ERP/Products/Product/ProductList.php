@@ -38,11 +38,40 @@ class ProductList
     }
 
     /**
+     * Calculate the prices in the list
+     */
+    public function calc()
+    {
+        QUI\ERP\Products\Utils\Calc::calcProductList($this);
+    }
+
+    /**
+     * Return the products
+     *
+     * @return array
+     */
+    public function getProducts()
+    {
+        return $this->products;
+    }
+
+    /**
      * Add a product to the list
      * @param QUI\ERP\Products\Interfaces\Product $Product
      */
     public function addProduct(QUI\ERP\Products\Interfaces\Product $Product)
     {
+        // only UniqueProduct can be calculated
+
+        /* @var $Product QUI\ERP\Products\Product\Model */
+        if ($Product instanceof QUI\ERP\Products\Product\Model) {
+            $Product = $Product->createUniqueProduct();
+        }
+
+        if (!($Product instanceof UniqueProduct)) {
+            return;
+        }
+
         if ($this->duplicate) {
             $this->products[] = $Product;
             return;

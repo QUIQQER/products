@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Utils\Calc;
 
 /**
  * Class ProductAttributeList
@@ -78,6 +79,51 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     public function getJavaScriptSettings()
     {
         return 'package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings';
+    }
+
+    /**
+     * Return the array for the calculation
+     *
+     * @return array
+     */
+    public function getCalculationData()
+    {
+        $options = $this->getOptions();
+
+        if (!isset($options['priority'])) {
+            $options['priority'] = 0;
+        }
+
+        if (!isset($options['calculation_basis'])) {
+            $options['calculation_basis'] = '';
+        }
+
+        if (!isset($options['entries'])) {
+            $options['entries'] = array();
+        }
+
+        $entries  = $options['entries'];
+        $value    = $this->getValue();
+        $sum      = 0;
+        $calcType = Calc::CALCULATION_COMPLEMENT;
+
+        if (isset($entries[$value])) {
+            $sum  = $entries[$value]['sum'];
+            $type = $entries[$value]['type'];
+
+            switch ($type) {
+                case Calc::CALCULATION_BASIS_CURRENTPRICE:
+                    $calcType = Calc::CALCULATION_BASIS_CURRENTPRICE;
+                    break;
+            }
+        }
+
+        return array(
+            'priority' => (int)$options['priority'],
+            'basis' => $options['calculation_basis'],
+            'value' => $sum,
+            'calculation' => $calcType
+        );
     }
 
     /**

@@ -74,6 +74,12 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
     protected $custom;
 
     /**
+     * custom field calculation data
+     * @var array
+     */
+    protected $custom_calc;
+
+    /**
      * search cache value
      *
      * @var string
@@ -144,6 +150,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
             'isSystem',
             'isPublic',
             'custom',
+            'custom_calc',
             'unassigned',
             'value',
             'ownField',
@@ -328,6 +335,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
             'suffix' => $this->suffix,
             'priority' => $this->priority,
             'custom' => $this->isCustomField(),
+            'custom_calc' => $this->custom_calc,
             'unassigned' => $this->isUnassigned(),
             'value' => $this->getValue()
         );

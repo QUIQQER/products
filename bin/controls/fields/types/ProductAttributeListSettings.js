@@ -199,8 +199,8 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                          '         </span>' +
                          '         <select type="text" name="price_calculation_basis" ' +
                          '                 class="quiqqer-products-attributeList-settings-input">' +
-                         '              <option value="netto">Netto</option>' +
-                         '              <option value="calculated_price">Kalkulierte Preis</option>' +
+                         '              <option value="1">Netto</option>' +
+                         '              <option value="2">Kalkulierte Preis</option>' +
                          '          </select>' +
                          '     </label>' +
                          '</div>'

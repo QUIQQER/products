@@ -6,10 +6,11 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
-use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\Interfaces\Users\User;
+use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Utils\Price;
+use QUI\ERP\Products\Product\ProductList;
 use QUI\ERP\Currency\Handler as Currencies;
 
 /**
@@ -20,6 +21,28 @@ use QUI\ERP\Currency\Handler as Currencies;
  */
 class Calc
 {
+    /**
+     * Percentage calculation
+     */
+    const CALCULATION_PERCENTAGE = 1;
+
+    /**
+     * Standard calculation
+     */
+    const CALCULATION_COMPLEMENT = 2;
+
+
+    /**
+     * Basis calculation -> netto
+     */
+    const CALCULATION_BASIS_NETTO = 1;
+
+    /**
+     * Basis calculation -> from current price
+     */
+    const CALCULATION_BASIS_CURRENTPRICE = 2;
+
+
     /**
      * @var User
      */
@@ -37,6 +60,24 @@ class Calc
     }
 
     /**
+     * Calculate a complete product list
+     *
+     * @param ProductList $List
+     * @return ProductList
+     */
+    public static function calcProductList(ProductList $List)
+    {
+        $products = $List->getProducts();
+
+        /* @var $Product UniqueProduct */
+        foreach ($products as $Product) {
+            self::getProductPrice($Product);
+        }
+
+        return $List;
+    }
+
+    /**
      * Calculate the product price
      *
      * @param UniqueProduct $Product
@@ -47,7 +88,21 @@ class Calc
     public static function getProductPrice(UniqueProduct $Product)
     {
         $price  = $Product->getFieldValue(Fields::FIELD_PRICE);
-        $prices = $Product->getPriceFactors();
+        $prices = $Product->getPriceFactors()->sort();
+
+        /* @var PriceFactor $PriceFactor */
+        foreach ($prices as $PriceFactor) {
+            // CALCULATION_BASIS_NETTO
+
+
+            // CALCULATION_BASIS_CURRENTPRICE
+
+            $price = $price + $PriceFactor->getValue();
+        }
+
+
+//        QUI\System\Log::writeRecursive($basisNettoPrices);
+//        QUI\System\Log::writeRecursive($basisCurrentPrices);
 
         // methode vom grundpreis berechnen
 
@@ -61,4 +116,5 @@ class Calc
 
         return new Price($price, Currencies::getDefaultCurrency());
     }
+
 }

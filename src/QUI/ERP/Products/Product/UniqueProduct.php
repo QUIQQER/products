@@ -6,9 +6,12 @@ use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Handler\Categories;
+use QUI\ERP\Products\Utils\PriceFactor;
 
 /**
  * Class UniqueProduct
+ *
+ * @event onProductsPriceFactorsInit [QUI\ERP\Products\Utils\PriceFactors, QUI\ERP\Products\Interfaces\Product]
  */
 class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
 {
@@ -33,6 +36,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected $fields = array();
 
     /**
+     * Price factors
+     *
+     * @var QUI\ERP\Products\Utils\PriceFactors
+     */
+    protected $PriceFactors;
+
+    /**
      * @var array
      */
     protected $attributes = array();
@@ -55,7 +65,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         // generate the price factors
         $fields = $this->getFields();
 
-        var_dump($fields);
+        $this->PriceFactors = new QUI\ERP\Products\Utils\PriceFactors();
 
         /* @var $Field QUI\ERP\Products\Field\UniqueField */
         foreach ($fields as $Field) {
@@ -63,10 +73,15 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
                 continue;
             }
 
+            $attributes = $Field->getAttributes();
 
-//            $options = $Field->getOptions();
-//            $value   = $Field->getValue();
+            $Factor = new PriceFactor($attributes['custom_calc']);
+            $Factor->setTitle($Field->getTitle());
+
+            $this->PriceFactors->add($Factor);
         }
+
+        QUI::getEvents()->fireEvent('productsPriceFactorsInit', array($this->PriceFactors, $this));
     }
 
     /**
@@ -83,13 +98,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $fields = $attributes['fields'];
 
         foreach ($fields as $field) {
-            $Field = new UniqueField($field['id'], $field);
-
-            $this->fields[] = $Field;
-
-//            if ($Field->isCustomField() || $Field->isSystem()) {
-//                $this->fields[] = $Field;
-//            }
+            $this->fields[] = new UniqueField($field['id'], $field);
         }
     }
 
@@ -135,11 +144,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
-     * @return array
+     * Return the price factor list of the product
+     *
+     * @return QUI\ERP\Products\Utils\PriceFactors
      */
     public function getPriceFactors()
     {
-        return array();
+        return $this->PriceFactors;
     }
 
     /**

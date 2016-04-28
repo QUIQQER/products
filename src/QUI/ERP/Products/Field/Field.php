@@ -694,6 +694,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return column type for database column (cache table)
      *
+     * @return string
      */
     public function getColumnType()
     {
@@ -725,7 +726,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Return the search type
      *
+     * @return string
      */
     public function getSearchDataType()
     {
