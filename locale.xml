@@ -99,8 +99,9 @@
             <en><![CDATA[Public field]]></en>
         </locale>
         <locale name="publicFieldDesc">
-            <de>
-                <![CDATA[Öffentliche Felder werden öffentlich angezeigt. Besucher Ihrer Seite können dieses Feld sehen.]]></de>
+            <de><![CDATA[
+            Öffentliche Felder werden öffentlich angezeigt. Besucher Ihrer Seite können dieses Feld sehen.
+            ]]></de>
             <en><![CDATA[Public fields are displayed publicly. Visitors of your page can see this field.]]></en>
         </locale>
         <locale name="systemField">
@@ -364,6 +365,22 @@
             <en><![CDATA[1 dropdown list - single choice  + Individual input]]></en>
         </locale>
 
+        <locale name="permission.product._header">
+            <de><![CDATA[Produkte]]></de>
+            <en><![CDATA[Products]]></en>
+        </locale>
+        <locale name="permission.product.create">
+            <de><![CDATA[Darf Produkte anlegen.]]></de>
+            <en><![CDATA[Is allowed to create products.]]></en>
+        </locale>
+        <locale name="permission.product.delete">
+            <de><![CDATA[Darf Produkte löschen.]]></de>
+            <en><![CDATA[Is allowed to delete products.]]></en>
+        </locale>
+        <locale name="permission.product.edit">
+            <de><![CDATA[Darf Produkte bearbeiten.]]></de>
+            <en><![CDATA[Is allowed to edit products.]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
@@ -716,6 +733,19 @@
             <en><![CDATA[Search fields]]></en>
         </locale>
 
+        <locale name="quiqqer.products.field.header.placeholder">
+            <de><![CDATA[Rechte für das Feld #[fielId] - [fieldname]]]></de>
+            <en><![CDATA[Permissions for the field #[fielId] - [fieldname].]]></en>
+        </locale>
+        <locale name="quiqqer.products.field.view.placeholder">
+            <de><![CDATA[Darf Feld #[fielId] - [fieldname] sehen.]]></de>
+            <en><![CDATA[Is allowed to see the field #[fielId] - [fieldname].]]></en>
+        </locale>
+        <locale name="quiqqer.products.field.edit.placeholder">
+            <de><![CDATA[Darf Feld #[fielId] - [fieldname] bearbeiten.]]></de>
+            <en><![CDATA[Is allowed to edit the field #[fielId] - [fieldname].]]></en>
+        </locale>
+
         <!-- FrontendSearch -->
         <locale name="exception.frontendsearch.site.type.not.eligible">
             <de>
@@ -730,12 +760,16 @@
                 <![CDATA[The product category site #[siteId] is not assigned to a product category yet. Thus only standard fields are searchable.]]></en>
         </locale>
         <locale name="exception.search.value.invalid">
-            <de><![CDATA[Der Such-Wert, der für Feld [fieldTitle] #[fieldId] übergeben wurde, ist ungültig und kann für die Suche nicht verwertet werden.]]></de>
-            <en><![CDATA[The search value that was given for field [fieldTitle] #[fieldId] is invalid and cannot be used for searching.]]></en>
+            <de>
+                <![CDATA[Der Such-Wert, der für Feld [fieldTitle] #[fieldId] übergeben wurde, ist ungültig und kann für die Suche nicht verwertet werden.]]></de>
+            <en>
+                <![CDATA[The search value that was given for field [fieldTitle] #[fieldId] is invalid and cannot be used for searching.]]></en>
         </locale>
         <locale name="exception.search.field.unknown.searchtype">
-            <de><![CDATA[Der Such-Typ, der für Feld [fieldTitle] #[fieldId] übergeben wurde, ist ungültig. Das Feld kann für die Suche nicht verwertet werden.]]></de>
-            <en><![CDATA[The search type that was given for field [fieldTitle] #[fieldId] is invalid. The field cannot be used for searching.]]></en>
+            <de>
+                <![CDATA[Der Such-Typ, der für Feld [fieldTitle] #[fieldId] übergeben wurde, ist ungültig. Das Feld kann für die Suche nicht verwertet werden.]]></de>
+            <en>
+                <![CDATA[The search type that was given for field [fieldTitle] #[fieldId] is invalid. The field cannot be used for searching.]]></en>
         </locale>
 
 

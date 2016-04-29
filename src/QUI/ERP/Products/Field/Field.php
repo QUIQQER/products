@@ -232,6 +232,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     {
         QUI\Rights\Permission::checkPermission('field.edit');
 
+        QUI\Rights\Permission::checkPermission(
+            "permission.products.fields.field{$this->getId()}.edit"
+        );
+
         $allowedAttributes = Fields::getChildAttributes();
 
         $data = array();
@@ -281,21 +285,41 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             ));
         }
 
+        $fieldId = $this->getId();
+
         QUI::getDataBase()->delete(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
-            array('id' => $this->getId())
+            array('id' => $fieldId)
         );
 
         // delete the locale
         QUI\Translator::delete(
             'quiqqer/products',
-            'products.field.' . $this->getId() . '.title'
+            "products.field.{$fieldId}.title"
         );
 
         QUI\Translator::delete(
             'quiqqer/products',
-            'products.field.' . $this->getId() . '.workingtitle'
+            "products.field.{$fieldId}.workingtitle"
         );
+
+        QUI\Translator::delete(
+            'quiqqer/products',
+            "permission.permission.products.fields.field{$fieldId}._header"
+        );
+
+        // view permission
+        QUI\Translator::delete(
+            'quiqqer/products',
+            "permission.products.fields.field{$fieldId}.view.title"
+        );
+
+        // edit permission
+        QUI\Translator::delete(
+            'quiqqer/products',
+            "permission.products.fields.field{$fieldId}.edit.title"
+        );
+
 
         // delete column
         QUI::getDataBase()->table()->deleteColumn(
@@ -306,6 +330,18 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         // delete cache
         QUI\Cache\Manager::clear(
             Fields::getFieldCacheName($this->getId())
+        );
+
+
+        // delete permission
+        // delete view permission
+        QUI::getPermissionManager()->deletePermission(
+            "permission.products.fields.field{$fieldId}.view"
+        );
+
+        // delete edit permission
+        QUI::getPermissionManager()->deletePermission(
+            "permission.products.fields.field{$fieldId}.edit"
         );
     }
 

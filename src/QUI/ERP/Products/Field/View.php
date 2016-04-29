@@ -37,6 +37,14 @@ class View extends UniqueField
      */
     public function create()
     {
+        try {
+            QUI\Rights\Permission::checkPermission(
+                "permission.products.fields.field{$this->getId()}.view"
+            );
+        } catch (QUI\Exception $Exception) {
+            return '';
+        }
+
         return '<div class="quiqqer-product-field">
             <div class="quiqqer-product-field-title">' . $this->getTitle() . '</div>
             <div class="quiqqer-product-field-value">' . $this->getValue() . '</div>

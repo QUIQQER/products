@@ -9,7 +9,12 @@ use QUI;
 
 /**
  * Class Fields
+ *
  * @package QUI\ERP\Products\Handler
+ *
+ * Feld Rechte:
+ * - permission.products.fields.field{$newId}.edit
+ * - permission.products.fields.field{$newId}.view
  */
 class Fields
 {
@@ -284,46 +289,121 @@ class Fields
     public static function setFieldTranslations($fieldId, $attributes)
     {
         $localeGroup = 'quiqqer/products';
-        $localeVar   = 'products.field.' . $fieldId . '.title';
 
-        // title
-        try {
-            $data  = QUI\Translator::get($localeGroup, $localeVar);
-            $texts = array();
-
-            if (isset($attributes['titles'])) {
-                $texts = $attributes['titles'];
-            }
-
-            $texts['datatype'] = 'php,js';
-            $texts['html']     = 1;
-
-            if (!isset($data[0])) {
-                QUI\Translator::addUserVar($localeGroup, $localeVar, $texts);
-            }
-
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addNotice($Exception->getMessage(), array(
-                'trace' => $Exception->getTrace()
-            ));
+        if (!isset($attributes['titles'])) {
+            $attributes['titles'] = array();
         }
 
-        $localeVar = 'products.field.' . $fieldId . '.workingtitle';
+        if (!isset($attributes['workingtitles'])) {
+            $attributes['workingtitles'] = array();
+        }
+
+        // title
+        self::insertTranslations(
+            $localeGroup,
+            'products.field.' . $fieldId . '.title',
+            $attributes['titles']
+        );
 
         // working title
-        try {
-            $data  = QUI\Translator::get($localeGroup, $localeVar);
-            $texts = array();
+        self::insertTranslations(
+            $localeGroup,
+            'products.field.' . $fieldId . '.workingtitle',
+            $attributes['workingtitles']
+        );
 
-            if (isset($attributes['workingtitles'])) {
-                $texts = $attributes['workingtitles'];
+
+        // permission translations
+        $languages = QUI\Translator::langs();
+
+        $headerTranslations = array();
+        $viewTranslations   = array();
+        $editTranslations   = array();
+
+        foreach ($languages as $lang) {
+            $title = $fieldId;
+
+            if (isset($attributes['titles'][$lang])) {
+                $title = $attributes['titles'][$lang];
             }
 
-            $texts['datatype'] = 'php,js';
-            $texts['html']     = 1;
+            $headerTranslations[$lang] = QUI::getLocale()->getByLang(
+                $lang,
+                'quiqqer/products',
+                'quiqqer.products.field.header.placeholder',
+                array(
+                    'fielId' => $fieldId,
+                    'fieldname' => $title
+                )
+            );
 
-            if (!isset($data[0])) {
-                QUI\Translator::addUserVar($localeGroup, $localeVar, $texts);
+            $viewTranslations[$lang] = QUI::getLocale()->getByLang(
+                $lang,
+                'quiqqer/products',
+                'quiqqer.products.field.view.placeholder',
+                array(
+                    'fielId' => $fieldId,
+                    'fieldname' => $title
+                )
+            );
+
+            $editTranslations[$lang] = QUI::getLocale()->getByLang(
+                $lang,
+                'quiqqer/products',
+                'quiqqer.products.field.edit.placeholder',
+                array(
+                    'fielId' => $fieldId,
+                    'fieldname' => $title
+                )
+            );
+        }
+
+        // header
+        self::insertTranslations(
+            $localeGroup,
+            "permission.permission.products.fields.field{$fieldId}._header",
+            $viewTranslations
+        );
+
+        // view permission
+        self::insertTranslations(
+            $localeGroup,
+            "permission.products.fields.field{$fieldId}.view.title",
+            $viewTranslations
+        );
+
+
+        // edit permission
+        self::insertTranslations(
+            $localeGroup,
+            "permission.products.fields.field{$fieldId}.edit.title",
+            $editTranslations
+        );
+    }
+
+    /**
+     * Insert translations
+     *
+     * @param string $group
+     * @param string $var
+     * @param array $data
+     */
+    protected static function insertTranslations($group, $var, $data = array())
+    {
+        try {
+            $translations = QUI\Translator::get($group, $var);
+
+            if (!is_array($data)) {
+                $data = array();
+            }
+
+            $data['datatype'] = 'php,js';
+            $data['html']     = 1;
+
+            if (!isset($translations[0])) {
+                QUI\Translator::addUserVar($group, $var, $data);
+            } else {
+                QUI\Translator::edit($group, $var, $data);
             }
 
         } catch (QUI\Exception $Exception) {
