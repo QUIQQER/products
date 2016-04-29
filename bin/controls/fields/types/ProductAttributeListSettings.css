@@ -27,7 +27,8 @@
 .quiqqer-products-attributeList-settings,
 .quiqqer-products-attributeList-settings-title,
 .quiqqer-products-attributeList-settings-priority,
-.quiqqer-products-attributeList-settings-calcbasis {
+.quiqqer-products-attributeList-settings-calcbasis,
+.quiqqer-products-attributeList-settings-displayDiscounts {
     clear: both;
     float: left;
     width: 100%
@@ -39,13 +40,15 @@
 }
 
 .quiqqer-products-attributeList-settings-priority,
-.quiqqer-products-attributeList-settings-calcbasis {
+.quiqqer-products-attributeList-settings-calcbasis,
+.quiqqer-products-attributeList-settings-displayDiscounts {
     border-bottom: 1px solid rgba(147, 128, 108, 0.25);
     padding: 10px;
 }
 
 .quiqqer-products-attributeList-settings-priority label,
-.quiqqer-products-attributeList-settings-calcbasis label {
+.quiqqer-products-attributeList-settings-calcbasis label,
+.quiqqer-products-attributeList-settings-displayDiscounts label {
     cursor: pointer;
     width: 100% !important;
 }
@@ -55,6 +58,10 @@
     line-height: 12px;
     padding: 10px;
     width: 200px;
+}
+
+.quiqqer-products-attributeList-settings-displayDiscounts input {
+    float: left;
 }
 
 .quiqqer-products-attributeList-settings-input {

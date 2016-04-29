@@ -90,21 +90,35 @@ class Calc
         $price  = $Product->getFieldValue(Fields::FIELD_PRICE);
         $prices = $Product->getPriceFactors()->sort();
 
+        $basisPrice = $price;
+
         /* @var PriceFactor $PriceFactor */
         foreach ($prices as $PriceFactor) {
-            // CALCULATION_BASIS_NETTO
+            QUI\System\Log::writeRecursive($PriceFactor->getCalculation());
+            switch ($PriceFactor->getCalculation()) {
+                // einfache Zahl, Währung --- kein Prozent
+                case Calc::CALCULATION_COMPLEMENT:
+                    $price = $price + $PriceFactor->getValue();
+                    break;
 
+                // Prozent Angabe
+                case Calc::CALCULATION_PERCENTAGE:
+                    $percentage = 0;
 
-            // CALCULATION_BASIS_CURRENTPRICE
+                    switch ($PriceFactor->getCalculationBasis()) {
+                        case Calc::CALCULATION_BASIS_NETTO:
+                            $percentage = $PriceFactor->getValue() / 100 * $basisPrice;
+                            break;
 
-            $price = $price + $PriceFactor->getValue();
+                        case Calc::CALCULATION_BASIS_CURRENTPRICE:
+                            $percentage = $PriceFactor->getValue() / 100 * $price;
+                            break;
+                    }
+
+                    $price = $price + $percentage;
+                    break;
+            }
         }
-
-
-//        QUI\System\Log::writeRecursive($basisNettoPrices);
-//        QUI\System\Log::writeRecursive($basisCurrentPrices);
-
-        // methode vom grundpreis berechnen
 
 
         // @todo muss richtig implementiert werden

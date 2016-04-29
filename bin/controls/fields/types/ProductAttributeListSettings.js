@@ -13,12 +13,13 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
     'Locale',
     'controls/grid/Grid',
     'controls/lang/InputMultiLang',
+    'package/quiqqer/products/bin/utils/Calc',
     'Mustache',
 
     'text!package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettingsCreate.html',
     'css!package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings.css'
 
-], function (QUI, QUIControl, QUIConfirm, QUILocale, Grid, InputMultiLang, Mustache, templateCreate) {
+], function (QUI, QUIControl, QUIConfirm, QUILocale, Grid, InputMultiLang, Calc, Mustache, templateCreate) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -52,7 +53,8 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             this.$CalcBasis = null;
 
             // price container
-            this.$PriceCalc = null;
+            this.$PriceCalc        = null;
+            this.$DisplayDiscounts = null;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -192,6 +194,14 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                          '                class="quiqqer-products-attributeList-settings-input" />' +
                          '     </label>' +
                          '</div>' +
+                         '<div class="quiqqer-products-attributeList-settings-displayDiscounts">' +
+                         '     <label>' +
+                         '         <span class="quiqqer-products-attributeList-settings-text">' +
+                         '             Auf / Abschläge anzeigen:' +
+                         '         </span>' +
+                         '         <input type="checkbox" name="display_discounts" />' +
+                         '     </label>' +
+                         '</div>' +
                          '<div class="quiqqer-products-attributeList-settings-calcbasis">' +
                          '     <label>' +
                          '         <span class="quiqqer-products-attributeList-settings-text">' +
@@ -206,8 +216,9 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                          '</div>'
             }).inject(this.$Elm, 'top');
 
-            this.$Priority  = this.$PriceCalc.getElement('[name="price_priority"]');
-            this.$CalcBasis = this.$PriceCalc.getElement('[name="price_calculation_basis"]');
+            this.$Priority         = this.$PriceCalc.getElement('[name="price_priority"]');
+            this.$CalcBasis        = this.$PriceCalc.getElement('[name="price_calculation_basis"]');
+            this.$DisplayDiscounts = this.$PriceCalc.getElement('[name="display_discounts"]');
 
             this.refresh();
         },
@@ -270,8 +281,15 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 this.$CalcBasis.value = data.calculation_basis;
             }
 
+            if ("display_discounts" in data) {
+                this.$DisplayDiscounts.checked = data.display_discounts;
+            } else {
+                this.$DisplayDiscounts.checked = false;
+            }
+
             this.$Priority.addEvent('change', this.update);
             this.$CalcBasis.addEvent('change', this.update);
+            this.$DisplayDiscounts.addEvent('change', this.update);
         },
 
         /**
@@ -338,13 +356,14 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 }
 
                 // currency percent
-                switch (entry.type) {
-                    case 'percent':
+                switch (parseInt(entry.type)) {
+                    case Calc.CALCULATION_PERCENTAGE:
                         type = new Element('span', {
                             'class': 'fa fa-percent'
                         });
                         break;
 
+                    case Calc.CALCULATION_COMPLEMENT:
                     default:
                         type = new Element('span', {
                             'class': 'fa fa-money'
@@ -457,7 +476,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                             index,
                             Title.getData(),
                             Form.elements.sum.value,
-                            Form.elements.type.value
+                            parseInt(Form.elements.type.value)
                         );
                     }
                 }
@@ -503,10 +522,9 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             this.$Input.value = JSON.encode({
                 entries          : this.$data,
                 priority         : this.$Priority.value,
-                calculation_basis: this.$CalcBasis.value
+                calculation_basis: this.$CalcBasis.value,
+                display_discounts: this.$DisplayDiscounts.checked
             });
-
-            console.log(this.$Input.value);
         },
 
         /**
@@ -517,6 +535,17 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * @param {String} type
          */
         add: function (title, sum, type) {
+            switch (parseInt(type)) {
+                case Calc.CALCULATION_PERCENTAGE:
+                    type = Calc.CALCULATION_PERCENTAGE;
+                    break;
+
+                case Calc.CALCULATION_COMPLEMENT:
+                default:
+                    type = Calc.CALCULATION_COMPLEMENT;
+                    break;
+            }
+
             this.$data.push({
                 title: title,
                 sum  : sum,

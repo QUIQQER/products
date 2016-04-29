@@ -40,8 +40,11 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      */
     public function __construct($fieldId, array $params)
     {
-        $this->setAttributes(array(
-            'options' => array(),
+        $this->setOptions(array(
+            'entries' => array(),
+            'priority' => 0,
+            'calculation_basis' => '',
+            'display_discounts' => true
         ));
 
         parent::__construct($fieldId, $params);
@@ -112,8 +115,8 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             $type = $entries[$value]['type'];
 
             switch ($type) {
-                case Calc::CALCULATION_BASIS_CURRENTPRICE:
-                    $calcType = Calc::CALCULATION_BASIS_CURRENTPRICE;
+                case Calc::CALCULATION_PERCENTAGE:
+                    $calcType = Calc::CALCULATION_PERCENTAGE;
                     break;
             }
         }

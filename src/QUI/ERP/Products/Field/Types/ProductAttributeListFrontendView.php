@@ -34,10 +34,18 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
     public function create()
     {
         $id      = $this->getId();
-        $name    = 'field-' . $id;
         $value   = $this->getValue();
         $options = $this->getOptions();
         $current = QUI::getLocale()->getCurrent();
+        $name    = 'field-' . $id;
+
+        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+
+        $display_discounts = false;
+
+        if (isset($options['display_discounts'])) {
+            $display_discounts = $options['display_discounts'];
+        }
 
         if (!is_string($value)) {
             $value = '';
@@ -54,7 +62,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                     disabled=\"disabled\">";
 
         if ($value === '') {
-            $html .= '<option value=""></option>';
+            $html .= '<option value="">Bitte auswählen</option>';
         }
 
         $entries = array();
@@ -69,6 +77,22 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
             if (isset($title[$current])) {
                 $text = $title[$current];
+            }
+
+            if ($display_discounts) {
+                switch ($option['type']) {
+                    case 'percent': // fallback fix
+                    case QUI\ERP\Products\Utils\Calc::CALCULATION_PERCENTAGE:
+                        $discount = $option['sum'] . '%';
+                        break;
+
+                    case QUI\ERP\Products\Utils\Calc::CALCULATION_COMPLEMENT:
+                    default:
+                        $discount = $Currency->format($option['sum']);
+                        break;
+                }
+
+                $text .= ' (+' . $discount . ')';
             }
 
             $html .= '<option value="' . $key . '">' . $text . '</option>';
