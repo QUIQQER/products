@@ -130,48 +130,74 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      * Check the value
      * is the value valid for the field type?
      *
-     * @param mixed $value
+     * @param integer $value
      * @throws \QUI\Exception
      */
     public function validate($value)
     {
-//        if (!is_numeric($value)) {
-//            throw new QUI\Exception(array(
-//                'quiqqer/products',
-//                'exception.field.invalid',
-//                array(
-//                    'fieldId' => $this->getId(),
-//                    'fieldTitle' => $this->getTitle(),
-//                    'fieldType' => $this->getType()
-//                )
-//            ));
-//        }
-//
-//        $value   = (int)$value;
-//        $options = $this->getOptions();
-//
-//        if (!isset($options[$value])) {
-//            throw new QUI\Exception(array(
-//                'quiqqer/products',
-//                'exception.field.invalid',
-//                array(
-//                    'fieldId' => $this->getId(),
-//                    'fieldTitle' => $this->getTitle(),
-//                    'fieldType' => $this->getType()
-//                )
-//            ));
-//        }
+        if (empty($value)) {
+            return;
+        }
+
+        if (!is_numeric($value)) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType' => $this->getType()
+                )
+            ));
+        }
+
+        $value   = (int)$value;
+        $options = $this->getOptions();
+
+        if (!isset($options['entries'])) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType' => $this->getType()
+                )
+            ));
+        }
+
+        $entries = $options['entries'];
+
+        if (!isset($entries[$value])) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.field.invalid',
+                array(
+                    'fieldId' => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType' => $this->getType()
+                )
+            ));
+        }
     }
 
     /**
      * Cleanup the value, so the value is valid
      *
-     * @param mixed $value
+     * @param integer $value
      * @throws \QUI\Exception
-     * @return array
+     * @return int|null
      */
     public function cleanup($value)
     {
-        return $value;
+        if (empty($value)) {
+            return null;
+        }
+
+        if (!is_numeric($value)) {
+            return null;
+        }
+
+        return (int)$value;
     }
 }
