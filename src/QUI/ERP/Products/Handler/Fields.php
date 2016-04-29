@@ -178,8 +178,6 @@ class Fields
             $data['options'] = json_encode($data['options']);
         }
 
-        // @todo create field permissions -> view und edit
-        QUI::getPermissionManager()->addPermission(array());
 
         // insert field data
         QUI::getDataBase()->insert(
@@ -198,6 +196,28 @@ class Fields
         self::setFieldTranslations($newId, $attributes);
 
         $Field = self::getField($newId);
+
+
+        // create view permission
+        QUI::getPermissionManager()->addPermission(array(
+            'name' => "permission.products.fields.field{$newId}.view",
+            'title' => "quiqqer/products permission.products.fields.field{$newId}.view.title",
+            'desc' => "",
+            'type' => 'bool',
+            'area' => '',
+            'src' => 'user'
+        ));
+
+        // create edit permission
+        QUI::getPermissionManager()->addPermission(array(
+            'name' => "permission.products.fields.field{$newId}.edit",
+            'title' => "quiqqer/products permission.products.fields.field{$newId}.edit.title",
+            'desc' => "",
+            'type' => 'bool',
+            'area' => '',
+            'src' => 'user'
+        ));
+
 
         // create new cache column
         if ($Field->isSearchable()) {

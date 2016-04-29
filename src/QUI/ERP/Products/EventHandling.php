@@ -241,6 +241,7 @@ class EventHandling
                 )
             ));
 
+            // update system fields
             if (isset($result[0])) {
                 if ($field['id'] > 1000) {
                     continue;
@@ -268,9 +269,32 @@ class EventHandling
                     // nothing, operation may not be allowed depending on field type
                 }
 
+
+                // create / update view permission
+                QUI::getPermissionManager()->addPermission(array(
+                    'name' => "permission.products.fields.field{$field['id']}.view",
+                    'title' => "quiqqer/products permission.products.fields.field{$field['id']}.view.title",
+                    'desc' => "",
+                    'type' => 'bool',
+                    'area' => '',
+                    'src' => 'user'
+                ));
+
+                // create / update edit permission
+                QUI::getPermissionManager()->addPermission(array(
+                    'name' => "permission.products.fields.field{$field['id']}.edit",
+                    'title' => "quiqqer/products permission.products.fields.field{$field['id']}.edit.title",
+                    'desc' => "",
+                    'type' => 'bool',
+                    'area' => '',
+                    'src' => 'user'
+                ));
+
+
                 continue;
             }
 
+            // create system fields
             try {
                 Fields::createField($field);
             } catch (QUI\Exception $Exception) {
