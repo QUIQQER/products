@@ -362,7 +362,7 @@ class Fields
         self::insertTranslations(
             $localeGroup,
             "permission.permission.products.fields.field{$fieldId}._header",
-            $viewTranslations
+            $headerTranslations
         );
 
         // view permission
