@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains package_quiqqer_products_ajax_search_frontend_setSearchFields
+ * This file contains package_quiqqer_products_ajax_search_backend_setSearchFields
  */
 
 use \QUI\ERP\Products\Handler\Search as SearchHandler;
@@ -10,9 +10,6 @@ use \QUI\ERP\Products\Handler\Search as SearchHandler;
  * Get all fields that are available for search for a specific Site
  *
  * @param array $searchFields
- * @param integer $siteId
- * @param string $project
- *
  * @return array - searchfields after set
  */
 QUI::$Ajax->registerFunction(
