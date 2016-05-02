@@ -2,7 +2,15 @@
  * @module package/quiqqer/products/bin/controls/products/search/Settings
  * @author www.pcsg.de (Henning Leutz)
  *
- * Backend suche für produkte
+ * Backend such einstellungen
+ *
+ * @require qui/QUI
+ * @require qui/controls/Control
+ * @require qui/controls/buttons/Switch
+ * @require controls/grid/Grid
+ * @require Locale
+ * @require Ajax
+ * @require package/quiqqer/products/bin/Fields
  */
 define('package/quiqqer/products/bin/controls/products/search/Settings', [
 
@@ -87,7 +95,7 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
                 height     : 300,
                 width      : size.x - 100,
                 columnModel: [{
-                    header   : QUILocale.get(lg, 'id'),
+                    header   : QUILocale.get(lg, 'settings.window.products.grid.searchstatus'),
                     dataIndex: 'status',
                     dataType : 'QUI',
                     width    : 60
@@ -153,7 +161,7 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
                                 status     : Switch,
                                 id         : entry.id,
                                 title      : entry.title,
-                                fieldtype  : entry.fieldtype,
+                                fieldtype  : entry.type,
                                 search_type: entry.search_type
                             };
                         }.bind(this));
@@ -212,7 +220,7 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
 
             this.setFields(values).then(function (result) {
                 var keys = [];
-                
+
                 for (var i in result) {
                     if (result.hasOwnProperty(i) && result[i]) {
                         keys.push(i);
