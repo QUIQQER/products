@@ -260,7 +260,7 @@ class BackendSearch extends Search
 
         foreach ($currentSearchFields as $fieldId => $search) {
             if (isset($searchFields[$fieldId])
-                && $search) {
+                && $searchFields[$fieldId]) {
                 $newSearchFieldIds[] = $fieldId;
             } else {
                 unset($currentSearchFields[$fieldId]);
