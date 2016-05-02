@@ -47,6 +47,10 @@
             Under this folder, a folder for product images is created for each product
             ]]></en>
         </locale>
+        <locale name="settings.window.products.grid.searchstatus">
+            <de><![CDATA[Suchbar]]></de>
+            <en><![CDATA[Searchable]]></en>
+        </locale>
 
         <locale name="settings.window.fieldsearch.select">
             <de><![CDATA[Feldeinstellungen für die Produktsuche im Backend.]]></de>

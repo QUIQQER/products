@@ -161,8 +161,22 @@ define('package/quiqqer/products/bin/controls/products/Select', [
                     width: 50
                 },
                 events: {
-                    onClick: function () {
+                    onClick: function (Btn) {
+                        Btn.setAttribute('icon', 'fa fa-spinner fa-spin');
 
+                        require([
+                            'package/quiqqer/products/bin/controls/products/search/Window'
+                        ], function (Search) {
+                            new Search({
+                                events: {
+                                    onSubmit: function (Win, values) {
+                                        console.log(values);
+                                    }
+                                }
+                            }).open();
+
+                            Btn.setAttribute('icon', 'fa fa-search');
+                        });
                     }
                 }
             }).inject(this.$Elm);

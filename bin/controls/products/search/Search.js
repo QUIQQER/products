@@ -7,9 +7,12 @@
 define('package/quiqqer/products/bin/controls/products/search/Search', [
 
     'qui/QUI',
-    'qui/controls/Control'
+    'qui/controls/Control',
+    'Ajax',
 
-], function (QUI, QUIControl) {
+    'css!package/quiqqer/products/bin/controls/products/search/Search.css'
+
+], function (QUI, QUIControl, Ajax) {
     "use strict";
 
     return new Class({
@@ -33,15 +36,26 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
         /**
          * event : on create
          */
-        $onCreate: function () {
+        create: function () {
+            this.$Elm = new Element('div', {
+                'class': 'quiqqer-products-search'
+            });
 
+
+            return this.$Elm;
         },
 
         /**
          * event : on inject
          */
         $onInject: function () {
+            Ajax.get('package_quiqqer_products_ajax_search_backend_getSearchFieldData', function (result) {
 
+                console.log(result);
+
+            }, {
+                'package': 'quiqqer/products'
+            });
         }
     });
 });
