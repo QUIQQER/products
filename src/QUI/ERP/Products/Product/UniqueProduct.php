@@ -11,7 +11,7 @@ use QUI\ERP\Products\Utils\PriceFactor;
 /**
  * Class UniqueProduct
  *
- * @event onProductsPriceFactorsInit [QUI\ERP\Products\Utils\PriceFactors, QUI\ERP\Products\Interfaces\Product]
+ * @event onQuiqqerProductsPriceFactorsInit [QUI\ERP\Products\Utils\PriceFactors, QUI\ERP\Products\Interfaces\Product]
  */
 class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
 {
@@ -81,7 +81,10 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $this->PriceFactors->add($Factor);
         }
 
-        QUI::getEvents()->fireEvent('productsPriceFactorsInit', array($this->PriceFactors, $this));
+        QUI::getEvents()->fireEvent(
+            'quiqqerProductsPriceFactorsInit',
+            array($this->PriceFactors, $this)
+        );
     }
 
     /**

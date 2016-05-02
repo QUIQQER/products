@@ -2,6 +2,8 @@
  * @modue package/quiqqer/products/bin/controls/search/FieldSelect
  * @author www.pcsg.de (Henning Leutz)
  *
+ * Feld Auswahl für eine Produktkategorie oder Produktsuche
+ *
  * @require qui/QUI
  * @require qui/controls/Control
  * @require package/quiqqer/products/bin/Fields

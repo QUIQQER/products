@@ -19,6 +19,11 @@
             <de><![CDATA[Produkte]]></de>
             <en><![CDATA[Products]]></en>
         </locale>
+        <locale name="menu.erp.products.fieldsearch.title">
+            <de><![CDATA[Backend-Suche]]></de>
+            <en><![CDATA[Backendsearch]]></en>
+        </locale>
+
         <locale name="menu.erp.products.categories.title">
             <de><![CDATA[Kategorien]]></de>
             <en><![CDATA[Categories]]></en>
@@ -43,6 +48,10 @@
             ]]></en>
         </locale>
 
+        <locale name="settings.window.fieldsearch.select">
+            <de><![CDATA[Feldeinstellungen für die Produktsuche im Backend.]]></de>
+            <en><![CDATA[Field settings for the product search in the backend.]]></en>
+        </locale>
 
         <locale name="fieldtype">
             <de><![CDATA[Feld-Typ]]></de>

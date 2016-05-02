@@ -69,9 +69,23 @@ class Search
         return new FrontendSearch($Site);
     }
 
+
     public static function getBackendSearch()
     {
         // TODO
+    }
+
+    /**
+     * Return the fields for the backend search
+     *
+     * @return array
+     */
+    public static function getBackendSearchFields()
+    {
+        $list = array();
+
+
+        return $list;
     }
 
     /**
