@@ -21,4 +21,10 @@
     <permission name="category.edit" type="bool">
         <defaultvalue>1</defaultvalue>
     </permission>
+
+    <!-- Search -->
+    <permission name="search.frontend.execute" type="bool"/>
+    <permission name="search.frontend.configure" type="bool"/>
+    <permission name="search.backend.execute" type="bool"/>
+    <permission name="search.backend.configure" type="bool"/>
 </permissions>

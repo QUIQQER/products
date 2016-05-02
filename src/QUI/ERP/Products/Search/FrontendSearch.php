@@ -157,6 +157,10 @@ class FrontendSearch extends Search
      */
     public function search($searchParams, $countOnly = false)
     {
+        QUI\Rights\Permission::checkPermission(
+            SearchHandler::PERMISSION_BACKEND_EXECUTE
+        );
+
         $PDO = QUI::getDataBase()->getPDO();
 
         $binds = array();

@@ -38,6 +38,14 @@ class Search
     const SEARCHDATATYPE_JSON    = 3;
 
     /**
+     * Search permissions
+     */
+    const PERMISSION_FRONTEND_EXECUTE   = 'search.frontend.execute';
+    const PERMISSION_FRONTEND_CONFIGURE = 'search.frontend.configure';
+    const PERMISSION_BACKEND_EXECUTE    = 'search.backend.execute';
+    const PERMISSION_BACKEND_CONFIGURE  = 'search.backend.configure';
+
+    /**
      * Get all available search types
      *
      * @return array
