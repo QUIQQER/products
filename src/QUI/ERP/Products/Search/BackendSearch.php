@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Search\FrontendSearch
+ * This file contains QUI\ERP\Products\Search\BackendSearch
  */
 namespace QUI\ERP\Products\Search;
 
@@ -18,58 +18,17 @@ use QUI\Utils\Security\Orthos;
  *
  * @package QUI\ERP\Products\Search
  */
-class FrontendSearch extends Search
+class BackendSearch extends Search
 {
-    const SITETYPE_SEARCH   = 'quiqqer/products:types/search';
-    const SITETYPE_CATEGORY = 'quiqqer/products:types/category';
-
     /**
-     * All site types eligible for frontend search
+     * BackendSearch constructor.
      *
-     * @var array
-     */
-    protected $eligibleSiteTypes = array(
-        self::SITETYPE_CATEGORY => true,
-        self::SITETYPE_SEARCH   => true
-    );
-
-    /**
-     * The frontend Site where the search is conducted
-     *
-     * @var QUI\Projects\Site
-     */
-    protected $Site = null;
-
-    /**
-     * Site type of frontend search/category site
-     *
-     * @var string
-     */
-    protected $siteType = null;
-
-    /**
-     * FrontendSearch constructor.
-     *
-     * @param QUI\Projects\Site $Site - Search Site or Category Site
+     * @param string $lang
      * @throws QUI\Exception
      */
-    public function __construct($Site)
+    public function __construct($lang)
     {
-        $type = $Site->getAttribute('type');
 
-        if (!isset($this->eligibleSiteTypes[$type])) {
-            throw new QUI\Exception(array(
-                'quiqqer/products',
-                'exception.frontendsearch.site.type.not.eligible',
-                array(
-                    'siteId' => $Site->getId()
-                )
-            ));
-        }
-
-        $this->Site     = $Site;
-        $this->lang     = $Site->getAttribute('lang');
-        $this->siteType = $type;
     }
 
     /**
@@ -117,8 +76,11 @@ class FrontendSearch extends Search
             );
         }
 
-        // frontendsearch ALWAYS searches active products only
-        $where[] = '`active` = 1';
+        if (isset($searchParams['active'])
+            && !empty($searchParams['active'])
+        ) {
+            $where[] = '`active` = 1';
+        }
 
         // retrieve query data for fields
         try {
@@ -200,8 +162,7 @@ class FrontendSearch extends Search
      */
     public function getSearchFieldData()
     {
-        $cname = 'products/search/frontend/fieldvalues/'
-                 . $this->Site->getId() . '/' . $this->lang;
+        $cname = 'products/search/backend/fieldvalues/' . $this->lang;
 
         try {
             return SearchCache::get($cname);
@@ -211,19 +172,6 @@ class FrontendSearch extends Search
 
         $searchFieldData = array();
         $parseFields     = $this->getSearchFields();
-        $catId           = null;
-
-        switch ($this->siteType) {
-            case self::SITETYPE_CATEGORY:
-                $catId = $this->Site->getAttribute(
-                    'quiqqer.products.settings.categoryId'
-                );
-
-                if (!$catId) {
-                    $catId = null;
-                }
-                break;
-        }
 
         $Locale = new QUI\Locale();
         $Locale->setCurrent($this->lang);
@@ -239,7 +187,7 @@ class FrontendSearch extends Search
 
             if (in_array($Field->getSearchType(),
                 $this->searchTypesWithValues)) {
-                $searchValues = $this->getValuesFromField($Field, true, $catId);
+                $searchValues = $this->getValuesFromField($Field, false);
                 $searchParams = array();
 
                 foreach ($searchValues as $val) {
@@ -269,28 +217,20 @@ class FrontendSearch extends Search
      */
     public function getSearchFields()
     {
-        $searchFields         = array();
-        $searchFieldsFromSite = $this->Site->getAttribute(
-            'quiqqer.products.settings.searchFieldIds'
-        );
+        $searchFields          = array();
+        $searchFieldIdsFromCfg = array(); // TODO: searchfields holen
 
-        $eligibleFields = $this->getEligibleSearchFields();
-
-        if (!$searchFieldsFromSite) {
-            $searchFieldsFromSite = array();
-        } else {
-            $searchFieldsFromSite = json_decode($searchFieldsFromSite, true);
-        }
+        $eligibleFields = self::getEligibleSearchFields();
 
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($eligibleFields as $Field) {
-            if (!isset($searchFieldsFromSite[$Field->getId()])) {
+            if (!isset($searchFieldIdsFromCfg[$Field->getId()])) {
                 $searchFields[$Field->getId()] = false;
                 continue;
             }
 
             $searchFields[$Field->getId()] = boolval(
-                $searchFieldsFromSite[$Field->getId()]
+                $searchFieldIdsFromCfg[$Field->getId()]
             );
         }
 
@@ -342,34 +282,7 @@ class FrontendSearch extends Search
             return $this->eligibleFields;
         }
 
-        switch ($this->siteType) {
-            case self::SITETYPE_CATEGORY:
-                $categoryId = $this->Site->getAttribute(
-                    'quiqqer.products.settings.categoryId'
-                );
-
-                if (!$categoryId) {
-                    QUI::getMessagesHandler()->addAttention(
-                        QUI::getLocale()->get(
-                            'quiqqer/products',
-                            'attention.frontendsearch.category.site.no.category',
-                            array(
-                                'siteId' => $this->Site->getId()
-                            )
-                        )
-                    );
-
-                    $fields = Fields::getStandardFields();
-                } else {
-                    $Category = Categories::getCategory($categoryId);
-                    $fields   = $Category->getFields();
-                }
-                break;
-
-            default:
-                $fields = Fields::getStandardFields();
-        }
-
+        $fields               = Fields::getFields();
         $this->eligibleFields = $this->filterEligibleSearchFields($fields);
 
         return $this->eligibleFields;

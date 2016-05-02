@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Search;
 use QUI;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
+use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Class Search
@@ -207,6 +208,284 @@ abstract class Search extends QUI\QDOM
         sort($values);
 
         return $values;
+    }
+
+    /**
+     * Get where strings and binds with values and PDO datatypes
+     *
+     * @param array $fieldSearchData
+     * @return array - where strings and binds with values and PDO datatypes
+     * @throws QUI\Exception
+     */
+    protected function getFieldQueryData($fieldSearchData)
+    {
+        $where = array();
+        $binds = array();
+
+        foreach ($fieldSearchData as $fieldId => $value) {
+            $Field      = Fields::getField($fieldId);
+            $columnName = SearchHandler::getSearchFieldColumnName($Field);
+            $column     = '`' . $columnName . '`';
+
+            switch ($Field->getSearchType()) {
+                case SearchHandler::SEARCHTYPE_HASVALUE:
+                    if (boolval($value)) {
+                        $where[] = $column . ' IS NOT NULL';
+                    } else {
+                        $where[] = $column . ' IS NULL';
+                    }
+                    break;
+
+                case SearchHandler::SEARCHTYPE_BOOL:
+                    if (boolval($value)) {
+                        $where[] = $column . ' = 1';
+                    } else {
+                        $where[] = $column . ' = 0';
+                    }
+                    break;
+
+                case SearchHandler::SEARCHTYPE_SELECTSINGLE:
+                case SearchHandler::SEARCHTYPE_INPUTSELECTSINGLE:
+                    if (!is_string($value)) {
+                        throw new QUI\Exception(array(
+                            'quiqqer/products',
+                            'exception.search.value.invalid',
+                            array(
+                                'fieldId'    => $Field->getId(),
+                                'fieldTitle' => $Field->getTitle()
+                            )
+                        ));
+                    }
+
+                    $where[]            = $column . ' = :' . $columnName;
+                    $binds[$columnName] = array(
+                        'value' => $value,
+                        'type'  => \PDO::PARAM_STR
+                    );
+                    break;
+
+                case SearchHandler::SEARCHTYPE_SELECTRANGE:
+                case SearchHandler::SEARCHTYPE_INPUTSELECTRANGE:
+                    if (!is_array($value)) {
+                        throw new QUI\Exception(array(
+                            'quiqqer/products',
+                            'exception.search.value.invalid',
+                            array(
+                                'fieldId'    => $Field->getId(),
+                                'fieldTitle' => $Field->getTitle()
+                            )
+                        ));
+                    }
+
+                    $from = false;
+                    $to   = false;
+
+                    if (isset($value['from'])) {
+                        $from = $value['from'];
+
+                        if (!is_string($from)) {
+                            throw new QUI\Exception(array(
+                                'quiqqer/products',
+                                'exception.search.value.invalid',
+                                array(
+                                    'fieldId'    => $Field->getId(),
+                                    'fieldTitle' => $Field->getTitle()
+                                )
+                            ));
+                        }
+                    }
+
+                    if (isset($value['to'])) {
+                        $to = $value['to'];
+
+                        if (!is_string($to)) {
+                            throw new QUI\Exception(array(
+                                'quiqqer/products',
+                                'exception.search.value.invalid',
+                                array(
+                                    'fieldId'    => $Field->getId(),
+                                    'fieldTitle' => $Field->getTitle()
+                                )
+                            ));
+                        }
+                    }
+
+                    if ($from !== false && $to !== false) {
+                        if ($from > $to) {
+                            $_from = $from;
+                            $from  = $to;
+                            $to    = $_from;
+                        }
+                    }
+
+                    $where = array();
+
+                    if ($from !== false) {
+                        $where[]                     = $column . ' >= :' . $columnName . 'From';
+                        $binds[$columnName . 'From'] = array(
+                            'value' => $value,
+                            'type'  => \PDO::PARAM_STR
+                        );
+                    }
+
+                    if ($to !== false) {
+                        $where[]                   = $column . ' <= :' . $columnName . 'To';
+                        $binds[$columnName . 'To'] = array(
+                            'value' => $value,
+                            'type'  => \PDO::PARAM_STR
+                        );
+                    }
+                    break;
+
+                case SearchHandler::SEARCHTYPE_DATERANGE:
+                    if (!is_array($value)) {
+                        throw new QUI\Exception(array(
+                            'quiqqer/products',
+                            'exception.search.value.invalid',
+                            array(
+                                'fieldId'    => $Field->getId(),
+                                'fieldTitle' => $Field->getTitle()
+                            )
+                        ));
+                    }
+
+                    $from = false;
+                    $to   = false;
+
+                    if (isset($value['from'])) {
+                        $from = $value['from'];
+
+                        if (!is_numeric($from)) {
+                            throw new QUI\Exception(array(
+                                'quiqqer/products',
+                                'exception.search.value.invalid',
+                                array(
+                                    'fieldId'    => $Field->getId(),
+                                    'fieldTitle' => $Field->getTitle()
+                                )
+                            ));
+                        }
+                    }
+
+                    if (isset($value['to'])) {
+                        $to = $value['to'];
+
+                        if (!is_numeric($from)) {
+                            throw new QUI\Exception(array(
+                                'quiqqer/products',
+                                'exception.search.value.invalid',
+                                array(
+                                    'fieldId'    => $Field->getId(),
+                                    'fieldTitle' => $Field->getTitle()
+                                )
+                            ));
+                        }
+                    }
+
+                    if ($from !== false && $to !== false) {
+                        if ($from > $to) {
+                            $_from = $from;
+                            $from  = $to;
+                            $to    = $_from;
+                        }
+                    }
+
+                    $where = array();
+
+                    if ($from !== false) {
+                        $where[]                     = $column . ' >= :' . $columnName . 'From';
+                        $binds[$columnName . 'From'] = array(
+                            'value' => (int)$value,
+                            'type'  => \PDO::PARAM_INT
+                        );
+                    }
+
+                    if ($to !== false) {
+                        $where[]                   = $column . ' <= :' . $columnName . 'To';
+                        $binds[$columnName . 'To'] = array(
+                            'value' => (int)$value,
+                            'type'  => \PDO::PARAM_INT
+                        );
+                    }
+                    break;
+
+                case SearchHandler::SEARCHTYPE_DATE:
+                    if (!is_string($value)
+                        && !is_numeric($value)
+                    ) {
+                        throw new QUI\Exception(array(
+                            'quiqqer/products',
+                            'exception.search.value.invalid',
+                            array(
+                                'fieldId'    => $Field->getId(),
+                                'fieldTitle' => $Field->getTitle()
+                            )
+                        ));
+                    }
+
+                    $where              = $column . ' = :' . $columnName;
+                    $binds[$columnName] = array(
+                        'value' => (int)$value,
+                        'type'  => \PDO::PARAM_INT
+                    );
+                    break;
+
+                case SearchHandler::SEARCHTYPE_SELECTMULTI:
+                    if (!is_array($value)) {
+                        throw new QUI\Exception(array(
+                            'quiqqer/products',
+                            'exception.search.value.invalid',
+                            array(
+                                'fieldId'    => $Field->getId(),
+                                'fieldTitle' => $Field->getTitle()
+                            )
+                        ));
+                    }
+
+                    for ($i = 0; $i < count($value); $i++) {
+                        $where[]                 = $column . ' = :' . $columnName . $i;
+                        $binds[$columnName . $i] = array(
+                            'value' => $value,
+                            'type'  => \PDO::PARAM_STR
+                        );
+                    }
+                    break;
+
+                case SearchHandler::SEARCHTYPE_TEXT:
+                    if (!is_string($value)) {
+                        throw new QUI\Exception(array(
+                            'quiqqer/products',
+                            'exception.search.value.invalid',
+                            array(
+                                'fieldId'    => $Field->getId(),
+                                'fieldTitle' => $Field->getTitle()
+                            )
+                        ));
+                    }
+
+                    $where[]            = $column . ' LIKE :' . $columnName;
+                    $binds[$columnName] = array(
+                        'value' => '%' . $value . '%',
+                        'type'  => \PDO::PARAM_STR
+                    );
+                    break;
+
+                default:
+                    throw new QUI\Exception(array(
+                        'quiqqer/products',
+                        'exception.search.field.unknown.searchtype',
+                        array(
+                            'fieldId'    => $Field->getId(),
+                            'fieldTitle' => $Field->getTitle()
+                        )
+                    ));
+            }
+        }
+
+        return array(
+            'where' => $where,
+            'binds' => $binds
+        );
     }
 
     /**
