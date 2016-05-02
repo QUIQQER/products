@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Handler;
 use QUI;
 use Stash;
 use QUI\ERP\Products\Search\FrontendSearch;
+use QUI\ERP\Products\Search\BackendSearch;
 
 /**
  * Class Fields
@@ -18,23 +19,23 @@ class Search
     /**
      * Search types
      */
-    const SEARCHTYPE_TEXT = 'text';
-    const SEARCHTYPE_SELECTRANGE = 'selectRange';
-    const SEARCHTYPE_INPUTSELECTRANGE = 'inputSelectRange';
-    const SEARCHTYPE_SELECTSINGLE = 'selectSingle';
+    const SEARCHTYPE_TEXT              = 'text';
+    const SEARCHTYPE_SELECTRANGE       = 'selectRange';
+    const SEARCHTYPE_INPUTSELECTRANGE  = 'inputSelectRange';
+    const SEARCHTYPE_SELECTSINGLE      = 'selectSingle';
     const SEARCHTYPE_INPUTSELECTSINGLE = 'inputSelectSingle';
-    const SEARCHTYPE_SELECTMULTI = 'selectMulti';
-    const SEARCHTYPE_BOOL = 'bool';
-    const SEARCHTYPE_HASVALUE = 'hasValue';
-    const SEARCHTYPE_DATE = 'date';
-    const SEARCHTYPE_DATERANGE = 'dateRange';
+    const SEARCHTYPE_SELECTMULTI       = 'selectMulti';
+    const SEARCHTYPE_BOOL              = 'bool';
+    const SEARCHTYPE_HASVALUE          = 'hasValue';
+    const SEARCHTYPE_DATE              = 'date';
+    const SEARCHTYPE_DATERANGE         = 'dateRange';
 
     /**
      * Data types for search values
      */
-    const SEARCHDATATYPE_TEXT = 1;
+    const SEARCHDATATYPE_TEXT    = 1;
     const SEARCHDATATYPE_NUMERIC = 2;
-    const SEARCHDATATYPE_JSON = 3;
+    const SEARCHDATATYPE_JSON    = 3;
 
     /**
      * Get all available search types
@@ -70,22 +71,16 @@ class Search
     }
 
 
-    public static function getBackendSearch()
-    {
-        // TODO
-    }
-
     /**
-     * Return the fields for the backend search
+     * Get BackEndSearch
      *
-     * @return array
+     * @param string $lang (optional) - if ommitted, take lang from Product Locale
+     * @return BackendSearch
+     * @throws QUI\Exception
      */
-    public static function getBackendSearchFields()
+    public static function getBackendSearch($lang = null)
     {
-        $list = array();
-
-
-        return $list;
+        return new BackendSearch($lang);
     }
 
     /**
@@ -94,8 +89,9 @@ class Search
      * @param QUI\ERP\Products\Interfaces\Field $Field
      * @return string
      */
-    public static function getSearchFieldColumnName(QUI\ERP\Products\Interfaces\Field $Field)
-    {
+    public static function getSearchFieldColumnName(
+        QUI\ERP\Products\Interfaces\Field $Field
+    ) {
         return 'F' . $Field->getId();
     }
 }

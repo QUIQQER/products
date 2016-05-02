@@ -12,6 +12,7 @@ use QUI\ERP\Products\Search\Cache as SearchCache;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
 use QUI\Utils\Security\Orthos;
+use QUI\ERP\Products\Handler\Products;
 
 /**
  * Class Search
@@ -23,12 +24,16 @@ class BackendSearch extends Search
     /**
      * BackendSearch constructor.
      *
-     * @param string $lang
+     * @param string $lang (optional) - if ommitted, take lang from Product Locale
      * @throws QUI\Exception
      */
-    public function __construct($lang)
+    public function __construct($lang = null)
     {
+        if (is_null($lang)) {
+            $lang = Products::getLocale()->getCurrent();
+        }
 
+        $this->lang = $lang;
     }
 
     /**
@@ -218,20 +223,25 @@ class BackendSearch extends Search
     public function getSearchFields()
     {
         $searchFields          = array();
-        $searchFieldIdsFromCfg = array(); // TODO: searchfields holen
+        $PackageCfg            = QUI\ERP\Products\Utils\Package::getConfig();
+        $searchFieldIdsFromCfg = $PackageCfg->get('search', 'backend');
+
+        if ($searchFieldIdsFromCfg === false) {
+            $searchFieldIdsFromCfg = array();
+        } else {
+            $searchFieldIdsFromCfg = explode(',', $searchFieldIdsFromCfg);
+        }
 
         $eligibleFields = self::getEligibleSearchFields();
 
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($eligibleFields as $Field) {
-            if (!isset($searchFieldIdsFromCfg[$Field->getId()])) {
+            if (!in_array($Field->getId(), $searchFieldIdsFromCfg)) {
                 $searchFields[$Field->getId()] = false;
                 continue;
             }
 
-            $searchFields[$Field->getId()] = boolval(
-                $searchFieldIdsFromCfg[$Field->getId()]
-            );
+            $searchFields[$Field->getId()] = true;
         }
 
         return $searchFields;
@@ -246,23 +256,23 @@ class BackendSearch extends Search
     public function setSearchFields($searchFields)
     {
         $currentSearchFields = $this->getSearchFields();
+        $newSearchFieldIds   = array();
 
         foreach ($currentSearchFields as $fieldId => $search) {
             if (isset($searchFields[$fieldId])) {
-                $currentSearchFields[$fieldId] = boolval(
-                    $searchFields[$fieldId]
-                );
+                $newSearchFieldIds[] = $fieldId;
+            } else {
+                unset($currentSearchFields[$fieldId]);
             }
         }
 
-        $Edit = $this->Site->getEdit();
+        $PackageCfg = QUI\ERP\Products\Utils\Package::getConfig();
 
-        $Edit->setAttribute(
-            'quiqqer.products.settings.searchFieldIds',
-            json_encode($currentSearchFields)
+        $PackageCfg->set(
+            'search',
+            'backend',
+            implode(',', $newSearchFieldIds)
         );
-
-        $Edit->save();
 
         return $currentSearchFields;
     }
