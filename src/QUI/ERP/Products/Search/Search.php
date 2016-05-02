@@ -9,6 +9,7 @@ use QUI;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\Utils\Security\Orthos;
 
 /**
  * Class Search
@@ -223,7 +224,17 @@ abstract class Search extends QUI\QDOM
         $binds = array();
 
         foreach ($fieldSearchData as $fieldId => $value) {
-            $Field      = Fields::getField($fieldId);
+            try {
+                $Field = Fields::getField($fieldId);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addWarning(
+                    'Product Search :: could not build query data for field #'
+                    . $fieldId . ' -> ' . $Exception->getMessage()
+                );
+
+                continue;
+            }
+
             $columnName = SearchHandler::getSearchFieldColumnName($Field);
             $column     = '`' . $columnName . '`';
 
@@ -259,7 +270,7 @@ abstract class Search extends QUI\QDOM
 
                     $where[]            = $column . ' = :' . $columnName;
                     $binds[$columnName] = array(
-                        'value' => $value,
+                        'value' => $this->sanitizeString($value),
                         'type'  => \PDO::PARAM_STR
                     );
                     break;
@@ -323,7 +334,7 @@ abstract class Search extends QUI\QDOM
                     if ($from !== false) {
                         $where[]                     = $column . ' >= :' . $columnName . 'From';
                         $binds[$columnName . 'From'] = array(
-                            'value' => $value,
+                            'value' => $this->sanitizeString($value),
                             'type'  => \PDO::PARAM_STR
                         );
                     }
@@ -331,7 +342,7 @@ abstract class Search extends QUI\QDOM
                     if ($to !== false) {
                         $where[]                   = $column . ' <= :' . $columnName . 'To';
                         $binds[$columnName . 'To'] = array(
-                            'value' => $value,
+                            'value' => $this->sanitizeString($value),
                             'type'  => \PDO::PARAM_STR
                         );
                     }
@@ -445,7 +456,7 @@ abstract class Search extends QUI\QDOM
                     for ($i = 0; $i < count($value); $i++) {
                         $where[]                 = $column . ' = :' . $columnName . $i;
                         $binds[$columnName . $i] = array(
-                            'value' => $value,
+                            'value' => $this->sanitizeString($value),
                             'type'  => \PDO::PARAM_STR
                         );
                     }
@@ -465,7 +476,7 @@ abstract class Search extends QUI\QDOM
 
                     $where[]            = $column . ' LIKE :' . $columnName;
                     $binds[$columnName] = array(
-                        'value' => '%' . $value . '%',
+                        'value' => '%' . $this->sanitizeString($value) . '%',
                         'type'  => \PDO::PARAM_STR
                     );
                     break;
@@ -535,5 +546,45 @@ abstract class Search extends QUI\QDOM
         }
 
         return false;
+    }
+
+    /**
+     * Sanitizes a string so it can be used for search
+     *
+     * @param string $str
+     * @return false|string
+     */
+    protected function sanitizeString($str)
+    {
+        if (!is_string($str)
+            && !is_numeric($str)
+        ) {
+            return false;
+        }
+
+        $str = Orthos::removeHTML($str);
+        $str = Orthos::clearPath($str);
+        $str = htmlspecialchars_decode($str);
+        $str = str_replace(
+            array(
+                '<',
+                '%3C',
+                '>',
+                '%3E',
+                '"',
+                '%22',
+//                '\\',
+//                '%5C',
+//                '/',
+//                '%2F',
+                '\'',
+                '%27',
+            ),
+            '',
+            $str
+        );
+        $str = htmlspecialchars($str);
+
+        return $str;
     }
 }

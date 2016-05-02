@@ -73,6 +73,81 @@ class FrontendSearch extends Search
     }
 
     /**
+     * Perform machine search and set search parameters via GET/POST
+     *
+     * @param array $urlParams
+     * @param bool $countOnly (optional) - return search result count only [default: false]
+     * @return array
+     */
+    public function searchByUrl($urlParams, $countOnly = false)
+    {
+        $searchData = array(
+            'fields' => array()
+        );
+
+        // parse all field specific parameters
+        foreach ($urlParams as $k => $v) {
+            if (mb_strpos($k, 'F') !== 0) {
+                continue;
+            }
+
+            preg_match('#\d*#i', $k, $matches);
+
+            if (empty($matches)) {
+                continue;
+            }
+
+            $v       = $this->sanitizeString($v);
+            $fieldId = (int)$matches[0];
+
+            preg_match('#from#i', $k, $from);
+            preg_match('#to#i', $k, $to);
+
+            if (!empty($from)
+                || !empty($to)
+            ) {
+                $value = array();
+
+                if (!empty($from)) {
+                    $value['from'] = $v;
+                }
+
+                if (!empty($to)) {
+                    $value['to'] = $v;
+                }
+
+                $v = $value;
+            }
+
+            $searchData['fields'][$fieldId] = array(
+                'value' => $v
+            );
+        }
+
+        if (isset($urlParams['category']) && !empty($urlParams['category'])) {
+            $searchData['category'] = (int)$urlParams['category'];
+        }
+
+        if (isset($urlParams['limit']) && !empty($urlParams['limit'])) {
+            $searchData['limit'] =$urlParams['limit'];
+        }
+
+        if (isset($urlParams['sheet']) && !empty($urlParams['sheet'])) {
+            $searchData['sheet'] = (int)$urlParams['sheet'];
+        }
+
+        if (isset($urlParams['sortOn']) && !empty($urlParams['sortOn'])) {
+            $searchData['sortOn'] = $urlParams['sortOn'];
+        }
+
+        if (isset($urlParams['sortBy']) && !empty($urlParams['sortBy'])) {
+            $searchData['sortBy'] = $urlParams['sortBy'];
+        }
+
+        return $this->search($searchData, $countOnly);
+    }
+
+    /**
      * Execute product search
      *
      * @param array $searchParams - search parameters
@@ -153,7 +228,7 @@ class FrontendSearch extends Search
         ) {
             $Pagination = new QUI\Bricks\Controls\Pagination($searchParams);
             $sqlParams  = $Pagination->getSQLParams();
-            $sql .= " LIMIT " . $sqlParams['limit'];
+            $sql .= " LIMIT " . Orthos::clear($sqlParams['limit']);
         } else {
             if (!$countOnly) {
                 $sql .= " LIMIT " . (int)20; // @todo: standard-limit als setting auslagern
