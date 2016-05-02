@@ -351,12 +351,24 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         .append(systemFields)
                         .append(standardFields);
 
+                    // cleanup complete list
+                    var completeIds = {};
+
+                    complete = complete.filter(function (entry) {
+                        if (entry.id in completeIds) {
+                            return false;
+                        }
+                        completeIds[entry.id] = true;
+                        return true;
+                    });
+
                     for (i = 0, len = complete.length; i < len; i++) {
                         fieldList[complete[i].id] = complete[i];
                     }
 
                     self.$createCategories(fieldList.clean());
 
+                    
                     var diffFields = complete.filter(function (value) {
                         for (var i = 0, len = systemFields.length; i < len; i++) {
                             if (value.id === systemFields[i].id) {
@@ -592,8 +604,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @return {Promise}
          */
         openData: function () {
-            if (this.getCategory('data').isActive()
-                && !this.$FieldAdministration.getStyle('opacity')) {
+            if (this.getCategory('data').isActive() && !this.$FieldAdministration.getStyle('opacity')) {
                 return Promise.resolve();
             }
 

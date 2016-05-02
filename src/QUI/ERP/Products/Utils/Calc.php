@@ -94,7 +94,6 @@ class Calc
 
         /* @var PriceFactor $PriceFactor */
         foreach ($prices as $PriceFactor) {
-            QUI\System\Log::writeRecursive($PriceFactor->getCalculation());
             switch ($PriceFactor->getCalculation()) {
                 // einfache Zahl, Währung --- kein Prozent
                 case Calc::CALCULATION_COMPLEMENT:

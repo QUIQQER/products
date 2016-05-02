@@ -8,6 +8,11 @@
                     <type><![CDATA[string]]></type>
                 </conf>
             </section>
+            <section name="search">
+                <conf name="backend">
+                    <type><![CDATA[string]]></type>
+                </conf>
+            </section>
         </config>
 
         <window name="ERP">
@@ -33,6 +38,27 @@
                         <input conf="products.folder" class="media-folder">
                             <text>
                                 <locale group="quiqqer/products" var="settings.window.products.folder"/>
+                            </text>
+                        </input>
+                    </settings>
+                </category>
+
+                <category name="adminSearchFields" index="4">
+                    <text>
+                        <locale group="quiqqer/products" var="menu.erp.products.fieldsearch.title"/>
+                    </text>
+                    <icon>fa fa-search</icon>
+
+                    <settings title="search" name="search">
+                        <title>
+                            <locale group="quiqqer/products" var="menu.erp.products.fieldsearch.title"/>
+                        </title>
+
+                        <input conf="search.backend"
+                               data-qui="package/quiqqer/products/bin/controls/products/search/Settings"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.fieldsearch.select"/>
                             </text>
                         </input>
                     </settings>

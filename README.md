@@ -56,7 +56,6 @@ Lizenz
 Entwickler
 --------
 
-
 ```php
 
 // Ein Produkt bekommen
@@ -66,3 +65,8 @@ QUI\ERP\Products\Handler\Products::getProduct( ID );
 QUI\ERP\Products\Handler\Fields::getField( ID );
 
 ```
+
+Events
+======
+
+- onQuiqqerProductsPriceFactorsInit [PriceFactors, UniqueProduct]

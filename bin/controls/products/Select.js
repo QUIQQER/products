@@ -159,6 +159,11 @@ define('package/quiqqer/products/bin/controls/products/Select', [
                 icon  : 'fa fa-search',
                 styles: {
                     width: 50
+                },
+                events: {
+                    onClick: function () {
+
+                    }
                 }
             }).inject(this.$Elm);
 
