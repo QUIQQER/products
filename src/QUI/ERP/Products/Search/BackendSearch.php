@@ -69,7 +69,7 @@ class BackendSearch extends Search
             $binds[] = array(
                 'category' => array(
                     'value' => (int)$searchParams['category'],
-                    'type'  => \PDO::PARAM_INT
+                    'type' => \PDO::PARAM_INT
                 )
             );
         }
@@ -186,12 +186,11 @@ class BackendSearch extends Search
             $Field = Fields::getField($fieldId);
 
             $searchFieldDataContent = array(
-                'id'         => $Field->getId(),
+                'id' => $Field->getId(),
                 'searchType' => $Field->getSearchType()
             );
 
-            if (in_array($Field->getSearchType(),
-                $this->searchTypesWithValues)) {
+            if (in_array($Field->getSearchType(), $this->searchTypesWithValues)) {
                 $searchValues = $this->getValuesFromField($Field, false);
                 $searchParams = array();
 
@@ -260,7 +259,8 @@ class BackendSearch extends Search
 
         foreach ($currentSearchFields as $fieldId => $search) {
             if (isset($searchFields[$fieldId])
-                && $searchFields[$fieldId]) {
+                && $searchFields[$fieldId]
+            ) {
                 $newSearchFieldIds[] = $fieldId;
             } else {
                 unset($currentSearchFields[$fieldId]);
@@ -275,7 +275,9 @@ class BackendSearch extends Search
             implode(',', $newSearchFieldIds)
         );
 
-        return $currentSearchFields;
+        $PackageCfg->save();
+
+        return $this->getSearchFields();
     }
 
     /**

@@ -8,11 +8,13 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
 
     'qui/QUI',
     'qui/controls/Control',
+    'qui/controls/buttons/Switch',
     'controls/grid/Grid',
     'Locale',
-    'Ajax'
+    'Ajax',
+    'package/quiqqer/products/bin/Fields'
 
-], function (QUI, QUIControl, Grid, QUILocale, Ajax) {
+], function (QUI, QUIControl, QUISwitch, Grid, QUILocale, Ajax, Fields) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -22,8 +24,14 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
         Type   : 'package/quiqqer/products/bin/controls/products/search/Settings',
 
         Binds: [
-            '$onImport'
+            '$onImport',
+            '$onSwitchChange',
+            'refresh'
         ],
+
+        options: {
+            ids: []
+        },
 
         initialize: function (options) {
             this.parent(options);
@@ -42,6 +50,7 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
             this.$Input      = this.getElm();
             this.$Input.type = 'hidden';
 
+            // create
             this.$Elm = new Element('div', {
                 styles: {
                     'float'  : 'left',
@@ -74,10 +83,15 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
                 }
             }).inject(this.$Elm);
 
-            new Grid(Container, {
+            this.$Grid = new Grid(Container, {
                 height     : 300,
                 width      : size.x - 100,
                 columnModel: [{
+                    header   : QUILocale.get(lg, 'id'),
+                    dataIndex: 'status',
+                    dataType : 'QUI',
+                    width    : 60
+                }, {
                     header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
                     dataType : 'number',
@@ -97,45 +111,118 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
                     dataIndex: 'search_type',
                     dataType : 'text',
                     width    : 200
-                }, {
-                    header   : QUILocale.get(lg, 'priority'),
-                    dataIndex: 'priority',
-                    dataType : 'number',
-                    width    : 100
-                }, {
-                    header   : QUILocale.get(lg, 'prefix'),
-                    dataIndex: 'prefix',
-                    dataType : 'text',
-                    width    : 100
-                }, {
-                    header   : QUILocale.get(lg, 'suffix'),
-                    dataIndex: 'suffix',
-                    dataType : 'text',
-                    width    : 100
-                }, {
-                    header   : QUILocale.get(lg, 'standardField'),
-                    dataIndex: 'isStandard',
-                    dataType : 'node',
-                    width    : 60
-                }, {
-                    header   : QUILocale.get(lg, 'requiredField'),
-                    dataIndex: 'isRequired',
-                    dataType : 'node',
-                    width    : 60
                 }]
+            });
+
+            this.$Grid.addEvents({
+                refresh: this.refresh
+            });
+
+            this.$Grid.refresh();
+        },
+
+        /**
+         * Get the available search fields
+         *
+         * @returns {Promise}
+         */
+        refresh: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_search_backend_getSearchFields', function (result) {
+                    var fieldIds = Object.keys(result),
+                        ids      = [],
+                        values   = this.$Input.value.split(',');
+
+                    values.each(function (value) {
+                        ids.push(parseInt(value));
+                    });
+
+                    this.setAttribute('ids', ids);
+
+                    Fields.getChildren(fieldIds).then(function (fieldlist) {
+                        var fieldsData = fieldlist.map(function (entry) {
+                            var Switch = new QUISwitch({
+                                status : ids.contains(entry.id),
+                                fieldId: entry.id,
+                                events : {
+                                    onChange: this.$onSwitchChange
+                                }
+                            });
+
+                            return {
+                                status     : Switch,
+                                id         : entry.id,
+                                title      : entry.title,
+                                fieldtype  : entry.fieldtype,
+                                search_type: entry.search_type
+                            };
+                        }.bind(this));
+
+                        this.$Grid.setData({
+                            data: fieldsData
+                        });
+
+                        resolve();
+                    }.bind(this));
+
+                }.bind(this), {
+                    'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            }.bind(this));
+        },
+
+        /**
+         * Set fields to the config
+         *
+         * @param {Array} searchFields
+         * @returns {Promise}
+         */
+        setFields: function (searchFields) {
+            return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_search_backend_setSearchFields', resolve, {
+                    'package'   : 'quiqqer/products',
+                    onError     : reject,
+                    searchFields: JSON.encode(searchFields)
+                });
             });
         },
 
-        refresh: function () {
-            return new Promise(function (resolve, reject) {
-                Ajax.get('', function () {
-
-
-                    resolve();
-                }, {
-                    'package': 'quiqqer/products'
-                });
+        /**
+         * event : switch status change
+         *
+         * @apram {Object} CurrentSwitch
+         */
+        $onSwitchChange: function (CurrentSwitch) {
+            var controls = QUI.Controls.getControlsInElement(this.$Elm);
+            var switches = controls.filter(function (Control) {
+                return Control.getType() === 'qui/controls/buttons/Switch';
             });
+
+            var i, len, fieldId;
+            var values = {};
+
+            for (i = 0, len = switches.length; i < len; i++) {
+                fieldId = switches[i].getAttribute('fieldId');
+
+                values[fieldId] = switches[i].getStatus();
+            }
+
+            CurrentSwitch.disable();
+
+            this.setFields(values).then(function (result) {
+                var keys = [];
+                
+                for (var i in result) {
+                    if (result.hasOwnProperty(i) && result[i]) {
+                        keys.push(i);
+                    }
+                }
+
+                this.$Input.value = keys.join(',');
+                this.refresh();
+
+            }.bind(this));
         }
     });
 });
