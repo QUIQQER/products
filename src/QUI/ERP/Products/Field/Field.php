@@ -909,7 +909,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 $add = 1;
                 $i   = 10;
 
-                while ($value < $i) {
+                while ($value > $i) {
                     $i *= 10;
                     $add *= 10;
                 }
