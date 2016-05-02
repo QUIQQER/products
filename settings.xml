@@ -40,6 +40,14 @@
                                 <locale group="quiqqer/products" var="settings.window.products.folder"/>
                             </text>
                         </input>
+
+                        <input type="hidden"
+                               data-qui="package/quiqqer/products/bin/controls/products/settings/ClearProductCache"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.clearcache"/>
+                            </text>
+                        </input>
                     </settings>
                 </category>
 

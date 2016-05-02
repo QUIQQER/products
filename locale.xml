@@ -51,6 +51,14 @@
             <de><![CDATA[Suchbar]]></de>
             <en><![CDATA[Searchable]]></en>
         </locale>
+        <locale name="settings.window.products.clearcache">
+            <de><![CDATA[Produktcache]]></de>
+            <en><![CDATA[Product cache]]></en>
+        </locale>
+        <locale name="settings.window.products.clearcache.button">
+            <de><![CDATA[Produktcache leeren]]></de>
+            <en><![CDATA[Clear product cache]]></en>
+        </locale>
 
         <locale name="settings.window.fieldsearch.select">
             <de><![CDATA[Feldeinstellungen für die Produktsuche im Backend.]]></de>

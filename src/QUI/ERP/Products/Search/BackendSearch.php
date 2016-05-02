@@ -183,6 +183,10 @@ class BackendSearch extends Search
 
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($parseFields as $fieldId => $search) {
+            if (!$search) {
+                continue;
+            }
+
             $Field = Fields::getField($fieldId);
 
             $searchFieldDataContent = array(
