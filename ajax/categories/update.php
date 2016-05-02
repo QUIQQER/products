@@ -32,8 +32,8 @@ QUI::$Ajax->registerFunction(
                 try {
                     $Field = $Fields->getField($fieldData['id']);
 
-                    $Field->setAttribute('publicStatus', $fieldData['publicStatus']);
-                    $Field->setAttribute('searchStatus', $fieldData['searchStatus']);
+//                    $Field->setAttribute('publicStatus', $fieldData['publicStatus']);
+//                    $Field->setAttribute('searchStatus', $fieldData['searchStatus']);
 
                     $Category->addField($Field);
 

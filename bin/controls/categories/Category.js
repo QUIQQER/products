@@ -692,9 +692,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 field = data[i];
 
                 fields.push({
-                    id          : field.id,
-                    publicStatus: field.publicStatus.getStatus(),
-                    searchStatus: field.searchStatus.getStatus()
+                    id: field.id
                 });
             }
 
