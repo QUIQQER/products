@@ -902,6 +902,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $value   = $start;
         $range[] = $value;
 
+        QUI\System\Log::writeRecursive($min);
+        QUI\System\Log::writeRecursive($max);
+        QUI\System\Log::writeRecursive($value);
+
         while ($value < $max) {
             if (round($value, 1) < 1) {
                 $add = 0.1;
@@ -909,7 +913,12 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 $add = 1;
                 $i   = 10;
 
-                while ($value < $i) {
+                while ($value > $i) {
+
+                    QUI\System\Log::writeRecursive($value);
+                    QUI\System\Log::writeRecursive($i);
+                    QUI\System\Log::writeRecursive('====');
+
                     $i *= 10;
                     $add *= 10;
                 }
@@ -919,7 +928,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
             $value += $add;
             $range[] = $value;
+
+
         }
+
+        QUI\System\Log::writeRecursive('stop');
 
         return $range;
     }
