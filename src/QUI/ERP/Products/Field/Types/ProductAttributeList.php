@@ -44,7 +44,8 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             'entries' => array(),
             'priority' => 0,
             'calculation_basis' => '',
-            'display_discounts' => true
+            'display_discounts' => true,
+            'generate_tags' => false
         ));
 
         parent::__construct($fieldId, $params);

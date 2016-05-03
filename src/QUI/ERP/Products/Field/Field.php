@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Field;
 use QUI;
 use QUI\ERP\Products\Handler\Search;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Handler\Products;
 
 /**
  * Class Field
@@ -817,6 +818,21 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['ownField']   = $this->isOwnField();
 
         return $attributes;
+    }
+
+    /**
+     * Get all products associated with a field
+     */
+    public function getProducts()
+    {
+        return Products::getProducts(array(
+            'where' => array(
+                'fieldData' => array(
+                    'type' => '%LIKE%',
+                    'value' => '"id":' . $this->id . ','
+                )
+            )
+        ));
     }
 
     /**
