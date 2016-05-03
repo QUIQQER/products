@@ -140,9 +140,9 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
                         var fieldsIds = result.map(function (Entry) {
                             return Entry.id;
                         });
-
+                        
                         Fields.getChildren(fieldsIds).then(function (fields) {
-                            var i, len, fieldId, Field;
+                            var i, id, len, fieldId, Field;
 
                             var fieldFilter = function (Field) {
                                 return Field.id == this;
@@ -155,9 +155,6 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
                                 result[i].fieldTitle = Field.title;
                             }
 
-                            console.log(fields);
-                            console.log(result);
-
                             this.$Form.set({
                                 html: Mustache.render(template, {
                                     fields        : result,
@@ -166,6 +163,33 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
                             });
 
                             QUI.parse(this.$Form).then(function () {
+                                var Field;
+                                var controls = QUI.Controls.getControlsInElement(this.$Form);
+
+                                var getControlByFieldById = function (fieldId) {
+                                    for (var c = 0, len = controls.length; c < len; c++) {
+                                        if (controls[c].getAttribute('fieldid') === fieldId) {
+                                            return controls[c];
+                                        }
+                                    }
+                                    return false;
+                                };
+
+                                for (i = 0, len = result.length; i < len; i++) {
+                                    id = result[i].id;
+
+                                    if (!("searchData" in result[i])) {
+                                        continue;
+                                    }
+
+                                    Field = getControlByFieldById(result[i].id);
+
+                                    if (Field) {
+                                        Field.setSearchData(result[i].searchData);
+                                    }
+                                }
+
+
                                 this.$showContainer(this.$Form).then(resolve, reject);
                             }.bind(this));
 
