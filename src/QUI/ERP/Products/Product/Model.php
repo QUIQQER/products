@@ -617,8 +617,12 @@ class Model extends QUI\QDOM
 
         $fields = $this->getFields();
 
-        /** @var Field $Field */
+        /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($fields as $Field) {
+            if (!$Field->isSearchable()) {
+                continue;
+            }
+
             $fieldColumnName        = SearchHandler::getSearchFieldColumnName($Field);
             $data[$fieldColumnName] = $Field->getSearchCacheValue($Locale);
         }

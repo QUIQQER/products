@@ -55,6 +55,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             // price container
             this.$PriceCalc        = null;
             this.$DisplayDiscounts = null;
+            this.$GenerateTags     = null;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -194,6 +195,14 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                          '                class="quiqqer-products-attributeList-settings-input" />' +
                          '     </label>' +
                          '</div>' +
+                         '<div class="quiqqer-products-attributeList-settings-generateTags">' +
+                         '     <label>' +
+                         '         <span class="quiqqer-products-attributeList-settings-text">' +
+                         '             Tags generieren:' +
+                         '         </span>' +
+                         '         <input type="checkbox" name="generate_tags" />' +
+                         '     </label>' +
+                         '</div>' +
                          '<div class="quiqqer-products-attributeList-settings-displayDiscounts">' +
                          '     <label>' +
                          '         <span class="quiqqer-products-attributeList-settings-text">' +
@@ -219,6 +228,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             this.$Priority         = this.$PriceCalc.getElement('[name="price_priority"]');
             this.$CalcBasis        = this.$PriceCalc.getElement('[name="price_calculation_basis"]');
             this.$DisplayDiscounts = this.$PriceCalc.getElement('[name="display_discounts"]');
+            this.$GenerateTags     = this.$PriceCalc.getElement('[name="generate_tags"]');
 
             this.refresh();
         },
@@ -287,9 +297,16 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 this.$DisplayDiscounts.checked = false;
             }
 
+            if ("generate_tags" in data) {
+                this.$GenerateTags.checked = data.generate_tags;
+            } else {
+                this.$GenerateTags.checked = false;
+            }
+
             this.$Priority.addEvent('change', this.update);
             this.$CalcBasis.addEvent('change', this.update);
             this.$DisplayDiscounts.addEvent('change', this.update);
+            this.$GenerateTags.addEvent('change', this.update);
         },
 
         /**
@@ -523,7 +540,8 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 entries          : this.$data,
                 priority         : this.$Priority.value,
                 calculation_basis: this.$CalcBasis.value,
-                display_discounts: this.$DisplayDiscounts.checked
+                display_discounts: this.$DisplayDiscounts.checked,
+                generate_tags    : this.$GenerateTags.checked
             });
         },
 

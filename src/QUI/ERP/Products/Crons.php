@@ -7,6 +7,7 @@ namespace QUI\ERP\Products;
 
 use QUI;
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Class EventHandling
@@ -42,6 +43,100 @@ class Crons
                     . $Exception->getMessage()
                 );
             }
+        }
+    }
+
+    /**
+     * Generates tags for every entry in every product attribute list field
+     * and assigns them to projects and products
+     *
+     * @hrows QUI\Exception
+     */
+    public static function generateProductAttributeListTags()
+    {
+        $fields = Fields::getFields(array(
+            'where' => array(
+                'type' => 'ProductAttributeList'
+            )
+        ));
+
+        $projects = QUI::getProjectManager()->getProjects(false);
+
+        /** @var QUI\ERP\Products\Field\Field $Field */
+        foreach ($fields as $Field) {
+            $options = $Field->getOptions();
+
+            if (!isset($options['generate_tags'])
+                || !$options['generate_tags']
+            ) {
+                continue;
+            }
+
+            if (!isset($options['entries'])) {
+                QUI\System\Log::addWarning(
+                    'Cron :: generateProductAttributeListTags -> Could not find'
+                    . ' product attribute list entries for field #' . $Field->getId()
+                );
+
+                continue;
+            }
+
+            $tagsByLang = array();
+            $tagList    = array();
+
+            foreach ($options['entries'] as $entry) {
+                foreach ($entry['title'] as $lang => $text) {
+                    if (empty($lang)
+                        || empty($text)
+                    ) {
+                        continue;
+                    }
+
+                    $tagsByLang[$lang][] = $text;
+                    $tagList[]           = $text;
+                }
+            }
+
+            $products = $Field->getProducts();
+
+            foreach ($tagsByLang as $lang => $tags) {
+                foreach ($tags as $tag) {
+                    // add tags to projects
+                    foreach ($projects as $project) {
+                        self::addTagToProject($project, $lang, $tag);
+                    }
+                }
+            }
+
+            foreach ($tagList as $tag) {
+                // add tags to products
+                foreach ($products as $Product) {
+                    // TODO: add tag to product
+                }
+            }
+        }
+    }
+
+    /**
+     * Adds a tag to a project
+     *
+     * @param string $project - project name
+     * @param string $lang - tag and project lang
+     * @param string $tag - text of the tag
+     */
+    protected static function addTagToProject($project, $lang, $tag)
+    {
+        try {
+            $Project    = QUI::getProjectManager()->getProject($project, $lang);
+            $TagManager = new QUI\Tags\Manager($Project);
+
+            $TagManager->add($tag, array('title' => $tag));
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addNotice(
+                'Cron :: generateProductAttributeListTags -> Could not'
+                . ' add tags to projects with lang "' . $lang . '" -> '
+                . $Exception->getMessage()
+            );
         }
     }
 }
