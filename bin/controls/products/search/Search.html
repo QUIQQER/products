@@ -1,0 +1,18 @@
+{{#fields}}
+<label class="field-container">
+    <span class="field-container-item" title="{{fieldTitle}}" data-fieldid="{{id}}">
+        {{fieldTitle}}
+    </span>
+    <div class="field-container-field"
+         data-searchtype="{{searchType}}"
+         data-qui="package/quiqqer/products/bin/controls/search/SearchField"
+    >
+        {{searchType}}
+    </div>
+</label>
+{{/fields}}
+{{^fields}}
+<div class="quiqqer-products-search-empty">
+    {{text_no_fields}}
+</div>
+{{/fields}}
