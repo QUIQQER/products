@@ -402,6 +402,36 @@
             <de><![CDATA[Darf Produkte bearbeiten.]]></de>
             <en><![CDATA[Is allowed to edit products.]]></en>
         </locale>
+
+        <!-- Permissions -->
+        <locale name="permission.search._header">
+            <de><![CDATA[Produkt-Suche]]></de>
+            <en><![CDATA[Product search]]></en>
+        </locale>
+        <locale name="permission.search.backend._header">
+            <de><![CDATA[Frontend]]></de>
+            <en><![CDATA[Frontend]]></en>
+        </locale>
+        <locale name="permission.search.frontend._header">
+            <de><![CDATA[Backend]]></de>
+            <en><![CDATA[Backend]]></en>
+        </locale>
+        <locale name="permission.search.frontend.execute">
+            <de><![CDATA[Darf Frontend-Suche ausführen]]></de>
+            <en><![CDATA[Can execute frontend search]]></en>
+        </locale>
+        <locale name="permission.search.frontend.configure">
+            <de><![CDATA[Darf Such-Felder für die Frontend-Suche konfigurieren]]></de>
+            <en><![CDATA[Can configure search fields for the frontend search]]></en>
+        </locale>
+        <locale name="permission.search.backend.execute">
+            <de><![CDATA[Darf Backend-Suche ausführen]]></de>
+            <en><![CDATA[Can execute backend search]]></en>
+        </locale>
+        <locale name="permission.search.backend.configure">
+            <de><![CDATA[Darf Such-Felder für die Backend-Suche konfigurieren]]></de>
+            <en><![CDATA[Can configure search fields for the backend search]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
