@@ -2,7 +2,7 @@
  * @module package/quiqqer/products/bin/controls/products/search/Search
  * @author www.pcsg.de (Henning Leutz)
  *
- * Backend suche für produkte
+ * Backend suche für produkte, nur das suchformular
  *
  * @require qui/QUI
  * @require qui/controls/Control
@@ -10,11 +10,14 @@
  * @require Ajax
  * @require Locale
  * @require css!package/quiqqer/products/bin/controls/products/search/Search.css
+ *
+ * @event onSearchBegin [this]
  */
 define('package/quiqqer/products/bin/controls/products/search/Search', [
 
     'qui/QUI',
     'qui/controls/Control',
+    'qui/controls/buttons/Button',
     'controls/grid/Grid',
     'package/quiqqer/products/bin/Fields',
     'Ajax',
@@ -24,7 +27,7 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
     'text!package/quiqqer/products/bin/controls/products/search/Search.html',
     'css!package/quiqqer/products/bin/controls/products/search/Search.css'
 
-], function (QUI, QUIControl, Grid, Fields, Ajax, QUILocale, Mustache, template) {
+], function (QUI, QUIControl, QUIButton, Grid, Fields, Ajax, QUILocale, Mustache, template) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -34,9 +37,14 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
         Type   : 'package/quiqqer/products/bin/controls/products/search/Search',
 
         Binds: [
-            '$onCreate',
+            'search',
             '$onInject'
         ],
+
+        options: {
+            searchfields: {},
+            searchbutton: true
+        },
 
         initialize: function (options) {
             this.parent(options);
@@ -53,17 +61,23 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
         },
 
         /**
-         * event : on create
+         * Resize
+         *
+         * @return {Promise}
+         */
+        resize: function () {
+            return Promise.resize();
+        },
+
+        /**
+         * Create the domnode element
+         *
+         * @return {HTMLFormElement}
          */
         create: function () {
-            this.$Elm = new Element('div', {
-                'class': 'quiqqer-products-search',
-                html   : '<div class="quiqqer-products-search-result"></div>' +
-                         '<div class="quiqqer-products-search-form"></div>'
+            this.$Elm = new Element('form', {
+                'class': 'quiqqer-products-search'
             });
-
-            this.$Result = this.getElm().getElement('.quiqqer-products-search-result');
-            this.$Form   = this.getElm().getElement('.quiqqer-products-search-form');
 
             return this.$Elm;
         },
@@ -72,204 +86,101 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
          * event : on inject
          */
         $onInject: function () {
-            var Container = new Element('div', {
-                'class': 'quiqqer-products-search-result-container'
-            }).inject(this.$Result);
+            Ajax.get('package_quiqqer_products_ajax_search_backend_getSearchFieldData', function (result) {
 
-            this.$Grid = new Grid(Container, {
-                columnModel: [{
-                    header   : QUILocale.get(lg, 'product.fields.grid.visible'),
-                    dataIndex: 'visible',
-                    dataType : 'QUI',
-                    width    : 60
-                }, {
-                    header   : '&nbsp;',
-                    dataIndex: 'ownFieldDisplay',
-                    dataType : 'node',
-                    width    : 30
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'id'),
-                    dataIndex: 'id',
-                    dataType : 'number',
-                    width    : 60
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'title'),
-                    dataIndex: 'title',
-                    dataType : 'text',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get(lg, 'fieldtype'),
-                    dataIndex: 'fieldtype',
-                    dataType : 'text',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get(lg, 'priority'),
-                    dataIndex: 'priority',
-                    dataType : 'number',
-                    width    : 100
-                }, {
-                    header   : QUILocale.get(lg, 'prefix'),
-                    dataIndex: 'prefix',
-                    dataType : 'text',
-                    width    : 100
-                }, {
-                    header   : QUILocale.get(lg, 'suffix'),
-                    dataIndex: 'suffix',
-                    dataType : 'text',
-                    width    : 100
-                }, {
-                    dataIndex: 'ownField',
-                    dataType : 'hidden'
-                }]
-            });
+                var fieldsIds = result.map(function (Entry) {
+                    return Entry.id;
+                });
 
-            this.showSearch();
-        },
+                Fields.getChildren(fieldsIds).then(function (fields) {
+                    var i, id, len, fieldId, Field;
 
-        /**
-         * Show the search
-         *
-         * @returns {Promise}
-         */
-        showSearch: function () {
-            return this.$hideContainer(this.$Result).then(function () {
+                    var fieldFilter = function (Field) {
+                        return Field.id == this;
+                    };
 
-                return new Promise(function (resolve, reject) {
-                    Ajax.get('package_quiqqer_products_ajax_search_backend_getSearchFieldData', function (result) {
+                    for (i = 0, len = result.length; i < len; i++) {
+                        fieldId = result[i].id;
+                        Field   = fields.filter(fieldFilter.bind(result[i].id))[0];
 
-                        var fieldsIds = result.map(function (Entry) {
-                            return Entry.id;
-                        });
-                        
-                        Fields.getChildren(fieldsIds).then(function (fields) {
-                            var i, id, len, fieldId, Field;
+                        result[i].fieldTitle = Field.title;
+                    }
 
-                            var fieldFilter = function (Field) {
-                                return Field.id == this;
-                            };
+                    this.$Elm.set({
+                        html: Mustache.render(template, {
+                            fields        : result,
+                            text_no_fields: 'Keine Suchefelder gefunden'
+                        })
+                    });
 
-                            for (i = 0, len = result.length; i < len; i++) {
-                                fieldId = result[i].id;
-                                Field   = fields.filter(fieldFilter.bind(result[i].id))[0];
+                    QUI.parse(this.$Elm).then(function () {
+                        var Field;
+                        var controls = QUI.Controls.getControlsInElement(this.$Elm);
 
-                                result[i].fieldTitle = Field.title;
+                        var getControlByFieldById = function (fieldId) {
+                            for (var c = 0, len = controls.length; c < len; c++) {
+                                if (controls[c].getAttribute('fieldid') === fieldId) {
+                                    return controls[c];
+                                }
+                            }
+                            return false;
+                        };
+
+                        for (i = 0, len = result.length; i < len; i++) {
+                            id = result[i].id;
+
+                            if (!("searchData" in result[i])) {
+                                continue;
                             }
 
-                            this.$Form.set({
-                                html: Mustache.render(template, {
-                                    fields        : result,
-                                    text_no_fields: 'Keine Suchefelder gefunden'
-                                })
-                            });
+                            Field = getControlByFieldById(result[i].id);
 
-                            QUI.parse(this.$Form).then(function () {
-                                var Field;
-                                var controls = QUI.Controls.getControlsInElement(this.$Form);
-
-                                var getControlByFieldById = function (fieldId) {
-                                    for (var c = 0, len = controls.length; c < len; c++) {
-                                        if (controls[c].getAttribute('fieldid') === fieldId) {
-                                            return controls[c];
-                                        }
-                                    }
-                                    return false;
-                                };
-
-                                for (i = 0, len = result.length; i < len; i++) {
-                                    id = result[i].id;
-
-                                    if (!("searchData" in result[i])) {
-                                        continue;
-                                    }
-
-                                    Field = getControlByFieldById(result[i].id);
-
-                                    if (Field) {
-                                        Field.setSearchData(result[i].searchData);
-                                    }
-                                }
-
-
-                                this.$showContainer(this.$Form).then(resolve, reject);
-                            }.bind(this));
-
-                        }.bind(this));
-
-                    }.bind(this), {
-                        'package': 'quiqqer/products',
-                        onError  : reject
-                    });
-                }.bind(this));
-
-            }.bind(this));
-        },
-
-        /**
-         * Show the results
-         *
-         * @returns {Promise}
-         */
-        showResults: function () {
-            return this.$hideContainer(this.$Result).then(function () {
-
-                return new Promise(function (resolve, reject) {
-                    Ajax.get('package_quiqqer_products_ajax_search_backend_getSearchFieldData', function (result) {
-
-                        for (var i = 0, len = result.length; i < len; i++) {
-                            console.log(result[i]);
+                            if (Field) {
+                                Field.setSearchData(result[i].searchData);
+                            }
                         }
+                    }.bind(this));
 
+                    if (this.getAttribute('searchbutton')) {
+                        new QUIButton({
+                            textimage: 'fa fa-search',
+                            text     : 'Suche',
+                            events   : {
+                                onClick: this.search
+                            }
+                        }).inject(this.$Elm);
+                    }
 
-                        this.$showContainer(this.$Form).then(resolve, reject);
-
-                    }.bind(this), {
-                        'package': 'quiqqer/products',
-                        onError  : reject
-                    });
                 }.bind(this));
 
+            }.bind(this), {
+                'package': 'quiqqer/products'
+            });
+        },
+
+        /**
+         * Execute the search
+         */
+        search: function () {
+            this.fireEvent('searchBegin', [this]);
+
+            return new Promise(function (resolve) {
+
+                var searchParams = {};
+
+                Ajax.get('package_quiqqer_products_ajax_search_backend_execute', function (result) {
+
+                    console.log(result);
+
+                    resolve();
+
+                    this.fireEvent('search', [this]);
+
+                }.bind(this), {
+                    searchParams: JSON.encode(searchParams)
+                });
+
             }.bind(this));
-        },
-
-        /**
-         * Hide a container
-         *
-         * @param {HTMLDivElement} Container
-         * @returns {Promise}
-         */
-        $hideContainer: function (Container) {
-            return new Promise(function (resolve) {
-                moofx(Container).animate({
-                    opacity: 0,
-                    top    : -50
-                }, {
-                    duration: 200,
-                    callback: function () {
-                        Container.setStyle('display', 'none');
-                        resolve();
-                    }
-                });
-            });
-        },
-
-        /**
-         * Show a container
-         *
-         * @param {HTMLDivElement} Container
-         * @returns {Promise}
-         */
-        $showContainer: function (Container) {
-            Container.setStyle('display', 'block');
-
-            return new Promise(function (resolve) {
-                moofx(Container).animate({
-                    opacity: 1,
-                    top    : 0
-                }, {
-                    duration: 200,
-                    callback: resolve
-                });
-            });
         }
     });
 });

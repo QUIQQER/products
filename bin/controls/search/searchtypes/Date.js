@@ -22,9 +22,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Date', [
         ],
 
         initialize: function (options) {
-
             this.$Elm = null;
-
             this.parent(options);
         },
 
@@ -34,7 +32,9 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Date', [
          * @return {HTMLDivElement}
          */
         create: function () {
-            this.$Elm = new Element('input');
+            this.$Elm = new Element('input', {
+                type: 'date'
+            });
 
             return this.$Elm;
         },
