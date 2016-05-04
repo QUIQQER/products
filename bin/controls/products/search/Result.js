@@ -77,11 +77,22 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
         },
 
         /**
+         * Set result data to the grid
+         *
+         * @param {Object} data - grid data
+         */
+        setData: function (data) {
+            console.warn(data);
+            this.$Grid.setData(data);
+        },
+
+        /**
          * event : on inject
          */
         $onInject: function () {
 
             this.$Grid = new Grid(this.$GridContainer, {
+                pagination : true,
                 columnModel: [{
                     header   : QUILocale.get(lg, 'product.fields.grid.visible'),
                     dataIndex: 'visible',

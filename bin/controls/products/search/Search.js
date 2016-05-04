@@ -49,11 +49,8 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Result = null;
-            this.$Form   = null;
-            this.$Grid   = null;
-
-
+            this.$Form = null;
+            
             this.addEvents({
                 onCreate: this.$onCreate,
                 onInject: this.$onInject
@@ -185,15 +182,9 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
 
                 params.fields = searchvalues;
 
-                console.log(params);
-
-                Ajax.get('package_quiqqer_products_ajax_search_backend_execute', function (result) {
-
-                    console.warn(result);
-
-                    resolve();
-
-                    this.fireEvent('search', [this]);
+                Ajax.get('package_quiqqer_products_ajax_search_backend_executeForGrid', function (result) {
+                    resolve(result);
+                    this.fireEvent('search', [this, result]);
 
                 }.bind(this), {
                     'package'   : 'quiqqer/products',

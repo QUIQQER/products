@@ -143,10 +143,12 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
 
         /**
          * event : on search .. ing
+         *
+         * @param {Object} Search - Search control
+         * @param {Array} result - grid data - product list
          */
-        $onSearch: function (result) {
-
-
+        $onSearch: function (Search, result) {
+            this.$Result.setData(result);
             this.Loader.hide();
         },
 
@@ -154,20 +156,7 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
          * Submit
          */
         submit: function () {
-            this.$Search.search();
-            // var ids = this.$Search.getSelectedData().map(function (Entry) {
-            //     return Entry.id;
-            // });
-            //
-            // if (!ids.length) {
-            //     return;
-            // }
-            //
-            // this.fireEvent('submit', [this, ids]);
-            //
-            // if (this.getAttribute('autoclose')) {
-            //     this.close();
-            // }
+            this.$Search.search().then();
         }
     });
 });
