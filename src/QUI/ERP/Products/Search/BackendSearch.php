@@ -101,7 +101,9 @@ class BackendSearch extends Search
         }
 
         // build WHERE query string
-        $sql .= " WHERE " . implode(" AND ", $where);
+        if (!empty($where)) {
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
 
         if (isset($searchParams['sortOn']) &&
             !empty($searchParams['sortOn'])
