@@ -82,7 +82,6 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
          * @param {Object} data - grid data
          */
         setData: function (data) {
-            console.warn(data);
             this.$Grid.setData(data);
         },
 
@@ -94,16 +93,6 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
             this.$Grid = new Grid(this.$GridContainer, {
                 pagination : true,
                 columnModel: [{
-                    header   : QUILocale.get(lg, 'product.fields.grid.visible'),
-                    dataIndex: 'visible',
-                    dataType : 'QUI',
-                    width    : 60
-                }, {
-                    header   : '&nbsp;',
-                    dataIndex: 'ownFieldDisplay',
-                    dataType : 'node',
-                    width    : 30
-                }, {
                     header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
                     dataType : 'number',
@@ -114,28 +103,15 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                     dataType : 'text',
                     width    : 200
                 }, {
-                    header   : QUILocale.get(lg, 'fieldtype'),
-                    dataIndex: 'fieldtype',
+                    header   : QUILocale.get('quiqqer/system', 'description'),
+                    dataIndex: 'description',
                     dataType : 'text',
                     width    : 200
                 }, {
-                    header   : QUILocale.get(lg, 'priority'),
-                    dataIndex: 'priority',
-                    dataType : 'number',
-                    width    : 100
-                }, {
-                    header   : QUILocale.get(lg, 'prefix'),
-                    dataIndex: 'prefix',
+                    header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
+                    dataIndex: 'price',
                     dataType : 'text',
                     width    : 100
-                }, {
-                    header   : QUILocale.get(lg, 'suffix'),
-                    dataIndex: 'suffix',
-                    dataType : 'text',
-                    width    : 100
-                }, {
-                    dataIndex: 'ownField',
-                    dataType : 'hidden'
                 }]
             });
         }

@@ -30,7 +30,12 @@ QUI::$Ajax->registerFunction(
         foreach ($result as $pid) {
             try {
                 $Product    = Products::getProduct((int)$pid);
-                $products[] = $Product->getAttributes();
+                $attributes = $Product->getAttributes();
+
+                $attributes['title']       = $Product->getTitle();
+                $attributes['description'] = $Product->getDescription();
+
+                $products[] = $attributes;
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeRecursive($Exception, QUI\System\Log::LEVEL_ALERT);
 
