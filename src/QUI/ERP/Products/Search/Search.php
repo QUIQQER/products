@@ -299,7 +299,8 @@ abstract class Search extends QUI\QDOM
                     $from = false;
                     $to   = false;
 
-                    if (isset($value['from'])) {
+                    if (isset($value['from'])
+                        && !empty($value['from'])) {
                         $from = $value['from'];
 
                         if (!is_string($from)) {
@@ -314,7 +315,8 @@ abstract class Search extends QUI\QDOM
                         }
                     }
 
-                    if (isset($value['to'])) {
+                    if (isset($value['to'])
+                        && !empty($value['to'])) {
                         $to = $value['to'];
 
                         if (!is_string($to)) {
@@ -375,7 +377,8 @@ abstract class Search extends QUI\QDOM
                     $from = false;
                     $to   = false;
 
-                    if (isset($value['from'])) {
+                    if (isset($value['from'])
+                        && !empty($value['from'])) {
                         $from = $value['from'];
 
                         if (!is_numeric($from)) {
@@ -390,7 +393,8 @@ abstract class Search extends QUI\QDOM
                         }
                     }
 
-                    if (isset($value['to'])) {
+                    if (isset($value['to'])
+                        && !empty($value['to'])) {
                         $to = $value['to'];
 
                         if (!is_numeric($from)) {
