@@ -34,7 +34,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Text', [
          */
         create: function () {
             this.$Elm = new Element('input', {
-                'class' : 'quiqqer-products-searchtype-text'
+                'class': 'quiqqer-products-searchtype-text'
             });
 
             return this.$Elm;
@@ -43,10 +43,19 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Text', [
         /**
          * set the search data
          *
-         * @param {object|array} data
+         * @param {Object|Array} data
          */
         setSearchData: function (data) {
             this.$Elm.value = data.toString();
+        },
+
+        /**
+         * Return the search value
+         *
+         * @returns {String}
+         */
+        getSearchValue: function () {
+            return this.$Elm.value;
         }
     });
 });

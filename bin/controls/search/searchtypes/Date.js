@@ -2,6 +2,8 @@
  * @module package/quiqqer/products/bin/controls/search/searchtypes/Date
  * @author www.pcsg.de (Henning Leutz)
  *
+ * Ein Datumsfeld
+ *
  * @require qui/QUI
  * @require qui/controls/Control
  */
@@ -46,6 +48,10 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Date', [
          */
         setSearchData: function (data) {
 
+        },
+
+        getSearchValue: function () {
+            return '';
         }
     });
 });

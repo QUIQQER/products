@@ -166,18 +166,38 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
 
             return new Promise(function (resolve) {
 
-                var searchParams = {};
+                var params   = {},
+                    controls = QUI.Controls.getControlsInElement(this.$Elm);
+
+                var searchfields = controls.filter(function (Control) {
+                    return Control.getType() === 'package/quiqqer/products/bin/controls/search/SearchField';
+                });
+
+                var i, len, Field, fieldid;
+                var searchvalues = {};
+
+                for (i = 0, len = searchfields.length; i < len; i++) {
+                    Field   = searchfields[i];
+                    fieldid = Field.getFieldId();
+
+                    searchvalues[fieldid] = Field.getSearchValue();
+                }
+
+                params.fields = searchvalues;
+
+                console.log(params);
 
                 Ajax.get('package_quiqqer_products_ajax_search_backend_execute', function (result) {
 
-                    console.log(result);
+                    console.warn(result);
 
                     resolve();
 
                     this.fireEvent('search', [this]);
 
                 }.bind(this), {
-                    searchParams: JSON.encode(searchParams)
+                    'package'   : 'quiqqer/products',
+                    searchParams: JSON.encode(params)
                 });
 
             }.bind(this));

@@ -2,6 +2,8 @@
  * @module package/quiqqer/products/bin/controls/search/searchtypes/DateRange
  * @author www.pcsg.de (Henning Leutz)
  *
+ * Ein Datumsfeld von bis
+ *
  * @require qui/QUI
  * @require qui/controls/Control
  */
@@ -46,6 +48,10 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/DateRange', [
          */
         setSearchData: function (data) {
 
+        },
+
+        getSearchValue: function () {
+            return '';
         }
     });
 });
