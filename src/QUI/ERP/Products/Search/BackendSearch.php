@@ -132,7 +132,9 @@ class BackendSearch extends Search
                 $sql .= " LIMIT " . (int)20; // @todo: standard-limit als setting auslagern
             }
         }
-QUI\System\Log::writeRecursive($sql);
+
+        $sql .= " GROUP BY id ";
+
         $Stmt = $PDO->prepare($sql);
 
         // bind search values

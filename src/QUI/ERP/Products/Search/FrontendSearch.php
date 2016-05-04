@@ -241,6 +241,8 @@ class FrontendSearch extends Search
             }
         }
 
+        $sql .= " GROUP BY id ";
+
         $Stmt = $PDO->prepare($sql);
 
         // bind search values
