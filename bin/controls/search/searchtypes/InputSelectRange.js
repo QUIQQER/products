@@ -4,6 +4,7 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require qui/controls/buttons/Select
  */
 define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRange', [
 
@@ -37,11 +38,32 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
          * @return {HTMLDivElement}
          */
         create: function () {
-            this.$SelectFrom = new QUISelect();
-            this.$SelectTo   = new QUISelect();
+            this.$Elm = new Element('div', {
+                styles: {
+                    width: '100%'
+                }
+            });
 
-            this.$Elm = this.$SelectFrom.create();
-            this.$Elm = this.$SelectTo.create();
+            this.$SelectFrom = new QUISelect({
+                showIcons      : false,
+                placeholderText: 'Von',
+                styles         : {
+                    margin: '0 2px 0 0',
+                    width : 'calc(50% - 2px)'
+                }
+            });
+
+            this.$SelectTo = new QUISelect({
+                showIcons      : false,
+                placeholderText: 'Bis',
+                styles         : {
+                    margin: '0 0 0 2px',
+                    width : 'calc(50% - 2px)'
+                }
+            });
+
+            this.$SelectFrom.inject(this.$Elm);
+            this.$SelectTo.inject(this.$Elm);
 
             this.refresh();
 
@@ -55,14 +77,17 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
             if (!this.$Select || !this.$data) {
                 return;
             }
-return;
-            this.$Select.clear();
 
-            console.log(this.$Elm);
-            console.log(this.$data);
+            this.$SelectFrom.clear();
+            this.$SelectTo.clear();
 
             for (var i = 0, len = this.$data.length; i < len; i++) {
-                this.$Select.appendChild(
+                this.$SelectFrom.appendChild(
+                    this.$data[i].label,
+                    this.$data[i].value
+                );
+
+                this.$SelectTo.appendChild(
                     this.$data[i].label,
                     this.$data[i].value
                 );
@@ -77,6 +102,18 @@ return;
         setSearchData: function (data) {
             this.$data = data;
             this.refresh();
+        },
+
+        /**
+         * Return the search value
+         *
+         * @returns {Array}
+         */
+        getSearchValue: function () {
+            return {
+                from: this.$SelectFrom.getValue(),
+                to  : this.$SelectTo.getValue()
+            };
         }
     });
 });

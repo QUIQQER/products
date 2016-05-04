@@ -38,8 +38,14 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectSing
          * @return {HTMLDivElement}
          */
         create: function () {
-            this.$Select = new QUISelect();
-            this.$Elm    = this.$Select.create();
+            this.$Select = new QUISelect({
+                showIcons: false,
+                styles   : {
+                    width: '100%'
+                }
+            });
+
+            this.$Elm = this.$Select.create();
 
             this.refresh();
 
@@ -53,9 +59,6 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectSing
             if (!this.$Select || !this.$data) {
                 return;
             }
-
-console.log(this.$Elm);
-console.log(this.$data);
 
             this.$Select.clear();
 
@@ -75,6 +78,15 @@ console.log(this.$data);
         setSearchData: function (data) {
             this.$data = data;
             this.refresh();
+        },
+
+        /**
+         * Return the search value
+         *
+         * @returns {String}
+         */
+        getSearchValue: function () {
+            return this.$Select.getValue();
         }
     });
 });

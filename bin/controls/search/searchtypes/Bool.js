@@ -2,8 +2,11 @@
  * @module package/quiqqer/products/bin/controls/search/searchtypes/Bool
  * @author www.pcsg.de (Henning Leutz)
  *
+ * Ein Ja / Nein Feld
+ *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require qui/controls/buttons/Select
  */
 define('package/quiqqer/products/bin/controls/search/searchtypes/Bool', [
 
@@ -51,6 +54,15 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Bool', [
          */
         setSearchData: function (data) {
 
+        },
+
+        /**
+         * Return the search value
+         *
+         * @returns {String|Boolean}
+         */
+        getSearchValue: function () {
+            return this.$Select.getValue();
         }
     });
 });

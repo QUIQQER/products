@@ -46,6 +46,10 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectMulti', [
          */
         setSearchData: function (data) {
 
+        },
+
+        getSearchValue: function () {
+            return '';
         }
     });
 });

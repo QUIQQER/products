@@ -70,6 +70,10 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
         setSearchData: function (data) {
             this.$data = data;
             this.refresh();
+        },
+
+        getSearchValue: function () {
+            return '';
         }
     });
 });

@@ -77,6 +77,15 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
         },
 
         /**
+         * Return the Field-ID
+         *
+         * @returns {Number}
+         */
+        getFieldId: function () {
+            return this.getAttribute('fieldid');
+        },
+
+        /**
          * Create the domnode element
          *
          * @return {HTMLDivElement}
@@ -97,8 +106,6 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
          * event : on inject
          */
         $onInject: function () {
-            console.log(this.getAttribute('searchtype'));
-
             require([
                 'package/quiqqer/products/bin/controls/search/searchtypes/Bool',
                 'package/quiqqer/products/bin/controls/search/searchtypes/Date',
@@ -173,6 +180,19 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
             } else {
                 this.$searchData = data;
             }
+        },
+
+        /**
+         * Return the search value
+         *
+         * @returns {Object|Boolean|String|Number}
+         */
+        getSearchValue: function () {
+            if (!this.getAttribute('fieldid')) {
+                return false;
+            }
+
+            return this.$Type.getSearchValue();
         }
     });
 });

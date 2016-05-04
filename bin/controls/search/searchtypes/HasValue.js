@@ -46,6 +46,10 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/HasValue', [
          */
         setSearchData: function (data) {
 
+        },
+
+        getSearchValue: function () {
+            return '';
         }
     });
 });

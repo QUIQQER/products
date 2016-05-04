@@ -17,17 +17,24 @@
     width: 100%;
 }
 
-.quiqqer-products-search .field-container {
-    margin-bottom: 10px;
-}
-
-.quiqqer-products-search .field-container-field,
-.quiqqer-products-search .field-container-item {
-    padding: 0.2em 0.75em !important;
-}
-
-.quiqqer-products-search-result-container {
+.quiqqer-products-search-field-container {
     float: left;
     height: 100%;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.quiqqer-products-search-field-label {
+    float: left;
+    padding: 0 0 5px 5px;
+    width: 100%;
+}
+
+.quiqqer-products-search-field-container-field {
+    float: left;
+    width: 100%;
+}
+
+.quiqqer-products-search-field-container-field input {
     width: 100%;
 }

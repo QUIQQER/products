@@ -130,7 +130,7 @@ class BackendSearch extends Search
                 $sql .= " LIMIT " . (int)20; // @todo: standard-limit als setting auslagern
             }
         }
-
+QUI\System\Log::writeRecursive($sql);
         $Stmt = $PDO->prepare($sql);
 
         // bind search values

@@ -49,6 +49,15 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectSingle', 
          */
         setSearchData: function (data) {
 
+        },
+        
+        /**
+         * Return the search value
+         *
+         * @returns {String}
+         */
+        getSearchValue: function () {
+            return '';
         }
     });
 });
