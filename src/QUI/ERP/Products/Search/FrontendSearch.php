@@ -158,7 +158,7 @@ class FrontendSearch extends Search
     public function search($searchParams, $countOnly = false)
     {
         QUI\Rights\Permission::checkPermission(
-            SearchHandler::PERMISSION_BACKEND_EXECUTE
+            SearchHandler::PERMISSION_FRONTEND_EXECUTE_EXECUTE
         );
 
         $PDO = QUI::getDataBase()->getPDO();
@@ -167,24 +167,27 @@ class FrontendSearch extends Search
         $where = array();
 
         if ($countOnly) {
-            $sql = "SELECT id, COUNT(id)";
+            $sql = "SELECT COUNT(*)";
         } else {
             $sql = "SELECT id";
         }
 
         $sql .= " FROM " . TablesUtils::getProductCacheTableName();
 
+        $where[] = 'lang = :lang';
+        $binds['lang'] = array(
+            'value' => $this->lang,
+            'type' => \PDO::PARAM_STR
+        );
+
         if (isset($searchParams['category']) &&
             !empty($searchParams['category'])
         ) {
-            $where[] = array(
-                '`category` = :category'
-            );
-
-            $binds[] = array(
+            $where[] = '`category` = :category';
+            $binds['category'] = array(
                 'category' => array(
                     'value' => (int)$searchParams['category'],
-                    'type'  => \PDO::PARAM_INT
+                    'type' => \PDO::PARAM_INT
                 )
             );
         }
@@ -196,7 +199,6 @@ class FrontendSearch extends Search
             );
         }
 
-        // frontendsearch ALWAYS searches active products only
         $where[] = '`active` = 1';
 
         // retrieve query data for fields
@@ -234,14 +236,12 @@ class FrontendSearch extends Search
         ) {
             $Pagination = new QUI\Bricks\Controls\Pagination($searchParams);
             $sqlParams  = $Pagination->getSQLParams();
-            $sql .= " LIMIT " . Orthos::clear($sqlParams['limit']);
+            $sql .= " LIMIT " . $sqlParams['limit'];
         } else {
             if (!$countOnly) {
                 $sql .= " LIMIT " . (int)20; // @todo: standard-limit als setting auslagern
             }
         }
-
-        $sql .= " GROUP BY `id`";
 
         $Stmt = $PDO->prepare($sql);
 
@@ -264,7 +264,7 @@ class FrontendSearch extends Search
         }
 
         if ($countOnly) {
-            return (int)current($result['COUNT(id)']);
+            return (int)current(current($result));
         }
 
         $productIds = array();

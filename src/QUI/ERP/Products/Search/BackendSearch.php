@@ -56,21 +56,24 @@ class BackendSearch extends Search
         $where = array();
 
         if ($countOnly) {
-            $sql = "SELECT id, COUNT(id)";
+            $sql = "SELECT COUNT(*)";
         } else {
             $sql = "SELECT id";
         }
 
         $sql .= " FROM " . TablesUtils::getProductCacheTableName();
 
+        $where[] = 'lang = :lang';
+        $binds['lang'] = array(
+            'value' => $this->lang,
+            'type' => \PDO::PARAM_STR
+        );
+
         if (isset($searchParams['category']) &&
             !empty($searchParams['category'])
         ) {
-            $where[] = array(
-                '`category` = :category'
-            );
-
-            $binds[] = array(
+            $where[] = '`category` = :category';
+            $binds['category'] = array(
                 'category' => array(
                     'value' => (int)$searchParams['category'],
                     'type' => \PDO::PARAM_INT
@@ -133,8 +136,6 @@ class BackendSearch extends Search
             }
         }
 
-        $sql .= " GROUP BY `id`";
-
         $Stmt = $PDO->prepare($sql);
 
         // bind search values
@@ -156,7 +157,7 @@ class BackendSearch extends Search
         }
 
         if ($countOnly) {
-            return (int)current($result['COUNT(id)']);
+            return (int)current(current($result));
         }
 
         $productIds = array();
