@@ -17,9 +17,10 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
     'qui/controls/Control',
     'qui/controls/windows/Confirm',
     'package/quiqqer/products/bin/controls/products/search/Search',
+    'package/quiqqer/products/bin/controls/products/search/Result',
     'Locale'
 
-], function (QUI, QUIControl, QUIConfirm, Search, QUILocale) {
+], function (QUI, QUIControl, QUIConfirm, Search, Result, QUILocale) {
     "use strict";
 
     return new Class({
@@ -30,12 +31,14 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
         Binds: [
             '$onOpen',
             '$onResize',
+            '$onSearch',
+            '$onSearchBegin',
             'tableRefresh'
         ],
 
         options: {
             maxHeight: 600,
-            maxWidth : 800,
+            maxWidth : 300,
             icon     : 'fa fa-search',
             title    : 'Produktsuche',
             autoclose: false,
@@ -46,7 +49,7 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
                 textimage: 'fa fa-remove'
             },
             ok_button    : {
-                text     : QUILocale.get('quiqqer/system', 'accept'),
+                text     : QUILocale.get('quiqqer/system', 'search'),
                 textimage: 'fa fa-search'
             }
         },
@@ -55,6 +58,7 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
             this.parent(options);
 
             this.$Search = null;
+            this.$Result = null;
 
             this.addEvents({
                 onOpen: this.$onOpen
@@ -76,29 +80,94 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
          * @returns {HTMLDivElement}
          */
         $onOpen: function (Win) {
-            Win.getContent().set('html', '');
+            var Content = Win.getContent();
 
-            this.$Search = new Search().inject(Win.getContent());
-            this.$onResize();
+            Content.set({
+                html: '<div class="search"></div>' +
+                      '<div class="result"></div>'
+            });
+
+            this.$SearchContainer = Content.getElement('.search');
+            this.$SearchResult    = Content.getElement('.result');
+
+            this.$Search = new Search({
+                searchbutton: false,
+                events      : {
+                    onSearchBegin: this.$onSearchBegin,
+                    onSearch     : this.$onSearch
+                }
+            }).inject(this.$SearchContainer);
+
+            this.$SearchContainer.setStyles({
+                'float' : 'left',
+                maxWidth: 300
+            });
+
+            this.$SearchResult.setStyles({
+                display: 'none',
+                'float': 'left',
+                height : '100%',
+                margin : '0 0 0 20px',
+                width  : 'calc(100% - 320px)'
+            });
+        },
+
+        /**
+         * event: search begin
+         */
+        $onSearchBegin: function () {
+            this.Loader.show();
+
+            if (this.$Result) {
+                return;
+            }
+
+            this.$Result = new Result({
+                styles: {
+                    height: '100%'
+                }
+            }).inject(this.$SearchResult);
+
+            this.setAttribute('maxWidth', 800);
+
+            this.resize().then(function () {
+                this.$SearchResult.setStyle('opacity', 0);
+                this.$SearchResult.setStyle('display', 'block');
+                this.$Result.resize();
+
+                moofx(this.$SearchResult).animate({
+                    opacity: 1
+                });
+            }.bind(this));
+        },
+
+        /**
+         * event : on search .. ing
+         */
+        $onSearch: function (result) {
+
+
+            this.Loader.hide();
         },
 
         /**
          * Submit
          */
         submit: function () {
-            var ids = this.$Search.getSelectedData().map(function (Entry) {
-                return Entry.id;
-            });
-
-            if (!ids.length) {
-                return;
-            }
-
-            this.fireEvent('submit', [this, ids]);
-
-            if (this.getAttribute('autoclose')) {
-                this.close();
-            }
+            this.$Search.search();
+            // var ids = this.$Search.getSelectedData().map(function (Entry) {
+            //     return Entry.id;
+            // });
+            //
+            // if (!ids.length) {
+            //     return;
+            // }
+            //
+            // this.fireEvent('submit', [this, ids]);
+            //
+            // if (this.getAttribute('autoclose')) {
+            //     this.close();
+            // }
         }
     });
 });

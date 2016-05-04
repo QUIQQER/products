@@ -21,6 +21,11 @@
     margin-bottom: 10px;
 }
 
+.quiqqer-products-search .field-container-field,
+.quiqqer-products-search .field-container-item {
+    padding: 0.2em 0.75em !important;
+}
+
 .quiqqer-products-search-result-container {
     float: left;
     height: 100%;

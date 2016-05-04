@@ -37,8 +37,11 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
          * @return {HTMLDivElement}
          */
         create: function () {
-            this.$Select = new QUISelect();
-            this.$Elm    = this.$Select.create();
+            this.$SelectFrom = new QUISelect();
+            this.$SelectTo   = new QUISelect();
+
+            this.$Elm = this.$SelectFrom.create();
+            this.$Elm = this.$SelectTo.create();
 
             this.refresh();
 
@@ -52,8 +55,11 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
             if (!this.$Select || !this.$data) {
                 return;
             }
-
+return;
             this.$Select.clear();
+
+            console.log(this.$Elm);
+            console.log(this.$data);
 
             for (var i = 0, len = this.$data.length; i < len; i++) {
                 this.$Select.appendChild(

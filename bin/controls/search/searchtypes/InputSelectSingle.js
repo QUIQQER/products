@@ -54,6 +54,9 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectSing
                 return;
             }
 
+console.log(this.$Elm);
+console.log(this.$data);
+
             this.$Select.clear();
 
             for (var i = 0, len = this.$data.length; i < len; i++) {
