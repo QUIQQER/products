@@ -167,7 +167,7 @@ class FrontendSearch extends Search
         $where = array();
 
         if ($countOnly) {
-            $sql = "SELECT COUNT(*)";
+            $sql = "SELECT id, COUNT(id)";
         } else {
             $sql = "SELECT id";
         }
@@ -241,7 +241,7 @@ class FrontendSearch extends Search
             }
         }
 
-        $sql .= " GROUP BY id ";
+        $sql .= " GROUP BY `id`";
 
         $Stmt = $PDO->prepare($sql);
 
@@ -264,7 +264,7 @@ class FrontendSearch extends Search
         }
 
         if ($countOnly) {
-            return (int)current(current($result));
+            return (int)current($result['COUNT(id)']);
         }
 
         $productIds = array();
