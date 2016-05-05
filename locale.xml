@@ -33,6 +33,11 @@
             <en><![CDATA[Product fields]]></en>
         </locale>
 
+        <locale name="window.erp.title">
+            <de><![CDATA[Shop]]></de>
+            <en><![CDATA[Shop]]></en>
+        </locale>
+
         <locale name="settings.window.products.folder">
             <de><![CDATA[Produktbilder]]></de>
             <en><![CDATA[Product images]]></en>
