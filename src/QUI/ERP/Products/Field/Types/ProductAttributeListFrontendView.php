@@ -72,8 +72,13 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         }
 
         foreach ($entries as $key => $option) {
-            $text  = '';
-            $title = $option['title'];
+            $text     = '';
+            $title    = $option['title'];
+            $selected = '';
+
+            if (isset($option['selected']) && $option['selected']) {
+                $selected = 'selected="selected" ';
+            }
 
             if (isset($title[$current])) {
                 $text = $title[$current];
@@ -95,7 +100,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                 $text .= ' (+' . $discount . ')';
             }
 
-            $html .= '<option value="' . $key . '">' . $text . '</option>';
+            $html .= '<option ' . $selected . 'value="' . $key . '">' . $text . '</option>';
         }
 
         $html .= '</select></div>';

@@ -156,7 +156,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     new Element('span', {
                         'class': 'field-container-field',
                         html   : QUILocale.get(lg, 'fieldtype.not.searchable')
-                    }).replaces(FieldSearchType);
+                    }).replaces(Elm.getElement('.field-search_type'));
+
                 } else {
                     for (i = 0, len = searchTypes.length; i < len; i++) {
                         new Element('option', {
@@ -174,13 +175,16 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 }
 
                 // set data to the form
-                FieldTypes.value      = fieldData.type;
-                FieldOptions.value    = options;
-                FieldPriority.value   = fieldData.priority;
-                FieldPrefix.value     = fieldData.prefix;
-                FieldSuffix.value     = fieldData.suffix;
-                FieldSearchType.value = fieldData.search_type;
+                FieldTypes.value    = fieldData.type;
+                FieldOptions.value  = options;
+                FieldPriority.value = fieldData.priority;
+                FieldPrefix.value   = fieldData.prefix;
+                FieldSuffix.value   = fieldData.suffix;
 
+                if (FieldSearchType) {
+                    FieldSearchType.value = fieldData.search_type;
+                }
+                
                 FieldRequired.checked = fieldData.isRequired;
                 FieldSystem.checked   = fieldData.isSystem;
                 FieldStandard.checked = fieldData.standard;

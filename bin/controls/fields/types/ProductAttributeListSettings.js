@@ -150,6 +150,11 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     }
                 }],
                 columnModel: [{
+                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
+                    dataIndex: 'selected',
+                    dataType : 'node',
+                    width    : 30
+                }, {
                     header   : QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
                     dataType : 'string',
@@ -380,7 +385,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                         });
                         break;
 
-                    case Calc.CALCULATION_COMPLEMENT:
+                    // case Calc.CALCULATION_COMPLEMENT:
                     default:
                         type = new Element('span', {
                             'class': 'fa fa-money'
@@ -388,11 +393,13 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                         break;
                 }
 
-
                 data.push({
-                    title: langTitle,
-                    sum  : entry.sum,
-                    type : type
+                    title   : langTitle,
+                    sum     : entry.sum,
+                    type    : type,
+                    selected: new Element('span', {
+                        'class': entry.selected ? 'fa fa-check-square-o' : 'fa fa-square-o'
+                    })
                 });
             }
 
@@ -420,9 +427,10 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 events   : {
                     onOpen  : function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            title     : QUILocale.get('quiqqer/system', 'title'),
-                            priceTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
-                            deduction : QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction')
+                            title        : QUILocale.get('quiqqer/system', 'title'),
+                            priceTitle   : QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
+                            deduction    : QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction'),
+                            selectedTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.selected')
                         }));
 
                         var Form = Win.getContent().getElement('form');
@@ -438,7 +446,8 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                         self.add(
                             Title.getData(),
                             Form.elements.sum.value,
-                            Form.elements.type.value
+                            Form.elements.type.value,
+                            Form.elements.selected.checked
                         );
                     }
                 }
@@ -470,16 +479,18 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 events   : {
                     onOpen  : function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            title     : QUILocale.get('quiqqer/system', 'title'),
-                            priceTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
-                            deduction : QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction')
+                            title        : QUILocale.get('quiqqer/system', 'title'),
+                            priceTitle   : QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
+                            deduction    : QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction'),
+                            selectedTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.selected')
                         }));
 
                         var Form = Win.getContent().getElement('form');
 
-                        Form.elements.title.value = JSON.encode(data.title);
-                        Form.elements.sum.value   = data.sum;
-                        Form.elements.type.value  = data.type;
+                        Form.elements.title.value      = JSON.encode(data.title);
+                        Form.elements.sum.value        = data.sum;
+                        Form.elements.type.value       = data.type;
+                        Form.elements.selected.checked = data.selected;
 
                         new InputMultiLang().imports(Form.elements.title);
                     },
@@ -493,7 +504,8 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                             index,
                             Title.getData(),
                             Form.elements.sum.value,
-                            parseInt(Form.elements.type.value)
+                            parseInt(Form.elements.type.value),
+                            Form.elements.selected.checked
                         );
                     }
                 }
@@ -551,23 +563,25 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * @param {Object|String} title
          * @param {Number} sum
          * @param {String} type
+         * @param {Boolean} selected
          */
-        add: function (title, sum, type) {
+        add: function (title, sum, type, selected) {
             switch (parseInt(type)) {
                 case Calc.CALCULATION_PERCENTAGE:
                     type = Calc.CALCULATION_PERCENTAGE;
                     break;
 
-                case Calc.CALCULATION_COMPLEMENT:
+                // case Calc.CALCULATION_COMPLEMENT:
                 default:
                     type = Calc.CALCULATION_COMPLEMENT;
                     break;
             }
 
             this.$data.push({
-                title: title,
-                sum  : sum,
-                type : type
+                title   : title,
+                sum     : sum,
+                type    : type,
+                selected: Boolean(selected)
             });
 
             this.refresh();
@@ -621,12 +635,21 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * @param {Object|String} title
          * @param {Number} sum
          * @param {String} type
+         * @param {Boolean} selected
          */
-        edit: function (index, title, sum, type) {
+        edit: function (index, title, sum, type, selected) {
+            // if selected, then all others unselected
+            if (selected) {
+                this.$data.each(function (entry, key) {
+                    this.$data[key].selected = false;
+                }.bind(this));
+            }
+
             this.$data[index] = {
-                title: title,
-                sum  : sum,
-                type : type
+                title   : title,
+                sum     : sum,
+                type    : type,
+                selected: selected
             };
 
             this.refresh();
