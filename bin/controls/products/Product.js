@@ -59,7 +59,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         Type   : 'package/quiqqer/products/bin/controls/products/Product',
 
         Binds: [
+            'refresh',
             'update',
+            'switchStatus',
             'openData',
             'openImages',
             'openFiles',
@@ -134,13 +136,26 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * event : on create
          */
         $onCreate: function () {
-
             this.addButton({
                 name     : 'update',
                 textimage: 'fa fa-save',
                 text     : QUILocale.get('quiqqer/system', 'save'),
                 events   : {
                     onClick: this.update
+                }
+            });
+
+            this.addButton({
+                type: 'seperator'
+            });
+
+            this.addButton({
+                name     : 'status',
+                textimage: 'fa fa-check',
+                disabled : true,
+                text     : QUILocale.get('quiqqer/system', 'activate'),
+                events   : {
+                    onClick: this.switchStatus
                 }
             });
         },
@@ -368,7 +383,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                     self.$createCategories(fieldList.clean());
 
-                    
+
                     var diffFields = complete.filter(function (value) {
                         for (var i = 0, len = systemFields.length; i < len; i++) {
                             if (value.id === systemFields[i].id) {
@@ -498,6 +513,31 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 console.error(err);
                 self.destroy();
             });
+        },
+
+        /**
+         * Refresh the panel
+         */
+        refresh: function () {
+            this.parent();
+
+            this.$Product.isActive().then(function (status) {
+                var Button = this.getButtons('status');
+
+                // product is active
+                if (status) {
+                    Button.setAttribute('textimage', 'fa fa-remove');
+                    Button.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'deactivate'));
+                    Button.enable();
+                    return;
+                }
+
+                // product is deactivate
+                Button.setAttribute('textimage', 'fa fa-check');
+                Button.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'activate'));
+                Button.enable();
+
+            }.bind(this));
         },
 
         /**
@@ -1042,6 +1082,24 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     reject(err);
                 });
             });
+        },
+
+        /**
+         * Change the product status - activate / deactivate
+         */
+        switchStatus: function () {
+            var Button = this.getButtons('status');
+
+            Button.setAttribute('textimage', 'fa fa-spinner fa-spin');
+            Button.disable();
+
+            this.$Product.isActive().then(function (status) {
+                if (status) {
+                    this.$Product.deactivate().then(this.refresh);
+                } else {
+                    this.$Product.activate().then(this.refresh);
+                }
+            }.bind(this));
         },
 
         /**

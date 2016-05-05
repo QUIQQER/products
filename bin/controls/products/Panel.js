@@ -84,6 +84,12 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 perPage: this.$Grid.options.perPage,
                 page   : this.$Grid.options.page
             }).then(function (data) {
+                for (var i = 0, len = data.data.length; i < len; i++) {
+                    data.data[i].status = new Element('span', {
+                        'class': data.data[i].active ? 'fa fa-check' : 'fa fa-remove'
+                    });
+                }
+
                 self.$Grid.setData(data);
 
                 var Delete = self.getButtons('delete'),
@@ -179,6 +185,11 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                     dataType : 'number',
                     width    : 60
                 }, {
+                    header   : QUILocale.get('quiqqer/system', 'status'),
+                    dataIndex: 'status',
+                    dataType : 'node',
+                    width    : 60
+                }, {
                     header   : QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
                     dataType : 'text',
@@ -193,6 +204,10 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                     dataIndex: 'price',
                     dataType : 'text',
                     width    : 100
+                }, {
+                    dataIndex: 'active',
+                    dataType : 'number',
+                    hidden   : true
                 }]
             });
 

@@ -7,7 +7,7 @@
             <field type="BIGINT(20)">category</field>
             <field type="TEXT">categories</field>
             <field type="LONGTEXT NULL">fieldData</field>
-            <field type="TINYINT(1)">active</field>
+            <field type="TINYINT(1) DEFAULT 0">active</field>
             <field type="BIGINT(10) NULL">parent</field>
 
             <primary>id</primary>

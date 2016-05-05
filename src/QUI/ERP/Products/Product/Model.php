@@ -48,6 +48,13 @@ class Model extends QUI\QDOM
     protected $Category = null;
 
     /**
+     * Active / Deactive status
+     *
+     * @var bool
+     */
+    protected $active = false;
+
+    /**
      * Model constructor
      *
      * @param integer $pid - Product-ID
@@ -73,7 +80,12 @@ class Model extends QUI\QDOM
             );
         }
 
+        $this->active = (int)$result[0]['active'] ? true : false;
+
+        QUI\System\Log::writeRecursive($result[0]['active']);
+
         unset($result[0]['id']);
+        unset($result[0]['active']);
 
         $this->setAttributes($result[0]);
 
@@ -308,6 +320,8 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Return the product content
+     *
      * @param QUI\Locale|Boolean $Locale - optional
      * @return string
      */
@@ -389,8 +403,9 @@ class Model extends QUI\QDOM
     public function getAttributes()
     {
         $attributes = parent::getAttributes();
-        
+
         $attributes['id']          = $this->getId();
+        $attributes['active']      = $this->isActive();
         $attributes['title']       = $this->getTitle();
         $attributes['description'] = $this->getDescription();
 
@@ -906,5 +921,45 @@ class Model extends QUI\QDOM
         } catch (QUI\Exception $Exception) {
             return array();
         }
+    }
+
+    /**
+     * Deactivate the product
+     */
+    public function deactivate()
+    {
+        QUI\Rights\Permission::checkPermission('product.activate');
+
+        $this->active = false;
+
+        QUI::getDataBase()->update(
+            QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            array('active' => 0),
+            array('id' => $this->getId())
+        );
+    }
+
+    /**
+     * Activate the product
+     */
+    public function activate()
+    {
+        QUI\Rights\Permission::checkPermission('product.activate');
+
+        $this->active = true;
+
+        QUI::getDataBase()->update(
+            QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            array('active' => 1),
+            array('id' => $this->getId())
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->active;
     }
 }

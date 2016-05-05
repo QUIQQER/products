@@ -46,6 +46,26 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Activate the product
+         *
+         * @param {Number} productId - Product ID
+         * @returns {Promise}
+         */
+        activate: function (productId) {
+            return this.get(productId).activate();
+        },
+
+        /**
+         * Deactivate the product
+         *
+         * @param {Number} productId - Product ID
+         * @returns {Promise}
+         */
+        deactivate: function (productId) {
+            return this.get(productId).deactivate();
+        },
+
+        /**
          * Calculate the product price
          *
          * @param {Number} productId - Product ID
@@ -53,11 +73,12 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @returns {Promise}
          */
         calcPrice: function (productId, fields) {
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_products_calc', resolve, {
                     'package': 'quiqqer/products',
                     productId: productId,
-                    fields   : JSON.encode(fields)
+                    fields   : JSON.encode(fields),
+                    onError  : reject
                 });
             });
         },
@@ -230,7 +251,7 @@ define('package/quiqqer/products/bin/classes/Products', [
          *
          * @param {number} productId
          */
-        openPanel: function(productId) {
+        openPanel: function (productId) {
             require([
                 'package/quiqqer/products/bin/controls/products/Product',
                 'utils/Panels'

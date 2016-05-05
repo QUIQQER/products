@@ -19,7 +19,7 @@ use QUI\ERP\Products\Product\Product;
  * @example
  * QUI\ERP\Products\Handler\Categories::getCategory( ID );
  */
-class Category extends QUI\QDOM
+class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
 {
     /**
      * Field-ID
@@ -80,10 +80,10 @@ class Category extends QUI\QDOM
     /**
      * Return the title / name of the category
      *
-     * @param QUI\Locale|Boolean $Locale - optional
+     * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getTitle($Locale = false)
+    public function getTitle($Locale = null)
     {
         if (!$Locale) {
             return QUI::getLocale()->get(
@@ -101,10 +101,10 @@ class Category extends QUI\QDOM
     /**
      * Return the title / name of the category
      *
-     * @param QUI\Locale|Boolean $Locale - optional
+     * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getDescription($Locale = false)
+    public function getDescription($Locale = null)
     {
         if (!$Locale) {
             return QUI::getLocale()->get(
@@ -133,10 +133,10 @@ class Category extends QUI\QDOM
      * Return category url
      * Return the category url of a binded site from the project
      *
-     * @param QUI\Projects\Project|boolean $Project - optional, default = global project
+     * @param QUI\Projects\Project|null $Project - optional, default = global project
      * @return string
      */
-    public function getUrl($Project = false)
+    public function getUrl($Project = null)
     {
         if (!$Project) {
             $Project = QUI::getRewrite()->getProject();
@@ -209,6 +209,7 @@ class Category extends QUI\QDOM
 
     /**
      * Return the attributes
+     *
      * @return array
      */
     public function getAttributes()
@@ -354,12 +355,12 @@ class Category extends QUI\QDOM
     /**
      * Return the category site
      *
-     * @param QUI\Projects\Project|boolean $Project
+     * @param QUI\Projects\Project|null $Project
      * @return QUI\Projects\Site
      *
      * @throws QUI\Exception
      */
-    public function getSite($Project = false)
+    public function getSite($Project = null)
     {
         if (!$Project) {
             $Project = QUI::getRewrite()->getProject();
@@ -388,10 +389,10 @@ class Category extends QUI\QDOM
     /**
      * Return all sites which assigned the category
      *
-     * @param QUI\Projects\Project|boolean $Project
+     * @param QUI\Projects\Project|null $Project
      * @return array
      */
-    public function getSites($Project = false)
+    public function getSites($Project = null)
     {
         if (!is_null($this->sites) && !$Project) {
             return $this->sites;
@@ -567,18 +568,37 @@ class Category extends QUI\QDOM
     /**
      * Return the number of the products in the category
      *
+     * @param array $params - query parameter
+     *                              $queryParams['where']
+     *                              $queryParams['debug']
      * @return integer
      */
-    public function countProducts()
+    public function countProducts($params = array())
     {
-        return Products::countProducts(array(
-            'where' => array(
-                'categories' => array(
-                    'type' => '%LIKE%',
-                    'value' => ',' . $this->getId() . ','
-                )
+        if (!is_array($params)) {
+            $params = array();
+        }
+
+        $query = array();
+
+        $where = array(
+            'categories' => array(
+                'type' => '%LIKE%',
+                'value' => ',' . $this->getId() . ','
             )
-        ));
+        );
+
+        if (isset($params['where'])) {
+            $where = array_merge($where, $params['where']);
+        }
+
+        $query['where'] = $where;
+
+        if (isset($params['debug'])) {
+            $query['debug'] = $params['debug'];
+        }
+
+        return Products::countProducts($query);
     }
 
     /**

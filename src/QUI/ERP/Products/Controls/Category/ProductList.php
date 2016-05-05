@@ -16,7 +16,7 @@ use QUI\ERP\Products\Handler\Categories;
 class ProductList extends QUI\Control
 {
     /**
-     * @var null
+     * @var null|QUI\ERP\Products\Category\Category
      */
     protected $Category = null;
 
@@ -51,20 +51,32 @@ class ProductList extends QUI\Control
     {
         $Engine   = QUI::getTemplateManager()->getEngine();
         $Category = $this->getCategory();
+        $count    = $Category->countProducts();
 
         if ($Category) {
             $this->setAttribute('data-cid', $Category->getId());
         }
 
         $rows = array(
-            $this->getRow(0),
-            $this->getRow(1),
-            $this->getRow(2)
+            $this->getRow(0, $count),
+            $this->getRow(1, $count),
+            $this->getRow(2, $count)
         );
+
+        // get more?
+        $more = true;
+
+        foreach ($rows as $entry) {
+            if (isset($entry['more']) && $entry['more'] === false) {
+                $more = false;
+                break;
+            }
+        }
 
         $Engine->assign(array(
             'rows' => $rows,
-            'children' => $this->getSite()->getNavigation()
+            'children' => $this->getSite()->getNavigation(),
+            'more' => $more
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/ProductList.html');
@@ -74,10 +86,11 @@ class ProductList extends QUI\Control
      * Return the row html
      *
      * @param integer $rowNumber
-     * @return array [html, more]
+     * @param boolean|integer $count - (optional) count of children, if false, it looks for a count
+     * @return array [html, count, more]
      * @throws QUI\Exception
      */
-    public function getRow($rowNumber)
+    public function getRow($rowNumber, $count = false)
     {
         $Engine    = QUI::getTemplateManager()->getEngine();
         $Category  = $this->getCategory();
@@ -111,7 +124,10 @@ class ProductList extends QUI\Control
 
         $more  = true;
         $start = $rowNumber * $max;
-        $count = $Category->countProducts();
+
+        if ($count === false) {
+            $count = $Category->countProducts();
+        }
 
         $products = $Category->getProducts(array(
             'limit' => $start . ',' . $max
@@ -137,12 +153,12 @@ class ProductList extends QUI\Control
     /**
      * Return the product list category
      *
-     * @return null|QUI\ERP\Products\Category\Category
+     * @return null|QUI\ERP\Products\Category\ViewBackend|QUI\ERP\Products\Category\ViewFrontend
      */
     public function getCategory()
     {
         if ($this->Category) {
-            return $this->Category;
+            return $this->Category->getView();
         }
 
         $categoryId = $this->getAttribute('categoryId');
@@ -155,7 +171,7 @@ class ProductList extends QUI\Control
             }
         }
 
-        return $this->Category;
+        return $this->Category->getView();
     }
 
     /**

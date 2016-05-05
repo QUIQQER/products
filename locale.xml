@@ -94,7 +94,8 @@
             <en><![CDATA[Search type]]></en>
         </locale>
         <locale name="fieldSearchtypeInfo">
-            <de><![CDATA[Der Such-Typ kann nach der Erstellung des Feldes in den Feld-Optionen festgelegt werden.]]></de>
+            <de>
+                <![CDATA[Der Such-Typ kann nach der Erstellung des Feldes in den Feld-Optionen festgelegt werden.]]></de>
             <en><![CDATA[The search type can be set in the field options after creating the field.]]></en>
         </locale>
 
@@ -398,6 +399,11 @@
             <de><![CDATA[Darf Produkte anlegen.]]></de>
             <en><![CDATA[Is allowed to create products.]]></en>
         </locale>
+        <locale name="permission.product.activate">
+            <de><![CDATA[Darf Produkte aktivieren / deaktivieren.]]></de>
+            <en><![CDATA[Is allowed to activate and deactivate products.]]></en>
+        </locale>
+
         <locale name="permission.product.delete">
             <de><![CDATA[Darf Produkte löschen.]]></de>
             <en><![CDATA[Is allowed to delete products.]]></en>

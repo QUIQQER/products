@@ -2,6 +2,9 @@
     <permission name="product.create" type="bool">
         <defaultvalue>1</defaultvalue>
     </permission>
+    <permission name="product.activate" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
     <permission name="product.delete" type="bool">
         <defaultvalue>1</defaultvalue>
     </permission>

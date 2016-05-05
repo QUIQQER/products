@@ -71,14 +71,15 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @return {Promise}
          */
         setPublicStatusFromField: function (fieldId, status) {
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_products_setPublicStatusFromField', function () {
-                    this.refresh().then(resolve);
+                    this.refresh().then(resolve, reject);
                 }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
                     fieldId  : fieldId,
-                    status   : status ? 1 : 0
+                    status   : status ? 1 : 0,
+                    onError  : reject
                 });
             }.bind(this));
         },
@@ -108,6 +109,59 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * Return the status of the product
+         *
+         * @returns {Promise}
+         */
+        isActive: function () {
+            return new Promise(function (resolve, reject) {
+
+                if (this.$loaded) {
+                    return resolve(this.$data.active ? true : false);
+                }
+
+                this.refresh().then(function () {
+                    resolve(this.$data.active ? true : false);
+                }.bind(this)).catch(reject);
+
+            }.bind(this));
+        },
+
+        /**
+         * Activate the product
+         *
+         * @returns {Promise}
+         */
+        activate: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_activate', function () {
+                    this.refresh().then(resolve, reject);
+                }.bind(this), {
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
+                    onError  : reject
+                });
+            }.bind(this));
+        },
+
+        /**
+         * Activate the product
+         *
+         * @returns {Promise}
+         */
+        deactivate: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_deactivate', function () {
+                    this.refresh().then(resolve, reject);
+                }.bind(this), {
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
+                    onError  : reject
+                });
+            }.bind(this));
+        },
+
+        /**
          * Refresh the product data
          *
          * @returns {Promise}
@@ -122,7 +176,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                     Products.getChild(this.getAttribute('id')).then(function (data) {
                         this.$loaded = true;
                         this.$data   = data;
-
+                        console.log(this.$data, 'refresh');
                         resolve(this);
 
                         this.fireEvent('refresh', [this]);
