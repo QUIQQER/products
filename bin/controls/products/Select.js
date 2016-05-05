@@ -24,7 +24,7 @@ define('package/quiqqer/products/bin/controls/products/Select', [
 
     'css!package/quiqqer/discount/bin/controls/Select.css'
 
-], function (QUIControl, QUIButton, DiscountDisplay, Handler, Ajax, Locale) {
+], function (QUIControl, QUIButton, ProductItem, Handler, Ajax, Locale) {
     "use strict";
 
     var lg       = 'quiqqer/products';
@@ -90,6 +90,8 @@ define('package/quiqqer/products/bin/controls/products/Select', [
             if (this.$Elm) {
                 return this.$Elm;
             }
+
+            var self = this;
 
             this.$Elm = new Element('div', {
                 'class'     : 'qui-discount-list',
@@ -170,7 +172,9 @@ define('package/quiqqer/products/bin/controls/products/Select', [
                             new Search({
                                 events: {
                                     onSubmit: function (Win, values) {
-                                        console.log(values);
+                                        for (var i = 0, len = values.length; i < len; i++) {
+                                            self.addProduct(values[i]);
+                                        }
                                     }
                                 }
                             }).open();
@@ -299,12 +303,12 @@ define('package/quiqqer/products/bin/controls/products/Select', [
 
             var value = this.$Search.value;
 
-            Discounts.search({
-                order: 'ASC',
-                limit: 5
-            }).then(function (result) {
-                console.log(result);
-            });
+            // Discounts.search({
+            //     order: 'ASC',
+            //     limit: 5
+            // }).then(function (result) {
+            //     console.log(result);
+            // });
 
             return;
 
@@ -429,7 +433,8 @@ define('package/quiqqer/products/bin/controls/products/Select', [
          * @return {Object} this (package/quiqqer/discount/bin/controls/Select)
          */
         addProduct: function (id) {
-            new ProductItem(id, {
+            new ProductItem({
+                id    : id,
                 events: {
                     onDestroy: this.$onProductDestroy
                 }
@@ -579,7 +584,7 @@ define('package/quiqqer/products/bin/controls/products/Select', [
          */
         $onProductDestroy: function (Item) {
             this.$values = this.$values.erase(
-                Item.getDiscount().getId()
+                Item.getAttribute('id')
             );
 
             this.$refreshValues();

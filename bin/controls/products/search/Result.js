@@ -2,10 +2,15 @@
  * @module package/quiqqer/products/bin/controls/products/search/Result
  * @author www.pcsg.de (Henning Leutz)
  *
+ * Display the results from a product search
+ *
  * @require qui/QUI
  * @require qui/controls/Control
  * @require controls/grid/Grid
  * @require Locale
+ *
+ * @event onRefresh [this, {Object} GridOptions]
+ * @event onSubmit [this, {Array} productIds]
  */
 define('package/quiqqer/products/bin/controls/products/search/Result', [
 
@@ -24,7 +29,8 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
         Type   : 'package/quiqqer/products/bin/controls/products/search/Result',
 
         Binds: [
-            '$onInject'
+            '$onInject',
+            'submit'
         ],
 
         options: {
@@ -91,8 +97,9 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
         $onInject: function () {
 
             this.$Grid = new Grid(this.$GridContainer, {
-                pagination : true,
-                columnModel: [{
+                pagination       : true,
+                multipleSelection: true,
+                columnModel      : [{
                     header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
                     dataType : 'number',
@@ -114,6 +121,40 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                     width    : 100
                 }]
             });
+
+            this.$Grid.addEvents({
+                onRefresh: function () {
+                    this.fireEvent('refresh', [this, this.$Grid.options]);
+                }.bind(this),
+
+                onDblClick: this.submit
+            });
+        },
+
+        /**
+         * Return the selected product ids
+         *
+         * @returns {Array}
+         */
+        getSelected: function () {
+            var selected = this.$Grid.getSelectedData();
+
+            if (!selected.length) {
+                return [];
+            }
+
+            return selected.map(function (entry) {
+                return entry.id;
+            });
+        },
+
+        /**
+         * submit the selected data
+         *
+         * @fires onSelect
+         */
+        submit: function () {
+            this.fireEvent('submit', [this, this.getSelected()]);
         }
     });
 });

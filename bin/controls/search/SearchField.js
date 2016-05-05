@@ -6,37 +6,37 @@
  * @require qui/controls/Control
  * @require css!package/quiqqer/products/bin/controls/search/SearchField.css
  *
+ * @event ready
  *
  * self::SEARCHTYPE_TEXT,
- - Input
-
- self::SEARCHTYPE_SELECTRANGE,
- - 2 Select (von bis)
-
- self::SEARCHTYPE_SELECTSINGLE,
- - 1 Select
-
- self::SEARCHTYPE_SELECTMULTI,
- - Select multi
-
- self::SEARCHTYPE_BOOL,
- - Input checkbox (oder Select)
-
- self::SEARCHTYPE_HASVALUE,
- - Select (ja / nein)
-
- self::SEARCHTYPE_DATE,
- - Input date
-
- self::SEARCHTYPE_DATERANGE,
- - 2 Input date (von bis)
-
- self::SEARCHTYPE_INPUTSELECTRANGE,
- - 2 Select (von bis - mit zusätzlicher eingabe -> wie zb mobile.de)
-
- self::SEARCHTYPE_INPUTSELECTSINGLE
- - 1 Select (von bis - mit zusätzlicher eingabe -> wie zb mobile.de)
-
+ * - Input
+ *
+ * self::SEARCHTYPE_SELECTRANGE,
+ * - 2 Select (von bis)
+ *
+ * self::SEARCHTYPE_SELECTSINGLE,
+ * - 1 Select
+ *
+ * self::SEARCHTYPE_SELECTMULTI,
+ * - Select multi
+ *
+ * self::SEARCHTYPE_BOOL,
+ * - Input checkbox (oder Select)
+ *
+ * self::SEARCHTYPE_HASVALUE,
+ * - Select (ja / nein)
+ *
+ * self::SEARCHTYPE_DATE,
+ * - Input date
+ *
+ * self::SEARCHTYPE_DATERANGE,
+ * - 2 Input date (von bis)
+ *
+ * self::SEARCHTYPE_INPUTSELECTRANGE,
+ * - 2 Select (von bis - mit zusätzlicher eingabe -> wie zb mobile.de)
+ *
+ * self::SEARCHTYPE_INPUTSELECTSINGLE
+ * - 1 Select (von bis - mit zusätzlicher eingabe -> wie zb mobile.de)
  */
 define('package/quiqqer/products/bin/controls/search/SearchField', [
 
@@ -67,6 +67,7 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
             this.$Input = null;
             this.$Type  = null;
 
+            this.$ready      = false;
             this.$searchData = null;
 
             this.parent(options);
@@ -83,6 +84,26 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
          */
         getFieldId: function () {
             return this.getAttribute('fieldid');
+        },
+
+        /**
+         * Set the focus to the element
+         */
+        focus: function () {
+            if (!this.$Type) {
+                if (!this.$ready) {
+                    this.addEvent('ready', this.focus);
+                }
+
+                return;
+            }
+
+            try {
+                this.$Type.focus();
+            } catch (e) {
+                console.error(this.$Type.getType, 'Has no focus method?');
+                console.error(e);
+            }
         },
 
         /**
@@ -165,6 +186,9 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
                 if (this.$searchData) {
                     this.$Type.setSearchData(this.$searchData);
                 }
+
+                this.$ready = true;
+                this.fireEvent('ready');
 
             }.bind(this));
         },

@@ -77,7 +77,7 @@ define('package/quiqqer/products/bin/controls/products/SelectItem', [
             Products.getChild(
                 this.getAttribute('id')
             ).then(function (data) {
-                console.log(data);
+                self.$Text.set('html', data.title);
             }).catch(function () {
                 self.$Icon.removeClass('fa-percent');
                 self.$Icon.addClass('fa-bolt');

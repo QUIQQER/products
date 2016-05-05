@@ -15,12 +15,13 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
 
     'qui/QUI',
     'qui/controls/Control',
+    'qui/controls/buttons/Button',
     'qui/controls/windows/Confirm',
     'package/quiqqer/products/bin/controls/products/search/Search',
     'package/quiqqer/products/bin/controls/products/search/Result',
     'Locale'
 
-], function (QUI, QUIControl, QUIConfirm, Search, Result, QUILocale) {
+], function (QUI, QUIControl, QUIButton, QUIConfirm, Search, Result, QUILocale) {
     "use strict";
 
     return new Class({
@@ -29,6 +30,8 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
         Type   : 'package/quiqqer/products/bin/controls/products/search/Window',
 
         Binds: [
+            'search',
+            'submit',
             '$onOpen',
             '$onResize',
             '$onSearch',
@@ -41,17 +44,8 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
             maxWidth : 300,
             icon     : 'fa fa-search',
             title    : 'Produktsuche',
-            autoclose: false,
-            multiple : false,
-
-            cancel_button: {
-                text     : QUILocale.get('quiqqer/system', 'cancel'),
-                textimage: 'fa fa-remove'
-            },
-            ok_button    : {
-                text     : QUILocale.get('quiqqer/system', 'search'),
-                textimage: 'fa fa-search'
-            }
+            autoclose: true,
+            multiple : false
         },
 
         initialize: function (options) {
@@ -59,6 +53,13 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
 
             this.$Search = null;
             this.$Result = null;
+
+            this.$ButtonCancel = null;
+            this.$ButtonSubmit = null;
+            this.$ButtonSearch = null;
+
+            this.$ButtonsSearchContainer = null;
+            this.$ButtonsResultContainer = null;
 
             this.addEvents({
                 onOpen: this.$onOpen
@@ -110,6 +111,64 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
                 margin : '0 0 0 20px',
                 width  : 'calc(100% - 320px)'
             });
+
+            // buttons
+            this.$Buttons.set('html', '');
+
+            this.$ButtonsSearchContainer = new Element('div', {
+                styles: {
+                    'float'  : 'left',
+                    maxWidth : 300,
+                    textAlign: 'center',
+                    width    : '100%'
+                }
+            }).inject(this.$Buttons);
+
+            this.$ButtonsResultContainer = new Element('div', {
+                styles: {
+                    display  : 'none',
+                    'float'  : 'left',
+                    textAlign: 'right',
+                    width    : 'calc(100% - 320px)'
+                }
+            }).inject(this.$Buttons);
+
+
+            this.$ButtonSearch = new QUIButton({
+                text     : QUILocale.get('quiqqer/system', 'search'),
+                textimage: 'fa fa-search',
+                styles   : {
+                    'float': 'none'
+                },
+                events   : {
+                    onClick: this.search
+                }
+            }).inject(this.$ButtonsSearchContainer);
+
+            this.$ButtonSubmit = new QUIButton({
+                text     : QUILocale.get('quiqqer/system', 'accept'),
+                textimage: 'fa fa-check',
+                styles   : {
+                    'float': 'none'
+                },
+                events   : {
+                    onClick: this.submit
+                }
+            }).inject(this.$ButtonsResultContainer);
+
+            this.$ButtonCancel = new QUIButton({
+                text     : QUILocale.get('quiqqer/system', 'cancel'),
+                textimage: 'fa fa-remove',
+                styles   : {
+                    'float': 'none'
+                },
+                events   : {
+                    onClick: this.cancel
+                }
+            }).inject(this.$ButtonsResultContainer);
+
+            this.$ButtonSubmit.hide();
+            this.$ButtonCancel.hide();
         },
 
         /**
@@ -125,15 +184,28 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
             this.$Result = new Result({
                 styles: {
                     height: '100%'
+                },
+                events: {
+                    onRefresh: function (Result, gridOptions) {
+
+                    },
+                    onSubmit : this.submit,
+                    onSelect : function (Result, selected) {
+
+                    }
                 }
             }).inject(this.$SearchResult);
 
-            this.setAttribute('maxWidth', 800);
+            this.setAttribute('maxWidth', 900);
 
             this.resize().then(function () {
                 this.$SearchResult.setStyle('opacity', 0);
                 this.$SearchResult.setStyle('display', 'block');
                 this.$Result.resize();
+
+                this.$ButtonsResultContainer.setStyle('display', null);
+                this.$ButtonSubmit.show();
+                this.$ButtonCancel.show();
 
                 moofx(this.$SearchResult).animate({
                     opacity: 1
@@ -153,10 +225,29 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
         },
 
         /**
+         * Execute the search
+         */
+        search: function () {
+            this.$Search.search();
+        },
+
+        /**
          * Submit
+         *
+         * @fires onSubmit
          */
         submit: function () {
-            this.$Search.search().then();
+            var selected = this.$Result.getSelected();
+
+            if (!selected.length) {
+                return;
+            }
+
+            this.fireEvent('submit', [this, selected]);
+
+            if (this.getAttribute('autoclose')) {
+                this.close();
+            }
         }
     });
 });

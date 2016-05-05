@@ -39,8 +39,9 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectSing
          */
         create: function () {
             this.$Select = new QUISelect({
-                showIcons: false,
-                styles   : {
+                showIcons      : false,
+                placeholderText: '---',
+                styles         : {
                     width: '100%'
                 }
             });

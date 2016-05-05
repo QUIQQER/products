@@ -388,8 +388,11 @@ class Model extends QUI\QDOM
      */
     public function getAttributes()
     {
-        $attributes       = parent::getAttributes();
-        $attributes['id'] = $this->getId();
+        $attributes = parent::getAttributes();
+        
+        $attributes['id']          = $this->getId();
+        $attributes['title']       = $this->getTitle();
+        $attributes['description'] = $this->getDescription();
 
         /* @var $Price QUI\ERP\Products\Utils\Price */
         $Price = $this->getPrice();

@@ -30,8 +30,6 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
 ], function (QUI, QUIControl, QUIButton, Grid, Fields, Ajax, QUILocale, Mustache, template) {
     "use strict";
 
-    var lg = 'quiqqer/products';
-
     return new Class({
         Extends: QUIControl,
         Type   : 'package/quiqqer/products/bin/controls/products/search/Search',
@@ -50,7 +48,7 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
             this.parent(options);
 
             this.$Form = null;
-            
+
             this.addEvents({
                 onCreate: this.$onCreate,
                 onInject: this.$onInject
@@ -73,7 +71,15 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
          */
         create: function () {
             this.$Elm = new Element('form', {
-                'class': 'quiqqer-products-search'
+                'class': 'quiqqer-products-search',
+                events : {
+                    // submit event, because we have no real submit button
+                    keyup: function (event) {
+                        if (event.key === 'enter') {
+                            this.search();
+                        }
+                    }.bind(this)
+                }
             });
 
             return this.$Elm;
@@ -125,6 +131,10 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
 
                         for (i = 0, len = result.length; i < len; i++) {
                             id = result[i].id;
+
+                            if (i == 0) {
+                                getControlByFieldById(result[i].id).focus();
+                            }
 
                             if (!("searchData" in result[i])) {
                                 continue;
