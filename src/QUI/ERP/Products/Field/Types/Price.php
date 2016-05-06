@@ -15,7 +15,7 @@ use QUI\ERP\Products\Handler\Search;
  */
 class Price extends QUI\ERP\Products\Field\Field
 {
-    protected $columnType     = 'DOUBLE';
+    protected $columnType = 'DOUBLE';
     protected $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
 
     /**
@@ -25,19 +25,23 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     protected $currencyCode = null;
 
+    /**
+     * @return View
+     */
     public function getBackendView()
     {
-        // TODO: Hier aus display-price aus Price-Klasse verwenden?
-
         return new View(array(
-            'value'    => $this->cleanup($this->getValue()),
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
 
+    /**
+     * @return View
+     */
     public function getFrontendView()
     {
         $Price = new QUI\ERP\Products\Utils\Price(
@@ -46,10 +50,10 @@ class Price extends QUI\ERP\Products\Field\Field
         );
 
         return new View(array(
-            'value'    => $Price->getDisplayPrice(),
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
+            'value' => $Price->getDisplayPrice(),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -60,6 +64,14 @@ class Price extends QUI\ERP\Products\Field\Field
     public function getJavaScriptControl()
     {
         return 'package/quiqqer/products/bin/controls/fields/types/Price';
+    }
+
+    /**
+     * @return string
+     */
+    public function getJavaScriptSettings()
+    {
+        return 'package/quiqqer/products/bin/controls/fields/types/PriceSettings';
     }
 
     /**
@@ -80,9 +92,9 @@ class Price extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType'  => $this->getType()
+                    'fieldType' => $this->getType()
                 )
             ));
         }

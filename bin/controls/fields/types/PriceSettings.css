@@ -1,0 +1,24 @@
+
+.quiqqer-products-price-settings,
+.quiqqer-products-price-settings-groups {
+    clear: both;
+    float: left;
+    width: 100%
+}
+
+.quiqqer-products-price-settings-groups {
+    border-bottom: 1px solid rgba(147, 128, 108, 0.25);
+    padding: 10px;
+}
+
+.quiqqer-products-price-settings-groups label {
+    cursor: pointer;
+    width: 100% !important;
+}
+
+.quiqqer-products-price-settings-groups-text {
+    float: left;
+    line-height: 12px;
+    padding: 10px;
+    width: 200px;
+}

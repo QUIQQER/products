@@ -123,20 +123,19 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
             ]).then(function (result) {
                 var i, len, settings;
 
-                var fieldTypes      = result[1],
-                    fieldData       = result[0],
-                    fieldSettings   = result[2],
-                    searchTypes     = result[3],
-                    FieldTypes      = Elm.getElement('[name="type"]'),
-                    FieldOptions    = Elm.getElement('[name="options"]'),
-                    FieldPriority   = Elm.getElement('[name="priority"]'),
-                    FieldPrefix     = Elm.getElement('[name="prefix"]'),
-                    FieldSuffix     = Elm.getElement('[name="suffix"]'),
-                    FieldSearchType = Elm.getElement('[name="search_type"]'),
-                    FieldRequired   = Elm.getElement('[name="requiredField"]'),
-                    FieldSystem     = Elm.getElement('[name="systemField"]'),
-                    FieldPublic     = Elm.getElement('[name="publicField"]'),
-                    FieldStandard   = Elm.getElement('[name="standardField"]');
+                var fieldTypes    = result[1],
+                    fieldData     = result[0],
+                    fieldSettings = result[2],
+                    searchTypes   = result[3],
+                    FieldTypes    = Elm.getElement('[name="type"]'),
+                    FieldOptions  = Elm.getElement('[name="options"]'),
+                    FieldPriority = Elm.getElement('[name="priority"]'),
+                    FieldPrefix   = Elm.getElement('[name="prefix"]'),
+                    FieldSuffix   = Elm.getElement('[name="suffix"]'),
+                    FieldRequired = Elm.getElement('[name="requiredField"]'),
+                    FieldSystem   = Elm.getElement('[name="systemField"]'),
+                    FieldPublic   = Elm.getElement('[name="publicField"]'),
+                    FieldStandard = Elm.getElement('[name="standardField"]');
 
                 for (i = 0, len = fieldTypes.length; i < len; i++) {
                     settings = '';
@@ -159,6 +158,14 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     }).replaces(Elm.getElement('.field-search_type'));
 
                 } else {
+                    var FieldSearchType = new Element('select', {
+                        name  : 'search_field',
+                        value : fieldData.search_type,
+                        styles: {
+                            width: '100%'
+                        }
+                    }).inject(Elm.getElement('.field-search_type'));
+
                     for (i = 0, len = searchTypes.length; i < len; i++) {
                         new Element('option', {
                             html : QUILocale.get(lg, 'searchtype.' + searchTypes[i] + '.title'),
@@ -181,10 +188,6 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 FieldPrefix.value   = fieldData.prefix;
                 FieldSuffix.value   = fieldData.suffix;
 
-                if (FieldSearchType) {
-                    FieldSearchType.value = fieldData.search_type;
-                }
-                
                 FieldRequired.checked = fieldData.isRequired;
                 FieldSystem.checked   = fieldData.isSystem;
                 FieldStandard.checked = fieldData.standard;
