@@ -224,9 +224,11 @@ class Fields
         ));
 
 
-        // create new cache column
+        // create new cache column and set default search type
         if ($Field->isSearchable()) {
             self::createFieldCacheColumn($newId);
+            $Field->setAttribute('search_type', $Field->getDefaultSearchType());
+            $Field->save();
         }
 
         return $Field;

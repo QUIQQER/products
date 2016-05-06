@@ -108,4 +108,14 @@ class Input extends QUI\ERP\Products\Field\Field
             Search::SEARCHTYPE_INPUTSELECTSINGLE
         );
     }
+
+    /**
+     * Get default search type
+     *
+     * @return string
+     */
+    public function getDefaultSearchType()
+    {
+        return Search::SEARCHTYPE_TEXT;
+    }
 }

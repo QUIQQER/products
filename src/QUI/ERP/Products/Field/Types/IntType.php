@@ -109,4 +109,14 @@ class IntType extends QUI\ERP\Products\Field\Field
             Search::SEARCHTYPE_INPUTSELECTRANGE
         );
     }
+
+    /**
+     * Get default search type
+     *
+     * @return string
+     */
+    public function getDefaultSearchType()
+    {
+        return Search::SEARCHTYPE_SELECTRANGE;
+    }
 }
