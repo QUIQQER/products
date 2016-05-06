@@ -63,25 +63,25 @@ class BackendSearch extends Search
 
         $sql .= " FROM " . TablesUtils::getProductCacheTableName();
 
-        $where[] = 'lang = :lang';
+        $where[]       = 'lang = :lang';
         $binds['lang'] = array(
             'value' => $this->lang,
-            'type' => \PDO::PARAM_STR
+            'type'  => \PDO::PARAM_STR
         );
 
         if (isset($searchParams['category']) &&
             !empty($searchParams['category'])
         ) {
-            $where[] = '`category` = :category';
+            $where[]           = '`category` = :category';
             $binds['category'] = array(
-                'category' => array(
-                    'value' => (int)$searchParams['category'],
-                    'type' => \PDO::PARAM_INT
-                )
+                'value' => (int)$searchParams['category'],
+                'type'  => \PDO::PARAM_INT
             );
         }
 
-        if (!isset($searchParams['fields'])) {
+        if (!isset($searchParams['fields'])
+            && !isset($searchParams['freetext'])
+        ) {
             throw new QUI\Exception(
                 'Wrong search parameters.',
                 400
@@ -92,6 +92,34 @@ class BackendSearch extends Search
             && !empty($searchParams['active'])
         ) {
             $where[] = '`active` = 1';
+        }
+
+        // freetext search
+        if (isset($searchParams['freetext'])
+            && !empty($searchParams['freetext'])
+        ) {
+            $whereFreeText = array();
+            $searchFields  = $this->getSearchFields();
+            $value         = $this->sanitizeString($searchParams['freetext']);
+
+            foreach ($searchFields as $fieldId => $search) {
+                if (!$search) {
+                    continue;
+                }
+
+                $Field      = Fields::getField($fieldId);
+                $columnName = SearchHandler::getSearchFieldColumnName($Field);
+
+                $whereFreeText[] = '`' . $columnName . '` LIKE :freetext' . $fieldId;
+                $binds['freetext' . $fieldId] = array(
+                    'value' => $value,
+                    'type'  => \PDO::PARAM_STR
+                );
+            }
+
+            if (!empty($whereFreeText)) {
+                $where[] = '(' . implode(' OR ', $whereFreeText) . ')';
+            }
         }
 
         // retrieve query data for fields
@@ -199,11 +227,12 @@ class BackendSearch extends Search
             $Field = Fields::getField($fieldId);
 
             $searchFieldDataContent = array(
-                'id' => $Field->getId(),
+                'id'         => $Field->getId(),
                 'searchType' => $Field->getSearchType()
             );
 
-            if (in_array($Field->getSearchType(), $this->searchTypesWithValues)) {
+            if (in_array($Field->getSearchType(),
+                $this->searchTypesWithValues)) {
                 $searchValues = $this->getValuesFromField($Field, false);
                 $searchParams = array();
 
@@ -212,7 +241,8 @@ class BackendSearch extends Search
                         $Field->setValue($val);
                         $label = $Field->getValueByLocale($Locale);
                     } catch (QUI\Exception $Exception) {
-                        QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);
+                        QUI\System\Log::writeException($Exception,
+                            QUI\System\Log::LEVEL_DEBUG);
                         $label = $val;
                     }
 

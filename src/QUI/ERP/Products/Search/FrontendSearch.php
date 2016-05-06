@@ -185,18 +185,45 @@ class FrontendSearch extends Search
         ) {
             $where[] = '`category` = :category';
             $binds['category'] = array(
-                'category' => array(
-                    'value' => (int)$searchParams['category'],
-                    'type' => \PDO::PARAM_INT
-                )
+                'value' => (int)$searchParams['category'],
+                'type' => \PDO::PARAM_INT
             );
         }
 
-        if (!isset($searchParams['fields'])) {
+        if (!isset($searchParams['fields'])
+            && !isset($searchParams['freetext'])) {
             throw new QUI\Exception(
                 'Wrong search parameters.',
                 400
             );
+        }
+
+        // freetext search
+        if (isset($searchParams['freetext'])
+            && !empty($searchParams['freetext'])
+        ) {
+            $whereFreeText = array();
+            $searchFields  = $this->getSearchFields();
+            $value         = $this->sanitizeString($searchParams['freetext']);
+
+            foreach ($searchFields as $fieldId => $search) {
+                if (!$search) {
+                    continue;
+                }
+
+                $Field      = Fields::getField($fieldId);
+                $columnName = SearchHandler::getSearchFieldColumnName($Field);
+
+                $whereFreeText[] = '`' . $columnName . '` LIKE :freetext' . $fieldId;
+                $binds['freetext' . $fieldId] = array(
+                    'value' => $value,
+                    'type'  => \PDO::PARAM_STR
+                );
+            }
+
+            if (!empty($whereFreeText)) {
+                $where[] = '(' . implode(' OR ', $whereFreeText) . ')';
+            }
         }
 
         $where[] = '`active` = 1';
