@@ -139,8 +139,6 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
             this.$Input.value = JSON.encode({
                 groups: this.$Groups.getValue()
             });
-
-            console.warn(this.$Input.value);
         }
     });
 });

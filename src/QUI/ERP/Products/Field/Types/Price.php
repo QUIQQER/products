@@ -15,7 +15,14 @@ use QUI\ERP\Products\Handler\Search;
  */
 class Price extends QUI\ERP\Products\Field\Field
 {
+    /**
+     * @var string
+     */
     protected $columnType = 'DOUBLE';
+
+    /**
+     * @var int
+     */
     protected $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
 
     /**
@@ -71,6 +78,10 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     public function getJavaScriptSettings()
     {
+        if ($this->getId() == QUI\ERP\Products\Handler\Fields::FIELD_PRICE) {
+            return '';
+        }
+        
         return 'package/quiqqer/products/bin/controls/fields/types/PriceSettings';
     }
 
