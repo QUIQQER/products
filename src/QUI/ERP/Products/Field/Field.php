@@ -564,7 +564,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
             case 'prefix':
             case 'suffix':
-                $val = json_encode(json_decode($val, true));
+                if (!empty($val)) {
+                    $val = json_encode(json_decode($val, true));
+                }
                 break;
             default:
                 return $this;
