@@ -48,12 +48,18 @@ class Product extends QUI\Control
         $fields  = array();
 
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
-            $Product = $Product->getView();
+            $View  = $Product->getView();
+            $Price = QUI\ERP\Products\Utils\Calc::getProductPrice(
+                $Product->createUniqueProduct()
+            );
+
+        } else {
+            $View  = $Product;
+            $Price = $Product->getPrice();
         }
 
-
         /* @var $Product QUI\ERP\Products\Product\UniqueProduct */
-        $this->setAttribute('data-productid', $Product->getId());
+        $this->setAttribute('data-productid', $View->getId());
 
         // galery
         $PlaceholderImage = $this->getProject()->getMedia()->getPlaceholderImage();
@@ -68,7 +74,7 @@ class Product extends QUI\Control
         }
 
         try {
-            $Gallery->setAttribute('folderId', $Product->getFieldValue(Fields::FIELD_FOLDER));
+            $Gallery->setAttribute('folderId', $View->getFieldValue(Fields::FIELD_FOLDER));
         } catch (QUI\Exception $Exception) {
         }
 
@@ -89,19 +95,19 @@ class Product extends QUI\Control
         );
 
         foreach ($displayedFields as $field) {
-            if ($Product->getField($field)) {
-                $fields[] = $Product->getField($field);
+            if ($View->getField($field)) {
+                $fields[] = $View->getField($field);
             }
         }
 
 
         // pricedisplay
         $PriceDisplay = new QUI\ERP\Products\Controls\Price(array(
-            'Price' => $Product->getPrice()
+            'Price' => $Price
         ));
 
         // attribute list fields
-        $attributeListFields = $Product->getFieldsByType('ProductAttributeList');
+        $attributeListFields = $View->getFieldsByType('ProductAttributeList');
 
         $attributeListFields = array_filter($attributeListFields, function ($Field) {
             /* @var $Field QUI\ERP\Products\Interfaces\Field */
@@ -109,17 +115,17 @@ class Product extends QUI\Control
         });
 
         $Engine->assign(array(
-            'Product' => $Product,
+            'Product' => $View,
             'Gallery' => $Gallery,
             'fields' => $fields,
             'productAttributeList' => $attributeListFields,
             'PriceDisplay' => $PriceDisplay,
             'WatchlistButton' => new WatchlistButton(array(
-                'Product' => $Product,
+                'Product' => $View,
                 'width' => 'calc(50% - 5px)'
             )),
             'OfferButton' => new OfferButton(array(
-                'Product' => $Product,
+                'Product' => $View,
                 'width' => 'calc(50% - 5px)'
             ))
         ));

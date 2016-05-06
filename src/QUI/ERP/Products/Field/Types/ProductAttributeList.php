@@ -33,6 +33,11 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     protected $searchable = false;
 
     /**
+     * @var null
+     */
+    protected $defaultValue = null;
+
+    /**
      * ProductAttributeList constructor.
      *
      * @param int $fieldId
@@ -49,6 +54,50 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         ));
 
         parent::__construct($fieldId, $params);
+
+        // set default, if one are set
+        $options = $this->getOptions();
+
+        foreach ($options['entries'] as $key => $option) {
+            if (isset($option['selected']) && $option['selected']) {
+                $this->value        = $key;
+                $this->defaultValue = $key;
+            }
+        }
+    }
+
+    /**
+     * Set a field option
+     *
+     * @param string $option - option name
+     * @param mixed $value - option value
+     */
+    public function setOption($option, $value)
+    {
+        parent::setOption($option, $value);
+
+        if ($option == 'entries') {
+            if (is_array($value)) {
+                foreach ($value as $key => $val) {
+                    if (isset($val['selected']) && $val['selected']) {
+                        $this->value        = $key;
+                        $this->defaultValue = $key;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @return string|array
+     */
+    public function getValue()
+    {
+        if (!is_null($this->value)) {
+            return $this->value;
+        }
+
+        return $this->defaultValue;
     }
 
     /**
