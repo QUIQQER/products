@@ -14,6 +14,9 @@
     <permission name="product.edit" type="bool">
         <defaultvalue>1</defaultvalue>
     </permission>
+    <permission name="product.view.prices" type="bool">
+        <defaultvalue>1</defaultvalue>
+    </permission>
 
     <permission name="category.create" type="bool">
         <defaultvalue>1</defaultvalue>

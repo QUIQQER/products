@@ -42,6 +42,10 @@
             <de><![CDATA[Produktbilder]]></de>
             <en><![CDATA[Product images]]></en>
         </locale>
+        <locale name="settings.window.products.hidePrices">
+            <de><![CDATA[Preise nicht anzeigen]]></de>
+            <en><![CDATA[Hide prices]]></en>
+        </locale>
         <locale name="settings.window.products.folder.desc">
             <de><![CDATA[
             Geben Sie den Hauptordner für Produktbilder an.
@@ -251,6 +255,10 @@
             <en><![CDATA[Current price]]></en>
         </locale>
 
+        <locale name="fieldtype.ProductAttributeList.select.emptyvalue">
+            <de><![CDATA[Bitte auswahlen]]></de>
+            <en><![CDATA[Please select]]></en>
+        </locale>
 
         <!-- exceptions -->
         <locale name="exception.field.is.invalid">
@@ -416,6 +424,10 @@
         <locale name="permission.product.edit">
             <de><![CDATA[Darf Produkte bearbeiten.]]></de>
             <en><![CDATA[Is allowed to edit products.]]></en>
+        </locale>
+        <locale name="permission.product.view.prices">
+            <de><![CDATA[Darf Preise sehen.]]></de>
+            <en><![CDATA[Is allowed to view prices.]]></en>
         </locale>
 
         <!-- Permissions -->

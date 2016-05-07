@@ -75,7 +75,9 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         };
 
         if ($value === '' && !$hasDefault()) {
-            $html .= '<option value="">Bitte auswählen</option>';
+            $html .= '<option value="">' .
+                     QUI::getLocale()->get('quiqqer/products', 'fieldtype.ProductAttributeList.select.emptyvalue') .
+                     '</option>';
         }
 
         foreach ($entries as $key => $option) {

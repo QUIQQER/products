@@ -7,6 +7,9 @@
                 <conf name="folder">
                     <type><![CDATA[string]]></type>
                 </conf>
+                <conf name="hidePrices">
+                    <type><![CDATA[bool]]></type>
+                </conf>
             </section>
             <section name="search">
                 <conf name="backend">
@@ -35,6 +38,11 @@
                             <locale group="quiqqer/products" var="menu.erp.products.products.title"/>
                         </title>
 
+                        <input conf="products.hidePrices" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.hidePrices"/>
+                            </text>
+                        </input>
                         <input conf="products.folder" class="media-folder">
                             <text>
                                 <locale group="quiqqer/products" var="settings.window.products.folder"/>

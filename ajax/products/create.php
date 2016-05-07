@@ -19,11 +19,7 @@ QUI::$Ajax->registerFunction(
     function ($categories, $fields) {
         $fields     = json_decode($fields, true);
         $categories = json_decode($categories, true);
-
-        \QUI\System\Log::writeRecursive("create product");
-        \QUI\System\Log::writeRecursive($fields);
-
-        $fieldList = array();
+        $fieldList  = array();
 
         foreach ($fields as $fieldId => $fieldData) {
             try {
@@ -34,12 +30,11 @@ QUI::$Ajax->registerFunction(
 
                 $fieldList[] = $Field;
             } catch (QUI\Exception $Exception) {
-                \QUI\System\Log::writeRecursive($Exception->getMessage());
+                QUI\System\Log::writeRecursive($Exception->getMessage());
             }
         }
 
         $Products = new Products();
-        \QUI\System\Log::writeRecursive($fieldList);
         $Product  = $Products->createProduct($categories, $fieldList);
 
         return $Product->getAttributes();

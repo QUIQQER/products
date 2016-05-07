@@ -23,8 +23,7 @@ QUI::$Ajax->registerFunction(
             'searchParams' => $searchParams
         ));
 
-        $result = $result['result'];
-
+        $result   = $result['result'];
         $products = array();
 
         foreach ($result as $pid) {
