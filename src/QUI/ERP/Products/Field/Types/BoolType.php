@@ -124,4 +124,14 @@ class BoolType extends QUI\ERP\Products\Field\Field
             Search::SEARCHTYPE_BOOL
         );
     }
+
+    /**
+     * Get default search type
+     *
+     * @return string
+     */
+    public function getDefaultSearchType()
+    {
+        return Search::SEARCHTYPE_BOOL;
+    }
 }

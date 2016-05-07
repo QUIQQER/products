@@ -806,6 +806,16 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Get default search type
+     *
+     * @return string|null
+     */
+    public function getDefaultSearchType()
+    {
+        return null;
+    }
+
+    /**
      * Get all available search types for this field
      *
      * @return array
