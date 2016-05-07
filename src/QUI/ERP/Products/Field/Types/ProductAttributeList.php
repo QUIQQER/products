@@ -243,7 +243,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      */
     public function cleanup($value)
     {
-        if (empty($value)) {
+        if (empty($value) && !is_int($value) && $value != 0) {
             return null;
         }
 

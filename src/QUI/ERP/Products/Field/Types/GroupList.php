@@ -319,8 +319,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
             try {
                 $result[] = $Groups->get($groupId);
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeException($Exception,
-                    QUI\System\Log::LEVEL_NOTICE);
+                QUI\System\Log::writeException(
+                    $Exception,
+                    QUI\System\Log::LEVEL_NOTICE
+                );
             }
         }
 
