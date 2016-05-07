@@ -19,7 +19,11 @@ QUI::$Ajax->registerFunction(
         /* @var $Field \QUI\ERP\Products\Field\Field */
         foreach ($fields as $Field) {
             if (method_exists($Field, 'getJavaScriptSettings')) {
-                $result[$Field->getType()] = $Field->getJavaScriptSettings();
+                $settings = $Field->getJavaScriptSettings();
+
+                if (!empty($settings)) {
+                    $result[$Field->getId()] = $settings;
+                }
             }
         }
 

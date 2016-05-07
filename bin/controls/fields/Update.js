@@ -140,8 +140,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 for (i = 0, len = fieldTypes.length; i < len; i++) {
                     settings = '';
 
-                    if (fieldTypes[i] in fieldSettings) {
-                        settings = fieldSettings[fieldTypes[i]];
+                    if (id in fieldSettings) {
+                        settings = fieldSettings[id];
                     }
 
                     new Element('option', {
@@ -190,7 +190,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
                 FieldRequired.checked = fieldData.isRequired;
                 FieldSystem.checked   = fieldData.isSystem;
-                FieldStandard.checked = fieldData.standard;
+                FieldStandard.checked = fieldData.isStandard;
                 FieldPublic.checked   = fieldData.isPublic;
 
                 var loadSettings = function () {

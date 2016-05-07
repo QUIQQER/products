@@ -5,6 +5,7 @@
  */
 namespace QUI\ERP\Products\Field;
 
+use BirknerAlex\XMPPHP\Log;
 use QUI;
 use QUI\ERP\Products\Handler\Search;
 use QUI\ERP\Products\Handler\Fields;
@@ -141,6 +142,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $this->standard = $params['standard'] ? true : false;
         }
 
+        if ($this->isSystem()) {
+            $this->standard = true;
+        }
+
         if (isset($params['options'])) {
             $this->setOptions($params['options']);
         }
@@ -239,24 +244,38 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         $allowedAttributes = Fields::getChildAttributes();
 
-        $data = array();
+        $data = array(
+            'standardField' => $this->isStandard() ? 1 : 0,
+            'systemField' => $this->isSystem() ? 1 : 0,
+            'requiredField' => $this->isRequired() ? 1 : 0,
+            'publicField' => $this->isPublic() ? 1 : 0
+        );
 
         foreach ($allowedAttributes as $attribute) {
+            if ($attribute == 'standardField'
+                || $attribute == 'systemField'
+                || $attribute == 'requiredField'
+                || $attribute == 'publicField'
+            ) {
+                continue;
+            }
+
             if ($this->getAttribute($attribute)) {
                 $data[$attribute] = $this->getAttribute($attribute);
-            } else {
-                $data[$attribute] = '';
+                continue;
             }
+
+            $data[$attribute] = '';
         }
 
         // options json check
         $data['options'] = '';
         $options         = $this->getOptions();
-        QUI\System\Log::writeRecursive($options);
+
         if (!empty($options)) {
             $data['options'] = json_encode($options);
         }
-        QUI\System\Log::writeRecursive($data);
+
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             $data,
@@ -555,10 +574,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             case 'type':
             case 'search_type':
             case 'priority':
-            case 'standardField':
-            case 'systemField':
-            case 'requiredField':
-            case 'publicField':
                 $val = QUI\Utils\Security\Orthos::clear($val);
                 break;
 
@@ -568,6 +583,26 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                     $val = json_encode(json_decode($val, true));
                 }
                 break;
+
+            case 'standardField':
+                $this->standard = $val ? true : false;
+                if ($this->isSystem()) {
+                    $this->standard = true;
+                }
+                return $this;
+
+            case 'systemField':
+                // system field type could not be changed
+                return $this;
+
+            case 'requiredField':
+                $this->require = $val ? true : false;
+                return $this;
+
+            case 'publicField':
+                $this->public = $val ? true : false;
+                return $this;
+
             default:
                 return $this;
         }
@@ -875,10 +910,17 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Is the field a standard field?
+     *
      * @return bool
      */
     public function isStandard()
     {
+        // systemfields are always standardfields
+        if ($this->isSystem()) {
+            return true;
+        }
+
         return $this->standard;
     }
 
@@ -920,11 +962,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $value   = $start;
         $range[] = $value;
 
-        QUI\System\Log::writeRecursive($min);
-        QUI\System\Log::writeRecursive($max);
-        QUI\System\Log::writeRecursive($value);
-        \QUI\System\Log::writeRecursive("-----------");
-
         while ($value < $max) {
             if (round($value, 1) < 1) {
                 $add = 0.1;
@@ -933,10 +970,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 $i   = 10;
 
                 while ($value > $i) {
-
-                    QUI\System\Log::writeRecursive($value);
-                    QUI\System\Log::writeRecursive($i);
-                    QUI\System\Log::writeRecursive('====');
                     $i *= 10;
                     $add *= 10;
                 }
@@ -946,11 +979,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
             $value += $add;
             $range[] = $value;
-
-
         }
-
-        QUI\System\Log::writeRecursive('stop');
 
         return $range;
     }

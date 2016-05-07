@@ -81,7 +81,7 @@ class Price extends QUI\ERP\Products\Field\Field
         if ($this->getId() == QUI\ERP\Products\Handler\Fields::FIELD_PRICE) {
             return '';
         }
-        
+
         return 'package/quiqqer/products/bin/controls/fields/types/PriceSettings';
     }
 

@@ -82,8 +82,6 @@ class Model extends QUI\QDOM
 
         $this->active = (int)$result[0]['active'] ? true : false;
 
-        QUI\System\Log::writeRecursive($result[0]['active']);
-
         unset($result[0]['id']);
         unset($result[0]['active']);
 
@@ -150,9 +148,7 @@ class Model extends QUI\QDOM
         }
 
 
-        // all standard system fields must be in the product
-
-        // field list from the system
+        // all standard and all system fields must be in the product
         $systemfields = Fields::getFields(array(
             'where_or' => array(
                 'systemField' => 1,

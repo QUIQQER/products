@@ -66,9 +66,9 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
             Elm.set({
                 'class': 'field-create',
                 html   : Mustache.render(template, {
-                    contentText      : '<div class="field-create-header">' +
-                                       QUILocale.get(lg, 'control.field.create.content') +
-                                       '</div>',
+                    contentText        : '<div class="field-create-header">' +
+                                         QUILocale.get(lg, 'control.field.create.content') +
+                                         '</div>',
                     tableHeader        : QUILocale.get(lg, 'control.field.create.header'),
                     fieldTitle         : QUILocale.get('quiqqer/system', 'title'),
                     fieldWorkingTitle  : QUILocale.get(lg, 'workingTitle'),
@@ -150,7 +150,7 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
 
                 Fields.createChild({
                     type         : Form.elements.type.value,
-                    search_type  : Form.elements.search_type.value,
+                    search_type  : '',
                     prefix       : Form.elements.prefix.value,
                     suffix       : Form.elements.suffix.value,
                     priority     : Form.elements.priority.value,

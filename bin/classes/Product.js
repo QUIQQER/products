@@ -176,7 +176,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                     Products.getChild(this.getAttribute('id')).then(function (data) {
                         this.$loaded = true;
                         this.$data   = data;
-                        console.log(this.$data, 'refresh');
+                        
                         resolve(this);
 
                         this.fireEvent('refresh', [this]);
