@@ -33,13 +33,17 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
      */
     public function create()
     {
-        $id      = $this->getId();
-        $value   = $this->getValue();
-        $options = $this->getOptions();
-        $current = QUI::getLocale()->getCurrent();
-        $name    = 'field-' . $id;
-
+        $id       = $this->getId();
+        $value    = $this->getValue();
+        $options  = $this->getOptions();
+        $current  = QUI::getLocale()->getCurrent();
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $name     = 'field-' . $id;
+        $entries  = array();
+
+        if (isset($options['entries'])) {
+            $entries = $options['entries'];
+        }
 
         $display_discounts = false;
 
@@ -61,14 +65,17 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                     data-qui=\"package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeList\"
                     disabled=\"disabled\">";
 
-        if ($value === '') {
+        $hasDefault = function () use ($entries) {
+            foreach ($entries as $key => $option) {
+                if (isset($option['selected']) && $option['selected']) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        if ($value === '' && !$hasDefault()) {
             $html .= '<option value="">Bitte auswählen</option>';
-        }
-
-        $entries = array();
-
-        if (isset($options['entries'])) {
-            $entries = $options['entries'];
         }
 
         foreach ($entries as $key => $option) {
