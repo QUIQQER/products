@@ -87,7 +87,7 @@ class Calc
      */
     public static function getProductPrice(UniqueProduct $Product)
     {
-        $price  = $Product->getFieldValue(Fields::FIELD_PRICE);
+        $price  = $Product->getPrice()->getPrice();
         $prices = $Product->getPriceFactors()->sort();
 
         $basisPrice = $price;
