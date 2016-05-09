@@ -471,6 +471,55 @@ class Model extends QUI\QDOM
     {
         QUI\Rights\Permission::checkPermission('product.edit');
 
+        $categoryFields = array();
+        $categoryData   = array();
+        $categories     = $this->getCategories();
+
+        /* @var $Field Field */
+        /* @var $Category Category */
+
+        // get category field data
+        foreach ($categories as $Category) {
+            $categoryData[] = $Category->getId();
+            $catFields      = $Category->getFields();
+
+            foreach ($catFields as $Field) {
+                $categoryFields[$Field->getId()] = true;
+            }
+        }
+
+
+        // set main category
+        $mainCategory = '';
+        $Category     = $this->getCategory();
+
+        if ($Category) {
+            $mainCategory = $Category->getId();
+        }
+
+        // update
+        QUI::getDataBase()->update(
+            QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            array(
+                'categories' => ',' . implode(',', $categoryData) . ',',
+                'category' => $mainCategory,
+                'fieldData' => json_encode($this->validateFields())
+            ),
+            array('id' => $this->getId())
+        );
+
+        $this->updateCache();
+    }
+
+    /**
+     * Validate the fields and return the field data
+     *
+     * @return array
+     *
+     * @throws QUI\ERP\Products\Product\Exception
+     */
+    protected function validateFields()
+    {
         $fieldData    = array();
         $categoryData = array();
 
@@ -580,25 +629,7 @@ class Model extends QUI\QDOM
             $fieldData[] = $Field->toProductArray();
         }
 
-        // set main category
-        $mainCategory = '';
-        $Category     = $this->getCategory();
-
-        if ($Category) {
-            $mainCategory = $Category->getId();
-        }
-
-        QUI::getDataBase()->update(
-            QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            array(
-                'categories' => ',' . implode(',', $categoryData) . ',',
-                'category' => $mainCategory,
-                'fieldData' => json_encode($fieldData)
-            ),
-            array('id' => $this->getId())
-        );
-
-        $this->updateCache();
+        return $fieldData;
     }
 
     /**
@@ -959,6 +990,9 @@ class Model extends QUI\QDOM
     public function activate()
     {
         QUI\Rights\Permission::checkPermission('product.activate');
+
+        // all fields correct?
+        $this->validateFields();
 
         $this->active = true;
 
