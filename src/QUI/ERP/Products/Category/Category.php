@@ -359,6 +359,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
      * @return QUI\Projects\Site
      *
      * @throws QUI\Exception
+     * @throws QUI\ERP\Products\Category\Exception
      */
     public function getSite($Project = null)
     {
@@ -380,7 +381,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
             return $sites[0];
         }
 
-        throw new QUI\Exception(array(
+        throw new QUI\ERP\Products\Category\Exception(array(
             'quiqqer/products',
             'exception.category.has.no.site'
         ));
