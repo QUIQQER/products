@@ -1077,7 +1077,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 ).then(function () {
                     self.Loader.hide();
                     resolve();
-                }).catch(function (err) {
+                }, function (err) {
                     self.Loader.hide();
                     reject(err);
                 });

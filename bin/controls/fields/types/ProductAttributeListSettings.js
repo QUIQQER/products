@@ -16,10 +16,11 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
     'package/quiqqer/products/bin/utils/Calc',
     'Mustache',
 
+    'text!package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings.html',
     'text!package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettingsCreate.html',
     'css!package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings.css'
 
-], function (QUI, QUIControl, QUIConfirm, QUILocale, Grid, InputMultiLang, Calc, Mustache, templateCreate) {
+], function (QUI, QUIControl, QUIConfirm, QUILocale, Grid, InputMultiLang, Calc, Mustache, template, templateCreate) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -56,6 +57,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             this.$PriceCalc        = null;
             this.$DisplayDiscounts = null;
             this.$GenerateTags     = null;
+            this.$UserInput        = null;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -188,52 +190,14 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
 
             this.$PriceCalc = new Element('div', {
                 'class': 'quiqqer-products-attributeList-settings',
-                html   : '<div class="quiqqer-products-attributeList-settings-title">' +
-                         '     Zur Preisberechnung' +
-                         '</div>' +
-                         '<div class="quiqqer-products-attributeList-settings-priority">' +
-                         '     <label>' +
-                         '         <span class="quiqqer-products-attributeList-settings-text">' +
-                         '             Priorität:' +
-                         '         </span>' +
-                         '         <input type="number" name="price_priority"' +
-                         '                class="quiqqer-products-attributeList-settings-input" />' +
-                         '     </label>' +
-                         '</div>' +
-                         '<div class="quiqqer-products-attributeList-settings-generateTags">' +
-                         '     <label>' +
-                         '         <span class="quiqqer-products-attributeList-settings-text">' +
-                         '             Tags generieren:' +
-                         '         </span>' +
-                         '         <input type="checkbox" name="generate_tags" />' +
-                         '     </label>' +
-                         '</div>' +
-                         '<div class="quiqqer-products-attributeList-settings-displayDiscounts">' +
-                         '     <label>' +
-                         '         <span class="quiqqer-products-attributeList-settings-text">' +
-                         '             Auf / Abschläge anzeigen:' +
-                         '         </span>' +
-                         '         <input type="checkbox" name="display_discounts" />' +
-                         '     </label>' +
-                         '</div>' +
-                         '<div class="quiqqer-products-attributeList-settings-calcbasis">' +
-                         '     <label>' +
-                         '         <span class="quiqqer-products-attributeList-settings-text">' +
-                         '             Berechnungsgrundlage:' +
-                         '         </span>' +
-                         '         <select type="text" name="price_calculation_basis" ' +
-                         '                 class="quiqqer-products-attributeList-settings-input">' +
-                         '              <option value="1">Netto</option>' +
-                         '              <option value="2">Kalkulierte Preis</option>' +
-                         '          </select>' +
-                         '     </label>' +
-                         '</div>'
+                html   : template
             }).inject(this.$Elm, 'top');
 
             this.$Priority         = this.$PriceCalc.getElement('[name="price_priority"]');
             this.$CalcBasis        = this.$PriceCalc.getElement('[name="price_calculation_basis"]');
             this.$DisplayDiscounts = this.$PriceCalc.getElement('[name="display_discounts"]');
             this.$GenerateTags     = this.$PriceCalc.getElement('[name="generate_tags"]');
+            this.$UserInput        = this.$PriceCalc.getElement('[name="userinput"]');
 
             this.refresh();
         },
@@ -308,10 +272,17 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 this.$GenerateTags.checked = false;
             }
 
+            if ("userinput" in data) {
+                this.$UserInput.checked = data.userinput;
+            } else {
+                this.$UserInput.checked = false;
+            }
+
             this.$Priority.addEvent('change', this.update);
             this.$CalcBasis.addEvent('change', this.update);
             this.$DisplayDiscounts.addEvent('change', this.update);
             this.$GenerateTags.addEvent('change', this.update);
+            this.$UserInput.addEvent('change', this.update);
         },
 
         /**
@@ -553,7 +524,8 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 priority         : this.$Priority.value,
                 calculation_basis: this.$CalcBasis.value,
                 display_discounts: this.$DisplayDiscounts.checked,
-                generate_tags    : this.$GenerateTags.checked
+                generate_tags    : this.$GenerateTags.checked,
+                userinput        : this.$UserInput.checked
             });
         },
 

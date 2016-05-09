@@ -34,8 +34,31 @@ QUI::$Ajax->registerFunction(
 
             try {
                 $ProductField = $Product->getField($Field->getId());
+
+                // wenn es ein feld ist, welches vom benutzer / käufer ausgefüllt werden muss,
+                // werden keine values gesetzt
+                if ($ProductField->isCustomField()) {
+                    continue;
+                }
+
                 $ProductField->validate($field);
                 $ProductField->setValue($field);
+
+            } catch (QUI\ERP\Products\Product\Exception $Exception) {
+                if ($Exception->getCode() === 1002) {
+                    continue;
+                }
+
+                QUI\System\Log::addNotice(
+                    $Exception->getMessage(),
+                    array(
+                        'id' => $Field->getId(),
+                        'title' => $Field->getTitle(),
+                        'data' => $field
+                    )
+                );
+
+                throw $Exception;
 
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addNotice(
@@ -57,7 +80,6 @@ QUI::$Ajax->registerFunction(
         foreach ($categories as $category) {
             try {
                 $Category = $Categories->getCategory($category);
-
                 $Product->addCategory($Category);
 
             } catch (QUI\Exception $Exception) {

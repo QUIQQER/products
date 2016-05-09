@@ -23,6 +23,11 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
  *
  * @example
  * QUI\ERP\Products\Handler\Products::getProduct( ID );
+ *
+ * Exceptions:
+ * - Code 1002 (QUI\ERP\Products\Product\Exception) Field not found
+ * - Code 1003 (QUI\ERP\Products\Product\Exception) Field is invalid
+ * - Code 1004 (QUI\ERP\Products\Product\Exception) Field is empty but required
  */
 class Model extends QUI\QDOM
 {
@@ -59,7 +64,7 @@ class Model extends QUI\QDOM
      *
      * @param integer $pid - Product-ID
      *
-     * @throws QUI\Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function __construct($pid)
     {
@@ -73,7 +78,7 @@ class Model extends QUI\QDOM
         ));
 
         if (!isset($result[0])) {
-            throw new QUI\Exception(
+            throw new QUI\ERP\Products\Product\Exception(
                 array('quiqqer/products', 'exception.product.not.found'),
                 404,
                 array('id' => $this->getId())
@@ -458,6 +463,8 @@ class Model extends QUI\QDOM
 
     /**
      * save / update the product data
+     *
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function save()
     {
@@ -521,7 +528,7 @@ class Model extends QUI\QDOM
                 $Field->setUnassignedStatus(false);
             }
 
-            if (!$Field->isRequired()) {
+            if (!$Field->isRequired() || $Field->isCustomField()) {
                 $Field->validate($value);
 
                 $fieldData[] = $Field->toProductArray();
@@ -535,31 +542,38 @@ class Model extends QUI\QDOM
                     $Exception->getMessage(),
                     array(
                         'id' => $Field->getId(),
-                        'title' => $Field->getTitle()
+                        'title' => $Field->getTitle(),
+                        'fieldType' => $Field->getType()
                     )
                 );
 
-                throw new QUI\Exception(array(
-                    'quiqqer/products',
-                    'exception.field.invalid',
+                throw new QUI\ERP\Products\Product\Exception(
                     array(
-                        'fieldId' => $Field->getId(),
-                        'fieldTitle' => $Field->getTitle(),
-                        'fieldType' => $Field->getType()
-                    )
-                ));
+                        'quiqqer/products',
+                        'exception.field.invalid',
+                        array(
+                            'fieldId' => $Field->getId(),
+                            'fieldTitle' => $Field->getTitle(),
+                            'fieldType' => $Field->getType()
+                        )
+                    ),
+                    1003
+                );
             }
 
             if ($Field->isEmpty()) {
-                throw new QUI\Exception(array(
-                    'quiqqer/products',
-                    'exception.field.required.but.empty',
+                throw new QUI\ERP\Products\Product\Exception(
                     array(
-                        'fieldId' => $Field->getId(),
-                        'fieldTitle' => $Field->getTitle(),
-                        'fieldType' => $Field->getType()
-                    )
-                ));
+                        'quiqqer/products',
+                        'exception.field.required.but.empty',
+                        array(
+                            'fieldId' => $Field->getId(),
+                            'fieldTitle' => $Field->getTitle(),
+                            'fieldType' => $Field->getType()
+                        )
+                    ),
+                    1004
+                );
             }
 
             $fieldData[] = $Field->toProductArray();
@@ -735,7 +749,7 @@ class Model extends QUI\QDOM
      *
      * @param integer $fieldId
      * @return QUI\ERP\Products\Field\Field
-     * @throws QUI\Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function getField($fieldId)
     {
@@ -743,14 +757,17 @@ class Model extends QUI\QDOM
             return $this->fields[$fieldId];
         }
 
-        throw new QUI\Exception(array(
-            'quiqqer/products',
-            'exception.field.not.found',
+        throw new QUI\ERP\Products\Product\Exception(
             array(
-                'fieldId' => $fieldId,
-                'productId' => $this->getId()
-            )
-        ));
+                'quiqqer/products',
+                'exception.field.not.found',
+                array(
+                    'fieldId' => $fieldId,
+                    'productId' => $this->getId()
+                )
+            ),
+            1002
+        );
     }
 
     /**
@@ -758,7 +775,7 @@ class Model extends QUI\QDOM
      *
      * @param integer $fieldId
      * @return mixed
-     * @throws QUI\Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function getFieldValue($fieldId)
     {
@@ -771,7 +788,7 @@ class Model extends QUI\QDOM
      * @param integer $fieldId
      * @param QUI\Locale $Locale (optional)
      * @return mixed
-     * @throws QUI\Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function getFieldValueByLocale($fieldId, $Locale = null)
     {
@@ -849,7 +866,7 @@ class Model extends QUI\QDOM
             return $Folder;
         }
 
-        throw new QUI\Exception(array(
+        throw new QUI\ERP\Products\Product\Exception(array(
             'quiqqer/products',
             'exception.products.media.folder.missing'
         ));
@@ -878,7 +895,7 @@ class Model extends QUI\QDOM
             }
         }
 
-        throw new QUI\Exception(array(
+        throw new QUI\ERP\Products\Product\Exception(array(
             'quiqqer/products',
             'exception.product.no.image',
             array(
