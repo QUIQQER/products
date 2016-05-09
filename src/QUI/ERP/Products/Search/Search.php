@@ -235,6 +235,11 @@ abstract class Search extends QUI\QDOM
                 continue;
             }
 
+            // if field is not searchable -> ignore in search
+            if (!$this->canSearchField($Field)) {
+                continue;
+            }
+
             $columnName = SearchHandler::getSearchFieldColumnName($Field);
             $column     = '`' . $columnName . '`';
 

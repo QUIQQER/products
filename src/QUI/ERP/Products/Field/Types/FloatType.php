@@ -152,8 +152,8 @@ class FloatType extends QUI\ERP\Products\Field\Field
         return array(
             Search::SEARCHTYPE_TEXT,
             Search::SEARCHTYPE_SELECTRANGE,
-            Search::SEARCHTYPE_HASVALUE,
-            Search::SEARCHTYPE_INPUTSELECTRANGE
+            Search::SEARCHTYPE_INPUTSELECTRANGE,
+            Search::SEARCHTYPE_HASVALUE
         );
     }
 

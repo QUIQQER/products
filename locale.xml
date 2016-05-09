@@ -363,45 +363,45 @@
         </locale>
 
         <!-- searchtypes -->
-        <locale name="searchtype.1.title">
+        <locale name="searchtype.text.title">
             <de><![CDATA[Text-Eingabefeld]]></de>
             <en><![CDATA[Text input field]]></en>
         </locale>
-        <locale name="searchtype.2.title">
-            <de><![CDATA[2 Dropdown-Menüs - von/bis]]></de>
-            <en><![CDATA[2 dropdown lists - from/to]]></en>
+        <locale name="searchtype.selectRange.title">
+            <de><![CDATA[Zwei Dropdown-Menüs - von/bis]]></de>
+            <en><![CDATA[Two dropdown lists - from/to]]></en>
         </locale>
-        <locale name="searchtype.4.title">
-            <de><![CDATA[1 Dropdown-Menü - Einfach-Auswahl]]></de>
-            <en><![CDATA[1 dropdown list - single choice]]></en>
+        <locale name="searchtype.selectSingle.title">
+            <de><![CDATA[Dropdown-Menü - Einfach-Auswahl]]></de>
+            <en><![CDATA[Dropdown list - single choice]]></en>
         </locale>
-        <locale name="searchtype.6.title">
+        <locale name="searchtype.selectMulti.title">
             <de><![CDATA[Mehrfach-Auswahl]]></de>
             <en><![CDATA[Multiple choice]]></en>
         </locale>
-        <locale name="searchtype.7.title">
+        <locale name="searchtype.bool.title">
             <de><![CDATA[Ja/Nein Auswahl]]></de>
             <en><![CDATA[Yes/No choice]]></en>
         </locale>
-        <locale name="searchtype.8.title">
+        <locale name="searchtype.hasValue.title">
             <de><![CDATA[Wert/kein Wert Auswahl]]></de>
             <en><![CDATA[Value/No value choice]]></en>
         </locale>
-        <locale name="searchtype.9.title">
+        <locale name="searchtype.date.title">
             <de><![CDATA[Datums-Auswahl]]></de>
             <en><![CDATA[Date picker]]></en>
         </locale>
-        <locale name="searchtype.10.title">
+        <locale name="searchtype.dateRange.title">
             <de><![CDATA[Datumsbereich-Auswahl]]></de>
             <en><![CDATA[Date range picker]]></en>
         </locale>
-        <locale name="searchtype.3.title">
-            <de><![CDATA[2 Dropdown-Menüs - von/bis + Individuelle Eingabe]]></de>
-            <en><![CDATA[2 dropdown lists - from/to + Individual input]]></en>
+        <locale name="searchtype.inputSelectRange.title">
+            <de><![CDATA[Zwei Dropdown-Menüs - von/bis + Individuelle Eingabe]]></de>
+            <en><![CDATA[Two dropdown lists - from/to + Individual input]]></en>
         </locale>
-        <locale name="searchtype.5.title">
-            <de><![CDATA[1 Dropdown-Menü - Einfach-Auswahl  + Individuelle Eingabe]]></de>
-            <en><![CDATA[1 dropdown list - single choice  + Individual input]]></en>
+        <locale name="searchtype.inputSelectSingle.title">
+            <de><![CDATA[Dropdown-Menü - Einfach-Auswahl + Individuelle Eingabe]]></de>
+            <en><![CDATA[Dropdown list - single choice + Individual input]]></en>
         </locale>
 
         <locale name="permission.product._header">

@@ -129,7 +129,7 @@ class FrontendSearch extends Search
         }
 
         if (isset($urlParams['limit']) && !empty($urlParams['limit'])) {
-            $searchData['limit'] =$urlParams['limit'];
+            $searchData['limit'] = $urlParams['limit'];
         }
 
         if (isset($urlParams['sheet']) && !empty($urlParams['sheet'])) {
@@ -174,24 +174,25 @@ class FrontendSearch extends Search
 
         $sql .= " FROM " . TablesUtils::getProductCacheTableName();
 
-        $where[] = 'lang = :lang';
+        $where[]       = 'lang = :lang';
         $binds['lang'] = array(
             'value' => $this->lang,
-            'type' => \PDO::PARAM_STR
+            'type'  => \PDO::PARAM_STR
         );
 
         if (isset($searchParams['category']) &&
             !empty($searchParams['category'])
         ) {
-            $where[] = '`category` = :category';
+            $where[]           = '`category` = :category';
             $binds['category'] = array(
                 'value' => (int)$searchParams['category'],
-                'type' => \PDO::PARAM_INT
+                'type'  => \PDO::PARAM_INT
             );
         }
 
         if (!isset($searchParams['fields'])
-            && !isset($searchParams['freetext'])) {
+            && !isset($searchParams['freetext'])
+        ) {
             throw new QUI\Exception(
                 'Wrong search parameters.',
                 400
@@ -211,10 +212,16 @@ class FrontendSearch extends Search
                     continue;
                 }
 
-                $Field      = Fields::getField($fieldId);
+                $Field = Fields::getField($fieldId);
+
+                // can only search fields with permission
+                if (!$this->canSearchField($Field)) {
+                    continue;
+                }
+
                 $columnName = SearchHandler::getSearchFieldColumnName($Field);
 
-                $whereFreeText[] = '`' . $columnName . '` LIKE :freetext' . $fieldId;
+                $whereFreeText[]              = '`' . $columnName . '` LIKE :freetext' . $fieldId;
                 $binds['freetext' . $fieldId] = array(
                     'value' => $value,
                     'type'  => \PDO::PARAM_STR
