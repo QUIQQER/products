@@ -107,15 +107,9 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      */
     public function getFrontendView()
     {
-        return new ProductAttributeListFrontendView(array(
-            'id' => $this->getId(),
-            'value' => $this->getValue(),
-            'title' => $this->getTitle(),
-            'prefix' => $this->getAttribute('prefix'),
-            'suffix' => $this->getAttribute('suffix'),
-            'priority' => $this->getAttribute('priority'),
-            'options' => $this->getOptions()
-        ));
+        return new ProductAttributeListFrontendView(
+            $this->getAttributes()
+        );
     }
 
     /**

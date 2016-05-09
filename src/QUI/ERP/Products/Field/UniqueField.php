@@ -108,7 +108,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
     /**
      * @var boolean
      */
-    protected $isRequire = false;
+    protected $isRequired = false;
 
     /**
      * a field in the product, but not in any category from the product
@@ -364,7 +364,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
      */
     public function isRequired()
     {
-        return $this->isRequire;
+        return $this->isRequired;
     }
 
     /**

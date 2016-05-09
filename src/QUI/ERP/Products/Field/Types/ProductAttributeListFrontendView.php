@@ -45,10 +45,15 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $entries = $options['entries'];
         }
 
-        $display_discounts = false;
+        $requiredField    = '';
+        $displayDiscounts = false;
 
         if (isset($options['display_discounts'])) {
-            $display_discounts = $options['display_discounts'];
+            $displayDiscounts = $options['display_discounts'];
+        }
+
+        if ($this->isRequired()) {
+            $requiredField = ' required="required"';
         }
 
         if (!is_string($value)) {
@@ -57,10 +62,11 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
         $value = htmlspecialchars($value);
 
+        // create html
         $html = '<div class="quiqqer-product-field">';
         $html .= '<div class="quiqqer-product-field-title">' . $this->getTitle() . '</div>';
         $html .= '<div class="quiqqer-product-field-value">';
-        $html .= "<select name=\"{$name}\" value=\"{$value}\"
+        $html .= "<select name=\"{$name}\" value=\"{$value}\" {$requiredField}
                     data-field=\"{$id}\"
                     data-qui=\"package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeList\"
                     disabled=\"disabled\">";
@@ -93,7 +99,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                 $text = $title[$current];
             }
 
-            if ($display_discounts) {
+            if ($displayDiscounts) {
                 switch ($option['type']) {
                     case 'percent': // fallback fix
                     case QUI\ERP\Products\Utils\Calc::CALCULATION_PERCENTAGE:
