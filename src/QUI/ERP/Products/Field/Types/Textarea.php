@@ -111,9 +111,9 @@ class Textarea extends QUI\ERP\Products\Field\Field
         return array(
             Search::SEARCHTYPE_TEXT,
             Search::SEARCHTYPE_SELECTSINGLE,
+            Search::SEARCHTYPE_INPUTSELECTSINGLE,
             Search::SEARCHTYPE_SELECTMULTI,
-            Search::SEARCHTYPE_HASVALUE,
-            Search::SEARCHTYPE_INPUTSELECTSINGLE
+            Search::SEARCHTYPE_HASVALUE
         );
     }
 
