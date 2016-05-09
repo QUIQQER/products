@@ -87,7 +87,7 @@ class Calc
      */
     public static function getProductPrice(UniqueProduct $Product)
     {
-        $price  = $Product->getPrice()->getPrice();
+        $price  = self::findProductPriceField($Product)->getNetto();
         $prices = $Product->getPriceFactors()->sort();
 
         $basisPrice = $price;
@@ -130,4 +130,60 @@ class Calc
         return new Price($price, Currencies::getDefaultCurrency());
     }
 
+
+    /**
+     *
+     *
+     * @param UniqueProduct $Product
+     * @return \QUI\ERP\Products\Utils\Price
+     */
+    protected function findProductPriceField(UniqueProduct $Product)
+    {
+        $Currency   = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $PriceField = $Product->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRICE);
+
+        // @todo product user???
+        $User = QUI::getUserBySession();
+
+        // exists more price fields?
+        // is user in group filter
+        $priceFields = array_filter($Product->getFieldsByType('Price'), function ($Field) use ($User) {
+            /* @var $Field QUI\ERP\Products\Field\UniqueField */
+
+            // ignore default main price
+            if ($Field->getId() == QUI\ERP\Products\Handler\Fields::FIELD_PRICE) {
+                return false;
+            };
+
+            $options = $Field->getOptions();
+
+            if (!isset($options['groups'])) {
+                return false;
+            }
+
+            $groups = explode(',', $options['groups']);
+
+            if (empty($groups)) {
+                return false;
+            }
+
+            foreach ($groups as $gid) {
+                if ($User->isInGroup($gid)) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
+
+        // use the lowest price?
+        foreach ($priceFields as $Field) {
+            /* @var $Field QUI\ERP\Products\Field\UniqueField */
+            if ($Field->getValue() < $PriceField->getValue()) {
+                $PriceField = $Field;
+            }
+        }
+
+        return new QUI\ERP\Products\Utils\Price($PriceField->getValue(), $Currency);
+    }
 }

@@ -1093,7 +1093,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             Button.setAttribute('textimage', 'fa fa-spinner fa-spin');
             Button.disable();
 
-            this.$Product.isActive().then(function (status) {
+            this.update().then(function () {
+                return this.$Product.isActive();
+
+            }.bind(this)).then(function (status) {
                 if (status) {
                     this.$Product.deactivate().then(this.refresh);
                 } else {
