@@ -100,7 +100,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @throws \QUI\ERP\Products\Field\Exception
      */
     public function validate($value)
     {
@@ -108,7 +108,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
             && !is_array($value)
         ) {
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new QUI\Exception(array(
+                throw new QUI\ERP\Products\Field\Exception(array(
                     'quiqqer/products',
                     'exception.field.invalid',
                     array(
@@ -124,7 +124,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
             $value = json_decode($value, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new QUI\Exception(array(
+                throw new QUI\ERP\Products\Field\Exception(array(
                     'quiqqer/products',
                     'exception.field.invalid',
                     array(
@@ -144,7 +144,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
 
         foreach ($keys as $lang) {
             if (!is_string($lang) || strlen($lang) != 2) {
-                throw new QUI\Exception(array(
+                throw new QUI\ERP\Products\Field\Exception(array(
                     'quiqqer/products',
                     'exception.field.invalid',
                     array(

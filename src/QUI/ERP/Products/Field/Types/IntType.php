@@ -68,7 +68,7 @@ class IntType extends QUI\ERP\Products\Field\Field
         }
 
         if (!is_numeric($value)) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(

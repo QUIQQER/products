@@ -70,7 +70,7 @@ class Products
      * @param integer $pid - Product-ID
      * @return QUI\ERP\Products\Product\Product
      *
-     * @throw QUI\Exception
+     * @throw QUI\ERP\Products\Product\Exception
      */
     public static function getProduct($pid)
     {
@@ -104,6 +104,7 @@ class Products
                 ),
                 'limit' => 1
             ));
+            
         } catch (QUI\Exception $Exception) {
             // TODO: mit Mor besprechen
             QUI\System\Log::addError(

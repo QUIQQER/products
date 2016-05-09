@@ -17,6 +17,9 @@ class Image extends QUI\ERP\Products\Field\Field
     protected $columnType = 'BIGINT(20)';
     protected $searchable = false;
 
+    /**
+     * @return View
+     */
     public function getBackendView()
     {
         return new View(array(
@@ -28,6 +31,9 @@ class Image extends QUI\ERP\Products\Field\Field
         ));
     }
 
+    /**
+     * @return View
+     */
     public function getFrontendView()
     {
         return new View(array(
@@ -52,7 +58,7 @@ class Image extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @throws \QUI\ERP\Products\Field\Exception
      */
     public function validate($value)
     {
@@ -67,7 +73,7 @@ class Image extends QUI\ERP\Products\Field\Field
                 throw new QUI\Exception();
             }
         } catch (QUI\Exception $Exception) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(

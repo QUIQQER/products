@@ -15,27 +15,33 @@ use QUI\ERP\Products\Handler\Search;
  */
 class Input extends QUI\ERP\Products\Field\Field
 {
-    protected $columnType     = 'TEXT';
+    protected $columnType = 'TEXT';
     protected $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
+    /**
+     * @return View
+     */
     public function getBackendView()
     {
         return new View(array(
-            'value'    => $this->cleanup($this->getValue()),
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
 
+    /**
+     * @return View
+     */
     public function getFrontendView()
     {
         return new View(array(
-            'value'    => $this->cleanup($this->getValue()),
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
+            'value' => $this->cleanup($this->getValue()),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -53,7 +59,7 @@ class Input extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @throws \QUI\ERP\Products\Field\Exception
      */
     public function validate($value)
     {
@@ -64,13 +70,13 @@ class Input extends QUI\ERP\Products\Field\Field
         if (!is_string($value)
             && !is_numeric($value)
         ) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType'  => $this->getType()
+                    'fieldType' => $this->getType()
                 )
             ));
         }

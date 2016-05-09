@@ -15,9 +15,19 @@ use Hklused\Machines\Purchase\Search;
  */
 class Url extends QUI\ERP\Products\Field\Field
 {
+    /**
+     * @var string
+     */
     protected $columnType = 'TEXT';
+
+    /**
+     * @var bool
+     */
     protected $searchable = false;
 
+    /**
+     * @return View
+     */
     public function getBackendView()
     {
         return new View(array(
@@ -29,6 +39,9 @@ class Url extends QUI\ERP\Products\Field\Field
         ));
     }
 
+    /**
+     * @return View
+     */
     public function getFrontendView()
     {
         return new View(array(
@@ -53,7 +66,7 @@ class Url extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @throws \QUI\ERP\Products\Field\Exception
      */
     public function validate($value)
     {
@@ -62,7 +75,7 @@ class Url extends QUI\ERP\Products\Field\Field
         }
 
         if (filter_var($value, FILTER_VALIDATE_URL) === false) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(

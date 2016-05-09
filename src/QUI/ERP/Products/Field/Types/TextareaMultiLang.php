@@ -15,6 +15,9 @@ use QUI\ERP\Products\Handler\Search;
  */
 class TextareaMultiLang extends QUI\ERP\Products\Field\Field
 {
+    /**
+     * @var int
+     */
     protected $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
     /**
@@ -96,7 +99,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
             && !is_array($value)
         ) {
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new QUI\Exception(array(
+                throw new QUI\ERP\Products\Field\Exception(array(
                     'quiqqer/products',
                     'exception.field.invalid',
                     array(
@@ -112,7 +115,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
             $value = json_decode($value, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new QUI\Exception(array(
+                throw new QUI\ERP\Products\Field\Exception(array(
                     'quiqqer/products',
                     'exception.field.invalid',
                     array(
@@ -132,7 +135,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
 
         foreach ($keys as $lang) {
             if (!is_string($lang) || strlen($lang) != 2) {
-                throw new QUI\Exception(array(
+                throw new QUI\ERP\Products\Field\Exception(array(
                     'quiqqer/products',
                     'exception.field.invalid',
                     array(

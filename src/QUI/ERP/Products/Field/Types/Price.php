@@ -90,7 +90,7 @@ class Price extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @throws \QUI\ERP\Products\Field\Exception
      */
     public function validate($value)
     {
@@ -99,7 +99,7 @@ class Price extends QUI\ERP\Products\Field\Field
         }
 
         if (!is_numeric($value)) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(

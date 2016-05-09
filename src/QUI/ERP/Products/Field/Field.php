@@ -292,14 +292,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Delete the field
      *
-     * @throws QUI\Exception
+     * @throws QUI\ERP\Products\Field\Exception
      */
     public function delete()
     {
         QUI\Rights\Permission::checkPermission('field.delete');
 
         if ($this->isSystem()) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exceptions.system.fields.cant.be.deleted'
             ));
@@ -523,7 +523,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Set the field value
      *
      * @param mixed $value
-     * @throws QUI\Exception
+     * @throws QUI\ERP\Products\Field\Exception
      */
     public function setValue($value)
     {

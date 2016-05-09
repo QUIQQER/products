@@ -92,7 +92,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @throws \QUI\ERP\Products\Field\Exception
      */
     public function validate($value)
     {
@@ -119,7 +119,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
         }
 
         if (count($userIds) > 1 && !$multipleUsers) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.grouplist.user.limit.reached',
                 array(
@@ -130,7 +130,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
         }
 
         if (empty($userIds)) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
@@ -153,7 +153,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
         try {
             foreach ($userIds as $userId) {
                 if (!is_numeric($userId)) {
-                    throw new QUI\Exception(array(
+                    throw new QUI\ERP\Products\Field\Exception(array(
                         'quiqqer/products',
                         'exception.field.grouplist.invalid.userId'
                     ));
@@ -163,7 +163,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 $userGroups = $User->getGroups(false);
 
                 if (!$isUserInGroups($userGroups)) {
-                    throw new QUI\Exception(array(
+                    throw new QUI\ERP\Products\Field\Exception(array(
                         'quiqqer/products',
                         'exception.field.grouplist.user.not.in.group',
                         array(
@@ -176,7 +176,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
             }
 
         } catch (QUI\Exception $Exception) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.unexptected.error',
                 array(
@@ -193,7 +193,6 @@ class GroupList extends QUI\ERP\Products\Field\Field
      *
      * @param mixed $value
      * @return mixed
-     * @throws \QUI\Exception
      */
     public function cleanup($value)
     {

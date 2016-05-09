@@ -25,6 +25,7 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
  * QUI\ERP\Products\Handler\Products::getProduct( ID );
  *
  * Exceptions:
+ * - Code 404 (QUI\ERP\Products\Product\Exception) Product not found
  * - Code 1002 (QUI\ERP\Products\Product\Exception) Field not found
  * - Code 1003 (QUI\ERP\Products\Product\Exception) Field is invalid
  * - Code 1004 (QUI\ERP\Products\Product\Exception) Field is empty but required

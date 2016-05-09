@@ -18,6 +18,9 @@ class FloatType extends QUI\ERP\Products\Field\Field
     protected $columnType     = 'DOUBLE';
     protected $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
 
+    /**
+     * @return View
+     */
     public function getBackendView()
     {
         return new View(array(
@@ -29,6 +32,9 @@ class FloatType extends QUI\ERP\Products\Field\Field
         ));
     }
 
+    /**
+     * @return View
+     */
     public function getFrontendView()
     {
         // @TODO value formatierung aus settings (nachkommastellen, separatoren)
@@ -55,7 +61,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @throws \QUI\ERP\Products\Field\Exception
      */
     public function validate($value)
     {
@@ -64,7 +70,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
         }
 
         if (!is_numeric($value)) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(

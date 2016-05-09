@@ -184,7 +184,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      * is the value valid for the field type?
      *
      * @param integer $value
-     * @throws \QUI\Exception
+     * @throws \QUI\ERP\Products\Field\Exception
      */
     public function validate($value)
     {
@@ -193,7 +193,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         }
 
         if (!is_numeric($value)) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
@@ -208,7 +208,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         $options = $this->getOptions();
 
         if (!isset($options['entries'])) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
@@ -222,7 +222,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         $entries = $options['entries'];
 
         if (!isset($entries[$value])) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(

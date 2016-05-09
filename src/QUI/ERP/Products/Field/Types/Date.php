@@ -22,7 +22,7 @@ class Date extends QUI\ERP\Products\Field\Field
      * Validates a year value
      *
      * @param mixed $value
-     * @throws QUI\Exception
+     * @throws QUI\ERP\Products\Field\Exception
      */
     public function validate($value)
     {
@@ -39,7 +39,7 @@ class Date extends QUI\ERP\Products\Field\Field
         }
 
         if ($dateTime === false) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
@@ -53,7 +53,7 @@ class Date extends QUI\ERP\Products\Field\Field
         $errors = \DateTime::getLastErrors();
 
         if (!empty($errors['warning_count'])) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
