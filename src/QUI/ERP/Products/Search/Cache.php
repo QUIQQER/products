@@ -127,7 +127,7 @@ class Cache extends QUI\QDOM
 
             $Stash = new Stash\Pool($Handler);
         } catch (\Exception $Exception) {
-            throw new QUI\Exception(array(
+            throw new Exception(array(
                 'quiqqer/products',
                 'exception.searchcache.initialize.error',
                 array(

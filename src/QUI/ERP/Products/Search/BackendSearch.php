@@ -82,7 +82,7 @@ class BackendSearch extends Search
         if (!isset($searchParams['fields'])
             && !isset($searchParams['freetext'])
         ) {
-            throw new QUI\Exception(
+            throw new Exception(
                 'Wrong search parameters.',
                 400
             );

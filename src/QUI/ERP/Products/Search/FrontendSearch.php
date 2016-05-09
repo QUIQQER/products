@@ -58,7 +58,7 @@ class FrontendSearch extends Search
         $type = $Site->getAttribute('type');
 
         if (!isset($this->eligibleSiteTypes[$type])) {
-            throw new QUI\Exception(array(
+            throw new Exception(array(
                 'quiqqer/products',
                 'exception.frontendsearch.site.type.not.eligible',
                 array(
@@ -193,7 +193,7 @@ class FrontendSearch extends Search
         if (!isset($searchParams['fields'])
             && !isset($searchParams['freetext'])
         ) {
-            throw new QUI\Exception(
+            throw new Exception(
                 'Wrong search parameters.',
                 400
             );

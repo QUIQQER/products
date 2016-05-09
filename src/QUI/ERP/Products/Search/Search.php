@@ -267,7 +267,7 @@ abstract class Search extends QUI\QDOM
                     }
 
                     if (!is_string($value)) {
-                        throw new QUI\Exception(array(
+                        throw new Exception(array(
                             'quiqqer/products',
                             'exception.search.value.invalid',
                             array(
@@ -291,7 +291,7 @@ abstract class Search extends QUI\QDOM
                     }
 
                     if (!is_array($value)) {
-                        throw new QUI\Exception(array(
+                        throw new Exception(array(
                             'quiqqer/products',
                             'exception.search.value.invalid',
                             array(
@@ -309,7 +309,7 @@ abstract class Search extends QUI\QDOM
                         $from = $value['from'];
 
                         if (!is_string($from)) {
-                            throw new QUI\Exception(array(
+                            throw new Exception(array(
                                 'quiqqer/products',
                                 'exception.search.value.invalid',
                                 array(
@@ -325,7 +325,7 @@ abstract class Search extends QUI\QDOM
                         $to = $value['to'];
 
                         if (!is_string($to)) {
-                            throw new QUI\Exception(array(
+                            throw new Exception(array(
                                 'quiqqer/products',
                                 'exception.search.value.invalid',
                                 array(
@@ -369,7 +369,7 @@ abstract class Search extends QUI\QDOM
                     }
 
                     if (!is_array($value)) {
-                        throw new QUI\Exception(array(
+                        throw new Exception(array(
                             'quiqqer/products',
                             'exception.search.value.invalid',
                             array(
@@ -387,7 +387,7 @@ abstract class Search extends QUI\QDOM
                         $from = $value['from'];
 
                         if (!is_numeric($from)) {
-                            throw new QUI\Exception(array(
+                            throw new Exception(array(
                                 'quiqqer/products',
                                 'exception.search.value.invalid',
                                 array(
@@ -403,7 +403,7 @@ abstract class Search extends QUI\QDOM
                         $to = $value['to'];
 
                         if (!is_numeric($from)) {
-                            throw new QUI\Exception(array(
+                            throw new Exception(array(
                                 'quiqqer/products',
                                 'exception.search.value.invalid',
                                 array(
@@ -449,7 +449,7 @@ abstract class Search extends QUI\QDOM
                     if (!is_string($value)
                         && !is_numeric($value)
                     ) {
-                        throw new QUI\Exception(array(
+                        throw new Exception(array(
                             'quiqqer/products',
                             'exception.search.value.invalid',
                             array(
@@ -472,7 +472,7 @@ abstract class Search extends QUI\QDOM
                     }
 
                     if (!is_array($value)) {
-                        throw new QUI\Exception(array(
+                        throw new Exception(array(
                             'quiqqer/products',
                             'exception.search.value.invalid',
                             array(
@@ -497,7 +497,7 @@ abstract class Search extends QUI\QDOM
                     }
 
                     if (!is_string($value)) {
-                        throw new QUI\Exception(array(
+                        throw new Exception(array(
                             'quiqqer/products',
                             'exception.search.value.invalid',
                             array(
@@ -515,7 +515,7 @@ abstract class Search extends QUI\QDOM
                     break;
 
                 default:
-                    throw new QUI\Exception(array(
+                    throw new Exception(array(
                         'quiqqer/products',
                         'exception.search.field.unknown.searchtype',
                         array(
