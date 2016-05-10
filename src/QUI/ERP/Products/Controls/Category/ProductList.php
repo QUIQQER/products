@@ -165,12 +165,14 @@ class ProductList extends QUI\Control
 
         $categoryId = $this->getAttribute('categoryId');
 
-        if ($categoryId) {
-            try {
-                $this->Category = Categories::getCategory($categoryId);
-            } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addDebug($Exception->getMessage());
-            }
+        if (!$categoryId) {
+            return null;
+        }
+
+        try {
+            $this->Category = Categories::getCategory($categoryId);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addWarning($Exception->getMessage());
         }
 
         return $this->Category->getView();
