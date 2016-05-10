@@ -51,9 +51,10 @@ class ProductList extends QUI\Control
     {
         $Engine   = QUI::getTemplateManager()->getEngine();
         $Category = $this->getCategory();
-        $count    = $Category->countProducts();
+        $count    = 0;
 
         if ($Category) {
+            $count = $Category->countProducts();
             $this->setAttribute('data-cid', $Category->getId());
         }
 
