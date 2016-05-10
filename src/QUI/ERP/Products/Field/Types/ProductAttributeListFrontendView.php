@@ -39,7 +39,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         $id      = $this->getId();
         $value   = $this->getValue();
         $options = $this->getOptions();
-        
+
         $name    = 'field-' . $id;
         $entries = array();
 
@@ -93,9 +93,11 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         }
 
         foreach ($entries as $key => $option) {
-            $text     = '';
-            $title    = $option['title'];
-            $selected = '';
+            $title = $option['title'];
+
+            $text      = '';
+            $selected  = '';
+            $userinput = '';
 
             if (isset($option['selected']) && $option['selected']) {
                 $selected = 'selected="selected" ';
@@ -103,6 +105,10 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
             if (isset($title[$current])) {
                 $text = $title[$current];
+            }
+
+            if (isset($option['userinput']) && $option['userinput']) {
+                $userinput = ' data-userinput="1"';
             }
 
             if ($displayDiscounts) {
@@ -121,7 +127,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                 $text .= ' (+' . $discount . ')';
             }
 
-            $html .= '<option ' . $selected . 'value="' . $key . '">' . $text . '</option>';
+            $html .= '<option ' . $selected . $userinput . 'value="' . $key . '">' . $text . '</option>';
         }
 
         $html .= '</select></div>';

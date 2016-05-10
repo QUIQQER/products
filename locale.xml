@@ -717,6 +717,10 @@
             <de><![CDATA[Standard]]></de>
             <en><![CDATA[Default]]></en>
         </locale>
+        <locale name="fields.control.productAttributeListSettings.grid.userinput">
+            <de><![CDATA[Benutzerspezifische Eingabe]]></de>
+            <en><![CDATA[User input]]></en>
+        </locale>
 
         <locale name="fields.control.productAttributeList.remove.window.title">
             <de><![CDATA[Eintrag aus der Auswahlliste entfernen?]]></de>
@@ -748,6 +752,10 @@
         <locale name="fields.control.productAttributeList.create.selected">
             <de><![CDATA[Standard (Default)]]></de>
             <en><![CDATA[Default]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeList.create.userinput">
+            <de><![CDATA[Benutzerspezifische Eingabe]]></de>
+            <en><![CDATA[User input]]></en>
         </locale>
         <locale name="fieldtype.not.searchable">
             <de><![CDATA[Felder dieses Feld-Typs sind nicht durchsuchbar.]]></de>

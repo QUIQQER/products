@@ -1,13 +1,13 @@
 <form class="quiqqer-products-attributeList-entry-create">
     <label class="field-container field-attributeList-title">
-        <span class="field-container-item">
+        <span class="field-container-item" title="{{title}}">
             {{title}}
         </span>
         <input type="hidden" name="title"/>
     </label>
 
     <label class="field-container field-attributeList-price">
-        <span class="field-container-item">
+        <span class="field-container-item" title="{{priceTitle}}">
             {{priceTitle}}
         </span>
         <span class="field-container-field">
@@ -21,11 +21,21 @@
     </label>
 
     <label class="field-container field-attributeList-selected">
-        <span class="field-container-item">
+        <span class="field-container-item" title="{{selectedTitle}}">
             {{selectedTitle}}
         </span>
         <span class="field-container-field">
             <input type="checkbox" name="selected"/>
         </span>
     </label>
+
+    <label class="field-container field-attributeList-selected">
+        <span class="field-container-item" title="{{userInputTitle}}">
+            {{userInputTitle}}
+        </span>
+        <span class="field-container-field">
+            <input type="checkbox" name="userinput"/>
+        </span>
+    </label>
+
 </form>

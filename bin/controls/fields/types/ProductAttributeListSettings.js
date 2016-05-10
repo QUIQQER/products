@@ -180,6 +180,16 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     dataIndex: 'type',
                     dataType : 'node',
                     width    : 60
+                }, {
+                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.userinput'),
+                    title    : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.userinput'),
+                    dataIndex: 'userinputIcon',
+                    dataType : 'node',
+                    width    : 30
+                }, {
+                    dataIndex: 'userinput',
+                    dataType : 'number',
+                    hidden   : true
                 }]
             });
 
@@ -206,10 +216,9 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     userInput   : QUILocale.get(lg, 'product.fields.attributeList.userInput'),
                     generateTags: QUILocale.get(lg, 'product.fields.attributeList.generateTags'),
 
-                    calcBasis                : QUILocale.get(lg, 'product.fields.attributeList.calcBasis'),
-                    calcBasisNetto           : QUILocale.get(lg, 'product.fields.attributeList.calcBasis.netto'),
-                    calculationBasisCalcPrice: QUILocale.get(lg, 'product.fields.attributeList.calcBasis.netto'),
-
+                    calcBasis         : QUILocale.get(lg, 'product.fields.attributeList.calcBasis'),
+                    calcBasisNetto    : QUILocale.get(lg, 'product.fields.attributeList.calcBasis.netto'),
+                    calcBasisCalcPrice: QUILocale.get(lg, 'product.fields.grid.calcBasis.calculationBasisCalcPrice')
                 })
             }).inject(this.$Elm, 'top');
 
@@ -342,7 +351,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * refresh the grid data dispaly
          */
         refresh: function () {
-            var i, len, entry, langTitle, type;
+            var i, len, entry, langTitle, type, userInputIcon;
             var data = [];
 
             var currentLang = QUILocale.getCurrent();
@@ -362,10 +371,22 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     continue;
                 }
 
-                langTitle = '---';
+                if (!("userinput" in entry)) {
+                    entry.userinput = false;
+                }
+
+                langTitle     = '---';
+                userInputIcon = new Element('span', {
+                    html: '&nbsp;'
+                });
 
                 if (typeof entry.title[currentLang] !== 'undefined') {
                     langTitle = entry.title[currentLang];
+                }
+
+                if (entry.userinput) {
+                    userInputIcon.addClass('fa fa-user');
+                    userInputIcon.set('html', '');
                 }
 
                 // currency percent
@@ -385,12 +406,14 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 }
 
                 data.push({
-                    title   : langTitle,
-                    sum     : entry.sum,
-                    type    : type,
-                    selected: new Element('span', {
+                    title        : langTitle,
+                    sum          : entry.sum,
+                    type         : type,
+                    selected     : new Element('span', {
                         'class': entry.selected ? 'fa fa-check-square-o' : 'fa fa-square-o'
-                    })
+                    }),
+                    userinput    : entry.userinput,
+                    userinputIcon: userInputIcon
                 });
             }
 
@@ -413,15 +436,16 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 title    : QUILocale.get(lg, 'fields.control.productAttributeList.add.window.title'),
                 icon     : 'fa fa-plus',
                 texticon : false,
-                maxHeight: 300,
-                maxWidth : 450,
+                maxHeight: 400,
+                maxWidth : 600,
                 events   : {
                     onOpen  : function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            title        : QUILocale.get('quiqqer/system', 'title'),
-                            priceTitle   : QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
-                            deduction    : QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction'),
-                            selectedTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.selected')
+                            title         : QUILocale.get('quiqqer/system', 'title'),
+                            priceTitle    : QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
+                            deduction     : QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction'),
+                            selectedTitle : QUILocale.get(lg, 'fields.control.productAttributeList.create.selected'),
+                            userInputTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.userinput')
                         }));
 
                         var Form = Win.getContent().getElement('form');
@@ -438,7 +462,8 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                             Title.getData(),
                             Form.elements.sum.value,
                             Form.elements.type.value,
-                            Form.elements.selected.checked
+                            Form.elements.selected.checked,
+                            Form.elements.userinput.checked
                         );
                     }
                 }
@@ -465,23 +490,25 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             new QUIConfirm({
                 title    : QUILocale.get(lg, 'fields.control.productAttributeList.edit.window.title'),
                 icon     : 'fa fa-edit',
-                maxHeight: 300,
-                maxWidth : 450,
+                maxHeight: 400,
+                maxWidth : 600,
                 events   : {
                     onOpen  : function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            title        : QUILocale.get('quiqqer/system', 'title'),
-                            priceTitle   : QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
-                            deduction    : QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction'),
-                            selectedTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.selected')
+                            title         : QUILocale.get('quiqqer/system', 'title'),
+                            priceTitle    : QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
+                            deduction     : QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction'),
+                            selectedTitle : QUILocale.get(lg, 'fields.control.productAttributeList.create.selected'),
+                            userInputTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.userinput')
                         }));
 
                         var Form = Win.getContent().getElement('form');
 
-                        Form.elements.title.value      = JSON.encode(data.title);
-                        Form.elements.sum.value        = data.sum;
-                        Form.elements.type.value       = data.type;
-                        Form.elements.selected.checked = data.selected;
+                        Form.elements.title.value       = JSON.encode(data.title);
+                        Form.elements.sum.value         = data.sum;
+                        Form.elements.type.value        = data.type;
+                        Form.elements.selected.checked  = data.selected;
+                        Form.elements.userinput.checked = data.userinput;
 
                         new InputMultiLang().imports(Form.elements.title);
                     },
@@ -496,7 +523,8 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                             Title.getData(),
                             Form.elements.sum.value,
                             parseInt(Form.elements.type.value),
-                            Form.elements.selected.checked
+                            Form.elements.selected.checked,
+                            Form.elements.userinput.checked
                         );
                     }
                 }
@@ -556,8 +584,9 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * @param {Number} sum
          * @param {String} type
          * @param {Boolean} selected
+         * @param {Boolean} userinput
          */
-        add: function (title, sum, type, selected) {
+        add: function (title, sum, type, selected, userinput) {
             switch (parseInt(type)) {
                 case Calc.CALCULATION_PERCENTAGE:
                     type = Calc.CALCULATION_PERCENTAGE;
@@ -570,10 +599,11 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             }
 
             this.$data.push({
-                title   : title,
-                sum     : sum,
-                type    : type,
-                selected: Boolean(selected)
+                title    : title,
+                sum      : sum,
+                type     : type,
+                selected : Boolean(selected),
+                userinput: Boolean(userinput)
             });
 
             this.refresh();
@@ -629,7 +659,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * @param {String} type
          * @param {Boolean} selected
          */
-        edit: function (index, title, sum, type, selected) {
+        edit: function (index, title, sum, type, selected, userinput) {
             // if selected, then all others unselected
             if (selected) {
                 this.$data.each(function (entry, key) {
@@ -638,10 +668,11 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             }
 
             this.$data[index] = {
-                title   : title,
-                sum     : sum,
-                type    : type,
-                selected: selected
+                title    : title,
+                sum      : sum,
+                type     : type,
+                selected : selected,
+                userinput: userinput
             };
 
             this.refresh();

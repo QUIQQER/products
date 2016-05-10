@@ -7,8 +7,11 @@
     width: 100%;
 }
 
-.quiqqer-products-attributeList-entry-create .field-container-item {
-    width: 180px;
+.quiqqer-products-attributeList-entry-create .field-container-item:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 180px !important;
 }
 
 .quiqqer-products-attributeList-entry-create .field-attributeList-price input {
