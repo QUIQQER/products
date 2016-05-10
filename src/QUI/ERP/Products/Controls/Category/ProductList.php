@@ -76,7 +76,8 @@ class ProductList extends QUI\Control
         $Engine->assign(array(
             'rows' => $rows,
             'children' => $this->getSite()->getNavigation(),
-            'more' => $more
+            'more' => $more,
+            'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice()
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/ProductList.html');
@@ -140,7 +141,8 @@ class ProductList extends QUI\Control
         $Engine->assign(array(
             'products' => $products,
             'rowNumber' => $rowNumber,
-            'productTpl' => $productTpl
+            'productTpl' => $productTpl,
+            'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice()
         ));
 
         return array(

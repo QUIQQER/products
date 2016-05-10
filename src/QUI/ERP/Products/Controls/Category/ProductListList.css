@@ -13,17 +13,20 @@
 }
 
 .quiqqer-productList-product-list-price {
+    line-height: 20px;
+    padding: 10px;
     text-align: right;
 }
 
 .quiqqer-productList-product-list-price,
 .quiqqer-productList-product-list-buttons {
-    float: left;
+    float: right;
     width: 100px;
 }
 
 .quiqqer-productList-product-list-buttons {
     cursor: pointer;
-    float: left;
+    float: right;
+    line-height: 20px;
     text-align: right;
 }

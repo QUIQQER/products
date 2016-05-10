@@ -112,13 +112,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$parseElements(Elm);
 
-            this.$More.addEvent('click', function () {
-                if (!this.$More.hasClass('disabled')) {
-                    this.next();
-                }
-            }.bind(this));
+            if (this.$More) {
+                this.$More.addEvent('click', function () {
+                    if (!this.$More.hasClass('disabled')) {
+                        this.next();
+                    }
+                }.bind(this));
 
-            this.$More.removeClass('disabled');
+                this.$More.removeClass('disabled');
+            }
         },
 
         /**
@@ -403,6 +405,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         $hideMoreButton: function () {
+            if (!this.$More) {
+                return Promise.resolve();
+            }
+
             this.$More.addClass('disabled');
             this.$More.setStyle('cursor', 'default');
 
@@ -422,6 +428,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         $showMoreButton: function () {
+            if (!this.$More) {
+                return Promise.resolve();
+            }
+
             return new Promise(function (resolve) {
                 this.$MoreFX.animate({
                     opacity: 1

@@ -13,12 +13,15 @@
         </a>
     </header>
 
-    <div class="quiqqer-productList-product-detail-price">
-        {$Product->getPrice()->getDisplayPrice()}
-    </div>
-
     <div class="quiqqer-productList-product-detail-buttons">
         <span class="fa fa-envelope button__small"></span>
         <span class="fa fa-plus button__small"></span>
     </div>
+
+    {if !$hidePrice}
+    <div class="quiqqer-productList-product-detail-price">
+        {$Product->getPrice()->getDisplayPrice()}
+    </div>
+    {/if}
+
 </article>
