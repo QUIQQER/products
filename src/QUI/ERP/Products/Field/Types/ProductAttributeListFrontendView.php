@@ -33,13 +33,15 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
      */
     public function create()
     {
-        $id       = $this->getId();
-        $value    = $this->getValue();
-        $options  = $this->getOptions();
-        $current  = QUI::getLocale()->getCurrent();
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
-        $name     = 'field-' . $id;
-        $entries  = array();
+        $current  = QUI::getLocale()->getCurrent();
+
+        $id      = $this->getId();
+        $value   = $this->getValue();
+        $options = $this->getOptions();
+        
+        $name    = 'field-' . $id;
+        $entries = array();
 
         if (isset($options['entries'])) {
             $entries = $options['entries'];
@@ -50,6 +52,10 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
         if (isset($options['display_discounts'])) {
             $displayDiscounts = $options['display_discounts'];
+        }
+
+        if (QUI\ERP\Products\Utils\Package::hidePrice()) {
+            $displayDiscounts = false;
         }
 
         if ($this->isRequired()) {

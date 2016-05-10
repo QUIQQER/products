@@ -6,7 +6,6 @@
 namespace QUI\ERP\Products\Controls;
 
 use QUI;
-use QUI\Rights\Permission;
 
 /**
  * Price display
@@ -39,16 +38,7 @@ class Price extends QUI\Control
      */
     public function getBody()
     {
-        $Package    = QUI::getPackage('quiqqer/products');
-        $Config     = $Package->getConfig();
-        $hidePrices = (int)$Config->get('products', 'hidePrices');
-        $User       = QUI::getUserBySession();
-
-        if ($User->getId() && Permission::hasPermission('product.view.prices')) {
-            $hidePrices = false;
-        }
-
-        if ($hidePrices) {
+        if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             $this->setAttributes(array(
                 'data-qui' => '',
                 'Price' => null

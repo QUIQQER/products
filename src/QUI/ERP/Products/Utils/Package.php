@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
+use QUI\Rights\Permission;
 
 /**
  * Class Package
@@ -15,6 +16,11 @@ use QUI;
 class Package
 {
     const PACKAGE = 'quiqqer/products';
+
+    /**
+     * @var null
+     */
+    static protected $hidePrice = null;
 
     /**
      * Return config
@@ -34,5 +40,29 @@ class Package
     public static function getVarDir()
     {
         return QUI::getPackage(self::PACKAGE)->getVarDir();
+    }
+
+    /**
+     * Hide price display?
+     *
+     * @return bool|int
+     */
+    public static function hidePrice()
+    {
+        if (!is_null(self::$hidePrice)) {
+            return self::$hidePrice;
+        }
+
+        $Package = QUI::getPackage('quiqqer/products');
+        $Config  = $Package->getConfig();
+        $User    = QUI::getUserBySession();
+
+        self::$hidePrice = (int)$Config->get('products', 'hidePrices');
+
+        if ($User->getId() && Permission::hasPermission('product.view.prices')) {
+            self::$hidePrice = false;
+        }
+
+        return self::$hidePrice;
     }
 }

@@ -126,10 +126,9 @@ class Calc
             return $price * $quantity;
         }
 
-
+        
         return new Price($price, Currencies::getDefaultCurrency());
     }
-
 
     /**
      *
@@ -137,7 +136,7 @@ class Calc
      * @param UniqueProduct $Product
      * @return \QUI\ERP\Products\Utils\Price
      */
-    protected function findProductPriceField(UniqueProduct $Product)
+    protected static function findProductPriceField(UniqueProduct $Product)
     {
         $Currency   = QUI\ERP\Currency\Handler::getDefaultCurrency();
         $PriceField = $Product->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRICE);
