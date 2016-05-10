@@ -1,16 +1,16 @@
 <div class="quiqqer-products-attributeList-settings-title">
-    Zur Preisberechnung
+    {{title}}
 </div>
 
 <div class="quiqqer-products-attributeList-settings-calcbasis">
     <label>
-        <span class="quiqqer-products-attributeList-settings-text">
-              Berechnungsgrundlage:
+        <span class="quiqqer-products-attributeList-settings-text" title="{{calcBasis}}">
+              {{calcBasis}}
         </span>
         <select type="text" name="price_calculation_basis"
                 class="quiqqer-products-attributeList-settings-input">
-            <option value="1">Netto</option>
-            <option value="2">Kalkulierter Preis</option>
+            <option value="1">{{calcBasisNetto}}</option>
+            <option value="2">{{calculationBasisCalcPrice}}</option>
         </select>
     </label>
 </div>
@@ -18,7 +18,7 @@
 <div class="quiqqer-products-attributeList-settings-priority">
     <label>
         <span class="quiqqer-products-attributeList-settings-text">
-            Priorität:
+            {{priority}}
         </span>
         <input type="number" name="price_priority"
                class="quiqqer-products-attributeList-settings-input"/>
@@ -28,7 +28,7 @@
 <div class="quiqqer-products-attributeList-settings-displayDiscounts">
     <label>
         <span class="quiqqer-products-attributeList-settings-text">
-            Auf / Abschläge anzeigen:
+            {{discounts}}
         </span>
         <input type="checkbox" name="display_discounts"/>
     </label>
@@ -37,7 +37,7 @@
 <div class="quiqqer-products-attributeList-settings-userinput">
     <label>
         <span class="quiqqer-products-attributeList-settings-text">
-            Benutzereingabe:
+            {{userInput}}
         </span>
         <input type="checkbox" name="userinput"/>
     </label>
@@ -46,7 +46,7 @@
 <div class="quiqqer-products-attributeList-settings-generateTags">
     <label>
         <span class="quiqqer-products-attributeList-settings-text">
-            Tags generieren:
+            {{generateTags}}
         </span>
         <input type="checkbox" name="generate_tags"/>
     </label>

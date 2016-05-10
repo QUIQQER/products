@@ -4,6 +4,15 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require qui/controls/windows/Confirm
+ * @require Locale
+ * @require controls/grid/Grid
+ * @require controls/lang/InputMultiLang
+ * @require package/quiqqer/products/bin/utils/Calc
+ * @require Mustache
+ * @require text!package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings.html
+ * @require text!package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettingsCreate.html
+ * @require css!package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings.css
  */
 define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings', [
 
@@ -190,7 +199,18 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
 
             this.$PriceCalc = new Element('div', {
                 'class': 'quiqqer-products-attributeList-settings',
-                html   : template
+                html   : Mustache.render(template, {
+                    title       : QUILocale.get(lg, 'product.fields.attributeList.title'),
+                    priority    : QUILocale.get(lg, 'product.fields.attributeList.priority'),
+                    discounts   : QUILocale.get(lg, 'product.fields.attributeList.discounts'),
+                    userInput   : QUILocale.get(lg, 'product.fields.attributeList.userInput'),
+                    generateTags: QUILocale.get(lg, 'product.fields.attributeList.generateTags'),
+
+                    calcBasis                : QUILocale.get(lg, 'product.fields.attributeList.calcBasis'),
+                    calcBasisNetto           : QUILocale.get(lg, 'product.fields.attributeList.calcBasis.netto'),
+                    calculationBasisCalcPrice: QUILocale.get(lg, 'product.fields.attributeList.calcBasis.netto'),
+
+                })
             }).inject(this.$Elm, 'top');
 
             this.$Priority         = this.$PriceCalc.getElement('[name="price_priority"]');

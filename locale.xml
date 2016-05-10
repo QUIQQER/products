@@ -771,8 +771,43 @@
             <en><![CDATA[Basis]]></en>
         </locale>
         <locale name="product.fields.grid.calcBasis.desc">
-            <de><![CDATA[Berechnungs Grundlage]]></de>
-            <en><![CDATA[Calculation casis]]></en>
+            <de><![CDATA[Berechnungs-Grundlage]]></de>
+            <en><![CDATA[Calculation basis]]></en>
+        </locale>
+
+
+        <locale name="product.fields.attributeList.title">
+            <de><![CDATA[Zur Preisberechnung]]></de>
+            <en><![CDATA[For price calculation]]></en>
+        </locale>
+
+        <locale name="product.fields.attributeList.calcBasis">
+            <de><![CDATA[Berechnungs-Grundlage]]></de>
+            <en><![CDATA[Calculation basis]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.calcBasis.netto">
+            <de><![CDATA[Netto]]></de>
+            <en><![CDATA[Netto]]></en>
+        </locale>
+        <locale name="product.fields.grid.calcBasis.calculationBasisCalcPrice">
+            <de><![CDATA[Kalkulierter Preis]]></de>
+            <en><![CDATA[Calculated price]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.priority">
+            <de><![CDATA[Priorität]]></de>
+            <en><![CDATA[Priority]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.discounts">
+            <de><![CDATA[Auf / Abschläge anzeigen]]></de>
+            <en><![CDATA[Show surcharges / discounts]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.userInput">
+            <de><![CDATA[Benutzereingabe]]></de>
+            <en><![CDATA[User input]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.generateTags">
+            <de><![CDATA[Tags generieren]]></de>
+            <en><![CDATA[Generate tags]]></en>
         </locale>
 
         <locale name="product.fields.remove.field">
