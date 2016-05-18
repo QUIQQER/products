@@ -93,7 +93,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
                         },
                         html  : Mustache.render(template, {
                             fields        : result,
-                            text_no_fields: 'Keine Suchefelder gefunden'
+                            text_no_fields: 'Kein Suchefelder gefunden'
                         })
                     });
 
@@ -122,8 +122,8 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
                             }
 
                             Field = getControlByFieldById(result[i].id);
-console.log(Field);
-console.log(result[i].searchData);
+                            console.log(Field);
+                            console.log(result[i].searchData);
                             if (Field) {
                                 Field.setSearchData(result[i].searchData);
                             }
@@ -170,9 +170,6 @@ console.log(result[i].searchData);
          */
         $getFields: function () {
             return new Promise(function (resolve) {
-
-                console.log(this.getAttribute('siteid'));
-
                 QUIAjax.get('package_quiqqer_products_ajax_search_frontend_getSearchFieldData', resolve, {
                     'package': 'quiqqer/products',
                     siteId   : this.getAttribute('siteid'),

@@ -77,6 +77,10 @@ define('package/quiqqer/products/bin/controls/search/FieldSelect', [
                 }
             }
 
+            if (Elm.value != '') {
+                this.$FieldSelect.addFields(Elm.value.split(','));
+            }
+
             if (this.getAttribute('Site')) {
                 this.$FieldSelect.enable();
             }
@@ -162,7 +166,7 @@ define('package/quiqqer/products/bin/controls/search/FieldSelect', [
          * event : on select change
          */
         $onSelectChange: function () {
-            this.$FieldSelect;
+            this.getElm().value = this.$FieldSelect.getValue();
         }
     });
 });

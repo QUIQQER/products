@@ -1,7 +1,8 @@
 /**
- *
  * @module package/quiqqer/products/bin/controls/fields/search/Window
  * @author www.pcsg.de (Henning Leutz)
+ *
+ * Felder suche
  *
  * @require qui/QUI
  * @require qui/controls/Control
@@ -121,7 +122,6 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
 
 
             return Search.then(function (data) {
-                console.warn(data);
                 // if no grid array, create a grid array
                 if (!("data" in data)) {
                     data = {data: data};

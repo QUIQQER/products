@@ -350,5 +350,11 @@ class EventHandling
 
             QUI::getRewrite()->registerPath($url . '/*', $Site);
         }
+
+
+        $cname = 'products/search/frontend/fieldvalues/'
+                 . $Site->getId() . '/' . $Site->getProject()->getLang();
+
+        QUI\ERP\Products\Search\Cache::clear($cname);
     }
 }

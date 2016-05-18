@@ -66,7 +66,7 @@ class FrontendSearch extends Search
                 )
             ));
         }
-        
+
         $this->Site     = $Site;
         $this->lang     = $Site->getProject()->getLang();
         $this->siteType = $type;
@@ -317,9 +317,6 @@ class FrontendSearch extends Search
      */
     public function getSearchFieldData()
     {
-        QUI\System\Log::writeRecursive($this->lang);
-        QUI\System\Log::writeRecursive('sss');
-
         $cname = 'products/search/frontend/fieldvalues/'
                  . $this->Site->getId() . '/' . $this->lang;
 
