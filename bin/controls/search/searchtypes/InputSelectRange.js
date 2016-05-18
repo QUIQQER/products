@@ -74,7 +74,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
          * Refresh the control
          */
         refresh: function () {
-            if (!this.$Select || !this.$data) {
+            if (!this.$SelectFrom || !this.$data) {
                 return;
             }
 

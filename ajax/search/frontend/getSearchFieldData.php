@@ -4,7 +4,7 @@
  * This file contains package_quiqqer_products_ajax_search_frontend_getSearchFieldData
  */
 
-use \QUI\ERP\Products\Handler\Search as SearchHandler;
+use QUI\ERP\Products\Handler\Search as SearchHandler;
 
 /**
  * Get search data for a specific site for frontend search
@@ -23,6 +23,5 @@ QUI::$Ajax->registerFunction(
 
         return $FrontEndSearch->getSearchFieldData();
     },
-    array('siteId', 'project'),
-    'Permission::checkAdminUser'
+    array('siteId', 'project')
 );

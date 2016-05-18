@@ -20,7 +20,7 @@ use QUI\Utils\Security\Orthos;
  */
 class FrontendSearch extends Search
 {
-    const SITETYPE_SEARCH   = 'quiqqer/products:types/search';
+    const SITETYPE_SEARCH = 'quiqqer/products:types/search';
     const SITETYPE_CATEGORY = 'quiqqer/products:types/category';
 
     /**
@@ -30,7 +30,7 @@ class FrontendSearch extends Search
      */
     protected $eligibleSiteTypes = array(
         self::SITETYPE_CATEGORY => true,
-        self::SITETYPE_SEARCH   => true
+        self::SITETYPE_SEARCH => true
     );
 
     /**
@@ -66,9 +66,9 @@ class FrontendSearch extends Search
                 )
             ));
         }
-
+        
         $this->Site     = $Site;
-        $this->lang     = $Site->getAttribute('lang');
+        $this->lang     = $Site->getProject()->getLang();
         $this->siteType = $type;
     }
 
@@ -177,7 +177,7 @@ class FrontendSearch extends Search
         $where[]       = 'lang = :lang';
         $binds['lang'] = array(
             'value' => $this->lang,
-            'type'  => \PDO::PARAM_STR
+            'type' => \PDO::PARAM_STR
         );
 
         if (isset($searchParams['category']) &&
@@ -186,7 +186,7 @@ class FrontendSearch extends Search
             $where[]           = '`category` = :category';
             $binds['category'] = array(
                 'value' => (int)$searchParams['category'],
-                'type'  => \PDO::PARAM_INT
+                'type' => \PDO::PARAM_INT
             );
         }
 
@@ -224,7 +224,7 @@ class FrontendSearch extends Search
                 $whereFreeText[]              = '`' . $columnName . '` LIKE :freetext' . $fieldId;
                 $binds['freetext' . $fieldId] = array(
                     'value' => $value,
-                    'type'  => \PDO::PARAM_STR
+                    'type' => \PDO::PARAM_STR
                 );
             }
 
@@ -317,6 +317,9 @@ class FrontendSearch extends Search
      */
     public function getSearchFieldData()
     {
+        QUI\System\Log::writeRecursive($this->lang);
+        QUI\System\Log::writeRecursive('sss');
+
         $cname = 'products/search/frontend/fieldvalues/'
                  . $this->Site->getId() . '/' . $this->lang;
 
@@ -350,12 +353,13 @@ class FrontendSearch extends Search
             $Field = Fields::getField($fieldId);
 
             $searchFieldDataContent = array(
-                'id'         => $Field->getId(),
-                'searchType' => $Field->getSearchType()
+                'id' => $Field->getId(),
+                'searchType' => $Field->getSearchType(),
+                'title' => $Field->getTitle($Locale),
+                'description' => $Field->getTitle($Locale)
             );
 
-            if (in_array($Field->getSearchType(),
-                $this->searchTypesWithValues)) {
+            if (in_array($Field->getSearchType(), $this->searchTypesWithValues)) {
                 $searchValues = $this->getValuesFromField($Field, true, $catId);
                 $searchParams = array();
 

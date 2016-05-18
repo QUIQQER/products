@@ -55,6 +55,7 @@
 .product-data-fieldlist .quiqqer-product-field {
     clear: both;
     float: left;
+    margin-bottom: 10px;
     width: 100%;
 }
 

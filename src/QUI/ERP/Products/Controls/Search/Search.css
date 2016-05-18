@@ -1,0 +1,45 @@
+
+.quiqqer-products-search-field-label {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.quiqqer-products-search form {
+    clear: both;
+    float: left;
+    position: relative;
+    width: 100%;
+}
+
+.quiqqer-products-search-field-container {
+    clear: both;
+    float: left;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.quiqqer-products-search-field-container .qui-select {
+    margin: 0;
+}
+
+.quiqqer-products-search-field-container-field .text {
+    font-size: 14px;
+}
+
+.quiqqer-products-search-fieldplaceholder-label {
+    background: #dfe4e4;
+    clear: both;
+    float: left;
+    height: 16px;
+    margin: 8px 0 4px;
+    width: 100%;
+}
+
+.quiqqer-products-search-fieldplaceholder-select {
+    background: #dfe4e4;
+    clear: both;
+    float: left;
+    height: 30px;
+    margin-bottom: 10px;
+    width: 100%;
+}

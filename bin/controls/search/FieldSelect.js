@@ -56,8 +56,6 @@ define('package/quiqqer/products/bin/controls/search/FieldSelect', [
 
             Elm.type = 'hidden';
 
-            console.log(Elm.value);
-
             this.$FieldSelect = new FieldSelect({
                 disabled: true,
                 search  : this.$search,
