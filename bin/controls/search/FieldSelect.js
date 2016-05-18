@@ -77,8 +77,21 @@ define('package/quiqqer/products/bin/controls/search/FieldSelect', [
                 }
             }
 
-            if (Elm.value != '') {
-                this.$FieldSelect.addFields(Elm.value.split(','));
+            if (Elm.value !== '') {
+                try {
+                    var ids    = [];
+                    var values = JSON.decode(Elm.value);
+
+                    for (var id in values) {
+                        if (values.hasOwnProperty(id)) {
+                            ids.push(id);
+                        }
+                    }
+
+                    this.$FieldSelect.addFields(ids);
+
+                } catch (e) {
+                }
             }
 
             if (this.getAttribute('Site')) {
@@ -166,7 +179,14 @@ define('package/quiqqer/products/bin/controls/search/FieldSelect', [
          * event : on select change
          */
         $onSelectChange: function () {
-            this.getElm().value = this.$FieldSelect.getValue();
+            var value = {};
+            var ids   = this.$FieldSelect.getValue().split(',');
+
+            for (var i = 0, len = ids.length; i < len; i++) {
+                value[ids[i]] = true;
+            }
+
+            this.getElm().value = JSON.encode(value);
         }
     });
 });
