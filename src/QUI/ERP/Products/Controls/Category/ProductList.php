@@ -7,6 +7,7 @@ namespace QUI\ERP\Products\Controls\Category;
 
 use QUI;
 use QUI\ERP\Products\Handler\Categories;
+use QUI\ERP\Products\Handler\Products;
 
 /**
  * Class Button
@@ -129,16 +130,16 @@ class ProductList extends QUI\Control
                 break;
         }
 
-        $more     = true;
-        $start    = $rowNumber * $max;
-        $products = array();
-
+        $more   = true;
+        $start  = $rowNumber * $max;
         $Search = $this->getSearch();
 
         try {
-            $products = $Search->search(array(
+            $result = $Search->search(array(
                 'category' => $Category->getId(),
-                'freetext' => ''
+                'freetext' => '',
+                'limit' => $max,
+                'sheet' => $rowNumber + 1 // sheet ist immer eines mehr
             ));
 
             if ($count === false) {
@@ -150,11 +151,22 @@ class ProductList extends QUI\Control
 
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);
-            $count = 0;
+
+            $count  = 0;
+            $result = array();
         }
 
         if ($start + $max >= $count) {
             $more = false;
+        }
+
+        $products = array();
+
+        foreach ($result as $product) {
+            try {
+                $products[] = Products::getProduct($product);
+            } catch (QUI\Exception $Exception) {
+            }
         }
 
         $Engine->assign(array(

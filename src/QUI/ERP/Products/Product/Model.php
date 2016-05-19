@@ -666,7 +666,7 @@ class Model extends QUI\QDOM
                 Fields::FIELD_TITLE,
                 $Locale
             ),
-            'active' => $this->getAttribute('active') ? 1 : 0
+            'active' => $this->isActive() ? 1 : 0
         );
 
         $Category = $this->getCategory();
