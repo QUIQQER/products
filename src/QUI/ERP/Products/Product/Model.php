@@ -740,6 +740,8 @@ class Model extends QUI\QDOM
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             array('id' => $this->getId())
         );
+
+        // @todo aus cache entfernen
     }
 
     /**
@@ -982,6 +984,8 @@ class Model extends QUI\QDOM
             array('active' => 0),
             array('id' => $this->getId())
         );
+
+        $this->updateCache();
     }
 
     /**
@@ -1001,6 +1005,8 @@ class Model extends QUI\QDOM
             array('active' => 1),
             array('id' => $this->getId())
         );
+
+        $this->updateCache();
     }
 
     /**
