@@ -40,7 +40,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectSing
         create: function () {
             this.$Select = new QUISelect({
                 showIcons      : false,
-                placeholderText: '---',
+                placeholderText: '---', // @todo locale
                 styles         : {
                     width: '100%'
                 }

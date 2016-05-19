@@ -1,7 +1,7 @@
 {if count($children)}
 <div class="quiqqer-products-productList-categories">
     {foreach from=$children item=Category}
-    <a href="{url site=$Category}">
+    <a href="{url site=$Category}" class="button">
         {$Category->getAttribute('title')}
         <span class="fa fa-angle-right"></span>
     </a>

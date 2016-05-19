@@ -122,8 +122,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
                             }
 
                             Field = getControlByFieldById(result[i].id);
-                            console.log(Field);
-                            console.log(result[i].searchData);
+
                             if (Field) {
                                 Field.setSearchData(result[i].searchData);
                             }

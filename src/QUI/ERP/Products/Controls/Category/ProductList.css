@@ -46,18 +46,20 @@
     border: 1px solid #f1f1f1;
     display: inline-block;
     float: left;
+    margin-bottom: 10px;
     padding: 10px 0;
     text-align: center;
     width: calc(50% - 10px);
 }
 
-.quiqqer-products-productList-categories a:hover {
-    background: #cdd4d5;
-    color: #1d1d1b;
-}
-
 .quiqqer-products-productList-categories a:nth-child(odd) {
     margin-right: 20px;
+}
+
+@media (max-width: 460px) {
+    .quiqqer-products-productList-categories a {
+        width: 100%;
+    }
 }
 
 /** Produkte

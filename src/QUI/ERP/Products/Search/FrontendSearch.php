@@ -323,7 +323,7 @@ class FrontendSearch extends Search
                  . $this->Site->getId() . '/' . $this->lang;
 
         try {
-            return SearchCache::get($cname);
+//            return SearchCache::get($cname);
         } catch (QUI\Exception $Exception) {
             // nothing, retrieve values
         }
@@ -367,10 +367,19 @@ class FrontendSearch extends Search
                 $searchParams = array();
 
                 foreach ($searchValues as $val) {
-                    $Field->setValue($val);
+                    try {
+                        $Field->setValue($val);
+                        $label = $Field->getValueByLocale($Locale);
+                    } catch (QUI\Exception $Exception) {
+                        QUI\System\Log::writeException(
+                            $Exception,
+                            QUI\System\Log::LEVEL_DEBUG
+                        );
+                        $label = $val;
+                    }
 
                     $searchParams[] = array(
-                        'label' => $Field->getValueByLocale($Locale),
+                        'label' => $label,
                         'value' => $val
                     );
                 }

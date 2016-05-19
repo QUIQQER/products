@@ -66,7 +66,7 @@ class BackendSearch extends Search
         $where[]       = 'lang = :lang';
         $binds['lang'] = array(
             'value' => $this->lang,
-            'type'  => \PDO::PARAM_STR
+            'type' => \PDO::PARAM_STR
         );
 
         if (isset($searchParams['category']) &&
@@ -75,7 +75,7 @@ class BackendSearch extends Search
             $where[]           = '`category` = :category';
             $binds['category'] = array(
                 'value' => (int)$searchParams['category'],
-                'type'  => \PDO::PARAM_INT
+                'type' => \PDO::PARAM_INT
             );
         }
 
@@ -119,7 +119,7 @@ class BackendSearch extends Search
                 $whereFreeText[]              = '`' . $columnName . '` LIKE :freetext' . $fieldId;
                 $binds['freetext' . $fieldId] = array(
                     'value' => $value,
-                    'type'  => \PDO::PARAM_STR
+                    'type' => \PDO::PARAM_STR
                 );
             }
 
@@ -233,12 +233,11 @@ class BackendSearch extends Search
             $Field = Fields::getField($fieldId);
 
             $searchFieldDataContent = array(
-                'id'         => $Field->getId(),
+                'id' => $Field->getId(),
                 'searchType' => $Field->getSearchType()
             );
 
-            if (in_array($Field->getSearchType(),
-                $this->searchTypesWithValues)) {
+            if (in_array($Field->getSearchType(), $this->searchTypesWithValues)) {
                 $searchValues = $this->getValuesFromField($Field, false);
                 $searchParams = array();
 
