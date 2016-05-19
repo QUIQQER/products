@@ -280,7 +280,7 @@ class FrontendSearch extends Search
         }
 
         $Stmt = $PDO->prepare($sql);
-        
+
         // bind search values
         foreach ($binds as $var => $bind) {
             $Stmt->bindValue(':' . $var, $bind['value'], $bind['type']);
