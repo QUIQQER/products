@@ -7,6 +7,10 @@
  * @require qui/QUI
  * @require qui/controls/Control
  * @require qui/controls/buttons/Select
+ *
+ * @event onChange
+ *
+ * @todo translation
  */
 define('package/quiqqer/products/bin/controls/search/searchtypes/Bool', [
 
@@ -43,6 +47,10 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Bool', [
 
             this.$Select.appendChild('Ja', 1);
             this.$Select.appendChild('Nein', 0);
+
+            this.$Select.addEvent('change', function () {
+                this.fireEvent('change', [this]);
+            }.bind(this));
 
             return this.$Elm;
         },

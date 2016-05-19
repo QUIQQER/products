@@ -16,16 +16,21 @@ use QUI\ERP\Products\Controls\Category\ProductList;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_controls_categories_productList',
-    function ($categoryId, $view, $sort, $row) {
+    function ($project, $siteId, $categoryId, $view, $row, $searchParams) {
         Categories::getCategory($categoryId);
+
+        $Project = QUI\Projects\Manager::decode($project);
+        $Site    = $Project->get($siteId);
 
         $Control = new ProductList(array(
             'categoryId' => $categoryId,
-            'view' => $view
+            'view' => $view,
+            'Site' => $Site,
+            'searchParams' => json_decode($searchParams, true)
         ));
 
         return $Control->getRow($row);
     },
-    array('categoryId', 'view', 'sort', 'row'),
+    array('project', 'siteId', 'categoryId', 'view', 'row', 'searchParams'),
     false
 );

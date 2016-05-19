@@ -11,7 +11,11 @@
 .quiqqer-products-productList-sort-sorting {
     font-size: 16px;
     line-height: 20px;
-    padding: 10px !important;
+    padding: 4px 0 !important;
+}
+
+.quiqqer-products-productList-sort-sorting .qui-select {
+    margin: 0;
 }
 
 .quiqqer-products-productList-sort-display {
@@ -50,6 +54,10 @@
     padding: 10px 0;
     text-align: center;
     width: calc(50% - 10px);
+}
+
+.quiqqer-products-productList-categories a .fa-angle-right {
+    margin-left: 10px;
 }
 
 .quiqqer-products-productList-categories a:nth-child(odd) {

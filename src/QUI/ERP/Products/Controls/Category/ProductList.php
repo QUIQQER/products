@@ -37,7 +37,9 @@ class ProductList extends QUI\Control
             'categoryId' => false,
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/category/ProductList',
             'data-cid' => false,
-            'view' => 'galery' // galery, list, detail
+            'view' => 'galery', // galery, list, detail
+            'Search' => false,
+            'searchParams' => false
         ));
 
         $this->addCSSFile(dirname(__FILE__) . '/ProductList.css');
@@ -58,12 +60,22 @@ class ProductList extends QUI\Control
         $Engine   = QUI::getTemplateManager()->getEngine();
         $Category = $this->getCategory();
         $count    = 0;
+        $Search   = $this->getAttribute('Search');
+
+        if ($Search instanceof QUI\ERP\Products\Controls\Search\Search) {
+            /* @var $Search QUI\ERP\Products\Controls\Search\Search */
+            $this->setAttribute('data-search', $Search->getAttribute('data-name'));
+        }
+
+        $this->setAttribute('data-project', $this->getSite()->getProject()->getName());
+        $this->setAttribute('data-lang', $this->getSite()->getProject()->getLang());
+        $this->setAttribute('data-siteid', $this->getSite()->getId());
 
         if ($Category) {
-            $count = $this->getSearch()->search(array(
-                'category' => $Category->getId(),
-                'freetext' => ''
-            ), true);
+            $count = $this->getSearch()->search(
+                $this->getCountParams(),
+                true
+            );
 
             $this->setAttribute('data-cid', $Category->getId());
         }
@@ -140,18 +152,12 @@ class ProductList extends QUI\Control
         $Search = $this->getSearch();
 
         try {
-            $result = $Search->search(array(
-                'category' => $Category->getId(),
-                'freetext' => '',
-                'limit' => $max,
-                'sheet' => $rowNumber + 1 // sheet ist immer eines mehr
-            ));
+            $result = $Search->search(
+                $this->getSearchParams($rowNumber, $max)
+            );
 
             if ($count === false) {
-                $count = $Search->search(array(
-                    'category' => $Category->getId(),
-                    'freetext' => ''
-                ), true);
+                $count = $Search->search($this->getCountParams(), true);
             }
 
         } catch (QUI\Exception $Exception) {
@@ -189,6 +195,44 @@ class ProductList extends QUI\Control
     }
 
     /**
+     * @param $rowNumber
+     * @param $max
+     * @return array|mixed
+     */
+    protected function getSearchParams($rowNumber, $max)
+    {
+        $searchParams = $this->getAttribute('searchParams');
+
+        if (!is_array($searchParams)) {
+            $searchParams = array();
+        }
+
+        $searchParams['category'] = $this->getCategory()->getId();
+        $searchParams['freetext'] = '';
+        $searchParams['limit']    = $max;
+        $searchParams['sheet']    = $rowNumber + 1;
+
+        return $searchParams;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    protected function getCountParams()
+    {
+        $searchParams = $this->getAttribute('searchParams');
+
+        if (!is_array($searchParams)) {
+            $searchParams = array();
+        }
+
+        $searchParams['category'] = $this->getCategory()->getId();
+        $searchParams['freetext'] = '';
+
+        return $searchParams;
+    }
+
+    /**
      * Return the product list category
      *
      * @return null|QUI\ERP\Products\Category\ViewBackend|QUI\ERP\Products\Category\ViewFrontend
@@ -199,7 +243,7 @@ class ProductList extends QUI\Control
             return $this->Category->getView();
         }
 
-        $categoryId = $this->getAttribute('categoryId');
+        $categoryId = $this->getSite()->getAttribute('quiqqer.products.settings.categoryId');
 
         if (!$categoryId) {
             return null;

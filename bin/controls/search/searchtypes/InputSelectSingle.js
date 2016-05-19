@@ -5,6 +5,8 @@
  * @require qui/QUI
  * @require qui/controls/Control
  * @require qui/controls/buttons/Select
+ *
+ * @event onChange [this]
  */
 define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectSingle', [
 
@@ -43,6 +45,11 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectSing
                 placeholderText: '---', // @todo locale
                 styles         : {
                     width: '100%'
+                },
+                events         : {
+                    onChange: function () {
+                        this.fireEvent('change', [this]);
+                    }.bind(this)
                 }
             });
 

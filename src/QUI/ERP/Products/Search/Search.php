@@ -113,8 +113,8 @@ abstract class Search extends QUI\QDOM
 
         $params = array(
             'select' => array(),
-            'from'   => Tables::getProductCacheTableName(),
-            'where'  => array(
+            'from' => Tables::getProductCacheTableName(),
+            'where' => array(
                 'lang' => $this->lang
             )
         );
@@ -271,7 +271,7 @@ abstract class Search extends QUI\QDOM
                             'quiqqer/products',
                             'exception.search.value.invalid',
                             array(
-                                'fieldId'    => $Field->getId(),
+                                'fieldId' => $Field->getId(),
                                 'fieldTitle' => $Field->getTitle()
                             )
                         ));
@@ -280,7 +280,7 @@ abstract class Search extends QUI\QDOM
                     $where[]            = $column . ' = :' . $columnName;
                     $binds[$columnName] = array(
                         'value' => $this->sanitizeString($value),
-                        'type'  => \PDO::PARAM_STR
+                        'type' => \PDO::PARAM_STR
                     );
                     break;
 
@@ -295,7 +295,7 @@ abstract class Search extends QUI\QDOM
                             'quiqqer/products',
                             'exception.search.value.invalid',
                             array(
-                                'fieldId'    => $Field->getId(),
+                                'fieldId' => $Field->getId(),
                                 'fieldTitle' => $Field->getTitle()
                             )
                         ));
@@ -305,15 +305,16 @@ abstract class Search extends QUI\QDOM
                     $to   = false;
 
                     if (isset($value['from'])
-                        && !empty($value['from'])) {
+                        && !empty($value['from'])
+                    ) {
                         $from = $value['from'];
 
-                        if (!is_string($from)) {
+                        if (!is_string($from) && !is_numeric($from)) {
                             throw new Exception(array(
                                 'quiqqer/products',
                                 'exception.search.value.invalid',
                                 array(
-                                    'fieldId'    => $Field->getId(),
+                                    'fieldId' => $Field->getId(),
                                     'fieldTitle' => $Field->getTitle()
                                 )
                             ));
@@ -321,15 +322,16 @@ abstract class Search extends QUI\QDOM
                     }
 
                     if (isset($value['to'])
-                        && !empty($value['to'])) {
+                        && !empty($value['to'])
+                    ) {
                         $to = $value['to'];
 
-                        if (!is_string($to)) {
+                        if (!is_string($to) && !is_numeric($to)) {
                             throw new Exception(array(
                                 'quiqqer/products',
                                 'exception.search.value.invalid',
                                 array(
-                                    'fieldId'    => $Field->getId(),
+                                    'fieldId' => $Field->getId(),
                                     'fieldTitle' => $Field->getTitle()
                                 )
                             ));
@@ -349,16 +351,16 @@ abstract class Search extends QUI\QDOM
                     if ($from !== false) {
                         $where[]                     = $column . ' >= :' . $columnName . 'From';
                         $binds[$columnName . 'From'] = array(
-                            'value' => $this->sanitizeString($value),
-                            'type'  => \PDO::PARAM_STR
+                            'value' => $this->sanitizeString($from),
+                            'type' => \PDO::PARAM_STR
                         );
                     }
 
                     if ($to !== false) {
                         $where[]                   = $column . ' <= :' . $columnName . 'To';
                         $binds[$columnName . 'To'] = array(
-                            'value' => $this->sanitizeString($value),
-                            'type'  => \PDO::PARAM_STR
+                            'value' => $this->sanitizeString($to),
+                            'type' => \PDO::PARAM_STR
                         );
                     }
                     break;
@@ -373,7 +375,7 @@ abstract class Search extends QUI\QDOM
                             'quiqqer/products',
                             'exception.search.value.invalid',
                             array(
-                                'fieldId'    => $Field->getId(),
+                                'fieldId' => $Field->getId(),
                                 'fieldTitle' => $Field->getTitle()
                             )
                         ));
@@ -383,7 +385,8 @@ abstract class Search extends QUI\QDOM
                     $to   = false;
 
                     if (isset($value['from'])
-                        && !empty($value['from'])) {
+                        && !empty($value['from'])
+                    ) {
                         $from = $value['from'];
 
                         if (!is_numeric($from)) {
@@ -391,7 +394,7 @@ abstract class Search extends QUI\QDOM
                                 'quiqqer/products',
                                 'exception.search.value.invalid',
                                 array(
-                                    'fieldId'    => $Field->getId(),
+                                    'fieldId' => $Field->getId(),
                                     'fieldTitle' => $Field->getTitle()
                                 )
                             ));
@@ -399,7 +402,8 @@ abstract class Search extends QUI\QDOM
                     }
 
                     if (isset($value['to'])
-                        && !empty($value['to'])) {
+                        && !empty($value['to'])
+                    ) {
                         $to = $value['to'];
 
                         if (!is_numeric($from)) {
@@ -407,7 +411,7 @@ abstract class Search extends QUI\QDOM
                                 'quiqqer/products',
                                 'exception.search.value.invalid',
                                 array(
-                                    'fieldId'    => $Field->getId(),
+                                    'fieldId' => $Field->getId(),
                                     'fieldTitle' => $Field->getTitle()
                                 )
                             ));
@@ -428,7 +432,7 @@ abstract class Search extends QUI\QDOM
                         $where[]                     = $column . ' >= :' . $columnName . 'From';
                         $binds[$columnName . 'From'] = array(
                             'value' => (int)$value,
-                            'type'  => \PDO::PARAM_INT
+                            'type' => \PDO::PARAM_INT
                         );
                     }
 
@@ -436,7 +440,7 @@ abstract class Search extends QUI\QDOM
                         $where[]                   = $column . ' <= :' . $columnName . 'To';
                         $binds[$columnName . 'To'] = array(
                             'value' => (int)$value,
-                            'type'  => \PDO::PARAM_INT
+                            'type' => \PDO::PARAM_INT
                         );
                     }
                     break;
@@ -453,7 +457,7 @@ abstract class Search extends QUI\QDOM
                             'quiqqer/products',
                             'exception.search.value.invalid',
                             array(
-                                'fieldId'    => $Field->getId(),
+                                'fieldId' => $Field->getId(),
                                 'fieldTitle' => $Field->getTitle()
                             )
                         ));
@@ -462,7 +466,7 @@ abstract class Search extends QUI\QDOM
                     $where              = $column . ' = :' . $columnName;
                     $binds[$columnName] = array(
                         'value' => (int)$value,
-                        'type'  => \PDO::PARAM_INT
+                        'type' => \PDO::PARAM_INT
                     );
                     break;
 
@@ -476,7 +480,7 @@ abstract class Search extends QUI\QDOM
                             'quiqqer/products',
                             'exception.search.value.invalid',
                             array(
-                                'fieldId'    => $Field->getId(),
+                                'fieldId' => $Field->getId(),
                                 'fieldTitle' => $Field->getTitle()
                             )
                         ));
@@ -486,7 +490,7 @@ abstract class Search extends QUI\QDOM
                         $where[]                 = $column . ' = :' . $columnName . $i;
                         $binds[$columnName . $i] = array(
                             'value' => $this->sanitizeString($value),
-                            'type'  => \PDO::PARAM_STR
+                            'type' => \PDO::PARAM_STR
                         );
                     }
                     break;
@@ -501,7 +505,7 @@ abstract class Search extends QUI\QDOM
                             'quiqqer/products',
                             'exception.search.value.invalid',
                             array(
-                                'fieldId'    => $Field->getId(),
+                                'fieldId' => $Field->getId(),
                                 'fieldTitle' => $Field->getTitle()
                             )
                         ));
@@ -510,7 +514,7 @@ abstract class Search extends QUI\QDOM
                     $where[]            = $column . ' LIKE :' . $columnName;
                     $binds[$columnName] = array(
                         'value' => '%' . $this->sanitizeString($value) . '%',
-                        'type'  => \PDO::PARAM_STR
+                        'type' => \PDO::PARAM_STR
                     );
                     break;
 
@@ -519,7 +523,7 @@ abstract class Search extends QUI\QDOM
                         'quiqqer/products',
                         'exception.search.field.unknown.searchtype',
                         array(
-                            'fieldId'    => $Field->getId(),
+                            'fieldId' => $Field->getId(),
                             'fieldTitle' => $Field->getTitle()
                         )
                     ));

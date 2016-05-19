@@ -16,11 +16,12 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
     'qui/QUI',
     'qui/controls/Control',
     'package/quiqqer/products/bin/Fields',
+    'package/quiqqer/products/bin/Search',
     'Ajax',
     'Locale',
     URL_OPT_DIR + 'bin/mustache/mustache.min.js'
 
-], function (QUI, QUIControl, Fields, QUIAjax, QUILocale, Mustache) {
+], function (QUI, QUIControl, Fields, Search, QUIAjax, QUILocale, Mustache) {
     "use strict";
 
     return new Class({
@@ -29,7 +30,8 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
         Type   : 'package/quiqqer/products/bin/controls/frontend/search/Search',
 
         Binds: [
-            '$onImport'
+            '$onImport',
+            '$onChange'
         ],
 
         options: {
@@ -41,7 +43,9 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Form = null;
+            this.$Form   = null;
+            this.$fields = [];
+            this.$loaded = false;
 
             this.addEvents({
                 onImport: this.$onImport
@@ -99,7 +103,8 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
 
                     QUI.parse(Container).then(function () {
                         var i, id, len, Field;
-                        var controls = QUI.Controls.getControlsInElement(Container);
+                        var self     = this,
+                            controls = QUI.Controls.getControlsInElement(Container);
 
                         var getControlByFieldById = function (fieldId) {
                             for (var c = 0, len = controls.length; c < len; c++) {
@@ -117,11 +122,14 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
                                 getControlByFieldById(result[i].id).focus();
                             }
 
+                            Field = getControlByFieldById(result[i].id);
+                            Field.addEvent('onChange', this.$onChange);
+
+                            this.$fields.push(Field);
+
                             if (!("searchData" in result[i])) {
                                 continue;
                             }
-
-                            Field = getControlByFieldById(result[i].id);
 
                             if (Field) {
                                 Field.setSearchData(result[i].searchData);
@@ -152,6 +160,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
                                 duration: 250,
                                 callback: function () {
                                     FormContainer.destroy();
+                                    self.$loaded = true;
                                 }
                             });
                         }).delay(200);
@@ -163,21 +172,42 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
         },
 
         /**
+         * @return {Object}
+         */
+        getFieldValues: function () {
+            var i, len, Field;
+            var values = {};
+
+            for (i = 0, len = this.$fields.length; i < len; i++) {
+                Field = this.$fields[i];
+
+                values[Field.getFieldId()] = Field.getSearchValue();
+            }
+
+            return values;
+        },
+
+        /**
          * Return the fields for the site
          *
          * @returns {Promise}
          */
         $getFields: function () {
-            return new Promise(function (resolve) {
-                QUIAjax.get('package_quiqqer_products_ajax_search_frontend_getSearchFieldData', resolve, {
-                    'package': 'quiqqer/products',
-                    siteId   : this.getAttribute('siteid'),
-                    project  : JSON.encode({
-                        name: this.getAttribute('project'),
-                        lang: this.getAttribute('lang')
-                    })
-                });
-            }.bind(this));
+            return Search.getFieldData(this.getAttribute('siteid'), {
+                name: this.getAttribute('project'),
+                lang: this.getAttribute('lang')
+            });
+        },
+
+        /**
+         * event on field change
+         */
+        $onChange: function () {
+            if (!this.$loaded) {
+                return;
+            }
+
+            this.fireEvent('change', [this]);
         }
     });
 });

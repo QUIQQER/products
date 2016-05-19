@@ -1,9 +1,18 @@
+
 .quiqqer-products-productGalery-products-product {
     height: 180px;
     margin-top: 20px;
     overflow: hidden;
     position: relative;
     text-align: center;
+}
+
+.quiqqer-products-productGalery-products-product:first-child {
+    padding-left: 0;
+}
+
+.quiqqer-products-productGalery-products-product:nth-child(n+3) {
+    padding-right: 0;
 }
 
 .quiqqer-products-productGalery-products-product a {

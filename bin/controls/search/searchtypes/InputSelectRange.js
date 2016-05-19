@@ -5,6 +5,8 @@
  * @require qui/QUI
  * @require qui/controls/Control
  * @require qui/controls/buttons/Select
+ *
+ * @event onChange [this]
  */
 define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRange', [
 
@@ -53,6 +55,11 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
                 }
             });
 
+            this.$SelectFrom.addEvent('change', function () {
+                this.fireEvent('change', [this]);
+            }.bind(this));
+
+
             this.$SelectTo = new QUISelect({
                 showIcons      : false,
                 placeholderText: 'Bis',
@@ -62,8 +69,14 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
                 }
             });
 
+            this.$SelectTo.addEvent('change', function () {
+                this.fireEvent('change', [this]);
+            }.bind(this));
+
+
             this.$SelectFrom.inject(this.$Elm);
             this.$SelectTo.inject(this.$Elm);
+
 
             this.refresh();
 

@@ -20,7 +20,8 @@ class Search extends QUI\Control
         $this->setAttributes(array(
             'categoryId' => false,
             'Site' => false,
-            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/search/Search'
+            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/search/Search',
+            'data-name' => false
         ));
 
         $this->addCSSFile(dirname(__FILE__) . '/Search.css');

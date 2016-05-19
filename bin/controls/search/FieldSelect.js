@@ -187,6 +187,7 @@ define('package/quiqqer/products/bin/controls/search/FieldSelect', [
             }
 
             this.getElm().value = JSON.encode(value);
+            this.fireEvent('change', [this]);
         }
     });
 });

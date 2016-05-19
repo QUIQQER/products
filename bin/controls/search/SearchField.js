@@ -2,6 +2,8 @@
  * @module package/quiqqer/products/bin/controls/search/SearchField
  * @author www.pcsg.de (Henning Leutz)
  *
+ * Ein Feld für die Sache, hohlt sich die search types rein
+ *
  * @require qui/QUI
  * @require qui/controls/Control
  * @require css!package/quiqqer/products/bin/controls/search/SearchField.css
@@ -182,6 +184,10 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
                         this.$Type = new DateRange().inject(this.getElm());
                         break;
                 }
+
+                this.$Type.addEvent('onChange', function () {
+                    this.fireEvent('change', [this]);
+                }.bind(this));
 
                 if (this.$searchData) {
                     this.$Type.setSearchData(this.$searchData);
