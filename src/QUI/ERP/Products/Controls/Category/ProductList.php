@@ -60,7 +60,11 @@ class ProductList extends QUI\Control
         $count    = 0;
 
         if ($Category) {
-            $count = $Category->countProducts();
+            $count = $this->getSearch()->search(array(
+                'category' => $Category->getId(),
+                'freetext' => ''
+            ), true);
+
             $this->setAttribute('data-cid', $Category->getId());
         }
 
@@ -81,6 +85,7 @@ class ProductList extends QUI\Control
         }
 
         $Engine->assign(array(
+            'count' => $count,
             'rows' => $rows,
             'children' => $this->getSite()->getNavigation(),
             'more' => $more,

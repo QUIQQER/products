@@ -9,6 +9,7 @@
 </div>
 {/if}
 
+{if $count}
 <div class="quiqqer-products-productList-sort">
     <noscript>
         Bitte aktivieren Sie JavaScript.
@@ -29,15 +30,18 @@
         ></span>
     </div>
 </div>
+{/if}
 
 <div class="quiqqer-products-productList-products">
+    {if $count}
     {foreach from=$rows item=row}
-    {$row.html}
-    {foreachelse}
+        {$row.html}
+    {/foreach}
+    {else}
     <div class="quiqqer-products-productList-sort__noProducts">
         In der Kategorie sind keine Produkte enthalten
     </div>
-    {/foreach}
+    {/if}
 
 </div>
 {if $more}
