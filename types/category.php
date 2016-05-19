@@ -1,11 +1,14 @@
 <?php
 
+use QUI\ERP\Products;
+use QUI\System\Log;
+
 $siteUrl = $Site->getLocation();
 
 $url = $_REQUEST['_url'];
 $url = pathinfo($url);
 
-// check machine url
+// check product url
 if ($siteUrl != $_REQUEST['_url']) {
     /**
      * Product
@@ -21,10 +24,10 @@ if ($siteUrl != $_REQUEST['_url']) {
     $refNo = (int)$refNo;
 
     try {
-        $Product = QUI\ERP\Products\Handler\Products::getProduct($refNo);
+        $Product = Products\Handler\Products::getProduct($refNo);
 
         $Engine->assign(array(
-            'Product' => new QUI\ERP\Products\Controls\Products\Product(array(
+            'Product' => new Products\Controls\Products\Product(array(
                 'Product' => $Product
             ))
         ));
@@ -32,7 +35,7 @@ if ($siteUrl != $_REQUEST['_url']) {
         $Site->setAttribute('content-header', false);
 
     } catch (QUI\Exception $Exception) {
-        QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);
+        Log::writeException($Exception, Log::LEVEL_NOTICE);
         QUI::getRewrite()->showErrorHeader(404);
     }
 
@@ -40,7 +43,7 @@ if ($siteUrl != $_REQUEST['_url']) {
     /**
      * Category display
      */
-    $ProductList = new QUI\ERP\Products\Controls\Category\ProductList(array(
+    $ProductList = new Products\Controls\Category\ProductList(array(
         'categoryId' => $Site->getAttribute('quiqqer.products.settings.categoryId')
     ));
 

@@ -21,6 +21,11 @@ class ProductList extends QUI\Control
     protected $Category = null;
 
     /**
+     * @var null|QUI\ERP\Products\Search\FrontendSearch
+     */
+    protected $Search = null;
+
+    /**
      * constructor
      *
      * @param array $attributes
@@ -124,16 +129,29 @@ class ProductList extends QUI\Control
                 break;
         }
 
-        $more  = true;
-        $start = $rowNumber * $max;
+        $more     = true;
+        $start    = $rowNumber * $max;
+        $products = array();
 
-        if ($count === false) {
-            $count = $Category->countProducts();
+        $Search = $this->getSearch();
+
+        try {
+            $products = $Search->search(array(
+                'category' => $Category->getId(),
+                'freetext' => ''
+            ));
+
+            if ($count === false) {
+                $count = $Search->search(array(
+                    'category' => $Category->getId(),
+                    'freetext' => ''
+                ), true);
+            }
+
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);
+            $count = 0;
         }
-
-        $products = $Category->getProducts(array(
-            'limit' => $start . ',' . $max
-        ));
 
         if ($start + $max >= $count) {
             $more = false;
@@ -177,6 +195,22 @@ class ProductList extends QUI\Control
         }
 
         return $this->Category->getView();
+    }
+
+    /**
+     * Return the frontend search
+     *
+     * @return null|QUI\ERP\Products\Search\FrontendSearch
+     */
+    public function getSearch()
+    {
+        if (is_null($this->Search)) {
+            $this->Search = QUI\ERP\Products\Handler\Search::getFrontendSearch(
+                $this->getSite()
+            );
+        }
+
+        return $this->Search;
     }
 
     /**

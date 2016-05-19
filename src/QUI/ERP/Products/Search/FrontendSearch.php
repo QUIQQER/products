@@ -158,7 +158,7 @@ class FrontendSearch extends Search
     public function search($searchParams, $countOnly = false)
     {
         QUI\Rights\Permission::checkPermission(
-            SearchHandler::PERMISSION_FRONTEND_EXECUTE_EXECUTE
+            SearchHandler::PERMISSION_FRONTEND_EXECUTE
         );
 
         $PDO = QUI::getDataBase()->getPDO();
@@ -236,12 +236,14 @@ class FrontendSearch extends Search
         $where[] = '`active` = 1';
 
         // retrieve query data for fields
-        try {
-            $queryData = $this->getFieldQueryData($searchParams['fields']);
-            $where     = array_merge($where, $queryData['where']);
-            $binds     = array_merge($binds, $queryData['binds']);
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addError($Exception->getMessage());
+        if (isset($searchParams['fields'])) {
+            try {
+                $queryData = $this->getFieldQueryData($searchParams['fields']);
+                $where     = array_merge($where, $queryData['where']);
+                $binds     = array_merge($binds, $queryData['binds']);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addError($Exception->getMessage());
+            }
         }
 
         // build WHERE query string
