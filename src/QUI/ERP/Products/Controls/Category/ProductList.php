@@ -72,12 +72,12 @@ class ProductList extends QUI\Control
         $this->setAttribute('data-siteid', $this->getSite()->getId());
 
         try {
-            if ($Category) {
-                $count = $this->getSearch()->search(
-                    $this->getCountParams(),
-                    true
-                );
+            $count = $this->getSearch()->search(
+                $this->getCountParams(),
+                true
+            );
 
+            if ($Category) {
                 $this->setAttribute('data-cid', $Category->getId());
             }
 
@@ -138,16 +138,7 @@ class ProductList extends QUI\Control
     public function getRow($rowNumber, $count = false)
     {
         $Engine    = QUI::getTemplateManager()->getEngine();
-        $Category  = $this->getCategory();
         $rowNumber = (int)$rowNumber;
-
-        if (!$Category) {
-            return array(
-                'html' => '',
-                'count' => 0,
-                'more' => false
-            );
-        }
 
         switch ($this->getAttribute('view')) {
             case 'list':
@@ -227,7 +218,10 @@ class ProductList extends QUI\Control
             $searchParams = array();
         }
 
-        $searchParams['category'] = $this->getCategory()->getId();
+        if ($this->getCategory()) {
+            $searchParams['category'] = $this->getCategory()->getId();
+        }
+
         $searchParams['freetext'] = '';
         $searchParams['limit']    = $max;
         $searchParams['sheet']    = $rowNumber + 1;
@@ -246,7 +240,10 @@ class ProductList extends QUI\Control
             $searchParams = array();
         }
 
-        $searchParams['category'] = $this->getCategory()->getId();
+        if ($this->getCategory()) {
+            $searchParams['category'] = $this->getCategory()->getId();
+        }
+
         $searchParams['freetext'] = '';
 
         return $searchParams;
@@ -279,16 +276,18 @@ class ProductList extends QUI\Control
     }
 
     /**
-     * Return the frontend search
+     * Return the search
      *
-     * @return null|QUI\ERP\Products\Search\FrontendSearch
+     * @return false|QUI\ERP\Products\Search\FrontendSearch
      */
-    public function getSearch()
+    protected function getSearch()
     {
-        if (is_null($this->Search)) {
-            $this->Search = QUI\ERP\Products\Handler\Search::getFrontendSearch(
-                $this->getSite()
-            );
+        try {
+            if (is_null($this->Search)) {
+                $this->Search = new QUI\ERP\Products\Search\FrontendSearch($this->getSite());
+            }
+        } catch (QUI\Exception $Exception) {
+            $this->Search = false;
         }
 
         return $this->Search;

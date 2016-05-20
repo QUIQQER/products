@@ -38,6 +38,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectSingle', 
         create: function () {
             this.$Select = new QUISelect();
             this.$Elm    = this.$Select.create();
+            this.$Elm.addClass('quiqqer-products-searchtype-selectsingle');
 
             return this.$Elm;
         },
@@ -50,7 +51,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectSingle', 
         setSearchData: function (data) {
 
         },
-        
+
         /**
          * Return the search value
          *

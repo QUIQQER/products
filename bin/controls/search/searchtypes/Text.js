@@ -34,7 +34,8 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Text', [
          */
         create: function () {
             this.$Elm = new Element('input', {
-                'class': 'quiqqer-products-searchtype-text'
+                'class': 'quiqqer-products-searchtype-text',
+                type   : 'text'
             });
 
             return this.$Elm;

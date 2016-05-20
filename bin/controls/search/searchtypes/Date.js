@@ -38,6 +38,8 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Date', [
                 type: 'date'
             });
 
+            this.$Elm.addClass('quiqqer-products-searchtype-date');
+
             return this.$Elm;
         },
 

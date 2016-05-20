@@ -172,6 +172,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                             value: searchTypes[i]
                         }).inject(FieldSearchType);
                     }
+
+                    FieldSearchType.value = fieldData.search_type;
                 }
 
                 // options

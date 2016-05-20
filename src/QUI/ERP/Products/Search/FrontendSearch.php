@@ -157,7 +157,7 @@ class FrontendSearch extends Search
      */
     public function search($searchParams, $countOnly = false)
     {
-        QUI\Rights\Permission::checkPermission(
+        QUI\Permissions\Permission::checkPermission(
             SearchHandler::PERMISSION_FRONTEND_EXECUTE
         );
 
