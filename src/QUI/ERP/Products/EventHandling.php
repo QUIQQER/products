@@ -230,6 +230,38 @@ class EventHandling
                     'de' => 'Media-Ordner',
                     'en' => 'Media folder'
                 )
+            ),
+            // Produkt bestand
+            array(
+                'id' => Fields::FIELD_STOCK,
+                'type' => 'IntType',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 9,
+                'systemField' => 0,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'search_type' => '',
+                'titles' => array(
+                    'de' => 'Lagerbestand',
+                    'en' => 'Total stock'
+                )
+            ),
+            // Produkt suchbegriffe
+            array(
+                'id' => Fields::FIELD_KEYWORDS,
+                'type' => 'Textarea',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 10,
+                'systemField' => 0,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'search_type' => '',
+                'titles' => array(
+                    'de' => 'Suchbegriffe',
+                    'en' => 'Search keywords'
+                )
             )
         );
 
