@@ -98,13 +98,13 @@ class Products
                 'select' => array(
                     'id'
                 ),
-                'from' => TablesUtils::getProductCacheTableName(),
-                'where' => array(
+                'from'   => TablesUtils::getProductCacheTableName(),
+                'where'  => array(
                     'productNo' => $productNo
                 ),
-                'limit' => 1
+                'limit'  => 1
             ));
-            
+
         } catch (QUI\Exception $Exception) {
             // TODO: mit Mor besprechen
             QUI\System\Log::addError(
@@ -210,7 +210,7 @@ class Products
                         'quiqqer/products',
                         'exception.field.is.invalid',
                         array(
-                            'fieldId' => $Field->getId(),
+                            'fieldId'    => $Field->getId(),
                             'fieldtitle' => $Field->getTitle()
                         )
                     ));
@@ -225,14 +225,17 @@ class Products
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
-                'fieldData' => json_encode($fieldData),
+                'fieldData'  => json_encode($fieldData),
                 'categories' => ',' . implode($categories, ',') . ','
             )
         );
 
-        $newId = QUI::getDataBase()->getPDO()->lastInsertId();
+        $newId   = QUI::getDataBase()->getPDO()->lastInsertId();
+        $Product = self::getProduct($newId);
 
-        return self::getProduct($newId);
+        $Product->updateCache();
+
+        return $Product;
     }
 
     /**
@@ -330,10 +333,10 @@ class Products
     public static function countProducts($queryParams = array())
     {
         $query = array(
-            'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
             'count' => array(
                 'select' => 'id',
-                'as' => 'count'
+                'as'     => 'count'
             )
         );
 
