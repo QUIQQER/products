@@ -319,8 +319,10 @@ class FrontendSearch extends Search
      */
     public function getSearchFieldData()
     {
-        $cname = 'products/search/frontend/fieldvalues/'
-                 . $this->Site->getId() . '/' . $this->lang;
+        $cname = 'products/search/frontend/searchfielddata/';
+        $cname .= $this->Site->getId() . '/';
+        $cname .= $this->lang . '/';
+        $cname .= $this->getGroupHashFromUser();
 
         try {
             return SearchCache::get($cname);
@@ -354,6 +356,10 @@ class FrontendSearch extends Search
             }
 
             $Field = Fields::getField($fieldId);
+
+            if (!$this->canSearchField($Field)) {
+                continue;
+            }
 
             $searchFieldDataContent = array(
                 'id' => $Field->getId(),
@@ -506,5 +512,28 @@ class FrontendSearch extends Search
         $this->eligibleFields = $this->filterEligibleSearchFields($fields);
 
         return $this->eligibleFields;
+    }
+
+    /**
+     * Gets a unique hash for a user
+     *
+     * @param QUI\Users\User $User (optional) - If ommitted, User is
+     * @return string - md5 hash
+     */
+    protected function getGroupHashFromUser($User = null)
+    {
+        if (is_null($User)) {
+            $User = QUI::getUserBySession();
+        }
+
+        $groups = $User->getGroups(false);
+
+        if (is_array($groups)) {
+            $groups = implode(',', $groups);
+        } else {
+            $groups = "";
+        }
+
+        return md5($groups);
     }
 }
