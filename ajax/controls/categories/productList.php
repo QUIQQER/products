@@ -17,7 +17,11 @@ use QUI\ERP\Products\Controls\Category\ProductList;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_controls_categories_productList',
     function ($project, $siteId, $categoryId, $view, $row, $searchParams) {
-        Categories::getCategory($categoryId);
+        try {
+            Categories::getCategory($categoryId);
+        } catch (QUI\Exception $Exception) {
+            $categoryId = false;
+        }
 
         $Project = QUI\Projects\Manager::decode($project);
         $Site    = $Project->get($siteId);
