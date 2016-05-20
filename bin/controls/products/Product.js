@@ -1303,9 +1303,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             this.Loader.hide();
 
             return this.$Product.createMediaFolder().then(function () {
-                self.$Product.refresh();
-
-            }).then(function () {
                 return self.$Product.getFields();
 
             }).then(function (productField) {
