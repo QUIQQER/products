@@ -68,10 +68,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             'openField',
             '$onCreate',
             '$onInject',
-            '$onFolderCreated',
             'openAddFieldDialog',
             'openAttributeList',
-            'openFieldAdministration'
+            'openFieldAdministration',
+            '$onCreateMediaFolderClick'
         ],
 
         options: {
@@ -266,20 +266,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     folderId     : false,
                     Parent       : Folder,
                     newFolderName: this.$Product.getId(),
-                    filetype     : ['file'],
-                    events       : {
-                        onFolderCreated: self.$onFolderCreated
-                    }
+                    filetype     : ['file']
                 }).inject(this.$Files);
 
                 this.$ImageViewer = new FolderViewer({
                     folderId     : false,
                     Parent       : Folder,
                     newFolderName: this.$Product.getId(),
-                    filetype     : ['image'],
-                    events       : {
-                        onFolderCreated: self.$onFolderCreated
-                    }
+                    filetype     : ['image']
                 }).inject(this.$Media);
 
 
@@ -487,6 +481,48 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         }
                     });
 
+                    // no media folder exists
+                    // display create message
+                    if (!productFolder) {
+                        self.$FileViewer.hide();
+                        self.$ImageViewer.hide();
+
+                        var Container = new Element('div', {
+                            'class': 'folder-missing-container',
+                            html   : QUILocale.get(lg, 'products.product.panel.folder.missing')
+                        }).inject(self.$Media);
+
+                        new QUIButton({
+                            text     : QUILocale.get(lg, 'products.product.panel.folder.missing.button'),
+                            textimage: 'fa fa-plus',
+                            styles   : {
+                                clear : 'both',
+                                margin: '20px 0 0 0'
+                            },
+                            events   : {
+                                onClick: self.$onCreateMediaFolderClick
+                            }
+                        }).inject(Container);
+
+                        var Container2 = new Element('div', {
+                            'class': 'folder-missing-container',
+                            html   : QUILocale.get(lg, 'products.product.panel.folder.missing')
+                        }).inject(self.$Files);
+
+                        new QUIButton({
+                            text     : QUILocale.get(lg, 'products.product.panel.folder.missing.button'),
+                            textimage: 'fa fa-plus',
+                            styles   : {
+                                clear : 'both',
+                                margin: '20px 0 0 0'
+                            },
+                            events   : {
+                                onClick: self.$onCreateMediaFolderClick
+                            }
+                        }).inject(Container2);
+                    }
+
+                    // parse qui controls
                     QUI.parse().then(function () {
                         self.getCategory('data').click();
 
@@ -1259,25 +1295,19 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         },
 
         /**
-         * event : on folder created, if the product hadnt a media folder
-         *
-         * @param {Object} Viewer
-         * @param {Object} Folder
+         * Create the media folder for the product
          */
-        $onFolderCreated: function (Viewer, Folder) {
+        $createMediaFolder: function () {
             var self = this;
 
-            this.Loader.show();
+            this.Loader.hide();
 
-            var Form  = this.getContent().getElement('form'),
-                Input = Form.elements['field-10'];
+            return this.$Product.createMediaFolder().then(function () {
+                self.$Product.refresh();
 
-            Input.value = Folder.getUrl();
-
-            this.update().then(function () {
-                return self.$Product.refresh();
             }).then(function () {
                 return self.$Product.getFields();
+
             }).then(function (productField) {
 
                 var folder = productField.filter(function (field) {
@@ -1292,7 +1322,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 self.$ImageViewer.setAttribute('folderUrl', folder[0].value);
 
                 self.$ImageViewer.refresh();
+                self.$ImageViewer.show();
+
                 self.$FileViewer.refresh();
+                self.$FileViewer.show();
 
                 // image fields
                 var images = self.getElm().getElements(
@@ -1310,6 +1343,75 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 self.Loader.hide();
             });
+        },
+
+        /**
+         * event: click at create media folder
+         *
+         * @param {Object} Button - qui button
+         */
+        $onCreateMediaFolderClick: function (Button) {
+            var self = this;
+
+            Button.setAttribute('textimage', 'fa fa-spinner fa-spin');
+
+            this.$createMediaFolder().then(function () {
+                self.getElm().getElements('.folder-missing-container').destroy();
+            });
         }
+
+        /**
+         * event : on folder created, if the product hadnt a media folder
+         *
+         * @param {Object} Viewer
+         * @param {Object} Folder
+         */
+        // $onFolderCreated: function (Viewer, Folder) {
+        //     var self = this;
+        //
+        //     this.Loader.show();
+        //
+        //     var Form  = this.getContent().getElement('form'),
+        //         Input = Form.elements['field-10'];
+        //
+        //     Input.value = Folder.getUrl();
+        //
+        //     this.update().then(function () {
+        //         return self.$Product.refresh();
+        //     }).then(function () {
+        //         return self.$Product.getFields();
+        //     }).then(function (productField) {
+        //
+        //         var folder = productField.filter(function (field) {
+        //             return field.id == Fields.FIELD_FOLDER;
+        //         });
+        //
+        //         if (!folder.length) {
+        //             return self.Loader.hide();
+        //         }
+        //
+        //         self.$FileViewer.setAttribute('folderUrl', folder[0].value);
+        //         self.$ImageViewer.setAttribute('folderUrl', folder[0].value);
+        //
+        //         self.$ImageViewer.refresh();
+        //         self.$FileViewer.refresh();
+        //
+        //         // image fields
+        //         var images = self.getElm().getElements(
+        //             '[data-qui="package/quiqqer/products/bin/controls/fields/types/Image"]'
+        //         );
+        //
+        //         images.each(function (Input) {
+        //             var quiId   = Input.get('data-quiid'),
+        //                 Control = QUI.Controls.getById(quiId);
+        //
+        //             if (Control) {
+        //                 Control.setAttribute('productFolder', folder[0].value);
+        //             }
+        //         });
+        //
+        //         self.Loader.hide();
+        //     });
+        // }
     });
 });

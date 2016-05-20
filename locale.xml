@@ -184,6 +184,16 @@
             <en><![CDATA[Select lists]]></en>
         </locale>
 
+        <locale name="products.product.panel.folder.missing" html="true">
+            <de><![CDATA[<p>Das Produkt besitzt noch keinen Media Ordner.</p>]]></de>
+            <en><![CDATA[<p>The product does not have a Media folder.</p>]]></en>
+        </locale>
+        <locale name="products.product.panel.folder.missing.button">
+            <de><![CDATA[Neuen Media Ordner anlegen]]></de>
+            <en><![CDATA[Create new Media folder]]></en>
+        </locale>
+
+
         <!-- Feldtypen -->
         <locale name="fieldtype.IntType">
             <de><![CDATA[Zahl]]></de>
