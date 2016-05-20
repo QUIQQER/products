@@ -11,6 +11,16 @@ use QUI;
 class Search extends QUI\Control
 {
     /**
+     * @var null
+     */
+    protected $Search = null;
+
+    /**
+     * @var array
+     */
+    protected $fields = null;
+
+    /**
      * constructor
      *
      * @param array $attributes
@@ -40,23 +50,64 @@ class Search extends QUI\Control
         $Engine  = QUI::getTemplateManager()->getEngine();
         $Site    = $this->getSite();
         $Project = $Site->getProject();
-        $fields  = array();
-
-        try {
-            $Search = new QUI\ERP\Products\Search\FrontendSearch($Site);
-            $fields = $Search->getSearchFieldData();
-        } catch (QUI\Exception $Exception) {
-        }
 
         $this->setAttribute('data-project', $Project->getName());
         $this->setAttribute('data-lang', $Project->getLang());
         $this->setAttribute('data-siteid', $Site->getId());
 
         $Engine->assign(array(
-            'fields' => $fields
+            'fields' => $this->getSearchFieldData()
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/Search.html');
+    }
+
+    /**
+     * Has the search fields?
+     *
+     * @return boolean
+     */
+    public function hasFields()
+    {
+        return count($this->getSearchFieldData()) ? true : false;
+    }
+
+    /**
+     * Return the search
+     *
+     * @return false|QUI\ERP\Products\Search\FrontendSearch
+     */
+    protected function getSearch()
+    {
+        try {
+            if (is_null($this->Search)) {
+                $this->Search = new QUI\ERP\Products\Search\FrontendSearch($this->getSite());
+            }
+        } catch (QUI\Exception $Exception) {
+            $this->Search = false;
+        }
+
+        return $this->Search;
+    }
+
+    /**
+     * Return the search field data
+     *
+     * @return array
+     */
+    protected function getSearchFieldData()
+    {
+        if (is_null($this->fields)) {
+            $Search = $this->getSearch();
+
+            if ($Search) {
+                $this->fields = $Search->getSearchFieldData();
+            } else {
+                $this->fields = array();
+            }
+        }
+
+        return $this->fields;
     }
 
     /**

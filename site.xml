@@ -42,5 +42,35 @@
             </settings>
         </type>
 
+        <!-- Kategorien -->
+        <type type="types/search" icon="fa fa-shopping-basket fa-search">
+            <locale group="quiqqer/products" var="admin.types.search"/>
+            <desc>
+                <locale group="quiqqer/products" var="admin.types.search.desc"/>
+            </desc>
+
+            <attributes>
+                <attribute>quiqqer.products.settings.searchFieldIds</attribute>
+            </attributes>
+
+            <settings>
+                <category name="search-settings">
+                    <settings>
+                        <title>
+                            <locale group="quiqqer/products" var="quiqqer.products.search.settings.title"/>
+                        </title>
+
+                        <input conf="quiqqer.products.settings.searchFieldIds" type="hidden"
+                               data-qui="package/quiqqer/products/bin/controls/search/FieldSelect"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.searchFieldIds"/>
+                            </text>
+                        </input>
+                    </settings>
+                </category>
+            </settings>
+        </type>
+
     </types>
 </site>

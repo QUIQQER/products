@@ -71,30 +71,50 @@ class ProductList extends QUI\Control
         $this->setAttribute('data-lang', $this->getSite()->getProject()->getLang());
         $this->setAttribute('data-siteid', $this->getSite()->getId());
 
-        if ($Category) {
-            $count = $this->getSearch()->search(
-                $this->getCountParams(),
-                true
+        try {
+            if ($Category) {
+                $count = $this->getSearch()->search(
+                    $this->getCountParams(),
+                    true
+                );
+
+                $this->setAttribute('data-cid', $Category->getId());
+            }
+
+            $rows = array(
+                $this->getRow(0, $count),
+                $this->getRow(1, $count),
+                $this->getRow(2, $count)
             );
 
-            $this->setAttribute('data-cid', $Category->getId());
-        }
+            // get more?
+            $more = true;
 
-        $rows = array(
-            $this->getRow(0, $count),
-            $this->getRow(1, $count),
-            $this->getRow(2, $count)
-        );
-
-        // get more?
-        $more = true;
-
-        foreach ($rows as $entry) {
-            if (isset($entry['more']) && $entry['more'] === false) {
-                $more = false;
-                break;
+            foreach ($rows as $entry) {
+                if (isset($entry['more']) && $entry['more'] === false) {
+                    $more = false;
+                    break;
+                }
             }
+
+        } catch (QUI\Permissions\Exception $Exception) {
+            QUI\System\Log::addNotice(
+                $Exception->getMessage(),
+                $Exception->getContext()
+            );
+
+            $more  = false;
+            $count = 0;
+            $rows  = array();
+
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);
+
+            $more  = false;
+            $count = 0;
+            $rows  = array();
         }
+
 
         $Engine->assign(array(
             'count' => $count,

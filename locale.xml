@@ -10,6 +10,10 @@
             <de><![CDATA[Produktkategorie]]></de>
             <en><![CDATA[Product category]]></en>
         </locale>
+        <locale name="admin.types.search">
+            <de><![CDATA[Produktsuche]]></de>
+            <en><![CDATA[Product search]]></en>
+        </locale>
 
         <locale name="menu.erp.title">
             <de><![CDATA[Shop]]></de>
@@ -849,6 +853,10 @@
 
     <groups name="quiqqer/products" datatype="php">
         <locale name="quiqqer.products.category.settings.title">
+            <de><![CDATA[Shop Einstellungen]]></de>
+            <en><![CDATA[Shop settings]]></en>
+        </locale>
+        <locale name="quiqqer.products.search.settings.title">
             <de><![CDATA[Shop Einstellungen]]></de>
             <en><![CDATA[Shop settings]]></en>
         </locale>

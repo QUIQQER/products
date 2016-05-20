@@ -1,14 +1,7 @@
-{if isset($Product)}
-    {$Product->create()}
-{else}
-
 <div class="grid-100 mobile-grid-100 grid-parent page-multible-content">
-
-    {if $Search->hasFields()}
     <div class="content-headerpage-multible-left grid-30 mobile-grid-100">
         {$Search->create()}
     </div>
-    {/if}
 
     <div class="grid-70 mobile-grid-100">
         {if $Site->getAttribute('content-header')}
@@ -33,5 +26,3 @@
         {$ProductList->create()}
     </div>
 </div>
-
-{/if}
