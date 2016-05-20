@@ -118,7 +118,7 @@ class Cache extends QUI\QDOM
 
         try {
             $handlers[] = new Stash\Driver\FileSystem(array(
-                'patch' => $cacheDir
+                'path' => $cacheDir
             ));
 
             $Handler = new Stash\Driver\Composite(array(
