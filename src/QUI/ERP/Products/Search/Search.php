@@ -550,29 +550,6 @@ abstract class Search extends QUI\QDOM
     }
 
     /**
-     * Filters all fields that are not eligible for use in search
-     *
-     * @param array $fields - array with Field objects
-     * @return array
-     */
-    protected function filterEligibleSearchFields($fields)
-    {
-        $eligibleFields = array();
-
-        /** @var QUI\ERP\Products\Field\Field $Field */
-        foreach ($fields as $Field) {
-            if ($Field->isSearchable()
-                && $Field->isPublic()
-                && $Field->getSearchType()
-            ) {
-                $eligibleFields[] = $Field;
-            }
-        }
-
-        return $eligibleFields;
-    }
-
-    /**
      * Checks if the currently logged in user is allowed to search a category field
      *
      * @param QUI\ERP\Products\Field\Field $Field
@@ -640,5 +617,27 @@ abstract class Search extends QUI\QDOM
         $str = htmlspecialchars($str);
 
         return $str;
+    }
+
+    /**
+     * Filters all fields that are not eligible for use in search
+     *
+     * @param array $fields - array with Field objects
+     * @return array
+     */
+    protected function filterEligibleSearchFields($fields)
+    {
+        $eligibleFields = array();
+
+        /** @var QUI\ERP\Products\Field\Field $Field */
+        foreach ($fields as $Field) {
+            if ($Field->isSearchable()
+                && $Field->getSearchType()
+            ) {
+                $eligibleFields[] = $Field;
+            }
+        }
+
+        return $eligibleFields;
     }
 }
