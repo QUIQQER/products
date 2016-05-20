@@ -40,6 +40,10 @@ class Fields
 
     const FIELD_WORKING_TITLE = 11;
 
+    const FIELD_STOCK = 12;
+
+    const FIELD_KEYWORDS = 13;
+
     /**
      * @var array
      */
