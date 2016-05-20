@@ -159,7 +159,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
                 } else {
                     var FieldSearchType = new Element('select', {
-                        name  : 'search_field',
+                        name  : 'search_type',
                         value : fieldData.search_type,
                         styles: {
                             width: '100%'
