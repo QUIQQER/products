@@ -38,6 +38,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
         create: function () {
             this.$Select = new QUISelect();
             this.$Elm    = this.$Select.create();
+            this.$Elm.addClass('quiqqer-products-searchtype-selectrange');
 
             this.refresh();
 

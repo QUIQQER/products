@@ -41,7 +41,8 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
          */
         create: function () {
             this.$Elm = new Element('div', {
-                styles: {
+                'class': 'quiqqer-products-searchtype-inputselectrange',
+                styles : {
                     width: '100%'
                 }
             });

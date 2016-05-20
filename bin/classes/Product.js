@@ -64,6 +64,23 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * Create the media folder for the product
+         *
+         * @returns {Promise}
+         */
+        createMediaFolder: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_createMediaFolder', function () {
+                    this.refresh().then(resolve, reject);
+                }.bind(this), {
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
+                    onError  : reject
+                });
+            }.bind(this));
+        },
+
+        /**
          * Set the public status from a product field
          *
          * @param {Number}  fieldId
@@ -176,7 +193,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                     Products.getChild(this.getAttribute('id')).then(function (data) {
                         this.$loaded = true;
                         this.$data   = data;
-                        
+
                         resolve(this);
 
                         this.fireEvent('refresh', [this]);

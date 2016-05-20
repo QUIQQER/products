@@ -141,13 +141,11 @@ abstract class Search extends QUI\QDOM
         // special queries depending on search type
         switch ($Field->getSearchDataType()) {
             case SearchHandler::SEARCHDATATYPE_NUMERIC:
-
                 switch ($Field->getSearchType()) {
                     case SearchHandler::SEARCHTYPE_SELECTSINGLE:
                     case SearchHandler::SEARCHTYPE_INPUTSELECTSINGLE:
                     case SearchHandler::SEARCHTYPE_SELECTRANGE:
                     case SearchHandler::SEARCHTYPE_INPUTSELECTRANGE:
-
                         $params['select'] = array(
                             'MIN(' . $column . ')',
                             'MAX(' . $column . ')'
@@ -159,20 +157,16 @@ abstract class Search extends QUI\QDOM
                 break;
 
             case SearchHandler::SEARCHDATATYPE_TEXT:
-
                 switch ($Field->getSearchType()) {
                     case SearchHandler::SEARCHTYPE_SELECTSINGLE:
                     case SearchHandler::SEARCHTYPE_INPUTSELECTSINGLE:
-
                         $params['select'] = array($column);
                         $params['group']  = $column;
 
                         break;
 
                     case SearchHandler::SEARCHTYPE_SELECTMULTI:
-
                         $params['select'] = array($column);
-
                         break;
                 }
 
@@ -185,7 +179,6 @@ abstract class Search extends QUI\QDOM
             QUI\System\Log::addError(
                 'Search::getValuesFromField -> Could not retrieve values of'
                 . ' field #' . $Field->getId() . ' -> ' . $Exception->getMessage()
-
             );
 
             return array();

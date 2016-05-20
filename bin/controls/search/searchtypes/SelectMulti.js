@@ -35,6 +35,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectMulti', [
          */
         create: function () {
             this.$Elm = new Element('select');
+            this.$Elm.addClass('quiqqer-products-searchtype-selectmulti');
 
             return this.$Elm;
         },

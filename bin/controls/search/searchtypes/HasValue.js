@@ -22,7 +22,6 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/HasValue', [
         ],
 
         initialize: function (options) {
-
             this.$Elm = null;
 
             this.parent(options);
@@ -35,6 +34,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/HasValue', [
          */
         create: function () {
             this.$Elm = new Element('input');
+            this.$Elm.addClass('quiqqer-products-searchtype-hasvalue');
 
             return this.$Elm;
         },

@@ -54,6 +54,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectSing
             });
 
             this.$Elm = this.$Select.create();
+            this.$Elm.addClass('quiqqer-products-searchtype-inputselectsingle');
 
             this.refresh();
 

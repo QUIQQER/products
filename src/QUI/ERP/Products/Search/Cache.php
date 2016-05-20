@@ -118,7 +118,7 @@ class Cache extends QUI\QDOM
 
         try {
             $handlers[] = new Stash\Driver\FileSystem(array(
-                'patch' => $cacheDir
+                'path' => $cacheDir
             ));
 
             $Handler = new Stash\Driver\Composite(array(
@@ -127,6 +127,8 @@ class Cache extends QUI\QDOM
 
             $Stash = new Stash\Pool($Handler);
         } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
             throw new Exception(array(
                 'quiqqer/products',
                 'exception.searchcache.initialize.error',

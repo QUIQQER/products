@@ -219,6 +219,43 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Create the media folder for the product
+     * if the product has a folder, no folder would be created
+     *
+     * @return QUI\Projects\Media\Folder
+     *
+     * @throws QUI\Exception
+     */
+    public function createMediaFolder()
+    {
+        try {
+            return $this->getMediaFolder();
+
+        } catch (QUI\Exception $Exception) {
+        }
+
+        // create folder
+        $Parent = Products::getParentMediaFolder();
+
+        try {
+            $Folder = $Parent->createFolder($this->getId());
+        } catch (QUI\Exception $Exception) {
+            if ($Exception->getCode() != 701) {
+                throw $Exception;
+            }
+
+            $Folder = $Parent->getChildByName($this->getId());
+        }
+
+        $Field = $this->getField(Fields::FIELD_FOLDER);
+        $Field->setValue($Folder->getUrl());
+
+        $this->update();
+
+        return $Folder;
+    }
+
+    /**
      * @return integer
      */
     public function getId()
@@ -469,7 +506,7 @@ class Model extends QUI\QDOM
      */
     public function save()
     {
-        QUI\Rights\Permission::checkPermission('product.edit');
+        QUI\Permissions\Permission::checkPermission('product.edit');
 
         $categoryFields = array();
         $categoryData   = array();
@@ -887,7 +924,7 @@ class Model extends QUI\QDOM
      * Return the product media folder
      *
      * @return QUI\Projects\Media\Folder
-     * @throws QUI\Exception
+     * @throws QUI\Exception|QUI\ERP\Products\Product\Exception
      */
     public function getMediaFolder()
     {

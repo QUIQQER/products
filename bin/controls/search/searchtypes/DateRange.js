@@ -24,7 +24,6 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/DateRange', [
         ],
 
         initialize: function (options) {
-
             this.$Elm = null;
 
             this.parent(options);
@@ -37,6 +36,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/DateRange', [
          */
         create: function () {
             this.$Elm = new Element('input');
+            this.$Elm.addClass('quiqqer-products-searchtype-daterange');
 
             return this.$Elm;
         },

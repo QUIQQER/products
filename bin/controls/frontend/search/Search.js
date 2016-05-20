@@ -64,6 +64,13 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
                 height: this.$Form.getSize().y
             });
 
+            this.$Form.addEvents({
+                submit: function (event) {
+                    event.stop();
+                    this.$onChange();
+                }.bind(this)
+            });
+
             this.setAttribute('project', QUIQQER_PROJECT.name);
             this.setAttribute('lang', QUIQQER_PROJECT.lang);
             this.setAttribute('siteid', parseInt(QUIQQER_SITE.id));

@@ -44,6 +44,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Bool', [
         create: function () {
             this.$Select = new QUISelect();
             this.$Elm    = this.$Select.create();
+            this.$Elm.addClass('quiqqer-products-searchtype-bool');
 
             this.$Select.appendChild('Ja', 1);
             this.$Select.appendChild('Nein', 0);

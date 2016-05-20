@@ -1,3 +1,4 @@
+
 .field-container-field .quiqqer-products-searchtype-text {
     border: none;
     width: 100%;
@@ -5,5 +6,11 @@
 
 .field-container-field .qui-select {
     border: none;
+    width: 100%;
+}
+
+.quiqqer-products-search .quiqqer-products-searchtype-selectsingle,
+.quiqqer-products-search .quiqqer-products-searchtype-selectrange,
+.quiqqer-products-search .quiqqer-products-searchtype-text {
     width: 100%;
 }
