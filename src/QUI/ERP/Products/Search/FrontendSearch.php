@@ -323,7 +323,7 @@ class FrontendSearch extends Search
                  . $this->Site->getId() . '/' . $this->lang;
 
         try {
-//            return SearchCache::get($cname);
+            return SearchCache::get($cname);
         } catch (QUI\Exception $Exception) {
             // nothing, retrieve values
         }
