@@ -328,7 +328,7 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         getPrice: function () {
             return new Promise(function (resolve) {
-                Ajax.get('package_quiqqer_products_ajax_product_calc', resolve, {
+                Ajax.get('package_quiqqer_products_ajax_products_calc', resolve, {
                     'package' : 'quiqqer/products',
                     productId : this.getId(),
                     attributes: this.getAttributes()
