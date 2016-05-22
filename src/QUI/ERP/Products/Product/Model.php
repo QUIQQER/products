@@ -955,6 +955,18 @@ class Model extends QUI\QDOM
 
             return $Image;
         } catch (QUI\Exception $Exception) {
+        }
+
+        try {
+            $Folder = $this->getMediaFolder();
+
+            if ($Folder) {
+                return $Folder->firstChild();
+            }
+        } catch (QUI\Exception $Exception) {
+        }
+
+        try {
             $Project     = QUI::getRewrite()->getProject();
             $Media       = $Project->getMedia();
             $Placeholder = $Media->getPlaceholderImage();
@@ -962,6 +974,7 @@ class Model extends QUI\QDOM
             if ($Placeholder) {
                 return $Placeholder;
             }
+        } catch (QUI\Exception $Exception) {
         }
 
         throw new QUI\ERP\Products\Product\Exception(array(
@@ -1028,7 +1041,10 @@ class Model extends QUI\QDOM
      */
     public function activate()
     {
-        QUI\Rights\Permission::checkPermission('product.activate');
+        QUI\Permissions\Permission::checkPermission('product.activate');
+
+        // exist a main category?
+        $this->getCategory();
 
         // all fields correct?
         $this->validateFields();
