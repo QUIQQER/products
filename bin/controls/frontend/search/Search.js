@@ -68,7 +68,14 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
                 submit: function (event) {
                     event.stop();
                     this.$onChange();
-                }.bind(this)
+                }.bind(this),
+
+                keyup: function (event) {
+                    if (event.key == 'enter') {
+                        event.stop();
+                        this.$onChange();
+                    }
+                }
             });
 
             this.setAttribute('project', QUIQQER_PROJECT.name);
