@@ -61,7 +61,7 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
          * @return {Promise}
          */
         resize: function () {
-            return Promise.resize();
+            return Promise.resolve();
         },
 
         /**

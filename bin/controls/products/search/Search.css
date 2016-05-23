@@ -17,9 +17,12 @@
     width: 100%;
 }
 
+.quiqqer-products-search .qui-select {
+    margin: 0;
+}
+
 .quiqqer-products-search-field-container {
     float: left;
-    height: 100%;
     margin-bottom: 10px;
     width: 100%;
 }
