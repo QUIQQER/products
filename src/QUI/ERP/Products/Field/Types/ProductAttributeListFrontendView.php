@@ -115,7 +115,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                 $option['sum'] = 0;
             }
 
-            if ($displayDiscounts) {
+            if ($displayDiscounts && $option['sum'] != 0) {
                 switch ($option['type']) {
                     case 'percent': // fallback fix
                     case QUI\ERP\Products\Utils\Calc::CALCULATION_PERCENTAGE:
