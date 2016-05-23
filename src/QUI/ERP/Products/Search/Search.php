@@ -358,7 +358,7 @@ abstract class Search extends QUI\QDOM
                         $where[]                     = $column . ' >= :' . $columnName . 'From';
                         $binds[$columnName . 'From'] = array(
                             'value' => $this->sanitizeString($from),
-                            'type'  => \PDO::PARAM_STR
+                            'type'  => \PDO::PARAM_INT
                         );
                     }
 
@@ -366,7 +366,7 @@ abstract class Search extends QUI\QDOM
                         $where[]                   = $column . ' <= :' . $columnName . 'To';
                         $binds[$columnName . 'To'] = array(
                             'value' => $this->sanitizeString($to),
-                            'type'  => \PDO::PARAM_STR
+                            'type'  => \PDO::PARAM_INT
                         );
                     }
                     break;
