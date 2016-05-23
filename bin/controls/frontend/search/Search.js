@@ -75,7 +75,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
                         event.stop();
                         this.$onChange();
                     }
-                }
+                }.bind(this)
             });
 
             this.setAttribute('project', QUIQQER_PROJECT.name);
