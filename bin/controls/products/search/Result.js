@@ -56,7 +56,12 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
         create: function () {
             this.$Elm = new Element('div', {
                 'class': 'quiqqer-products-search-results',
-                html   : '<div class="quiqqer-products-search-grid"></div>'
+                html   : '<div class="quiqqer-products-search-grid"></div>',
+                styles : {
+                    'float': 'left',
+                    height : '100%',
+                    width  : '100%'
+                }
             });
 
             this.$GridContainer = this.$Elm.getElement('.quiqqer-products-search-grid');
@@ -95,7 +100,6 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
          * event : on inject
          */
         $onInject: function () {
-
             this.$Grid = new Grid(this.$GridContainer, {
                 pagination       : true,
                 multipleSelection: true,

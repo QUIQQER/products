@@ -16,7 +16,7 @@ use QUI\Utils\Security\Orthos;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_search_frontend_execute',
     function ($project, $siteId, $searchParams) {
-        QUI\Rights\Permission::checkPermission(
+        QUI\Permissions\Permission::checkPermission(
             SearchHandler::PERMISSION_FRONTEND_EXECUTE
         );
 

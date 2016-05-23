@@ -59,7 +59,6 @@ class ProductList extends QUI\Control
     {
         $Engine   = QUI::getTemplateManager()->getEngine();
         $Category = $this->getCategory();
-        $count    = 0;
         $Search   = $this->getAttribute('Search');
 
         if ($Search instanceof QUI\ERP\Products\Controls\Search\Search) {

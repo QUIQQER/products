@@ -23,18 +23,19 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
     'qui/controls/windows/Confirm',
     'controls/grid/Grid',
     'Locale',
-    'package/quiqqer/products/bin/classes/Products',
+    'package/quiqqer/products/bin/Products',
+    'package/quiqqer/products/bin/controls/products/search/Search',
+    'package/quiqqer/products/bin/controls/products/search/Result',
     'package/quiqqer/products/bin/controls/products/Create',
     'package/quiqqer/products/bin/controls/products/Product',
 
     'css!package/quiqqer/products/bin/controls/products/Panel.css'
 
 ], function (QUI, QUIPanel, QUIButton, QUIConfirm, Grid, QUILocale,
-             Handler, CreateProduct, ProductPanel) {
+             Products, SearchForm, SearchResult, CreateProduct, ProductPanel) {
     "use strict";
 
-    var lg       = 'quiqqer/products',
-        Products = new Handler();
+    var lg = 'quiqqer/products';
 
     return new Class({
 
@@ -59,8 +60,11 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             this.parent(options);
 
-            this.$Grid          = null;
-            this.$GridContainer = null;
+            this.$SearchForm   = null;
+            this.$SearchResult = null;
+
+            this.$FormContainer   = null;
+            this.$ResultContainer = null;
 
             this.addEvents({
                 onCreate: this.$onCreate,
@@ -75,33 +79,32 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * @return {Promise}
          */
         refresh: function () {
-            var self = this;
-
-            this.Loader.show();
+            // this.Loader.show();
             this.parent();
 
-            return Products.getList({
-                perPage: this.$Grid.options.perPage,
-                page   : this.$Grid.options.page
-            }).then(function (data) {
-                for (var i = 0, len = data.data.length; i < len; i++) {
-                    data.data[i].status = new Element('span', {
-                        'class': data.data[i].active ? 'fa fa-check' : 'fa fa-remove'
-                    });
-                }
+            return this.$SearchForm.search();
 
-                self.$Grid.setData(data);
-
-                var Delete = self.getButtons('delete'),
-                    Edit   = self.getButtons('edit');
-
-                Delete.disable();
-                Edit.disable();
-
-                self.Loader.hide();
-            });
+            // return Products.getList({
+            //     perPage: this.$Grid.options.perPage,
+            //     page   : this.$Grid.options.page
+            // }).then(function (data) {
+            //     for (var i = 0, len = data.data.length; i < len; i++) {
+            //         data.data[i].status = new Element('span', {
+            //             'class': data.data[i].active ? 'fa fa-check' : 'fa fa-remove'
+            //         });
+            //     }
+            //
+            //     self.$Grid.setData(data);
+            //
+            //     var Delete = self.getButtons('delete'),
+            //         Edit   = self.getButtons('edit');
+            //
+            //     Delete.disable();
+            //     Edit.disable();
+            //
+            //     self.Loader.hide();
+            // });
         },
-
 
         /**
          * Resize the panel
@@ -109,11 +112,9 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * @return {Promise}
          */
         $onResize: function () {
-            var size = this.$GridContainer.getSize();
-
             return Promise.all([
-                this.$Grid.setHeight(size.y),
-                this.$Grid.setWidth(size.x)
+                this.$SearchResult.resize(),
+                this.$SearchForm.resize()
             ]);
         },
 
@@ -121,7 +122,6 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * event : on create
          */
         $onCreate: function () {
-
             var self    = this,
                 Content = this.getContent();
 
@@ -167,67 +167,82 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 }
             });
 
-
-            // grid
-            this.$GridContainer = new Element('div', {
-                'class': 'products-categories-panel-grid-container'
+            // search form
+            this.$FormContainer = new Element('div', {
+                'class': 'products-categories-panel-form-container'
             }).inject(Content);
 
-            var GridContainer = new Element('div', {
-                'class': 'products-categories-panel-grid'
-            }).inject(this.$GridContainer);
-
-            this.$Grid = new Grid(GridContainer, {
-                pagination : true,
-                columnModel: [{
-                    header   : QUILocale.get('quiqqer/system', 'id'),
-                    dataIndex: 'id',
-                    dataType : 'number',
-                    width    : 60
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'status'),
-                    dataIndex: 'status',
-                    dataType : 'node',
-                    width    : 60
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'title'),
-                    dataIndex: 'title',
-                    dataType : 'text',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'description'),
-                    dataIndex: 'description',
-                    dataType : 'text',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
-                    dataIndex: 'price',
-                    dataType : 'text',
-                    width    : 100
-                }, {
-                    dataIndex: 'active',
-                    dataType : 'number',
-                    hidden   : true
-                }]
-            });
+            this.$ResultContainer = new Element('div', {
+                'class': 'products-categories-panel-result-container'
+            }).inject(Content);
 
 
-            this.$Grid.addEvents({
-                onRefresh : this.refresh,
-                onClick   : function () {
-                    var Delete = self.getButtons('delete'),
-                        Edit   = self.getButtons('edit');
+            this.$SearchResult = new SearchResult().inject(this.$ResultContainer);
 
-                    Delete.enable();
-                    Edit.enable();
-
-                },
-                onDblClick: function () {
-                    self.updateChild(
-                        self.$Grid.getSelectedData()[0].id
-                    );
+            this.$SearchForm = new SearchForm({
+                events: {
+                    onSearchBegin: function () {
+                        this.Loader.show();
+                    }.bind(this),
+                    onSearch     : function (SF, result) {
+                        this.$SearchResult.setData(result);
+                        this.Loader.hide();
+                    }.bind(this)
                 }
-            });
+            }).inject(this.$FormContainer);
+
+
+            // this.$Grid = new Grid(GridContainer, {
+            //     pagination : true,
+            //     columnModel: [{
+            //         header   : QUILocale.get('quiqqer/system', 'id'),
+            //         dataIndex: 'id',
+            //         dataType : 'number',
+            //         width    : 60
+            //     }, {
+            //         header   : QUILocale.get('quiqqer/system', 'status'),
+            //         dataIndex: 'status',
+            //         dataType : 'node',
+            //         width    : 60
+            //     }, {
+            //         header   : QUILocale.get('quiqqer/system', 'title'),
+            //         dataIndex: 'title',
+            //         dataType : 'text',
+            //         width    : 200
+            //     }, {
+            //         header   : QUILocale.get('quiqqer/system', 'description'),
+            //         dataIndex: 'description',
+            //         dataType : 'text',
+            //         width    : 200
+            //     }, {
+            //         header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
+            //         dataIndex: 'price',
+            //         dataType : 'text',
+            //         width    : 100
+            //     }, {
+            //         dataIndex: 'active',
+            //         dataType : 'number',
+            //         hidden   : true
+            //     }]
+            // });
+            //
+            //
+            // this.$Grid.addEvents({
+            //     onRefresh : this.refresh,
+            //     onClick   : function () {
+            //         var Delete = self.getButtons('delete'),
+            //             Edit   = self.getButtons('edit');
+            //
+            //         Delete.enable();
+            //         Edit.enable();
+            //
+            //     },
+            //     onDblClick: function () {
+            //         self.updateChild(
+            //             self.$Grid.getSelectedData()[0].id
+            //         );
+            //     }
+            // });
         },
 
         /**
@@ -241,7 +256,6 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * Opens the create child dialog
          */
         createChild: function () {
-
             var self = this;
 
             this.Loader.show();
