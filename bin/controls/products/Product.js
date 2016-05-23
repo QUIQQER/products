@@ -309,6 +309,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                     html : QUILocale.get(lg, 'products.category.' + id + '.title')
                                 }).inject(self.$MainCategory);
                             });
+
+                            if (ids.length) {
+                                self.$MainCategoryRow.setStyle('display', null);
+                            } else {
+                                self.$MainCategoryRow.setStyle('display', 'none');
+                            }
                         }
                     }
                 }).inject(
