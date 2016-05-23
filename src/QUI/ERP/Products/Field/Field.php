@@ -1007,10 +1007,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 "permission.products.fields.field{$this->getId()}.view",
                 $User
             );
-
-            return true;
-
         } catch (QUI\Exception $Exception) {
+            return false;
         }
 
         return true;
