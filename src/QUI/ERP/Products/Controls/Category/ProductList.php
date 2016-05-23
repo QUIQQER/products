@@ -34,11 +34,11 @@ class ProductList extends QUI\Control
     public function __construct($attributes = array())
     {
         $this->setAttributes(array(
-            'categoryId' => false,
-            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/category/ProductList',
-            'data-cid' => false,
-            'view' => 'galery', // galery, list, detail
-            'Search' => false,
+            'categoryId'   => false,
+            'data-qui'     => 'package/quiqqer/products/bin/controls/frontend/category/ProductList',
+            'data-cid'     => false,
+            'view'         => 'galery', // galery, list, detail
+            'Search'       => false,
             'searchParams' => false
         ));
 
@@ -117,10 +117,10 @@ class ProductList extends QUI\Control
 
 
         $Engine->assign(array(
-            'count' => $count,
-            'rows' => $rows,
-            'children' => $this->getSite()->getNavigation(),
-            'more' => $more,
+            'count'     => $count,
+            'rows'      => $rows,
+            'children'  => $this->getSite()->getNavigation(),
+            'more'      => $more,
             'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice()
         ));
 
@@ -192,16 +192,16 @@ class ProductList extends QUI\Control
         }
 
         $Engine->assign(array(
-            'products' => $products,
-            'rowNumber' => $rowNumber,
+            'products'   => $products,
+            'rowNumber'  => $rowNumber,
             'productTpl' => $productTpl,
-            'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice()
+            'hidePrice'  => QUI\ERP\Products\Utils\Package::hidePrice()
         ));
 
         return array(
-            'html' => $Engine->fetch(dirname(__FILE__) . '/ProductListRow.html'),
+            'html'  => $Engine->fetch(dirname(__FILE__) . '/ProductListRow.html'),
             'count' => $count,
-            'more' => $more
+            'more'  => $more
         );
     }
 

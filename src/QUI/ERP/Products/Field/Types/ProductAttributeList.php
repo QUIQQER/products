@@ -46,11 +46,11 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     public function __construct($fieldId, array $params)
     {
         $this->setOptions(array(
-            'entries' => array(),
-            'priority' => 0,
+            'entries'           => array(),
+            'priority'          => 0,
             'calculation_basis' => '',
             'display_discounts' => true,
-            'generate_tags' => false
+            'generate_tags'     => false
         ));
 
         parent::__construct($fieldId, $params);
@@ -166,9 +166,9 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         }
 
         return array(
-            'priority' => (int)$options['priority'],
-            'basis' => $options['calculation_basis'],
-            'value' => $sum,
+            'priority'    => (int)$options['priority'],
+            'basis'       => $options['calculation_basis'],
+            'value'       => $sum,
             'calculation' => $calcType
         );
     }
@@ -191,9 +191,9 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
-                    'fieldId' => $this->getId(),
+                    'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType' => $this->getType()
+                    'fieldType'  => $this->getType()
                 )
             ));
         }
@@ -206,9 +206,9 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
-                    'fieldId' => $this->getId(),
+                    'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType' => $this->getType()
+                    'fieldType'  => $this->getType()
                 )
             ));
         }
@@ -220,9 +220,9 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
-                    'fieldId' => $this->getId(),
+                    'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType' => $this->getType()
+                    'fieldType'  => $this->getType()
                 )
             ));
         }

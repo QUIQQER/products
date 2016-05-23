@@ -38,7 +38,7 @@ class View extends UniqueField
     public function create()
     {
         try {
-            QUI\Rights\Permission::checkPermission(
+            QUI\Permissions\Permission::checkPermission(
                 "permission.products.fields.field{$this->getId()}.view"
             );
         } catch (QUI\Exception $Exception) {

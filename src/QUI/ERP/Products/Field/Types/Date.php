@@ -43,9 +43,9 @@ class Date extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
-                    'fieldId' => $this->getId(),
+                    'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType' => $this->getType()
+                    'fieldType'  => $this->getType()
                 )
             ));
         }
@@ -57,9 +57,9 @@ class Date extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
-                    'fieldId' => $this->getId(),
+                    'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType' => $this->getType()
+                    'fieldType'  => $this->getType()
                 )
             ));
         }
@@ -94,10 +94,10 @@ class Date extends QUI\ERP\Products\Field\Field
     protected function getBackendView()
     {
         return new View(array(
-            'value' => ProductsHandler::getLocale()->formatDate($this->getValue()),
-            'title' => $this->getTitle(),
-            'prefix' => $this->getAttribute('prefix'),
-            'suffix' => $this->getAttribute('suffix'),
+            'value'    => ProductsHandler::getLocale()->formatDate($this->getValue()),
+            'title'    => $this->getTitle(),
+            'prefix'   => $this->getAttribute('prefix'),
+            'suffix'   => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -108,10 +108,10 @@ class Date extends QUI\ERP\Products\Field\Field
     protected function getFrontendView()
     {
         return new View(array(
-            'value' => ProductsHandler::getLocale()->formatDate($this->getValue()),
-            'title' => $this->getTitle(),
-            'prefix' => $this->getAttribute('prefix'),
-            'suffix' => $this->getAttribute('suffix'),
+            'value'    => ProductsHandler::getLocale()->formatDate($this->getValue()),
+            'title'    => $this->getTitle(),
+            'prefix'   => $this->getAttribute('prefix'),
+            'suffix'   => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }

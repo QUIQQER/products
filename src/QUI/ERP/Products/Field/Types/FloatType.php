@@ -15,7 +15,7 @@ use QUI\ERP\Products\Handler\Search;
  */
 class FloatType extends QUI\ERP\Products\Field\Field
 {
-    protected $columnType     = 'DOUBLE';
+    protected $columnType = 'DOUBLE';
     protected $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
 
     /**

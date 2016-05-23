@@ -56,209 +56,209 @@ class EventHandling
         $standardFields = array(
             // Preis
             array(
-                'id' => Fields::FIELD_PRICE,
-                'type' => 'Price',
-                'prefix' => '',
-                'suffix' => '',
-                'priority' => 5,
-                'systemField' => 1,
+                'id'            => Fields::FIELD_PRICE,
+                'type'          => 'Price',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 5,
+                'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 1,
-                'search_type' => Search::SEARCHTYPE_INPUTSELECTRANGE,
-                'titles' => array(
+                'search_type'   => Search::SEARCHTYPE_INPUTSELECTRANGE,
+                'titles'        => array(
                     'de' => 'Preis',
                     'en' => 'Price'
                 )
             ),
             // MwSt ID
             array(
-                'id' => Fields::FIELD_TAX,
-                'type' => 'Vat',
-                'prefix' => '',
-                'suffix' => '',
-                'priority' => 6,
-                'systemField' => 1,
+                'id'            => Fields::FIELD_TAX,
+                'type'          => 'Vat',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 6,
+                'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'search_type' => '',
-                'titles' => array(
+                'search_type'   => '',
+                'titles'        => array(
                     'de' => 'MwSt.',
                     'en' => 'Vat'
                 )
             ),
             // Artikel Nummer
             array(
-                'id' => Fields::FIELD_PRODUCT_NO,
-                'type' => 'Input',
-                'prefix' => '',
-                'suffix' => '',
-                'priority' => 4,
-                'systemField' => 1,
+                'id'            => Fields::FIELD_PRODUCT_NO,
+                'type'          => 'Input',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 4,
+                'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'search_type' => Search::SEARCHTYPE_TEXT,
-                'titles' => array(
+                'search_type'   => Search::SEARCHTYPE_TEXT,
+                'titles'        => array(
                     'de' => 'Art. Nr.',
                     'en' => 'Artikel No.'
                 )
             ),
             // Title
             array(
-                'id' => Fields::FIELD_TITLE,
-                'type' => 'InputMultiLang',
-                'prefix' => '',
-                'suffix' => '',
-                'priority' => 1,
-                'systemField' => 1,
+                'id'            => Fields::FIELD_TITLE,
+                'type'          => 'InputMultiLang',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 1,
+                'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 1,
-                'search_type' => Search::SEARCHTYPE_TEXT,
-                'options' => array(
+                'search_type'   => Search::SEARCHTYPE_TEXT,
+                'options'       => array(
                     'maxLength' => 255,
                     'minLength' => 3
                 ),
-                'titles' => array(
+                'titles'        => array(
                     'de' => 'Titel',
                     'en' => 'Title'
                 )
             ),
             // Short Desc
             array(
-                'id' => Fields::FIELD_SHORT_DESC,
-                'type' => 'InputMultiLang',
-                'prefix' => '',
-                'suffix' => '',
-                'priority' => 2,
-                'systemField' => 1,
+                'id'            => Fields::FIELD_SHORT_DESC,
+                'type'          => 'InputMultiLang',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 2,
+                'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'search_type' => Search::SEARCHTYPE_TEXT,
-                'options' => array(
+                'search_type'   => Search::SEARCHTYPE_TEXT,
+                'options'       => array(
                     'maxLength' => 255,
                     'minLength' => 3
                 ),
-                'titles' => array(
+                'titles'        => array(
                     'de' => 'Kurzbeschreibung',
                     'en' => 'Short description'
                 )
             ),
             // Content
             array(
-                'id' => Fields::FIELD_CONTENT,
-                'type' => 'TextareaMultiLang',
-                'prefix' => '',
-                'suffix' => '',
-                'priority' => 3,
-                'systemField' => 1,
+                'id'            => Fields::FIELD_CONTENT,
+                'type'          => 'TextareaMultiLang',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 3,
+                'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'search_type' => Search::SEARCHTYPE_TEXT,
-                'options' => array(
+                'search_type'   => Search::SEARCHTYPE_TEXT,
+                'options'       => array(
                     'html' => 1
                 ),
-                'titles' => array(
+                'titles'        => array(
                     'de' => 'Inhalt',
                     'en' => 'Content'
                 )
             ),
             // Lieferant
             array(
-                'id' => Fields::FIELD_SUPPLIER,
-                'type' => 'GroupList',
-                'prefix' => '',
-                'suffix' => '',
-                'priority' => 9,
-                'systemField' => 0,
+                'id'            => Fields::FIELD_SUPPLIER,
+                'type'          => 'GroupList',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 9,
+                'systemField'   => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'search_type' => Search::SEARCHTYPE_INPUTSELECTSINGLE,
-                'options' => array(
+                'search_type'   => Search::SEARCHTYPE_INPUTSELECTSINGLE,
+                'options'       => array(
                     'multipleUsers' => false
                 ),
-                'titles' => array(
+                'titles'        => array(
                     'de' => 'Lieferant',
                     'en' => 'Supplier'
                 )
             ),
             // Hersteller
             array(
-                'id' => Fields::FIELD_MANUFACTURER,
-                'type' => 'GroupList',
-                'prefix' => '',
-                'suffix' => '',
-                'priority' => 10,
-                'systemField' => 0,
+                'id'            => Fields::FIELD_MANUFACTURER,
+                'type'          => 'GroupList',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 10,
+                'systemField'   => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'search_type' => Search::SEARCHTYPE_INPUTSELECTSINGLE,
-                'options' => array(
+                'search_type'   => Search::SEARCHTYPE_INPUTSELECTSINGLE,
+                'options'       => array(
                     'multipleUsers' => false
                 ),
-                'titles' => array(
+                'titles'        => array(
                     'de' => 'Hersteller',
                     'en' => 'Manufacturer'
                 )
             ),
             // Produkt Bild
             array(
-                'id' => Fields::FIELD_IMAGE,
-                'type' => 'Image',
-                'prefix' => '',
-                'suffix' => '',
-                'priority' => 7,
-                'systemField' => 1,
+                'id'            => Fields::FIELD_IMAGE,
+                'type'          => 'Image',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 7,
+                'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'search_type' => '',
-                'titles' => array(
+                'search_type'   => '',
+                'titles'        => array(
                     'de' => 'Produktbild',
                     'en' => 'Product image'
                 )
             ),
             // Produkt mediaordner
             array(
-                'id' => Fields::FIELD_FOLDER,
-                'type' => 'Folder',
-                'prefix' => '',
-                'suffix' => '',
-                'priority' => 8,
-                'systemField' => 1,
+                'id'            => Fields::FIELD_FOLDER,
+                'type'          => 'Folder',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 8,
+                'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'search_type' => '',
-                'titles' => array(
+                'search_type'   => '',
+                'titles'        => array(
                     'de' => 'Media-Ordner',
                     'en' => 'Media folder'
                 )
             ),
             // Produkt bestand
             array(
-                'id' => Fields::FIELD_STOCK,
-                'type' => 'IntType',
-                'prefix' => '',
-                'suffix' => '',
-                'priority' => 9,
-                'systemField' => 0,
+                'id'            => Fields::FIELD_STOCK,
+                'type'          => 'IntType',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 9,
+                'systemField'   => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'search_type' => '',
-                'titles' => array(
+                'search_type'   => '',
+                'titles'        => array(
                     'de' => 'Lagerbestand',
                     'en' => 'Total stock'
                 )
             ),
             // Produkt suchbegriffe
             array(
-                'id' => Fields::FIELD_KEYWORDS,
-                'type' => 'Textarea',
-                'prefix' => '',
-                'suffix' => '',
-                'priority' => 10,
-                'systemField' => 0,
+                'id'            => Fields::FIELD_KEYWORDS,
+                'type'          => 'Textarea',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 10,
+                'systemField'   => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'search_type' => '',
-                'titles' => array(
+                'search_type'   => '',
+                'titles'        => array(
                     'de' => 'Suchbegriffe',
                     'en' => 'Search keywords'
                 )
@@ -267,7 +267,7 @@ class EventHandling
 
         foreach ($standardFields as $field) {
             $result = QUI::getDataBase()->fetch(array(
-                'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+                'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                 'where' => array(
                     'id' => $field['id']
                 )
@@ -282,13 +282,13 @@ class EventHandling
                 QUI::getDataBase()->update(
                     QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                     array(
-                        'type' => $field['type'],
-                        'prefix' => $field['prefix'],
-                        'suffix' => $field['suffix'],
-                        'priority' => $field['priority'],
-                        'systemField' => $field['systemField'],
+                        'type'          => $field['type'],
+                        'prefix'        => $field['prefix'],
+                        'suffix'        => $field['suffix'],
+                        'priority'      => $field['priority'],
+                        'systemField'   => $field['systemField'],
                         'standardField' => $field['standardField'],
-                        'search_type' => $field['search_type']
+                        'search_type'   => $field['search_type']
                     ),
                     array('id' => $field['id'])
                 );
@@ -304,22 +304,22 @@ class EventHandling
 
                 // create / update view permission
                 QUI::getPermissionManager()->addPermission(array(
-                    'name' => "permission.products.fields.field{$field['id']}.view",
+                    'name'  => "permission.products.fields.field{$field['id']}.view",
                     'title' => "quiqqer/products permission.products.fields.field{$field['id']}.view.title",
-                    'desc' => "",
-                    'type' => 'bool',
-                    'area' => '',
-                    'src' => 'user'
+                    'desc'  => "",
+                    'type'  => 'bool',
+                    'area'  => '',
+                    'src'   => 'user'
                 ));
 
                 // create / update edit permission
                 QUI::getPermissionManager()->addPermission(array(
-                    'name' => "permission.products.fields.field{$field['id']}.edit",
+                    'name'  => "permission.products.fields.field{$field['id']}.edit",
                     'title' => "quiqqer/products permission.products.fields.field{$field['id']}.edit.title",
-                    'desc' => "",
-                    'type' => 'bool',
-                    'area' => '',
-                    'src' => 'user'
+                    'desc'  => "",
+                    'type'  => 'bool',
+                    'area'  => '',
+                    'src'   => 'user'
                 ));
 
 

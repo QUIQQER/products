@@ -322,22 +322,22 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
     public function getAttributes()
     {
         return array(
-            'id' => $this->getId(),
-            'title' => $this->getTitle(),
-            'type' => $this->getType(),
-            'options' => $this->getOptions(),
+            'id'         => $this->getId(),
+            'title'      => $this->getTitle(),
+            'type'       => $this->getType(),
+            'options'    => $this->getOptions(),
             'isRequired' => $this->isRequired(),
             'isStandard' => $this->isStandard(),
-            'isSystem' => $this->isSystem(),
-            'isPublic' => $this->isPublic(),
+            'isSystem'   => $this->isSystem(),
+            'isPublic'   => $this->isPublic(),
 
-            'prefix' => $this->prefix,
-            'suffix' => $this->suffix,
-            'priority' => $this->priority,
-            'custom' => $this->isCustomField(),
+            'prefix'      => $this->prefix,
+            'suffix'      => $this->suffix,
+            'priority'    => $this->priority,
+            'custom'      => $this->isCustomField(),
             'custom_calc' => $this->custom_calc,
-            'unassigned' => $this->isUnassigned(),
-            'value' => $this->getValue()
+            'unassigned'  => $this->isUnassigned(),
+            'value'       => $this->getValue()
         );
     }
 

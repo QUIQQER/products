@@ -236,9 +236,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function save()
     {
-        QUI\Rights\Permission::checkPermission('field.edit');
+        QUI\Permissions\Permission::checkPermission('field.edit');
 
-        QUI\Rights\Permission::checkPermission(
+        QUI\Permissions\Permission::checkPermission(
             "permission.products.fields.field{$this->getId()}.edit"
         );
 
@@ -246,9 +246,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         $data = array(
             'standardField' => $this->isStandard() ? 1 : 0,
-            'systemField' => $this->isSystem() ? 1 : 0,
+            'systemField'   => $this->isSystem() ? 1 : 0,
             'requiredField' => $this->isRequired() ? 1 : 0,
-            'publicField' => $this->isPublic() ? 1 : 0
+            'publicField'   => $this->isPublic() ? 1 : 0
         );
 
         foreach ($allowedAttributes as $attribute) {
@@ -296,7 +296,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function delete()
     {
-        QUI\Rights\Permission::checkPermission('field.delete');
+        QUI\Permissions\Permission::checkPermission('field.delete');
 
         if ($this->isSystem()) {
             throw new QUI\ERP\Products\Field\Exception(array(
@@ -373,8 +373,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function deleteSystemField()
     {
-        QUI\Rights\Permission::checkPermission('field.delete');
-        QUI\Rights\Permission::checkPermission('field.delete.systemfield');
+        QUI\Permissions\Permission::checkPermission('field.delete');
+        QUI\Permissions\Permission::checkPermission('field.delete.systemfield');
 
         QUI::getDataBase()->delete(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
@@ -875,7 +875,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         return Products::getProducts(array(
             'where' => array(
                 'fieldData' => array(
-                    'type' => '%LIKE%',
+                    'type'  => '%LIKE%',
                     'value' => '"id":' . $this->id . ','
                 )
             )

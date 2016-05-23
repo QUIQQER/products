@@ -25,7 +25,7 @@ class Product extends QUI\Control
     public function __construct($attributes = array())
     {
         $this->setAttributes(array(
-            'Product' => false,
+            'Product'  => false,
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/Product'
         ));
 
@@ -115,18 +115,18 @@ class Product extends QUI\Control
         });
 
         $Engine->assign(array(
-            'Product' => $View,
-            'Gallery' => $Gallery,
-            'fields' => $fields,
+            'Product'              => $View,
+            'Gallery'              => $Gallery,
+            'fields'               => $fields,
             'productAttributeList' => $attributeListFields,
-            'PriceDisplay' => $PriceDisplay,
-            'WatchlistButton' => new WatchlistButton(array(
+            'PriceDisplay'         => $PriceDisplay,
+            'WatchlistButton'      => new WatchlistButton(array(
                 'Product' => $View,
-                'width' => 'calc(50% - 5px)'
+                'width'   => 'calc(50% - 5px)'
             )),
-            'OfferButton' => new OfferButton(array(
+            'OfferButton'          => new OfferButton(array(
                 'Product' => $View,
-                'width' => 'calc(50% - 5px)'
+                'width'   => 'calc(50% - 5px)'
             ))
         ));
 

@@ -24,7 +24,7 @@ class Button extends QUI\Control
         $this->setAttributes(array(
             'nodeName' => 'button',
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/offer/Button',
-            'Product' => false,
+            'Product'  => false,
             'disabled' => 'disabled'
         ));
 
@@ -52,7 +52,7 @@ class Button extends QUI\Control
                 'control.button.addToWatchlist',
                 array(
                     'productId' => $Product->getId(),
-                    'product' => $Product->getTitle(),
+                    'product'   => $Product->getTitle(),
                 )
             ));
         }

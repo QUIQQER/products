@@ -24,10 +24,10 @@ class Folder extends QUI\ERP\Products\Field\Field
     public function getBackendView()
     {
         return new View(array(
-            'value' => $this->cleanup($this->getValue()),
-            'title' => $this->getTitle(),
-            'prefix' => $this->getAttribute('prefix'),
-            'suffix' => $this->getAttribute('suffix'),
+            'value'    => $this->cleanup($this->getValue()),
+            'title'    => $this->getTitle(),
+            'prefix'   => $this->getAttribute('prefix'),
+            'suffix'   => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -38,10 +38,10 @@ class Folder extends QUI\ERP\Products\Field\Field
     public function getFrontendView()
     {
         return new View(array(
-            'value' => $this->cleanup($this->getValue()),
-            'title' => $this->getTitle(),
-            'prefix' => $this->getAttribute('prefix'),
-            'suffix' => $this->getAttribute('suffix'),
+            'value'    => $this->cleanup($this->getValue()),
+            'title'    => $this->getTitle(),
+            'prefix'   => $this->getAttribute('prefix'),
+            'suffix'   => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -66,7 +66,7 @@ class Folder extends QUI\ERP\Products\Field\Field
         if (empty($value)) {
             return;
         }
-        
+
         try {
             $MediaItem = MediaUtils::getMediaItemByUrl($value);
 
@@ -78,9 +78,9 @@ class Folder extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
-                    'fieldId' => $this->getId(),
+                    'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType' => $this->getType()
+                    'fieldType'  => $this->getType()
                 )
             ));
         }

@@ -23,7 +23,7 @@ class Price extends QUI\Control
     {
         $this->setAttributes(array(
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/Price',
-            'Price' => null
+            'Price'    => null
         ));
 
         $this->addCSSClass('qui-products-price-display');
@@ -41,7 +41,7 @@ class Price extends QUI\Control
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             $this->setAttributes(array(
                 'data-qui' => '',
-                'Price' => null
+                'Price'    => null
             ));
 
             return '';

@@ -38,10 +38,10 @@ class Price extends QUI\ERP\Products\Field\Field
     public function getBackendView()
     {
         return new View(array(
-            'value' => $this->cleanup($this->getValue()),
-            'title' => $this->getTitle(),
-            'prefix' => $this->getAttribute('prefix'),
-            'suffix' => $this->getAttribute('suffix'),
+            'value'    => $this->cleanup($this->getValue()),
+            'title'    => $this->getTitle(),
+            'prefix'   => $this->getAttribute('prefix'),
+            'suffix'   => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -57,10 +57,10 @@ class Price extends QUI\ERP\Products\Field\Field
         );
 
         return new View(array(
-            'value' => $Price->getDisplayPrice(),
-            'title' => $this->getTitle(),
-            'prefix' => $this->getAttribute('prefix'),
-            'suffix' => $this->getAttribute('suffix'),
+            'value'    => $Price->getDisplayPrice(),
+            'title'    => $this->getTitle(),
+            'prefix'   => $this->getAttribute('prefix'),
+            'suffix'   => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ));
     }
@@ -103,9 +103,9 @@ class Price extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.invalid',
                 array(
-                    'fieldId' => $this->getId(),
+                    'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType' => $this->getType()
+                    'fieldType'  => $this->getType()
                 )
             ));
         }

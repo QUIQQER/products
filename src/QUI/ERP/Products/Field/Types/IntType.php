@@ -15,7 +15,7 @@ use QUI\ERP\Products\Handler\Search;
  */
 class IntType extends QUI\ERP\Products\Field\Field
 {
-    protected $columnType     = 'BIGINT';
+    protected $columnType = 'BIGINT';
     protected $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
 
     /**

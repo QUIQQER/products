@@ -285,10 +285,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
     public function countChildren()
     {
         $data = QUI::getDataBase()->fetch(array(
-            'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+            'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             'count' => array(
                 'select' => 'id',
-                'as' => 'id'
+                'as'     => 'id'
             ),
             'where' => array(
                 'parentId' => $this->getId()
@@ -496,7 +496,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
 
         $where = array(
             'categories' => array(
-                'type' => '%LIKE%',
+                'type'  => '%LIKE%',
                 'value' => ',' . $this->getId() . ','
             )
         );
@@ -540,7 +540,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
 
         $where = array(
             'categories' => array(
-                'type' => '%LIKE%',
+                'type'  => '%LIKE%',
                 'value' => ',' . $this->getId() . ','
             )
         );
@@ -584,7 +584,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
 
         $where = array(
             'categories' => array(
-                'type' => '%LIKE%',
+                'type'  => '%LIKE%',
                 'value' => ',' . $this->getId() . ','
             )
         );
@@ -745,7 +745,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
      */
     public function save($User = false)
     {
-        QUI\Rights\Permission::checkPermission('category.edit', $User);
+        QUI\Permissions\Permission::checkPermission('category.edit', $User);
 
         $fields = array();
 
@@ -761,7 +761,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             array(
-                'fields' => json_encode($fields),
+                'fields'   => json_encode($fields),
                 'parentId' => $this->getParentId()
             ),
             array('id' => $this->getId())
@@ -785,7 +785,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
             return;
         }
 
-        QUI\Rights\Permission::checkPermission('category.delete', $User);
+        QUI\Permissions\Permission::checkPermission('category.delete', $User);
 
         // get children ids
         $ids = array();

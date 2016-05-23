@@ -15,7 +15,7 @@ use QUI\ERP\Products\Handler\Search;
  */
 class InputMultiLang extends QUI\ERP\Products\Field\Field
 {
-    protected $columnType     = 'TEXT';
+    protected $columnType = 'TEXT';
     protected $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
     /**
