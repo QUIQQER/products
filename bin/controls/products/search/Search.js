@@ -186,16 +186,37 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
 
             return new Promise(function (resolve) {
 
-                var i, len, Field, fieldid;
+                var i, len, Field, fieldid, sortOn;
                 var searchvalues = {};
+
+                // console.warn(this.getAttribute('sortOn'));
+
+                switch (this.getAttribute('sortOn')) {
+                    case 'price_netto':
+                        sortOn = 'F1';
+                        break;
+
+                    case 'status':
+                        sortOn = 'active';
+                        break;
+
+                    case 'id':
+                    case 'productNo':
+                    case 'title':
+                        sortOn = this.getAttribute('sortOn');
+                        break;
+
+                    default:
+                        sortOn = '';
+                }
 
                 var params = {
                     sheet : this.getAttribute('sheet'),
                     limit : this.getAttribute('limit'),
-                    sortOn: this.getAttribute('sortOn'),
+                    sortOn: sortOn,
                     sortBy: this.getAttribute('sortBy')
                 };
-
+                
                 var controls = QUI.Controls.getControlsInElement(this.$Elm);
 
                 var searchfields = controls.filter(function (Control) {
