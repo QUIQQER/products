@@ -157,6 +157,10 @@ class Products
         // categories
         $categoryids = array();
 
+        if (empty($categoryids)) {
+            $categoryids[] = Categories::getMainCategory();
+        }
+
         foreach ($categories as $Category) {
             if (!is_object($Category)) {
                 try {

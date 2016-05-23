@@ -99,6 +99,8 @@ class Categories
      */
     public static function getCategory($id)
     {
+        $id = (int)$id;
+
         if (isset(self::$list[$id])) {
             return self::$list[$id];
         }
@@ -140,6 +142,25 @@ class Categories
         self::$list[$id] = $Product;
 
         return $Product;
+    }
+
+    /**
+     * Return the main category
+     * New products are created automatically in this category.
+     *
+     * @return QUI\ERP\Products\Category\Category
+     * @throws QUI\Exception
+     */
+    public static function getMainCategory()
+    {
+        $Config       = QUI::getPackage('quiqqer/products')->getConfig();
+        $mainCategory = $Config->get('products', 'mainCategory');
+
+        if (!$mainCategory) {
+            return self::getCategory(0);
+        }
+
+        return self::getCategory($mainCategory);
     }
 
     /**

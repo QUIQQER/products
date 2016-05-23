@@ -44,6 +44,12 @@
     border-width: 0 0 1px 0;
 }
 
+.qui-xml-panel-row-item > .qui-products-categories-list {
+    border: 1px solid #dedede;
+    padding: 0;
+    width: calc(100% - 160px);
+}
+
 .field-container-field > .qui-products-categories-list .qui-products-categories-list-search {
     border: none;
 }

@@ -893,6 +893,13 @@ class Model extends QUI\QDOM
             }
         }
 
+        if (is_null($this->Category)) {
+            try {
+                $this->Category = Categories::getMainCategory();
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
         return $this->Category;
     }
 
@@ -1038,13 +1045,26 @@ class Model extends QUI\QDOM
 
     /**
      * Activate the product
+     *
+     * @throws QUI\ERP\Products\Product\Exception|QUI\Permissions\Exception
      */
     public function activate()
     {
         QUI\Permissions\Permission::checkPermission('product.activate');
 
         // exist a main category?
-        $this->getCategory();
+        $Category = $this->getCategory();
+
+        if (!$Category) {
+            throw new QUI\ERP\Products\Product\Exception(array(
+                'quiqqer/products',
+                'exception.product.activasion.no.category',
+                array(
+                    'id'    => $this->getId(),
+                    'title' => $this->getTitle()
+                )
+            ));
+        }
 
         // all fields correct?
         $this->validateFields();

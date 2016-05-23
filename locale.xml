@@ -50,6 +50,15 @@
             <de><![CDATA[Preise nicht anzeigen]]></de>
             <en><![CDATA[Hide prices]]></en>
         </locale>
+        <locale name="settings.window.products.mainCategory">
+            <de><![CDATA[Hauptkategory für Produkte]]></de>
+            <en><![CDATA[Main category for products]]></en>
+        </locale>
+        <locale name="settings.window.products.mainCategory.description">
+            <de><![CDATA[Neue Produkte werden automatisch in dieser Kategorie angelegt.]]></de>
+            <en><![CDATA[New products are created automatically in this category.]]></en>
+        </locale>
+
         <locale name="settings.window.products.folder.desc">
             <de><![CDATA[
             Geben Sie den Hauptordner für Produktbilder an.
@@ -303,6 +312,16 @@
             <de><![CDATA[Das Produkt #[productId] besitzt kein Bild.]]></de>
             <en><![CDATA[The product #[productId] has no image.]]></en>
         </locale>
+        <locale name="exception.product.activasion.no.category" html="true">
+            <de><![CDATA[
+            Das Produkt #[productId] kann nicht aktiviert werden.<br />Bitte weisen Sie dem Produkt eine Kategorie zu.
+            ]]></de>
+            <en><![CDATA[
+            The product #[productId] can't be activated.<br />Please set a category to the product.
+            ]]></en>
+        </locale>
+
+
         <locale name="exception.field.grouplist.user.limit.reached">
             <de><![CDATA[
                 Nicht erlaubter Inhalt für das Feld: #[fieldId] [fieldTitle]. Diesem Feld kann nur ein Benutzer zugeordnet werden. Bitte korrigieren Sie die Eingabe.

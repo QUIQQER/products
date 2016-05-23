@@ -309,6 +309,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                     html : QUILocale.get(lg, 'products.category.' + id + '.title')
                                 }).inject(self.$MainCategory);
                             });
+
+                            if (ids.length) {
+                                self.$MainCategoryRow.setStyle('display', null);
+                            } else {
+                                self.$MainCategoryRow.setStyle('display', 'none');
+                            }
                         }
                     }
                 }).inject(
@@ -1134,9 +1140,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             }.bind(this)).then(function (status) {
                 if (status) {
-                    this.$Product.deactivate().then(this.refresh);
+                    this.$Product.deactivate().then(this.refresh, this.refresh);
                 } else {
-                    this.$Product.activate().then(this.refresh);
+                    this.$Product.activate().then(this.refresh, this.refresh);
                 }
             }.bind(this));
         },
