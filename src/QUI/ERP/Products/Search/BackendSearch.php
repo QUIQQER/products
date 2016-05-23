@@ -7,6 +7,7 @@ namespace QUI\ERP\Products\Search;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Search\Cache as SearchCache;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
@@ -158,7 +159,8 @@ class BackendSearch extends Search
         }
 
         if (isset($searchParams['limit']) &&
-            !empty($searchParams['limit'])
+            !empty($searchParams['limit']) &&
+            !$countOnly
         ) {
             $Pagination = new QUI\Bricks\Controls\Pagination($searchParams);
             $sqlParams  = $Pagination->getSQLParams();
@@ -180,8 +182,6 @@ class BackendSearch extends Search
             $Stmt->execute();
             $result = $Stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $Exception) {
-            QUI\System\Log::addError($Exception->getMessage());
-
             if ($countOnly) {
                 return 0;
             }

@@ -295,13 +295,6 @@ class EventHandling
 
                 Fields::setFieldTranslations($field['id'], $field);
 
-                try {
-                    Fields::createFieldCacheColumn($field['id']);
-                } catch (QUI\Exception $Exception) {
-                    // nothing, operation may not be allowed depending on field type
-                }
-
-
                 // create / update view permission
                 QUI::getPermissionManager()->addPermission(array(
                     'name'  => "permission.products.fields.field{$field['id']}.view",
@@ -321,7 +314,6 @@ class EventHandling
                     'area'  => '',
                     'src'   => 'user'
                 ));
-
 
                 continue;
             }
@@ -362,6 +354,19 @@ class EventHandling
                 $Field->deleteSystemField();
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_WARNING);
+            }
+        }
+
+
+        // field cache
+        $fields = Fields::getFieldIds();
+
+        foreach ($fields as $fieldsId) {
+            $fieldId = (int)$fieldsId['id'];
+
+            try {
+                Fields::createFieldCacheColumn($fieldId);
+            } catch (QUI\Exception $Exception) {
             }
         }
     }

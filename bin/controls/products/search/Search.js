@@ -36,12 +36,17 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
 
         Binds: [
             'search',
+            '$onSubmit',
             '$onInject'
         ],
 
         options: {
             searchfields: {},
-            searchbutton: true
+            searchbutton: true,
+            sortOn      : false,
+            sortBy      : false,
+            limit       : false,
+            sheet       : 1
         },
 
         initialize: function (options) {
@@ -76,7 +81,7 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
                     // submit event, because we have no real submit button
                     keyup: function (event) {
                         if (event.key === 'enter') {
-                            this.search();
+                            this.$onSubmit();
                         }
                     }.bind(this)
                 }
@@ -132,7 +137,7 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
                         for (i = 0, len = result.length; i < len; i++) {
                             id = result[i].id;
 
-                            if (i == 0) {
+                            if (i === 0) {
                                 getControlByFieldById(result[i].id).focus();
                             }
 
@@ -153,7 +158,7 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
                             textimage: 'fa fa-search',
                             text     : 'Suche',
                             events   : {
-                                onClick: this.search
+                                onClick: this.$onSubmit
                             }
                         }).inject(this.$Elm);
                     }
@@ -166,6 +171,14 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
         },
 
         /**
+         * event : on submit
+         */
+        $onSubmit: function () {
+            this.setAttribute('sheet', 1);
+            this.search();
+        },
+
+        /**
          * Execute the search
          */
         search: function () {
@@ -173,15 +186,21 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
 
             return new Promise(function (resolve) {
 
-                var params   = {},
-                    controls = QUI.Controls.getControlsInElement(this.$Elm);
+                var i, len, Field, fieldid;
+                var searchvalues = {};
+
+                var params = {
+                    sheet : this.getAttribute('sheet'),
+                    limit : this.getAttribute('limit'),
+                    sortOn: this.getAttribute('sortOn'),
+                    sortBy: this.getAttribute('sortBy')
+                };
+
+                var controls = QUI.Controls.getControlsInElement(this.$Elm);
 
                 var searchfields = controls.filter(function (Control) {
                     return Control.getType() === 'package/quiqqer/products/bin/controls/search/SearchField';
                 });
-
-                var i, len, Field, fieldid;
-                var searchvalues = {};
 
                 for (i = 0, len = searchfields.length; i < len; i++) {
                     Field   = searchfields[i];

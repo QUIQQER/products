@@ -17,9 +17,10 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
     'qui/QUI',
     'qui/controls/Control',
     'controls/grid/Grid',
-    'Locale'
+    'Locale',
+    'package/quiqqer/products/bin/Fields'
 
-], function (QUI, QUIControl, Grid, QUILocale) {
+], function (QUI, QUIControl, Grid, QUILocale, Fields) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -34,7 +35,11 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
         ],
 
         options: {
-            styles: false
+            styles : false,
+            sortOn : false,
+            sortBy : false,
+            perPage: 20,
+            page   : false
         },
 
         initialize: function (options) {
@@ -93,6 +98,26 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
          * @param {Object} data - grid data
          */
         setData: function (data) {
+            var i, len, entry, productNo;
+
+            var findProductNo = function (o) {
+                return o.id == Fields.FIELD_PRODUCT_NO;
+            };
+
+            for (i = 0, len = data.data.length; i < len; i++) {
+                entry = data.data[i];
+
+                // active status
+                data.data[i].status = new Element('span', {
+                    'class': entry.active ? 'fa fa-check' : 'fa fa-remove'
+                });
+
+                // product no
+                productNo = entry.fields.find(findProductNo);
+
+                data.data[i].productNo = productNo.value || '';
+            }
+
             this.$Grid.setData(data);
         },
 
@@ -103,11 +128,25 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
             this.$Grid = new Grid(this.$GridContainer, {
                 pagination       : true,
                 multipleSelection: true,
+                perPage          : this.getAttribute('perPage'),
+                page             : this.getAttribute('page'),
+                sortOn           : this.getAttribute('sortOn'),
+                serverSort       : true,
                 columnModel      : [{
+                    header   : QUILocale.get('quiqqer/system', 'status'),
+                    dataIndex: 'status',
+                    dataType : 'node',
+                    width    : 40
+                }, {
                     header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
                     dataType : 'number',
-                    width    : 60
+                    width    : 50
+                }, {
+                    header   : QUILocale.get(lg, 'productNo'),
+                    dataIndex: 'productNo',
+                    dataType : 'text',
+                    width    : 100
                 }, {
                     header   : QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
@@ -120,9 +159,14 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                     width    : 200
                 }, {
                     header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
-                    dataIndex: 'price',
-                    dataType : 'text',
+                    dataIndex: 'price_netto',
+                    dataType : 'number',
                     width    : 100
+                }, {
+                    header   : QUILocale.get(lg, 'products.product.panel.grid.currency'),
+                    dataIndex: 'price_currency',
+                    dataType : 'text',
+                    width    : 60
                 }]
             });
 

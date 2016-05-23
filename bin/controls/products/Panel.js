@@ -79,8 +79,13 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * @return {Promise}
          */
         refresh: function () {
-            // this.Loader.show();
             this.parent();
+
+            var Delete = this.getButtons('delete'),
+                Edit   = this.getButtons('edit');
+
+            Delete.enable();
+            Edit.enable();
 
             return this.$SearchForm.search();
 
@@ -177,14 +182,35 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             }).inject(Content);
 
 
-            this.$SearchResult = new SearchResult().inject(this.$ResultContainer);
+            this.$SearchResult = new SearchResult({
+                events: {
+                    onRefresh: function (Result, options) {
+
+                        console.log(options);
+
+                        self.$SearchForm.setAttribute('sheet', options.page);
+                        self.$SearchForm.setAttribute('limit', options.perPage);
+                        self.$SearchForm.setAttribute('sortOn', options.sortOn);
+                        self.$SearchForm.setAttribute('sortBy', options.sortBy);
+
+                        self.$SearchForm.search();
+                    },
+
+                    onSubmit: function (Result, selected) {
+                        for (var i = 0, len = selected.length; i < len; i++) {
+                            self.updateChild(selected[i]);
+                        }
+                    }
+                }
+            }).inject(this.$ResultContainer);
 
             this.$SearchForm = new SearchForm({
                 events: {
                     onSearchBegin: function () {
                         this.Loader.show();
                     }.bind(this),
-                    onSearch     : function (SF, result) {
+
+                    onSearch: function (SF, result) {
                         this.$SearchResult.setData(result);
                         this.Loader.hide();
                     }.bind(this)

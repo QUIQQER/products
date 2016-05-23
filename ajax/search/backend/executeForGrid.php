@@ -23,6 +23,7 @@ QUI::$Ajax->registerFunction(
             'searchParams' => $searchParams
         ));
 
+        $page     = 1;
         $result   = $result['result'];
         $products = array();
 
@@ -40,17 +41,21 @@ QUI::$Ajax->registerFunction(
         }
 
         // count
-        $searchParams = json_decode($searchParams, true);
-
+        $searchParams          = json_decode($searchParams, true);
         $searchParams['count'] = 1;
+
+        if (isset($searchParams['sheet'])) {
+            $page = (int)$searchParams['sheet'];
+        }
 
         $count = QUI::$Ajax->callRequestFunction('package_quiqqer_products_ajax_search_backend_execute', array(
             'searchParams' => json_encode($searchParams)
         ));
 
         return array(
-            'data' => $products,
-            'total' => $count['result']
+            'data'  => $products,
+            'total' => $count['result'],
+            'page'  => $page
         );
     },
     array('searchParams'),
