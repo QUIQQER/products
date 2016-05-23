@@ -152,7 +152,7 @@ class Products
         $categories = array(),
         $fields = array()
     ) {
-        QUI\Rights\Permission::checkPermission('product.create');
+        QUI\Permissions\Permission::checkPermission('product.create');
 
         // categories
         $categoryids = array();

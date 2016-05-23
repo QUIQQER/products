@@ -72,7 +72,7 @@ class Model extends QUI\QDOM
         $this->id = (int)$pid;
 
         $result = QUI::getDataBase()->fetch(array(
-            'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
             'where' => array(
                 'id' => $this->getId()
             )
@@ -157,7 +157,7 @@ class Model extends QUI\QDOM
         // all standard and all system fields must be in the product
         $systemfields = Fields::getFields(array(
             'where_or' => array(
-                'systemField' => 1,
+                'systemField'   => 1,
                 'standardField' => 1
             )
         ));
@@ -278,7 +278,7 @@ class Model extends QUI\QDOM
         $Site = $Category->getSite();
 
         $url = $Site->getUrlRewritten(array(
-            0 => $this->getUrlName(),
+            0              => $this->getUrlName(),
             'paramAsSites' => true
         ));
 
@@ -539,8 +539,8 @@ class Model extends QUI\QDOM
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
                 'categories' => ',' . implode(',', $categoryData) . ',',
-                'category' => $mainCategory,
-                'fieldData' => json_encode($this->validateFields())
+                'category'   => $mainCategory,
+                'fieldData'  => json_encode($this->validateFields())
             ),
             array('id' => $this->getId())
         );
@@ -628,8 +628,8 @@ class Model extends QUI\QDOM
                 QUI\System\Log::addWarning(
                     $Exception->getMessage(),
                     array(
-                        'id' => $Field->getId(),
-                        'title' => $Field->getTitle(),
+                        'id'        => $Field->getId(),
+                        'title'     => $Field->getTitle(),
                         'fieldType' => $Field->getType()
                     )
                 );
@@ -639,9 +639,9 @@ class Model extends QUI\QDOM
                         'quiqqer/products',
                         'exception.field.invalid',
                         array(
-                            'fieldId' => $Field->getId(),
+                            'fieldId'    => $Field->getId(),
                             'fieldTitle' => $Field->getTitle(),
-                            'fieldType' => $Field->getType()
+                            'fieldType'  => $Field->getType()
                         )
                     ),
                     1003
@@ -654,9 +654,9 @@ class Model extends QUI\QDOM
                         'quiqqer/products',
                         'exception.field.required.but.empty',
                         array(
-                            'fieldId' => $Field->getId(),
+                            'fieldId'    => $Field->getId(),
                             'fieldTitle' => $Field->getTitle(),
-                            'fieldType' => $Field->getType()
+                            'fieldType'  => $Field->getType()
                         )
                     ),
                     1004
@@ -699,11 +699,11 @@ class Model extends QUI\QDOM
                 Fields::FIELD_PRODUCT_NO,
                 $Locale
             ),
-            'title' => $this->getFieldValueByLocale(
+            'title'     => $this->getFieldValueByLocale(
                 Fields::FIELD_TITLE,
                 $Locale
             ),
-            'active' => $this->isActive() ? 1 : 0
+            'active'    => $this->isActive() ? 1 : 0
         );
 
         $Category = $this->getCategory();
@@ -732,9 +732,9 @@ class Model extends QUI\QDOM
 
         // test if cache entry exists first
         $result = QUI::getDataBase()->fetch(array(
-            'from' => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            'from'  => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             'where' => array(
-                'id' => $this->getId(),
+                'id'   => $this->getId(),
                 'lang' => $lang
             )
         ));
@@ -755,7 +755,7 @@ class Model extends QUI\QDOM
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             $data,
             array(
-                'id' => $this->getId(),
+                'id'   => $this->getId(),
                 'lang' => $lang
             )
         );
@@ -766,7 +766,7 @@ class Model extends QUI\QDOM
      */
     public function delete()
     {
-        QUI\Rights\Permission::checkPermission('product.delete');
+        QUI\Permissions\Permission::checkPermission('product.delete');
 
         QUI::getDataBase()->delete(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
@@ -831,7 +831,7 @@ class Model extends QUI\QDOM
                 'quiqqer/products',
                 'exception.field.not.found',
                 array(
-                    'fieldId' => $fieldId,
+                    'fieldId'   => $fieldId,
                     'productId' => $this->getId()
                 )
             ),
@@ -1023,7 +1023,7 @@ class Model extends QUI\QDOM
      */
     public function deactivate()
     {
-        QUI\Rights\Permission::checkPermission('product.activate');
+        QUI\Permissions\Permission::checkPermission('product.activate');
 
         $this->active = false;
 

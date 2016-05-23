@@ -19,31 +19,31 @@ class Search
     /**
      * Search types
      */
-    const SEARCHTYPE_TEXT              = 'text';
-    const SEARCHTYPE_SELECTRANGE       = 'selectRange';
-    const SEARCHTYPE_INPUTSELECTRANGE  = 'inputSelectRange';
-    const SEARCHTYPE_SELECTSINGLE      = 'selectSingle';
+    const SEARCHTYPE_TEXT = 'text';
+    const SEARCHTYPE_SELECTRANGE = 'selectRange';
+    const SEARCHTYPE_INPUTSELECTRANGE = 'inputSelectRange';
+    const SEARCHTYPE_SELECTSINGLE = 'selectSingle';
     const SEARCHTYPE_INPUTSELECTSINGLE = 'inputSelectSingle';
-    const SEARCHTYPE_SELECTMULTI       = 'selectMulti';
-    const SEARCHTYPE_BOOL              = 'bool';
-    const SEARCHTYPE_HASVALUE          = 'hasValue';
-    const SEARCHTYPE_DATE              = 'date';
-    const SEARCHTYPE_DATERANGE         = 'dateRange';
+    const SEARCHTYPE_SELECTMULTI = 'selectMulti';
+    const SEARCHTYPE_BOOL = 'bool';
+    const SEARCHTYPE_HASVALUE = 'hasValue';
+    const SEARCHTYPE_DATE = 'date';
+    const SEARCHTYPE_DATERANGE = 'dateRange';
 
     /**
      * Data types for search values
      */
-    const SEARCHDATATYPE_TEXT    = 1;
+    const SEARCHDATATYPE_TEXT = 1;
     const SEARCHDATATYPE_NUMERIC = 2;
-    const SEARCHDATATYPE_JSON    = 3;
+    const SEARCHDATATYPE_JSON = 3;
 
     /**
      * Search permissions
      */
-    const PERMISSION_FRONTEND_EXECUTE   = 'search.frontend.execute';
+    const PERMISSION_FRONTEND_EXECUTE = 'search.frontend.execute';
     const PERMISSION_FRONTEND_CONFIGURE = 'search.frontend.configure';
-    const PERMISSION_BACKEND_EXECUTE    = 'search.backend.execute';
-    const PERMISSION_BACKEND_CONFIGURE  = 'search.backend.configure';
+    const PERMISSION_BACKEND_EXECUTE = 'search.backend.execute';
+    const PERMISSION_BACKEND_CONFIGURE = 'search.backend.configure';
 
     /**
      * Get all available search types

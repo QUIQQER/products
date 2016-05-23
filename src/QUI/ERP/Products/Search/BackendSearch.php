@@ -7,7 +7,6 @@ namespace QUI\ERP\Products\Search;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
-use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Search\Cache as SearchCache;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
@@ -46,7 +45,7 @@ class BackendSearch extends Search
      */
     public function search($searchParams, $countOnly = false)
     {
-        QUI\Rights\Permission::checkPermission(
+        QUI\Permissions\Permission::checkPermission(
             SearchHandler::PERMISSION_BACKEND_EXECUTE
         );
 
@@ -66,7 +65,7 @@ class BackendSearch extends Search
         $where[]       = 'lang = :lang';
         $binds['lang'] = array(
             'value' => $this->lang,
-            'type' => \PDO::PARAM_STR
+            'type'  => \PDO::PARAM_STR
         );
 
         if (isset($searchParams['category']) &&
@@ -75,7 +74,7 @@ class BackendSearch extends Search
             $where[]           = '`category` = :category';
             $binds['category'] = array(
                 'value' => (int)$searchParams['category'],
-                'type' => \PDO::PARAM_INT
+                'type'  => \PDO::PARAM_INT
             );
         }
 
@@ -119,7 +118,7 @@ class BackendSearch extends Search
                 $whereFreeText[]              = '`' . $columnName . '` LIKE :freetext' . $fieldId;
                 $binds['freetext' . $fieldId] = array(
                     'value' => $value,
-                    'type' => \PDO::PARAM_STR
+                    'type'  => \PDO::PARAM_STR
                 );
             }
 
@@ -233,7 +232,7 @@ class BackendSearch extends Search
             $Field = Fields::getField($fieldId);
 
             $searchFieldDataContent = array(
-                'id' => $Field->getId(),
+                'id'         => $Field->getId(),
                 'searchType' => $Field->getSearchType()
             );
 

@@ -126,7 +126,7 @@ class Calc
             return $price * $quantity;
         }
 
-        
+
         return new Price($price, Currencies::getDefaultCurrency());
     }
 

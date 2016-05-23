@@ -30,7 +30,7 @@ class FrontendSearch extends Search
      */
     protected $eligibleSiteTypes = array(
         self::SITETYPE_CATEGORY => true,
-        self::SITETYPE_SEARCH => true
+        self::SITETYPE_SEARCH   => true
     );
 
     /**
@@ -177,7 +177,7 @@ class FrontendSearch extends Search
         $where[]       = 'lang = :lang';
         $binds['lang'] = array(
             'value' => $this->lang,
-            'type' => \PDO::PARAM_STR
+            'type'  => \PDO::PARAM_STR
         );
 
         if (isset($searchParams['category']) &&
@@ -186,7 +186,7 @@ class FrontendSearch extends Search
             $where[]           = '`category` = :category';
             $binds['category'] = array(
                 'value' => (int)$searchParams['category'],
-                'type' => \PDO::PARAM_INT
+                'type'  => \PDO::PARAM_INT
             );
         }
 
@@ -224,7 +224,7 @@ class FrontendSearch extends Search
                 $whereFreeText[]              = '`' . $columnName . '` LIKE :freetext' . $fieldId;
                 $binds['freetext' . $fieldId] = array(
                     'value' => $value,
-                    'type' => \PDO::PARAM_STR
+                    'type'  => \PDO::PARAM_STR
                 );
             }
 
@@ -362,9 +362,9 @@ class FrontendSearch extends Search
             }
 
             $searchFieldDataContent = array(
-                'id' => $Field->getId(),
-                'searchType' => $Field->getSearchType(),
-                'title' => $Field->getTitle($Locale),
+                'id'          => $Field->getId(),
+                'searchType'  => $Field->getSearchType(),
+                'title'       => $Field->getTitle($Locale),
                 'description' => $Field->getTitle($Locale)
             );
 

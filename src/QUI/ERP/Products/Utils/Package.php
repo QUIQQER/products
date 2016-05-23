@@ -6,7 +6,7 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
-use QUI\Rights\Permission;
+use QUI\Permissions\Permission;
 
 /**
  * Class Package

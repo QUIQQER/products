@@ -55,10 +55,10 @@ class Categories
     public function countCategories($queryParams = array())
     {
         $query = array(
-            'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+            'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             'count' => array(
                 'select' => 'id',
-                'as' => 'count'
+                'as'     => 'count'
             )
         );
 
@@ -111,7 +111,7 @@ class Categories
 
             } catch (QUI\Exception $Eception) {
                 $data = QUI::getDataBase()->fetch(array(
-                    'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+                    'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                     'where' => array(
                         'id' => $id
                     )
@@ -193,14 +193,14 @@ class Categories
      */
     public static function createCategory($parentId = null, $title = '')
     {
-        QUI\Rights\Permission::checkPermission('category.create');
+        QUI\Permissions\Permission::checkPermission('category.create');
 
         if (is_null($parentId)) {
             $parentId = 0;
         }
 
         $result = QUI::getDataBase()->fetch(array(
-            'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+            'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             'limit' => 1
         ));
 
@@ -209,7 +209,7 @@ class Categories
                 QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 array(
                     'parentId' => $parentId,
-                    'id' => 1
+                    'id'       => 1
                 )
             );
         } else {

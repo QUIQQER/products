@@ -43,18 +43,18 @@ if ($siteUrl != $_REQUEST['_url']) {
     /**
      * Category display
      */
-    $Search = new \QUI\ERP\Products\Controls\Search\Search(array(
-        'Site' => $Site,
+    $Search = new QUI\ERP\Products\Controls\Search\Search(array(
+        'Site'      => $Site,
         'data-name' => 'category-search'
     ));
 
     $ProductList = new Products\Controls\Category\ProductList(array(
         'categoryId' => $Site->getAttribute('quiqqer.products.settings.categoryId'),
-        'Search' => $Search
+        'Search'     => $Search
     ));
 
     $Engine->assign(array(
         'ProductList' => $ProductList,
-        'Search' => $Search
+        'Search'      => $Search
     ));
 }

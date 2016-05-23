@@ -70,9 +70,9 @@ class Price
     public function toArray()
     {
         return array(
-            'price' => $this->getNetto(),
+            'price'    => $this->getNetto(),
             'currency' => $this->getCurrency()->getCode(),
-            'display' => $this->getDisplayPrice()
+            'display'  => $this->getDisplayPrice()
         );
     }
 
