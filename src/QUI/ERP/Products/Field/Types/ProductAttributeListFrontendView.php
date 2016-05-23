@@ -111,6 +111,10 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                 $userinput = ' data-userinput="1"';
             }
 
+            if (!isset($option['sum']) || !$option['sum']) {
+                $option['sum'] = 0;
+            }
+
             if ($displayDiscounts) {
                 switch ($option['type']) {
                     case 'percent': // fallback fix
