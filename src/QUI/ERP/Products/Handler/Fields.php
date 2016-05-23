@@ -243,13 +243,6 @@ class Fields
      */
     public static function createCacheColumn($columnName, $columnType = 'text')
     {
-        $DBTable   = QUI::getDataBase()->table();
-        $tableName = QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
-
-        if ($DBTable->existColumnInTable($tableName, $columnName)) {
-            return;
-        }
-
         QUI::getDataBase()->table()->addColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             array($columnName => $columnType)
