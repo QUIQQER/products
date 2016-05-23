@@ -1140,9 +1140,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             }.bind(this)).then(function (status) {
                 if (status) {
-                    this.$Product.deactivate().then(this.refresh);
+                    this.$Product.deactivate().then(this.refresh, this.refresh);
                 } else {
-                    this.$Product.activate().then(this.refresh);
+                    this.$Product.activate().then(this.refresh, this.refresh);
                 }
             }.bind(this));
         },

@@ -561,10 +561,15 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
          * @return {Object} this (package/quiqqer/products/bin/controls/categories/Select)
          */
         focus: function () {
-            if (this.$Search) {
-                this.$Search.focus();
+            if (this.getAttribute('max') == 1) {
+                this.$SearchButton.click();
             }
 
+            if (this.$Search) {
+                this.$Search.focus();
+                return this;
+            }
+            
             return this;
         },
 

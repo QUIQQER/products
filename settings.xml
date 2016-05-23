@@ -10,6 +10,9 @@
                 <conf name="hidePrices">
                     <type><![CDATA[bool]]></type>
                 </conf>
+                <conf name="mainCategory">
+                    <type><![CDATA[integer]]></type>
+                </conf>
             </section>
             <section name="search">
                 <conf name="backend">
@@ -43,6 +46,20 @@
                                 <locale group="quiqqer/products" var="settings.window.products.hidePrices"/>
                             </text>
                         </input>
+
+                        <input conf="products.mainCategory"
+                               data-qui="package/quiqqer/products/bin/controls/categories/Select"
+                               data-qui-options-max="1"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.mainCategory"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.mainCategory.description"/>
+                            </description>
+                        </input>
+
                         <input conf="products.folder" class="media-folder">
                             <text>
                                 <locale group="quiqqer/products" var="settings.window.products.folder"/>
