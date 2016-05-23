@@ -278,19 +278,19 @@ define('package/quiqqer/products/bin/classes/Product', [
             return new Promise(function (resolve, reject) {
 
                 if (self.$loaded) {
-                    var categories = self.$data.categories.split(',');
+                    var categories = self.$data.categories.split(',').filter(function (entry) {
+                        return entry !== '';
+                    });
+
 
                     categories.each(function (value, index) {
                         categories[index] = parseInt(value);
                     });
 
-                    if (self.$data.category && !categories.contains(parseInt(self.$data.category))) {
+                    if (self.$data.category != 0 &&
+                        self.$data.category && !categories.contains(parseInt(self.$data.category))) {
                         categories.push(parseInt(self.$data.category));
                     }
-
-                    categories = categories.filter(function (item) {
-                        return item !== '';
-                    });
 
                     return resolve(categories);
                 }
