@@ -965,7 +965,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $start = 0.1;
         } else {
             // round down to lowest 10 (e.g.: 144 = 140; 2554 = 2550)
-            $start = floor($min / 10) * 10;
+            $floorPrecision = 1;
+
+            if ((string)mb_strlen((int)$min) > 1) {
+                $floorPrecision = 10;
+            }
+
+            $start = floor($min / $floorPrecision) * $floorPrecision;
             $start = (int)$start;
         }
 
@@ -979,7 +985,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 $add = 1;
                 $i   = 10;
 
-                while ($value > $i) {
+                while ($value >= $i) {
                     $i *= 10;
                     $add *= 10;
                 }

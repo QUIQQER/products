@@ -191,8 +191,8 @@ abstract class Search extends QUI\QDOM
         switch ($Field->getSearchDataType()) {
             case SearchHandler::SEARCHDATATYPE_NUMERIC:
                 $values = $Field->calculateValueRange(
-                    $result[0]['MAX(' . $column . ')'],
-                    $result[0]['MIN(' . $column . ')']
+                    $result[0]['MIN(' . $column . ')'],
+                    $result[0]['MAX(' . $column . ')']
                 );
                 break;
 
