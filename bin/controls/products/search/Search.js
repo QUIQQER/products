@@ -38,6 +38,11 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
         Extends: QUIControl,
         Type   : 'package/quiqqer/products/bin/controls/products/search/Search',
 
+        Binds: [
+            '$onInject',
+            'toggleSearch'
+        ],
+
         options: {
             sortOn: false,
             sortBy: false,
@@ -46,10 +51,6 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
 
             injectShow: true
         },
-
-        Binds: [
-            '$onInject'
-        ],
 
         /**
          * construct
@@ -63,7 +64,12 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
             this.$Result = null;
             this.$Form   = null;
 
+            this.$FxResult = null;
+            this.$FxForm   = null;
+
+            this.$searchHide      = false;
             this.$FormContainer   = null;
+            this.$CloserContainer = null;
             this.$ResultContainer = null;
 
             this.addEvents({
@@ -89,11 +95,18 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
                 'class': 'products-search-form--form-container'
             }).inject(this.$Elm);
 
+            this.$CloserContainer = new Element('div', {
+                'class': 'products-search-form--closer-container',
+                html   : '<span class="fa fa-arrow-left"></span>',
+                events : {
+                    click: this.toggleSearch
+                }
+            }).inject(this.$Elm);
+
             this.$ResultContainer = new Element('div', {
                 'class': 'products-search-form--result-container'
             }).inject(this.$Elm);
 
-            // @todo dblclick
             this.$Form = new Form({
                 events: {
                     onSearchBegin: function () {
@@ -127,6 +140,9 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
                     }
                 }
             });
+
+            this.$FxForm   = QUI.fx(this.$FormContainer);
+            this.$FxResult = QUI.fx(this.$ResultContainer);
 
             return this.$Elm;
         },
@@ -203,6 +219,75 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
          */
         getSelected: function () {
             return this.$Result.getSelected();
+        },
+
+        /**
+         * Toggle search
+         *
+         * @return {Promise}
+         */
+        toggleSearch: function () {
+            if (this.$searchHide) {
+                return this.showSearch();
+            }
+
+            return this.hideSearch();
+        },
+
+        /**
+         * Hide the search
+         *
+         * @return {Promise}
+         */
+        hideSearch: function () {
+            var size  = this.getElm().getSize(),
+                Arrow = this.$CloserContainer.getElement('.fa');
+
+            return Promise.all([
+                this.$FxForm.animate({
+                    opacity: 0,
+                    padding: 0,
+                    width  : 0
+                }),
+                this.$FxResult.animate({
+                    width: size.x - 20
+                })
+            ]).then(function () {
+                this.$searchHide = true;
+
+                Arrow.removeClass('fa-arrow-left');
+                Arrow.addClass('fa-search');
+
+                return this.$Result.resize();
+            }.bind(this));
+        },
+
+        /**
+         * Show the search
+         *
+         * @return {Promise}
+         */
+        showSearch: function () {
+            var size  = this.getElm().getSize(),
+                Arrow = this.$CloserContainer.getElement('.fa');
+
+            return Promise.all([
+                this.$FxForm.animate({
+                    opacity: 1,
+                    padding: '0 20px 0 0',
+                    width  : 280
+                }),
+                this.$FxResult.animate({
+                    width: size.x - 300
+                })
+            ]).then(function () {
+                this.$searchHide = false;
+
+                Arrow.removeClass('fa-search');
+                Arrow.addClass('fa-arrow-right');
+
+                return this.$Result.resize();
+            }.bind(this));
         }
     });
 });
