@@ -284,7 +284,7 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
                 this.$searchHide = false;
 
                 Arrow.removeClass('fa-search');
-                Arrow.addClass('fa-arrow-right');
+                Arrow.addClass('fa-arrow-left');
 
                 return this.$Result.resize();
             }.bind(this));
