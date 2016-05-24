@@ -58,7 +58,6 @@
 
             <attributes>
                 <attribute>quiqqer.products.settings.searchFieldIds</attribute>
-                <attribute>quiqqer.products.settings.dontShowSearch</attribute>
             </attributes>
 
             <settings>
@@ -67,12 +66,6 @@
                         <title>
                             <locale group="quiqqer/products" var="quiqqer.products.search.settings.title"/>
                         </title>
-
-                        <input conf="quiqqer.products.settings.dontShowSearch" type="checkbox">
-                            <text>
-                                <locale group="quiqqer/products" var="quiqqer.products.settings.dontShowSearch"/>
-                            </text>
-                        </input>
 
                         <input conf="quiqqer.products.settings.searchFieldIds" type="hidden"
                                data-qui="package/quiqqer/products/bin/controls/search/FieldSelect"
