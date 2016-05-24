@@ -18,6 +18,9 @@
                 <conf name="backend">
                     <type><![CDATA[string]]></type>
                 </conf>
+                <conf name="frontend">
+                    <type><![CDATA[string]]></type>
+                </conf>
             </section>
         </config>
 
@@ -82,16 +85,29 @@
                     </text>
                     <icon>fa fa-search</icon>
 
-                    <settings title="search" name="search">
+                    <settings title="backend" name="backend">
                         <title>
-                            <locale group="quiqqer/products" var="menu.erp.products.fieldsearch.title"/>
+                            <locale group="quiqqer/products" var="settings.window.fieldsearch.backend.title"/>
                         </title>
-
                         <input conf="search.backend"
                                data-qui="package/quiqqer/products/bin/controls/products/search/Settings"
                         >
                             <text>
-                                <locale group="quiqqer/products" var="settings.window.fieldsearch.select"/>
+                                <locale group="quiqqer/products" var="settings.window.fieldsearch.backend.description"/>
+                            </text>
+                        </input>
+                    </settings>
+
+                    <settings title="frontend" name="frontend">
+                        <title>
+                            <locale group="quiqqer/products" var="settings.window.fieldsearch.frontend.title"/>
+                        </title>
+                        <input conf="search.frontend"
+                               data-qui="package/quiqqer/products/bin/controls/products/search/Settings"
+                        >
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.fieldsearch.frontend.description"/>
                             </text>
                         </input>
                     </settings>
