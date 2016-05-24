@@ -978,6 +978,11 @@
             <de><![CDATA[Suchfelder]]></de>
             <en><![CDATA[Search fields]]></en>
         </locale>
+        <locale name="quiqqer.products.settings.dontShowSearch">
+            <de><![CDATA[Suche nicht anzeigen]]></de>
+            <en><![CDATA[Don't show the search]]></en>
+        </locale>
+
 
         <locale name="quiqqer.products.field.header.placeholder">
             <de><![CDATA[Rechte für das Feld #[fielId] - [fieldname]]]></de>
