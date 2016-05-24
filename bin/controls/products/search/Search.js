@@ -198,10 +198,16 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
          * @return {Promise}
          */
         resize: function () {
-            return Promise.all([
-                this.$Result.resize(),
-                this.$Form.resize()
-            ]);
+            if (this.$searchHide) {
+                return this.hideSearch();
+            }
+
+            return this.showSearch();
+            //
+            // return Promise.all([
+            //     this.$Result.resize(),
+            //     this.$Form.resize()
+            // ]);
         },
 
         /**
@@ -275,7 +281,6 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
             return Promise.all([
                 this.$FxForm.animate({
                     opacity: 1,
-                    padding: '0 20px 0 0',
                     width  : 280
                 }),
                 this.$FxResult.animate({

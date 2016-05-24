@@ -1,28 +1,30 @@
-{{#freeTextSearch}}
-<label class="quiqqer-products-search-field-container">
-    <span class="quiqqer-products-search-field-label" title="{{fieldTitleFreeTextSearch}}">
-        {{fieldTitleFreeTextSearch}}
-    </span>
-    <div class="quiqqer-products-search-field-container-field">
-        <input type="text" name="search" />
-    </div>
-</label>
-{{/freeTextSearch}}
+<div class="quiqqer-products-search-fieldContainer">
+    {{#freeTextSearch}}
+    <label class="quiqqer-products-search-field-container">
+        <span class="quiqqer-products-search-field-label" title="{{fieldTitleFreeTextSearch}}">
+            {{fieldTitleFreeTextSearch}}
+        </span>
+        <div class="quiqqer-products-search-field-container-field">
+            <input type="text" name="search" />
+        </div>
+    </label>
+    {{/freeTextSearch}}
 
-{{#fields}}
-<label class="quiqqer-products-search-field-container">
-    <span class="quiqqer-products-search-field-label" title="{{fieldTitle}}" data-fieldid="{{id}}">
-        {{fieldTitle}}
-    </span>
-    <div class="quiqqer-products-search-field-container-field"
-         data-qui-options-searchtype="{{searchType}}"
-         data-qui-options-fieldid="{{id}}"
-         data-qui="package/quiqqer/products/bin/controls/search/SearchField"
-    ></div>
-</label>
-{{/fields}}
-{{^fields}}
-<div class="quiqqer-products-search-empty">
-    {{text_no_fields}}
+    {{#fields}}
+    <label class="quiqqer-products-search-field-container">
+        <span class="quiqqer-products-search-field-label" title="{{fieldTitle}}" data-fieldid="{{id}}">
+            {{fieldTitle}}
+        </span>
+        <div class="quiqqer-products-search-field-container-field"
+             data-qui-options-searchtype="{{searchType}}"
+             data-qui-options-fieldid="{{id}}"
+             data-qui="package/quiqqer/products/bin/controls/search/SearchField"
+        ></div>
+    </label>
+    {{/fields}}
+    {{^fields}}
+    <div class="quiqqer-products-search-empty">
+        {{text_no_fields}}
+    </div>
+    {{/fields}}
 </div>
-{{/fields}}

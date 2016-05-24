@@ -6,6 +6,19 @@
     width: 100%;
 }
 
+.quiqqer-products-search-fieldContainer {
+    float: left;
+    height: 100%;
+    padding: 20px 20px 0 20px;
+    width: 100%;
+}
+
+.quiqqer-products-search-form-submitButton .quiqqer-products-search-fieldContainer {
+    float: none;
+    height: calc(100% - 50px);
+    overflow: auto;
+}
+
 .quiqqer-products-search-form .qui-select {
     margin: 0;
 }

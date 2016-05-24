@@ -74,7 +74,9 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                 }
             });
 
-            this.$GridContainer = this.$Elm.getElement('.quiqqer-products-search-grid');
+            this.$GridContainer = this.$Elm.getElement(
+                '.quiqqer-products-search-grid'
+            );
 
             if (this.getAttribute('styles')) {
                 this.$Elm.setStyles(this.getAttribute('styles'));

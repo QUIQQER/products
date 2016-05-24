@@ -57,8 +57,8 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Form   = null;
-            this.$loaded = false;
+            this.$Container = null;
+            this.$loaded    = false;
 
             this.addEvents({
                 onCreate: this.$onCreate,
@@ -141,10 +141,13 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                         })
                     });
 
+                    this.$Container = this.$Elm.getElement(
+                        '.quiqqer-products-search-fieldContainer'
+                    );
 
                     QUI.parse(this.$Elm).then(function () {
                         var Field;
-                        var controls = QUI.Controls.getControlsInElement(this.$Elm);
+                        var controls = QUI.Controls.getControlsInElement(this.$Container);
 
                         var getControlByFieldById = function (fieldId) {
                             for (var c = 0, len = controls.length; c < len; c++) {
@@ -177,11 +180,22 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                     if (this.getAttribute('searchbutton')) {
                         new QUIButton({
                             textimage: 'fa fa-search',
-                            text     : 'Suche',
+                            text     : QUILocale.get('quiqqer/system', 'search'),
                             events   : {
                                 onClick: this.$onSubmit
+                            },
+                            styles   : {
+                                display : 'block',
+                                'float' : 'none',
+                                margin  : '10px auto 0',
+                                maxWidth: '100%',
+                                width   : 200
                             }
                         }).inject(this.$Elm);
+
+                        this.$Elm.addClass(
+                            'quiqqer-products-search-form-submitButton'
+                        );
                     }
 
                     this.$loaded = true;
