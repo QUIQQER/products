@@ -91,6 +91,7 @@
             <de><![CDATA[Feld-Typ]]></de>
             <en><![CDATA[Field type]]></en>
         </locale>
+
         <locale name="workingTitle">
             <de><![CDATA[Arbeitstitel]]></de>
             <en><![CDATA[Working title]]></en>
@@ -439,6 +440,14 @@
         <locale name="searchtype.inputSelectSingle.title">
             <de><![CDATA[Dropdown-Menü - Einfach-Auswahl + Individuelle Eingabe]]></de>
             <en><![CDATA[Dropdown list - single choice + Individual input]]></en>
+        </locale>
+        <locale name="searchtype.freeTextSearch.title">
+            <de><![CDATA[Suche]]></de>
+            <en><![CDATA[Search]]></en>
+        </locale>
+        <locale name="searchtypes.empty">
+            <de><![CDATA[Keine Suchfelder gefunden]]></de>
+            <en><![CDATA[No search fields found]]></en>
         </locale>
 
         <locale name="permission.product._header">

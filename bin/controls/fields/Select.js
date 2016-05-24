@@ -17,6 +17,7 @@
  */
 define('package/quiqqer/products/bin/controls/fields/Select', [
 
+    'qui/QUI',
     'qui/controls/Control',
     'qui/controls/buttons/Button',
     'qui/utils/Elements',
@@ -27,7 +28,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
     'css!package/quiqqer/products/bin/controls/fields/Select.css'
 
-], function (QUIControl, QUIButton, QUIElementUtils, SelectItem, Fields, Ajax, QUILocale) {
+], function (QUI, QUIControl, QUIButton, QUIElementUtils, SelectItem, Fields, Ajax, QUILocale) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -270,6 +271,49 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
             this.$Elm.removeClass('disabled');
             this.$SearchButton.enable();
             this.$Search.set('disabled', false);
+        },
+
+        /**
+         * Clear - Remove all fields
+         *
+         * @return {Object} this (package/quiqqer/products/bin/controls/field/Select)
+         */
+        clear: function () {
+            this.$List.set('html', '');
+            this.$values = [];
+
+            this.fireEvent('clear', [this]);
+            this.$refreshValues();
+
+            return this;
+        },
+
+        /**
+         * Remove a field from the list
+         *
+         * @param {Number} fieldId
+         */
+        removeField: function (fieldId) {
+            var newValues = [];
+
+            for (var i = 0, len = this.$values.length; i < len; i++) {
+                if (this.$values[i] != fieldId) {
+                    newValues.push(this.$values[i]);
+                }
+            }
+
+            this.$values = newValues;
+
+            QUI.Controls.getControlsInElement(this.$List).each(function (Field) {
+                if (Field.getAttribute('id') == fieldId) {
+                    Field.destroy();
+                }
+            });
+
+            this.fireEvent('removeField', [this, fieldId]);
+            this.$refreshValues();
+
+            return this;
         },
 
         /**

@@ -49,7 +49,8 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
             limit : false,
             sheet : 1,
 
-            injectShow: true
+            injectShow    : true,
+            freeTextSearch: true
         },
 
         /**

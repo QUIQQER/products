@@ -32,6 +32,8 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
 ], function (QUI, QUIControl, QUIButton, Grid, Fields, Ajax, QUILocale, Mustache, template) {
     "use strict";
 
+    var lg = 'quiqqer/products';
+
     return new Class({
         Extends: QUIControl,
         Type   : 'package/quiqqer/products/bin/controls/products/search/Search',
@@ -43,12 +45,13 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
         ],
 
         options: {
-            searchfields: {},
-            searchbutton: true,
-            sortOn      : false,
-            sortBy      : false,
-            limit       : false,
-            sheet       : 1
+            searchfields  : {},
+            searchbutton  : true,
+            sortOn        : false,
+            sortBy        : false,
+            limit         : false,
+            sheet         : 1,
+            freeTextSearch: true
         },
 
         initialize: function (options) {
@@ -111,7 +114,6 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
          */
         $onInject: function () {
             Ajax.get('package_quiqqer_products_ajax_search_backend_getSearchFieldData', function (result) {
-
                 var fieldsIds = result.map(function (Entry) {
                     return Entry.id;
                 });
@@ -132,10 +134,13 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
 
                     this.$Elm.set({
                         html: Mustache.render(template, {
-                            fields        : result,
-                            text_no_fields: 'Keine Suchefelder gefunden'
+                            fields                  : result,
+                            freeTextSearch          : this.getAttribute('freeTextSearch'),
+                            fieldTitleFreeTextSearch: QUILocale.get(lg, 'searchtype.freeTextSearch.title'),
+                            text_no_fields          : QUILocale.get(lg, 'searchtypes.empty')
                         })
                     });
+
 
                     QUI.parse(this.$Elm).then(function () {
                         var Field;
@@ -206,6 +211,7 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
 
                 var i, len, Field, fieldid, sortOn;
                 var searchvalues = {};
+                this.$Elm.getElements('[name="search"]');
 
                 // console.warn(this.getAttribute('sortOn'));
 
@@ -249,6 +255,7 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                 }
 
                 params.fields = searchvalues;
+
 
                 Ajax.get('package_quiqqer_products_ajax_search_backend_executeForGrid', function (result) {
                     resolve(result);
