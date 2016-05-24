@@ -134,9 +134,11 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 textimage: 'fa fa-trash',
                 disabled : true,
                 events   : {
-                    onClick: function () {
+                    onClick: function (Btn) {
+                        Btn.setAttribute('textimage', 'fa fa-spinner fa-spin');
+
                         self.deleteChild(
-                            self.$Search.getSelected()[0]
+                            self.$Search.getSelected()
                         );
                     }
                 }
@@ -269,34 +271,70 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
         /**
          * Opens the delete dialog
          *
-         * @param {Number} productId
+         * @param {Number|Array} productIds
          */
-        deleteChild: function (productId) {
+        deleteChild: function (productIds) {
             var self = this;
 
-            new QUIConfirm({
-                title      : QUILocale.get(lg, 'products.window.delete.title'),
-                text       : QUILocale.get(lg, 'products.window.delete.text', {
-                    productId: productId
-                }),
-                information: QUILocale.get(lg, 'products.window.delete.information', {
-                    productId: productId
-                }),
-                autoclose  : false,
-                maxHeight  : 300,
-                maxWidth   : 450,
-                icon       : 'fa fa-trashcan',
-                texticon   : 'fa fa-trashcan',
-                events     : {
-                    onSubmit: function (Win) {
-                        Win.Loader.show();
-                        Products.deleteChild(productId).then(function () {
-                            Win.close();
-                            self.refresh();
-                        });
-                    }
+            return new Promise(function (resolve, reject) {
+                if (typeOf(productIds) == 'number') {
+                    productIds = [productIds];
                 }
-            }).open();
+
+                if (typeOf(productIds) != 'array') {
+                    return reject();
+                }
+
+                if (!productIds.length) {
+
+                }
+
+                Products.getChildren(productIds).then(function (data) {
+                    var products = '<ul>';
+
+                    for (var i = 0, len = data.length; i < len; i++) {
+                        products = products + '<li>' + data[i].id + ': ' +
+                                   data[i].title + '</li>';
+                    }
+
+                    products = products + '</ul>';
+
+                    new QUIConfirm({
+                        title      : QUILocale.get(lg, 'products.window.delete.title'),
+                        text       : QUILocale.get(lg, 'products.window.delete.text', {
+                            products: products
+                        }),
+                        information: QUILocale.get(lg, 'products.window.delete.information', {
+                            products: products
+                        }),
+                        autoclose  : false,
+                        maxHeight  : 400,
+                        maxWidth   : 600,
+                        icon       : 'fa fa-trashcan',
+                        texticon   : 'fa fa-trashcan',
+                        events     : {
+                            onSubmit: function (Win) {
+                                Win.Loader.show();
+
+                                Products.deleteChildren(productIds).then(function () {
+                                    Win.close();
+                                    self.refresh();
+
+                                    QUI.getMessageHandler().then(function (MH) {
+                                        MH.addSuccess(
+                                            QUILocale.get(lg, 'message.success.products.delete')
+                                        );
+                                    })
+                                });
+                            }
+                        }
+                    }).open();
+
+                    resolve();
+
+                }, reject);
+
+            });
         }
     });
 });

@@ -384,6 +384,10 @@
             <de><![CDATA[Fehler beim Setzen der Hauptkategorie. Es wurde keine Hauptkategorie angegeben.]]></de>
             <en><![CDATA[Failed to set the main category. There was no main category specified.]]></en>
         </locale>
+        <locale name="message.success.products.delete">
+            <de><![CDATA[Die Produkte wurden erfolgreich gelöscht.]]></de>
+            <en><![CDATA[The products has been deleted successfully.]]></en>
+        </locale>
 
         <!-- crons -->
         <locale name="cron.updateProductCache.title">
@@ -541,6 +545,22 @@
             <en><![CDATA[Add field]]></en>
         </locale>
 
+        <locale name="products.window.delete.title">
+            <de><![CDATA[Produkte löschen]]></de>
+            <en><![CDATA[Delete products]]></en>
+        </locale>
+        <locale name="products.window.delete.text">
+            <de><![CDATA[Folgende Produkte löschen:]]></de>
+            <en><![CDATA[Delete following products:]]></en>
+        </locale>
+        <locale name="products.window.delete.information" html="true">
+            <de><![CDATA[
+            [products]Die Produkte werden unwiderruflich gelöscht und können nicht wieder hergestellt werden.
+            ]]></de>
+            <en><![CDATA[
+            [products]The products will be permanently deleted and can not be recovered.
+            ]]></en>
+        </locale>
 
         <locale name="category.panel.title">
             <de><![CDATA[Kategorie: [title]]]></de>
