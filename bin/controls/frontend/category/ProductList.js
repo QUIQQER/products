@@ -8,8 +8,8 @@
  * @require qui/QUI
  * @require qui/controls/Control
  * @require qui/controls/buttons/Select
+ * @require package/quiqqer/products/bin/Search
  * @require Ajax
- * @require html5tooltips
  */
 define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
@@ -37,6 +37,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             'next',
             '$hideMoreButton',
             '$showMoreButton',
+            '$scrollToLastRow',
             '$onInject'
         ],
 
@@ -63,7 +64,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$Sort   = null;
             this.$MoreFX = null;
 
-            this.$fields = {};
+            this.$fields         = {};
+            this.$freetext       = '';
+            this.$sortingEnabled = true;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -163,7 +166,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 if (SearchForm) {
                     SearchForm.addEvent('change', function () {
-                        self.$fields = SearchForm.getFieldValues();
+                        self.$fields   = SearchForm.getFieldValues();
+                        self.$freetext = SearchForm.getFreeTextSearch();
                         self.$clearContainer().then(self.$loadData.bind(self));
                     });
 
@@ -227,8 +231,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                 self.$More.removeClass('loading');
                             }
 
-                            resolve();
-                        });
+                        }).then(function () {
+                            return self.$scrollToLastRow();
+                        }).then(resolve);
                     }
                 });
             });
@@ -240,11 +245,19 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         galeryView: function () {
+            if (!this.$sortingEnabled) {
+                return Promise.resolve();
+            }
+
             this.resetButtons();
             this.$ButtonGalery.addClass('active');
             this.setAttribute('view', 'galery');
 
-            return this.$clearContainer().then(this.$loadData.bind(this));
+            return this.$clearContainer().then(
+                this.$loadData.bind(this)
+            ).then(
+                this.$showContainer.bind(this)
+            );
         },
 
         /**
@@ -253,11 +266,19 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         detailView: function () {
+            if (!this.$sortingEnabled) {
+                return Promise.resolve();
+            }
+
             this.resetButtons();
             this.$ButtonDetails.addClass('active');
             this.setAttribute('view', 'detail');
 
-            return this.$clearContainer().then(this.$loadData.bind(this));
+            return this.$clearContainer().then(
+                this.$loadData.bind(this)
+            ).then(
+                this.$showContainer.bind(this)
+            );
         },
 
         /**
@@ -266,11 +287,19 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         listView: function () {
+            if (!this.$sortingEnabled) {
+                return Promise.resolve();
+            }
+
             this.resetButtons();
             this.$ButtonList.addClass('active');
             this.setAttribute('view', 'list');
 
-            return this.$clearContainer().then(this.$loadData.bind(this));
+            return this.$clearContainer().then(
+                this.$loadData.bind(this)
+            ).then(
+                this.$showContainer.bind(this)
+            );
         },
 
         /**
@@ -298,7 +327,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             return new Promise(function (resolve) {
                 var searchParams = {
-                    fields: self.$fields
+                    fields  : self.$fields,
+                    freetext: self.$freetext
                 };
 
                 Ajax.get('package_quiqqer_products_ajax_controls_categories_productList', function (result) {
@@ -319,38 +349,33 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                     var Row = Ghost.getElement('[data-row]');
 
+                    // no results
+                    if (!Row) {
+                        self.disableSorting();
+                        Container.set('html', '');
+                        Ghost.inject(Container);
+
+                        self.$showContainer().then(function () {
+                            resolve(result);
+                        });
+                        
+                        return;
+                    }
+
+                    if (row === 0) {
+                        Container.set('html', '');
+                    }
+
+                    self.enableSorting();
+
                     Row.setStyles({
-                        opacity   : 0,
-                        overflow  : 'hidden',
-                        position  : 'absolute',
-                        visibility: 'hidden',
-                        width     : '100%'
+                        width: '100%'
                     });
 
                     Row.inject(Container);
 
-                    var rowSize = Row.getSize();
-
-                    Row.setStyles({
-                        height  : 0,
-                        position: 'relative'
-                    });
-
-                    moofx(Row).animate({
-                        height    : rowSize.y,
-                        opacity   : 1,
-                        visibility: null
-                    }, {
-                        duration: 200,
-                        callback: function () {
-                            new Fx.Scroll(window.document).start(
-                                0,
-                                Row.getPosition().y - 100
-                            ).chain(function () {
-                                self.$Container.setStyle('height', null);
-                                resolve(result);
-                            });
-                        }
+                    self.$showContainer().then(function () {
+                        resolve(result);
                     });
 
                 }, {
@@ -393,73 +418,64 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             var self = this,
                 rows = this.$Container.getElements('[data-row]');
 
-            var stack = [],
-                delay = 0;
-
-            for (var i = 0, len = rows.length; i < len; i++) {
-                if (i === 0) {
-                    delay = 500;
-                }
-
-                if (i == 1) {
-                    delay = 300;
-                }
-
-                if (i >= 2) {
-                    delay = 100;
-                }
-
-                stack.push(
-                    this.$hideRow(rows[i], delay)
-                );
-            }
-
             this.$Container.setStyle('height', this.$Container.getSize().y);
 
             return new Promise(function (resolve) {
 
-                Promise.all(stack).then(function () {
-
-                    moofx(self.$Container).animate({
-                        height: 0
-                    }, {
-                        duration: 300,
-                        callback: function () {
-                            self.$Container.setStyle('height', null);
-                            resolve();
-                        }
-                    });
+                moofx(self.$Container).animate({
+                    opacity: 0
+                }, {
+                    duration: 500,
+                    callback: function () {
+                        rows.destroy();
+                        resolve();
+                    }
                 });
 
             }.bind(this));
         },
 
         /**
-         * hide a row
+         * Show the container
          *
-         * @param {HTMLDivElement} Row
-         * @param {Number} [delay]
          * @returns {Promise}
          */
-        $hideRow: function (Row, delay) {
-            delay = delay || 100;
+        $showContainer: function () {
+            var self = this,
+                rows = this.$Container.getElements('[data-row]'),
+                size = this.$Container.getScrollSize();
+
+            var rowSize = rows.getSize().map(function (o) {
+                return o.y;
+            }).sum();
 
             return new Promise(function (resolve) {
 
-                (function () {
+                moofx(self.$Container).animate({
+                    height : rowSize < size.y ? rowSize : size.y,
+                    opacity: 1
+                }, {
+                    duration: 500,
+                    callback: function () {
+                        resolve();
+                    }
+                });
 
-                    moofx(Row).animate({
-                        opacity: 0
-                    }, {
-                        duration: 200,
-                        callback: function () {
-                            Row.destroy();
-                            resolve();
-                        }
-                    });
+            }.bind(this));
+        },
 
-                }).delay(delay);
+        /**
+         * Scroll to the last row
+         * @returns {Promise}
+         */
+        $scrollToLastRow: function () {
+            var Row = this.$Container.getElement('[data-row]:last-child');
 
+            return new Promise(function (resolve) {
+                new Fx.Scroll(window.document).start(
+                    0,
+                    Row.getPosition().y - 100
+                ).chain(resolve);
             });
         },
 
@@ -508,6 +524,36 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }.bind(this)
                 });
             }.bind(this));
+        },
+
+        /**
+         * disable all sorting functionality
+         */
+        disableSorting: function () {
+            this.$sortingEnabled = false;
+
+            this.$ButtonDetails.addClass('disabled');
+            this.$ButtonGalery.addClass('disabled');
+            this.$ButtonList.addClass('disabled');
+
+            this.$ButtonDetails.removeClass('active');
+            this.$ButtonGalery.removeClass('active');
+            this.$ButtonList.removeClass('active');
+
+            this.$Sort.disable();
+        },
+
+        /**
+         * enable all sorting functionality
+         */
+        enableSorting: function () {
+            this.$sortingEnabled = true;
+
+            this.$ButtonDetails.removeClass('disabled');
+            this.$ButtonGalery.removeClass('disabled');
+            this.$ButtonList.removeClass('disabled');
+
+            this.$Sort.enable();
         },
 
         /**

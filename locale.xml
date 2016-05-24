@@ -203,6 +203,31 @@
             <en><![CDATA[Create new Media folder]]></en>
         </locale>
 
+        <locale name="category.control.productlist.button.more">
+            <de><![CDATA[Mehr laden]]></de>
+            <en><![CDATA[More]]></en>
+        </locale>
+        <locale name="category.control.productlist.sortby">
+            <de><![CDATA[Sortieren nach...]]></de>
+            <en><![CDATA[Sort by...]]></en>
+        </locale>
+        <locale name="category.control.productlist.view.gallery">
+            <de><![CDATA[Galerie]]></de>
+            <en><![CDATA[Gallery]]></en>
+        </locale>
+        <locale name="category.control.productlist.view.details">
+            <de><![CDATA[Details]]></de>
+            <en><![CDATA[Details]]></en>
+        </locale>
+        <locale name="category.control.productlist.view.list">
+            <de><![CDATA[Liste]]></de>
+            <en><![CDATA[List]]></en>
+        </locale>
+        <locale name="category.control.productlist.javascript">
+            <de><![CDATA[Bitte aktivieren Sie JavaScript.]]></de>
+            <en><![CDATA[Please activate JavaScript.]]></en>
+        </locale>
+
 
         <!-- Feldtypen -->
         <locale name="fieldtype.IntType">
@@ -390,6 +415,11 @@
             <en><![CDATA[The products has been deleted successfully.]]></en>
         </locale>
 
+        <locale name="message.product.search.empty">
+            <de><![CDATA[Leider wurden keine Produkte gefunden.]]></de>
+            <en><![CDATA[Sorry, no products were found.]]></en>
+        </locale>
+
         <!-- crons -->
         <locale name="cron.updateProductCache.title">
             <de><![CDATA[Produkt-Cache aktualisieren]]></de>
@@ -446,6 +476,10 @@
             <en><![CDATA[Search]]></en>
         </locale>
         <locale name="searchtypes.empty">
+            <de><![CDATA[Keine Suchfelder gefunden]]></de>
+            <en><![CDATA[No search fields found]]></en>
+        </locale>
+        <locale name="searchtypes.empty.frontend">
             <de><![CDATA[Keine Suchfelder gefunden]]></de>
             <en><![CDATA[No search fields found]]></en>
         </locale>
@@ -943,6 +977,10 @@
         <locale name="quiqqer.products.field.edit.placeholder">
             <de><![CDATA[Darf Feld #[fielId] - [fieldname] bearbeiten.]]></de>
             <en><![CDATA[Is allowed to edit the field #[fielId] - [fieldname].]]></en>
+        </locale>
+        <locale name="quiqqer.products.control.search.title">
+            <de><![CDATA[Filter]]></de>
+            <en><![CDATA[Filter]]></en>
         </locale>
 
         <!-- FrontendSearch -->

@@ -24,6 +24,8 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
 ], function (QUI, QUIControl, Fields, Search, QUIAjax, QUILocale, Mustache) {
     "use strict";
 
+    var lg = 'quiqqer/products';
+
     return new Class({
 
         Extends: QUIControl,
@@ -35,9 +37,10 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
         ],
 
         options: {
-            siteid : false,
-            project: false,
-            lang   : false
+            siteid        : false,
+            project       : false,
+            lang          : false,
+            freeTextSearch: true
         },
 
         initialize: function (options) {
@@ -99,7 +102,6 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
                 require([
                     'text!package/quiqqer/products/bin/controls/frontend/search/Search.Form.html'
                 ], function (template) {
-
                     var Container     = new Element('div');
                     var FormContainer = this.$Form.getElement('.inner-form');
 
@@ -110,8 +112,10 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
                             zIndex  : 1
                         },
                         html  : Mustache.render(template, {
-                            fields        : result,
-                            text_no_fields: 'Kein Suchefelder gefunden'
+                            fields                  : result,
+                            freeTextSearch          : this.getAttribute('freeTextSearch'),
+                            fieldTitleFreeTextSearch: QUILocale.get(lg, 'searchtype.freeTextSearch.title'),
+                            text_no_fields          : QUILocale.get(lg, 'searchtypes.empty.frontend')
                         })
                     });
 
@@ -199,6 +203,21 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
             }
 
             return values;
+        },
+
+        /**
+         * Return the free text search value
+         *
+         * @return {String}
+         */
+        getFreeTextSearch: function () {
+            var FreeText = this.getElm().getElement('[name="search"]');
+
+            if (FreeText) {
+                return FreeText.value;
+            }
+
+            return '';
         },
 
         /**

@@ -194,7 +194,8 @@ class ProductList extends QUI\Control
             'products'   => $products,
             'rowNumber'  => $rowNumber,
             'productTpl' => $productTpl,
-            'hidePrice'  => QUI\ERP\Products\Utils\Package::hidePrice()
+            'hidePrice'  => QUI\ERP\Products\Utils\Package::hidePrice(),
+            'count'      => $count
         ));
 
         return array(
@@ -221,9 +222,12 @@ class ProductList extends QUI\Control
             $searchParams['category'] = $this->getCategory()->getId();
         }
 
-        $searchParams['freetext'] = '';
-        $searchParams['limit']    = $max;
-        $searchParams['sheet']    = $rowNumber + 1;
+        if (!isset($searchParams['freetext'])) {
+            $searchParams['freetext'] = '';
+        }
+
+        $searchParams['limit'] = $max;
+        $searchParams['sheet'] = $rowNumber + 1;
 
         return $searchParams;
     }
@@ -243,7 +247,9 @@ class ProductList extends QUI\Control
             $searchParams['category'] = $this->getCategory()->getId();
         }
 
-        $searchParams['freetext'] = '';
+        if (!isset($searchParams['freetext'])) {
+            $searchParams['freetext'] = '';
+        }
 
         return $searchParams;
     }
