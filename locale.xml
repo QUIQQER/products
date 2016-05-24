@@ -508,6 +508,10 @@
             <de><![CDATA[Nettopreis]]></de>
             <en><![CDATA[netto price]]></en>
         </locale>
+        <locale name="products.product.panel.grid.currency">
+            <de><![CDATA[Währung]]></de>
+            <en><![CDATA[Currency]]></en>
+        </locale>
 
         <locale name="products.fields.panel.title">
             <de><![CDATA[Produktfelder]]></de>

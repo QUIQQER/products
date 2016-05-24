@@ -2,88 +2,129 @@
  * @module package/quiqqer/products/bin/controls/products/search/Search
  * @author www.pcsg.de (Henning Leutz)
  *
- * Backend suche für produkte, nur das suchformular
+ * Produkte Suche
+ * - Zeigt eine Suchmaske an
+ * - Zeigt die Ergebnisse an
  *
  * @require qui/QUI
  * @require qui/controls/Control
- * @require controls/grid/Grid
- * @require Ajax
+ * @require qui/controls/buttons/Button
  * @require Locale
+ * @require package/quiqqer/products/bin/controls/products/search/Form
+ * @require package/quiqqer/products/bin/controls/products/search/Result
  * @require css!package/quiqqer/products/bin/controls/products/search/Search.css
  *
- * @event onSearchBegin [this]
+ * @events onSearch [this]
+ * @events onSearchBegin [this]
+ * @events onClick [this, selected]
+ * @events onDblClick [this, selected]
  */
 define('package/quiqqer/products/bin/controls/products/search/Search', [
 
     'qui/QUI',
     'qui/controls/Control',
     'qui/controls/buttons/Button',
-    'controls/grid/Grid',
-    'package/quiqqer/products/bin/Fields',
-    'Ajax',
     'Locale',
-    'Mustache',
+    'package/quiqqer/products/bin/controls/products/search/Form',
+    'package/quiqqer/products/bin/controls/products/search/Result',
 
-    'text!package/quiqqer/products/bin/controls/products/search/Search.html',
     'css!package/quiqqer/products/bin/controls/products/search/Search.css'
 
-], function (QUI, QUIControl, QUIButton, Grid, Fields, Ajax, QUILocale, Mustache, template) {
+], function (QUI, QUIControl, QUIButton, QUILocale, Form, Result) {
     "use strict";
 
     return new Class({
+
         Extends: QUIControl,
         Type   : 'package/quiqqer/products/bin/controls/products/search/Search',
 
+        options: {
+            sortOn: false,
+            sortBy: false,
+            limit : false,
+            sheet : 1,
+
+            injectShow: true
+        },
+
         Binds: [
-            'search',
-            '$onSubmit',
             '$onInject'
         ],
 
-        options: {
-            searchfields: {},
-            searchbutton: true,
-            sortOn      : false,
-            sortBy      : false,
-            limit       : false,
-            sheet       : 1
-        },
-
+        /**
+         * construct
+         *
+         * @param {Object} options
+         */
         initialize: function (options) {
             this.parent(options);
 
-            this.$Form = null;
+            this.$Elm    = null;
+            this.$Result = null;
+            this.$Form   = null;
+
+            this.$FormContainer   = null;
+            this.$ResultContainer = null;
 
             this.addEvents({
-                onCreate: this.$onCreate,
                 onInject: this.$onInject
             });
         },
 
         /**
-         * Resize
-         *
-         * @return {Promise}
-         */
-        resize: function () {
-            return Promise.resolve();
-        },
-
-        /**
-         * Create the domnode element
-         *
-         * @return {HTMLFormElement}
+         * create the domnode element
          */
         create: function () {
-            this.$Elm = new Element('form', {
+            var self = this;
+
+            this.$Elm = new Element('div', {
                 'class': 'quiqqer-products-search',
-                events : {
-                    // submit event, because we have no real submit button
-                    keyup: function (event) {
-                        if (event.key === 'enter') {
-                            this.$onSubmit();
-                        }
+                styles : {
+                    opacity: 0
+                }
+            });
+
+            // search form
+            this.$FormContainer = new Element('div', {
+                'class': 'products-search-form--form-container'
+            }).inject(this.$Elm);
+
+            this.$ResultContainer = new Element('div', {
+                'class': 'products-search-form--result-container'
+            }).inject(this.$Elm);
+
+            // @todo dblclick
+            this.$Form = new Form({
+                events: {
+                    onSearchBegin: function () {
+                        self.fireEvent('searchBegin', [self]);
+                    },
+
+                    onSearch: function (SF, result) {
+                        this.$Result.setData(result);
+                        self.fireEvent('search', [self]);
                     }.bind(this)
+                }
+            });
+
+            this.$Result = new Result({
+                events: {
+                    onRefresh: function (Result, options) {
+                        self.$Form.setAttribute('sheet', options.page);
+                        self.$Form.setAttribute('limit', options.perPage);
+                        self.$Form.setAttribute('sortOn', options.sortOn);
+                        self.$Form.setAttribute('sortBy', options.sortBy);
+
+                        self.$Form.search();
+                    },
+
+                    onClick: function () {
+                        self.fireEvent('click', [self, self.$Result.getSelected()]);
+                    },
+
+                    onDblClick: function () {
+                        self.fireEvent('dblClick', [self, self.$Result.getSelected()]);
+                    }
                 }
             });
 
@@ -94,154 +135,74 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
          * event : on inject
          */
         $onInject: function () {
-            Ajax.get('package_quiqqer_products_ajax_search_backend_getSearchFieldData', function (result) {
+            this.$Result.inject(this.$ResultContainer);
+            this.$Form.inject(this.$FormContainer);
 
-                var fieldsIds = result.map(function (Entry) {
-                    return Entry.id;
-                });
-
-                Fields.getChildren(fieldsIds).then(function (fields) {
-                    var i, id, len, fieldId, Field;
-
-                    var fieldFilter = function (Field) {
-                        return Field.id == this;
-                    };
-
-                    for (i = 0, len = result.length; i < len; i++) {
-                        fieldId = result[i].id;
-                        Field   = fields.filter(fieldFilter.bind(result[i].id))[0];
-
-                        result[i].fieldTitle = Field.title;
-                    }
-
-                    this.$Elm.set({
-                        html: Mustache.render(template, {
-                            fields        : result,
-                            text_no_fields: 'Keine Suchefelder gefunden'
-                        })
-                    });
-
-                    QUI.parse(this.$Elm).then(function () {
-                        var Field;
-                        var controls = QUI.Controls.getControlsInElement(this.$Elm);
-
-                        var getControlByFieldById = function (fieldId) {
-                            for (var c = 0, len = controls.length; c < len; c++) {
-                                if (controls[c].getAttribute('fieldid') === fieldId) {
-                                    return controls[c];
-                                }
-                            }
-                            return false;
-                        };
-
-                        for (i = 0, len = result.length; i < len; i++) {
-                            id = result[i].id;
-
-                            if (i === 0) {
-                                getControlByFieldById(result[i].id).focus();
-                            }
-
-                            if (!("searchData" in result[i])) {
-                                continue;
-                            }
-
-                            Field = getControlByFieldById(result[i].id);
-
-                            if (Field) {
-                                Field.setSearchData(result[i].searchData);
-                            }
-                        }
-                    }.bind(this));
-
-                    if (this.getAttribute('searchbutton')) {
-                        new QUIButton({
-                            textimage: 'fa fa-search',
-                            text     : 'Suche',
-                            events   : {
-                                onClick: this.$onSubmit
-                            }
-                        }).inject(this.$Elm);
-                    }
-
-                }.bind(this));
-
-            }.bind(this), {
-                'package': 'quiqqer/products'
-            });
+            if (this.getAttribute('injectShow')) {
+                this.show();
+            }
         },
 
         /**
-         * event : on submit
+         * Show the control
+         *
+         * @returns {Promise}
          */
-        $onSubmit: function () {
-            this.setAttribute('sheet', 1);
-            this.search();
+        show: function () {
+            return new Promise(function (resolve) {
+                moofx(this.$Elm).animate({
+                    opacity: 1
+                }, {
+                    duration: 250,
+                    callback: resolve
+                });
+            }.bind(this));
+        },
+
+        /**
+         * Hide the control
+         *
+         * @returns {Promise}
+         */
+        hide: function () {
+            return new Promise(function (resolve) {
+                moofx(this.$Elm).animate({
+                    opacity: 1
+                }, {
+                    duration: 250,
+                    callback: resolve
+                });
+            }.bind(this));
+        },
+
+        /**
+         * resize the control
+         *
+         * @return {Promise}
+         */
+        resize: function () {
+            return Promise.all([
+                this.$Result.resize(),
+                this.$Form.resize()
+            ]);
         },
 
         /**
          * Execute the search
+         *
+         * @returns {Promise}
          */
         search: function () {
-            this.fireEvent('searchBegin', [this]);
+            return this.$Form.search();
+        },
 
-            return new Promise(function (resolve) {
-
-                var i, len, Field, fieldid, sortOn;
-                var searchvalues = {};
-
-                // console.warn(this.getAttribute('sortOn'));
-
-                switch (this.getAttribute('sortOn')) {
-                    case 'price_netto':
-                        sortOn = 'F1';
-                        break;
-
-                    case 'status':
-                        sortOn = 'active';
-                        break;
-
-                    case 'id':
-                    case 'productNo':
-                    case 'title':
-                        sortOn = this.getAttribute('sortOn');
-                        break;
-
-                    default:
-                        sortOn = '';
-                }
-
-                var params = {
-                    sheet : this.getAttribute('sheet'),
-                    limit : this.getAttribute('limit'),
-                    sortOn: sortOn,
-                    sortBy: this.getAttribute('sortBy')
-                };
-                
-                var controls = QUI.Controls.getControlsInElement(this.$Elm);
-
-                var searchfields = controls.filter(function (Control) {
-                    return Control.getType() === 'package/quiqqer/products/bin/controls/search/SearchField';
-                });
-
-                for (i = 0, len = searchfields.length; i < len; i++) {
-                    Field   = searchfields[i];
-                    fieldid = Field.getFieldId();
-
-                    searchvalues[fieldid] = Field.getSearchValue();
-                }
-
-                params.fields = searchvalues;
-
-                Ajax.get('package_quiqqer_products_ajax_search_backend_executeForGrid', function (result) {
-                    resolve(result);
-                    this.fireEvent('search', [this, result]);
-
-                }.bind(this), {
-                    'package'   : 'quiqqer/products',
-                    searchParams: JSON.encode(params)
-                });
-
-            }.bind(this));
+        /**
+         * Return the selected data
+         *
+         * @returns {Array}
+         */
+        getSelected: function () {
+            return this.$Result.getSelected();
         }
     });
 });

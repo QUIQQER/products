@@ -11,6 +11,7 @@
  *
  * @event onRefresh [this, {Object} GridOptions]
  * @event onSubmit [this, {Array} productIds]
+ * @event onDblClick [this, {Array} productIds]
  */
 define('package/quiqqer/products/bin/controls/products/search/Result', [
 
@@ -18,7 +19,9 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
     'qui/controls/Control',
     'controls/grid/Grid',
     'Locale',
-    'package/quiqqer/products/bin/Fields'
+    'package/quiqqer/products/bin/Fields',
+
+    'css!package/quiqqer/products/bin/controls/products/search/Result.css'
 
 ], function (QUI, QUIControl, Grid, QUILocale, Fields) {
     "use strict";
@@ -43,7 +46,9 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
         },
 
         initialize: function (options) {
-            this.$Grid          = null;
+            this.$data = null;
+            this.$Grid = null;
+
             this.$GridContainer = null;
 
             this.parent(options);
@@ -116,6 +121,18 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                 productNo = entry.fields.find(findProductNo);
 
                 data.data[i].productNo = productNo.value || '';
+
+                if (data.data[i].price_netto) {
+                    data.data[i].price_netto = new Element('span', {
+                        html   : data.data[i].price_netto.toFixed(2),
+                        'class': 'quiqqer-products-search-results--price-display'
+                    });
+                }
+            }
+
+            if (!this.$Grid) {
+                this.$data = data;
+                return;
             }
 
             this.$Grid.setData(data);
@@ -160,7 +177,7 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                 }, {
                     header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
                     dataIndex: 'price_netto',
-                    dataType : 'number',
+                    dataType : 'node',
                     width    : 100
                 }, {
                     header   : QUILocale.get(lg, 'products.product.panel.grid.currency'),
@@ -175,8 +192,19 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                     this.fireEvent('refresh', [this, this.$Grid.options]);
                 }.bind(this),
 
-                onDblClick: this.submit
+                onDblClick: function () {
+                    this.fireEvent('dblClick', [this, this.getSelected()]);
+                    this.submit();
+                }.bind(this),
+
+                onClick: function () {
+                    this.fireEvent('click', [this, this.getSelected()]);
+                }.bind(this)
             });
+
+            if (this.$data) {
+                this.$Grid.setData(this.$data);
+            }
         },
 
         /**

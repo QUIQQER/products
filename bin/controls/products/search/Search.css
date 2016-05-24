@@ -5,39 +5,15 @@
     width: 100%;
 }
 
-.quiqqer-products-search-form,
-.quiqqer-products-search-result {
-    display: none;
+.products-search-form--form-container {
     float: left;
     height: 100%;
-    left: 0;
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
+    padding: 0 20px 0 0;
+    width: 300px;
 }
 
-.quiqqer-products-search .qui-select {
-    margin: 0;
-}
-
-.quiqqer-products-search-field-container {
+.products-search-form--result-container {
     float: left;
-    margin-bottom: 10px;
-    width: 100%;
-}
-
-.quiqqer-products-search-field-label {
-    float: left;
-    padding: 0 0 5px 5px;
-    width: 100%;
-}
-
-.quiqqer-products-search-field-container-field {
-    float: left;
-    width: 100%;
-}
-
-.quiqqer-products-search-field-container-field input {
-    width: 100%;
+    height: 100%;
+    width: calc(100% - 300px);
 }

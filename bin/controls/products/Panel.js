@@ -13,7 +13,6 @@
  * @require package/quiqqer/products/bin/classes/Products
  * @require package/quiqqer/products/bin/controls/products/Create
  * @require package/quiqqer/products/bin/controls/products/Product
- * @require css!package/quiqqer/products/bin/controls/products/Panel.css
  */
 define('package/quiqqer/products/bin/controls/products/Panel', [
 
@@ -24,15 +23,12 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
     'controls/grid/Grid',
     'Locale',
     'package/quiqqer/products/bin/Products',
-    'package/quiqqer/products/bin/controls/products/search/Search',
-    'package/quiqqer/products/bin/controls/products/search/Result',
     'package/quiqqer/products/bin/controls/products/Create',
     'package/quiqqer/products/bin/controls/products/Product',
-
-    'css!package/quiqqer/products/bin/controls/products/Panel.css'
+    'package/quiqqer/products/bin/controls/products/search/Search'
 
 ], function (QUI, QUIPanel, QUIButton, QUIConfirm, Grid, QUILocale,
-             Products, SearchForm, SearchResult, CreateProduct, ProductPanel) {
+             Products, CreateProduct, ProductPanel, Search) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -47,29 +43,28 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             'createChild',
             'deleteChild',
             'updateChild',
+            '$onShow',
+            '$onHide',
             '$onCreate',
             '$onResize',
             '$onInject'
         ],
 
         initialize: function (options) {
-
             this.setAttributes({
                 title: QUILocale.get(lg, 'products.panel.title')
             });
 
             this.parent(options);
 
-            this.$SearchForm   = null;
-            this.$SearchResult = null;
-
-            this.$FormContainer   = null;
-            this.$ResultContainer = null;
+            this.$Search = null;
 
             this.addEvents({
                 onCreate: this.$onCreate,
                 onResize: this.$onResize,
-                onInject: this.$onInject
+                onInject: this.$onInject,
+                onShow  : this.$onShow,
+                onHide  : this.$onHide
             });
         },
 
@@ -87,28 +82,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             Delete.enable();
             Edit.enable();
 
-            return this.$SearchForm.search();
-
-            // return Products.getList({
-            //     perPage: this.$Grid.options.perPage,
-            //     page   : this.$Grid.options.page
-            // }).then(function (data) {
-            //     for (var i = 0, len = data.data.length; i < len; i++) {
-            //         data.data[i].status = new Element('span', {
-            //             'class': data.data[i].active ? 'fa fa-check' : 'fa fa-remove'
-            //         });
-            //     }
-            //
-            //     self.$Grid.setData(data);
-            //
-            //     var Delete = self.getButtons('delete'),
-            //         Edit   = self.getButtons('edit');
-            //
-            //     Delete.disable();
-            //     Edit.disable();
-            //
-            //     self.Loader.hide();
-            // });
+            return this.$Search.search();
         },
 
         /**
@@ -117,18 +91,14 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * @return {Promise}
          */
         $onResize: function () {
-            return Promise.all([
-                this.$SearchResult.resize(),
-                this.$SearchForm.resize()
-            ]);
+            return this.$Search.resize();
         },
 
         /**
          * event : on create
          */
         $onCreate: function () {
-            var self    = this,
-                Content = this.getContent();
+            var self = this;
 
             // buttons
             this.addButton({
@@ -148,7 +118,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 events   : {
                     onClick: function () {
                         self.updateChild(
-                            self.$Grid.getSelectedData()[0].id
+                            self.$Search.getSelected()[0]
                         );
                     }
                 }
@@ -166,116 +136,65 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 events   : {
                     onClick: function () {
                         self.deleteChild(
-                            self.$Grid.getSelectedData()[0].id
+                            self.$Search.getSelected()[0]
                         );
                     }
                 }
             });
-
-            // search form
-            this.$FormContainer = new Element('div', {
-                'class': 'products-categories-panel-form-container'
-            }).inject(Content);
-
-            this.$ResultContainer = new Element('div', {
-                'class': 'products-categories-panel-result-container'
-            }).inject(Content);
-
-
-            this.$SearchResult = new SearchResult({
-                events: {
-                    onRefresh: function (Result, options) {
-
-                        console.log(options);
-
-                        self.$SearchForm.setAttribute('sheet', options.page);
-                        self.$SearchForm.setAttribute('limit', options.perPage);
-                        self.$SearchForm.setAttribute('sortOn', options.sortOn);
-                        self.$SearchForm.setAttribute('sortBy', options.sortBy);
-
-                        self.$SearchForm.search();
-                    },
-
-                    onSubmit: function (Result, selected) {
-                        for (var i = 0, len = selected.length; i < len; i++) {
-                            self.updateChild(selected[i]);
-                        }
-                    }
-                }
-            }).inject(this.$ResultContainer);
-
-            this.$SearchForm = new SearchForm({
-                events: {
-                    onSearchBegin: function () {
-                        this.Loader.show();
-                    }.bind(this),
-
-                    onSearch: function (SF, result) {
-                        this.$SearchResult.setData(result);
-                        this.Loader.hide();
-                    }.bind(this)
-                }
-            }).inject(this.$FormContainer);
-
-
-            // this.$Grid = new Grid(GridContainer, {
-            //     pagination : true,
-            //     columnModel: [{
-            //         header   : QUILocale.get('quiqqer/system', 'id'),
-            //         dataIndex: 'id',
-            //         dataType : 'number',
-            //         width    : 60
-            //     }, {
-            //         header   : QUILocale.get('quiqqer/system', 'status'),
-            //         dataIndex: 'status',
-            //         dataType : 'node',
-            //         width    : 60
-            //     }, {
-            //         header   : QUILocale.get('quiqqer/system', 'title'),
-            //         dataIndex: 'title',
-            //         dataType : 'text',
-            //         width    : 200
-            //     }, {
-            //         header   : QUILocale.get('quiqqer/system', 'description'),
-            //         dataIndex: 'description',
-            //         dataType : 'text',
-            //         width    : 200
-            //     }, {
-            //         header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
-            //         dataIndex: 'price',
-            //         dataType : 'text',
-            //         width    : 100
-            //     }, {
-            //         dataIndex: 'active',
-            //         dataType : 'number',
-            //         hidden   : true
-            //     }]
-            // });
-            //
-            //
-            // this.$Grid.addEvents({
-            //     onRefresh : this.refresh,
-            //     onClick   : function () {
-            //         var Delete = self.getButtons('delete'),
-            //             Edit   = self.getButtons('edit');
-            //
-            //         Delete.enable();
-            //         Edit.enable();
-            //
-            //     },
-            //     onDblClick: function () {
-            //         self.updateChild(
-            //             self.$Grid.getSelectedData()[0].id
-            //         );
-            //     }
-            // });
         },
 
         /**
          * event : on inject
          */
         $onInject: function () {
+            var self = this;
+
+            this.$Search = new Search({
+                injectShow: false,
+                events    : {
+                    onClick: function () {
+                        var Delete = self.getButtons('delete'),
+                            Edit   = self.getButtons('edit');
+
+                        Delete.enable();
+                        Edit.enable();
+                    },
+
+                    onDblClick: function () {
+                        self.updateChild(self.$Search.getSelected()[0]);
+                    },
+
+                    onSearchBegin: function () {
+                        var Delete = self.getButtons('delete'),
+                            Edit   = self.getButtons('edit');
+
+                        Delete.disable();
+                        Edit.disable();
+
+                        self.Loader.show();
+                    },
+
+                    onSearch: function () {
+                        self.Loader.hide();
+                    }
+                }
+            }).inject(this.getContent());
+
             this.refresh();
+        },
+
+        /**
+         * event: on show
+         */
+        $onShow: function () {
+            this.$Search.show.delay(300, this.$Search);
+        },
+
+        /**
+         * event: on hide
+         */
+        $onHide: function () {
+            this.$Search.hide();
         },
 
         /**
