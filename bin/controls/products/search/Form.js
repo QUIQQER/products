@@ -210,10 +210,9 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
             return new Promise(function (resolve) {
 
                 var i, len, Field, fieldid, sortOn;
-                var searchvalues = {};
-                this.$Elm.getElements('[name="search"]');
 
-                // console.warn(this.getAttribute('sortOn'));
+                var searchvalues = {},
+                    FreeText     = this.$Elm.getElement('[name="search"]');
 
                 switch (this.getAttribute('sortOn')) {
                     case 'price_netto':
@@ -241,6 +240,10 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                     sortBy: this.getAttribute('sortBy')
                 };
 
+                if (FreeText) {
+                    params.freetext = FreeText.value;
+                }
+
                 var controls = QUI.Controls.getControlsInElement(this.$Elm);
 
                 var searchfields = controls.filter(function (Control) {
@@ -255,7 +258,6 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                 }
 
                 params.fields = searchvalues;
-
 
                 Ajax.get('package_quiqqer_products_ajax_search_backend_executeForGrid', function (result) {
                     resolve(result);
