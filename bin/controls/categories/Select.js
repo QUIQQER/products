@@ -13,6 +13,8 @@
  *
  * @event onAddCategory [ this, id ]
  * @event onChange [ this ]
+ * @event onRemoveCategory [ this, categoryId ]
+ * @event onClear [ this ]
  */
 define('package/quiqqer/products/bin/controls/categories/Select', [
 
@@ -314,6 +316,49 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         },
 
         /**
+         * Clear - Remove all fields
+         *
+         * @return {Object} this (package/quiqqer/products/bin/controls/categories/Select)
+         */
+        clear: function () {
+            this.$List.set('html', '');
+            this.$values = [];
+
+            this.fireEvent('clear', [this]);
+            this.$refreshValues();
+
+            return this;
+        },
+
+        /**
+         * Remove a category from the list
+         *
+         * @param {Number} categoryId
+         */
+        removeCategory: function (categoryId) {
+            var newValues = [];
+
+            for (var i = 0, len = this.$values.length; i < len; i++) {
+                if (this.$values[i] != categoryId) {
+                    newValues.push(this.$values[i]);
+                }
+            }
+
+            this.$values = newValues;
+
+            QUI.Controls.getControlsInElement(this.$List).each(function (Category) {
+                if (Category.getAttribute('id') == categoryId) {
+                    Category.destroy();
+                }
+            });
+
+            this.fireEvent('removeCategory', [this, categoryId]);
+            this.$refreshValues();
+
+            return this;
+        },
+
+        /**
          * trigger a users search and open a category dropdown for selection
          *
          * @method package/quiqqer/products/bin/controls/categories/Select#search
@@ -569,7 +614,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 this.$Search.focus();
                 return this;
             }
-            
+
             return this;
         },
 

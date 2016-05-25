@@ -131,7 +131,7 @@ define('package/quiqqer/products/bin/classes/Products', [
         /**
          * Return the data of a product
          *
-         * @param {number} productId
+         * @param {Number} productId
          * @returns {Promise}
          */
         getChild: function (productId) {
@@ -140,6 +140,22 @@ define('package/quiqqer/products/bin/classes/Products', [
                     'package': 'quiqqer/products',
                     onError  : reject,
                     productId: productId
+                });
+            });
+        },
+
+        /**
+         * Return the data of a product
+         *
+         * @param {number} productIds
+         * @returns {Promise}
+         */
+        getChildren: function (productIds) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_getChildren', resolve, {
+                    'package' : 'quiqqer/products',
+                    onError   : reject,
+                    productIds: JSON.encode(productIds)
                 });
             });
         },

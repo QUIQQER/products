@@ -223,7 +223,7 @@ class FrontendSearch extends Search
 
                 $whereFreeText[]              = '`' . $columnName . '` LIKE :freetext' . $fieldId;
                 $binds['freetext' . $fieldId] = array(
-                    'value' => $value,
+                    'value' => '%' . $value . '%',
                     'type'  => \PDO::PARAM_STR
                 );
             }
@@ -280,7 +280,7 @@ class FrontendSearch extends Search
         }
 
         $Stmt = $PDO->prepare($sql);
-
+        
         // bind search values
         foreach ($binds as $var => $bind) {
             $Stmt->bindValue(':' . $var, $bind['value'], $bind['type']);

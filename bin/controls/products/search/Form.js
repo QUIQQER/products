@@ -32,6 +32,8 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
 ], function (QUI, QUIControl, QUIButton, Grid, Fields, Ajax, QUILocale, Mustache, template) {
     "use strict";
 
+    var lg = 'quiqqer/products';
+
     return new Class({
         Extends: QUIControl,
         Type   : 'package/quiqqer/products/bin/controls/products/search/Search',
@@ -43,19 +45,20 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
         ],
 
         options: {
-            searchfields: {},
-            searchbutton: true,
-            sortOn      : false,
-            sortBy      : false,
-            limit       : false,
-            sheet       : 1
+            searchfields  : {},
+            searchbutton  : true,
+            sortOn        : false,
+            sortBy        : false,
+            limit         : false,
+            sheet         : 1,
+            freeTextSearch: true
         },
 
         initialize: function (options) {
             this.parent(options);
 
-            this.$Form   = null;
-            this.$loaded = false;
+            this.$Container = null;
+            this.$loaded    = false;
 
             this.addEvents({
                 onCreate: this.$onCreate,
@@ -111,7 +114,6 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
          */
         $onInject: function () {
             Ajax.get('package_quiqqer_products_ajax_search_backend_getSearchFieldData', function (result) {
-
                 var fieldsIds = result.map(function (Entry) {
                     return Entry.id;
                 });
@@ -132,14 +134,20 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
 
                     this.$Elm.set({
                         html: Mustache.render(template, {
-                            fields        : result,
-                            text_no_fields: 'Keine Suchefelder gefunden'
+                            fields                  : result,
+                            freeTextSearch          : this.getAttribute('freeTextSearch'),
+                            fieldTitleFreeTextSearch: QUILocale.get(lg, 'searchtype.freeTextSearch.title'),
+                            text_no_fields          : QUILocale.get(lg, 'searchtypes.empty')
                         })
                     });
 
+                    this.$Container = this.$Elm.getElement(
+                        '.quiqqer-products-search-fieldContainer'
+                    );
+
                     QUI.parse(this.$Elm).then(function () {
                         var Field;
-                        var controls = QUI.Controls.getControlsInElement(this.$Elm);
+                        var controls = QUI.Controls.getControlsInElement(this.$Container);
 
                         var getControlByFieldById = function (fieldId) {
                             for (var c = 0, len = controls.length; c < len; c++) {
@@ -172,11 +180,22 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                     if (this.getAttribute('searchbutton')) {
                         new QUIButton({
                             textimage: 'fa fa-search',
-                            text     : 'Suche',
+                            text     : QUILocale.get('quiqqer/system', 'search'),
                             events   : {
                                 onClick: this.$onSubmit
+                            },
+                            styles   : {
+                                display : 'block',
+                                'float' : 'none',
+                                margin  : '10px auto 0',
+                                maxWidth: '100%',
+                                width   : 200
                             }
                         }).inject(this.$Elm);
+
+                        this.$Elm.addClass(
+                            'quiqqer-products-search-form-submitButton'
+                        );
                     }
 
                     this.$loaded = true;
@@ -205,9 +224,9 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
             return new Promise(function (resolve) {
 
                 var i, len, Field, fieldid, sortOn;
-                var searchvalues = {};
 
-                // console.warn(this.getAttribute('sortOn'));
+                var searchvalues = {},
+                    FreeText     = this.$Elm.getElement('[name="search"]');
 
                 switch (this.getAttribute('sortOn')) {
                     case 'price_netto':
@@ -234,6 +253,10 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                     sortOn: sortOn,
                     sortBy: this.getAttribute('sortBy')
                 };
+
+                if (FreeText) {
+                    params.freetext = FreeText.value;
+                }
 
                 var controls = QUI.Controls.getControlsInElement(this.$Elm);
 

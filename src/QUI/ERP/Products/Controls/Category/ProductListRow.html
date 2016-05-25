@@ -1,3 +1,4 @@
+{if $count}
 <div class="quiqqer-products-productList-products-product-row"
      data-row="{$rowNumber}"
 >
@@ -5,3 +6,8 @@
         {include file=$productTpl Product=$Product}
     {/foreach}
 </div>
+{else}
+<div class="quiqqer-products-productList-sort__noProducts">
+    {locale group="quiqqer/products" var="message.product.search.empty"}
+</div>
+{/if}

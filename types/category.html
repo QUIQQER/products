@@ -6,7 +6,9 @@
 
 <div class="grid-100 mobile-grid-100 grid-parent page-multible-content">
 
-    {if $Search->hasFields()}
+    {if $Site->getAttribute('quiqqer.products.settings.dontShowSearch') == false &&
+        $Search->hasFields()
+    }
     <div class="content-headerpage-multible-left grid-30 mobile-grid-100">
         {$Search->create()}
     </div>

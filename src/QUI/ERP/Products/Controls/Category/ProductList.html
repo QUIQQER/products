@@ -12,21 +12,21 @@
 {if $count}
 <div class="quiqqer-products-productList-sort">
     <noscript>
-        Bitte aktivieren Sie JavaScript.
+        {locale group=" quiqqer/products" var="category.control.productlist.javascript"}
     </noscript>
 
     <div class="grid-50 mobile-grid-50 grid-parent quiqqer-products-productList-sort-sorting" style="display: none">
-        Sortieren nach...
+        {locale group="quiqqer/products" var="category.control.productlist.sortby"}
     </div>
     <div class="grid-50 mobile-grid-50 grid-parent quiqqer-products-productList-sort-display" style="display: none">
         <span class="fa fa-th button quiqqer-products-productList-sort-display-galery"
-              data-tooltip="Gallerie"
+              data-tooltip="{locale group=" quiqqer/products" var="category.control.productlist.view.gallery"}"
         ></span>
         <span class="fa fa-list-ul button quiqqer-products-productList-sort-display-details"
-              data-tooltip="Details"
+              data-tooltip="{locale group=" quiqqer/products" var="category.control.productlist.view.details"}"
         ></span>
         <span class="fa fa-align-justify button quiqqer-products-productList-sort-display-list"
-              data-tooltip="Liste"
+              data-tooltip="{locale group=" quiqqer/products" var="category.control.productlist.view.list"}"
         ></span>
     </div>
 </div>
@@ -34,20 +34,18 @@
 
 <div class="quiqqer-products-productList-products">
     {if $count}
-    {foreach from=$rows item=row}
-        {$row.html}
-    {/foreach}
-    {elseif !count($children)}
-    <div class="quiqqer-products-productList-sort__noProducts">
-        Es wurden keine Produkte gefunden
-    </div>
+        {foreach from=$rows item=row}
+            {$row.html}
+        {/foreach}
+    {else}
+        <div class="quiqqer-products-productList-sort__noProducts">
+            {locale group="quiqqer/products" var="message.product.search.empty"}
+        </div>
     {/if}
+</div>
 
+<div class="quiqqer-products-productList-products-more" {if $more}style="opacity: 0" {/if}>
+<div class="button disabled">
+    {locale group="quiqqer/products" var="category.control.productlist.button.more"}
 </div>
-{if $more}
-<div class="quiqqer-products-productList-products-more">
-    <div class="button disabled">
-        Mehr laden
-    </div>
 </div>
-{/if}
