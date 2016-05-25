@@ -372,7 +372,7 @@ class EventHandling
     }
 
     /**
-     * Event on machine category site save
+     * Event on product category site save
      *
      * @param \QUI\Projects\Site\Edit $Site
      */
@@ -388,10 +388,55 @@ class EventHandling
             QUI::getRewrite()->registerPath($url . '/*', $Site);
         }
 
-
+        // cache clearing
         $cname = 'products/search/frontend/fieldvalues/'
                  . $Site->getId() . '/' . $Site->getProject()->getLang();
 
         QUI\ERP\Products\Search\Cache::clear($cname);
+    }
+
+    /**
+     * Event on product category site save
+     *
+     * @param \QUI\Projects\Site\Edit $Site
+     */
+    public static function onSiteSaveBefore($Site)
+    {
+        // default fields ids
+        $searchFieldIds = $Site->getAttribute('quiqqer.products.settings.searchFieldIds');
+        $fieldsIds      = array();
+
+        if ($searchFieldIds === false) {
+            $searchFieldIds = array();
+        }
+
+        if (is_string($searchFieldIds)) {
+            $searchFieldIds = json_decode($searchFieldIds, true);
+        }
+
+
+        foreach ($searchFieldIds as $key => $entry) {
+            if (is_numeric($key)) {
+                $fieldsIds[] = $key;
+            }
+        }
+
+        if (empty($fieldsIds)) {
+            $Package    = QUI::getPackage('quiqqer/products');
+            $defaultIds = $Package->getConfig()->get('search', 'frontend');
+
+            if ($defaultIds) {
+                $defaultIds = explode(',', $defaultIds);
+
+                foreach ($defaultIds as $defaultId) {
+                    $fieldsIds[$defaultId] = 1;
+                }
+
+                $Site->setAttribute(
+                    'quiqqer.products.settings.searchFieldIds',
+                    json_encode($fieldsIds)
+                );
+            }
+        }
     }
 }
