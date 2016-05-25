@@ -106,4 +106,20 @@ class Folder extends QUI\ERP\Products\Field\Field
 
         return $MediaItem->getUrl();
     }
+
+    /**
+     * Get media folder of this field
+     *
+     * @return QUI\Projects\Media\Item|false
+     */
+    public function getMediaFolder()
+    {
+        try {
+            $MediaItem = MediaUtils::getMediaItemByUrl($this->getValue());
+        } catch (QUI\Exception $Exception) {
+            return false;
+        }
+
+        return $MediaItem;
+    }
 }
