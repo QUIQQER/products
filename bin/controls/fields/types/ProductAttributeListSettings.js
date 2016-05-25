@@ -129,6 +129,28 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
 
             this.$Grid = new Grid(Container, {
                 buttons    : [{
+                    name    : 'up',
+                    icon    : 'fa fa-angle-up',
+                    disabled: true,
+                    events  : {
+                        onClick: function () {
+                            this.$Grid.moveup();
+                            this.$refreshSorting();
+                        }.bind(this)
+                    }
+                }, {
+                    name    : 'down',
+                    icon    : 'fa fa-angle-down',
+                    disabled: true,
+                    events  : {
+                        onClick: function () {
+                            this.$Grid.movedown();
+                            this.$refreshSorting();
+                        }.bind(this)
+                    }
+                }, {
+                    type: 'seperator'
+                }, {
                     name     : 'add',
                     textimage: 'fa fa-plus',
                     text     : QUILocale.get('quiqqer/system', 'add'),
@@ -162,6 +184,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 }],
                 columnModel: [{
                     header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
+                    title    : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
                     dataIndex: 'selected',
                     dataType : 'node',
                     width    : 30
@@ -322,6 +345,14 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             var selected = this.$Grid.getSelectedIndices(),
                 buttons  = this.$Grid.getButtons();
 
+            var Up = buttons.filter(function (Button) {
+                return Button.getAttribute('name') == 'up';
+            })[0];
+
+            var Down = buttons.filter(function (Button) {
+                return Button.getAttribute('name') == 'down';
+            })[0];
+
             var Edit = buttons.filter(function (Button) {
                 return Button.getAttribute('name') == 'edit';
             })[0];
@@ -334,10 +365,14 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             if (selected.length == 1) {
                 Edit.enable();
                 Delete.enable();
+                Up.enable();
+                Down.enable();
                 return;
             }
 
             Edit.disable();
+            Up.disable();
+            Down.disable();
 
             if (selected.length > 1) {
                 Delete.enable();

@@ -21,6 +21,9 @@
                 <conf name="frontend">
                     <type><![CDATA[string]]></type>
                 </conf>
+                <conf name="freetext">
+                    <type><![CDATA[string]]></type>
+                </conf>
             </section>
         </config>
 
@@ -108,6 +111,20 @@
                             <text>
                                 <locale group="quiqqer/products"
                                         var="settings.window.fieldsearch.frontend.description"/>
+                            </text>
+                        </input>
+                    </settings>
+
+                    <settings title="freetext" name="freetext">
+                        <title>
+                            <locale group="quiqqer/products" var="settings.window.fieldsearch.freetext.title"/>
+                        </title>
+                        <input conf="search.freetext"
+                               data-qui="package/quiqqer/products/bin/controls/products/search/Settings"
+                        >
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.fieldsearch.freetext.description"/>
                             </text>
                         </input>
                     </settings>

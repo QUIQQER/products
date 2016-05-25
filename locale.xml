@@ -83,21 +83,40 @@
         </locale>
 
         <locale name="settings.window.fieldsearch.backend.title">
-            <de><![CDATA[Backend-Filter]]></de>
-            <en><![CDATA[Backend filter]]></en>
+            <de><![CDATA[Felder für Backend-Filter]]></de>
+            <en><![CDATA[Fields for backend filter]]></en>
         </locale>
         <locale name="settings.window.fieldsearch.backend.description">
-            <de><![CDATA[Feldeinstellungen für die Produktsuche im Backend.]]></de>
-            <en><![CDATA[Field settings for the product search in the backend.]]></en>
+            <de><![CDATA[
+            Hier können Sie einstellen welche Filter in der Backendproduktsuche angezeigt werden sollen.
+            ]]></de>
+            <en><![CDATA[
+            Here you can define which filters to display in the backend product search.
+            ]]></en>
         </locale>
 
         <locale name="settings.window.fieldsearch.frontend.title">
-            <de><![CDATA[Allgemeine Frontend-Filter]]></de>
-            <en><![CDATA[General frontend filter]]></en>
+            <de><![CDATA[Voreinstellung für Kategorie Filter]]></de>
+            <en><![CDATA[Default for category filter]]></en>
         </locale>
         <locale name="settings.window.fieldsearch.frontend.description">
-            <de><![CDATA[Allgemeine Feldeinstellungen für die Produktsuche im Frontend.]]></de>
-            <en><![CDATA[General Field settings for the product search in the frontend.]]></en>
+            <de><![CDATA[
+            Hier können Sie die Felder für den Produktfilter definieren welche den Kategorieseiten
+            automatisch zugeordnet werden sollen.
+            ]]></de>
+            <en><![CDATA[
+            Here you can define the fields for the product filter which the category pages
+            to be assigned automatically.
+            ]]></en>
+        </locale>
+
+        <locale name="settings.window.fieldsearch.freetext.title">
+            <de><![CDATA[Feldeinstellung für Freitextsuche]]></de>
+            <en><![CDATA[Field settings for the free text search]]></en>
+        </locale>
+        <locale name="settings.window.fieldsearch.freetext.description">
+            <de><![CDATA[]]></de>
+            <en><![CDATA[]]></en>
         </locale>
 
         <locale name="fieldtype">
