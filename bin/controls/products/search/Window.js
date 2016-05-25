@@ -18,10 +18,9 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
     'qui/controls/buttons/Button',
     'qui/controls/windows/Confirm',
     'package/quiqqer/products/bin/controls/products/search/Search',
-    'package/quiqqer/products/bin/controls/products/search/Result',
     'Locale'
 
-], function (QUI, QUIControl, QUIButton, QUIConfirm, Search, Result, QUILocale) {
+], function (QUI, QUIControl, QUIButton, QUIConfirm, Search, QUILocale) {
     "use strict";
 
     return new Class({
@@ -41,7 +40,7 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
 
         options: {
             maxHeight: 600,
-            maxWidth : 300,
+            maxWidth : 800,
             icon     : 'fa fa-search',
             title    : 'Produktsuche',
             autoclose: true,
@@ -56,10 +55,6 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
 
             this.$ButtonCancel = null;
             this.$ButtonSubmit = null;
-            this.$ButtonSearch = null;
-
-            this.$ButtonsSearchContainer = null;
-            this.$ButtonsResultContainer = null;
 
             this.addEvents({
                 onOpen: this.$onOpen
@@ -83,13 +78,7 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
         $onOpen: function (Win) {
             var Content = Win.getContent();
 
-            Content.set({
-                html: '<div class="search"></div>' +
-                      '<div class="result"></div>'
-            });
-
-            this.$SearchContainer = Content.getElement('.search');
-            this.$SearchResult    = Content.getElement('.result');
+            Content.set('html', '');
 
             this.$Search = new Search({
                 searchbutton: false,
@@ -97,20 +86,7 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
                     onSearchBegin: this.$onSearchBegin,
                     onSearch     : this.$onSearch
                 }
-            }).inject(this.$SearchContainer);
-
-            this.$SearchContainer.setStyles({
-                'float' : 'left',
-                maxWidth: 300
-            });
-
-            this.$SearchResult.setStyles({
-                display: 'none',
-                'float': 'left',
-                height : '100%',
-                margin : '0 0 0 20px',
-                width  : 'calc(100% - 320px)'
-            });
+            }).inject(Content);
 
             // buttons
             this.$Buttons.set('html', '');

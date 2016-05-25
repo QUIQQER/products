@@ -33,6 +33,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
     'package/quiqqer/products/bin/controls/products/Product',
     'package/quiqqer/products/bin/Categories',
     'package/quiqqer/products/bin/Fields',
+    'package/quiqqer/products/bin/controls/products/search/Window',
     'package/quiqqer/products/bin/controls/categories/Sitemap',
     'package/quiqqer/translator/bin/controls/Update',
 
@@ -40,7 +41,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
     'css!package/quiqqer/products/bin/controls/categories/Category.css'
 
 ], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIConfirm, QUILocale, Mustache, Grid,
-             ProductPanel, Categories, Fields, CategorySitemap, Translation, template) {
+             ProductPanel, Categories, Fields, ProductSearchWindow, CategorySitemap, Translation, template) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -56,6 +57,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             'openSites',
             'openProducts',
             'openFields',
+            'openProductAddDialog',
             'save',
             '$onCreate',
             '$onInject'
@@ -330,7 +332,10 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     pagination : true,
                     buttons    : [{
                         text     : QUILocale.get(lg, 'category.panel.button.products.add'),
-                        textimage: 'fa fa-plus'
+                        textimage: 'fa fa-plus',
+                        events   : {
+                            onClick: this.openProductAddDialog
+                        }
                     }],
                     columnModel: [{
                         header   : QUILocale.get('quiqqer/system', 'id'),
@@ -755,6 +760,17 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             return this.save().then(function () {
                 this.openRecursiveDialog();
             }.bind(this));
+        },
+
+
+        openProductAddDialog: function () {
+            new ProductSearchWindow({
+                events: {
+                    onSubmit: function () {
+
+                    }
+                }
+            }).open();
         }
     });
 });

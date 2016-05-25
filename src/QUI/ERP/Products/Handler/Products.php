@@ -157,7 +157,7 @@ class Products
         // categories
         $categoryids = array();
 
-        if (empty($categoryids)) {
+        if (empty($categories)) {
             $categoryids[] = Categories::getMainCategory();
         }
 
@@ -230,7 +230,7 @@ class Products
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
                 'fieldData'  => json_encode($fieldData),
-                'categories' => ',' . implode($categories, ',') . ','
+                'categories' => ',' . implode($categoryids, ',') . ','
             )
         );
 
