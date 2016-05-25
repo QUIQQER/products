@@ -534,6 +534,18 @@ class Model extends QUI\QDOM
             $mainCategory = $Category->getId();
         }
 
+        QUI\Watcher::addString(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.save', array(
+                'id' => $this->getId()
+            )),
+            '',
+            array(
+                'categories' => ',' . implode(',', $categoryData) . ',',
+                'category'   => $mainCategory,
+                'fieldData'  => json_encode($this->validateFields())
+            )
+        );
+
         // update
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
@@ -767,6 +779,13 @@ class Model extends QUI\QDOM
     public function delete()
     {
         QUI\Permissions\Permission::checkPermission('product.delete');
+
+        QUI\Watcher::addString(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.delete', array(
+                'id'    => $this->getId(),
+                'title' => $this->getTitle(),
+            ))
+        );
 
         QUI::getDataBase()->delete(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
@@ -1034,6 +1053,12 @@ class Model extends QUI\QDOM
 
         $this->active = false;
 
+        QUI\Watcher::addString(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.activate', array(
+                'id' => $this->getId()
+            ))
+        );
+
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array('active' => 0),
@@ -1065,6 +1090,12 @@ class Model extends QUI\QDOM
                 )
             ));
         }
+
+        QUI\Watcher::addString(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.activate', array(
+                'id' => $this->getId()
+            ))
+        );
 
         // all fields correct?
         $this->validateFields();

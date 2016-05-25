@@ -276,6 +276,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $data['options'] = json_encode($options);
         }
 
+        QUI\Watcher::addString(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.save', array(
+                'id' => $this->getId()
+            )),
+            '',
+            $data
+        );
+
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             $data,
@@ -304,6 +312,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 'exceptions.system.fields.cant.be.deleted'
             ));
         }
+
+        QUI\Watcher::addString(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.delete', array(
+                'id'    => $this->getId(),
+                'title' => $this->getTitle()
+            ))
+        );
 
         $fieldId = $this->getId();
 

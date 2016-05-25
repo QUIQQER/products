@@ -225,6 +225,12 @@ class Categories
             'limit' => 1
         ));
 
+        QUI\Watcher::addString(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.category.create', array(
+                'title' => $title
+            ))
+        );
+
         if (empty($result)) {
             QUI::getDataBase()->insert(
                 QUI\ERP\Products\Utils\Tables::getCategoryTableName(),

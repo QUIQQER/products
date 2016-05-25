@@ -1022,10 +1022,12 @@
 
         <!-- FrontendSearch -->
         <locale name="exception.frontendsearch.site.type.not.eligible">
-            <de>
-                <![CDATA[Die Seite #[siteId] ist mit der Frontend Produkt-Suche nicht kompatibel, da der Seiten-Typ nicht passt.]]></de>
-            <en>
-                <![CDATA[The site #[siteId] is not compatible with the frontend product search because the site type ist not eligible.]]></en>
+            <de><![CDATA[
+            Die Seite #[siteId] ist mit der Frontend Produkt-Suche nicht kompatibel, da der Seiten-Typ nicht passt.
+            ]]></de>
+            <en><![CDATA[
+            The site #[siteId] is not compatible with the frontend product search because the site type ist not eligible.
+            ]]></en>
         </locale>
         <locale name="attention.frontendsearch.category.site.no.category">
             <de>
@@ -1050,6 +1052,53 @@
         <locale name="exception.only.ownFields.deletable">
             <de><![CDATA[Nur eigene Felder können von einem Produkt entfernt werden.]]></de>
             <en><![CDATA[Only own fields can be removed from a product.]]></en>
+        </locale>
+
+        <locale name="watcher.message.product.save">
+            <de><![CDATA[Produkt [id] gespeichert.]]></de>
+            <en><![CDATA[Saved product [id].]]></en>
+        </locale>
+        <locale name="watcher.message.product.activate">
+            <de><![CDATA[Produkt [field] aktiviert.]]></de>
+            <en><![CDATA[Activate product [id].]]></en>
+        </locale>
+        <locale name="watcher.message.product.deactivate">
+            <de><![CDATA[Produkt [field] deaktiviert.]]></de>
+            <en><![CDATA[Dectivate product [id].]]></en>
+        </locale>
+        <locale name="watcher.message.product.delete">
+            <de><![CDATA[Produkt [field] "[title]" gelöscht.]]></de>
+            <en><![CDATA[Delete product [productId] "[title]".]]></en>
+        </locale>
+        <locale name="watcher.message.product.create">
+            <de><![CDATA[Produkt "[id]" erstellt.]]></de>
+            <en><![CDATA[Created product "[id]".]]></en>
+        </locale>
+
+        <locale name="watcher.message.category.create">
+            <de><![CDATA[Kategory "[title]" erstellt.]]></de>
+            <en><![CDATA[Created category "[title]".]]></en>
+        </locale>
+        <locale name="watcher.message.category.delete">
+            <de><![CDATA[Kategory [id] "[title]" gelöscht.]]></de>
+            <en><![CDATA[Delete category [id] "[title]".]]></en>
+        </locale>
+        <locale name="watcher.message.category.save">
+            <de><![CDATA[Kategory [id] gespeichert.]]></de>
+            <en><![CDATA[Saved category [id].]]></en>
+        </locale>
+
+        <locale name="watcher.message.field.create">
+            <de><![CDATA[Feld "[id]" erstellt.]]></de>
+            <en><![CDATA[Created field "[id]".]]></en>
+        </locale>
+        <locale name="watcher.message.field.delete">
+            <de><![CDATA[Feld [id] "[title]" gelöscht.]]></de>
+            <en><![CDATA[Delete field [id] "[title]".]]></en>
+        </locale>
+        <locale name="watcher.message.field.save">
+            <de><![CDATA[Feld [id] gespeichert.]]></de>
+            <en><![CDATA[Saved field [id].]]></en>
         </locale>
     </groups>
 

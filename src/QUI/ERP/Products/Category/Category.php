@@ -758,6 +758,14 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
             $fields[] = $attributes;
         }
 
+        QUI\Watcher::addString(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.category.save', array(
+                'id' => $this->getId()
+            )),
+            'Category->save',
+            $fields
+        );
+
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             array(
@@ -786,6 +794,13 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
         }
 
         QUI\Permissions\Permission::checkPermission('category.delete', $User);
+
+        QUI\Watcher::addString(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.category.delete', array(
+                'id'    => $this->getId(),
+                'title' => $this->getTitle()
+            ))
+        );
 
         // get children ids
         $ids = array();

@@ -186,6 +186,14 @@ class Fields
         }
 
 
+        QUI\Watcher::addString(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.fields.create', array(
+                'id' => $data['id']
+            )),
+            '',
+            $data
+        );
+
         // insert field data
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),

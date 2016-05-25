@@ -226,6 +226,7 @@ class Products
             $fieldData[] = $Field->toProductArray();
         }
 
+
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
@@ -234,9 +235,21 @@ class Products
             )
         );
 
-        $newId   = QUI::getDataBase()->getPDO()->lastInsertId();
-        $Product = self::getProduct($newId);
+        $newId = QUI::getDataBase()->getPDO()->lastInsertId();
 
+        QUI\Watcher::addString(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.create', array(
+                'id' => $newId
+            )),
+            '',
+            array(
+                'fieldData'  => $fieldData,
+                'categories' => ',' . implode($categoryids, ',') . ','
+            )
+        );
+
+
+        $Product = self::getProduct($newId);
         $Product->updateCache();
 
         return $Product;
