@@ -1,28 +1,33 @@
 {{#freeTextSearch}}
-<label class="quiqqer-products-search-field-container">
-    <span class="quiqqer-products-search-field-label" title="{{fieldTitleFreeTextSearch}}">
+<div class="quiqqer-products-search-freetext">
+    <header>
         {{fieldTitleFreeTextSearch}}
-    </span>
-    <div class="quiqqer-products-search-field-container-field">
-        <input type="text" name="search" class="quiqqer-products-searchtype-text" />
-    </div>
-</label>
+    </header>
+    <input type="text" name="search" class="quiqqer-products-searchtype-text"/>
+</div>
 {{/freeTextSearch}}
 
-{{#fields}}
-<label class="quiqqer-products-search-field-container">
-    <span class="quiqqer-products-search-field-label" title="{{title}}" data-fieldid="{{id}}">
-        {{title}}
-    </span>
-    <div class="quiqqer-products-search-field-container-field"
-         data-qui-options-searchtype="{{searchType}}"
-         data-qui-options-fieldid="{{id}}"
-         data-qui="package/quiqqer/products/bin/controls/search/SearchField"
-    ></div>
-</label>
-{{/fields}}
-{{^fields}}
-<div class="quiqqer-products-search-empty">
-    {{text_no_fields}}
+{{#fields.length}}
+<div class="quiqqer-products-search-filter">
+    <header>
+        Filter
+    </header>
+    {{#fields}}
+    <label class="quiqqer-products-search-field-container">
+        <span class="quiqqer-products-search-field-label" title="{{title}}" data-fieldid="{{id}}">
+            {{title}}
+        </span>
+        <div class="quiqqer-products-search-field-container-field"
+             data-qui-options-searchtype="{{searchType}}"
+             data-qui-options-fieldid="{{id}}"
+             data-qui="package/quiqqer/products/bin/controls/search/SearchField"
+        ></div>
+    </label>
+    {{/fields}}
+    {{^fields}}
+    <div class="quiqqer-products-search-empty">
+        {{text_no_fields}}
+    </div>
+    {{/fields}}
 </div>
-{{/fields}}
+{{/fields.length}}

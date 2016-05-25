@@ -1,19 +1,29 @@
+{*
 {if $this->getAttribute('title')}
 <header>
     {locale group="quiqqer/products" var="quiqqer.products.control.search.title"}
 </header>
 {/if}
-
+*}
 <form>
     <div class="inner-form">
         {if $this->getAttribute('freeTextSearch')}
-        <div class="quiqqer-products-search-fieldplaceholder-label"></div>
-        <div class="quiqqer-products-search-fieldplaceholder-select"></div>
+        <div class="quiqqer-products-search-freetext">
+            <header>
+                <div class="quiqqer-products-search-fieldplaceholder-label"></div>
+            </header>
+            <div class="quiqqer-products-search-fieldplaceholder-select"></div>
+        </div>
         {/if}
 
-        {foreach $fields as $field}
-        <div class="quiqqer-products-search-fieldplaceholder-label"></div>
-        <div class="quiqqer-products-search-fieldplaceholder-select"></div>
-        {/foreach}
+        {if count($fields)}
+            <header>
+                <div class="quiqqer-products-search-fieldplaceholder-label"></div>
+            </header>
+            {foreach $fields as $field}
+            <div class="quiqqer-products-search-fieldplaceholder-label"></div>
+            <div class="quiqqer-products-search-fieldplaceholder-select"></div>
+            {/foreach}
+        {/if}
     </div>
 </form>

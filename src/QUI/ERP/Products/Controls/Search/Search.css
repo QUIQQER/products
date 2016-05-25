@@ -11,6 +11,20 @@
     width: 100%;
 }
 
+.quiqqer-products-search form header {
+    clear: both;
+    float: left;
+    width: 100%;
+}
+
+.quiqqer-products-search-freetext,
+.quiqqer-products-search-filter {
+    clear: both;
+    float: left;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
 .quiqqer-products-search-field-container {
     clear: both;
     float: left;
@@ -31,7 +45,7 @@
     clear: both;
     float: left;
     height: 16px;
-    margin: 8px 0 4px;
+    margin: 0 0 4px;
     width: 100%;
 }
 
