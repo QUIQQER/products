@@ -134,8 +134,8 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     disabled: true,
                     events  : {
                         onClick: function () {
-                            this.$Grid.moveup();
-                            this.$refreshSorting();
+                            this.$moveup();
+                            // this.$refreshSorting();
                         }.bind(this)
                     }
                 }, {
@@ -144,8 +144,9 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     disabled: true,
                     events  : {
                         onClick: function () {
-                            this.$Grid.movedown();
-                            this.$refreshSorting();
+                            this.$movedown();
+                            // this.$Grid.movedown();
+                            // this.$refreshSorting();
                         }.bind(this)
                     }
                 }, {
@@ -596,6 +597,40 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     }
                 }
             }).open();
+        },
+
+        /**
+         * entry move up
+         */
+        $moveup: function () {
+            var from = this.$Grid.getSelectedIndices();
+
+            if (from === 0) {
+                return;
+            }
+
+            var to = from - 1;
+
+            this.$data.splice(to, 0, this.$data.splice(from, 1)[0]);
+            this.$Grid.moveup();
+            this.update();
+        },
+
+        /**
+         * entry move down
+         */
+        $movedown: function () {
+            var from = this.$Grid.getSelectedIndices();
+
+            if (from == this.$data.length - 1) {
+                return;
+            }
+
+            var to = from + 1;
+
+            this.$data.splice(to, 0, this.$data.splice(from, 1)[0]);
+            this.$Grid.movedown();
+            this.update();
         },
 
         /**
