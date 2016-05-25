@@ -41,7 +41,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
 
         options: {
             maxHeight: 600,
-            maxWidth : 400,
+            maxWidth : 800,
             icon     : 'fa fa-file-text-o',
             title    : 'Feld-Auswahl',
             autoclose: false,
@@ -148,6 +148,12 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
                         data.data[key].isRequired = ElmFalse.clone();
                     }
 
+                    if (value.isPublic) {
+                        data.data[key].isPublic = ElmOk.clone();
+                    } else {
+                        data.data[key].isPublic = ElmFalse.clone();
+                    }
+
                     value.fieldtype = QUILocale.get(lg, 'fieldtype.' + value.type);
                 });
 
@@ -207,6 +213,11 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
                     dataIndex: 'suffix',
                     dataType : 'text',
                     width    : 100
+                }, {
+                    header   : QUILocale.get(lg, 'publicField'),
+                    dataIndex: 'isPublic',
+                    dataType : 'node',
+                    width    : 60
                 }, {
                     header   : QUILocale.get(lg, 'standardField'),
                     dataIndex: 'isStandard',
