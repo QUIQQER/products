@@ -45,6 +45,24 @@ define('package/quiqqer/products/bin/classes/Categories', [
         },
 
         /**
+         * Add the category to the products
+         *
+         * @param {Number} categoryId
+         * @param {Array} productIds
+         * @returns {Promise}
+         */
+        addProducts: function (categoryId, productIds) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_categories_addProducts', resolve, {
+                    'package' : 'quiqqer/products',
+                    onError   : reject,
+                    categoryId: categoryId,
+                    productIds: JSON.encode(productIds)
+                });
+            });
+        },
+
+        /**
          * Return the children categories
          *
          * @param {Number} parentId

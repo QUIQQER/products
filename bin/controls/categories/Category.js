@@ -57,7 +57,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             'openSites',
             'openProducts',
             'openFields',
-            'openProductAddDialog',
+            'openAddProductDialog',
             'save',
             '$onCreate',
             '$onInject'
@@ -334,7 +334,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                         text     : QUILocale.get(lg, 'category.panel.button.products.add'),
                         textimage: 'fa fa-plus',
                         events   : {
-                            onClick: this.openProductAddDialog
+                            onClick: this.openAddProductDialog
                         }
                     }],
                     columnModel: [{
@@ -539,20 +539,29 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
         /**
          * Show the category sites
+         *
+         * @return {Promise}
          */
         openProducts: function () {
+            var self = this;
+
             this.getCategory('products').setActive();
 
             return this.$hideContainer()
                 .then(this.resize)
                 .then(function () {
-                    this.$grids.Products.refresh();
-                    return this.$showContainer(this.$ContainerProducts);
-                }.bind(this));
+                    self.$grids.Products.refresh();
+                    return self.$showContainer(self.$ContainerProducts);
+                })
+                .then(function () {
+                    self.$grids.Products.resize();
+                });
         },
 
         /**
          * Show the category fields
+         *
+         * @return {Promise}
          */
         openFields: function () {
             this.getCategory('fields').setActive();
@@ -567,24 +576,29 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
         /**
          * opens the field removing dialog
+         *
+         * @return {Promise}
          */
         openRemoveFieldDialog: function () {
             var self = this;
 
-            new QUIConfirm({
-                icon       : 'fa fa-trash',
-                texticon   : 'fa fa-trash',
-                title      : QUILocale.get(lg, 'category.update.field.window.delete.title'),
-                text       : QUILocale.get(lg, 'category.update.field.window.delete.text'),
-                information: QUILocale.get(lg, 'category.update.field.window.delete.information'),
-                maxHeight  : 300,
-                maxWidth   : 450,
-                events     : {
-                    onSubmit: function () {
-                        self.removeFields(self.$grids.Fields.getSelectedIndices());
+            return new Promise(function (resolve) {
+                new QUIConfirm({
+                    icon       : 'fa fa-trash',
+                    texticon   : 'fa fa-trash',
+                    title      : QUILocale.get(lg, 'category.update.field.window.delete.title'),
+                    text       : QUILocale.get(lg, 'category.update.field.window.delete.text'),
+                    information: QUILocale.get(lg, 'category.update.field.window.delete.information'),
+                    maxHeight  : 300,
+                    maxWidth   : 450,
+                    events     : {
+                        onSubmit: function () {
+                            self.removeFields(self.$grids.Fields.getSelectedIndices());
+                            resolve();
+                        }
                     }
-                }
-            }).open();
+                }).open();
+            });
         },
 
         /**
@@ -601,8 +615,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     texticon   : false,
                     title      : QUILocale.get(lg, 'category.panel.window.recursiveFields.title'),
                     information: QUILocale.get(lg, 'category.panel.window.recursiveFields.information'),
-
-                    text: QUILocale.get(lg, 'category.panel.window.recursiveFields.text', {
+                    text       : QUILocale.get(lg, 'category.panel.window.recursiveFields.text', {
                         category: categoryId
                     }),
 
@@ -749,6 +762,26 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
         },
 
         /**
+         * Add products to the category
+         *
+         * @param {Array} productIds
+         */
+        addProducts: function (productIds) {
+            this.Loader.show();
+
+            return Categories.addProducts(
+                this.getAttribute('categoryId'),
+                productIds
+            ).then(function () {
+                if (this.getCategory('products').isActive()) {
+                    this.$grids.Products.refresh();
+                }
+
+                this.Loader.hide();
+            }.bind(this));
+        },
+
+        /**
          * Remove a field from the category
          *
          * @param {Array} fields
@@ -762,13 +795,16 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             }.bind(this));
         },
 
-
-        openProductAddDialog: function () {
+        /**
+         * Opens the product search to add a product or multiple products to the category
+         */
+        openAddProductDialog: function () {
             new ProductSearchWindow({
                 events: {
-                    onSubmit: function () {
-
-                    }
+                    onSubmit: function (Win, selected) {
+                        this.addProducts(selected);
+                        Win.hide();
+                    }.bind(this)
                 }
             }).open();
         }

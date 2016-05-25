@@ -51,10 +51,6 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
             this.parent(options);
 
             this.$Search = null;
-            this.$Result = null;
-
-            this.$ButtonCancel = null;
-            this.$ButtonSubmit = null;
 
             this.addEvents({
                 onOpen: this.$onOpen
@@ -76,128 +72,30 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
          * @returns {HTMLDivElement}
          */
         $onOpen: function (Win) {
-            var Content = Win.getContent();
+            var self    = this,
+                Content = Win.getContent();
 
             Content.set('html', '');
 
             this.$Search = new Search({
                 searchbutton: false,
                 events      : {
-                    onSearchBegin: this.$onSearchBegin,
-                    onSearch     : this.$onSearch
+                    onDblClick: function () {
+                        self.submit();
+                    },
+
+                    onSearchBegin: function () {
+                        self.Loader.show();
+                    },
+
+                    onSearch: function () {
+                        self.Loader.hide();
+                    }
                 }
             }).inject(Content);
 
-            // buttons
-            this.$Buttons.set('html', '');
-
-            this.$ButtonsSearchContainer = new Element('div', {
-                styles: {
-                    'float'  : 'left',
-                    maxWidth : 300,
-                    textAlign: 'center',
-                    width    : '100%'
-                }
-            }).inject(this.$Buttons);
-
-            this.$ButtonsResultContainer = new Element('div', {
-                styles: {
-                    display  : 'none',
-                    'float'  : 'left',
-                    textAlign: 'right',
-                    width    : 'calc(100% - 320px)'
-                }
-            }).inject(this.$Buttons);
-
-
-            this.$ButtonSearch = new QUIButton({
-                text     : QUILocale.get('quiqqer/system', 'search'),
-                textimage: 'fa fa-search',
-                styles   : {
-                    'float': 'none'
-                },
-                events   : {
-                    onClick: this.search
-                }
-            }).inject(this.$ButtonsSearchContainer);
-
-            this.$ButtonSubmit = new QUIButton({
-                text     : QUILocale.get('quiqqer/system', 'accept'),
-                textimage: 'fa fa-check',
-                styles   : {
-                    'float': 'none'
-                },
-                events   : {
-                    onClick: this.submit
-                }
-            }).inject(this.$ButtonsResultContainer);
-
-            this.$ButtonCancel = new QUIButton({
-                text     : QUILocale.get('quiqqer/system', 'cancel'),
-                textimage: 'fa fa-remove',
-                styles   : {
-                    'float': 'none'
-                },
-                events   : {
-                    onClick: this.cancel
-                }
-            }).inject(this.$ButtonsResultContainer);
-
-            this.$ButtonSubmit.hide();
-            this.$ButtonCancel.hide();
-        },
-
-        /**
-         * event: search begin
-         */
-        $onSearchBegin: function () {
-            this.Loader.show();
-
-            if (this.$Result) {
-                return;
-            }
-
-            this.$Result = new Result({
-                styles: {
-                    height: '100%'
-                },
-                events: {
-                    onRefresh: function (Result, gridOptions) {
-
-                    },
-                    onSubmit : this.submit,
-                    onSelect : function (Result, selected) {
-
-                    }
-                }
-            }).inject(this.$SearchResult);
-
-            this.setAttribute('maxWidth', 900);
-
-            this.resize().then(function () {
-                this.$SearchResult.setStyle('opacity', 0);
-                this.$SearchResult.setStyle('display', 'block');
-                this.$Result.resize();
-
-                this.$ButtonsResultContainer.setStyle('display', null);
-                this.$ButtonSubmit.show();
-                this.$ButtonCancel.show();
-
-                moofx(this.$SearchResult).animate({
-                    opacity: 1
-                });
-            }.bind(this));
-        },
-
-        /**
-         * event : on search .. ing
-         *
-         * @param {Object} Search - Search control
-         * @param {Array} result - grid data - product list
-         */
-        $onSearch: function (Search, result) {
-            this.$Result.setData(result);
-            this.Loader.hide();
+            this.$Search.resize();
+            this.$Search.search();
         },
 
         /**
@@ -213,7 +111,7 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
          * @fires onSubmit
          */
         submit: function () {
-            var selected = this.$Result.getSelected();
+            var selected = this.$Search.getSelected();
 
             if (!selected.length) {
                 return;
