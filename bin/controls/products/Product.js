@@ -785,7 +785,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                         Editor.inject(this.$FieldContainer);
                     }.bind(this));
-                });
+                }.bind(this));
             }.bind(this));
         },
 
