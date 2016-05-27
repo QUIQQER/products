@@ -129,6 +129,11 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                         html   : data.data[i].price_netto.toFixed(2),
                         'class': 'quiqqer-products-search-results--price-display'
                     });
+                } else {
+                    data.data[i].price_netto = new Element('span', {
+                        html   : '---',
+                        'class': 'quiqqer-products-search-results--price-display'
+                    });
                 }
             }
 
