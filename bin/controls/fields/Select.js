@@ -239,7 +239,9 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
             // load values
             if (this.$Input.value || this.$Input.value !== '') {
-                this.addProduct(this.$Input.value);
+                this.$Input.value.split(',').each(function (categoryId) {
+                    self.addFields(categoryId);
+                });
             }
 
             if (this.getAttribute('disabled')) {
@@ -532,7 +534,6 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
          * @return {Object} this (package/quiqqer/products/bin/controls/field/Select)
          */
         addFields: function (ids) {
-
             if (typeOf(ids) !== 'array') {
                 return this;
             }
