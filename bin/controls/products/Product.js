@@ -266,14 +266,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     folderId     : false,
                     Parent       : Folder,
                     newFolderName: this.$Product.getId(),
-                    filetype     : ['file']
+                    filetype     : ['file'],
+                    autoactivate : true
                 }).inject(this.$Files);
 
                 this.$ImageViewer = new FolderViewer({
                     folderId     : false,
                     Parent       : Folder,
                     newFolderName: this.$Product.getId(),
-                    filetype     : ['image']
+                    filetype     : ['image'],
+                    autoactivate : true
                 }).inject(this.$Media);
 
 
@@ -831,8 +833,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
 
                 new FolderViewer({
-                    folderUrl: Field.value,
-                    filetype : ['image', 'file']
+                    folderUrl   : Field.value,
+                    filetype    : ['image', 'file'],
+                    autoactivate: true
                 }).inject(self.$FieldContainer);
 
                 return self.$showCategory(self.$FieldContainer);
