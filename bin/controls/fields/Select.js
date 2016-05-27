@@ -239,8 +239,8 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
             // load values
             if (this.$Input.value || this.$Input.value !== '') {
-                this.$Input.value.split(',').each(function (categoryId) {
-                    self.addFields(categoryId);
+                this.$Input.value.split(',').each(function (fieldId) {
+                    self.addFields(fieldId);
                 });
             }
 
