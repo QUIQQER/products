@@ -594,6 +594,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 self.openField(Btn.getAttribute('fieldId'));
             };
 
+            var imageFolderClick = function (Btn) {
+                self.openMediaFolderField(Btn.getAttribute('fieldId'));
+            };
+
             this.getCategoryBar().clear();
 
             this.addCategory({
@@ -613,8 +617,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 this.addCategory({
                     name   : 'field-' + fields[i].id,
-                    text   : fields[i].title,
-                    icon   : 'fa fa-picture-o',
+                    text   : fields[i].workingtitle,
+                    icon   : 'fa fa-file-text-o',
                     fieldId: fields[i].id,
                     field  : fields[i],
                     events : {
@@ -640,6 +644,27 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     onClick: this.openFiles
                 }
             });
+
+            for (i = 0, len = fields.length; i < len; i++) {
+                if (fields[i].type != 'Folder') {
+                    continue;
+                }
+
+                if (fields[i].id == Fields.FIELD_FOLDER) {
+                    continue;
+                }
+
+                this.addCategory({
+                    name   : 'images',
+                    text   : fields[i].workingtitle,
+                    icon   : 'fa fa-picture-o',
+                    fieldId: fields[i].id,
+                    field  : fields[i],
+                    events : {
+                        onClick: imageFolderClick
+                    }
+                });
+            }
 
             this.addCategory({
                 name  : 'attributelist',
@@ -732,7 +757,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         /**
          * Open a textarea field
          *
-         * @param {Object} fieldId
+         * @param {Number} fieldId
          */
         openField: function (fieldId) {
             var self  = this,
@@ -762,6 +787,56 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }.bind(this));
                 });
             }.bind(this));
+        },
+
+        /**
+         * Opens a media folder field
+         *
+         * @param {Number} fieldId
+         */
+        openMediaFolderField: function (fieldId) {
+            var self  = this,
+                Field = this.$data[fieldId];
+
+            self.$FieldContainer.set('html', '');
+
+            return this.$hideCategories().then(function () {
+
+                // no images or files exists
+                if (Field.value === '') {
+                    var Container = new Element('div', {
+                        'class': 'folder-missing-container',
+                        html   : QUILocale.get(lg, 'products.product.panel.folder.missing.for.field')
+                    }).inject(self.$FieldContainer);
+
+                    new QUIButton({
+                        text     : QUILocale.get(lg, 'products.product.panel.folder.missing.button'),
+                        textimage: 'fa fa-plus',
+                        styles   : {
+                            clear : 'both',
+                            margin: '20px 0 0 0'
+                        },
+                        events   : {
+                            onClick: function (Btn) {
+                                Btn.setAttribute('textimage', 'fa fa-spinner fa-spin');
+
+                                self.$createMediaFolder(Field.id).then(function () {
+
+                                });
+                            }
+                        }
+                    }).inject(Container);
+
+                    return self.$showCategory(self.$FieldContainer);
+                }
+
+                new FolderViewer({
+                    folderUrl: Field.value,
+                    filetype : ['image', 'file']
+                }).inject(self.$FieldContainer);
+
+                return self.$showCategory(self.$FieldContainer);
+            });
         },
 
         /**
@@ -1302,13 +1377,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
         /**
          * Create the media folder for the product
+         *
+         * @param {Number|Boolean} [fieldId] - Media Folder Field-ID
+         * @return {Promise}
          */
-        $createMediaFolder: function () {
+        $createMediaFolder: function (fieldId) {
             var self = this;
 
             this.Loader.hide();
 
-            return this.$Product.createMediaFolder().then(function () {
+            return this.$Product.createMediaFolder(fieldId).then(function () {
                 return self.$Product.getFields();
 
             }).then(function (productField) {

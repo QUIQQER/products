@@ -226,6 +226,16 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 }
             }
 
+            if (this.getAttribute('max') == 1) {
+                this.$Search.setStyle('display', 'none');
+
+                this.$List.setStyles({
+                    border: 'none',
+                    height: 31,
+                    width : 'calc(100% - 50px)'
+                });
+            }
+
 
             // load values
             if (this.$Input.value || this.$Input.value !== '') {
@@ -485,6 +495,21 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 return this;
             }
 
+            var max = this.getAttribute('max');
+
+            if (max == 1) {
+                // max = 1 -> overwrites the old
+                this.$values = [];
+
+                QUI.Controls.getControlsInElement(this.$List).each(function (Entry) {
+                    Entry.destroy();
+                });
+            }
+
+            if (max && this.$values.length > max) {
+                return this;
+            }
+
             new SelectItem({
                 id    : id,
                 events: {
@@ -640,6 +665,10 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
          * @return {Object} this (package/quiqqer/products/bin/controls/fields/Select)
          */
         focus: function () {
+            if (this.getAttribute('max') == 1) {
+                this.$SearchButton.click();
+            }
+
             if (this.$Search) {
                 this.$Search.focus();
             }

@@ -23,8 +23,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
     "use strict";
 
-    var lg = 'quiqqer/products';
-
     return new Class({
 
         Extends: QUIControl,
@@ -132,6 +130,37 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                     });
                 });
 
+                // get preview images
+                var rowClick = function (event) {
+                    var Target = event.target;
+
+                    if (Target.nodeName === 'IMG') {
+                        return;
+                    }
+
+                    if (Target.getParent('.product-data-files-table-preview')) {
+                        return;
+                    }
+
+                    if (Target.hasClass('product-data-files-table-download')) {
+                        return;
+                    }
+
+                    if (Target.getParent('.product-data-files-table-download')) {
+                        return;
+                    }
+
+                    this.getElement('.product-data-files-table-preview img').click();
+                };
+
+                var images = Elm.getElements(
+                    '.product-data-files-table-preview [data-zoom="1"]'
+                );
+
+                for (var i = 0, len = images.length; i < len; i++) {
+                    images[i].getParent('tr').addEvent('click', rowClick);
+                    images[i].getParent('tr').setStyle('cursor', 'pointer');
+                }
             }.bind(this));
         },
 

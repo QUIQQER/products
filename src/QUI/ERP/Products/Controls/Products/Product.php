@@ -114,10 +114,26 @@ class Product extends QUI\Control
             return !$Field->isUnassigned();
         });
 
+        // file / image folders
+        $mediaFolders = array();
+        $mediaFields  = $Product->getFieldsByType(Fields::TYPE_FOLDER);
+
+        /* @var $Field QUI\ERP\Products\Field\Types\Folder */
+        foreach ($mediaFields as $Field) {
+            if ($Field->getId() == Fields::FIELD_FOLDER) {
+                continue;
+            }
+
+            if ($Field->getMediaFolder()) {
+                $mediaFolders[] = $Field;
+            }
+        }
+
         $Engine->assign(array(
             'Product'              => $View,
             'Gallery'              => $Gallery,
             'fields'               => $fields,
+            'mediaFolders'         => $mediaFolders,
             'productAttributeList' => $attributeListFields,
             'PriceDisplay'         => $PriceDisplay,
             'WatchlistButton'      => new WatchlistButton(array(
@@ -127,7 +143,8 @@ class Product extends QUI\Control
             'OfferButton'          => new OfferButton(array(
                 'Product' => $View,
                 'width'   => 'calc(50% - 5px)'
-            ))
+            )),
+            'MediaUtils' => new QUI\Projects\Media\Utils()
         ));
 
         $Engine->assign('buttonsHtml', $Engine->fetch(dirname(__FILE__) . '/Product.Buttons.html'));

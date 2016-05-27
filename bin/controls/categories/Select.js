@@ -474,7 +474,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             }
 
             if (max && this.$values.length > max) {
-                return;
+                return this;
             }
 
             new SelectItem({

@@ -222,12 +222,57 @@ class Model extends QUI\QDOM
      * Create the media folder for the product
      * if the product has a folder, no folder would be created
      *
+     * @param integer|boolean $fieldId - optional, Media Folder Field id,
+     *                                   if you want to create a media folder for a media folder field
      * @return QUI\Projects\Media\Folder
      *
      * @throws QUI\Exception
      */
-    public function createMediaFolder()
+    public function createMediaFolder($fieldId = false)
     {
+        // create field folder
+        if ($fieldId) {
+            $Field = $this->getField($fieldId);
+
+            if ($Field->getType() != Fields::TYPE_FOLDER) {
+                throw new QUI\ERP\Products\Product\Exception(array(
+                    'quiqqer/products',
+                    'exception.product.field.is.no.media.folder'
+                ));
+            }
+
+            // exist a media folder in the field?
+            try {
+                $folderUrl = $this->getFieldValue($fieldId);
+                $Folder    = MediaUtils::getMediaItemByUrl($folderUrl);
+
+                if (MediaUtils::isFolder($Folder)) {
+                    return $Folder;
+                }
+            } catch (QUI\Exception $Exception) {
+            }
+
+
+            $MainFolder = $this->createMediaFolder();
+
+            try {
+                $Folder = $MainFolder->createFolder($fieldId);
+            } catch (QUI\Exception $Exception) {
+                if ($Exception->getCode() != 701) {
+                    throw $Exception;
+                }
+
+                $Folder = $MainFolder->getChildByName($fieldId);
+            }
+            
+            $Field = $this->getField($fieldId);
+            $Field->setValue($Folder->getUrl());
+            $this->update();
+
+            return $Folder;
+        }
+
+        // create main media folder
         try {
             return $this->getMediaFolder();
 

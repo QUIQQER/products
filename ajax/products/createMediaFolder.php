@@ -13,11 +13,16 @@ use QUI\ERP\Products\Handler\Products;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_createMediaFolder',
-    function ($productId) {
+    function ($productId, $fieldId) {
         $Product = Products::getProduct($productId);
-        $Folder  = $Product->createMediaFolder();
+
+        if (is_numeric($fieldId)) {
+            $Folder = $Product->createMediaFolder($fieldId);
+        } else {
+            $Folder = $Product->createMediaFolder();
+        }
 
         return QUI\Projects\Media\Utils::parseForMediaCenter($Folder);
     },
-    array('productId')
+    array('productId', 'fieldId')
 );

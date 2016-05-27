@@ -34,13 +34,53 @@ class Fields
 
     const FIELD_MANUFACTURER = 8;
 
+    /**
+     * Main product image
+     */
     const FIELD_IMAGE = 9;
 
+    /**
+     * Main media folder
+     */
     const FIELD_FOLDER = 10;
 
     const FIELD_STOCK = 12;
 
     const FIELD_KEYWORDS = 13;
+
+    /**
+     * Types
+     */
+
+    const TYPE_BOOL = 'BoolType';
+
+    const TYPE_DATE = 'Date';
+
+    const TYPE_FLOAT = 'FloatType';
+
+    const TYPE_FOLDER = 'Folder';
+
+    const TYPE_GROUP_LIST = 'GroupList';
+
+    const TYPE_IMAGE = 'Image';
+
+    const TYPE_INPUT = 'Input';
+
+    const TYPE_INPUT_MULTI_LANG = 'InputMultiLang';
+
+    const TYPE_INT = 'IntType';
+
+    const TYPE_PRICE = 'Price';
+
+    const TYPE_ATTRIBUTE_LIST = 'ProductAttributeList';
+
+    const TYPE_TEXTAREA = 'Textarea';
+
+    const TYPE_TEXTAREA_MULTI_LANG = 'TextareaMultiLang';
+
+    const TYPE_URL = 'Url';
+
+    const TYPE_VAT = 'Vat';
 
     /**
      * @var array
@@ -186,14 +226,6 @@ class Fields
         }
 
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.fields.create', array(
-                'id' => $data['id']
-            )),
-            '',
-            $data
-        );
-
         // insert field data
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
@@ -206,6 +238,14 @@ class Fields
             $newId = QUI::getDataBase()->getPDO()->lastInsertId();
         }
 
+
+        QUI\Watcher::addString(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.fields.create', array(
+                'id' => $newId
+            )),
+            '',
+            $data
+        );
 
         // add language var, if not exists
         self::setFieldTranslations($newId, $attributes);
@@ -384,6 +424,7 @@ class Fields
             "permission.products.fields.field{$fieldId}.edit.title",
             $editTranslations
         );
+        
     }
 
     /**

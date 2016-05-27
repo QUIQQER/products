@@ -10,7 +10,9 @@ use QUI\Projects\Media\Utils as MediaUtils;
 use QUI\ERP\Products\Field\View;
 
 /**
- * Class Input
+ * Class Folder
+ * Product field which specified a media folder
+ *
  * @package QUI\ERP\Products\Field
  */
 class Folder extends QUI\ERP\Products\Field\Field

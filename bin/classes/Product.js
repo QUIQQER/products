@@ -66,16 +66,20 @@ define('package/quiqqer/products/bin/classes/Product', [
         /**
          * Create the media folder for the product
          *
+         * @param {Number|Boolean}  [fieldId]
          * @returns {Promise}
          */
-        createMediaFolder: function () {
+        createMediaFolder: function (fieldId) {
+            fieldId = fieldId || false;
+
             return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_products_createMediaFolder', function () {
                     this.refresh().then(resolve, reject);
                 }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    onError  : reject
+                    onError  : reject,
+                    fieldId  : fieldId
                 });
             }.bind(this));
         },

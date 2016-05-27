@@ -234,6 +234,10 @@
             <de><![CDATA[Neuen Media Ordner anlegen]]></de>
             <en><![CDATA[Create new Media folder]]></en>
         </locale>
+        <locale name="products.product.panel.folder.missing.for.field" html="true">
+            <de><![CDATA[<p>Dem Feld wurde noch kein Media Ordner zugewiesen.</p>]]></de>
+            <en><![CDATA[<p>The field was still not assigned a media folder.</p>]]></en>
+        </locale>
 
         <locale name="category.control.productlist.button.more">
             <de><![CDATA[Mehr laden]]></de>
@@ -378,7 +382,14 @@
             The product #[productId] can't be activated.<br />Please set a category to the product.
             ]]></en>
         </locale>
-
+        <locale name="exception.product.field.is.no.media.folder">
+            <de><![CDATA[
+            Dem Feld kann kein Media-Ordner zugewiesen werden. Das Feld ist kein Media-Ordner Feld.
+            ]]></de>
+            <en><![CDATA[
+            The field can not be assigned a media folder. The field is not a media folder field.
+            ]]></en>
+        </locale>
 
         <locale name="exception.field.grouplist.user.limit.reached">
             <de><![CDATA[

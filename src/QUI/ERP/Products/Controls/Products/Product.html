@@ -27,7 +27,7 @@
         <div class="product-data-fieldlist">
             {foreach $productAttributeList as $Field}
             {if $Field->isPublic()}
-                {$Field->getView()->create()}
+            {$Field->getView()->create()}
             {/if}
             {/foreach}
         </div>
@@ -51,7 +51,14 @@
             <div class="product-data-more-tabs-tab" data-type="details">
                 Details
             </div>
+
+            {foreach $mediaFolders as $Field}
+            <div class="product-data-more-tabs-tab" data-type="F{$Field->getId()}">
+                {$Field->getTitle()}
+            </div>
+            {/foreach}
         </div>
+
         <div class="product-data-more-sheets">
             <div class="product-data-more-sheet" data-type="description">
                 {$Product->getContent()}
@@ -60,7 +67,39 @@
             <div class="product-data-more-sheet hide" data-type="details">
                 {$Product->getDescription()}
             </div>
+
+            {foreach $mediaFolders as $Field}
+            <div class="product-data-more-sheet hide" data-type="F{$Field->getId()}">
+                {assign var=Folder value=$Field->getMediaFolder()}
+                {assign var=files value=$Folder->getChildren()}
+
+                <table class="product-data-files-table">
+                    {foreach $files as $File}
+                    {if $File->isActive()}
+                    <tr>
+                        <td class="product-data-files-table-preview">
+                            {if $MediaUtils->isImage($File)}
+                            {image image=$File maxWidth=100 maxHeight=100 data-zoom="1"}
+                            {else}
+                            <span class="fa {$MediaUtils->getFronAwesomIconByItem($File)}"></span>
+                            {/if}
+                        </td>
+                        <td class="product-data-files-table-title">
+                            {$File->getAttribute('title')}
+                        </td>
+                        <td class="product-data-files-table-download">
+                            <a href="{$File->getUrl()}" target="_blank">
+                                <span class="fa fa-download"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    {/if}
+                    {/foreach}
+                </table>
+            </div>
+            {/foreach}
         </div>
+
     </div>
 
 </article>

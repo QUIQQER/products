@@ -156,5 +156,55 @@
     opacity: 0;
 }
 
+/** Files table
+ =========================================== */
 
+.product-data-files-table {
+    border-collapse: collapse;
+    width: 100%;
+}
 
+.product-data-files-table th {
+    text-align: left;
+    font-size: .75em;
+    padding-right: 20px;
+}
+
+.product-data-files-table tr {
+    outline: 0;
+    border: 0;
+}
+
+.product-data-files-table tr:hover td {
+    background: #f6f6f6;
+}
+
+.product-data-files-table-download,
+.product-data-files-table-preview,
+.product-data-files-table-title {
+    border: 0;
+    border-bottom: 1px solid #edf1f5;
+    outline: 0;
+    padding: 5px 0;
+    vertical-align: top;
+
+    -webkit-transition: background 300ms ease;
+    -moz-transition: background 300ms ease;
+    -ms-transition: background 300ms ease;
+    -o-transition: background 300ms ease;
+    transition: background 300ms ease;
+}
+
+.product-data-files-table-preview img {
+    padding: 10px 10px 0 10px;
+}
+
+.product-data-files-table-title {
+    text-align: left;
+}
+
+.product-data-files-table-download,
+.product-data-files-table-preview {
+    text-align: center;
+    width: 50px;
+}
