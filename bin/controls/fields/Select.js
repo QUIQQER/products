@@ -538,6 +538,17 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 return this;
             }
 
+            var max = this.getAttribute('max');
+
+            if (max == 1) {
+                // max = 1 -> overwrites the old
+                this.$values = [];
+
+                QUI.Controls.getControlsInElement(this.$List).each(function (Entry) {
+                    Entry.destroy();
+                });
+            }
+            
             ids.each(function (id) {
                 if (id === '' || !id) {
                     return;
