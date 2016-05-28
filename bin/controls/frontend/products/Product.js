@@ -207,18 +207,22 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * Activate the next tab
          */
         nextTab: function () {
-            var Active = this.$Tabbar.getElement('.active');
+            var Active = this.$Tabbar.getElement('[aria-selected="true"]');
             var Next   = Active.getNext();
 
             if (!Next) {
                 Next = this.$Tabbar.getFirst();
             }
 
+            Active.set('aria-selected', 'false');
             Active.removeClass('active');
+
+            Next.set('aria-selected', 'true');
             Next.addClass('active');
 
-            var ActiveSheet = this.$getSheet(Active.get('data-type'));
-            var NextSheet   = this.$getSheet(Next.get('data-type'));
+            var ActiveSheet = this.$getSheet(Active.get('aria-controls'));
+            var NextSheet   = this.$getSheet(Next.get('aria-controls'));
+
 
             return Promise.all([
                 this.$hideTabToLeft(ActiveSheet),
@@ -230,18 +234,21 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * Activate the previous tab
          */
         prevTab: function () {
-            var Active = this.$Tabbar.getElement('.active');
+            var Active = this.$Tabbar.getElement('[aria-selected="true"]');
             var Prev   = Active.getPrevious();
 
             if (!Prev) {
                 Prev = this.$Tabbar.getLast();
             }
 
+            Active.set('aria-selected', 'false');
             Active.removeClass('active');
+
+            Prev.set('aria-selected', 'true');
             Prev.addClass('active');
 
-            var ActiveSheet = this.$getSheet(Active.get('data-type'));
-            var PrevSheet   = this.$getSheet(Prev.get('data-type'));
+            var ActiveSheet = this.$getSheet(Active.get('aria-controls'));
+            var PrevSheet   = this.$getSheet(Prev.get('aria-controls'));
 
             return Promise.all([
                 this.$hideTabToRight(ActiveSheet),
@@ -358,24 +365,34 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * @returns {HTMLDivElement|null}
          */
         $getSheet: function (name) {
-            return this.$Sheets.getElement('[data-type="' + name + '"]');
+            return document.id(name);
         },
 
         /**
          * event: tab click
          */
         $tabClick: function (event) {
-            var Target      = event.target,
-                type        = Target.get('data-type'),
-                TargetSheet = this.$getSheet(type);
+            var Target = event.target;
 
-            var Active      = this.$Tabbar.getElement('.active'),
-                ActiveSheet = this.$getSheet(Active.get('data-type'));
+            event.stop();
+
+            if (Target.nodeName == 'A') {
+                Target = Target.getParent();
+            }
+
+
+            var TargetSheet = this.$getSheet(Target.get('aria-controls'));
+
+            var Active      = this.$Tabbar.getElement('[aria-selected="true"]'),
+                ActiveSheet = this.$getSheet(Active.get('aria-controls'));
 
             var activeIndex = QUIElementUtils.getChildIndex(Active),
                 targetIndex = QUIElementUtils.getChildIndex(Target);
 
+            Active.set('aria-selected', 'false');
             Active.removeClass('active');
+
+            Target.set('aria-selected', 'true');
             Target.addClass('active');
 
             if (activeIndex < targetIndex) {

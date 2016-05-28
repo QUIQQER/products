@@ -120,6 +120,9 @@
 
 .product-data-more-tabs {
     float: left;
+    list-style-type: none;
+    margin: 0 !important;
+    padding: 0;
     width: 100%;
 }
 

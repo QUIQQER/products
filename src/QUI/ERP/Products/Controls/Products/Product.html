@@ -44,32 +44,47 @@
 
 
     <div class="product-data-more">
-        <div class="product-data-more-tabs">
-            <div class="product-data-more-tabs-tab active" data-type="description">
-                Beschreibung
-            </div>
-            <div class="product-data-more-tabs-tab" data-type="details">
-                Details
-            </div>
+        <ul class="product-data-more-tabs" role="tablist">
+            <li class="product-data-more-tabs-tab active"
+                aria-controls="panelDescription" role="tab" tabindex="0" aria-selected="true"
+            >
+                <a href="#panelDescription">
+                    Beschreibung
+                </a>
+            </li>
+
+            <li class="product-data-more-tabs-tab" aria-controls="panelDetails" role="tab" tabindex="-1">
+                <a href="#panelDetails">
+                    Details
+                </a>
+            </li>
 
             {foreach $mediaFolders as $Field}
-            <div class="product-data-more-tabs-tab" data-type="F{$Field->getId()}">
-                {$Field->getTitle()}
-            </div>
+            <li class="product-data-more-tabs-tab" aria-controls="panelF{$Field->getId()}" role="tab" tabindex="-1">
+                <a href="#panelF{$Field->getId()}">
+                    {$Field->getTitle()}
+                </a>
+            </li>
             {/foreach}
-        </div>
+        </ul>
 
         <div class="product-data-more-sheets">
-            <div class="product-data-more-sheet" data-type="description">
+            <section class="product-data-more-sheet" id="panelDescription" role="tabpanel"
+                     aria-labelledby="panelDescription" tabindex="0"
+            >
                 {$Product->getContent()}
-            </div>
+            </section>
 
-            <div class="product-data-more-sheet hide" data-type="details">
+            <section class="product-data-more-sheet hide" id="panelDetails" role="tabpanel"
+                     aria-labelledby="panelDetails" tabindex="0" aria-hidden="true"
+            >
                 {$Product->getDescription()}
-            </div>
+            </section>
 
             {foreach $mediaFolders as $Field}
-            <div class="product-data-more-sheet hide" data-type="F{$Field->getId()}">
+            <section class="product-data-more-sheet hide" role="tabpanel"
+                     aria-labelledby="panelF{$Field->getId()}" tabindex="0" aria-hidden="true"
+            >
                 {assign var=Folder value=$Field->getMediaFolder()}
                 {assign var=files value=$Folder->getChildren()}
 
@@ -96,7 +111,7 @@
                     {/if}
                     {/foreach}
                 </table>
-            </div>
+            </section>
             {/foreach}
         </div>
 
