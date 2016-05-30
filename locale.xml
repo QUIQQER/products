@@ -370,6 +370,10 @@
                 Illegal content for the field: #[fieldId] [fieldTitle]. The field is required and must not be empty.
             ]]></en>
         </locale>
+        <locale name="exception.product.not.found">
+            <de><![CDATA[Das Produkt #[productId] wurde nicht gefunden.]]></de>
+            <en><![CDATA[The product #[productId] not found.]]></en>
+        </locale>
         <locale name="exception.product.no.image">
             <de><![CDATA[Das Produkt #[productId] besitzt kein Bild.]]></de>
             <en><![CDATA[The product #[productId] has no image.]]></en>

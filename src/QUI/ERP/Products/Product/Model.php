@@ -79,8 +79,14 @@ class Model extends QUI\QDOM
         ));
 
         if (!isset($result[0])) {
+            // if not exists, so we cleanup the cache table table, too
+            QUI::getDataBase()->delete(
+                QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+                array('id' => $this->getId())
+            );
+
             throw new QUI\ERP\Products\Product\Exception(
-                array('quiqqer/products', 'exception.product.not.found'),
+                array('quiqqer/products', 'exception.product.not.found', array('productId' => $this->getId())),
                 404,
                 array('id' => $this->getId())
             );
@@ -264,7 +270,7 @@ class Model extends QUI\QDOM
 
                 $Folder = $MainFolder->getChildByName($fieldId);
             }
-            
+
             $Field = $this->getField($fieldId);
             $Field->setValue($Folder->getUrl());
             $this->update();
