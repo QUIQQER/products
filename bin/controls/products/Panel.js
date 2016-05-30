@@ -235,7 +235,9 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                                     onClick: function () {
                                         self.Loader.show();
 
-                                        Product.submit().then(function () {
+                                        Product.submit().then(function (Product) {
+                                            self.updateChild(Product.id);
+
                                             Sheet.hide().then(function () {
                                                 Sheet.destroy();
                                                 self.refresh();
