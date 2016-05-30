@@ -116,7 +116,13 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getFields()
     {
-        return $this->Product->getFields();
+        $fields = $this->Product->getFields();
+        $fields = array_filter($fields, function ($Field) {
+            /* @var $Field QUI\ERP\Products\Interfaces\Field */
+            return $Field->isPublic();
+        });
+
+        return $fields;
     }
 
     /**

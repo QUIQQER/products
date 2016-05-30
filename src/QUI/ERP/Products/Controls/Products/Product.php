@@ -89,7 +89,7 @@ class Product extends QUI\Control
         $Gallery->setAttribute('data-qui-options-preview-background-color', '#fff');
         $Gallery->setAttribute('data-qui-options-preview-color', '#ddd');
 
-        // fields
+        // fields - fields for the product header
         $displayedFields = array(
             Fields::FIELD_PRODUCT_NO
         );
@@ -99,6 +99,29 @@ class Product extends QUI\Control
                 $fields[] = $View->getField($field);
             }
         }
+
+        // fields for the details
+        $details = array_filter($View->getFields(), function ($Field) {
+            /* @var $Field QUI\ERP\Products\Field\View */
+            if ($Field->getId() == Fields::FIELD_TITLE
+                || $Field->getId() == Fields::FIELD_CONTENT
+                || $Field->getId() == Fields::FIELD_SHORT_DESC
+                || $Field->getId() == Fields::FIELD_PRICE
+                || $Field->getId() == Fields::FIELD_TAX
+                || $Field->getId() == Fields::FIELD_IMAGE
+            ) {
+                return false;
+            }
+
+            if ($Field->getType() == Fields::TYPE_ATTRIBUTE_LIST
+                || $Field->getType() == Fields::TYPE_FOLDER
+                || $Field->getType() == Fields::TYPE_IMAGE
+            ) {
+                return false;
+            }
+
+            return true;
+        });
 
 
         // pricedisplay
@@ -133,6 +156,7 @@ class Product extends QUI\Control
             'Product'              => $View,
             'Gallery'              => $Gallery,
             'fields'               => $fields,
+            'details'              => $details,
             'mediaFolders'         => $mediaFolders,
             'productAttributeList' => $attributeListFields,
             'PriceDisplay'         => $PriceDisplay,
@@ -144,7 +168,7 @@ class Product extends QUI\Control
                 'Product' => $View,
                 'width'   => 'calc(50% - 5px)'
             )),
-            'MediaUtils' => new QUI\Projects\Media\Utils()
+            'MediaUtils'           => new QUI\Projects\Media\Utils()
         ));
 
         $Engine->assign('buttonsHtml', $Engine->fetch(dirname(__FILE__) . '/Product.Buttons.html'));

@@ -8,8 +8,6 @@ namespace QUI\ERP\Products\Utils;
 use QUI;
 use QUI\Interfaces\Users\User;
 use QUI\ERP\Products\Product\UniqueProduct;
-use QUI\ERP\Products\Handler\Fields;
-use QUI\ERP\Products\Utils\Price;
 use QUI\ERP\Products\Product\ProductList;
 use QUI\ERP\Currency\Handler as Currencies;
 
@@ -121,10 +119,10 @@ class Calc
 
 
         // @todo muss richtig implementiert werden
-        if (method_exists($Product, 'getQuantity')) {
-            $quantity = $Product->getQuantity();
-            return $price * $quantity;
-        }
+//        if (method_exists($Product, 'getQuantity')) {
+//            $quantity = $Product->getQuantity();
+//            return $price * $quantity;
+//        }
 
 
         return new Price($price, Currencies::getDefaultCurrency());

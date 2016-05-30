@@ -19,68 +19,53 @@ use QUI;
 class Fields
 {
     const FIELD_PRICE = 1;
-
     const FIELD_TAX = 2;
-
     const FIELD_PRODUCT_NO = 3;
-
     const FIELD_TITLE = 4;
-
     const FIELD_SHORT_DESC = 5;
-
     const FIELD_CONTENT = 6;
-
     const FIELD_SUPPLIER = 7;
-
     const FIELD_MANUFACTURER = 8;
-
-    /**
-     * Main product image
-     */
-    const FIELD_IMAGE = 9;
-
-    /**
-     * Main media folder
-     */
-    const FIELD_FOLDER = 10;
-
+    const FIELD_IMAGE = 9; // Main product image
+    const FIELD_FOLDER = 10; // Main media folder
     const FIELD_STOCK = 12;
-
     const FIELD_KEYWORDS = 13;
 
     /**
      * Types
      */
-
     const TYPE_BOOL = 'BoolType';
-
     const TYPE_DATE = 'Date';
-
     const TYPE_FLOAT = 'FloatType';
-
     const TYPE_FOLDER = 'Folder';
-
     const TYPE_GROUP_LIST = 'GroupList';
-
     const TYPE_IMAGE = 'Image';
-
     const TYPE_INPUT = 'Input';
-
     const TYPE_INPUT_MULTI_LANG = 'InputMultiLang';
-
     const TYPE_INT = 'IntType';
-
     const TYPE_PRICE = 'Price';
-
     const TYPE_ATTRIBUTE_LIST = 'ProductAttributeList';
-
     const TYPE_TEXTAREA = 'Textarea';
-
     const TYPE_TEXTAREA_MULTI_LANG = 'TextareaMultiLang';
-
     const TYPE_URL = 'Url';
-
     const TYPE_VAT = 'Vat';
+
+    /**
+     * product array changed types
+     */
+    const PRODUCT_ARRAY_CHANGED = 'pac'; // product array has changed
+    const PRODUCT_ARRAY_UNCHANGED = 'pau'; // product array hasn't changed
+
+    /**
+     * List of cache names
+     *
+     * @var array
+     */
+    protected static $cacheNames = array(
+        'quiqqer/products/fields',
+        'quiqqer/products/fields/field/',
+        'quiqqer/products/fields/query/'
+    );
 
     /**
      * @var array
@@ -135,6 +120,16 @@ class Fields
                 'systemField' => 1
             )
         ));
+    }
+
+    /**
+     * Clear the field cache
+     */
+    public static function clearCache()
+    {
+        foreach (self::$cacheNames as $cache) {
+            QUI\Cache\Manager::clear($cache);
+        }
     }
 
     /**
@@ -424,7 +419,7 @@ class Fields
             "permission.products.fields.field{$fieldId}.edit.title",
             $editTranslations
         );
-        
+
     }
 
     /**
@@ -665,6 +660,13 @@ class Fields
      */
     public static function getFieldIds($queryParams = array())
     {
+        $cacheName = 'quiqqer/products/fields/query/' . md5(serialize($queryParams));
+
+        try {
+            return QUI\Cache\Manager::get($cacheName);
+        } catch (QUI\Exception $Exception) {
+        }
+
         $query = array(
             'select' => 'id',
             'from'   => QUI\ERP\Products\Utils\Tables::getFieldTableName()
@@ -721,7 +723,11 @@ class Fields
                 $query['order'] = 'priority ASC';
         }
 
-        return QUI::getDataBase()->fetch($query);
+        $result = QUI::getDataBase()->fetch($query);
+
+        QUI\Cache\Manager::set($cacheName, $result);
+
+        return $result;
     }
 
     /**

@@ -21,6 +21,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected $id;
 
     /**
+     * @var integer|float
+     */
+    protected $quantity = 1;
+
+    /**
      * @var array
      */
     protected $categories = array();
@@ -362,5 +367,43 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     public function getCategories()
     {
         return $this->categories;
+    }
+
+
+    /**
+     * Set the quantity of the product
+     *
+     * @param integer|float $quantity
+     */
+    public function setQuantity($quantity)
+    {
+        if (!is_numeric($quantity)) {
+            return;
+        }
+
+        $this->quantity = $quantity;
+    }
+
+    /**
+     * Return the quantity
+     *
+     * @reutrn integer|float
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * Return the product attributes
+     *
+     * @return array
+     */
+    public function getAttributes()
+    {
+        $attributes             = parent::getAttributes();
+        $attributes['quantity'] = $this->getQuantity();
+
+        return $attributes;
     }
 }

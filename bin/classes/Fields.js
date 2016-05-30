@@ -35,6 +35,9 @@ define('package/quiqqer/products/bin/classes/Fields', [
         FIELD_FOLDER       : 10,
         FIELD_WORKING_TITLE: 11,
 
+        PRODUCT_ARRAY_CHANGED  : 'pac', // product array has changed
+        PRODUCT_ARRAY_UNCHANGED: 'pau', // product array hasn't changed
+
         /**
          * Return the allowed field attributes
          *

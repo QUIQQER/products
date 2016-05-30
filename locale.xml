@@ -806,7 +806,7 @@
             <en><![CDATA[Create a new product field]]></en>
         </locale>
 
-        <locale name="fields.update.title">
+        <locale name="fields.update.text">
             <de><![CDATA[Produktfeld bearbeiten]]></de>
             <en><![CDATA[Update a new product field]]></en>
         </locale>
@@ -820,7 +820,7 @@
             <de><![CDATA[Feld löschen]]></de>
             <en><![CDATA[Delete the field]]></en>
         </locale>
-        <locale name="fields.window.delete.title">
+        <locale name="fields.window.delete.text">
             <de><![CDATA[Möchten Sie das Produktfeld #[fieldId] wirklich löschen?]]></de>
             <en><![CDATA[Do you really want to delete the field #[fieldId]?]]></en>
         </locale>
@@ -834,6 +834,34 @@
                  with products and categories will be lost.
             ]]></en>
         </locale>
+
+        <locale name="fields.window.productarray.changed.title">
+            <de><![CDATA[
+                Feld-Eigenschaften haben sich geändert welche Produkte direkt betreffen.
+                ]]></de>
+            <en><![CDATA[
+
+            ]]></en>
+        </locale>
+        <locale name="fields.window.productarray.changed.text" html="true">
+            <de><![CDATA[
+                Möchten Sie die Feldeigenschaften auf alle Produkte anwenden welche das Feld besitzen?
+                ]]></de>
+            <en><![CDATA[
+
+            ]]></en>
+        </locale>
+        <locale name="fields.window.productarray.changed.information" html="true">
+            <de><![CDATA[
+                Feld-Eigenschaften haben sich geändert welche Produkte direkt betreffen.<br />
+                Möchten Sie alle Produkte welche das Feld <strong>[fieldId] [fieldName]</strong> besitzen anpassen? <br />
+                Für jedes Produkt werden die Eigenschaften des Feldes <strong>[fieldId] [fieldName]</strong> gesetzt.
+                ]]></de>
+            <en><![CDATA[
+
+            ]]></en>
+        </locale>
+
 
         <locale name="category.update.field.grid.publicStatus">
             <de><![CDATA[Öffentlich]]></de>

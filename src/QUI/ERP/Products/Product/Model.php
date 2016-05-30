@@ -910,6 +910,17 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Has the product the field?
+     *
+     * @param Integer $fieldId
+     * @return bool
+     */
+    public function hasField($fieldId)
+    {
+        return isset($this->fields[$fieldId]);
+    }
+
+    /**
      * Return the field value
      *
      * @param integer $fieldId

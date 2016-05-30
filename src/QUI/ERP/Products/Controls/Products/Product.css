@@ -159,6 +159,68 @@
     opacity: 0;
 }
 
+/** Details
+ =========================================== */
+
+.product-data-more-details-description {
+    margin-bottom: 20px;
+}
+
+.product-data-more-details-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.product-data-more-details-table th {
+    text-align: left;
+    font-size: .75em;
+    padding-right: 20px;
+}
+
+.product-data-more-details-table tr {
+    outline: 0;
+    border: 0;
+}
+
+.product-data-more-details-table tr:hover td {
+    background: #f6f6f6;
+}
+
+.product-data-more-details-table td {
+    border: 0;
+    border-bottom: 1px solid #edf1f5;
+    outline: 0;
+    padding: 5px 0;
+    vertical-align: top;
+
+    -webkit-transition: background 300ms ease;
+    -moz-transition: background 300ms ease;
+    -ms-transition: background 300ms ease;
+    -o-transition: background 300ms ease;
+    transition: background 300ms ease;
+}
+
+.product-data-more-details-table tr:nth-child(odd) {
+    background: #edf1f5;
+}
+
+.product-data-more-details-table td:first-child {
+    padding-left: 10px;
+}
+
+.product-data-more-details-table tr:last-child td {
+    border-bottom: none;
+}
+
+.product-data-more-details-table-title {
+    max-width: 300px;
+    width: 20%;
+}
+
+.product-data-more-details-table-value {
+    width: 80%;
+}
+
 /** Files table
  =========================================== */
 
