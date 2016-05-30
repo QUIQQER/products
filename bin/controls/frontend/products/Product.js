@@ -115,11 +115,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 // price
                 var Price = Elm.getElement('.quiqqer-price"');
 
-                if (!Price) {
-                    return;
+                if (Price) {
+                    this.$Price = QUI.Controls.getById(Price.get('data-quiid'));
                 }
-
-                this.$Price = QUI.Controls.getById(Price.get('data-quiid'));
 
                 // field events
                 var fields = this.getFieldControls();

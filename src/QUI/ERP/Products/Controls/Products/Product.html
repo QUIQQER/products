@@ -82,7 +82,7 @@
             </section>
 
             {foreach $mediaFolders as $Field}
-            <section class="product-data-more-sheet hide" role="tabpanel"
+            <section class="product-data-more-sheet hide" id="panelF{$Field->getId()}" role="tabpanel"
                      aria-labelledby="panelF{$Field->getId()}" tabindex="0" aria-hidden="true"
             >
                 {assign var=Folder value=$Field->getMediaFolder()}
@@ -109,6 +109,10 @@
                         </td>
                     </tr>
                     {/if}
+                    {foreachelse}
+                    <tr>
+                        <td>Keine Dateien enthalten</td>
+                    </tr>
                     {/foreach}
                 </table>
             </section>
