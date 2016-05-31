@@ -57,6 +57,14 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
     }
 
     /**
+     * @return string
+     */
+    public function getJavaScriptSettings()
+    {
+        return 'package/quiqqer/products/bin/controls/fields/types/TextareaMultiLangSettings';
+    }
+
+    /**
      * Return the field value by a locale language
      *
      *
@@ -95,9 +103,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        if (!is_string($value)
-            && !is_array($value)
-        ) {
+        if (!is_string($value) && !is_array($value)) {
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new QUI\ERP\Products\Field\Exception(array(
                     'quiqqer/products',
@@ -158,8 +164,16 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
     {
         $languages = QUI\Translator::getAvailableLanguages();
 
-        if (!is_array($value)) {
+        if (!is_string($value) && !is_array($value)) {
             return array_fill_keys($languages, '');
+        }
+
+        if (is_string($value)) {
+            $value = json_decode($value, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return array_fill_keys($languages, '');
+            }
         }
 
         $result = array();

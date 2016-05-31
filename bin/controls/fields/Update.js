@@ -19,8 +19,10 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
     'qui/QUI',
     'qui/controls/Control',
+    'qui/controls/windows/Confirm',
     'qui/utils/Form',
     'Locale',
+    'Ajax',
     'Mustache',
     'controls/lang/InputMultiLang',
     'package/quiqqer/products/bin/classes/Fields',
@@ -29,7 +31,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
     'text!package/quiqqer/products/bin/controls/fields/Create.html',
     'css!package/quiqqer/products/bin/controls/fields/Create.css'
 
-], function (QUI, QUIControl, QUIFormUtils, QUILocale, Mustache, InputMultiLang, Handler, Translation, template) {
+], function (QUI, QUIControl, QUIConfirm, QUIFormUtils, QUILocale, QUIAjax,
+             Mustache, InputMultiLang, Handler, Translation, template) {
     "use strict";
 
     var lg     = 'quiqqer/products',
@@ -252,11 +255,60 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     requiredField: Form.elements.requiredField.checked ? 1 : 0,
                     publicField  : Form.elements.publicField.checked ? 1 : 0,
                     options      : Form.elements.options.value
+                }).then(function (PRODUCT_ARRAY_STATUS) {
+                    if (PRODUCT_ARRAY_STATUS == Fields.PRODUCT_ARRAY_CHANGED) {
+                        // product array changed,
+                        return self.saveFieldToAllProducts();
+                    }
+
+                    return Promise.resolve();
                 }).then(function () {
                     return self.$Translation.save();
                 }).then(function () {
                     return self.$WorkingTitle.save();
                 }).then(resolve()).catch(reject);
+            });
+        },
+
+        /**
+         *
+         * @returns {Promise}
+         */
+        saveFieldToAllProducts: function () {
+            var self = this;
+
+            return new Promise(function (resolve) {
+
+                new QUIConfirm({
+                    icon       : 'fa fa-file-text-o',
+                    title      : QUILocale.get('quiqqer/products', 'fields.window.productarray.changed.title'),
+                    text       : QUILocale.get('quiqqer/products', 'fields.window.productarray.changed.text', {
+                        fieldId  : self.getAttribute('fieldId'),
+                        fieldName: self.$Translation.getValue()
+                    }),
+                    texticon   : 'fa fa-file-text-o',
+                    information: QUILocale.get('quiqqer/products', 'fields.window.productarray.changed.information', {
+                        fieldId  : self.getAttribute('fieldId'),
+                        fieldName: self.$Translation.getValue()
+                    }),
+                    maxHeight  : 500,
+                    maxWidth   : 750,
+                    autoclose  : false,
+                    events     : {
+                        onSubmit: function (Win) {
+                            Win.Loader.show();
+                            QUIAjax.post('package_quiqqer_products_ajax_fields_setProductFieldArray', function () {
+                                Win.close();
+                            }, {
+                                'package': 'quiqqer/products',
+                                fieldId  : self.getAttribute('fieldId')
+                            });
+                        },
+
+                        onClose: resolve
+                    }
+                }).open();
+
             });
         },
 

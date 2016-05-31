@@ -79,8 +79,14 @@ class Model extends QUI\QDOM
         ));
 
         if (!isset($result[0])) {
+            // if not exists, so we cleanup the cache table table, too
+            QUI::getDataBase()->delete(
+                QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+                array('id' => $this->getId())
+            );
+
             throw new QUI\ERP\Products\Product\Exception(
-                array('quiqqer/products', 'exception.product.not.found'),
+                array('quiqqer/products', 'exception.product.not.found', array('productId' => $this->getId())),
                 404,
                 array('id' => $this->getId())
             );
@@ -264,7 +270,7 @@ class Model extends QUI\QDOM
 
                 $Folder = $MainFolder->getChildByName($fieldId);
             }
-            
+
             $Field = $this->getField($fieldId);
             $Field->setValue($Folder->getUrl());
             $this->update();
@@ -553,21 +559,15 @@ class Model extends QUI\QDOM
     {
         QUI\Permissions\Permission::checkPermission('product.edit');
 
-        $categoryFields = array();
-        $categoryData   = array();
-        $categories     = $this->getCategories();
+        $categoryIds = array();
+        $categories  = $this->getCategories();
 
         /* @var $Field Field */
         /* @var $Category Category */
 
         // get category field data
         foreach ($categories as $Category) {
-            $categoryData[] = $Category->getId();
-            $catFields      = $Category->getFields();
-
-            foreach ($catFields as $Field) {
-                $categoryFields[$Field->getId()] = true;
-            }
+            $categoryIds[] = $Category->getId();
         }
 
 
@@ -579,15 +579,18 @@ class Model extends QUI\QDOM
             $mainCategory = $Category->getId();
         }
 
+
+        $fieldData = $this->getFieldData();
+
         QUI\Watcher::addString(
             QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.save', array(
                 'id' => $this->getId()
             )),
             '',
             array(
-                'categories' => ',' . implode(',', $categoryData) . ',',
+                'categories' => ',' . implode(',', $categoryIds) . ',',
                 'category'   => $mainCategory,
-                'fieldData'  => json_encode($this->validateFields())
+                'fieldData'  => json_encode($fieldData)
             )
         );
 
@@ -595,9 +598,9 @@ class Model extends QUI\QDOM
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
-                'categories' => ',' . implode(',', $categoryData) . ',',
+                'categories' => ',' . implode(',', $categoryIds) . ',',
                 'category'   => $mainCategory,
-                'fieldData'  => json_encode($this->validateFields())
+                'fieldData'  => json_encode($fieldData)
             ),
             array('id' => $this->getId())
         );
@@ -614,52 +617,11 @@ class Model extends QUI\QDOM
      */
     protected function validateFields()
     {
-        $fieldData    = array();
-        $categoryData = array();
-
-        $fields     = $this->getFields();
-        $categories = $this->getCategories();
-
-        $categoryFields = array();
-
-        /* @var $Field Field */
-        /* @var $Category Category */
-
-        // get category field data
-        foreach ($categories as $Category) {
-            $categoryData[] = $Category->getId();
-            $catFields      = $Category->getFields();
-
-            foreach ($catFields as $Field) {
-                $categoryFields[$Field->getId()] = true;
-            }
-        }
-
-        // helper function
-        $isFieldIdInArray = function ($fieldId, $array) {
-            /* @var $Field Field */
-            foreach ($array as $Field) {
-                if ($Field->getId() == $fieldId) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
-
-        // look if the product miss some category fields
-        foreach ($categoryFields as $fieldId => $val) {
-            if ($isFieldIdInArray($fieldId, $fields) === false) {
-                $CategoryField = $Category->getField($fieldId);
-
-                if ($CategoryField) {
-                    $fields[] = $CategoryField;
-                }
-            }
-        }
+        $fieldData = array();
+        $fields    = $this->getAllProductFields();
 
         // generate the product field data
-        /** @var QUI\ERP\Products\Field\Field $Field */
+        /* @var QUI\ERP\Products\Field\Field $Field */
         foreach ($fields as $Field) {
             $value = $Field->getValue();
 
@@ -724,6 +686,81 @@ class Model extends QUI\QDOM
         }
 
         return $fieldData;
+    }
+
+    /**
+     * Return the field data of all fields
+     * if the product is active, the fields would be validated, too
+     *
+     * @return array
+     */
+    protected function getFieldData()
+    {
+        if ($this->isActive()) {
+            return $this->validateFields();
+        }
+
+        $fields    = $this->getAllProductFields();
+        $fieldData = array();
+
+        /* @var QUI\ERP\Products\Field\Field $Field */
+        foreach ($fields as $Field) {
+            $fieldData[] = $Field->toProductArray();
+        }
+
+        return $fieldData;
+    }
+
+    /**
+     * Return all product fields
+     * looks at catgeories for missing fields
+     *
+     * @return array
+     */
+    protected function getAllProductFields()
+    {
+        $fields     = $this->getFields();
+        $categories = $this->getCategories();
+
+        $categoryFields = array();
+
+        /* @var $Field Field */
+        /* @var $Category Category */
+
+        // get category field data
+        foreach ($categories as $Category) {
+            $categoryData[] = $Category->getId();
+            $catFields      = $Category->getFields();
+
+            foreach ($catFields as $Field) {
+                $categoryFields[$Field->getId()] = true;
+            }
+        }
+
+        // helper function
+        $isFieldIdInArray = function ($fieldId, $array) {
+            /* @var $Field Field */
+            foreach ($array as $Field) {
+                if ($Field->getId() == $fieldId) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        // look if the product miss some category fields
+        foreach ($categoryFields as $fieldId => $val) {
+            if ($isFieldIdInArray($fieldId, $fields) === false) {
+                $CategoryField = $Category->getField($fieldId);
+
+                if ($CategoryField) {
+                    $fields[] = $CategoryField;
+                }
+            }
+        }
+
+        return $fields;
     }
 
     /**
@@ -901,6 +938,17 @@ class Model extends QUI\QDOM
             ),
             1002
         );
+    }
+
+    /**
+     * Has the product the field?
+     *
+     * @param Integer $fieldId
+     * @return bool
+     */
+    public function hasField($fieldId)
+    {
+        return isset($this->fields[$fieldId]);
     }
 
     /**

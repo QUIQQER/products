@@ -137,9 +137,13 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                     onClick: function (Btn) {
                         Btn.setAttribute('textimage', 'fa fa-spinner fa-spin');
 
-                        self.deleteChild(
-                            self.$Search.getSelected()
-                        );
+                        self.deleteChild(self.$Search.getSelected()).catch(function (Exception) {
+                            if (Exception.getType() == 'qui/controls/messages/Error') {
+                                return;
+                            }
+
+                            console.error(Exception);
+                        });
                     }
                 }
             });
@@ -231,7 +235,9 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                                     onClick: function () {
                                         self.Loader.show();
 
-                                        Product.submit().then(function () {
+                                        Product.submit().then(function (Product) {
+                                            self.updateChild(Product.id);
+
                                             Sheet.hide().then(function () {
                                                 Sheet.destroy();
                                                 self.refresh();
@@ -272,6 +278,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * Opens the delete dialog
          *
          * @param {Number|Array} productIds
+         * @return {Promise}
          */
         deleteChild: function (productIds) {
             var self = this;
@@ -286,10 +293,14 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 }
 
                 if (!productIds.length) {
-
+                    return reject();
                 }
 
                 Products.getChildren(productIds).then(function (data) {
+                    if (!data.length) {
+                        return reject();
+                    }
+
                     var products = '<ul>';
 
                     for (var i = 0, len = data.length; i < len; i++) {
@@ -324,7 +335,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                                         MH.addSuccess(
                                             QUILocale.get(lg, 'message.success.products.delete')
                                         );
-                                    })
+                                    });
                                 });
                             }
                         }

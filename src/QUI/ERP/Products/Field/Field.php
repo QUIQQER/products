@@ -904,14 +904,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function toProductArray()
     {
-        $attributes['id'] = $this->getId();
-
-        $attributes['value']      = $this->getValue();
-        $attributes['unassigned'] = $this->isUnassigned();
-        $attributes['ownField']   = $this->isOwnField();
-        $attributes['isPublic']   = $this->isPublic();
-
-        return $attributes;
+        return array(
+            'id'         => $this->getId(),
+            'value'      => $this->getValue(),
+            'unassigned' => $this->isUnassigned(),
+            'ownField'   => $this->isOwnField(),
+            'isPublic'   => $this->isPublic()
+        );
     }
 
     /**

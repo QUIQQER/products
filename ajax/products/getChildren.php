@@ -18,9 +18,19 @@ QUI::$Ajax->registerFunction(
         $Products   = new QUI\ERP\Products\Handler\Products();
         $result     = array();
 
+        $ExStack = new QUI\ExceptionStack();
+
         foreach ($productIds as $productId) {
-            $Product  = $Products->getProduct($productId);
-            $result[] = $Product->getAttributes();
+            try {
+                $Product  = $Products->getProduct($productId);
+                $result[] = $Product->getAttributes();
+            } catch (QUI\Exception $Exception) {
+                $ExStack->addException($Exception);
+            }
+        }
+
+        if (!$ExStack->isEmpty()) {
+            throw new QUI\Exception($ExStack->getMessage());
         }
 
         return $result;

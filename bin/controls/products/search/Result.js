@@ -112,7 +112,8 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
             };
 
             for (i = 0, len = data.data.length; i < len; i++) {
-                entry = data.data[i];
+                entry     = data.data[i];
+                productNo = '';
 
                 // active status
                 data.data[i].status = new Element('span', {
@@ -120,7 +121,9 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                 });
 
                 // product no
-                productNo = entry.fields.find(findProductNo);
+                if ("fields" in entry) {
+                    productNo = entry.fields.find(findProductNo);
+                }
 
                 data.data[i].productNo = productNo.value || '';
 

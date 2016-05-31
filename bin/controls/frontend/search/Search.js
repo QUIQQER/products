@@ -15,13 +15,14 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
 
     'qui/QUI',
     'qui/controls/Control',
+    'qui/utils/String',
     'package/quiqqer/products/bin/Fields',
     'package/quiqqer/products/bin/Search',
     'Ajax',
     'Locale',
     URL_OPT_DIR + 'bin/mustache/mustache.min.js'
 
-], function (QUI, QUIControl, Fields, Search, QUIAjax, QUILocale, Mustache) {
+], function (QUI, QUIControl, QUIStringUtils, Fields, Search, QUIAjax, QUILocale, Mustache) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -165,6 +166,8 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
 
                         Container.inject(this.$Form);
 
+                        this.$loadFromUrl();
+
                         moofx(Container).animate({
                             opacity: 1
                         }, {
@@ -240,7 +243,75 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
                 return;
             }
 
+            if (typeof window.history === 'undefined') {
+                return;
+            }
+
+            var loc   = '',
+                query = this.$buildUrlQuery();
+
+            if ("origin" in location) {
+                loc = location.origin;
+            }
+
+            var url = loc + location.pathname;
+
+            if (query !== '') {
+                url = url + '?' + query;
+            }
+
+            window.history.pushState({}, "", url);
+
             this.fireEvent('change', [this]);
+        },
+
+        /**
+         * Build the url search query
+         *
+         * @returns {String}
+         */
+        $buildUrlQuery: function () {
+            var params   = {},
+                values   = this.getFieldValues(),
+                freetext = this.getFreeTextSearch();
+
+            if (freetext !== '') {
+                params.search = JSON.encode(freetext);
+            }
+
+            var key, val;
+            for (key in values) {
+                if (!values.hasOwnProperty(key)) {
+                    continue;
+                }
+
+                val = values[key];
+
+                if (val === '') {
+                    continue;
+                }
+
+                params[key] = JSON.encode(val);
+            }
+
+            return Object.toQueryString(params);
+        },
+
+        /**
+         * load the field values from the url
+         */
+        $loadFromUrl: function () {
+            var params = QUIStringUtils.getUrlParams(
+                window.location.toString()
+            );
+
+            for (var key in params) {
+                if (params.hasOwnProperty(key)) {
+                    params[key] = JSON.decode(decodeURIComponent(params[key]));
+                }
+            }
+
+            console.log(params);
         }
     });
 });

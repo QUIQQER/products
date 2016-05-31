@@ -292,6 +292,7 @@ class ProductList extends QUI\Control
                 $this->Search = new QUI\ERP\Products\Search\FrontendSearch($this->getSite());
             }
         } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);
             $this->Search = false;
         }
 

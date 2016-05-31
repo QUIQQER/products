@@ -2,17 +2,15 @@
 
 use QUI\ERP\Products;
 use QUI\System\Log;
+use \Symfony\Component\HttpFoundation\RedirectResponse;
+use \Symfony\Component\HttpFoundation\Response;
 
 $siteUrl = $Site->getLocation();
-
-$url = $_REQUEST['_url'];
-$url = pathinfo($url);
+$url     = $_REQUEST['_url'];
+$url     = pathinfo($url);
 
 // check product url
 if ($siteUrl != $_REQUEST['_url']) {
-    /**
-     * Product
-     */
     $baseName = str_replace(
         QUI\Rewrite::getDefaultSuffix(),
         '',
@@ -36,13 +34,19 @@ if ($siteUrl != $_REQUEST['_url']) {
 
     } catch (QUI\Exception $Exception) {
         Log::writeException($Exception, Log::LEVEL_NOTICE);
-        QUI::getRewrite()->showErrorHeader(404);
+
+        $url = QUI::getRewrite()->getUrlFromSite(array(
+            'site' => $Site
+        ));
+
+        $Redirect = new RedirectResponse($url);
+        $Redirect->setStatusCode(Response::HTTP_NOT_FOUND);
+        echo $Redirect->getContent();
+
+        $Redirect->send();
     }
 
 } else {
-    /**
-     * Category display
-     */
     $Search = new QUI\ERP\Products\Controls\Search\Search(array(
         'Site'      => $Site,
         'data-name' => 'category-search'
