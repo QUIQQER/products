@@ -339,7 +339,6 @@ class Products
         self::getProduct($pid)->delete();
     }
 
-
     /**
      * Return the number of the products
      * Count products
@@ -372,6 +371,23 @@ class Products
         }
 
         return 0;
+    }
+
+    /**
+     * Cleanup all products
+     */
+    public static function cleanup()
+    {
+        $ids = self::getProductIds();
+
+        foreach ($ids as $id) {
+            try {
+                $Product = self::getProduct($id);
+                $Product->save();
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_WARNING);
+            }
+        }
     }
 
     /**
