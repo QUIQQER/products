@@ -147,6 +147,7 @@
 
 .product-data-more-sheet {
     left: 0;
+    outline: none;
     padding: 20px;
     position: absolute;
     top: 0;

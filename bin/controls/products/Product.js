@@ -102,11 +102,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 id: this.getAttribute('productId')
             });
 
-            this.$data   = {};
-            this.$Data   = null;
-            this.$Media  = null;
-            this.$Files  = null;
-            this.$Editor = null;
+            this.$data    = {};
+            this.$Data    = null;
+            this.$Media   = null;
+            this.$Files   = null;
+            this.$Control = null;
 
             this.$injected = false;
 
@@ -772,21 +772,18 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }).then(function () {
                 this.$currentField = fieldId;
 
-                require(['Editors'], function (Editors) {
-                    Editors.getEditor().then(function (Editor) {
+                require([Field.jsControl + 'Settings'], function (Control) {
+                    this.$Control = new Control();
 
-                        this.$Editor = Editor;
+                    this.$FieldContainer.setStyles({
+                        height: '100%'
+                    });
 
-                        this.$FieldContainer.setStyles({
-                            height: '100%'
-                        });
+                    if (Field && "value" in Field) {
+                        this.$Control.setAttribute('value', Field.value);
+                    }
 
-                        if (Field && "value" in Field) {
-                            Editor.setContent(Field.value);
-                        }
-
-                        Editor.inject(this.$FieldContainer);
-                    }.bind(this));
+                    this.$Control.inject(this.$FieldContainer);
                 }.bind(this));
             }.bind(this));
         },
@@ -1315,9 +1312,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     duration: 200,
                     callback: function () {
 
-                        if (this.$Editor) {
-                            this.$Editor.destroy();
-                            this.$Editor = null;
+                        if (this.$Control) {
+                            this.$Control.destroy();
+                            this.$Control = null;
                         }
 
                         if (this.$Grid) {
@@ -1343,14 +1340,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * storage the content fields
          */
         $saveEditorContent: function () {
-            if (this.$Editor) {
+            if (this.$Control) {
                 var currentField = this.$currentField;
 
                 if (!(currentField in this.$data)) {
                     this.$data[currentField] = {};
                 }
 
-                this.$data[currentField].value = this.$Editor.getContent();
+                this.$data[currentField].value = this.$Control.save();
             }
         },
 
