@@ -1125,7 +1125,6 @@ class Model extends QUI\QDOM
     {
         try {
             return $this->getMediaFolder()->getImages($params);
-
         } catch (QUI\Exception $Exception) {
             return array();
         }

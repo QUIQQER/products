@@ -586,28 +586,28 @@ abstract class Search extends QUI\QDOM
             return false;
         }
 
-        $str = Orthos::removeHTML($str);
-        $str = Orthos::clearPath($str);
-        $str = htmlspecialchars_decode($str);
-        $str = str_replace(
-            array(
-                '<',
-                '%3C',
-                '>',
-                '%3E',
-                '"',
-                '%22',
-//                '\\',
-//                '%5C',
-//                '/',
-//                '%2F',
-                '\'',
-                '%27',
-            ),
-            '',
-            $str
-        );
-        $str = htmlspecialchars($str);
+//        $str = Orthos::removeHTML($str);
+//        $str = Orthos::clearPath($str);
+//        $str = htmlspecialchars_decode($str);
+//        $str = str_replace(
+//            array(
+//                '<',
+//                '%3C',
+//                '>',
+//                '%3E',
+//                '"',
+//                '%22',
+////                '\\',
+////                '%5C',
+////                '/',
+////                '%2F',
+//                '\'',
+//                '%27',
+//            ),
+//            '',
+//            $str
+//        );
+//        $str = htmlspecialchars($str);
 
         return $str;
     }
