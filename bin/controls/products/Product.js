@@ -1186,6 +1186,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             require([
                 'package/quiqqer/products/bin/controls/products/permissions/Permissions'
             ], function (ProductPermissions) {
+                var self  = this;
                 var Sheet = this.createSheet({
                     icon : 'fa fa-shopping-bag',
                     title: this.getAttribute('title')
@@ -1193,10 +1194,24 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 Sheet.addEvents({
                     onOpen: function (Sheet) {
-                        new ProductPermissions({
-                            productId: this.getAttribute('productId')
+                        var Permissions = new ProductPermissions({
+                            productId: self.getAttribute('productId')
                         }).inject(Sheet.getContent());
-                    }.bind(this)
+
+                        Sheet.addButton({
+                            text     : QUILocale.get('quiqqer/system', 'save'),
+                            textimage: 'fa fa-save',
+                            events   : {
+                                onClick: function () {
+                                    self.Loader.show();
+                                    Permissions.save().then(function () {
+                                        Sheet.hide();
+                                        self.Loader.hide();
+                                    });
+                                }
+                            }
+                        });
+                    }
                 });
 
                 Sheet.show();

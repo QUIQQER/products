@@ -75,4 +75,70 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\Product
 
         $this->Category = $Category;
     }
+
+    /**
+     * Set own product permissions
+     *
+     * @param string $permission
+     * @param string $ugString - user group string
+     * @param QUI\Interfaces\Users\User $User - optional
+     */
+    public function setPermission($permission, $ugString = '', $User = null)
+    {
+        if (!QUI\Utils\UserGroups::isUserGroupString($ugString)) {
+            return;
+        };
+
+        QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
+
+        switch ($permission) {
+            case 'permission.viewable':
+            case 'permission.buyable':
+                $this->permissions[$permission] = $ugString;
+                break;
+        }
+    }
+
+    /**
+     * Clear the complete own product permissions
+     *
+     * @param QUI\Interfaces\Users\User $User - optional
+     *
+     * @throws QUI\Permissions\Exception
+     */
+    public function clearPermissions($User = null)
+    {
+        QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
+
+        $this->permissions = array();
+    }
+
+    /**
+     * Clear a product own permission
+     *
+     * @param string $permission - name of the product permission
+     * @param null $User
+     * @throws QUI\Permissions\Exception
+     */
+    public function clearPermission($permission, $User = null)
+    {
+        QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
+
+        if (isset($this->permissions[$permission])) {
+            $this->permissions[$permission] = array();
+        }
+    }
+
+    /**
+     * Set multiple permissions
+     *
+     * @param array $permissions - ist of permissions
+     * @param QUI\Interfaces\Users\User $User - optional
+     */
+    public function setPermissions($permissions, $User = null)
+    {
+        foreach ($permissions as $permission => $data) {
+            $this->setPermission($permission, $data, $User);
+        }
+    }
 }

@@ -16,7 +16,7 @@ QUI::$Ajax->registerFunction(
     function ($productId) {
         $Products = new QUI\ERP\Products\Handler\Products();
         $Product  = $Products->getProduct($productId);
-
+        
         return $Product->getAttributes();
     },
     array('productId')

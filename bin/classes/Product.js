@@ -106,6 +106,25 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * Set permissions for the own product permissions
+         *
+         * @param {Object} permissions - list of permissions
+         * @returns {Promise}
+         */
+        setPermissions: function (permissions) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_setPermissions', function () {
+                    this.refresh().then(resolve, reject);
+                }.bind(this), {
+                    'package'  : 'quiqqer/products',
+                    productId  : this.getId(),
+                    permissions: JSON.encode(permissions),
+                    onError    : reject
+                });
+            }.bind(this));
+        },
+
+        /**
          * Return the Product-ID
          *
          * @returns {Number|Boolean}
@@ -291,7 +310,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                         categories[index] = parseInt(value);
                     });
 
-                    if (self.$data.category != 0 &&
+                    if (self.$data.category !== 0 &&
                         self.$data.category && !categories.contains(parseInt(self.$data.category))) {
                         categories.push(parseInt(self.$data.category));
                     }
