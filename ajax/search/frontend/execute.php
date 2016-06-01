@@ -24,7 +24,7 @@ QUI::$Ajax->registerFunction(
         $Site    = $Project->get($siteId);
 
         $Search       = SearchHandler::getFrontendSearch($Site);
-        $searchParams = Orthos::clearArray(json_decode($searchParams, true));
+        $searchParams = json_decode($searchParams, true);
 
         if (isset($searchParams['count'])) {
             return $Search->search($searchParams, true);
