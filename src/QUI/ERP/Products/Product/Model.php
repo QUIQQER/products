@@ -107,6 +107,7 @@ class Model extends QUI\QDOM
             $this->permissions = json_decode($result[0]['permissions'], true);
         }
 
+        
         unset($result[0]['id']);
         unset($result[0]['active']);
 
@@ -1232,6 +1233,8 @@ class Model extends QUI\QDOM
      */
 
     /**
+     * Has the user the product permission?
+     *
      * @param string $permission - Permission name
      * @param QUI\Interfaces\Users\User $User
      * @return bool
@@ -1261,13 +1264,41 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Check the user product permission
+     *
+     * @param $permission
+     * @param null $User
+     * @throws QUI\Permissions\Exception
+     */
+    public function checkPermission($permission, $User = null)
+    {
+        if (!$User) {
+            $User = QUI::getUserBySession();
+        }
+
+        if (!$this->hasPermission($permission, $User)) {
+            throw new QUI\Permissions\Exception(
+                QUI::getLocale()->get(
+                    'quiqqer/system',
+                    'exception.no.permission'
+                ),
+                403,
+                array(
+                    'userid'   => $User->getId(),
+                    'username' => $User->getName()
+                )
+            );
+        }
+    }
+
+    /**
      * @return array|mixed
      */
     public function getPermissions()
     {
         return $this->permissions;
     }
-    
+
     /**
      * Clear the complete own product permissions
      *
