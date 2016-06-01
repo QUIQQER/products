@@ -100,36 +100,6 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\Product
     }
 
     /**
-     * Clear the complete own product permissions
-     *
-     * @param QUI\Interfaces\Users\User $User - optional
-     *
-     * @throws QUI\Permissions\Exception
-     */
-    public function clearPermissions($User = null)
-    {
-        QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
-
-        $this->permissions = array();
-    }
-
-    /**
-     * Clear a product own permission
-     *
-     * @param string $permission - name of the product permission
-     * @param null $User
-     * @throws QUI\Permissions\Exception
-     */
-    public function clearPermission($permission, $User = null)
-    {
-        QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
-
-        if (isset($this->permissions[$permission])) {
-            $this->permissions[$permission] = array();
-        }
-    }
-
-    /**
      * Set multiple permissions
      *
      * @param array $permissions - ist of permissions
