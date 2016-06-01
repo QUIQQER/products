@@ -9,6 +9,7 @@
             <field type="LONGTEXT NULL">fieldData</field>
             <field type="TINYINT(1) DEFAULT 0">active</field>
             <field type="BIGINT(10) NULL">parent</field>
+            <field type="TEXT">permissions</field>
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>

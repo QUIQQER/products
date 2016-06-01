@@ -110,7 +110,7 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLangSett
                     this.$Editor = Editor;
 
                     var value = this.getAttribute('value');
-                    
+
                     if (typeOf(value) === 'string') {
                         try {
                             value = JSON.decode(value);

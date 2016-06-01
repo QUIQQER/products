@@ -34,6 +34,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'controls/grid/Grid',
     'controls/projects/project/media/FolderViewer',
     'Mustache',
+    'Packages',
     'package/quiqqer/products/bin/Products',
     'package/quiqqer/products/bin/classes/Product',
     'package/quiqqer/products/bin/Categories',
@@ -46,7 +47,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'css!package/quiqqer/products/bin/controls/products/Product.css'
 
 ], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIConfirm, QUIFormUtils, QUILocale,
-             Grid, FolderViewer, Mustache,
+             Grid, FolderViewer, Mustache, Packages,
              Products, Product, Categories, Fields, FieldWindow,
              CategorySelect, templateProductData, templateField) {
     "use strict";
@@ -66,6 +67,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             'openImages',
             'openFiles',
             'openField',
+            'openPermissions',
             '$onCreate',
             '$onInject',
             'openAddFieldDialog',
@@ -179,7 +181,40 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 Content = self.getContent();
 
             // load product data
-            return this.loadData().then(function () {
+            return Packages.getConfig('quiqqer/products').then(function (config) {
+                if (!("products" in config)) {
+                    return;
+                }
+
+                if (!("usePermissions" in config.products)) {
+                    return;
+                }
+
+                if (!config.products.usePermissions ||
+                    config.products.usePermissions === '') {
+                    return;
+                }
+
+                new QUIButton({
+                    image : 'fa fa-shield',
+                    alt   : QUILocale.get(lg, 'products.product.panel.btn.permissions'),
+                    title : QUILocale.get(lg, 'products.product.panel.btn.permissions'),
+                    styles: {
+                        'border-left-width' : 1,
+                        'border-right-width': 1,
+                        'float'             : 'right',
+                        width               : 40
+                    },
+                    events: {
+                        onClick: self.openPermissions
+                    }
+                }).inject(self.getHeader());
+
+
+            }).then(function () {
+                return self.loadData();
+
+            }).then(function () {
 
                 // get product data
                 return Promise.all([
@@ -1138,6 +1173,34 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }.bind(this)).then(function () {
                     this.$Grid.resize();
                 }.bind(this));
+
+            }.bind(this));
+        },
+
+        /**
+         * Shows permissions for the product
+         */
+        openPermissions: function () {
+            this.Loader.show();
+
+            require([
+                'package/quiqqer/products/bin/controls/products/permissions/Permissions'
+            ], function (ProductPermissions) {
+                var Sheet = this.createSheet({
+                    icon : 'fa fa-shopping-bag',
+                    title: this.getAttribute('title')
+                });
+
+                Sheet.addEvents({
+                    onOpen: function (Sheet) {
+                        new ProductPermissions({
+                            productId: this.getAttribute('productId')
+                        }).inject(Sheet.getContent());
+                    }.bind(this)
+                });
+
+                Sheet.show();
+                this.Loader.hide();
 
             }.bind(this));
         },

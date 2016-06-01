@@ -49,6 +49,12 @@ class Model extends QUI\QDOM
     protected $categories = array();
 
     /**
+     * Permissions list
+     * @var array
+     */
+    protected $permissions = array();
+
+    /**
      * @var null
      */
     protected $Category = null;
@@ -93,6 +99,10 @@ class Model extends QUI\QDOM
         }
 
         $this->active = (int)$result[0]['active'] ? true : false;
+
+        if (isset($result[0]['permissions'])) {
+            $this->permissions = json_decode($result[0]['permissions'], true);
+        }
 
         unset($result[0]['id']);
         unset($result[0]['active']);
@@ -1210,5 +1220,31 @@ class Model extends QUI\QDOM
     public function isActive()
     {
         return $this->active;
+    }
+
+    /**
+     * Permissions
+     */
+
+    /**
+     * @param string $permission
+     * @param bool $User
+     * @return bool
+     */
+    public function hasPermission($permission, $User = false)
+    {
+        if (!Products::usePermissions()) {
+            return true;
+        }
+
+
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getPermissions()
+    {
+        return $this->permissions;
     }
 }

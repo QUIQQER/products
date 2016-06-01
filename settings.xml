@@ -13,6 +13,9 @@
                 <conf name="mainCategory">
                     <type><![CDATA[integer]]></type>
                 </conf>
+                <conf name="usePermissions">
+                    <type><![CDATA[integer]]></type>
+                </conf>
             </section>
             <section name="search">
                 <conf name="backend">
@@ -51,6 +54,16 @@
                             <text>
                                 <locale group="quiqqer/products" var="settings.window.products.hidePrices"/>
                             </text>
+                        </input>
+
+                        <input conf="products.usePermissions" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.usePermissions"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.usePermissions.description"/>
+                            </description>
                         </input>
 
                         <input conf="products.mainCategory"

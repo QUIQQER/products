@@ -20,6 +20,12 @@ use QUI\ERP\Products\Utils\Tables as TablesUtils;
 class Products
 {
     /**
+     * Product permission using?
+     * @var null|boolean
+     */
+    private static $usePermissions = null;
+
+    /**
      * List of internal products
      * @var array
      */
@@ -388,6 +394,27 @@ class Products
                 QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_WARNING);
             }
         }
+    }
+
+    /**
+     * Permission using?
+     * Is permission using active?
+     *
+     * @return boolean
+     */
+    public static function usePermissions()
+    {
+        if (!is_null(self::$usePermissions)) {
+            return self::$usePermissions;
+        }
+
+        $Package = QUI::getPackage('quiqqer/products');
+        $Config  = $Package->getConfig();
+
+        $usePermission        = (int)$Config->get('products', 'usePermissions');
+        self::$usePermissions = $usePermission ? true : false;
+
+        return self::$usePermissions;
     }
 
     /**

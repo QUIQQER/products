@@ -50,6 +50,18 @@
             <de><![CDATA[Preise nicht anzeigen]]></de>
             <en><![CDATA[Hide prices]]></en>
         </locale>
+        <locale name="settings.window.products.usePermissions">
+            <de><![CDATA[Produkt Rechte aktivieren]]></de>
+            <en><![CDATA[Activate product permissions]]></en>
+        </locale>
+        <locale name="settings.window.products.usePermissions.description">
+            <de><![CDATA[
+            Achtung! Das Aktivieren der einzelnen Produktrechte kann zu performance Einbußen führen.
+            ]]></de>
+            <en><![CDATA[
+            Attention! Activating the individual product permissions can lead to reduced performance.
+            ]]></en>
+        </locale>
         <locale name="settings.window.products.mainCategory">
             <de><![CDATA[Hauptkategory für Produkte]]></de>
             <en><![CDATA[Main category for products]]></en>
