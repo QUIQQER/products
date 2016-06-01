@@ -189,8 +189,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 if (!("usePermissions" in config.products)) {
                     return;
                 }
-
-                if (!config.products.usePermissions ||
+                
+                if (!parseInt(config.products.usePermissions) ||
                     config.products.usePermissions === '') {
                     return;
                 }

@@ -61,8 +61,19 @@ define('package/quiqqer/products/bin/controls/products/permissions/Permissions',
         $onInject: function () {
             Products.getChild(this.getAttribute('productId')).then(function (productData) {
 
-                if (typeof productData.permissions === 'undefined') {
-                    productData.permissions = {};
+                if (typeOf(productData.permissions) != 'object') {
+                    productData.permissions = {
+                        'permission.viewable': '',
+                        'permission.buyable' : ''
+                    };
+                }
+
+                if (typeOf(productData.permissions['permission.viewable']) !== 'string') {
+                    productData.permissions['permission.viewable'] = '';
+                }
+
+                if (typeOf(productData.permissions['permission.buyable']) !== 'string') {
+                    productData.permissions['permission.buyable'] = '';
                 }
 
                 this.$Viewable = new Permission({

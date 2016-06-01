@@ -107,7 +107,7 @@ class Model extends QUI\QDOM
             $this->permissions = json_decode($result[0]['permissions'], true);
         }
 
-        
+
         unset($result[0]['id']);
         unset($result[0]['active']);
 
