@@ -267,13 +267,15 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
                 // translations
                 this.$TitlesTranslation = new Translation({
-                    'group': 'quiqqer/products',
-                    'var'  : 'products.category.' + categoryId + '.title'
+                    'group'          : 'quiqqer/products',
+                    'var'            : 'products.category.' + categoryId + '.title',
+                    createIfNotExists: true
                 }).inject(TranslateTitles);
 
                 this.$CategoriesTranslation = new Translation({
-                    'group': 'quiqqer/products',
-                    'var'  : 'products.category.' + categoryId + '.description'
+                    'group'          : 'quiqqer/products',
+                    'var'            : 'products.category.' + categoryId + '.description',
+                    createIfNotExists: true
                 }).inject(TranslateCategories);
 
 
