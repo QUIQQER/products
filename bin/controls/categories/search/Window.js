@@ -40,6 +40,7 @@ define('package/quiqqer/products/bin/controls/categories/search/Window', [
             title    : 'Kategorie-Auswahl',
             autoclose: false,
             multiple : false,
+            message  : false,
 
             cancel_button: {
                 text     : QUILocale.get('quiqqer/system', 'cancel'),
@@ -74,6 +75,12 @@ define('package/quiqqer/products/bin/controls/categories/search/Window', [
 
             Content.set('html', '');
             Content.addClass('discount-search');
+
+            if (this.getAttribute('message')) {
+                new Element('div', {
+                    html: this.getAttribute('message')
+                }).inject(Content);
+            }
 
             this.$Sitemap = new Sitemap({
                 multiple: this.getAttribute('multiple')

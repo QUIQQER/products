@@ -54,7 +54,7 @@
             </settings>
         </type>
 
-        <!-- Kategorien -->
+        <!-- Produkt suche -->
         <type type="types/search" icon="fa fa-shopping-basket fa-search">
             <locale group="quiqqer/products" var="admin.types.search"/>
             <desc>
