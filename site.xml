@@ -9,6 +9,10 @@
                 <locale group="quiqqer/products" var="admin.types.category.desc"/>
             </desc>
 
+            <admin>
+                <js onSiteLoad="package/quiqqer/products/bin/CategorySiteWizard"/>
+            </admin>
+
             <attributes>
                 <attribute>quiqqer.products.settings.categoryId</attribute>
                 <attribute>quiqqer.products.settings.searchFieldIds</attribute>

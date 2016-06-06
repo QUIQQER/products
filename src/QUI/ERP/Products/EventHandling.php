@@ -396,6 +396,27 @@ class EventHandling
     }
 
     /**
+     * Event on child create
+     *
+     * @param integer $newId
+     * @param \QUI\Projects\Site\Edit $Parent
+     */
+    public static function onSiteCreateChild($newId, $Parent)
+    {
+        $type = $Parent->getAttribute('type');
+
+        if ($type != 'quiqqer/products:types/category') {
+            return;
+        }
+
+        $Project = $Parent->getProject();
+        $Site    = new QUI\Projects\Site\Edit($Project, $newId);
+
+        $Site->setAttribute('type', 'quiqqer/products:types/category');
+        $Site->save();
+    }
+
+    /**
      * Event on product category site save
      *
      * @param \QUI\Projects\Site\Edit $Site

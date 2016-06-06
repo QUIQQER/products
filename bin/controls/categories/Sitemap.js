@@ -84,7 +84,7 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
 
             this.$Sitemap.appendChild(
                 new QUISitemapItem({
-                    text  : 'Kategorien',
+                    text  : 'Kategorien', // #locale
                     id    : 0,
                     icon  : 'fa fa-shopping-basket',
                     events: {
