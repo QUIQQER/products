@@ -57,6 +57,11 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
     protected $data = array();
 
     /**
+     * @var array
+     */
+    protected $caches = array();
+
+    /**
      * Model constructor.
      *
      * @param integer $categoryId
@@ -67,6 +72,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
         $this->parentId = 0;
         $this->id       = (int)$categoryId;
         $this->data     = $data;
+
+        $this->caches = array(
+            'site-binds'
+        );
 
         if (isset($data['parentId'])) {
             $this->parentId = (int)$data['parentId'];
@@ -214,6 +223,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
      */
     public function getAttributes()
     {
+        $cacheName = QUI\ERP\Products\Handler\Categories::getCacheName($this->getId()) . '/attributes';
+
         $fields   = array();
         $fieldist = $this->getFields();
 
@@ -222,15 +233,26 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
             $fields[] = $Field->getAttributes();
         }
 
-        $attributes       = parent::getAttributes();
-        $attributes['id'] = $this->getId();
+        try {
+            $attributes = QUI\Cache\Manager::get($cacheName);
 
-        $attributes['title']         = $this->getTitle();
-        $attributes['description']   = $this->getDescription();
-        $attributes['countChildren'] = $this->countChildren();
-        $attributes['sites']         = $this->getSites();
-        $attributes['parent']        = $this->getParentId();
-        $attributes['fields']        = $fields;
+        } catch (QUI\Cache\Exception $Exception) {
+            $attributes       = parent::getAttributes();
+            $attributes['id'] = $this->getId();
+
+            $attributes['title']         = $this->getTitle();
+            $attributes['description']   = $this->getDescription();
+            $attributes['countChildren'] = $this->countChildren();
+            $attributes['sites']         = $this->getSites();
+            $attributes['parent']        = $this->getParentId();
+
+            QUI\Cache\Manager::set(
+                QUI\ERP\Products\Handler\Categories::getCacheName($this->getId()) . '/attributes',
+                $attributes
+            );
+        }
+
+        $attributes['fields'] = $fields;
 
         return $attributes;
     }
@@ -301,56 +323,6 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
 
         return 0;
     }
-
-//    /**
-//     * Get all products (active AND inactive) of this category
-//     *
-//     * @param bool $asObjects (optional) - true: return array with Product objects
-//     *                                      false: return array with product ids only [default: true]
-//     * @return array
-//     */
-//    public function getAllProducts($asObjects = true)
-//    {
-//        return QUI\ERP\Products\Handler\Products::getProducts(array(
-//            'where' => array(
-//                'category' => $this->id
-//            )
-//        ), $asObjects);
-//    }
-//
-//    /**
-//     * Get all active products of this category
-//     *
-//     * @param bool $asObjects (optional) - true: return array with Product objects
-//     *                                      false: return array with product ids only [default: true]
-//     * @return array
-//     */
-//    public function getActiveProducts($asObjects = true)
-//    {
-//        return QUI\ERP\Products\Handler\Products::getProducts(array(
-//            'where' => array(
-//                'category' => $this->id,
-//                'active' => 1
-//            )
-//        ), $asObjects);
-//    }
-//
-//    /**
-//     * Get all inactive products of this category
-//     *
-//     * @param bool $asObjects (optional) - true: return array with Product objects
-//     *                                      false: return array with product ids only [default: true]
-//     * @return array
-//     */
-//    public function getInactiveProducts($asObjects = true)
-//    {
-//        return QUI\ERP\Products\Handler\Products::getProducts(array(
-//            'where' => array(
-//                'category' => $this->id,
-//                'active' => 0
-//            )
-//        ), $asObjects);
-//    }
 
     /**
      * Return the category site

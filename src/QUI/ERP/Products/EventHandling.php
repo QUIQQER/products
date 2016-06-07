@@ -393,6 +393,16 @@ class EventHandling
                  . $Site->getId() . '/' . $Site->getProject()->getLang();
 
         QUI\ERP\Products\Search\Cache::clear($cname);
+
+        // category cache clearing
+        $categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
+
+        if ($categoryId) {
+            try {
+                QUI\ERP\Products\Handler\Categories::clearCache($categoryId);
+            } catch (QUI\Cache\Exception $Exception) {
+            }
+        }
     }
 
     /**

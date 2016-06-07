@@ -17,7 +17,7 @@ QUI::$Ajax->registerFunction(
         $Categories = new QUI\ERP\Products\Handler\Categories();
         $result     = array();
 
-        $Grid = new \QUI\Utils\Grid();
+        $Grid = new QUI\Utils\Grid();
 
         $data = $Categories->getCategories(
             $Grid->parseDBParams(json_decode($params, true))
