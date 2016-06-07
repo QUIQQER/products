@@ -18,7 +18,8 @@ QUI::$Ajax->registerFunction(
         $Site    = $Project->get($siteId);
 
         $newChildId = $Site->createChild(array(
-            'name' => $title
+            'name'  => QUI\Projects\Site\Utils::clearUrl($title, $Project),
+            'title' => $title
         ));
 
         if ((int)$createCategory == 0) {
