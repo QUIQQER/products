@@ -109,13 +109,15 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 id   = this.getAttribute('fieldId');
 
             this.$Translation = new Translation({
-                'group': 'quiqqer/products',
-                'var'  : 'products.field.' + id + '.title'
+                'group'          : 'quiqqer/products',
+                'var'            : 'products.field.' + id + '.title',
+                createIfNotExists: true
             }).inject(Elm.getElement('.field-title'));
 
             this.$WorkingTitle = new Translation({
-                'group': 'quiqqer/products',
-                'var'  : 'products.field.' + id + '.workingtitle'
+                'group'          : 'quiqqer/products',
+                'var'            : 'products.field.' + id + '.workingtitle',
+                createIfNotExists: true
             }).inject(Elm.getElement('.field-workingtitle'));
 
             Promise.all([
@@ -244,17 +246,28 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     search_type = Form.elements.search_type.value;
                 }
 
-                // trigger update
-                Fields.updateChild(fieldId, {
-                    type         : Form.elements.type.value,
-                    search_type  : search_type,
-                    prefix       : Form.elements.prefix.value,
-                    suffix       : Form.elements.suffix.value,
-                    priority     : Form.elements.priority.value,
-                    standardField: Form.elements.standardField.checked ? 1 : 0,
-                    requiredField: Form.elements.requiredField.checked ? 1 : 0,
-                    publicField  : Form.elements.publicField.checked ? 1 : 0,
-                    options      : Form.elements.options.value
+                return QUI.getMessageHandler().then(function (MH) {
+                    MH.setAttribute('showMessages', false);
+
+                }).then(function () {
+                    return self.$Translation.save();
+
+                }).then(function () {
+                    return self.$WorkingTitle.save();
+
+                }).then(function () {
+                    return Fields.updateChild(fieldId, {
+                        type         : Form.elements.type.value,
+                        search_type  : search_type,
+                        prefix       : Form.elements.prefix.value,
+                        suffix       : Form.elements.suffix.value,
+                        priority     : Form.elements.priority.value,
+                        standardField: Form.elements.standardField.checked ? 1 : 0,
+                        requiredField: Form.elements.requiredField.checked ? 1 : 0,
+                        publicField  : Form.elements.publicField.checked ? 1 : 0,
+                        options      : Form.elements.options.value
+                    });
+
                 }).then(function (PRODUCT_ARRAY_STATUS) {
                     if (PRODUCT_ARRAY_STATUS == Fields.PRODUCT_ARRAY_CHANGED) {
                         // product array changed,
@@ -262,11 +275,21 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     }
 
                     return Promise.resolve();
+
                 }).then(function () {
-                    return self.$Translation.save();
-                }).then(function () {
-                    return self.$WorkingTitle.save();
-                }).then(resolve()).catch(reject);
+                    return QUI.getMessageHandler();
+
+                }).then(function (MH) {
+                    MH.setAttribute('showMessages', true);
+                    MH.addSuccess(
+                        QUILocale.get(lg, 'message.field.successfully.saved', {
+                            fieldId: fieldId
+                        })
+                    );
+
+                    resolve();
+
+                }).catch(reject);
             });
         },
 
