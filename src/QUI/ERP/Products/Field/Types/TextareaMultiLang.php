@@ -162,6 +162,10 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
+        if (empty($value)) {
+            return null;
+        }
+
         $languages = QUI\Translator::getAvailableLanguages();
 
         if (!is_string($value) && !is_array($value)) {
