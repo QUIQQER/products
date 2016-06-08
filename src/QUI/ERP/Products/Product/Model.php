@@ -29,6 +29,9 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
  * - Code 1002 (QUI\ERP\Products\Product\Exception) Field not found
  * - Code 1003 (QUI\ERP\Products\Product\Exception) Field is invalid
  * - Code 1004 (QUI\ERP\Products\Product\Exception) Field is empty but required
+ *
+ * permission.viewable
+ * permission.buyable
  */
 class Model extends QUI\QDOM
 {
@@ -103,6 +106,7 @@ class Model extends QUI\QDOM
         if (isset($result[0]['permissions'])) {
             $this->permissions = json_decode($result[0]['permissions'], true);
         }
+
 
         unset($result[0]['id']);
         unset($result[0]['active']);
@@ -508,6 +512,7 @@ class Model extends QUI\QDOM
         $attributes['active']      = $this->isActive();
         $attributes['title']       = $this->getTitle();
         $attributes['description'] = $this->getDescription();
+        $attributes['permissions'] = $this->getPermissions();
 
         /* @var $Price QUI\ERP\Products\Utils\Price */
         $Price = $this->getPrice();
@@ -598,9 +603,10 @@ class Model extends QUI\QDOM
             )),
             '',
             array(
-                'categories' => ',' . implode(',', $categoryIds) . ',',
-                'category'   => $mainCategory,
-                'fieldData'  => json_encode($fieldData)
+                'categories'  => ',' . implode(',', $categoryIds) . ',',
+                'category'    => $mainCategory,
+                'fieldData'   => json_encode($fieldData),
+                'permissions' => json_encode($this->permissions)
             )
         );
 
@@ -608,9 +614,10 @@ class Model extends QUI\QDOM
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
-                'categories' => ',' . implode(',', $categoryIds) . ',',
-                'category'   => $mainCategory,
-                'fieldData'  => json_encode($fieldData)
+                'categories'  => ',' . implode(',', $categoryIds) . ',',
+                'category'    => $mainCategory,
+                'fieldData'   => json_encode($fieldData),
+                'permissions' => json_encode($this->permissions)
             ),
             array('id' => $this->getId())
         );
@@ -1222,21 +1229,66 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * Permissions
+     * Own Product Permissions
      */
 
     /**
-     * @param string $permission
-     * @param bool $User
+     * Has the user the product permission?
+     *
+     * @param string $permission - Permission name
+     * @param QUI\Interfaces\Users\User $User
      * @return bool
      */
-    public function hasPermission($permission, $User = false)
+    public function hasPermission($permission, $User = null)
     {
         if (!Products::usePermissions()) {
             return true;
         }
 
+        if (!$User) {
+            $User = QUI::getUserBySession();
+        }
 
+
+        $permissions = '';
+
+        if (isset($this->permissions[$permission])) {
+            $permissions = $this->permissions[$permission];
+        }
+
+        if (empty($permissions)) {
+            return true;
+        }
+
+        return QUI\Utils\UserGroups::isUserInUserGroupString($User, $permissions);
+    }
+
+    /**
+     * Check the user product permission
+     *
+     * @param $permission
+     * @param null $User
+     * @throws QUI\Permissions\Exception
+     */
+    public function checkPermission($permission, $User = null)
+    {
+        if (!$User) {
+            $User = QUI::getUserBySession();
+        }
+
+        if (!$this->hasPermission($permission, $User)) {
+            throw new QUI\Permissions\Exception(
+                QUI::getLocale()->get(
+                    'quiqqer/system',
+                    'exception.no.permission'
+                ),
+                403,
+                array(
+                    'userid'   => $User->getId(),
+                    'username' => $User->getName()
+                )
+            );
+        }
     }
 
     /**
@@ -1245,5 +1297,35 @@ class Model extends QUI\QDOM
     public function getPermissions()
     {
         return $this->permissions;
+    }
+
+    /**
+     * Clear the complete own product permissions
+     *
+     * @param QUI\Interfaces\Users\User $User - optional
+     *
+     * @throws QUI\Permissions\Exception
+     */
+    public function clearPermissions($User = null)
+    {
+        QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
+
+        $this->permissions = array();
+    }
+
+    /**
+     * Clear a product own permission
+     *
+     * @param string $permission - name of the product permission
+     * @param null $User
+     * @throws QUI\Permissions\Exception
+     */
+    public function clearPermission($permission, $User = null)
+    {
+        QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
+
+        if (isset($this->permissions[$permission])) {
+            $this->permissions[$permission] = array();
+        }
     }
 }

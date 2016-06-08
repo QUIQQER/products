@@ -75,4 +75,40 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\Product
 
         $this->Category = $Category;
     }
+
+    /**
+     * Set own product permissions
+     *
+     * @param string $permission
+     * @param string $ugString - user group string
+     * @param QUI\Interfaces\Users\User $User - optional
+     */
+    public function setPermission($permission, $ugString = '', $User = null)
+    {
+        if (!QUI\Utils\UserGroups::isUserGroupString($ugString)) {
+            return;
+        };
+
+        QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
+
+        switch ($permission) {
+            case 'permission.viewable':
+            case 'permission.buyable':
+                $this->permissions[$permission] = $ugString;
+                break;
+        }
+    }
+
+    /**
+     * Set multiple permissions
+     *
+     * @param array $permissions - ist of permissions
+     * @param QUI\Interfaces\Users\User $User - optional
+     */
+    public function setPermissions($permissions, $User = null)
+    {
+        foreach ($permissions as $permission => $data) {
+            $this->setPermission($permission, $data, $User);
+        }
+    }
 }

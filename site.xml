@@ -9,6 +9,10 @@
                 <locale group="quiqqer/products" var="admin.types.category.desc"/>
             </desc>
 
+            <admin>
+                <js onSiteLoad="package/quiqqer/products/bin/CategorySiteWizard"/>
+            </admin>
+
             <attributes>
                 <attribute>quiqqer.products.settings.categoryId</attribute>
                 <attribute>quiqqer.products.settings.searchFieldIds</attribute>
@@ -50,7 +54,7 @@
             </settings>
         </type>
 
-        <!-- Kategorien -->
+        <!-- Produkt suche -->
         <type type="types/search" icon="fa fa-shopping-basket fa-search">
             <locale group="quiqqer/products" var="admin.types.search"/>
             <desc>

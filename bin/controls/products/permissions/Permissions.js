@@ -31,6 +31,9 @@ define('package/quiqqer/products/bin/controls/products/permissions/Permissions',
         initialize: function (options) {
             this.parent(options);
 
+            this.$Viewable = null;
+            this.$Buyable  = null;
+
             this.addEvents({
                 onInject: this.$onInject
             });
@@ -43,7 +46,10 @@ define('package/quiqqer/products/bin/controls/products/permissions/Permissions',
          */
         create: function () {
             this.$Elm = new Element('div', {
-                'class': 'quiqqer-products-permissions'
+                'class': 'quiqqer-products-permissions',
+                styles : {
+                    padding: 20
+                }
             });
 
             return this.$Elm;
@@ -55,17 +61,60 @@ define('package/quiqqer/products/bin/controls/products/permissions/Permissions',
         $onInject: function () {
             Products.getChild(this.getAttribute('productId')).then(function (productData) {
 
-                new Permission({
-                    value     : '',
-                    permission: 'product.permission.visible'
+                if (typeOf(productData.permissions) != 'object') {
+                    productData.permissions = {
+                        'permission.viewable': '',
+                        'permission.buyable' : ''
+                    };
+                }
+
+                if (typeOf(productData.permissions['permission.viewable']) !== 'string') {
+                    productData.permissions['permission.viewable'] = '';
+                }
+
+                if (typeOf(productData.permissions['permission.buyable']) !== 'string') {
+                    productData.permissions['permission.buyable'] = '';
+                }
+
+                this.$Viewable = new Permission({
+                    value     : productData.permissions['permission.viewable'] || false,
+                    permission: 'permission.viewable',
+                    title     : 'Darf Produkt sehen'
                 }).inject(this.getElm());
 
-                new Permission({
-                    value     : '',
-                    permission: 'product.permission.buyable'
+
+                this.$Buyable = new Permission({
+                    value     : productData.permissions['permission.buyable'] || false,
+                    permission: 'permission.buyable',
+                    title     : 'Darf Produkt kaufen'
                 }).inject(this.getElm());
 
-                console.log(productData);
+            }.bind(this));
+        },
+
+        /**
+         * Return the value
+         *
+         * @returns {{[permission.viewable]: *, [permission.buyable]: *}}
+         */
+        getValue: function () {
+            return {
+                'permission.viewable': this.$Viewable.getValue(),
+                'permission.buyable' : this.$Buyable.getValue()
+            };
+        },
+
+        /**
+         * save the permissions
+         *
+         * @return {Promise}
+         */
+        save: function () {
+            return new Promise(function (resolve, reject) {
+                var Product = Products.get(this.getAttribute('productId'));
+
+                Product.setPermissions(this.getValue()).then(resolve, reject);
+
             }.bind(this));
         }
     });

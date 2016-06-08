@@ -4,8 +4,10 @@
  * @module package/quiqqer/products/bin/controls/categories/Select
  * @author www.pcsg.de (Henning Leutz)
  *
+ * @require qui/QUI
  * @require qui/controls/Control
  * @require qui/controls/buttons/Button
+ * @require qui/controls/windows/Confirm
  * @require package/quiqqer/products/bin/controls/categories/SelectItem
  * @require package/quiqqer/products/bin/classes/Categories
  * @require Ajax
@@ -21,6 +23,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
     'qui/QUI',
     'qui/controls/Control',
     'qui/controls/buttons/Button',
+    'qui/controls/windows/Confirm',
     'qui/utils/Elements',
     'package/quiqqer/products/bin/controls/categories/SelectItem',
     'package/quiqqer/products/bin/classes/Categories',
@@ -29,7 +32,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
     'css!package/quiqqer/products/bin/controls/categories/Select.css'
 
-], function (QUI, QUIControl, QUIButton, QUIElementUtils, SelectItem, Handler, Ajax, QUILocale) {
+], function (QUI, QUIControl, QUIButton, QUIConfirm, QUIElementUtils, SelectItem, Handler, Ajax, QUILocale) {
     "use strict";
 
     var lg         = 'quiqqer/products';
@@ -53,6 +56,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             'fireSearch',
             'update',
 
+            '$showCreateCategoryDialog',
             '$onCategoryDestroy',
             '$onInputFocus',
             '$onImport'
@@ -81,7 +85,12 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             this.$values = [];
 
             this.addEvents({
-                onImport: this.$onImport
+                onImport      : this.$onImport,
+                onSetAttribute: function (attr, value) {
+                    if (attr === 'Site' && !this.$values.length) {
+                        this.$showCreateButton();
+                    }
+                }.bind(this)
             });
         },
 
@@ -169,7 +178,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 },
                 events: {
                     onClick: function (Btn) {
-
                         Btn.setAttribute('icon', 'fa fa-spinner fa-spin');
 
                         require([
@@ -193,6 +201,20 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                     }
                 }
             }).inject(this.$Elm);
+
+
+            this.$CreateButton = new QUIButton({
+                icon  : 'fa fa-sitemap',
+                styles: {
+                    display: 'none',
+                    width  : 50
+                },
+                alt   : 'Kategorie erstellen',
+                events: {
+                    onClick: this.$showCreateCategoryDialog
+                }
+            }).inject(this.$Elm);
+
 
             this.$DropDown = new Element('div', {
                 'class': 'qui-products-categories-list-dropdown',
@@ -462,6 +484,8 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 return this;
             }
 
+            this.$hideCreateButton();
+
             var max = this.getAttribute('max');
 
             if (max == 1) {
@@ -645,6 +669,10 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
             this.fireEvent('delete', [this, Item]);
             this.$refreshValues();
+
+            if (!this.$values.length && this.getAttribute('Site')) {
+                this.$showCreateButton();
+            }
         },
 
         /**
@@ -658,6 +686,70 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             }
 
             this.focus();
+        },
+
+        /**
+         * Show the create category button
+         */
+        $showCreateButton: function () {
+            this.$CreateButton.getElm().setStyle('display', null);
+
+            this.$List.setStyles({
+                width: 'calc(100% - 100px)'
+            });
+        },
+
+        /**
+         * Hide the create category button
+         */
+        $hideCreateButton: function () {
+            this.$CreateButton.getElm().setStyle('display', 'none');
+
+            this.$List.setStyles({
+                width: 'calc(100% - 50px)'
+            });
+        },
+
+        /**
+         *
+         */
+        $showCreateCategoryDialog: function () {
+            if (!this.getAttribute('Site')) {
+                return;
+            }
+
+            var self  = this,
+                title = this.getAttribute('Site').getAttribute('title');
+
+            self.$CreateButton.setAttribute('icon', 'fa fa-spinner fa-spin');
+
+            require([
+                'package/quiqqer/products/bin/controls/categories/search/Window'
+            ], function (Window) {
+                new Window({
+                    autoclose: true,
+                    multiple : false,
+                    message  : 'Bitte wählen Sie die Übergeordnete Kategorie aus:',
+                    events   : {
+                        onSubmit: function (Win, categorieIds) {
+                            self.$CreateButton.setAttribute('icon', 'fa fa-spinner fa-spin');
+
+                            Ajax.post('package_quiqqer_products_ajax_categories_create', function (category) {
+                                self.addCategory(category.id);
+                                self.$CreateButton.setAttribute('icon', 'fa fa-sitemap');
+                            }, {
+                                'package': 'quiqqer/products',
+                                parentId : categorieIds[0],
+                                params   : JSON.encode({
+                                    title: title
+                                })
+                            });
+                        }
+                    }
+                }).open();
+
+                self.$CreateButton.setAttribute('icon', 'fa fa-sitemap');
+            });
         }
     });
 });

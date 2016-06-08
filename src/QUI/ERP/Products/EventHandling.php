@@ -393,6 +393,37 @@ class EventHandling
                  . $Site->getId() . '/' . $Site->getProject()->getLang();
 
         QUI\ERP\Products\Search\Cache::clear($cname);
+
+        // category cache clearing
+        $categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
+
+        if ($categoryId) {
+            try {
+                QUI\ERP\Products\Handler\Categories::clearCache($categoryId);
+            } catch (QUI\Cache\Exception $Exception) {
+            }
+        }
+    }
+
+    /**
+     * Event on child create
+     *
+     * @param integer $newId
+     * @param \QUI\Projects\Site\Edit $Parent
+     */
+    public static function onSiteCreateChild($newId, $Parent)
+    {
+        $type = $Parent->getAttribute('type');
+
+        if ($type != 'quiqqer/products:types/category') {
+            return;
+        }
+
+        $Project = $Parent->getProject();
+        $Site    = new QUI\Projects\Site\Edit($Project, $newId);
+
+        $Site->setAttribute('type', 'quiqqer/products:types/category');
+        $Site->save();
     }
 
     /**
