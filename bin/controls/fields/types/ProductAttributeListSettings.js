@@ -268,6 +268,8 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             var data   = {},
                 result = [];
 
+            var titles, lang;
+
             try {
                 data = JSON.decode(this.$Input.value);
 
@@ -284,6 +286,19 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
 
                         if (!("type" in data.entries[i])) {
                             continue;
+                        }
+
+                        // lang to locale
+                        titles = data.entries[i].title;
+
+                        for (lang in titles) {
+                            if (!titles.hasOwnProperty(lang)) {
+                                continue;
+                            }
+
+                            if (lang.length == 2) {
+                                titles[lang.toLowerCase() + '_' + lang.toUpperCase()] = titles[lang];
+                            }
                         }
 
                         result.push(data.entries[i]);
