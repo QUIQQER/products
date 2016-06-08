@@ -89,6 +89,55 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     }
 
     /**
+     * Add an product attribute entry
+     *
+     * @param array $entry - data entry
+     *
+     * @example $this->addEntry(array(
+     *       'title' => '',    // translation json string {de: "", en: ""}
+     *       'sum' => '',      // -> 10, 100 -> numbers
+     *       'type' => '',     // optional -> QUI\ERP\Products\Utils\Calc::CALCULATION_PERCENTAGE |
+     *                                        QUI\ERP\Products\Utils\Calc::CALCULATION_COMPLEMENT
+     *       'selected' => '', // optional
+     *       'userinput => ''' // optional
+     * ));
+     */
+    public function addEntry($entry = array())
+    {
+        if (!empty($entry)) {
+            return;
+        }
+
+        if (!isset($entry['title'])) {
+            return;
+        }
+
+        if (!isset($entry['sum'])) {
+            return;
+        }
+
+        $data      = array();
+        $available = array(
+            'title',
+            'sum',
+            'type',     // optional
+            'selected', // optional
+            'userinput' // optional
+        );
+
+        foreach ($available as $k) {
+            if (isset($entry[$k])) {
+                $data[$k] = $entry[$k];
+            }
+        }
+
+        $entries   = $this->options['entries'];
+        $entries[] = $entry;
+
+        $this->options['entries'] = $data;
+    }
+
+    /**
      * @return string|array
      */
     public function getValue()
