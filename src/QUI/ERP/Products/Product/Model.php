@@ -152,7 +152,6 @@ class Model extends QUI\QDOM
 
             try {
                 $Field = Fields::getField($field['id']);
-
                 $Field->setValue($field['value']);
 
                 if (isset($field['unassigned'])) {

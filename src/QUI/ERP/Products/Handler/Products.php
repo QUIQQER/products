@@ -39,6 +39,21 @@ class Products
     private static $Locale = null;
 
     /**
+     *
+     */
+    public static function setup()
+    {
+        $table = QUI::getDBTableName('products_cache');
+
+        if (QUI::getDataBase()->table()->exist($table)) {
+            QUI::getDataBase()->getPDO()->query(
+                "ALTER TABLE `{$table}` CHANGE `lang` `lang` VARCHAR(5)
+                CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;"
+            );
+        }
+    }
+
+    /**
      * Return the main media folder
      *
      * @return QUI\Projects\Media\Folder

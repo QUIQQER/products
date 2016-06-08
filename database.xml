@@ -58,4 +58,6 @@
         </table>
     </global>
 
+    <global execute="QUI\ERP\Products\Handler\Products::setup"/>
+
 </database>

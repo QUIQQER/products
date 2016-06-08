@@ -104,9 +104,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        if (!is_string($value)
-            && !is_array($value)
-        ) {
+        if (!is_string($value) && !is_array($value)) {
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new QUI\ERP\Products\Field\Exception(array(
                     'quiqqer/products',
@@ -195,7 +193,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
         $result = array();
 
         foreach ($value as $key => $val) {
-            if (!is_string($key) || strlen($key) != 2) {
+            if (!is_string($key) || strlen($key) != 5) {
                 continue;
             }
 
