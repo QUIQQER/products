@@ -137,6 +137,16 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
             return;
         }
 
+        // 2 sign locales to 5 signs locales
+        foreach ($value as $lang => $data) {
+            if (strlen($lang) === 2) {
+                $locale = QUI::getLocale()->parseLangToLocaleCode($lang);
+
+                $value[$locale] = $value[$lang];
+                unset($value[$lang]);
+            }
+        }
+
         $keys = array_keys($value);
 
         foreach ($keys as $lang) {
@@ -166,6 +176,17 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
             return null;
         }
 
+        // 2 sign locales to 5 signs locales
+        foreach ($value as $lang => $data) {
+            if (strlen($lang) === 2) {
+                $locale = QUI::getLocale()->parseLangToLocaleCode($lang);
+
+                $value[$locale] = $value[$lang];
+                unset($value[$lang]);
+            }
+        }
+
+        
         $languages = QUI\Translator::getAvailableLanguages();
 
         if (!is_string($value) && !is_array($value)) {

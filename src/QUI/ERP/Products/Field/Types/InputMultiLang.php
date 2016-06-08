@@ -140,10 +140,20 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
             return;
         }
 
+        // 2 sign locales to 5 signs locales
+        foreach ($value as $lang => $data) {
+            if (strlen($lang) === 2) {
+                $locale = QUI::getLocale()->parseLangToLocaleCode($lang);
+
+                $value[$locale] = $value[$lang];
+                unset($value[$lang]);
+            }
+        }
+
         $keys = array_keys($value);
 
         foreach ($keys as $lang) {
-            if (!is_string($lang) || strlen($lang) != 2) {
+            if (!is_string($lang) || strlen($lang) != 5) {
                 throw new QUI\ERP\Products\Field\Exception(array(
                     'quiqqer/products',
                     'exception.field.invalid',
@@ -170,6 +180,17 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
         if (!is_array($value)) {
             return array_fill_keys($languages, '');
         }
+
+        // 2 sign locales to 5 signs locales
+        foreach ($value as $lang => $data) {
+            if (strlen($lang) === 2) {
+                $locale = QUI::getLocale()->parseLangToLocaleCode($lang);
+
+                $value[$locale] = $value[$lang];
+                unset($value[$lang]);
+            }
+        }
+
 
         $result = array();
 
