@@ -104,7 +104,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      */
     public function addEntry($entry = array())
     {
-        if (!empty($entry)) {
+        if (empty($entry)) {
             return;
         }
 
@@ -132,9 +132,9 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         }
 
         $entries   = $this->options['entries'];
-        $entries[] = $entry;
+        $entries[] = $data;
 
-        $this->options['entries'] = $data;
+        $this->options['entries'] = $entries;
     }
 
     /**
