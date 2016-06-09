@@ -1017,8 +1017,9 @@ class Model extends QUI\QDOM
         if (is_null($this->Category)) {
             $categories = $this->getCategories();
 
-            if (isset($categories[0])) {
-                $this->Category = $categories[0];
+            if (count($categories)) {
+                reset($array);
+                $this->Category = current($array);
             }
         }
 
