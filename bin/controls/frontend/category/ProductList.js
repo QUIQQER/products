@@ -165,7 +165,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 '[data-name="' + this.getAttribute('search') + '"]'
             );
 
-            if (SearchNode.get('data-quiid')) {
+            if (SearchNode && SearchNode.get('data-quiid')) {
                 var SearchForm = QUI.Controls.getById(SearchNode.get('data-quiid'));
 
                 if (SearchForm) {
