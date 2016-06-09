@@ -194,6 +194,11 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
                     dataType : 'text',
                     width    : 200
                 }, {
+                    header   : QUILocale.get(lg, 'workingTitle'),
+                    dataIndex: 'workingtitle',
+                    dataType : 'text',
+                    width    : 200
+                }, {
                     header   : QUILocale.get(lg, 'fieldtype'),
                     dataIndex: 'fieldtype',
                     dataType : 'text',
