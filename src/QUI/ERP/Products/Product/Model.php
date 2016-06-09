@@ -643,7 +643,7 @@ class Model extends QUI\QDOM
             $value = $Field->getValue();
 
             // @todo muss alle categorien prüfen
-            if (!$Field->isSystem()) {
+            if (!$Field->isSystem() && !$Field->isStandard() && !$Field->isOwnField()) {
                 $Field->setUnassignedStatus(
                     !isset($categoryFields[$Field->getId()])
                 );
