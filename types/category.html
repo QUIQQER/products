@@ -16,9 +16,9 @@
     {if $Site->getAttribute('quiqqer.products.settings.dontShowSearch') == false &&
         $Search->hasFields()
     }
-        <div class="page-multible-right grid-100 mobile-grid-100">
-    {else}
         <div class="page-multible-right grid-70 mobile-grid-100">
+    {else}
+        <div class="page-multible-right grid-100 mobile-grid-100">
     {/if}
 
         {if $Site->getAttribute('content-header')}
