@@ -1018,8 +1018,8 @@ class Model extends QUI\QDOM
             $categories = $this->getCategories();
 
             if (count($categories)) {
-                reset($array);
-                $this->Category = current($array);
+                reset($categories);
+                $this->Category = current($categories);
             }
         }
 
