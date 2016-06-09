@@ -97,7 +97,7 @@ QUI::$Ajax->registerFunction(
             );
         }
 
-        $Product->save();
+        $Product->userSave();
 
         QUI::getMessagesHandler()->addSuccess(
             QUI::getLocale()->get(

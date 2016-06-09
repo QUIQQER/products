@@ -572,6 +572,18 @@ class Model extends QUI\QDOM
      */
     public function save()
     {
+        $this->productSave($this->getFieldData());
+    }
+
+    /**
+     * Internal saving method
+     *
+     * @param array $fieldData - field data
+     *
+     * @throws QUI\Permissions\Exception
+     */
+    protected function productSave($fieldData)
+    {
         QUI\Permissions\Permission::checkPermission('product.edit');
 
         $categoryIds = array();
@@ -593,9 +605,6 @@ class Model extends QUI\QDOM
         if ($Category) {
             $mainCategory = $Category->getId();
         }
-
-
-        $fieldData = $this->getFieldData();
 
         QUI\Watcher::addString(
             QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.save', array(
@@ -626,13 +635,30 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * save / update the product data
+     * and check the product fields if the product is active
+     *
+     * @throws QUI\ERP\Products\Product\Exception
+     */
+    public function userSave()
+    {
+        if ($this->isActive()) {
+            $fieldData = $this->validateFields();
+        } else {
+            $fieldData = $this->getFieldData();
+        }
+
+        $this->productSave($fieldData);
+    }
+
+    /**
      * Validate the fields and return the field data
      *
      * @return array
      *
      * @throws QUI\ERP\Products\Product\Exception
      */
-    protected function validateFields()
+    public function validateFields()
     {
         $fieldData = array();
         $fields    = $this->getAllProductFields();
@@ -713,10 +739,6 @@ class Model extends QUI\QDOM
      */
     protected function getFieldData()
     {
-        if ($this->isActive()) {
-            return $this->validateFields();
-        }
-
         $fields    = $this->getAllProductFields();
         $fieldData = array();
 
