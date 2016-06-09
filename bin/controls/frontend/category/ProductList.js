@@ -88,16 +88,16 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             var self = this,
                 Elm  = this.getElm();
 
-            this.$ButtonDetails = Elm.getElement('.quiqqer-products-productList-sort-display-details');
-            this.$ButtonGalery  = Elm.getElement('.quiqqer-products-productList-sort-display-galery');
-            this.$ButtonList    = Elm.getElement('.quiqqer-products-productList-sort-display-list');
-            this.$Container     = Elm.getElement('.quiqqer-products-productList-products');
+            this.$ButtonDetails = Elm.getElements('.quiqqer-products-productList-sort-display-details');
+            this.$ButtonGalery  = Elm.getElements('.quiqqer-products-productList-sort-display-galery');
+            this.$ButtonList    = Elm.getElements('.quiqqer-products-productList-sort-display-list');
+            this.$Container     = Elm.getElements('.quiqqer-products-productList-products');
 
-            this.$BarSort     = Elm.getElement('.quiqqer-products-productList-sort-sorting');
-            this.$BarDisplays = Elm.getElement('.quiqqer-products-productList-sort-display');
+            this.$BarSort     = Elm.getElements('.quiqqer-products-productList-sort-sorting');
+            this.$BarDisplays = Elm.getElements('.quiqqer-products-productList-sort-display');
 
 
-            this.$More   = Elm.getElement('.quiqqer-products-productList-products-more .button');
+            this.$More   = Elm.getElements('.quiqqer-products-productList-products-more .button');
             this.$MoreFX = moofx(this.$More);
 
             this.setAttribute('categoryId', this.getElm().get('data-cid').toInt());
@@ -358,7 +358,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         self.$showContainer().then(function () {
                             resolve(result);
                         });
-                        
+
                         return;
                     }
 
