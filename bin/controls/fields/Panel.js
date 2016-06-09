@@ -213,6 +213,11 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                     dataType : 'number',
                     width    : 60
                 }, {
+                    header   : QUILocale.get(lg, 'workingTitle'),
+                    dataIndex: 'workingtitle',
+                    dataType : 'text',
+                    width    : 200
+                }, {
                     header   : QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
                     dataType : 'text',
