@@ -91,10 +91,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$ButtonDetails = Elm.getElements('.quiqqer-products-productList-sort-display-details');
             this.$ButtonGalery  = Elm.getElements('.quiqqer-products-productList-sort-display-galery');
             this.$ButtonList    = Elm.getElements('.quiqqer-products-productList-sort-display-list');
-            this.$Container     = Elm.getElements('.quiqqer-products-productList-products');
+            this.$Container     = Elm.getElement('.quiqqer-products-productList-products');
 
-            this.$BarSort     = Elm.getElements('.quiqqer-products-productList-sort-sorting');
-            this.$BarDisplays = Elm.getElements('.quiqqer-products-productList-sort-display');
+            this.$BarSort     = Elm.getElement('.quiqqer-products-productList-sort-sorting');
+            this.$BarDisplays = Elm.getElement('.quiqqer-products-productList-sort-display');
 
 
             this.$More   = Elm.getElements('.quiqqer-products-productList-products-more .button');
@@ -124,21 +124,25 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             // sort
-            this.$BarSort.set('html', '');
+            if (this.$BarSort) {
+                this.$BarSort.set('html', '');
 
-            this.$Sort = new QUISelect({
-                showIcons      : false,
-                placeholderText: 'Sortieren nach...'
-            }).inject(this.$BarSort);
+                this.$Sort = new QUISelect({
+                    showIcons      : false,
+                    placeholderText: 'Sortieren nach...'
+                }).inject(this.$BarSort);
 
-            this.$Sort.appendChild('Name aufsteigen', 'name');
-            this.$Sort.appendChild('Name abssteigend', 'name');
-            // this.$Sort.appendChild('Preis aufsteigen', 'name');
-            // this.$Sort.appendChild('Preis abssteigend', 'name');
+                this.$Sort.appendChild('Name aufsteigen', 'name');
+                this.$Sort.appendChild('Name abssteigend', 'name');
+                // this.$Sort.appendChild('Preis aufsteigen', 'name');
+                // this.$Sort.appendChild('Preis abssteigend', 'name');
 
+                this.$BarSort.setStyle('display', null);
+            }
 
-            this.$BarSort.setStyle('display', null);
-            this.$BarDisplays.setStyle('display', null);
+            if (this.$BarDisplays) {
+                this.$BarDisplays.setStyle('display', null);
+            }
 
             this.$parseElements(Elm);
 
