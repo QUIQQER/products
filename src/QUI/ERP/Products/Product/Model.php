@@ -130,7 +130,7 @@ class Model extends QUI\QDOM
         // main category
         $mainCategory = $this->getAttribute('category');
 
-        if ($mainCategory !== false) {
+        if ($mainCategory !== false && isset($this->categories[$mainCategory])) {
             try {
                 $this->Category = Categories::getCategory($mainCategory);
             } catch (QUI\Exception $Exception) {
@@ -571,6 +571,18 @@ class Model extends QUI\QDOM
      */
     public function save()
     {
+        $this->productSave($this->getFieldData());
+    }
+
+    /**
+     * Internal saving method
+     *
+     * @param array $fieldData - field data
+     *
+     * @throws QUI\Permissions\Exception
+     */
+    protected function productSave($fieldData)
+    {
         QUI\Permissions\Permission::checkPermission('product.edit');
 
         $categoryIds = array();
@@ -592,9 +604,6 @@ class Model extends QUI\QDOM
         if ($Category) {
             $mainCategory = $Category->getId();
         }
-
-
-        $fieldData = $this->getFieldData();
 
         QUI\Watcher::addString(
             QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.save', array(
@@ -625,13 +634,30 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * save / update the product data
+     * and check the product fields if the product is active
+     *
+     * @throws QUI\ERP\Products\Product\Exception
+     */
+    public function userSave()
+    {
+        if ($this->isActive()) {
+            $fieldData = $this->validateFields();
+        } else {
+            $fieldData = $this->getFieldData();
+        }
+
+        $this->productSave($fieldData);
+    }
+
+    /**
      * Validate the fields and return the field data
      *
      * @return array
      *
      * @throws QUI\ERP\Products\Product\Exception
      */
-    protected function validateFields()
+    public function validateFields()
     {
         $fieldData = array();
         $fields    = $this->getAllProductFields();
@@ -642,7 +668,7 @@ class Model extends QUI\QDOM
             $value = $Field->getValue();
 
             // @todo muss alle categorien prüfen
-            if (!$Field->isSystem()) {
+            if (!$Field->isSystem() && !$Field->isStandard() && !$Field->isOwnField()) {
                 $Field->setUnassignedStatus(
                     !isset($categoryFields[$Field->getId()])
                 );
@@ -712,10 +738,6 @@ class Model extends QUI\QDOM
      */
     protected function getFieldData()
     {
-        if ($this->isActive()) {
-            return $this->validateFields();
-        }
-
         $fields    = $this->getAllProductFields();
         $fieldData = array();
 
@@ -1016,8 +1038,9 @@ class Model extends QUI\QDOM
         if (is_null($this->Category)) {
             $categories = $this->getCategories();
 
-            if (isset($categories[0])) {
-                $this->Category = $categories[0];
+            if (count($categories)) {
+                reset($categories);
+                $this->Category = current($categories);
             }
         }
 
