@@ -189,7 +189,9 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                 events   : {
                     onClick: function () {
                         self.deleteChild(
-                            self.$Grid.getSelectedData()[0].id
+                            self.$Grid.getSelectedData().map(function (entry) {
+                                return entry.id;
+                            })
                         );
                     }
                 }
@@ -206,8 +208,9 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
             }).inject(this.$GridContainer);
 
             this.$Grid = new Grid(GridContainer, {
-                pagination : true,
-                columnModel: [{
+                pagination       : true,
+                multipleSelection: true,
+                columnModel      : [{
                     header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
                     dataType : 'number',
@@ -401,24 +404,26 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
         deleteChild: function (fieldId) {
             var self = this;
 
+            if (typeOf(fieldId) != 'array') {
+                fieldId = [fieldId];
+            }
+
             new QUIConfirm({
                 title      : QUILocale.get(lg, 'fields.window.delete.title'),
-                text       : QUILocale.get(lg, 'fields.window.delete.text', {
-                    fieldId: fieldId
-                }),
-                information: QUILocale.get(lg, 'fields.window.delete.information', {
-                    fieldId: fieldId
+                text       : QUILocale.get(lg, 'fields.window.delete.text'),
+                information: QUILocale.get(lg, 'fields.window.delete.description', {
+                    fields: fieldId.join(',')
                 }),
                 autoclose  : false,
-                maxHeight  : 300,
-                maxWidth   : 450,
+                maxHeight  : 400,
+                maxWidth   : 600,
                 icon       : 'fa fa-trashcan',
                 texticon   : 'fa fa-trashcan',
                 events     : {
                     onSubmit: function (Win) {
                         Win.Loader.show();
 
-                        Fields.deleteChild(fieldId).then(function () {
+                        Fields.deleteChildren(fieldId).then(function () {
                             Win.close();
                             self.refresh();
                         });
