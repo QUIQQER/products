@@ -829,20 +829,20 @@
         </locale>
 
         <locale name="fields.window.delete.title">
-            <de><![CDATA[Feld löschen]]></de>
-            <en><![CDATA[Delete the field]]></en>
+            <de><![CDATA[Felder löschen]]></de>
+            <en><![CDATA[Delete the fields]]></en>
         </locale>
         <locale name="fields.window.delete.text">
-            <de><![CDATA[Möchten Sie das Produktfeld #[fieldId] wirklich löschen?]]></de>
-            <en><![CDATA[Do you really want to delete the field #[fieldId]?]]></en>
+            <de><![CDATA[Möchten Sie die Produktfelder wirklich löschen?]]></de>
+            <en><![CDATA[Do you really want to delete the fields?]]></en>
         </locale>
-        <locale name="fields.window.delete.description">
+        <locale name="fields.window.delete.description" html="">
             <de><![CDATA[
-                Das Feld wird unwiderruflich gelöscht und alle Beziehungen
+                Die Felder <b>[fields]</b> werden unwiderruflich gelöscht und alle Beziehungen
                 zu Produkten und Kategorien gehen verloren.
             ]]></de>
             <en><![CDATA[
-                The field will be permanently deleted and all relations
+                The fields <b>[fields]</b> will be permanently deleted and all relations
                  with products and categories will be lost.
             ]]></en>
         </locale>
