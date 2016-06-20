@@ -91,7 +91,7 @@
 .quiqqer-products-categoryGalery-catgory-more {
     clear: both;
     display: block;
-    margin: 20px auto 0;
+    margin: 20px auto;
     text-align: center;
     width: calc(33% - 20px);
 }
