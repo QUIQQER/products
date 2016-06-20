@@ -53,8 +53,9 @@ if ($siteUrl != $_REQUEST['_url']) {
     ));
 
     $ProductList = new Products\Controls\Category\ProductList(array(
-        'categoryId' => $Site->getAttribute('quiqqer.products.settings.categoryId'),
-        'Search'     => $Search
+        'categoryId'           => $Site->getAttribute('quiqqer.products.settings.categoryId'),
+        'Search'               => $Search,
+        'hideEmptyProductList' => true
     ));
 
     $Engine->assign(array(

@@ -1,0 +1,15 @@
+{foreach from=$children item=Category}
+<article class="quiqqer-products-categoryGalery-catgory grid-33 mobile-grid-50" data-pid="{$Category->getId()}">
+{strip}
+    <a href="{url site=$Category}" title="{$Category->getAttribute('title')|escape:" html"}">
+    {image src=$Category->getAttribute('image_site') title=$Category->getAttribute('title') width=400}
+    <header>
+        {$Category->getAttribute('title')}
+        <div class="quiqqer-products-categoryGalery-catgory-details">
+            <span class="fa fa-sort-down"></span>
+        </div>
+    </header>
+    </a>
+{/strip}
+</article>
+{/foreach}

@@ -34,18 +34,23 @@ class ProductList extends QUI\Control
     public function __construct($attributes = array())
     {
         $this->setAttributes(array(
-            'categoryId'   => false,
-            'data-qui'     => 'package/quiqqer/products/bin/controls/frontend/category/ProductList',
-            'data-cid'     => false,
-            'view'         => 'galery', // galery, list, detail
-            'Search'       => false,
-            'searchParams' => false
+            'categoryId'           => false,
+            'data-qui'             => 'package/quiqqer/products/bin/controls/frontend/category/ProductList',
+            'data-cid'             => false,
+            'view'                 => 'galery', // galery, list, detail
+            'categoryView'         => 'galery', // galery, list, detail
+            'Search'               => false,
+            'searchParams'         => false,
+            'hideEmptyProductList' => false
         ));
 
         $this->addCSSFile(dirname(__FILE__) . '/ProductList.css');
         $this->addCSSFile(dirname(__FILE__) . '/ProductListGalery.css');
         $this->addCSSFile(dirname(__FILE__) . '/ProductListDetails.css');
         $this->addCSSFile(dirname(__FILE__) . '/ProductListList.css');
+
+        $this->addCSSFile(dirname(__FILE__) . '/ProductListCategoryGalery.css');
+//        $this->addCSSFile(dirname(__FILE__) . '/ProductListDetails.css');
 
         parent::__construct($attributes);
     }
@@ -114,13 +119,27 @@ class ProductList extends QUI\Control
             $rows  = array();
         }
 
+        // category view
+        switch ($this->getAttribute('categoryView')) {
+            default:
+            case 'galery':
+                $categoryFile = dirname(__FILE__) . '/ProductListCategoryGalery.html';
+                break;
+
+            case 'list':
+                $categoryFile = dirname(__FILE__) . '/ProductListCategoryList.html';
+                break;
+        }
+
 
         $Engine->assign(array(
-            'count'     => $count,
-            'rows'      => $rows,
-            'children'  => $this->getSite()->getNavigation(),
-            'more'      => $more,
-            'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice()
+            'this'         => $this,
+            'count'        => $count,
+            'rows'         => $rows,
+            'children'     => $this->getSite()->getNavigation(),
+            'more'         => $more,
+            'hidePrice'    => QUI\ERP\Products\Utils\Package::hidePrice(),
+            'categoryFile' => $categoryFile
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/ProductList.html');

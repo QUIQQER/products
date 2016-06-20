@@ -1,3 +1,8 @@
+
+.page-content-header-description {
+    margin-bottom: 20px;
+}
+
 .product-galery {
     padding-right: 10px;
 }
@@ -116,6 +121,9 @@
 
 .product-data-more {
     clear: both;
+    float: left;
+    margin-top: 20px;
+    width: 100%;
 }
 
 .product-data-more-tabs {
