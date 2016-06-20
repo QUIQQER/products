@@ -51,7 +51,7 @@ class ProductList extends QUI\Control
         $this->addCSSFile(dirname(__FILE__) . '/ProductListList.css');
 
         $this->addCSSFile(dirname(__FILE__) . '/ProductListCategoryGalery.css');
-//        $this->addCSSFile(dirname(__FILE__) . '/ProductListDetails.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductListCategoryList.css');
 
         parent::__construct($attributes);
     }

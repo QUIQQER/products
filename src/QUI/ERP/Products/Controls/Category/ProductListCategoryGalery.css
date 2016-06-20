@@ -1,3 +1,8 @@
+
+.quiqqer-products-catgory__hide {
+    display: none;
+}
+
 .quiqqer-products-categoryGalery-catgories {
     float: left;
     display: block;
@@ -24,10 +29,6 @@
 .quiqqer-products-categoryGalery-catgory:nth-child(3n+3) {
     padding-left: 20px;
     padding-right: 0;
-}
-
-.quiqqer-products-categoryGalery-catgory__hide {
-    display: none;
 }
 
 .quiqqer-products-categoryGalery-catgory a {

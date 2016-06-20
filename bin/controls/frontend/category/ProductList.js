@@ -100,6 +100,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$BarDisplays  = Elm.getElement('.quiqqer-products-productList-sort-display');
             this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryGalery-catgory-more');
 
+            if (!this.$CategoryMore) {
+                this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryList-catgory-more');
+            }
+
 
             this.$More   = Elm.getElements('.quiqqer-products-productList-products-more .button');
             this.$MoreFX = moofx(this.$More);
@@ -599,18 +603,20 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             console.log(Product);
         },
 
-
+        /**
+         * Show all categories if some categories are hidden
+         */
         showAllCategories: function () {
             var Categories = this.getElm().getElement(
                 '.quiqqer-products-productList-categories'
             );
-
+            console.log(Categories);
             if (!Categories) {
                 return;
             }
 
             var hiddenChildren = Categories.getElements(
-                '.quiqqer-products-categoryGalery-catgory__hide'
+                '.quiqqer-products-catgory__hide'
             );
 
             if (!hiddenChildren.length) {
@@ -624,7 +630,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 overflow: 'hidden'
             });
 
-            hiddenChildren.removeClass('quiqqer-products-categoryGalery-catgory__hide');
+            hiddenChildren.removeClass('quiqqer-products-catgory__hide');
 
             var wantedSizes = Categories.getScrollSize();
 

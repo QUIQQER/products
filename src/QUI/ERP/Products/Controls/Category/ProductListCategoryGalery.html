@@ -3,9 +3,9 @@
     {foreach from=$children item=Category}
     {assign var=cssClass value=""}
     {if $categoryStartNumber && $categoryStartNumber <= $c}
-        {assign var=cssClass value=" quiqqer-products-categoryGalery-catgory__hide"}
+        {assign var=cssClass value=" quiqqer-products-catgory__hide"}
     {/if}
-    <article class="quiqqer-products-categoryGalery-catgory grid-33 mobile-grid-50{$cssClass}"
+    <section class="quiqqer-products-categoryGalery-catgory grid-33 mobile-grid-50{$cssClass}"
              data-pid="{$Category->getId()}"
     >
     {strip}
@@ -24,7 +24,7 @@
         </a>
     {/strip}
     {assign var=c value=$c+1}
-    </article>
+    </section>
     {/foreach}
 </div>
 

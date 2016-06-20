@@ -56,7 +56,8 @@ if ($siteUrl != $_REQUEST['_url']) {
         'categoryId'           => $Site->getAttribute('quiqqer.products.settings.categoryId'),
         'Search'               => $Search,
         'hideEmptyProductList' => true,
-        'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber')
+        'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
+        'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay')
     ));
 
     $Engine->assign(array(
