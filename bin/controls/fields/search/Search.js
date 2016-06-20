@@ -75,8 +75,9 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                 pagination       : true,
                 multipleSelection: this.getAttribute('multiple'),
                 buttons          : [{
-                    text: QUILocale.get(lg, 'categories.window.fieldtype.filter'),
-                    name: 'select'
+                    text     : QUILocale.get(lg, 'categories.window.fieldtype.filter'),
+                    name     : 'select',
+                    showIcons: false
                 }],
                 columnModel      : [{
                     header   : QUILocale.get('quiqqer/system', 'id'),
@@ -161,7 +162,6 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                 this.setAttribute('fieldTypeFilter', value);
                 this.refresh();
             }.bind(this));
-
 
             return this.$Elm;
         },
@@ -253,6 +253,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
 
                 self.$FieldTypeFilter.getContextMenu(function (Menu) {
                     Menu.setAttribute('maxHeight', 300);
+                    Menu.setAttribute('showIcons', false);
                     Menu.clear();
                 });
 
