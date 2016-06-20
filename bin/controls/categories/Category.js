@@ -189,13 +189,13 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     events   : {
                         onClick: function () {
                             require([
-                                'package/quiqqer/products/bin/controls/fields/Window'
+                                'package/quiqqer/products/bin/controls/fields/search/Window'
                             ], function (Win) {
                                 new Win({
                                     title : QUILocale.get(lg, 'category.update.window.addField.title'),
                                     events: {
                                         onSubmit: function (Win, value) {
-                                            self.addField(value);
+                                            self.addField(value[0]);
                                         }
                                     }
                                 }).open();

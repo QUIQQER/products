@@ -39,7 +39,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'package/quiqqer/products/bin/classes/Product',
     'package/quiqqer/products/bin/Categories',
     'package/quiqqer/products/bin/Fields',
-    'package/quiqqer/products/bin/controls/fields/Window',
+    'package/quiqqer/products/bin/controls/fields/search/Window',
     'package/quiqqer/products/bin/controls/categories/Select',
 
     'text!package/quiqqer/products/bin/controls/products/ProductData.html',
@@ -189,7 +189,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 if (!("usePermissions" in config.products)) {
                     return;
                 }
-                
+
                 if (!parseInt(config.products.usePermissions) ||
                     config.products.usePermissions === '') {
                     return;

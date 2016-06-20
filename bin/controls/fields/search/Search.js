@@ -1,83 +1,77 @@
 /**
- * Field select window
- * User can select a field
- *
- * @module package/quiqqer/products/bin/controls/fields/Window
+ * @module package/quiqqer/products/bin/controls/fields/search/Search
  * @author www.pcsg.de (Henning Leutz)
  *
+ * Felder suche
+ *
  * @require qui/QUI
- * @require qui/controls/windows/Confirm
- * @require Locale
+ * @require qui/controls/Control
  * @require controls/grid/Grid
- * @require package/quiqqer/products/bin/classes/Fields
+ * @require package/quiqqer/products/bin/Fields
+ * @require Locale
  */
-define('package/quiqqer/products/bin/controls/fields/Window', [
+define('package/quiqqer/products/bin/controls/fields/search/Search', [
 
     'qui/QUI',
-    'qui/controls/windows/Confirm',
-    'Locale',
+    'qui/controls/Control',
     'controls/grid/Grid',
-    'package/quiqqer/products/bin/classes/Fields'
+    'package/quiqqer/products/bin/Fields',
+    'Locale'
 
-], function (QUI, QUIConfirm, QUILocale, Grid, Handler) {
+], function (QUI, QUIControl, Grid, Fields, QUILocale) {
     "use strict";
 
-    var lg     = 'quiqqer/products',
-        Fields = new Handler();
+
+    var lg = 'quiqqer/products';
 
     return new Class({
 
-        Extends: QUIConfirm,
-        Type   : 'package/quiqqer/products/bin/controls/fields/Window',
+        Extends: QUIControl,
+        Type   : 'package/quiqqer/products/bin/controls/fields/search/Search',
 
         Binds: [
-            '$onOpen',
-            '$onResize',
+            '$onInject',
             'refresh',
             'submit'
         ],
 
         options: {
-            maxHeight      : 600,
-            maxWidth       : 800,
             multiple       : false,
-            title          : QUILocale.get(lg, 'fields.window.confirm.title'),
-            icon           : 'fa fa-plus',
             fieldTypeFilter: false
         },
 
         initialize: function (options) {
-
             this.parent(options);
 
-            this.$Grid            = null;
-            this.$FieldTypeFilter = null;
+            this.$Grid = null;
 
             this.addEvents({
-                onOpen  : this.$onOpen,
-                onResize: this.$onResize
+                onInject: this.$onInject
             });
         },
 
         /**
-         * event : on open
+         * Create the domnode
+         *
+         * @return {HTMLDivElement}
          */
-        $onOpen: function () {
-            this.Loader.show();
-
-            var self    = this,
-                Content = this.getContent();
-
-            Content.set({
-                html  : '',
+        create: function () {
+            this.$Elm = new Element('div', {
                 styles: {
-                    opacity: 0
+                    'float': 'left',
+                    height : '100%',
+                    width  : '100%'
                 }
             });
 
-            var Container = new Element('div').inject(Content);
+            var GridContainer = new Element('div', {
+                styles: {
+                    height: '100%',
+                    width : '100%'
+                }
+            }).inject(this.$Elm);
 
-            this.$Grid = new Grid(Container, {
+            this.$Grid = new Grid(GridContainer, {
                 pagination       : true,
                 multipleSelection: this.getAttribute('multiple'),
                 buttons          : [{
@@ -101,7 +95,7 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
                     width    : 200
                 }, {
                     header   : QUILocale.get(lg, 'fieldtype'),
-                    dataIndex: 'typeText',
+                    dataIndex: 'fieldtype',
                     dataType : 'text',
                     width    : 200
                 }, {
@@ -120,22 +114,32 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
                     dataType : 'text',
                     width    : 100
                 }, {
-                    header   : QUILocale.get(lg, 'searchtype'),
-                    dataIndex: 'searchtype',
-                    dataType : 'text',
-                    width    : 200
+                    header   : QUILocale.get(lg, 'publicField'),
+                    dataIndex: 'isPublic',
+                    dataType : 'node',
+                    width    : 60
                 }, {
-                    dataIndex: 'type',
-                    dataType : 'hidden'
+                    header   : QUILocale.get(lg, 'standardField'),
+                    dataIndex: 'isStandard',
+                    dataType : 'node',
+                    width    : 60
+                }, {
+                    header   : QUILocale.get(lg, 'requiredField'),
+                    dataIndex: 'isRequired',
+                    dataType : 'node',
+                    width    : 60
                 }]
             });
 
             this.$Grid.addEvents({
                 onRefresh : this.refresh,
-                onDblClick: this.submit
+                onDblClick: this.submit,
+                onClick   : function () {
+                    this.fireEvent('click', [this]);
+                }.bind(this)
             });
 
-            this.$FieldTypeFilter = self.$Grid.getButtons().filter(function (Btn) {
+            this.$FieldTypeFilter = this.$Grid.getButtons().filter(function (Btn) {
                 return Btn.getAttribute('name') == 'select';
             })[0];
 
@@ -143,65 +147,83 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
                 var value = ContextItem.getAttribute('value');
 
                 if (value === '') {
-                    self.$FieldTypeFilter.setAttribute(
+                    this.$FieldTypeFilter.setAttribute(
                         'text',
                         QUILocale.get(lg, 'categories.window.fieldtype.filter')
                     );
                 } else {
-                    self.$FieldTypeFilter.setAttribute(
+                    this.$FieldTypeFilter.setAttribute(
                         'text',
                         QUILocale.get(lg, 'fieldtype.' + value)
                     );
                 }
 
-                self.setAttribute('fieldTypeFilter', value);
-                self.refresh();
-            });
+                this.setAttribute('fieldTypeFilter', value);
+                this.refresh();
+            }.bind(this));
 
 
-            this.refresh().then(function () {
-                return self.$onResize();
-
-            }).then(function () {
-                self.Loader.hide();
-
-                moofx(Content).animate({
-                    opacity: 1
-                });
-            });
+            return this.$Elm;
         },
 
         /**
-         * event : on resize
+         * event: on inject
+         */
+        $onInject: function () {
+            this.resize();
+        },
+
+        /**
+         * resize
          *
          * @return {Promise}
          */
-        $onResize: function () {
-            var self = this;
-
+        resize: function () {
             return new Promise(function (resolve) {
-
-                if (!self.$Grid) {
-                    return resolve();
-                }
-
-                var Content = self.getContent(),
-                    size    = Content.getSize();
+                var size = this.getElm().getSize();
 
                 Promise.all([
-                    self.$Grid.setHeight(size.y - 40),
-                    self.$Grid.setWidth(size.x - 40)
+                    this.$Grid.setHeight(size.y),
+                    this.$Grid.setWidth(size.x),
+                    this.refresh()
                 ]).then(resolve);
+
+            }.bind(this));
+        },
+
+        /**
+         * submit the selected elements
+         */
+        submit: function () {
+            var ids = this.getSelected();
+
+            if (!ids.length) {
+                return;
+            }
+
+            this.fireEvent('submit', [this, ids]);
+        },
+
+        /**
+         * Return the selected ids
+         *
+         * @returns {Array}
+         */
+        getSelected: function () {
+            return this.$Grid.getSelectedData().map(function (Entry) {
+                return Entry.id;
             });
         },
 
         /**
-         * Refresh the table
+         * refresh the table data
          *
          * @return {Promise}
          */
         refresh: function () {
             var self = this;
+
+            this.fireEvent('refreshBegin');
 
             return Promise.all([
                 Fields.getFieldTypes(),
@@ -253,30 +275,45 @@ define('package/quiqqer/products/bin/controls/fields/Window', [
                     );
                 }
 
+
+                // if no grid array, create a grid array
+                if (!("data" in gridData)) {
+                    gridData = {data: gridData};
+                }
+
+                var ElmOk = new Element('span', {
+                    'class': 'fa fa-check'
+                });
+
+                var ElmFalse = new Element('span', {
+                    'class': 'fa fa-remove'
+                });
+
+                gridData.data.each(function (value, key) {
+                    if (value.isStandard) {
+                        gridData.data[key].isStandard = ElmOk.clone();
+                    } else {
+                        gridData.data[key].isStandard = ElmFalse.clone();
+                    }
+
+                    if (value.isRequired) {
+                        gridData.data[key].isRequired = ElmOk.clone();
+                    } else {
+                        gridData.data[key].isRequired = ElmFalse.clone();
+                    }
+
+                    if (value.isPublic) {
+                        gridData.data[key].isPublic = ElmOk.clone();
+                    } else {
+                        gridData.data[key].isPublic = ElmFalse.clone();
+                    }
+
+                    value.fieldtype = QUILocale.get(lg, 'fieldtype.' + value.type);
+                });
+
                 self.$Grid.setData(gridData);
+                self.fireEvent('refresh');
             });
-        },
-
-        /**
-         * submission of the popup
-         */
-        submit: function () {
-
-            if (!this.$Grid) {
-                return;
-            }
-
-            var selected = this.$Grid.getSelectedData();
-
-            if (!selected.length) {
-                return;
-            }
-
-            this.fireEvent('submit', [this, selected[0].id]);
-
-            if (this.getAttribute('autoclose')) {
-                this.close();
-            }
         }
     });
 });
