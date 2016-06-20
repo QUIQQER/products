@@ -31,6 +31,7 @@ class Button extends QUI\Control
         parent::__construct($attributes);
 
         $this->addCSSClass('product-offer-button');
+        $this->addCSSClass('button--callToAction');
         $this->addCSSFile(dirname(__FILE__) . '/Button.css');
     }
 

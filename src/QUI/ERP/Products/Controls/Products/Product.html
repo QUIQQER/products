@@ -1,17 +1,17 @@
 <article class="grid-100 mobile-grid-100 grid-parent">
 
+    <header class="page-content-header">
+        <h1>{$Product->getTitle()}</h1>
+        <div class="page-content-header-description">
+            {$Product->getDescription()}
+        </div>
+    </header>
+
     <div class="grid-50 mobile-grid-100 grid-parent product-galery">
         {$Gallery->create()}
     </div>
 
     <div class="grid-50 mobile-grid-100 grid-parent product-data">
-        <header class="page-content-header">
-            <h1>{$Product->getTitle()}</h1>
-        </header>
-        <div>
-            {$Product->getDescription()}
-        </div>
-
         <div class="product-data-fields">
             {foreach $fields as $Field}
             <div class="grid-50 mobile-grid-50 grid-parent product-data-fields-title">
@@ -27,7 +27,7 @@
         <div class="product-data-fieldlist">
             {foreach $productAttributeList as $Field}
             {if $Field->isPublic()}
-            {$Field->getView()->create()}
+                {$Field->getView()->create()}
             {/if}
             {/foreach}
         </div>
