@@ -1,3 +1,7 @@
+.quiqqer-products-productList-categories {
+    margin-bottom: 40px;
+}
+
 .quiqqer-products-productList-sort {
     border-color: #f1f1f1;
     border-style: solid;
@@ -44,6 +48,16 @@
     width: 100%;
 }
 
+/*.quiqqer-products-productList-products-header h2 {*/
+/*background: rgba(0, 0, 0, 0.1);*/
+/*border-radius: 3px 3px 0 0;*/
+/*float: left;*/
+/*font-weight: normal;*/
+/*font-size: 14px;*/
+/*margin: 0;*/
+/*padding: 0 20px;*/
+/*}*/
+
 .quiqqer-products-productList-products-more {
     clear: both;
     text-align: center;
@@ -62,4 +76,13 @@
     clear: both;
     float: left;
     width: 100%;
+}
+
+@media (max-width: 768px) {
+
+    .quiqqer-products-productList-products-more .button {
+        max-width: 100%;
+        width: 200px;
+    }
+
 }

@@ -73,3 +73,9 @@
     -webkit-transition: all 1s ease;
 }
 
+@media (max-width: 768px) {
+    .quiqqer-products-productGalery-products-product {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}

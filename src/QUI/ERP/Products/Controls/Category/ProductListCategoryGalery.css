@@ -15,7 +15,7 @@
 
 .quiqqer-products-categoryGalery-catgory {
     height: 180px;
-    margin-top: 20px;
+    margin-bottom: 20px;
     overflow: hidden;
     position: relative;
     text-align: center;
@@ -91,7 +91,24 @@
 .quiqqer-products-categoryGalery-catgory-more {
     clear: both;
     display: block;
-    margin: 20px auto;
+    margin: 0 auto 20px;
     text-align: center;
     width: calc(33% - 20px);
+}
+
+@media (max-width: 768px) {
+    .quiqqer-products-categoryGalery-catgory:nth-child(2n+1) {
+        padding-left: 0;
+        padding-right: 10px;
+    }
+
+    .quiqqer-products-categoryGalery-catgory:nth-child(2n+2) {
+        padding-left: 10px;
+        padding-right: 0;
+    }
+
+    .quiqqer-products-categoryGalery-catgory-more {
+        max-width: 100%;
+        width: 200px;
+    }
 }
