@@ -45,6 +45,7 @@
 }
 
 .quiqqer-products-productList-products-more {
+    clear: both;
     text-align: center;
 }
 
