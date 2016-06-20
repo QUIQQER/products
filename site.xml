@@ -18,6 +18,8 @@
                 <attribute>quiqqer.products.settings.searchFieldIds</attribute>
                 <attribute>quiqqer.products.settings.searchFieldsByUser</attribute>
                 <attribute>quiqqer.products.settings.dontShowSearch</attribute>
+                <attribute>quiqqer.products.settings.categoryStartNumber</attribute>
+                <attribute>quiqqer.products.settings.categoryDisplay</attribute>
             </attributes>
 
             <settings>
@@ -41,6 +43,25 @@
                                 <locale group="quiqqer/products" var="quiqqer.products.settings.categoryId"/>
                             </text>
                         </input>
+
+                        <input conf="quiqqer.products.settings.categoryStartNumber" type="number">
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.categoryStartNumber"/>
+                            </text>
+                        </input>
+
+                        <select conf="quiqqer.products.settings.categoryDisplay">
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.categoryDisplay"/>
+                            </text>
+
+                            <option value="galery">
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.categoryDisplay.galery"/>
+                            </option>
+                            <option value="list">
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.categoryDisplay.list"/>
+                            </option>
+                        </select>
 
                         <input conf="quiqqer.products.settings.searchFieldIds" type="hidden"
                                data-qui="package/quiqqer/products/bin/controls/search/FieldSelect"

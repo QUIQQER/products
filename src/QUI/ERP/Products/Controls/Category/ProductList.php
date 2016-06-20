@@ -41,7 +41,8 @@ class ProductList extends QUI\Control
             'categoryView'         => 'galery', // galery, list, detail
             'Search'               => false,
             'searchParams'         => false,
-            'hideEmptyProductList' => false
+            'hideEmptyProductList' => false,
+            'categoryStartNumber'  => false
         ));
 
         $this->addCSSFile(dirname(__FILE__) . '/ProductList.css');
@@ -50,7 +51,7 @@ class ProductList extends QUI\Control
         $this->addCSSFile(dirname(__FILE__) . '/ProductListList.css');
 
         $this->addCSSFile(dirname(__FILE__) . '/ProductListCategoryGalery.css');
-//        $this->addCSSFile(dirname(__FILE__) . '/ProductListDetails.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductListCategoryList.css');
 
         parent::__construct($attributes);
     }
@@ -133,14 +134,16 @@ class ProductList extends QUI\Control
 
 
         $Engine->assign(array(
-            'this'         => $this,
-            'count'        => $count,
-            'rows'         => $rows,
-            'children'     => $this->getSite()->getNavigation(),
-            'more'         => $more,
-            'hidePrice'    => QUI\ERP\Products\Utils\Package::hidePrice(),
-            'categoryFile' => $categoryFile,
-            'placeholder'  => $this->getProject()->getMedia()->getPlaceholder()
+            'this'      => $this,
+            'count'     => $count,
+            'rows'      => $rows,
+            'children'  => $this->getSite()->getNavigation(),
+            'more'      => $more,
+            'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice(),
+
+            'categoryFile'        => $categoryFile,
+            'placeholder'         => $this->getProject()->getMedia()->getPlaceholder(),
+            'categoryStartNumber' => $this->getAttribute('categoryStartNumber')
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/ProductList.html');

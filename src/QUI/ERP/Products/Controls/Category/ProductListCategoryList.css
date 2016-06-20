@@ -1,0 +1,43 @@
+
+.quiqqer-products-catgory__hide {
+    display: none !important;
+}
+
+.quiqqer-products-categoryList {
+    display: block;
+    float: left;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+.quiqqer-products-categoryList-catgory {
+    border: 1px solid #f1f1f1;
+    display: inline-block;
+    float: left;
+    margin-bottom: 10px;
+    padding: 10px 0;
+    text-align: center;
+    width: calc(50% - 10px);
+}
+
+.quiqqer-products-categoryList-catgory .fa-angle-right {
+    margin-left: 10px;
+}
+
+.quiqqer-products-categoryList-catgory:nth-child(odd) {
+    margin-right: 20px;
+}
+
+.quiqqer-products-categoryList-catgory-more {
+    clear: both;
+    display: block;
+    margin: 20px auto 0;
+    text-align: center;
+    width: calc(33% - 20px);
+}
+
+@media (max-width: 460px) {
+    .quiqqer-products-categoryList-catgory {
+        width: 100%;
+    }
+}

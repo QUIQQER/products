@@ -1061,7 +1061,22 @@
             <de><![CDATA[Suche nicht anzeigen]]></de>
             <en><![CDATA[Don't show the search]]></en>
         </locale>
-
+        <locale name="quiqqer.products.settings.categoryStartNumber">
+            <de><![CDATA[Anzahl angezeigter Kategorien]]></de>
+            <en><![CDATA[Limit of displayed categories]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryDisplay">
+            <de><![CDATA[Kategorienanzeige]]></de>
+            <en><![CDATA[Categorydisplay]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryDisplay.galery">
+            <de><![CDATA[Gallerie]]></de>
+            <en><![CDATA[Galery]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryDisplay.list">
+            <de><![CDATA[Liste]]></de>
+            <en><![CDATA[List]]></en>
+        </locale>
 
         <locale name="quiqqer.products.field.header.placeholder">
             <de><![CDATA[Rechte für das Feld #[fielId] - [fieldname]]]></de>
