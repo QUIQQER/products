@@ -139,7 +139,8 @@ class ProductList extends QUI\Control
             'children'     => $this->getSite()->getNavigation(),
             'more'         => $more,
             'hidePrice'    => QUI\ERP\Products\Utils\Package::hidePrice(),
-            'categoryFile' => $categoryFile
+            'categoryFile' => $categoryFile,
+            'placeholder'  => $this->getProject()->getMedia()->getPlaceholder()
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/ProductList.html');
