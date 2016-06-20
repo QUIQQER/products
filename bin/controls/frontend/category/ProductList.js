@@ -35,6 +35,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             'detailView',
             'listView',
             'next',
+            'showAllCategories',
             '$hideMoreButton',
             '$showMoreButton',
             '$scrollToLastRow',
@@ -63,6 +64,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$More   = null;
             this.$Sort   = null;
             this.$MoreFX = null;
+
+            this.$CategoryMore = null;
 
             this.$fields         = {};
             this.$freetext       = '';
@@ -93,8 +96,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$ButtonList    = Elm.getElements('.quiqqer-products-productList-sort-display-list');
             this.$Container     = Elm.getElement('.quiqqer-products-productList-products');
 
-            this.$BarSort     = Elm.getElement('.quiqqer-products-productList-sort-sorting');
-            this.$BarDisplays = Elm.getElement('.quiqqer-products-productList-sort-display');
+            this.$BarSort      = Elm.getElement('.quiqqer-products-productList-sort-sorting');
+            this.$BarDisplays  = Elm.getElement('.quiqqer-products-productList-sort-display');
+            this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryGalery-catgory-more');
 
 
             this.$More   = Elm.getElements('.quiqqer-products-productList-products-more .button');
@@ -121,6 +125,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 case 'list':
                     this.$ButtonList.addClass('active');
                     break;
+            }
+
+            // categories
+            if (this.$CategoryMore) {
+                this.$CategoryMore.addEvent('click', this.showAllCategories);
             }
 
             // sort
@@ -588,6 +597,57 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          */
         showProductDetails: function (Product) {
             console.log(Product);
+        },
+
+
+        showAllCategories: function () {
+            var Categories = this.getElm().getElement(
+                '.quiqqer-products-productList-categories'
+            );
+
+            if (!Categories) {
+                return;
+            }
+
+            var hiddenChildren = Categories.getElements(
+                '.quiqqer-products-categoryGalery-catgory__hide'
+            );
+
+            if (!hiddenChildren.length) {
+                return;
+            }
+
+            var size = Categories.getSize();
+
+            Categories.setStyles({
+                height  : size.y,
+                overflow: 'hidden'
+            });
+
+            hiddenChildren.removeClass('quiqqer-products-categoryGalery-catgory__hide');
+
+            var wantedSizes = Categories.getScrollSize();
+
+            if (this.$CategoryMore) {
+                moofx(this.$CategoryMore).animate({
+                    height : 0,
+                    opacity: 0
+                }, {
+                    duration: 200,
+                    callback: function () {
+                        this.$CategoryMore.setStyle('display', 'none');
+                    }.bind(this)
+                });
+            }
+
+            moofx(Categories).animate({
+                height: wantedSizes.y
+            }, {
+                duratiobn: 250,
+                callback : function () {
+
+                }
+            });
         }
     });
 });

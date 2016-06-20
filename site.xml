@@ -18,6 +18,7 @@
                 <attribute>quiqqer.products.settings.searchFieldIds</attribute>
                 <attribute>quiqqer.products.settings.searchFieldsByUser</attribute>
                 <attribute>quiqqer.products.settings.dontShowSearch</attribute>
+                <attribute>quiqqer.products.settings.categoryStartNumber</attribute>
             </attributes>
 
             <settings>
@@ -39,6 +40,12 @@
                         >
                             <text>
                                 <locale group="quiqqer/products" var="quiqqer.products.settings.categoryId"/>
+                            </text>
+                        </input>
+
+                        <input conf="quiqqer.products.settings.categoryStartNumber" type="number">
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.categoryStartNumber"/>
                             </text>
                         </input>
 
