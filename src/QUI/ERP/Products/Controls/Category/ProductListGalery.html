@@ -1,6 +1,7 @@
 <article class="quiqqer-products-productGalery-products-product grid-33 mobile-grid-100"
          data-pid="{$Product->getId()}"
 >
+{strip}
     <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:" html"}">
     {image image=$Product->getImage() title=$Product->getTitle() width=400}
     <header>
@@ -9,5 +10,9 @@
             <span class="fa fa-sort-down"></span>
         </div>
     </header>
+    <div class="quiqqer-products-productGalery-products-product-short">
+        {$Product->getDescription()}
+    </div>
     </a>
+{/strip}
 </article>

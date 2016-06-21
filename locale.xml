@@ -833,6 +833,11 @@
             <en><![CDATA[Add field]]></en>
         </locale>
 
+        <locale name="fields.window.search.title">
+            <de><![CDATA[Feld-Auswahl]]></de>
+            <en><![CDATA[Field selection]]></en>
+        </locale>
+
         <locale name="fields.window.delete.title">
             <de><![CDATA[Felder löschen]]></de>
             <en><![CDATA[Delete the fields]]></en>

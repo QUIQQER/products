@@ -189,13 +189,13 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     events   : {
                         onClick: function () {
                             require([
-                                'package/quiqqer/products/bin/controls/fields/Window'
+                                'package/quiqqer/products/bin/controls/fields/search/Window'
                             ], function (Win) {
                                 new Win({
                                     title : QUILocale.get(lg, 'category.update.window.addField.title'),
                                     events: {
                                         onSubmit: function (Win, value) {
-                                            self.addField(value);
+                                            self.addField(value[0]);
                                         }
                                     }
                                 }).open();
@@ -313,7 +313,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
                     fieldGridData.push({
                         id   : field.id,
-                        title: QUILocale.get(lg, 'products.field.' + field.id + '.title')
+                        title: field.title || QUILocale.get(lg, 'products.field.' + field.id + '.title')
                     });
                 }
 
@@ -506,6 +506,24 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
                     Categories.getInformation(categoryId).then(function (informations) {
                         this.$informations = informations;
+
+                        if (this.$grids.Fields) {
+                            var field;
+                            var fieldGridData = [];
+
+                            for (var i = 0, len = this.$data.fields.length; i < len; i++) {
+                                field = this.$data.fields[i];
+
+                                fieldGridData.push({
+                                    id   : field.id,
+                                    title: field.title || QUILocale.get(lg, 'products.field.' + field.id + '.title')
+                                });
+                            }
+
+                            this.$grids.Fields.setData({
+                                data: fieldGridData
+                            });
+                        }
 
                         resolve(data);
                     }.bind(this));

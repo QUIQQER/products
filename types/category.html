@@ -8,7 +8,7 @@
     {if $Site->getAttribute('quiqqer.products.settings.dontShowSearch') == false &&
         $Search->hasFields()
     }
-    <div class="content-headerpage-multible-left grid-30 mobile-grid-100">
+    <div class="content-headerpage-multible-left grid-30 hide-on-mobile">
         {$Search->create()}
     </div>
     {/if}
@@ -37,6 +37,12 @@
             <header class="page-content-header">
                 <h1>{$Site->getAttribute('title')}</h1>
             </header>
+
+                {if $Site->getAttribute('short')}
+                <div class="page-content-short">
+                    {$Site->getAttribute('short')}
+                </div>
+                {/if}
             {/if}
         {/if}
 

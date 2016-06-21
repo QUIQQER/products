@@ -10,6 +10,7 @@
  * @require controls/grid/Grid
  * @require package/quiqqer/products/bin/Fields
  * @require Locale
+ * @require package/quiqqer/products/bin/controls/fields/search/Search
  * @require css!package/quiqqer/products/bin/controls/fields/search/Window.css
  */
 define('package/quiqqer/products/bin/controls/fields/search/Window', [
@@ -20,10 +21,11 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
     'controls/grid/Grid',
     'package/quiqqer/products/bin/Fields',
     'Locale',
+    'package/quiqqer/products/bin/controls/fields/search/Search',
 
     'css!package/quiqqer/products/bin/controls/fields/search/Window.css'
 
-], function (QUI, QUIControl, QUIConfirm, Grid, Fields, QUILocale) {
+], function (QUI, QUIControl, QUIConfirm, Grid, Fields, QUILocale, Search) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -34,22 +36,18 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
         Type   : 'package/quiqqer/products/bin/controls/fields/search/Window',
 
         Binds: [
+            'submit',
             '$onOpen',
-            '$onResize',
-            'tableRefresh'
+            '$onResize'
         ],
 
         options: {
             maxHeight: 600,
             maxWidth : 800,
             icon     : 'fa fa-file-text-o',
-            title    : 'Feld-Auswahl',
-            autoclose: false,
+            title    : QUILocale.get(lg, 'fields.window.search.title'),
+            autoclose: true,
             multiple : false,
-
-            // search function function(value, params) @return Promise;
-            // resolve( [fieldData, fieldData, fieldData] )
-            search: false,
 
             cancel_button: {
                 text     : QUILocale.get('quiqqer/system', 'cancel'),
@@ -64,7 +62,8 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Grid = null;
+            this.$Search = null;
+            this.$Grid   = null;
 
             this.$ButtonCancel = null;
             this.$ButtonSubmit = null;
@@ -76,90 +75,9 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
 
         /**
          * event : on resize
-         *
-         * @return {Promise}
          */
         $onResize: function () {
-            return new Promise(function (resolve) {
-
-                var Content = this.getContent(),
-                    size    = Content.getSize();
-
-                Promise.all([
-                    this.$Grid.setHeight(size.y - 40),
-                    this.$Grid.setWidth(size.x - 40),
-                    this.tableRefresh()
-                ]).then(resolve);
-
-            }.bind(this));
-        },
-
-        /**
-         * refresh the table data
-         *
-         * @return {Promise}
-         */
-        tableRefresh: function () {
-            var self = this;
-
-            this.Loader.show();
-
-
-            var Search = Promise.resolve(false);
-
-            if (typeof this.getAttribute('search') === 'function') {
-                Search = this.getAttribute('search')(false, {
-                    perPage: this.$Grid.options.perPage,
-                    page   : this.$Grid.options.page
-                });
-
-            } else {
-                Search = Fields.getList({
-                    perPage: this.$Grid.options.perPage,
-                    page   : this.$Grid.options.page
-                });
-            }
-
-
-            return Search.then(function (data) {
-                // if no grid array, create a grid array
-                if (!("data" in data)) {
-                    data = {data: data};
-                }
-
-                var ElmOk = new Element('span', {
-                    'class': 'fa fa-check'
-                });
-
-                var ElmFalse = new Element('span', {
-                    'class': 'fa fa-remove'
-                });
-
-                data.data.each(function (value, key) {
-                    if (value.isStandard) {
-                        data.data[key].isStandard = ElmOk.clone();
-                    } else {
-                        data.data[key].isStandard = ElmFalse.clone();
-                    }
-
-                    if (value.isRequired) {
-                        data.data[key].isRequired = ElmOk.clone();
-                    } else {
-                        data.data[key].isRequired = ElmFalse.clone();
-                    }
-
-                    if (value.isPublic) {
-                        data.data[key].isPublic = ElmOk.clone();
-                    } else {
-                        data.data[key].isPublic = ElmFalse.clone();
-                    }
-
-                    value.fieldtype = QUILocale.get(lg, 'fieldtype.' + value.type);
-                });
-
-                self.$Grid.setData(data);
-                self.Loader.hide();
-            });
+            this.$Search.resize();
         },
 
         /**
@@ -168,80 +86,14 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
          * @returns {HTMLDivElement}
          */
         $onOpen: function (Win) {
-            var self    = this,
-                Content = Win.getContent();
-
+            var Content = Win.getContent();
             Content.set('html', '');
 
-            var GridContainer = new Element('div', {
-                styles: {
-                    height: '100%',
-                    width : '100%'
+            this.$Search = new Search({
+                events: {
+                    onSubmit: this.submit
                 }
             }).inject(Content);
-
-            this.$Grid = new Grid(GridContainer, {
-                pagination       : true,
-                multipleSelection: this.getAttribute('multiple'),
-                columnModel      : [{
-                    header   : QUILocale.get('quiqqer/system', 'id'),
-                    dataIndex: 'id',
-                    dataType : 'number',
-                    width    : 60
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'title'),
-                    dataIndex: 'title',
-                    dataType : 'text',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get(lg, 'workingTitle'),
-                    dataIndex: 'workingtitle',
-                    dataType : 'text',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get(lg, 'fieldtype'),
-                    dataIndex: 'fieldtype',
-                    dataType : 'text',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get(lg, 'priority'),
-                    dataIndex: 'priority',
-                    dataType : 'text',
-                    width    : 100
-                }, {
-                    header   : QUILocale.get(lg, 'prefix'),
-                    dataIndex: 'prefix',
-                    dataType : 'text',
-                    width    : 100
-                }, {
-                    header   : QUILocale.get(lg, 'suffix'),
-                    dataIndex: 'suffix',
-                    dataType : 'text',
-                    width    : 100
-                }, {
-                    header   : QUILocale.get(lg, 'publicField'),
-                    dataIndex: 'isPublic',
-                    dataType : 'node',
-                    width    : 60
-                }, {
-                    header   : QUILocale.get(lg, 'standardField'),
-                    dataIndex: 'isStandard',
-                    dataType : 'node',
-                    width    : 60
-                }, {
-                    header   : QUILocale.get(lg, 'requiredField'),
-                    dataIndex: 'isRequired',
-                    dataType : 'node',
-                    width    : 60
-                }]
-            });
-
-            this.$Grid.addEvents({
-                onRefresh : this.tableRefresh,
-                onDblClick: function () {
-                    self.submit();
-                }
-            });
 
             this.$onResize();
         },
@@ -250,9 +102,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
          * Submit
          */
         submit: function () {
-            var ids = this.$Grid.getSelectedData().map(function (Entry) {
-                return Entry.id;
-            });
+            var ids = this.$Search.getSelected();
 
             if (!ids.length) {
                 return;
