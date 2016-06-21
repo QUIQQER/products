@@ -416,14 +416,45 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @param Node
          */
         $parseElements: function (Node) {
-            var self    = this,
-                Details = Node.getElements(
-                    '.quiqqer-products-productGalery-products-product-details'
-                );
+            var Products = Node.getElements('.quiqqer-products-productGalery-products-product'),
+                Details  = Node.getElements('.quiqqer-products-productGalery-products-product-details');
 
-            Details.addEvent('click', function (event) {
-                event.stop();
-                self.showProductDetails(this.getParent('article'));
+            Products.set({
+                tabIndex: -1,
+                styles  : {
+                    outline: 'none'
+                }
+            });
+
+            Details.addEvents({
+                click: function (event) {
+                    event.stop();
+
+                    event.target.getParent(
+                        '.quiqqer-products-productGalery-products-product'
+                    ).focus();
+                }
+            });
+
+
+            var Categories      = Node.getElements('.quiqqer-products-categoryGalery-catgory'),
+                CategoryDetails = Node.getElements('.quiqqer-products-categoryGalery-catgory-details');
+
+            Categories.set({
+                tabIndex: -1,
+                styles  : {
+                    outline: 'none'
+                }
+            });
+
+            CategoryDetails.addEvents({
+                click: function (event) {
+                    event.stop();
+
+                    event.target.getParent(
+                        '.quiqqer-products-categoryGalery-catgory'
+                    ).focus();
+                }
             });
         },
 
