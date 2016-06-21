@@ -55,8 +55,8 @@
                                 <locale group="quiqqer/products" var="quiqqer.products.settings.categoryDisplay"/>
                             </text>
 
-                            <option value="galery">
-                                <locale group="quiqqer/products" var="quiqqer.products.settings.categoryDisplay.galery"/>
+                            <option value="gallery">
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.categoryDisplay.gallery"/>
                             </option>
                             <option value="list">
                                 <locale group="quiqqer/products" var="quiqqer.products.settings.categoryDisplay.list"/>

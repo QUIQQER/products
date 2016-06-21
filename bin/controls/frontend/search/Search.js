@@ -311,6 +311,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
                 }
             }
 
+            console.log('$loadFromUrl');
             console.log(params);
         }
     });

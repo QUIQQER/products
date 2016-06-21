@@ -27,8 +27,9 @@ define('package/quiqqer/products/bin/classes/Product', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$data   = null;
-            this.$loaded = false;
+            this.$data     = null;
+            this.$loaded   = false;
+            this.$quantity = 1;
         },
 
         /**
@@ -125,6 +126,30 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * Set the quantity
+         *
+         * @param {Number} quantity
+         * @return {Promise}
+         */
+        setQuantity: function (quantity) {
+            return new Promise(function (resolve) {
+                Ajax.post('package_quiqqer_products_ajax_products_setQuantity', function (result) {
+
+                    this.$quantity = parseInt(result);
+                    this.fireEvent('change', [this]);
+
+                    resolve(result);
+
+                }.bind(this), {
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
+                    quantity : quantity
+                });
+
+            }.bind(this));
+        },
+
+        /**
          * Return the Product-ID
          *
          * @returns {Number|Boolean}
@@ -143,7 +168,8 @@ define('package/quiqqer/products/bin/classes/Product', [
                 this.$data = {};
             }
 
-            this.$data.id = this.getId();
+            this.$data.id       = this.getId();
+            this.$data.quantity = this.getQuantity();
 
             return this.$data;
         },
@@ -347,16 +373,29 @@ define('package/quiqqer/products/bin/classes/Product', [
         /**
          * Return the caluclated product price
          *
+         * @param {Number} [quantity] - price of a wanted quantity
          * @returns {Promise}
          */
-        getPrice: function () {
+        getPrice: function (quantity) {
+            quantity = quantity || this.getQuantity();
+
             return new Promise(function (resolve) {
                 Ajax.get('package_quiqqer_products_ajax_products_calc', resolve, {
                     'package' : 'quiqqer/products',
                     productId : this.getId(),
-                    attributes: this.getAttributes()
+                    attributes: this.getAttributes(),
+                    quantity  : quantity
                 });
             }.bind(this));
+        },
+
+        /**
+         * Return the quantity
+         *
+         * @returns {Number}
+         */
+        getQuantity: function () {
+            return this.$quantity;
         }
     });
 });
