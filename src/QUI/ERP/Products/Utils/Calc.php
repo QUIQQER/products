@@ -118,6 +118,9 @@ class Calc
         }
 
 
+        // quantity
+        $price = $price * $Product->getQuantity();
+
         // @todo muss richtig implementiert werden
 //        if (method_exists($Product, 'getQuantity')) {
 //            $quantity = $Product->getQuantity();

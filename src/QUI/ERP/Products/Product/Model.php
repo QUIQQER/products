@@ -513,6 +513,13 @@ class Model extends QUI\QDOM
         $attributes['title']       = $this->getTitle();
         $attributes['description'] = $this->getDescription();
         $attributes['permissions'] = $this->getPermissions();
+        $attributes['image']       = false;
+
+        try {
+            $attributes['image'] = $this->getImage()->getUrl(true);
+        } catch (QUI\Exception $Exception) {
+        }
+
 
         /* @var $Price QUI\ERP\Products\Utils\Price */
         $Price = $this->getPrice();

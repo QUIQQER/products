@@ -61,7 +61,7 @@ class Product extends QUI\Control
         /* @var $Product QUI\ERP\Products\Product\UniqueProduct */
         $this->setAttribute('data-productid', $View->getId());
 
-        // galery
+        // gallery
         $PlaceholderImage = $this->getProject()->getMedia()->getPlaceholderImage();
 
         if ($PlaceholderImage) {

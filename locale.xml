@@ -1069,9 +1069,9 @@
             <de><![CDATA[Kategorienanzeige]]></de>
             <en><![CDATA[Categorydisplay]]></en>
         </locale>
-        <locale name="quiqqer.products.settings.categoryDisplay.galery">
-            <de><![CDATA[Gallerie]]></de>
-            <en><![CDATA[Galery]]></en>
+        <locale name="quiqqer.products.settings.categoryDisplay.gallery">
+            <de><![CDATA[Galerie]]></de>
+            <en><![CDATA[Gallery]]></en>
         </locale>
         <locale name="quiqqer.products.settings.categoryDisplay.list">
             <de><![CDATA[Liste]]></de>

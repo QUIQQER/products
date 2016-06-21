@@ -31,7 +31,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         Type   : 'package/quiqqer/products/bin/controls/frontend/category/ProductList',
 
         Binds: [
-            'galeryView',
+            'galleryView',
             'detailView',
             'listView',
             'next',
@@ -44,7 +44,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
         options: {
             categoryId: false,
-            view      : 'galery',
+            view      : 'gallery',
             sort      : false,
             project   : false,
             lang      : false,
@@ -55,7 +55,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.parent(options);
 
             this.$ButtonDetails = null;
-            this.$ButtonGalery  = null;
+            this.$ButtonGallery = null;
             this.$ButtonList    = null;
 
             this.$BarSort     = null;
@@ -92,13 +92,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 Elm  = this.getElm();
 
             this.$ButtonDetails = Elm.getElements('.quiqqer-products-productList-sort-display-details');
-            this.$ButtonGalery  = Elm.getElements('.quiqqer-products-productList-sort-display-galery');
+            this.$ButtonGallery  = Elm.getElements('.quiqqer-products-productList-sort-display-gallery');
             this.$ButtonList    = Elm.getElements('.quiqqer-products-productList-sort-display-list');
             this.$Container     = Elm.getElement('.quiqqer-products-productList-products');
 
             this.$BarSort      = Elm.getElement('.quiqqer-products-productList-sort-sorting');
             this.$BarDisplays  = Elm.getElement('.quiqqer-products-productList-sort-display');
-            this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryGalery-catgory-more');
+            this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryGallery-catgory-more');
 
             if (!this.$CategoryMore) {
                 this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryList-catgory-more');
@@ -116,15 +116,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             // events
             this.$ButtonDetails.addEvent('click', this.detailView);
-            this.$ButtonGalery.addEvent('click', this.galeryView);
+            this.$ButtonGallery.addEvent('click', this.galleryView);
             this.$ButtonList.addEvent('click', this.listView);
 
             switch (this.getAttribute('view')) {
                 case 'details':
                     this.$ButtonDetails.addClass('active');
                     break;
-                case 'galery':
-                    this.$ButtonGalery.addClass('active');
+                case 'gallery':
+                    this.$ButtonGallery.addClass('active');
                     break;
                 case 'list':
                     this.$ButtonList.addClass('active');
@@ -257,18 +257,18 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         },
 
         /**
-         * Change to galery view
+         * Change to gallery view
          *
          * @return {Promise}
          */
-        galeryView: function () {
+        galleryView: function () {
             if (!this.$sortingEnabled) {
                 return Promise.resolve();
             }
 
             this.resetButtons();
-            this.$ButtonGalery.addClass('active');
-            this.setAttribute('view', 'galery');
+            this.$ButtonGallery.addClass('active');
+            this.setAttribute('view', 'gallery');
 
             return this.$clearContainer().then(
                 this.$loadData.bind(this)
@@ -324,7 +324,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          */
         resetButtons: function () {
             this.$ButtonDetails.removeClass('active');
-            this.$ButtonGalery.removeClass('active');
+            this.$ButtonGallery.removeClass('active');
             this.$ButtonList.removeClass('active');
         },
 
@@ -416,8 +416,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @param Node
          */
         $parseElements: function (Node) {
-            var Products = Node.getElements('.quiqqer-products-productGalery-products-product'),
-                Details  = Node.getElements('.quiqqer-products-productGalery-products-product-details');
+            var Products = Node.getElements('.quiqqer-products-productGallery-products-product'),
+                Details  = Node.getElements('.quiqqer-products-productGallery-products-product-details');
 
             Products.set({
                 tabIndex: -1,
@@ -431,14 +431,14 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     event.stop();
 
                     event.target.getParent(
-                        '.quiqqer-products-productGalery-products-product'
+                        '.quiqqer-products-productGallery-products-product'
                     ).focus();
                 }
             });
 
 
-            var Categories      = Node.getElements('.quiqqer-products-categoryGalery-catgory'),
-                CategoryDetails = Node.getElements('.quiqqer-products-categoryGalery-catgory-details');
+            var Categories      = Node.getElements('.quiqqer-products-categoryGallery-catgory'),
+                CategoryDetails = Node.getElements('.quiqqer-products-categoryGallery-catgory-details');
 
             Categories.set({
                 tabIndex: -1,
@@ -452,7 +452,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     event.stop();
 
                     event.target.getParent(
-                        '.quiqqer-products-categoryGalery-catgory'
+                        '.quiqqer-products-categoryGallery-catgory'
                     ).focus();
                 }
             });
@@ -581,11 +581,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$sortingEnabled = false;
 
             this.$ButtonDetails.addClass('disabled');
-            this.$ButtonGalery.addClass('disabled');
+            this.$ButtonGallery.addClass('disabled');
             this.$ButtonList.addClass('disabled');
 
             this.$ButtonDetails.removeClass('active');
-            this.$ButtonGalery.removeClass('active');
+            this.$ButtonGallery.removeClass('active');
             this.$ButtonList.removeClass('active');
 
             this.$Sort.disable();
@@ -598,7 +598,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$sortingEnabled = true;
 
             this.$ButtonDetails.removeClass('disabled');
-            this.$ButtonGalery.removeClass('disabled');
+            this.$ButtonGallery.removeClass('disabled');
             this.$ButtonList.removeClass('disabled');
 
             this.$Sort.enable();

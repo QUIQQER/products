@@ -37,8 +37,8 @@ class ProductList extends QUI\Control
             'categoryId'           => false,
             'data-qui'             => 'package/quiqqer/products/bin/controls/frontend/category/ProductList',
             'data-cid'             => false,
-            'view'                 => 'galery', // galery, list, detail
-            'categoryView'         => 'galery', // galery, list, detail
+            'view'                 => 'gallery', // gallery, list, detail
+            'categoryView'         => 'gallery', // gallery, list, detail
             'Search'               => false,
             'searchParams'         => false,
             'hideEmptyProductList' => false,
@@ -46,11 +46,11 @@ class ProductList extends QUI\Control
         ));
 
         $this->addCSSFile(dirname(__FILE__) . '/ProductList.css');
-        $this->addCSSFile(dirname(__FILE__) . '/ProductListGalery.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductListGallery.css');
         $this->addCSSFile(dirname(__FILE__) . '/ProductListDetails.css');
         $this->addCSSFile(dirname(__FILE__) . '/ProductListList.css');
 
-        $this->addCSSFile(dirname(__FILE__) . '/ProductListCategoryGalery.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductListCategoryGallery.css');
         $this->addCSSFile(dirname(__FILE__) . '/ProductListCategoryList.css');
 
         parent::__construct($attributes);
@@ -123,8 +123,8 @@ class ProductList extends QUI\Control
         // category view
         switch ($this->getAttribute('categoryView')) {
             default:
-            case 'galery':
-                $categoryFile = dirname(__FILE__) . '/ProductListCategoryGalery.html';
+            case 'gallery':
+                $categoryFile = dirname(__FILE__) . '/ProductListCategoryGallery.html';
                 break;
 
             case 'list':
@@ -174,9 +174,9 @@ class ProductList extends QUI\Control
                 break;
 
             default:
-            case 'galery':
+            case 'gallery':
                 $max        = 3;
-                $productTpl = dirname(__FILE__) . '/ProductListGalery.html';
+                $productTpl = dirname(__FILE__) . '/ProductListGallery.html';
                 break;
         }
 

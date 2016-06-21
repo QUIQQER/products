@@ -16,9 +16,13 @@ use QUI\ERP\Products\Handler\Fields;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_calc',
-    function ($productId, $fields) {
+    function ($productId, $fields, $quantity) {
         $fields  = json_decode($fields, true);
         $Product = Products::getProduct($productId);
+
+        if (!is_array($fields)) {
+            $fields = array();
+        }
 
         foreach ($fields as $field) {
             try {
@@ -41,11 +45,13 @@ QUI::$Ajax->registerFunction(
             }
         }
 
-        $Price = QUI\ERP\Products\Utils\Calc::getProductPrice(
-            $Product->createUniqueProduct()
-        );
+
+        $Unique = $Product->createUniqueProduct();
+        $Unique->setQuantity(isset($quantity) ? $quantity : 1);
+
+        $Price = QUI\ERP\Products\Utils\Calc::getProductPrice($Unique);
 
         return $Price->toArray();
     },
-    array('productId', 'fields')
+    array('productId', 'fields', 'quantity')
 );
