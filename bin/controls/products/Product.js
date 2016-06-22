@@ -1084,7 +1084,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 this.$Grid = new Grid(GridContainer, {
                     sortOn     : 'calcPriority',
                     buttons    : [{
-                        text     : 'Auswahlliste hinzufügen',
+                        text     : QUILocale.get(lg, 'product.fields.grid.button.addSelectList'),
                         textimage: 'fa fa-plus',
                         events   : {
                             onClick: function () {
@@ -1383,7 +1383,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         onSubmit: function (Win, value) {
                             Win.Loader.show();
 
-                            this.addField(value).then(function () {
+                            this.addField(value[0]).then(function () {
                                 Win.close();
                             });
                         }.bind(this),
