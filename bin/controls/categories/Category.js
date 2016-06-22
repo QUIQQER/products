@@ -251,7 +251,6 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
          * event: on inject
          */
         $onInject: function () {
-
             if (this.$injected) {
                 return;
             }
@@ -528,6 +527,9 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                             });
                         }
 
+                        // parent refresh for title
+                        this.$refresh();
+
                         resolve(data);
                     }.bind(this));
 
@@ -591,9 +593,14 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
             return this.$hideContainer()
                 .then(this.resize)
+
                 .then(function () {
                     this.$grids.Fields.refresh();
                     return this.$showContainer(this.$ContainerFields);
+                }.bind(this))
+
+                .then(function () {
+                    this.$grids.Fields.resize();
                 }.bind(this));
         },
 

@@ -28,7 +28,31 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\Product
      */
     public function addField(Field $Field)
     {
-        $this->fields[$Field->getId()] = $Field;
+        if (!isset($this->fields[$Field->getId()])) {
+            $this->fields[$Field->getId()] = $Field;
+            return;
+        }
+
+        /* @var Field $Exists */
+        $Exists = $this->fields[$Field->getId()];
+
+        if ($Exists->isUnassigned()) {
+            $Exists->setUnassignedStatus(false);
+        }
+    }
+
+    /**
+     * Add a own product field
+     * This field is explicit added to the product
+     *
+     * @param QUI\ERP\Products\Field\Field $Field
+     */
+    public function addOwnField(QUI\ERP\Products\Field\Field $Field)
+    {
+        $Field->setUnassignedStatus(false);
+        $Field->setOwnFieldStatus(true);
+
+        $this->addField($Field);
     }
 
     /**
