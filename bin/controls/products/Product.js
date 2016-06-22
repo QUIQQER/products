@@ -891,6 +891,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 this.$Grid = new Grid(GridContainer, {
                     pagination : true,
+                    perPage    : 150,
                     buttons    : [{
                         text  : QUILocale.get(lg, 'product.fields.add.field'),
                         events: {
@@ -1056,6 +1057,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 this.$Grid = new Grid(GridContainer, {
                     pagination : true,
                     sortOn     : 'calcPriority',
+                    perPage    : 150,
                     columnModel: [{
                         header   : QUILocale.get(lg, 'product.fields.grid.visible'),
                         dataIndex: 'visible',

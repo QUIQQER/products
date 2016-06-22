@@ -182,6 +182,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             }).inject(this.$ContainerFields);
 
             this.$grids.Fields = new Grid(FieldContainer, {
+                perPage    : 150,
                 buttons    : [{
                     name     : 'add',
                     text     : QUILocale.get(lg, 'category.update.field.grid.button.add'),
@@ -331,6 +332,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 }).inject(this.$ContainerProducts);
 
                 this.$grids.Products = new Grid(ProductContainer, {
+                    perPage    : 150,
                     pagination : true,
                     buttons    : [{
                         text     : QUILocale.get(lg, 'category.panel.button.products.add'),
@@ -402,6 +404,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 }).inject(this.$ContainerSites);
 
                 this.$grids.Sites = new Grid(SitesContainer, {
+                    perPage    : 150,
                     columnModel: [{
                         header   : QUILocale.get('quiqqer/system', 'id'),
                         dataIndex: 'id',

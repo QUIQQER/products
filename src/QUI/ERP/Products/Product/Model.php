@@ -389,7 +389,7 @@ class Model extends QUI\QDOM
             )
         );
 
-        return '#' . $this->getId();
+        return '';
     }
 
     /**
@@ -420,7 +420,7 @@ class Model extends QUI\QDOM
             )
         );
 
-        return '#' . $this->getId();
+        return '';
     }
 
     /**
@@ -675,14 +675,7 @@ class Model extends QUI\QDOM
         foreach ($fields as $Field) {
             $value = $Field->getValue();
 
-            // @todo muss alle categorien prüfen
-            if (!$Field->isSystem() && !$Field->isStandard() && !$Field->isOwnField()) {
-                $Field->setUnassignedStatus(
-                    !isset($categoryFields[$Field->getId()])
-                );
-            } else {
-                $Field->setUnassignedStatus(false);
-            }
+            $this->setUnassignedStatusToField($Field);
 
             if (!$Field->isRequired() || $Field->isCustomField()) {
                 $Field->validate($value);
@@ -751,10 +744,44 @@ class Model extends QUI\QDOM
 
         /* @var QUI\ERP\Products\Field\Field $Field */
         foreach ($fields as $Field) {
+            $this->setUnassignedStatusToField($Field);
+
             $fieldData[] = $Field->toProductArray();
         }
 
         return $fieldData;
+    }
+
+    /**
+     * Set the unasigned status to a field
+     * checks the unassigned status for a field
+     * looks into each category
+     *
+     * @param Field $Field
+     */
+    protected function setUnassignedStatusToField($Field)
+    {
+        if ($Field->isSystem()
+            || $Field->isStandard()
+            || $Field->isOwnField()
+        ) {
+            $Field->setUnassignedStatus(false);
+            return;
+        }
+
+        $categories = $this->getCategories();
+
+        /* @var $Category Category */
+        foreach ($categories as $Category) {
+            $CategoryField = $Category->getField($Field->getId());
+
+            if ($CategoryField) {
+                $Field->setUnassignedStatus(false);
+                return;
+            }
+        }
+
+        $Field->setUnassignedStatus(true);
     }
 
     /**

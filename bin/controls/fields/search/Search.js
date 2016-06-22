@@ -74,6 +74,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
             this.$Grid = new Grid(GridContainer, {
                 pagination       : true,
                 multipleSelection: this.getAttribute('multiple'),
+                perPage          : 150,
                 buttons          : [{
                     text     : QUILocale.get(lg, 'categories.window.fieldtype.filter'),
                     name     : 'select',

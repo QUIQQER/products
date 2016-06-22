@@ -237,6 +237,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
             this.$Grid = new Grid(GridContainer, {
                 pagination : true,
+                perPage    : 150,
                 columnModel: [{
                     header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',

@@ -128,6 +128,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 size = Width.getSize();
 
             this.$Grid = new Grid(Container, {
+                perPage    : 150,
                 buttons    : [{
                     name    : 'up',
                     icon    : 'fa fa-angle-up',

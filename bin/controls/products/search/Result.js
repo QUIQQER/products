@@ -41,7 +41,7 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
             styles : false,
             sortOn : false,
             sortBy : false,
-            perPage: 20,
+            perPage: 150,
             page   : false
         },
 
