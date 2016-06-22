@@ -19,11 +19,8 @@ QUI::$Ajax->registerFunction(
 
         $Product = $Products->getProduct($productId);
         $Field   = $Fields->getField($fieldId);
-
-        $Field->setUnassignedStatus(false);
-        $Field->setOwnFieldStatus(true);
-
-        $Product->addField($Field);
+            
+        $Product->addOwnField($Field);
         $Product->save();
     },
     array('productId', 'fieldId'),

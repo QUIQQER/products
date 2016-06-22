@@ -94,6 +94,7 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
             this.$Grid = new Grid(Container, {
                 height     : 300,
                 width      : size.x - 100,
+                perPage    : 150,
                 columnModel: [{
                     header   : QUILocale.get(lg, 'settings.window.products.grid.searchstatus'),
                     dataIndex: 'status',

@@ -403,6 +403,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     {
         $attributes             = parent::getAttributes();
         $attributes['quantity'] = $this->getQuantity();
+        $attributes['id']       = $this->getId();
+        $attributes['fields']   = $this->getFields();
 
         return $attributes;
     }

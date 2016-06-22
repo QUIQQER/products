@@ -182,6 +182,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             }).inject(this.$ContainerFields);
 
             this.$grids.Fields = new Grid(FieldContainer, {
+                perPage    : 150,
                 buttons    : [{
                     name     : 'add',
                     text     : QUILocale.get(lg, 'category.update.field.grid.button.add'),
@@ -225,6 +226,21 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     dataIndex: 'title',
                     dataType : 'text',
                     width    : 200
+                }, {
+                    header   : QUILocale.get(lg, 'workingTitle'),
+                    dataIndex: 'workingtitle',
+                    dataType : 'text',
+                    width    : 200
+                }, {
+                    header   : QUILocale.get(lg, 'fieldtype'),
+                    dataIndex: 'fieldtype',
+                    dataType : 'text',
+                    width    : 200
+                }, {
+                    header   : QUILocale.get(lg, 'priority'),
+                    dataIndex: 'priority',
+                    dataType : 'text',
+                    width    : 100
                 }]
             });
 
@@ -250,7 +266,6 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
          * event: on inject
          */
         $onInject: function () {
-
             if (this.$injected) {
                 return;
             }
@@ -312,8 +327,11 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     field = this.$data.fields[i];
 
                     fieldGridData.push({
-                        id   : field.id,
-                        title: field.title || QUILocale.get(lg, 'products.field.' + field.id + '.title')
+                        id          : field.id,
+                        title       : field.title || QUILocale.get(lg, 'products.field.' + field.id + '.title'),
+                        workingtitle: field.workingtitle || '',
+                        fieldtype   : QUILocale.get(lg, 'fieldtype.' + field.type),
+                        priority    : field.priority
                     });
                 }
 
@@ -331,6 +349,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 }).inject(this.$ContainerProducts);
 
                 this.$grids.Products = new Grid(ProductContainer, {
+                    perPage    : 150,
                     pagination : true,
                     buttons    : [{
                         text     : QUILocale.get(lg, 'category.panel.button.products.add'),
@@ -402,6 +421,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 }).inject(this.$ContainerSites);
 
                 this.$grids.Sites = new Grid(SitesContainer, {
+                    perPage    : 150,
                     columnModel: [{
                         header   : QUILocale.get('quiqqer/system', 'id'),
                         dataIndex: 'id',
@@ -525,6 +545,9 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                             });
                         }
 
+                        // parent refresh for title
+                        this.$refresh();
+
                         resolve(data);
                     }.bind(this));
 
@@ -588,9 +611,14 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
             return this.$hideContainer()
                 .then(this.resize)
+
                 .then(function () {
                     this.$grids.Fields.refresh();
                     return this.$showContainer(this.$ContainerFields);
+                }.bind(this))
+
+                .then(function () {
+                    this.$grids.Fields.resize();
                 }.bind(this));
         },
 

@@ -41,6 +41,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'package/quiqqer/products/bin/Fields',
     'package/quiqqer/products/bin/controls/fields/search/Window',
     'package/quiqqer/products/bin/controls/categories/Select',
+    'package/quiqqer/products/bin/controls/fields/FieldTypeSelect',
 
     'text!package/quiqqer/products/bin/controls/products/ProductData.html',
     'text!package/quiqqer/products/bin/controls/products/CreateField.html',
@@ -49,7 +50,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 ], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIConfirm, QUIFormUtils, QUILocale,
              Grid, FolderViewer, Mustache, Packages,
              Products, Product, Categories, Fields, FieldWindow,
-             CategorySelect, templateProductData, templateField) {
+             CategorySelect, FieldTypeSelect, templateProductData, templateField) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -881,6 +882,57 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             return this.$hideCategories().then(function () {
 
+                var refresh = function () {
+                    var FieldTypes = this.$Grid.getButtons().filter(function (Btn) {
+                        return Btn.getAttribute('name') == 'select';
+                    })[0];
+
+                    this.$Product.getFields().then(function (fields) {
+                        var i, len, entry;
+                        var data = [];
+
+                        var fieldType = FieldTypes.getValue();
+
+                        for (i = 0, len = fields.length; i < len; i++) {
+                            entry = fields[i];
+
+                            if (fieldType !== '' && fieldType !== entry.type) {
+                                continue;
+                            }
+
+                            data.push({
+                                visible        : new QUISwitch({
+                                    fieldId: entry.id,
+                                    status : entry.isPublic,
+                                    events : {
+                                        onChange: switchStatusChange
+                                    }
+                                }),
+                                id             : entry.id,
+                                title          : entry.title || '',
+                                workingtitle   : entry.workingtitle || '',
+                                fieldtype      : entry.type,
+                                priority       : entry.priority,
+                                suffix         : entry.suffix,
+                                prefix         : entry.prefix,
+                                ownField       : entry.ownField,
+                                ownFieldDisplay: new Element('div', {
+                                    'class': 'fa fa-user',
+                                    styles : {
+                                        color: entry.ownField ? '' : '#dddddd'
+                                    }
+                                })
+                            });
+                        }
+
+                        this.$Grid.setData({
+                            data: data
+                        });
+
+                    }.bind(this));
+                }.bind(this);
+
+
                 var GridContainer = new Element('div', {
                     styles: {
                         'float': 'left',
@@ -890,26 +942,33 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }).inject(this.$FieldAdministration);
 
                 this.$Grid = new Grid(GridContainer, {
-                    pagination : true,
-                    buttons    : [{
-                        text  : QUILocale.get(lg, 'product.fields.add.field'),
-                        events: {
-                            onClick: this.openAddFieldDialog
-                        }
-                    }, {
-                        type: 'seperator'
-                    }, {
-                        name    : 'remove',
-                        text    : QUILocale.get(lg, 'product.fields.remove.field'),
-                        disabled: true,
-                        events  : {
-                            onClick: function () {
-                                this.openDeleteFieldDialog(
-                                    this.$Grid.getSelectedData()[0].id
-                                );
-                            }.bind(this)
-                        }
-                    }],
+                    buttons    : [
+                        new FieldTypeSelect({
+                            name  : 'select',
+                            events: {
+                                filterChange: refresh
+                            }
+                        }), {
+                            type: 'seperator'
+                        }, {
+                            text     : QUILocale.get(lg, 'product.fields.add.field'),
+                            textimage: 'fa fa-plus',
+                            events   : {
+                                onClick: this.openAddFieldDialog
+                            }
+                        }, {
+                            name     : 'remove',
+                            text     : QUILocale.get(lg, 'product.fields.remove.field'),
+                            disabled : true,
+                            textimage: 'fa fa-trash',
+                            events   : {
+                                onClick: function () {
+                                    this.openDeleteFieldDialog(
+                                        this.$Grid.getSelectedData()[0].id
+                                    );
+                                }.bind(this)
+                            }
+                        }],
                     columnModel: [{
                         header   : QUILocale.get(lg, 'product.fields.grid.visible'),
                         dataIndex: 'visible',
@@ -928,6 +987,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }, {
                         header   : QUILocale.get('quiqqer/system', 'title'),
                         dataIndex: 'title',
+                        dataType : 'text',
+                        width    : 200
+                    }, {
+                        header   : QUILocale.get(lg, 'workingTitle'),
+                        dataIndex: 'workingtitle',
                         dataType : 'text',
                         width    : 200
                     }, {
@@ -952,7 +1016,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         width    : 100
                     }, {
                         dataIndex: 'ownField',
-                        dataType : 'hidden'
+                        hidden   : true
                     }]
                 });
 
@@ -968,44 +1032,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 }.bind(this);
 
-                var refresh = function () {
-                    this.$Product.getFields().then(function (fields) {
-                        var i, len, entry;
-                        var data = [];
-
-                        for (i = 0, len = fields.length; i < len; i++) {
-                            entry = fields[i];
-
-                            data.push({
-                                visible        : new QUISwitch({
-                                    fieldId: entry.id,
-                                    status : entry.isPublic,
-                                    events : {
-                                        onChange: switchStatusChange
-                                    }
-                                }),
-                                id             : entry.id,
-                                title          : entry.workingtitle || entry.title,
-                                fieldtype      : entry.type,
-                                priority       : entry.priority,
-                                suffix         : entry.suffix,
-                                prefix         : entry.prefix,
-                                ownField       : entry.ownField,
-                                ownFieldDisplay: new Element('div', {
-                                    'class': 'fa fa-user',
-                                    styles : {
-                                        color: entry.ownField ? '' : '#dddddd'
-                                    }
-                                })
-                            });
-                        }
-
-                        this.$Grid.setData({
-                            data: data
-                        });
-
-                    }.bind(this));
-                }.bind(this);
 
                 this.$Grid.addEvents({
                     onRefresh: refresh,
@@ -1030,8 +1056,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 return this.$Grid.setHeight(size.y - 40).then(function () {
                     this.$Grid.refresh();
                     return this.$showCategory(this.$FieldAdministration);
+
                 }.bind(this)).then(function () {
                     this.$Grid.resize();
+
                 }.bind(this));
 
             }.bind(this));
@@ -1056,6 +1084,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 this.$Grid = new Grid(GridContainer, {
                     pagination : true,
                     sortOn     : 'calcPriority',
+                    perPage    : 150,
                     columnModel: [{
                         header   : QUILocale.get(lg, 'product.fields.grid.visible'),
                         dataIndex: 'visible',
@@ -1081,6 +1110,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }, {
                         header   : QUILocale.get('quiqqer/system', 'title'),
                         dataIndex: 'title',
+                        dataType : 'text',
+                        width    : 200
+                    }, {
+                        header   : QUILocale.get(lg, 'workingTitle'),
+                        dataIndex: 'workingtitle',
                         dataType : 'text',
                         width    : 200
                     }]
@@ -1148,7 +1182,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 calcPriority: priority,
                                 calcBasis   : calculation_basis,
                                 id          : entry.id,
-                                title       : entry.workingtitle || entry.title
+                                title       : entry.title || '',
+                                workingtitle: entry.workingtitle || ''
                             });
                         }
 

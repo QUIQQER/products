@@ -129,14 +129,6 @@ class Product extends QUI\Control
             'Price' => $Price
         ));
 
-        // attribute list fields
-        $attributeListFields = $View->getFieldsByType('ProductAttributeList');
-
-        $attributeListFields = array_filter($attributeListFields, function ($Field) {
-            /* @var $Field QUI\ERP\Products\Interfaces\Field */
-            return !$Field->isUnassigned();
-        });
-
         // file / image folders
         $mediaFolders = array();
         $mediaFields  = $Product->getFieldsByType(Fields::TYPE_FOLDER);
@@ -158,7 +150,7 @@ class Product extends QUI\Control
             'fields'               => $fields,
             'details'              => $details,
             'mediaFolders'         => $mediaFolders,
-            'productAttributeList' => $attributeListFields,
+            'productAttributeList' => $View->getFieldsByType('ProductAttributeList'),
             'PriceDisplay'         => $PriceDisplay,
             'WatchlistButton'      => new WatchlistButton(array(
                 'Product' => $View,
