@@ -792,7 +792,7 @@ class Model extends QUI\QDOM
      */
     protected function getAllProductFields()
     {
-        $fields     = $this->getFields();
+        $fields     = $this->fields;
         $categories = $this->getCategories();
 
         $categoryFields = array();
@@ -964,7 +964,16 @@ class Model extends QUI\QDOM
      */
     public function getFields()
     {
-        return $this->fields;
+        $field = array();
+
+        /* @var $Field Field */
+        foreach ($this->fields as $Field) {
+            if (!$Field->isUnassigned()) {
+                $field[$Field->getId()] = $Field;
+            }
+        }
+
+        return $field;
     }
 
     /**
@@ -976,9 +985,10 @@ class Model extends QUI\QDOM
     public function getFieldsByType($type)
     {
         $result = array();
+        $fields = $this->getFields();
 
         /* @var $Field QUI\ERP\Products\Field\Field */
-        foreach ($this->fields as $Field) {
+        foreach ($fields as $Field) {
             if ($Field->getType() == $type) {
                 $result[] = $Field;
             }
