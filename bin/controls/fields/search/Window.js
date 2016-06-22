@@ -42,12 +42,13 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
         ],
 
         options: {
-            maxHeight: 600,
-            maxWidth : 800,
-            icon     : 'fa fa-file-text-o',
-            title    : QUILocale.get(lg, 'fields.window.search.title'),
-            autoclose: true,
-            multiple : false,
+            maxHeight      : 600,
+            maxWidth       : 800,
+            icon           : 'fa fa-file-text-o',
+            title          : QUILocale.get(lg, 'fields.window.search.title'),
+            autoclose      : true,
+            multiple       : false,
+            fieldTypeFilter: false,
 
             cancel_button: {
                 text     : QUILocale.get('quiqqer/system', 'cancel'),
@@ -90,7 +91,8 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
             Content.set('html', '');
 
             this.$Search = new Search({
-                events: {
+                fieldTypeFilter: this.getAttribute('fieldTypeFilter'),
+                events         : {
                     onSubmit: this.submit
                 }
             }).inject(Content);

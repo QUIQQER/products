@@ -1082,9 +1082,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }).inject(this.$AttributeList);
 
                 this.$Grid = new Grid(GridContainer, {
-                    pagination : true,
                     sortOn     : 'calcPriority',
-                    perPage    : 150,
+                    buttons    : [{
+                        text     : 'Auswahlliste hinzufügen',
+                        textimage: 'fa fa-plus',
+                        events   : {
+                            onClick: function () {
+                                this.openAddFieldDialog('ProductAttributeList');
+                            }.bind(this)
+                        }
+                    }],
                     columnModel: [{
                         header   : QUILocale.get(lg, 'product.fields.grid.visible'),
                         dataIndex: 'visible',
@@ -1363,19 +1370,29 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
         /**
          * open add field dialog
+         *
+         * @param {string} [fieldTypeFilter]
+         * @return {Promise}
          */
-        openAddFieldDialog: function () {
-            new FieldWindow({
-                events: {
-                    onSubmit: function (Win, value) {
-                        Win.Loader.show();
+        openAddFieldDialog: function (fieldTypeFilter) {
+            return new Promise(function (resolve) {
 
-                        this.addField(value).then(function () {
-                            Win.close();
-                        });
-                    }.bind(this)
-                }
-            }).open();
+                new FieldWindow({
+                    fieldTypeFilter: fieldTypeFilter,
+                    events         : {
+                        onSubmit: function (Win, value) {
+                            Win.Loader.show();
+
+                            this.addField(value).then(function () {
+                                Win.close();
+                            });
+                        }.bind(this),
+
+                        onClose: resolve
+                    }
+                }).open();
+
+            }.bind(this));
         },
 
         /**
