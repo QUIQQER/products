@@ -77,6 +77,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                 perPage          : 150,
                 buttons          : [{
                     text     : QUILocale.get(lg, 'categories.window.fieldtype.filter'),
+                    textimage: 'fa fa-filter',
                     name     : 'select',
                     showIcons: false
                 }],
