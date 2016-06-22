@@ -226,6 +226,21 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     dataIndex: 'title',
                     dataType : 'text',
                     width    : 200
+                }, {
+                    header   : QUILocale.get(lg, 'workingTitle'),
+                    dataIndex: 'workingtitle',
+                    dataType : 'text',
+                    width    : 200
+                }, {
+                    header   : QUILocale.get(lg, 'fieldtype'),
+                    dataIndex: 'fieldtype',
+                    dataType : 'text',
+                    width    : 200
+                }, {
+                    header   : QUILocale.get(lg, 'priority'),
+                    dataIndex: 'priority',
+                    dataType : 'text',
+                    width    : 100
                 }]
             });
 
@@ -312,8 +327,11 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     field = this.$data.fields[i];
 
                     fieldGridData.push({
-                        id   : field.id,
-                        title: field.title || QUILocale.get(lg, 'products.field.' + field.id + '.title')
+                        id          : field.id,
+                        title       : field.title || QUILocale.get(lg, 'products.field.' + field.id + '.title'),
+                        workingtitle: field.workingtitle || '',
+                        fieldtype   : QUILocale.get(lg, 'fieldtype.' + field.type),
+                        priority    : field.priority
                     });
                 }
 
