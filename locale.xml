@@ -366,12 +366,12 @@
             <de><![CDATA[Das Feld "[fieldType]" #[fieldId] wurde nicht gefunden.]]></de>
             <en><![CDATA[Field "[fieldType]" #[fieldId] not found.]]></en>
         </locale>
-        <locale name="exception.field.invalid">
+        <locale name="exception.field.invalid" html="1">
             <de><![CDATA[
-                Nicht erlaubter Inhalt für das Feld: #[fieldId] [fieldTitle]. Bitte korrigieren Sie die Eingabe.
+                Nicht erlaubter Inhalt für das Feld: #[fieldId] <b>[fieldTitle]</b>. Bitte korrigieren Sie die Eingabe.
                 ]]></de>
             <en><![CDATA[
-                Illegal content for the field: #[fieldId] [fieldTitle]. Please correct the entry.
+                Illegal content for the field: #[fieldId] <b>[fieldTitle]</b>. Please correct the entry.
             ]]></en>
         </locale>
         <locale name="exception.field.required.but.empty">

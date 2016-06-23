@@ -144,7 +144,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 textimage: 'fa fa-save',
                 text     : QUILocale.get('quiqqer/system', 'save'),
                 events   : {
-                    onClick: this.update
+                    onClick: function () {
+                        this.update().catch(function () {
+
+                        });
+                    }.bind(this)
                 }
             });
 
@@ -1313,7 +1317,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     fields
                 ).then(function () {
                     self.Loader.hide();
-                    resolve();
+                    return self.loadData().then(resolve);
+
                 }, function (err) {
                     self.Loader.hide();
                     reject(err);
