@@ -41,7 +41,7 @@ class Date extends QUI\ERP\Products\Field\Field
         } catch (\Exception $Exception) {
             $dateTime = false;
         }
-        
+
         if ($dateTime === false) {
             throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
@@ -75,6 +75,10 @@ class Date extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
+        if (is_numeric($value)) {
+            $value = strtotime($value);
+        }
+
         try {
             $Date = new \DateTime($value);
         } catch (\Exception $Exception) {
