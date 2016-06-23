@@ -277,19 +277,25 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     return Promise.resolve();
 
                 }).then(function () {
+                    return self.$Translation.save();
+                }).then(function () {
+                    return self.$WorkingTitle.save();
+                }).then(function () {
                     return QUI.getMessageHandler();
 
                 }).then(function (MH) {
                     MH.setAttribute('showMessages', true);
+
                     MH.addSuccess(
-                        QUILocale.get(lg, 'message.field.successfully.saved', {
-                            fieldId: fieldId
-                        })
+                        QUILocale.get(lg, 'message.field.successfully.saved')
                     );
 
-                    resolve();
-
-                }).catch(reject);
+                }).then(resolve).catch(function (e) {
+                    QUI.getMessageHandler().then(function (MH) {
+                        MH.setAttribute('showMessages', true);
+                        reject(e);
+                    });
+                });
             });
         },
 

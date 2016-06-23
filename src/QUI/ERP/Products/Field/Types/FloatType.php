@@ -23,13 +23,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
      */
     public function getBackendView()
     {
-        return new View(array(
-            'value'    => $this->cleanup($this->getValue()),
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
-            'priority' => $this->getAttribute('priority')
-        ));
+        return new View($this->getFieldDataForView());
     }
 
     /**
@@ -39,13 +33,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
     {
         // @TODO value formatierung aus settings (nachkommastellen, separatoren)
 
-        return new View(array(
-            'value'    => $this->cleanup($this->getValue()),
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
-            'priority' => $this->getAttribute('priority')
-        ));
+        return new View($this->getFieldDataForView());
     }
 
     /**

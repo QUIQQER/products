@@ -221,7 +221,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
             var ActiveSheet = this.$getSheet(Active.get('aria-controls'));
             var NextSheet   = this.$getSheet(Next.get('aria-controls'));
 
-
             return Promise.all([
                 this.$hideTabToLeft(ActiveSheet),
                 this.$showFromRight(NextSheet)
@@ -318,6 +317,19 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 opacity: 0
             });
 
+            var height     = 310,
+                nodeHeight = Node.getSize().y + 10;
+
+            if (nodeHeight > height) {
+                height = nodeHeight;
+            }
+
+            moofx(this.$Sheets).animate({
+                height: height
+            }, {
+                duration: 200
+            });
+
             return new Promise(function (resolve) {
                 moofx(Node).animate({
                     left   : 0,
@@ -343,6 +355,19 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 display: 'inline',
                 left   : 50,
                 opacity: 0
+            });
+
+            var height     = 310,
+                nodeHeight = Node.getSize().y + 10;
+
+            if (nodeHeight > height) {
+                height = nodeHeight;
+            }
+
+            moofx(this.$Sheets).animate({
+                height: height
+            }, {
+                duration: 200
             });
 
             return new Promise(function (resolve) {

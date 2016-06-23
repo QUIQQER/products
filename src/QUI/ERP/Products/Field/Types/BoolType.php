@@ -22,13 +22,7 @@ class BoolType extends QUI\ERP\Products\Field\Field
      */
     public function getBackendView()
     {
-        return new View(array(
-            'value'    => $this->cleanup($this->getValue()),
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
-            'priority' => $this->getAttribute('priority')
-        ));
+        return new View($this->getFieldDataForView());
     }
 
     /**
@@ -36,13 +30,7 @@ class BoolType extends QUI\ERP\Products\Field\Field
      */
     public function getFrontendView()
     {
-        return new View(array(
-            'value'    => $this->cleanup($this->getValue()),
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
-            'priority' => $this->getAttribute('priority')
-        ));
+        return new BoolTypeFrontendView($this->getFieldDataForView());
     }
 
     /**
@@ -62,6 +50,10 @@ class BoolType extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
+        if ($value === '') {
+            return;
+        }
+
         if (is_bool($value)) {
             return;
         }
@@ -101,6 +93,10 @@ class BoolType extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
+        if ($value === '') {
+            return 0;
+        }
+
         if ($value === true) {
             return 1;
         }
