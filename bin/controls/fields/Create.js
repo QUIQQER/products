@@ -148,18 +148,23 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
 
                 var Form = Elm.getElement('form');
 
-                Fields.createChild({
-                    type         : Form.elements.type.value,
-                    search_type  : '',
-                    prefix       : Form.elements.prefix.value,
-                    suffix       : Form.elements.suffix.value,
-                    priority     : Form.elements.priority.value,
-                    standardField: Form.elements.standardField.checked ? 1 : 0,
-                    systemField  : 0,
-                    publicField  : Form.elements.publicField.checked ? 1 : 0,
-                    requiredField: Form.elements.requiredField.checked ? 1 : 0
-                }).then(function (data) {
+                QUI.getMessageHandler().then(function (MH) {
+                    MH.setAttribute('showMessages', false);
 
+                }).then(function () {
+                    return Fields.createChild({
+                        type         : Form.elements.type.value,
+                        search_type  : '',
+                        prefix       : Form.elements.prefix.value,
+                        suffix       : Form.elements.suffix.value,
+                        priority     : Form.elements.priority.value,
+                        standardField: Form.elements.standardField.checked ? 1 : 0,
+                        systemField  : 0,
+                        publicField  : Form.elements.publicField.checked ? 1 : 0,
+                        requiredField: Form.elements.requiredField.checked ? 1 : 0
+                    });
+
+                }).then(function (data) {
                     self.$Translation.setAttribute(
                         'var',
                         'products.field.' + data.id + '.title'
@@ -170,11 +175,26 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                         'products.field.' + data.id + '.workingtitle'
                     );
 
-                    self.$Translation.save().then(function () {
-                        return self.$WorkingTitle.save();
-                    }).then(function () {
-                        resolve();
-                    }).catch(reject);
+                    return self.$Translation.save();
+
+                }).then(function () {
+                    return self.$WorkingTitle.save();
+
+                }).then(function () {
+                    return QUI.getMessageHandler();
+
+                }).then(function (MH) {
+                    MH.setAttribute('showMessages', true);
+
+                    MH.addSuccess(
+                        QUILocale.get(lg, 'message.field.successfully.created')
+                    );
+
+                }).then(resolve).catch(function (e) {
+                    QUI.getMessageHandler().then(function (MH) {
+                        MH.setAttribute('showMessages', true);
+                        reject(e);
+                    });
                 });
             });
         }
