@@ -479,6 +479,15 @@
             <en><![CDATA[Sorry, no products were found.]]></en>
         </locale>
 
+        <locale name="message.field.successfully.saved">
+            <de><![CDATA[Das Feld #[fieldId] wurde erfolgreich gespeichert.]]></de>
+            <en><![CDATA[The field #[fieldId] has been successfully saved.]]></en>
+        </locale>
+        <locale name="message.field.successfully.created">
+            <de><![CDATA[Das Feld wurde erfolgreich erstellt.]]></de>
+            <en><![CDATA[The field has been successfully created.]]></en>
+        </locale>
+
         <!-- crons -->
         <locale name="cron.updateProductCache.title">
             <de><![CDATA[Produkt-Cache aktualisieren]]></de>
