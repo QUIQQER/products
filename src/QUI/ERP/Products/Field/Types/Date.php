@@ -32,12 +32,16 @@ class Date extends QUI\ERP\Products\Field\Field
 
         $dateTime = true;
 
+        if (is_numeric($value)) {
+            $value = strtotime($value);
+        }
+
         try {
             new \DateTime($value);
         } catch (\Exception $Exception) {
             $dateTime = false;
         }
-
+        
         if ($dateTime === false) {
             throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
