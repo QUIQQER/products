@@ -41,7 +41,6 @@ QUI::$Ajax->registerFunction(
                     continue;
                 }
 
-                $ProductField->validate($field);
                 $ProductField->setValue($field);
 
             } catch (QUI\ERP\Products\Product\Exception $Exception) {
@@ -52,9 +51,9 @@ QUI::$Ajax->registerFunction(
                 QUI\System\Log::addNotice(
                     $Exception->getMessage(),
                     array(
-                        'id' => $Field->getId(),
+                        'id'    => $Field->getId(),
                         'title' => $Field->getTitle(),
-                        'data' => $field
+                        'data'  => $field
                     )
                 );
 
@@ -64,9 +63,9 @@ QUI::$Ajax->registerFunction(
                 QUI\System\Log::addNotice(
                     $Exception->getMessage(),
                     array(
-                        'id' => $Field->getId(),
+                        'id'    => $Field->getId(),
                         'title' => $Field->getTitle(),
-                        'data' => $field
+                        'data'  => $field
                     )
                 );
 

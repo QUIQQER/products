@@ -169,9 +169,9 @@ class Model extends QUI\QDOM
                 $this->fields[$Field->getId()] = $Field;
 
             } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);
             }
         }
-
 
         // all standard and all system fields must be in the product
         $systemfields = Fields::getFields(array(

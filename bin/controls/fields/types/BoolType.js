@@ -24,6 +24,8 @@ define('package/quiqqer/products/bin/controls/fields/types/BoolType', [
         initialize: function (options) {
             this.parent(options);
 
+            this.$Input = null;
+
             this.addEvents({
                 onImport: this.$onImport
             });
@@ -35,8 +37,18 @@ define('package/quiqqer/products/bin/controls/fields/types/BoolType', [
         $onImport: function () {
             var Elm = this.getElm();
 
-            Elm.addClass('field-container-field');
-            Elm.type = 'checkbox';
+            this.$Input = Elm;
+
+            this.$Input.type    = 'checkbox';
+            this.$Input.checked = parseInt(this.$Input.value);
+
+            this.$Input.addEvent('change', function () {
+                this.value = this.checked ? 1 : 0;
+            });
+
+            this.$Elm = new Element('div', {
+                'class': 'field-container-field'
+            }).wraps(this.$Input);
         }
     });
 });
