@@ -27,7 +27,7 @@
         <div class="product-data-fieldlist">
             {foreach $productAttributeList as $Field}
             {if $Field->isPublic()}
-                {$Field->getView()->create()}
+            {$Field->getView()->create()}
             {/if}
             {/foreach}
         </div>
@@ -87,20 +87,19 @@
                     {foreach $details as $Field}
                     {if is_string($Field->getValue()) || is_numeric($Field->getValue())}
                     <tr>
-                        <td class="product-data-more-details-table-title">
-                            {$Field->getTitle()}
-                        </td>
-                        <td class="product-data-more-details-table-value">
-                            {$Field->getValue()}
+                        <td>
+                            {$Field->getView()->create()}
                         </td>
                     </tr>
                     {else}
                     <tr>
-                        <td class="product-data-more-details-table-title">
-                            {$Field->getTitle()}
-                        </td>
-                        <td class="product-data-more-details-table-value">
-                            ---
+                        <td>
+                            <div class="quiqqer-product-field-title">
+                                {$Field->getTitle()}
+                            </div>
+                            <div class="quiqqer-product-field-value">
+                                ---
+                            </div>
                         </td>
                     </tr>
                     {/if}

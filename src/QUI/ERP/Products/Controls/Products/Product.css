@@ -213,20 +213,21 @@
     background: #edf1f5;
 }
 
-.product-data-more-details-table td:first-child {
-    padding-left: 10px;
-}
-
 .product-data-more-details-table tr:last-child td {
     border-bottom: none;
+    width: 100%;
 }
 
-.product-data-more-details-table-title {
+.product-data-more-details-table .quiqqer-product-field-title {
+    float: left;
     max-width: 300px;
+    padding: 0 0 0 10px;
     width: 20%;
 }
 
-.product-data-more-details-table-value {
+.product-data-more-details-table .quiqqer-product-field-value {
+    float: left;
+    padding-left: 10px;
     width: 80%;
 }
 

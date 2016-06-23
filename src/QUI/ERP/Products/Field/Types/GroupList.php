@@ -48,13 +48,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function getBackendView()
     {
-        return new View(array(
-            'value'    => $this->cleanup($this->getValue()),
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
-            'priority' => $this->getAttribute('priority')
-        ));
+        return new View($this->getAttributes());
     }
 
     /**
@@ -62,13 +56,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function getFrontendView()
     {
-        return new View(array(
-            'value'    => $this->cleanup($this->getValue()),
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
-            'priority' => $this->getAttribute('priority')
-        ));
+        return new View($this->getAttributes());
     }
 
     /**

@@ -158,7 +158,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     protected function getBackendView()
     {
-        return new View($this->getAttributes());
+        return new View($this->getFieldDataForView());
     }
 
     /**
@@ -168,7 +168,20 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     protected function getFrontendView()
     {
-        return new View($this->getAttributes());
+        return new View($this->getFieldDataForView());
+    }
+
+    /**
+     * Return the field data for a view
+     *
+     * @return array
+     */
+    protected function getFieldDataForView()
+    {
+        $attributes          = $this->getAttributes();
+        $attributes['value'] = $this->getValue();
+
+        return $attributes;
     }
 
     /**
