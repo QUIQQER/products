@@ -15,7 +15,14 @@ use QUI\ERP\Products\Handler\Search;
  */
 class FloatType extends QUI\ERP\Products\Field\Field
 {
+    /**
+     * @var string
+     */
     protected $columnType = 'DOUBLE';
+
+    /**
+     * @var int
+     */
     protected $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
 
     /**
@@ -27,13 +34,31 @@ class FloatType extends QUI\ERP\Products\Field\Field
     }
 
     /**
+     * @TODO value formatierung aus settings (nachkommastellen, separatoren)
+     *
      * @return View
      */
     public function getFrontendView()
     {
-        // @TODO value formatierung aus settings (nachkommastellen, separatoren)
+        $attributes = $this->getFieldDataForView();
+        $value      = $this->getValue();
 
-        return new View($this->getFieldDataForView());
+        $localeCode = QUI::getLocale()->getLocalesByLang(
+            QUI::getLocale()->getCurrent()
+        );
+
+        $Formatter = new \NumberFormatter(
+            $localeCode[0],
+            \NumberFormatter::DECIMAL
+        );
+
+        if (is_string($value)) {
+            $value = floatval($value);
+        }
+
+        $attributes['value'] = $Formatter->format($value);
+
+        return new View($attributes);
     }
 
     /**

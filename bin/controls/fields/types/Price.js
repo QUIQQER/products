@@ -4,6 +4,8 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ *
+ * new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(1000)
  */
 define('package/quiqqer/products/bin/controls/fields/types/Price', [
 
