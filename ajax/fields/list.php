@@ -37,7 +37,7 @@ QUI::$Ajax->registerFunction(
             $result[] = $attributes;
         }
 
-        return $Grid->parseResult($result, $Fields->countFields());
+        return $Grid->parseResult($result, $Fields->countFields($query));
     },
     array('params'),
     'Permission::checkAdminUser'

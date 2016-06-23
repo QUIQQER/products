@@ -979,6 +979,14 @@
             <de><![CDATA[Berechnungs-Grundlage]]></de>
             <en><![CDATA[Calculation basis]]></en>
         </locale>
+        <locale name="product.fields.grid.button.addSelectList">
+            <de><![CDATA[Auswahlliste hinzufügen]]></de>
+            <en><![CDATA[Add Select list]]></en>
+        </locale>
+        <locale name="product.fields.grid.button.removeSelectList">
+            <de><![CDATA[Auswahlliste entfernen]]></de>
+            <en><![CDATA[Remove Select list]]></en>
+        </locale>
 
 
         <locale name="product.fields.attributeList.title">

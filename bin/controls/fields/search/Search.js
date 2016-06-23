@@ -16,9 +16,10 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
     'qui/controls/Control',
     'controls/grid/Grid',
     'package/quiqqer/products/bin/Fields',
+    'package/quiqqer/products/bin/controls/fields/FieldTypeSelect',
     'Locale'
 
-], function (QUI, QUIControl, Grid, Fields, QUILocale) {
+], function (QUI, QUIControl, Grid, Fields, FieldTypeSelect, QUILocale) {
     "use strict";
 
 
@@ -75,12 +76,16 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                 pagination       : true,
                 multipleSelection: this.getAttribute('multiple'),
                 perPage          : 150,
-                buttons          : [{
-                    text     : QUILocale.get(lg, 'categories.window.fieldtype.filter'),
-                    textimage: 'fa fa-filter',
-                    name     : 'select',
-                    showIcons: false
-                }],
+                buttons          : [
+                    new FieldTypeSelect({
+                        events: {
+                            onFilterChange: function (FTS, value) {
+                                this.setAttribute('fieldTypeFilter', value);
+                                this.refresh();
+                            }.bind(this)
+                        }
+                    })
+                ],
                 columnModel      : [{
                     header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
@@ -141,29 +146,6 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                     this.fireEvent('click', [this]);
                 }.bind(this)
             });
-
-            this.$FieldTypeFilter = this.$Grid.getButtons().filter(function (Btn) {
-                return Btn.getAttribute('name') == 'select';
-            })[0];
-
-            this.$FieldTypeFilter.addEvent('change', function (Btn, ContextItem) {
-                var value = ContextItem.getAttribute('value');
-
-                if (value === '') {
-                    this.$FieldTypeFilter.setAttribute(
-                        'text',
-                        QUILocale.get(lg, 'categories.window.fieldtype.filter')
-                    );
-                } else {
-                    this.$FieldTypeFilter.setAttribute(
-                        'text',
-                        QUILocale.get(lg, 'fieldtype.' + value)
-                    );
-                }
-
-                this.setAttribute('fieldTypeFilter', value);
-                this.refresh();
-            }.bind(this));
 
             return this.$Elm;
         },
@@ -227,49 +209,13 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
 
             this.fireEvent('refreshBegin');
 
-            return Promise.all([
-                Fields.getFieldTypes(),
-                Fields.getList({
-                    perPage: this.$Grid.options.perPage,
-                    page   : this.$Grid.options.page,
-                    type   : this.getAttribute('fieldTypeFilter')
-                })
-            ]).then(function (result) {
+            return Fields.getList({
+                perPage: this.$Grid.options.perPage,
+                page   : this.$Grid.options.page,
+                type   : this.getAttribute('fieldTypeFilter')
+            }).then(function (result) {
                 var i, len;
-                var fieldTypes = result[0],
-                    gridData   = result[1];
-
-                fieldTypes.sort(function (a, b) {
-                    var aText = QUILocale.get(lg, 'fieldtype.' + a);
-                    var bText = QUILocale.get(lg, 'fieldtype.' + b);
-
-                    if (aText > bText) {
-                        return 1;
-                    }
-                    if (aText < bText) {
-                        return -1;
-                    }
-
-                    return 0;
-                });
-
-                self.$FieldTypeFilter.getContextMenu(function (Menu) {
-                    Menu.setAttribute('maxHeight', 300);
-                    Menu.setAttribute('showIcons', false);
-                    Menu.clear();
-                });
-
-                self.$FieldTypeFilter.appendChild({
-                    text : QUILocale.get(lg, 'categories.window.fieldtype.filter.showAll'),
-                    value: ''
-                });
-
-                for (i = 0, len = fieldTypes.length; i < len; i++) {
-                    self.$FieldTypeFilter.appendChild({
-                        text : QUILocale.get(lg, 'fieldtype.' + fieldTypes[i]),
-                        value: fieldTypes[i]
-                    });
-                }
+                var gridData = result;
 
                 for (i = 0, len = gridData.data.length; i < len; i++) {
                     gridData.data[i].typeText = QUILocale.get(
