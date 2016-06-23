@@ -62,51 +62,60 @@ class BoolType extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
+        if (is_bool($value)) {
+            return;
+        }
+
+        if (is_int($value)) {
+            return;
+        }
+
+        if (is_numeric($value)) {
+            return;
+        }
+
         switch ($value) {
-            case 1:
-            case '1':
-            case true:
             case 'TRUE':
             case 'true':
-            case 0:
-            case '0':
-            case false:
             case 'FALSE':
             case 'false':
-                break;
-
-            default:
-                throw new QUI\ERP\Products\Field\Exception(array(
-                    'quiqqer/products',
-                    'exception.field.invalid',
-                    array(
-                        'fieldId'    => $this->getId(),
-                        'fieldTitle' => $this->getTitle(),
-                        'fieldType'  => $this->getType()
-                    )
-                ));
+                return;
         }
+
+        throw new QUI\ERP\Products\Field\Exception(array(
+            'quiqqer/products',
+            'exception.field.invalid',
+            array(
+                'fieldId'    => $this->getId(),
+                'fieldTitle' => $this->getTitle(),
+                'fieldType'  => $this->getType()
+            )
+        ));
     }
 
     /**
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return bool
+     * @return int - 1 or 0
      */
     public function cleanup($value)
     {
+        if ($value === true) {
+            return 1;
+        }
+
+        if (is_numeric($value)) {
+            return (int)$value ? 1 : 0;
+        }
+
         switch ($value) {
-            case 1:
-            case '1':
-            case true:
             case 'TRUE':
             case 'true':
                 return 1;
-
-            default:
-                return 0;
         }
+
+        return 0;
     }
 
     /**
