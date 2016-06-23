@@ -43,20 +43,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
         $attributes = $this->getFieldDataForView();
         $value      = $this->getValue();
 
-        $localeCode = QUI::getLocale()->getLocalesByLang(
-            QUI::getLocale()->getCurrent()
-        );
-
-        $Formatter = new \NumberFormatter(
-            $localeCode[0],
-            \NumberFormatter::DECIMAL
-        );
-
-        if (is_string($value)) {
-            $value = floatval($value);
-        }
-
-        $attributes['value'] = $Formatter->format($value);
+        $attributes['value'] = QUI::getLocale()->formatNumber($value);
 
         return new View($attributes);
     }
