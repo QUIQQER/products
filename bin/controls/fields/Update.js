@@ -245,16 +245,22 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 }
 
                 // trigger update
-                Fields.updateChild(fieldId, {
-                    type         : Form.elements.type.value,
-                    search_type  : search_type,
-                    prefix       : Form.elements.prefix.value,
-                    suffix       : Form.elements.suffix.value,
-                    priority     : Form.elements.priority.value,
-                    standardField: Form.elements.standardField.checked ? 1 : 0,
-                    requiredField: Form.elements.requiredField.checked ? 1 : 0,
-                    publicField  : Form.elements.publicField.checked ? 1 : 0,
-                    options      : Form.elements.options.value
+                QUI.getMessageHandler().then(function (MH) {
+                    MH.setAttribute('showMessages', false);
+
+                }).then(function () {
+                    return Fields.updateChild(fieldId, {
+                        type         : Form.elements.type.value,
+                        search_type  : search_type,
+                        prefix       : Form.elements.prefix.value,
+                        suffix       : Form.elements.suffix.value,
+                        priority     : Form.elements.priority.value,
+                        standardField: Form.elements.standardField.checked ? 1 : 0,
+                        requiredField: Form.elements.requiredField.checked ? 1 : 0,
+                        publicField  : Form.elements.publicField.checked ? 1 : 0,
+                        options      : Form.elements.options.value
+                    });
+
                 }).then(function (PRODUCT_ARRAY_STATUS) {
                     if (PRODUCT_ARRAY_STATUS == Fields.PRODUCT_ARRAY_CHANGED) {
                         // product array changed,
@@ -266,7 +272,22 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     return self.$Translation.save();
                 }).then(function () {
                     return self.$WorkingTitle.save();
-                }).then(resolve()).catch(reject);
+                }).then(function () {
+                    return QUI.getMessageHandler();
+
+                }).then(function (MH) {
+                    MH.setAttribute('showMessages', true);
+
+                    MH.addSuccess(
+                        QUILocale.get(lg, 'message.field.successfully.created')
+                    );
+
+                }).then(resolve).catch(function (e) {
+                    QUI.getMessageHandler().then(function (MH) {
+                        MH.setAttribute('showMessages', true);
+                        reject(e);
+                    });
+                });
             });
         },
 

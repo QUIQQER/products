@@ -62,6 +62,10 @@ class BoolType extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
+        if ($value === '') {
+            return;
+        }
+
         if (is_bool($value)) {
             return;
         }
@@ -101,6 +105,10 @@ class BoolType extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
+        if ($value === '') {
+            return 0;
+        }
+
         if ($value === true) {
             return 1;
         }
