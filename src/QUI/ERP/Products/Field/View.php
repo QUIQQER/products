@@ -45,9 +45,12 @@ class View extends UniqueField
             return '';
         }
 
+        $value = htmlspecialchars($this->getValue());
+        $title = htmlspecialchars($this->getTitle());
+
         return '<div class="quiqqer-product-field">
-            <div class="quiqqer-product-field-title">' . $this->getTitle() . '</div>
-            <div class="quiqqer-product-field-value">' . $this->getValue() . '</div>
+            <div class="quiqqer-product-field-title">' . $title . '</div>
+            <div class="quiqqer-product-field-value">' . $value . '</div>
         </div>';
     }
 }

@@ -157,7 +157,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     public function getFrontendView()
     {
         return new ProductAttributeListFrontendView(
-            $this->getAttributes()
+            $this->getFieldDataForView()
         );
     }
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Field\Types\UrlFrontendView
+ * This file contains QUI\ERP\Products\Field\Types\BoolTypeFrontendView
  */
 namespace QUI\ERP\Products\Field\Types;
 
@@ -10,12 +10,12 @@ use QUI\ERP\Products\Field\View;
 use Hklused\Machines\Purchase\Search;
 
 /**
- * Class UrlFrontendView
- * Frontend View for the Url Field
+ * Class BoolType
+ * Frontend View for the BoolType Field
  *
  * @package QUI\ERP\Products\Field
  */
-class UrlFrontendView extends QUI\ERP\Products\Field\View
+class BoolTypeFrontendView extends QUI\ERP\Products\Field\View
 {
     /**
      * Render the view, return the html
@@ -32,17 +32,16 @@ class UrlFrontendView extends QUI\ERP\Products\Field\View
             return '';
         }
 
-        $title = $this->getTitle();
+        $title = htmlspecialchars($this->getTitle());
         $title = htmlspecialchars($title);
 
-        $link  = '';
-        $value = $this->getValue();
-
-        if (!empty($value)) {
-            $link = '<a href="' . $value . '" target="_blank">' . $value . '</a>';
+        if ($this->getValue()) {
+            $html = '<span class="fa fa-check"></span>';
+        } else {
+            $html = '<span class="fa fa-remove"></span>';
         }
 
         return "<div class=\"quiqqer-product-field-title\">{$title}</div>
-            <div class=\"quiqqer-product-field-value\">{$link}</div>";
+            <div class=\"quiqqer-product-field-value\">{$html}</div>";
     }
 }

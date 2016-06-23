@@ -101,7 +101,7 @@ class Date extends QUI\ERP\Products\Field\Field
      */
     protected function getBackendView()
     {
-        return new View($this->getAttributes());
+        return new View($this->getFieldDataForView());
     }
 
     /**
@@ -109,7 +109,7 @@ class Date extends QUI\ERP\Products\Field\Field
      */
     protected function getFrontendView()
     {
-        return new View($this->getAttributes());
+        return new View($this->getFieldDataForView());
     }
 
     /**

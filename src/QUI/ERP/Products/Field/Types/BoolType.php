@@ -22,7 +22,7 @@ class BoolType extends QUI\ERP\Products\Field\Field
      */
     public function getBackendView()
     {
-        return new View($this->getAttributes());
+        return new View($this->getFieldDataForView());
     }
 
     /**
@@ -30,7 +30,7 @@ class BoolType extends QUI\ERP\Products\Field\Field
      */
     public function getFrontendView()
     {
-        return new View($this->getAttributes());
+        return new BoolTypeFrontendView($this->getFieldDataForView());
     }
 
     /**
