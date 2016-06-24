@@ -1,4 +1,6 @@
 /**
+ * Komma zahl feld
+ *
  * @module package/quiqqer/products/bin/controls/fields/types/FloatType
  * @author www.pcsg.de (Henning Leutz)
  *
@@ -36,7 +38,10 @@ define('package/quiqqer/products/bin/controls/fields/types/FloatType', [
             var Elm = this.getElm();
 
             Elm.addClass('field-container-field');
-            Elm.type = 'text';
+
+            Elm.type        = 'number';
+            Elm.step        = 'any';
+            Elm.placeholder = '10.9999';
         }
     });
 });

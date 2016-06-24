@@ -314,6 +314,10 @@
             <de><![CDATA[Text]]></de>
             <en><![CDATA[Text]]></en>
         </locale>
+        <locale name="fieldtype.Products">
+            <de><![CDATA[Produkte]]></de>
+            <en><![CDATA[Products]]></en>
+        </locale>
         <locale name="fieldtype.Date">
             <de><![CDATA[Datum]]></de>
             <en><![CDATA[Date]]></en>
@@ -765,6 +769,10 @@
         <locale name="control.select.search.categories.placeholder">
             <de><![CDATA[Suche nach einer Produktkategorie...]]></de>
             <en><![CDATA[Search for a product category...]]></en>
+        </locale>
+        <locale name="control.select.search.placeholder">
+            <de><![CDATA[Suche nach einem Produkt...]]></de>
+            <en><![CDATA[Search for a product...]]></en>
         </locale>
 
         <locale name="control.category.update.title.fields">

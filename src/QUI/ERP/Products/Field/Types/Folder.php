@@ -17,7 +17,14 @@ use QUI\ERP\Products\Field\View;
  */
 class Folder extends QUI\ERP\Products\Field\Field
 {
+    /**
+     * @var string
+     */
     protected $columnType = 'BIGINT(20)';
+
+    /**
+     * @var bool
+     */
     protected $searchable = false;
 
     /**

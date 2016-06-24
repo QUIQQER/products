@@ -1,71 +1,79 @@
 @CHARSET "UTF-8";
 
-.qui-discount-list {
+.qui-quiqqer-products-select {
     float: left;
-    max-width: 400px;
     padding: 2px;
     position: relative;
     width: 100%;
 }
 
-.field-container > .qui-discount-list {
+.field-container > .qui-quiqqer-products-select {
     max-width: none;
     padding: 0;
 }
 
-.qui-discount-list-list {
-    position: relative;
-    z-index: 2;
-}
-
-.qui-discount-list-list {
+.qui-quiqqer-products-list {
     background: #fff;
     border: 1px solid #dedede;
     border-radius: 3px;
     float: left;
-    height: 100px;
+    height: calc(100% - 30px);
     overflow: auto;
     width: 100%;
 }
 
-.qui-discount-list-search {
+.qui-quiqqer-products-list-search {
     clear: both;
     float: left;
+    height: 30px;
+    padding-left: 30px;
     width: calc(100% - 50px);
 }
 
-.field-container-field > .qui-discount-list {
+.qui-quiqqer-products-list-search-loader {
+    bottom: 2px;
+    height: 30px;
+    left: 2px;
+    line-height: 30px;
+    position: absolute;
+    text-align: center;
+    width: 30px;
+}
+
+.field-container-field > .qui-quiqqer-products-select {
     max-width: none;
     padding: 0;
 }
 
-.field-container-field > .qui-discount-list .qui-discount-list-list {
+.field-container-field > .qui-quiqqer-products-select .qui-quiqqer-products-list {
     border-radius: 0;
     border-width: 0 0 1px 0;
 }
 
-.field-container-field > .qui-discount-list .qui-discount-list-search {
+.field-container-field > .qui-quiqqer-products-select .qui-products-list-search {
     border: none;
 }
 
 /** DropDown
  ======================================================= */
 
-.qui-discount-list-dropdown {
+.qui-quiqqer-products-list-dropdown {
     background: #fff;
     border: 1px solid #dedede;
+    max-height: 300px;
+    overflow: auto;
     padding: 5px;
     position: absolute;
     width: 200px;
     z-index: 10;
 }
 
-.qui-discount-list-dropdown .mark {
+.qui-quiqqer-products-list-dropdown .mark {
     color: red;
     font-weight: bold;
 }
 
-.qui-discount-list-dropdown-entry {
+.qui-quiqqer-products-list-dropdown-entry {
     clear: both;
     cursor: pointer;
     float: left;
@@ -73,7 +81,7 @@
     width: 100%;
 }
 
-.qui-discount-list-dropdown-entry-hover {
+.qui-quiqqer-products-list-dropdown-entry-hover {
     background: #2F8FC6;
     color: #FFFFFF;
 }

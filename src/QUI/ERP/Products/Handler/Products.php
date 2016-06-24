@@ -106,6 +106,28 @@ class Products
     }
 
     /**
+     * Exists a product?
+     *
+     * @param integer $pid - Product-ID
+     * @return boolean
+     */
+    public static function existsProduct($pid)
+    {
+        if (isset(self::$list[$pid])) {
+            return true;
+        }
+
+        $result = QUI::getDataBase()->fetch(array(
+            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            'where' => array(
+                'id' => $pid
+            )
+        ));
+
+        return isset($result[0]);
+    }
+
+    /**
      * Get product by product no
      *
      * @param string $productNo - Product-No

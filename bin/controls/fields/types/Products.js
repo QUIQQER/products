@@ -1,13 +1,11 @@
 /**
- * @module package/quiqqer/products/bin/controls/fields/types/Price
+ * @module package/quiqqer/products/bin/controls/fields/types/Products
  * @author www.pcsg.de (Henning Leutz)
  *
  * @require qui/QUI
  * @require qui/controls/Control
- *
- * new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(1000)
  */
-define('package/quiqqer/products/bin/controls/fields/types/Price', [
+define('package/quiqqer/products/bin/controls/fields/types/Products', [
 
     'qui/QUI',
     'qui/controls/Control'
@@ -17,7 +15,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
 
     return new Class({
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/Price',
+        Type   : 'package/quiqqer/products/bin/controls/fields/types/Products',
 
         Binds: [
             '$onImport'
@@ -25,6 +23,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
 
         initialize: function (options) {
             this.parent(options);
+
+            this.$Input = null;
 
             this.addEvents({
                 onImport: this.$onImport
@@ -38,8 +38,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
             var Elm = this.getElm();
 
             Elm.addClass('field-container-field');
-            Elm.type        = 'text';
-            Elm.placeholder = '1.000,00';
+            Elm.type = 'text';
         }
     });
 });

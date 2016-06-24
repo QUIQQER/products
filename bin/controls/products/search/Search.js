@@ -203,11 +203,6 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
             }
 
             return this.showSearch();
-            //
-            // return Promise.all([
-            //     this.$Result.resize(),
-            //     this.$Form.resize()
-            // ]);
         },
 
         /**

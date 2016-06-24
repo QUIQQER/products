@@ -117,7 +117,7 @@ class BackendSearch extends Search
 
                 $whereFreeText[]              = '`' . $columnName . '` LIKE :freetext' . $fieldId;
                 $binds['freetext' . $fieldId] = array(
-                    'value' => $value,
+                    'value' => '%' . $value . '%',
                     'type'  => \PDO::PARAM_STR
                 );
             }
@@ -128,12 +128,14 @@ class BackendSearch extends Search
         }
 
         // retrieve query data for fields
-        try {
-            $queryData = $this->getFieldQueryData($searchParams['fields']);
-            $where     = array_merge($where, $queryData['where']);
-            $binds     = array_merge($binds, $queryData['binds']);
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addError($Exception->getMessage());
+        if (isset($searchParams['fields'])) {
+            try {
+                $queryData = $this->getFieldQueryData($searchParams['fields']);
+                $where     = array_merge($where, $queryData['where']);
+                $binds     = array_merge($binds, $queryData['binds']);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addError($Exception->getMessage());
+            }
         }
 
         // build WHERE query string
