@@ -118,9 +118,8 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        // @TODO diese beiden Werte aus Settings nehmen
-        $decimalSeperator   = '.';
-        $thousandsSeperator = ',';
+        $decimalSeperator   = QUI::getLocale()->getDecimalSeperator();//'.';
+        $thousandsSeperator = QUI::getLocale()->getGroupingSeperator();//',';
 
         if (is_float($value)) {
             return round($value, 8);

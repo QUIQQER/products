@@ -35,11 +35,22 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
          * event : on import
          */
         $onImport: function () {
-            var Elm = this.getElm();
+            var Elm   = this.getElm(),
+                price = Elm.value;
 
             Elm.addClass('field-container-field');
             Elm.type        = 'text';
             Elm.placeholder = '1.000,00';
+
+            // @todo settings vom system auslesen
+            // admin format
+            var NumberFormatter = Intl.NumberFormat('de-DE', {
+                //style                : 'currency',
+                //currency             : 'EUR',
+                minimumFractionDigits: 8
+            });
+
+            Elm.value = NumberFormatter.format(price);
         }
     });
 });
