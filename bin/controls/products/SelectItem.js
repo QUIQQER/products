@@ -48,7 +48,7 @@ define('package/quiqqer/products/bin/controls/products/SelectItem', [
 
             Elm.set({
                 'class': 'quiqqer-products-selectItem smooth',
-                html   : '<span class="quiqqer-products-selectItem-icon fa fa-percent"></span>' +
+                html   : '<span class="quiqqer-products-selectItem-icon fa fa-shopping-bag"></span>' +
                          '<span class="quiqqer-products-selectItem-text">&nbsp;</span>' +
                          '<span class="quiqqer-products-selectItem-destroy fa fa-remove"></span>'
             });
@@ -79,7 +79,7 @@ define('package/quiqqer/products/bin/controls/products/SelectItem', [
             ).then(function (data) {
                 self.$Text.set('html', data.title);
             }).catch(function () {
-                self.$Icon.removeClass('fa-percent');
+                self.$Icon.removeClass('fa-shopping-bag');
                 self.$Icon.addClass('fa-bolt');
                 self.$Text.set('html', '...');
             });

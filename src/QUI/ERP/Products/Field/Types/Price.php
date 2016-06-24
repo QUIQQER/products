@@ -93,6 +93,8 @@ class Price extends QUI\ERP\Products\Field\Field
             return;
         }
 
+        $value = $this->cleanup($value);
+
         if (!is_numeric($value)) {
             throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
