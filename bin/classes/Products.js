@@ -124,7 +124,13 @@ define('package/quiqqer/products/bin/classes/Products', [
             params = params || {};
 
             return new Promise(function (resolve, reject) {
-
+                Ajax.get('package_quiqqer_products_ajax_search_backend_executeForGrid', function (result) {
+                    resolve(result.data);
+                }, {
+                    'package'   : 'quiqqer/products',
+                    searchParams: JSON.encode(params),
+                    onError     : reject
+                });
             });
         },
 

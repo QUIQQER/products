@@ -15,6 +15,7 @@
  */
 define('package/quiqqer/products/bin/controls/products/Select', [
 
+    'qui/QUI',
     'qui/controls/Control',
     'qui/controls/buttons/Button',
     'package/quiqqer/products/bin/controls/products/SelectItem',
@@ -24,7 +25,7 @@ define('package/quiqqer/products/bin/controls/products/Select', [
 
     'css!package/quiqqer/products/bin/controls/products/Select.css'
 
-], function (QUIControl, QUIButton, ProductItem, Handler, Ajax, Locale) {
+], function (QUI, QUIControl, QUIButton, ProductItem, Handler, Ajax, Locale) {
     "use strict";
 
     var lg       = 'quiqqer/products';
@@ -48,6 +49,7 @@ define('package/quiqqer/products/bin/controls/products/Select', [
             'fireSearch',
             'update',
 
+            '$calcDropDownPosition',
             '$onProductDestroy',
             '$onInputFocus',
             '$onImport'
@@ -130,6 +132,11 @@ define('package/quiqqer/products/bin/controls/products/Select', [
                 'class': 'qui-quiqqer-products-list'
             }).inject(this.$Elm);
 
+            this.$Icon = new Element('span', {
+                'class': 'qui-quiqqer-products-list-search-loader',
+                html   : '<span class="fa fa-shopping-bag"></span>'
+            }).inject(this.$Elm);
+
             this.$Search = new Element('input', {
                 'class'    : 'qui-quiqqer-products-list-search',
                 placeholder: Locale.get(lg, 'control.select.search.placeholder'),
@@ -190,7 +197,6 @@ define('package/quiqqer/products/bin/controls/products/Select', [
                 'class': 'qui-quiqqer-products-list-dropdown',
                 styles : {
                     display: 'none',
-                    top    : this.$Search.getPosition().y + this.$Search.getSize().y,
                     left   : this.$Search.getPosition().x
                 }
             }).inject(document.body);
@@ -252,12 +258,13 @@ define('package/quiqqer/products/bin/controls/products/Select', [
 
             this.cancelSearch();
 
+            this.$Icon.set('html', '<span class="fa fa-spinner fa-spin"></span>');
+
             this.$DropDown.set({
-                html  : '<span class="fa fa-spinner fa-spin"></span>',
                 styles: {
                     display: '',
-                    top    : this.$Search.getPosition().y + this.$Search.getSize().y,
-                    left   : this.$Search.getPosition().x
+                    left   : this.getElm().getPosition().x + 2,
+                    width  : this.getElm().getSize().x - 4
                 }
             });
 
@@ -282,6 +289,8 @@ define('package/quiqqer/products/bin/controls/products/Select', [
          */
         close: function () {
             this.cancelSearch();
+
+            this.$Icon.set('html', '<span class="fa fa-shopping-bag"></span>');
             this.$DropDown.setStyle('display', 'none');
             this.$Search.value = '';
         },
@@ -301,33 +310,24 @@ define('package/quiqqer/products/bin/controls/products/Select', [
          * @method package/quiqqer/products/bin/controls/products/Select#search
          */
         search: function () {
-
             var value = this.$Search.value;
 
-            // Discounts.search({
-            //     order: 'ASC',
-            //     limit: 5
-            // }).then(function (result) {
-            //     console.log(result);
-            // });
-
-            return;
-
-            Ajax.get('ajax_usersgroups_search', function (result, Request) {
-                var i, len, nam, type, Entry,
+            Products.search({
+                freetext: value
+            }).then(function (result) {
+                var i, len, nam, Entry,
                     func_mousedown, func_mouseover,
 
-                    data     = result.data,
-                    value    = Request.getAttribute('value'),
-                    Elm      = Request.getAttribute('Elm'),
-                    DropDown = Elm.$DropDown;
-
+                    data     = result,
+                    DropDown = this.$DropDown;
 
                 DropDown.set('html', '');
 
+                this.$Icon.set('html', '<span class="fa fa-shopping-bag"></span>');
+
                 if (!data.length) {
                     new Element('div', {
-                        html  : Locale.get('quiqqer/system', 'usersAndGroups.no.results'),
+                        html  : Locale.get('quiqqer/system', 'no.results'),
                         styles: {
                             'float': 'left',
                             'clear': 'both',
@@ -336,37 +336,35 @@ define('package/quiqqer/products/bin/controls/products/Select', [
                         }
                     }).inject(DropDown);
 
+                    this.$calcDropDownPosition();
                     return;
                 }
 
                 // events
                 func_mousedown = function (event) {
-                    var Elm = event.target;
+                    var Target = event.target;
 
-                    if (!Elm.hasClass('qui-discount-list-dropdown-entry')) {
-                        Elm = Elm.getParent('.qui-discount-list-dropdown-entry');
+                    if (!Target.hasClass('qui-quiqqer-products-list-dropdown-entry')) {
+                        Target = Target.getParent('.qui-quiqqer-products-list-dropdown-entry');
                     }
 
-                    this.add(
-                        Elm.get('data-id'),
-                        Elm.get('data-type')
-                    );
+                    this.addProduct(Target.get('data-id'));
 
-                }.bind(Elm);
+                }.bind(this);
 
                 func_mouseover = function () {
                     this.getParent().getElements(
-                        '.qui-discount-list-dropdown-entry-hover'
+                        '.qui-quiqqer-products-list-dropdown-entry-hover'
                     ).removeClass(
-                        'qui-discount-list-dropdown-entry-hover'
+                        'qui-quiqqer-products-list-dropdown-entry-hover'
                     );
 
-                    this.addClass('qui-discount-list-dropdown-entry-hover');
+                    this.addClass('qui-quiqqer-products-list-dropdown-entry-hover');
                 };
 
                 // create
                 for (i = 0, len = data.length; i < len; i++) {
-                    nam = data[i].username || data[i].name;
+                    nam = data[i].title;
 
                     if (value) {
                         nam = nam.toString().replace(
@@ -375,55 +373,28 @@ define('package/quiqqer/products/bin/controls/products/Select', [
                         );
                     }
 
-
-                    type = 'group';
-
-                    if (data[i].username) {
-                        type = 'user';
-                    }
-
                     Entry = new Element('div', {
-                        html       : '<span>' + nam + ' (' + data[i].id + ')</span>',
-                        'class'    : 'box-sizing qui-discount-list-dropdown-entry',
-                        'data-id'  : data[i].id,
-                        'data-name': data[i].username || data[i].name,
-                        'data-type': type,
-                        events     : {
+                        html     : '<span>' + nam + ' (' + data[i].id + ')</span>',
+                        'class'  : 'qui-quiqqer-products-list-dropdown-entry',
+                        'data-id': data[i].id,
+                        events   : {
                             mousedown : func_mousedown,
                             mouseenter: func_mouseover
                         }
                     }).inject(DropDown);
 
-                    if (type == 'group') {
-                        new Element('span', {
-                            'class': 'fa fa-group',
-                            styles : {
-                                marginRight: 5
-                            }
-                        }).inject(Entry, 'top');
-                    } else {
-                        new Element('span', {
-                            'class': 'fa fa-user',
-                            styles : {
-                                marginRight: 5
-                            }
-                        }).inject(Entry, 'top');
-                    }
 
+                    new Element('span', {
+                        'class': 'fa fa-shopping-bag',
+                        styles : {
+                            marginRight: 5
+                        }
+                    }).inject(Entry, 'top');
                 }
-            }, {
-                Elm   : this,
-                value : this.$Search.value,
-                params: JSON.encode({
-                    order         : 'ASC',
-                    limit         : 5,
-                    page          : 1,
-                    search        : true,
-                    searchSettings: {
-                        userSearchString: this.$Search.value
-                    }
-                })
-            });
+
+                this.$calcDropDownPosition();
+
+            }.bind(this));
         },
 
         /**
@@ -542,7 +513,7 @@ define('package/quiqqer/products/bin/controls/products/Select', [
             );
 
             if (Active) {
-                this.addProducts(Active.get('data-id'));
+                this.addProduct(Active.get('data-id'));
             }
 
             this.$Input.value = '';
@@ -602,6 +573,18 @@ define('package/quiqqer/products/bin/controls/products/Select', [
             }
 
             this.focus();
+        },
+
+        /**
+         * Calculate the dropdown position
+         */
+        $calcDropDownPosition: function () {
+            var size      = this.$DropDown.getSize();
+            var searchPos = this.$Search.getPosition();
+
+            this.$DropDown.setStyles({
+                top: searchPos.y - size.y
+            });
         }
     });
 });

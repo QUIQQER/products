@@ -26,7 +26,18 @@
     clear: both;
     float: left;
     height: 30px;
+    padding-left: 30px;
     width: calc(100% - 50px);
+}
+
+.qui-quiqqer-products-list-search-loader {
+    bottom: 2px;
+    height: 30px;
+    left: 2px;
+    line-height: 30px;
+    position: absolute;
+    text-align: center;
+    width: 30px;
 }
 
 .field-container-field > .qui-quiqqer-products-select {
@@ -49,6 +60,8 @@
 .qui-quiqqer-products-list-dropdown {
     background: #fff;
     border: 1px solid #dedede;
+    max-height: 300px;
+    overflow: auto;
     padding: 5px;
     position: absolute;
     width: 200px;
