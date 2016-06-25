@@ -35,7 +35,7 @@
 
     {if !$count && $this->getAttribute('hideEmptyProductList') && count($children)}
     {else}
-    <div class="quiqqer-products-productList-products">
+    <div class="quiqqer-products-productList-products-container">
         {if $count}
             {foreach from=$rows item=row}
                 {$row.html}
@@ -48,9 +48,9 @@
     </div>
 
     <div class="quiqqer-products-productList-products-more" {if $more}style="opacity: 0" {/if}>
-    <div class="button disabled">
-        {locale group="quiqqer/products" var="category.control.productlist.button.more"}
-    </div>
+        <div class="button disabled">
+            {locale group="quiqqer/products" var="category.control.productlist.button.more"}
+        </div>
     </div>
     {/if}
 </section>

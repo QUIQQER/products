@@ -43,20 +43,11 @@
 /** Produkte
  ================================================= */
 
-.quiqqer-products-productList-products {
+.quiqqer-products-productList-products-container {
     float: left;
+    overflow: hidden;
     width: 100%;
 }
-
-/*.quiqqer-products-productList-products-header h2 {*/
-/*background: rgba(0, 0, 0, 0.1);*/
-/*border-radius: 3px 3px 0 0;*/
-/*float: left;*/
-/*font-weight: normal;*/
-/*font-size: 14px;*/
-/*margin: 0;*/
-/*padding: 0 20px;*/
-/*}*/
 
 .quiqqer-products-productList-products-more {
     clear: both;

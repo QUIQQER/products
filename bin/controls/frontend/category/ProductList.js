@@ -92,9 +92,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 Elm  = this.getElm();
 
             this.$ButtonDetails = Elm.getElements('.quiqqer-products-productList-sort-display-details');
-            this.$ButtonGallery  = Elm.getElements('.quiqqer-products-productList-sort-display-gallery');
+            this.$ButtonGallery = Elm.getElements('.quiqqer-products-productList-sort-display-gallery');
             this.$ButtonList    = Elm.getElements('.quiqqer-products-productList-sort-display-list');
-            this.$Container     = Elm.getElement('.quiqqer-products-productList-products');
+            this.$Container     = Elm.getElement('.quiqqer-products-productList-products-container');
 
             this.$BarSort      = Elm.getElement('.quiqqer-products-productList-sort-sorting');
             this.$BarDisplays  = Elm.getElement('.quiqqer-products-productList-sort-display');
@@ -105,8 +105,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
 
-            this.$More   = Elm.getElements('.quiqqer-products-productList-products-more .button');
-            this.$MoreFX = moofx(this.$More);
+            this.$More = Elm.getElement('.quiqqer-products-productList-products-more .button');
 
             this.setAttribute('categoryId', this.getElm().get('data-cid').toInt());
             this.setAttribute('project', this.getElm().get('data-project'));
@@ -160,6 +159,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$parseElements(Elm);
 
             if (this.$More) {
+                this.$MoreFX = moofx(this.$More.getParent());
+
                 this.$More.addEvent('click', function () {
                     if (!this.$More.hasClass('disabled')) {
                         this.next();
@@ -167,6 +168,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }.bind(this));
 
                 this.$More.removeClass('disabled');
+                this.$showMoreButton();
             }
 
             // bind to the search
@@ -215,44 +217,37 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             });
 
             return new Promise(function (resolve) {
-                self.$MoreFX.animate({
-                    color: 'transparent'
-                }, {
-                    duration: 250,
-                    callback: function () {
-                        var oldButtonText = self.$More.get('text');
+                var oldButtonText = self.$More.get('text');
 
-                        if (self.$More) {
-                            self.$More.set('html', '<span class="fa fa-spinner fa-spin"></span>');
-                            self.$More.setStyle('color', null);
-                            self.$More.addClass('loading');
-                        }
+                if (self.$More) {
+                    self.$More.set('html', '<span class="fa fa-spinner fa-spin"></span>');
+                    self.$More.setStyle('color', null);
+                    self.$More.addClass('loading');
+                }
 
-                        self.$loadData(nextRow).then(function (data) {
-                            if (self.$More) {
-                                self.$More.set({
-                                    html  : oldButtonText,
-                                    styles: {
-                                        width: null
-                                    }
-                                });
+                self.$loadData(nextRow).then(function (data) {
+                    if (self.$More) {
+                        self.$More.set({
+                            html  : oldButtonText,
+                            styles: {
+                                width: null
                             }
-
-                            if ("more" in data && data.more === false) {
-                                self.$hideMoreButton();
-                            } else {
-                                self.$showMoreButton();
-                            }
-
-                            if (self.$More) {
-                                self.$More.removeClass('loading');
-                            }
-
-                        }).then(function () {
-                            return self.$scrollToLastRow();
-                        }).then(resolve);
+                        });
                     }
-                });
+
+                    if ("more" in data && data.more === false) {
+                        self.$hideMoreButton();
+                    } else {
+                        self.$showMoreButton();
+                    }
+
+                    if (self.$More) {
+                        self.$More.removeClass('loading');
+                    }
+
+                }).then(function () {
+                    return self.$scrollToLastRow();
+                }).then(resolve);
             });
         },
 
@@ -503,7 +498,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     height : rowSize < size.y ? rowSize : size.y,
                     opacity: 1
                 }, {
-                    duration: 500,
+                    duration: 250,
                     callback: function () {
                         resolve();
                     }
