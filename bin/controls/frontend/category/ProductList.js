@@ -38,7 +38,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             'showAllCategories',
             '$hideMoreButton',
             '$showMoreButton',
-            '$scrollToLastRow',
+            'scrollToLastRow',
             '$onInject'
         ],
 
@@ -245,8 +245,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         self.$More.removeClass('loading');
                     }
 
-                }).then(function () {
-                    return self.$scrollToLastRow();
                 }).then(resolve);
             });
         },
@@ -511,7 +509,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * Scroll to the last row
          * @returns {Promise}
          */
-        $scrollToLastRow: function () {
+        scrollToLastRow: function () {
             var Row = this.$Container.getElement('[data-row]:last-child');
 
             return new Promise(function (resolve) {
