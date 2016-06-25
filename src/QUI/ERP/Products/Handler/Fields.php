@@ -18,6 +18,9 @@ use QUI;
  */
 class Fields
 {
+    /**
+     * Fields
+     */
     const FIELD_PRICE = 1;
     const FIELD_TAX = 2;
     const FIELD_PRODUCT_NO = 3;
@@ -30,6 +33,8 @@ class Fields
     const FIELD_FOLDER = 10; // Main media folder
     const FIELD_STOCK = 12;
     const FIELD_KEYWORDS = 13;
+    const FIELD_EQUIPMENT = 14;
+    const FIELD_SIMILAR_PRODUCTS = 15;
 
     /**
      * Types
@@ -49,6 +54,7 @@ class Fields
     const TYPE_TEXTAREA_MULTI_LANG = 'TextareaMultiLang';
     const TYPE_URL = 'Url';
     const TYPE_VAT = 'Vat';
+    const TYPE_PRODCUCTS = 'Products';
 
     /**
      * product array changed types

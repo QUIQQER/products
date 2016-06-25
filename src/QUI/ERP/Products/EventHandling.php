@@ -215,7 +215,7 @@ class EventHandling
                     'en' => 'Product image'
                 )
             ),
-            // Produkt mediaordner
+            // Produkt Mediaordner
             array(
                 'id'            => Fields::FIELD_FOLDER,
                 'type'          => 'Folder',
@@ -261,6 +261,38 @@ class EventHandling
                 'titles'        => array(
                     'de' => 'Suchbegriffe',
                     'en' => 'Search keywords'
+                )
+            ),
+            // Produkt Zubehör
+            array(
+                'id'            => Fields::FIELD_EQUIPMENT,
+                'type'          => 'Products',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 11,
+                'systemField'   => 0,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'search_type'   => '',
+                'titles'        => array(
+                    'de' => 'Zubehör',
+                    'en' => 'Equipment'
+                )
+            ),
+            // Produkt Ähnliche Produkte
+            array(
+                'id'            => Fields::FIELD_SIMILAR_PRODUCTS,
+                'type'          => 'Products',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 12,
+                'systemField'   => 0,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'search_type'   => '',
+                'titles'        => array(
+                    'de' => 'Ähnliche Produkte',
+                    'en' => 'Similar Products'
                 )
             )
         );
