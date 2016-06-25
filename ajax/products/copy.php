@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * This file contains package_quiqqer_products_ajax_products_copy
+ */
+
+use QUI\ERP\Products\Handler\Products;
+
+/**
+ * Create a new product
+ *
+ * @param string|integer $productId - Product ID
+ * @return integer - new product id
+ */
+QUI::$Ajax->registerFunction(
+    'package_quiqqer_products_ajax_products_copy',
+    function ($productId) {
+        return Products::copyProduct($productId)->getId();
+    },
+    array('productId'),
+    'Permission::checkAdminUser'
+);

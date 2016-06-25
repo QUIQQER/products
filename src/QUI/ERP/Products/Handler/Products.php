@@ -289,7 +289,7 @@ class Products
      * @param integer $productId
      * @return QUI\ERP\Products\Product\Product
      */
-    public function copyProduct($productId)
+    public static function copyProduct($productId)
     {
         $Product = self::getProduct($productId);
 

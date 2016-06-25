@@ -1058,6 +1058,19 @@
                 ]]></en>
         </locale>
 
+        <locale name="products.window.copy.title">
+            <de><![CDATA[Produkt kopieren]]></de>
+            <en><![CDATA[Copy the product]]></en>
+        </locale>
+        <locale name="products.window.copy.information">
+            <de><![CDATA[Möchten Sie das Produkt [id] [title] wirklich kopieren?]]></de>
+            <en><![CDATA[Do you realy want to copy the product [id] [title]?]]></en>
+        </locale>
+        <locale name="products.window.copy.text">
+            <de><![CDATA[Produkt [id] [title] kopieren]]></de>
+            <en><![CDATA[Copy the product: [id] [title]]]></en>
+        </locale>
+
         <locale name="products.category.no.parent">
             <de><![CDATA[Die Kategorie besitzt keine übergeordnete Kategorie]]></de>
             <en><![CDATA[The category has no parent category]]></en>

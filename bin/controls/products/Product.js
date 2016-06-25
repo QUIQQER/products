@@ -63,6 +63,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         Binds: [
             'refresh',
             'update',
+            'copy',
             'switchStatus',
             'openData',
             'openImages',
@@ -163,6 +164,18 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 text     : QUILocale.get('quiqqer/system', 'activate'),
                 events   : {
                     onClick: this.switchStatus
+                }
+            });
+
+            this.addButton({
+                name  : 'copy',
+                icon  : 'fa fa-copy',
+                title : QUILocale.get('quiqqer/system', 'copy'),
+                events: {
+                    onClick: this.copy
+                },
+                styles: {
+                    'float': 'right'
                 }
             });
         },
@@ -740,16 +753,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          */
         loadData: function () {
             return this.$Product.refresh().then(function () {
-                return this.$Product.getFieldValue(4); // title
+                return this.$Product.getTitle();
 
-            }.bind(this)).then(function (field) {
-
-                var title   = '',
-                    current = QUILocale.getCurrent();
-
-                if (current in field) {
-                    title = field[current];
-                }
+            }.bind(this)).then(function (title) {
 
                 this.setAttributes({
                     title: QUILocale.get(lg, 'products.product.panel.title', {
@@ -1355,6 +1361,69 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     reject(err);
                 });
             });
+        },
+
+        /**
+         * Copy the product
+         *
+         * @returns {Promise}
+         */
+        copy: function () {
+            return new Promise(function (resolve, reject) {
+                this.$Product.getTitle().then(function (title) {
+                    new QUIConfirm({
+                        icon       : 'fa fa-copy',
+                        title      : QUILocale.get(lg, 'products.window.copy.title', {
+                            id   : this.$Product.getId(),
+                            title: title
+                        }),
+                        text       : QUILocale.get(lg, 'products.window.copy.text', {
+                            id   : this.$Product.getId(),
+                            title: title
+                        }),
+                        texticon   : false,
+                        information: QUILocale.get(lg, 'products.window.copy.information', {
+                            id   : this.$Product.getId(),
+                            title: title
+                        }),
+                        autoclose  : false,
+                        maxHeight  : 300,
+                        maxWidth   : 450,
+
+                        ok_button: {
+                            text     : QUILocale.get('quiqqer/system', 'copy'),
+                            textimage: 'fa fa-copy'
+                        },
+
+                        events: {
+                            onSubmit: function (Win) {
+                                Win.Loader.show();
+
+                                Products.copy(this.$Product.getId())
+                                    .then(function (newProductId) {
+
+                                        require([
+                                            'package/quiqqer/products/bin/controls/products/Product'
+                                        ], function (ProductPanel) {
+
+                                            new ProductPanel({
+                                                productId: newProductId
+                                            }).inject(this.getParent());
+
+                                            Win.close();
+
+                                        }.bind(this));
+
+                                    }.bind(this)).catch(reject);
+
+                            }.bind(this),
+
+                            onClose: resolve
+                        }
+                    }).open();
+
+                }.bind(this));
+            }.bind(this));
         },
 
         /**

@@ -11,9 +11,10 @@ define('package/quiqqer/products/bin/classes/Product', [
 
     'qui/QUI',
     'qui/classes/DOM',
-    'Ajax'
+    'Ajax',
+    'Locale'
 
-], function (QUI, QUIDOM, Ajax) {
+], function (QUI, QUIDOM, Ajax, QUILocale) {
     "use strict";
 
     return new Class({
@@ -156,6 +157,36 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         getId: function () {
             return this.getAttribute('id');
+        },
+
+
+        /**
+         * Return the product title
+         *
+         * @param {Object} [Locale] - optional, QUI Locale object
+         * @returns {Promise}
+         */
+        getTitle: function (Locale) {
+            Locale = Locale || QUILocale;
+
+            return this.getFieldValue(4).then(function (field) {
+                if (typeOf(field) == 'string') {
+                    try {
+                        field = JSON.decode(field);
+                    } catch (e) {
+                        field = {};
+                    }
+                }
+
+                var title   = '',
+                    current = Locale.getCurrent();
+
+                if (current in field) {
+                    title = field[current];
+                }
+
+                return title;
+            });
         },
 
         /**

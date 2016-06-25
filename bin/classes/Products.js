@@ -66,6 +66,22 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Copy a product
+         *
+         * @param {Number} productId - Product ID
+         * @returns {Promise}
+         */
+        copy: function (productId) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_copy', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: productId,
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
          * Calculate the product price
          *
          * @param {Number} productId - Product ID
