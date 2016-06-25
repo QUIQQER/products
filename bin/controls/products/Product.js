@@ -39,6 +39,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'package/quiqqer/products/bin/classes/Product',
     'package/quiqqer/products/bin/Categories',
     'package/quiqqer/products/bin/Fields',
+    'package/quiqqer/products/bin/utils/Fields',
     'package/quiqqer/products/bin/controls/fields/search/Window',
     'package/quiqqer/products/bin/controls/categories/Select',
     'package/quiqqer/products/bin/controls/fields/FieldTypeSelect',
@@ -49,7 +50,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
 ], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIConfirm, QUIFormUtils, QUILocale,
              Grid, FolderViewer, Mustache, Packages,
-             Products, Product, Categories, Fields, FieldWindow,
+             Products, Product, Categories, Fields, FieldUtils, FieldWindow,
              CategorySelect, FieldTypeSelect, templateProductData, templateField) {
     "use strict";
 
@@ -436,9 +437,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         fieldList[complete[i].id] = complete[i];
                     }
 
-                    self.$createCategories(fieldList.clean());
-
-
                     var diffFields = complete.filter(function (value) {
                         for (var i = 0, len = systemFields.length; i < len; i++) {
                             if (value.id === systemFields[i].id) {
@@ -448,6 +446,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         return true;
                     });
 
+                    fieldList    = FieldUtils.sortFields(fieldList);
+                    diffFields   = FieldUtils.sortFields(diffFields);
+                    systemFields = FieldUtils.sortFields(systemFields);
+
+                    self.$createCategories(fieldList);
 
                     // systemfields
                     for (i = 0, len = systemFields.length; i < len; i++) {

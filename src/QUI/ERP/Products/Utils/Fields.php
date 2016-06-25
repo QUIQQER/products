@@ -9,6 +9,7 @@ use QUI;
 
 /**
  * Class Fields
+ *
  * @package QUI\ERP\Products
  */
 class Fields
@@ -68,8 +69,50 @@ class Fields
      */
     public static function validateField(QUI\ERP\Products\Interfaces\Field $Field)
     {
-        $Field->validate(
-            $Field->getValue()
-        );
+        $Field->validate($Field->getValue());
+    }
+
+    /**
+     * Sort the fields by priority
+     *
+     * @param array $fields
+     * @return array
+     */
+    public static function sortFields($fields)
+    {
+        usort($fields, function ($Field1, $Field2) {
+            if (!self::isField($Field1)) {
+                return 1;
+            }
+
+            if (!self::isField($Field2)) {
+                return -1;
+            }
+
+            /* @var $Field1 QUI\ERP\Products\Field\Field */
+            /* @var $Field2 QUI\ERP\Products\Field\Field */
+            $priority1 = (int)$Field1->getAttribute('priority');
+            $priority2 = (int)$Field2->getAttribute('priority');
+
+            if ($priority1 === 0) {
+                return 1;
+            }
+
+            if ($priority2 === 0) {
+                return -1;
+            }
+
+            if ($priority1 < $priority2) {
+                return -1;
+            }
+
+            if ($priority1 > $priority2) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        return $fields;
     }
 }

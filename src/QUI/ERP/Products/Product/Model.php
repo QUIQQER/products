@@ -993,7 +993,7 @@ class Model extends QUI\QDOM
             }
         }
 
-        return $result;
+        return QUI\ERP\Products\Utils\Fields::sortFields($result);
     }
 
     /**

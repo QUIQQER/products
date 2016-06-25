@@ -1,6 +1,6 @@
 /**
- * Fields handler
- * Create and edit fields
+ * Calc utils
+ * Helper for calculations
  *
  * @module package/quiqqer/products/bin/utils/Calc
  * @author www.pcsg.de (Henning Leutz)

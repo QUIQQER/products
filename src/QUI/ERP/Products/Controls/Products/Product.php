@@ -147,8 +147,8 @@ class Product extends QUI\Control
         $Engine->assign(array(
             'Product'              => $View,
             'Gallery'              => $Gallery,
-            'fields'               => $fields,
-            'details'              => $details,
+            'fields'               => QUI\ERP\Products\Utils\Fields::sortFields($fields),
+            'details'              => QUI\ERP\Products\Utils\Fields::sortFields($details),
             'mediaFolders'         => $mediaFolders,
             'productAttributeList' => $View->getFieldsByType('ProductAttributeList'),
             'PriceDisplay'         => $PriceDisplay,
