@@ -10,9 +10,10 @@
 define('package/quiqqer/products/bin/controls/fields/types/Price', [
 
     'qui/QUI',
-    'qui/controls/Control'
+    'qui/controls/Control',
+    'Locale'
 
-], function (QUI, QUIControl) {
+], function (QUI, QUIControl, QUILocale) {
     "use strict";
 
     return new Class({
@@ -38,19 +39,17 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
             var Elm   = this.getElm(),
                 price = Elm.value;
 
-            Elm.addClass('field-container-field');
-            Elm.type        = 'text';
-            Elm.placeholder = '1.000,00';
-
-            // @todo settings vom system auslesen
             // admin format
-            var NumberFormatter = Intl.NumberFormat('de-DE', {
+            var NumberFormatter = QUILocale.getNumberFormatter({
                 //style                : 'currency',
                 //currency             : 'EUR',
                 minimumFractionDigits: 8
             });
 
-            Elm.value = NumberFormatter.format(price);
+            Elm.addClass('field-container-field');
+            Elm.type        = 'text';
+            Elm.placeholder = NumberFormatter.format(1000);
+            Elm.value       = NumberFormatter.format(price);
         }
     });
 });
