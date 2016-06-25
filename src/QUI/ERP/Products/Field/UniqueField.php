@@ -92,7 +92,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
      *
      * @var boolean
      */
-    protected $public = false;
+    protected $isPublic = false;
 
     /**
      * Field from the system, like price
@@ -158,7 +158,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
         );
 
         if (!isset($params['isPublic'])) {
-            $this->public = true;
+            $this->isPublic = true;
         }
 
         foreach ($attributes as $attribute) {
@@ -380,6 +380,6 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
      */
     public function isPublic()
     {
-        return $this->public;
+        return $this->isPublic;
     }
 }

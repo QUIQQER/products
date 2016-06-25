@@ -1035,15 +1035,21 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function hasViewPermission($User = null)
     {
+        if ($this->isPublic()) {
+            return true;
+        }
+
         try {
-            QUI\Rights\Permission::checkPermission(
+            QUI\Permissions\Permission::checkPermission(
                 "permission.products.fields.field{$this->getId()}.view",
                 $User
             );
+
+            return true;
+
         } catch (QUI\Exception $Exception) {
-            return false;
         }
 
-        return true;
+        return false;
     }
 }

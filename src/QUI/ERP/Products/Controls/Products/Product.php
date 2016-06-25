@@ -120,7 +120,7 @@ class Product extends QUI\Control
                 return false;
             }
 
-            return true;
+            return $Field->hasViewPermission();
         });
 
 

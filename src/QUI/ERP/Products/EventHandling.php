@@ -64,6 +64,7 @@ class EventHandling
                 'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 1,
+                'publicField'   => 1,
                 'search_type'   => Search::SEARCHTYPE_INPUTSELECTRANGE,
                 'titles'        => array(
                     'de' => 'Preis',
@@ -79,6 +80,7 @@ class EventHandling
                 'priority'      => 6,
                 'systemField'   => 1,
                 'standardField' => 1,
+                'publicField'   => 0,
                 'requiredField' => 0,
                 'search_type'   => '',
                 'titles'        => array(
@@ -96,6 +98,7 @@ class EventHandling
                 'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'publicField'   => 1,
                 'search_type'   => Search::SEARCHTYPE_TEXT,
                 'titles'        => array(
                     'de' => 'Art. Nr.',
@@ -112,6 +115,7 @@ class EventHandling
                 'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 1,
+                'publicField'   => 1,
                 'search_type'   => Search::SEARCHTYPE_TEXT,
                 'options'       => array(
                     'maxLength' => 255,
@@ -132,6 +136,7 @@ class EventHandling
                 'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'publicField'   => 1,
                 'search_type'   => Search::SEARCHTYPE_TEXT,
                 'options'       => array(
                     'maxLength' => 255,
@@ -152,6 +157,7 @@ class EventHandling
                 'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'publicField'   => 1,
                 'search_type'   => Search::SEARCHTYPE_TEXT,
                 'options'       => array(
                     'html' => 1
@@ -171,6 +177,7 @@ class EventHandling
                 'systemField'   => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'publicField'   => 1,
                 'search_type'   => Search::SEARCHTYPE_INPUTSELECTSINGLE,
                 'options'       => array(
                     'multipleUsers' => false
@@ -190,6 +197,7 @@ class EventHandling
                 'systemField'   => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'publicField'   => 1,
                 'search_type'   => Search::SEARCHTYPE_INPUTSELECTSINGLE,
                 'options'       => array(
                     'multipleUsers' => false
@@ -209,6 +217,7 @@ class EventHandling
                 'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'publicField'   => 1,
                 'search_type'   => '',
                 'titles'        => array(
                     'de' => 'Produktbild',
@@ -225,6 +234,7 @@ class EventHandling
                 'systemField'   => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'publicField'   => 1,
                 'search_type'   => '',
                 'titles'        => array(
                     'de' => 'Media-Ordner',
@@ -241,6 +251,7 @@ class EventHandling
                 'systemField'   => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'publicField'   => 0,
                 'search_type'   => '',
                 'titles'        => array(
                     'de' => 'Lagerbestand',
@@ -257,6 +268,7 @@ class EventHandling
                 'systemField'   => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'publicField'   => 0,
                 'search_type'   => '',
                 'titles'        => array(
                     'de' => 'Suchbegriffe',
@@ -273,6 +285,7 @@ class EventHandling
                 'systemField'   => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'publicField'   => 1,
                 'search_type'   => '',
                 'titles'        => array(
                     'de' => 'Zubehör',
@@ -289,6 +302,7 @@ class EventHandling
                 'systemField'   => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
+                'publicField'   => 1,
                 'search_type'   => '',
                 'titles'        => array(
                     'de' => 'Ähnliche Produkte',

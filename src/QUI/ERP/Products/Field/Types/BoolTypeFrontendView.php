@@ -24,11 +24,7 @@ class BoolTypeFrontendView extends QUI\ERP\Products\Field\View
      */
     public function create()
     {
-        try {
-            QUI\Permissions\Permission::checkPermission(
-                "permission.products.fields.field{$this->getId()}.view"
-            );
-        } catch (QUI\Exception $Exception) {
+        if (!$this->hasViewPermission()) {
             return '';
         }
 
@@ -41,7 +37,9 @@ class BoolTypeFrontendView extends QUI\ERP\Products\Field\View
             $html = '<span class="fa fa-remove"></span>';
         }
 
-        return "<div class=\"quiqqer-product-field-title\">{$title}</div>
-            <div class=\"quiqqer-product-field-value\">{$html}</div>";
+        return "<div class=\"quiqqer-product-field\">
+            <div class=\"quiqqer-product-field-title\">{$title}</div>
+            <div class=\"quiqqer-product-field-value\">{$html}</div>
+        </div>";
     }
 }

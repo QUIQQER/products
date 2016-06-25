@@ -37,11 +37,7 @@ class View extends UniqueField
      */
     public function create()
     {
-        try {
-            QUI\Permissions\Permission::checkPermission(
-                "permission.products.fields.field{$this->getId()}.view"
-            );
-        } catch (QUI\Exception $Exception) {
+        if (!$this->hasViewPermission()) {
             return '';
         }
 
@@ -52,5 +48,31 @@ class View extends UniqueField
             <div class="quiqqer-product-field-title">' . $title . '</div>
             <div class="quiqqer-product-field-value">' . $value . '</div>
         </div>';
+    }
+
+    /**
+     * Has the user view permissions
+     *
+     * @param QUI\Users\User $User
+     * @return bool
+     */
+    public function hasViewPermission($User = null)
+    {
+        if ($this->isPublic()) {
+            return true;
+        }
+
+        try {
+            QUI\Permissions\Permission::checkPermission(
+                "permission.products.fields.field{$this->getId()}.view",
+                $User
+            );
+
+            return true;
+
+        } catch (QUI\Exception $Exception) {
+        }
+
+        return false;
     }
 }

@@ -24,11 +24,7 @@ class UrlFrontendView extends QUI\ERP\Products\Field\View
      */
     public function create()
     {
-        try {
-            QUI\Permissions\Permission::checkPermission(
-                "permission.products.fields.field{$this->getId()}.view"
-            );
-        } catch (QUI\Exception $Exception) {
+        if (!$this->hasViewPermission()) {
             return '';
         }
 
@@ -42,7 +38,9 @@ class UrlFrontendView extends QUI\ERP\Products\Field\View
             $link = '<a href="' . $value . '" target="_blank">' . $value . '</a>';
         }
 
-        return "<div class=\"quiqqer-product-field-title\">{$title}</div>
-            <div class=\"quiqqer-product-field-value\">{$link}</div>";
+        return "<div class=\'quiqqer-product-field\'>
+            <div class=\"quiqqer-product-field-title\">{$title}</div>
+            <div class=\"quiqqer-product-field-value\">{$link}</div>
+        </div>";
     }
 }
