@@ -284,6 +284,28 @@ class Products
     }
 
     /**
+     * Copy a product
+     *
+     * @param integer $productId
+     * @return QUI\ERP\Products\Product\Product
+     */
+    public function copyProduct($productId)
+    {
+        $Product = self::getProduct($productId);
+
+        $New = self::createProduct(
+            $Product->getCategories(),
+            $Product->getFields()
+        );
+
+        $New->setPermissions($Product->getPermissions());
+        $New->setMainCategory($Product->getCategory());
+        $New->save();
+
+        return $New;
+    }
+
+    /**
      * Return a list of products
      * if $queryParams is empty, all fields are returned
      *

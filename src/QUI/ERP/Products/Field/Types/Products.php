@@ -63,20 +63,6 @@ class Products extends QUI\ERP\Products\Field\Field
                 )
             ));
         }
-
-        foreach ($value as $productId) {
-            if (!ProductHandler::existsProduct($productId)) {
-                throw new QUI\ERP\Products\Field\Exception(array(
-                    'quiqqer/products',
-                    'exception.field.invalid',
-                    array(
-                        'fieldId'    => $this->getId(),
-                        'fieldTitle' => $this->getTitle(),
-                        'fieldType'  => $this->getType()
-                    )
-                ));
-            }
-        }
     }
 
     /**

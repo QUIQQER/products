@@ -72,7 +72,9 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductsSettings', [
 
             if (typeOf(value) == 'array') {
                 for (var i = 0, len = value.length; i < len; i++) {
-                    this.$Select.addProduct(value[i]);
+                    if (value[i] !== '') {
+                        this.$Select.addProduct(value[i]);
+                    }
                 }
             }
         },
