@@ -261,6 +261,16 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
+     *
+     */
+    public function getImage()
+    {
+        $image = $this->getFieldValue(Fields::FIELD_IMAGE);
+
+        var_dump($image);
+    }
+
+    /**
      * Return the the wanted field
      *
      * @param int $fieldId

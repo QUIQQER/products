@@ -19,6 +19,7 @@
   "require": {
     "php": ">=5.3",
     "quiqqer/quiqqer": "*@dev",
+    "quiqqer/bricks": "*@dev",
     "quiqqer/discount": "*@dev",
     "quiqqer/currency": "dev-dev",
     "quiqqer/slider": "*@dev",

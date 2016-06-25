@@ -144,4 +144,22 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     {
         return $this->Product->getCategories();
     }
+
+    /**
+     * Return the product image
+     *
+     * @return QUI\Projects\Media\Image
+     */
+    public function getImage()
+    {
+        return $this->Product->getImage();
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->Product->getUrl();
+    }
 }

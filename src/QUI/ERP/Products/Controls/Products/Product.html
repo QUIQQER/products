@@ -1,4 +1,4 @@
-<article class="grid-100 mobile-grid-100 grid-parent">
+<article class="grid-100 mobile-grid-100">
 
     <header class="page-content-header">
         <h1>{$Product->getTitle()}</h1>
@@ -41,7 +41,6 @@
             {$buttonsHtml}
         </div>
     </div>
-
 
     <div class="product-data-more">
         <ul class="product-data-more-tabs" role="tablist">
@@ -86,7 +85,7 @@
                 <table class="product-data-more-details-table">
                     {foreach $details as $Field}
                     {if !empty($Field->getValue()) &&
-                        (is_string($Field->getValue()) || is_numeric($Field->getValue()))
+                    (is_string($Field->getValue()) || is_numeric($Field->getValue()))
                     }
                     <tr>
                         <td>
@@ -147,7 +146,17 @@
             </section>
             {/foreach}
         </div>
-
     </div>
+
+    {if isset($SimilarProducts) && isset($SimilarProductField)}
+    <section class="product-similar-products">
+        <header>
+            <h3>
+                {$SimilarProductField->getTitle()}
+            </h3>
+        </header>
+        {$SimilarProducts->create()}
+    </section>
+    {/if}
 
 </article>

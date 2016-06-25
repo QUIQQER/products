@@ -144,6 +144,22 @@ class Product extends QUI\Control
             }
         }
 
+        // ChildrenSlider
+        $SimilarProductField = $Product->getField(Fields::FIELD_SIMILAR_PRODUCTS);
+
+        if ($SimilarProductField->getValue()) {
+            $SimilarProducts = new ChildrenSlider();
+            $SimilarProducts->addProducts(
+                $Product->getFieldValue(Fields::FIELD_SIMILAR_PRODUCTS)
+            );
+
+            $Engine->assign(array(
+                'SimilarProducts'     => $SimilarProducts,
+                'SimilarProductField' => $SimilarProductField->getView()
+            ));
+        }
+
+
         $Engine->assign(array(
             'Product'              => $View,
             'Gallery'              => $Gallery,

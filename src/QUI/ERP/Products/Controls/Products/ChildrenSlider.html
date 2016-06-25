@@ -1,0 +1,30 @@
+<div class="quiqqer-bricks-children-slider-container">
+    <div class="quiqqer-bricks-children-slider-container-inner">
+        <ul class="quiqqer-bricks-children-slider-container-slide"
+            style="height: {$this->getAttribute('height')}px;"
+        >
+            {strip}
+            {foreach $products as $Product}
+                {assign var=hasImage value=0}
+                {if $Product->getImage()}
+                    {assign var=hasImage value=1}
+                {/if}
+            <li class="quiqqer-bricks-children-slider-child">
+                <article class="quiqqer-bricks-children-slider-child-display">
+                    <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:" html"}">
+                    {if !$hasImage}
+                        <header>
+                            {$Product->getTitle()}
+                        </header>
+                        {$Product->getDescription()}
+                    {else}
+                        {image image=$Product->getImage() height=$this->getAttribute('height')}
+                    {/if}
+                    </a>
+                </article>
+            </li>
+            {/foreach}
+            {/strip}
+        </ul>
+    </div>
+</div>

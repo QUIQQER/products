@@ -78,6 +78,14 @@ interface Product
     public function getFieldsByType($type);
 
     /**
+     * Return the main product image
+     *
+     * @return \QUI\Projects\Media\Image
+     * @throws \QUI\Exception
+     */
+    public function getImage();
+
+    /**
      * Return the price object of the product
      *
      * @return Price
