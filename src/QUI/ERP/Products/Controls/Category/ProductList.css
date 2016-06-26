@@ -70,10 +70,8 @@
 }
 
 @media (max-width: 768px) {
-
     .quiqqer-products-productList-products-more .button {
         max-width: 100%;
         width: 200px;
     }
-
 }

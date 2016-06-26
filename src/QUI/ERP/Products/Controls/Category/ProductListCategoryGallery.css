@@ -81,13 +81,6 @@
     z-index: 1;
 }
 
-/*.quiqqer-products-categoryGallery-catgory img:hover {*/
-/*transform: scale(1.1);*/
-/*-webkit-transform: scale(1.1);*/
-/*transition: all 1s ease;*/
-/*-webkit-transition: all 1s ease;*/
-/*}*/
-
 .quiqqer-products-categoryGallery-catgory-more {
     clear: both;
     display: block;
@@ -127,6 +120,25 @@
     -ms-transition: top 300ms ease;
     -o-transition: top 300ms ease;
     transition: top 300ms ease;
+}
+
+.quiqqer-products-categoryGallery-catgory .fa-sort-down {
+    -webkit-transition: transform 300ms ease;
+    -moz-transition: transform 300ms ease;
+    -ms-transition: transform 300ms ease;
+    -o-transition: transform 300ms ease;
+    transition: transform 300ms ease;
+}
+
+.quiqqer-products-categoryGallery-catgory-short-open .fa-sort-down,
+.quiqqer-products-categoryGallery-catgory:hover .fa-sort-down {
+    transform: rotate(-90deg);
+
+    -webkit-transition: transform 300ms ease;
+    -moz-transition: transform 300ms ease;
+    -ms-transition: transform 300ms ease;
+    -o-transition: transform 300ms ease;
+    transition: transform 300ms ease;
 }
 
 .quiqqer-products-categoryGallery-catgory:hover header {
