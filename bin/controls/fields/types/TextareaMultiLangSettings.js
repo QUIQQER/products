@@ -153,6 +153,11 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLangSett
             }
         },
 
+        /**
+         * Return current value
+         *
+         * @returns {Object}
+         */
         getValue: function () {
             return this.getAttribute('value');
         },

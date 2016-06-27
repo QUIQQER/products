@@ -106,6 +106,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
             $userIds = $value;
         }
 
+        if (empty($userIds)) {
+            return;
+        }
+
         if (count($userIds) > 1 && !$multipleUsers) {
             throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
@@ -117,16 +121,16 @@ class GroupList extends QUI\ERP\Products\Field\Field
             ));
         }
 
-        if (empty($userIds)) {
-            throw new QUI\ERP\Products\Field\Exception(array(
-                'quiqqer/products',
-                'exception.field.invalid',
-                array(
-                    'fieldId'    => $this->getId(),
-                    'fieldTitle' => $this->getTitle()
-                )
-            ));
-        }
+//        if (empty($userIds)) {
+//            throw new QUI\ERP\Products\Field\Exception(array(
+//                'quiqqer/products',
+//                'exception.field.invalid',
+//                array(
+//                    'fieldId'    => $this->getId(),
+//                    'fieldTitle' => $this->getTitle()
+//                )
+//            ));
+//        }
 
         $isUserInGroups = function ($userGroups) use ($groupIds) {
             foreach ($userGroups as $userGroup) {

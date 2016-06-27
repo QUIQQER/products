@@ -410,13 +410,21 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 Promise.all([
                     Categories.getFields(categories),
                     Fields.getSystemFields(),
-                    Fields.getStandardFields()
+                    Fields.getStandardFields(),
+                    Fields.getFieldTypes()
                 ]).then(function (result) {
 
                     var fieldList        = [],
+                        fieldTypes       = {},
                         categoriesFields = result[0],
                         systemFields     = result[1],
                         standardFields   = result[2];
+
+                    var types = result[3];
+
+                    for (i = 0, len = types.length; i < len; i++) {
+                        fieldTypes[types[i].name] = types[i];
+                    }
 
                     var complete = [].append(categoriesFields)
                         .append(systemFields)
@@ -450,7 +458,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     diffFields   = FieldUtils.sortFields(diffFields);
                     systemFields = FieldUtils.sortFields(systemFields);
 
-                    self.$createCategories(fieldList);
+                    self.$createCategories(fieldList, fieldTypes);
 
                     // systemfields
                     for (i = 0, len = systemFields.length; i < len; i++) {
@@ -474,6 +482,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             continue;
                         }
 
+                        if (typeof fieldTypes[field.type] !== 'undefined' &&
+                            fieldTypes[field.type].category) {
+                            continue;
+                        }
 
                         title = QUILocale.get(lg, 'products.field.' + field.id + '.title');
 
@@ -510,6 +522,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             continue;
                         }
 
+                        if (typeof fieldTypes[field.type] !== 'undefined' &&
+                            fieldTypes[field.type].category) {
+                            continue;
+                        }
 
                         title = QUILocale.get(lg, 'products.field.' + field.id + '.title');
 
@@ -650,8 +666,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * Create panel categories
          *
          * @param {Object} fields
+         * @param {Object} fieldtypes - list of the fieldtypes data
          */
-        $createCategories: function (fields) {
+        $createCategories: function (fields, fieldtypes) {
             var self = this;
 
             var fieldClick = function (Btn) {
@@ -660,6 +677,20 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             var imageFolderClick = function (Btn) {
                 self.openMediaFolderField(Btn.getAttribute('fieldId'));
+            };
+
+            var showCategory = function (type) {
+                if (type == 'TextareaMultiLang' ||
+                    type == 'Textarea' ||
+                    type == 'Products') {
+                    return true;
+                }
+
+                if (typeof fieldtypes[type] === 'undefined') {
+                    return true;
+                }
+
+                return fieldtypes[type].category ? true : false;
             };
 
             this.getCategoryBar().clear();
@@ -673,18 +704,18 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
             });
 
-            var i, len, icon;
+            var i, len, icon, type;
 
             for (i = 0, len = fields.length; i < len; i++) {
-                if (fields[i].type != 'TextareaMultiLang' &&
-                    fields[i].type != 'Textarea' &&
-                    fields[i].type != 'Products') {
+                type = fields[i].type;
+
+                if (showCategory(type) === false) {
                     continue;
                 }
 
                 icon = 'fa fa-file-text-o';
 
-                if (fields[i].type == 'Products') {
+                if (type == 'Products') {
                     icon = 'fa fa-shopping-bag';
                 }
 
@@ -833,10 +864,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             return this.$hideCategories().then(function () {
                 return self.$showCategory(self.$FieldContainer);
+
             }).then(function () {
                 this.$currentField = fieldId;
 
-                require([Field.jsControl + 'Settings'], function (Control) {
+                require([Field.jsSettings], function (Control) {
                     this.$Control = new Control();
 
                     this.$FieldContainer.setStyles({
@@ -1343,11 +1375,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 // content / product fields
                 Object.each(selfData, function (entry) {
-                    if (entry.type == 'TextareaMultiLang' ||
-                        entry.type == 'Textarea' ||
-                        entry.type == 'Products') {
-                        fields['field-' + entry.id] = entry.value;
-                    }
+                    //if (entry.type == 'TextareaMultiLang' ||
+                    //    entry.type == 'Textarea' ||
+                    //    entry.type == 'Products') {
+                    fields['field-' + entry.id] = entry.value;
+                    //}
                 });
 
                 Products.updateChild(

@@ -120,10 +120,21 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
 
                 var FieldTypes = Elm.getElement('[name="type"]');
 
+                fieldTypes.sort(function (a, b) {
+                    var aField = QUILocale.get(a.locale[0], a.locale[1]);
+                    var bField = QUILocale.get(b.locale[0], b.locale[1]);
+
+                    if (aField == bField) {
+                        return 0;
+                    }
+
+                    return aField < bField ? -1 : 1;
+                });
+
                 for (var i = 0, len = fieldTypes.length; i < len; i++) {
                     new Element('option', {
-                        html : QUILocale.get('quiqqer/products', 'fieldtype.' + fieldTypes[i]),
-                        value: fieldTypes[i]
+                        html : QUILocale.get(fieldTypes[i].locale[0], fieldTypes[i].locale[1]),
+                        value: fieldTypes[i].name
                     }).inject(FieldTypes);
                 }
 

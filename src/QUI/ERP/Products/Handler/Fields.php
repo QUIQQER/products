@@ -152,7 +152,6 @@ class Fields
 
         $data          = array();
         $allowedFields = self::getChildAttributes();
-        $allowedTypes  = self::getFieldTypes();
 
         foreach ($allowedFields as $allowed) {
             if (isset($attributes[$allowed])) {
@@ -167,7 +166,9 @@ class Fields
             ));
         }
 
-        if (!in_array($data['type'], $allowedTypes)) {
+        $isAllowed = self::getFieldTypeData($data['type']);
+
+        if (empty($isAllowed)) {
             throw new QUI\Exception(array(
                 'quiqqer/products',
                 'exception.fields.type.not.allowed'
@@ -225,7 +226,6 @@ class Fields
         if (isset($data['options']) && is_array($data['options'])) {
             $data['options'] = json_encode($data['options']);
         }
-
 
         // insert field data
         QUI::getDataBase()->insert(
@@ -495,13 +495,74 @@ class Fields
                 continue;
             }
 
-            $file     = pathinfo($file);
-            $result[] = $file['filename'];
+            $file = pathinfo($file);
+
+            $result[] = array(
+                'plugin'   => 'quiqqer/products',
+                'src'      => 'QUI\ERP\Products\Field\Types\\' . $file['filename'],
+                'category' => 0,
+                'locale'   => array('quiqqer/products', 'fieldtype.' . $file['filename']),
+                'name'     => $file['filename']
+            );
+        }
+
+        $plugins = QUI::getPackageManager()->getInstalled();
+
+        foreach ($plugins as $plugin) {
+            $xml = OPT_DIR . $plugin['name'] . '/products.xml';
+
+            if (!file_exists($xml)) {
+                continue;
+            }
+
+            $Dom  = QUI\Utils\XML::getDomFromXml($xml);
+            $Path = new \DOMXPath($Dom);
+
+            $fields = $Path->query("//quiqqer/products/fields/field");
+
+            /* @var $Field \DOMElement */
+            foreach ($fields as $Field) {
+                $src      = $Field->getAttribute('src');
+                $category = $Field->getAttribute('category');
+                $name     = $Field->getAttribute('name');
+
+                if (!class_exists($src)) {
+                    continue;
+                }
+
+                $result[] = array(
+                    'plugin'   => $plugin['name'],
+                    'src'      => $src,
+                    'category' => $category,
+                    'locale'   => QUI\Utils\DOM::getTextFromNode($Field, false),
+                    'name'     => $name
+                );
+            }
         }
 
         QUI\Cache\Manager::set($cacheName, $result);
 
         return $result;
+    }
+
+    /**
+     * Return internal field init data for a field type
+     *
+     * @param string $type - field type
+     * @return array
+     */
+    public static function getFieldTypeData($type)
+    {
+        $types = self::getFieldTypes();
+        $found = array_filter($types, function ($entry) use ($type) {
+            return $entry['name'] == $type;
+        });
+
+        if (empty($found)) {
+            return array();
+        }
+
+        return reset($found);
     }
 
     /**
@@ -576,18 +637,16 @@ class Fields
 
 
         // exists the type?
-        $dir   = dirname(dirname(__FILE__)) . '/Field/Types/';
-        $file  = $dir . $data['type'] . '.php';
-        $class = 'QUI\ERP\Products\Field\Types\\' . $data['type'];
+        $fieldTypes = self::getFieldTypeData($data['type']);
+        $class      = $fieldTypes['src'];
 
-        if (!file_exists($file)) {
+        if (empty($fieldTypes)) {
             throw new QUI\Exception(
                 array('quiqqer/products', 'exception.field.type.not.found'),
                 404,
                 array(
                     'id'   => (int)$fieldId,
-                    'type' => $data['type'],
-                    'file' => $file
+                    'type' => $data['type']
                 )
             );
         }

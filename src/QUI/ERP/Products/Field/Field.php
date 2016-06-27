@@ -71,6 +71,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $searchable = true;
 
     /**
+     * @var string
+     */
+    protected $type = null;
+
+    /**
      * Field-Name
      *
      * @var string
@@ -807,10 +812,30 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getType()
     {
-        $type = parent::getType();
-        $type = str_replace('QUI\ERP\Products\Field\Types\\', '', $type);
+        if (!is_null($this->type)) {
+            return $this->type;
+        }
 
-        return $type;
+        $class = parent::getType();
+
+        // quiqqer/product fields
+        if (strpos($class, 'QUI\ERP\Products\Field\Types\\') !== false) {
+            $this->type = str_replace('QUI\ERP\Products\Field\Types\\', '', $class);
+            return $this->type;
+        }
+
+        $fieldTypes = Fields::getFieldTypes();
+        $fieldTypes = array_filter($fieldTypes, function ($entry) use ($class) {
+            return trim($entry['src'], '\\') == trim($class, '\\');
+        });
+
+        if (empty($fieldTypes)) {
+            return $class;
+        }
+
+        $this->type = reset($fieldTypes)['name'];
+
+        return $this->type;
     }
 
     /**
@@ -891,6 +916,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['isPublic']   = $this->isPublic();
         $attributes['searchable'] = $this->isSearchable();
         $attributes['ownField']   = $this->isOwnField();
+        $attributes['jsSettings'] = '';
+
+        if (method_exists($this, 'getJavaScriptSettings')) {
+            $attributes['jsSettings'] = $this->getJavaScriptSettings();
+        }
 
         return $attributes;
     }

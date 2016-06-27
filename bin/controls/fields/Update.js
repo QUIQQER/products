@@ -140,6 +140,17 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     FieldPublic   = Elm.getElement('[name="publicField"]'),
                     FieldStandard = Elm.getElement('[name="standardField"]');
 
+                fieldTypes.sort(function (a, b) {
+                    var aField = QUILocale.get(a.locale[0], a.locale[1]);
+                    var bField = QUILocale.get(b.locale[0], b.locale[1]);
+
+                    if (aField == bField) {
+                        return 0;
+                    }
+
+                    return aField < bField ? -1 : 1;
+                });
+
                 for (i = 0, len = fieldTypes.length; i < len; i++) {
                     settings = '';
 
@@ -148,8 +159,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     }
 
                     new Element('option', {
-                        html           : QUILocale.get(lg, 'fieldtype.' + fieldTypes[i]),
-                        value          : fieldTypes[i],
+                        html           : QUILocale.get(fieldTypes[i].locale[0], fieldTypes[i].locale[1]),
+                        value          : fieldTypes[i].name,
                         'data-settings': settings
                     }).inject(FieldTypes);
                 }
@@ -339,6 +350,10 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
          * @param {HTMLSelectElement} FieldTypes
          */
         $loadSettings: function (FieldTypes) {
+            if (FieldTypes.value === '') {
+                return;
+            }
+
             var self     = this,
                 Option   = FieldTypes.getElement('[value="' + FieldTypes.value + '"]'),
                 settings = Option.get('data-settings');
