@@ -941,6 +941,15 @@ class Model extends QUI\QDOM
             ))
         );
 
+        // delete the media folder
+        try {
+            $MediaFolder = $this->getMediaFolder();
+            $MediaFolder->delete();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addWarning($Exception->getMessage());
+        }
+
+
         QUI::getDataBase()->delete(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array('id' => $this->getId())

@@ -10,6 +10,7 @@ use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Field\Field;
 use QUI\Projects\Media\Utils as FolderUtils;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
+use QUI\Projects\Media\Utils;
 
 /**
  * Class Products
@@ -436,6 +437,29 @@ class Products
                 $Product->save();
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_WARNING);
+            }
+        }
+
+        // media cleanup
+        $MainFolder = Products::getParentMediaFolder();
+        $Media      = $MainFolder->getMedia();
+        $childIds   = $MainFolder->getChildrenIds();
+
+        foreach ($childIds as $folderId) {
+            try {
+                Products::getProduct($folderId);
+                continue;
+            } catch (QUI\Exception $Exception) {
+            }
+
+            try {
+                // wenn product id nicht existiert, kann der ordner gelöscht werden
+                $Folder = $Media->get($folderId);
+
+                if (Utils::isFolder($Folder)) {
+                    $Folder->delete();
+                }
+            } catch (QUI\Exception $Exception) {
             }
         }
     }
