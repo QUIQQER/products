@@ -282,6 +282,9 @@ class Fields
             $Field->save();
         }
 
+        // clear the field cache
+        QUI\Cache\Manager::clear('quiqqer/products/fields');
+
         return $Field;
     }
 
