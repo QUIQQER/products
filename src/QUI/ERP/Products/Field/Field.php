@@ -5,7 +5,6 @@
  */
 namespace QUI\ERP\Products\Field;
 
-use BirknerAlex\XMPPHP\Log;
 use QUI;
 use QUI\ERP\Products\Handler\Search;
 use QUI\ERP\Products\Handler\Fields;

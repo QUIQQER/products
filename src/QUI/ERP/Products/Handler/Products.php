@@ -447,19 +447,16 @@ class Products
 
         foreach ($childIds as $folderId) {
             try {
-                Products::getProduct($folderId);
-                continue;
-            } catch (QUI\Exception $Exception) {
-            }
-
-            try {
                 // wenn product id nicht existiert, kann der ordner gelöscht werden
                 $Folder = $Media->get($folderId);
+
+                Products::getProduct($Folder->getAttribute('name'));
 
                 if (Utils::isFolder($Folder)) {
                     $Folder->delete();
                 }
             } catch (QUI\Exception $Exception) {
+                QUI\System\Log::write($Exception->getMessage());
             }
         }
     }
