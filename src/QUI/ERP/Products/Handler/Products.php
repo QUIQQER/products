@@ -440,21 +440,39 @@ class Products
             }
         }
 
+        // kategorien
+        $categories = Categories::getCategories();
+
+        /* @var $Category Category */
+        foreach ($categories as $Category) {
+            try {
+                $Category->save(new QUI\Users\SystemUser());
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_ERROR);
+            }
+        }
+
         // media cleanup
         $MainFolder = Products::getParentMediaFolder();
         $Media      = $MainFolder->getMedia();
         $childIds   = $MainFolder->getChildrenIds();
 
         foreach ($childIds as $folderId) {
+            $Folder = null;
+
             try {
                 // wenn product id nicht existiert, kann der ordner gelöscht werden
                 $Folder = $Media->get($folderId);
 
                 Products::getProduct($Folder->getAttribute('name'));
 
-                if (Utils::isFolder($Folder)) {
+            } catch (QUI\ERP\Products\Product\Exception $Exception) {
+                if ($Exception->getCode() == 404 && Utils::isFolder($Folder)) {
                     $Folder->delete();
                 }
+
+                QUI\System\Log::write($Exception->getMessage());
+
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::write($Exception->getMessage());
             }
