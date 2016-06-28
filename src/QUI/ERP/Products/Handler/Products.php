@@ -429,6 +429,11 @@ class Products
      */
     public static function cleanup()
     {
+        // cache cleanup
+        QUI\ERP\Products\Search\Cache::clear();
+        Categories::clearCache();
+
+
         $ids = self::getProductIds();
 
         foreach ($ids as $id) {
@@ -480,6 +485,7 @@ class Products
 
         // cache cleanup
         QUI\ERP\Products\Search\Cache::clear();
+        Categories::clearCache();
     }
 
     /**
