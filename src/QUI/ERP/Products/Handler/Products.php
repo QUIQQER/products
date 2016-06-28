@@ -477,6 +477,9 @@ class Products
                 QUI\System\Log::write($Exception->getMessage());
             }
         }
+
+        // cache cleanup
+        QUI\ERP\Products\Search\Cache::clear();
     }
 
     /**
