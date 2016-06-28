@@ -1359,13 +1359,25 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             return new Promise(function (resolve, reject) {
 
-                var Form = Elm.getElement('form');
-                var data = QUIFormUtils.getFormData(Form);
+                var fields = {};
+                var Form   = Elm.getElement('form');
+                var data   = QUIFormUtils.getFormData(Form);
+
+                Object.each(selfData, function (entry) {
+                    fields['field-' + entry.id] = entry.value;
+                });
 
                 // fields
-                var fields = Object.filter(data, function (value, key) {
+                var formfields = Object.filter(data, function (value, key) {
                     return (key.indexOf('field-') >= 0);
                 });
+
+                for (var field in formfields) {
+                    if (formfields.hasOwnProperty(field)) {
+                        fields[field] = formfields[field];
+                    }
+                }
+
 
                 var categories = data.categories.split(',');
 
@@ -1373,14 +1385,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     return item !== '';
                 });
 
-                // content / product fields
-                Object.each(selfData, function (entry) {
-                    //if (entry.type == 'TextareaMultiLang' ||
-                    //    entry.type == 'Textarea' ||
-                    //    entry.type == 'Products') {
-                    fields['field-' + entry.id] = entry.value;
-                    //}
-                });
 
                 Products.updateChild(
                     self.getAttribute('productId'),

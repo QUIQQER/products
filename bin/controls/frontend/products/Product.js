@@ -1,6 +1,6 @@
 /**
  * Product view
- * Display a product
+ * Display a product in the content
  *
  * @module package/quiqqer/products/bin/controls/frontend/products/Product
  * @author www.pcsg.de (Henning Leutz)
