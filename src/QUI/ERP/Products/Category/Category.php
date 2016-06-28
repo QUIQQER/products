@@ -723,6 +723,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($this->getFields() as $Field) {
+            if ($Field->isStandard() || $Field->isSystem()) {
+                continue;
+            }
+
             $attributes['id']           = $Field->getId();
             $attributes['publicStatus'] = $Field->getAttribute('publicStatus') ? 1 : 0;
             $attributes['searchStatus'] = $Field->getAttribute('searchStatus') ? 1 : 0;
