@@ -114,7 +114,7 @@ class PriceFactor
      */
     public function getCalculation()
     {
-        return $this->calculation;
+        return (int)$this->calculation;
     }
 
     /**
@@ -189,6 +189,8 @@ class PriceFactor
      */
     public function setCalculation($calculation)
     {
+        $calculation = (int)$calculation;
+
         switch ($calculation) {
             case Calc::CALCULATION_COMPLEMENT:
             case Calc::CALCULATION_PERCENTAGE:

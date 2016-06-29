@@ -35,10 +35,7 @@ QUI::$Ajax->registerFunction(
                 $fieldId    = $field['fieldId'];
                 $fieldValue = $field['value'];
 
-                $Field = Fields::getField($fieldId);
-                $Field->setValue($fieldValue);
-
-                $Product->addField($Field);
+                $Product->getField($fieldId)->setValue($fieldValue);
 
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_WARNING);

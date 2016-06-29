@@ -100,9 +100,8 @@ class Calc
 
                 // Prozent Angabe
                 case Calc::CALCULATION_PERCENTAGE:
-                    $percentage = 0;
-
                     switch ($PriceFactor->getCalculationBasis()) {
+                        default:
                         case Calc::CALCULATION_BASIS_NETTO:
                             $percentage = $PriceFactor->getValue() / 100 * $basisPrice;
                             break;
