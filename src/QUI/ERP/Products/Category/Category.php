@@ -506,9 +506,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
      */
     public function getProductIds($params = array())
     {
-        $query = array(
-            'limit' => 20
-        );
+        $query = array();
 
         $where = array(
             'categories' => array(
