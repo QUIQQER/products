@@ -166,7 +166,7 @@ class Product extends QUI\Control
             'fields'               => QUI\ERP\Products\Utils\Fields::sortFields($fields),
             'details'              => QUI\ERP\Products\Utils\Fields::sortFields($details),
             'mediaFolders'         => $mediaFolders,
-            'productAttributeList' => $View->getFieldsByType('ProductAttributeList'),
+            'productAttributeList' => $Product->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
             'PriceDisplay'         => $PriceDisplay,
             'WatchlistButton'      => new WatchlistButton(array(
                 'Product' => $View,

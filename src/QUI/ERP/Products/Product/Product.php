@@ -33,12 +33,11 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\Product
             return;
         }
 
-        /* @var Field $Exists */
+        /* @var QUI\ERP\Products\Field\Field $Exists */
         $Exists = $this->fields[$Field->getId()];
 
-        if ($Exists->isUnassigned()) {
-            $Exists->setUnassignedStatus(false);
-        }
+        $Exists->setUnassignedStatus($Field->isUnassigned());
+        $Exists->setOwnFieldStatus($Field->isOwnField());
     }
 
     /**

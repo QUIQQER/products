@@ -99,7 +99,17 @@ class ProductList
 
         /* @var $Product Product */
         foreach ($this->products as $Product) {
-            $list[] = $Product->getAttributes();
+            $attributes = $Product->getAttributes();
+            $fields     = $Product->getFields();
+
+            $attributes['fields'] = array();
+
+            /* @var $Field QUI\ERP\Products\Interfaces\Field */
+            foreach ($fields as $Field) {
+                $attributes['fields'][] = $Field->getAttributes();
+            }
+
+            $list[] = $attributes;
         }
 
         return $list;

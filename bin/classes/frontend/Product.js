@@ -44,11 +44,12 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          */
         setFieldValue: function (fieldId, value) {
             return new Promise(function (resolve) {
-                Ajax.post('package_quiqqer_products_ajax_products_setFieldValue', function (result) {
+                Ajax.post('package_quiqqer_products_ajax_products_setCustomFieldValue', function (result) {
 
-                    resolve();
+                    this.$fields[fieldId] = result;
+                    resolve(this);
 
-                }, {
+                }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
                     fieldId  : fieldId,
@@ -65,7 +66,7 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          */
         setFieldValues: function (fields) {
             return new Promise(function (resolve) {
-                Ajax.post('package_quiqqer_products_ajax_products_setFieldValues', function (result) {
+                Ajax.post('package_quiqqer_products_ajax_products_frontend_setCustomFieldValues', function (result) {
 
                     for (var fieldId in result) {
                         if (result.hasOwnProperty(fieldId)) {
@@ -78,7 +79,7 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                 }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    fields   : JSON.decode(fields)
+                    fields   : JSON.encode(fields)
                 });
 
             }.bind(this));
@@ -158,6 +159,7 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
 
             this.$data.id       = this.getId();
             this.$data.quantity = this.getQuantity();
+            this.$data.fields   = this.$fields;
 
             return this.$data;
         },
@@ -208,22 +210,12 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
         },
 
         /**
-         * Return the fields of the product
+         * Return the fields of the frontend product
          *
-         * @returns {Promise}
+         * @returns {Object}
          */
         getFields: function () {
-            return new Promise(function (resolve, reject) {
-
-                if (this.$loaded) {
-                    return resolve(this.$data.fields);
-                }
-
-                this.refresh().then(function () {
-                    resolve(this.$data.fields);
-                }.bind(this)).catch(reject);
-
-            }.bind(this));
+            return this.$fields;
         },
 
         /**
@@ -234,27 +226,12 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          */
         getField: function (fieldId) {
             return new Promise(function (resolve, reject) {
-
-                if (typeof fieldId === 'undefined') {
-                    return reject('No field given');
+                if (typeof this.$fields[fieldId] !== 'undefined') {
+                    resolve(this.$fields[fieldId]);
+                    return;
                 }
 
-                if (this.$loaded) {
-                    var field = this.$data.fields.filter(function (item) {
-                        return (item.id == fieldId);
-                    });
-
-                    if (field.length) {
-                        return resolve(field[0]);
-                    }
-
-                    return reject('Field not found');
-                }
-
-                this.refresh().then(function () {
-                    this.getField(fieldId).then(resolve);
-                }.bind(this)).catch(reject);
-
+                reject();
             }.bind(this));
         },
 
