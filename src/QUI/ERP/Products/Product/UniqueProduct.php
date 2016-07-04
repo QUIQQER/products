@@ -7,6 +7,7 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Utils\PriceFactor;
+use QUI\Projects\Media\Utils as MediaUtils;
 
 /**
  * Class UniqueProduct
@@ -261,13 +262,50 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
+     * Return the image url
      *
+     * @return QUI\Projects\Media\Image
+     * @throws QUI\Exception
      */
     public function getImage()
     {
         $image = $this->getFieldValue(Fields::FIELD_IMAGE);
 
-        var_dump($image);
+        try {
+            return MediaUtils::getImageByUrl($image);
+        } catch (QUI\Exception $Exception) {
+        }
+
+        try {
+            $Folder = MediaUtils::getMediaItemByUrl(
+                $this->getFieldValue(Fields::FIELD_FOLDER)
+            );
+
+            /* @var $Folder QUI\Projects\Media\Folder */
+            if (MediaUtils::isFolder($Folder)) {
+                return $Folder->firstChild();
+            }
+        } catch (QUI\Exception $Exception) {
+        }
+
+        try {
+            $Project     = QUI::getRewrite()->getProject();
+            $Media       = $Project->getMedia();
+            $Placeholder = $Media->getPlaceholderImage();
+
+            if ($Placeholder) {
+                return $Placeholder;
+            }
+        } catch (QUI\Exception $Exception) {
+        }
+
+        throw new QUI\ERP\Products\Product\Exception(array(
+            'quiqqer/products',
+            'exception.product.no.image',
+            array(
+                'productId' => $this->getId()
+            )
+        ));
     }
 
     /**

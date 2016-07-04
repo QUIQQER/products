@@ -33,11 +33,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
      */
     public function create()
     {
-        try {
-            QUI\Permissions\Permission::checkPermission(
-                "permission.products.fields.field{$this->getId()}.view"
-            );
-        } catch (QUI\Exception $Exception) {
+        if (!$this->hasViewPermission()) {
             return '';
         }
 
