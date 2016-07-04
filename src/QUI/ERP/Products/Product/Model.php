@@ -872,10 +872,19 @@ class Model extends QUI\QDOM
             'active'    => $this->isActive() ? 1 : 0
         );
 
-        $Category = $this->getCategory();
+        $categories = $this->getCategories();
 
-        if ($Category) {
-            $data['category'] = $Category->getId();
+        if (!empty($categories)) {
+            $catIds = array();
+
+            /** @var Category $Category */
+            foreach ($categories as $Category) {
+                $catIds[] = $Category->getId();
+            }
+
+            $data['category'] = ',' . implode(',', $catIds) . ',';
+        } else {
+            $data['category'] = null;
         }
 
         $fields = $this->getFields();

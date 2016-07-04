@@ -72,10 +72,10 @@ class BackendSearch extends Search
         if (isset($searchParams['category']) &&
             !empty($searchParams['category'])
         ) {
-            $where[]           = '`category` = :category';
+            $where[]           = '`category` LIKE :category';
             $binds['category'] = array(
-                'value' => (int)$searchParams['category'],
-                'type'  => \PDO::PARAM_INT
+                'value' => '%,' . (int)$searchParams['category'] . ',%',
+                'type'  => \PDO::PARAM_STR
             );
         }
 
