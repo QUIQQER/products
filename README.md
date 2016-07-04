@@ -70,3 +70,40 @@ Events
 ======
 
 - onQuiqqerProductsPriceFactorsInit [PriceFactors, UniqueProduct]
+- onQuiqqerProductsProductCleanup
+- onQuiqqerProductsFieldsClearCache
+- onQuiqqerProductsCategoriesClearCache
+
+Produkt Events
+------
+
+- onQuiqqerProductsProductCreate [Product]
+- onQuiqqerProductsProductCopy [Product]
+
+- onQuiqqerProductsProductSave [Product]
+- onQuiqqerProductsProductUserSave [Product]
+
+- onQuiqqerProductsProductActivate [Product]
+- onQuiqqerProductsProductDeactivate [Product]
+- onQuiqqerProductsProductDelete [Product]
+- onQuiqqerProductsProductDeleteBegin [Product]
+- onQuiqqerProductsProductCreateMediaFolder [Product]
+
+Field Events
+------
+
+- onQuiqqerProductsFieldsCreate [Field]
+- onQuiqqerProductsFieldDelete [Field]
+- onQuiqqerProductsFieldDeleteSystemfield [Field]
+- onQuiqqerProductsFieldSave [Field]
+
+
+Kategorien Events
+------
+
+- onQuiqqerProductsCategoryCreate [Category]
+- onQuiqqerProductsCategoryAddField [Category, Field]
+- onQuiqqerProductsCategoryClearFields [Category]
+- onQuiqqerProductsCategorySave [Category]
+- onQuiqqerProductsCategoryDelete [Category]
+- onQuiqqerProductsCategorySetFieldsToAllProducts [Category]

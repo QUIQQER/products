@@ -136,6 +136,8 @@ class Fields
         foreach (self::$cacheNames as $cache) {
             QUI\Cache\Manager::clear($cache);
         }
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldsClearCache');
     }
 
     /**
@@ -284,6 +286,8 @@ class Fields
 
         // clear the field cache
         QUI\Cache\Manager::clear('quiqqer/products/fields');
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldCreate', array($Field));
 
         return $Field;
     }

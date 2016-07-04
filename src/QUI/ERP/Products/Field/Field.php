@@ -309,6 +309,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         // clear field cache
         QUI\Cache\Manager::clear('quiqqer/products/fields');
+
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldSave', array($this));
     }
 
     /**
@@ -393,6 +396,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         QUI::getPermissionManager()->deletePermission(
             "permission.products.fields.field{$fieldId}.edit"
         );
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldDelete', array($this));
     }
 
     /**
@@ -452,6 +457,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         QUI\Cache\Manager::clear(
             Fields::getFieldCacheName($this->getId())
         );
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldDeleteSystemfield', array($this));
     }
 
     /**

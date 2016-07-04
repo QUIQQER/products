@@ -281,6 +281,8 @@ class Products
         $Product = self::getProduct($newId);
         $Product->updateCache();
 
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreate', array($Product));
+
         return $Product;
     }
 
@@ -302,6 +304,8 @@ class Products
         $New->setPermissions($Product->getPermissions());
         $New->setMainCategory($Product->getCategory());
         $New->save();
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCopy', array($Product));
 
         return $New;
     }
@@ -486,6 +490,8 @@ class Products
         // cache cleanup
         QUI\ERP\Products\Search\Cache::clear();
         Categories::clearCache();
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCleanup');
     }
 
     /**

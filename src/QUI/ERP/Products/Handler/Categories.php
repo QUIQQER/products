@@ -33,6 +33,8 @@ class Categories
         } else {
             QUI\Cache\Manager::clear(self::getCacheName($categoryId));
         }
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsCategoriesClearCache');
     }
 
     /**
@@ -276,7 +278,11 @@ class Categories
             );
         }
 
-        return self::getCategory($newId);
+        $Category = self::getCategory($newId);
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsCategoryCreate', array($Category));
+
+        return $Category;
     }
 
     /**

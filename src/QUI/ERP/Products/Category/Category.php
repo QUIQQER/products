@@ -588,6 +588,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
                 $Product->save();
             }
         }
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsCategorySetFieldsToAllProducts', array($this));
     }
 
     /**
@@ -678,6 +680,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
         }
 
         $this->fields[] = $Field;
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsCategoryAddField', array($this, $Field));
     }
 
     /**
@@ -706,6 +710,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
     public function clearFields()
     {
         $this->fields = array();
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsCategoryClearFields', array($this));
     }
 
     /**
@@ -750,6 +756,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
         );
 
         QUI\ERP\Products\Handler\Categories::clearCache($this->getId());
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsCategorySave', array($this));
     }
 
     /**
@@ -816,6 +824,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
 
             QUI\ERP\Products\Handler\Categories::clearCache($id);
         }
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsCategoryDelete', array($this));
     }
 
     /**

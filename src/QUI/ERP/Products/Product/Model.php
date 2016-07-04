@@ -316,6 +316,8 @@ class Model extends QUI\QDOM
 
         $this->update();
 
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreateMediaFolder', array($this));
+
         return $Folder;
     }
 
@@ -638,6 +640,8 @@ class Model extends QUI\QDOM
         );
 
         $this->updateCache();
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', array($this));
     }
 
     /**
@@ -655,6 +659,8 @@ class Model extends QUI\QDOM
         }
 
         $this->productSave($fieldData);
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductUserSave', array($this));
     }
 
     /**
@@ -941,6 +947,8 @@ class Model extends QUI\QDOM
             ))
         );
 
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductDeleteBegin', array($this));
+
         // delete the media folder
         try {
             $MediaFolder = $this->getMediaFolder();
@@ -959,6 +967,8 @@ class Model extends QUI\QDOM
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             array('id' => $this->getId())
         );
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductDelete', array($this));
     }
 
     /**
@@ -1250,6 +1260,8 @@ class Model extends QUI\QDOM
         );
 
         $this->updateCache();
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductDeactivate', array($this));
     }
 
     /**
@@ -1293,6 +1305,8 @@ class Model extends QUI\QDOM
         );
 
         $this->updateCache();
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductActivate', array($this));
     }
 
     /**

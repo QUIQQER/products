@@ -96,6 +96,9 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                      '</option>';
         }
 
+        // patch für neue <-> alte version
+        $currentLC = strtolower($current) . '_' . strtoupper($current);
+
         foreach ($entries as $key => $option) {
             $title = $option['title'];
 
@@ -107,8 +110,12 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                 $selected = 'selected="selected" ';
             }
 
-            if (isset($title[$current])) {
+            if (is_string($title)) {
+                $text = $title;
+            } elseif (isset($title[$current])) {
                 $text = $title[$current];
+            } elseif (isset($title[$currentLC])) {
+                $text = $title[$currentLC];
             }
 
             if (isset($option['userinput']) && $option['userinput']) {
