@@ -199,6 +199,12 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                         this.$loaded = true;
                         this.$data   = data;
 
+                        this.$data.fields.each(function (Field) {
+                            if (typeof this.$fields[Field.id] !== 'undefined') {
+                                Field.value = this.$fields[Field.id];
+                            }
+                        }.bind(this));
+
                         resolve(this);
 
                         this.fireEvent('refresh', [this]);

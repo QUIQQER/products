@@ -16,7 +16,11 @@ QUI::$Ajax->registerFunction(
     function ($productId) {
         $Products = new QUI\ERP\Products\Handler\Products();
         $Product  = $Products->getProduct($productId);
-        
+
+        if (QUI::isFrontend()) {
+            return $Product->getView()->getAttributes();
+        }
+
         return $Product->getAttributes();
     },
     array('productId')
