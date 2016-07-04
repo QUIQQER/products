@@ -201,6 +201,20 @@ define('package/quiqqer/products/bin/classes/Fields', [
         },
 
         /**
+         * Return all field types
+         *
+         * @returns {Promise}
+         */
+        getPublicFields: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_fields_getPublicFields', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
          * Return the extra settings for special field types
          *
          * @returns {Promise}

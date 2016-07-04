@@ -23,6 +23,13 @@ interface Product
     public function getId();
 
     /**
+     * Return all attributes of the product
+     *
+     * @return mixed
+     */
+    public function getAttributes();
+
+    /**
      * Return the translated title
      *
      * @param bool $Locale

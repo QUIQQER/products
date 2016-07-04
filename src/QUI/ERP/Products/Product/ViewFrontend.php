@@ -39,6 +39,66 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     }
 
     /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        $attributes = array(
+            'id'          => $this->getId(),
+            'title'       => $this->getTitle(),
+            'description' => $this->getDescription(),
+            'image'       => false
+        );
+
+        try {
+            $attributes['image'] = $this->getImage()->getUrl(true);
+        } catch (QUI\Exception $Exception) {
+        }
+
+
+        /* @var $Price QUI\ERP\Products\Utils\Price */
+        $Price = $this->getPrice();
+
+        $attributes['price_netto']    = $Price->getNetto();
+        $attributes['price_currency'] = $Price->getCurrency()->getCode();
+
+        if ($this->getCategory()) {
+            $attributes['category'] = $this->getCategory()->getId();
+        }
+
+        // fields
+        $fields    = array();
+        $fieldList = $this->getFields();
+
+        /* @var $Field QUI\ERP\Products\Interfaces\Field */
+        foreach ($fieldList as $Field) {
+            $fields[] = array_merge(
+                $Field->toProductArray(),
+                $Field->getAttributes()
+            );
+        }
+
+        if (!empty($fields)) {
+            $attributes['fields'] = $fields;
+        }
+
+        // categories
+        $categories = array();
+        $catList    = $this->getCategories();
+
+        /* @var $Category QUI\ERP\Products\Category\Category */
+        foreach ($catList as $Category) {
+            $categories[] = $Category->getId();
+        }
+
+        if (!empty($categories)) {
+            $attributes['categories'] = implode(',', $categories);
+        }
+
+        return $attributes;
+    }
+
+    /**
      * @param bool $Locale
      * @return string
      */

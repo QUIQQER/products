@@ -196,7 +196,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 });
             }
 
-            Products.calcPrice(this.getAttribute('productId'), fieldData).then(function (result) {
+            if (!self.$Price) {
+                return Promise.resolve();
+            }
+
+            return Products.calcPrice(this.getAttribute('productId'), fieldData).then(function (result) {
                 self.$Price.setPrice(result.price, result.currency);
             });
         },
