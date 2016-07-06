@@ -69,8 +69,18 @@ class Calc
 
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
+            $PriceFactor = $Product->getPriceFactors();
+
+            QUI::getEvents()->fireEvent('onQuiqqerProductsCalcListProduct', array($PriceFactor, $Product));
+
             self::getProductPrice($Product);
         }
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsCalcList', array($List));
+
+
+        // calc
+
 
         return $List;
     }
@@ -116,10 +126,9 @@ class Calc
             }
         }
 
-
         // quantity
         $price = $price * $Product->getQuantity();
-        
+
         return new Price($price, Currencies::getDefaultCurrency());
     }
 

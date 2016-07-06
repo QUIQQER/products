@@ -74,6 +74,9 @@ Events
 - onQuiqqerProductsFieldsClearCache
 - onQuiqqerProductsCategoriesClearCache
 
+- onQuiqqerProductsCalcListProduct [PriceFactor, Product]
+- onQuiqqerProductsCalcList [Product]
+
 Produkt Events
 ------
 

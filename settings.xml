@@ -32,7 +32,7 @@
 
         <window name="ERP">
             <title>
-                <locale group="quiqqer/currency" var="window.erp.title"/>
+                <locale group="quiqqer/products" var="window.erp.title"/>
             </title>
             <params>
                 <icon>fa fa-sun-o</icon>

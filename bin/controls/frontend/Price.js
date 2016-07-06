@@ -66,6 +66,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
                 this.getAttribute('currency')
             ).then(function (result) {
                     this.getElm().set('html', result);
+                    this.getElm().set('title', result);
                 }.bind(this),
                 function () {
                 }
