@@ -97,8 +97,6 @@ class Crons
                 }
             }
 
-            $products = $Field->getProducts();
-
             foreach ($tagsByLang as $lang => $tags) {
                 foreach ($tags as $tag) {
                     // add tags to projects
@@ -108,11 +106,25 @@ class Crons
                 }
             }
 
-            foreach ($tagList as $tag) {
-                // add tags to products
-                foreach ($products as $Product) {
-                    // TODO: add tag to product
+            // add tags to products
+            $products = $Field->getProducts();
+
+            /** @var QUI\ERP\Products\Product\Product $Product */
+            foreach ($products as $Product) {
+                $tagFields = $Product->getFieldsByType('productstags.tags');
+
+                /** @var QUI\ERP\Tags\Field $Field */
+                foreach ($tagFields as $Field) {
+                    if (!$Field->getOption('insert_tags')) {
+                        continue;
+                    }
+
+                    foreach ($tagsByLang as $lang => $tags) {
+                        $Field->addTags($tags, $lang);
+                    }
                 }
+
+                $Product->save();
             }
         }
     }
