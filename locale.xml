@@ -501,6 +501,14 @@
             <de><![CDATA[Aktualisiert die Cache-Tabelle für alle Produkte im System]]></de>
             <en><![CDATA[Updates the cache table for all products in the system]]></en>
         </locale>
+        <locale name="cron.generateProductAttributeListTags.title">
+            <de><![CDATA[Auswahllisten-Tags generieren]]></de>
+            <en><![CDATA[Generate attribute list tags]]></en>
+        </locale>
+        <locale name="cron.generateProductAttributeListTags.description">
+            <de><![CDATA[Erstellt aus allen Einträgen von allen Auswahllisten Tags und weist sie Tag-Feldern in Produkten zu]]></de>
+            <en><![CDATA[Creates tags for every entry in every attribute list and assigns them to tag fields in products]]></en>
+        </locale>
 
         <!-- searchtypes -->
         <locale name="searchtype.text.title">
