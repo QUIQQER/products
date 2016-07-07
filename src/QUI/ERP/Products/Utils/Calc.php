@@ -71,12 +71,18 @@ class Calc
         foreach ($products as $Product) {
             $PriceFactor = $Product->getPriceFactors();
 
-            QUI::getEvents()->fireEvent('onQuiqqerProductsCalcListProduct', array($PriceFactor, $Product));
+            QUI::getEvents()->fireEvent(
+                'onQuiqqerProductsCalcListProduct',
+                array($PriceFactor, $Product)
+            );
 
             self::getProductPrice($Product);
         }
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsCalcList', array($List));
+        QUI::getEvents()->fireEvent(
+            'onQuiqqerProductsCalcList',
+            array($List)
+        );
 
 
         // calc
