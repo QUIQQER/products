@@ -417,6 +417,7 @@ class EventHandling
         }
 
         self::checkProductCacheTable();
+        Crons::updateProductCache();
     }
 
     /**
