@@ -18,7 +18,7 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_search_frontend_setSearchFields',
     function ($searchFields, $siteId, $project) {
-        QUI\Rights\Permission::checkPermission(
+        QUI\Permissions\Permission::checkPermission(
             SearchHandler::PERMISSION_FRONTEND_CONFIGURE
         );
 
