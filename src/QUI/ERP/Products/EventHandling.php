@@ -415,6 +415,26 @@ class EventHandling
             } catch (QUI\Exception $Exception) {
             }
         }
+
+        self::checkProductCacheTable();
+        Crons::updateProductCache();
+    }
+
+    /**
+     * Checks if the table products_cache is correct
+     *
+     * @return void
+     */
+    protected static function checkProductCacheTable()
+    {
+        $categoryColumn = QUI::getDataBase()->table()->getColumn('products_cache', 'category');
+
+        if ($categoryColumn['Type'] === 'varchar(255)') {
+            return;
+        }
+
+        $Stmnt = QUI::getDataBase()->getPDO()->prepare("ALTER TABLE products_cache MODIFY `category` VARCHAR(255)");
+        $Stmnt->execute();
     }
 
     /**
