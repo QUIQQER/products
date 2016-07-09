@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <events>
     <event on="onPackageSetup" fire="\QUI\ERP\Products\EventHandling::onPackageSetup"/>
+    <event on="onPackageInstall" fire="\QUI\ERP\Products\EventHandling::onPackageInstall"/>
     <event on="onSiteSave" fire="\QUI\ERP\Products\EventHandling::onSiteSave"/>
     <event on="onSiteCreateChild" fire="\QUI\ERP\Products\EventHandling::onSiteCreateChild"/>
     <event on="onSiteSaveBefore" fire="\QUI\ERP\Products\EventHandling::onSiteSaveBefore"/>

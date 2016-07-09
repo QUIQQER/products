@@ -536,4 +536,35 @@ class EventHandling
             }
         }
     }
+
+    /**
+     * event: onPackageInstall
+     *
+     * @param Package $Package
+     */
+    public static function onPackageInstall($Package)
+    {
+        // create crons
+        $CronManager = new QUI\Cron\Manager();
+        $L           = QUI::getLocale();
+        $lg          = $Package->getName();
+
+        // which crons to set up
+        $crons = array(
+            $L->get($lg, 'cron.updateProductCache.title'),
+            $L->get($lg, 'cron.generateProductAttributeListTags.title')
+        );
+
+        foreach ($crons as $cron) {
+            if ($CronManager->isCronSetUp($cron)) {
+                continue;
+            }
+
+            // add cron: run once every day at 0 am
+            $CronManager->add(
+                $cron,
+                '0', '0', '*', '*', '*'
+            );
+        }
+    }
 }
