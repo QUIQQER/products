@@ -49,7 +49,7 @@ class Product extends QUI\Control
 
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
             $View  = $Product->getView();
-            $Price = QUI\ERP\Products\Utils\Calc::getProductPrice(
+            $Price = QUI\ERP\Products\Utils\Calc::getInstance()->getProductPrice(
                 $Product->createUniqueProduct()
             );
 

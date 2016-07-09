@@ -5,7 +5,6 @@
  */
 
 use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Calculate the product price
@@ -46,7 +45,7 @@ QUI::$Ajax->registerFunction(
         $Unique = $Product->createUniqueProduct();
         $Unique->setQuantity(isset($quantity) ? $quantity : 1);
 
-        $Price = QUI\ERP\Products\Utils\Calc::getProductPrice($Unique);
+        $Price = QUI\ERP\Products\Utils\Calc::getInstance()->getProductPrice($Unique);
 
         return $Price->toArray();
     },

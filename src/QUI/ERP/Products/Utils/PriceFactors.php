@@ -32,6 +32,16 @@ class PriceFactors
     }
 
     /**
+     * Return the number of the price factors
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->list);
+    }
+
+    /**
      * @param PriceFactor $PriceFactor
      */
     public function add(PriceFactor $PriceFactor)

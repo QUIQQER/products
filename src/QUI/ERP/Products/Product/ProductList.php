@@ -14,6 +14,55 @@ use QUI;
 class ProductList
 {
     /**
+     * is the product list calculated?
+     * @var bool
+     */
+    protected $calulated = false;
+
+    protected $sum;
+    protected $subSum;
+    protected $nettoSum;
+
+    protected $displaySum;
+    protected $displaySubSum;
+    protected $displayNettoSum;
+
+    /**
+     * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
+     * @var array
+     */
+    protected $vatArray = array();
+
+    /**
+     * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
+     * @var array()
+     */
+    protected $vatText;
+
+    /**
+     * Prüfen ob EU Vat für den Benutzer in Frage kommt
+     * @var
+     */
+    protected $isEuVat = false;
+
+    /**
+     * Wird Brutto oder Netto gerechnet
+     * @var bool
+     */
+    protected $isNetto = true;
+
+    /**
+     * Currency information
+     * @var array
+     */
+    protected $currencyData = array(
+        'currency_sign' => '',
+        'currency_code' => '',
+        'user_currency' => '',
+        'currency_rate' => ''
+    );
+
+    /**
      * @var array
      */
     protected $products = array();
@@ -23,7 +72,13 @@ class ProductList
      * Default = false
      * @var bool
      */
-    public $duplicate = false;
+    public $duplicate = true;
+
+    /**
+     * PriceFactor List
+     * @var QUI\ERP\Products\Utils\PriceFactors
+     */
+    protected $PriceFactors = false;
 
     /**
      * ProductList constructor.
@@ -35,14 +90,51 @@ class ProductList
         if (isset($params['duplicate'])) {
             $this->duplicate = (boolean)$params['duplicate'];
         }
+
+        $this->PriceFactors = new QUI\ERP\Products\Utils\PriceFactors();
     }
 
     /**
      * Calculate the prices in the list
+     *
+     * @return ProductList
      */
     public function calc()
     {
-        QUI\ERP\Products\Utils\Calc::calcProductList($this);
+        if ($this->calulated) {
+            return $this;
+        }
+
+        $self = $this;
+
+        QUI\ERP\Products\Utils\Calc::getInstance()->calcProductList($this, function ($data) use ($self) {
+            $self->sum             = $data['sum'];
+            $self->subSum          = $data['subSum'];
+            $self->nettoSum        = $data['nettoSum'];
+            $self->displaySum      = $data['displaySum'];
+            $self->displaySubSum   = $data['displaySubSum'];
+            $self->displayNettoSum = $data['displayNettoSum'];
+            $self->vatArray        = $data['vatArray'];
+            $self->vatText         = $data['vatText'];
+            $self->isEuVat         = $data['isEuVat'];
+            $self->isNetto         = $data['isNetto'];
+            $self->currencyData    = $data['currencyData'];
+
+            $self->calulated = true;
+
+        });
+
+        return $this;
+    }
+
+    /**
+     * Return the length of the list
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->getProducts());
     }
 
     /**
@@ -53,6 +145,16 @@ class ProductList
     public function getProducts()
     {
         return $this->products;
+    }
+
+    /**
+     * Reutrn the price factors list (list of price indicators)
+     *
+     * @return QUI\ERP\Products\Utils\PriceFactors
+     */
+    public function getPriceFactors()
+    {
+        return $this->PriceFactors;
     }
 
     /**
@@ -95,7 +197,8 @@ class ProductList
      */
     public function toArray()
     {
-        $list = array();
+        $this->calc();
+        $products = array();
 
         /* @var $Product Product */
         foreach ($this->products as $Product) {
@@ -109,10 +212,25 @@ class ProductList
                 $attributes['fields'][] = $Field->getAttributes();
             }
 
-            $list[] = $attributes;
+            $products[] = $attributes;
         }
 
-        return $list;
+        $result = array(
+            'products'        => $products,
+            'sum'             => $this->sum,
+            'subSum'          => $this->subSum,
+            'nettoSum'        => $this->nettoSum,
+            'displaySum'      => $this->displaySum,
+            'displaySubSum'   => $this->displaySubSum,
+            'displayNettoSum' => $this->displayNettoSum,
+            'vatArray'        => $this->vatArray,
+            'vatText'         => $this->vatText,
+            'noEuVat'         => $this->nettoSum,
+            'isNetto'         => $this->isNetto,
+            'currencyData'    => $this->currencyData
+        );
+
+        return $result;
     }
 
     /**

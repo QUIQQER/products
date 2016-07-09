@@ -56,7 +56,14 @@ class PriceFactor
     /**
      * PriceFactor constructor.
      *
-     * @param array $params
+     * @param array $params - array(
+     *      'title' => '',
+     *      'description' => '',
+     *      'priority' => '',
+     *      'calculation' => '',
+     *      'basis' => '',
+     *      'value' => '',
+     * )
      */
     public function __construct($params = array())
     {

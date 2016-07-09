@@ -61,6 +61,10 @@ class Price
 
         $this->User      = $User;
         $this->discounts = array();
+
+        if (!QUI::getUsers()->isUser($User)) {
+            $this->User = QUI::getUserBySession();
+        }
     }
 
     /**

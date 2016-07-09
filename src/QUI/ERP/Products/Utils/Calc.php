@@ -44,7 +44,36 @@ class Calc
     /**
      * @var User
      */
-    protected static $User;
+    protected $User;
+
+    /**
+     * Calc constructor.
+     *
+     * @param User|bool $User - calculation user
+     */
+    public function __construct($User = false)
+    {
+        if (!QUI::getUsers()->isUser($User)) {
+            $User = QUI::getUserBySession();
+        }
+
+        $this->User = $User;
+    }
+
+    /**
+     * Static instance create
+     *
+     * @param User|bool $User - optional
+     * @return Calc
+     */
+    public static function getInstance($User = false)
+    {
+        if (!QUI::getUsers()->isUser($User)) {
+            $User = QUI::getUserBySession();
+        }
+
+        return new self($User);
+    }
 
     /**
      * Set the calculation user
@@ -52,66 +81,103 @@ class Calc
      *
      * @param User $User
      */
-    public static function setUser(User $User)
+    public function setUser(User $User)
     {
-        self::$User = $User;
+        $this->User = $User;
+    }
+
+    /**
+     * Return the calc user
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->User;
     }
 
     /**
      * Calculate a complete product list
      *
      * @param ProductList $List
+     * @param callable|boolean $callback - optional, callback function for the data array
      * @return ProductList
      */
-    public static function calcProductList(ProductList $List)
+    public function calcProductList(ProductList $List, $callback = false)
     {
+        // calc data
+        if (!is_callable($callback)) {
+            return $List->calc();
+        }
+
         $products = $List->getProducts();
 
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
-            $PriceFactor = $Product->getPriceFactors();
+            // add netto price
 
             QUI::getEvents()->fireEvent(
                 'onQuiqqerProductsCalcListProduct',
-                array($PriceFactor, $Product)
+                array($this, $Product)
             );
 
-            self::getProductPrice($Product);
+            $this->getProductPrice($Product);
         }
 
         QUI::getEvents()->fireEvent(
             'onQuiqqerProductsCalcList',
-            array($List)
+            array($this, $List)
         );
 
 
-        // calc
-
+        $callback(array(
+            'sum'             => '',
+            'subSum'          => '',
+            'nettoSum'        => '',
+            'displaySum'      => '',
+            'displaySubSum'   => '',
+            'displayNettoSum' => '',
+            'vatArray'        => '',
+            'vatText'         => '',
+            'isEuVat'         => QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser()),
+            'isNetto'         => QUI\ERP\Products\Utils\User::isNettoUser($this->getUser()),
+            'currencyData'    => ''
+        ));
 
         return $List;
     }
 
     /**
      * Calculate the product price
+     * only fields
      *
      * @param UniqueProduct $Product
+     * @param callable|boolean $callback - optional, callback function for the calculated data array
      * @return Price
      *
      * @todo muss richtig implementiert werden
      */
-    public static function getProductPrice(UniqueProduct $Product)
+    public function getProductPrice(UniqueProduct $Product, $callback = false)
     {
-        $price  = self::findProductPriceField($Product)->getNetto();
-        $prices = $Product->getPriceFactors()->sort();
+        // calc data
+        if (!is_callable($callback)) {
+            $Product->calc();
 
-        $basisPrice = $price;
+            return $Product->getPrice();
+        }
+
+        $isNetto      = QUI\ERP\Products\Utils\User::isNettoUser($this->getUser());
+        $nettoPrice   = self::findProductPriceField($Product)->getNetto();
+        $priceFactors = $Product->getPriceFactors()->sort();
+
+        $basisNettoPrice = $nettoPrice;
 
         /* @var PriceFactor $PriceFactor */
-        foreach ($prices as $PriceFactor) {
+        foreach ($priceFactors as $PriceFactor) {
             switch ($PriceFactor->getCalculation()) {
                 // einfache Zahl, Währung --- kein Prozent
                 case Calc::CALCULATION_COMPLEMENT:
-                    $price = $price + $PriceFactor->getValue();
+                    $nettoPrice = $nettoPrice + $PriceFactor->getValue();
                     break;
 
                 // Prozent Angabe
@@ -119,38 +185,58 @@ class Calc
                     switch ($PriceFactor->getCalculationBasis()) {
                         default:
                         case Calc::CALCULATION_BASIS_NETTO:
-                            $percentage = $PriceFactor->getValue() / 100 * $basisPrice;
+                            $percentage = $PriceFactor->getValue() / 100 * $basisNettoPrice;
                             break;
 
                         case Calc::CALCULATION_BASIS_CURRENTPRICE:
-                            $percentage = $PriceFactor->getValue() / 100 * $price;
+                            $percentage = $PriceFactor->getValue() / 100 * $nettoPrice;
                             break;
                     }
 
-                    $price = $price + $percentage;
+                    $nettoPrice = $nettoPrice + $percentage;
                     break;
             }
         }
 
-        // quantity
-        $price = $price * $Product->getQuantity();
+        // mwst
+        $Tax         = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
+        $bruttoPrice = self::round($nettoPrice * $Tax->getValue());
 
-        return new Price($price, Currencies::getDefaultCurrency());
+        // sum
+        $nettoSum  = self::round($nettoPrice * $Product->getQuantity());
+        $bruttoSum = self::round($nettoSum * $Tax->getValue());
+
+        $price = $isNetto ? $nettoPrice : $bruttoPrice;
+        $sum   = $isNetto ? $nettoSum : $bruttoSum;
+
+        $callback(array(
+            'price'           => $price,
+            'sum'             => $sum,
+            'nettoSum'        => $nettoSum,
+            'displaySum'      => '',
+            'displayNettoSum' => '',
+            'vatArray'        => '',
+            'vatText'         => '',
+            'isEuVat'         => QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser()),
+            'isNetto'         => QUI\ERP\Products\Utils\User::isNettoUser($this->getUser()),
+            'currencyData'    => ''
+        ));
+
+        return $Product->getPrice();
     }
 
     /**
-     *
+     * Find the the product price field
+     * If the product have multiple price fields
      *
      * @param UniqueProduct $Product
      * @return \QUI\ERP\Products\Utils\Price
      */
-    protected static function findProductPriceField(UniqueProduct $Product)
+    protected function findProductPriceField(UniqueProduct $Product)
     {
         $Currency   = QUI\ERP\Currency\Handler::getDefaultCurrency();
         $PriceField = $Product->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRICE);
-
-        // @todo product user???
-        $User = QUI::getUserBySession();
+        $User       = $this->getUser();
 
         // exists more price fields?
         // is user in group filter
@@ -192,5 +278,27 @@ class Calc
         }
 
         return new QUI\ERP\Products\Utils\Price($PriceField->getValue(), $Currency);
+    }
+
+    /**
+     * Rounds the value via shop config
+     *
+     * @param string $value
+     * @return float|mixed
+     */
+    public static function round($value)
+    {
+        $decimalSeperator  = QUI::getLocale()->getDecimalSeperator();
+        $groupingSeperator = QUI::getLocale()->getGroupingSeperator();
+        $precision         = 8; // nachkommstelle beim rundne -> @todo in die conf?
+
+        if (strpos($value, $decimalSeperator) && $decimalSeperator != '.') {
+            $value = str_replace($groupingSeperator, '', $value);
+        }
+
+        $value = str_replace(',', '.', $value);
+        $value = round($value, $precision);
+
+        return $value;
     }
 }

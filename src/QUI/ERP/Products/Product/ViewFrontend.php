@@ -130,7 +130,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getPrice()
     {
-        return QUI\ERP\Products\Utils\Calc::getProductPrice(
+        return QUI\ERP\Products\Utils\Calc::getInstance()->getProductPrice(
             $this->Product->createUniqueProduct()
         );
     }

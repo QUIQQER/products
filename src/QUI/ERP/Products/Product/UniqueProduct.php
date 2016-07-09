@@ -17,6 +17,12 @@ use QUI\Projects\Media\Utils as MediaUtils;
 class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
 {
     /**
+     * is the product list calculated?
+     * @var bool
+     */
+    protected $calulated = false;
+
+    /**
      * @var integer
      */
     protected $id;
@@ -52,6 +58,31 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * @var array
      */
     protected $attributes = array();
+
+    // calculate params
+    protected $sum;
+    protected $nettoSum;
+
+    protected $displaySum;
+    protected $displayNettoSum;
+
+    /**
+     * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
+     * @var array
+     */
+    protected $vatArray = array();
+
+    /**
+     * Prüfen ob EU Vat für den Benutzer in Frage kommt
+     * @var
+     */
+    protected $isEuVat = false;
+
+    /**
+     * Wird Brutto oder Netto gerechnet
+     * @var bool
+     */
+    protected $isNetto = true;
 
     /**
      * UniqueProduct constructor.
@@ -180,6 +211,34 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Calculates
+     *
+     * @return UniqueProduct
+     */
+    public function calc()
+    {
+        if ($this->calulated) {
+            return $this;
+        }
+
+        $self = $this;
+
+        QUI\ERP\Products\Utils\Calc::getInstance()->getProductPrice($this, function ($data) use ($self) {
+            $self->sum             = $data['sum'];
+            $self->nettoSum        = $data['nettoSum'];
+            $self->displaySum      = $data['displaySum'];
+            $self->displayNettoSum = $data['displayNettoSum'];
+            $self->vatArray        = $data['vatArray'];
+            $self->isEuVat         = $data['isEuVat'];
+            $self->isNetto         = $data['isNetto'];
+
+            $self->calulated = true;
+        });
+
+        return $this;
     }
 
     /**
@@ -364,7 +423,12 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function getPrice()
     {
-        return QUI\ERP\Products\Utils\Calc::getProductPrice($this);
+        $this->calc();
+
+        return new QUI\ERP\Products\Utils\Price(
+            $this->sum,
+            QUI\ERP\Currency\Handler::getDefaultCurrency()
+        );
     }
 
     /**
