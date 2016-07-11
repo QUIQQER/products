@@ -12,7 +12,7 @@
         <tab name="ERP">
             <text>Rechnungsdaten</text>
             <image>fa fa-sun-o</image>
-            <template>OPT_DIR/</template>
+            <template>OPT_DIR/quiqqer/products/template/user.html</template>
         </tab>
     </window>
 

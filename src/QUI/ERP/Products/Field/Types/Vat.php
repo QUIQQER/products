@@ -47,6 +47,20 @@ class Vat extends QUI\ERP\Products\Field\Field
             return;
         }
 
+        if ($value === -1) {
+            return;
+        }
+
+        if (strpos($value, ':') !== false) {
+            $value = explode(':', $value);
+
+            if (isset($value[1])) {
+                $value = (int)$value[1];
+            } else {
+                $value = false;
+            }
+        }
+
         if (!is_numeric($value)) {
             throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
@@ -86,6 +100,20 @@ class Vat extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
+        if ($value === '') {
+            return -1;
+        }
+
+        if (strpos($value, ':') !== false) {
+            $value = explode(':', $value);
+
+            if (isset($value[1])) {
+                $value = $value[1];
+            } else {
+                $value = -1;
+            }
+        }
+
         return (int)$value;
     }
 }

@@ -23,10 +23,6 @@ class ProductList
     protected $subSum;
     protected $nettoSum;
 
-    protected $displaySum;
-    protected $displaySubSum;
-    protected $displayNettoSum;
-
     /**
      * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
      * @var array
@@ -108,17 +104,14 @@ class ProductList
         $self = $this;
 
         QUI\ERP\Products\Utils\Calc::getInstance()->calcProductList($this, function ($data) use ($self) {
-            $self->sum             = $data['sum'];
-            $self->subSum          = $data['subSum'];
-            $self->nettoSum        = $data['nettoSum'];
-            $self->displaySum      = $data['displaySum'];
-            $self->displaySubSum   = $data['displaySubSum'];
-            $self->displayNettoSum = $data['displayNettoSum'];
-            $self->vatArray        = $data['vatArray'];
-            $self->vatText         = $data['vatText'];
-            $self->isEuVat         = $data['isEuVat'];
-            $self->isNetto         = $data['isNetto'];
-            $self->currencyData    = $data['currencyData'];
+            $self->sum          = $data['sum'];
+            $self->subSum       = $data['subSum'];
+            $self->nettoSum     = $data['nettoSum'];
+            $self->vatArray     = $data['vatArray'];
+            $self->vatText      = $data['vatText'];
+            $self->isEuVat      = $data['isEuVat'];
+            $self->isNetto      = $data['isNetto'];
+            $self->currencyData = $data['currencyData'];
 
             $self->calulated = true;
 
@@ -216,18 +209,15 @@ class ProductList
         }
 
         $result = array(
-            'products'        => $products,
-            'sum'             => $this->sum,
-            'subSum'          => $this->subSum,
-            'nettoSum'        => $this->nettoSum,
-            'displaySum'      => $this->displaySum,
-            'displaySubSum'   => $this->displaySubSum,
-            'displayNettoSum' => $this->displayNettoSum,
-            'vatArray'        => $this->vatArray,
-            'vatText'         => $this->vatText,
-            'noEuVat'         => $this->nettoSum,
-            'isNetto'         => $this->isNetto,
-            'currencyData'    => $this->currencyData
+            'products'     => $products,
+            'sum'          => $this->sum,
+            'subSum'       => $this->subSum,
+            'nettoSum'     => $this->nettoSum,
+            'vatArray'     => $this->vatArray,
+            'vatText'      => $this->vatText,
+            'isEuVat'      => $this->isEuVat,
+            'isNetto'      => $this->isNetto,
+            'currencyData' => $this->currencyData
         );
 
         return $result;

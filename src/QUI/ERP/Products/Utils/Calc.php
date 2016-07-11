@@ -9,7 +9,8 @@ use QUI;
 use QUI\Interfaces\Users\User;
 use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\ERP\Products\Product\ProductList;
-use QUI\ERP\Currency\Handler as Currencies;
+use QUI\ERP\Products\Handler\Fields as FieldHandler;
+use QUI\ERP\Tax\Utils as TaxUtils;
 
 /**
  * Class Calc
@@ -110,7 +111,16 @@ class Calc
             return $List->calc();
         }
 
-        $products = $List->getProducts();
+        $products    = $List->getProducts();
+        $isNetto     = QUI\ERP\Products\Utils\User::isNettoUser($this->getUser());
+        $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
+
+        $sum      = 0;
+        $subSum   = 0;
+        $nettoSum = 0;
+        $vatArray = array();
+        $vatText  = array();
+
 
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
@@ -122,6 +132,13 @@ class Calc
             );
 
             $this->getProductPrice($Product);
+
+            $productAttributes = $Product->getAttributes();
+
+            $subSum   = $subSum + $productAttributes['calculated_price'];
+            $sum      = $sum + $productAttributes['calculated_price'];
+            $nettoSum = $nettoSum + $productAttributes['calculated_nettoSum'];
+            $vatArray = array_merge($vatArray, $productAttributes['calculated_vatArray']);
         }
 
         QUI::getEvents()->fireEvent(
@@ -129,19 +146,55 @@ class Calc
             array($this, $List)
         );
 
+        // price factors
+        $priceFactors    = $List->getPriceFactors()->sort();
+        $basisNettoPrice = $nettoSum;
+
+        /* @var $PriceFactor PriceFactor */
+        foreach ($priceFactors as $PriceFactor) {
+            switch ($PriceFactor->getCalculation()) {
+                // einfache Zahl, Währung --- kein Prozent
+                case Calc::CALCULATION_COMPLEMENT:
+                    $nettoSum = $nettoSum + $PriceFactor->getValue();
+                    $sum      = $sum + $PriceFactor->getValue();
+                    break;
+
+                // Prozent Angabe
+                case Calc::CALCULATION_PERCENTAGE:
+                    switch ($PriceFactor->getCalculationBasis()) {
+                        default:
+                        case Calc::CALCULATION_BASIS_NETTO:
+                            $percentage = $PriceFactor->getValue() / 100 * $basisNettoPrice;
+                            break;
+
+                        case Calc::CALCULATION_BASIS_CURRENTPRICE:
+                            $percentage = $PriceFactor->getValue() / 100 * $nettoSum;
+                            break;
+                    }
+
+                    $nettoSum = self::round($nettoSum + $percentage);
+                    $sum      = self::round($sum + $percentage);
+                    break;
+            }
+        }
+
+        // vat text
+        $vatLists = array();
+
+        foreach ($vatArray as $vatEntry) {
+            $vatLists[$vatEntry['vat']] = true;
+        }
+        var_dump($vatLists);
 
         $callback(array(
-            'sum'             => '',
-            'subSum'          => '',
-            'nettoSum'        => '',
-            'displaySum'      => '',
-            'displaySubSum'   => '',
-            'displayNettoSum' => '',
-            'vatArray'        => '',
-            'vatText'         => '',
-            'isEuVat'         => QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser()),
-            'isNetto'         => QUI\ERP\Products\Utils\User::isNettoUser($this->getUser()),
-            'currencyData'    => ''
+            'sum'          => $sum,
+            'subSum'       => $subSum,
+            'nettoSum'     => $nettoSum,
+            'vatArray'     => $vatArray,
+            'vatText'      => $vatText,
+            'isEuVat'      => $isEuVatUser,
+            'isNetto'      => $isNetto,
+            'currencyData' => ''
         ));
 
         return $List;
@@ -166,7 +219,10 @@ class Calc
             return $Product->getPrice();
         }
 
-        $isNetto      = QUI\ERP\Products\Utils\User::isNettoUser($this->getUser());
+        $isNetto     = QUI\ERP\Products\Utils\User::isNettoUser($this->getUser());
+        $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
+        $Area        = QUI\ERP\Products\Utils\User::getUserArea($this->getUser());
+
         $nettoPrice   = self::findProductPriceField($Product)->getNetto();
         $priceFactors = $Product->getPriceFactors()->sort();
 
@@ -199,27 +255,56 @@ class Calc
         }
 
         // mwst
-        $Tax         = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
-        $bruttoPrice = self::round($nettoPrice * $Tax->getValue());
+        $Tax    = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
+        $vatSum = $nettoPrice * ($Tax->getValue() / 100);
+
+        $bruttoPrice = self::round($nettoPrice + $vatSum);
 
         // sum
         $nettoSum  = self::round($nettoPrice * $Product->getQuantity());
-        $bruttoSum = self::round($nettoSum * $Tax->getValue());
+        $vatSum    = $nettoSum * ($Tax->getValue() / 100);
+        $bruttoSum = self::round($nettoSum + $vatSum);
 
         $price = $isNetto ? $nettoPrice : $bruttoPrice;
         $sum   = $isNetto ? $nettoSum : $bruttoSum;
 
+
+        // vat array
+        $Taxes     = new QUI\ERP\Tax\Handler();
+        $vatFields = $Product->getFieldsByType(FieldHandler::TYPE_VAT);
+        $vatArray  = array();
+        $vatText   = array();
+
+        /* @var $Vat QUI\ERP\Products\Field\UniqueField */
+        foreach ($vatFields as $Vat) {
+            if ($Vat->getValue() === false || $Vat->getValue() < 0) {
+                continue;
+            }
+
+            try {
+                $TaxType  = $Taxes->getTaxType($Vat->getValue());
+                $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
+
+            } catch (QUI\Exception $Exception) {
+                continue;
+            }
+
+            $vatArray[] = array(
+                'vat'  => $TaxEntry->getValue(),
+                'sum'  => self::round($nettoSum * ($TaxEntry->getValue() / 100)),
+                'text' => $Vat->getTitle()
+            );
+        }
+
         $callback(array(
-            'price'           => $price,
-            'sum'             => $sum,
-            'nettoSum'        => $nettoSum,
-            'displaySum'      => '',
-            'displayNettoSum' => '',
-            'vatArray'        => '',
-            'vatText'         => '',
-            'isEuVat'         => QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser()),
-            'isNetto'         => QUI\ERP\Products\Utils\User::isNettoUser($this->getUser()),
-            'currencyData'    => ''
+            'price'        => $price,
+            'sum'          => $sum,
+            'nettoSum'     => $nettoSum,
+            'vatArray'     => $vatArray,
+            'vatText'      => $vatText,
+            'isEuVat'      => $isEuVatUser,
+            'isNetto'      => $isNetto,
+            'currencyData' => ''
         ));
 
         return $Product->getPrice();

@@ -91,4 +91,39 @@ class User
     {
         return self::getBruttoNettoUserStatus($User) === self::IS_NETTO_USER;
     }
+
+    /**
+     * Return the area of the user
+     * if user is in no area, the default one of the shop would be used
+     *
+     * @param UserInterface $User
+     * @return bool|QUI\ERP\Areas\Area
+     */
+    public static function getUserArea(UserInterface $User)
+    {
+        $Country = $User->getCountry();
+        $Area    = QUI\ERP\Areas\Utils::getAreaByCountry($Country);
+
+        if ($Area) {
+            return $Area;
+        }
+
+        return self::getShopArea();
+    }
+
+    /**
+     * Return the area of the shop
+     *
+     * @return int
+     * @throws QUI\Exception
+     */
+    public static function getShopArea()
+    {
+        $Areas        = new QUI\ERP\Areas\Handler();
+        $Package      = QUI::getPackage('quiqqer/tax');
+        $Config       = $Package->getConfig();
+        $standardArea = $Config->getValue('shop', 'area');
+
+        return $Areas->getChild($standardArea);
+    }
 }

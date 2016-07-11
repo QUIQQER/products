@@ -60,11 +60,9 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected $attributes = array();
 
     // calculate params
+    protected $price;
     protected $sum;
     protected $nettoSum;
-
-    protected $displaySum;
-    protected $displayNettoSum;
 
     /**
      * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
@@ -227,13 +225,12 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $self = $this;
 
         QUI\ERP\Products\Utils\Calc::getInstance()->getProductPrice($this, function ($data) use ($self) {
-            $self->sum             = $data['sum'];
-            $self->nettoSum        = $data['nettoSum'];
-            $self->displaySum      = $data['displaySum'];
-            $self->displayNettoSum = $data['displayNettoSum'];
-            $self->vatArray        = $data['vatArray'];
-            $self->isEuVat         = $data['isEuVat'];
-            $self->isNetto         = $data['isNetto'];
+            $self->price    = $data['price'];
+            $self->sum      = $data['sum'];
+            $self->nettoSum = $data['nettoSum'];
+            $self->vatArray = $data['vatArray'];
+            $self->isEuVat  = $data['isEuVat'];
+            $self->isNetto  = $data['isNetto'];
 
             $self->calulated = true;
         });
@@ -417,7 +414,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
-     * Return a price object
+     * Return a price object (single price)
      *
      * @return QUI\ERP\Products\Utils\Price
      */
@@ -426,7 +423,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $this->calc();
 
         return new QUI\ERP\Products\Utils\Price(
-            $this->sum,
+            $this->price,
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
     }
@@ -517,6 +514,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $attributes['quantity'] = $this->getQuantity();
         $attributes['id']       = $this->getId();
         $attributes['fields']   = $this->getFields();
+
+        $attributes['calculated_price']    = $this->price;
+        $attributes['calculated_sum']      = $this->sum;
+        $attributes['calculated_nettoSum'] = $this->nettoSum;
+        $attributes['calculated_isEuVat']  = $this->isEuVat;
+        $attributes['calculated_isNetto']  = $this->isNetto;
+        $attributes['calculated_vatArray'] = $this->vatArray;
 
         return $attributes;
     }
