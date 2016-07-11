@@ -544,15 +544,12 @@ class EventHandling
      */
     public static function onPackageInstall($Package)
     {
-        // create crons
         $CronManager = new QUI\Cron\Manager();
-        $L           = QUI::getLocale();
-        $lg          = $Package->getName();
 
         // which crons to set up
         $crons = array(
-            $L->get($lg, 'cron.updateProductCache.title'),
-            $L->get($lg, 'cron.generateProductAttributeListTags.title')
+            QUI::getLocale()->get($Package->getName(), 'cron.updateProductCache.title'),
+            QUI::getLocale()->get($Package->getName(), 'cron.generateProductAttributeListTags.title')
         );
 
         foreach ($crons as $cron) {
@@ -561,10 +558,7 @@ class EventHandling
             }
 
             // add cron: run once every day at 0 am
-            $CronManager->add(
-                $cron,
-                '0', '0', '*', '*', '*'
-            );
+            $CronManager->add($cron, '0', '0', '*', '*', '*');
         }
     }
 }
