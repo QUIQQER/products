@@ -571,6 +571,7 @@ class EventHandling
             return;
         }
 
+        QUI\System\Log::writeRecursive('test');
 
     }
 }
