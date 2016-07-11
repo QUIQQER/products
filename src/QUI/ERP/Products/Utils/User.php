@@ -37,6 +37,16 @@ class User
     {
         $nettoStatus = $User->getAttribute('quiqqer.erp.isNettoUser');
 
+        if (is_numeric($nettoStatus)) {
+            $nettoStatus = (int)$nettoStatus;
+        }
+
+        switch ($nettoStatus) {
+            case self::IS_NETTO_USER:
+            case self::IS_BRUTTO_USER:
+                return $nettoStatus;
+        }
+
         if (is_bool($nettoStatus)) {
             $nettoStatus = 0;
         }

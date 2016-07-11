@@ -5,5 +5,5 @@
     <event on="onSiteSave" fire="\QUI\ERP\Products\EventHandling::onSiteSave"/>
     <event on="onSiteCreateChild" fire="\QUI\ERP\Products\EventHandling::onSiteCreateChild"/>
     <event on="onSiteSaveBefore" fire="\QUI\ERP\Products\EventHandling::onSiteSaveBefore"/>
-    <event on="onUserSave" fire="\QUI\ERP\Products\EventHandling::onUserSave"/>
+    <event on="onUserSaveBegin" fire="\QUI\ERP\Products\EventHandling::onUserSave"/>
 </events>

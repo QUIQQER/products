@@ -563,15 +563,19 @@ class EventHandling
     }
 
     /**
-     * @param $User
+     * event: on user save
+     *
+     * @param QUI\Interfaces\Users\User $User
      */
-    public static function onUserSave($User)
+    public static function onUserSave(QUI\Interfaces\Users\User $User)
     {
         if (!QUI::getUsers()->isUser($User)) {
             return;
         }
 
-        QUI\System\Log::writeRecursive('test');
-
+        $User->setAttribute(
+            'quiqqer.erp.isNettoUser',
+            QUI\Erp\Products\Utils\User::getBruttoNettoUserStatus($User)
+        );
     }
 }
