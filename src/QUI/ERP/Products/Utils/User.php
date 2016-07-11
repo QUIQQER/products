@@ -47,48 +47,49 @@ class User
                 return $nettoStatus;
         }
 
-        if (is_bool($nettoStatus)) {
-            $nettoStatus = 0;
+
+        if ($User->getAttribute('quiqqer.erp.euVatId')
+            || $User->getAttribute('quiqqer.erp.taxNumber')
+        ) {
+            return self::IS_NETTO_USER;
         }
-
-        $nettoStatus = (int)$nettoStatus;
-
-        switch ($nettoStatus) {
-            case self::IS_NETTO_USER:
-                return true;
-                break;
-
-            case self::IS_BRUTTO_USER:
-                return false;
-                break;
-        }
-
-
-        $Taxes = new QUI\ERP\Tax\Handler();
-        $Areas = new QUI\ERP\Areas\Handler();
 
         $Package = QUI::getPackage('quiqqer/tax');
         $Config  = $Package->getConfig();
 
-        $standardTax  = $Config->getValue('shop', 'tax');
-        $standardArea = $Config->getValue('shop', 'area');
-        $isNetto      = $Config->getValue('shop', 'isNetto');
-
         try {
-            $TaxGroup = $Taxes->getTaxGroup($standardTax);
-            $Area     = $Areas->getChild($standardArea);
+            $Address = self::getUserERPAddress($User);
 
+            if ($Address->getAttribute('company')) {
+                if ($Config->getValue('shop', 'companyForceBruttoPrice')) {
+                    return self::IS_BRUTTO_USER;
+                }
+
+                return self::IS_NETTO_USER;
+            }
         } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_CRITICAL);
+            // no address found
+        }
+
+        $isNetto = $Config->getValue('shop', 'isNetto');
+
+        if ($isNetto) {
             return self::IS_NETTO_USER;
         }
 
 
-        // @todo status setzen
-        // @todo muss kontrolliert werden
+        try {
+            $Tax = QUI\ERP\Tax\Utils::getTaxByUser($User);
 
+            if ($Tax->getValue() == 0) {
+                return self::IS_NETTO_USER;
+            }
 
-        return self::IS_NETTO_USER;
+        } catch (QUI\Exception $Exception) {
+            return self::IS_NETTO_USER;
+        }
+
+        return self::IS_BRUTTO_USER;
     }
 
     /**
@@ -101,6 +102,7 @@ class User
     {
         return self::getBruttoNettoUserStatus($User) === self::IS_NETTO_USER;
     }
+
 
     /**
      * Return the area of the user
@@ -119,6 +121,37 @@ class User
         }
 
         return self::getShopArea();
+    }
+
+    /**
+     * Return the user ERP address (Rechnungsaddresse, Accounting Address)
+     *
+     * @param UserInterface $User
+     * @return false|QUI\Users\Address
+     * @throws QUI\Exception
+     */
+    public static function getUserERPAddress(UserInterface $User)
+    {
+        if (!QUI::getUsers()->isUser($User)) {
+            throw new QUI\Exception(array(
+                'quiqqer/products',
+                'exception.no.user'
+            ));
+        }
+
+        /* @var $User QUI\Users\User */
+        if (!$User->getAttribute('quiqqer.erp.address')) {
+            return $User->getStandardAddress();
+        }
+
+        $erpAddress = $User->getAttribute('quiqqer.erp.address');
+
+        try {
+            return $User->getAddress($erpAddress);
+        } catch (QUI\Exception $Exception) {
+        }
+
+        return $User->getStandardAddress();
     }
 
     /**

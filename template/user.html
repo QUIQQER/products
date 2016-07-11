@@ -1,15 +1,16 @@
 <table class="data-table data-table-flexbox">
     <tr>
         <th>
-            Rechnungsdaten
+            {locale group="quiqqer/products" var="user.settings.title"}
+
         </th>
     </tr>
     <tr>
         <td>
             <label class="field-container">
-                    <span class="field-container-item">
-                        Umsatzsteuer-ID
-                    </span>
+                <span class="field-container-item">
+                    {locale group="quiqqer/products" var="user.settings.euVatId"}
+                </span>
                 <input type="text" name="quiqqer.erp.euVatId" class="field-container-field"/>
             </label>
         </td>
@@ -17,9 +18,9 @@
     <tr>
         <td>
             <label class="field-container">
-                    <span class="field-container-item">
-                        Steuernummer
-                    </span>
+                <span class="field-container-item">
+                    {locale group="quiqqer/products" var="user.settings.taxNumber"}
+                </span>
                 <input type="text" name="quiqqer.erp.taxNumber" class="field-container-field"/>
             </label>
         </td>
@@ -27,9 +28,9 @@
     <tr>
         <td>
             <label class="field-container">
-                    <span class="field-container-item">
-                        Rechnungsadresse
-                    </span>
+                <span class="field-container-item">
+                    {locale group="quiqqer/products" var="user.settings.address"}
+                </span>
                 <select type="text" name="quiqqer.erp.address" class="field-container-field"
                         data-qui="controls/users/address/Select"
                 ></select>

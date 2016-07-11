@@ -573,9 +573,12 @@ class EventHandling
             return;
         }
 
+        // reset status
+        $User->setAttribute('quiqqer.erp.isNettoUser', false);
+
         $User->setAttribute(
             'quiqqer.erp.isNettoUser',
-            QUI\Erp\Products\Utils\User::getBruttoNettoUserStatus($User)
+            QUI\ERP\Products\Utils\User::getBruttoNettoUserStatus($User)
         );
     }
 }
