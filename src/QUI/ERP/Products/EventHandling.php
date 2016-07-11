@@ -561,4 +561,16 @@ class EventHandling
             $CronManager->add($cron, '0', '0', '*', '*', '*');
         }
     }
+
+    /**
+     * @param $User
+     */
+    public static function onUserSave($User)
+    {
+        if (!QUI::getUsers()->isUser($User)) {
+            return;
+        }
+
+
+    }
 }
