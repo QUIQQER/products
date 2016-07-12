@@ -580,7 +580,7 @@ class EventHandling
         $validate = $Package->getConfig()->getValue('shop', 'validateVatId');
         $vatId    = $User->getAttribute('quiqqer.erp.euVatId');
 
-        if ($validate && $vatId) {
+        if ($validate && $vatId && !empty($vatId)) {
             try {
                 $vatId = QUI\ERP\Tax\Utils::validateVatId($vatId);
             } catch (QUI\ERP\Tax\Exception $Exception) {
@@ -590,7 +590,7 @@ class EventHandling
 
                 $vatId = QUI\ERP\Tax\Utils::cleanupVatId($vatId);
             }
-
+            
         } elseif ($vatId) {
             $vatId = QUI\ERP\Tax\Utils::cleanupVatId($vatId);
         }
