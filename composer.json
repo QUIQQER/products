@@ -27,6 +27,9 @@
     "npm-asset/mustache": "2.*",
     "bower-asset\/uri.js": "1.*"
   },
+  "require-dev": {
+    "phpunit/phpunit-mock-objects": "~3.1"
+  },
   "suggest": {
     "quiqqer/areas": "Area management",
     "quiqqer/tax": "VAT management"
