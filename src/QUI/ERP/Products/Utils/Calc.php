@@ -9,6 +9,8 @@ use QUI;
 use QUI\Interfaces\Users\User;
 use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\ERP\Products\Product\ProductList;
+
+use QUI\ERP\Products\Utils\User as ProductUserUtils;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Tax\Utils as TaxUtils;
 
@@ -119,8 +121,6 @@ class Calc
         $subSum   = 0;
         $nettoSum = 0;
         $vatArray = array();
-        $vatText  = array();
-
 
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
@@ -180,11 +180,17 @@ class Calc
 
         // vat text
         $vatLists = array();
+        $vatText  = array();
 
         foreach ($vatArray as $vatEntry) {
             $vatLists[$vatEntry['vat']] = true;
         }
-        var_dump($vatLists);
+
+        foreach ($vatLists as $vat => $bool) {
+            $vatText[] = self::getVatText($vat, $this->getUser());
+        }
+
+        var_dump($vatText);
 
         $callback(array(
             'sum'          => $sum,
@@ -277,7 +283,7 @@ class Calc
 
         /* @var $Vat QUI\ERP\Products\Field\UniqueField */
         foreach ($vatFields as $Vat) {
-            if ($Vat->getValue() === false || $Vat->getValue() < 0) {
+            if ($Vat->getValue() === false) {
                 continue;
             }
 
@@ -292,7 +298,7 @@ class Calc
             $vatArray[] = array(
                 'vat'  => $TaxEntry->getValue(),
                 'sum'  => self::round($nettoSum * ($TaxEntry->getValue() / 100)),
-                'text' => $Vat->getTitle()
+                'text' => self::getVatText($TaxEntry->getValue(), $this->getUser())
             );
         }
 
@@ -385,5 +391,65 @@ class Calc
         $value = round($value, $precision);
 
         return $value;
+    }
+
+
+    /**
+     * text
+     */
+
+    /**
+     * Return the tax message for an user
+     *
+     * @param User $User
+     * @return string
+     */
+    protected static function getVatTextByUser(User $User)
+    {
+        $Tax = QUI\ERP\Tax\Utils::getTaxByUser($User);
+        $vat = $Tax->getValue() . '%';
+
+        return self::getVatText($vat, $User);
+    }
+
+    /**
+     * Return tax text
+     * eq: incl or zzgl
+     *
+     * @param integer $vat
+     * @param User $User
+     * @return array|string
+     */
+    protected static function getVatText($vat, User $User)
+    {
+        if (ProductUserUtils::isNettoUser($User)) {
+            if (QUI\ERP\Tax\Utils::isUserEuVatUser($User)) {
+                return $User->getLocale()->get(
+                    'quiqqer/tax',
+                    'message.vat.text.netto.EUVAT',
+                    array('vat' => $vat)
+                );
+            }
+
+            return $User->getLocale()->get(
+                'quiqqer/tax',
+                'message.vat.text.netto',
+                array('vat' => $vat)
+            );
+        }
+
+        if (QUI\ERP\Tax\Utils::isUserEuVatUser($User)) {
+            return $User->getLocale()->get(
+                'quiqqer/tax',
+                'message.vat.text.brutto.EUVAT',
+                array('vat' => $vat)
+            );
+        }
+
+        return $User->getLocale()->get(
+            'quiqqer/tax',
+            'message.vat.text.brutto',
+            array('vat' => $vat)
+        );
     }
 }
