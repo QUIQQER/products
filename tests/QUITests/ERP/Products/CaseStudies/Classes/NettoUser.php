@@ -21,6 +21,10 @@ class NettoUser extends QUI\Users\User
         $this->id      = 0;
         $this->active  = 1;
         $this->company = false;
+        $this->lang    = 'de';
+
+        $this->Locale = new QUI\Locale();
+        $this->Locale->setCurrent('de');
 
         $this->setAttribute(
             'quiqqer.erp.isNettoUser',

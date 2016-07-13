@@ -214,9 +214,10 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     /**
      * Calculates
      *
+     * @param QUI\ERP\Products\Utils\Calc|null $Calc - optional, calculation object
      * @return UniqueProduct
      */
-    public function calc()
+    public function calc($Calc = null)
     {
         if ($this->calulated) {
             return $this;
@@ -224,7 +225,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $self = $this;
 
-        QUI\ERP\Products\Utils\Calc::getInstance()->getProductPrice($this, function ($data) use ($self) {
+        if (!$Calc) {
+            $Calc = QUI\ERP\Products\Utils\Calc::getInstance();
+        }
+
+        $Calc->getProductPrice($this, function ($data) use ($self) {
             $self->price    = $data['price'];
             $self->sum      = $data['sum'];
             $self->nettoSum = $data['nettoSum'];

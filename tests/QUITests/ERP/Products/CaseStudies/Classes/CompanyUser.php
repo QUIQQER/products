@@ -8,7 +8,7 @@ use QUI;
  * Class BruttoUser
  * @package QUITests\ERP\Products\CaseStudies\Classes
  */
-class NettoUser extends QUI\Users\User
+class CompanyUser extends QUI\Users\User
 {
     public function __construct()
     {
@@ -21,6 +21,10 @@ class NettoUser extends QUI\Users\User
         $this->id      = 0;
         $this->active  = 1;
         $this->company = true;
+        $this->lang    = 'en';
+
+        $this->Locale = new QUI\Locale();
+        $this->Locale->setCurrent('en');
 
         $this->setAttribute('quiqqer.erp.euVatId', 'DE263620766');
     }

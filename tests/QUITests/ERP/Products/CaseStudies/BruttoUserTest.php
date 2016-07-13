@@ -16,6 +16,11 @@ class BruttoUserTest extends \PHPUnit_Framework_TestCase
 {
     public function testCaseStudyBrutto()
     {
+        writePhpUnitMessage('/*********************************/');
+        writePhpUnitMessage('      Brutto Nutzer');
+        writePhpUnitMessage('/*********************************/');
+        writePhpUnitMessage();
+
         $Brutto = new BruttoUser();
         $List   = ProductListHelper::getList();
 

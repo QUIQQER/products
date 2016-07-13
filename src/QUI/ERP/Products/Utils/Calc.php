@@ -192,8 +192,8 @@ class Calc
                             break;
                     }
 
-                    $nettoSum = self::round($nettoSum + $percentage);
-                    $sum      = self::round($sum + $percentage);
+                    $nettoSum = $this->round($nettoSum + $percentage);
+                    $sum      = $this->round($sum + $percentage);
 
                     $priceFactorSum = $priceFactorSum + $percentage;
                     break;
@@ -210,7 +210,7 @@ class Calc
             $vatLists[$vat] = true; // liste für MWST texte
 
             // rabatt abzug - rabatte müssen bei der MWST beachtet werden
-            $vatSumPriceFactorSum = self::round($priceFactorSum * ($vat / 100));
+            $vatSumPriceFactorSum = $this->round($priceFactorSum * ($vat / 100));
 
             $sum = $sum + $vatEntry['sum'] + $vatSumPriceFactorSum;
 
@@ -219,9 +219,8 @@ class Calc
         }
 
         foreach ($vatLists as $vat => $bool) {
-            $vatText[] = self::getVatText($vat, $this->getUser());
+            $vatText[] = $this->getVatText($vat, $this->getUser());
         }
-
 
         $callback(array(
             'sum'          => $sum,
@@ -249,7 +248,7 @@ class Calc
     {
         // calc data
         if (!is_callable($callback)) {
-            $Product->calc();
+            $Product->calc($this);
 
             return $Product->getPrice();
         }
@@ -258,7 +257,7 @@ class Calc
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
         $Area        = QUI\ERP\Products\Utils\User::getUserArea($this->getUser());
 
-        $nettoPrice   = self::findProductPriceField($Product)->getNetto();
+        $nettoPrice   = $this->findProductPriceField($Product)->getNetto();
         $priceFactors = $Product->getPriceFactors()->sort();
 
         $basisNettoPrice = $nettoPrice;
@@ -293,12 +292,12 @@ class Calc
         $Tax    = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
         $vatSum = $nettoPrice * ($Tax->getValue() / 100);
 
-        $bruttoPrice = self::round($nettoPrice + $vatSum);
+        $bruttoPrice = $this->round($nettoPrice + $vatSum);
 
         // sum
-        $nettoSum  = self::round($nettoPrice * $Product->getQuantity());
+        $nettoSum  = $this->round($nettoPrice * $Product->getQuantity());
         $vatSum    = $nettoSum * ($Tax->getValue() / 100);
-        $bruttoSum = self::round($nettoSum + $vatSum);
+        $bruttoSum = $this->round($nettoSum + $vatSum);
 
         $price = $isNetto ? $nettoPrice : $bruttoPrice;
         $sum   = $isNetto ? $nettoSum : $bruttoSum;
@@ -326,8 +325,8 @@ class Calc
 
             $vatArray[] = array(
                 'vat'  => $TaxEntry->getValue(),
-                'sum'  => self::round($nettoSum * ($TaxEntry->getValue() / 100)),
-                'text' => self::getVatText($TaxEntry->getValue(), $this->getUser())
+                'sum'  => $this->round($nettoSum * ($TaxEntry->getValue() / 100)),
+                'text' => $this->getVatText($TaxEntry->getValue(), $this->getUser())
             );
         }
 
@@ -438,7 +437,7 @@ class Calc
         $Tax = QUI\ERP\Tax\Utils::getTaxByUser($User);
         $vat = $Tax->getValue() . ' % ';
 
-        return self::getVatText($vat, $User);
+        return $this->getVatText($vat, $User);
     }
 
     /**
@@ -451,16 +450,18 @@ class Calc
      */
     protected function getVatText($vat, UserInterface $User)
     {
+        $Locale = $User->getLocale();
+
         if (ProductUserUtils::isNettoUser($User)) {
             if (QUI\ERP\Tax\Utils::isUserEuVatUser($User)) {
-                return $User->getLocale()->get(
+                return $Locale->get(
                     'quiqqer/tax',
                     'message.vat.text.netto.EUVAT',
                     array('vat' => $vat)
                 );
             }
 
-            return $User->getLocale()->get(
+            return $Locale->get(
                 'quiqqer/tax',
                 'message.vat.text.netto',
                 array('vat' => $vat)
@@ -468,14 +469,14 @@ class Calc
         }
 
         if (QUI\ERP\Tax\Utils::isUserEuVatUser($User)) {
-            return $User->getLocale()->get(
+            return $Locale->get(
                 'quiqqer/tax',
                 'message.vat.text.brutto.EUVAT',
                 array('vat' => $vat)
             );
         }
 
-        return $User->getLocale()->get(
+        return $Locale->get(
             'quiqqer/tax',
             'message.vat.text.brutto',
             array('vat' => $vat)
