@@ -141,6 +141,21 @@ class PriceFactor
     }
 
     /**
+     * @return float|int
+     */
+    public function getValueFormated()
+    {
+        switch ($this->calculation) {
+            default:
+            case Calc::CALCULATION_COMPLEMENT:
+                return QUI\ERP\Currency\Handler::getDefaultCurrency()->format($this->value);
+
+            case Calc::CALCULATION_PERCENTAGE:
+                return $this->value . '%';
+        }
+    }
+
+    /**
      * Set the title
      *
      * @param string $title

@@ -19,8 +19,24 @@ class ProductList
      */
     protected $calulated = false;
 
+    /**
+     * @var int|float|double
+     */
     protected $sum;
+
+    /**
+     * @var null|QUI\Interfaces\Users\User
+     */
+    protected $User = null;
+
+    /**
+     * @var int|float|double
+     */
     protected $subSum;
+
+    /**
+     * @var int|float|double
+     */
     protected $nettoSum;
 
     /**
@@ -80,14 +96,20 @@ class ProductList
      * ProductList constructor.
      *
      * @param array $params - optional, list settings
+     * @param QUI\Interfaces\Users\User|boolean $User - optional, User for calculation
      */
-    public function __construct($params = array())
+    public function __construct($params = array(), $User = false)
     {
         if (isset($params['duplicate'])) {
             $this->duplicate = (boolean)$params['duplicate'];
         }
 
+        if (!QUI::getUsers()->isUser($User)) {
+            $User = QUI::getUserBySession();
+        }
+
         $this->PriceFactors = new QUI\ERP\Products\Utils\PriceFactors();
+        $this->User         = $User;
     }
 
     /**
@@ -102,8 +124,11 @@ class ProductList
         }
 
         $self = $this;
+        $Calc = QUI\ERP\Products\Utils\Calc::getInstance();
 
-        QUI\ERP\Products\Utils\Calc::getInstance()->calcProductList($this, function ($data) use ($self) {
+        $Calc->setUser($this->User);
+
+        $Calc->calcProductList($this, function ($data) use ($self) {
             $self->sum          = $data['sum'];
             $self->subSum       = $data['subSum'];
             $self->nettoSum     = $data['nettoSum'];

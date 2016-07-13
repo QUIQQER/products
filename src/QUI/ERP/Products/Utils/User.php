@@ -103,7 +103,6 @@ class User
         return self::getBruttoNettoUserStatus($User) === self::IS_NETTO_USER;
     }
 
-
     /**
      * Return the area of the user
      * if user is in no area, the default one of the shop would be used

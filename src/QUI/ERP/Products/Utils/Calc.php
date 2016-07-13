@@ -6,7 +6,7 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
-use QUI\Interfaces\Users\User;
+use QUI\Interfaces\Users\User as UserInterface;
 use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\ERP\Products\Product\ProductList;
 
@@ -45,14 +45,14 @@ class Calc
 
 
     /**
-     * @var User
+     * @var UserInterface
      */
     protected $User;
 
     /**
      * Calc constructor.
      *
-     * @param User|bool $User - calculation user
+     * @param UserInterface|bool $User - calculation user
      */
     public function __construct($User = false)
     {
@@ -66,7 +66,7 @@ class Calc
     /**
      * Static instance create
      *
-     * @param User|bool $User - optional
+     * @param UserInterface|bool $User - optional
      * @return Calc
      */
     public static function getInstance($User = false)
@@ -82,9 +82,9 @@ class Calc
      * Set the calculation user
      * All calculations are made in dependence from this user
      *
-     * @param User $User
+     * @param UserInterface $User
      */
-    public function setUser(User $User)
+    public function setUser(UserInterface $User)
     {
         $this->User = $User;
     }
@@ -92,7 +92,7 @@ class Calc
     /**
      * Return the calc user
      *
-     * @return User
+     * @return UserInterface
      */
     public function getUser()
     {
@@ -138,7 +138,17 @@ class Calc
             $subSum   = $subSum + $productAttributes['calculated_price'];
             $sum      = $sum + $productAttributes['calculated_price'];
             $nettoSum = $nettoSum + $productAttributes['calculated_nettoSum'];
-            $vatArray = array_merge($vatArray, $productAttributes['calculated_vatArray']);
+
+            foreach ($productAttributes['calculated_vatArray'] as $vatEntry) {
+                $vat = $vatEntry['vat'];
+
+                if (!isset($vatArray[$vat])) {
+                    $vatArray[$vat]        = $vatEntry;
+                    $vatArray[$vat]['sum'] = 0;
+                }
+
+                $vatArray[$vat]['sum'] = $vatArray[$vat]['sum'] + $vatEntry['sum'];
+            }
         }
 
         QUI::getEvents()->fireEvent(
@@ -150,6 +160,8 @@ class Calc
         $priceFactors    = $List->getPriceFactors()->sort();
         $basisNettoPrice = $nettoSum;
 
+        $priceFactorSum = 0;
+
         /* @var $PriceFactor PriceFactor */
         foreach ($priceFactors as $PriceFactor) {
             switch ($PriceFactor->getCalculation()) {
@@ -157,6 +169,8 @@ class Calc
                 case Calc::CALCULATION_COMPLEMENT:
                     $nettoSum = $nettoSum + $PriceFactor->getValue();
                     $sum      = $sum + $PriceFactor->getValue();
+
+                    $priceFactorSum = $priceFactorSum + $PriceFactor->getValue();
                     break;
 
                 // Prozent Angabe
@@ -174,6 +188,8 @@ class Calc
 
                     $nettoSum = self::round($nettoSum + $percentage);
                     $sum      = self::round($sum + $percentage);
+
+                    $priceFactorSum = $priceFactorSum + $percentage;
                     break;
             }
         }
@@ -183,14 +199,23 @@ class Calc
         $vatText  = array();
 
         foreach ($vatArray as $vatEntry) {
-            $vatLists[$vatEntry['vat']] = true;
+            $vat = $vatEntry['vat'];
+
+            $vatLists[$vat] = true; // liste für MWST texte
+
+            // rabatt abzug - rabatte müssen bei der MWST beachtet werden
+            $vatSumPriceFactorSum = self::round($priceFactorSum * ($vat / 100));
+
+            $sum = $sum + $vatEntry['sum'] + $vatSumPriceFactorSum;
+
+            // neu berechnung (aktualisierung) auf den summen eintrag in den MWST
+            $vatArray[$vat]['sum'] = $vatArray[$vat]['sum'] + $vatSumPriceFactorSum;
         }
 
         foreach ($vatLists as $vat => $bool) {
             $vatText[] = self::getVatText($vat, $this->getUser());
         }
 
-        var_dump($vatText);
 
         $callback(array(
             'sum'          => $sum,
@@ -213,8 +238,6 @@ class Calc
      * @param UniqueProduct $Product
      * @param callable|boolean $callback - optional, callback function for the calculated data array
      * @return Price
-     *
-     * @todo muss richtig implementiert werden
      */
     public function getProductPrice(UniqueProduct $Product, $callback = false)
     {
@@ -383,11 +406,11 @@ class Calc
         $groupingSeperator = QUI::getLocale()->getGroupingSeperator();
         $precision         = 8; // nachkommstelle beim rundne -> @todo in die conf?
 
-        if (strpos($value, $decimalSeperator) && $decimalSeperator != '.') {
+        if (strpos($value, $decimalSeperator) && $decimalSeperator != ' . ') {
             $value = str_replace($groupingSeperator, '', $value);
         }
 
-        $value = str_replace(',', '.', $value);
+        $value = str_replace(',', ' . ', $value);
         $value = round($value, $precision);
 
         return $value;
@@ -401,13 +424,13 @@ class Calc
     /**
      * Return the tax message for an user
      *
-     * @param User $User
+     * @param UserInterface $User
      * @return string
      */
-    protected static function getVatTextByUser(User $User)
+    protected static function getVatTextByUser(UserInterface $User)
     {
         $Tax = QUI\ERP\Tax\Utils::getTaxByUser($User);
-        $vat = $Tax->getValue() . '%';
+        $vat = $Tax->getValue() . ' % ';
 
         return self::getVatText($vat, $User);
     }
@@ -417,10 +440,10 @@ class Calc
      * eq: incl or zzgl
      *
      * @param integer $vat
-     * @param User $User
+     * @param UserInterface $User
      * @return array|string
      */
-    protected static function getVatText($vat, User $User)
+    protected static function getVatText($vat, UserInterface $User)
     {
         if (ProductUserUtils::isNettoUser($User)) {
             if (QUI\ERP\Tax\Utils::isUserEuVatUser($User)) {

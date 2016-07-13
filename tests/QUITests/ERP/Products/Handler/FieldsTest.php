@@ -17,7 +17,16 @@ class FieldsTest extends \PHPUnit_Framework_TestCase
     {
         $fields = QUI\ERP\Products\Handler\Fields::getFieldTypes();
 
-        $this->assertContains("Date", $fields);
-        $this->assertContains("Price", $fields);
+        $contains = function ($fields, $fieldType) {
+            foreach ($fields as $fieldData) {
+                if ($fieldData['src'] == $fieldType) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        $this->assertTrue($contains($fields, 'QUI\ERP\Products\Field\Types\Date'));
+        $this->assertTrue($contains($fields, 'QUI\ERP\Products\Field\Types\Price'));
     }
 }
