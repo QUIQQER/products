@@ -16,30 +16,33 @@ class ProductListHelper
     /**
      * Return the product test list
      *
+     * @param QUI\Interfaces\Users\User $User
      * @return QUI\ERP\Products\Product\ProductList
      * @throws QUI\ERP\Products\Product\Exception
      */
-    public static function getList()
+    public static function getList($User)
     {
         $Products = new QUI\ERP\Products\Handler\Products();
         $List     = new QUI\ERP\Products\Product\ProductList(
             array('duplicate' => true)
         );
 
+        $List->setUser($User);
+
         // preis 40 €
         $Product = $Products->getProduct(4575);
 
         // produkt 1
         $Product->getField(1013)->setValue(0);
-        $Product1 = $Product->createUniqueProduct();
+        $Product1 = $Product->createUniqueProduct($User->getLocale());
 
         // produkt 2
         $Product->getField(1013)->setValue(1);
-        $Product2 = $Product->createUniqueProduct();
+        $Product2 = $Product->createUniqueProduct($User->getLocale());
 
         // produkt 3
         $Product->getField(1013)->setValue(1);
-        $Product3 = $Product->createUniqueProduct();
+        $Product3 = $Product->createUniqueProduct($User->getLocale());
 
         $List->addProduct($Product1);
         $List->addProduct($Product2);

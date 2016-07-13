@@ -22,9 +22,7 @@ class CompanyUserTest extends \PHPUnit_Framework_TestCase
         writePhpUnitMessage();
 
         $Company = new CompanyUser();
-        $List    = ProductListHelper::getList();
-
-        $List->setUser($Company);
+        $List    = ProductListHelper::getList($Company);
         $List->calc();
 
         ProductListHelper::outputList($List);

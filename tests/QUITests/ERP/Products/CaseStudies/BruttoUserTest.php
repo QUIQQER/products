@@ -22,9 +22,7 @@ class BruttoUserTest extends \PHPUnit_Framework_TestCase
         writePhpUnitMessage();
 
         $Brutto = new BruttoUser();
-        $List   = ProductListHelper::getList();
-
-        $List->setUser($Brutto);
+        $List   = ProductListHelper::getList($Brutto);
         $List->calc();
 
         ProductListHelper::outputList($List);

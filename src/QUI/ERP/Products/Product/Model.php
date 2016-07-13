@@ -227,14 +227,16 @@ class Model extends QUI\QDOM
     /**
      * Return the product as unique product
      *
+     * @param QUI\Locale|null $Locale
      * @return UniqueProduct
      */
-    public function createUniqueProduct()
+    public function createUniqueProduct($Locale = null)
     {
-        return new UniqueProduct(
-            $this->getId(),
-            $this->getAttributes()
-        );
+        $attributes                = $this->getAttributes();
+        $attributes['title']       = $this->getTitle($Locale);
+        $attributes['description'] = $this->getDescription($Locale);
+
+        return new UniqueProduct($this->getId(), $attributes);
     }
 
     /**
@@ -368,10 +370,10 @@ class Model extends QUI\QDOM
     /**
      * Return the title of the product
      *
-     * @param QUI\Locale|Boolean $Locale - optional
+     * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getTitle($Locale = false)
+    public function getTitle($Locale = null)
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_TITLE, $Locale);
 
@@ -396,10 +398,10 @@ class Model extends QUI\QDOM
     /**
      * Return the description of the product
      *
-     * @param QUI\Locale|Boolean $Locale - optional
+     * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getDescription($Locale = false)
+    public function getDescription($Locale = null)
     {
         $result = $this->getLanguageFieldValue(
             Fields::FIELD_SHORT_DESC,
@@ -410,44 +412,22 @@ class Model extends QUI\QDOM
             return $result;
         }
 
-        QUI\System\Log::addWarning(
-            QUI::getLocale()->get(
-                'quiqqer/products',
-                'warning.product.have.no.description',
-                array('id' => $this->getId())
-            ),
-            array(
-                'id' => $this->getId()
-            )
-        );
-
         return '';
     }
 
     /**
      * Return the product content
      *
-     * @param QUI\Locale|Boolean $Locale - optional
+     * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getContent($Locale = false)
+    public function getContent($Locale = null)
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_CONTENT, $Locale);
 
         if ($result) {
             return $result;
         }
-//
-//        QUI\System\Log::addWarning(
-//            QUI::getLocale()->get(
-//                'quiqqer/products',
-//                'warning.product.have.no.content',
-//                array('id' => $this->getId())
-//            ),
-//            array(
-//                'id' => $this->getId()
-//            )
-//        );
 
         return '';
     }
@@ -456,11 +436,11 @@ class Model extends QUI\QDOM
      * Return the value of an language field
      *
      * @param integer $field - optional
-     * @param QUI\Locale|boolean $Locale - optional
+     * @param QUI\Locale|null $Locale - optional
      *
      * @return string|boolean
      */
-    protected function getLanguageFieldValue($field, $Locale = false)
+    protected function getLanguageFieldValue($field, $Locale = null)
     {
         if (!$Locale) {
             $Locale = Products::getLocale();
@@ -476,9 +456,21 @@ class Model extends QUI\QDOM
                 return $data;
             }
 
+            if (isset($data[$current]) && !empty($data[$current])) {
+                return $data[$current];
+            }
+
+            // search none empty
+            foreach ($data as $lang => $value) {
+                if (!empty($data[$lang])) {
+                    return $data[$lang];
+                }
+            }
+
             if (isset($data[$current])) {
                 return $data[$current];
             }
+
         } catch (QUI\Exception $Exception) {
         }
 

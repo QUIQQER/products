@@ -128,18 +128,21 @@ class ProductList
     /**
      * Calculate the prices in the list
      *
+     * @param QUI\ERP\Products\Utils\Calc|null $Calc - optional, calculation object
      * @return ProductList
      */
-    public function calc()
+    public function calc($Calc = null)
     {
         if ($this->calulated) {
             return $this;
         }
 
         $self = $this;
-        $Calc = QUI\ERP\Products\Utils\Calc::getInstance();
 
-        $Calc->setUser($this->User);
+        if (!$Calc) {
+            $Calc = QUI\ERP\Products\Utils\Calc::getInstance();
+            $Calc->setUser($this->User);
+        }
 
         $Calc->calcProductList($this, function ($data) use ($self) {
             $self->sum          = $data['sum'];
@@ -197,7 +200,9 @@ class ProductList
 
         /* @var $Product QUI\ERP\Products\Product\Model */
         if ($Product instanceof QUI\ERP\Products\Product\Model) {
-            $Product = $Product->createUniqueProduct();
+            $Product = $Product->createUniqueProduct(
+                $this->User->getLocale()
+            );
         }
 
         if (!($Product instanceof UniqueProduct)) {
@@ -232,7 +237,7 @@ class ProductList
 
         QUI\ERP\Products\Handler\Products::setLocale($this->User->getLocale());
 
-        /* @var $Product Product */
+        /* @var $Product UniqueProduct */
         foreach ($this->products as $Product) {
             $attributes = $Product->getAttributes();
             $fields     = $Product->getFields();

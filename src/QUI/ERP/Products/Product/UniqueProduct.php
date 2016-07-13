@@ -252,7 +252,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     public function getTitle($Locale = false)
     {
         if (!$Locale) {
-            $Locale = QUI::getLocale();
+            $Locale = QUI\ERP\Products\Handler\Products::getLocale();
         }
 
         $current = $Locale->getCurrent();
@@ -280,7 +280,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     public function getDescription($Locale = false)
     {
         if (!$Locale) {
-            $Locale = QUI::getLocale();
+            $Locale = QUI\ERP\Products\Handler\Products::getLocale();
         }
 
         $current = $Locale->getCurrent();
@@ -303,7 +303,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     public function getContent($Locale = false)
     {
         if (!$Locale) {
-            $Locale = QUI::getLocale();
+            $Locale = QUI\ERP\Products\Handler\Products::getLocale();
         }
 
         $current = $Locale->getCurrent();
