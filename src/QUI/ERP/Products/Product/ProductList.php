@@ -113,6 +113,19 @@ class ProductList
     }
 
     /**
+     * Set the user for the list
+     * User for calculation
+     *
+     * @param QUI\Interfaces\Users\User $User
+     */
+    public function setUser(QUI\Interfaces\Users\User $User)
+    {
+        if (QUI::getUsers()->isUser($User)) {
+            $this->User = $User;
+        }
+    }
+
+    /**
      * Calculate the prices in the list
      *
      * @return ProductList
@@ -139,7 +152,6 @@ class ProductList
             $self->currencyData = $data['currencyData'];
 
             $self->calulated = true;
-
         });
 
         return $this;
@@ -217,6 +229,8 @@ class ProductList
     {
         $this->calc();
         $products = array();
+
+        QUI\ERP\Products\Handler\Products::setLocale($this->User->getLocale());
 
         /* @var $Product Product */
         foreach ($this->products as $Product) {

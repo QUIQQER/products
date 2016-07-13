@@ -125,11 +125,14 @@ class Calc
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
             // add netto price
-
-            QUI::getEvents()->fireEvent(
-                'onQuiqqerProductsCalcListProduct',
-                array($this, $Product)
-            );
+            try {
+                QUI::getEvents()->fireEvent(
+                    'onQuiqqerProductsCalcListProduct',
+                    array($this, $Product)
+                );
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_ERROR);
+            }
 
             $this->getProductPrice($Product);
 
@@ -151,16 +154,19 @@ class Calc
             }
         }
 
-        QUI::getEvents()->fireEvent(
-            'onQuiqqerProductsCalcList',
-            array($this, $List)
-        );
+        try {
+            QUI::getEvents()->fireEvent(
+                'onQuiqqerProductsCalcList',
+                array($this, $List)
+            );
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_ERROR);
+        }
 
         // price factors
         $priceFactors    = $List->getPriceFactors()->sort();
         $basisNettoPrice = $nettoSum;
-
-        $priceFactorSum = 0;
+        $priceFactorSum  = 0;
 
         /* @var $PriceFactor PriceFactor */
         foreach ($priceFactors as $PriceFactor) {
@@ -400,10 +406,10 @@ class Calc
      * @param string $value
      * @return float|mixed
      */
-    public static function round($value)
+    public function round($value)
     {
-        $decimalSeperator  = QUI::getLocale()->getDecimalSeperator();
-        $groupingSeperator = QUI::getLocale()->getGroupingSeperator();
+        $decimalSeperator  = $this->getUser()->getLocale()->getDecimalSeperator();
+        $groupingSeperator = $this->getUser()->getLocale()->getGroupingSeperator();
         $precision         = 8; // nachkommstelle beim rundne -> @todo in die conf?
 
         if (strpos($value, $decimalSeperator) && $decimalSeperator != ' . ') {
@@ -427,7 +433,7 @@ class Calc
      * @param UserInterface $User
      * @return string
      */
-    protected static function getVatTextByUser(UserInterface $User)
+    protected function getVatTextByUser(UserInterface $User)
     {
         $Tax = QUI\ERP\Tax\Utils::getTaxByUser($User);
         $vat = $Tax->getValue() . ' % ';
@@ -443,7 +449,7 @@ class Calc
      * @param UserInterface $User
      * @return array|string
      */
-    protected static function getVatText($vat, UserInterface $User)
+    protected function getVatText($vat, UserInterface $User)
     {
         if (ProductUserUtils::isNettoUser($User)) {
             if (QUI\ERP\Tax\Utils::isUserEuVatUser($User)) {
