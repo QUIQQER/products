@@ -35,6 +35,7 @@ class ProductListHelper
         // produkt 1
         $Product->getField(1013)->setValue(0);
         $Product1 = $Product->createUniqueProduct($User->getLocale());
+        $Product1->setQuantity(2);
 
         // produkt 2
         $Product->getField(1013)->setValue(1);
@@ -69,7 +70,7 @@ class ProductListHelper
         writePhpUnitMessage();
 
         foreach ($data['products'] as $product) {
-            writePhpUnitMessage($product['title']);
+            writePhpUnitMessage($product['quantity'] . 'x ' . $product['title']);
             writePhpUnitMessage('-------');
 
             writePhpUnitMessage('    Calc Netto Sum: ' . $product['calculated_nettoSum']);
@@ -87,6 +88,7 @@ class ProductListHelper
 
         writePhpUnitMessage();
 
+        writePhpUnitMessage('NettoSubSum: ' . $data['nettoSubSum']);
         writePhpUnitMessage('SubSum: ' . $data['subSum']);
         writePhpUnitMessage();
         writePhpUnitMessage();

@@ -35,8 +35,9 @@
     "quiqqer/tax": "VAT management"
   },
   "autoload": {
-    "psr-0": {
-      "QUI": "src/"
+    "psr-4": {
+      "QUI\\ERP\\Products\\": "src/QUI/ERP/Products",
+      "QUITests\\ERP\\Products\\": "tests/QUITests/ERP/Products"
     }
   }
 }

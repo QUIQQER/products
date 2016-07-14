@@ -40,6 +40,11 @@ class ProductList
     protected $nettoSum;
 
     /**
+     * @var int|float|double
+     */
+    protected $nettoSubSum;
+
+    /**
      * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
      * @var array
      */
@@ -148,6 +153,7 @@ class ProductList
             $self->sum          = $data['sum'];
             $self->subSum       = $data['subSum'];
             $self->nettoSum     = $data['nettoSum'];
+            $self->nettoSubSum  = $data['nettoSubSum'];
             $self->vatArray     = $data['vatArray'];
             $self->vatText      = $data['vatText'];
             $self->isEuVat      = $data['isEuVat'];
@@ -257,6 +263,7 @@ class ProductList
             'sum'          => $this->sum,
             'subSum'       => $this->subSum,
             'nettoSum'     => $this->nettoSum,
+            'nettoSubSum'  => $this->nettoSubSum,
             'vatArray'     => $this->vatArray,
             'vatText'      => $this->vatText,
             'isEuVat'      => $this->isEuVat,

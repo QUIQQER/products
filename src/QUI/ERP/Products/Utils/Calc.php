@@ -117,7 +117,6 @@ class Calc
         $isNetto     = QUI\ERP\Products\Utils\User::isNettoUser($this->getUser());
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
 
-        $sum      = 0;
         $subSum   = 0;
         $nettoSum = 0;
         $vatArray = array();
@@ -138,8 +137,7 @@ class Calc
 
             $productAttributes = $Product->getAttributes();
 
-            $subSum   = $subSum + $productAttributes['calculated_price'];
-            $sum      = $sum + $productAttributes['calculated_price'];
+            $subSum   = $subSum + $productAttributes['calculated_sum'];
             $nettoSum = $nettoSum + $productAttributes['calculated_nettoSum'];
 
             foreach ($productAttributes['calculated_vatArray'] as $vatEntry) {
@@ -164,18 +162,16 @@ class Calc
         }
 
         // price factors
-        $priceFactors    = $List->getPriceFactors()->sort();
-        $basisNettoPrice = $nettoSum;
-        $priceFactorSum  = 0;
+        $priceFactors   = $List->getPriceFactors()->sort();
+        $nettoSubSum    = $nettoSum;
+        $priceFactorSum = 0;
 
         /* @var $PriceFactor PriceFactor */
         foreach ($priceFactors as $PriceFactor) {
             switch ($PriceFactor->getCalculation()) {
                 // einfache Zahl, Währung --- kein Prozent
                 case Calc::CALCULATION_COMPLEMENT:
-                    $nettoSum = $nettoSum + $PriceFactor->getValue();
-                    $sum      = $sum + $PriceFactor->getValue();
-
+                    $nettoSum       = $nettoSum + $PriceFactor->getValue();
                     $priceFactorSum = $priceFactorSum + $PriceFactor->getValue();
                     break;
 
@@ -184,7 +180,7 @@ class Calc
                     switch ($PriceFactor->getCalculationBasis()) {
                         default:
                         case Calc::CALCULATION_BASIS_NETTO:
-                            $percentage = $PriceFactor->getValue() / 100 * $basisNettoPrice;
+                            $percentage = $PriceFactor->getValue() / 100 * $nettoSubSum;
                             break;
 
                         case Calc::CALCULATION_BASIS_CURRENTPRICE:
@@ -192,9 +188,7 @@ class Calc
                             break;
                     }
 
-                    $nettoSum = $this->round($nettoSum + $percentage);
-                    $sum      = $this->round($sum + $percentage);
-
+                    $nettoSum       = $this->round($nettoSum + $percentage);
                     $priceFactorSum = $priceFactorSum + $percentage;
                     break;
             }
@@ -203,6 +197,7 @@ class Calc
         // vat text
         $vatLists = array();
         $vatText  = array();
+        $sum      = $nettoSum;
 
         foreach ($vatArray as $vatEntry) {
             $vat = $vatEntry['vat'];
@@ -219,13 +214,14 @@ class Calc
         }
 
         foreach ($vatLists as $vat => $bool) {
-            $vatText[] = $this->getVatText($vat, $this->getUser());
+            $vatText[$vat] = $this->getVatText($vat, $this->getUser());
         }
 
         $callback(array(
             'sum'          => $sum,
             'subSum'       => $subSum,
             'nettoSum'     => $nettoSum,
+            'nettoSubSum'  => $nettoSubSum,
             'vatArray'     => $vatArray,
             'vatText'      => $vatText,
             'isEuVat'      => $isEuVatUser,
