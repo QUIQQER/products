@@ -237,4 +237,21 @@ class PriceFactor
                 break;
         }
     }
+
+    /**
+     * Returns the price factor as an array
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'title'             => $this->getTitle(),
+            'description'       => $this->getDescription(),
+            'calculation'       => $this->getCalculation(),
+            'calculation_basis' => $this->getCalculationBasis(),
+            'value'             => $this->getValue(),
+            'priority'          => $this->getPriority()
+        );
+    }
 }

@@ -265,6 +265,7 @@ class Calc
         $nettoPrice   = $this->findProductPriceField($Product)->getNetto();
         $priceFactors = $Product->getPriceFactors()->sort();
 
+        $factors                    = array();
         $basisNettoPrice            = $nettoPrice;
         $calculationBasisBruttoList = array();
 
@@ -277,8 +278,9 @@ class Calc
 
             switch ($PriceFactor->getCalculation()) {
                 // einfache Zahl, Währung --- kein Prozent
+                default:
                 case Calc::CALCULATION_COMPLEMENT:
-                    $nettoPrice = $nettoPrice + $PriceFactor->getValue();
+                    $priceFactorSum = $PriceFactor->getValue();
                     break;
 
                 // Prozent Angabe
@@ -286,17 +288,21 @@ class Calc
                     switch ($PriceFactor->getCalculationBasis()) {
                         default:
                         case Calc::CALCULATION_BASIS_NETTO:
-                            $percentage = $PriceFactor->getValue() / 100 * $basisNettoPrice;
+                            $priceFactorSum = $PriceFactor->getValue() / 100 * $basisNettoPrice;
                             break;
 
                         case Calc::CALCULATION_BASIS_CURRENTPRICE:
-                            $percentage = $PriceFactor->getValue() / 100 * $nettoPrice;
+                            $priceFactorSum = $PriceFactor->getValue() / 100 * $nettoPrice;
                             break;
                     }
-
-                    $nettoPrice = $nettoPrice + $percentage;
-                    break;
             }
+
+            $nettoPrice       = $nettoPrice + $priceFactorSum;
+            $priceFactorArray = $PriceFactor->toArray();
+
+            $priceFactorArray['sum'] = $priceFactorSum;
+
+            $factors[] = $priceFactorArray;
         }
 
         // Calc::CALCULATION_BASIS_BRUTTO
@@ -365,7 +371,8 @@ class Calc
             'vatText'      => $vatText,
             'isEuVat'      => $isEuVatUser,
             'isNetto'      => $isNetto,
-            'currencyData' => ''
+            'currencyData' => '',
+            'factors'      => $factors
         ));
 
         return $Product->getPrice();

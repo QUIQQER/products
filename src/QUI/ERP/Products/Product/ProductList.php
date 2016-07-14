@@ -25,7 +25,7 @@ class ProductList
     protected $sum;
 
     /**
-     * @var null|QUI\Interfaces\Users\User
+     * @var QUI\Interfaces\Users\User
      */
     protected $User = null;
 
@@ -128,6 +128,16 @@ class ProductList
         if (QUI::getUsers()->isUser($User)) {
             $this->User = $User;
         }
+    }
+
+    /**
+     * Return the list user
+     *
+     * @return QUI\Interfaces\Users\User|QUI\Users\User
+     */
+    public function getUser()
+    {
+        return $this->User;
     }
 
     /**

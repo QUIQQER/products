@@ -59,9 +59,22 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     protected $attributes = array();
 
-    // calculate params
+    /**
+     * calculated price
+     * @var float|int
+     */
     protected $price;
+
+    /**
+     * calculated sum
+     * @var float|int
+     */
     protected $sum;
+
+    /**
+     * calculated nettosum
+     * @var float|int
+     */
     protected $nettoSum;
 
     /**
@@ -81,6 +94,12 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * @var bool
      */
     protected $isNetto = true;
+
+    /**
+     * Calculated factors
+     * @var array
+     */
+    protected $factors = array();
 
     /**
      * UniqueProduct constructor.
@@ -236,6 +255,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $self->vatArray = $data['vatArray'];
             $self->isEuVat  = $data['isEuVat'];
             $self->isNetto  = $data['isNetto'];
+            $self->factors  = $data['factors'];
 
             $self->calulated = true;
         });
@@ -526,6 +546,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $attributes['calculated_isEuVat']  = $this->isEuVat;
         $attributes['calculated_isNetto']  = $this->isNetto;
         $attributes['calculated_vatArray'] = $this->vatArray;
+        $attributes['calculated_factors']  = $this->factors;
 
         return $attributes;
     }

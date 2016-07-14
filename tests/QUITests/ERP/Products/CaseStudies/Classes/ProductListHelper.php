@@ -59,7 +59,10 @@ class ProductListHelper
      */
     public static function outputList(QUI\ERP\Products\Product\ProductList $List)
     {
-        $data = $List->toArray();
+        $data     = $List->toArray();
+        $User     = $List->getUser();
+        $Locale   = $User->getLocale();
+        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
 
         writePhpUnitMessage('Preis Liste');
         writePhpUnitMessage('== ' . ($data['isNetto'] ? 'netto' : 'brutto') . ' =========================');
@@ -70,16 +73,29 @@ class ProductListHelper
         writePhpUnitMessage();
 
         foreach ($data['products'] as $product) {
+            $priceFactors = $product['calculated_factors'];
+
             writePhpUnitMessage($product['quantity'] . 'x ' . $product['title']);
             writePhpUnitMessage('-------');
 
-            writePhpUnitMessage('    Calc Netto Sum: ' . $product['calculated_nettoSum']);
-            writePhpUnitMessage('    Calc Price: ' . $product['calculated_price']);
-            writePhpUnitMessage('    Calc Sum: ' . $product['calculated_sum']);
+            writePhpUnitMessage('    Calc Netto Sum: ' . $Currency->format($product['calculated_nettoSum'], $Locale));
+            writePhpUnitMessage('    Calc Price: ' . $Currency->format($product['calculated_price'], $Locale));
+            writePhpUnitMessage('    Calc Sum: ' . $Currency->format($product['calculated_sum'], $Locale));
+
+
+            foreach ($priceFactors as $priceFactor) {
+                writePhpUnitMessage(
+                    '    -> ' . $priceFactor['title'] . ': ' . $Currency->format($priceFactor['sum'], $Locale)
+                );
+            }
+
+            writePhpUnitMessage();
 
             foreach ($product['calculated_vatArray'] as $vatEntry) {
                 writePhpUnitMessage(
-                    '    -> Vat ' . $vatEntry['vat'] . '% : ' . $vatEntry['sum'] . ' ' . $vatEntry['text']
+                    '    -> Vat ' . $vatEntry['vat'] . '% : ' .
+                    $Currency->format($vatEntry['sum'], $Locale) .
+                    ' ' . $vatEntry['text']
                 );
             }
 
@@ -88,8 +104,8 @@ class ProductListHelper
 
         writePhpUnitMessage();
 
-        writePhpUnitMessage('NettoSubSum: ' . $data['nettoSubSum']);
-        writePhpUnitMessage('SubSum: ' . $data['subSum']);
+        writePhpUnitMessage('NettoSubSum: ' . $Currency->format($data['nettoSubSum'], $Locale));
+        writePhpUnitMessage('SubSum: ' . $Currency->format($data['subSum'], $Locale));
         writePhpUnitMessage();
         writePhpUnitMessage();
 
@@ -112,16 +128,16 @@ class ProductListHelper
         writePhpUnitMessage('------');
         writePhpUnitMessage();
 
-        writePhpUnitMessage('nettoSum: ' . $data['nettoSum']);
+        writePhpUnitMessage('nettoSum: ' . $Currency->format($data['nettoSum'], $Locale));
         writePhpUnitMessage();
         writePhpUnitMessage('    MwSt.:');
 
         foreach ($data['vatArray'] as $vatEntry) {
-            writePhpUnitMessage('    - ' . $vatEntry['text'] . ': ' . $vatEntry['sum']);
+            writePhpUnitMessage('    - ' . $vatEntry['text'] . ': ' . $Currency->format($vatEntry['sum'], $Locale));
         }
 
         writePhpUnitMessage();
-        writePhpUnitMessage('Sum: ' . $data['sum']);
+        writePhpUnitMessage('Sum: ' . $Currency->format($data['sum'], $Locale));
         writePhpUnitMessage();
         writePhpUnitMessage();
     }
