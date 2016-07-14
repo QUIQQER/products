@@ -393,7 +393,15 @@ class Calc
 
         // exists more price fields?
         // is user in group filter
-        $priceFields = array_filter($Product->getFieldsByType('Price'), function ($Field) use ($User) {
+        $priceList = $Product->getFieldsByType('Price');
+
+        if (empty($priceList)) {
+            return new QUI\ERP\Products\Utils\Price($PriceField->getValue(), $Currency);
+        }
+
+        // @todo speizial preisfelder beachten, zb EK Preis
+
+        $priceFields = array_filter($priceList, function ($Field) use ($User) {
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
 
             // ignore default main price

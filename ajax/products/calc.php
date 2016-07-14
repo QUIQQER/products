@@ -41,13 +41,10 @@ QUI::$Ajax->registerFunction(
             }
         }
 
-
         $Unique = $Product->createUniqueProduct();
         $Unique->setQuantity(isset($quantity) ? $quantity : 1);
 
-        $Price = QUI\ERP\Products\Utils\Calc::getInstance()->getProductPrice($Unique);
-
-        return $Price->toArray();
+        return $Unique->calc()->toArray();
     },
     array('productId', 'fields', 'quantity')
 );

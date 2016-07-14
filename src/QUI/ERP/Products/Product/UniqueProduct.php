@@ -416,6 +416,10 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function getFields()
     {
+        if (QUI::isFrontend()) {
+            return $this->getPublicFields();
+        }
+
         return $this->fields;
     }
 
@@ -468,6 +472,46 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         }
 
         return false;
+    }
+
+    /**
+     * Return all custom fields
+     * custom fields are only fields that the customer fills out
+     *
+     * @return array
+     */
+    public function getCustomFields()
+    {
+        $result = array();
+
+        /* @var $Field QUI\ERP\Products\Field\UniqueField */
+        foreach ($this->fields as $Field) {
+            if ($Field->isCustomField()) {
+                $result[$Field->getId()] = $Field;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return all public fields
+     * custom fields are only fields that the customer fills out
+     *
+     * @return array
+     */
+    public function getPublicFields()
+    {
+        $result = array();
+
+        /* @var $Field QUI\ERP\Products\Field\UniqueField */
+        foreach ($this->fields as $Field) {
+            if ($Field->isPublic()) {
+                $result[$Field->getId()] = $Field;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -548,6 +592,19 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $attributes['calculated_vatArray'] = $this->vatArray;
         $attributes['calculated_factors']  = $this->factors;
 
+        if (isset($attributes['fieldData'])) {
+            unset($attributes['fieldData']);
+        }
+
         return $attributes;
+    }
+
+    /**
+     * Alias for getAttributes()
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->getAttributes();
     }
 }
