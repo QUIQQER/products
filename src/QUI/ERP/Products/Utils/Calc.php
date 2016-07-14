@@ -43,6 +43,15 @@ class Calc
      */
     const CALCULATION_BASIS_CURRENTPRICE = 2;
 
+    /**
+     * Basis brutto
+     * include all price factors (from netto calculated price)
+     * warning: its not brutto VAT
+     *
+     * geht vnn der netto basis aus, welche alle price faktoren schon beinhaltet
+     * alle felder sind in diesem price schon enthalten
+     */
+    const CALCULATION_BASIS_BRUTTO = 3;
 
     /**
      * @var UserInterface
@@ -256,10 +265,16 @@ class Calc
         $nettoPrice   = $this->findProductPriceField($Product)->getNetto();
         $priceFactors = $Product->getPriceFactors()->sort();
 
-        $basisNettoPrice = $nettoPrice;
+        $basisNettoPrice            = $nettoPrice;
+        $calculationBasisBruttoList = array();
 
         /* @var PriceFactor $PriceFactor */
         foreach ($priceFactors as $PriceFactor) {
+            if ($PriceFactor->getCalculationBasis() == Calc::CALCULATION_BASIS_BRUTTO) {
+                $calculationBasisBruttoList[] = $PriceFactor;
+                continue;
+            }
+
             switch ($PriceFactor->getCalculation()) {
                 // einfache Zahl, Währung --- kein Prozent
                 case Calc::CALCULATION_COMPLEMENT:
@@ -279,6 +294,22 @@ class Calc
                             break;
                     }
 
+                    $nettoPrice = $nettoPrice + $percentage;
+                    break;
+            }
+        }
+
+        // Calc::CALCULATION_BASIS_BRUTTO
+        foreach ($calculationBasisBruttoList as $PriceFactor) {
+            switch ($PriceFactor->getCalculation()) {
+                // einfache Zahl, Währung --- kein Prozent
+                case Calc::CALCULATION_COMPLEMENT:
+                    $nettoPrice = $nettoPrice + $PriceFactor->getValue();
+                    break;
+
+                // Prozent Angabe
+                case Calc::CALCULATION_PERCENTAGE:
+                    $percentage = $PriceFactor->getValue() / 100 * $nettoPrice;
                     $nettoPrice = $nettoPrice + $percentage;
                     break;
             }
