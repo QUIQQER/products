@@ -13,6 +13,7 @@ use QUI\Projects\Media\Utils as MediaUtils;
  * Class UniqueProduct
  *
  * @event onQuiqqerProductsPriceFactorsInit [QUI\ERP\Products\Utils\PriceFactors, QUI\ERP\Products\Interfaces\Product]
+ * @todo view für unique product
  */
 class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
 {
@@ -416,10 +417,6 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function getFields()
     {
-        if (QUI::isFrontend()) {
-            return $this->getPublicFields();
-        }
-
         return $this->fields;
     }
 

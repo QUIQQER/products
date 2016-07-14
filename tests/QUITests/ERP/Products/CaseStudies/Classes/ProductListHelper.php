@@ -78,6 +78,9 @@ class ProductListHelper
             writePhpUnitMessage($product['quantity'] . 'x ' . $product['title']);
             writePhpUnitMessage('-------');
 
+            writePhpUnitMessage('Grundpreis: ' . $Currency->format($product['price_netto'], $Locale));
+            writePhpUnitMessage();
+
             writePhpUnitMessage('    Calc Netto Sum: ' . $Currency->format($product['calculated_nettoSum'], $Locale));
             writePhpUnitMessage('    Calc Price: ' . $Currency->format($product['calculated_price'], $Locale));
             writePhpUnitMessage('    Calc Sum: ' . $Currency->format($product['calculated_sum'], $Locale));
@@ -94,8 +97,8 @@ class ProductListHelper
             foreach ($product['calculated_vatArray'] as $vatEntry) {
                 writePhpUnitMessage(
                     '    -> Vat ' . $vatEntry['vat'] . '% : ' .
-                    $Currency->format($vatEntry['sum'], $Locale) .
-                    ' ' . $vatEntry['text']
+                    $vatEntry['text'] . ' ' .
+                    $Currency->format($vatEntry['sum'], $Locale)
                 );
             }
 

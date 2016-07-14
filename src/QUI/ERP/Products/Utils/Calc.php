@@ -192,6 +192,7 @@ class Calc
                             $percentage = $PriceFactor->getValue() / 100 * $nettoSubSum;
                             break;
 
+                        case Calc::CALCULATION_BASIS_BRUTTO:
                         case Calc::CALCULATION_BASIS_CURRENTPRICE:
                             $percentage = $PriceFactor->getValue() / 100 * $nettoSum;
                             break;
