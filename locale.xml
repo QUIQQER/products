@@ -50,6 +50,10 @@
             <de><![CDATA[Preise nicht anzeigen]]></de>
             <en><![CDATA[Hide prices]]></en>
         </locale>
+        <locale name="settings.window.products.hideDiscounts">
+            <de><![CDATA[Rabatte nicht anzeigen]]></de>
+            <en><![CDATA[Hide discounts]]></en>
+        </locale>
         <locale name="settings.window.products.usePermissions">
             <de><![CDATA[Produkt Rechte aktivieren]]></de>
             <en><![CDATA[Activate product permissions]]></en>

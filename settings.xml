@@ -10,6 +10,9 @@
                 <conf name="hidePrices">
                     <type><![CDATA[bool]]></type>
                 </conf>
+                <conf name="hideDiscounts">
+                    <type><![CDATA[bool]]></type>
+                </conf>
                 <conf name="mainCategory">
                     <type><![CDATA[integer]]></type>
                 </conf>
@@ -53,6 +56,12 @@
                         <input conf="products.hidePrices" type="checkbox">
                             <text>
                                 <locale group="quiqqer/products" var="settings.window.products.hidePrices"/>
+                            </text>
+                        </input>
+
+                        <input conf="products.hideDiscounts" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.hideDiscounts"/>
                             </text>
                         </input>
 

@@ -40,6 +40,13 @@ class PriceFactor
     protected $value = 0;
 
     /**
+     * Is the pricefactor visible
+     *
+     * @var bool
+     */
+    protected $visible = true;
+
+    /**
      * Basis calculation
      * of which calculation basis should be calculated
      *
@@ -90,6 +97,14 @@ class PriceFactor
         if (isset($params['value'])) {
             $this->setValue($params['value']);
         }
+
+        if (isset($params['visible'])) {
+            if (is_bool($params['visible'])) {
+                $this->visible = (bool)$params['visible'];
+            } else {
+                $this->visible = $params['visible'] ? true : false;
+            }
+        }
     }
 
     /**
@@ -138,6 +153,16 @@ class PriceFactor
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Is the price factor visible
+     *
+     * @return boolean
+     */
+    public function isVisible()
+    {
+        return $this->visible;
     }
 
     /**
@@ -251,7 +276,8 @@ class PriceFactor
             'calculation'       => $this->getCalculation(),
             'calculation_basis' => $this->getCalculationBasis(),
             'value'             => $this->getValue(),
-            'priority'          => $this->getPriority()
+            'priority'          => $this->getPriority(),
+            'visible'           => $this->isVisible()
         );
     }
 }

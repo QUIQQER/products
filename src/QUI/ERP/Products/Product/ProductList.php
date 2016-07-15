@@ -293,4 +293,18 @@ class ProductList
     {
         return json_encode($this->toArray());
     }
+
+    /**
+     * Return the product list view for the frontend
+     *
+     * @return ProductListView
+     */
+    public function getView()
+    {
+        if (!$this->calulated) {
+            $this->calc();
+        }
+
+        return new ProductListView($this);
+    }
 }
