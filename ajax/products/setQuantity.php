@@ -16,7 +16,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_setQuantity',
     function ($productId, $quantity) {
         $Product = Products::getProduct($productId);
-        $Unique  = $Product->createUniqueProduct();
+        $Unique  = $Product->createUniqueProduct(QUI::getUserBySession());
         $Unique->setQuantity($quantity);
 
         return $Unique->getQuantity();

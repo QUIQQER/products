@@ -216,9 +216,7 @@ class ProductList
 
         /* @var $Product QUI\ERP\Products\Product\Model */
         if ($Product instanceof QUI\ERP\Products\Product\Model) {
-            $Product = $Product->createUniqueProduct(
-                $this->User->getLocale()
-            );
+            $Product = $Product->createUniqueProduct($this->User);
         }
 
         if (!($Product instanceof UniqueProduct)) {

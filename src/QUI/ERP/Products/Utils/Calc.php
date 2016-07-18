@@ -263,7 +263,7 @@ class Calc
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
         $Area        = QUI\ERP\Products\Utils\User::getUserArea($this->getUser());
 
-        $nettoPrice   = $this->findProductPriceField($Product)->getNetto();
+        $nettoPrice   = $Product->getNettoPrice()->getNetto();
         $priceFactors = $Product->getPriceFactors()->sort();
 
         $factors                    = array();
@@ -378,69 +378,73 @@ class Calc
 
         return $Product->getPrice();
     }
-
-    /**
-     * Find the the product price field
-     * If the product have multiple price fields
-     *
-     * @param UniqueProduct $Product
-     * @return \QUI\ERP\Products\Utils\Price
-     */
-    protected function findProductPriceField(UniqueProduct $Product)
-    {
-        $Currency   = QUI\ERP\Currency\Handler::getDefaultCurrency();
-        $PriceField = $Product->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRICE);
-        $User       = $this->getUser();
-
-        // exists more price fields?
-        // is user in group filter
-        $priceList = $Product->getFieldsByType('Price');
-
-        if (empty($priceList)) {
-            return new QUI\ERP\Products\Utils\Price($PriceField->getValue(), $Currency);
-        }
-
-        // @todo speizial preisfelder beachten, zb EK Preis
-
-        $priceFields = array_filter($priceList, function ($Field) use ($User) {
-            /* @var $Field QUI\ERP\Products\Field\UniqueField */
-
-            // ignore default main price
-            if ($Field->getId() == QUI\ERP\Products\Handler\Fields::FIELD_PRICE) {
-                return false;
-            };
-
-            $options = $Field->getOptions();
-
-            if (!isset($options['groups'])) {
-                return false;
-            }
-
-            $groups = explode(',', $options['groups']);
-
-            if (empty($groups)) {
-                return false;
-            }
-
-            foreach ($groups as $gid) {
-                if ($User->isInGroup($gid)) {
-                    return true;
-                }
-            }
-
-            return false;
-        });
-
-        // use the lowest price?
-        foreach ($priceFields as $Field) {
-            /* @var $Field QUI\ERP\Products\Field\UniqueField */
-            if ($Field->getValue() < $PriceField->getValue()) {
-                $PriceField = $Field;
-            }
-        }
-
-        return new QUI\ERP\Products\Utils\Price($PriceField->getValue(), $Currency);
-    }
+//
+//    /**
+//     * Find the the product price field
+//     * If the product have multiple price fields
+//     *
+//     * @param UniqueProduct $Product
+//     * @return \QUI\ERP\Products\Utils\Price
+//     */
+//    protected function findProductPriceField(UniqueProduct $Product)
+//    {
+//        $Currency   = QUI\ERP\Currency\Handler::getDefaultCurrency();
+//        $PriceField = $Product->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRICE);
+//        $User       = $this->getUser();
+//
+//        // exists more price fields?
+//        // is user in group filter
+//        $priceList = $Product->getFieldsByType('Price');
+//
+//        if (empty($priceList)) {
+//            return new QUI\ERP\Products\Utils\Price($PriceField->getValue(), $Currency);
+//        }
+//
+//        $priceFields = array_filter($priceList, function ($Field) use ($User) {
+//            /* @var $Field QUI\ERP\Products\Field\UniqueField */
+//
+//            // ignore default main price
+//            if ($Field->getId() == QUI\ERP\Products\Handler\Fields::FIELD_PRICE) {
+//                return false;
+//            };
+//
+//            $options = $Field->getOptions();
+//
+//            if (!isset($options['groups'])) {
+//                return false;
+//            }
+//
+//            if (isset($options['ignoreForPriceCalculation'])
+//                && $options['ignoreForPriceCalculation'] == 1
+//            ) {
+//                return false;
+//            }
+//
+//            $groups = explode(',', $options['groups']);
+//
+//            if (empty($groups)) {
+//                return false;
+//            }
+//
+//            foreach ($groups as $gid) {
+//                if ($User->isInGroup($gid)) {
+//                    return true;
+//                }
+//            }
+//
+//            return false;
+//        });
+//
+//        // use the lowest price?
+//        foreach ($priceFields as $Field) {
+//            /* @var $Field QUI\ERP\Products\Field\UniqueField */
+//            if ($Field->getValue() < $PriceField->getValue()) {
+//                $PriceField = $Field;
+//            }
+//        }
+//
+//        return new QUI\ERP\Products\Utils\Price($PriceField->getValue(), $Currency);
+//    }
 
     /**
      * Rounds the value via shop config

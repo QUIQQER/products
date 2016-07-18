@@ -4,6 +4,7 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require Locale
  *
  * new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(1000)
  */

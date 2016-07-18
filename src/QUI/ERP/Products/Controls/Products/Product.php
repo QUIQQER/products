@@ -48,10 +48,11 @@ class Product extends QUI\Control
         $fields  = array();
 
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
-            $View  = $Product->getView();
-            $Price = QUI\ERP\Products\Utils\Calc::getInstance()->getProductPrice(
-                $Product->createUniqueProduct()
-            );
+            $View = $Product->getView();
+            $User = QUI::getUserBySession();
+            $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
+
+            $Price = $Calc->getProductPrice($Product->createUniqueProduct($Calc));
 
         } else {
             $View  = $Product;

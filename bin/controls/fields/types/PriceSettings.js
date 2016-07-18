@@ -29,13 +29,16 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
 
         options: {
             fieldId: false,
-            groups : []
+            groups : [],
+
+            ignoreForPriceCalculation: false
         },
 
         initialize: function (options) {
             this.parent(options);
 
             this.$Groups = null;
+            this.$Ignore = null;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -72,12 +75,17 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
             new Element('div', {
                 'class': 'quiqqer-products-price-settings',
                 html   : '<div class="quiqqer-products-price-settings-groups">' +
-                         '     <label>' +
-                         '         <span class="quiqqer-products-price-settings-groups-text">' +
-                         '             Gruppenzuweisung:' +
-                         '         </span>' +
-                         '         <div class="quiqqer-products-price-settings-groups-values"></div>' +
-                         '     </label>' +
+                         '    <label>' +
+                         '        <span class="quiqqer-products-price-settings-groups-text">' +
+                         '            Gruppenzuweisung:' +
+                         '        </span>' +
+                         '        <div class="quiqqer-products-price-settings-groups-values"></div>' +
+                         '    </label>' +
+                         '</div>' +
+                         '<div class="quiqqer-products-price-settings-ignoreForPriceCalculation">' +
+                         '    <label>' +
+                         '        <input type="checkbox" name="ignoreForPriceCalculation"/> Bei der Preisberechnung ignorieren' +
+                         '    </label>' +
                          '</div>'
             }).inject(this.$Elm);
 
@@ -92,11 +100,17 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
                 this.$Elm.getElement('.quiqqer-products-price-settings-groups-values')
             );
 
+            this.$Ignore = this.$Elm.getElement('[name="ignoreForPriceCalculation"]');
+            this.$Ignore.addEvent('change', this.update);
+
+            // values
             if (this.getAttribute('groups')) {
                 this.$Groups.addGroups(
                     this.getAttribute('groups').toString().split(',')
                 );
             }
+
+            this.$Ignore.checked = this.getAttribute('ignoreForPriceCalculation') ? true : false;
         },
 
         /**
@@ -119,6 +133,10 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
                     this.setAttribute('groups', data.groups.split(','));
                 }
 
+                if ("ignoreForPriceCalculation" in data) {
+                    this.setAttribute('ignoreForPriceCalculation', data.ignoreForPriceCalculation);
+                }
+
             } catch (e) {
                 console.error(this.$Input.value);
                 console.error(e);
@@ -137,7 +155,8 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
          */
         update: function () {
             this.$Input.value = JSON.encode({
-                groups: this.$Groups.getValue()
+                groups                   : this.$Groups.getValue(),
+                ignoreForPriceCalculation: this.$Ignore.checked ? 1 : 0
             });
         }
     });

@@ -34,16 +34,16 @@ class ProductListHelper
 
         // produkt 1
         $Product->getField(1013)->setValue(0);
-        $Product1 = $Product->createUniqueProduct($User->getLocale());
+        $Product1 = $Product->createUniqueProduct($User);
         $Product1->setQuantity(2);
 
         // produkt 2
         $Product->getField(1013)->setValue(1);
-        $Product2 = $Product->createUniqueProduct($User->getLocale());
+        $Product2 = $Product->createUniqueProduct($User);
 
         // produkt 3
         $Product->getField(1013)->setValue(1);
-        $Product3 = $Product->createUniqueProduct($User->getLocale());
+        $Product3 = $Product->createUniqueProduct($User);
 
         $List->addProduct($Product1);
         $List->addProduct($Product2);

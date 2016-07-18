@@ -11,6 +11,14 @@
     padding: 10px;
 }
 
+.quiqqer-products-price-settings-ignoreForPriceCalculation {
+    clear: both;
+    float: left;
+    padding: 10px;
+    width: 100%;
+}
+
+.quiqqer-products-price-settings-ignoreForPriceCalculation label,
 .quiqqer-products-price-settings-groups label {
     cursor: pointer;
     width: 100% !important;

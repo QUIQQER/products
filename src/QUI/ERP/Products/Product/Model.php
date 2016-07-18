@@ -195,7 +195,9 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * @return ViewFrontend
+     * Return the duly view
+     *
+     * @return ViewFrontend|ViewBackend
      */
     public function getView()
     {
@@ -227,14 +229,21 @@ class Model extends QUI\QDOM
     /**
      * Return the product as unique product
      *
-     * @param QUI\Locale|null $Locale
+     * @param QUI\Interfaces\Users\|null $User
      * @return UniqueProduct
      */
-    public function createUniqueProduct($Locale = null)
+    public function createUniqueProduct($User = null)
     {
+        if (!QUI::getUsers()->isUser($User)) {
+            $User = QUI::getUsers()->getNobody();
+        }
+
+        $Locale = $User->getLocale();
+
         $attributes                = $this->getAttributes();
         $attributes['title']       = $this->getTitle($Locale);
         $attributes['description'] = $this->getDescription($Locale);
+        $attributes['uid']         = $User->getId();
 
         return new UniqueProduct($this->getId(), $attributes);
     }
@@ -478,18 +487,28 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * Return the price
+     * Return the price of the product
      *
+     * Beachtet alle Preisfelder und sucht das zu diesem Zeitpunkt richtig Preisfeld
+     *
+     * @param null|QUI\Interfaces\Users\User $User - optional, default = Nobody
      * @return QUI\ERP\Products\Utils\Price
      */
-    public function getPrice()
+    public function getPrice($User = null)
     {
-        $price = $this->getFieldValue(Fields::FIELD_PRICE);
+        return QUI\ERP\Products\Utils\Products::getPriceFieldForProduct($this, $User);
+    }
 
-        return new QUI\ERP\Products\Utils\Price(
-            $price,
-            QUI\ERP\Currency\Handler::getDefaultCurrency()
-        );
+    /**
+     * Alias for getPrice
+     * So, the Product has the same construction as the UniqueProduct
+     *
+     * @param null|QUI\Interfaces\Users\User $User
+     * @return QUI\ERP\Products\Utils\Price
+     */
+    public function getNettoPrice($User = null)
+    {
+        return $this->getPrice($User);
     }
 
     /**
@@ -1183,7 +1202,13 @@ class Model extends QUI\QDOM
             $Folder = $this->getMediaFolder();
 
             if ($Folder) {
-                return $Folder->firstChild();
+                $images = $Folder->getImages(array(
+                    'limit' => 1
+                ));
+
+                if (isset($images[0])) {
+                    return $images[0];
+                }
             }
         } catch (QUI\Exception $Exception) {
         }

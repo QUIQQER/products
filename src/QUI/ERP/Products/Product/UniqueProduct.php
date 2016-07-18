@@ -29,6 +29,18 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected $id;
 
     /**
+     * User-ID
+     *
+     * @var
+     */
+    protected $uid;
+
+    /**
+     * @var array
+     */
+    protected $userData = array();
+
+    /**
      * @var integer|float
      */
     protected $quantity = 1;
@@ -107,11 +119,19 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      *
      * @param integer $pid - Product ID
      * @param $attributes - attributes
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function __construct($pid, $attributes = array())
     {
         $this->id         = $pid;
         $this->attributes = $attributes;
+
+        if (!isset($attributes['uid'])) {
+            throw new QUI\ERP\Products\Product\Exception(array(
+                'quiqqer/products',
+                'exception.missing.uid.unique.product'
+            ));
+        }
 
         // fields
         $this->parseFieldsFromAttributes($attributes);
@@ -202,6 +222,17 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
+     * Return the user for the unique product
+     *
+     * @return QUI\Users\User
+     * @throws QUI\Users\Exception
+     */
+    public function getUser()
+    {
+        return QUI::getUsers()->get($this->uid);
+    }
+
+    /**
      * Return the price factor list of the product
      *
      * @return QUI\ERP\Products\Utils\PriceFactors
@@ -246,7 +277,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $self = $this;
 
         if (!$Calc) {
-            $Calc = QUI\ERP\Products\Utils\Calc::getInstance();
+            $Calc = QUI\ERP\Products\Utils\Calc::getInstance($this->getUser());
         }
 
         $Calc->getProductPrice($this, function ($data) use ($self) {
@@ -461,6 +492,16 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
+     * Return the netto price of the product
+     *
+     * @return QUI\ERP\Products\Utils\Price
+     */
+    public function getNettoPrice()
+    {
+        return QUI\ERP\Products\Utils\Products::getPriceFieldForProduct($this, $this->getUser());
+    }
+
+    /**
      * Return the value of the wanted field
      *
      * @param int $fieldId
@@ -586,6 +627,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $attributes['quantity'] = $this->getQuantity();
         $attributes['id']       = $this->getId();
         $attributes['fields']   = $this->getFields();
+        $attributes['uid']      = $this->uid;
 
         $attributes['calculated_price']    = $this->price;
         $attributes['calculated_sum']      = $this->sum;
@@ -594,6 +636,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $attributes['calculated_isNetto']  = $this->isNetto;
         $attributes['calculated_vatArray'] = $this->vatArray;
         $attributes['calculated_factors']  = $this->factors;
+
+        $attributes['user_data'] = $this->userData;
 
         if (isset($attributes['fieldData'])) {
             unset($attributes['fieldData']);
