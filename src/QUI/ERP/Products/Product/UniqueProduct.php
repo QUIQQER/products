@@ -365,7 +365,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
             /* @var $Folder QUI\Projects\Media\Folder */
             if (MediaUtils::isFolder($Folder)) {
-                return $Folder->firstChild();
+                $images = $Folder->getImages(array(
+                    'limit' => 1
+                ));
+
+                if (isset($images[0])) {
+                    return $images[0];
+                }
             }
         } catch (QUI\Exception $Exception) {
         }
@@ -514,7 +520,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     /**
      * Return the main catgory
      *
-     * @return QUI\ERP\Products\Handler\Categories|null
+     * @return QUI\ERP\Products\Category\Category|null
      */
     public function getCategory()
     {
