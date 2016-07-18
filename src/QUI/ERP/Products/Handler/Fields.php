@@ -141,6 +141,29 @@ class Fields
     }
 
     /**
+     * Is the mixed a field?
+     *
+     * @param mixed $mixed
+     * @return bool
+     */
+    public static function isField($mixed)
+    {
+        if (!is_object($mixed)) {
+            return false;
+        }
+
+        if (get_class($mixed) === QUI\ERP\Products\Field\Field::class) {
+            return true;
+        }
+
+        if (get_class($mixed) === QUI\ERP\Products\Field\UniqueField::class) {
+            return true;
+        }
+
+        return $mixed instanceof QUI\ERP\Products\Interfaces\Field;
+    }
+
+    /**
      * Create a new field
      *
      * @param array $attributes - field attributes
