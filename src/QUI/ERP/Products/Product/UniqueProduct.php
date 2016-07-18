@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * This file contains QUI\ERP\Products\Product\UniqueProduct
+ */
 namespace QUI\ERP\Products\Product;
 
 use QUI;
