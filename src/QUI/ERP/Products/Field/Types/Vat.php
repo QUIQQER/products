@@ -13,18 +13,15 @@ use QUI;
  */
 class Vat extends QUI\ERP\Products\Field\Field
 {
+    /**
+     * @var string
+     */
     protected $columnType = 'SMALLINT';
+
+    /**
+     * @var bool
+     */
     protected $searchable = false;
-
-    public function getBackendView()
-    {
-        // TODO: Implement getBackendView() method.
-    }
-
-    public function getFrontendView()
-    {
-        // TODO: Implement getFrontendView() method.
-    }
 
     /**
      * @return string
