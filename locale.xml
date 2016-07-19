@@ -310,6 +310,10 @@
             <de><![CDATA[Preis]]></de>
             <en><![CDATA[Price]]></en>
         </locale>
+        <locale name="fieldtype.PriceByQuantity">
+            <de><![CDATA[Preis in Abhängigkeit von Stückzahl]]></de>
+            <en><![CDATA[Price depending on quantity]]></en>
+        </locale>
         <locale name="fieldtype.Textarea">
             <de><![CDATA[Langer Text]]></de>
             <en><![CDATA[Long text]]></en>

@@ -1,0 +1,21 @@
+.quiqqer-products-field-priceByQuantity-price {
+    border: 1px solid #fff;
+    float: left;
+    width: 40%
+}
+
+.quiqqer-products-field-priceByQuantity-currency {
+    border-right: 1px solid rgba(147, 128, 108, 0.25);
+    float: left;
+    line-height: 30px;
+    margin-right: 10px;
+    padding: 0 0 0 5px;
+    text-align: left;
+    width: 10%
+}
+
+.quiqqer-products-field-priceByQuantity-quantity {
+    border: 1px solid #fff;
+    float: left;
+    width: calc(50% - 10px)
+}

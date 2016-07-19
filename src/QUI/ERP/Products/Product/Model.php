@@ -95,7 +95,11 @@ class Model extends QUI\QDOM
             );
 
             throw new QUI\ERP\Products\Product\Exception(
-                array('quiqqer/products', 'exception.product.not.found', array('productId' => $this->getId())),
+                array(
+                    'quiqqer/products',
+                    'exception.product.not.found',
+                    array('productId' => $this->getId())
+                ),
                 404,
                 array('id' => $this->getId())
             );

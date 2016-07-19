@@ -13,6 +13,7 @@ interface Field extends UniqueField
 {
     /**
      * Return the field for the product as an array
+     *
      * @return array
      */
     public function toProductArray();

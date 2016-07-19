@@ -7,6 +7,7 @@ namespace QUI\ERP\Products\Utils;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
+use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Class Products Helper
@@ -15,6 +16,33 @@ use QUI\ERP\Products\Handler\Fields as FieldHandler;
  */
 class Products
 {
+    /**
+     * Is mixed a product compatible object?
+     * looks for:
+     * - QUI\ERP\Products\Interfaces\Product::class
+     * - QUI\ERP\Products\Product\Model
+     * - QUI\ERP\Products\Product\Product
+     *
+     * @param $mixed
+     * @return bool
+     */
+    public static function isProduct($mixed)
+    {
+        if (get_class($mixed) == QUI\ERP\Products\Product\Model::class) {
+            return true;
+        }
+
+        if (get_class($mixed) == QUI\ERP\Products\Product\Product::class) {
+            return true;
+        }
+
+        if ($mixed instanceof QUI\ERP\Products\Interfaces\Product) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Return the price field from the product for the user
      *
@@ -30,18 +58,20 @@ class Products
             $User = QUI::getUsers()->getNobody();
         }
 
-        if (get_class($Product) != QUI\ERP\Products\Interfaces\Product::class &&
-            !($Product instanceof QUI\ERP\Products\Interfaces\Product)
-        ) {
+        if (!self::isProduct($Product)) {
             throw new QUI\Exception('No Product given');
         }
 
         $PriceField = $Product->getField(FieldHandler::FIELD_PRICE);
+        $priceValue = $PriceField->getValue();
         $Currency   = QUI\ERP\Currency\Handler::getDefaultCurrency();
 
         // exists more price fields?
         // is user in group filter
-        $priceList = $Product->getFieldsByType('Price');
+        $priceList = array_merge(
+            $Product->getFieldsByType('Price'),
+            $Product->getFieldsByType('PriceByQuantity')
+        );
 
         if (empty($priceList)) {
             return new QUI\ERP\Products\Utils\Price($PriceField->getValue(), $Currency);
@@ -85,11 +115,33 @@ class Products
         // use the lowest price?
         foreach ($priceFields as $Field) {
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
+            $type = 'QUI\\ERP\\Products\\Field\\Types\\' . $Field->getType();
+
+            if (is_callable(array($type, 'onGetPriceFieldForProduct'))) {
+                try {
+                    $ParentField = Fields::getField($Field->getId());
+                    $value       = $ParentField->onGetPriceFieldForProduct($Product, $User);
+
+                    if ($value && $value < $PriceField->getValue()) {
+                        $PriceField = $Field;
+                        $priceValue = $value;
+                    }
+                } catch (QUI\Exception $Exception) {
+                }
+
+                continue;
+            }
+
+            if ($Field->getValue() === false) {
+                continue;
+            }
+
             if ($Field->getValue() < $PriceField->getValue()) {
                 $PriceField = $Field;
+                $priceValue = $Field->getValue();
             }
         }
 
-        return new QUI\ERP\Products\Utils\Price($PriceField->getValue(), $Currency);
+        return new QUI\ERP\Products\Utils\Price($priceValue, $Currency);
     }
 }

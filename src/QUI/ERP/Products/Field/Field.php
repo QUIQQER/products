@@ -237,6 +237,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Returns the price object
      *
      * @return QUI\ERP\Products\Utils\Price
+     * @deprecated ?
      */
     public function getPrice()
     {
@@ -789,10 +790,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the working title
      *
-     * @param QUI\Locale|Boolean $Locale - optional
+     * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getWorkingTitle($Locale = false)
+    public function getWorkingTitle($Locale = null)
     {
         $var   = 'products.field.' . $this->getId() . '.workingtitle';
         $group = 'quiqqer/products';

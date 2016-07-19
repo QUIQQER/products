@@ -180,6 +180,8 @@ class Price
             return round($value, 4);
         }
 
+        QUI\System\Log::writeRecursive($value);
+
         $value = (string)$value;
         $value = preg_replace('#[^\d,.]#i', '', $value);
 
