@@ -40,6 +40,11 @@ class PriceFactor
     protected $value = 0;
 
     /**
+     * @var string
+     */
+    protected $valueText = '';
+
+    /**
      * Is the pricefactor visible
      *
      * @var bool
@@ -70,6 +75,7 @@ class PriceFactor
      *      'calculation' => '',
      *      'basis' => '',
      *      'value' => '',
+     *      'valueText' => ''
      * )
      */
     public function __construct($params = array())
@@ -96,6 +102,10 @@ class PriceFactor
 
         if (isset($params['value'])) {
             $this->setValue($params['value']);
+        }
+
+        if (isset($params['valueText'])) {
+            $this->setValueText($params['valueText']);
         }
 
         if (isset($params['visible'])) {
@@ -153,6 +163,18 @@ class PriceFactor
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValueText()
+    {
+        if (!empty($this->valueText)) {
+            return $this->valueText;
+        }
+
+        return (string)$this->value;
     }
 
     /**
@@ -218,6 +240,17 @@ class PriceFactor
     }
 
     /**
+     * The text for the value presentation
+     * If no value text is set, normal value is used
+     *
+     * @param string $value
+     */
+    public function setValueText($value)
+    {
+        $this->valueText = $value;
+    }
+
+    /**
      * Set the priority of the calculation
      *
      * @param int $priority
@@ -276,6 +309,7 @@ class PriceFactor
             'calculation'       => $this->getCalculation(),
             'calculation_basis' => $this->getCalculationBasis(),
             'value'             => $this->getValue(),
+            'valueText'         => $this->getValueText(),
             'priority'          => $this->getPriority(),
             'visible'           => $this->isVisible()
         );

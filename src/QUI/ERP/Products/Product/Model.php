@@ -233,7 +233,7 @@ class Model extends QUI\QDOM
     /**
      * Return the product as unique product
      *
-     * @param QUI\Interfaces\Users\|null $User
+     * @param QUI\Interfaces\Users\User|null $User
      * @return UniqueProduct
      */
     public function createUniqueProduct($User = null)
@@ -242,12 +242,40 @@ class Model extends QUI\QDOM
             $User = QUI::getUsers()->getNobody();
         }
 
-        $Locale = $User->getLocale();
+        $Locale    = $User->getLocale();
+        $fieldList = $this->getFields();
 
         $attributes                = $this->getAttributes();
         $attributes['title']       = $this->getTitle($Locale);
         $attributes['description'] = $this->getDescription($Locale);
         $attributes['uid']         = $User->getId();
+
+        $fields = array();
+
+        foreach ($fieldList as $Field) {
+            /* @var $Field QUI\ERP\Products\Field\CustomField */
+            if ($Field->isCustomField()) {
+                $calcData['custom_calc'] = $Field->getCalculationData($Locale);
+
+                $fields[] = array_merge(
+                    $Field->toProductArray(),
+                    $Field->getAttributes(),
+                    $calcData
+                );
+
+                continue;
+            }
+
+            /* @var $Field QUI\ERP\Products\Field\Field */
+            $fields[] = array_merge(
+                $Field->toProductArray(),
+                $Field->getAttributes()
+            );
+        }
+
+        if (!empty($fields)) {
+            $attributes['fields'] = $fields;
+        }
 
         return new UniqueProduct($this->getId(), $attributes);
     }
@@ -551,7 +579,7 @@ class Model extends QUI\QDOM
         $fields    = array();
         $fieldList = $this->getFields();
 
-        /* @var $Field Field */
+        /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($fieldList as $Field) {
             $fields[] = array_merge(
                 $Field->toProductArray(),

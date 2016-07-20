@@ -187,6 +187,25 @@ class ProductList
     }
 
     /**
+     * Return the product count of the list
+     * it includes the quantity of each product
+     *
+     * @return int
+     */
+    public function getQuantity()
+    {
+        $quantity = 0;
+        $products = $this->getProducts();
+
+        foreach ($products as $Products) {
+            /* @var $Products UniqueProduct */
+            $quantity = $quantity + $Products->getQuantity();
+        }
+
+        return $quantity;
+    }
+
+    /**
      * Return the products
      *
      * @return array

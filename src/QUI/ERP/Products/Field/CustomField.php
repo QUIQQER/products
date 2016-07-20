@@ -22,11 +22,13 @@ abstract class CustomField extends Field
      *     basis         // from which price should calculated - netto or calculated
      *     value
      *     calculation
+     *     valueText     // text for value presentation (optional)
      * );
      *
+     * @param \QUI\Locale|null $Locale
      * @return array
      */
-    abstract public function getCalculationData();
+    abstract public function getCalculationData($Locale = null);
 
     /**
      * @return array

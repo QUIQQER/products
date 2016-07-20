@@ -180,9 +180,10 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     /**
      * Return the array for the calculation
      *
+     * @param null|QUI\Locale $Locale
      * @return array
      */
-    public function getCalculationData()
+    public function getCalculationData($Locale = null)
     {
         $options = $this->getOptions();
 
@@ -198,14 +199,24 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             $options['entries'] = array();
         }
 
-        $entries  = $options['entries'];
-        $value    = $this->getValue();
-        $sum      = 0;
-        $calcType = Calc::CALCULATION_COMPLEMENT;
+        $entries   = $options['entries'];
+        $value     = $this->getValue();
+        $valueText = '';
+        $sum       = 0;
+        $calcType  = Calc::CALCULATION_COMPLEMENT;
 
         if (isset($entries[$value])) {
-            $sum  = $entries[$value]['sum'];
-            $type = $entries[$value]['type'];
+            $sum       = $entries[$value]['sum'];
+            $type      = $entries[$value]['type'];
+            $valueText = $entries[$value]['title'];
+
+            if ($Locale && get_class($Locale) == QUI\Locale::class) {
+                $current = $Locale->getCurrent();
+
+                if (isset($valueText[$current])) {
+                    $valueText = $valueText[$current];
+                }
+            }
 
             switch ($type) {
                 case Calc::CALCULATION_PERCENTAGE:
@@ -218,7 +229,8 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             'priority'    => (int)$options['priority'],
             'basis'       => $options['calculation_basis'],
             'value'       => $sum,
-            'calculation' => $calcType
+            'calculation' => $calcType,
+            'valueText'   => $valueText
         );
     }
 

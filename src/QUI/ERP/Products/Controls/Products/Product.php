@@ -8,7 +8,7 @@ namespace QUI\ERP\Products\Controls\Products;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Watchlist\Controls\ButtonAdd as WatchlistButton;
-use QUI\ERP\Products\Controls\Offer\Button as OfferButton;
+use QUI\ERP\Watchlist\Controls\ButtonPurchase as PurchaseButton;
 
 /**
  * Class Button
@@ -173,7 +173,7 @@ class Product extends QUI\Control
                 'Product' => $View,
                 'width'   => 'calc(50% - 5px)'
             )),
-            'OfferButton'          => new OfferButton(array(
+            'OfferButton'          => new PurchaseButton(array(
                 'Product' => $View,
                 'width'   => 'calc(50% - 5px)'
             )),

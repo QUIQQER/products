@@ -164,7 +164,7 @@ class Calc
         try {
             QUI::getEvents()->fireEvent(
                 'onQuiqqerProductsCalcList',
-                array($this, $List)
+                array($this, $List, $nettoSum)
             );
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_ERROR);

@@ -22,7 +22,7 @@ use QUI\ERP\Products\Handler\Search;
  *
  * @package QUI\ERP\Products\Field
  * @todo Benutzergruppe beim Setup anlegen
- * @todo Einstellung zur Verfügung stellen, Lieferant und Hersteller gruppe festlegen
+ * @todo Einstellung zur Verfügung stellen, Lieferant- und Herstellergruppe festlegen
  */
 class GroupList extends QUI\ERP\Products\Field\Field
 {
