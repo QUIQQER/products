@@ -182,6 +182,8 @@ class Calc
                 case Calc::CALCULATION_COMPLEMENT:
                     $nettoSum       = $nettoSum + $PriceFactor->getValue();
                     $priceFactorSum = $priceFactorSum + $PriceFactor->getValue();
+
+                    $PriceFactor->setSum($this, $PriceFactor->getValue());
                     break;
 
                 // Prozent Angabe
@@ -197,6 +199,8 @@ class Calc
                             $percentage = $PriceFactor->getValue() / 100 * $nettoSum;
                             break;
                     }
+
+                    $PriceFactor->setSum($this, $percentage);
 
                     $nettoSum       = $this->round($nettoSum + $percentage);
                     $priceFactorSum = $priceFactorSum + $percentage;
@@ -298,6 +302,8 @@ class Calc
                     }
             }
 
+            $PriceFactor->setSum($this, $priceFactorSum);
+
             $nettoPrice       = $nettoPrice + $priceFactorSum;
             $priceFactorArray = $PriceFactor->toArray();
 
@@ -312,12 +318,14 @@ class Calc
                 // einfache Zahl, Währung --- kein Prozent
                 case Calc::CALCULATION_COMPLEMENT:
                     $nettoPrice = $nettoPrice + $PriceFactor->getValue();
+                    $PriceFactor->setSum($this, $PriceFactor->getValue());
                     break;
 
                 // Prozent Angabe
                 case Calc::CALCULATION_PERCENTAGE:
                     $percentage = $PriceFactor->getValue() / 100 * $nettoPrice;
                     $nettoPrice = $nettoPrice + $percentage;
+                    $PriceFactor->setSum($this, $percentage);
                     break;
             }
         }
@@ -361,6 +369,14 @@ class Calc
                 'vat'  => $TaxEntry->getValue(),
                 'sum'  => $this->round($nettoSum * ($TaxEntry->getValue() / 100)),
                 'text' => $this->getVatText($TaxEntry->getValue(), $this->getUser())
+            );
+        }
+
+        if (empty($vatArray)) {
+            $vatArray[] = array(
+                'vat'  => $Tax->getValue(),
+                'sum'  => $this->round($nettoSum * ($Tax->getValue() / 100)),
+                'text' => $this->getVatText($Tax->getValue(), $this->getUser())
             );
         }
 

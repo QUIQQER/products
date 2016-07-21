@@ -211,10 +211,13 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             $valueText = $entries[$value]['title'];
 
             if ($Locale && get_class($Locale) == QUI\Locale::class) {
-                $current = $Locale->getCurrent();
+                $current     = $Locale->getCurrent();
+                $currentCode = mb_strtolower($current) . '_' . mb_strtoupper($current);
 
                 if (isset($valueText[$current])) {
                     $valueText = $valueText[$current];
+                } elseif (isset($valueText[$currentCode])) {
+                    $valueText = $valueText[$currentCode];
                 }
             }
 
@@ -223,6 +226,10 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
                     $calcType = Calc::CALCULATION_PERCENTAGE;
                     break;
             }
+        }
+
+        if ($value === '') {
+            $valueText = '';
         }
 
         return array(

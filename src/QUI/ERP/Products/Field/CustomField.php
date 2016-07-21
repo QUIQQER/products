@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Field;
 
 use QUI\ERP\Products\Field\Field;
+use QUI\ERP\Products\Handler\Products;
 
 /**
  * Class CustomField
@@ -36,7 +37,7 @@ abstract class CustomField extends Field
     public function getAttributes()
     {
         $attributes                = parent::getAttributes();
-        $attributes['custom_calc'] = $this->getCalculationData();
+        $attributes['custom_calc'] = $this->getCalculationData(Products::getLocale());
 
         return $attributes;
     }

@@ -489,6 +489,21 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $this->calc();
 
         return new QUI\ERP\Products\Utils\Price(
+            $this->sum,
+            QUI\ERP\Currency\Handler::getDefaultCurrency()
+        );
+    }
+
+    /**
+     * Return a price object (single price)
+     *
+     * @return QUI\ERP\Products\Utils\Price
+     */
+    public function getUnitPrice()
+    {
+        $this->calc();
+
+        return new QUI\ERP\Products\Utils\Price(
             $this->price,
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );

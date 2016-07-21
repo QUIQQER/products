@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
+use QUI\ERP\Currency\Handler as Currencies;
 
 /**
  * Class PriceFactors
@@ -40,9 +41,14 @@ class PriceFactor
     protected $value = 0;
 
     /**
+     * @var bool
+     */
+    protected $sum = false;
+
+    /**
      * @var string
      */
-    protected $valueText = '';
+    protected $valueText = false;
 
     /**
      * Is the pricefactor visible
@@ -170,11 +176,16 @@ class PriceFactor
      */
     public function getValueText()
     {
+        // empty value = no value is set
+        if ($this->valueText === '') {
+            return '-';
+        }
+
         if (!empty($this->valueText)) {
             return $this->valueText;
         }
 
-        return (string)$this->value;
+        return $this->getValueFormated();
     }
 
     /**
@@ -188,16 +199,21 @@ class PriceFactor
     }
 
     /**
-     * @return float|int
+     * @return string
      */
     public function getValueFormated()
     {
         switch ($this->calculation) {
             default:
             case Calc::CALCULATION_COMPLEMENT:
-                return QUI\ERP\Currency\Handler::getDefaultCurrency()->format($this->value);
+                return Currencies::getDefaultCurrency()->format($this->value);
 
             case Calc::CALCULATION_PERCENTAGE:
+                if ($this->getSum()) {
+                    $sum = Currencies::getDefaultCurrency()->format($this->getSum());
+                    return $this->value . '% (' . $sum . ')';
+                }
+
                 return $this->value . '%';
         }
     }
@@ -294,6 +310,27 @@ class PriceFactor
                 $this->basis = $basis;
                 break;
         }
+    }
+
+    /**
+     * Set the calculated sum
+     *
+     * @param Calc $Calc - calculation object
+     * @param int|double|float $sum - sum
+     */
+    public function setSum(Calc $Calc, $sum)
+    {
+        if (is_numeric($sum)) {
+            $this->sum = $sum;
+        }
+    }
+
+    /**
+     * @return bool|int|float|double
+     */
+    public function getSum()
+    {
+        return $this->sum;
     }
 
     /**
