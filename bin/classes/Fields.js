@@ -24,7 +24,7 @@ define('package/quiqqer/products/bin/classes/Fields', [
         Type   : 'package/quiqqer/products/bin/classes/Fields',
 
         FIELD_PRICE        : 1,
-        FIELD_TAX          : 2,
+        FIELD_VAT          : 2,
         FIELD_PRODUCT_NO   : 3,
         FIELD_TITLE        : 4,
         FIELD_SHORT_DESC   : 5,

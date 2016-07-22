@@ -73,7 +73,7 @@ class EventHandling
             ),
             // MwSt ID
             array(
-                'id'            => Fields::FIELD_TAX,
+                'id'            => Fields::FIELD_VAT,
                 'type'          => 'Vat',
                 'prefix'        => '',
                 'suffix'        => '',
@@ -590,7 +590,7 @@ class EventHandling
 
                 $vatId = QUI\ERP\Tax\Utils::cleanupVatId($vatId);
             }
-            
+
         } elseif ($vatId) {
             $vatId = QUI\ERP\Tax\Utils::cleanupVatId($vatId);
         }

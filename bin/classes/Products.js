@@ -154,14 +154,18 @@ define('package/quiqqer/products/bin/classes/Products', [
          * Return the data of a product
          *
          * @param {Number} productId
+         * @param {Object} [fields] - optional, {fieldID: fieldValue, fieldID: fieldValue}
          * @returns {Promise}
          */
-        getChild: function (productId) {
+        getChild: function (productId, fields) {
+            fields = fields || {};
+
             return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_products_get', resolve, {
                     'package': 'quiqqer/products',
                     onError  : reject,
-                    productId: productId
+                    productId: productId,
+                    fields   : JSON.decode(fields)
                 });
             });
         },

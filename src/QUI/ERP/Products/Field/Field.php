@@ -956,7 +956,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             'value'      => $this->getValue(),
             'unassigned' => $this->isUnassigned(),
             'ownField'   => $this->isOwnField(),
-            'isPublic'   => $this->isPublic()
+            'isPublic'   => $this->isPublic(),
+            'isRequired' => $this->isRequired()
         );
     }
 

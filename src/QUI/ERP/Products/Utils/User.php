@@ -47,7 +47,6 @@ class User
                 return $nettoStatus;
         }
 
-
         if ($User->getAttribute('quiqqer.erp.euVatId')
             || $User->getAttribute('quiqqer.erp.taxNumber')
         ) {

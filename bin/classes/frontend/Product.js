@@ -47,6 +47,7 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                 Ajax.post('package_quiqqer_products_ajax_products_setCustomFieldValue', function (result) {
 
                     this.$fields[fieldId] = result;
+                    this.fireEvent('change', [this]);
                     resolve(this);
 
                 }.bind(this), {
@@ -74,6 +75,7 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                         }
                     }
 
+                    this.fireEvent('change', [this]);
                     resolve(this);
 
                 }.bind(this), {
@@ -195,7 +197,10 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                     'package/quiqqer/products/bin/Products'
                 ], function (Products) {
 
-                    Products.getChild(this.getAttribute('id')).then(function (data) {
+                    Products.getChild(
+                        this.getAttribute('id'),
+                        this.$data.fields
+                    ).then(function (data) {
                         this.$loaded = true;
                         this.$data   = data;
 
@@ -208,8 +213,8 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                         resolve(this);
 
                         this.fireEvent('refresh', [this]);
-
                     }.bind(this)).catch(reject);
+
                 }.bind(this));
 
             }.bind(this));

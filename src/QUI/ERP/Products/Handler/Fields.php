@@ -22,7 +22,7 @@ class Fields
      * Fields
      */
     const FIELD_PRICE = 1;
-    const FIELD_TAX = 2;
+    const FIELD_VAT = 2;
     const FIELD_PRODUCT_NO = 3;
     const FIELD_TITLE = 4;
     const FIELD_SHORT_DESC = 5;
@@ -54,6 +54,7 @@ class Fields
     const TYPE_TEXTAREA_MULTI_LANG = 'TextareaMultiLang';
     const TYPE_URL = 'Url';
     const TYPE_VAT = 'Vat';
+    const TYPE_TAX = 'Tax';
     const TYPE_PRODCUCTS = 'Products';
 
     /**

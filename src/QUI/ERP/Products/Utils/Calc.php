@@ -302,7 +302,7 @@ class Calc
                     }
             }
 
-            $PriceFactor->setSum($this, $priceFactorSum);
+            $PriceFactor->setSum($this, $priceFactorSum * $Product->getQuantity());
 
             $nettoPrice       = $nettoPrice + $priceFactorSum;
             $priceFactorArray = $PriceFactor->toArray();
@@ -346,7 +346,6 @@ class Calc
 
 
         // vat array
-        $Taxes     = new QUI\ERP\Tax\Handler();
         $vatFields = $Product->getFieldsByType(FieldHandler::TYPE_VAT);
         $vatArray  = array();
         $vatText   = array();
@@ -358,10 +357,11 @@ class Calc
             }
 
             try {
-                $TaxType  = $Taxes->getTaxType($Vat->getValue());
+                $TaxType  = TaxUtils::getTaxTypeByArea($Area);
                 $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
 
             } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeRecursive($Exception->getMessage());
                 continue;
             }
 
@@ -372,12 +372,13 @@ class Calc
             );
         }
 
-        if (empty($vatArray)) {
-            $vatArray[] = array(
-                'vat'  => $Tax->getValue(),
-                'sum'  => $this->round($nettoSum * ($Tax->getValue() / 100)),
-                'text' => $this->getVatText($Tax->getValue(), $this->getUser())
-            );
+        // pricefactoren mit mwst / pricefactros with VAT
+        if (!$isNetto && count($vatArray)) {
+            foreach ($priceFactors as $PriceFactor) {
+                $factorNettoSum = $PriceFactor->getSum();
+                $factorNettoSum = $factorNettoSum + $factorNettoSum * ($vatArray[0]['vat'] / 100);
+                $PriceFactor->setSum($this, $factorNettoSum);
+            }
         }
 
         $callback(array(

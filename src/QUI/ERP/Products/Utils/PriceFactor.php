@@ -206,7 +206,7 @@ class PriceFactor
         switch ($this->calculation) {
             default:
             case Calc::CALCULATION_COMPLEMENT:
-                return Currencies::getDefaultCurrency()->format($this->value);
+                return Currencies::getDefaultCurrency()->format($this->getSum());
 
             case Calc::CALCULATION_PERCENTAGE:
                 if ($this->getSum()) {

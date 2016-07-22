@@ -108,7 +108,7 @@ class Product extends QUI\Control
                 || $Field->getId() == Fields::FIELD_CONTENT
                 || $Field->getId() == Fields::FIELD_SHORT_DESC
                 || $Field->getId() == Fields::FIELD_PRICE
-                || $Field->getId() == Fields::FIELD_TAX
+                || $Field->getId() == Fields::FIELD_VAT
                 || $Field->getId() == Fields::FIELD_IMAGE
             ) {
                 return false;
