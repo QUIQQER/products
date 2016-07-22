@@ -7,7 +7,6 @@ namespace QUI\ERP\Products\Utils;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
-use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Class Products Helper
@@ -119,7 +118,7 @@ class Products
 
             if (is_callable(array($type, 'onGetPriceFieldForProduct'))) {
                 try {
-                    $ParentField = Fields::getField($Field->getId());
+                    $ParentField = FieldHandler::getField($Field->getId());
                     $value       = $ParentField->onGetPriceFieldForProduct($Product, $User);
 
                     if ($value && $value < $PriceField->getValue()) {
