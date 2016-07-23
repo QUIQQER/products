@@ -32,7 +32,6 @@ class Calc
      */
     const CALCULATION_COMPLEMENT = 2;
 
-
     /**
      * Basis calculation -> netto
      */
@@ -125,6 +124,7 @@ class Calc
         $products    = $List->getProducts();
         $isNetto     = QUI\ERP\Products\Utils\User::isNettoUser($this->getUser());
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
+        $Area        = QUI\ERP\Products\Utils\User::getUserArea($this->getUser());
 
         $subSum   = 0;
         $nettoSum = 0;
@@ -183,7 +183,7 @@ class Calc
                     $nettoSum       = $nettoSum + $PriceFactor->getValue();
                     $priceFactorSum = $priceFactorSum + $PriceFactor->getValue();
 
-                    $PriceFactor->setSum($this, $PriceFactor->getValue());
+                    $PriceFactor->setNettoSum($this, $PriceFactor->getValue());
                     break;
 
                 // Prozent Angabe
@@ -200,12 +200,39 @@ class Calc
                             break;
                     }
 
-                    $PriceFactor->setSum($this, $percentage);
+                    $PriceFactor->setNettoSum($this, $percentage);
 
                     $nettoSum       = $this->round($nettoSum + $percentage);
                     $priceFactorSum = $priceFactorSum + $percentage;
                     break;
+
+                default:
+                    continue;
             }
+
+
+            // add pricefactor VAT
+            if (!($PriceFactor instanceof QUI\ERP\Products\Interfaces\PriceFactorWithVat)) {
+                continue;
+            }
+
+            $VatType = $PriceFactor->getVatType();
+            $Vat     = QUI\ERP\Tax\Utils::getTaxEntry($VatType, $Area);
+            $vatSum  = $PriceFactor->getNettoSum() * ($Vat->getValue() / 100);
+            $vat     = $Vat->getValue();
+
+            $PriceFactor->setBruttoSum($this, $vatSum + $PriceFactor->getNettoSum());
+
+            if (!isset($vatArray[$vat])) {
+                $vatArray[$vat] = array(
+                    'vat'  => $vat,
+                    'text' => $this->getVatText($Vat->getValue(), $this->getUser())
+                );
+
+                $vatArray[$vat]['sum'] = 0;
+            }
+
+            $vatArray[$vat]['sum'] = $vatArray[$vat]['sum'] + $vatSum;
         }
 
         // vat text
@@ -214,17 +241,9 @@ class Calc
         $sum      = $nettoSum;
 
         foreach ($vatArray as $vatEntry) {
-            $vat = $vatEntry['vat'];
+            $vatLists[$vatEntry['vat']] = true; // liste für MWST texte
 
-            $vatLists[$vat] = true; // liste für MWST texte
-
-            // rabatt abzug - rabatte müssen bei der MWST beachtet werden
-            $vatSumPriceFactorSum = $this->round($priceFactorSum * ($vat / 100));
-
-            $sum = $sum + $vatEntry['sum'] + $vatSumPriceFactorSum;
-
-            // neu berechnung (aktualisierung) auf den summen eintrag in den MWST
-            $vatArray[$vat]['sum'] = $vatArray[$vat]['sum'] + $vatSumPriceFactorSum;
+            $sum = $sum + $vatEntry['sum'];
         }
 
         foreach ($vatLists as $vat => $bool) {
@@ -302,7 +321,7 @@ class Calc
                     }
             }
 
-            $PriceFactor->setSum($this, $priceFactorSum * $Product->getQuantity());
+            $PriceFactor->setNettoSum($this, $priceFactorSum * $Product->getQuantity());
 
             $nettoPrice       = $nettoPrice + $priceFactorSum;
             $priceFactorArray = $PriceFactor->toArray();
@@ -318,14 +337,14 @@ class Calc
                 // einfache Zahl, Währung --- kein Prozent
                 case Calc::CALCULATION_COMPLEMENT:
                     $nettoPrice = $nettoPrice + $PriceFactor->getValue();
-                    $PriceFactor->setSum($this, $PriceFactor->getValue());
+                    $PriceFactor->setNettoSum($this, $PriceFactor->getValue());
                     break;
 
                 // Prozent Angabe
                 case Calc::CALCULATION_PERCENTAGE:
                     $percentage = $PriceFactor->getValue() / 100 * $nettoPrice;
                     $nettoPrice = $nettoPrice + $percentage;
-                    $PriceFactor->setSum($this, $percentage);
+                    $PriceFactor->setNettoSum($this, $percentage);
                     break;
             }
         }
@@ -341,9 +360,9 @@ class Calc
         $vatSum    = $nettoSum * ($Tax->getValue() / 100);
         $bruttoSum = $this->round($nettoSum + $vatSum);
 
-        $price = $isNetto ? $nettoPrice : $bruttoPrice;
-        $sum   = $isNetto ? $nettoSum : $bruttoSum;
-
+        $price      = $isNetto ? $nettoPrice : $bruttoPrice;
+        $sum        = $isNetto ? $nettoSum : $bruttoSum;
+        $basisPrice = $isNetto ? $basisNettoPrice : $basisNettoPrice + ($basisNettoPrice * $Tax->getValue() / 100);
 
         // vat array
         $vatFields = $Product->getFieldsByType(FieldHandler::TYPE_VAT);
@@ -375,13 +394,14 @@ class Calc
         // pricefactoren mit mwst / pricefactros with VAT
         if (!$isNetto && count($vatArray)) {
             foreach ($priceFactors as $PriceFactor) {
-                $factorNettoSum = $PriceFactor->getSum();
+                $factorNettoSum = $PriceFactor->getNettoSum();
                 $factorNettoSum = $factorNettoSum + $factorNettoSum * ($vatArray[0]['vat'] / 100);
-                $PriceFactor->setSum($this, $factorNettoSum);
+                $PriceFactor->setBruttoSum($this, $factorNettoSum);
             }
         }
 
         $callback(array(
+            'basisPrice'   => $basisPrice,
             'price'        => $price,
             'sum'          => $sum,
             'nettoSum'     => $nettoSum,

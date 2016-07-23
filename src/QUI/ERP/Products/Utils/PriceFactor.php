@@ -16,7 +16,7 @@ use QUI\ERP\Currency\Handler as Currencies;
  *
  * @package QUI\ERP\Products\Utils
  */
-class PriceFactor
+class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactor
 {
     /**
      * @var string
@@ -41,9 +41,19 @@ class PriceFactor
     protected $value = 0;
 
     /**
+     * @var bool|integer|double|float
+     */
+    protected $nettoSum = false;
+
+    /**
      * @var bool
      */
-    protected $sum = false;
+    protected $bruttoSum = false;
+
+    /**
+     * @var bool|integer|double|float
+     */
+    protected $calculatedSum = false;
 
     /**
      * @var string
@@ -56,6 +66,11 @@ class PriceFactor
      * @var bool
      */
     protected $visible = true;
+
+    /**
+     * @var string
+     */
+    protected $type = PriceFactors::DEFAULT_TYPE;
 
     /**
      * Basis calculation
@@ -185,7 +200,7 @@ class PriceFactor
             return $this->valueText;
         }
 
-        return $this->getValueFormated();
+        return $this->getBruttoSumFormatted();
     }
 
     /**
@@ -196,26 +211,6 @@ class PriceFactor
     public function isVisible()
     {
         return $this->visible;
-    }
-
-    /**
-     * @return string
-     */
-    public function getValueFormated()
-    {
-        switch ($this->calculation) {
-            default:
-            case Calc::CALCULATION_COMPLEMENT:
-                return Currencies::getDefaultCurrency()->format($this->getSum());
-
-            case Calc::CALCULATION_PERCENTAGE:
-                if ($this->getSum()) {
-                    $sum = Currencies::getDefaultCurrency()->format($this->getSum());
-                    return $this->value . '% (' . $sum . ')';
-                }
-
-                return $this->value . '%';
-        }
     }
 
     /**
@@ -313,24 +308,113 @@ class PriceFactor
     }
 
     /**
-     * Set the calculated sum
+     * Sum method
+     */
+
+    /**
+     * Set the calculated sum (brutto)
      *
      * @param Calc $Calc - calculation object
      * @param int|double|float $sum - sum
      */
-    public function setSum(Calc $Calc, $sum)
+    public function setNettoSum(Calc $Calc, $sum)
     {
         if (is_numeric($sum)) {
-            $this->sum = $sum;
+            $this->nettoSum = $sum;
         }
     }
 
     /**
      * @return bool|int|float|double
      */
-    public function getSum()
+    public function getNettoSum()
     {
-        return $this->sum;
+        return $this->nettoSum;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNettoSumFormatted()
+    {
+        $sum = $this->getNettoSum();
+
+        if ($sum == 0) {
+            return '';
+        }
+
+        switch ($this->calculation) {
+            default:
+            case Calc::CALCULATION_COMPLEMENT:
+                if ($sum > 0) {
+                    return '+' . Currencies::getDefaultCurrency()->format($sum);
+                }
+
+                return Currencies::getDefaultCurrency()->format($sum);
+
+            case Calc::CALCULATION_PERCENTAGE:
+                if ($this->getNettoSum()) {
+                    $sum = Currencies::getDefaultCurrency()->format($sum);
+                    return '(' . $this->value . '%) ' . $sum;
+                }
+
+                return $this->value . '%';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getBruttoSumFormatted()
+    {
+        if (!$this->bruttoSum) {
+            return $this->getNettoSumFormatted();
+        }
+
+        $sum = $this->getBruttoSum();
+
+        if ($sum == 0) {
+            return '';
+        }
+
+        switch ($this->calculation) {
+            default:
+            case Calc::CALCULATION_COMPLEMENT:
+                if ($sum > 0) {
+                    return '+' . Currencies::getDefaultCurrency()->format($sum);
+                }
+
+                return Currencies::getDefaultCurrency()->format($sum);
+
+            case Calc::CALCULATION_PERCENTAGE:
+                if ($this->getNettoSum()) {
+                    $sum = Currencies::getDefaultCurrency()->format($sum);
+                    return '(' . $this->value . '%) ' . $sum;
+                }
+
+                return $this->value . '%';
+        }
+    }
+
+    /**
+     * Set the calculated sum (brutto)
+     *
+     * @param Calc $Calc - calculation object
+     * @param int|double|float $sum - sum
+     */
+    public function setBruttoSum(Calc $Calc, $sum)
+    {
+        if (is_numeric($sum)) {
+            $this->bruttoSum = $sum;
+        }
+    }
+
+    /**
+     * @return bool|int|float|double
+     */
+    public function getBruttoSum()
+    {
+        return $this->bruttoSum;
     }
 
     /**

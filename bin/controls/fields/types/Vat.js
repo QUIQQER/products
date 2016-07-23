@@ -37,7 +37,6 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
          * event : on import
          */
         $onImport: function () {
-
             var Elm = this.getElm();
 
             // loader
@@ -60,7 +59,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
 
             Tax.getList().then(function (result) {
                 var i, len, html, value;
-                
+
                 for (i = 0, len = result.length; i < len; i++) {
                     html  = result[i].groupTitle + ' : ' + result[i].title;
                     value = result[i].groupId + ':' + result[i].id;

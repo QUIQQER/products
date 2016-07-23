@@ -37,64 +37,44 @@ class ProductListView
      */
     public function toArray()
     {
-        $result   = $this->ProductList->toArray();
+        $list     = $this->ProductList->toArray();
         $products = $this->ProductList->getProducts();
 
         $Locale   = $this->ProductList->getUser()->getLocale();
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
         $Currency->setLocale($Locale);
 
-        if (isset($result['products'])) {
-            unset($result['products']);
-        }
-
         $productList = array();
-
-        $allowedAttributes = array(
-            'calculated*',
-            'categories',
-            'category',
-            'id',
-            'active',
-            'title',
-            'description',
-            'image',
-            'fields',
-            'quantity'
-        );
-
-        $filteAttributes = function ($attribute) use ($allowedAttributes) {
-            foreach ($allowedAttributes as $allowed) {
-                if ($allowed == $attribute) {
-                    return true;
-                }
-
-                if (StringHelper::match($allowed, $attribute)) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
 
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
-            $attributes = $Product->getAttributes();
-            $fields     = $Product->getFields();
+            $attributes   = $Product->getAttributes();
+            $fields       = $Product->getFields();
+            $PriceFactors = $Product->getPriceFactors();
 
-            $attributes['fields'] = array();
+            $product = array(
+                'fields'   => array(),
+                'vatArray' => array()
+            );
 
             /* @var $Field QUI\ERP\Products\Interfaces\Field */
             foreach ($fields as $Field) {
                 if ($Field->isPublic()) {
-                    $attributes['fields'][] = $Field->getAttributes();
+                    $product['fields'][] = $Field->getAttributes();
                 }
             }
 
             // format
-            $attributes['calculated_price']    = $Currency->format($attributes['calculated_price']);
-            $attributes['calculated_sum']      = $Currency->format($attributes['calculated_sum']);
-            $attributes['calculated_nettoSum'] = $Currency->format($attributes['calculated_nettoSum']);
+            $product['price']       = $Currency->format($attributes['calculated_price']);
+            $product['sum']         = $Currency->format($attributes['calculated_sum']);
+            $product['nettoSum']    = $Currency->format($attributes['calculated_nettoSum']);
+            $product['basisPrice']  = $Currency->format($attributes['calculated_basisPrice']);
+            $product['category']    = $attributes['category'];
+            $product['id']          = $attributes['id'];
+            $product['title']       = $attributes['title'];
+            $product['description'] = $attributes['description'];
+            $product['image']       = $attributes['image'];
+            $product['quantity']    = $attributes['quantity'];
 
             foreach ($attributes['calculated_vatArray'] as $key => $entry) {
                 $sum = $entry['sum'];
@@ -105,45 +85,54 @@ class ProductListView
                     $sum = $Currency->format($entry['sum']);
                 }
 
-                $attributes['calculated_vatArray'][$key]['sum'] = $sum;
+                $product['vatArray'][$key]['sum'] = $sum;
             }
 
-            foreach ($attributes['calculated_factors'] as $key => $entry) {
-                if (!$entry['visible']) {
-                    unset($attributes['calculated_factors'][$key]);
+            /* @var QUI\ERP\Products\Utils\PriceFactor $Factor */
+            foreach ($PriceFactors->sort() as $Factor) {
+                if (!$Factor->isVisible()) {
                     continue;
                 }
 
-                $sum = $entry['sum'];
-
-                if ($sum == 0) {
-                    $sum = '';
-                } else {
-                    $sum = $Currency->format($entry['sum']);
-                }
-
-                $attributes['calculated_factors'][$key]['sum'] = $sum;
+                $product['attributes'][] = array(
+                    'title' => $Factor->getTitle(),
+                    'value' => $Factor->getBruttoSumFormatted()
+                );
             }
 
-            $attributes = array_filter(
-                $attributes,
-                $filteAttributes,
-                \ARRAY_FILTER_USE_KEY
-            );
-
-            $productList[] = $attributes;
+            $productList[] = $product;
         }
 
+        // result
+        $result = array(
+            'attributes' => array(),
+            'vat'        => array()
+        );
 
-        foreach ($result['vatArray'] as $key => $entry) {
-            $result['vatArray'][$key] = $Currency->format($entry['sum']);
+        foreach ($list['vatArray'] as $key => $entry) {
+            $result['vat'][] = array(
+                'text'  => $list['vatText'][$key] . ': ' . $Currency->format($entry['sum']),
+                'value' => $Currency->format($entry['sum'])
+            );
+        }
+
+        /* @var $Factor QUI\ERP\Products\Utils\PriceFactor */
+        foreach ($this->ProductList->getPriceFactors()->sort() as $Factor) {
+            if (!$Factor->isVisible()) {
+                continue;
+            }
+
+            $result['attributes'][] = array(
+                'title' => $Factor->getTitle(),
+                'value' => $Factor->getBruttoSumFormatted()
+            );
         }
 
         $result['products']    = $productList;
-        $result['sum']         = $Currency->format($result['sum']);
-        $result['subSum']      = $Currency->format($result['subSum']);
-        $result['nettoSum']    = $Currency->format($result['nettoSum']);
-        $result['nettoSubSum'] = $Currency->format($result['nettoSubSum']);
+        $result['sum']         = $Currency->format($list['sum']);
+        $result['subSum']      = $Currency->format($list['subSum']);
+        $result['nettoSum']    = $Currency->format($list['nettoSum']);
+        $result['nettoSubSum'] = $Currency->format($list['nettoSubSum']);
 
         return $result;
     }
@@ -155,5 +144,14 @@ class ProductListView
     public function toJSON()
     {
         return json_encode($this->toArray());
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function toHTML()
+    {
+        return '';
     }
 }

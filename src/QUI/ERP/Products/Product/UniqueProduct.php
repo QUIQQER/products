@@ -82,6 +82,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected $price;
 
     /**
+     * calculated basisprice - netto or brutto
+     *
+     * @var float|int
+     */
+    protected $basisPrice;
+
+    /**
      * calculated sum
      * @var float|int
      */
@@ -284,13 +291,14 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         }
 
         $Calc->getProductPrice($this, function ($data) use ($self) {
-            $self->price    = $data['price'];
-            $self->sum      = $data['sum'];
-            $self->nettoSum = $data['nettoSum'];
-            $self->vatArray = $data['vatArray'];
-            $self->isEuVat  = $data['isEuVat'];
-            $self->isNetto  = $data['isNetto'];
-            $self->factors  = $data['factors'];
+            $self->price      = $data['price'];
+            $self->basisPrice = $data['basisPrice'];
+            $self->sum        = $data['sum'];
+            $self->nettoSum   = $data['nettoSum'];
+            $self->vatArray   = $data['vatArray'];
+            $self->isEuVat    = $data['isEuVat'];
+            $self->isNetto    = $data['isNetto'];
+            $self->factors    = $data['factors'];
 
             $self->calulated = true;
         });
@@ -647,13 +655,14 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $attributes['fields']   = $this->getFields();
         $attributes['uid']      = $this->uid;
 
-        $attributes['calculated_price']    = $this->price;
-        $attributes['calculated_sum']      = $this->sum;
-        $attributes['calculated_nettoSum'] = $this->nettoSum;
-        $attributes['calculated_isEuVat']  = $this->isEuVat;
-        $attributes['calculated_isNetto']  = $this->isNetto;
-        $attributes['calculated_vatArray'] = $this->vatArray;
-        $attributes['calculated_factors']  = $this->factors;
+        $attributes['calculated_basisPrice'] = $this->basisPrice;
+        $attributes['calculated_price']      = $this->price;
+        $attributes['calculated_sum']        = $this->sum;
+        $attributes['calculated_nettoSum']   = $this->nettoSum;
+        $attributes['calculated_isEuVat']    = $this->isEuVat;
+        $attributes['calculated_isNetto']    = $this->isNetto;
+        $attributes['calculated_vatArray']   = $this->vatArray;
+        $attributes['calculated_factors']    = $this->factors;
 
         $attributes['user_data'] = $this->userData;
 

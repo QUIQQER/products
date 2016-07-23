@@ -17,6 +17,11 @@ use QUI;
 class PriceFactors
 {
     /**
+     * Default price factor type
+     */
+    const DEFAULT_TYPE = 'PRICE_FACTOR';
+
+    /**
      * internal list of price factors
      *
      * @var array
@@ -60,9 +65,9 @@ class PriceFactors
     /**
      * Add a price factor
      *
-     * @param PriceFactor $PriceFactor
+     * @param QUI\ERP\Products\Interfaces\PriceFactor $PriceFactor
      */
-    public function add(PriceFactor $PriceFactor)
+    public function add(QUI\ERP\Products\Interfaces\PriceFactor $PriceFactor)
     {
         $this->list[] = $PriceFactor;
     }
@@ -70,9 +75,9 @@ class PriceFactors
     /**
      * Add a price factor to the beginning
      *
-     * @param PriceFactor $PriceFactor
+     * @param QUI\ERP\Products\Interfaces\PriceFactor $PriceFactor
      */
-    public function addToBeginning(PriceFactor $PriceFactor)
+    public function addToBeginning(QUI\ERP\Products\Interfaces\PriceFactor $PriceFactor)
     {
         $this->listBeginning[] = $PriceFactor;
     }
@@ -80,9 +85,9 @@ class PriceFactors
     /**
      * Add a price factor to the end
      *
-     * @param PriceFactor $PriceFactor
+     * @param QUI\ERP\Products\Interfaces\PriceFactor $PriceFactor
      */
-    public function addToEnd(PriceFactor $PriceFactor)
+    public function addToEnd(QUI\ERP\Products\Interfaces\PriceFactor $PriceFactor)
     {
         $this->listEnd[] = $PriceFactor;
     }
@@ -98,6 +103,10 @@ class PriceFactors
         $sort = function ($a, $b) {
             /* @var PriceFactor $a */
             /* @var PriceFactor $b */
+            if ($a->getPriority() == $b->getPriority()) {
+                return $a->getTitle() > $b->getTitle();
+            }
+
             return $a->getPriority() > $b->getPriority();
         };
 
