@@ -236,14 +236,14 @@ class Calc
         }
 
         // vat text
-        $vatLists = array();
-        $vatText  = array();
-        $sum      = $nettoSum;
+        $vatLists  = array();
+        $vatText   = array();
+        $bruttoSum = $nettoSum;
 
         foreach ($vatArray as $vatEntry) {
             $vatLists[$vatEntry['vat']] = true; // liste für MWST texte
 
-            $sum = $sum + $vatEntry['sum'];
+            $bruttoSum = $bruttoSum + $vatEntry['sum'];
         }
 
         foreach ($vatLists as $vat => $bool) {
@@ -251,7 +251,7 @@ class Calc
         }
 
         $callback(array(
-            'sum'          => $sum,
+            'sum'          => $isNetto ? $nettoSum : $bruttoSum,
             'subSum'       => $subSum,
             'nettoSum'     => $nettoSum,
             'nettoSubSum'  => $nettoSubSum,

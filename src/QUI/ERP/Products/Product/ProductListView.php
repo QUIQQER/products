@@ -39,6 +39,8 @@ class ProductListView
     {
         $list     = $this->ProductList->toArray();
         $products = $this->ProductList->getProducts();
+        $User     = $this->ProductList->getUser();
+        $isNetto  = QUI\ERP\Products\Utils\User::isNettoUser($User);
 
         $Locale   = $this->ProductList->getUser()->getLocale();
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
@@ -96,7 +98,7 @@ class ProductListView
 
                 $product['attributes'][] = array(
                     'title' => $Factor->getTitle(),
-                    'value' => $Factor->getBruttoSumFormatted()
+                    'value' => $isNetto ? $Factor->getNettoSumFormatted() : $Factor->getBruttoSumFormatted()
                 );
             }
 
@@ -124,7 +126,7 @@ class ProductListView
 
             $result['attributes'][] = array(
                 'title' => $Factor->getTitle(),
-                'value' => $Factor->getBruttoSumFormatted()
+                'value' => $isNetto ? $Factor->getNettoSumFormatted() : $Factor->getBruttoSumFormatted()
             );
         }
 
