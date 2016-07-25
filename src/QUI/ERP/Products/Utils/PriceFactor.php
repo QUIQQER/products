@@ -96,7 +96,8 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactor
      *      'calculation' => '',
      *      'basis' => '',
      *      'value' => '',
-     *      'valueText' => ''
+     *      'valueText' => '',
+     *      'visible' => true
      * )
      */
     public function __construct($params = array())

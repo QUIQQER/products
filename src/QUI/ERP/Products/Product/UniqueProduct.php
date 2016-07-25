@@ -158,9 +158,14 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
                 continue;
             }
 
-            $attributes = $Field->getAttributes();
+            $FieldView = $Field->getView();
 
-            $Factor = new PriceFactor($attributes['custom_calc']);
+            $attributes       = $Field->getAttributes();
+            $factorAttributes = $attributes['custom_calc'];
+
+            $factorAttributes['visible'] = $FieldView->hasViewPermission($this->getUser());
+
+            $Factor = new PriceFactor($factorAttributes);
             $Factor->setTitle($Field->getTitle());
 
             $this->PriceFactors->add($Factor);

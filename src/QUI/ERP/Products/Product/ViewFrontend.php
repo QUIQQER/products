@@ -72,6 +72,10 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
         /* @var $Field QUI\ERP\Products\Interfaces\Field */
         foreach ($fieldList as $Field) {
+            if (!$Field->isPublic()) {
+                continue;
+            }
+
             $fields[] = array_merge(
                 $Field->toProductArray(),
                 $Field->getAttributes()
