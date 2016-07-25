@@ -6,7 +6,6 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
-use QUI\Utils\StringHelper;
 
 /**
  * Class ProductListView
@@ -16,6 +15,11 @@ use QUI\Utils\StringHelper;
  */
 class ProductListView
 {
+    /**
+     * @var array
+     */
+    protected $data = array();
+
     /**
      * @var ProductList
      */
@@ -28,6 +32,7 @@ class ProductListView
     public function __construct(ProductList $ProductList)
     {
         $this->ProductList = $ProductList;
+        $this->parse();
     }
 
     /**
@@ -35,7 +40,7 @@ class ProductListView
      *
      * @return array
      */
-    public function toArray()
+    protected function parse()
     {
         $list     = $this->ProductList->toArray();
         $products = $this->ProductList->getProducts();
@@ -136,10 +141,21 @@ class ProductListView
         $result['nettoSum']    = $Currency->format($list['nettoSum']);
         $result['nettoSubSum'] = $Currency->format($list['nettoSubSum']);
 
-        return $result;
+        $this->data = $result;
     }
 
     /**
+     * Return the ProductListView as an array
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Return the list view as JSON
      *
      * @return string
      */
@@ -149,11 +165,78 @@ class ProductListView
     }
 
     /**
+     * Return the sum
      *
      * @return string
      */
-    public function toHTML()
+    public function getSum()
     {
-        return '';
+        return $this->data['sum'];
+    }
+
+    /**
+     * Return the subsum
+     *
+     * @return string
+     */
+    public function getSubSum()
+    {
+        return $this->data['subSum'];
+    }
+
+    /**
+     * Return the netto sum
+     *
+     * @return string
+     */
+    public function getNettoSum()
+    {
+        return $this->data['nettoSum'];
+    }
+
+    /**
+     * Return the netto sub sum
+     *
+     * @return string
+     */
+    public function getNettoSubSum()
+    {
+        return $this->data['nettoSubSum'];
+    }
+
+    /**
+     * Return the products
+     *
+     * @return array
+     */
+    public function getProducts()
+    {
+        return $this->data['products'];
+    }
+
+    /**
+     * Return the generated standard product listing
+     *
+     * @param bool $css - optional, with inline style, default = true
+     * @return string
+     */
+    public function toHTML($css = true)
+    {
+        $Engine = QUI::getTemplateManager()->getEngine();
+        $style  = '';
+
+        if ($css) {
+            $style = '<style>';
+            $style .= file_get_contents(dirname(__FILE__) . '/ProductListView.css');
+            $style .= '</style>';
+        }
+
+        $Engine->assign(array(
+            'this'  => $this,
+            'data'  => $this->data,
+            'style' => $style
+        ));
+
+        return $Engine->fetch(dirname(__FILE__) . '/ProductListView.html');
     }
 }

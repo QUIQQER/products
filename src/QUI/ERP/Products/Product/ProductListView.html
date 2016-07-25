@@ -1,0 +1,118 @@
+{$style}
+
+<!-- products -->
+<h1>{locale group="quiqqer/products" var="product.list.products.title"}</h1>
+
+{assign var=pos value=1}
+{foreach $data.products as $product}
+<table class="products-product">
+    <tr class="products-product-header">
+        <th class="products-product-header-pos">
+            {locale group="quiqqer/products" var="product.list.products.header.pos"}
+        </th>
+        <th class="products-product-header-information">
+            {locale group="quiqqer/products" var="product.list.products.header.description"}
+        </th>
+        <th class="products-product-header-quantity">
+            {locale group="quiqqer/products" var="product.list.products.header.quantity"}
+        </th>
+        <th class="products-product-header-unitprice">
+            {locale group="quiqqer/products" var="product.list.products.header.unitprice"}
+        </th>
+        <th class="products-product-header-price">
+            {locale group="quiqqer/products" var="product.list.products.header.price"}
+        </th>
+    </tr>
+    <tr>
+        <td class="products-product-pos" align="top">
+            {$pos}
+        </td>
+        <td class="products-product-information" align="top">
+            <div class="products-product-information-title">
+                {$product.title}
+            </div>
+            <div class="products-product-information-description">
+                {$product.description}
+            </div>
+
+            <div class="products-product-information-basisprice">
+                Grundpreis: {$product.basisPrice}
+            </div>
+
+            <ul class="products-product-fields">
+                {foreach $product.attributes as $attribute}
+                <li class="products-product-fields-field">
+                    {$attribute.title}: {$attribute.value}
+                </li>
+                {/foreach}
+            </ul>
+        </td>
+        <td class="products-product-quantity" align="top">
+            {$product.quantity}
+        </td>
+        <td class="products-product-unitprice" align="top">
+            {$product.price}
+        </td>
+        <td class="products-product-price" align="top">
+            {$product.sum}
+        </td>
+    </tr>
+</table>
+{assign var=pos value=$pos+1}
+{/foreach}
+
+<!-- sum display -->
+<table class="products-sum">
+    <tr class="products-sum-row-subsum">
+        <td class="products-sum-row-firstCell">
+            <span class="products-sum-row-subsum-text">
+                {locale group="quiqqer/products" var="product.list.products.subtotal"}
+            </span>
+        </td>
+        <td class="products-sum-row-sndCell">
+            <span class="products-sum-row-subsum-value">
+                {$data.subSum}
+            </span>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="2"><br/></td>
+    </tr>
+
+    {foreach $data.attributes as $attribute}
+    <tr>
+        <td class="products-sum-row-firstCell">
+            {$attribute.title}
+        </td>
+        <td class="products-sum-row-sndCell">
+            {$attribute.value}
+        </td>
+    </tr>
+    {/foreach}
+
+    {foreach $data.vat as $vat}
+    <tr>
+        <td colspan="2">
+            {$vat.text}
+        </td>
+    </tr>
+    {/foreach}
+
+    <tr>
+        <td colspan="2"><br/></td>
+    </tr>
+
+    <tr class="products-sum-row-sum">
+        <td class="products-sum-row-firstCell">
+            <span class="products-sum-row-sum-text">
+                {locale group="quiqqer/products" var="product.list.products.sumtotal"}
+            </span>
+        </td>
+        <td class="products-sum-row-sndCell">
+            <span class="products-sum-row-sum-value">
+                {$data.sum}
+            </span>
+        </td>
+    </tr>
+</table>

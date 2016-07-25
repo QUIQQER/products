@@ -600,6 +600,40 @@
             <en><![CDATA[Is allowed to view prices.]]></en>
         </locale>
 
+        <locale name="product.list.products.title">
+            <de><![CDATA[Produkte]]></de>
+            <en><![CDATA[Products]]></en>
+        </locale>
+        <locale name="product.list.products.header.pos">
+            <de><![CDATA[POS]]></de>
+            <en><![CDATA[POS]]></en>
+        </locale>
+        <locale name="product.list.products.header.description">
+            <de><![CDATA[Beschreibung]]></de>
+            <en><![CDATA[Description]]></en>
+        </locale>
+        <locale name="product.list.products.header.quantity">
+            <de><![CDATA[Menge]]></de>
+            <en><![CDATA[Quantity]]></en>
+        </locale>
+        <locale name="product.list.products.header.unitprice">
+            <de><![CDATA[Einzelpreis]]></de>
+            <en><![CDATA[Unitprice]]></en>
+        </locale>
+        <locale name="product.list.products.header.price">
+            <de><![CDATA[Preis]]></de>
+            <en><![CDATA[Price]]></en>
+        </locale>
+        <locale name="product.list.products.subtotal">
+            <de><![CDATA[Zwischensumme:]]></de>
+            <en><![CDATA[Subtotal:]]></en>
+        </locale>
+        <locale name="product.list.products.sumtotal">
+            <de><![CDATA[Summe:]]></de>
+            <en><![CDATA[Sum total:]]></en>
+        </locale>
+
+
         <!-- Permissions -->
         <locale name="permission.search._header">
             <de><![CDATA[Produkt-Suche]]></de>
