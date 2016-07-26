@@ -75,7 +75,7 @@ class Product extends QUI\Control
         }
 
         try {
-            $Gallery->setAttribute('folderId', $View->getFieldValue(Fields::FIELD_FOLDER));
+            $Gallery->setAttribute('folderId', $Product->getFieldValue(Fields::FIELD_FOLDER));
         } catch (QUI\Exception $Exception) {
         }
 
