@@ -438,6 +438,25 @@ class Calc
         return $value;
     }
 
+    /**
+     * Calc the price in dependence of the user
+     *
+     * @param int|double|float $nettoPrice - netto price
+     * @return int|double|float
+     */
+    public function getPrice($nettoPrice)
+    {
+        $isNetto = QUI\ERP\Products\Utils\User::isNettoUser($this->getUser());
+
+        if ($isNetto) {
+            return $nettoPrice;
+        }
+
+        $Tax    = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
+        $vatSum = $nettoPrice * ($Tax->getValue() / 100);
+
+        return $this->round($nettoPrice + $vatSum);
+    }
 
     /**
      * text

@@ -98,6 +98,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
         // patch für neue <-> alte version
         $currentLC = strtolower($current) . '_' . strtoupper($current);
+        $Calc      = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
         foreach ($entries as $key => $option) {
             $title = $option['title'];
@@ -135,7 +136,9 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
                     case QUI\ERP\Products\Utils\Calc::CALCULATION_COMPLEMENT:
                     default:
-                        $discount = $Currency->format($option['sum']);
+                        $discount = $Currency->format(
+                            $Calc->getPrice($option['sum'])
+                        );
                         break;
                 }
 

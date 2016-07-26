@@ -160,14 +160,13 @@ class Product extends QUI\Control
             ));
         }
 
-
         $Engine->assign(array(
             'Product'              => $View,
             'Gallery'              => $Gallery,
             'fields'               => QUI\ERP\Products\Utils\Fields::sortFields($fields),
             'details'              => QUI\ERP\Products\Utils\Fields::sortFields($details),
             'mediaFolders'         => $mediaFolders,
-            'productAttributeList' => $Product->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
+            'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
             'PriceDisplay'         => $PriceDisplay,
             'WatchlistButton'      => new WatchlistButton(array(
                 'Product' => $View,

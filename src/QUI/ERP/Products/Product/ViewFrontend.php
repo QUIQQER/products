@@ -151,7 +151,9 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getFieldValue($fieldId, $affixes = false)
     {
-        return $this->Product->getFieldValue($fieldId);
+        $Field = $this->getField($fieldId);
+
+        return $Field && $Field->isPublic() ? $Field->getValue() : false;
     }
 
     /**
@@ -162,7 +164,17 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getFieldsByType($type)
     {
-        return $this->Product->getFieldsByType($type);
+        $result = array();
+        $types  = $this->Product->getFieldsByType($type);
+
+        foreach ($types as $Field) {
+            /* @var $Field QUI\ERP\Products\Field\UniqueField */
+            if ($Field->isPublic()) {
+                $result[] = $Field;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -173,7 +185,9 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getField($fieldId)
     {
-        return $this->Product->getField($fieldId);
+        $Field = $this->Product->getField($fieldId);
+
+        return $Field->isPublic() ? $Field : false;
     }
 
     /**
