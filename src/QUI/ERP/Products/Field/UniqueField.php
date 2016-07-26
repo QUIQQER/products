@@ -243,7 +243,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
      */
     public function isCustomField()
     {
-        return $this->custom;
+        return $this->custom ? true : false;
     }
 
     /**

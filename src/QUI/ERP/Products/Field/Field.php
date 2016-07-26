@@ -195,7 +195,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function createUniqueField()
     {
-        return new UniqueField($this->getId(), $this->getAttributes());
+        return new UniqueField($this->getId(), $this->getAttributesForUniqueField());
     }
 
     /**
@@ -925,6 +925,20 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         if (method_exists($this, 'getJavaScriptSettings')) {
             $attributes['jsSettings'] = $this->getJavaScriptSettings();
         }
+
+        return $attributes;
+    }
+
+    /**
+     * Return the attributes for an unique field
+     *
+     * @return array
+     */
+    public function getAttributesForUniqueField()
+    {
+        $attributes          = $this->getAttributes();
+        $attributes['id']    = $this->getId();
+        $attributes['value'] = $this->getValue();
 
         return $attributes;
     }

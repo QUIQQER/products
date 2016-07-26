@@ -72,12 +72,13 @@ class ProductListView
             }
 
             // format
-            $product['price']       = $Currency->format($attributes['calculated_price']);
-            $product['sum']         = $Currency->format($attributes['calculated_sum']);
-            $product['nettoSum']    = $Currency->format($attributes['calculated_nettoSum']);
-            $product['basisPrice']  = $Currency->format($attributes['calculated_basisPrice']);
-            $product['category']    = $attributes['category'];
+            $product['price']      = $Currency->format($attributes['calculated_price']);
+            $product['sum']        = $Currency->format($attributes['calculated_sum']);
+            $product['nettoSum']   = $Currency->format($attributes['calculated_nettoSum']);
+            $product['basisPrice'] = $Currency->format($attributes['calculated_basisPrice']);
+
             $product['id']          = $attributes['id'];
+            $product['category']    = $attributes['category'];
             $product['title']       = $attributes['title'];
             $product['description'] = $attributes['description'];
             $product['image']       = $attributes['image'];

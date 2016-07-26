@@ -356,7 +356,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactor
             case Calc::CALCULATION_PERCENTAGE:
                 if ($this->getNettoSum()) {
                     $sum = Currencies::getDefaultCurrency()->format($sum);
-                    return '(' . $this->value . '%) ' . $sum;
+                    return $sum;
                 }
 
                 return $this->value . '%';

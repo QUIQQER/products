@@ -654,11 +654,27 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function getAttributes()
     {
-        $attributes             = parent::getAttributes();
-        $attributes['quantity'] = $this->getQuantity();
-        $attributes['id']       = $this->getId();
-        $attributes['fields']   = $this->getFields();
-        $attributes['uid']      = $this->uid;
+        $attributes = parent::getAttributes();
+
+        $attributes['title']       = $this->getTitle();
+        $attributes['description'] = $this->getDescription();
+        $attributes['quantity']    = $this->getQuantity();
+        $attributes['id']          = $this->getId();
+        $attributes['fields']      = $this->getFields();
+        $attributes['uid']         = $this->uid;
+        $attributes['image']       = '';
+
+        if ($this->getCategory()) {
+            $attributes['category'] = $this->getCategory()->getId();
+        } else {
+            $attributes['category'] = Categories::getMainCategory()->getId();
+        }
+
+        // image
+        $Image = $this->getImage();
+        if ($Image) {
+            $attributes['image'] = $Image->getUrl(true);
+        }
 
         $attributes['calculated_basisPrice'] = $this->basisPrice;
         $attributes['calculated_price']      = $this->price;

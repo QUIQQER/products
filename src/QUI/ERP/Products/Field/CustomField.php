@@ -6,14 +6,15 @@
 
 namespace QUI\ERP\Products\Field;
 
-use QUI\ERP\Products\Field\Field;
+use QUI;
 use QUI\ERP\Products\Handler\Products;
+use QUI\System\Log;
 
 /**
  * Class CustomField
  * @package QUI\ERP\Products\Field
  */
-abstract class CustomField extends Field
+abstract class CustomField extends QUI\ERP\Products\Field\Field
 {
     /**
      * Return the array for the calculation
