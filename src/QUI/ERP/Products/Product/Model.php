@@ -111,6 +111,8 @@ class Model extends QUI\QDOM
             $this->permissions = json_decode($result[0]['permissions'], true);
         }
 
+        // @todo permissions prüfung
+
 
         unset($result[0]['id']);
         unset($result[0]['active']);

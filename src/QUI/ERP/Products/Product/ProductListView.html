@@ -69,16 +69,18 @@
                 {locale group="quiqqer/products" var="product.list.products.subtotal"}
             </span>
         </td>
-        <td class="products-sum-row-sndCell">
+        <td style="width: 140px" class="products-sum-row-sndCell">
             <span class="products-sum-row-subsum-value">
                 {$data.subSum}
             </span>
         </td>
     </tr>
 
+    {if count($data.attributes)}
     <tr>
         <td colspan="2"><br/></td>
     </tr>
+    {/if}
 
     {foreach $data.attributes as $attribute}
     <tr>
@@ -93,15 +95,20 @@
 
     {foreach $data.vat as $vat}
     <tr>
-        <td colspan="2">
+        <td>
             {$vat.text}
+        </td>
+        <td>
+            {$vat.value}
         </td>
     </tr>
     {/foreach}
 
+    {if count($data.attributes)}
     <tr>
         <td colspan="2"><br/></td>
     </tr>
+    {/if}
 
     <tr class="products-sum-row-sum">
         <td class="products-sum-row-firstCell">

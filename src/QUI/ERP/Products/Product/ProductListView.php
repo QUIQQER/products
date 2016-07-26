@@ -119,7 +119,7 @@ class ProductListView
 
         foreach ($list['vatArray'] as $key => $entry) {
             $result['vat'][] = array(
-                'text'  => $list['vatText'][$key] . ': ' . $Currency->format($entry['sum']),
+                'text'  => $list['vatText'][$key],
                 'value' => $Currency->format($entry['sum'])
             );
         }
