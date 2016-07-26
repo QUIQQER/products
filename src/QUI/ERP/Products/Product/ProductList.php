@@ -314,7 +314,7 @@ class ProductList
     /**
      * Return the product list view for the frontend
      *
-     * @return ProductListView
+     * @return ProductListFrontendView|ProductListBackendView
      */
     public function getView()
     {
@@ -322,6 +322,28 @@ class ProductList
             $this->calc();
         }
 
-        return new ProductListView($this);
+        if (QUI::isBackend()) {
+            return $this->getBackendView();
+        }
+
+        return $this->getFrontendView();
+    }
+
+    /**
+     * Return the product list view for the frontend
+     *
+     * @return ProductListFrontendView
+     */
+    public function getFrontendView()
+    {
+        return new ProductListFrontendView($this);
+    }
+
+    /**
+     * @return ProductListBackendView
+     */
+    public function getBackendView()
+    {
+        return new ProductListBackendView($this);
     }
 }

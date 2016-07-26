@@ -18,6 +18,12 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
 
     "use strict";
 
+    var hidePrice = false;
+
+    if (typeof QUIQQER_PRODUCTS_HIDE_PRICE !== 'undefined' && QUIQQER_PRODUCTS_HIDE_PRICE) {
+        hidePrice = true;
+    }
+
     return new Class({
 
         Extends: QUIControl,
@@ -61,6 +67,10 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          * Refresh the display
          */
         refresh: function () {
+            if (hidePrice) {
+                return;
+            }
+
             Currency.convertWithSign(
                 this.getAttribute('price'),
                 this.getAttribute('currency')
@@ -77,6 +87,10 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          * event : on import
          */
         $onImport: function (self, Elm) {
+            if (hidePrice) {
+                return;
+            }
+
             Currency.addEvent('onChange', this.refresh);
 
             if (Elm.get('data-qui-options-currency')) {
@@ -92,6 +106,10 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          * event : on inject
          */
         $onInject: function () {
+            if (hidePrice) {
+                return;
+            }
+
             this.setPrice(this.getAttribute('price'));
         },
 
@@ -102,6 +120,10 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          * @param {String} [CurrencyCode]
          */
         setPrice: function (price, CurrencyCode) {
+            if (hidePrice) {
+                return;
+            }
+
             CurrencyCode = CurrencyCode || false;
 
             if (this.getAttribute('currency')) {
@@ -119,6 +141,10 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          * @param {String} CurrencyCode
          */
         setCurrency: function (CurrencyCode) {
+            if (hidePrice) {
+                return;
+            }
+
             this.setAttrbute('currency', CurrencyCode);
             this.refresh();
         }

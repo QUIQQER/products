@@ -278,6 +278,18 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
+     * @return UniqueProduct|UniqueProductFrontendView
+     */
+    public function getView()
+    {
+        if (QUI::isBackend()) {
+            return $this;
+        }
+
+        return new UniqueProductFrontendView($this->id, $this->attributes);
+    }
+
+    /**
      * Calculates
      *
      * @param QUI\ERP\Products\Utils\Calc|null $Calc - optional, calculation object

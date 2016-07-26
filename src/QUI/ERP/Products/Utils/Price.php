@@ -50,7 +50,7 @@ class Price
     /**
      * Price constructor.
      *
-     * @param float $nettoPrice
+     * @param float|int|double|string $nettoPrice
      * @param QUI\ERP\Currency\Currency $Currency
      * @param QUI\Users\User|boolean $User - optional, if no user, session user are used
      */
@@ -172,15 +172,13 @@ class Price
      * Validates a price value
      *
      * @param number|string $value
-     * @return float
+     * @return float|double|int|null
      */
     protected function validatePrice($value)
     {
         if (is_float($value)) {
             return round($value, 4);
         }
-
-        QUI\System\Log::writeRecursive($value);
 
         $value = (string)$value;
         $value = preg_replace('#[^\d,.]#i', '', $value);

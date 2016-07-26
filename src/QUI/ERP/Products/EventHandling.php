@@ -606,4 +606,24 @@ class EventHandling
             QUI\ERP\Products\Utils\User::getBruttoNettoUserStatus($User)
         );
     }
+
+    /**
+     * event: on template get header
+     *
+     * @param QUI\Template $TemplateManager
+     */
+    public static function onTemplateGetHeader(QUI\Template $TemplateManager)
+    {
+        $hide = 0;
+
+        if (QUI\ERP\Products\Utils\Package::hidePrice()) {
+            $hide = 1;
+        }
+
+        $header = '<script type="text/javascript">';
+        $header .= 'var QUIQQER_PRODUCTS_HIDE_PRICE = ' . $hide . ';';
+        $header .= '</script>';
+
+        $TemplateManager->extendHeader($header);
+    }
 }

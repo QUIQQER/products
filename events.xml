@@ -6,4 +6,5 @@
     <event on="onSiteCreateChild" fire="\QUI\ERP\Products\EventHandling::onSiteCreateChild"/>
     <event on="onSiteSaveBefore" fire="\QUI\ERP\Products\EventHandling::onSiteSaveBefore"/>
     <event on="onUserSaveBegin" fire="\QUI\ERP\Products\EventHandling::onUserSave"/>
+    <event on="onTemplateGetHeader" fire="\QUI\ERP\Products\EventHandling::onTemplateGetHeader"/>
 </events>

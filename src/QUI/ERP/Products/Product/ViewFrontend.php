@@ -134,6 +134,13 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getPrice()
     {
+        if (QUI\ERP\Products\Utils\Package::hidePrice()) {
+            return new QUI\ERP\Products\Utils\Price(
+                '',
+                QUI\ERP\Currency\Handler::getDefaultCurrency()
+            );
+        }
+
         $User = QUI::getUserBySession();
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
 

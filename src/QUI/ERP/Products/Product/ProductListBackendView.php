@@ -1,19 +1,19 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Product\Product
+ * This file contains QUI\ERP\Products\Product\ProductListBackendView
  */
 namespace QUI\ERP\Products\Product;
 
 use QUI;
 
 /**
- * Class ProductListView
+ * Class ProductListBackendView.
  * FrontendView for a product list
  *
  * @package QUI\ERP\Products\Product
  */
-class ProductListView
+class ProductListBackendView
 {
     /**
      * @var array
