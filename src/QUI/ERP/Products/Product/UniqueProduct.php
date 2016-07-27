@@ -171,6 +171,10 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $this->PriceFactors->add($Factor);
         }
 
+        if (isset($attributes['quantity']) && (int)$attributes['quantity']) {
+            $this->setQuantity((int)$attributes['quantity']);
+        }
+
         QUI::getEvents()->fireEvent(
             'quiqqerProductsPriceFactorsInit',
             array($this->PriceFactors, $this)
@@ -191,7 +195,17 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $fields = $attributes['fields'];
 
         foreach ($fields as $field) {
-            $this->fields[] = new UniqueField($field['id'], $field);
+            if (!Fields::isField($field)) {
+                $this->fields[] = new UniqueField($field['id'], $field);
+                continue;
+            }
+
+            if (get_class($field) != UniqueField::class) {
+                /* @var $field QUI\ERP\Products\Field\Field */
+                $field = $field->createUniqueField();
+            }
+
+            $this->fields[] = $field;
         }
     }
 
@@ -282,11 +296,16 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function getView()
     {
+        $this->calc();
+
         if (QUI::isBackend()) {
             return $this;
         }
 
-        return new UniqueProductFrontendView($this->id, $this->attributes);
+        $attributes        = $this->getAttributes();
+        $attributes['uid'] = $this->getUser()->getId();
+
+        return new UniqueProductFrontendView($this->id, $attributes);
     }
 
     /**

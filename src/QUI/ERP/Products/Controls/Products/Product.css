@@ -120,12 +120,26 @@
 
 .product-data-actionButtons .watchlist-add {
     font-size: 12px !important;
+    margin-bottom: 10px;
     margin-right: 10px;
+    text-align: center;
+    width: calc(50% - 5px);
 }
 
 .product-data-actionButtons .quiqqer-watchlist-purchase-button {
     font-size: 12px !important;
     line-height: 30px;
+    width: calc(50% - 5px);
+}
+
+@media (max-width: 400px) {
+    .product-data-actionButtons .watchlist-add {
+        width: 100%;
+    }
+
+    .product-data-actionButtons .quiqqer-watchlist-purchase-button {
+        width: 100%;
+    }
 }
 
 /** Details

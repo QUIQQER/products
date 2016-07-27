@@ -169,12 +169,10 @@ class Product extends QUI\Control
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
             'PriceDisplay'         => $PriceDisplay,
             'WatchlistButton'      => new WatchlistButton(array(
-                'Product' => $View,
-                'width'   => 'calc(50% - 5px)'
+                'Product' => $View
             )),
             'OfferButton'          => new PurchaseButton(array(
-                'Product' => $View,
-                'width'   => 'calc(50% - 5px)'
+                'Product' => $View
             )),
             'MediaUtils'           => new QUI\Projects\Media\Utils()
         ));

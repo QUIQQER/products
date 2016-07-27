@@ -96,7 +96,6 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
         setQuantity: function (quantity) {
             return new Promise(function (resolve) {
                 Ajax.post('package_quiqqer_products_ajax_products_setQuantity', function (result) {
-
                     this.$quantity = parseInt(result);
                     this.fireEvent('change', [this]);
 

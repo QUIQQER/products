@@ -15,6 +15,53 @@ use QUI;
 class UniqueProductFrontendView extends UniqueProduct
 {
     /**
+     * UniqueProductFrontendView constructor.
+     *
+     * @param int $pid
+     * @param array $attributes
+     */
+    public function __construct($pid, array $attributes)
+    {
+        parent::__construct($pid, $attributes);
+
+        if (isset($attributes['calculated_basisPrice'])) {
+            $this->basisPrice = $attributes['calculated_basisPrice'];
+        }
+
+        if (isset($attributes['calculated_price'])) {
+            $this->price = $attributes['calculated_price'];
+        }
+
+        if (isset($attributes['calculated_sum'])) {
+            $this->sum = $attributes['calculated_sum'];
+        }
+
+        if (isset($attributes['calculated_nettoSum'])) {
+            $this->nettoSum = $attributes['calculated_nettoSum'];
+        }
+
+        if (isset($attributes['calculated_isEuVat'])) {
+            $this->isEuVat = $attributes['calculated_isEuVat'];
+        }
+
+        if (isset($attributes['calculated_isNetto'])) {
+            $this->isNetto = $attributes['calculated_isNetto'];
+        }
+
+        if (isset($attributes['calculated_vatArray'])) {
+            $this->vatArray = $attributes['calculated_vatArray'];
+        }
+
+        if (isset($attributes['calculated_factors'])) {
+            $this->factors = $attributes['calculated_factors'];
+        }
+
+        if (isset($attributes['user_data'])) {
+            $this->userData = $attributes['user_data'];
+        }
+    }
+
+    /**
      * Return a price object (single price)
      *
      * @return QUI\ERP\Products\Utils\Price
