@@ -1,5 +1,10 @@
 /**
- * Country select item
+ * @module package/quiqqer/products/bin/controls/products/SelectItem
+ * @author www.pcsg.de (Henning Leutz)
+ *
+ * @require qui/controls/Control
+ * @require package/quiqqer/products/bin/classes/Products
+ * @require css!package/quiqqer/products/bin/controls/products/SelectItem.css
  */
 define('package/quiqqer/products/bin/controls/products/SelectItem', [
 

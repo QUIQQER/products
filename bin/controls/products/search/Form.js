@@ -6,7 +6,9 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require qui/controls/buttons/Button
  * @require controls/grid/Grid
+ * @require package/quiqqer/products/bin/Fields
  * @require Ajax
  * @require Locale
  * @require Mustache

@@ -275,6 +275,10 @@
             <de><![CDATA[Liste]]></de>
             <en><![CDATA[List]]></en>
         </locale>
+        <locale name="category.control.productlist.filter">
+            <de><![CDATA[Filter]]></de>
+            <en><![CDATA[Filter]]></en>
+        </locale>
         <locale name="category.control.productlist.javascript">
             <de><![CDATA[Bitte aktivieren Sie JavaScript.]]></de>
             <en><![CDATA[Please activate JavaScript.]]></en>

@@ -16,10 +16,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'qui/QUI',
     'qui/controls/Control',
     'qui/controls/buttons/Select',
+    'qui/controls/buttons/Button',
     'package/quiqqer/products/bin/Search',
     'Ajax'
 
-], function (QUI, QUIControl, QUISelect, Search, Ajax) {
+], function (QUI, QUIControl, QUISelect, QUIButton, Search, Ajax) {
 
     "use strict";
 
@@ -35,6 +36,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             'detailView',
             'listView',
             'next',
+            'toggleFilter',
             'showAllCategories',
             '$hideMoreButton',
             '$showMoreButton',
@@ -96,14 +98,20 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$ButtonList    = Elm.getElements('.quiqqer-products-productList-sort-display-list');
             this.$Container     = Elm.getElement('.quiqqer-products-productList-products-container');
 
-            this.$BarSort      = Elm.getElement('.quiqqer-products-productList-sort-sorting');
-            this.$BarDisplays  = Elm.getElement('.quiqqer-products-productList-sort-display');
-            this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryGallery-catgory-more');
+            this.$FilterContainer = Elm.getElement('.quiqqer-products-productList-filter');
+            this.$BarFilter       = Elm.getElement('.quiqqer-products-productList-sort-filter');
+            this.$BarSort         = Elm.getElement('.quiqqer-products-productList-sort-sorting');
+            this.$BarDisplays     = Elm.getElement('.quiqqer-products-productList-sort-display');
+            this.$CategoryMore    = Elm.getElement('.quiqqer-products-categoryGallery-catgory-more');
 
             if (!this.$CategoryMore) {
                 this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryList-catgory-more');
             }
 
+            if (this.$BarFilter) {
+                this.$BarFilter.getElement('.button').addEvent('click', this.toggleFilter);
+                this.$BarFilter.setStyle('display', null);
+            }
 
             this.$More = Elm.getElement('.quiqqer-products-productList-products-more .button');
 
@@ -634,7 +642,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             var Categories = this.getElm().getElement(
                 '.quiqqer-products-productList-categories'
             );
-            console.log(Categories);
+
             if (!Categories) {
                 return;
             }
@@ -678,6 +686,73 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 }
             });
+        },
+
+        /**
+         * toggle filter display
+         *
+         * @returns {Promise}
+         */
+        toggleFilter: function () {
+            if (!this.$FilterContainer) {
+                return Promise.resolve();
+            }
+
+            var opacity = this.$FilterContainer.getStyle('opacity').toInt();
+
+            if (opacity) {
+                return this.hideFilter();
+            }
+
+            return this.showFilter();
+        },
+
+        /**
+         * show filter
+         *
+         * @returns {Promise}
+         */
+        showFilter: function () {
+            if (!this.$FilterContainer) {
+                return Promise.resolve();
+            }
+
+            var height = this.$FilterContainer.getScrollSize().y;
+
+            return new Promise(function (resolve) {
+                moofx(this.$FilterContainer).animate({
+                    height : height + 40,
+                    opacity: 1,
+                    padding: '20px 0'
+                }, {
+                    duration: 250,
+                    callback: function () {
+                        resolve();
+                    }
+                });
+            }.bind(this));
+        },
+
+        /**
+         * hide filter
+         *
+         * @returns {Promise}
+         */
+        hideFilter: function () {
+            if (!this.$FilterContainer) {
+                return Promise.resolve();
+            }
+
+            return new Promise(function (resolve) {
+                moofx(this.$FilterContainer).animate({
+                    height : 0,
+                    opacity: 0,
+                    padding: 0
+                }, {
+                    duration: 250,
+                    callback: resolve
+                });
+            }.bind(this));
         }
     });
 });

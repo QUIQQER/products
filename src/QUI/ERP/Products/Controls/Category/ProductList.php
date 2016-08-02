@@ -132,6 +132,22 @@ class ProductList extends QUI\Control
                 break;
         }
 
+        // tag groups -> filter
+        $filter    = array();
+        $tagGroups = $this->getSite()->getAttribute('quiqqer.tags.tagGroups');
+
+        if (!empty($tagGroups) && is_string($tagGroups)) {
+            $tagGroups = explode(',', $tagGroups);
+        }
+
+        if (is_array($tagGroups)) {
+            foreach ($tagGroups as $tagGroup) {
+                try {
+                    $filter[] = QUI\Tags\Groups\Handler::get($this->getProject(), $tagGroup);
+                } catch (QUI\Tags\Exception $Exception) {
+                }
+            }
+        }
 
         $Engine->assign(array(
             'this'      => $this,
@@ -139,7 +155,9 @@ class ProductList extends QUI\Control
             'rows'      => $rows,
             'children'  => $this->getSite()->getNavigation(),
             'more'      => $more,
+            'filter'    => $filter,
             'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice(),
+            'Site'      => $this->getSite(),
 
             'categoryFile'        => $categoryFile,
             'placeholder'         => $this->getProject()->getMedia()->getPlaceholder(),

@@ -6,31 +6,53 @@
 
 <section class="quiqqer-products-productList-products">
     {if $count}
-    <!--<header class="quiqqer-products-productList-products-header">-->
-        <!--<h2>-->
-            <!--Produkte-->
-        <!--</h2>-->
-    <!--</header>-->
-    <div class="quiqqer-products-productList-sort">
-        <noscript>
-            {locale group=" quiqqer/products" var="category.control.productlist.javascript"}
-        </noscript>
+        <div class="quiqqer-products-productList-sort">
+            <noscript>
+                {locale group=" quiqqer/products" var="category.control.productlist.javascript"}
+            </noscript>
 
-        <div class="grid-50 mobile-grid-50 grid-parent quiqqer-products-productList-sort-sorting" style="display: none">
-            {locale group="quiqqer/products" var="category.control.productlist.sortby"}
+            <div class="quiqqer-products-productList-sort-filter" style="display: none">
+                <div class="button">
+                    <span class="fa fa-filter"></span>
+                    <span>{locale group="quiqqer/products" var="category.control.productlist.filter"}</span>
+                    <span class="fa fa-angle-down"></span>
+                </div>
+            </div>
+            <div class="quiqqer-products-productList-sort-sorting" style="display: none">
+                {locale group="quiqqer/products" var="category.control.productlist.sortby"}
+            </div>
+            <div class="quiqqer-products-productList-sort-display" style="display: none">
+                <span class="fa fa-th button quiqqer-products-productList-sort-display-gallery"
+                      data-tooltip="{locale group=" quiqqer/products" var="category.control.productlist.view.gallery"}"
+                ></span>
+                <span class="fa fa-list-ul button quiqqer-products-productList-sort-display-details"
+                      data-tooltip="{locale group=" quiqqer/products" var="category.control.productlist.view.details"}"
+                ></span>
+                <span class="fa fa-align-justify button quiqqer-products-productList-sort-display-list"
+                      data-tooltip="{locale group=" quiqqer/products" var="category.control.productlist.view.list"}"
+                ></span>
+            </div>
         </div>
-        <div class="grid-50 mobile-grid-50 grid-parent quiqqer-products-productList-sort-display" style="display: none">
-            <span class="fa fa-th button quiqqer-products-productList-sort-display-gallery"
-                  data-tooltip="{locale group=" quiqqer/products" var="category.control.productlist.view.gallery"}"
-            ></span>
-            <span class="fa fa-list-ul button quiqqer-products-productList-sort-display-details"
-                  data-tooltip="{locale group=" quiqqer/products" var="category.control.productlist.view.details"}"
-            ></span>
-            <span class="fa fa-align-justify button quiqqer-products-productList-sort-display-list"
-                  data-tooltip="{locale group=" quiqqer/products" var="category.control.productlist.view.list"}"
-            ></span>
+
+        {if !empty($filter)}
+        <div class="quiqqer-products-productList-filter">
+            {foreach $filter as $TagGroup}
+                <label class="quiqqer-products-productList-filter-entry">
+                    <span class="quiqqer-products-productList-filter-entry-title">
+                        {$TagGroup->getTitle()}
+                    </span>
+                    <select name="{$TagGroup->getTitle()}"
+                            class="quiqqer-products-productList-filter-entry-select"
+                    >
+                    {assign var=tags value=$TagGroup->getTags()}
+                    {foreach $tags as $tag}
+                        <option value="{$tag.tag}">{$tag.title}</option>
+                    {/foreach}
+                    </select>
+                </label>
+            {/foreach}
         </div>
-    </div>
+        {/if}
     {/if}
 
     {if !$count && $this->getAttribute('hideEmptyProductList') && count($children)}

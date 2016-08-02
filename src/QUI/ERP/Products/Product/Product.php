@@ -130,6 +130,10 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\Product
      */
     public function setPermissions($permissions, $User = null)
     {
+        if (!is_array($permissions)) {
+            return;
+        }
+
         foreach ($permissions as $permission => $data) {
             $this->setPermission($permission, $data, $User);
         }
