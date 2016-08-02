@@ -3,7 +3,7 @@
 }
 
 .quiqqer-products-productList-sort {
-    border-color: #f1f1f1;
+    border-color: #cdd4d5;
     border-style: solid;
     border-width: 1px 0;
     display: inline-block;
@@ -34,23 +34,6 @@
     padding: 0 10px !important;
 }
 
-.quiqqer-products-productList-sort-filter {
-    border-right: 1px solid #f1f1f1;
-    float: left;
-    margin-right: 20px;
-    padding: 0;
-}
-
-.quiqqer-products-productList-sort-filter .button {
-    border: none;
-    line-height: 40px !important;
-    padding: 0 20px !important;
-}
-
-.quiqqer-products-productList-sort-filter button span {
-    font-weight: normal;
-}
-
 .quiqqer-products-productList-sort__noProducts {
     opacity: 0.5;
     padding: 40px;
@@ -60,8 +43,24 @@
 /** Filter
  ================================================= */
 
-.quiqqer-products-productList-filter {
-    border-bottom: 1px solid #f1f1f1;
+.quiqqer-products-productList-sort-filter {
+    border: 1px solid #dfe4e4;
+    float: left;
+    margin: 4px 10px 0 0;
+    padding: 0;
+}
+
+.quiqqer-products-productList-sort-filter .button {
+    border: none;
+    line-height: 28px !important;
+    padding: 0 20px !important;
+}
+
+.quiqqer-products-productList-sort-filter button span {
+    font-weight: normal;
+}
+
+.quiqqer-products-productList-filter-container {
     float: left;
     height: 0;
     opacity: 0;
@@ -98,6 +97,41 @@
     clear: both;
     float: left;
     width: 100%;
+}
+
+.quiqqer-products-productList-filterList {
+    border-bottom: 1px solid #cdd4d5;
+    clear: both;
+    float: left;
+    font-size: 14px;
+    margin: 20px 0;
+    padding: 0 0 20px 0;
+    width: 100%;
+}
+
+.quiqqer-products-productList-filterList-title,
+.quiqqer-products-productList-filterList-list {
+    float: left;
+}
+
+.quiqqer-products-productList-filterList-title {
+    line-height: 20px;
+    margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+    .quiqqer-products-productList-filter-entry {
+        width: 50%;
+    }
+
+    .quiqqer-products-productList-filter-entry:first-child,
+    .quiqqer-products-productList-filter-entry:nth-child(2n+1) {
+        padding: 0 10px 0 0;
+    }
+
+    .quiqqer-products-productList-filter-entry:nth-child(2n) {
+        padding: 0 0 0 10px;
+    }
 }
 
 /** Produkte

@@ -1,6 +1,6 @@
 /**
  * Category view
- * Display a product
+ * Display a category with filters and search
  *
  * @module package/quiqqer/products/bin/controls/frontend/category/ProductList
  * @author www.pcsg.de (Henning Leutz)
@@ -8,6 +8,7 @@
  * @require qui/QUI
  * @require qui/controls/Control
  * @require qui/controls/buttons/Select
+ * @require qui/controls/buttons/Button
  * @require package/quiqqer/products/bin/Search
  * @require Ajax
  */
@@ -18,13 +19,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'qui/controls/buttons/Select',
     'qui/controls/buttons/Button',
     'package/quiqqer/products/bin/Search',
-    'Ajax'
+    'Ajax',
+    'package/quiqqer/products/bin/controls/frontend/category/ProductListFilter'
 
-], function (QUI, QUIControl, QUISelect, QUIButton, Search, Ajax) {
+], function (QUI, QUIControl, QUISelect, QUIButton, Search, Ajax, Filter) {
 
     "use strict";
-
-    var lg = 'quiqqer/products';
 
     return new Class({
 
@@ -97,8 +97,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$ButtonGallery = Elm.getElements('.quiqqer-products-productList-sort-display-gallery');
             this.$ButtonList    = Elm.getElements('.quiqqer-products-productList-sort-display-list');
             this.$Container     = Elm.getElement('.quiqqer-products-productList-products-container');
+            this.$FilterList    = Elm.getElement('.quiqqer-products-productList-filterList-list');
 
-            this.$FilterContainer = Elm.getElement('.quiqqer-products-productList-filter');
+            this.$FilterContainer = Elm.getElement('.quiqqer-products-productList-filter-container');
             this.$BarFilter       = Elm.getElement('.quiqqer-products-productList-sort-filter');
             this.$BarSort         = Elm.getElement('.quiqqer-products-productList-sort-sorting');
             this.$BarDisplays     = Elm.getElement('.quiqqer-products-productList-sort-display');
@@ -109,6 +110,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             if (this.$BarFilter) {
+                this.$renderFilter();
                 this.$BarFilter.getElement('.button').addEvent('click', this.toggleFilter);
                 this.$BarFilter.setStyle('display', null);
             }
@@ -201,7 +203,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     return;
                 }
 
-                console.log(SearchNode);
+                console.error(SearchNode);
             }
         },
 
@@ -753,6 +755,90 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     callback: resolve
                 });
             }.bind(this));
+        },
+
+        /**
+         * render the filter
+         */
+        $renderFilter: function () {
+            var c, i, len, clen, options, Control, Filter, Title, Select;
+            var filter = this.$FilterContainer.getElements(
+                '.quiqqer-products-productList-filter-entry'
+            );
+
+            var change = function (values) {
+                for (var i = 0, len = values.length; i < len; i++) {
+                    this.addFilter(values[i]);
+                }
+            }.bind(this);
+
+            for (i = 0, len = filter.length; i < len; i++) {
+                Filter = filter[i];
+                Select = Filter.getElement('select');
+                Title  = Filter.getElement(
+                    '.quiqqer-products-productList-filter-entry-title'
+                );
+
+                options = Select.getElements('option');
+
+                Control = new QUISelect({
+                    placeholderText      : Title.get('html').trim(),
+                    placeholderSelectable: false,
+                    multiple             : true,
+                    checkable            : true,
+                    styles               : {
+                        width: '100%'
+                    },
+                    events               : {
+                        onChange: change
+                    }
+                });
+
+                for (c = 0, clen = options.length; c < clen; c++) {
+                    Control.appendChild(
+                        options[c].get('html').trim(),
+                        options[c].get('value').trim()
+                    );
+                }
+
+                Filter.set('html', '');
+                Control.inject(Filter);
+            }
+        },
+
+        /**
+         * clear all filters
+         */
+        clearFilter: function () {
+            this.$FilterList.set('html', '');
+        },
+
+        /**
+         * Add a filter to the list
+         *
+         * @param {String} filter
+         */
+        addFilter: function (filter) {
+            if (this.$FilterList.getElement('[data-tag="' + filter + '"]')) {
+                return;
+            }
+
+            new Filter({
+                tag   : filter,
+                events: {
+                    onDestroy: function () {
+
+                    }
+                }
+            }).inject(this.$FilterList);
+        },
+
+        /**
+         *
+         * @param filter
+         */
+        removeFilter: function (filter) {
+
         }
     });
 });
