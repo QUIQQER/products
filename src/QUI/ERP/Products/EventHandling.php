@@ -503,14 +503,13 @@ class EventHandling
         $searchFieldIds = $Site->getAttribute('quiqqer.products.settings.searchFieldIds');
         $fieldsIds      = array();
 
-        if ($searchFieldIds === false) {
+        if (empty($searchFieldIds)) {
             $searchFieldIds = array();
         }
 
         if (is_string($searchFieldIds)) {
             $searchFieldIds = json_decode($searchFieldIds, true);
         }
-
 
         foreach ($searchFieldIds as $key => $entry) {
             if (is_numeric($key)) {
