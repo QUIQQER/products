@@ -55,6 +55,7 @@
     border: none;
     line-height: 28px !important;
     padding: 0 20px !important;
+    text-transform: none !important;
 }
 
 .quiqqer-products-productList-sort-filter button span {
@@ -100,24 +101,54 @@
     width: 100%;
 }
 
-.quiqqer-products-productList-filterList {
+.quiqqer-products-productList-fl {
     border-bottom: 1px solid #cdd4d5;
     clear: both;
     float: left;
-    font-size: 14px;
-    margin: 20px 0;
-    padding: 0 0 20px 0;
     width: 100%;
 }
 
-.quiqqer-products-productList-filterList-title,
-.quiqqer-products-productList-filterList-list {
+.quiqqer-products-productList-filterList {
     float: left;
+    font-size: 14px;
+    margin: 20px 0;
+    paddinG: 5px 0 0 0;
+    width: 50%;
 }
 
 .quiqqer-products-productList-filterList-title {
+    float: left;
     line-height: 20px;
-    margin-right: 10px;
+}
+
+.quiqqer-products-productList-filterList-list {
+    float: left;
+    max-width: calc(100% - 140px);
+    padding: 0 10px;
+    width: 600px;
+}
+
+.quiqqer-products-productList-resultInfo {
+    float: left;
+    margin: 20px 0;
+    width: 50%;
+}
+
+.quiqqer-products-productList-resultInfo-text,
+.quiqqer-products-productList-resultInfo-clearbtn {
+    float: left;
+    padding: 0 20px !important;
+    text-align: center;
+    width: 50%;
+}
+
+.quiqqer-products-productList-resultInfo-text {
+    font-size: 14px !important;
+    text-align: right;
+}
+
+.quiqqer-products-productList-resultInfo-clearbtn {
+    font-size: 12px !important;
 }
 
 @media (max-width: 768px) {

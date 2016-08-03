@@ -637,6 +637,10 @@
             <en><![CDATA[Sum total:]]></en>
         </locale>
 
+        <locale name="product.list.result.count">
+            <de><![CDATA[[count] Produkte gefunden]]></de>
+            <en><![CDATA[[count] products found]]></en>
+        </locale>
 
         <!-- Permissions -->
         <locale name="permission.search._header">
