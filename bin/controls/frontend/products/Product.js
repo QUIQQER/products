@@ -20,7 +20,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
     URL_OPT_DIR + 'bin/hammerjs/hammer.min.js'
 
 ], function (QUI, QUIControl, QUIElementUtils, Products, Hammer) {
-
     "use strict";
 
     return new Class({

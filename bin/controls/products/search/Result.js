@@ -8,6 +8,8 @@
  * @require qui/controls/Control
  * @require controls/grid/Grid
  * @require Locale
+ * @require package/quiqqer/products/bin/Fields
+ * @require css!package/quiqqer/products/bin/controls/products/search/Result.css
  *
  * @event onRefresh [this, {Object} GridOptions]
  * @event onSubmit [this, {Array} productIds]

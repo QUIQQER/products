@@ -303,7 +303,8 @@ class Products
 
         $New->setPermissions($Product->getPermissions());
         $New->setMainCategory($Product->getCategory());
-        $New->save();
+
+        // @todo titel setzen -> Kopie von
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsProductCopy', array($Product));
 
@@ -338,7 +339,7 @@ class Products
 
     /**
      * Return a list of product ids
-     * if $queryParams is empty, all fields are returned
+     * if $queryParams is empty, all products are returned
      *
      * @param array $queryParams - query parameter
      *                              $queryParams['where'],

@@ -10,9 +10,10 @@
  * @require qui/controls/windows/Confirm
  * @require controls/grid/Grid
  * @require Locale
- * @require package/quiqqer/products/bin/classes/Products
+ * @require package/quiqqer/products/bin/Products
  * @require package/quiqqer/products/bin/controls/products/Create
  * @require package/quiqqer/products/bin/controls/products/Product
+ * @require package/quiqqer/products/bin/controls/products/search/Search
  */
 define('package/quiqqer/products/bin/controls/products/Panel', [
 

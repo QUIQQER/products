@@ -275,6 +275,10 @@
             <de><![CDATA[Liste]]></de>
             <en><![CDATA[List]]></en>
         </locale>
+        <locale name="category.control.productlist.filter">
+            <de><![CDATA[Filter]]></de>
+            <en><![CDATA[Filter]]></en>
+        </locale>
         <locale name="category.control.productlist.javascript">
             <de><![CDATA[Bitte aktivieren Sie JavaScript.]]></de>
             <en><![CDATA[Please activate JavaScript.]]></en>
@@ -633,6 +637,10 @@
             <en><![CDATA[Sum total:]]></en>
         </locale>
 
+        <locale name="product.list.result.count">
+            <de><![CDATA[[count] Produkte gefunden]]></de>
+            <en><![CDATA[[count] products found]]></en>
+        </locale>
 
         <!-- Permissions -->
         <locale name="permission.search._header">

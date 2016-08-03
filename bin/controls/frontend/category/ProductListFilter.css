@@ -1,0 +1,20 @@
+.quiqqer-products-productList-filter {
+    background: #e91d2c;
+    color: #fff;
+    float: left;
+    font-weight: 500;
+    line-height: 20px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    padding: 0 5px;
+}
+
+.quiqqer-products-productList-filter-text,
+.quiqqer-products-productList-filter-destroy {
+    float: left;
+}
+
+.quiqqer-products-productList-filter-destroy {
+    cursor: pointer;
+    margin-left: 5px;
+}
