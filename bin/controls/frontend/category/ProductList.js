@@ -22,11 +22,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'qui/controls/buttons/Select',
     'qui/controls/buttons/Button',
     'package/quiqqer/products/bin/Search',
+    'package/quiqqer/products/bin/controls/search/SearchField',
     'Ajax',
     'Locale',
     'package/quiqqer/products/bin/controls/frontend/category/ProductListFilter'
 
-], function (QUI, QUIControl, QUISelect, QUIButton, Search, QUIAjax, QUILocale, Filter) {
+], function (QUI, QUIControl, QUISelect, QUIButton, Search, SearchField, QUIAjax, QUILocale, Filter) {
 
     "use strict";
 
@@ -85,6 +86,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 onInject: this.$onInject,
                 onImport: this.$onImport
             });
+
+            QUI.addEvent('resize', function () {
+                this.$recalcFilterDimensions();
+            }.bind(this));
         },
 
         /**
@@ -723,6 +728,21 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         },
 
         /**
+         * recalc the filter container dimensions
+         *
+         * @returns {Promise}
+         */
+        $recalcFilterDimensions: function () {
+            if (!this.$FilterContainer) {
+                return Promise.resolve();
+            }
+
+            if (this.$FilterContainer.getStyle('opacity').toInt()) {
+                return this.hideFilter().then(this.showFilter.bind(this));
+            }
+        },
+
+        /**
          * show filter
          *
          * @returns {Promise}
@@ -775,6 +795,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          */
         $renderFilter: function () {
             var c, i, len, clen, options, Control, Filter, Title, Select;
+
+            // standard
             var filter = this.$FilterContainer.getElements(
                 '.quiqqer-products-productList-filter-entry'
             );
@@ -791,6 +813,21 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 Title  = Filter.getElement(
                     '.quiqqer-products-productList-filter-entry-title'
                 );
+
+                // field
+                if (!Select) {
+                    // search fields
+                    // Title.destroy();
+                    Select = Filter.getElement('input');
+
+                    new SearchField({
+                        fieldid   : Select.get('data-fieldid'),
+                        searchtype: Select.get('data-searchtype')
+                    }).inject(Filter);
+
+                    Select.destroy();
+                    continue;
+                }
 
                 options = Select.getElements('option');
 
@@ -814,7 +851,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     );
                 }
 
-                Filter.set('html', '');
+                Select.destroy();
                 Control.inject(Filter);
 
                 this.$selectFilter.push(Control);
@@ -900,11 +937,16 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         $onFilterChange: function () {
             this.fireEvent('filterChangeBegin');
 
-            this.$FilterResultInfo.set('html', '<span class="fa fa-spinner fa-spin"></span>');
+            this.$FilterResultInfo.set(
+                'html',
+                '<span class="fa fa-spinner fa-spin"></span>'
+            );
 
-            var tags = this.$FilterList.getElements('[data-tag]').map(function (Elm) {
-                return Elm.get('data-tag');
-            });
+            var fields     = {},
+                fieldNodes = this.$FilterContainer.getElements('.quiqqer-products-search-field'),
+                tags       = this.$FilterList.getElements('[data-tag]').map(function (Elm) {
+                    return Elm.get('data-tag');
+                });
 
             // if no tags, no result count display
             if (!tags.length) {
@@ -926,9 +968,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 });
             }
 
+            var i, len, Field;
 
-            console.info(tags);
+            for (i = 0, len = fieldNodes.length; i < len; i++) {
+                Field = QUI.Controls.getById(fieldNodes[i].get('data-quiid'));
 
+                fields[Field.getFieldId()] = Field.getSearchValue();
+            }
+
+            // execute
             QUIAjax.get('package_quiqqer_products_ajax_search_frontend_execute', function (result) {
 
                 this.$FilterResultInfo.set('html', QUILocale.get(lg, 'product.list.result.count', {
@@ -949,6 +997,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 searchParams: JSON.encode({
                     tags    : tags,
                     freetext: '',
+                    fields  : fields,
                     count   : true
                 })
             });

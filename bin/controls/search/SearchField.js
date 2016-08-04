@@ -64,7 +64,6 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
         },
 
         initialize: function (options) {
-
             this.$Elm   = null;
             this.$Input = null;
             this.$Type  = null;
@@ -114,7 +113,10 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
          * @return {HTMLDivElement}
          */
         create: function () {
-            this.$Elm = new Element('div');
+            this.$Elm = new Element('div', {
+                'class'     : 'quiqqer-products-search-field',
+                'data-quiid': this.getId()
+            });
 
             if (!this.$Input) {
                 this.$Input = new Element('input', {
@@ -142,7 +144,7 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
                 'package/quiqqer/products/bin/controls/search/searchtypes/Text'
             ], function (Bool, Date, DateRange, HasValue, InputSelectRange, InputSelectSingle,
                          SelectMulti, SelectRange, SelectSingle, Text) {
-
+                console.warn(this.getAttribute('searchtype'));
                 switch (this.getAttribute('searchtype')) {
                     case 'text':
                         this.$Type = new Text().inject(this.getElm());

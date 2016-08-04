@@ -4,14 +4,16 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require qui/controls/buttons/Select
  */
 define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
 
     'qui/QUI',
     'qui/controls/Control',
-    'qui/controls/buttons/Select'
+    'qui/controls/input/Range',
+    'Locale'
 
-], function (QUI, QUIControl, QUISelect) {
+], function (QUI, QUIControl, QUIRange, QUILocale) {
     "use strict";
 
     return new Class({
@@ -23,7 +25,6 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
         ],
 
         initialize: function (options) {
-
             this.$Elm    = null;
             this.$Select = null;
 
@@ -36,8 +37,23 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
          * @return {HTMLDivElement}
          */
         create: function () {
-            this.$Select = new QUISelect();
-            this.$Elm    = this.$Select.create();
+            var NumberFormatter = QUILocale.getNumberFormatter({
+                style   : 'currency',
+                currency: DEFAULT_CURRENCY
+            });
+
+            this.$Select = new QUIRange({
+                range    : true,
+                styles   : {
+                    width: '100%'
+                },
+                Formatter: function (value) {
+                    return 'Von ' + NumberFormatter.format(value.from) +
+                           ' bis ' + NumberFormatter.format(value.to)
+                }
+            });
+
+            this.$Elm = this.$Select.create();
             this.$Elm.addClass('quiqqer-products-searchtype-selectrange');
 
             this.refresh();
@@ -49,32 +65,28 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
          * Refresh the control
          */
         refresh: function () {
-            if (!this.$Select || !this.$data) {
-                return;
-            }
 
-            this.$Select.clear();
+            console.info(this.$data);
 
-            for (var i = 0, len = this.$data.length; i < len; i++) {
-                this.$Select.appendChild(
-                    this.$data[i].label,
-                    this.$data[i].value
-                );
-            }
         },
 
         /**
          * set the search data
          *
-         * @param {object|array} data
+         * @param {Object|Array} data
          */
         setSearchData: function (data) {
             this.$data = data;
             this.refresh();
         },
 
+        /**
+         * Return the search value
+         *
+         * @returns {Object}
+         */
         getSearchValue: function () {
-            return '';
+            return this.$Select.getValue();
         }
     });
 });

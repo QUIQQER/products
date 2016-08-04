@@ -36,21 +36,34 @@
 
         {if !empty($filter)}
         <div class="quiqqer-products-productList-filter-container">
-            {foreach $filter as $TagGroup}
+            {foreach $filter as $Filter}
+                {if get_class($Filter) === 'QUI\Tags\Groups\Group'}
                 <label class="quiqqer-products-productList-filter-entry">
                     <span class="quiqqer-products-productList-filter-entry-title">
-                        {$TagGroup->getTitle()}
+                        {$Filter->getTitle()}
                     </span>
-                    <select name="{$TagGroup->getTitle()}"
+                    <select name="{$Filter->getTitle()}"
                             class="quiqqer-products-productList-filter-entry-select"
                             multiple
                     >
-                    {assign var=tags value=$TagGroup->getTags()}
+                    {assign var=tags value=$Filter->getTags()}
                     {foreach $tags as $tag}
                         <option value="{$tag.tag}">{$tag.title}</option>
                     {/foreach}
                     </select>
                 </label>
+                {else}
+                <label class="quiqqer-products-productList-filter-entry" data-fieldid="{$Filter->getId()}">
+                    <span class="quiqqer-products-productList-filter-entry-title">
+                        {$Filter->getTitle()}
+                    </span>
+                    <input name="{$Filter->getName()}"
+                           placeholder="{$Filter->getTitle()|escape:"html"}"
+                           data-fieldid="{$Filter->getId()}"
+                           data-searchtype="{$Filter->getDefaultSearchType()}"
+                    />
+                </label>
+                {/if}
             {/foreach}
         </div>
 

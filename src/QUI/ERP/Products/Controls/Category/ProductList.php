@@ -149,6 +149,52 @@ class ProductList extends QUI\Control
             }
         }
 
+        $fields = $this->getSearch()->getSearchFieldData();
+
+        foreach ($fields as $field) {
+            try {
+                $Field    = QUI\ERP\Products\Handler\Fields::getField($field['id']);
+                $filter[] = $Field;
+
+            } catch (QUI\ERP\Products\Field\Exception $Exception) {
+                // nothing
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
+        }
+
+        // sort
+        usort($filter, function ($EntryA, $EntryB) {
+            $priorityA = 0;
+            $priorityB = 0;
+
+            if (get_class($EntryA) === QUI\Tags\Groups\Group::class) {
+                /* @var QUI\Tags\Groups\Group $EntryA */
+                $priorityA = $EntryA->getPriority();
+            }
+
+            if (get_class($EntryB) === QUI\Tags\Groups\Group::class) {
+                /* @var QUI\Tags\Groups\Group $EntryB */
+                $priorityB = $EntryB->getPriority();
+            }
+
+            if (QUI\ERP\Products\Utils\Fields::isField($EntryA)) {
+                /* @var QUI\ERP\Products\Field\Field $EntryA */
+                $priorityA = $EntryA->getAttribute('priority');
+            }
+
+            if (QUI\ERP\Products\Utils\Fields::isField($EntryB)) {
+                /* @var QUI\ERP\Products\Field\Field $EntryB */
+                $priorityB = $EntryB->getAttribute('priority');
+            }
+
+            if ($priorityA == $priorityB) {
+                return 0;
+            }
+
+            return $priorityA > $priorityB ? 1 : -1;
+        });
+
         $Engine->assign(array(
             'this'      => $this,
             'count'     => $count,

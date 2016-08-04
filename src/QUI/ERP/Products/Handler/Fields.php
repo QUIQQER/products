@@ -186,7 +186,7 @@ class Fields
         }
 
         if (!isset($data['type'])) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.fields.type.not.allowed'
             ));
@@ -195,7 +195,7 @@ class Fields
         $isAllowed = self::getFieldTypeData($data['type']);
 
         if (empty($isAllowed)) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.fields.type.not.allowed'
             ));
@@ -207,7 +207,7 @@ class Fields
         );
 
         if (count($columns) > 1000) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.products.column.maxSize'
             ));
@@ -223,7 +223,7 @@ class Fields
             ));
 
             if (isset($result[0])) {
-                throw new QUI\Exception(array(
+                throw new QUI\ERP\Products\Field\Exception(array(
                     'quiqqer/products',
                     'exception.id.already.exists'
                 ));
@@ -340,7 +340,7 @@ class Fields
         $Field = self::getField($fieldId);
 
         if (!$Field->isSearchable()) {
-            throw new QUI\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
                 'exception.field.cache.column.not.allowed',
                 array(
@@ -617,7 +617,7 @@ class Fields
             return new $class($fieldId, $fieldParams);
         }
 
-        throw new QUI\Exception(array(
+        throw new QUI\ERP\Products\Field\Exception(array(
             'quiqqer/products',
             'exception.field.not.found',
             array(
@@ -633,7 +633,7 @@ class Fields
      * @param integer $fieldId - Field-ID
      * @return QUI\ERP\Products\Field\Field
      *
-     * @throws QUI\Exception
+     * @throws QUI\ERP\Products\Field\Exception
      */
     public static function getField($fieldId)
     {
@@ -656,7 +656,7 @@ class Fields
 
 
             if (!isset($result[0])) {
-                throw new QUI\Exception(
+                throw new QUI\ERP\Products\Field\Exception(
                     array('quiqqer/products', 'exception.field.not.found'),
                     404,
                     array('id' => (int)$fieldId)
@@ -672,7 +672,7 @@ class Fields
         $class      = $fieldTypes['src'];
 
         if (empty($fieldTypes)) {
-            throw new QUI\Exception(
+            throw new QUI\ERP\Products\Field\Exception(
                 array('quiqqer/products', 'exception.field.type.not.found'),
                 404,
                 array(
@@ -683,7 +683,7 @@ class Fields
         }
 
         if (!class_exists($class)) {
-            throw new QUI\Exception(
+            throw new QUI\ERP\Products\Field\Exception(
                 array('quiqqer/products', 'exception.field.class.not.found'),
                 404,
                 array(
@@ -704,7 +704,7 @@ class Fields
         $Field = new $class($fieldId, $fieldData);
 
         if (!QUI\ERP\Products\Utils\Fields::isField($Field)) {
-            throw new QUI\Exception(
+            throw new QUI\ERP\Products\Field\Exception(
                 array('quiqqer/products', 'exception.field.is.no.field'),
                 404,
                 array(

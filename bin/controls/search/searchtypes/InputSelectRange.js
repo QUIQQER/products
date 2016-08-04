@@ -121,7 +121,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
         /**
          * Return the search value
          *
-         * @returns {Array}
+         * @returns {Object}
          */
         getSearchValue: function () {
             return {

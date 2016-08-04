@@ -1,11 +1,9 @@
 {if $count}
-<div class="quiqqer-products-productList-products-product-row"
-     data-row="{$rowNumber}"
->
-    {foreach from=$products item=Product}
-        {include file=$productTpl Product=$Product}
-    {/foreach}
-</div>
+
+{foreach from=$products item=Product}
+{include file=$productTpl Product=$Product}
+{/foreach}
+
 {else}
 <div class="quiqqer-products-productList-sort__noProducts">
     {locale group="quiqqer/products" var="message.product.search.empty"}
