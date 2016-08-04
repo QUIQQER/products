@@ -108,7 +108,15 @@ class BackendSearch extends Search
                 );
             } else {
                 $whereFreeText = array();
-                $searchFields  = $this->getSearchFields();
+
+                // always search tags
+                $whereFreeText[]       = '`tags` LIKE :freetextTags';
+                $binds['freetextTags'] = array(
+                    'value' => '%,' . $value . ',%',
+                    'type'  => \PDO::PARAM_STR
+                );
+
+                $searchFields = $this->getSearchFields();
 
                 foreach ($searchFields as $fieldId => $search) {
                     if (!$search) {
@@ -134,6 +142,30 @@ class BackendSearch extends Search
                 if (!empty($whereFreeText)) {
                     $where[] = '(' . implode(' OR ', $whereFreeText) . ')';
                 }
+            }
+        }
+
+        // tags search
+        if (isset($searchParams['tags'])
+            && !empty($searchParams['tags'])
+            && is_array($searchParams['tags'])
+        ) {
+            $tags      = $searchParams['tags'];
+            $whereTags = array();
+            $i         = 0;
+
+            foreach ($tags as $tag) {
+                $whereTags[]       = '`tags` LIKE :tag' . $i;
+                $binds['tag' . $i] = array(
+                    'value' => '%,' . $tag . ',%',
+                    'type'  => \PDO::PARAM_STR
+                );
+
+                $i++;
+            }
+
+            if (!empty($whereTags)) {
+                $where[] = '(' . implode(' OR ', $whereTags) . ')';
             }
         }
 
