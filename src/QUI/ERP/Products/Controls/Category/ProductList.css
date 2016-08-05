@@ -197,9 +197,17 @@
         clear: none;
         padding: 0 0 0 10px;
     }
+
+    .quiqqer-products-productList-filterList {
+        width: 100%;
+    }
+
+    .quiqqer-products-productList-resultInfo {
+        width: 100%;
+    }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 500px) {
     .quiqqer-products-productList-filter-entry {
         width: 100%;
     }
@@ -211,6 +219,16 @@
 
     .quiqqer-products-productList-filter-entry:nth-child(2n) {
         padding: 0;
+    }
+
+    .quiqqer-products-productList-resultInfo-clearbtn {
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .quiqqer-products-productList-resultInfo-text {
+        text-align: center;
+        width: 100%;
     }
 }
 

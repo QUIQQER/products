@@ -347,8 +347,6 @@ class Products
      *                              $queryParams['limit']
      *                              $queryParams['order']
      * @return array
-     *
-     * @todo erlaubte order und where felder filtern
      */
     public static function getProductIds($queryParams = array())
     {
@@ -356,11 +354,25 @@ class Products
             'from' => QUI\ERP\Products\Utils\Tables::getProductTableName()
         );
 
-        if (isset($queryParams['where'])) {
+        $allowedFields = array(
+            'id',
+            'category',
+            'categories',
+            'fieldData',
+            'active',
+            'parent',
+            'permissions'
+        );
+
+        if (isset($queryParams['where']) &&
+            QUI\Database\DB::isWhereValid($queryParams['where'], $allowedFields)
+        ) {
             $query['where'] = $queryParams['where'];
         }
 
-        if (isset($queryParams['where_or'])) {
+        if (isset($queryParams['where_or']) &&
+            QUI\Database\DB::isWhereValid($queryParams['where_or'], $allowedFields)
+        ) {
             $query['where_or'] = $queryParams['where_or'];
         }
 
@@ -368,7 +380,9 @@ class Products
             $query['limit'] = $queryParams['limit'];
         }
 
-        if (isset($queryParams['order'])) {
+        if (isset($queryParams['order']) &&
+            QUI\Database\DB::isOrderValid($queryParams['order'], $allowedFields)
+        ) {
             $query['order'] = $queryParams['order'];
         }
 

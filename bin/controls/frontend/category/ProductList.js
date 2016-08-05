@@ -117,6 +117,19 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$FilterResultInfo  = Elm.getElement('.quiqqer-products-productList-resultInfo-text');
             this.$FilterClearButton = Elm.getElement('.quiqqer-products-productList-resultInfo-clearbtn');
 
+            var inner = this.$FilterContainer.get('html');
+
+            this.$FilterContainer.set('html', '');
+
+            new Element('div', {
+                html  : inner,
+                styles: {
+                    'float'      : 'left',
+                    paddingBottom: 20,
+                    width        : '100%'
+                }
+            }).inject(this.$FilterContainer);
+
             this.$BarFilter    = Elm.getElement('.quiqqer-products-productList-sort-filter');
             this.$BarSort      = Elm.getElement('.quiqqer-products-productList-sort-sorting');
             this.$BarDisplays  = Elm.getElement('.quiqqer-products-productList-sort-display');
@@ -738,9 +751,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return Promise.resolve();
             }
 
-            if (this.$FilterContainer.getStyle('opacity').toInt()) {
-                return this.hideFilter().then(this.showFilter.bind(this));
-            }
+            return this.showFilter();
         },
 
         /**
@@ -753,11 +764,18 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return Promise.resolve();
             }
 
-            var height = this.$FilterContainer.getScrollSize().y;
+            var scrollHeight = this.$FilterContainer.getFirst('div').getSize().y,
+                height       = this.$FilterContainer.getSize().y;
+
+            console.log(this.$FilterContainer.getChildren('div'));
+
+            if (scrollHeight == height) {
+                return Promise.resolve();
+            }
 
             return new Promise(function (resolve) {
                 moofx(this.$FilterContainer).animate({
-                    height : height + 40,
+                    height : scrollHeight,
                     opacity: 1,
                     padding: '20px 0'
                 }, {
