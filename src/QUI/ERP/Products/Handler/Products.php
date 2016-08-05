@@ -347,6 +347,8 @@ class Products
      *                              $queryParams['limit']
      *                              $queryParams['order']
      * @return array
+     *
+     * @todo erlaubte order und where felder filtern
      */
     public static function getProductIds($queryParams = array())
     {

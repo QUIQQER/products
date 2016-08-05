@@ -40,6 +40,14 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Date', [
 
             this.$Elm.addClass('quiqqer-products-searchtype-date');
 
+            var triggerChange = function () {
+                this.fireEvent('change', [this]);
+            }.bind(this);
+
+            this.$Elm.addEvents({
+                change: triggerChange
+            });
+
             return this.$Elm;
         },
 

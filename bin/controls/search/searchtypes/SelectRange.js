@@ -39,7 +39,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
         create: function () {
             var NumberFormatter = QUILocale.getNumberFormatter({
                 style   : 'currency',
-                currency: DEFAULT_CURRENCY
+                currency: window.DEFAULT_CURRENCY || 'EUR'
             });
 
             this.$Select = new QUIRange({
@@ -49,7 +49,12 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
                 },
                 Formatter: function (value) {
                     return 'Von ' + NumberFormatter.format(value.from) +
-                           ' bis ' + NumberFormatter.format(value.to)
+                           ' bis ' + NumberFormatter.format(value.to);
+                },
+                events   : {
+                    change: function () {
+                        this.fireEvent('change', [this]);
+                    }.bind(this)
                 }
             });
 

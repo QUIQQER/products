@@ -49,7 +49,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             '$hideMoreButton',
             '$showMoreButton',
             'scrollToLastRow',
-            '$onInject'
+            '$onInject',
+            '$onFilterChange'
         ],
 
         options: {
@@ -822,7 +823,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                     new SearchField({
                         fieldid   : Select.get('data-fieldid'),
-                        searchtype: Select.get('data-searchtype')
+                        searchtype: Select.get('data-searchtype'),
+                        events    : {
+                            onChange: this.$onFilterChange
+                        }
                     }).inject(Filter);
 
                     Select.destroy();
@@ -942,39 +946,45 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 '<span class="fa fa-spinner fa-spin"></span>'
             );
 
+            var i, len, Field;
+
             var fields     = {},
                 fieldNodes = this.$FilterContainer.getElements('.quiqqer-products-search-field'),
                 tags       = this.$FilterList.getElements('[data-tag]').map(function (Elm) {
                     return Elm.get('data-tag');
                 });
 
-            // if no tags, no result count display
-            if (!tags.length) {
-                moofx(this.$FilterResultInfo).animate({
-                    opacity: 0
-                }, {
-                    duration: 200,
-                    callback: function () {
-                        this.$FilterClearButton.setStyle('display', 'none');
-                    }.bind(this)
-                });
-            } else {
-                this.$FilterClearButton.setStyle('display', null);
-
-                moofx(this.$FilterResultInfo).animate({
-                    opacity: 1
-                }, {
-                    duration: 200
-                });
-            }
-
-            var i, len, Field;
-
             for (i = 0, len = fieldNodes.length; i < len; i++) {
                 Field = QUI.Controls.getById(fieldNodes[i].get('data-quiid'));
 
                 fields[Field.getFieldId()] = Field.getSearchValue();
             }
+
+
+            // if no tags, no result count display
+            if (tags.length || Object.getLength(fields)) {
+                moofx(this.$FilterResultInfo).animate({
+                    opacity: 1
+                }, {
+                    duration: 200
+                });
+            } else {
+                moofx(this.$FilterResultInfo).animate({
+                    opacity: 0
+                }, {
+                    duration: 200
+                });
+            }
+
+            if (tags.length) {
+                this.$FilterClearButton.setStyle('display', null);
+            } else {
+                this.$FilterClearButton.setStyle('display', 'none');
+            }
+
+
+            console.log(fields);
+            console.log(tags);
 
             // execute
             QUIAjax.get('package_quiqqer_products_ajax_search_frontend_execute', function (result) {

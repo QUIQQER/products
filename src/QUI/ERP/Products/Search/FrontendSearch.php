@@ -20,7 +20,7 @@ use QUI\Utils\Security\Orthos;
  */
 class FrontendSearch extends Search
 {
-    const SITETYPE_SEARCH   = 'quiqqer/products:types/search';
+    const SITETYPE_SEARCH = 'quiqqer/products:types/search';
     const SITETYPE_CATEGORY = 'quiqqer/products:types/category';
 
     /**
@@ -152,7 +152,7 @@ class FrontendSearch extends Search
      *
      * @param array $searchParams - search parameters
      * @param bool $countOnly (optional) - return count of search results only [default: false]
-     * @return array - product ids
+     * @return array|int - product ids
      * @throws QUI\Exception
      */
     public function search($searchParams, $countOnly = false)
@@ -286,14 +286,21 @@ class FrontendSearch extends Search
         if (isset($searchParams['sortOn']) &&
             !empty($searchParams['sortOn'])
         ) {
+            // @todo felder prüfen
             $order = "ORDER BY " . Orthos::clear($searchParams['sortOn']);
 
-            if (isset($searchParams['sortBy']) &&
-                !empty($searchParams['sortBy'])
-            ) {
-                $order .= " " . Orthos::clear($searchParams['sortBy']);
-            } else {
-                $order .= " ASC";
+            if (empty($searchParams['sortBy'])) {
+                $searchParams['sortBy'] = "ASC";
+            }
+
+            switch ($searchParams['sortBy']) {
+                case 'ASC':
+                case 'DESC':
+                    $order .= " " . $searchParams['sortBy'];
+                    break;
+
+                default:
+                    $order .= " ASC";
             }
 
             $sql .= " " . $order;

@@ -2,13 +2,14 @@
  * @module package/quiqqer/products/bin/controls/search/SearchField
  * @author www.pcsg.de (Henning Leutz)
  *
- * Ein Feld für die Sache, hohlt sich die search types rein
+ * Ein Feld für die Suche, hohlt sich die search types rein
  *
  * @require qui/QUI
  * @require qui/controls/Control
  * @require css!package/quiqqer/products/bin/controls/search/SearchField.css
  *
- * @event ready
+ * @event onReady [this]
+ * @event onChange [this]
  *
  * self::SEARCHTYPE_TEXT,
  * - Input
@@ -144,7 +145,7 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
                 'package/quiqqer/products/bin/controls/search/searchtypes/Text'
             ], function (Bool, Date, DateRange, HasValue, InputSelectRange, InputSelectSingle,
                          SelectMulti, SelectRange, SelectSingle, Text) {
-                console.warn(this.getAttribute('searchtype'));
+
                 switch (this.getAttribute('searchtype')) {
                     case 'text':
                         this.$Type = new Text().inject(this.getElm());
@@ -196,7 +197,7 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
                 }
 
                 this.$ready = true;
-                this.fireEvent('ready');
+                this.fireEvent('ready', [this]);
 
             }.bind(this));
         },

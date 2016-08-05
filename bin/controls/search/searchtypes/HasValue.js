@@ -36,6 +36,12 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/HasValue', [
             this.$Elm = new Element('input');
             this.$Elm.addClass('quiqqer-products-searchtype-hasvalue');
 
+            this.$Elm.addEvents({
+                change: function () {
+                    this.fireEvent('change', [this]);
+                }.bind(this)
+            });
+
             return this.$Elm;
         },
 

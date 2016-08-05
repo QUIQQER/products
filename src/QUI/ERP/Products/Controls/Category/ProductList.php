@@ -188,12 +188,25 @@ class ProductList extends QUI\Control
                 $priorityB = $EntryB->getAttribute('priority');
             }
 
+            if ($priorityA == 0 && $priorityB == 0) {
+                // sort via title?
+            }
+
+            if ($priorityA == 0) {
+                return 1;
+            }
+
+            if ($priorityB == 0) {
+                return -1;
+            }
+
             if ($priorityA == $priorityB) {
                 return 0;
             }
 
             return $priorityA > $priorityB ? 1 : -1;
         });
+
 
         $Engine->assign(array(
             'this'      => $this,

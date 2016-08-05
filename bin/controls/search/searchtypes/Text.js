@@ -38,6 +38,12 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Text', [
                 type   : 'text'
             });
 
+            this.$Elm.addEvents({
+                change: function () {
+                    this.fireEvent('change', [this]);
+                }.bind(this)
+            });
+
             return this.$Elm;
         },
 
