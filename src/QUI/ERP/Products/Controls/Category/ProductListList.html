@@ -1,11 +1,17 @@
 <article class="quiqqer-productList-product-list grid-33 mobile-grid-100"
          data-pid="{$Product->getId()}"
 >
-    <header class="quiqqer-productList-product-list-text">
-        <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:" html"}">
-        {$Product->getTitle()}
-        </a>
-    </header>
+    <div class="quiqqer-productList-product-list-text">
+        <header>
+            <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:" html"}">
+            {$Product->getTitle()}
+            </a>
+        </header>
+
+        <div class="quiqqer-productList-product-list-text-description">
+            {$Product->getDescription()}
+        </div>
+    </div>
 
     <div class="quiqqer-productList-product-list-buttons">
         <span class="fa fa-envelope button__small"></span>

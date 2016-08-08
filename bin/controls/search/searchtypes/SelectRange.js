@@ -28,6 +28,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
         initialize: function (options) {
             this.$Elm    = null;
             this.$Select = null;
+            this.$data   = {};
 
             this.parent(options);
         },
@@ -71,9 +72,22 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
          * Refresh the control
          */
         refresh: function () {
+            if ('from' in this.$data && 'to' in this.$data) {
+                this.$Select.setValue([
+                    this.$data.from,
+                    this.$data.to
+                ]);
+                return;
+            }
 
-            console.info(this.$data);
+            if ('from' in this.$data) {
+                this.$Select.setFrom(this.$data.from);
+                return;
+            }
 
+            if ('to' in this.$data) {
+                this.$Select.setTo(this.$data.to);
+            }
         },
 
         /**
@@ -82,6 +96,10 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
          * @param {Object|Array} data
          */
         setSearchData: function (data) {
+            if (typeOf(data) !== 'object') {
+                return;
+            }
+
             this.$data = data;
             this.refresh();
         },

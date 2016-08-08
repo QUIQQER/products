@@ -12,6 +12,10 @@
     width: calc(100% - 200px);
 }
 
+.quiqqer-productList-product-list-text-description {
+    font-size: 12px;
+}
+
 .quiqqer-productList-product-list-price {
     line-height: 20px;
     padding: 10px;

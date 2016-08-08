@@ -3,15 +3,20 @@
 >
     <div class="quiqqer-productList-product-detail-image">
         <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:" html"}">
-            {image image=$Product->getImage() title=$Product->getTitle() height=48}
+        {image image=$Product->getImage() title=$Product->getTitle() height=48}
         </a>
     </div>
 
-    <header class="quiqqer-productList-product-detail-text">
-        <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:" html"}">
+    <div class="quiqqer-productList-product-detail-text">
+        <header>
+            <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:" html"}">
             {$Product->getTitle()}
-        </a>
-    </header>
+            </a>
+        </header>
+        <div class="quiqqer-productList-product-detail-text-desription">
+            {$Product->getDescription()}
+        </div>
+    </div>
 
     <div class="quiqqer-productList-product-detail-buttons">
         <span class="fa fa-envelope button__small"></span>
