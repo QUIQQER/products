@@ -551,25 +551,43 @@ abstract class Search extends QUI\QDOM
      */
     protected function canSearchField($Field, $User = null)
     {
+        if (is_null($User)) {
+            $User = QUI::getUserBySession();
+        }
+
+        // calculate group hash
+        $userGroups = $User->getGroups(false);
+        sort($userGroups);
+
+        $groupHash = md5(implode('', $userGroups));
+        $cName     = 'products/search/userfieldids/' . $Field->getId() . '/' . $groupHash;
+
+        try {
+            return Cache::get($cName);
+        } catch (\Exception $Exception) {
+            // build cache entry
+        }
+
+        $canSearch = false;
+
         if ($Field->isPublic()) {
-            return true;
-        }
+            $canSearch = true;
+        } elseif ($Field->hasViewPermission($User)) {
+            $canSearch = true;
+        } else {
+            $eligibleFields = $this->getEligibleSearchFields();
 
-        $viewPermission = $Field->hasViewPermission($User);
-
-        if (!$viewPermission) {
-            return false;
-        }
-
-        $eligibleFields = $this->getEligibleSearchFields();
-
-        foreach ($eligibleFields as $EligibleField) {
-            if ($Field->getId() === $EligibleField->getId()) {
-                return true;
+            foreach ($eligibleFields as $EligibleField) {
+                if ($Field->getId() === $EligibleField->getId()) {
+                    $canSearch = true;
+                    break;
+                }
             }
         }
 
-        return false;
+        Cache::set($cName, $canSearch);
+
+        return $canSearch;
     }
 
     /**
@@ -632,5 +650,67 @@ abstract class Search extends QUI\QDOM
         }
 
         return $eligibleFields;
+    }
+
+    /**
+     * Validates an order statement
+     *
+     * @param array $searchParams - search params
+     * @return string - valid order statement
+     */
+    protected function validateOrderStatement($searchParams)
+    {
+        $order = 'ORDER BY';
+
+        if (!isset($searchParams['sortOn'])
+            || empty($searchParams['sortOn'])
+        ) {
+            $order .= ' title ASC';
+            return $order;
+        }
+
+        // check special fields
+        switch ($searchParams['sortOn']) {
+            case 'id':
+            case 'title':
+            case 'productNo':
+            case 'category':
+            case 'active':
+            case 'lang':
+            case 'tags':
+                $order .= ' ' . $searchParams['sortOn'];
+                break;
+
+            default:
+                $orderFieldId = (int)$searchParams['sortOn'];
+
+                try {
+                    $OrderField = Fields::getField($orderFieldId);
+                    $order      = ' ' . SearchHandler::getSearchFieldColumnName($OrderField);
+                } catch (\Exception $Exception) {
+                    // if field does not exist or throws some other kind of error - it is not searchable
+                    $order .= ' title ASC';
+                    return $order;
+                }
+        }
+
+        if (!isset($searchParams['sortBy'])
+            || empty($searchParams['sortBy'])
+        ) {
+            $order .= ' ASC';
+            return $order;
+        }
+
+        switch ($searchParams['sortBy']) {
+            case 'ASC':
+            case 'DESC':
+                $order .= " " . $searchParams['sortBy'];
+                break;
+
+            default:
+                $order .= " ASC";
+        }
+
+        return $order;
     }
 }

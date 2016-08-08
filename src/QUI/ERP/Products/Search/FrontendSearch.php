@@ -283,25 +283,8 @@ class FrontendSearch extends Search
             $sql .= " WHERE " . implode(" AND ", $where);
         }
 
-        if (!$countOnly && isset($searchParams['sortOn']) && !empty($searchParams['sortOn'])) {
-            // @todo felder prüfen
-            $order = "ORDER BY " . Orthos::clear($searchParams['sortOn']);
-
-            if (empty($searchParams['sortBy'])) {
-                $searchParams['sortBy'] = "ASC";
-            }
-
-            switch ($searchParams['sortBy']) {
-                case 'ASC':
-                case 'DESC':
-                    $order .= " " . $searchParams['sortBy'];
-                    break;
-
-                default:
-                    $order .= " ASC";
-            }
-
-            $sql .= " " . $order;
+        if (!$countOnly) {
+            $sql .= " " . $this->validateOrderStatement($searchParams);
         }
 
         if (!$countOnly) {

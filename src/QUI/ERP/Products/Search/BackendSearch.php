@@ -185,20 +185,8 @@ class BackendSearch extends Search
             $sql .= " WHERE " . implode(" AND ", $where);
         }
 
-        if (isset($searchParams['sortOn']) &&
-            !empty($searchParams['sortOn'])
-        ) {
-            $order = "ORDER BY " . Orthos::clear($searchParams['sortOn']);
-
-            if (isset($searchParams['sortBy']) &&
-                !empty($searchParams['sortBy'])
-            ) {
-                $order .= " " . Orthos::clear($searchParams['sortBy']);
-            } else {
-                $order .= " ASC";
-            }
-
-            $sql .= " " . $order;
+        if (!$countOnly) {
+            $sql .= " " . $this->validateOrderStatement($searchParams);
         }
 
         if (isset($searchParams['limit']) &&

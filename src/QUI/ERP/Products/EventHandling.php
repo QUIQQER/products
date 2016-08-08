@@ -459,6 +459,7 @@ class EventHandling
                  . $Site->getId() . '/' . $Site->getProject()->getLang();
 
         QUI\ERP\Products\Search\Cache::clear($cname);
+        QUI\ERP\Products\Search\Cache::clear('products/search/userfieldids/');
 
         // category cache clearing
         $categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
@@ -623,5 +624,20 @@ class EventHandling
         $header .= '</script>';
 
         $TemplateManager->extendHeader($header);
+    }
+
+    /**
+     * event: on set permission to object
+     *
+     * @param QUI\Users\User|QUI\Groups\Group|
+     *                           QUI\Projects\Project|QUI\Projects\Site|QUI\Projects\Site\Edit $Obj
+     * @param array $permissions
+     *
+     */
+    public static function onPermissionsSet($Obj, $permissions)
+    {
+        if ($Obj instanceof QUI\Groups\Group) {
+            QUI\ERP\Products\Search\Cache::clear('products/search/userfieldids/');
+        }
     }
 }
