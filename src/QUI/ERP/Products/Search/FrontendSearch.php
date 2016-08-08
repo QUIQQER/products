@@ -306,15 +306,37 @@ class FrontendSearch extends Search
             $sql .= " " . $order;
         }
 
-        if (isset($searchParams['limit']) &&
-            !empty($searchParams['limit'])
-        ) {
-            $Pagination = new QUI\Bricks\Controls\Pagination($searchParams);
-            $sqlParams  = $Pagination->getSQLParams();
-            $sql .= " LIMIT " . $sqlParams['limit'];
-        } else {
-            if (!$countOnly) {
-                $sql .= " LIMIT " . (int)20; // @todo: standard-limit als setting auslagern
+        if (!$countOnly) {
+            if (isset($searchParams['limit'])
+                && !empty($searchParams['limit'])
+                && isset($searchParams['sheet'])
+            ) {
+                $Pagination       = new QUI\Bricks\Controls\Pagination($searchParams);
+                $paginationParams = $Pagination->getSQLParams();
+                $queryLimit       = QUI\Database\DB::createQueryLimit($paginationParams['limit']);
+
+                foreach ($queryLimit['prepare'] as $bind => $value) {
+                    $binds[$bind] = array(
+                        'value' => $value[0],
+                        'type'  => $value[0]
+                    );
+                }
+
+                $sql .= " " . $queryLimit['limit'];
+
+            } elseif (isset($searchParams['limit'])) {
+                $queryLimit = QUI\Database\DB::createQueryLimit($searchParams['limit']);
+
+                foreach ($queryLimit['prepare'] as $bind => $value) {
+                    $binds[$bind] = array(
+                        'value' => $value[0],
+                        'type'  => $value[0]
+                    );
+                }
+
+                $sql .= " " . $queryLimit['limit'];
+            } else {
+                $sql .= " LIMIT 20"; // @todo as settings
             }
         }
 
@@ -322,7 +344,11 @@ class FrontendSearch extends Search
 
         // bind search values
         foreach ($binds as $var => $bind) {
-            $Stmt->bindValue(':' . $var, $bind['value'], $bind['type']);
+            if (strpos($var, ':') === false) {
+                $var = ':' . $var;
+            }
+
+            $Stmt->bindValue($var, $bind['value'], $bind['type']);
         }
 
         try {

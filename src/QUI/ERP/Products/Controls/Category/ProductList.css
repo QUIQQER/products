@@ -241,6 +241,11 @@
     width: 100%;
 }
 
+.quiqqer-products-productList-products-container-real {
+    float: left;
+    width: 100%;
+}
+
 .quiqqer-products-productList-products-more {
     clear: both;
     text-align: center;

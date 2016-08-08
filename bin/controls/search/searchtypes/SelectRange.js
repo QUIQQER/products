@@ -5,6 +5,7 @@
  * @require qui/QUI
  * @require qui/controls/Control
  * @require qui/controls/buttons/Select
+ * @require Locale
  */
 define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
 
@@ -48,7 +49,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
                     width: '100%'
                 },
                 Formatter: function (value) {
-                    return 'Von ' + NumberFormatter.format(value.from) +
+                    return NumberFormatter.format(value.from) +
                            ' bis ' + NumberFormatter.format(value.to);
                 },
                 events   : {

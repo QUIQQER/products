@@ -76,6 +76,10 @@ class ProductList extends QUI\Control
         $this->setAttribute('data-lang', $this->getSite()->getProject()->getLang());
         $this->setAttribute('data-siteid', $this->getSite()->getId());
 
+        $products = '';
+        $more     = false;
+        $count    = 0;
+
         try {
             $count = $this->getSearch()->search(
                 $this->getCountParams(),
@@ -86,21 +90,9 @@ class ProductList extends QUI\Control
                 $this->setAttribute('data-cid', $Category->getId());
             }
 
-            $rows = array(
-                $this->getRow(0, $count),
-                $this->getRow(1, $count),
-                $this->getRow(2, $count)
-            );
-
-            // get more?
-            $more = true;
-
-            foreach ($rows as $entry) {
-                if (isset($entry['more']) && $entry['more'] === false) {
-                    $more = false;
-                    break;
-                }
-            }
+            $start    = $this->getStart($count);
+            $products = $start['html'];
+            $more     = $start['more'];
 
         } catch (QUI\Permissions\Exception $Exception) {
             QUI\System\Log::addNotice(
@@ -108,16 +100,11 @@ class ProductList extends QUI\Control
                 $Exception->getContext()
             );
 
-            $more  = false;
-            $count = 0;
-            $rows  = array();
-
         } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);
-
-            $more  = false;
-            $count = 0;
-            $rows  = array();
+            QUI\System\Log::writeException(
+                $Exception,
+                QUI\System\Log::LEVEL_NOTICE
+            );
         }
 
         // category view
@@ -211,7 +198,7 @@ class ProductList extends QUI\Control
         $Engine->assign(array(
             'this'      => $this,
             'count'     => $count,
-            'rows'      => $rows,
+            'products'  => $products,
             'children'  => $this->getSite()->getNavigation(),
             'more'      => $more,
             'filter'    => $filter,
@@ -227,43 +214,72 @@ class ProductList extends QUI\Control
     }
 
     /**
-     * Return the row html
+     * Return the first articles as html array
      *
-     * @param integer $rowNumber
-     * @param boolean|integer $count - (optional) count of children, if false, it looks for a count
+     * @param boolean|integer $count - (optional) count of the children
      * @return array [html, count, more]
+     *
      * @throws QUI\Exception
      */
-    public function getRow($rowNumber, $count = false)
+    public function getStart($count = false)
     {
-        $Engine    = QUI::getTemplateManager()->getEngine();
-        $rowNumber = (int)$rowNumber;
+        return $this->renderData(0, $this->getMax() * 3, $count);
+    }
+
+    /**
+     * Return the next articles as html array
+     *
+     * @param boolean|integer $start - (optional) start position
+     * @param boolean|integer $count - (optional) count of the children
+     * @return array [html, count, more]
+     *
+     * @throws QUI\Exception
+     */
+    public function getNext($start = false, $count = false)
+    {
+        return $this->renderData($start, $this->getMax(), $count);
+    }
+
+    /**
+     * Render the products data
+     *
+     * @param boolean|integer $start - (optional) start position
+     * @param boolean|integer $max - (optional) max children
+     * @param boolean|integer $count - (optional) count of the children
+     * @return array [html, count, more]
+     *
+     * @throws QUI\Exception
+     */
+    protected function renderData($start, $max, $count = false)
+    {
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         switch ($this->getAttribute('view')) {
             case 'list':
-                $max        = 10;
                 $productTpl = dirname(__FILE__) . '/ProductListList.html';
                 break;
 
             case 'detail':
-                $max        = 5;
                 $productTpl = dirname(__FILE__) . '/ProductListDetails.html';
                 break;
 
             default:
             case 'gallery':
-                $max        = 3;
                 $productTpl = dirname(__FILE__) . '/ProductListGallery.html';
                 break;
         }
 
+        if (!$start) {
+            $start = 0;
+        }
+
+
         $more   = true;
-        $start  = $rowNumber * $max;
         $Search = $this->getSearch();
 
         try {
             $result = $Search->search(
-                $this->getSearchParams($rowNumber, $max)
+                $this->getSearchParams($start, $max)
             );
 
             if ($count === false) {
@@ -292,7 +308,6 @@ class ProductList extends QUI\Control
 
         $Engine->assign(array(
             'products'   => $products,
-            'rowNumber'  => $rowNumber,
             'productTpl' => $productTpl,
             'hidePrice'  => QUI\ERP\Products\Utils\Package::hidePrice(),
             'count'      => $count
@@ -306,11 +321,13 @@ class ProductList extends QUI\Control
     }
 
     /**
-     * @param $rowNumber
-     * @param $max
+     * Return the default search params
+     *
+     * @param integer $start - start
+     * @param integer|bool $max - optional, ax
      * @return array|mixed
      */
-    protected function getSearchParams($rowNumber, $max)
+    protected function getSearchParams($start = 0, $max = false)
     {
         $searchParams = $this->getAttribute('searchParams');
 
@@ -326,8 +343,11 @@ class ProductList extends QUI\Control
             $searchParams['freetext'] = '';
         }
 
-        $searchParams['limit'] = $max;
-        $searchParams['sheet'] = $rowNumber + 1;
+        if (!$max) {
+            $max = $this->getMax();
+        }
+
+        $searchParams['limit'] = $start . ',' . $max;
 
         return $searchParams;
     }
@@ -352,6 +372,25 @@ class ProductList extends QUI\Control
         }
 
         return $searchParams;
+    }
+
+    /**
+     * Return the max children per row
+     *
+     * @return int
+     */
+    protected function getMax()
+    {
+        switch ($this->getAttribute('view')) {
+            case 'list':
+                return 10;
+
+            case 'detail':
+                return 5;
+        }
+
+        // default
+        return 3;
     }
 
     /**

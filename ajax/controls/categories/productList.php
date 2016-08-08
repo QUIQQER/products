@@ -10,13 +10,13 @@ use QUI\ERP\Products\Controls\Category\ProductList;
 /**
  * Return the html for a prduct list
  *
- * @param string $params - JSON query params
+ * @param string $project - JSON project params
  *
- * @return array
+ * @return string
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_controls_categories_productList',
-    function ($project, $siteId, $categoryId, $view, $row, $searchParams) {
+    function ($project, $siteId, $categoryId, $view, $searchParams, $next, $articles) {
         try {
             Categories::getCategory($categoryId);
         } catch (QUI\Exception $Exception) {
@@ -27,14 +27,18 @@ QUI::$Ajax->registerFunction(
         $Site    = $Project->get($siteId);
 
         $Control = new ProductList(array(
-            'categoryId' => $categoryId,
-            'view' => $view,
-            'Site' => $Site,
+            'categoryId'   => $categoryId,
+            'view'         => $view,
+            'Site'         => $Site,
             'searchParams' => json_decode($searchParams, true)
         ));
 
-        return $Control->getRow($row);
+        if ($next) {
+            return $Control->getNext($articles);
+        }
+
+        return $Control->getStart();
     },
-    array('project', 'siteId', 'categoryId', 'view', 'row', 'searchParams'),
+    array('project', 'siteId', 'categoryId', 'view', 'searchParams', 'next', 'articles'),
     false
 );
