@@ -282,7 +282,6 @@ class ProductList extends QUI\Control
             if ($count === false) {
                 $count = $Search->search($this->getCountParams(), true);
             }
-
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);
 

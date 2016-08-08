@@ -323,7 +323,6 @@ class FrontendSearch extends Search
                 }
 
                 $sql .= " " . $queryLimit['limit'];
-
             } elseif (isset($searchParams['limit'])) {
                 $queryLimit = QUI\Database\DB::createQueryLimit($searchParams['limit']);
 
