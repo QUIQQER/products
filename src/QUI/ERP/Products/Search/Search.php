@@ -686,7 +686,12 @@ abstract class Search extends QUI\QDOM
 
                 try {
                     $OrderField = Fields::getField($orderFieldId);
-                    $order      = ' ' . SearchHandler::getSearchFieldColumnName($OrderField);
+
+                    if (!$this->canSearchField($OrderField)) {
+                        throw new QUI\Exception();
+                    }
+
+                    $order     .= ' ' . SearchHandler::getSearchFieldColumnName($OrderField);
                 } catch (\Exception $Exception) {
                     // if field does not exist or throws some other kind of error - it is not searchable
                     $order .= ' title ASC';
