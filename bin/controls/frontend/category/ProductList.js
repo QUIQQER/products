@@ -118,18 +118,20 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$FilterClearButton = Elm.getElement('.quiqqer-products-productList-resultInfo-clearbtn');
 
             // filter
-            var inner = this.$FilterContainer.get('html');
+            if (this.$FilterContainer) {
+                var inner = this.$FilterContainer.get('html');
 
-            this.$FilterContainer.set('html', '');
+                this.$FilterContainer.set('html', '');
 
-            new Element('div', {
-                html  : inner,
-                styles: {
-                    'float'      : 'left',
-                    paddingBottom: 20,
-                    width        : '100%'
-                }
-            }).inject(this.$FilterContainer);
+                new Element('div', {
+                    html  : inner,
+                    styles: {
+                        'float'      : 'left',
+                        paddingBottom: 20,
+                        width        : '100%'
+                    }
+                }).inject(this.$FilterContainer);
+            }
 
             this.$BarFilter    = Elm.getElement('.quiqqer-products-productList-sort-filter');
             this.$BarSort      = Elm.getElement('.quiqqer-products-productList-sort-sorting');
@@ -480,21 +482,34 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         /**
          * Return the current search params
          *
-         * @returns {{tags: (*|Array), freetext: string, fields: *, count: boolean, sortOn: string, sortBy: string}}
+         * @returns {
+         * {tags: (*|Array),
+         * freetext: string,
+         * fields: *,
+         * sortOn: string,
+         * sortBy: string}
+         * }
          */
         $getSearchParams: function () {
             var i, len, Field;
 
-            var fields     = {},
-                fieldNodes = this.$FilterContainer.getElements('.quiqqer-products-search-field'),
-                tags       = this.$FilterList.getElements('[data-tag]').map(function (Elm) {
+            var fields = {},
+                tags   = [];
+
+            if (this.$FilterContainer) {
+                var fieldNodes = this.$FilterContainer.getElements('.quiqqer-products-search-field');
+
+                for (i = 0, len = fieldNodes.length; i < len; i++) {
+                    Field = QUI.Controls.getById(fieldNodes[i].get('data-quiid'));
+
+                    fields[Field.getFieldId()] = Field.getSearchValue();
+                }
+            }
+
+            if (this.$FilterList) {
+                tags = this.$FilterList.getElements('[data-tag]').map(function (Elm) {
                     return Elm.get('data-tag');
                 });
-
-            for (i = 0, len = fieldNodes.length; i < len; i++) {
-                Field = QUI.Controls.getById(fieldNodes[i].get('data-quiid'));
-
-                fields[Field.getFieldId()] = Field.getSearchValue();
             }
 
             return {
