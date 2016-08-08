@@ -21,46 +21,46 @@ class Fields
     /**
      * Fields
      */
-    const FIELD_PRICE = 1;
-    const FIELD_VAT = 2;
-    const FIELD_PRODUCT_NO = 3;
-    const FIELD_TITLE = 4;
-    const FIELD_SHORT_DESC = 5;
-    const FIELD_CONTENT = 6;
-    const FIELD_SUPPLIER = 7;
-    const FIELD_MANUFACTURER = 8;
-    const FIELD_IMAGE = 9; // Main product image
-    const FIELD_FOLDER = 10; // Main media folder
-    const FIELD_STOCK = 12;
-    const FIELD_KEYWORDS = 13;
-    const FIELD_EQUIPMENT = 14;
+    const FIELD_PRICE            = 1;
+    const FIELD_VAT              = 2;
+    const FIELD_PRODUCT_NO       = 3;
+    const FIELD_TITLE            = 4;
+    const FIELD_SHORT_DESC       = 5;
+    const FIELD_CONTENT          = 6;
+    const FIELD_SUPPLIER         = 7;
+    const FIELD_MANUFACTURER     = 8;
+    const FIELD_IMAGE            = 9; // Main product image
+    const FIELD_FOLDER           = 10; // Main media folder
+    const FIELD_STOCK            = 12;
+    const FIELD_KEYWORDS         = 13;
+    const FIELD_EQUIPMENT        = 14;
     const FIELD_SIMILAR_PRODUCTS = 15;
 
     /**
      * Types
      */
-    const TYPE_BOOL = 'BoolType';
-    const TYPE_DATE = 'Date';
-    const TYPE_FLOAT = 'FloatType';
-    const TYPE_FOLDER = 'Folder';
-    const TYPE_GROUP_LIST = 'GroupList';
-    const TYPE_IMAGE = 'Image';
-    const TYPE_INPUT = 'Input';
-    const TYPE_INPUT_MULTI_LANG = 'InputMultiLang';
-    const TYPE_INT = 'IntType';
-    const TYPE_PRICE = 'Price';
-    const TYPE_ATTRIBUTE_LIST = 'ProductAttributeList';
-    const TYPE_TEXTAREA = 'Textarea';
+    const TYPE_BOOL                = 'BoolType';
+    const TYPE_DATE                = 'Date';
+    const TYPE_FLOAT               = 'FloatType';
+    const TYPE_FOLDER              = 'Folder';
+    const TYPE_GROUP_LIST          = 'GroupList';
+    const TYPE_IMAGE               = 'Image';
+    const TYPE_INPUT               = 'Input';
+    const TYPE_INPUT_MULTI_LANG    = 'InputMultiLang';
+    const TYPE_INT                 = 'IntType';
+    const TYPE_PRICE               = 'Price';
+    const TYPE_ATTRIBUTE_LIST      = 'ProductAttributeList';
+    const TYPE_TEXTAREA            = 'Textarea';
     const TYPE_TEXTAREA_MULTI_LANG = 'TextareaMultiLang';
-    const TYPE_URL = 'Url';
-    const TYPE_VAT = 'Vat';
-    const TYPE_TAX = 'Tax';
-    const TYPE_PRODCUCTS = 'Products';
+    const TYPE_URL                 = 'Url';
+    const TYPE_VAT                 = 'Vat';
+    const TYPE_TAX                 = 'Tax';
+    const TYPE_PRODCUCTS           = 'Products';
 
     /**
      * product array changed types
      */
-    const PRODUCT_ARRAY_CHANGED = 'pac'; // product array has changed
+    const PRODUCT_ARRAY_CHANGED   = 'pac'; // product array has changed
     const PRODUCT_ARRAY_UNCHANGED = 'pau'; // product array hasn't changed
 
     /**
@@ -230,7 +230,6 @@ class Fields
             }
 
             $data['id'] = $attributes['id'];
-
         } else {
             // exist an id with 1000? field-id begin at 1000
             $result = QUI::getDataBase()->fetch(array(
@@ -456,7 +455,6 @@ class Fields
             "permission.products.fields.field{$fieldId}.edit.title",
             $editTranslations
         );
-
     }
 
     /**
@@ -483,7 +481,6 @@ class Fields
             } else {
                 QUI\Translator::edit($group, $var, $data);
             }
-
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage(), array(
                 'trace' => $Exception->getTrace()

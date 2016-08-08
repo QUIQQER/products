@@ -589,7 +589,6 @@ class EventHandling
 
                 $vatId = QUI\ERP\Tax\Utils::cleanupVatId($vatId);
             }
-
         } elseif ($vatId) {
             $vatId = QUI\ERP\Tax\Utils::cleanupVatId($vatId);
         }
