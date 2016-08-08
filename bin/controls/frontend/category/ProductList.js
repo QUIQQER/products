@@ -247,7 +247,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             // read url
-            window.addEvent('popstate', this.$readWindowLocation.bind(this));
+            window.addEvent('popstate', function () {
+                this.$readWindowLocation();
+            }.bind(this));
 
             this.$readWindowLocation().then(function () {
                 this.$load                 = true;
@@ -332,7 +334,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                 Field.setSearchData(fieldParams[fieldId]);
                             }
                         }
-
                     } catch (e) {
                     }
                 }
@@ -353,8 +354,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     );
                 }
 
-                this.$__readWindowLocation = false;
-                resolve();
+                (function () {
+                    this.$__readWindowLocation = false;
+                    resolve();
+                }).delay(500, this);
 
             }.bind(this));
         },
@@ -1167,10 +1170,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return;
             }
 
-            if (this.$__readWindowLocation) {
-                return;
-            }
-            console.log('search');
             this.fireEvent('filterChangeBegin');
 
             this.$FilterResultInfo.set(
@@ -1204,7 +1203,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
 
-            this.$setWindowLocation();
+            if (!this.$__readWindowLocation) {
+                this.$setWindowLocation();
+            }
 
             // refresh display
             searchCountParams.count = true;
@@ -1214,8 +1215,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             this.$refreshTimer = (function () {
-                console.log('exec');
-
                 this.search(searchCountParams).then(function (result) {
 
                     self.$FilterResultInfo.set('html', QUILocale.get(lg, 'product.list.result.count', {
