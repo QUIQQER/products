@@ -347,7 +347,7 @@ class EventHandling
                     'title' => "quiqqer/products permission.products.fields.field{$field['id']}.view.title",
                     'desc'  => "",
                     'type'  => 'bool',
-                    'area'  => '',
+                    'area'  => 'groups',
                     'src'   => 'user'
                 ));
 
@@ -357,7 +357,7 @@ class EventHandling
                     'title' => "quiqqer/products permission.products.fields.field{$field['id']}.edit.title",
                     'desc'  => "",
                     'type'  => 'bool',
-                    'area'  => '',
+                    'area'  => 'groups',
                     'src'   => 'user'
                 ));
 
@@ -459,6 +459,7 @@ class EventHandling
                  . $Site->getId() . '/' . $Site->getProject()->getLang();
 
         QUI\ERP\Products\Search\Cache::clear($cname);
+        QUI\ERP\Products\Search\Cache::clear('products/search/userfieldids/');
 
         // category cache clearing
         $categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
@@ -589,7 +590,6 @@ class EventHandling
 
                 $vatId = QUI\ERP\Tax\Utils::cleanupVatId($vatId);
             }
-
         } elseif ($vatId) {
             $vatId = QUI\ERP\Tax\Utils::cleanupVatId($vatId);
         }
@@ -624,5 +624,20 @@ class EventHandling
         $header .= '</script>';
 
         $TemplateManager->extendHeader($header);
+    }
+
+    /**
+     * event: on set permission to object
+     *
+     * @param QUI\Users\User|QUI\Groups\Group|
+     *                           QUI\Projects\Project|QUI\Projects\Site|QUI\Projects\Site\Edit $Obj
+     * @param array $permissions
+     *
+     */
+    public static function onPermissionsSet($Obj, $permissions)
+    {
+        if ($Obj instanceof QUI\Groups\Group) {
+            QUI\ERP\Products\Search\Cache::clear('products/search/userfieldids/');
+        }
     }
 }

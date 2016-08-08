@@ -7,4 +7,5 @@
     <event on="onSiteSaveBefore" fire="\QUI\ERP\Products\EventHandling::onSiteSaveBefore"/>
     <event on="onUserSaveBegin" fire="\QUI\ERP\Products\EventHandling::onUserSave"/>
     <event on="onTemplateGetHeader" fire="\QUI\ERP\Products\EventHandling::onTemplateGetHeader"/>
+    <event on="onPermissionsSet" fire="\QUI\ERP\Products\EventHandling::onPermissionsSet"/>
 </events>
