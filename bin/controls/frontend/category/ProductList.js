@@ -17,6 +17,18 @@
  *
  * @event onFilterChange [self]
  */
+
+// uri require
+require.config({
+    paths: {
+        'URI'     : URL_OPT_DIR + 'bin/uri.js/src/URI',
+        'IPv6'    : URL_OPT_DIR + 'bin/uri.js/src/IPv6',
+        'punycode': URL_OPT_DIR + 'bin/uri.js/src/punycode',
+
+        'SecondLevelDomains': URL_OPT_DIR + 'bin/uri.js/src/SecondLevelDomains'
+    }
+});
+
 define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
     'qui/QUI',
@@ -27,7 +39,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'package/quiqqer/products/bin/controls/search/SearchField',
     'Ajax',
     'Locale',
-    URL_OPT_DIR + 'bin/uri.js/src/URI.js',
+    'URI',
     'package/quiqqer/products/bin/controls/frontend/category/ProductListFilter'
 
 ], function (QUI, QUIControl, QUISelect, QUIButton, Search, SearchField, QUIAjax, QUILocale, URI, Filter) {
@@ -234,12 +246,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$showMoreButton();
             }
 
-
             // read url
             window.addEvent('popstate', this.$readWindowLocation.bind(this));
 
             this.$readWindowLocation().then(function () {
-                this.$load = true;
+                this.$load                 = true;
+                this.$__readWindowLocation = false;
                 this.$onFilterChange();
             }.bind(this));
 
@@ -283,7 +295,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     search = Url.search(true);
 
                 if (!Object.getLength(search)) {
-                    this.$load = true;
+                    resolve();
                     return;
                 }
 
@@ -341,10 +353,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     );
                 }
 
-                (function () {
-                    this.$__readWindowLocation = false;
-                }).delay(500, this);
-
+                this.$__readWindowLocation = false;
                 resolve();
 
             }.bind(this));
@@ -1161,7 +1170,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (this.$__readWindowLocation) {
                 return;
             }
-
+            console.log('search');
             this.fireEvent('filterChangeBegin');
 
             this.$FilterResultInfo.set(
@@ -1200,16 +1209,24 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             // refresh display
             searchCountParams.count = true;
 
-            this.search(searchCountParams).then(function (result) {
+            if (typeof this.$refreshTimer !== 'undefined' && this.$refreshTimer) {
+                clearTimeout(this.$refreshTimer)
+            }
 
-                self.$FilterResultInfo.set('html', QUILocale.get(lg, 'product.list.result.count', {
-                    count: result
-                }));
+            this.$refreshTimer = (function () {
+                console.log('exec');
 
-                self.fireEvent('filterChange');
+                this.search(searchCountParams).then(function (result) {
 
-                return self.$renderSearch();
-            });
+                    self.$FilterResultInfo.set('html', QUILocale.get(lg, 'product.list.result.count', {
+                        count: result
+                    }));
+
+                    self.fireEvent('filterChange');
+
+                    return self.$renderSearch();
+                });
+            }).delay(200, this);
         }
     });
 });
