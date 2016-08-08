@@ -225,6 +225,10 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
                 return false;
             }
 
+            if (!this.$Type) {
+                return false;
+            }
+
             return this.$Type.getSearchValue();
         }
     });

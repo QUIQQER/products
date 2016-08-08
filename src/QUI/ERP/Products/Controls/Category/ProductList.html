@@ -94,7 +94,9 @@
     <div class="quiqqer-products-productList-products-container">
         <div class="quiqqer-products-productList-products-container-real">
         {if $count}
+            <noscript>
             {$products}
+            </noscript>
         {else}
             <div class="quiqqer-products-productList-sort__noProducts">
                 {locale group="quiqqer/products" var="message.product.search.empty"}

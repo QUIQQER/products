@@ -53,7 +53,8 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
             '$onSelectDestroy',
             '$onInputFocus',
-            '$onImport'
+            '$onImport',
+            '$onInject'
         ],
 
         options: {
@@ -82,9 +83,11 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
             this.$search = false;
             this.$values = [];
+            this.$loaded = false;
 
             this.addEvents({
-                onImport: this.$onImport
+                onImport: this.$onImport,
+                onInject: this.$onInject
             });
         },
 
@@ -263,6 +266,15 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
             this.$Elm = null;
             this.create();
+
+            this.$loaded = true;
+        },
+
+        /**
+         * event: on import
+         */
+        $onInject: function () {
+            this.$loaded = true;
         },
 
         /**
@@ -548,7 +560,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                     Entry.destroy();
                 });
             }
-            
+
             ids.each(function (id) {
                 if (id === '' || !id) {
                     return;
@@ -695,6 +707,11 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
          */
         $refreshValues: function () {
             this.$Input.value = this.$values.join(',');
+
+            if (this.$loaded === false) {
+                return;
+            }
+
             this.$Input.fireEvent('change', [{
                 target: this.$Input
             }]);
