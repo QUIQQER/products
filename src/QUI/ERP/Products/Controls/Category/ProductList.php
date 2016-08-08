@@ -93,13 +93,11 @@ class ProductList extends QUI\Control
             $start    = $this->getStart($count);
             $products = $start['html'];
             $more     = $start['more'];
-
         } catch (QUI\Permissions\Exception $Exception) {
             QUI\System\Log::addNotice(
                 $Exception->getMessage(),
                 $Exception->getContext()
             );
-
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException(
                 $Exception,
@@ -142,7 +140,6 @@ class ProductList extends QUI\Control
             try {
                 $Field    = QUI\ERP\Products\Handler\Fields::getField($field['id']);
                 $filter[] = $Field;
-
             } catch (QUI\ERP\Products\Field\Exception $Exception) {
                 // nothing
             } catch (QUI\Exception $Exception) {
