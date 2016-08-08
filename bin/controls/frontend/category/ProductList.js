@@ -848,6 +848,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * render the filter
          */
         $renderFilter: function () {
+            if (!this.$FilterContainer) {
+                return;
+            }
+
             var c, i, len, clen, options, Control, Filter, Title, Select;
 
             // standard
@@ -919,6 +923,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * clear all filters
          */
         clearFilter: function () {
+            if (!this.$FilterList) {
+                return;
+            }
+
             this.$FilterList.set('html', '');
 
             var uncheck = function (Child) {
@@ -947,6 +955,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @param {String} filter
          */
         addFilter: function (filter) {
+            if (!this.$FilterClearButton) {
+                return;
+            }
+
             if (this.$FilterClearButton.getStyle('display') === 'none') {
                 this.$FilterClearButton.setStyle('display', null);
 
@@ -980,6 +992,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @param {String} filter
          */
         removeFilter: function (filter) {
+            if (!this.$selectFilter) {
+                return;
+            }
+
             for (var i = 0, len = this.$selectFilter.length; i < len; i++) {
                 this.$selectFilter[i].unselectChild(filter);
                 this.$FilterList.getElements('[data-tag="' + filter + '"]').destroy();
@@ -992,6 +1008,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * event on filter change
          */
         $onFilterChange: function () {
+            if (!this.$FilterResultInfo) {
+                return;
+            }
+
             this.fireEvent('filterChangeBegin');
 
             this.$FilterResultInfo.set(
