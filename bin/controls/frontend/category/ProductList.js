@@ -142,7 +142,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryList-catgory-more');
             }
 
-            this.$FilterClearButton.addEvent('click', this.clearFilter);
+            if (this.$FilterClearButton) {
+                this.$FilterClearButton.addEvent('click', this.clearFilter);
+            }
 
             if (this.$BarFilter) {
                 this.$renderFilter();
