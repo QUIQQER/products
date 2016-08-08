@@ -286,7 +286,7 @@ class Fields
             'title' => "quiqqer/products permission.products.fields.field{$newId}.view.title",
             'desc'  => "",
             'type'  => 'bool',
-            'area'  => '',
+            'area'  => 'groups',
             'src'   => 'user'
         ));
 
@@ -296,7 +296,7 @@ class Fields
             'title' => "quiqqer/products permission.products.fields.field{$newId}.edit.title",
             'desc'  => "",
             'type'  => 'bool',
-            'area'  => '',
+            'area'  => 'groups',
             'src'   => 'user'
         ));
 

@@ -347,7 +347,7 @@ class EventHandling
                     'title' => "quiqqer/products permission.products.fields.field{$field['id']}.view.title",
                     'desc'  => "",
                     'type'  => 'bool',
-                    'area'  => '',
+                    'area'  => 'groups',
                     'src'   => 'user'
                 ));
 
@@ -357,7 +357,7 @@ class EventHandling
                     'title' => "quiqqer/products permission.products.fields.field{$field['id']}.edit.title",
                     'desc'  => "",
                     'type'  => 'bool',
-                    'area'  => '',
+                    'area'  => 'groups',
                     'src'   => 'user'
                 ));
 
