@@ -74,7 +74,6 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
             if (isset($value[$current])) {
                 return $value[$current];
             }
-
         } catch (QUI\Exception $Exception) {
         }
 
