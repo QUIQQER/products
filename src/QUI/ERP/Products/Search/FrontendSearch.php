@@ -20,7 +20,7 @@ use QUI\Utils\Security\Orthos;
  */
 class FrontendSearch extends Search
 {
-    const SITETYPE_SEARCH = 'quiqqer/products:types/search';
+    const SITETYPE_SEARCH   = 'quiqqer/products:types/search';
     const SITETYPE_CATEGORY = 'quiqqer/products:types/category';
 
     /**
@@ -48,6 +48,13 @@ class FrontendSearch extends Search
     protected $siteType = null;
 
     /**
+     * ID of product category assigned to site
+     *
+     * @var int
+     */
+    protected $categoryId = null;
+
+    /**
      * FrontendSearch constructor.
      *
      * @param QUI\Projects\Site $Site - Search Site or Category Site
@@ -66,6 +73,8 @@ class FrontendSearch extends Search
                 )
             ));
         }
+
+        $this->categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
 
         $this->Site     = $Site;
         $this->lang     = $Site->getProject()->getLang();
@@ -186,6 +195,12 @@ class FrontendSearch extends Search
             $where[]           = '`category` LIKE :category';
             $binds['category'] = array(
                 'value' => '%,' . (int)$searchParams['category'] . ',%',
+                'type'  => \PDO::PARAM_STR
+            );
+        } elseif ($this->categoryId) {
+            $where[]           = '`category` LIKE :category';
+            $binds['category'] = array(
+                'value' => '%,' . $this->categoryId . ',%',
                 'type'  => \PDO::PARAM_STR
             );
         }
