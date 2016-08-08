@@ -17,6 +17,18 @@
  *
  * @event onFilterChange [self]
  */
+
+// uri require
+require.config({
+    paths: {
+        'URI'     : URL_OPT_DIR + 'bin/uri.js/src/URI',
+        'IPv6'    : URL_OPT_DIR + 'bin/uri.js/src/IPv6',
+        'punycode': URL_OPT_DIR + 'bin/uri.js/src/punycode',
+
+        'SecondLevelDomains': URL_OPT_DIR + 'bin/uri.js/src/SecondLevelDomains'
+    }
+});
+
 define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
     'qui/QUI',
@@ -27,7 +39,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'package/quiqqer/products/bin/controls/search/SearchField',
     'Ajax',
     'Locale',
-    URL_OPT_DIR + 'bin/uri.js/src/URI.js',
+    'URI',
     'package/quiqqer/products/bin/controls/frontend/category/ProductListFilter'
 
 ], function (QUI, QUIControl, QUISelect, QUIButton, Search, SearchField, QUIAjax, QUILocale, URI, Filter) {
