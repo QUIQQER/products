@@ -220,7 +220,7 @@ class ProductList extends QUI\Control
      */
     public function getStart($count = false)
     {
-        return $this->renderData(0, $this->getMax() * 3, $count);
+        return $this->renderData(0, $this->getMax(), $count);
     }
 
     /**
@@ -270,7 +270,6 @@ class ProductList extends QUI\Control
             $start = 0;
         }
 
-
         $more   = true;
         $Search = $this->getSearch();
 
@@ -294,11 +293,12 @@ class ProductList extends QUI\Control
         }
 
         $products = array();
-
+        
         foreach ($result as $product) {
             try {
                 $products[] = Products::getProduct($product);
             } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
             }
         }
 
@@ -377,6 +377,7 @@ class ProductList extends QUI\Control
      */
     protected function getMax()
     {
+        // @todo als setting machen
         switch ($this->getAttribute('view')) {
             case 'list':
                 return 10;
@@ -386,7 +387,7 @@ class ProductList extends QUI\Control
         }
 
         // default
-        return 3;
+        return 9;
     }
 
     /**

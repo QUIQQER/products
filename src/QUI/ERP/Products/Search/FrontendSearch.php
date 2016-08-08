@@ -316,7 +316,7 @@ class FrontendSearch extends Search
                 foreach ($queryLimit['prepare'] as $bind => $value) {
                     $binds[$bind] = array(
                         'value' => $value[0],
-                        'type'  => $value[0]
+                        'type'  => $value[1]
                     );
                 }
 
@@ -327,7 +327,7 @@ class FrontendSearch extends Search
                 foreach ($queryLimit['prepare'] as $bind => $value) {
                     $binds[$bind] = array(
                         'value' => $value[0],
-                        'type'  => $value[0]
+                        'type'  => $value[1]
                     );
                 }
 
