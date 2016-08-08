@@ -186,11 +186,14 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 this.$Sort = new QUISelect({
                     showIcons      : false,
-                    placeholderText: 'Sortieren nach...'
+                    placeholderText: 'Sortieren nach...',
+                    events         : {
+                        onChange: this.$onFilterChange
+                    }
                 }).inject(this.$BarSort);
 
-                this.$Sort.appendChild('Name aufsteigen', 'name');
-                this.$Sort.appendChild('Name abssteigend', 'name');
+                this.$Sort.appendChild('Titel aufsteigen', 'title ASC');
+                this.$Sort.appendChild('Titel abssteigend', 'title DESC');
                 // this.$Sort.appendChild('Preis aufsteigen', 'name');
                 // this.$Sort.appendChild('Preis abssteigend', 'name');
 
@@ -494,7 +497,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             var i, len, Field;
 
             var fields = {},
-                tags   = [];
+                tags   = [],
+                sortOn = '',
+                sortBy = '';
 
             if (this.$FilterContainer) {
                 var fieldNodes = this.$FilterContainer.getElements('.quiqqer-products-search-field');
@@ -512,12 +517,24 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 });
             }
 
+            switch (this.$Sort.getValue()) {
+                case 'title DESC':
+                    sortBy = 'DESC';
+                    sortOn = 'title';
+                    break;
+
+                case 'title ASC':
+                    sortBy = 'ASC';
+                    sortOn = 'title';
+                    break;
+            }
+
             return {
                 tags    : tags,
                 freetext: '',
                 fields  : fields,
-                sortOn  : '',
-                sortBy  : ''
+                sortOn  : sortOn,
+                sortBy  : sortBy
             };
         },
 
