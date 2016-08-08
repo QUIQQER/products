@@ -10,7 +10,9 @@
  * @require qui/controls/buttons/Select
  * @require qui/controls/buttons/Button
  * @require package/quiqqer/products/bin/Search
+ * @require package/quiqqer/products/bin/controls/search/SearchField
  * @require Ajax
+ * @require Locale
  * @require package/quiqqer/products/bin/controls/frontend/category/ProductListFilter
  *
  * @event onFilterChange [self]

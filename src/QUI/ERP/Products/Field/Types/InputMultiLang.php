@@ -54,6 +54,23 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
                 return $value;
             }
 
+            // standard validate
+            if (isset($value[$current])) {
+                return $value[$current];
+            }
+
+            // lang validate
+            if (strpos($current, '_') !== false) {
+                $current = explode('_', $current);
+                $current = $current[0];
+
+                if (isset($value[$current])) {
+                    return $value[$current];
+                }
+            }
+
+            $current = mb_strtolower($current) . '_' . mb_strtoupper($current);
+
             if (isset($value[$current])) {
                 return $value[$current];
             }
