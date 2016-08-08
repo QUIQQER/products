@@ -232,7 +232,7 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
 
                 switch (this.getAttribute('sortOn')) {
                     case 'price_netto':
-                        sortOn = 'F1';
+                        sortOn = '1';
                         break;
 
                     case 'status':
