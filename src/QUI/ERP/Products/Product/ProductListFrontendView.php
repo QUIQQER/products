@@ -88,6 +88,7 @@ class ProductListFrontendView
             $product['description'] = $attributes['description'];
             $product['image']       = $attributes['image'];
             $product['quantity']    = $attributes['quantity'];
+            $product['attributes']  = array();
 
             foreach ($attributes['calculated_vatArray'] as $key => $entry) {
                 $sum = $entry['sum'];
