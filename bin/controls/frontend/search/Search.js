@@ -7,6 +7,7 @@
  * @require qui/QUI
  * @require qui/controls/Control
  * @require package/quiqqer/products/bin/Fields
+ * @require package/quiqqer/products/bin/Search
  * @require Ajax
  * @require Locale
  * @require URL_OPT_DIR + bin/mustache/mustache.min.js
@@ -307,7 +308,10 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
 
             for (var key in params) {
                 if (params.hasOwnProperty(key)) {
-                    params[key] = JSON.decode(decodeURIComponent(params[key]));
+                    try {
+                        params[key] = JSON.decode(decodeURIComponent(params[key]));
+                    } catch (e) {
+                    }
                 }
             }
 
