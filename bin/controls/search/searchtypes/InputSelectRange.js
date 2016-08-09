@@ -35,6 +35,13 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
         },
 
         /**
+         * Reset the field
+         */
+        reset: function () {
+
+        },
+
+        /**
          * Create the domnode element
          *
          * @return {HTMLDivElement}

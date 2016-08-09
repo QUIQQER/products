@@ -41,6 +41,13 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectMulti', [
         },
 
         /**
+         * Reset the field
+         */
+        reset: function () {
+
+        },
+
+        /**
          * set the search data
          *
          * @param {object|array} data

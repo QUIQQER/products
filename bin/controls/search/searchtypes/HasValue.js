@@ -46,6 +46,13 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/HasValue', [
         },
 
         /**
+         * Reset the field
+         */
+        reset: function () {
+
+        },
+
+        /**
          * set the search data
          *
          * @param {object|array} data

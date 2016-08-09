@@ -48,6 +48,14 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Text', [
         },
 
         /**
+         * Reset the field
+         */
+        reset: function () {
+            this.$Elm.value = '';
+            this.fireEvent('change', [this]);
+        },
+
+        /**
          * set the search data
          *
          * @param {Object|Array} data

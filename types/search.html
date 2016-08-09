@@ -1,9 +1,21 @@
 <div class="grid-100 mobile-grid-100 grid-parent page-multible-content">
-    <div class="content-headerpage-multible-left grid-30 mobile-grid-100">
+    {if $Site->getAttribute('quiqqer.products.settings.dontShowSearch') == false &&
+    $Search->hasFields()
+    }
+    <div class="content-headerpage-multible-left grid-30 hide-on-mobile">
         {$Search->create()}
     </div>
+    {/if}
 
-    <div class="grid-70 mobile-grid-100">
+
+    {if $Site->getAttribute('quiqqer.products.settings.dontShowSearch') == false &&
+        $Search->hasFields()
+    }
+        <div class="page-multible-right grid-70 mobile-grid-100">
+    {else}
+        <div class="page-multible-right grid-100 mobile-grid-100">
+    {/if}
+
         {if $Site->getAttribute('content-header')}
             {if $Site->getAttribute('image_emotion')}
             <header class="page-content-header-emotion"

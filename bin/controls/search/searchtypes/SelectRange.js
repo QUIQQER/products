@@ -92,6 +92,13 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
         },
 
         /**
+         * Reset the field
+         */
+        reset: function () {
+
+        },
+
+        /**
          * set the search data
          *
          * @param {Object|Array} data

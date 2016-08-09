@@ -56,7 +56,8 @@
                             </text>
 
                             <option value="gallery">
-                                <locale group="quiqqer/products" var="quiqqer.products.settings.categoryDisplay.gallery"/>
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.categoryDisplay.gallery"/>
                             </option>
                             <option value="list">
                                 <locale group="quiqqer/products" var="quiqqer.products.settings.categoryDisplay.list"/>
@@ -85,6 +86,7 @@
             <attributes>
                 <attribute>quiqqer.products.settings.searchFieldIds</attribute>
                 <attribute>quiqqer.products.settings.searchFieldsByUser</attribute>
+                <attribute>quiqqer.products.settings.dontShowSearch</attribute>
             </attributes>
 
             <settings>
@@ -94,6 +96,12 @@
                             <locale group="quiqqer/products" var="quiqqer.products.search.settings.title"/>
                         </title>
 
+                        <input conf="quiqqer.products.settings.dontShowSearch" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.dontShowSearch"/>
+                            </text>
+                        </input>
+                        
                         <input conf="quiqqer.products.settings.searchFieldIds" type="hidden"
                                data-qui="package/quiqqer/products/bin/controls/search/FieldSelect"
                         >

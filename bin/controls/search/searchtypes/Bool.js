@@ -57,6 +57,13 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Bool', [
         },
 
         /**
+         * Reset the field
+         */
+        reset: function () {
+            this.$Select.setValue(0);
+        },
+
+        /**
          * set the search data
          *
          * @param {object|array} data

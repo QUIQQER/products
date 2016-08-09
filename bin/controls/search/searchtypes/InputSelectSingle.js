@@ -62,6 +62,13 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectSing
         },
 
         /**
+         * Reset the field
+         */
+        reset: function () {
+
+        },
+
+        /**
          * Refresh the control
          */
         refresh: function () {
