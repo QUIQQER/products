@@ -28,7 +28,7 @@
     "npm-asset/mustache": "2.*",
     "bower-asset\/uri.js": "1.*",
     "bower-asset\/nouislider": "8.*",
-    "bower-asset/intl": "1.*",
+    "bower-asset/intl": "1.*"
   },
   "require-dev": {
     "phpunit/phpunit-mock-objects": "~3.1"
