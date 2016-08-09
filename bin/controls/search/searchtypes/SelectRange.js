@@ -17,6 +17,11 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
 ], function (QUI, QUIControl, QUIRange, QUILocale) {
     "use strict";
 
+    var NumberFormatter = QUILocale.getNumberFormatter({
+        style   : 'currency',
+        currency: window.DEFAULT_CURRENCY || 'EUR'
+    });
+
     return new Class({
         Extends: QUIControl,
         Type   : 'package/quiqqer/products/bin/controls/search/searchtypes/SelectRange',
@@ -39,21 +44,17 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
          * @return {HTMLDivElement}
          */
         create: function () {
-            var NumberFormatter = QUILocale.getNumberFormatter({
-                style   : 'currency',
-                currency: window.DEFAULT_CURRENCY || 'EUR'
-            });
-
             this.$Select = new QUIRange({
-                range    : true,
-                styles   : {
+                range : true,
+                styles: {
                     width: '100%'
                 },
-                Formatter: function (value) {
-                    return NumberFormatter.format(value.from) +
-                           ' bis ' + NumberFormatter.format(value.to);
-                },
-                events   : {
+
+                Formatter: function () {
+                    return this.getSearchValueFormatted();
+                }.bind(this),
+
+                events: {
                     change: function () {
                         this.fireEvent('change', [this]);
                     }.bind(this)
@@ -111,6 +112,18 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
          */
         getSearchValue: function () {
             return this.$Select.getValue();
+        },
+
+        /**
+         * Return the value formatted
+         *
+         * @returns {string}
+         */
+        getSearchValueFormatted: function () {
+            var value = this.getSearchValue();
+
+            return NumberFormatter.format(value.from) +
+                   ' bis ' + NumberFormatter.format(value.to);
         }
     });
 });

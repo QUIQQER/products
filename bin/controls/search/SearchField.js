@@ -230,6 +230,19 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
             }
 
             return this.$Type.getSearchValue();
+        },
+
+        /**
+         * Return the value formatted
+         *
+         * @returns {String}
+         */
+        getSearchValueFormatted: function () {
+            if ("getSearchValueFormatted" in this.$Type) {
+                return this.$Type.getSearchValueFormatted();
+            }
+
+            return this.getSearchValue().toString();
         }
     });
 });

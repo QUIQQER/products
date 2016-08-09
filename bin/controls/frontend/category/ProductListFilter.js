@@ -4,6 +4,7 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require Ajax
  */
 define('package/quiqqer/products/bin/controls/frontend/category/ProductListFilter', [
 
