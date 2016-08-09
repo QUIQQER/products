@@ -444,6 +444,8 @@ class EventHandling
      */
     public static function onSiteSave($Site)
     {
+        $Project = $Site->getProject();
+
         // register path
         if ($Site->getAttribute('active') &&
             $Site->getAttribute('type') == 'quiqqer/products:types/category'
@@ -455,11 +457,17 @@ class EventHandling
         }
 
         // cache clearing
-        $cname = 'products/search/frontend/fieldvalues/'
-                 . $Site->getId() . '/' . $Site->getProject()->getLang();
+        $cname = 'products/search/frontend/fieldvalues/' . $Site->getId() . '/' . $Project->getLang();
 
         QUI\ERP\Products\Search\Cache::clear($cname);
         QUI\ERP\Products\Search\Cache::clear('products/search/userfieldids/');
+
+        // field cache clearing
+        $searchFieldCache = 'products/search/frontend/searchfielddata/';
+        $searchFieldCache .= $Site->getId() . '/';
+        $searchFieldCache .= $Project->getLang() . '/';
+
+        QUI\ERP\Products\Search\Cache::clear($searchFieldCache);
 
         // category cache clearing
         $categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');

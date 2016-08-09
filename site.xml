@@ -101,7 +101,7 @@
                                 <locale group="quiqqer/products" var="quiqqer.products.settings.dontShowSearch"/>
                             </text>
                         </input>
-                        
+
                         <input conf="quiqqer.products.settings.searchFieldIds" type="hidden"
                                data-qui="package/quiqqer/products/bin/controls/search/FieldSelect"
                         >
