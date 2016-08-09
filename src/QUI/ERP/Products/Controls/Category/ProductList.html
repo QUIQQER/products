@@ -37,7 +37,7 @@
         {if !empty($filter)}
         <div class="quiqqer-products-productList-filter-container">
             {foreach $filter as $Filter}
-                {if get_class($Filter) === 'QUI\Tags\Groups\Group'}
+                {if !is_array($Filter) && get_class($Filter) === 'QUI\Tags\Groups\Group'}
                 <label class="quiqqer-products-productList-filter-entry">
                     <span class="quiqqer-products-productList-filter-entry-title">
                         {$Filter->getTitle()}
@@ -53,14 +53,14 @@
                     </select>
                 </label>
                 {else}
-                <label class="quiqqer-products-productList-filter-entry" data-fieldid="{$Filter->getId()}">
+                <label class="quiqqer-products-productList-filter-entry" data-fieldid="{$Filter.id}">
                     <span class="quiqqer-products-productList-filter-entry-title">
-                        {$Filter->getTitle()}
+                        {$Filter.title}
                     </span>
-                    <input name="{$Filter->getName()}"
-                           placeholder="{$Filter->getTitle()|escape:"html"}"
-                           data-fieldid="{$Filter->getId()}"
-                           data-searchtype="{$Filter->getDefaultSearchType()}"
+                    <input placeholder="{$Filter.title|escape:"html"}"
+                           data-fieldid="{$Filter.id}"
+                           data-searchdata="{$Filter.searchData|escape:"html"}"
+                           data-searchtype="{$Filter.searchType|escape:"html"}"
                     />
                 </label>
                 {/if}

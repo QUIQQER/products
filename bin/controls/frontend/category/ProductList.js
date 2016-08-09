@@ -256,15 +256,40 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             // read url
             window.addEvent('popstate', function () {
-                this.$readWindowLocation();
+                this.$load = false;
+                this.$readWindowLocation().then(function () {
+                    this.$onFilterChange();
+                    this.$load = true;
+                }.bind(this));
             }.bind(this));
 
-            this.$readWindowLocation().then(function () {
-                this.$load = true;
-                this.$onFilterChange();
 
-                this.$__readWindowLocation = false;
-            }.bind(this));
+            if (typeof Pace !== 'undefined') {
+                var loaded = false;
+
+                Pace.on('done', function () {
+                    if (loaded) {
+                        return;
+                    }
+                    this.$readWindowLocation().then(function () {
+                        this.$load = true;
+                        loaded     = true;
+
+                        this.$onFilterChange();
+                        this.$__readWindowLocation = false;
+                    }.bind(this));
+                }.bind(this));
+
+                return;
+            }
+
+            (function () {
+                this.$readWindowLocation().then(function () {
+                    this.$load = true;
+                    this.$onFilterChange();
+                    this.$__readWindowLocation = false;
+                }.bind(this));
+            }).delay(500, this);
 
 
             // // bind to the search
@@ -341,10 +366,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                             Field = findFilterById(fieldId);
 
                             if (Field) {
-                                Field.setSearchData(fieldParams[fieldId]);
+                                Field.setSearchValue(fieldParams[fieldId]);
                             }
                         }
                     } catch (e) {
+                        console.error(e);
                     }
                 }
 
@@ -1016,7 +1042,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return;
             }
 
-            var c, i, len, clen, options, Field, Control, Filter, Title, Select;
+            var c, i, len, clen, options, searchdata, Field, Control, Filter, Title, Select;
 
             // standard
             var filter = this.$FilterContainer.getElements(
@@ -1040,11 +1066,18 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 if (!Select) {
                     // search fields
                     // Title.destroy();
-                    Select = Filter.getElement('input');
+                    Select     = Filter.getElement('input');
+                    searchdata = null;
+
+                    try {
+                        searchdata = JSON.decode(Select.get('data-searchdata'));
+                    } catch (e) {
+                    }
 
                     Field = new SearchField({
                         fieldid   : Select.get('data-fieldid'),
                         searchtype: Select.get('data-searchtype'),
+                        searchdata: searchdata,
                         title     : Title.get('text').trim(),
                         events    : {
                             onChange: this.$onFilterChange
@@ -1196,7 +1229,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (!this.$load) {
                 return;
             }
-
+            console.log('$onFilterChange');
             this.fireEvent('filterChangeBegin');
 
             this.$FilterResultInfo.set(
@@ -1229,10 +1262,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$FilterClearButton.setStyle('display', 'none');
             }
 
-
-            if (!this.$__readWindowLocation) {
-                this.$setWindowLocation();
-            }
+            this.$setWindowLocation();
 
             // refresh display
             searchCountParams.count = true;

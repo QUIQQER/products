@@ -73,6 +73,15 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Bool', [
         },
 
         /**
+         * Set the input select value
+         * @param value
+         */
+        setSearchValue: function (value) {
+            this.setAttribute('value', value);
+
+        },
+
+        /**
          * Return the search value
          *
          * @returns {String|Boolean}

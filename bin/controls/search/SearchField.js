@@ -56,12 +56,14 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
         Type   : 'package/quiqqer/products/bin/controls/search/SearchField',
 
         Binds: [
-            '$onInject'
+            '$onInject',
+            'setSearchData'
         ],
 
         options: {
             searchtype: 'text',
-            fieldid   : false
+            fieldid   : false,
+            searchdata: null
         },
 
         initialize: function (options) {
@@ -69,14 +71,19 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
             this.$Input = null;
             this.$Type  = null;
 
-            this.$ready      = false;
-            this.$searchData = null;
+            this.$ready       = false;
+            this.$searchData  = null;
+            this.$searchValue = null;
 
             this.parent(options);
 
             this.addEvents({
                 onInject: this.$onInject
             });
+
+            if (this.getAttribute('searchdata')) {
+                this.$searchData = this.getAttribute('searchdata');
+            }
         },
 
         /**
@@ -192,6 +199,10 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
                     this.fireEvent('change', [this]);
                 }.bind(this));
 
+                if (this.$searchValue) {
+                    this.$Type.setSearchValue(this.$searchValue);
+                }
+
                 if (this.$searchData) {
                     this.$Type.setSearchData(this.$searchData);
                 }
@@ -212,6 +223,19 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
                 this.$Type.setSearchData(data);
             } else {
                 this.$searchData = data;
+            }
+        },
+
+        /**
+         * Set the search value for the fields
+         *
+         * @param {object|array} data
+         */
+        setSearchValue: function (data) {
+            if (this.$Type) {
+                this.$Type.setSearchValue(data);
+            } else {
+                this.$searchValue = data;
             }
         },
 

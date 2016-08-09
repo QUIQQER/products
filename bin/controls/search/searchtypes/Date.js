@@ -59,6 +59,15 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Date', [
         },
 
         /**
+         * Set the input select value
+         * @param value
+         */
+        setSearchValue: function (value) {
+            this.setAttribute('value', value);
+
+        },
+
+        /**
          * set the search data
          *
          * @param {object|array} data

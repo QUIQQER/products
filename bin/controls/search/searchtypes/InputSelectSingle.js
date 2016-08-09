@@ -62,13 +62,6 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectSing
         },
 
         /**
-         * Reset the field
-         */
-        reset: function () {
-
-        },
-
-        /**
          * Refresh the control
          */
         refresh: function () {
@@ -84,6 +77,15 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectSing
                     this.$data[i].value
                 );
             }
+        },
+
+        /**
+         * Set the input select value
+         * @param value
+         */
+        setSearchValue: function (value) {
+            this.setAttribute('value', value);
+
         },
 
         /**

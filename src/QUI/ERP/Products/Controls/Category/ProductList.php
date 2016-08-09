@@ -138,8 +138,19 @@ class ProductList extends QUI\Control
 
         foreach ($fields as $field) {
             try {
-                $Field    = QUI\ERP\Products\Handler\Fields::getField($field['id']);
-                $filter[] = $Field;
+                $Field = QUI\ERP\Products\Handler\Fields::getField($field['id']);
+
+                if ($Field->hasViewPermission()) {
+                    $field['priority'] = $Field->getAttribute('priority');
+
+                    if (!isset($field['searchData'])) {
+                        $field['searchData'] = '';
+                    } elseif (!is_string($field['searchData'])) {
+                        $field['searchData'] = json_encode($field['searchData']);
+                    }
+
+                    $filter[] = $field;
+                }
             } catch (QUI\ERP\Products\Field\Exception $Exception) {
                 // nothing
             } catch (QUI\Exception $Exception) {
@@ -152,24 +163,22 @@ class ProductList extends QUI\Control
             $priorityA = 0;
             $priorityB = 0;
 
-            if (get_class($EntryA) === QUI\Tags\Groups\Group::class) {
+            if (!is_array($EntryA) && get_class($EntryA) === QUI\Tags\Groups\Group::class) {
                 /* @var QUI\Tags\Groups\Group $EntryA */
                 $priorityA = $EntryA->getPriority();
             }
 
-            if (get_class($EntryB) === QUI\Tags\Groups\Group::class) {
+            if (!is_array($EntryB) && get_class($EntryB) === QUI\Tags\Groups\Group::class) {
                 /* @var QUI\Tags\Groups\Group $EntryB */
                 $priorityB = $EntryB->getPriority();
             }
 
-            if (QUI\ERP\Products\Utils\Fields::isField($EntryA)) {
-                /* @var QUI\ERP\Products\Field\Field $EntryA */
-                $priorityA = $EntryA->getAttribute('priority');
+            if (is_array($EntryA) && isset($EntryA['priority'])) {
+                $priorityA = $EntryA['priority'];
             }
 
-            if (QUI\ERP\Products\Utils\Fields::isField($EntryB)) {
-                /* @var QUI\ERP\Products\Field\Field $EntryB */
-                $priorityB = $EntryB->getAttribute('priority');
+            if (is_array($EntryB) && isset($EntryB['priority'])) {
+                $priorityB = $EntryB['priority'];
             }
 
             if ($priorityA == 0 && $priorityB == 0) {
@@ -293,7 +302,7 @@ class ProductList extends QUI\Control
         }
 
         $products = array();
-        
+
         foreach ($result as $product) {
             try {
                 $products[] = Products::getProduct($product);

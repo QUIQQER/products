@@ -73,22 +73,22 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
          * Refresh the control
          */
         refresh: function () {
-            if ('from' in this.$data && 'to' in this.$data) {
-                this.$Select.setValue([
-                    this.$data.from,
-                    this.$data.to
-                ]);
-                return;
-            }
-
-            if ('from' in this.$data) {
-                this.$Select.setFrom(this.$data.from);
-                return;
-            }
-
-            if ('to' in this.$data) {
-                this.$Select.setTo(this.$data.to);
-            }
+            // if ('from' in this.$data && 'to' in this.$data) {
+            //     this.$Select.setValue([
+            //         this.$data.from,
+            //         this.$data.to
+            //     ]);
+            //     return;
+            // }
+            //
+            // if ('from' in this.$data) {
+            //     this.$Select.setFrom(this.$data.from);
+            //     return;
+            // }
+            //
+            // if ('to' in this.$data) {
+            //     this.$Select.setTo(this.$data.to);
+            // }
         },
 
         /**
@@ -99,11 +99,22 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
         },
 
         /**
+         * Set the input select value
+         * @param value
+         */
+        setSearchValue: function (value) {
+            this.setAttribute('value', value);
+
+        },
+
+        /**
          * set the search data
          *
          * @param {Object|Array} data
          */
         setSearchData: function (data) {
+            console.error(data);
+
             if (typeOf(data) !== 'object') {
                 return;
             }
