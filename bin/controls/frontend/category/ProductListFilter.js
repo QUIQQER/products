@@ -77,7 +77,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListFilte
                 this.$Text.set('html', '<span class="fa fa-spinner fa-spin"></span>');
 
                 QUIAjax.get('package_quiqqer_tags_ajax_tag_get', function (result) {
-                    this.$Text.set('html', result.title || result.tag);
+                    this.$Text.set('text', result.title || result.tag);
                 }.bind(this), {
                     'package'  : 'quiqqer/tags',
                     projectName: QUIQQER_PROJECT.name,
