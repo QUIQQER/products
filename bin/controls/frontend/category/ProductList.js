@@ -392,6 +392,29 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     );
                 }
 
+                // view
+                if ("v" in search) {
+                    switch (search.v) {
+                        case 'detail':
+                            this.resetButtons();
+                            this.$ButtonDetails.addClass('active');
+                            this.setAttribute('view', search.v);
+                            break;
+
+                        case 'list':
+                            this.resetButtons();
+                            this.$ButtonList.addClass('active');
+                            this.setAttribute('view', search.v);
+                            break;
+
+                        case 'gallery':
+                            this.resetButtons();
+                            this.$ButtonGallery.addClass('active');
+                            this.setAttribute('view', search.v);
+                            break;
+                    }
+                }
+
                 resolve();
 
             }.bind(this));
@@ -427,6 +450,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             if (searchParams.tags.length) {
                 history.t = searchParams.tags.join(',');
+            }
+
+            switch (this.getAttribute('view')) {
+                case 'detail':
+                case 'list':
+                    history.v = this.getAttribute('view');
+                    break;
             }
 
             if (searchParams.fields) {
@@ -514,7 +544,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             return this.$clearContainer()
                 .then(this.$renderSearch.bind(this))
-                .then(this.$showContainer.bind(this));
+                .then(this.$showContainer.bind(this))
+                .then(this.$setWindowLocation.bind(this));
         },
 
         /**
@@ -533,7 +564,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             return this.$clearContainer()
                 .then(this.$renderSearch.bind(this))
-                .then(this.$showContainer.bind(this));
+                .then(this.$showContainer.bind(this))
+                .then(this.$setWindowLocation.bind(this));
         },
 
         /**
@@ -552,7 +584,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             return this.$clearContainer()
                 .then(this.$renderSearch.bind(this))
-                .then(this.$showContainer.bind(this));
+                .then(this.$showContainer.bind(this))
+                .then(this.$setWindowLocation.bind(this));
         },
 
         /**
