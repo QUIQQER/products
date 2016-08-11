@@ -994,6 +994,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return Promise.resolve();
             }
 
+            var Opener = this.$BarFilter.getElement(
+                '.quiqqer-products-productList-sort-filter-opener'
+            );
+
+            Opener.removeClass('fa-angle-down');
+            Opener.addClass('fa-angle-double-down');
+
             var scrollHeight = this.$FilterContainer.getFirst('div').getSize().y,
                 height       = this.$FilterContainer.getSize().y;
 
@@ -1024,6 +1031,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (!this.$FilterContainer) {
                 return Promise.resolve();
             }
+
+            var Opener = this.$BarFilter.getElement(
+                '.quiqqer-products-productList-sort-filter-opener'
+            );
+
+            Opener.removeClass('fa-angle-double-down');
+            Opener.addClass('fa-angle-down');
 
             return new Promise(function (resolve) {
                 moofx(this.$FilterContainer).animate({
