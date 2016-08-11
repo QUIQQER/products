@@ -630,6 +630,65 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         html: result.html
                     });
 
+                    // button events
+                    Ghost.getElements(
+                        '.quiqqer-products-product-button-purchase'
+                    ).addEvent('click', function (event) {
+                        var Target    = event.target,
+                            Article   = Target.getParent('article'),
+                            productId = Article.get('data-pid');
+
+                        Target.removeClass('fa-envelope');
+                        Target.addClass('fa-spinner fa-spin');
+
+                        require([
+                            'package/quiqqer/watchlist/bin/controls/frontend/PurchaseWindow',
+                            'package/quiqqer/watchlist/bin/classes/Product'
+                        ], function (Purchase, WatchlistProduct) {
+                            var Product = new WatchlistProduct({
+                                id    : productId,
+                                events: {
+                                    onChange: self.$onProductChange
+                                }
+                            });
+
+                            new Purchase({
+                                products: [Product]
+                            }).open();
+
+                            Target.removeClass('fa-spinner');
+                            Target.removeClass('fa-spin');
+                            Target.addClass('fa-envelope');
+                        });
+                    });
+
+                    Ghost.getElements(
+                        '.quiqqer-products-product-button-add'
+                    ).addEvent('click', function (event) {
+                        var Target    = event.target,
+                            Article   = Target.getParent('article'),
+                            productId = Article.get('data-pid');
+
+                        Target.removeClass('fa-plus');
+                        Target.addClass('fa-spinner fa-spin');
+
+                        require([
+                            'package/quiqqer/watchlist/bin/Watchlist'
+                        ], function (Watchlist) {
+                            Watchlist.addProduct(productId).then(function () {
+                                Target.removeClass('fa-spinner');
+                                Target.removeClass('fa-spin');
+                                Target.addClass('fa-check');
+
+                                (function () {
+                                    Target.removeClass('fa-check');
+                                    Target.addClass('fa-plus');
+                                }).delay(1000, this);
+                            });
+                        });
+                    });
+
+
                     var Prom = Promise.resolve();
 
                     if (next === false) {
