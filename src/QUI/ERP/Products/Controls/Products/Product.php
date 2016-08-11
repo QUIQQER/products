@@ -46,14 +46,11 @@ class Product extends QUI\Control
         $Product = $this->getAttribute('Product');
         $Gallery = new QUI\Gallery\Controls\Slider();
         $fields  = array();
+        $Calc    = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
-            $View = $Product->getView();
-            $User = QUI::getUserBySession();
-            $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
-
+            $View  = $Product->getView();
             $Price = $Calc->getProductPrice($Product->createUniqueProduct($Calc));
-
         } else {
             $View  = $Product;
             $Price = $Product->getPrice();
@@ -168,6 +165,7 @@ class Product extends QUI\Control
             'mediaFolders'         => $mediaFolders,
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
             'PriceDisplay'         => $PriceDisplay,
+            'vatText'              => $Calc->getVatTextByUser(),
             'WatchlistButton'      => new WatchlistButton(array(
                 'Product' => $View
             )),

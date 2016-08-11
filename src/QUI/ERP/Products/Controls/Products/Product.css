@@ -97,6 +97,14 @@
     width: 100%;
 }
 
+.product-data-price-vat {
+    clear: both;
+    float: left;
+    font-size: 12px;
+    text-align: right;
+    width: 100%;
+}
+
 .qui-products-price-display {
     clear: both;
     color: #e91d2c;

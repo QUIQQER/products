@@ -483,15 +483,13 @@ class Calc
     /**
      * Return the tax message for an user
      *
-     * @param UserInterface $User
      * @return string
      */
-    protected function getVatTextByUser(UserInterface $User)
+    public function getVatTextByUser()
     {
-        $Tax = QUI\ERP\Tax\Utils::getTaxByUser($User);
-        $vat = $Tax->getValue() . ' % ';
+        $Tax = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
 
-        return $this->getVatText($vat, $User);
+        return $this->getVatText($Tax->getValue(), $this->getUser());
     }
 
     /**
@@ -515,6 +513,11 @@ class Calc
                 );
             }
 
+            // vat ist leer und kein EU vat user
+            if (!$vat) {
+                return '';
+            }
+
             return $Locale->get(
                 'quiqqer/tax',
                 'message.vat.text.netto',
@@ -528,6 +531,11 @@ class Calc
                 'message.vat.text.brutto.EUVAT',
                 array('vat' => $vat)
             );
+        }
+
+        // vat ist leer und kein EU vat user
+        if (!$vat) {
+            return '';
         }
 
         return $Locale->get(
