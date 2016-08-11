@@ -1231,6 +1231,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * Render the fields filter
          */
         $renderFilterFields: function () {
+            if (!this.$FilterFieldList) {
+                return;
+            }
+
             this.$FilterFieldList.set('html', '');
 
             for (var i = 0, len = this.$selectFields.length; i < len; i++) {
