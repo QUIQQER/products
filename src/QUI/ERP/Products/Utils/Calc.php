@@ -55,7 +55,12 @@ class Calc
     /**
      * @var UserInterface
      */
-    protected $User;
+    protected $User = null;
+
+    /**
+     * @var null|QUI\ERP\Currency\Currency
+     */
+    protected $Currency = null;
 
     /**
      * Calc constructor.
@@ -105,6 +110,20 @@ class Calc
     public function getUser()
     {
         return $this->User;
+    }
+
+    /**
+     * Return the currency
+     *
+     * @return QUI\ERP\Currency\Currency
+     */
+    public function getCurrency()
+    {
+        if (is_null($this->Currency)) {
+            $this->Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        }
+
+        return $this->Currency;
     }
 
     /**
@@ -259,7 +278,7 @@ class Calc
             'vatText'      => $vatText,
             'isEuVat'      => $isEuVatUser,
             'isNetto'      => $isNetto,
-            'currencyData' => ''
+            'currencyData' => $this->getCurrency()->toArray()
         ));
 
         return $List;
@@ -378,7 +397,6 @@ class Calc
             try {
                 $TaxType  = TaxUtils::getTaxTypeByArea($Area);
                 $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
-
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeRecursive($Exception->getMessage());
                 continue;
@@ -409,7 +427,7 @@ class Calc
             'vatText'      => $vatText,
             'isEuVat'      => $isEuVatUser,
             'isNetto'      => $isNetto,
-            'currencyData' => '',
+            'currencyData' => $this->getCurrency()->toArray(),
             'factors'      => $factors
         ));
 
