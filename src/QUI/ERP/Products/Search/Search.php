@@ -310,9 +310,7 @@ abstract class Search extends QUI\QDOM
                     $from = false;
                     $to   = false;
 
-                    if (isset($value['from'])
-                        && !empty($value['from'])
-                    ) {
+                    if (isset($value['from']) && !empty($value['from'])) {
                         $from = $value['from'];
 
                         if (!is_string($from) && !is_numeric($from)) {
@@ -327,9 +325,7 @@ abstract class Search extends QUI\QDOM
                         }
                     }
 
-                    if (isset($value['to'])
-                        && !empty($value['to'])
-                    ) {
+                    if (isset($value['to']) && !empty($value['to'])) {
                         $to = $value['to'];
 
                         if (!is_string($to) && !is_numeric($to)) {
@@ -390,9 +386,7 @@ abstract class Search extends QUI\QDOM
                     $from = false;
                     $to   = false;
 
-                    if (isset($value['from'])
-                        && !empty($value['from'])
-                    ) {
+                    if (isset($value['from']) && !empty($value['from'])) {
                         $from = $value['from'];
 
                         if (!is_numeric($from)) {
@@ -407,9 +401,7 @@ abstract class Search extends QUI\QDOM
                         }
                     }
 
-                    if (isset($value['to'])
-                        && !empty($value['to'])
-                    ) {
+                    if (isset($value['to']) && !empty($value['to'])) {
                         $to = $value['to'];
 
                         if (!is_numeric($from)) {
@@ -456,9 +448,7 @@ abstract class Search extends QUI\QDOM
                         continue;
                     }
 
-                    if (!is_string($value)
-                        && !is_numeric($value)
-                    ) {
+                    if (!is_string($value) && !is_numeric($value)) {
                         throw new Exception(array(
                             'quiqqer/products',
                             'exception.search.value.invalid',
@@ -598,9 +588,7 @@ abstract class Search extends QUI\QDOM
      */
     protected function sanitizeString($str)
     {
-        if (!is_string($str)
-            && !is_numeric($str)
-        ) {
+        if (!is_string($str) && !is_numeric($str)) {
             return false;
         }
 
@@ -642,9 +630,7 @@ abstract class Search extends QUI\QDOM
 
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($fields as $Field) {
-            if ($Field->isSearchable()
-                && $Field->getSearchType()
-            ) {
+            if ($Field->isSearchable() && $Field->getSearchType()) {
                 $eligibleFields[] = $Field;
             }
         }
@@ -691,7 +677,7 @@ abstract class Search extends QUI\QDOM
                         throw new QUI\Exception();
                     }
 
-                    $order     .= ' ' . SearchHandler::getSearchFieldColumnName($OrderField);
+                    $order .= ' ' . SearchHandler::getSearchFieldColumnName($OrderField);
                 } catch (\Exception $Exception) {
                     // if field does not exist or throws some other kind of error - it is not searchable
                     $order .= ' title ASC';
