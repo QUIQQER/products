@@ -1073,6 +1073,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return Promise.resolve();
             }
 
+            var opacity = this.$FilterContainer.getStyle('opacity').toInt();
+
+            if (!opacity) {
+                return Promise.resolve();
+            }
+
             return this.showFilter();
         },
 

@@ -101,25 +101,23 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
                 return;
             }
 
-            console.warn(this.$data);
 
+            if ('from' in this.$data && 'to' in this.$data) {
+                this.$Select.setValue([
+                    this.$data.from,
+                    this.$data.to
+                ]);
+                return;
+            }
 
-            // if ('from' in this.$data && 'to' in this.$data) {
-            //     this.$Select.setValue([
-            //         this.$data.from,
-            //         this.$data.to
-            //     ]);
-            //     return;
-            // }
-            //
-            // if ('from' in this.$data) {
-            //     this.$Select.setFrom(this.$data.from);
-            //     return;
-            // }
-            //
-            // if ('to' in this.$data) {
-            //     this.$Select.setTo(this.$data.to);
-            // }
+            if ('from' in this.$data) {
+                this.$Select.setFrom(this.$data.from);
+                return;
+            }
+
+            if ('to' in this.$data) {
+                this.$Select.setTo(this.$data.to);
+            }
         },
 
         /**
