@@ -806,16 +806,18 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 });
             }
 
-            switch (this.$Sort.getValue()) {
-                case 'title DESC':
-                    sortBy = 'DESC';
-                    sortOn = 'title';
-                    break;
+            if (this.$Sort) {
+                switch (this.$Sort.getValue()) {
+                    case 'title DESC':
+                        sortBy = 'DESC';
+                        sortOn = 'title';
+                        break;
 
-                case 'title ASC':
-                    sortBy = 'ASC';
-                    sortOn = 'title';
-                    break;
+                    case 'title ASC':
+                        sortBy = 'ASC';
+                        sortOn = 'title';
+                        break;
+                }
             }
 
             return {
@@ -947,7 +949,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$ButtonGallery.removeClass('active');
             this.$ButtonList.removeClass('active');
 
-            this.$Sort.disable();
+            if (this.$Sort) {
+                this.$Sort.disable();
+            }
         },
 
         /**
@@ -960,7 +964,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$ButtonGallery.removeClass('disabled');
             this.$ButtonList.removeClass('disabled');
 
-            this.$Sort.enable();
+            if (this.$Sort) {
+                this.$Sort.enable();
+            }
         },
 
         /**
