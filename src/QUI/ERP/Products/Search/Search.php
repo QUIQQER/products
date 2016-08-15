@@ -246,6 +246,30 @@ abstract class Search extends QUI\QDOM
                 continue;
             }
 
+            // wenn feld -> price feld
+            // scheiss vorgehensweise, wollen aber kein doppelten code
+            if (get_class($this) == FrontendSearch::class) {
+                $User = QUI::getUserBySession();
+
+                if (!QUI\ERP\Products\Utils\User::isNettoUser($User)
+                    && $Field->getType() == Fields::TYPE_PRICE
+                ) {
+                    $Tax  = QUI\ERP\Tax\Utils::getTaxByUser(QUI::getUserBySession());
+                    $calc = ($Tax + 100) / 100;
+
+                    // calc netto sum
+                    if (is_array($value)
+                        && isset($value['from'])
+                        && isset($value['to'])
+                        && $calc
+                    ) {
+                        $value['from'] = $value['from'] / $calc;
+                        $value['to']   = $value['to'] / $calc;
+                    }
+                }
+            }
+
+
             $columnName = SearchHandler::getSearchFieldColumnName($Field);
             $column     = '`' . $columnName . '`';
 
