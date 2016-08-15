@@ -204,7 +204,7 @@ class Price extends QUI\ERP\Products\Field\Field
     public function calculateValueRange($min, $max)
     {
         // add tax to max value
-        $maxTaxValue = (float)"1." . QUI\ERP\Tax\Utils::getMaxTax();
+        $maxTaxValue = (100 + QUI\ERP\Tax\Utils::getMaxTax()) / 100;
         $max *= $maxTaxValue;
 
         if ($min < 1) {
