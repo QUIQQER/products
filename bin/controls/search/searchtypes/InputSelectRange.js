@@ -35,8 +35,10 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
         ],
 
         options: {
-            range: false,
-            value: false
+            range  : false,
+            snap   : true,
+            connect: true,
+            value  : false
         },
 
         initialize: function (options) {
@@ -57,6 +59,8 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
 
             this.$Select = new QUIRange({
                 range    : this.getAttribute('range'),
+                snap     : this.getAttribute('snap'),
+                connect  : this.getAttribute('connect'),
                 styles   : {
                     width: '100%'
                 },
@@ -83,6 +87,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
          */
         refresh: function () {
             if (typeOf(this.$data) === 'array') {
+                var i, pc;
                 var values = this.$data.map(function (entry) {
                     return parseFloat(entry.value);
                 });
@@ -91,12 +96,22 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
                     return a - b;
                 });
 
+                var len = values.length;
+
                 var range = {
                     min: values[0],
-                    max: values[values.length - 1]
+                    max: values[len - 1]
                 };
-                // console.info(values);
-                // console.info(range);
+
+                // percent
+                var percentStep = 100 / len;
+
+                for (i = 1; i < len - 1; i++) {
+                    pc = Math.round(percentStep * i);
+
+                    range[pc + '%'] = values[i];
+                }
+
                 this.$Select.setRange(range);
                 return;
             }

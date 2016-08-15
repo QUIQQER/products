@@ -108,16 +108,16 @@ abstract class Search extends QUI\QDOM
         $activeProductsOnly = true,
         $catId = null
     ) {
-//        $cname = 'products/search/backend/fieldvalues/';
-//        $cname .= $Field->getId() . '/';
-//        $cname .= $this->lang . '/';
-//        $cname .= $activeProductsOnly ? 'active' : 'inactive';
-//
-//        try {
-//            return Cache::get($cname);
-//        } catch (QUI\Exception $Exception) {
-//            // nothing, retrieve values
-//        }
+        $cname = 'products/search/backend/fieldvalues/';
+        $cname .= $Field->getId() . '/';
+        $cname .= $this->lang . '/';
+        $cname .= $activeProductsOnly ? 'active' : 'inactive';
+
+        try {
+            return Cache::get($cname);
+        } catch (QUI\Exception $Exception) {
+            // nothing, retrieve values
+        }
 
         $values = array();
         $column = SearchHandler::getSearchFieldColumnName($Field);
@@ -131,7 +131,10 @@ abstract class Search extends QUI\QDOM
         );
 
         if (!is_null($catId)) {
-            $params['where']['category'] = (int)$catId;
+            $params['where']['category'] = array(
+                'type'  => '%LIKE%',
+                'value' => ',' . (int)$catId . ','
+            );
         }
 
         if ($activeProductsOnly) {
@@ -207,12 +210,9 @@ abstract class Search extends QUI\QDOM
                 break;
         }
 
-//        $uniqueEntries = array_unique($values);
-//        $uniqueEntries = array_values($uniqueEntries);
-
         sort($values);
 
-//        Cache::set($cname, $values);
+        Cache::set($cname, $values);
 
         return $values;
     }

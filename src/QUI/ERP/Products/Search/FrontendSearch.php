@@ -11,7 +11,6 @@ use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Search\Cache as SearchCache;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
-use QUI\Utils\Security\Orthos;
 
 /**
  * Class Search
@@ -20,7 +19,7 @@ use QUI\Utils\Security\Orthos;
  */
 class FrontendSearch extends Search
 {
-    const SITETYPE_SEARCH   = 'quiqqer/products:types/search';
+    const SITETYPE_SEARCH = 'quiqqer/products:types/search';
     const SITETYPE_CATEGORY = 'quiqqer/products:types/category';
 
     /**
@@ -189,9 +188,7 @@ class FrontendSearch extends Search
             'type'  => \PDO::PARAM_STR
         );
 
-        if (isset($searchParams['category']) &&
-            !empty($searchParams['category'])
-        ) {
+        if (isset($searchParams['category']) && !empty($searchParams['category'])) {
             $where[]           = '`category` LIKE :category';
             $binds['category'] = array(
                 'value' => '%,' . (int)$searchParams['category'] . ',%',
@@ -205,9 +202,7 @@ class FrontendSearch extends Search
             );
         }
 
-        if (!isset($searchParams['fields'])
-            && !isset($searchParams['freetext'])
-        ) {
+        if (!isset($searchParams['fields']) && !isset($searchParams['freetext'])) {
             throw new Exception(
                 'Wrong search parameters.',
                 400
@@ -215,9 +210,7 @@ class FrontendSearch extends Search
         }
 
         // freetext search
-        if (isset($searchParams['freetext'])
-            && !empty($searchParams['freetext'])
-        ) {
+        if (isset($searchParams['freetext']) && !empty($searchParams['freetext'])) {
             $whereFreeText = array();
             $value         = $this->sanitizeString($searchParams['freetext']);
 
