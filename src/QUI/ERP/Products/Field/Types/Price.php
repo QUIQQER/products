@@ -193,4 +193,56 @@ class Price extends QUI\ERP\Products\Field\Field
     {
         return Search::SEARCHTYPE_SELECTRANGE;
     }
+
+    /**
+     * Calculates a range with individual steps between a min and a max number
+     *
+     * @param number $min
+     * @param number $max
+     * @return array - contains values from min to max with calculated steps inbetween
+     */
+    public function calculateValueRange($min, $max)
+    {
+        // add tax to max value
+        $maxTaxValue = (float)"1." . QUI\ERP\Tax\Utils::getMaxTax();
+        $max *= $maxTaxValue;
+
+        if ($min < 1) {
+            $start = 0.1;
+        } else {
+            // round down to lowest 10 (e.g.: 144 = 140; 2554 = 2550)
+            $floorPrecision = 1;
+
+            if ((string)mb_strlen((int)$min) > 1) {
+                $floorPrecision = 10;
+            }
+
+            $start = floor($min / $floorPrecision) * $floorPrecision;
+            $start = (int)$start;
+        }
+
+        $value   = $start;
+        $range[] = $value;
+
+        while ($value < $max) {
+            if (round($value, 1) < 1) {
+                $add = 0.1;
+            } else {
+                $add = 1;
+                $i   = 10;
+
+                while ($value >= $i) {
+                    $i *= 10;
+                    $add *= 10;
+                }
+
+                $value = floor($value / $add) * $add;
+            }
+
+            $value += $add;
+            $range[] = $value;
+        }
+
+        return $range;
+    }
 }
