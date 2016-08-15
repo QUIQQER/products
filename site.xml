@@ -16,6 +16,7 @@
             <attributes>
                 <attribute>quiqqer.products.settings.categoryId</attribute>
                 <attribute>quiqqer.products.settings.searchFieldIds</attribute>
+                <attribute>quiqqer.products.settings.searchFieldIds.edited</attribute>
                 <attribute>quiqqer.products.settings.searchFieldsByUser</attribute>
                 <attribute>quiqqer.products.settings.dontShowSearch</attribute>
                 <attribute>quiqqer.products.settings.categoryStartNumber</attribute>
@@ -85,6 +86,7 @@
 
             <attributes>
                 <attribute>quiqqer.products.settings.searchFieldIds</attribute>
+                <attribute>quiqqer.products.settings.searchFieldIds.edited</attribute>
                 <attribute>quiqqer.products.settings.searchFieldsByUser</attribute>
                 <attribute>quiqqer.products.settings.dontShowSearch</attribute>
             </attributes>

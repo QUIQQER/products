@@ -478,6 +478,9 @@ class EventHandling
             } catch (QUI\Cache\Exception $Exception) {
             }
         }
+
+        // the searchfield ids were initially saved
+        $Site->setAttribute('quiqqer.products.settings.searchFieldIds.edited', true);
     }
 
     /**
@@ -526,7 +529,9 @@ class EventHandling
             }
         }
 
-        if (empty($fieldsIds)) {
+        if (empty($fieldsIds)
+            && $Site->getAttribute('quiqqer.products.settings.searchFieldIds.edited') === false
+        ) {
             $Package    = QUI::getPackage('quiqqer/products');
             $defaultIds = $Package->getConfig()->get('search', 'frontend');
 
