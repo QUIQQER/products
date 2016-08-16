@@ -27,6 +27,9 @@ class Crons
      */
     public static function updateProductCache()
     {
+        // clear search cache
+        QUI\ERP\Products\Search\Cache::clear();
+
         $products = Products::getProducts();
 
         /** @var QUI\ERP\Products\Product\Model $Product */

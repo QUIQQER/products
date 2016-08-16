@@ -425,16 +425,46 @@ class EventHandling
      *
      * @return void
      */
-    protected static function checkProductCacheTable()
+    public static function checkProductCacheTable()
     {
-        $categoryColumn = QUI::getDataBase()->table()->getColumn('products_cache', 'category');
+        $DB             = QUI::getDataBase();
+        $categoryColumn = $DB->table()->getColumn('products_cache', 'category');
 
-        if ($categoryColumn['Type'] === 'varchar(255)') {
-            return;
+        if ($categoryColumn['Type'] !== 'varchar(255)') {
+            $Stmnt = QUI::getDataBase()->getPDO()->prepare("ALTER TABLE products_cache MODIFY `category` VARCHAR(255)");
+            $Stmnt->execute();
         }
 
-        $Stmnt = QUI::getDataBase()->getPDO()->prepare("ALTER TABLE products_cache MODIFY `category` VARCHAR(255)");
-        $Stmnt->execute();
+        // check field columns
+        $fieldColumns = $DB->table()->getColumns('products_cache');
+
+        foreach ($fieldColumns as $column) {
+            if (mb_substr($column, 0, 1) !== 'F') {
+                continue;
+            }
+
+            $fieldId = (int)mb_substr($column, 1);
+
+            try {
+                $Field              = Fields::getField($fieldId);
+                $columnTypeExpected = mb_strtolower($Field->getColumnType());
+                $columnInfo         = $DB->table()->getColumn('products_cache', $column);
+                $columnTypeActual   = preg_replace('#[\W\d]#i', '', $columnInfo['Type']);
+
+                if ($columnTypeActual !== $columnTypeExpected) {
+                    QUI\System\Log::addCritical(
+                        'Column "' . $column . '" in table "products_cache" has wrong type!'
+                        . ' Expected: ' . $columnTypeExpected . ' | Actual: ' . $columnTypeActual . '.'
+                        . ' Please fix manually!'
+                    );
+                }
+            } catch (\Exception $Exception) {
+                QUI\System\Log::addError(
+                    'EventHandling :: checkProductCacheTable -> ERROR on cache table column check for field #'
+                    . $fieldId . ': ' . $Exception->getMessage()
+                );
+            }
+        }
     }
 
     /**
