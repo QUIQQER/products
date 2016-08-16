@@ -106,7 +106,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$fields       = {};
             this.$selectFilter = [];
             this.$selectFields = [];
-            this.$freetext     = '';
 
             this.$sortingEnabled       = true;
             this.$__readWindowLocation = false;
@@ -781,10 +780,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         $getSearchParams: function () {
             var i, len, Field;
 
-            var fields = {},
-                tags   = [],
-                sortOn = '',
-                sortBy = '';
+            var fields   = {},
+                tags     = [],
+                sortOn   = '',
+                sortBy   = '',
+                freetext = '';
 
             if (this.$FilterContainer) {
                 var value;
@@ -820,9 +820,19 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
             }
 
+            if (window.location.search) {
+                var Url   = URI(window.location),
+                    query = Url.query(true);
+
+
+                if ("search" in query) {
+                    freetext = query.search;
+                }
+            }
+
             return {
                 tags    : tags,
-                freetext: '',
+                freetext: freetext,
                 fields  : fields,
                 sortOn  : sortOn,
                 sortBy  : sortBy
