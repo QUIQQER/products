@@ -94,14 +94,12 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         if (is_numeric($value)) {
             $userIds = array((int)$value);
-
         } elseif (is_string($value)) {
             $userIds = json_decode($value, true);
 
             if (!is_array($userIds) && !is_numeric($userIds)) {
                 $userIds = array();
             }
-
         } elseif (is_array($value)) {
             $userIds = $value;
         }
@@ -166,7 +164,6 @@ class GroupList extends QUI\ERP\Products\Field\Field
                     ));
                 }
             }
-
         } catch (QUI\Exception $Exception) {
             throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
@@ -195,14 +192,12 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         if (is_numeric($value)) {
             $userIds = array((int)$value);
-
         } elseif (is_string($value)) {
             $userIds = json_decode($value, true);
 
             if (!is_array($userIds) && !is_numeric($userIds)) {
                 $userIds = array();
             }
-
         } elseif (is_array($value)) {
             $userIds = $value;
         }
@@ -238,7 +233,6 @@ class GroupList extends QUI\ERP\Products\Field\Field
                     $result[] = $User->getId();
                 }
             }
-
         } catch (QUI\Exception $Exception) {
             return array();
         }

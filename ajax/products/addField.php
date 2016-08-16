@@ -19,7 +19,7 @@ QUI::$Ajax->registerFunction(
 
         $Product = $Products->getProduct($productId);
         $Field   = $Fields->getField($fieldId);
-            
+
         $Product->addOwnField($Field);
         $Product->save();
     },

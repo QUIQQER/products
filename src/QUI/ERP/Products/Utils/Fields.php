@@ -34,7 +34,6 @@ class Fields
                 self::validateField($Field);
 
                 $result[] = $Field->toProductArray();
-
             } catch (QUI\Exception $Exception) {
             }
         }

@@ -6,7 +6,6 @@
 namespace QUI\ERP\Products\Handler;
 
 use QUI;
-use Stash;
 use QUI\ERP\Products\Search\FrontendSearch;
 use QUI\ERP\Products\Search\BackendSearch;
 
@@ -78,7 +77,6 @@ class Search
         return new FrontendSearch($Site);
     }
 
-
     /**
      * Get BackEndSearch
      *
@@ -97,9 +95,8 @@ class Search
      * @param QUI\ERP\Products\Interfaces\Field $Field
      * @return string
      */
-    public static function getSearchFieldColumnName(
-        QUI\ERP\Products\Interfaces\Field $Field
-    ) {
+    public static function getSearchFieldColumnName(QUI\ERP\Products\Interfaces\Field $Field)
+    {
         return 'F' . $Field->getId();
     }
 }

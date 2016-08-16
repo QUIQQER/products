@@ -7,11 +7,9 @@ namespace QUI\ERP\Products\Search;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
-use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Search\Cache as SearchCache;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
-use QUI\Utils\Security\Orthos;
 use QUI\ERP\Products\Handler\Products;
 
 /**
@@ -41,7 +39,7 @@ class BackendSearch extends Search
      *
      * @param array $searchParams - search parameters
      * @param bool $countOnly (optional) - return count of search results only [default: false]
-     * @return array - product ids
+     * @return array|int - product ids
      * @throws QUI\Exception
      */
     public function search($searchParams, $countOnly = false)

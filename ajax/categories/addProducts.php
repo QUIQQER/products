@@ -21,7 +21,7 @@ QUI::$Ajax->registerFunction(
         $productIds = json_decode($productIds, true);
 
         $ExceptionStack = new \QUI\ExceptionStack();
-        
+
         foreach ($productIds as $productId) {
             try {
                 $Product = Products::getProduct($productId);

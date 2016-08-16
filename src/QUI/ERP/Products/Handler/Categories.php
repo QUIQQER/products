@@ -112,7 +112,6 @@ class Categories
         if ($id !== 0) {
             try {
                 $categoryData = QUI\Cache\Manager::get(self::getCacheName($id));
-
             } catch (QUI\Exception $Eception) {
                 $data = QUI::getDataBase()->fetch(array(
                     'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
@@ -269,7 +268,6 @@ class Categories
                 'products.category.' . $newId . '.title',
                 $languageData
             );
-
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addInfo($Exception->getMessage());
 

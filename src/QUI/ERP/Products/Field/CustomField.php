@@ -8,7 +8,6 @@ namespace QUI\ERP\Products\Field;
 
 use QUI;
 use QUI\ERP\Products\Handler\Products;
-use QUI\System\Log;
 
 /**
  * Class CustomField

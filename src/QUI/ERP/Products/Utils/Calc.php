@@ -9,7 +9,6 @@ use QUI;
 use QUI\Interfaces\Users\User as UserInterface;
 use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\ERP\Products\Product\ProductList;
-
 use QUI\ERP\Products\Utils\User as ProductUserUtils;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Tax\Utils as TaxUtils;

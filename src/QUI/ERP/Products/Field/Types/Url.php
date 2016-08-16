@@ -7,7 +7,6 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 use QUI\ERP\Products\Field\View;
-use Hklused\Machines\Purchase\Search;
 
 /**
  * Class FloatType
@@ -36,7 +35,7 @@ class Url extends QUI\ERP\Products\Field\Field
     /**
      * Return the FrontendView
      *
-     * @return ProductAttributeListFrontendView
+     * @return UrlFrontendView
      */
     public function getFrontendView()
     {

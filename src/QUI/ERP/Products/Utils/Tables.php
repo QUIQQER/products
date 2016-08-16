@@ -70,5 +70,4 @@ class Tables
     {
         return QUI::getDBTableName(self::CATEGORIES);
     }
-
 }

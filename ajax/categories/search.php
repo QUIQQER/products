@@ -42,7 +42,7 @@ QUI::$Ajax->registerFunction(
             }
 
             $query['where_or'][$field] = array(
-                'type' => '%LIKE%',
+                'type'  => '%LIKE%',
                 'value' => $value
             );
         }

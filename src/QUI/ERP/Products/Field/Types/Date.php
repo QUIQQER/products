@@ -7,7 +7,6 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 use QUI\ERP\Products\Field\View;
-use QUI\ERP\Products\Handler\Products as ProductsHandler;
 use QUI\ERP\Products\Handler\Search;
 
 /**

@@ -63,7 +63,6 @@ class Products
             if (FolderUtils::isFolder($Folder)) {
                 return $Folder;
             }
-
         } catch (QUI\Exception $Exception) {
         }
 
@@ -133,7 +132,6 @@ class Products
                 ),
                 'limit'  => 1
             ));
-
         } catch (QUI\Exception $Exception) {
             // TODO: mit Mor besprechen
             QUI\System\Log::addError(
@@ -491,14 +489,12 @@ class Products
                 $Folder = $Media->get($folderId);
 
                 Products::getProduct($Folder->getAttribute('name'));
-
             } catch (QUI\ERP\Products\Product\Exception $Exception) {
                 if ($Exception->getCode() == 404 && Utils::isFolder($Folder)) {
                     $Folder->delete();
                 }
 
                 QUI\System\Log::write($Exception->getMessage());
-
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::write($Exception->getMessage());
             }

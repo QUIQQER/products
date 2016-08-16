@@ -9,7 +9,6 @@ use QUI;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
 use QUI\ERP\Products\Handler\Fields;
-use QUI\Utils\Security\Orthos;
 
 /**
  * Class Search
@@ -255,7 +254,7 @@ abstract class Search extends QUI\QDOM
                     && $Field->getType() == Fields::TYPE_PRICE
                 ) {
                     $Tax  = QUI\ERP\Tax\Utils::getTaxByUser(QUI::getUserBySession());
-                    $calc = ($Tax + 100) / 100;
+                    $calc = ($Tax->getValue() + 100) / 100;
 
                     // calc netto sum
                     if (is_array($value)

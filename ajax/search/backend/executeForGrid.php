@@ -19,9 +19,10 @@ QUI::$Ajax->registerFunction(
         require_once 'execute.php';
 
         // products
-        $result = QUI::$Ajax->callRequestFunction('package_quiqqer_products_ajax_search_backend_execute', array(
-            'searchParams' => $searchParams
-        ));
+        $result = QUI::$Ajax->callRequestFunction(
+            'package_quiqqer_products_ajax_search_backend_execute',
+            array('searchParams' => $searchParams)
+        );
 
         $page     = 1;
         $result   = $result['result'];
@@ -48,9 +49,10 @@ QUI::$Ajax->registerFunction(
             $page = (int)$searchParams['sheet'];
         }
 
-        $count = QUI::$Ajax->callRequestFunction('package_quiqqer_products_ajax_search_backend_execute', array(
-            'searchParams' => json_encode($searchParams)
-        ));
+        $count = QUI::$Ajax->callRequestFunction(
+            'package_quiqqer_products_ajax_search_backend_execute',
+            array('searchParams' => json_encode($searchParams))
+        );
 
         return array(
             'data'  => $products,

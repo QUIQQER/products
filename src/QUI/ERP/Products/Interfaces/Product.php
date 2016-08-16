@@ -6,7 +6,6 @@
 namespace QUI\ERP\Products\Interfaces;
 
 use QUI\ERP\Products\Category\Category;
-use QUI\ERP\Products\Interfaces\Field;
 use QUI\ERP\Products\Utils\Price;
 
 /**

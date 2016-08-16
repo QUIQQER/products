@@ -16,16 +16,14 @@ QUI::$Ajax->registerFunction(
         $Config  = $Package->getConfig();
 
         try {
-            $folder = $Config->get('products', 'folder');
-
+            $folder  = $Config->get('products', 'folder');
             $Folder  = QUI\Projects\Media\Utils::getMediaItemByUrl($folder);
             $Project = $Folder->getProject();
 
             return array(
                 'project' => $Project->getName(),
-                'id' => $Folder->getId()
+                'id'      => $Folder->getId()
             );
-
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
             return false;

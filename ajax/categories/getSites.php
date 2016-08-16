@@ -21,8 +21,8 @@ QUI::$Ajax->registerFunction(
         foreach ($sites as $Site) {
             $result[] = array(
                 'project' => $Site->getProject()->getName(),
-                'lang' => $Site->getProject()->getLang(),
-                'id' => $Site->getId()
+                'lang'    => $Site->getProject()->getLang(),
+                'id'      => $Site->getId()
             );
         }
 

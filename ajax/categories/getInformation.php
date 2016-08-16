@@ -16,9 +16,9 @@ QUI::$Ajax->registerFunction(
         $Category   = $Categories->getCategory($categoryId);
 
         return array(
-            'products' => $Category->countProducts(),
+            'products'   => $Category->countProducts(),
             'categories' => $Category->countChildren(),
-            'fields' => count($Category->getFields())
+            'fields'     => count($Category->getFields())
         );
     },
     array('categoryId'),

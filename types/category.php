@@ -31,7 +31,6 @@ if ($siteUrl != $_REQUEST['_url']) {
         ));
 
         $Site->setAttribute('content-header', false);
-
     } catch (QUI\Exception $Exception) {
         Log::writeException($Exception, Log::LEVEL_NOTICE);
 
@@ -45,7 +44,6 @@ if ($siteUrl != $_REQUEST['_url']) {
 
         $Redirect->send();
     }
-
 } else {
     $Search = new QUI\ERP\Products\Controls\Search\Search(array(
         'Site'      => $Site,

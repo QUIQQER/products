@@ -7,9 +7,6 @@ namespace QUI\ERP\Products;
 
 use QUI;
 use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Products\Handler\Fields;
-use QUI\Tags\Groups\Handler as TagGroupsHandler;
-use QUI\ERP\Products\Handler\Categories;
 
 /**
  * Class EventHandling

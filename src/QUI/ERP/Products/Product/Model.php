@@ -173,7 +173,6 @@ class Model extends QUI\QDOM
                 }
 
                 $this->fields[$Field->getId()] = $Field;
-
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);
             }
@@ -339,7 +338,6 @@ class Model extends QUI\QDOM
         // create main media folder
         try {
             return $this->getMediaFolder();
-
         } catch (QUI\Exception $Exception) {
         }
 
@@ -513,7 +511,6 @@ class Model extends QUI\QDOM
             if (isset($data[$current])) {
                 return $data[$current];
             }
-
         } catch (QUI\Exception $Exception) {
         }
 
@@ -1292,7 +1289,6 @@ class Model extends QUI\QDOM
     {
         try {
             return $this->getMediaFolder()->getFiles($params);
-
         } catch (QUI\Exception $Exception) {
             return array();
         }
