@@ -34,7 +34,6 @@ define('package/quiqqer/products/bin/controls/fields/FieldTypeSelect', [
         ],
 
         initialize: function (options) {
-
             this.setAttributes({
                 text        : QUILocale.get(lg, 'categories.window.fieldtype.filter'),
                 textimage   : 'fa fa-filter',
@@ -59,12 +58,13 @@ define('package/quiqqer/products/bin/controls/fields/FieldTypeSelect', [
             Fields.getFieldTypes().then(function (fieldTypes) {
 
                 fieldTypes.sort(function (a, b) {
-                    var aText = QUILocale.get(lg, 'fieldtype.' + a);
-                    var bText = QUILocale.get(lg, 'fieldtype.' + b);
+                    var aText = QUILocale.get(a.locale[0], a.locale[1]);
+                    var bText = QUILocale.get(b.locale[0], a.locale[1]);
 
                     if (aText > bText) {
                         return 1;
                     }
+
                     if (aText < bText) {
                         return -1;
                     }
@@ -85,8 +85,8 @@ define('package/quiqqer/products/bin/controls/fields/FieldTypeSelect', [
 
                 for (var i = 0, len = fieldTypes.length; i < len; i++) {
                     this.appendChild({
-                        text : QUILocale.get(lg, 'fieldtype.' + fieldTypes[i]),
-                        value: fieldTypes[i]
+                        text : QUILocale.get(fieldTypes[i].locale[0], fieldTypes[i].locale[1]),
+                        value: fieldTypes[i].name
                     });
                 }
 
