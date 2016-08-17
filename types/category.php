@@ -80,7 +80,7 @@ if ($siteUrl != $_REQUEST['_url']) {
     if (isset($searchParams['tags'])) {
         $searchParams['tags'] = explode(',', $searchParams['tags']);
     }
-    
+
     $ProductList = new Products\Controls\Category\ProductList(array(
         'categoryId'           => $Site->getAttribute('quiqqer.products.settings.categoryId'),
         'Search'               => $Search,

@@ -23,21 +23,44 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
     protected $products = array();
 
     /**
+     * ChildrenSlider constructor.
+     * @param array $attributes
+     */
+    public function __construct($attributes = array())
+    {
+        parent::__construct($attributes);
+
+        $this->addCSSFile(
+            dirname(__FILE__) . '/ChildrenSlider.css'
+        );
+    }
+
+    /**
      * (non-PHPdoc)
      *
      * @see \QUI\Control::create()
      */
     public function getBody()
     {
-        $Engine = QUI::getTemplateManager()->getEngine();
+        $Engine   = QUI::getTemplateManager()->getEngine();
+        $products = array();
 
         if (!$this->getAttribute('height')) {
             $this->setAttribute('height', 200);
         }
 
+        foreach ($this->products as $Product) {
+            $products[] = array(
+                'Product' => $Product,
+                'Price'   => new QUI\ERP\Products\Controls\Price(array(
+                    'Price' => $Product->getPrice()
+                ))
+            );
+        }
+
         $Engine->assign(array(
             'this'     => $this,
-            'products' => $this->products
+            'products' => $products
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/ChildrenSlider.html');

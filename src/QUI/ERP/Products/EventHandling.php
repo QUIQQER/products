@@ -587,6 +587,10 @@ class EventHandling
      */
     public static function onPackageInstall($Package)
     {
+        if ($Package->getName() != 'quiqqer/products') {
+            return;
+        }
+
         $CronManager = new QUI\Cron\Manager();
 
         // which crons to set up
@@ -603,6 +607,20 @@ class EventHandling
             // add cron: run once every day at 0 am
             $CronManager->add($cron, '0', '0', '*', '*', '*');
         }
+    }
+
+    /**
+     * event: onPackageInstall
+     *
+     * @param Package $Package
+     */
+    public static function onPackageConfigSave($Package)
+    {
+        if ($Package->getName() != 'quiqqer/products') {
+            return;
+        }
+
+        QUI\ERP\Products\Search\Cache::clear();
     }
 
     /**

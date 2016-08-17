@@ -548,10 +548,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         foreach ($attributesLists as $List) {
             /* @var $List UniqueField */
-            QUI\System\Log::writeRecursive('req '. $List->isRequired());
-            QUI\System\Log::writeRecursive('value '. $List->getValue());
             if ($List->isRequired() && $List->getValue() === '') {
-                QUI\System\Log::writeRecursive(1);
                 $Price->changeToStartingPrice();
                 return $Price;
             }

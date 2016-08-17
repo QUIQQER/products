@@ -2,6 +2,7 @@
 <events>
     <event on="onPackageSetup" fire="\QUI\ERP\Products\EventHandling::onPackageSetup"/>
     <event on="onPackageInstall" fire="\QUI\ERP\Products\EventHandling::onPackageInstall"/>
+    <event on="onPackageConfigSave" fire="\QUI\ERP\Products\EventHandling::onPackageConfigSave"/>
     <event on="onSiteSave" fire="\QUI\ERP\Products\EventHandling::onSiteSave"/>
     <event on="onSiteCreateChild" fire="\QUI\ERP\Products\EventHandling::onSiteCreateChild"/>
     <event on="onSiteSaveBefore" fire="\QUI\ERP\Products\EventHandling::onSiteSaveBefore"/>

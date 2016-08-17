@@ -1,0 +1,30 @@
+.quiqqer-products-control-product-childrenslider-entry {
+    width: 300px;
+}
+
+.quiqqer-products-control-product-childrenslider-entry a {
+    float: left;
+    height: 100%;
+    width: 100%;
+}
+
+.quiqqer-products-control-product-childrenslider-entry-image {
+    float: left;
+    height: calc(100% - 50px);
+    padding: 10px;
+    width: 100%;
+}
+
+.quiqqer-products-control-product-childrenslider-entry-image img {
+    max-height:100%;
+    max-width:100%;
+}
+
+.quiqqer-products-control-product-childrenslider-entry header {
+    clear: both;
+    float: left;
+    line-height:20px;
+    margin: 0;
+    padding: 0 10px;
+    width: 100%;
+}
