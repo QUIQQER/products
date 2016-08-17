@@ -369,7 +369,7 @@
         </locale>
 
         <locale name="fieldtype.ProductAttributeList.select.emptyvalue">
-            <de><![CDATA[Bitte auswahlen]]></de>
+            <de><![CDATA[Bitte auswählen]]></de>
             <en><![CDATA[Please select]]></en>
         </locale>
 

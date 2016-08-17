@@ -8,7 +8,7 @@
                 {assign var=Product value=$Entry.Product}
                 {assign var=Price value=$Entry.Price}
                 {assign var=hasImage value=0}
-            
+
                 {if $Product->getImage()}
                     {assign var=hasImage value=1}
                 {/if}
