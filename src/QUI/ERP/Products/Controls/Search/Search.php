@@ -7,6 +7,7 @@ use QUI;
 /**
  * Class Search
  * @package QUI\ERP\Products\Controls\Search
+ * @deprecated
  */
 class Search extends QUI\Control
 {

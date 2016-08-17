@@ -31,6 +31,8 @@ if ($siteUrl != $_REQUEST['_url']) {
         ));
 
         $Site->setAttribute('content-header', false);
+
+        define('QUIQQER_ERP_IS_PRODUCT', true);
     } catch (QUI\Exception $Exception) {
         Log::writeException($Exception, Log::LEVEL_NOTICE);
 

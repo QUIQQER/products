@@ -62,7 +62,7 @@
     width: 100%;
 }
 
-.quiqqer-products-search-suggest-dropdown li:active,
+.quiqqer-products-search-suggest-dropdown li.active,
 .quiqqer-products-search-suggest-dropdown li:hover {
     background: rgba(0, 0, 0, 0.1);
 }

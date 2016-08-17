@@ -87,6 +87,13 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
             this.$Input = this.$Form.getElement('[type="search"]');
 
             this.$Form.addEvent('submit', function (event) {
+                var Active = this.$DropDown.getElement('li.active');
+
+                if (Active) {
+                    event.stop();
+                    return;
+                }
+
                 if (!("history" in window)) {
                     return;
                 }
@@ -160,6 +167,16 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
 
             switch (event.key) {
                 case 'enter':
+                    var Active = this.$DropDown.getElement('li.active');
+
+                    if (Active) {
+                        Active.fireEvent('click', {
+                            target: Active
+                        });
+                        event.stop();
+                        return;
+                    }
+
                     if (QUIQQER_SITE.type === 'quiqqer/products:types/search' ||
                         QUIQQER_SITE.type === 'quiqqer/products:types/category') {
                         this.$hideResults();
@@ -168,8 +185,13 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
                     break;
 
                 case 'up':
-                case 'down':
+                    this.$up();
+                    event.stop();
+                    return;
 
+                case 'down':
+                    this.$down();
+                    event.stop();
                     return;
             }
 
@@ -284,6 +306,54 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
                     callback: resolve
                 });
             }.bind(this));
+        },
+
+        /**
+         * Move up to next result
+         */
+        $up: function () {
+            var Active = this.$DropDown.getElement('li.active');
+
+            if (!Active) {
+                Active = this.$DropDown.getFirst('ul li');
+            }
+
+            if (!Active) {
+                return;
+            }
+
+            var Previous = Active.getPrevious();
+
+            if (!Previous) {
+                Previous = this.$DropDown.getLast('ul li');
+            }
+
+            Active.removeClass('active');
+            Previous.addClass('active');
+        },
+
+        /**
+         * Move down to next result
+         */
+        $down: function () {
+            var Active = this.$DropDown.getElement('li.active');
+
+            if (!Active) {
+                Active = this.$DropDown.getLast('ul li');
+            }
+
+            if (!Active) {
+                return;
+            }
+
+            var Next = Active.getNext();
+
+            if (!Next) {
+                Next = this.$DropDown.getFirst('ul li');
+            }
+
+            Active.removeClass('active');
+            Next.addClass('active');
         }
     });
 });
