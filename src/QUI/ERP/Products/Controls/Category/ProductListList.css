@@ -9,17 +9,11 @@
 .quiqqer-productList-product-list-text {
     float: left;
     padding: 0 10px 0 0;
-    width: calc(100% - 200px);
+    width: calc(100% - 230px);
 }
 
 .quiqqer-productList-product-list-text-description {
     font-size: 12px;
-}
-
-.quiqqer-productList-product-list-price {
-    line-height: 20px;
-    padding: 10px;
-    text-align: right;
 }
 
 .quiqqer-productList-product-list-price,
@@ -33,4 +27,11 @@
     float: right;
     line-height: 20px;
     text-align: right;
+}
+
+.quiqqer-productList-product-list-price {
+    line-height: 20px;
+    padding: 10px;
+    text-align: right;
+    width: 130px;
 }

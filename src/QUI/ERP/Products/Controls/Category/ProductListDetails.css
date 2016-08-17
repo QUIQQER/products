@@ -21,23 +21,24 @@
 .quiqqer-productList-product-detail-text {
     float: left;
     padding: 0 10px;
-    width: calc(100% - 280px);
+    width: calc(100% - 320px);
 }
 
 .quiqqer-productList-product-detail-text-desription {
     font-size: 12px;
 }
 
-.quiqqer-productList-product-detail-price {
-    line-height: 20px;
-    padding: 10px;
-    text-align: right;
-}
-
 .quiqqer-productList-product-detail-price,
 .quiqqer-productList-product-detail-buttons {
     float: right;
     width: 80px;
+}
+
+.quiqqer-productList-product-detail-price {
+    line-height: 20px;
+    padding: 10px;
+    text-align: right;
+    width: 130px;
 }
 
 .quiqqer-productList-product-detail-buttons {
