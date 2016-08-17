@@ -29,7 +29,12 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     public function __construct(Model $Product)
     {
         $this->Product = $Product;
-        $permissions   = $this->Product->getPermissions();
+
+        if (!QUI\ERP\Products\Handler\Products::usePermissions()) {
+            return;
+        }
+
+        $permissions = $this->Product->getPermissions();
 
         if (!isset($permissions['permission.viewable'])) {
             return;
