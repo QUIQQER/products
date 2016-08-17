@@ -20,7 +20,7 @@ use QUI\ERP\Products\Handler\Products;
  */
 class FrontendSearch extends Search
 {
-    const SITETYPE_SEARCH   = 'quiqqer/products:types/search';
+    const SITETYPE_SEARCH = 'quiqqer/products:types/search';
     const SITETYPE_CATEGORY = 'quiqqer/products:types/category';
 
     /**
@@ -276,23 +276,29 @@ class FrontendSearch extends Search
 
         // product permissions
         if (Products::usePermissions()) {
-            $whereOr[] = array();
-
             // user
             $User = QUI::getUserBySession();
 
-            $whereOr[]               = '`viewUsersGroups` LIKE :permissionUser';
-            $binds['permissionUser'] = array(
-                'value' => '%,u' . $User->getId() . ',%',
-                'type'  => \PDO::PARAM_STR
+            $whereOr = array(
+                '`viewUsersGroups` IS NULL'
             );
+
+            if ($User->getId()) {
+                $whereOr[] = '`viewUsersGroups` LIKE :permissionUser';
+
+                $binds['permissionUser'] = array(
+                    'value' => '%,u' . $User->getId() . ',%',
+                    'type'  => \PDO::PARAM_STR
+                );
+            }
 
             // user groups
             $userGroupIds = $User->getGroups(false);
             $i            = 0;
 
             foreach ($userGroupIds as $groupId) {
-                $whereOr[]                     = '`viewUsersGroups` LIKE :permissionGroup' . $i;
+                $whereOr[] = '`viewUsersGroups` LIKE :permissionGroup' . $i;
+
                 $binds['permissionGroup' . $i] = array(
                     'value' => '%,g' . $groupId . ',%',
                     'type'  => \PDO::PARAM_STR
@@ -358,9 +364,6 @@ class FrontendSearch extends Search
                 $sql .= " LIMIT 20"; // @todo as settings
             }
         }
-
-        \QUI\System\Log::writeRecursive($sql);
-        \QUI\System\Log::writeRecursive($binds);
 
         $Stmt = $PDO->prepare($sql);
 
