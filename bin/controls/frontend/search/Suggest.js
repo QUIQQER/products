@@ -166,6 +166,12 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
             }
 
             switch (event.key) {
+                case 'esc':
+                    this.$Input.value = '';
+                    this.$hideResults();
+                    event.stop();
+                    break;
+
                 case 'enter':
                     var Active = this.$DropDown.getElement('li.active');
 
@@ -199,6 +205,9 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
             this.$showResults();
 
             this.$timer = (function () {
+                if (this.$Input.value === '') {
+                    return this.$hideResults();
+                }
                 this.$search().then(this.$renderSearch);
             }).delay(this.getAttribute('delay'), this);
         },
