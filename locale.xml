@@ -339,8 +339,12 @@
             <en><![CDATA[Yes / No]]></en>
         </locale>
         <locale name="fieldtype.Vat">
-            <de><![CDATA[Steuer]]></de>
+            <de><![CDATA[MwSt.]]></de>
             <en><![CDATA[Vat]]></en>
+        </locale>
+        <locale name="fieldtype.Tax">
+            <de><![CDATA[Steuer]]></de>
+            <en><![CDATA[Tax]]></en>
         </locale>
         <locale name="fieldtype.Image">
             <de><![CDATA[Media Bild]]></de>

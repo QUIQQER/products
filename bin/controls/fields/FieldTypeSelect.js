@@ -89,7 +89,7 @@ define('package/quiqqer/products/bin/controls/fields/FieldTypeSelect', [
                         value: fieldTypes[i].name
                     });
                 }
-                
+
             }.bind(this));
         },
 
