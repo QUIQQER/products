@@ -52,12 +52,42 @@ if ($siteUrl != $_REQUEST['_url']) {
         'data-name' => 'category-search'
     ));
 
+    $searchParams = array();
+    $search       = QUI::getRequest()->get('search');
+    $fields       = QUI::getRequest()->get('f');
+    $tags         = QUI::getRequest()->get('t');
+    $sortBy       = QUI::getRequest()->get('sortBy');
+    $sortOn       = QUI::getRequest()->get('sortOn');
+
+    $view = QUI::getRequest()->get('v');
+
+    $searchParams = array_filter(array(
+        'freetext' => $search,
+        'fields'   => $fields,
+        'tags'     => $tags,
+        'sortBy'   => $sortBy,
+        'sortOn'   => $sortOn
+    ));
+
+    if (isset($searchParams['fields'])) {
+        $searchParams['fields'] = json_decode($searchParams['fields'], true);
+
+        if (is_null($searchParams['fields'])) {
+            unset($searchParams['fields']);
+        }
+    }
+
+    if (isset($searchParams['tags'])) {
+        $searchParams['tags'] = explode(',', $searchParams['tags']);
+    }
+    
     $ProductList = new Products\Controls\Category\ProductList(array(
         'categoryId'           => $Site->getAttribute('quiqqer.products.settings.categoryId'),
         'Search'               => $Search,
         'hideEmptyProductList' => true,
         'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
-        'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay')
+        'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
+        'searchParams'         => $searchParams
     ));
 
     $Engine->assign(array(
