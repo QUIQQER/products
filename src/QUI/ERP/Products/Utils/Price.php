@@ -27,6 +27,11 @@ class Price
     protected $Currency;
 
     /**
+     * @var bool
+     */
+    protected $startingPrice = false;
+
+    /**
      * @var array
      */
     protected $discounts;
@@ -74,9 +79,10 @@ class Price
     public function toArray()
     {
         return array(
-            'price'    => $this->getNetto(),
-            'currency' => $this->getCurrency()->getCode(),
-            'display'  => $this->getDisplayPrice()
+            'price'         => $this->getNetto(),
+            'currency'      => $this->getCurrency()->getCode(),
+            'display'       => $this->getDisplayPrice(),
+            'startingprice' => $this->isStartingPrice()
         );
     }
 
@@ -111,7 +117,26 @@ class Price
      */
     public function getDisplayPrice()
     {
-        return $this->Currency->format($this->getPrice());
+        $price = $this->Currency->format($this->getPrice());
+
+        if ($this->isStartingPrice()) {
+            return $this->User->getLocale()->get(
+                'quiqqer/products',
+                'price.starting.from',
+                array('price' => $price)
+            );
+        }
+
+        return $price;
+    }
+
+    /**
+     * Change the price to a starting price
+     * The price display is like (ab 30€, start at 30$)
+     */
+    public function changeToStartingPrice()
+    {
+        $this->startingPrice = true;
     }
 
     /**
@@ -162,6 +187,14 @@ class Price
     public function getCurrency()
     {
         return $this->Currency;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStartingPrice()
+    {
+        return $this->startingPrice;
     }
 
     /**

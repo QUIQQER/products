@@ -25,7 +25,11 @@
 
     {if !$hidePrice}
     <div class="quiqqer-productList-product-detail-price">
-        {$Product->getPrice()->getDisplayPrice()}
+        {locale
+            group="quiqqer/products"
+            var="price.starting.from"
+            price=$Product->getPrice()->getDisplayPrice()
+        }
     </div>
     {/if}
 

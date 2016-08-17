@@ -532,10 +532,32 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     {
         $this->calc();
 
-        return new QUI\ERP\Products\Utils\Price(
+        $Price = new QUI\ERP\Products\Utils\Price(
             $this->sum,
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
+
+        // wenn attribute listen existieren
+        // dann muss der kleinste preis rausgefunden werden
+        // d.h. bei attribute listen wird der kleinste preis ausgewählt
+        $attributesLists = $this->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST);
+
+        if (!count($attributesLists)) {
+            return $Price;
+        }
+
+        foreach ($attributesLists as $List) {
+            /* @var $List UniqueField */
+            QUI\System\Log::writeRecursive('req '. $List->isRequired());
+            QUI\System\Log::writeRecursive('value '. $List->getValue());
+            if ($List->isRequired() && $List->getValue() === '') {
+                QUI\System\Log::writeRecursive(1);
+                $Price->changeToStartingPrice();
+                return $Price;
+            }
+        }
+
+        return $Price;
     }
 
     /**

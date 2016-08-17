@@ -144,6 +144,16 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         $User = QUI::getUserBySession();
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
 
+//        // wenn attribute listen existieren
+//        // dann muss der kleinste preis rausgefunden werden
+//        $attributesLists = self::getFieldsByType(
+//            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST
+//        );
+//
+//        if (count($attributesLists)) {
+//
+//        }
+
         return $Calc->getProductPrice(
             $this->Product->createUniqueProduct($User)
         );

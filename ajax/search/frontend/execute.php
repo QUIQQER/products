@@ -5,10 +5,9 @@
  */
 
 use QUI\ERP\Products\Handler\Search as SearchHandler;
-use QUI\Utils\Security\Orthos;
 
 /**
- * Get all fields that are available for search for a specific Site
+ * Execute a product search
  *
  * @param array $searchData
  * @return array - product ids

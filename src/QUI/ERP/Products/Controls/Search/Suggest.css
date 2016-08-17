@@ -1,0 +1,92 @@
+.quiqqer-products-search-suggest {
+    float: left;
+    position: relative;
+    width: 100%;
+}
+
+.quiqqer-products-search-suggest-form {
+    float: left;
+    position: relative;
+    width: 100%;
+}
+
+.quiqqer-products-search-suggest-form-input {
+    float: left;
+    line-height: 30px;
+    padding: 0 10px;
+    width: calc(100% - 60px);
+}
+
+.quiqqer-products-search-suggest-form-button {
+    cursor: pointer;
+    float: left;
+    line-height: 30px;
+    text-align: center;
+    width: 60px;
+}
+
+.quiqqer-products-search-suggest-dropdown {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    position: absolute;
+    text-align: left;
+    top: 30px;
+    width: 100%;
+    z-index: 100;
+}
+
+.quiqqer-products-search-suggest-dropdown-loader {
+    float: left;
+    font-size: 16px;
+    padding: 20px;
+}
+
+.quiqqer-products-search-suggest-dropdown-noproducts {
+    float: left;
+    padding: 0 10px;
+}
+
+.quiqqer-products-search-suggest-dropdown ul {
+    list-style-type: none;
+    line-height: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+.quiqqer-products-search-suggest-dropdown li {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    clear: both;
+    cursor: pointer;
+    float: left;
+    padding: 10px;
+    width: 100%;
+}
+
+.quiqqer-products-search-suggest-dropdown li:active,
+.quiqqer-products-search-suggest-dropdown li:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.quiqqer-products-search-suggest-dropdown-icon {
+    float: left;
+    text-align: center;
+    width: 50px;
+}
+
+.quiqqer-products-search-suggest-dropdown-text {
+    float: left;
+    padding: 0 10px;
+    text-align: left;
+    width: calc(100% - 50px);
+}
+
+.quiqqer-products-search-suggest-dropdown-title {
+    float: left;
+    font-weight: bold;
+}
+
+.quiqqer-products-search-suggest-dropdown-description {
+    clear: both;
+    float: left;
+    font-size: 12px;
+}

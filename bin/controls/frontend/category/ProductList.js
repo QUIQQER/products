@@ -431,6 +431,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return;
             }
 
+            if (!("history" in window)) {
+                return;
+            }
+
             // set history
             var history      = {},
                 searchParams = this.$getSearchParams();
@@ -445,6 +449,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             if (searchParams.freetext !== '') {
                 history.search = searchParams.freetext;
+            }
+
+            if (searchParams.search !== '' && history.search === '') {
+                history.search = searchParams.search;
             }
 
             if (searchParams.tags.length) {

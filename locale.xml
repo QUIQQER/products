@@ -661,6 +661,16 @@
             <de><![CDATA[Darf Such-Felder für die Backend-Suche konfigurieren]]></de>
             <en><![CDATA[Can configure search fields for the backend search]]></en>
         </locale>
+
+        <locale name="control.search.suggest.placeholder">
+            <de><![CDATA[Suchbegriff eingeben...]]></de>
+            <en><![CDATA[Enter search...]]></en>
+        </locale>
+
+        <locale name="price.starting.from">
+            <de><![CDATA[ab [price]]]></de>
+            <en><![CDATA[starting from [price]]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
@@ -888,6 +898,10 @@
         <locale name="fields.update.text">
             <de><![CDATA[Produktfeld bearbeiten]]></de>
             <en><![CDATA[Update a new product field]]></en>
+        </locale>
+        <locale name="fields.update.title">
+            <de><![CDATA[Produktfeld #[fieldId] bearbeiten]]></de>
+            <en><![CDATA[Update product field #[fieldId]]]></en>
         </locale>
 
         <locale name="fields.window.confirm.title">
