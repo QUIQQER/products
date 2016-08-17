@@ -920,6 +920,19 @@ class Model extends QUI\QDOM
             'active'    => $this->isActive() ? 1 : 0
         );
 
+        // permissions
+        $permissions     = $this->getPermissions();
+        $viewPermissions = null;
+
+        if (isset($permissions['permission.viewable'])
+            && !empty($permissions['permission.viewable'])
+        ) {
+            $viewPermissions = ',' . $permissions['permission.viewable'] . ',';
+        }
+
+        $data['viewUsersGroups'] = $viewPermissions;
+
+        // get all categories
         $categories = $this->getCategories();
 
         if (!empty($categories)) {

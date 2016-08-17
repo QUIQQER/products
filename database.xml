@@ -54,6 +54,7 @@
             <field type="TINYINT(1)">active</field>
             <field type="VARCHAR(2) NOT NULL">lang</field>
             <field type="LONGTEXT NULL">tags</field>
+            <field type="TEXT NULL">viewUsersGroups</field>
 
             <primary>id,lang</primary>
         </table>

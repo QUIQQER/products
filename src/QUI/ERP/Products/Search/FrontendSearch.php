@@ -11,6 +11,7 @@ use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Search\Cache as SearchCache;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
+use QUI\ERP\Products\Handler\Products;
 
 /**
  * Class Search
@@ -19,7 +20,7 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
  */
 class FrontendSearch extends Search
 {
-    const SITETYPE_SEARCH = 'quiqqer/products:types/search';
+    const SITETYPE_SEARCH   = 'quiqqer/products:types/search';
     const SITETYPE_CATEGORY = 'quiqqer/products:types/category';
 
     /**
@@ -273,6 +274,36 @@ class FrontendSearch extends Search
             }
         }
 
+        // product permissions
+        if (Products::usePermissions()) {
+            $whereOr[] = array();
+
+            // user
+            $User = QUI::getUserBySession();
+
+            $whereOr[]               = '`viewUsersGroups` LIKE :permissionUser';
+            $binds['permissionUser'] = array(
+                'value' => '%,u' . $User->getId() . ',%',
+                'type'  => \PDO::PARAM_STR
+            );
+
+            // user groups
+            $userGroupIds = $User->getGroups(false);
+            $i            = 0;
+
+            foreach ($userGroupIds as $groupId) {
+                $whereOr[]                     = '`viewUsersGroups` LIKE :permissionGroup' . $i;
+                $binds['permissionGroup' . $i] = array(
+                    'value' => '%,g' . $groupId . ',%',
+                    'type'  => \PDO::PARAM_STR
+                );
+
+                $i++;
+            }
+
+            $where[] = '(' . implode(' OR ', $whereOr) . ')';
+        }
+
         $where[] = '`active` = 1';
 
         // retrieve query data for fields
@@ -327,6 +358,9 @@ class FrontendSearch extends Search
                 $sql .= " LIMIT 20"; // @todo as settings
             }
         }
+
+        \QUI\System\Log::writeRecursive($sql);
+        \QUI\System\Log::writeRecursive($binds);
 
         $Stmt = $PDO->prepare($sql);
 
