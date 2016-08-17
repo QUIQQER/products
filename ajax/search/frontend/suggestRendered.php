@@ -99,7 +99,6 @@ QUI::$Ajax->registerFunction(
                 $html .= '</div>';
 
                 $html .= '</li>';
-
             } catch (QUI\ERP\Products\Product\Exception $Exception) {
             }
         }
