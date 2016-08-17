@@ -22,8 +22,10 @@ class Price extends QUI\Control
     public function __construct($attributes = array())
     {
         $this->setAttributes(array(
-            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/Price',
-            'Price'    => null
+            'data-qui'    => 'package/quiqqer/products/bin/controls/frontend/Price',
+            'Price'       => null,
+            'withVatText' => false,
+            'Calc'        => false
         ));
 
         $this->addCSSClass('qui-products-price-display');
@@ -53,6 +55,23 @@ class Price extends QUI\Control
         $this->setAttribute('data-qui-options-price', $Price->getNetto());
         $this->setAttribute('data-qui-options-currency', $Price->getCurrency()->getCode());
 
-        return $Price->getDisplayPrice();
+        if ($this->getAttribute('withVatText') === false) {
+            return $Price->getDisplayPrice();
+        }
+
+        $Calc = $this->getAttribute('Calc');
+
+        if (!$Calc) {
+            $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
+        }
+
+        $result = '<span class="qui-products-price-display-value">';
+        $result .= $Price->getDisplayPrice();
+        $result .= '</span>';
+        $result .= '<span class="qui-products-price-display-vat">';
+        $result .= $Calc->getVatTextByUser();
+        $result .= '</span>';
+
+        return $result;
     }
 }

@@ -124,7 +124,9 @@ class Product extends QUI\Control
 
         // pricedisplay
         $PriceDisplay = new QUI\ERP\Products\Controls\Price(array(
-            'Price' => $Price
+            'Price'       => $Price,
+            'withVatText' => true,
+            'Calc'        => $Calc
         ));
 
         // file / image folders
@@ -165,7 +167,6 @@ class Product extends QUI\Control
             'mediaFolders'         => $mediaFolders,
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
             'PriceDisplay'         => $PriceDisplay,
-            'vatText'              => $Calc->getVatTextByUser(),
             'WatchlistButton'      => new WatchlistButton(array(
                 'Product' => $View
             )),
