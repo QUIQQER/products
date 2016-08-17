@@ -111,7 +111,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\Product
         if (!QUI\Utils\UserGroups::isUserGroupString($ugString)) {
             return;
         };
-
+        
         QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
 
         switch ($permission) {

@@ -24,10 +24,32 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * View constructor.
      *
      * @param Model $Product
+     * @throws QUI\Permissions\Exception
      */
     public function __construct(Model $Product)
     {
         $this->Product = $Product;
+        $permissions   = $this->Product->getPermissions();
+
+        if (!isset($permissions['permission.viewable'])) {
+            return;
+        }
+
+        // check group in list
+        $isAllowed = QUI\Utils\UserGroups::isUserInUserGroupString(
+            QUI::getUserBySession(),
+            $permissions['permission.viewable']
+        );
+
+        if ($isAllowed === false) {
+            throw new QUI\Permissions\Exception(
+                QUI::getLocale()->get(
+                    'quiqqer/system',
+                    'exception.no.permission'
+                ),
+                \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN
+            );
+        }
     }
 
     /**

@@ -23,6 +23,7 @@ if ($siteUrl != $_REQUEST['_url']) {
 
     try {
         $Product = Products\Handler\Products::getProduct($refNo);
+        $Product->getView();
 
         $Engine->assign(array(
             'Product' => new Products\Controls\Products\Product(array(
@@ -33,6 +34,16 @@ if ($siteUrl != $_REQUEST['_url']) {
         $Site->setAttribute('content-header', false);
 
         define('QUIQQER_ERP_IS_PRODUCT', true);
+    } catch (QUI\Permissions\Exception $Exception) {
+        $url = QUI::getRewrite()->getUrlFromSite(array(
+            'site' => $Site
+        ));
+
+        $Redirect = new RedirectResponse($url);
+        $Redirect->setStatusCode(Response::HTTP_FORBIDDEN);
+
+        echo $Redirect->getContent();
+        $Redirect->send();
     } catch (QUI\Exception $Exception) {
         Log::writeException($Exception, Log::LEVEL_NOTICE);
 
@@ -42,8 +53,8 @@ if ($siteUrl != $_REQUEST['_url']) {
 
         $Redirect = new RedirectResponse($url);
         $Redirect->setStatusCode(Response::HTTP_NOT_FOUND);
-        echo $Redirect->getContent();
 
+        echo $Redirect->getContent();
         $Redirect->send();
     }
 } else {
