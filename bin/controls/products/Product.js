@@ -873,7 +873,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }).then(function () {
                 this.$currentField = fieldId;
 
-                require([Field.jsSettings], function (Control) {
+                require([Field.jsControl], function (Control) {
                     this.$Control = new Control();
 
                     this.$FieldContainer.setStyles({

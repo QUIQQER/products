@@ -60,7 +60,6 @@ define('package/quiqqer/products/bin/controls/products/Select', [
             });
         },
 
-
         /**
          * Search areas
          *

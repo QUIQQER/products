@@ -45,14 +45,6 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
     }
 
     /**
-     * @return string
-     */
-    public function getJavaScriptSettings()
-    {
-        return 'package/quiqqer/products/bin/controls/fields/types/TextareaMultiLangSettings';
-    }
-
-    /**
      * Return the field value by a locale language
      *
      *

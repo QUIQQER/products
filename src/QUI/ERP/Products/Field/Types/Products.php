@@ -40,14 +40,6 @@ class Products extends QUI\ERP\Products\Field\Field
     }
 
     /**
-     * @return string
-     */
-    public function getJavaScriptSettings()
-    {
-        return 'package/quiqqer/products/bin/controls/fields/types/ProductsSettings';
-    }
-
-    /**
      * Check the value
      * is the value valid for the field type?
      *

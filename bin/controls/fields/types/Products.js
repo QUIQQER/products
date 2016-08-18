@@ -1,16 +1,20 @@
 /**
+ * Settings for field Products
+ *
  * @module package/quiqqer/products/bin/controls/fields/types/Products
  * @author www.pcsg.de (Henning Leutz)
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require package/quiqqer/products/bin/controls/products/Select
  */
 define('package/quiqqer/products/bin/controls/fields/types/Products', [
 
     'qui/QUI',
-    'qui/controls/Control'
+    'qui/controls/Control',
+    'package/quiqqer/products/bin/controls/products/Select'
 
-], function (QUI, QUIControl) {
+], function (QUI, QUIControl, ProductSelect) {
     "use strict";
 
     return new Class({
@@ -21,24 +25,67 @@ define('package/quiqqer/products/bin/controls/fields/types/Products', [
             '$onImport'
         ],
 
+        options: {
+            value: ''
+        },
+
         initialize: function (options) {
             this.parent(options);
 
-            this.$Input = null;
+            this.$Select = null;
 
             this.addEvents({
-                onImport: this.$onImport
+                onInject: this.$onInject
             });
+        },
+
+        /**
+         * Create the DOMNode Element
+         *
+         * @return {HTMLDivElement}
+         */
+        create: function () {
+            this.$Elm = new Element('div', {
+                styles: {
+                    'float': 'left',
+                    height : '100%',
+                    width  : '100%'
+                }
+            });
+
+            return this.$Elm;
         },
 
         /**
          * event : on import
          */
-        $onImport: function () {
-            var Elm = this.getElm();
+        $onInject: function () {
+            this.$Select = new ProductSelect({
+                multiple: true,
+                styles  : {
+                    height: '100%',
+                    width : '100%'
+                }
+            }).inject(this.$Elm);
 
-            Elm.addClass('field-container-field');
-            Elm.type = 'text';
+            var value = this.getAttribute('value');
+
+            if (typeOf(value) == 'array') {
+                for (var i = 0, len = value.length; i < len; i++) {
+                    if (value[i] !== '') {
+                        this.$Select.addItem(value[i]);
+                    }
+                }
+            }
+        },
+
+        /**
+         * Return the value
+         *
+         * @return {Array}
+         */
+        save: function () {
+            return this.$Select.getValue().split(',');
         }
     });
 });
