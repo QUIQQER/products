@@ -112,7 +112,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             QUI.parse(Elm).then(function () {
                 // price
-                var Price = Elm.getElement('.quiqqer-price"');
+                var Price = Elm.getElement('.qui-products-price-display');
 
                 if (Price) {
                     this.$Price = QUI.Controls.getById(Price.get('data-quiid'));
