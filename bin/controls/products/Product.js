@@ -7,17 +7,22 @@
  * @require qui/QUI
  * @require qui/controls/desktop/Panel
  * @require qui/controls/buttons/Button
+ * @require qui/controls/buttons/Switch
  * @require qui/controls/windows/Confirm
  * @require qui/utils/Form
  * @require Locale
  * @require controls/grid/Grid
  * @require controls/projects/project/media/FolderViewer
  * @require Mustache
- * @require package/quiqqer/products/bin/classes/Products
+ * @require Packages
+ * @require package/quiqqer/products/bin/Products
  * @require package/quiqqer/products/bin/classes/Product
- * @require package/quiqqer/products/bin/classes/Categories
- * @require package/quiqqer/products/bin/classes/Fields
+ * @require package/quiqqer/products/bin/Categories
+ * @require package/quiqqer/products/bin/Fields
+ * @require package/quiqqer/products/bin/utils/Fields
+ * @require package/quiqqer/products/bin/controls/fields/search/Window
  * @require package/quiqqer/products/bin/controls/categories/Select
+ * @require package/quiqqer/products/bin/controls/fields/FieldTypeSelect
  * @require text!package/quiqqer/products/bin/controls/products/ProductData.html
  * @require text!package/quiqqer/products/bin/controls/products/CreateField.html
  * @require css!package/quiqqer/products/bin/controls/products/Product.css
@@ -916,7 +921,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 Btn.setAttribute('textimage', 'fa fa-spinner fa-spin');
 
                                 self.$createMediaFolder(Field.id).then(function () {
-
                                 });
                             }
                         }

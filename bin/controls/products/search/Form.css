@@ -9,7 +9,7 @@
 .quiqqer-products-search-fieldContainer {
     float: left;
     height: 100%;
-    padding: 20px 20px 0 20px;
+    padding: 20px 20px 0 0;
     width: 100%;
 }
 
@@ -27,6 +27,12 @@
     float: left;
     margin-bottom: 10px;
     width: 100%;
+}
+
+.quiqqer-products-search-fieldContainer-freetext {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+    padding-bottom: 30px;
 }
 
 .quiqqer-products-search-field-label {
