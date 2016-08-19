@@ -1,0 +1,61 @@
+.quiqqer-products-productEdit header {
+    border-bottom: 20px solid #cdd4d5;
+    float: left;
+    padding: 20px;
+    width: 100%;
+}
+
+.quiqqer-products-productEdit-header-image {
+    float: left;
+    text-align: center;
+    width: 150px;
+}
+
+.quiqqer-products-productEdit-header-image img {
+    max-height: 100px;
+    max-width: 100%;
+}
+
+.quiqqer-products-productEdit-header-text {
+    float: left;
+    padding: 0 20px;
+    width: calc(100% - 150px);
+}
+
+.quiqqer-products-productEdit-header-title {
+    font-size: 24px;
+}
+
+.quiqqer-products-productEdit-description {
+    clear: both;
+    float: left;
+    padding-top: 20px;
+}
+
+.quiqqer-products-productEdit-data {
+    float: left;
+    padding: 20px 20px 20px 10px;
+    width: 100%;
+}
+
+.quiqqer-products-productEdit .quiqqer-product-field {
+    clear: both;
+    float: left;
+    width: 100%;
+}
+
+.quiqqer-products-productEdit .quiqqer-product-field-title {
+    float: left;
+    padding-bottom: 5px;
+    width: 100%;
+}
+
+.quiqqer-products-productEdit .quiqqer-product-field-value {
+    float: left;
+    width: 100%;
+}
+
+.quiqqer-products-productEdit .quiqqer-product-field-value input,
+.quiqqer-products-productEdit .quiqqer-product-field-value select {
+    width: 100%;
+}

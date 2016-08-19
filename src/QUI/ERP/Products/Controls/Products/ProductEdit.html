@@ -1,0 +1,21 @@
+<header>
+    <div class="quiqqer-products-productEdit-header-image">
+        {image image=$Product->getImage() width=220}
+    </div>
+
+    <div class="quiqqer-products-productEdit-header-text">
+        <div class="quiqqer-products-productEdit-header-title">
+            {$Product->getTitle()}
+        </div>
+
+        <div class="quiqqer-products-productEdit-description">
+            {$Product->getDescription()}
+        </div>
+    </div>
+</header>
+
+<form class="quiqqer-products-productEdit-data">
+    {foreach $productAttributeList as $Field}
+    {$Field->getView()->create()}
+    {/foreach}
+</form>
