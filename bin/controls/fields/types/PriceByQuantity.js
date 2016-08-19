@@ -59,7 +59,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
             Elm.type = 'hidden';
 
             this.$Input = Elm;
-console.log(this.$Input.value);
+
             try {
                 data = JSON.decode(this.$Input.value);
             } catch (e) {
