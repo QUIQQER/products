@@ -195,7 +195,6 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                 require([
                     'package/quiqqer/products/bin/Products'
                 ], function (Products) {
-
                     Products.getChild(
                         this.getAttribute('id'),
                         this.$data.fields
@@ -320,12 +319,24 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
         getPrice: function (quantity) {
             quantity = quantity || this.getQuantity();
 
+            var fields    = this.getFields(),
+                fieldList = [];
+
+            for (var fieldId in fields) {
+                if (fields.hasOwnProperty(fieldId)) {
+                    fieldList.push({
+                        fieldId: fieldId,
+                        value  : fields[fieldId]
+                    });
+                }
+            }
+
             return new Promise(function (resolve) {
                 Ajax.get('package_quiqqer_products_ajax_products_calc', resolve, {
-                    'package' : 'quiqqer/products',
-                    productId : this.getId(),
-                    attributes: this.getAttributes(),
-                    quantity  : quantity
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
+                    fields   : JSON.encode(fieldList),
+                    quantity : quantity
                 });
             }.bind(this));
         },

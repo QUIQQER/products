@@ -8,6 +8,8 @@
  * @require Locale
  *
  * @event onRefresh [this]
+ *
+ * for frontend products, please use package/quiqqer/products/bin/classes/frontend/Product
  */
 define('package/quiqqer/products/bin/classes/Product', [
 
@@ -414,10 +416,10 @@ define('package/quiqqer/products/bin/classes/Product', [
 
             return new Promise(function (resolve) {
                 Ajax.get('package_quiqqer_products_ajax_products_calc', resolve, {
-                    'package' : 'quiqqer/products',
-                    productId : this.getId(),
-                    attributes: this.getAttributes(),
-                    quantity  : quantity
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
+                    fields   : JSON.encode(this.$data.fields),
+                    quantity : quantity
                 });
             }.bind(this));
         },

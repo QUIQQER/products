@@ -42,7 +42,6 @@ class ProductEdit extends QUI\Control
         /* @var $Product QUI\ERP\Products\Product\Product */
         $Engine  = QUI::getTemplateManager()->getEngine();
         $Product = $this->getAttribute('Product');
-        $fields  = array();
         $Calc    = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
         if ($Product instanceof QUI\ERP\Products\Product\Product) {

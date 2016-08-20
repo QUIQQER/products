@@ -1095,7 +1095,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             );
 
             return true;
-
         } catch (QUI\Exception $Exception) {
         }
 

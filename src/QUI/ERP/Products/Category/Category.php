@@ -153,9 +153,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
 
         try {
             $Site = $this->getSite($Project);
-
             return $Site->getUrlRewritten();
-
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
         }
@@ -235,7 +233,6 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
 
         try {
             $attributes = QUI\Cache\Manager::get($cacheName);
-
         } catch (QUI\Cache\Exception $Exception) {
             $attributes       = parent::getAttributes();
             $attributes['id'] = $this->getId();
@@ -638,7 +635,6 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
                         }
 
                         $fields[] = $Field;
-
                     } catch (QUI\Exception $Exception) {
                         QUI\System\Log::writeException(
                             $Exception,
@@ -688,7 +684,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
      * Return a category field
      *
      * @param integer $fieldId - Field-ID
-     * @return QUI\ERP\Products\Field\Field
+     * @return QUI\ERP\Products\Field\Field|bool
      */
     public function getField($fieldId)
     {
@@ -798,7 +794,6 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
                 foreach ($children as $Child) {
                     $recursiveHelper($Child->getId(), $ids, $recursiveHelper);
                 }
-
             } catch (QUI\Exception $Exception) {
             }
         };

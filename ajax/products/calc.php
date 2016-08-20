@@ -25,17 +25,20 @@ QUI::$Ajax->registerFunction(
 
         foreach ($fields as $field) {
             try {
-                if (!isset($field['fieldId']) ||
-                    !isset($field['value'])
-                ) {
+                if (!isset($field['fieldId']) || !isset($field['value'])) {
                     continue;
                 }
 
                 $fieldId    = $field['fieldId'];
                 $fieldValue = $field['value'];
 
-                $Product->getField($fieldId)->setValue($fieldValue);
+                $Field = $Product->getField($fieldId);
 
+                if (!$Field->isCustomField()) {
+                    continue;
+                }
+
+                $Field->setValue($fieldValue);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_WARNING);
             }

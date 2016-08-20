@@ -69,7 +69,6 @@ class View extends UniqueField
             );
 
             return true;
-
         } catch (QUI\Exception $Exception) {
         }
 
