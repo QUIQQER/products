@@ -1,0 +1,44 @@
+<table class="data-table data-table-flexbox product-data">
+    <thead>
+    <tr>
+        <th>
+            {{title}}
+            <div class="description">{{description}}</div>
+        </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        <td>
+            <label class="field-container">
+                <span class="field-container-item" title="{{productCategories}}">
+                    {{productCategories}}
+                </span>
+                <span class="field-container-field field-information">
+                    {{#categories}}
+                        {{title}}
+                    {{/categories}}
+                </span>
+
+            </label>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label class="field-container">
+                <span class="field-container-item" title="{{productCategories}}">
+                    {{productImage}}
+                </span>
+                <span class="field-container-field field-information">
+                    {{#image}}
+                    <img src="{{image}}" style="max-width:100%; max-height: 300px;"/>
+                    {{/image}}
+                </span>
+
+            </label>
+        </td>
+    </tr>
+
+    </tbody>
+</table>

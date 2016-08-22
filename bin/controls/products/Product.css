@@ -37,3 +37,7 @@
 .product-data .field-container-item:last-child .fa {
     font-size: 14px;
 }
+
+.product-data .field-information {
+    line-height: 30px;
+}

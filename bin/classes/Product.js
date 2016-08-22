@@ -16,9 +16,11 @@ define('package/quiqqer/products/bin/classes/Product', [
     'qui/QUI',
     'qui/classes/DOM',
     'Ajax',
-    'Locale'
+    'Locale',
+    'package/quiqqer/products/bin/Fields',
+    'qui/utils/String'
 
-], function (QUI, QUIDOM, Ajax, QUILocale) {
+], function (QUI, QUIDOM, Ajax, QUILocale, Fields, StringUtils) {
     "use strict";
 
     return new Class({
@@ -163,7 +165,6 @@ define('package/quiqqer/products/bin/classes/Product', [
             return this.getAttribute('id');
         },
 
-
         /**
          * Return the product title
          *
@@ -173,7 +174,7 @@ define('package/quiqqer/products/bin/classes/Product', [
         getTitle: function (Locale) {
             Locale = Locale || QUILocale;
 
-            return this.getFieldValue(4).then(function (field) {
+            return this.getFieldValue(Fields.FIELD_TITLE).then(function (field) {
                 if (typeOf(field) == 'string') {
                     try {
                         field = JSON.decode(field);
@@ -191,6 +192,108 @@ define('package/quiqqer/products/bin/classes/Product', [
 
                 return title;
             });
+        },
+
+        /**
+         * Return the product image
+         *
+         * @param {Object} [Locale] - optional, QUI Locale object
+         * @returns {Promise}
+         */
+        getWorkingTitle: function (Locale) {
+            Locale = Locale || QUILocale;
+
+            return this.getFieldValue(Fields.FIELD_WORKING_TITLE).then(function (field) {
+                if (typeOf(field) == 'string') {
+                    try {
+                        field = JSON.decode(field);
+                    } catch (e) {
+                        field = {};
+                    }
+                }
+
+                var title   = '',
+                    current = Locale.getCurrent();
+
+                if (current in field) {
+                    title = field[current];
+                }
+
+                return title;
+            });
+        },
+
+        /**
+         * Return the product description
+         *
+         * @param {Object} [Locale] - optional, QUI Locale object
+         * @returns {Promise}
+         */
+        getDescription: function (Locale) {
+            Locale = Locale || QUILocale;
+
+            return this.getFieldValue(Fields.FIELD_SHORT_DESC).then(function (field) {
+                if (typeOf(field) == 'string') {
+                    try {
+                        field = JSON.decode(field);
+                    } catch (e) {
+                        field = {};
+                    }
+                }
+
+                var title   = '',
+                    current = Locale.getCurrent();
+
+                if (current in field) {
+                    title = field[current];
+                }
+
+                return title;
+            });
+        },
+
+        /**
+         * Return the product image
+         *
+         * @returns {Promise}
+         */
+        getImage: function () {
+            return new Promise(function (resolve, reject) {
+                this.getFieldValue(Fields.FIELD_IMAGE).then(function (result) {
+                    if (result !== '' && result) {
+                        return resolve(result);
+                    }
+
+                    this.getFolder().then(function (folder) {
+                        if (!folder) {
+                            return reject('Product has no media folder.');
+                        }
+
+                        var params = StringUtils.getUrlParams(folder);
+
+                        if (!("id" in params) || !("project" in params)) {
+                            return reject('Product media folder is no QUIQQER media url.');
+                        }
+
+                        // get first folder image
+                        Ajax.get('ajax_media_folder_firstImage', function (file) {
+                            resolve(file.url);
+                        }, {
+                            project : params.project,
+                            folderId: params.id
+                        });
+                    });
+                }.bind(this));
+            }.bind(this));
+        },
+
+        /**
+         * Return the product image
+         *
+         * @returns {Promise}
+         */
+        getFolder: function () {
+            return this.getFieldValue(Fields.FIELD_FOLDER);
         },
 
         /**

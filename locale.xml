@@ -182,6 +182,10 @@
             <de><![CDATA[Produkt-Hauptkategorie]]></de>
             <en><![CDATA[Product main category]]></en>
         </locale>
+        <locale name="productImage">
+            <de><![CDATA[Produkt-Bild]]></de>
+            <en><![CDATA[Product image]]></en>
+        </locale>
 
         <locale name="requiredField">
             <de><![CDATA[Pflichtfeld]]></de>

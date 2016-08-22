@@ -49,6 +49,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'package/quiqqer/products/bin/controls/categories/Select',
     'package/quiqqer/products/bin/controls/fields/FieldTypeSelect',
 
+    'text!package/quiqqer/products/bin/controls/products/ProductInformation.html',
     'text!package/quiqqer/products/bin/controls/products/ProductData.html',
     'text!package/quiqqer/products/bin/controls/products/CreateField.html',
     'css!package/quiqqer/products/bin/controls/products/Product.css'
@@ -56,7 +57,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 ], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIConfirm, QUIFormUtils, QUILocale,
              Grid, FolderViewer, Mustache, Packages,
              Products, Product, Categories, Fields, FieldUtils, FieldWindow,
-             CategorySelect, FieldTypeSelect, templateProductData, templateField) {
+             CategorySelect, FieldTypeSelect, informationTemplate, templateProductData, templateField) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -71,6 +72,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             'update',
             'copy',
             'switchStatus',
+            'openInformation',
             'openData',
             'openImages',
             'openFiles',
@@ -97,27 +99,25 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             this.parent(options);
 
-            this.$CategorySelect = null;
-            this.$FieldContainer = null;
-            this.$currentField   = null;
-
-            this.$FileViewer  = null;
-            this.$ImageViewer = null;
-            this.$Grid        = null;
-
+            this.$CategorySelect      = null;
+            this.$FieldContainer      = null;
+            this.$currentField        = null;
+            this.$FileViewer          = null;
+            this.$ImageViewer         = null;
+            this.$Grid                = null;
             this.$FieldAdministration = null;
             this.$AttributeList       = null;
+            this.$Data                = null;
+            this.$Media               = null;
+            this.$Files               = null;
+            this.$Control             = null;
+            this.$Information         = null;
 
             this.$Product = new Product({
                 id: this.getAttribute('productId')
             });
 
-            this.$data    = {};
-            this.$Data    = null;
-            this.$Media   = null;
-            this.$Files   = null;
-            this.$Control = null;
-
+            this.$data     = {};
             this.$injected = false;
 
             this.addEvents({
@@ -281,7 +281,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 });
 
                 Content.set({
-                    html: '<div class="product-update-data sheet">' + dataTemplate + '</div>' +
+                    html: '<div class="product-update-information sheet"></div>' +
+                          '<div class="product-update-data sheet">' + dataTemplate + '</div>' +
                           '<div class="product-update-field sheet"></div>' +
                           '<div class="product-update-media sheet"></div>' +
                           '<div class="product-update-files sheet"></div>' +
@@ -289,9 +290,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                           '<div class="product-update-attributelist sheet"></div>'
                 });
 
-                this.$Data  = Content.getElement('.product-update-data');
-                this.$Media = Content.getElement('.product-update-media');
-                this.$Files = Content.getElement('.product-update-files');
+                this.$Information = Content.getElement('.product-update-information');
+                this.$Data        = Content.getElement('.product-update-data');
+                this.$Media       = Content.getElement('.product-update-media');
+                this.$Files       = Content.getElement('.product-update-files');
 
                 this.$FieldAdministration = Content.getElement('.product-update-fieldadministration');
                 this.$AttributeList       = Content.getElement('.product-update-attributelist');
@@ -615,7 +617,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                     // parse qui controls
                     QUI.parse().then(function () {
-                        self.getCategory('data').click();
+                        self.getCategory('information').click();
 
                         // image fields
                         var images = self.getElm().getElements(
@@ -699,6 +701,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             };
 
             this.getCategoryBar().clear();
+
+
+            this.addCategory({
+                name  : 'information',
+                text  : QUILocale.get('quiqqer/system', 'information'),
+                icon  : 'fa fa-info',
+                events: {
+                    onClick: this.openInformation
+                }
+            });
 
             this.addCategory({
                 name  : 'data',
@@ -805,6 +817,53 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 this.refresh();
 
             }.bind(this));
+        },
+
+        /**
+         * Open the information category tab
+         *
+         * @return {Promise}
+         */
+        openInformation: function () {
+            if (this.getCategory('information').isActive()) {
+                return Promise.resolve();
+            }
+
+            var self = this;
+
+            return self.$hideCategories().then(function () {
+                return self.$Product.getCategories();
+
+            }).then(function (data) {
+                return Categories.getCategories(data);
+
+            }).then(function (categories) {
+                return Promise.all([
+                    self.$Product.getTitle(),
+                    self.$Product.getDescription(),
+                    self.$Product.getImage(),
+                    categories
+                ]);
+
+            }).then(function (data) {
+                var categories = data[3].map(function (Category) {
+                    return {title: Category.title};
+                });
+
+                self.$Information.set({
+                    html: Mustache.render(informationTemplate, {
+                        title            : data[0],
+                        description      : data[1],
+                        image            : URL_DIR + data[2],
+                        categories       : categories,
+                        fields           : [],
+                        productCategories: QUILocale.get(lg, 'productCategories'),
+                        productImage     : QUILocale.get(lg, 'productImage')
+                    })
+                });
+
+                return self.$showCategory(self.$Information);
+            });
         },
 
         /**

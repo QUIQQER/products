@@ -95,9 +95,26 @@ define('package/quiqqer/products/bin/classes/Categories', [
         },
 
         /**
+         * Return category informations
          *
-         * @param categoryId
-         * @returns {*}
+         * @param {Array} categoryIds - list of catgeorie ids
+         * @returns {Promise}
+         */
+        getCategories: function (categoryIds) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_categories_getCategories', resolve, {
+                    'package'  : 'quiqqer/products',
+                    onError    : reject,
+                    categoryIds: JSON.encode(categoryIds)
+                });
+            });
+        },
+
+        /**
+         * Return the path from a category
+         *
+         * @param {Number} categoryId
+         * @returns {Promise}
          */
         getPath: function (categoryId) {
             return new Promise(function (resolve, reject) {
