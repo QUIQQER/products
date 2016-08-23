@@ -49,6 +49,10 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
                 Elm   = this.getElm(),
                 price = parseFloat(Elm.value);
 
+            if (Elm.value === '') {
+                price = 0;
+            }
+
             Elm.addClass('field-container-field');
             Elm.type        = 'text';
             Elm.placeholder = this.$Formatter.format(1000);
@@ -74,6 +78,10 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
          * @returns {String}
          */
         setValue: function (value) {
+            if (value === '') {
+                return;
+            }
+
             this.getElm().value = this.$Formatter.format(parseFloat(value));
         },
 

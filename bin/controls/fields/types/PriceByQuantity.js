@@ -76,6 +76,10 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
                 };
             }
 
+            if (data.price === '') {
+                data.price = 0;
+            }
+
 
             this.$Elm = new Element('div', {
                 'class': 'field-container-field quiqqer-products-field-priceByQuantity'
@@ -132,10 +136,12 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
 
         /**
          * Return the current value
-         *
-         * @returns {String}
          */
         setValue: function (value) {
+            if (value === '') {
+                return;
+            }
+
             if (typeOf(value) === 'number') {
                 this.$Price.value = parseFloat(value);
             }
