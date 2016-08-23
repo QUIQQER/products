@@ -190,6 +190,15 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
          */
         $updateInput: function () {
             this.$Input.value = JSON.encode(this.$uids);
+        },
+
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        getValue: function () {
+            return this.$Input.value;
         }
     });
 });

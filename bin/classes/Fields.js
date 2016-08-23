@@ -23,18 +23,49 @@ define('package/quiqqer/products/bin/classes/Fields', [
         Extends: QUIDOM,
         Type   : 'package/quiqqer/products/bin/classes/Fields',
 
-        FIELD_PRICE        : 1,
-        FIELD_VAT          : 2,
-        FIELD_PRODUCT_NO   : 3,
-        FIELD_TITLE        : 4,
-        FIELD_SHORT_DESC   : 5,
-        FIELD_CONTENT      : 6,
-        FIELD_SUPPLIER     : 7,
-        FIELD_MANUFACTURER : 8,
-        FIELD_IMAGE        : 9,
-        FIELD_FOLDER       : 10,
-        FIELD_WORKING_TITLE: 11,
+        /**
+         * Fields
+         */
+        FIELD_PRICE           : 1,
+        FIELD_VAT             : 2,
+        FIELD_PRODUCT_NO      : 3,
+        FIELD_TITLE           : 4,
+        FIELD_SHORT_DESC      : 5,
+        FIELD_CONTENT         : 6,
+        FIELD_SUPPLIER        : 7,
+        FIELD_MANUFACTURER    : 8,
+        FIELD_IMAGE           : 9,
+        FIELD_FOLDER          : 10,
+        FIELD_WORKING_TITLE   : 11,
+        FIELD_KEYWORDS        : 13,
+        FIELD_EQUIPMENT       : 14,
+        FIELD_SIMILAR_PRODUCTS: 15,
 
+        /**
+         * Types
+         */
+        TYPE_BOOL               : 'BoolType',
+        TYPE_DATE               : 'Date',
+        TYPE_FLOAT              : 'FloatType',
+        TYPE_FOLDER             : 'Folder',
+        TYPE_GROUP_LIST         : 'GroupList',
+        TYPE_IMAGE              : 'Image',
+        TYPE_INPUT              : 'Input',
+        TYPE_INPUT_MULTI_LANG   : 'InputMultiLang',
+        TYPE_INT                : 'IntType',
+        TYPE_PRICE              : 'Price',
+        TYPE_PRICE_BY_QUANTITY  : 'PriceByQuantity',
+        TYPE_ATTRIBUTE_LIST     : 'ProductAttributeList',
+        TYPE_TEXTAREA           : 'Textarea',
+        TYPE_TEXTAREA_MULTI_LANG: 'TextareaMultiLang',
+        TYPE_URL                : 'Url',
+        TYPE_VAT                : 'Vat',
+        TYPE_TAX                : 'Tax',
+        TYPE_PRODCUCTS          : 'Products',
+
+        /**
+         * product array changed types
+         */
         PRODUCT_ARRAY_CHANGED  : 'pac', // product array has changed
         PRODUCT_ARRAY_UNCHANGED: 'pau', // product array hasn't changed
 

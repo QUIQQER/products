@@ -48,6 +48,15 @@ define('package/quiqqer/products/bin/controls/fields/types/Date', [
 
             Elm.addClass('field-container-field');
             Elm.type = 'date';
+        },
+
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        getValue: function () {
+            return this.getElm().value;
         }
     });
 });

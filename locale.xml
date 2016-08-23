@@ -236,6 +236,10 @@
             <de><![CDATA[Produktbilder]]></de>
             <en><![CDATA[Product images]]></en>
         </locale>
+        <locale name="products.product.panel.category.prices">
+            <de><![CDATA[Preise]]></de>
+            <en><![CDATA[Prices]]></en>
+        </locale>
 
         <locale name="products.product.panel.category.files">
             <de><![CDATA[Produktdateien]]></de>

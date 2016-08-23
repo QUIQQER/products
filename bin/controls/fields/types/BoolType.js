@@ -49,6 +49,15 @@ define('package/quiqqer/products/bin/controls/fields/types/BoolType', [
             this.$Elm = new Element('div', {
                 'class': 'field-container-field'
             }).wraps(this.$Input);
+        },
+
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        getValue: function () {
+            return this.$Input.value;
         }
     });
 });

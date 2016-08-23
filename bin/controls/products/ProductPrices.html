@@ -1,0 +1,27 @@
+<form>
+    <table class="data-table data-table-flexbox product-prices">
+        <thead>
+        <tr>
+            <th>
+                {{title}}
+            </th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {{#fields}}
+        <tr>
+            <td>
+                <label class="field-container">
+                    <span class="field-container-item" title="{{title}}">
+                        {{title}}
+                    </span>
+                    <input type="hidden" name="field-{{id}}" data-qui="{{jsControl}}" value="{{value}}" />
+                </label>
+            </td>
+        </tr>
+        {{/fields}}
+        </tbody>
+    </table>
+
+</form>

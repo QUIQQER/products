@@ -37,6 +37,10 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
             this.$Currency = null;
             this.$Quantity = null;
 
+            this.$Formatter = QUILocale.getNumberFormatter({
+                minimumFractionDigits: 8
+            });
+
             this.addEvents({
                 onImport: this.$onImport
             });
@@ -52,16 +56,16 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
                     quantity: ''
                 };
 
-            var NumberFormatter = QUILocale.getNumberFormatter({
-                minimumFractionDigits: 8
-            });
-
             Elm.type = 'hidden';
 
             this.$Input = Elm;
 
             try {
                 data = JSON.decode(this.$Input.value);
+
+                if ("price" in data) {
+                    data.price = parseFloat(data.price);
+                }
             } catch (e) {
             }
 
@@ -80,8 +84,8 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
             this.$Price = new Element('input', {
                 'class'    : 'quiqqer-products-field-priceByQuantity-price',
                 type       : 'text',
-                placeholder: NumberFormatter.format(1000),
-                value      : data.price ? NumberFormatter.format(data.price) : '',
+                placeholder: this.$Formatter.format(1000),
+                value      : data.price ? this.$Formatter.format(data.price) : '',
                 events     : {
                     change: this.refresh,
                     blur  : this.refresh
@@ -114,8 +118,71 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
                 quantity: this.$Quantity.value
             });
 
+            this.fireEvent('change', [this]);
+        },
 
-            console.log(this.$Input.value);
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        getValue: function () {
+            return this.$Input.value;
+        },
+
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        setValue: function (value) {
+            if (typeOf(value) === 'number') {
+                this.$Price.value = parseFloat(value);
+            }
+
+            if (typeOf(value) === 'object') {
+                if ("price" in value) {
+                    this.$Price.value = this.$Formatter.format(parseFloat(value.price));
+                }
+
+                if ("quantity" in value) {
+                    this.$Quantity.value = parseInt(value.quantity);
+                }
+            }
+
+            if (typeOf(value) === 'string' && value.match('{')) {
+                try {
+                    value = JSON.decode(value);
+
+                    if ("price" in value) {
+                        this.$Price.value = this.$Formatter.format(parseFloat(value.price));
+                    }
+
+                    if ("quantity" in value) {
+                        this.$Quantity.value = parseInt(value.quantity);
+                    }
+                } catch (e) {
+                }
+            } else if (typeOf(value) === 'string') {
+                this.$Price.value = parseFloat(value);
+            }
+
+            this.refresh();
+        },
+
+        /**
+         * Retuen the field ID
+         *
+         * @return {String|Boolean|Number}
+         */
+        getFieldId: function () {
+            var name = this.$Input.name;
+
+            name = name.replace('field-', '');
+            name = parseInt(name);
+
+            return name || false;
         }
     });
-});
+})
+;

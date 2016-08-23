@@ -410,6 +410,21 @@ define('package/quiqqer/products/bin/classes/Product', [
             }.bind(this));
         },
 
+
+        /**
+         * Return all fields from the specific type
+         *
+         * @param {String} type
+         * @return {Array}
+         */
+        getFieldsByType: function (type) {
+            return this.getFields().then(function (fields) {
+                return fields.filter(function (Field) {
+                    return Field.type == type;
+                });
+            });
+        },
+
         /**
          * Return the field data
          *

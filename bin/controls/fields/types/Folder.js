@@ -100,6 +100,15 @@ define('package/quiqqer/products/bin/controls/fields/types/Folder', [
                     }
                 }
             }).open();
+        },
+
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        getValue: function () {
+            return this.$Input.value;
         }
     });
 });

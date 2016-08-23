@@ -37,6 +37,15 @@ define('package/quiqqer/products/bin/controls/fields/types/Input', [
 
             Elm.addClass('field-container-field');
             Elm.type = 'text';
+        },
+
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        getValue: function () {
+            return this.getElm().value;
         }
     });
 });

@@ -100,6 +100,15 @@ define('package/quiqqer/products/bin/controls/fields/types/Url', [
                 console.warn(e);
                 return false;
             }
+        },
+
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        getValue: function () {
+            return this.getElm().value;
         }
     });
 });

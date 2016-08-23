@@ -86,6 +86,15 @@ define('package/quiqqer/products/bin/controls/fields/types/Products', [
          */
         save: function () {
             return this.$Select.getValue().split(',');
+        },
+
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        getValue: function () {
+            return this.$Select.getValue();
         }
     });
 });

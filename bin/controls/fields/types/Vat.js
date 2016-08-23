@@ -28,6 +28,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
         initialize: function (options) {
             this.parent(options);
 
+            this.$Select = null;
+
             this.addEvents({
                 onImport: this.$onImport
             });
@@ -37,7 +39,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
          * event : on import
          */
         $onImport: function () {
-            var Elm = this.getElm();
+            var self = this,
+                Elm  = this.getElm();
 
             // loader
             var Loader = new Element('span', {
@@ -51,7 +54,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
             }).inject(Elm, 'after');
 
             //vat select
-            var Select = new Element('select', {
+            this.$Select = new Element('select', {
                 'class': 'field-container-field',
                 'html' : '<option value=""></option>',
                 name   : Elm.name
@@ -67,10 +70,10 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
                     new Element('option', {
                         html : html,
                         value: value
-                    }).inject(Select);
+                    }).inject(self.$Select);
                 }
 
-                Select.value = Elm.value;
+                self.$Select.value = Elm.value;
 
                 Elm.destroy();
 
@@ -79,6 +82,15 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
                     '<span class="fa fa-percent"></span>'
                 );
             });
+        },
+
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        getValue: function () {
+            return this.$Input.value;
         }
     });
 });

@@ -68,8 +68,8 @@ class Products
         // exists more price fields?
         // is user in group filter
         $priceList = array_merge(
-            $Product->getFieldsByType('Price'),
-            $Product->getFieldsByType('PriceByQuantity')
+            $Product->getFieldsByType(FieldHandler::TYPE_PRICE),
+            $Product->getFieldsByType(FieldHandler::TYPE_PRICE_BY_QUANTITY)
         );
 
         if (empty($priceList)) {

@@ -42,6 +42,15 @@ define('package/quiqqer/products/bin/controls/fields/types/FloatType', [
             Elm.type        = 'number';
             Elm.step        = 'any';
             Elm.placeholder = '10.9999';
+        },
+
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        getValue: function () {
+            return this.getElm().value;
         }
     });
 });

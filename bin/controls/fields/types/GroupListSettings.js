@@ -165,6 +165,15 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
                 groupIds     : groups,
                 multipleUsers: this.$MultipleUsers.checked
             });
+        },
+
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        getValue: function () {
+            return this.$Input.value;
         }
     });
 });

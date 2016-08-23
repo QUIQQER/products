@@ -28,6 +28,14 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
         initialize: function (options) {
             this.parent(options);
 
+            // admin format
+            this.$Formatter = QUILocale.getNumberFormatter({
+                //style                : 'currency',
+                //currency             : 'EUR',
+                minimumFractionDigits: 8
+            });
+
+
             this.addEvents({
                 onImport: this.$onImport
             });
@@ -37,20 +45,50 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
          * event : on import
          */
         $onImport: function () {
-            var Elm   = this.getElm(),
-                price = Elm.value;
-
-            // admin format
-            var NumberFormatter = QUILocale.getNumberFormatter({
-                //style                : 'currency',
-                //currency             : 'EUR',
-                minimumFractionDigits: 8
-            });
+            var self  = this,
+                Elm   = this.getElm(),
+                price = parseFloat(Elm.value);
 
             Elm.addClass('field-container-field');
             Elm.type        = 'text';
-            Elm.placeholder = NumberFormatter.format(1000);
-            Elm.value       = NumberFormatter.format(price);
+            Elm.placeholder = this.$Formatter.format(1000);
+            Elm.value       = this.$Formatter.format(price);
+
+            Elm.addEvent('change', function () {
+                self.fireEvent('change', [self]);
+            });
+        },
+
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        getValue: function () {
+            return this.getElm().value;
+        },
+
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        setValue: function (value) {
+            this.getElm().value = this.$Formatter.format(parseFloat(value));
+        },
+
+        /**
+         * Retuen the field ID
+         *
+         * @return {String|Boolean|Number}
+         */
+        getFieldId: function () {
+            var name = this.getElm().name;
+
+            name = name.replace('field-', '');
+            name = parseInt(name);
+
+            return name || false;
         }
     });
 });

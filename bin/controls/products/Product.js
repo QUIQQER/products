@@ -51,13 +51,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
     'text!package/quiqqer/products/bin/controls/products/ProductInformation.html',
     'text!package/quiqqer/products/bin/controls/products/ProductData.html',
+    'text!package/quiqqer/products/bin/controls/products/ProductPrices.html',
     'text!package/quiqqer/products/bin/controls/products/CreateField.html',
     'css!package/quiqqer/products/bin/controls/products/Product.css'
 
 ], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIConfirm, QUIFormUtils, QUILocale,
              Grid, FolderViewer, Mustache, Packages,
              Products, Product, Categories, Fields, FieldUtils, FieldWindow,
-             CategorySelect, FieldTypeSelect, informationTemplate, templateProductData, templateField) {
+             CategorySelect, FieldTypeSelect,
+             informationTemplate, templateProductData, templateProductPrices, templateField) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -74,6 +76,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             'switchStatus',
             'openInformation',
             'openData',
+            'openPrices',
             'openImages',
             'openFiles',
             'openField',
@@ -286,20 +289,21 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                           '<div class="product-update-field sheet"></div>' +
                           '<div class="product-update-media sheet"></div>' +
                           '<div class="product-update-files sheet"></div>' +
+                          '<div class="product-update-prices sheet"></div>' +
                           '<div class="product-update-fieldadministration sheet"></div>' +
                           '<div class="product-update-attributelist sheet"></div>'
                 });
 
-                this.$Information = Content.getElement('.product-update-information');
-                this.$Data        = Content.getElement('.product-update-data');
-                this.$Media       = Content.getElement('.product-update-media');
-                this.$Files       = Content.getElement('.product-update-files');
+                this.$Information     = Content.getElement('.product-update-information');
+                this.$Data            = Content.getElement('.product-update-data');
+                this.$Media           = Content.getElement('.product-update-media');
+                this.$Files           = Content.getElement('.product-update-files');
+                this.$Prices          = Content.getElement('.product-update-prices');
+                this.$MainCategoryRow = Content.getElement('.product-mainCategory');
+                this.$MainCategory    = Content.getElement('[name="product-category"]');
 
                 this.$FieldAdministration = Content.getElement('.product-update-fieldadministration');
                 this.$AttributeList       = Content.getElement('.product-update-attributelist');
-
-                this.$MainCategoryRow = Content.getElement('.product-mainCategory');
-                this.$MainCategory    = Content.getElement('[name="product-category"]');
 
                 Content.getElements('.sheet').setStyles({
                     display: 'none'
@@ -617,6 +621,28 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                     // parse qui controls
                     QUI.parse().then(function () {
+                        // field change events
+                        var fieldChange = function (Field) {
+                            if (!("getFieldId" in Field)) {
+                                return;
+                            }
+
+                            var fieldId = Field.getFieldId();
+
+                            // set product field value
+                            if (fieldId in self.$data) {
+                                self.$data[fieldId].value = Field.getValue();
+                            }
+                        };
+
+                        QUI.Controls.getControlsInElement(self.$Data).each(function (Field) {
+                            if (!Field.getType().match("controls/fields/types/")) {
+                                return;
+                            }
+
+                            Field.addEvent('change', fieldChange);
+                        });
+
                         self.getCategory('information').click();
 
                         // image fields
@@ -718,6 +744,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 icon  : 'fa fa-shopping-bag',
                 events: {
                     onClick: this.openData
+                }
+            });
+
+            this.addCategory({
+                name  : 'prices',
+                text  : QUILocale.get(lg, 'products.product.panel.category.prices'),
+                icon  : 'fa fa-money',
+                events: {
+                    onClick: this.openPrices
                 }
             });
 
@@ -876,9 +911,111 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 return Promise.resolve();
             }
 
-            return this.$hideCategories().then(function () {
-                return this.$showCategory(this.$Data);
-            }.bind(this));
+            var self = this;
+
+            return self.$hideCategories().then(function () {
+                // set values
+                QUI.Controls.getControlsInElement(self.$Data)
+                    .each(function (Field) {
+                        if (!("getFieldId" in Field)) {
+                            return;
+                        }
+
+                        if (!("setValue" in Field)) {
+                            return;
+                        }
+
+                        var fieldId = Field.getFieldId();
+
+                        if (fieldId in self.$data) {
+                            Field.setValue(self.$data[fieldId].value);
+                        }
+                    });
+
+                return self.$showCategory(self.$Data);
+            });
+        },
+
+        /**
+         * Opens the price fields
+         */
+        openPrices: function () {
+            if (this.getCategory('prices').isActive()) {
+                return Promise.resolve();
+            }
+
+            var self = this;
+
+            return self.$hideCategories().then(function () {
+                return Promise.all([
+                    self.$Product.getFieldsByType(Fields.TYPE_PRICE),
+                    self.$Product.getFieldsByType(Fields.TYPE_PRICE_BY_QUANTITY)
+                ]);
+
+            }).then(function (fields) {
+                fields = fields.flatten();
+
+                // sort by priority and mein price as first
+                fields.sort(function (FieldA, FieldB) {
+                    var priorityA = parseInt(FieldA.priority),
+                        priorityB = parseInt(FieldB.priority);
+
+                    if (FieldA.id == Fields.FIELD_PRICE) {
+                        return -1;
+                    }
+
+                    if (FieldB.id == Fields.FIELD_PRICE) {
+                        return 1;
+                    }
+
+                    if (priorityA === 0) {
+                        return 1;
+                    }
+
+                    if (priorityB === 0) {
+                        return -1;
+                    }
+
+                    if (priorityA < priorityB) {
+                        return -1;
+                    }
+
+                    if (priorityA > priorityB) {
+                        return 1;
+                    }
+
+                    return 0;
+                });
+
+                self.$Prices.set({
+                    html: Mustache.render(templateProductPrices, {
+                        title : QUILocale.get(lg, 'products.product.panel.category.prices'),
+                        fields: fields
+                    })
+                });
+
+                return QUI.parse(self.$Prices);
+
+            }).then(function () {
+
+                // change events
+                var prices   = QUI.Controls.getControlsInElement(self.$Prices),
+
+                    onChange = function (Price) {
+                        var fieldId = Price.getFieldId();
+
+                        // set product field value
+                        if (fieldId in self.$data) {
+                            self.$data[fieldId].value = Price.getValue();
+                        }
+                    };
+
+                for (var i = 0, len = prices.length; i < len; i++) {
+                    prices[i].addEvent('change', onChange);
+                }
+
+                return self.$showCategory(self.$Prices);
+            });
         },
 
         /**

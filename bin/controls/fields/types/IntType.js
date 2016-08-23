@@ -37,6 +37,15 @@ define('package/quiqqer/products/bin/controls/fields/types/IntType', [
 
             Elm.addClass('field-container-field');
             Elm.type = 'number';
+        },
+
+        /**
+         * Return the current value
+         *
+         * @returns {String}
+         */
+        getValue: function () {
+            return this.getElm().value;
         }
     });
 });
