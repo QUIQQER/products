@@ -190,5 +190,4 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
             return name || false;
         }
     });
-})
-;
+});

@@ -8,6 +8,7 @@
  * @require qui/controls/desktop/Panel
  * @require qui/controls/buttons/Button
  * @require qui/controls/buttons/Switch
+ * @require qui/controls/buttons/ButtonSwitch
  * @require qui/controls/windows/Confirm
  * @require qui/utils/Form
  * @require Locale
@@ -33,6 +34,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'qui/controls/desktop/Panel',
     'qui/controls/buttons/Button',
     'qui/controls/buttons/Switch',
+    'qui/controls/buttons/ButtonSwitch',
     'qui/controls/windows/Confirm',
     'qui/utils/Form',
     'Locale',
@@ -55,7 +57,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'text!package/quiqqer/products/bin/controls/products/CreateField.html',
     'css!package/quiqqer/products/bin/controls/products/Product.css'
 
-], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIConfirm, QUIFormUtils, QUILocale,
+], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIButtonSwitch, QUIConfirm, QUIFormUtils, QUILocale,
              Grid, FolderViewer, Mustache, Packages,
              Products, Product, Categories, Fields, FieldUtils, FieldWindow,
              CategorySelect, FieldTypeSelect,
@@ -73,7 +75,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             'refresh',
             'update',
             'copy',
-            'switchStatus',
+            '$onActivationStatusChange',
             'openInformation',
             'openData',
             'openPrices',
@@ -166,15 +168,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 type: 'seperator'
             });
 
-            this.addButton({
-                name     : 'status',
-                textimage: 'fa fa-check',
-                disabled : true,
-                text     : QUILocale.get('quiqqer/system', 'activate'),
-                events   : {
-                    onClick: this.switchStatus
-                }
-            });
+            this.addButton(
+                new QUIButtonSwitch({
+                    name    : 'status',
+                    text    : '---',
+                    disabled: true,
+                    events  : {
+                        onChange: this.$onActivationStatusChange
+                    }
+                })
+            );
 
             this.addButton({
                 name  : 'copy',
@@ -248,7 +251,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     self.$Product.getFields(),
                     self.$Product.getCategories(),
                     self.$Product.getCategory(),
-                    Products.getParentFolder()
+                    Products.getParentFolder(),
+                    self.$Product.isActive()
                 ]).then(function (result) {
                     return result;
                 });
@@ -259,10 +263,17 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 var fields     = data[0],
                     categories = data[1],
                     category   = data[2],
-                    Folder     = data[3];
+                    Folder     = data[3],
+                    isActive   = data[4];
 
                 if (typeOf(fields) !== 'array') {
                     fields = [];
+                }
+
+                if (isActive) {
+                    self.getButtons('status').on();
+                } else {
+                    self.getButtons('status').off();
                 }
 
                 if (typeOf(categories) !== 'array') {
@@ -681,15 +692,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 // product is active
                 if (status) {
-                    Button.setAttribute('textimage', 'fa fa-remove');
-                    Button.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'deactivate'));
+                    Button.on();
+                    Button.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'isActivate'));
                     Button.enable();
                     return;
                 }
 
                 // product is deactivate
-                Button.setAttribute('textimage', 'fa fa-check');
-                Button.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'activate'));
+                Button.off();
+                Button.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'isDeactivate'));
                 Button.enable();
 
             }.bind(this));
@@ -1578,6 +1589,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
                 }
 
+                if (typeof data.categories === 'undefined') {
+                    data.categories = '';
+                }
 
                 var categories = data.categories.split(',');
 
@@ -1668,20 +1682,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         /**
          * Change the product status - activate / deactivate
          */
-        switchStatus: function () {
+        $onActivationStatusChange: function () {
             var Button = this.getButtons('status');
-
-            Button.setAttribute('textimage', 'fa fa-spinner fa-spin');
             Button.disable();
 
             this.update().then(function () {
-                return this.$Product.isActive();
-
-            }.bind(this)).then(function (status) {
-                if (status) {
-                    this.$Product.deactivate().then(this.refresh, this.refresh);
-                } else {
+                if (Button.getStatus()) {
                     this.$Product.activate().then(this.refresh, this.refresh);
+                } else {
+                    this.$Product.deactivate().then(this.refresh, this.refresh);
                 }
             }.bind(this));
         },

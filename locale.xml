@@ -683,6 +683,12 @@
             <de><![CDATA[ab [price]]]></de>
             <en><![CDATA[starting from [price]]]></en>
         </locale>
+
+        <locale name="products.category.0.title">
+            <de><![CDATA[Kategorien]]></de>
+            <en><![CDATA[Categories]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
