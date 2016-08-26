@@ -94,6 +94,20 @@
     width: 100%;
 }
 
+.content-headerpage-multible-left .quiqqer-products-productList-filter-container {
+    background: rgba(0, 0, 0, 0.1);
+    height: auto;
+    opacity: 1;
+}
+
+.content-headerpage-multible-left .quiqqer-products-productList-filterContainerLoading * {
+    opacity: 0;
+}
+
+.content-headerpage-multible-left .quiqqer-products-productList-filterContainerLoaded * {
+    opacity: 1;
+}
+
 .quiqqer-products-productList-filter-entry {
     float: left;
     margin-bottom: 10px;
@@ -110,6 +124,13 @@
 .quiqqer-products-productList-filter-entry:nth-child(3n) {
     padding-left: 20px;
     padding-right: 0;
+}
+
+.content-headerpage-multible-left .quiqqer-products-productList-filter-entry,
+.content-headerpage-multible-left .quiqqer-products-productList-filter-entry:first-child,
+.content-headerpage-multible-left .quiqqer-products-productList-filter-entry:nth-child(3n+1) {
+    padding: 0;
+    width: 100%;
 }
 
 .quiqqer-products-productList-filter-entry-title {

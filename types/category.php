@@ -58,11 +58,6 @@ if ($siteUrl != $_REQUEST['_url']) {
         $Redirect->send();
     }
 } else {
-    $Search = new QUI\ERP\Products\Controls\Search\Search(array(
-        'Site'      => $Site,
-        'data-name' => 'category-search'
-    ));
-
     $searchParams = array();
     $search       = QUI::getRequest()->get('search');
     $fields       = QUI::getRequest()->get('f');
@@ -94,15 +89,17 @@ if ($siteUrl != $_REQUEST['_url']) {
 
     $ProductList = new Products\Controls\Category\ProductList(array(
         'categoryId'           => $Site->getAttribute('quiqqer.products.settings.categoryId'),
-        'Search'               => $Search,
         'hideEmptyProductList' => true,
         'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
         'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
         'searchParams'         => $searchParams
     ));
 
+    if ($Site->getAttribute('quiqqer.products.settings.showFilterLeft')) {
+        $ProductList->setAttribute('showFilter', false);
+    }
+
     $Engine->assign(array(
-        'ProductList' => $ProductList,
-        'Search'      => $Search
+        'ProductList' => $ProductList
     ));
 }

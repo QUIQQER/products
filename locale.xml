@@ -1177,9 +1177,9 @@
             <de><![CDATA[Suchfelder]]></de>
             <en><![CDATA[Search fields]]></en>
         </locale>
-        <locale name="quiqqer.products.settings.dontShowSearch">
-            <de><![CDATA[Suche nicht anzeigen]]></de>
-            <en><![CDATA[Don't show the search]]></en>
+        <locale name="quiqqer.products.settings.showFilterLeft">
+            <de><![CDATA[Filter auf der linken Seite anzeigen]]></de>
+            <en><![CDATA[Show filter at the left side]]></en>
         </locale>
         <locale name="quiqqer.products.settings.categoryStartNumber">
             <de><![CDATA[Anzahl angezeigter Kategorien]]></de>

@@ -131,7 +131,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * event : on import
          */
         $onImport: function () {
-            var Elm = this.getElm();
+            var Elm = this.getElm(),
+                cid = Elm.get('data-productlist-id');
 
             this.$ButtonDetails = Elm.getElements('.quiqqer-products-productList-sort-display-details');
             this.$ButtonGallery = Elm.getElements('.quiqqer-products-productList-sort-display-gallery');
@@ -143,9 +144,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$FilterDisplay     = Elm.getElement('.quiqqer-products-productList-filterList');
             this.$FilterList        = Elm.getElement('.quiqqer-products-productList-filterList-list');
             this.$FilterFieldList   = Elm.getElement('.quiqqer-products-productList-filterList-fields');
-            this.$FilterContainer   = Elm.getElement('.quiqqer-products-productList-filter-container');
             this.$FilterResultInfo  = Elm.getElement('.quiqqer-products-productList-resultInfo-text');
             this.$FilterClearButton = Elm.getElement('.quiqqer-products-productList-resultInfo-clearbtn');
+
+            this.$FilterContainer = document.getElement('.quiqqer-products-productList-filter-container-' + cid);
 
             // delete noscript tags -> because CSS
             Elm.getElements('noscript').destroy();
@@ -179,12 +181,38 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$FilterClearButton.addEvent('click', this.clearFilter);
             }
 
-            if (this.$BarFilter) {
+            if (this.$FilterContainer) {
+                this.$FilterContainer.setStyle(
+                    'height',
+                    this.$FilterContainer.getSize().y
+                );
+
                 this.$renderFilter();
                 this.$renderFilterFields();
+            }
 
+            if (this.$BarFilter) {
                 this.$BarFilter.getElement('.button').addEvent('click', this.toggleFilter);
                 this.$BarFilter.setStyle('display', null);
+            } else {
+                // open filter, if no filter button exists
+                moofx(this.$FilterContainer).animate({
+                    background: 'transparent'
+                }, {
+                    duration: 200,
+                    callback: function () {
+                        this.$FilterContainer.addClass(
+                            'quiqqer-products-productList-filterContainerLoaded'
+                        );
+                        this.$FilterContainer.removeClass(
+                            'quiqqer-products-productList-filterContainerLoading'
+                        );
+
+                        this.$FilterContainer.setStyles({
+                            height: null
+                        });
+                    }.bind(this)
+                });
             }
 
             this.$More = Elm.getElement('.quiqqer-products-productList-products-more .button');
@@ -292,32 +320,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     this.$__readWindowLocation = false;
                 }.bind(this));
             }).delay(500, this);
-
-
-            // // bind to the search
-            // if (!this.getAttribute('search')) {
-            //     return;
-            // }
-            //
-            // var SearchNode = document.getElement(
-            //     '[data-name="' + this.getAttribute('search') + '"]'
-            // );
-            //
-            // if (SearchNode && SearchNode.get('data-quiid')) {
-            //     var SearchForm = QUI.Controls.getById(SearchNode.get('data-quiid'));
-            //
-            //     if (SearchForm) {
-            //         SearchForm.addEvent('change', function () {
-            //             self.$fields   = SearchForm.getFieldValues();
-            //             self.$freetext = SearchForm.getFreeTextSearch();
-            //             self.$clearContainer().then(self.$loadData.bind(self));
-            //         });
-            //
-            //         return;
-            //     }
-            //
-            //     console.error(SearchNode);
-            // }
         },
 
         /**
@@ -1116,14 +1118,16 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return Promise.resolve();
             }
 
-            var Opener = this.$BarFilter.getElement(
-                '.quiqqer-products-productList-sort-filter-opener'
-            );
+            if (this.$BarFilter) {
+                var Opener = this.$BarFilter.getElement(
+                    '.quiqqer-products-productList-sort-filter-opener'
+                );
 
-            Opener.removeClass('fa-angle-down');
-            Opener.addClass('fa-angle-double-down');
+                Opener.removeClass('fa-angle-down');
+                Opener.addClass('fa-angle-double-down');
+            }
 
-            var scrollHeight = this.$FilterContainer.getFirst('div').getSize().y,
+            var scrollHeight = this.$FilterContainer.getFirst('div').getComputedSize().totalHeight,
                 height       = this.$FilterContainer.getSize().y;
 
             if (scrollHeight == height) {
@@ -1131,10 +1135,16 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             return new Promise(function (resolve) {
+                var padding = '20px 0';
+
+                if (this.$FilterContainer.getParent('.content-headerpage-multible-left')) {
+                    padding = 0;
+                }
+
                 moofx(this.$FilterContainer).animate({
                     height : scrollHeight,
                     opacity: 1,
-                    padding: '20px 0'
+                    padding: padding
                 }, {
                     duration: 250,
                     callback: function () {

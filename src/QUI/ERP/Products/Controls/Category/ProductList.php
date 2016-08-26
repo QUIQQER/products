@@ -27,6 +27,18 @@ class ProductList extends QUI\Control
     protected $Search = null;
 
     /**
+     * @var null
+     */
+    protected $filter = null;
+
+    /**
+     * CID
+     *
+     * @var null|QUI\Control
+     */
+    protected $id = null;
+
+    /**
      * constructor
      *
      * @param array $attributes
@@ -39,10 +51,10 @@ class ProductList extends QUI\Control
             'data-cid'             => false,
             'view'                 => 'gallery', // gallery, list, detail
             'categoryView'         => 'gallery', // gallery, list, detail
-            'Search'               => false,
             'searchParams'         => false,
             'hideEmptyProductList' => false,
-            'categoryStartNumber'  => false
+            'categoryStartNumber'  => false,
+            'showFilter'           => true // show the filter, or not
         ));
 
         $this->addCSSFile(dirname(__FILE__) . '/ProductList.css');
@@ -52,6 +64,8 @@ class ProductList extends QUI\Control
 
         $this->addCSSFile(dirname(__FILE__) . '/ProductListCategoryGallery.css');
         $this->addCSSFile(dirname(__FILE__) . '/ProductListCategoryList.css');
+
+        $this->id = uniqid();
 
         parent::__construct($attributes);
     }
@@ -65,16 +79,11 @@ class ProductList extends QUI\Control
     {
         $Engine   = QUI::getTemplateManager()->getEngine();
         $Category = $this->getCategory();
-        $Search   = $this->getAttribute('Search');
-
-        if ($Search instanceof QUI\ERP\Products\Controls\Search\Search) {
-            /* @var $Search QUI\ERP\Products\Controls\Search\Search */
-            $this->setAttribute('data-search', $Search->getAttribute('data-name'));
-        }
 
         $this->setAttribute('data-project', $this->getSite()->getProject()->getName());
         $this->setAttribute('data-lang', $this->getSite()->getProject()->getLang());
         $this->setAttribute('data-siteid', $this->getSite()->getId());
+        $this->setAttribute('data-productlist-id', $this->id);
 
         $products = '';
         $more     = false;
@@ -117,7 +126,54 @@ class ProductList extends QUI\Control
                 break;
         }
 
-        // tag groups -> filter
+
+        $Engine->assign(array(
+            'this'      => $this,
+            'count'     => $count,
+            'products'  => $products,
+            'children'  => $this->getSite()->getNavigation(),
+            'more'      => $more,
+            'filter'    => $this->getFilter(),
+            'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice(),
+            'Site'      => $this->getSite(),
+
+            'categoryFile'        => $categoryFile,
+            'placeholder'         => $this->getProject()->getMedia()->getPlaceholder(),
+            'categoryStartNumber' => $this->getAttribute('categoryStartNumber')
+        ));
+
+        return $Engine->fetch(dirname(__FILE__) . '/ProductList.html');
+    }
+
+    /**
+     * Return the html from the filter display
+     *
+     * @return string
+     */
+    public function createFilter()
+    {
+        $Engine = QUI::getTemplateManager()->getEngine();
+
+        $Engine->assign(array(
+            'this'   => $this,
+            'filter' => $this->getFilter(),
+            'cid'    => $this->id
+        ));
+
+        return $Engine->fetch(dirname(__FILE__) . '/ProductList.Filter.html');
+    }
+
+    /**
+     * Return the available filter in sorted sequence
+     *
+     * @return array
+     */
+    protected function getFilter()
+    {
+        if (!is_null($this->filter)) {
+            return $this->filter;
+        }
+
         $filter    = array();
         $tagGroups = $this->getSite()->getAttribute('quiqqer.tags.tagGroups');
 
@@ -200,23 +256,9 @@ class ProductList extends QUI\Control
             return $priorityA > $priorityB ? 1 : -1;
         });
 
+        $this->filter = $filter;
 
-        $Engine->assign(array(
-            'this'      => $this,
-            'count'     => $count,
-            'products'  => $products,
-            'children'  => $this->getSite()->getNavigation(),
-            'more'      => $more,
-            'filter'    => $filter,
-            'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice(),
-            'Site'      => $this->getSite(),
-
-            'categoryFile'        => $categoryFile,
-            'placeholder'         => $this->getProject()->getMedia()->getPlaceholder(),
-            'categoryStartNumber' => $this->getAttribute('categoryStartNumber')
-        ));
-
-        return $Engine->fetch(dirname(__FILE__) . '/ProductList.html');
+        return $filter;
     }
 
     /**

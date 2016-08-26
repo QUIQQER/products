@@ -18,7 +18,7 @@
                 <attribute>quiqqer.products.settings.searchFieldIds</attribute>
                 <attribute>quiqqer.products.settings.searchFieldIds.edited</attribute>
                 <attribute>quiqqer.products.settings.searchFieldsByUser</attribute>
-                <attribute>quiqqer.products.settings.dontShowSearch</attribute>
+                <attribute>quiqqer.products.settings.showFilterLeft</attribute>
                 <attribute>quiqqer.products.settings.categoryStartNumber</attribute>
                 <attribute>quiqqer.products.settings.categoryDisplay</attribute>
             </attributes>
@@ -30,9 +30,9 @@
                             <locale group="quiqqer/products" var="quiqqer.products.category.settings.title"/>
                         </title>
 
-                        <input conf="quiqqer.products.settings.dontShowSearch" type="checkbox">
+                        <input conf="quiqqer.products.settings.showFilterLeft" type="checkbox">
                             <text>
-                                <locale group="quiqqer/products" var="quiqqer.products.settings.dontShowSearch"/>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.showFilterLeft"/>
                             </text>
                         </input>
 
@@ -88,7 +88,7 @@
                 <attribute>quiqqer.products.settings.searchFieldIds</attribute>
                 <attribute>quiqqer.products.settings.searchFieldIds.edited</attribute>
                 <attribute>quiqqer.products.settings.searchFieldsByUser</attribute>
-                <attribute>quiqqer.products.settings.dontShowSearch</attribute>
+                <attribute>quiqqer.products.settings.showFilterLeft</attribute>
             </attributes>
 
             <settings>
@@ -98,9 +98,9 @@
                             <locale group="quiqqer/products" var="quiqqer.products.search.settings.title"/>
                         </title>
 
-                        <input conf="quiqqer.products.settings.dontShowSearch" type="checkbox">
+                        <input conf="quiqqer.products.settings.showFilterLeft" type="checkbox">
                             <text>
-                                <locale group="quiqqer/products" var="quiqqer.products.settings.dontShowSearch"/>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.showFilterLeft"/>
                             </text>
                         </input>
 

@@ -5,17 +5,13 @@
 {else}
 <div class="grid-100 mobile-grid-100 grid-parent page-multible-content quiqqer-products-category">
 
-    {if $Site->getAttribute('quiqqer.products.settings.dontShowSearch') == false &&
-        $Search->hasFields()
-    }
+    {if $Site->getAttribute('quiqqer.products.settings.showFilterLeft')}
     <div class="content-headerpage-multible-left grid-30 hide-on-mobile">
-        {$Search->create()}
+        {$ProductList->createFilter()}
     </div>
     {/if}
 
-    {if $Site->getAttribute('quiqqer.products.settings.dontShowSearch') == false &&
-        $Search->hasFields()
-    }
+    {if $Site->getAttribute('quiqqer.products.settings.showFilterLeft')}
         <div class="page-multible-right grid-70 mobile-grid-100">
     {else}
         <div class="page-multible-right grid-100 mobile-grid-100">

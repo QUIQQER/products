@@ -111,7 +111,7 @@ class Model extends QUI\QDOM
             $this->permissions = json_decode($result[0]['permissions'], true);
         }
 
-        // @todo permissions prüfung
+        // view permissions prüfung wird im Frontend view gemacht (ViewFrontend)
 
 
         unset($result[0]['id']);
@@ -310,6 +310,7 @@ class Model extends QUI\QDOM
                 $Folder    = MediaUtils::getMediaItemByUrl($folderUrl);
 
                 if (MediaUtils::isFolder($Folder)) {
+                    /* @var $Folder QUI\Projects\Media\Folder */
                     return $Folder;
                 }
             } catch (QUI\Exception $Exception) {
@@ -1217,6 +1218,7 @@ class Model extends QUI\QDOM
         $Folder    = MediaUtils::getMediaItemByUrl($folderUrl);
 
         if (MediaUtils::isFolder($Folder)) {
+            /* @var $Folder QUI\Projects\Media\Folder */
             return $Folder;
         }
 

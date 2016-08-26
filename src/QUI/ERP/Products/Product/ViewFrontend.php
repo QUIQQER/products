@@ -8,8 +8,7 @@ namespace QUI\ERP\Products\Product;
 use QUI;
 
 /**
- * Class Controller
- * Product Manager
+ * Product frontend View
  *
  * @package QUI\ERP\Products\Product
  */

@@ -11,6 +11,7 @@
                 {locale group=" quiqqer/products" var="category.control.productlist.javascript"}
             </noscript>
 
+            {if $this->getAttribute('showFilter')}
             <div class="quiqqer-products-productList-sort-filter" style="display: none">
                 <div class="button">
                     <span class="fa fa-filter"></span>
@@ -18,6 +19,7 @@
                     <span class="fa fa-angle-down quiqqer-products-productList-sort-filter-opener"></span>
                 </div>
             </div>
+            {/if}
             <div class="quiqqer-products-productList-sort-sorting" style="display: none">
                 {locale group="quiqqer/products" var="category.control.productlist.sortby"}
             </div>
@@ -35,37 +37,9 @@
         </div>
 
         {if !empty($filter)}
-        <div class="quiqqer-products-productList-filter-container">
-            {foreach $filter as $Filter}
-                {if !is_array($Filter) && get_class($Filter) === 'QUI\Tags\Groups\Group'}
-                <label class="quiqqer-products-productList-filter-entry">
-                    <span class="quiqqer-products-productList-filter-entry-title">
-                        {$Filter->getTitle()}
-                    </span>
-                    <select name="{$Filter->getTitle()}"
-                            class="quiqqer-products-productList-filter-entry-select"
-                            multiple
-                    >
-                    {assign var=tags value=$Filter->getTags()}
-                    {foreach $tags as $tag}
-                        <option value="{$tag.tag}">{$tag.title}</option>
-                    {/foreach}
-                    </select>
-                </label>
-                {else}
-                <label class="quiqqer-products-productList-filter-entry" data-fieldid="{$Filter.id}">
-                    <span class="quiqqer-products-productList-filter-entry-title">
-                        {$Filter.title}
-                    </span>
-                    <input placeholder="{$Filter.title|escape:"html"}"
-                           data-fieldid="{$Filter.id}"
-                           data-searchdata="{$Filter.searchData|escape:"html"}"
-                           data-searchtype="{$Filter.searchType|escape:"html"}"
-                    />
-                </label>
-                {/if}
-            {/foreach}
-        </div>
+        {if $this->getAttribute('showFilter')}
+            {$this->createFilter()}
+        {/if}
 
         <div class="quiqqer-products-productList-fl">
             <div class="quiqqer-products-productList-filterList">
