@@ -1,19 +1,15 @@
 <?php
 
 use QUI\ERP\Products\Controls\Category\ProductList;
-use QUI\ERP\Products\Controls\Search\Search;
-
-$Search = new Search(array(
-    'Site'      => $Site,
-    'data-name' => 'search'
-));
 
 $ProductList = new ProductList(array(
-    'categoryId' => $Site->getAttribute('quiqqer.products.settings.categoryId'),
-    'Search'     => $Search
+    'categoryId' => $Site->getAttribute('quiqqer.products.settings.categoryId')
 ));
 
+if ($Site->getAttribute('quiqqer.products.settings.showFilterLeft')) {
+    $ProductList->setAttribute('showFilter', false);
+}
+
 $Engine->assign(array(
-    'ProductList' => $ProductList,
-    'Search'      => $Search
+    'ProductList' => $ProductList
 ));

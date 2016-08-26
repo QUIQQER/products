@@ -121,6 +121,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         },
 
         /**
+         * Execute a search and display the results
+         */
+        execute: function () {
+            this.$onFilterChange();
+        },
+
+        /**
          * event : on inject
          */
         $onInject: function () {

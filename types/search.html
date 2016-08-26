@@ -1,16 +1,14 @@
-<div class="grid-100 mobile-grid-100 grid-parent page-multible-content">
-    {if $Site->getAttribute('quiqqer.products.settings.dontShowSearch') == false &&
-    $Search->hasFields()
-    }
+<div class="grid-100 mobile-grid-100 grid-parent page-multible-content"
+     data-qui="package/quiqqer/products/bin/types/Search"
+>
+    {if $Site->getAttribute('quiqqer.products.settings.showFilterLeft')}
     <div class="content-headerpage-multible-left grid-30 hide-on-mobile">
-        {$Search->create()}
+        {$ProductList->createFilter()}
     </div>
     {/if}
 
 
-    {if $Site->getAttribute('quiqqer.products.settings.dontShowSearch') == false &&
-        $Search->hasFields()
-    }
+    {if $Site->getAttribute('quiqqer.products.settings.showFilterLeft')}
         <div class="page-multible-right grid-70 mobile-grid-100">
     {else}
         <div class="page-multible-right grid-100 mobile-grid-100">
@@ -34,6 +32,15 @@
             </header>
             {/if}
         {/if}
+
+        <form action="{url site=$Site}" method="GET" class="quiqqer-products-search-form">
+            <input type="search" name="search" value="" autocomplete="off"
+                   placeholder="Suchbegriff eingeben..."
+            />
+            <button class="quiqqer-products-search-form-button button--callToAction button">
+                <span class="fa fa-search quiqqer-products-search-suggest-form-button-icon"></span>
+            </button>
+        </form>
 
         {$ProductList->create()}
     </div>
