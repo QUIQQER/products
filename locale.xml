@@ -291,6 +291,14 @@
             <de><![CDATA[Bitte aktivieren Sie JavaScript.]]></de>
             <en><![CDATA[Please activate JavaScript.]]></en>
         </locale>
+        <locale name="category.control.productlist.clearFilter">
+            <de><![CDATA[Alle Filter löschen]]></de>
+            <en><![CDATA[Clear all filters]]></en>
+        </locale>
+        <locale name="category.control.productlist.selectionTitle">
+            <de><![CDATA[Ihre Auswahl:]]></de>
+            <en><![CDATA[Your selection:]]></en>
+        </locale>
 
 
         <!-- Feldtypen -->

@@ -201,7 +201,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (this.$BarFilter) {
                 this.$BarFilter.getElement('.button').addEvent('click', this.toggleFilter);
                 this.$BarFilter.setStyle('display', null);
-            } else {
+            } else if (this.$FilterContainer) {
                 // open filter, if no filter button exists
                 moofx(this.$FilterContainer).animate({
                     background: 'transparent'

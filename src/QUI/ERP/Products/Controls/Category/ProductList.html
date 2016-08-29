@@ -11,7 +11,7 @@
                 {locale group=" quiqqer/products" var="category.control.productlist.javascript"}
             </noscript>
 
-            {if $this->getAttribute('showFilter')}
+            {if $this->getAttribute('showFilter') && !empty($filter)}
             <div class="quiqqer-products-productList-sort-filter" style="display: none">
                 <div class="button">
                     <span class="fa fa-filter"></span>
@@ -37,29 +37,34 @@
         </div>
 
         {if !empty($filter)}
-        {if $this->getAttribute('showFilter')}
-            {$this->createFilter()}
+            {if $this->getAttribute('showFilter')}
+                {$this->createFilter()}
+            {/if}
         {/if}
 
         <div class="quiqqer-products-productList-fl">
+            {if !empty($filter)}
             <div class="quiqqer-products-productList-filterList">
                 <span class="quiqqer-products-productList-filterList-title">
-                    Ihre Auswahl:
+                    {locale group="quiqqer/products" var="category.control.productlist.selectionTitle"}
                 </span>
                 <div class="quiqqer-products-productList-filterList-fields"></div>
                 <div class="quiqqer-products-productList-filterList-list"></div>
             </div>
+            {/if}
             <div class="quiqqer-products-productList-resultInfo">
                 <div class="quiqqer-products-productList-resultInfo-text"></div>
                 <div class="button quiqqer-products-productList-resultInfo-clearbtn"
                      style="opacity: 0; display: none"
                 >
                     <span class="fa fa-remove"></span>
-                    <span>Alle Filter löschen</span>
+                    <span>
+                        {locale group="quiqqer/products" var="category.control.productlist.clearFilter"}
+                    </span>
                 </div>
             </div>
         </div>
-        {/if}
+
     {/if}
 
     {if !$count && $this->getAttribute('hideEmptyProductList') && count($children)}
