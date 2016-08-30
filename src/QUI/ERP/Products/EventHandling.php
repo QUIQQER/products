@@ -71,6 +71,40 @@ class EventHandling
                     'en' => 'Price'
                 )
             ),
+            // Angebotspreis
+            array(
+                'id'            => Fields::FIELD_PRICE_OFFER,
+                'type'          => 'Price',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 6,
+                'systemField'   => 0,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField'   => 1,
+                'search_type'   => Search::SEARCHTYPE_INPUTSELECTRANGE,
+                'titles'        => array(
+                    'de' => 'Angebotspreis',
+                    'en' => 'Price offer'
+                )
+            ),
+            // UVP - Unverbindliche Preisempfehlung
+            array(
+                'id'            => Fields::FIELD_PRICE_RETAIL,
+                'type'          => 'Price',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 6,
+                'systemField'   => 0,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField'   => 1,
+                'search_type'   => Search::SEARCHTYPE_INPUTSELECTRANGE,
+                'titles'        => array(
+                    'de' => 'UVP',
+                    'en' => 'RRP'
+                )
+            ),
             // MwSt ID
             array(
                 'id'            => Fields::FIELD_VAT,
