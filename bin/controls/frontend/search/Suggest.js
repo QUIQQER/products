@@ -55,6 +55,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
 
         Binds: [
             '$onImport',
+            '$onInject',
             '$keyup',
             '$search',
             '$renderSearch',
@@ -65,7 +66,8 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
             siteid : siteid,
             project: project,
             lang   : lang,
-            delay  : 500
+            delay  : 500,
+            styles : false
         },
 
         initialize: function (options) {
@@ -75,7 +77,49 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
             this.$loaded = false;
 
             this.addEvents({
-                onImport: this.$onImport
+                onImport: this.$onImport,
+                onInject: this.$onInject
+            });
+        },
+
+        /**
+         * Create the domnode
+         */
+        create: function () {
+            this.$Elm = new Element('div', {
+                'class': 'quiqqer-products-search-suggest'
+            });
+
+            if (this.getAttribute('styles')) {
+                this.$Elm.setStyles(this.getAttribute('styles'));
+            }
+
+            return this.$Elm;
+        },
+
+        /**
+         *
+         */
+        $onInject: function () {
+            // look if template exists in html
+            var Node = document.getElement(
+                '[data-qui="package/quiqqer/products/bin/controls/frontend/search/Suggest"]'
+            );
+
+            if (Node) {
+                this.$Elm.set('html', Node.get('html'));
+                this.$onImport();
+                return;
+            }
+
+            // load the html template
+            QUIAjax.get('package_quiqqer_products_ajax_controls_search_suggestTemplate', function (result) {
+                this.$Elm.set('html', result);
+                this.$onImport();
+            }.bind(this), {
+                'package': 'quiqqer/products',
+                project  : JSON.encode(QUIQQER_PROJECT),
+                siteId   : QUIQQER_SITE.id
             });
         },
 
