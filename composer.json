@@ -20,7 +20,7 @@
     "php": ">=5.3",
     "quiqqer/quiqqer": "*@dev",
     "quiqqer/bricks": "*@dev",
-    "quiqqer/discount": "*@dev",
+    "quiqqer/discount": "dev-dev",
     "quiqqer/areas": "dev-dev",
     "quiqqer/currency": "dev-dev",
     "quiqqer/slider": "*@dev",
@@ -35,7 +35,6 @@
     "phpunit/phpunit-mock-objects": "~3.1"
   },
   "suggest": {
-    "quiqqer/areas": "Area management",
     "quiqqer/tax": "VAT management"
   },
   "autoload": {
