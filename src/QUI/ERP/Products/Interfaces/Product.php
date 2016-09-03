@@ -99,6 +99,20 @@ interface Product
     public function getPrice();
 
     /**
+     * Return the lowest possible price
+     *
+     * @return Price
+     */
+    public function getMinimumPrice();
+
+    /**
+     * Return the highest possible price
+     *
+     * @return Price
+     */
+    public function getMaximumPrice();
+
+    /**
      * Return an attribute of the product
      *
      * @param string $name - name of the attribute

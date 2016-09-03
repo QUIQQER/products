@@ -95,6 +95,16 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected $sum;
 
     /**
+     * @var float|int
+     */
+    protected $minimumPrice;
+
+    /**
+     * @var float|int
+     */
+    protected $maximumPrice;
+
+    /**
      * calculated nettosum
      * @var float|int
      */
@@ -141,6 +151,14 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
                 'quiqqer/products',
                 'exception.missing.uid.unique.product'
             ));
+        }
+
+        if (isset($attributes['minimumPrice'])) {
+            $this->minimumPrice = $attributes['minimumPrice'];
+        }
+
+        if (isset($attributes['maximumPrice'])) {
+            $this->maximumPrice = $attributes['maximumPrice'];
         }
 
         // fields
@@ -555,6 +573,36 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         }
 
         return $Price;
+    }
+
+    /**
+     * @return QUI\ERP\Products\Utils\Price
+     */
+    public function getMinimumPrice()
+    {
+        if ($this->minimumPrice) {
+            return new QUI\ERP\Products\Utils\Price(
+                $this->minimumPrice,
+                QUI\ERP\Currency\Handler::getDefaultCurrency()
+            );
+        }
+
+        return $this->getPrice();
+    }
+
+    /**
+     * @return QUI\ERP\Products\Utils\Price
+     */
+    public function getMaximumPrice()
+    {
+        if ($this->maximumPrice) {
+            return new QUI\ERP\Products\Utils\Price(
+                $this->maximumPrice,
+                QUI\ERP\Currency\Handler::getDefaultCurrency()
+            );
+        }
+
+        return $this->getPrice();
     }
 
     /**

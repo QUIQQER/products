@@ -544,6 +544,131 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Return the minimum price
+     *
+     * @param null $User
+     * @return QUI\ERP\Products\Utils\Price
+     */
+    public function getMinimumPrice($User = null)
+    {
+        $cacheName = 'quiqqer/products/' . $this->getId() . '/prices/min';
+
+        try {
+            $data     = QUI\Cache\Manager::get($cacheName);
+            $Currency = QUI\ERP\Currency\Handler::getCurrency($data['currency']);
+
+            return new QUI\ERP\Products\Utils\Price($data['price'], $Currency);
+        } catch (QUI\Exception $Exception) {
+        }
+
+        // search all custom fields, and set the minimum
+        $Clone  = new Product($this->getId());
+        $Calc   = QUI\ERP\Products\Utils\Calc::getInstance($User); // @todo netto user nutzen
+        $fields = $Clone->getFields();
+
+        // alle felder müssen erst einmal gesetzt werden
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        foreach ($fields as $Field) {
+            if (!$Field->isCustomField()) {
+                continue;
+            }
+
+            $options = $Field->getOptions();
+
+            if (isset($options['entries']) && count($options['entries'])) {
+                $Clone->getField($Field->getId())->setValue(0);
+            }
+        }
+
+        $Price        = $Clone->createUniqueProduct()->calc($Calc)->getPrice();
+        $currentPrice = $Price->getNetto();
+
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        foreach ($fields as $Field) {
+            if (!$Field->isCustomField()) {
+                continue;
+            }
+
+            $options = $Field->getOptions();
+
+            if (!isset($options['entries'])) {
+                continue;
+            }
+
+            foreach ($options['entries'] as $index => $data) {
+                $Clone->getField($Field->getId())->setValue($index);
+
+                $price = $Clone->createUniqueProduct()->calc($Calc)->getPrice()->getNetto();
+
+                if ($currentPrice > $price) {
+                    $currentPrice = $price;
+                }
+            }
+        }
+
+        $Result = new QUI\ERP\Products\Utils\Price($currentPrice, $Price->getCurrency());
+
+        QUI\Cache\Manager::set($cacheName, $Result->toArray());
+
+        return $Result;
+    }
+
+    /**
+     * Return the maximum price
+     *
+     * @param null $User
+     * @return QUI\ERP\Products\Utils\Price
+     */
+    public function getMaximumPrice($User = null)
+    {
+        $cacheName = 'quiqqer/products/' . $this->getId() . '/prices/max';
+
+        try {
+            $data     = QUI\Cache\Manager::get($cacheName);
+            $Currency = QUI\ERP\Currency\Handler::getCurrency($data['currency']);
+
+            return new QUI\ERP\Products\Utils\Price($data['price'], $Currency);
+        } catch (QUI\Exception $Exception) {
+        }
+
+        $Clone  = new Product($this->getId());
+        $Calc   = QUI\ERP\Products\Utils\Calc::getInstance($User);
+        $fields = $Clone->getFields();
+
+        $Price        = $Clone->createUniqueProduct()->calc($Calc)->getPrice();
+        $currentPrice = $Price->getNetto();
+
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        foreach ($fields as $Field) {
+            if (!$Field->isCustomField()) {
+                continue;
+            }
+
+            $options = $Field->getOptions();
+
+            if (!isset($options['entries'])) {
+                continue;
+            }
+
+            foreach ($options['entries'] as $index => $data) {
+                $Clone->getField($Field->getId())->setValue($index);
+
+                $price = $Clone->createUniqueProduct()->calc($Calc)->getPrice()->getNetto();
+
+                if ($currentPrice < $price) {
+                    $currentPrice = $price;
+                }
+            }
+        }
+
+        $Result = new QUI\ERP\Products\Utils\Price($currentPrice, $Price->getCurrency());
+
+        QUI\Cache\Manager::set($cacheName, $Result->toArray());
+
+        return $Result;
+    }
+
+    /**
      * Return the attributes
      *
      * @return array
@@ -683,6 +808,8 @@ class Model extends QUI\QDOM
         );
 
         $this->updateCache();
+
+        QUI\Cache\Manager::clear('quiqqer/products/' . $this->getId());
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', array($this));
     }
@@ -918,7 +1045,9 @@ class Model extends QUI\QDOM
                 Fields::FIELD_TITLE,
                 $Locale
             ),
-            'active'    => $this->isActive() ? 1 : 0
+            'active'    => $this->isActive() ? 1 : 0,
+            'minPrice'  => $this->getMinimumPrice()->getNetto(),
+            'maxPrice'  => $this->getMaximumPrice()->getNetto()
         );
 
         // permissions

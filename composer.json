@@ -21,6 +21,7 @@
     "quiqqer/quiqqer": "*@dev",
     "quiqqer/bricks": "*@dev",
     "quiqqer/discount": "*@dev",
+    "quiqqer/areas": "dev-dev",
     "quiqqer/currency": "dev-dev",
     "quiqqer/slider": "*@dev",
     "quiqqer/watcher": "*",

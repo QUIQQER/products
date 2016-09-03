@@ -62,6 +62,13 @@ class Calc
     protected $Currency = null;
 
     /**
+     * Flag for ignore vat calculation (force ignore VAT)
+     *
+     * @var bool
+     */
+    protected $ignoreVatCalculation = false;
+
+    /**
      * Calc constructor.
      *
      * @param UserInterface|bool $User - calculation user
@@ -88,6 +95,16 @@ class Calc
         }
 
         return new self($User);
+    }
+
+    /**
+     * Static instance create
+     *
+     * @return Calc
+     */
+    public function ignoreVatCalculation()
+    {
+        $this->ignoreVatCalculation = true;
     }
 
     /**
@@ -143,6 +160,10 @@ class Calc
         $isNetto     = QUI\ERP\Products\Utils\User::isNettoUser($this->getUser());
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
         $Area        = QUI\ERP\Products\Utils\User::getUserArea($this->getUser());
+
+        if ($this->ignoreVatCalculation) {
+            $isNetto = true;
+        }
 
         $subSum   = 0;
         $nettoSum = 0;
@@ -266,6 +287,11 @@ class Calc
 
         foreach ($vatLists as $vat => $bool) {
             $vatText[$vat] = $this->getVatText($vat, $this->getUser());
+        }
+
+        if ($this->ignoreVatCalculation) {
+            $vatArray = array();
+            $vatText  = array();
         }
 
         $callback(array(

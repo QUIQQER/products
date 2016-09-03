@@ -143,6 +143,26 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
+     * @return QUI\ERP\Products\Utils\Price
+     */
+    public function getMinimumPrice()
+    {
+        return $this->Product->getMinimumPrice(
+            QUI::getUserBySession()
+        );
+    }
+
+    /**
+     * @return QUI\ERP\Products\Utils\Price
+     */
+    public function getMaximumPrice()
+    {
+        return $this->Product->getMaximumPrice(
+            QUI::getUserBySession()
+        );
+    }
+
+    /**
      * Get a FieldView
      *
      * @param integer $fieldId

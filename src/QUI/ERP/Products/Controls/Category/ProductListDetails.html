@@ -28,7 +28,7 @@
         {locale
             group="quiqqer/products"
             var="price.starting.from"
-            price=$Product->getPrice()->getDisplayPrice()
+            price=$Product->getMinimumPrice()->getDisplayPrice()
         }
     </div>
     {/if}
