@@ -546,7 +546,7 @@ class Fields
                 continue;
             }
 
-            $Dom  = QUI\Utils\XML::getDomFromXml($xml);
+            $Dom  = QUI\Utils\Text\XML::getDomFromXml($xml);
             $Path = new \DOMXPath($Dom);
 
             $fields = $Path->query("//quiqqer/products/fields/field");
