@@ -11,16 +11,19 @@
 }
 
 .quiqqer-products-search-suggest-form-input {
+    border: 1px solid rgba(0, 0, 0, 0.2);
     float: left;
+    height: 30px;
     line-height: 30px;
     padding: 0 10px;
     width: calc(100% - 60px);
 }
 
 .quiqqer-products-search-suggest-form-button {
+    border: 1px solid transparent;
     cursor: pointer;
     float: left;
-    line-height: 30px;
+    height: 30px;
     text-align: center;
     width: 60px;
 }
