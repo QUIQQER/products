@@ -41,6 +41,11 @@
     width: 100%;
 }
 
+.quiqqer-products-categoryGallery-catgory .quiqqer-icon {
+    font-size: 90px;
+    line-height: 140px;
+}
+
 .quiqqer-products-categoryGallery-catgory header {
     background: #dfe4e4;
     float: left;
