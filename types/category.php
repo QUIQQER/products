@@ -44,6 +44,7 @@ if ($siteUrl != $_REQUEST['_url']) {
 
         echo $Redirect->getContent();
         $Redirect->send();
+        exit;
     } catch (QUI\Exception $Exception) {
         Log::writeException($Exception, Log::LEVEL_NOTICE);
 
@@ -56,6 +57,7 @@ if ($siteUrl != $_REQUEST['_url']) {
 
         echo $Redirect->getContent();
         $Redirect->send();
+        exit;
     }
 } else {
     $searchParams = array();

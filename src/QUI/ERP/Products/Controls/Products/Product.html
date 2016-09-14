@@ -157,4 +157,15 @@
     </section>
     {/if}
 
+    {if isset($VisitedProducts) && isset($VisitedProducts)}
+    <section class="product-similar-products">
+        <header>
+            <h3>
+                {locale group="quiqqer/products" var="brick.control.VisitedProducts.title"}
+            </h3>
+        </header>
+        {$VisitedProducts->create()}
+    </section>
+    {/if}
+
 </article>

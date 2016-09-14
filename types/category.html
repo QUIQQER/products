@@ -2,6 +2,9 @@
     <div class="quiqqer-products-product">
         {$Product->create()}
     </div>
+    <script>
+        var QUIQQER_PRODUCT_ID = '{$Product->getAttribute('data-productid')}';
+    </script>
 {else}
 <div class="grid-100 mobile-grid-100 grid-parent page-multible-content quiqqer-products-category">
 

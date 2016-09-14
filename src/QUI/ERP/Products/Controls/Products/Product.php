@@ -167,6 +167,7 @@ class Product extends QUI\Control
             'mediaFolders'         => $mediaFolders,
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
             'PriceDisplay'         => $PriceDisplay,
+            'VisitedProducts'      => new VisitedProducts(),
             'WatchlistButton'      => new WatchlistButton(array(
                 'Product' => $View
             )),

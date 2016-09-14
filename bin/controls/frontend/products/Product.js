@@ -58,6 +58,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          */
         $onInject: function () {
             this.$Product = Products.get(this.getAttribute('productId'));
+
+            Products.addToVisited(this.getAttribute('productId'));
         },
 
         /**
@@ -68,6 +70,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 Elm  = this.getElm();
 
             this.setAttribute('productId', Elm.get('data-productid'));
+
+            Products.addToVisited(this.getAttribute('productId'));
 
             this.$Tabbar       = Elm.getElement('.product-data-more-tabs');
             this.$Sheets       = Elm.getElement('.product-data-more-sheets');
@@ -158,6 +162,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                     images[i].getParent('tr').addEvent('click', rowClick);
                     images[i].getParent('tr').setStyle('cursor', 'pointer');
                 }
+
             }.bind(this));
         },
 

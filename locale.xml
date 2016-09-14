@@ -1165,6 +1165,11 @@
             <de><![CDATA[Die Kategorie besitzt keine übergeordnete Kategorie]]></de>
             <en><![CDATA[The category has no parent category]]></en>
         </locale>
+
+        <locale name="products.category.no.parent">
+            <de><![CDATA[Die Kategorie besitzt keine übergeordnete Kategorie]]></de>
+            <en><![CDATA[The category has no parent category]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="php">

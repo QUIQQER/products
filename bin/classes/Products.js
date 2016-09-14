@@ -305,6 +305,51 @@ define('package/quiqqer/products/bin/classes/Products', [
 
                 Panels.openPanelInTasks(PPanel);
             });
+        },
+
+        /**
+         * Add a product id to the visited list
+         *
+         * @param {number} pid
+         */
+        addToVisited: function (pid) {
+            var visited = this.getVisitedProductIds();
+
+            visited.push(pid);
+            visited = visited.unique();
+
+            if (visited.length > 10) {
+                visited.shift();
+            }
+
+            QUI.Storage.set('quiqqer-products-visited', JSON.encode(visited));
+        },
+
+        /**
+         * Return the last visited product ids
+         *
+         * @returns {Array}
+         */
+        getVisitedProductIds: function () {
+            var visited = QUI.Storage.get('quiqqer-products-visited');
+
+            if (!visited) {
+                return [];
+            }
+
+            try {
+                visited = JSON.decode(visited);
+            } catch (e) {
+                return [];
+            }
+
+            if (typeOf(visited) !== 'array') {
+                return [];
+            }
+
+            visited.reverse();
+
+            return visited;
         }
     });
 });
