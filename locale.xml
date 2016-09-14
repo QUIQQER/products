@@ -697,6 +697,14 @@
             <en><![CDATA[Categories]]></en>
         </locale>
 
+        <locale name="brick.control.VisitedProducts.title">
+            <de><![CDATA[Besuchte Produkte]]></de>
+            <en><![CDATA[Visited products]]></en>
+        </locale>
+        <locale name="brick.control.VisitedProducts.empty">
+            <de><![CDATA[Sie haben noch keine Produkte besucht.]]></de>
+            <en><![CDATA[You have not visited any products.]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
