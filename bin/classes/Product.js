@@ -279,8 +279,10 @@ define('package/quiqqer/products/bin/classes/Product', [
                         Ajax.get('ajax_media_folder_firstImage', function (file) {
                             resolve(file.url);
                         }, {
-                            project : params.project,
-                            folderId: params.id
+                            project  : params.project,
+                            folderId : params.id,
+                            showError: false,
+                            onError  : reject
                         });
                     });
                 }.bind(this));
