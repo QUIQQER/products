@@ -41,7 +41,7 @@ class PDF
      * Return template engine
      *
      * @param QUI\Projects\Project|null $Project - optional, Project object
-     * @return QUI\Interfaces\Template\Engine
+     * @return QUI\Interfaces\Template\EngineInterface
      */
     protected static function getEngine($Project = null)
     {
