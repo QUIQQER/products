@@ -60,6 +60,7 @@ class Products
         try {
             $Folder = FolderUtils::getMediaItemByUrl($folderUrl);
 
+            /* @var $Folder QUI\Projects\Media\Folder */
             if (FolderUtils::isFolder($Folder)) {
                 return $Folder;
             }
@@ -302,9 +303,26 @@ class Products
         $New->setPermissions($Product->getPermissions());
         $New->setMainCategory($Product->getCategory());
 
+        $folders = $New->getFieldsByType(Fields::TYPE_FOLDER);
+
+        // @todo sub media folder kopieren wäre sinnvoller.
+        // vorerst leer machen, so wird dann ein neuer ordner erstellt
+
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        foreach ($folders as $Field) {
+            $Field->setValue('');
+        }
+
+        // neuer media ordner erstellen
+        $New->createMediaFolder(Fields::FIELD_FOLDER);
+
+
+
         // @todo titel setzen -> Kopie von
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCopy', array($Product));
+        $New->save();
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCopy', array($New, $Product));
 
         return $New;
     }

@@ -884,23 +884,33 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 return Categories.getCategories(data);
 
             }).then(function (categories) {
-                return Promise.all([
-                    self.$Product.getTitle(),
-                    self.$Product.getDescription(),
-                    self.$Product.getImage(),
-                    categories
-                ]);
+
+                // eigenes bild hohlen, wenn leer, oder nicht existiert, egal
+                return new Promise(function (resolve) {
+                    self.$Product.getImage().then(resolve).catch(function () {
+                        resolve(false);
+                    });
+                }).then(function (image) {
+                    return Promise.all([
+                        self.$Product.getTitle(),
+                        self.$Product.getDescription(),
+                        image,
+                        categories
+                    ]);
+                });
 
             }).then(function (data) {
                 var categories = data[3].map(function (Category) {
                     return {title: Category.title};
                 });
 
+                var image = data[2] ? URL_DIR + data[2] : false;
+
                 self.$Information.set({
                     html: Mustache.render(informationTemplate, {
                         title            : data[0],
                         description      : data[1],
-                        image            : URL_DIR + data[2],
+                        image            : image,
                         categories       : categories,
                         fields           : [],
                         productCategories: QUILocale.get(lg, 'productCategories'),

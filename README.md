@@ -81,7 +81,7 @@ Produkt Events
 ------
 
 - onQuiqqerProductsProductCreate [Product]
-- onQuiqqerProductsProductCopy [Product]
+- onQuiqqerProductsProductCopy [NewProduct, OldProduct]
 
 - onQuiqqerProductsProductSave [Product]
 - onQuiqqerProductsProductUserSave [Product]
