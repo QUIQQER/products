@@ -296,8 +296,29 @@ class Categories
      */
     public static function getCategories($queryParams = array())
     {
+        $ids    = self::getCategoryIds($queryParams);
+        $result = array();
+
+        foreach ($ids as $id) {
+            try {
+                $result[] = self::getCategory($id);
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     *
+     * @param array $queryParams
+     * @return array
+     */
+    public static function getCategoryIds($queryParams = array())
+    {
         $query = array(
-            'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName()
+            'select' => 'id',
+            'from'   => QUI\ERP\Products\Utils\Tables::getCategoryTableName()
         );
 
         if (isset($queryParams['where'])) {
@@ -321,7 +342,7 @@ class Categories
 
         foreach ($data as $entry) {
             try {
-                $result[] = self::getCategory($entry['id']);
+                $result[] = $entry['id'];
             } catch (QUI\Exception $Exception) {
             }
         }

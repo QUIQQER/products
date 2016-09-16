@@ -160,6 +160,10 @@
             <de><![CDATA[Suffix]]></de>
             <en><![CDATA[Suffix]]></en>
         </locale>
+        <locale name="source">
+            <de><![CDATA[Quelle / Vererbt von]]></de>
+            <en><![CDATA[SOurce / Inherited from]]></en>
+        </locale>
         <locale name="searchtype">
             <de><![CDATA[Such-Typ]]></de>
             <en><![CDATA[Search type]]></en>

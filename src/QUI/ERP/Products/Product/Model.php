@@ -1272,6 +1272,57 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * @param $fieldId
+     * @return array
+     * @throws Exception
+     */
+    public function getFieldSource($fieldId)
+    {
+        $sources    = array();
+        $Field      = $this->getField($fieldId);
+        $categories = $this->getCategories();
+
+        if ($Field->isPublic()) {
+            $sources[] = QUI::getLocale()->get('quiqqer/products', 'publicField');
+        }
+
+        if ($Field->isSystem()) {
+            $sources[] = QUI::getLocale()->get('quiqqer/products', 'systemField');
+        }
+
+        if ($Field->isStandard()) {
+            $sources[] = QUI::getLocale()->get('quiqqer/products', 'standardField');
+        }
+
+        $found = Categories::getCategoryIds(array(
+            'where' => array(
+                'fields' => array(
+                    'type'  => '%LIKE%',
+                    'value' => '"id":' . $Field->getId() . ','
+                )
+            )
+        ));
+
+        $isIdInCategories = function ($cid) use ($categories) {
+            /* @var $Category Category */
+            foreach ($categories as $Category) {
+                if ($Category->getId() == $cid) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        foreach ($found as $cid) {
+            if ($isIdInCategories($cid)) {
+                $sources[] = Categories::getCategory($cid)->getTitle();
+            }
+        }
+
+        return $sources;
+    }
+
+    /**
      * Category methods
      */
 

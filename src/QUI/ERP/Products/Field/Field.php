@@ -611,6 +611,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             case 'type':
             case 'search_type':
             case 'priority':
+            case 'source':
                 $val = QUI\Utils\Security\Orthos::clear($val);
                 break;
 

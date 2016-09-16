@@ -1210,13 +1210,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 priority       : entry.priority,
                                 suffix         : entry.suffix,
                                 prefix         : entry.prefix,
+                                source         : entry.source.join(', '),
                                 ownField       : entry.ownField,
                                 ownFieldDisplay: new Element('div', {
                                     'class': 'fa fa-user',
                                     styles : {
                                         color: entry.ownField ? '' : '#dddddd'
                                     }
-                                })
+                                }),
+
                             });
                         }
 
@@ -1309,6 +1311,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         dataIndex: 'suffix',
                         dataType : 'text',
                         width    : 100
+                    }, {
+                        header   : QUILocale.get(lg, 'source'),
+                        dataIndex: 'source',
+                        dataType : 'text',
+                        width    : 200
                     }, {
                         dataIndex: 'ownField',
                         hidden   : true

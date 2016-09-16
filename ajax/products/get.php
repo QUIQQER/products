@@ -21,7 +21,13 @@ QUI::$Ajax->registerFunction(
             return $Product->getView()->getAttributes();
         }
 
-        return $Product->getAttributes();
+        $attributes = $Product->getAttributes();
+
+        foreach ($attributes['fields'] as $key => $field) {
+            $attributes['fields'][$key]['source'] = $Product->getFieldSource($field['id']);
+        }
+
+        return $attributes;
     },
     array('productId')
 );
