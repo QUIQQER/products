@@ -1315,7 +1315,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         header   : QUILocale.get(lg, 'source'),
                         dataIndex: 'source',
                         dataType : 'text',
-                        width    : 200
+                        width    : 400
                     }, {
                         dataIndex: 'ownField',
                         hidden   : true
