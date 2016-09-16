@@ -1337,6 +1337,14 @@
             <de><![CDATA[Rechnungsadresse]]></de>
             <en><![CDATA[Billing address]]></en>
         </locale>
+        <locale name="brick.VisitedProducts.title">
+            <de><![CDATA[Zuletzt angesehene Produkte]]></de>
+            <en><![CDATA[Recently viewed products]]></en>
+        </locale>
+        <locale name="brick.VisitedProducts.description">
+            <de><![CDATA[Zeigt Produkte an, die der Besucher zuletzt besucht hat.]]></de>
+            <en><![CDATA[Shows products that the visitor has recently visited.]]></en>
+        </locale>
     </groups>
 
 </locales>
