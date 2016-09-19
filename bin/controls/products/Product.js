@@ -271,9 +271,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
 
                 if (isActive) {
-                    self.getButtons('status').on();
+                    self.getButtons('status').setSilentOn();
                 } else {
-                    self.getButtons('status').off();
+                    self.getButtons('status').setSilentOff();
                 }
 
                 if (typeOf(categories) !== 'array') {
@@ -692,14 +692,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 // product is active
                 if (status) {
-                    Button.on();
+                    Button.setSilentOn();
                     Button.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'isActivate'));
                     Button.enable();
                     return;
                 }
 
                 // product is deactivate
-                Button.off();
+                Button.setSilentOff();
                 Button.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'isDeactivate'));
                 Button.enable();
 
