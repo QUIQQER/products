@@ -45,18 +45,16 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
          * event : on import
          */
         $onImport: function () {
-            var self  = this,
-                Elm   = this.getElm(),
-                price = parseFloat(Elm.value);
-
-            if (Elm.value === '') {
-                price = 0;
-            }
+            var self = this,
+                Elm  = this.getElm();
 
             Elm.addClass('field-container-field');
             Elm.type        = 'text';
             Elm.placeholder = this.$Formatter.format(1000);
-            Elm.value       = this.$Formatter.format(price);
+
+            if (Elm.value !== '') {
+                Elm.value = this.$Formatter.format(parseFloat(Elm.value));
+            }
 
             Elm.addEvent('change', function () {
                 self.fireEvent('change', [self]);
@@ -78,7 +76,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
          * @returns {String}
          */
         setValue: function (value) {
-            if (value === '') {
+            if (value === '' || !value) {
+                this.getElm().value = '';
                 return;
             }
 
