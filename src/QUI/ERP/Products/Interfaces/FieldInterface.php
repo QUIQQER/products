@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Interfaces\Field
+ * This file contains QUI\ERP\Products\Interfaces\FieldInterface
  */
 namespace QUI\ERP\Products\Interfaces;
 
@@ -9,7 +9,7 @@ namespace QUI\ERP\Products\Interfaces;
  * Interface Field
  * @package QUI\ERP\Products\Interfaces
  */
-interface Field extends UniqueField
+interface FieldInterface extends UniqueFieldInterface
 {
     /**
      * Return the field for the product as an array

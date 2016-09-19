@@ -227,9 +227,9 @@ class ProductList
 
     /**
      * Add a product to the list
-     * @param QUI\ERP\Products\Interfaces\Product $Product
+     * @param QUI\ERP\Products\Interfaces\ProductInterface $Product
      */
-    public function addProduct(QUI\ERP\Products\Interfaces\Product $Product)
+    public function addProduct(QUI\ERP\Products\Interfaces\ProductInterface $Product)
     {
         // only UniqueProduct can be calculated
 
@@ -277,7 +277,7 @@ class ProductList
 
             $attributes['fields'] = array();
 
-            /* @var $Field QUI\ERP\Products\Interfaces\Field */
+            /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             foreach ($fields as $Field) {
                 $attributes['fields'][] = $Field->getAttributes();
             }

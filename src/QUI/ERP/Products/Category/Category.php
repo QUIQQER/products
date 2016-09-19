@@ -19,7 +19,7 @@ use QUI\ERP\Products\Product\Product;
  * @example
  * QUI\ERP\Products\Handler\Categories::getCategory( ID );
  */
-class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
+class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryInterface
 {
     /**
      * Field-ID
@@ -243,10 +243,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
             $attributes['sites']         = $this->getSites();
             $attributes['parent']        = $this->getParentId();
 
-            QUI\Cache\Manager::set(
-                QUI\ERP\Products\Handler\Categories::getCacheName($this->getId()) . '/attributes',
-                $attributes
-            );
+            QUI\Cache\Manager::set($cacheName, $attributes);
         }
 
         $attributes['fields'] = $fields;
@@ -352,7 +349,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
 
         throw new QUI\ERP\Products\Category\Exception(array(
             'quiqqer/products',
-            'exception.category.has.no.site'
+            'exception.category.has.no.site',
+            array(
+                'id' => $this->getId()
+            )
         ));
     }
 
@@ -397,10 +397,25 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
                 continue;
             }
 
-            if ($Site->getAttribute('quiqqer.products.settings.categoryId') == $id) {
+            if ($Site->getAttribute('quiqqer.products.settings.categoryId') == $id ||
+                $Site->getAttribute('quiqqer.products.settings.categoryId') == 0
+            ) {
                 $sites[] = $Site;
             }
         }
+
+        usort($sites, function ($SiteA, $SiteB) {
+            /* @var $SiteA QUI\Projects\Site */
+            /* @var $SiteB QUI\Projects\Site */
+            $a = $SiteA->getAttribute('quiqqer.products.settings.categoryId');
+            $b = $SiteB->getAttribute('quiqqer.products.settings.categoryId');
+
+            if ($a == $b) {
+                return 0;
+            }
+
+            return ($a > $b) ? -1 : 1;
+        });
 
         return $sites;
     }
@@ -426,12 +441,19 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
             ));
 
             $idList = array();
+            $debug  = array();
 
             foreach ($sites as $Site) {
                 /* @var $Site QUI\Projects\Site */
-                if ($Site->getAttribute('quiqqer.products.settings.categoryId') == $id) {
+                $siteCatId = $Site->getAttribute('quiqqer.products.settings.categoryId');
+
+                if ($siteCatId != ''
+                    && $siteCatId !== false
+                    && ($siteCatId == $id || $siteCatId == 0)
+                ) {
                     $result[] = $Site;
                     $idList[] = $Site->getId();
+                    $debug[]  = $siteCatId;
                 }
             }
 
@@ -586,7 +608,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
             }
         }
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsCategorySetFieldsToAllProducts', array($this));
+        QUI::getEvents()->fireEvent(
+            'onQuiqqerProductsCategorySetFieldsToAllProducts',
+            array($this)
+        );
     }
 
     /**
@@ -757,7 +782,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
     }
 
     /**
-     * delete the complete product
+     * delete the complete category
      *
      * @param boolean|QUI\Interfaces\Users\User $User
      */
@@ -834,6 +859,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Category
         $fields       = $this->getFields();
 
         foreach ($fields as $Field) {
+            /* @var $Field QUI\ERP\Products\Field\Field */
             if ($Field->getAttribute('searchStatus')) {
                 $searchFields[] = $Field;
             }

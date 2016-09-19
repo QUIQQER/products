@@ -32,7 +32,6 @@ QUI::$Ajax->registerFunction(
                 try {
                     $Field = $Fields->getField($fieldData['id']);
                     $Category->addField($Field);
-
                 } catch (QUI\Exception $Exception) {
                 }
             }

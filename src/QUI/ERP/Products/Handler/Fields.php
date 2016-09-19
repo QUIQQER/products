@@ -164,7 +164,7 @@ class Fields
             return true;
         }
 
-        return $mixed instanceof QUI\ERP\Products\Interfaces\Field;
+        return $mixed instanceof QUI\ERP\Products\Interfaces\FieldInterface;
     }
 
     /**

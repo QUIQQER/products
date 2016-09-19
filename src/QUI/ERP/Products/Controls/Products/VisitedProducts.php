@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Products\Product
+ * This file contains QUI\ERP\Products\Products\VisitedProducts
  */
 namespace QUI\ERP\Products\Controls\Products;
 
@@ -44,11 +44,10 @@ class VisitedProducts extends QUI\Control
         return $this->Slider->create();
     }
 
-
     /**
      * Add a product to the children slider
      *
-     * @param QUI\ERP\Products\Interfaces\Product|integer $Product
+     * @param QUI\ERP\Products\Interfaces\ProductInterface|integer $Product
      */
     public function addProduct($Product)
     {

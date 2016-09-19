@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Interfaces\Product
+ * This file contains QUI\ERP\Products\Interfaces\ProductInterface
  */
 namespace QUI\ERP\Products\Interfaces;
 
@@ -12,7 +12,7 @@ use QUI\ERP\Products\Utils\Price;
  * Interface Product
  * @package QUI\ERP\Products
  */
-interface Product
+interface ProductInterface
 {
     /**
      * Return the Product-ID
@@ -63,7 +63,7 @@ interface Product
      * Return the field
      *
      * @param integer $fieldId
-     * @return Field
+     * @return FieldInterface
      */
     public function getField($fieldId);
 

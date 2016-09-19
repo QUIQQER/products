@@ -92,10 +92,10 @@ class Search
     /**
      * Get column name for search fields
      *
-     * @param QUI\ERP\Products\Interfaces\Field $Field
+     * @param QUI\ERP\Products\Interfaces\FieldInterface $Field
      * @return string
      */
-    public static function getSearchFieldColumnName(QUI\ERP\Products\Interfaces\Field $Field)
+    public static function getSearchFieldColumnName(QUI\ERP\Products\Interfaces\FieldInterface $Field)
     {
         return 'F' . $Field->getId();
     }

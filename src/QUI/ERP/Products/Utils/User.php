@@ -83,7 +83,6 @@ class User
             if ($Tax->getValue() == 0) {
                 return self::IS_NETTO_USER;
             }
-
         } catch (QUI\Exception $Exception) {
             return self::IS_NETTO_USER;
         }

@@ -1,18 +1,17 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Interfaces\Category
+ * This file contains QUI\ERP\Products\Interfaces\CategoryViewInterface
  */
 namespace QUI\ERP\Products\Interfaces;
 
-use QUI\Locale;
-use QUI\Projects\Project;
-
 /**
- * Interface Category
+ * Interface Category for the view
+ * has only getter methods
+ *
  * @package QUI\ERP\Products
  */
-interface Category
+interface CategoryViewInterface
 {
     /**
      * Return the Category-ID
@@ -24,7 +23,7 @@ interface Category
     /**
      * Return the translated title
      *
-     * @param null|Locale $Locale
+     * @param null|\QUI\Locale $Locale
      * @return string
      */
     public function getTitle($Locale = null);
@@ -32,7 +31,7 @@ interface Category
     /**
      * Return the translated description
      *
-     * @param null|Locale $Locale
+     * @param null|\QUI\Locale $Locale
      * @return string
      */
     public function getDescription($Locale = null);
@@ -40,7 +39,7 @@ interface Category
     /**
      * Return the to the category
      *
-     * @param null|Project $Project
+     * @param null|\QUI\Projects\Project $Project
      * @return string
      */
     public function getUrl($Project = null);
@@ -50,6 +49,7 @@ interface Category
      * Category 0 has no parent => returns false
      *
      * @return integer|boolean
+     * @throws \QUI\Exception
      */
     public function getParentId();
 
@@ -57,7 +57,7 @@ interface Category
      * Return the the parent category
      * Category 0 has no parent => returns false
      *
-     * @return bool|Category
+     * @return bool|CategoryInterface
      * @throws \QUI\Exception
      */
     public function getParent();

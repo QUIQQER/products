@@ -16,7 +16,7 @@ use QUI\ERP\Currency\Handler as Currencies;
  *
  * @package QUI\ERP\Products\Utils
  */
-class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactor
+class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
 {
     /**
      * @var string

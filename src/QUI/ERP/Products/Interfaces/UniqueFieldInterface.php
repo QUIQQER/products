@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Interfaces\UniqueField
+ * This file contains QUI\ERP\Products\Interfaces\UniqueFieldInterface
  */
 namespace QUI\ERP\Products\Interfaces;
 
@@ -12,7 +12,7 @@ use QUI\ERP\Products\Field\View;
  *
  * @package QUI\ERP\Products\Interfaces
  */
-interface UniqueField
+interface UniqueFieldInterface
 {
     /**
      * Return the field id

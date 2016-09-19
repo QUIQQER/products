@@ -1,15 +1,17 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Interfaces\PriceFactor
+ * This file contains QUI\ERP\Products\Interfaces\PriceFactorInterface
  */
 namespace QUI\ERP\Products\Interfaces;
+
+use QUI;
 
 /**
  * Interface PriceFactor
  * @package QUI\ERP\Products\Interfaces
  */
-interface PriceFactor
+interface PriceFactorInterface
 {
     /**
      * @return string
@@ -112,7 +114,7 @@ interface PriceFactor
      * @param \QUI\ERP\Products\Utils\Calc $Calc - calculation object
      * @param int|double|float $sum - sum
      */
-    public function setNettoSum(\QUI\ERP\Products\Utils\Calc $Calc, $sum);
+    public function setNettoSum(QUI\ERP\Products\Utils\Calc $Calc, $sum);
 
     /**
      * @return bool|int|float|double
@@ -130,7 +132,7 @@ interface PriceFactor
      * @param \QUI\ERP\Products\Utils\Calc $Calc - calculation object
      * @param int|double|float $sum - sum
      */
-    public function setBruttoSum(\QUI\ERP\Products\Utils\Calc $Calc, $sum);
+    public function setBruttoSum(QUI\ERP\Products\Utils\Calc $Calc, $sum);
 
     /**
      * @return bool|int|float|double

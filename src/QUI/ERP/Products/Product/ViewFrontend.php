@@ -12,7 +12,7 @@ use QUI;
  *
  * @package QUI\ERP\Products\Product
  */
-class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
+class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\ProductInterface
 {
     /**
      * @var UniqueProduct
@@ -96,7 +96,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         $fields    = array();
         $fieldList = $this->getFields();
 
-        /* @var $Field QUI\ERP\Products\Interfaces\Field */
+        /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
         foreach ($fieldList as $Field) {
             if (!$Field->isPublic()) {
                 continue;
@@ -244,7 +244,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * Return the the wanted field
      *
      * @param int $fieldId
-     * @return false|QUI\ERP\Products\Field\UniqueField|QUI\ERP\Products\Interfaces\Field
+     * @return false|QUI\ERP\Products\Field\UniqueField|QUI\ERP\Products\Interfaces\FieldInterface
      */
     public function getField($fieldId)
     {
@@ -263,7 +263,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         $fields = $this->Product->getFields();
 
         $fields = array_filter($fields, function ($Field) {
-            /* @var $Field QUI\ERP\Products\Interfaces\Field */
+            /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             return $Field->isPublic();
         });
 

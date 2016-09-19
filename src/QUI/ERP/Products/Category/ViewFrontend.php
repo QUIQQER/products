@@ -12,7 +12,7 @@ use QUI;
  *
  * @package QUI\ERP\Products\Category
  */
-class ViewFrontend implements QUI\ERP\Products\Interfaces\Category
+class ViewFrontend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
 {
     /**
      * Real category

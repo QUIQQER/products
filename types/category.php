@@ -25,6 +25,19 @@ if ($siteUrl != $_REQUEST['_url']) {
         $Product = Products\Handler\Products::getProduct($refNo);
         $Product->getView();
 
+        $productUrl = urldecode($Product->getUrl());
+
+        // weiterleitung, falls das produkt eine neue URL hat
+        // kann passieren, wenn das produkt vorher in "alle produkte" war
+        if ($productUrl != URL_DIR . $_REQUEST['_url']) {
+            $Redirect = new RedirectResponse($productUrl);
+            $Redirect->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
+
+            echo $Redirect->getContent();
+            $Redirect->send();
+            exit;
+        }
+
         $Engine->assign(array(
             'Product' => new Products\Controls\Products\Product(array(
                 'Product' => $Product

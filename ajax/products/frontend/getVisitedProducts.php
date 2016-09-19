@@ -4,8 +4,6 @@
  * This file contains package_quiqqer_products_ajax_products_frontend_setCustomFieldValues
  */
 
-use QUI\ERP\Products\Handler\Products;
-
 /**
  * Get the fields for a frontend product
  *

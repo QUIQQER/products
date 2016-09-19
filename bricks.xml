@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiqqer>
+    <bricks>
+
+        <brick control="\QUI\ERP\Products\Products\VisitedProducts">
+            <title>
+                <locale group="quiqqer/products" var="brick.VisitedProducts.title"/>
+            </title>
+            <description>
+                <locale group="quiqqer/products" var="brick.VisitedProducts.description"/>
+            </description>
+        </brick>
+
+    </bricks>
+</quiqqer>

@@ -15,10 +15,13 @@ use QUI\Projects\Media\Utils as MediaUtils;
 /**
  * Class UniqueProduct
  *
- * @event onQuiqqerProductsPriceFactorsInit [QUI\ERP\Products\Utils\PriceFactors, QUI\ERP\Products\Interfaces\Product]
+ * @event onQuiqqerProductsPriceFactorsInit [
+ *      QUI\ERP\Products\Utils\PriceFactors,
+ *      QUI\ERP\Products\Interfaces\ProductInterface
+ * ]
  * @todo view für unique product
  */
-class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
+class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\ProductInterface
 {
     /**
      * is the product list calculated?
