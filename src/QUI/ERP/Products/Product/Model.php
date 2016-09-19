@@ -6,7 +6,7 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
-use QUI\ERP\Products\Interfaces\Field;
+use QUI\ERP\Products\Interfaces\FieldInterface;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Categories;
@@ -765,7 +765,7 @@ class Model extends QUI\QDOM
         $categoryIds = array();
         $categories  = $this->getCategories();
 
-        /* @var $Field Field */
+        /* @var $Field FieldInterface */
         /* @var $Category Category */
 
         // get category field data
@@ -846,7 +846,7 @@ class Model extends QUI\QDOM
         $fields    = $this->getAllProductFields();
 
         // generate the product field data
-        /* @var QUI\ERP\Products\Field\Field $Field */
+        /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($fields as $Field) {
             $value = $Field->getValue();
 
@@ -932,7 +932,7 @@ class Model extends QUI\QDOM
      * checks the unassigned status for a field
      * looks into each category
      *
-     * @param Field $Field
+     * @param FieldInterface $Field
      */
     protected function setUnassignedStatusToField($Field)
     {
@@ -972,7 +972,7 @@ class Model extends QUI\QDOM
 
         $categoryFields = array();
 
-        /* @var $Field Field */
+        /* @var $Field FieldInterface */
         /* @var $Category Category */
 
         // get category field data
@@ -987,7 +987,7 @@ class Model extends QUI\QDOM
 
         // helper function
         $isFieldIdInArray = function ($fieldId, $array) {
-            /* @var $Field Field */
+            /* @var $Field FieldInterface */
             foreach ($array as $Field) {
                 if ($Field->getId() == $fieldId) {
                     return true;
@@ -1178,7 +1178,7 @@ class Model extends QUI\QDOM
     {
         $field = array();
 
-        /* @var $Field Field */
+        /* @var $Field FieldInterface */
         foreach ($this->fields as $Field) {
             if (!$Field->isUnassigned()) {
                 $field[$Field->getId()] = $Field;

@@ -50,6 +50,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
         }
 
         foreach ($this->products as $Product) {
+            /* @var $Product QUI\ERP\Products\Interfaces\ProductInterface */
             $products[] = array(
                 'Product' => $Product,
                 'Price'   => new QUI\ERP\Products\Controls\Price(array(
@@ -69,7 +70,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
     /**
      * Add a product to the children slider
      *
-     * @param QUI\ERP\Products\Interfaces\Product|integer $Product
+     * @param QUI\ERP\Products\Interfaces\ProductInterface|integer $Product
      */
     public function addProduct($Product)
     {
@@ -82,7 +83,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
             return;
         }
 
-        if ($Product instanceof QUI\ERP\Products\Interfaces\Product) {
+        if ($Product instanceof QUI\ERP\Products\Interfaces\ProductInterface) {
             $this->products[] = $Product;
         }
     }

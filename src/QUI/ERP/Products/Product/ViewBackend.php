@@ -12,7 +12,7 @@ use QUI;
  *
  * @package QUI\ERP\Products\Product
  */
-class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Product
+class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\ProductInterface
 {
     /**
      * @var Product
@@ -68,7 +68,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
         $fields    = array();
         $fieldList = $this->getFields();
 
-        /* @var $Field QUI\ERP\Products\Interfaces\Field */
+        /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
         foreach ($fieldList as $Field) {
             $fields[] = array_merge(
                 $Field->toProductArray(),

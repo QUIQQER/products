@@ -479,8 +479,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
          * @return {Object} this (package/quiqqer/products/bin/controls/categories/Select)
          */
         addCategory: function (id) {
-
-            if (!id || id === '') {
+            if (id !== 0 && (!id || id === '')) {
                 return this;
             }
 

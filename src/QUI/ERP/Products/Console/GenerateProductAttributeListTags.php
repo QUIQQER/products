@@ -32,6 +32,6 @@ class GenerateProductAttributeListTags extends QUI\System\Console\Tool
     public function execute()
     {
         QUI\Permissions\Permission::isAdmin();
-        QUI\ERP\Products\Crons::generateProductAttributeListTags();
+        QUI\ERP\Tags\Crons::generateProductAttributeListTags();
     }
 }

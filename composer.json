@@ -25,7 +25,7 @@
     "quiqqer/discount": "dev-dev",
     "quiqqer/pace": "*",
     "quiqqer/slider": "*@dev",
-    "quiqqer/utils": ">=1.4|dev-master|dev-dev",
+    "quiqqer/utils": ">=1.6|dev-master|dev-dev",
     "quiqqer/watcher": "*",
     "npm-asset/mustache": "2.*",
     "bower-asset\/uri.js": "1.*",

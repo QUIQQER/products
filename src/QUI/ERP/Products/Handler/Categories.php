@@ -95,7 +95,7 @@ class Categories
 
     /**
      * @param integer $id
-     * @return QUI\ERP\Products\Category\Category
+     * @return QUI\ERP\Products\Interfaces\CategoryInterface
      *
      * @throws QUI\Exception
      */
@@ -107,42 +107,45 @@ class Categories
             return self::$list[$id];
         }
 
-        $categoryData = array();
+        if ($id === 0) {
+            self::$list[$id] = new QUI\ERP\Products\Category\AllProducts();
 
-        if ($id !== 0) {
-            try {
-                $categoryData = QUI\Cache\Manager::get(self::getCacheName($id));
-            } catch (QUI\Exception $Eception) {
-                $data = QUI::getDataBase()->fetch(array(
-                    'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
-                    'where' => array(
-                        'id' => $id
-                    )
-                ));
-
-                if (!isset($data[0])) {
-                    throw new QUI\Exception(
-                        array(
-                            'quiqqer/products',
-                            'exception.category.not.found'
-                        ),
-                        404,
-                        array(
-                            'categoryId' => $id
-                        )
-                    );
-                }
-
-                $categoryData = $data[0];
-
-                QUI\Cache\Manager::set(self::getCacheName($id), $categoryData);
-            }
+            return self::$list[$id];
         }
 
-        $Product         = new QUI\ERP\Products\Category\Category($id, $categoryData);
-        self::$list[$id] = $Product;
+        try {
+            $categoryData = QUI\Cache\Manager::get(self::getCacheName($id));
+        } catch (QUI\Exception $Eception) {
+            $data = QUI::getDataBase()->fetch(array(
+                'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+                'where' => array(
+                    'id' => $id
+                )
+            ));
 
-        return $Product;
+            if (!isset($data[0])) {
+                throw new QUI\Exception(
+                    array(
+                        'quiqqer/products',
+                        'exception.category.not.found'
+                    ),
+                    404,
+                    array(
+                        'categoryId' => $id
+                    )
+                );
+            }
+
+            $categoryData = $data[0];
+
+            QUI\Cache\Manager::set(self::getCacheName($id), $categoryData);
+        }
+
+
+        $Category        = new QUI\ERP\Products\Category\Category($id, $categoryData);
+        self::$list[$id] = $Category;
+
+        return $Category;
     }
 
     /**
@@ -198,7 +201,11 @@ class Categories
             return false;
         }
 
-        if (get_class($Category) === 'QUI\ERP\Products\Category\Category') {
+        if (get_class($Category) === QUI\ERP\Products\Category\Category::class) {
+            return true;
+        }
+
+        if (get_class($Category) === QUI\ERP\Products\Category\AllProducts::class) {
             return true;
         }
 

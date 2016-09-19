@@ -20,9 +20,10 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
     'qui/controls/sitemap/Map',
     'qui/controls/sitemap/Item',
     'qui/utils/Functions',
-    'package/quiqqer/products/bin/classes/Categories'
+    'package/quiqqer/products/bin/classes/Categories',
+    'Locale'
 
-], function (QUI, QUIControl, QUISitemap, QUISitemapItem, QUIFunctionUtils, Handler) {
+], function (QUI, QUIControl, QUISitemap, QUISitemapItem, QUIFunctionUtils, Handler, QUILocale) {
     "use strict";
 
     var Categories = new Handler();
@@ -84,8 +85,9 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
 
             this.$Sitemap.appendChild(
                 new QUISitemapItem({
-                    text  : 'Kategorien', // #locale
+                    text  : QUILocale.get('quiqqer/products', 'products.category.0.title'),
                     id    : 0,
+                    value : 0,
                     icon  : 'fa fa-shopping-basket',
                     events: {
                         onOpen : this.$onItemOpen,

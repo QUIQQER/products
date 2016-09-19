@@ -6,7 +6,7 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
-use QUI\ERP\Products\Interfaces\Field;
+use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Categories;
 
@@ -19,7 +19,7 @@ use QUI\ERP\Products\Handler\Categories;
  * @example
  * QUI\ERP\Products\Handler\Products::getProduct( ID );
  */
-class Product extends Model implements QUI\ERP\Products\Interfaces\Product
+class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterface
 {
     /**
      * Add a field to the product
@@ -77,9 +77,9 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\Product
     /**
      * Add the product to a category
      *
-     * @param Category $Category
+     * @param QUI\ERP\Products\Interfaces\CategoryInterface $Category
      */
-    public function addCategory(Category $Category)
+    public function addCategory(QUI\ERP\Products\Interfaces\CategoryInterface $Category)
     {
         $this->categories[$Category->getId()] = $Category;
     }
@@ -111,7 +111,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\Product
         if (!QUI\Utils\UserGroups::isUserGroupString($ugString)) {
             return;
         };
-        
+
         QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
 
         switch ($permission) {

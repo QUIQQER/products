@@ -49,7 +49,6 @@ class PriceFactors
      */
     public function __construct()
     {
-
     }
 
     /**
@@ -65,9 +64,9 @@ class PriceFactors
     /**
      * Add a price factor
      *
-     * @param QUI\ERP\Products\Interfaces\PriceFactor $PriceFactor
+     * @param QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor
      */
-    public function add(QUI\ERP\Products\Interfaces\PriceFactor $PriceFactor)
+    public function add(QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor)
     {
         $this->list[] = $PriceFactor;
     }
@@ -75,9 +74,9 @@ class PriceFactors
     /**
      * Add a price factor to the beginning
      *
-     * @param QUI\ERP\Products\Interfaces\PriceFactor $PriceFactor
+     * @param QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor
      */
-    public function addToBeginning(QUI\ERP\Products\Interfaces\PriceFactor $PriceFactor)
+    public function addToBeginning(QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor)
     {
         $this->listBeginning[] = $PriceFactor;
     }
@@ -85,9 +84,9 @@ class PriceFactors
     /**
      * Add a price factor to the end
      *
-     * @param QUI\ERP\Products\Interfaces\PriceFactor $PriceFactor
+     * @param QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor
      */
-    public function addToEnd(QUI\ERP\Products\Interfaces\PriceFactor $PriceFactor)
+    public function addToEnd(QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor)
     {
         $this->listEnd[] = $PriceFactor;
     }

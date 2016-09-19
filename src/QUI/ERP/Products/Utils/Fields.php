@@ -29,7 +29,7 @@ class Fields
                 continue;
             }
 
-            /* @var $Field QUI\ERP\Products\Interfaces\Field */
+            /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             try {
                 self::validateField($Field);
 
@@ -53,7 +53,7 @@ class Fields
             return false;
         }
 
-        if ($object instanceof QUI\ERP\Products\Interfaces\Field) {
+        if ($object instanceof QUI\ERP\Products\Interfaces\FieldInterface) {
             return true;
         }
 
@@ -63,10 +63,10 @@ class Fields
     /**
      * Validate the value of the field
      *
-     * @param QUI\ERP\Products\Interfaces\Field $Field
+     * @param QUI\ERP\Products\Interfaces\FieldInterface $Field
      * @throws QUI\Exception
      */
-    public static function validateField(QUI\ERP\Products\Interfaces\Field $Field)
+    public static function validateField(QUI\ERP\Products\Interfaces\FieldInterface $Field)
     {
         $Field->validate($Field->getValue());
     }

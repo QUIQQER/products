@@ -251,10 +251,11 @@ class Calc
 
 
             // add pricefactor VAT
-            if (!($PriceFactor instanceof QUI\ERP\Products\Interfaces\PriceFactorWithVat)) {
+            if (!($PriceFactor instanceof QUI\ERP\Products\Interfaces\PriceFactorWithVatInterface)) {
                 continue;
             }
 
+            /* @var $PriceFactor QUI\ERP\Products\Interfaces\PriceFactorWithVatInterface */
             $VatType = $PriceFactor->getVatType();
             $Vat     = QUI\ERP\Tax\Utils::getTaxEntry($VatType, $Area);
             $vatSum  = $PriceFactor->getNettoSum() * ($Vat->getValue() / 100);

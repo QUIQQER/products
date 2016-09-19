@@ -18,7 +18,7 @@ class Products
     /**
      * Is mixed a product compatible object?
      * looks for:
-     * - QUI\ERP\Products\Interfaces\Product::class
+     * - QUI\ERP\Products\Interfaces\ProductInterface::class
      * - QUI\ERP\Products\Product\Model
      * - QUI\ERP\Products\Product\Product
      *
@@ -35,7 +35,7 @@ class Products
             return true;
         }
 
-        if ($mixed instanceof QUI\ERP\Products\Interfaces\Product) {
+        if ($mixed instanceof QUI\ERP\Products\Interfaces\ProductInterface) {
             return true;
         }
 
@@ -45,7 +45,7 @@ class Products
     /**
      * Return the price field from the product for the user
      *
-     * @param QUI\ERP\Products\Interfaces\Product|QUI\ERP\Products\Product\Model $Product
+     * @param QUI\ERP\Products\Interfaces\ProductInterface|QUI\ERP\Products\Product\Model $Product
      * @param QUI\Interfaces\Users\User|null $User
      * @return QUI\ERP\Products\Utils\Price
      *

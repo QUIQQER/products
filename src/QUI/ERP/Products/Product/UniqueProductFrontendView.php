@@ -10,7 +10,10 @@ use QUI;
 /**
  * Class UniqueProductFrontendView
  *
- * @event onQuiqqerProductsPriceFactorsInit [QUI\ERP\Products\Utils\PriceFactors, QUI\ERP\Products\Interfaces\Product]
+ * @event onQuiqqerProductsPriceFactorsInit [
+ *      QUI\ERP\Products\Utils\PriceFactors,
+ *      QUI\ERP\Products\Interfaces\ProductInterface
+ * ]
  */
 class UniqueProductFrontendView extends UniqueProduct
 {

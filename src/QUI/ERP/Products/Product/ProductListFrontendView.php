@@ -69,7 +69,7 @@ class ProductListFrontendView
                 'vatArray' => array()
             );
 
-            /* @var $Field QUI\ERP\Products\Interfaces\Field */
+            /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             foreach ($fields as $Field) {
                 if ($Field->isPublic()) {
                     $product['fields'][] = $Field->getAttributes();

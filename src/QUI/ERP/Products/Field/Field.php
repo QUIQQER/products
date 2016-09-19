@@ -18,7 +18,7 @@ use QUI\ERP\Products\Handler\Products;
  * @example
  * QUI\ERP\Products\Handler\Field::getField( ID );
  */
-abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Field
+abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\FieldInterface
 {
     /**
      * Field-ID

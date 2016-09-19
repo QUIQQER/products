@@ -110,14 +110,12 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
             this.loading();
 
             if (this.getAttribute('categoryId') === 0) {
-
                 self.$Text.set({
                     html: QUILocale.get(
                         'quiqqer/products',
-                        'products.category.no.parent'
+                        'products.category.0.title'
                     )
                 });
-
                 return;
             }
 

@@ -16,7 +16,7 @@ use QUI;
  * @example
  * QUI\ERP\Products\Handler\Field::getField( ID )->createUniqueField();
  */
-class UniqueField implements QUI\ERP\Products\Interfaces\UniqueField
+class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
 {
     /**
      * Field-ID

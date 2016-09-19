@@ -495,6 +495,10 @@
                 A cache table column for field #[fieldId] [fieldTitle] cannot be created because the field type of this field is marked as not searchable.
             ]]></en>
         </locale>
+        <locale name="exception.category.has.no.site">
+            <de><![CDATA[Der Kategorie #[id] wurde keine Projektseite zugeordnet.]]></de>
+            <en><![CDATA[The category #[id] has not been assigned to any project page.]]></en>
+        </locale>
 
         <!-- produkte -->
         <locale name="message.product.create.missing.category">
@@ -697,8 +701,8 @@
         </locale>
 
         <locale name="products.category.0.title">
-            <de><![CDATA[Kategorien]]></de>
-            <en><![CDATA[Categories]]></en>
+            <de><![CDATA[Alle Produkte]]></de>
+            <en><![CDATA[All products]]></en>
         </locale>
 
         <locale name="brick.control.VisitedProducts.title">

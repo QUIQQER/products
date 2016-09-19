@@ -23,6 +23,7 @@ QUI::$Ajax->registerFunction(
         $Parent = $Category->getParent();
 
         while ($Parent) {
+            /* @var $Parent \QUI\ERP\Products\Interfaces\CategoryInterface */
             try {
                 $result[] = $Parent->getId();
                 $Parent   = $Parent->getParent();

@@ -42,7 +42,6 @@ QUI::$Ajax->registerFunction(
                 }
 
                 $ProductField->setValue($field);
-
             } catch (QUI\ERP\Products\Product\Exception $Exception) {
                 if ($Exception->getCode() === 1002) {
                     continue;
@@ -58,7 +57,6 @@ QUI::$Ajax->registerFunction(
                 );
 
                 throw $Exception;
-
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addNotice(
                     $Exception->getMessage(),
@@ -80,7 +78,6 @@ QUI::$Ajax->registerFunction(
             try {
                 $Category = $Categories->getCategory($category);
                 $Product->addCategory($Category);
-
             } catch (QUI\Exception $Exception) {
             }
         }
