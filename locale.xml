@@ -499,6 +499,10 @@
             <de><![CDATA[Der Kategorie #[id] wurde keine Projektseite zugeordnet.]]></de>
             <en><![CDATA[The category #[id] has not been assigned to any project page.]]></en>
         </locale>
+        <locale name="exception.category.not.found">
+            <de><![CDATA[Die Kategorie #[categoryId] wurde nicht gefunden.]]></de>
+            <en><![CDATA[The category #[categoryId] wasn't found.]]></en>
+        </locale>
 
         <!-- produkte -->
         <locale name="message.product.create.missing.category">
