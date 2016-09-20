@@ -679,7 +679,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                         var UserLoad = Promise.resolve();
 
-                        if (User.isLoaded()) {
+                        if (!User.isLoaded()) {
                             UserLoad = User.load();
                         }
 
@@ -693,7 +693,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             } else {
                                 self.getCategory('information').click();
                             }
-                            
+
                             self.Loader.hide();
                         });
                     });
