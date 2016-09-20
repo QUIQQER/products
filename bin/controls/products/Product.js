@@ -117,6 +117,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             this.$Files               = null;
             this.$Control             = null;
             this.$Information         = null;
+            this.$CurrentCategory     = null;
 
             this.$Product = new Product({
                 id: this.getAttribute('productId')
@@ -157,8 +158,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 text     : QUILocale.get('quiqqer/system', 'save'),
                 events   : {
                     onClick: function () {
-                        this.update().catch(function () {
-
+                        this.update().catch(function (err) {
+                            QUI.getMessageHandler().then(function (MH) {
+                                MH.addError(QUILocale.get(lg, 'message.product.error.saving', {
+                                    error: err
+                                }));
+                            });
                         });
                     }.bind(this)
                 }
@@ -1606,6 +1611,30 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
                 }
 
+                // current fields
+                if (self.$CurrentCategory) {
+                    Form = self.$CurrentCategory;
+                    data = {};
+
+                    if (Form.nodeName !== 'FORM') {
+                        Form = self.$CurrentCategory.getElement('form');
+                    }
+
+                    if (Form && Form.nodeName === 'FORM') {
+                        data = QUIFormUtils.getFormData(Form);
+                    }
+
+                    formfields = Object.filter(data, function (value, key) {
+                        return (key.indexOf('field-') >= 0);
+                    });
+
+                    for (field in formfields) {
+                        if (formfields.hasOwnProperty(field)) {
+                            fields[field] = formfields[field];
+                        }
+                    }
+                }
+
                 if (typeof data.categories === 'undefined') {
                     data.categories = '';
                 }
@@ -1615,7 +1644,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 categories = categories.filter(function (item) {
                     return item !== '';
                 });
-
 
                 Products.updateChild(
                     self.getAttribute('productId'),
@@ -1858,6 +1886,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @returns {Promise}
          */
         $showCategory: function (Node) {
+            this.$CurrentCategory = Node;
+
             return new Promise(function (resolve) {
                 Node.setStyles({
                     position: null,
@@ -1940,59 +1970,5 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 self.getElm().getElements('.folder-missing-container').destroy();
             });
         }
-
-        /**
-         * event : on folder created, if the product hadnt a media folder
-         *
-         * @param {Object} Viewer
-         * @param {Object} Folder
-         */
-        // $onFolderCreated: function (Viewer, Folder) {
-        //     var self = this;
-        //
-        //     this.Loader.show();
-        //
-        //     var Form  = this.getContent().getElement('form'),
-        //         Input = Form.elements['field-10'];
-        //
-        //     Input.value = Folder.getUrl();
-        //
-        //     this.update().then(function () {
-        //         return self.$Product.refresh();
-        //     }).then(function () {
-        //         return self.$Product.getFields();
-        //     }).then(function (productField) {
-        //
-        //         var folder = productField.filter(function (field) {
-        //             return field.id == Fields.FIELD_FOLDER;
-        //         });
-        //
-        //         if (!folder.length) {
-        //             return self.Loader.hide();
-        //         }
-        //
-        //         self.$FileViewer.setAttribute('folderUrl', folder[0].value);
-        //         self.$ImageViewer.setAttribute('folderUrl', folder[0].value);
-        //
-        //         self.$ImageViewer.refresh();
-        //         self.$FileViewer.refresh();
-        //
-        //         // image fields
-        //         var images = self.getElm().getElements(
-        //             '[data-qui="package/quiqqer/products/bin/controls/fields/types/Image"]'
-        //         );
-        //
-        //         images.each(function (Input) {
-        //             var quiId   = Input.get('data-quiid'),
-        //                 Control = QUI.Controls.getById(quiId);
-        //
-        //             if (Control) {
-        //                 Control.setAttribute('productFolder', folder[0].value);
-        //             }
-        //         });
-        //
-        //         self.Loader.hide();
-        //     });
-        // }
     });
 });
