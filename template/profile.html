@@ -1,0 +1,40 @@
+<table class="data-table data-table-flexbox">
+    <tr>
+        <th>
+            {locale group="quiqqer/products" var="user.profile.title"}
+        </th>
+    </tr>
+    <tr>
+        <td>
+            <label class="field-container">
+                <span class="field-container-item">
+                    {locale group="quiqqer/products" var="user.profile.productPanel.open.category"}
+                </span>
+                <select
+                        name="quiqqer.erp.productPanel.open.category"
+                        class="field-container-field"
+                >
+                    <option value="information">
+                        {locale group="quiqqer/system" var="information"}
+                    </option>
+                    <option value="data">
+                        {locale group="quiqqer/system" var="data"}
+                    </option>
+                    <option value="prices">
+                        {locale group="quiqqer/products" var="products.product.panel.category.prices"}
+                    </option>
+                    <option value="images">
+                        {locale group="quiqqer/products" var="products.product.panel.category.images"}
+                    </option>
+                    <option value="files">
+                        {locale group="quiqqer/products" var="products.product.panel.category.files"}
+                    </option>
+                    <option value="attributelist">
+                        {locale group="quiqqer/products" var="products.product.panel.category.attributelist"}
+                    </option>
+                </select>
+
+            </label>
+        </td>
+    </tr>
+</table>

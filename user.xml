@@ -6,6 +6,7 @@
         <attribute>quiqqer.erp.taxNumber</attribute>
         <attribute>quiqqer.erp.address</attribute>
         <attribute>quiqqer.erp.isNettoUser</attribute>
+        <attribute>quiqqer.erp.productPanel.open.category</attribute>
     </attributes>
 
     <window>
@@ -15,5 +16,13 @@
             <template>OPT_DIR/quiqqer/products/template/user.html</template>
         </tab>
     </window>
+
+    <profile>
+        <tab name="ERP">
+            <text>Produkte</text>
+            <image>fa fa-shopping-bag</image>
+            <template>OPT_DIR/quiqqer/products/template/profile.html</template>
+        </tab>
+    </profile>
 
 </user>
