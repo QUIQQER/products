@@ -661,16 +661,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             Field.addEvent('change', fieldChange);
                         });
 
-                        var wantedCategory = User.getAttribute(
-                            'quiqqer.erp.productPanel.open.category'
-                        );
-
-                        if (wantedCategory && self.getCategory(wantedCategory)) {
-                            self.getCategory(wantedCategory).click();
-                        } else {
-                            self.getCategory('information').click();
-                        }
-
 
                         // image fields
                         var images = self.getElm().getElements(
@@ -687,7 +677,25 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         });
 
 
-                        self.Loader.hide();
+                        var UserLoad = Promise.resolve();
+
+                        if (User.isLoaded()) {
+                            UserLoad = User.load();
+                        }
+
+                        UserLoad.then(function () {
+                            var wantedCategory = User.getAttribute(
+                                'quiqqer.erp.productPanel.open.category'
+                            );
+
+                            if (wantedCategory && self.getCategory(wantedCategory)) {
+                                self.getCategory(wantedCategory).click();
+                            } else {
+                                self.getCategory('information').click();
+                            }
+                            
+                            self.Loader.hide();
+                        });
                     });
                 });
 
