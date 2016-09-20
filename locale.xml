@@ -513,6 +513,10 @@
             <de><![CDATA[Produkt wurde gespeichert.]]></de>
             <en><![CDATA[Product has been saved.]]></en>
         </locale>
+        <locale name="message.product.error.saving">
+            <de><![CDATA[Beim speichern des Produktes ist ein Fehler aufgetreten. [error]]]></de>
+            <en><![CDATA[Some error occurred during saving. [error]]]></en>
+        </locale>
         <locale name="message.set.maincategory.error">
             <de><![CDATA[Fehler beim Setzen der Hauptkategorie. Es wurde keine Hauptkategorie angegeben.]]></de>
             <en><![CDATA[Failed to set the main category. There was no main category specified.]]></en>
