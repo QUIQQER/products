@@ -721,6 +721,16 @@
             <de><![CDATA[Sie haben noch keine Produkte besucht.]]></de>
             <en><![CDATA[You have not visited any products.]]></en>
         </locale>
+
+
+        <locale name="user.profile.title">
+            <de><![CDATA[Persönliche Produkteinstellungen]]></de>
+            <en><![CDATA[Personal product settings]]></en>
+        </locale>
+        <locale name="user.profile.productPanel.open.category">
+            <de><![CDATA[Standard-Registerkarte im Produkt Panel]]></de>
+            <en><![CDATA[Standard tab in the product panel]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
@@ -1356,6 +1366,11 @@
         <locale name="brick.VisitedProducts.description">
             <de><![CDATA[Zeigt Produkte an, die der Besucher zuletzt besucht hat.]]></de>
             <en><![CDATA[Shows products that the visitor has recently visited.]]></en>
+        </locale>
+
+        <locale name="user.profile.title">
+            <de><![CDATA[Produkt Einstellungen]]></de>
+            <en><![CDATA[Product settings]]></en>
         </locale>
     </groups>
 

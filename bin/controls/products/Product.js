@@ -38,6 +38,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'qui/controls/windows/Confirm',
     'qui/utils/Form',
     'Locale',
+    'Users',
     'controls/grid/Grid',
     'controls/projects/project/media/FolderViewer',
     'Mustache',
@@ -58,13 +59,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'css!package/quiqqer/products/bin/controls/products/Product.css'
 
 ], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIButtonSwitch, QUIConfirm, QUIFormUtils, QUILocale,
-             Grid, FolderViewer, Mustache, Packages,
+             Users, Grid, FolderViewer, Mustache, Packages,
              Products, Product, Categories, Fields, FieldUtils, FieldWindow,
              CategorySelect, FieldTypeSelect,
              informationTemplate, templateProductData, templateProductPrices, templateField) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    var lg   = 'quiqqer/products',
+        User = Users.getUserBySession();
 
     return new Class({
 
@@ -659,7 +661,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             Field.addEvent('change', fieldChange);
                         });
 
-                        self.getCategory('information').click();
+                        var wantedCategory = User.getAttribute(
+                            'quiqqer.erp.productPanel.open.category'
+                        );
+
+                        if (wantedCategory && self.getCategory(wantedCategory)) {
+                            self.getCategory(wantedCategory).click();
+                        } else {
+                            self.getCategory('information').click();
+                        }
+
 
                         // image fields
                         var images = self.getElm().getElements(
