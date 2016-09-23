@@ -27,6 +27,7 @@
     "quiqqer/slider": "*@dev",
     "quiqqer/utils": ">=1.6|dev-master|dev-dev",
     "quiqqer/watcher": "*",
+    "quiqqer/translator": "dev-dev",
     "npm-asset/mustache": "2.*",
     "bower-asset\/uri.js": "1.*",
     "bower-asset\/nouislider": "dev-master|8.*",
