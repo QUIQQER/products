@@ -731,6 +731,11 @@
             <de><![CDATA[Standard-Registerkarte im Produkt Panel]]></de>
             <en><![CDATA[Standard tab in the product panel]]></en>
         </locale>
+
+        <locale name="exceptions.system.fields.cant.be.deleted">
+            <de><![CDATA[Das Feld #[id] [title] kann nicht gelöscht werden]]></de>
+            <en><![CDATA[The field #[id] [title] could not be deleted]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">

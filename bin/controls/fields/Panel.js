@@ -296,6 +296,8 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                         Fields.deleteChildren(fieldId).then(function () {
                             Win.close();
                             self.refresh();
+                        }).catch(function () {
+                            Win.Loader.hide();
                         });
                     }
                 }

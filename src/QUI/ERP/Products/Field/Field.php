@@ -327,7 +327,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         if ($this->isSystem()) {
             throw new QUI\ERP\Products\Field\Exception(array(
                 'quiqqer/products',
-                'exceptions.system.fields.cant.be.deleted'
+                'exceptions.system.fields.cant.be.deleted',
+                array(
+                    'id'    => $this->getId(),
+                    'title' => $this->getTitle()
+                )
             ));
         }
 
