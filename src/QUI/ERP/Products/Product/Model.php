@@ -1178,16 +1178,16 @@ class Model extends QUI\QDOM
      */
     public function getFields()
     {
-        $field = array();
+        $fields = array();
 
         /* @var $Field FieldInterface */
         foreach ($this->fields as $Field) {
             if (!$Field->isUnassigned()) {
-                $field[$Field->getId()] = $Field;
+                $fields[$Field->getId()] = $Field;
             }
         }
 
-        return $field;
+        return QUI\ERP\Products\Utils\Fields::sortFields($fields);
     }
 
     /**
