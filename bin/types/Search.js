@@ -32,7 +32,7 @@ define('package/quiqqer/products/bin/types/Search', [
     return new Class({
 
         Extends: QUIControl,
-        Type   : '',
+        Type   : 'package/quiqqer/products/bin/types/Search',
 
         initialize: function (options) {
             this.parent(options);

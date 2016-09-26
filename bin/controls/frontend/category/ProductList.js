@@ -79,7 +79,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             sort      : false,
             project   : false,
             lang      : false,
-            siteId    : false
+            siteId    : false,
+            autoload  : true
         },
 
         initialize: function (options) {
@@ -140,6 +141,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         $onImport: function () {
             var Elm = this.getElm(),
                 cid = Elm.get('data-productlist-id');
+
+            if (parseInt(Elm.get('data-autoload')) === 0) {
+                this.setAttribute('autoload', false);
+            }
 
             this.$ButtonDetails = Elm.getElements('.quiqqer-products-productList-sort-display-details');
             this.$ButtonGallery = Elm.getElements('.quiqqer-products-productList-sort-display-gallery');
@@ -300,6 +305,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }.bind(this));
             }.bind(this));
 
+
+            if (!this.getAttribute('autoload')) {
+                return;
+            }
 
             if (typeof Pace !== 'undefined') {
                 var loaded = false;

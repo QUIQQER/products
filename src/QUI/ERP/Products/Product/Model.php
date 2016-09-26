@@ -802,7 +802,9 @@ class Model extends QUI\QDOM
                 'categories'  => ',' . implode(',', $categoryIds) . ',',
                 'category'    => $mainCategory,
                 'fieldData'   => json_encode($fieldData),
-                'permissions' => json_encode($this->permissions)
+                'permissions' => json_encode($this->permissions),
+                'e_user'      => QUI::getUserBySession()->getId(),
+                'e_date'      => date('Y-m-d H:i:s')
             ),
             array('id' => $this->getId())
         );
