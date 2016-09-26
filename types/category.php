@@ -107,7 +107,8 @@ if ($siteUrl != $_REQUEST['_url']) {
         'hideEmptyProductList' => true,
         'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
         'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
-        'searchParams'         => $searchParams
+        'searchParams'         => $searchParams,
+        'autoload'             => false
     ));
 
     if ($Site->getAttribute('quiqqer.products.settings.showFilterLeft')) {
