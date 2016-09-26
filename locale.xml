@@ -1105,11 +1105,11 @@
             <en><![CDATA[visible]]></en>
         </locale>
         <locale name="product.fields.grid.calcPriority">
-            <de><![CDATA[Priorität]]></de>
-            <en><![CDATA[Priority]]></en>
+            <de><![CDATA[Berechnungspriorität]]></de>
+            <en><![CDATA[Calculation priority]]></en>
         </locale>
         <locale name="product.fields.grid.calcPriority.desc">
-            <de><![CDATA[Berechnungs Priorität]]></de>
+            <de><![CDATA[Berechnungspriorität]]></de>
             <en><![CDATA[Calculating priority]]></en>
         </locale>
         <locale name="product.fields.grid.calcBasis">
@@ -1148,8 +1148,8 @@
             <en><![CDATA[Calculated price]]></en>
         </locale>
         <locale name="product.fields.attributeList.priority">
-            <de><![CDATA[Priorität]]></de>
-            <en><![CDATA[Priority]]></en>
+            <de><![CDATA[Berechnungspriorität]]></de>
+            <en><![CDATA[Calculation priority]]></en>
         </locale>
         <locale name="product.fields.attributeList.discounts">
             <de><![CDATA[Auf / Abschläge anzeigen]]></de>
