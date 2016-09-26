@@ -1449,6 +1449,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         }
                     }],
                     columnModel: [{
+                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        dataIndex: 'id',
+                        dataType : 'number',
+                        width    : 60
+                    }, {
                         header   : QUILocale.get(lg, 'product.fields.grid.visible'),
                         dataIndex: 'visible',
                         dataType : 'QUI',
@@ -1471,11 +1476,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         dataIndex: 'calcBasis',
                         dataType : 'string',
                         width    : 100
-                    }, {
-                        header   : QUILocale.get('quiqqer/system', 'id'),
-                        dataIndex: 'id',
-                        dataType : 'number',
-                        width    : 60
                     }, {
                         header   : QUILocale.get('quiqqer/system', 'title'),
                         dataIndex: 'title',
@@ -1504,7 +1504,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 var refresh = function () {
                     self.$Product.getFields().then(function (fields) {
                         var i, len, entry,
-                            options, calculation_basis, calculation_priority, priority;
+                            options, calculation_basis, calculation_priority;
 
                         var data = [];
 
@@ -1517,7 +1517,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                             calculation_priority = '';
                             calculation_basis    = '';
-                            priority             = '';
 
                             options = entry.options;
 
@@ -1543,10 +1542,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 }
                             }
 
-                            if ("priority" in options) {
-                                priority = options.priority;
-                            }
-
                             data.push({
                                 visible     : new QUISwitch({
                                     fieldId: entry.id,
@@ -1554,7 +1549,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                         onChange: switchStatusChange
                                     }
                                 }),
-                                sort        : priority,
+                                sort        : entry.priority,
                                 calcPriority: calculation_priority,
                                 calcBasis   : calculation_basis,
                                 id          : entry.id,
