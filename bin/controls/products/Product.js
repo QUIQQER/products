@@ -1454,6 +1454,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         dataType : 'QUI',
                         width    : 60
                     }, {
+                        header   : QUILocale.get(lg, 'priority'),
+                        title    : QUILocale.get(lg, 'priority'),
+                        dataIndex: 'sort',
+                        dataType : 'string',
+                        width    : 60
+                    }, {
                         header   : QUILocale.get(lg, 'product.fields.grid.calcPriority'),
                         title    : QUILocale.get(lg, 'product.fields.grid.calcPriority.desc'),
                         dataIndex: 'calcPriority',
@@ -1498,7 +1504,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 var refresh = function () {
                     self.$Product.getFields().then(function (fields) {
                         var i, len, entry,
-                            options, calculation_basis, priority;
+                            options, calculation_basis, calculation_priority, priority;
 
                         var data = [];
 
@@ -1509,10 +1515,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 continue;
                             }
 
-                            calculation_basis = '';
-                            priority          = '';
+                            calculation_priority = '';
+                            calculation_basis    = '';
+                            priority             = '';
 
                             options = entry.options;
+
+                            if ("priority" in options) {
+                                calculation_priority = options.priority;
+                            }
 
                             if ("calculation_basis" in options) {
                                 switch (options.calculation_basis) {
@@ -1543,7 +1554,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                         onChange: switchStatusChange
                                     }
                                 }),
-                                calcPriority: priority,
+                                sort        : priority,
+                                calcPriority: calculation_priority,
                                 calcBasis   : calculation_basis,
                                 id          : entry.id,
                                 title       : entry.title || '',
