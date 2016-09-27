@@ -168,6 +168,7 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
                 }
 
                 Item.removeIcon('fa-shopping-basket');
+                Item.removeIcon('fa-sitemap');
                 Item.addIcon('fa fa-spinner fa-spin');
 
                 Categories.getChildren(categoryId || 0).then(function (data) {
@@ -192,7 +193,12 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
                     }
 
                     Item.removeIcon('fa-spinner');
-                    Item.addIcon('fa fa-shopping-basket');
+
+                    if (Item.getAttribute('id') === 0) {
+                        Item.addIcon('fa fa-shopping-basket');
+                    } else {
+                        Item.addIcon('fa fa-sitemap');
+                    }
 
                     if (data.length) {
                         Item.open();
