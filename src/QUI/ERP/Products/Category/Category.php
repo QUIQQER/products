@@ -237,8 +237,6 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             $attributes       = parent::getAttributes();
             $attributes['id'] = $this->getId();
 
-            $attributes['title']         = $this->getTitle();
-            $attributes['description']   = $this->getDescription();
             $attributes['countChildren'] = $this->countChildren();
             $attributes['sites']         = $this->getSites();
             $attributes['parent']        = $this->getParentId();
@@ -246,7 +244,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             QUI\Cache\Manager::set($cacheName, $attributes);
         }
 
-        $attributes['fields'] = $fields;
+        $attributes['title']       = $this->getTitle();
+        $attributes['description'] = $this->getDescription();
+        $attributes['fields']      = $fields;
 
         return $attributes;
     }

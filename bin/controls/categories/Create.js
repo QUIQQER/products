@@ -304,8 +304,15 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
 
                 var parentId = self.getAttribute('parentId');
 
-                Categories.createChild(parentId).then(function (childData) {
+                QUI.getMessageHandler().then(function (MH) {
+                    MH.setAttribute('showMessages', false);
 
+                }).then(function () {
+                    // category creation
+                    return Categories.createChild(parentId);
+
+                }).then(function (childData) {
+                    // title / desc translation
                     self.$TitleTranslate.setAttribute(
                         'var',
                         'products.category.' + childData.id + '.title'
@@ -316,29 +323,30 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
                         'products.category.' + childData.id + '.description'
                     );
 
-                    require([
-                        'package/quiqqer/translator/bin/classes/Translator'
-                    ], function (Translator) {
+                    self.$TitleTranslate.createTranslation().then(function () {
+                        return self.$DescTranslate.createTranslation();
 
-                        var Translate = new Translator();
+                    }).then(function () {
+                        return QUI.getMessageHandler();
 
-                        Promise.all([
-                            self.$TitleTranslate.createTranslation(),
-                            self.$DescTranslate.createTranslation()
-                        ]).then(function () {
-                            return Translate.publish();
+                    }).then(function (MH) {
+                        MH.setAttribute('showMessages', true);
 
-                        }).then(function () {
-                            return Translate.refreshLocale();
+                        MH.addSuccess(
+                            QUILocale.get('quiqqer/products', 'message.category.successfully.created')
+                        );
 
-                        }).then(function () {
-                            self.fireEvent('success');
-                            resolve();
-                        }, reject);
-
+                        self.fireEvent('success', [self, childData]);
+                        resolve(childData);
                     });
 
+                }).catch(function () {
+                    QUI.getMessageHandler().then(function (MH) {
+                        MH.setAttribute('showMessages', true);
+                        reject();
+                    });
                 });
+
             });
         }
     });
