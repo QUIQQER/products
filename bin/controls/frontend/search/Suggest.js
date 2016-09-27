@@ -63,11 +63,12 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
         ],
 
         options: {
-            siteid : siteid,
-            project: project,
-            lang   : lang,
-            delay  : 500,
-            styles : false
+            siteid      : siteid,
+            project     : project,
+            lang        : lang,
+            delay       : 500,
+            styles      : false,
+            globalsearch: false
         },
 
         initialize: function (options) {
@@ -270,8 +271,8 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
                     }),
                     searchParams: JSON.encode({
                         freetext: this.$Input.value
-                    })
-
+                    }),
+                    globalsearch: this.getAttribute('globalsearch')
                 });
             }.bind(this));
         },

@@ -25,7 +25,8 @@ class Suggest extends QUI\Control
             'Site'                => false,
             'Project'             => false,
             'data-qui'            => 'package/quiqqer/products/bin/controls/frontend/search/Suggest',
-            'hideOnProductSearch' => false
+            'hideOnProductSearch' => false,
+            'globalsearch'        => false
         ));
 
         $this->addCSSFile(dirname(__FILE__) . '/Suggest.css');
@@ -42,6 +43,10 @@ class Suggest extends QUI\Control
     public function getBody()
     {
         $Engine = QUI::getTemplateManager()->getEngine();
+
+        if ($this->getAttribute('globalsearch')) {
+            $this->setAttribute('data-qui-options-globalsearch', 1);
+        }
 
         $Engine->assign(array(
             'this' => $this,
