@@ -1134,6 +1134,10 @@
             <de><![CDATA[Zur Preisberechnung]]></de>
             <en><![CDATA[For price calculation]]></en>
         </locale>
+        <locale name="product.fields.attributeList.entry.title">
+            <de><![CDATA[Listeneinträge]]></de>
+            <en><![CDATA[List entries]]></en>
+        </locale>
 
         <locale name="product.fields.attributeList.calcBasis">
             <de><![CDATA[Berechnungs-Grundlage]]></de>

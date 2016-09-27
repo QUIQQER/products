@@ -102,7 +102,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
 
             new Element('div', {
                 'class': 'quiqqer-products-attributeList-settings-title',
-                html   : 'Listen Einträge',
+                html   : QUILocale.get(lg, 'product.fields.attributeList.entry.title'),
                 styles : {
                     marginTop: 20
                 }
