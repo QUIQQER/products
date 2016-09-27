@@ -1431,7 +1431,8 @@ class Model extends QUI\QDOM
 
             if ($Folder) {
                 $images = $Folder->getImages(array(
-                    'limit' => 1
+                    'limit' => 1,
+                    'order' => 'priority ASC, title ASC'
                 ));
 
                 if (isset($images[0])) {
