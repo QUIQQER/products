@@ -469,7 +469,10 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 });
 
                 self.resize();
-            });
+            }).catch(function (err) {
+                console.error(err);
+                this.close();
+            }.bind(this));
         },
 
         /**
@@ -516,7 +519,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
         refresh: function () {
             var categoryId = this.getAttribute('categoryId');
 
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
                 Categories.getChild(categoryId).then(function (data) {
                     this.$data = data;
 
@@ -551,6 +554,9 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                         resolve(data);
                     }.bind(this));
 
+                }.bind(this), function (err) {
+                    console.error(err);
+                    reject();
                 }.bind(this));
             }.bind(this));
         },

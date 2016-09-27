@@ -539,6 +539,10 @@
             <de><![CDATA[Das Feld wurde erfolgreich erstellt.]]></de>
             <en><![CDATA[The field has been successfully created.]]></en>
         </locale>
+        <locale name="message.category.successfully.created">
+            <de><![CDATA[Die Kategorie wurde erfolgreich erstellt.]]></de>
+            <en><![CDATA[The category has been successfully created.]]></en>
+        </locale>
 
         <!-- crons -->
         <locale name="cron.updateProductCache.title">

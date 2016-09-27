@@ -285,6 +285,7 @@ class Categories
 
         $Category = self::getCategory($newId);
 
+        QUI\ERP\Products\Handler\Categories::clearCache($parentId);
         QUI::getEvents()->fireEvent('onQuiqqerProductsCategoryCreate', array($Category));
 
         return $Category;
