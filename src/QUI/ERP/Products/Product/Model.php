@@ -393,7 +393,8 @@ class Model extends QUI\QDOM
         $Category = $this->getCategory();
         $Site     = $Category->getSite();
 
-        if ($Site->getAttribute('type') !== 'quiqqer/products:types/category'
+        if ($Site->getAttribute('quiqqer.products.fake.type') ||
+            $Site->getAttribute('type') !== 'quiqqer/products:types/category'
             && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
         ) {
             QUI\System\Log::addWarning(
