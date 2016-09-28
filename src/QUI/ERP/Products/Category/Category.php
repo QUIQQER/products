@@ -607,8 +607,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         $ExceptionStack = new QUI\ExceptionStack();
 
         foreach ($productIds as $productId) {
-            set_time_limit(0);
-
+            set_time_limit(3);
+            
             try {
                 $Product = new Product($productId);
 
