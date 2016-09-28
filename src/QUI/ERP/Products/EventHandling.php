@@ -11,6 +11,9 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Handler\Search;
 
+use \Symfony\Component\HttpFoundation\RedirectResponse;
+use \Symfony\Component\HttpFoundation\Response;
+
 /**
  * Class EventHandling
  *
@@ -742,13 +745,41 @@ class EventHandling
      * @param QUI\Rewrite $Rewrite
      * @param $url
      */
-    public function onRequest(QUI\Rewrite $Rewrite, $url)
+    public static function onRequest(QUI\Rewrite $Rewrite, $url)
     {
-        if (strpos($url, '_p/') === false) {
+        if (QUI::getLocale()->getCurrent() != '_p') {
             return;
         }
 
-        echo $url;
-        exit;
+        $params = $Rewrite->getUrlParamsList();
+
+        if (!count($params)) {
+            return;
+        }
+
+        try {
+            $Product = Handler\Products::getProduct($params[0]);
+            $Project = $Rewrite->getProject();
+
+            if ('/_p/' . $url !== $Product->getUrl()) {
+                $Redirect = new RedirectResponse($Product->getUrl());
+                $Redirect->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
+
+                echo $Redirect->getContent();
+                $Redirect->send();
+                exit;
+            }
+
+            $Site = $Project->firstChild();
+            $Site->setAttribute('type', 'quiqqer/products:types/category');
+            $Site->setAttribute('quiqqer.products.settings.categoryId', 0);
+            $Site->setAttribute('quiqqer.products.fake.type', 1);
+            $Site->setAttribute('layout', $Project->getAttribute('layout'));
+
+            $_REQUEST['_url'] = '';
+
+            $Rewrite->setSite($Site);
+        } catch (QUI\Exception $Exception) {
+        }
     }
 }

@@ -9,6 +9,24 @@ $siteUrl = $Site->getLocation();
 $url     = $_REQUEST['_url'];
 $url     = pathinfo($url);
 
+// fallback url for a product, with NO category
+// this should never happen and is a configuration error
+if (strpos(QUI::getRequest()->getPathInfo(), '_p/') !== false) {
+    $_REQUEST['_url'] = QUI::getRequest()->getPathInfo();
+
+    if (strlen(URL_DIR) == 1) {
+        $_REQUEST['_url'] = ltrim($_REQUEST['_url'], URL_DIR);
+    } else {
+        $from             = '/' . preg_quote(URL_DIR, '/') . '/';
+        $_REQUEST['_url'] = preg_replace($from, '', $_REQUEST['_url'], 1);
+    }
+
+    $siteUrl = '';
+
+    $url = $_REQUEST['_url'];
+    $url = pathinfo($url);
+}
+
 // check product url
 if ($siteUrl != $_REQUEST['_url']) {
     $baseName = str_replace(
@@ -29,6 +47,7 @@ if ($siteUrl != $_REQUEST['_url']) {
 
         // weiterleitung, falls das produkt eine neue URL hat
         // kann passieren, wenn das produkt vorher in "alle produkte" war
+
         if ($productUrl != URL_DIR . $_REQUEST['_url']) {
             $Redirect = new RedirectResponse($productUrl);
             $Redirect->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
