@@ -388,14 +388,19 @@ class Model extends QUI\QDOM
      */
     public function getUrl()
     {
-        // @todo URL generierungs fehler abfangen und besser loggen, siehe bug block @hen
         $Category = $this->getCategory();
+        $Site     = $Category->getSite();
 
-        if (!$Category) {
-            return '';
+        if ($Site->getAttribute('type') !== 'quiqqer/products:types/category'
+            && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
+        ) {
+            QUI\System\Log::addWarning(
+                QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', array(
+                    'productId' => $this->getId(),
+                    'title'     => $this->getTitle()
+                ))
+            );
         }
-
-        $Site = $Category->getSite();
 
         $url = $Site->getUrlRewritten(array(
             0              => $this->getUrlName(),
@@ -1359,6 +1364,7 @@ class Model extends QUI\QDOM
      */
     public function getCategory()
     {
+        // fallback, but never happen
         if (is_null($this->Category)) {
             $categories = $this->getCategories();
 
@@ -1368,6 +1374,7 @@ class Model extends QUI\QDOM
             }
         }
 
+        // fallback, but never happen
         if (is_null($this->Category)) {
             try {
                 $this->Category = Categories::getMainCategory();

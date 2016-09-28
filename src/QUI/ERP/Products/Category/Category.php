@@ -347,13 +347,14 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             return $sites[0];
         }
 
-        throw new QUI\ERP\Products\Category\Exception(array(
-            'quiqqer/products',
-            'exception.category.has.no.site',
-            array(
-                'id' => $this->getId()
-            )
-        ));
+        QUI\System\Log::addWarning(
+            QUI::getLocale()->get('quiqqer/products', 'exception.category.has.no.site', array(
+                'id'    => $this->getId(),
+                'title' => $this->getTitle()
+            ))
+        );
+
+        return $Project->firstChild();
     }
 
     /**
@@ -608,7 +609,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         foreach ($productIds as $productId) {
             set_time_limit(3);
-            
+
             try {
                 $Product = new Product($productId);
 

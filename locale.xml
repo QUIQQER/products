@@ -426,6 +426,10 @@
             <de><![CDATA[Das Produkt #[productId] wurde nicht gefunden.]]></de>
             <en><![CDATA[The product #[productId] not found.]]></en>
         </locale>
+        <locale name="exception.product.url.missing">
+            <de><![CDATA[Für das Produkt #[productId] [title] konnte keine URL erzeugt werden.]]></de>
+            <en><![CDATA[An URL could not be generated for the product #[productId] [title].]]></en>
+        </locale>
         <locale name="exception.product.no.image">
             <de><![CDATA[Das Produkt #[productId] besitzt kein Bild.]]></de>
             <en><![CDATA[The product #[productId] has no image.]]></en>
