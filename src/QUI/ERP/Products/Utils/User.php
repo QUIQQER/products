@@ -35,6 +35,10 @@ class User
      */
     public static function getBruttoNettoUserStatus(UserInterface $User)
     {
+        if (QUI::getUsers()->isSystemUser($User)) {
+            return self::IS_NETTO_USER;
+        }
+
         $nettoStatus = $User->getAttribute('quiqqer.erp.isNettoUser');
 
         if (is_numeric($nettoStatus)) {

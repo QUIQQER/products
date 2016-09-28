@@ -1062,6 +1062,9 @@ class Model extends QUI\QDOM
         $Locale = new QUI\Locale();
         $Locale->setCurrent($lang);
 
+        $minPrice = $this->getMinimumPrice()->getNetto();
+        $maxPrice = $this->getMaximumPrice()->getNetto();
+
         $data = array(
             'productNo' => $this->getFieldValueByLocale(
                 Fields::FIELD_PRODUCT_NO,
@@ -1072,8 +1075,8 @@ class Model extends QUI\QDOM
                 $Locale
             ),
             'active'    => $this->isActive() ? 1 : 0,
-            'minPrice'  => $this->getMinimumPrice()->getNetto(),
-            'maxPrice'  => $this->getMaximumPrice()->getNetto()
+            'minPrice'  => $minPrice ? $minPrice : 0,
+            'maxPrice'  => $maxPrice ? $maxPrice : 0
         );
 
         // permissions

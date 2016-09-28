@@ -148,10 +148,20 @@ abstract class Search extends QUI\QDOM
                     case SearchHandler::SEARCHTYPE_INPUTSELECTSINGLE:
                     case SearchHandler::SEARCHTYPE_SELECTRANGE:
                     case SearchHandler::SEARCHTYPE_INPUTSELECTRANGE:
-                        $params['select'] = array(
-                            'MIN(' . $column . ')',
-                            'MAX(' . $column . ')'
-                        );
+                        switch ($Field->getId()) {
+                            case Fields::FIELD_PRICE:
+                                $params['select'] = array(
+                                    'MIN(`minPrice`)',
+                                    'MAX(`maxPrice`)'
+                                );
+                                break;
+
+                            default:
+                                $params['select'] = array(
+                                    'MIN(`' . $column . '`)',
+                                    'MAX(`' . $column . '`)'
+                                );
+                        }
 
                         break;
                 }
@@ -162,13 +172,13 @@ abstract class Search extends QUI\QDOM
                 switch ($Field->getSearchType()) {
                     case SearchHandler::SEARCHTYPE_SELECTSINGLE:
                     case SearchHandler::SEARCHTYPE_INPUTSELECTSINGLE:
-                        $params['select'] = array($column);
+                        $params['select'] = array('`' . $column . '`');
                         $params['group']  = $column;
 
                         break;
 
                     case SearchHandler::SEARCHTYPE_SELECTMULTI:
-                        $params['select'] = array($column);
+                        $params['select'] = array('`' . $column . '`');
                         break;
                 }
 
@@ -192,10 +202,21 @@ abstract class Search extends QUI\QDOM
 
         switch ($Field->getSearchDataType()) {
             case SearchHandler::SEARCHDATATYPE_NUMERIC:
-                $values = $Field->calculateValueRange(
-                    $result[0]['MIN(' . $column . ')'],
-                    $result[0]['MAX(' . $column . ')']
-                );
+                switch ($Field->getId()) {
+                    case Fields::FIELD_PRICE:
+                        $values = $Field->calculateValueRange(
+                            $result[0]['MIN(`minPrice`)'],
+                            $result[0]['MAX(`maxPrice`)']
+                        );
+                        break;
+
+                    default:
+                        $values = $Field->calculateValueRange(
+                            $result[0]['MIN(' . $column . ')'],
+                            $result[0]['MAX(' . $column . ')']
+                        );
+                }
+
                 break;
 
             case SearchHandler::SEARCHDATATYPE_TEXT:
