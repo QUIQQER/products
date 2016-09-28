@@ -118,47 +118,55 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        $decimalSeperator   = QUI::getLocale()->getDecimalSeperator();//'.';
-        $thousandsSeperator = QUI::getLocale()->getGroupingSeperator();//',';
+        $localeCode = QUI::getLocale()->getLocalesByLang(
+            QUI::getLocale()->getCurrent()
+        );
 
-        if (is_float($value)) {
-            return round($value, 8);
-        }
+        $Formatter = new \NumberFormatter($localeCode[0], \NumberFormatter::DECIMAL);
 
-        $value = (string)$value;
-        $value = preg_replace('#[^\d,.]#i', '', $value);
+        return $Formatter->parse($value);
 
-        if (trim($value) === '') {
-            return null;
-        }
-
-        $decimal   = mb_strpos($value, $decimalSeperator);
-        $thousands = mb_strpos($value, $thousandsSeperator);
-
-        if ($thousands === false && $decimal === false) {
-            return round(floatval($value), 8);
-        }
-
-        if ($thousands !== false && $decimal === false) {
-            if (mb_substr($value, -8, 1) === $decimalSeperator) {
-                $value = str_replace($thousandsSeperator, '', $value);
-            }
-        }
-
-        if ($thousands === false && $decimal !== false) {
-            $value = str_replace(
-                $decimalSeperator,
-                '.',
-                $value
-            );
-        }
-
-        if ($thousands !== false && $decimal !== false) {
-            $value = str_replace($decimalSeperator, '', $value);
-            $value = str_replace($thousandsSeperator, '.', $value);
-        }
-
-        return round(floatval($value), 8);
+//        $decimalSeperator   = QUI::getLocale()->getDecimalSeperator();//'.';
+//        $thousandsSeperator = QUI::getLocale()->getGroupingSeperator();//',';
+//
+//        if (is_float($value)) {
+//            return round($value, 8);
+//        }
+//
+//        $value = (string)$value;
+//        $value = preg_replace('#[^\d,.]#i', '', $value);
+//
+//        if (trim($value) === '') {
+//            return null;
+//        }
+//
+//        $decimal   = mb_strpos($value, $decimalSeperator);
+//        $thousands = mb_strpos($value, $thousandsSeperator);
+//
+//        if ($thousands === false && $decimal === false) {
+//            return round(floatval($value), 8);
+//        }
+//
+//        if ($thousands !== false && $decimal === false) {
+//            if (mb_substr($value, -8, 1) === $decimalSeperator) {
+//                $value = str_replace($thousandsSeperator, '', $value);
+//            }
+//        }
+//
+//        if ($thousands === false && $decimal !== false) {
+//            $value = str_replace(
+//                $decimalSeperator,
+//                '.',
+//                $value
+//            );
+//        }
+//
+//        if ($thousands !== false && $decimal !== false) {
+//            $value = str_replace($decimalSeperator, '', $value);
+//            $value = str_replace($thousandsSeperator, '.', $value);
+//        }
+//
+//        return round(floatval($value), 8);
     }
 
     /**

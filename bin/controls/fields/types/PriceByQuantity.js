@@ -62,10 +62,6 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
 
             try {
                 data = JSON.decode(this.$Input.value);
-
-                if ("price" in data) {
-                    data.price = parseFloat(data.price);
-                }
             } catch (e) {
             }
 
@@ -89,12 +85,13 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
                 'class'    : 'quiqqer-products-field-priceByQuantity-price',
                 type       : 'text',
                 placeholder: this.$Formatter.format(1000),
-                value      : data.price ? this.$Formatter.format(data.price) : '',
                 events     : {
                     change: this.refresh,
                     blur  : this.refresh
                 }
             }).inject(this.$Elm);
+
+            this.setPriceValue(data.price);
 
             this.$Currency = new Element('span', {
                 'class': 'quiqqer-products-field-priceByQuantity-currency',
@@ -111,6 +108,8 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
                     blur  : this.refresh
                 }
             }).inject(this.$Elm);
+
+            this.refresh();
         },
 
         /**
@@ -143,12 +142,12 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
             }
 
             if (typeOf(value) === 'number') {
-                this.$Price.value = parseFloat(value);
+                this.setPriceValue(value);
             }
 
             if (typeOf(value) === 'object') {
                 if ("price" in value) {
-                    this.$Price.value = this.$Formatter.format(parseFloat(value.price));
+                    this.setPriceValue(value.price);
                 }
 
                 if ("quantity" in value) {
@@ -161,7 +160,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
                     value = JSON.decode(value);
 
                     if ("price" in value) {
-                        this.$Price.value = this.$Formatter.format(parseFloat(value.price));
+                        this.setPriceValue(value.price);
                     }
 
                     if ("quantity" in value) {
@@ -170,10 +169,32 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
                 } catch (e) {
                 }
             } else if (typeOf(value) === 'string') {
-                this.$Price.value = parseFloat(value);
+                this.setPriceValue(value);
             }
 
             this.refresh();
+        },
+
+        /**
+         * Return the current value
+         */
+        setPriceValue: function (value) {
+            if (value === '' || !value) {
+                this.$Price.value = '';
+                return;
+            }
+
+            var groupingSeperator = QUILocale.getGroupingSeperator();
+            var decimalSeperator  = QUILocale.getDecimalSeperator();
+
+            if (typeOf(value) === 'string' && value.indexOf(groupingSeperator) >= 0 ||
+                typeOf(value) === 'string' && value.indexOf(decimalSeperator) >= 0) {
+
+                this.$Price.value = value;
+                return;
+            }
+
+            this.$Price.value = this.$Formatter.format(parseFloat(value));
         },
 
         /**
