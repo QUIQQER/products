@@ -216,7 +216,7 @@ class Price extends QUI\ERP\Products\Field\Field
         $max *= $maxTaxValue;
 
         if ($min < 1) {
-            $start = 0.1;
+            $start = 0;
         } else {
             // round down to lowest 10 (e.g.: 144 = 140; 2554 = 2550)
             $floorPrecision = 1;
