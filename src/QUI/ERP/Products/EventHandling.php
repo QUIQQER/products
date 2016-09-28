@@ -735,4 +735,20 @@ class EventHandling
             QUI\ERP\Products\Search\Cache::clear('products/search/userfieldids/');
         }
     }
+
+    /**
+     * event : on request
+     *
+     * @param QUI\Rewrite $Rewrite
+     * @param $url
+     */
+    public function onRequest(QUI\Rewrite $Rewrite, $url)
+    {
+        if (strpos($url, '_p/') === false) {
+            return;
+        }
+
+        echo $url;
+        exit;
+    }
 }

@@ -9,4 +9,5 @@
     <event on="onUserSaveBegin" fire="\QUI\ERP\Products\EventHandling::onUserSave"/>
     <event on="onTemplateGetHeader" fire="\QUI\ERP\Products\EventHandling::onTemplateGetHeader"/>
     <event on="onPermissionsSet" fire="\QUI\ERP\Products\EventHandling::onPermissionsSet"/>
+    <event on="onRequest" fire="\QUI\ERP\Products\EventHandling::onRequest"/>
 </events>
