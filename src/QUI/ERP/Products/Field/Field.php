@@ -649,7 +649,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 return $this;
         }
 
-        return parent::setAttribute($name, $val);
+        parent::setAttribute($name, $val);
+
+        return $this;
     }
 
     /**

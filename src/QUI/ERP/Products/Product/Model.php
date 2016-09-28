@@ -133,6 +133,11 @@ class Model extends QUI\QDOM
             }
         }
 
+        if (!isset($this->categories[0])) {
+            $this->categories[0] = QUI\ERP\Products\Handler\Categories::getCategory(0);
+        }
+
+
         // main category
         $mainCategory = $this->getAttribute('category');
 
@@ -141,6 +146,10 @@ class Model extends QUI\QDOM
                 $this->Category = Categories::getCategory($mainCategory);
             } catch (QUI\Exception $Exception) {
             }
+        }
+
+        if (!$this->Category) {
+            $this->Category = $this->categories[0];
         }
 
 
@@ -379,6 +388,7 @@ class Model extends QUI\QDOM
      */
     public function getUrl()
     {
+        // @todo URL generierungs fehler abfangen und besser loggen, siehe bug block @hen
         $Category = $this->getCategory();
 
         if (!$Category) {
@@ -493,6 +503,10 @@ class Model extends QUI\QDOM
         try {
             $Field = $this->getField($field);
             $data  = $Field->getValue();
+
+            if (empty($data)) {
+                return false;
+            }
 
             if (is_string($data)) {
                 return $data;
