@@ -383,6 +383,8 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Return the URL for the product
+     * It uses the current project
      *
      * @return string
      */
