@@ -402,6 +402,8 @@ class Model extends QUI\QDOM
                     'title'     => $this->getTitle()
                 ))
             );
+
+            return '/_p/' . $this->getUrlName();
         }
 
         $url = $Site->getUrlRewritten(array(
