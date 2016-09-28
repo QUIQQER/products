@@ -158,9 +158,6 @@ class PriceByQuantity extends Price
         $price    = $value['price'];
         $quantity = $value['quantity'];
 
-        $decimalSeperator   = QUI::getLocale()->getDecimalSeperator();//'.';
-        $thousandsSeperator = QUI::getLocale()->getGroupingSeperator();//',';
-
         if (is_float($price)) {
             return array(
                 'price'    => $price,
@@ -168,41 +165,12 @@ class PriceByQuantity extends Price
             );
         }
 
-        $price = (string)$price;
-        $price = preg_replace('#[^\d,.]#i', '', $price);
+        $localeCode = QUI::getLocale()->getLocalesByLang(
+            QUI::getLocale()->getCurrent()
+        );
 
-        if (trim($price) === '') {
-            return $defaultReturn;
-        }
-
-        $decimal   = mb_strpos($price, $decimalSeperator);
-        $thousands = mb_strpos($price, $thousandsSeperator);
-
-        if ($thousands === false && $decimal === false) {
-            return array(
-                'price'    => round(floatval($price), 8),
-                'quantity' => (int)$quantity,
-            );
-        }
-
-        if ($thousands !== false && $decimal === false) {
-            if (mb_substr($price, -8, 1) === $decimalSeperator) {
-                $price = str_replace($thousandsSeperator, '', $price);
-            }
-        }
-
-        if ($thousands === false && $decimal !== false) {
-            $price = str_replace(
-                $decimalSeperator,
-                '.',
-                $price
-            );
-        }
-
-        if ($thousands !== false && $decimal !== false) {
-            $price = str_replace($decimalSeperator, '', $price);
-            $price = str_replace($thousandsSeperator, '.', $price);
-        }
+        $Formatter = new \NumberFormatter($localeCode[0], \NumberFormatter::DECIMAL);
+        $price     = $Formatter->parse($price);
 
         return array(
             'price'    => round(floatval($price), 8),

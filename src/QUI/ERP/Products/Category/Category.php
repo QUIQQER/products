@@ -593,18 +593,31 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
     /**
      * Set all field settings to all products in the category
+     *
+     * @throws QUI\ExceptionStack
+     *
+     * @todo auslagern auf queue, wenn queue service existiert
+     * @todo ansonsten über junks aufbauen
+     * @todo vorsicht wegen timeouts bei 10.000 produkten
      */
     public function setFieldsToAllProducts()
     {
-        $productIds = $this->getProductIds();
-        $fields     = $this->getFields();
+        $productIds     = $this->getProductIds();
+        $fields         = $this->getFields();
+        $ExceptionStack = new QUI\ExceptionStack();
 
         foreach ($productIds as $productId) {
-            $Product = new Product($productId);
+            set_time_limit(3);
+            
+            try {
+                $Product = new Product($productId);
 
-            foreach ($fields as $Field) {
-                $Product->addField($Field);
-                $Product->save();
+                foreach ($fields as $Field) {
+                    $Product->addField($Field);
+                    $Product->save();
+                }
+            } catch (QUI\Exception $Exception) {
+                $ExceptionStack->addException($Exception);
             }
         }
 
@@ -612,6 +625,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             'onQuiqqerProductsCategorySetFieldsToAllProducts',
             array($this)
         );
+
+        if (!$ExceptionStack->isEmpty()) {
+            throw $ExceptionStack;
+        }
     }
 
     /**
