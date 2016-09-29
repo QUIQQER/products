@@ -740,6 +740,26 @@ class EventHandling
     }
 
     /**
+     * Event on product save
+     *
+     * @param QUI\ERP\Products\Product\Model $Product
+     */
+    public static function onQuiqqerProductsProductSave($Product)
+    {
+        QUI\ERP\Products\Search\Cache::clear('products/search/frontend/searchfielddata/');
+    }
+
+    /**
+     * Event on field save
+     *
+     * @param QUI\ERP\Products\Field\Field $Field
+     */
+    public static function onQuiqqerProductsFieldSave($Field)
+    {
+        QUI\ERP\Products\Search\Cache::clear('products/search/frontend/searchfielddata/');
+    }
+
+    /**
      * event : on request
      *
      * @param QUI\Rewrite $Rewrite
