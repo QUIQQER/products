@@ -693,9 +693,15 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         $showCreateButton: function () {
             this.$CreateButton.getElm().setStyle('display', null);
 
-            this.$List.setStyles({
-                width: 'calc(100% - 100px)'
-            });
+            if (this.getAttribute('max') == 1) {
+                this.$List.setStyles({
+                    width: 'calc(100% - 100px)'
+                });
+            } else {
+                this.$List.setStyles({
+                    width: 'calc(100% - 50px)'
+                });
+            }
         },
 
         /**
@@ -704,9 +710,15 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         $hideCreateButton: function () {
             this.$CreateButton.getElm().setStyle('display', 'none');
 
-            this.$List.setStyles({
-                width: 'calc(100% - 50px)'
-            });
+            if (this.getAttribute('max') == 1) {
+                this.$List.setStyles({
+                    width: 'calc(100% - 50px)'
+                });
+            } else {
+                this.$List.setStyles({
+                    width: '100%'
+                });
+            }
         },
 
         /**
