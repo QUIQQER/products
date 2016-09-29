@@ -118,6 +118,14 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
+        if (trim($value) === '') {
+            return null;
+        }
+
+        if (is_float($value)) {
+            return round($value, 8);
+        }
+
         $localeCode = QUI::getLocale()->getLocalesByLang(
             QUI::getLocale()->getCurrent()
         );
