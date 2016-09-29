@@ -746,7 +746,7 @@ class EventHandling
      */
     public static function onQuiqqerProductsProductSave($Product)
     {
-        QUI\ERP\Products\Search\Cache::clear('products/search/frontend/searchfielddata/');
+        QUI\ERP\Products\Search\Cache::clear('products/search/backend/fieldvalues/');
     }
 
     /**
@@ -756,7 +756,7 @@ class EventHandling
      */
     public static function onQuiqqerProductsFieldSave($Field)
     {
-        QUI\ERP\Products\Search\Cache::clear('products/search/frontend/searchfielddata/');
+        QUI\ERP\Products\Search\Cache::clear('products/search/backend/fieldvalues/' . $Field->getId());
     }
 
     /**
