@@ -486,7 +486,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                     var complete = [].append(categoriesFields)
                         .append(systemFields)
-                        .append(standardFields);
+                        .append(standardFields)
+                        .append(fields);
 
                     // cleanup complete list
                     var completeIds = {};
