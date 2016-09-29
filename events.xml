@@ -10,6 +10,4 @@
     <event on="onTemplateGetHeader" fire="\QUI\ERP\Products\EventHandling::onTemplateGetHeader"/>
     <event on="onPermissionsSet" fire="\QUI\ERP\Products\EventHandling::onPermissionsSet"/>
     <event on="onRequest" fire="\QUI\ERP\Products\EventHandling::onRequest"/>
-    <event on="onQuiqqerProductsProductSave" fire="\QUI\ERP\Products\EventHandling::onQuiqqerProductsProductSave"/>
-    <event on="onQuiqqerProductsFieldSave" fire="\QUI\ERP\Products\EventHandling::onQuiqqerProductsFieldSave"/>
 </events>
