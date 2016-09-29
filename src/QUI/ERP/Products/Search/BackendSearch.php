@@ -107,34 +107,39 @@ class BackendSearch extends Search
             } else {
                 $whereFreeText = array();
 
-                // always search tags
-                $whereFreeText[]       = '`tags` LIKE :freetextTags';
-                $binds['freetextTags'] = array(
-                    'value' => '%,' . $value . ',%',
-                    'type'  => \PDO::PARAM_STR
-                );
+                // split search value by space
+                $freetextValues = explode(' ', $value);
 
-                $searchFields = $this->getSearchFields();
-
-                foreach ($searchFields as $fieldId => $search) {
-                    if (!$search) {
-                        continue;
-                    }
-
-                    $Field = Fields::getField($fieldId);
-
-                    // can only search fields with permission
-                    if (!$this->canSearchField($Field)) {
-                        continue;
-                    }
-
-                    $columnName = SearchHandler::getSearchFieldColumnName($Field);
-
-                    $whereFreeText[]              = '`' . $columnName . '` LIKE :freetext' . $fieldId;
-                    $binds['freetext' . $fieldId] = array(
-                        'value' => '%' . $value . '%',
+                foreach ($freetextValues as $value) {
+                    // always search tags
+                    $whereFreeText[]       = '`tags` LIKE :freetextTags';
+                    $binds['freetextTags'] = array(
+                        'value' => '%,' . $value . ',%',
                         'type'  => \PDO::PARAM_STR
                     );
+
+                    $searchFields = $this->getSearchFields();
+
+                    foreach ($searchFields as $fieldId => $search) {
+                        if (!$search) {
+                            continue;
+                        }
+
+                        $Field = Fields::getField($fieldId);
+
+                        // can only search fields with permission
+                        if (!$this->canSearchField($Field)) {
+                            continue;
+                        }
+
+                        $columnName = SearchHandler::getSearchFieldColumnName($Field);
+
+                        $whereFreeText[]              = '`' . $columnName . '` LIKE :freetext' . $fieldId;
+                        $binds['freetext' . $fieldId] = array(
+                            'value' => '%' . $value . '%',
+                            'type'  => \PDO::PARAM_STR
+                        );
+                    }
                 }
 
                 if (!empty($whereFreeText)) {
