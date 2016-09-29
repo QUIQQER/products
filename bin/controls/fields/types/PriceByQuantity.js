@@ -179,7 +179,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
          * Return the current value
          */
         setPriceValue: function (value) {
-            if (value === '' || !value) {
+            if (value === '' || !value || value === 'false') {
                 this.$Price.value = '';
                 return;
             }
