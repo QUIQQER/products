@@ -292,8 +292,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }
                 }.bind(this));
 
-                this.$More.removeClass('disabled');
-                this.$showMoreButton();
+                if (this.$More.hasClass('disabled')) {
+                    this.$hideMoreButton();
+                } else {
+                    this.$showMoreButton()
+                }
             }
 
             // read url

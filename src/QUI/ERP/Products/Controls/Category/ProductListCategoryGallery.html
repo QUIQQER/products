@@ -32,8 +32,8 @@
     {/foreach}
 </div>
 
-{if $categoryStartNumber && categoryStartNumber < count($children)}
+{if $categoryStartNumber && $categoryStartNumber < count($children)}
     <div class="quiqqer-products-categoryGallery-catgory-more button">
-        Mehr laden
+        {locale group="quiqqer/products" var="category.control.productlist.button.more"}
     </div>
 {/if}
