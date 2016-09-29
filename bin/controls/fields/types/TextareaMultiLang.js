@@ -121,7 +121,7 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
                         }
                     }
 
-                    if (current in value) {
+                    if (value && current in value) {
                         Editor.setContent(value[current]);
                     }
 
@@ -170,6 +170,10 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
         save: function () {
             var value   = this.getAttribute('value');
             var current = this.getAttribute('current');
+
+            if (typeOf(value) !== 'object') {
+                value = {};
+            }
 
             value[current] = this.$Editor.getContent();
 
