@@ -64,22 +64,21 @@
                 </div>
             </div>
         </div>
-
     {/if}
 
     {if !$count && $this->getAttribute('hideEmptyProductList') && count($children)}
     {else}
-    <div class="quiqqer-products-productList-products-container">
-        <div class="quiqqer-products-productList-products-container-real">
-        {if $count}
-            {$products}
-        {else}
-            <div class="quiqqer-products-productList-sort__noProducts">
-                {locale group="quiqqer/products" var="message.product.search.empty"}
+        <div class="quiqqer-products-productList-products-container">
+            <div class="quiqqer-products-productList-products-container-real">
+            {if $count}
+                {$products}
+            {else}
+                <div class="quiqqer-products-productList-sort__noProducts">
+                    {locale group="quiqqer/products" var="message.product.search.empty"}
+                </div>
+            {/if}
             </div>
-        {/if}
         </div>
-    </div>
 
         {if $count}
         <div class="quiqqer-products-productList-products-more" {if $more}style="opacity: 0" {/if}>
