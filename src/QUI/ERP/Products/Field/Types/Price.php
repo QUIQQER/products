@@ -223,7 +223,7 @@ class Price extends QUI\ERP\Products\Field\Field
         $maxTaxValue = (100 + QUI\ERP\Tax\Utils::getMaxTax()) / 100;
         $max *= $maxTaxValue;
 
-        if ($min < 1) {
+        if ($min < 10) {
             $start = 0;
         } else {
             // round down to lowest 10 (e.g.: 144 = 140; 2554 = 2550)
