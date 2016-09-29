@@ -1786,16 +1786,25 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * Change the product status - activate / deactivate
          */
         $onActivationStatusChange: function () {
-            var Button = this.getButtons('status');
+            var self   = this,
+                Button = this.getButtons('status');
+
             Button.disable();
 
-            this.update().then(function () {
+            var Prom = Promise.resolve();
+
+            if (!Button.getStatus()) {
+                Prom = this.$Product.deactivate();
+            }
+
+            Prom.then(function () {
+                return self.update();
+
+            }).then(function () {
                 if (Button.getStatus()) {
-                    this.$Product.activate().then(this.refresh, this.refresh);
-                } else {
-                    this.$Product.deactivate().then(this.refresh, this.refresh);
+                    return self.$Product.activate();
                 }
-            }.bind(this));
+            }).then(self.refresh).catch(self.refresh);
         },
 
         /**
