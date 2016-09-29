@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
+use \Symfony\Component\HttpFoundation\Response;
 
 /**
  * Product frontend View
@@ -24,10 +25,27 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      *
      * @param Model $Product
      * @throws QUI\Permissions\Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function __construct(Model $Product)
     {
         $this->Product = $Product;
+
+        if (!$Product->isActive()) {
+            throw new QUI\ERP\Products\Product\Exception(
+                array(
+                    'quiqqer/products',
+                    'exception.product.not.found',
+                    array('productId' => $this->getId())
+                ),
+                404,
+                array(
+                    'id'     => $this->getId(),
+                    'view'   => 'frontend',
+                    'active' => 0
+                )
+            );
+        }
 
         if (!QUI\ERP\Products\Handler\Products::usePermissions()) {
             return;
@@ -51,7 +69,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
                     'quiqqer/system',
                     'exception.no.permission'
                 ),
-                \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN
+                Response::HTTP_FORBIDDEN
             );
         }
     }
