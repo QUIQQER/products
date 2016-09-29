@@ -206,7 +206,7 @@ class BackendSearch extends Search
         foreach ($binds as $var => $bind) {
             $Stmt->bindValue(':' . $var, $bind['value'], $bind['type']);
         }
-
+        
         try {
             $Stmt->execute();
             $result = $Stmt->fetchAll(\PDO::FETCH_ASSOC);

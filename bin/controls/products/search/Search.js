@@ -109,6 +109,7 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
             }).inject(this.$Elm);
 
             this.$Form = new Form({
+                limit : 150,
                 events: {
                     onSearchBegin: function () {
                         self.fireEvent('searchBegin', [self]);
@@ -122,7 +123,8 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
             });
 
             this.$Result = new Result({
-                events: {
+                perPage: 150,
+                events : {
                     onRefresh: function (Result, options) {
                         self.$Form.setAttribute('sheet', options.page);
                         self.$Form.setAttribute('limit', options.perPage);

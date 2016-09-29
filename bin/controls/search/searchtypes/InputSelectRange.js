@@ -168,6 +168,9 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
                 values[0],
                 values[values.length - 1]
             ]);
+
+            this.$Select.setAttribute('min', values[0]);
+            this.$Select.setAttribute('max', values[values.length - 1]);
         },
 
         /**
@@ -199,10 +202,17 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
         /**
          * Return the search value
          *
-         * @returns {Object}
+         * @returns {Object|Boolean}
          */
         getSearchValue: function () {
-            return this.$Select.getValue();
+            var value = this.$Select.getValue();
+
+            if (parseFloat(value.from) == this.$Select.getAttribute('min') &&
+                parseFloat(value.to) == this.$Select.getAttribute('max')) {
+                return false;
+            }
+
+            return value;
         },
 
         /**
