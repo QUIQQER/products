@@ -220,7 +220,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 );
 
                 if (wantedCategory && this.getCategory(wantedCategory)) {
-                    this.getCategory(wantedCategory).click();
+                    var Category = this.getCategory(wantedCategory);
+
+                    if (typeOf(Category) === 'qui/controls/buttons/Button') {
+                        Category.click();
+                    }
                 } else {
                     this.getCategory('information').click();
                 }
