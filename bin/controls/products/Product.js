@@ -220,7 +220,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 );
 
                 if (wantedCategory && this.getCategory(wantedCategory)) {
-                    this.getCategory(wantedCategory).click();
+                    var Category = this.getCategory(wantedCategory);
+
+                    if (typeOf(Category) === 'qui/controls/buttons/Button') {
+                        Category.click();
+                    }
                 } else {
                     this.getCategory('information').click();
                 }
@@ -927,7 +931,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         self.$Product.getTitle(),
                         self.$Product.getDescription(),
                         image,
-                        categories
+                        categories,
+                        self.$Product.getAttributes()
                     ]);
                 });
 
@@ -945,8 +950,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         image            : image,
                         categories       : categories,
                         fields           : [],
+                        c_date           : data[4].c_date || '---',
+                        c_user           : data[4].c_user,
+                        e_date           : data[4].e_date,
+                        e_user           : data[4].e_user,
                         productCategories: QUILocale.get(lg, 'productCategories'),
-                        productImage     : QUILocale.get(lg, 'productImage')
+                        productImage     : QUILocale.get(lg, 'productImage'),
+                        productEDate     : QUILocale.get('quiqqer/system', 'editdate'),
+                        productEUser     : QUILocale.get('quiqqer/system', 'edituser'),
+                        productCDate     : QUILocale.get('quiqqer/system', 'createdate'),
+                        productCUser     : QUILocale.get('quiqqer/system', 'createuser')
                     })
                 });
 

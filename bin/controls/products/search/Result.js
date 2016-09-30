@@ -196,6 +196,16 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                     dataIndex: 'price_currency',
                     dataType : 'text',
                     width    : 60
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'editdate'),
+                    dataIndex: 'e_date',
+                    dataType : 'text',
+                    width    : 100
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'createdate'),
+                    dataIndex: 'c_date',
+                    dataType : 'text',
+                    width    : 100
                 }]
             });
 
