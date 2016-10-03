@@ -547,9 +547,7 @@ class FrontendSearch extends Search
 
         foreach ($currentSearchFields as $fieldId => $search) {
             if (isset($searchFields[$fieldId])) {
-                $currentSearchFields[$fieldId] = boolval(
-                    $searchFields[$fieldId]
-                );
+                $currentSearchFields[$fieldId] = boolval($searchFields[$fieldId]);
             }
         }
 
@@ -563,6 +561,65 @@ class FrontendSearch extends Search
         $Edit->save();
 
         return $currentSearchFields;
+    }
+
+    /**
+     * Set the global default / fallback fields that are searchable
+     *
+     * @param array $searchFields
+     * @return array - search fields
+     */
+    public static function setGlobalSearchFields($searchFields)
+    {
+        $GlobaleSearch       = new QUI\ERP\Products\Search\GlobalFrontendSearch();
+        $currentSearchFields = $GlobaleSearch->getSearchFields();
+        $newSearchFieldIds   = array();
+
+        foreach ($currentSearchFields as $fieldId => $search) {
+            if (isset($searchFields[$fieldId])
+                && $searchFields[$fieldId]
+            ) {
+                $newSearchFieldIds[] = $fieldId;
+            } else {
+                unset($currentSearchFields[$fieldId]);
+            }
+        }
+
+        $PackageCfg = QUI\ERP\Products\Utils\Package::getConfig();
+
+        $PackageCfg->set(
+            'search',
+            'frontend',
+            implode(',', $newSearchFieldIds)
+        );
+
+        $PackageCfg->save();
+
+
+        // field result
+        $searchFields          = array();
+        $PackageCfg            = QUI\ERP\Products\Utils\Package::getConfig();
+        $searchFieldIdsFromCfg = $PackageCfg->get('search', 'frontend');
+
+        if ($searchFieldIdsFromCfg === false) {
+            $searchFieldIdsFromCfg = array();
+        } else {
+            $searchFieldIdsFromCfg = explode(',', $searchFieldIdsFromCfg);
+        }
+
+        $eligibleFields = $GlobaleSearch->getEligibleSearchFields();
+
+        /** @var QUI\ERP\Products\Field\Field $Field */
+        foreach ($eligibleFields as $Field) {
+            if (!in_array($Field->getId(), $searchFieldIdsFromCfg)) {
+                $searchFields[$Field->getId()] = false;
+                continue;
+            }
+
+            $searchFields[$Field->getId()] = true;
+        }
+
+        return $searchFields;
     }
 
     /**
