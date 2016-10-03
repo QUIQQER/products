@@ -85,6 +85,11 @@ class Products
             return self::$list[$pid];
         }
 
+        // Wenn der RAM zu voll wird, Objekte mal leeren
+        if (QUI\Utils\System::memUsageToHigh()) {
+            self::$list = array();
+        }
+
         $Product          = new QUI\ERP\Products\Product\Product($pid);
         self::$list[$pid] = $Product;
 

@@ -641,6 +641,11 @@ class Fields
             return clone self::$list[$fieldId];
         }
 
+        // Wenn der RAM zu voll wird, Objekte mal leeren
+        if (QUI\Utils\System::memUsageToHigh()) {
+            self::$list = array();
+        }
+
         try {
             $data = QUI\Cache\Manager::get(
                 QUI\ERP\Products\Handler\Fields::getFieldCacheName($fieldId)
