@@ -678,10 +678,16 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     autoclose: false,
                     events   : {
                         onSubmit: function (Win) {
+                            Win.Loader.setAttribute('closetime', 100000);
                             Win.Loader.show();
                             Categories.setFieldsToAllProducts(categoryId).then(function () {
                                 Win.close();
                                 resolve();
+                            }).catch(function (Exception) {
+                                Win.Loader.hide();
+                                QUI.getMessageHandler().then(function (MH) {
+                                    MH.addError(Exception.getMessage());
+                                });
                             });
                         },
                         onCancel: function () {
