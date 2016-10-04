@@ -187,9 +187,10 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
             var groupingSeperator = QUILocale.getGroupingSeperator();
             var decimalSeperator  = QUILocale.getDecimalSeperator();
 
-            if (typeOf(value) === 'string' && value.indexOf(groupingSeperator) >= 0 ||
-                typeOf(value) === 'string' && value.indexOf(decimalSeperator) >= 0) {
+            var foundGroupSeperator   = typeOf(value) === 'string' && value.indexOf(groupingSeperator) >= 0;
+            var foundDecimalSeperator = typeOf(value) === 'string' && value.indexOf(decimalSeperator) >= 0;
 
+            if ((foundGroupSeperator || foundDecimalSeperator) && !(foundGroupSeperator && !foundDecimalSeperator)) {
                 this.$Price.value = value;
                 return;
             }
