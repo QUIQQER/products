@@ -94,9 +94,9 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantitySettin
 
             // values
             if (this.getAttribute('groups')) {
-                this.$Groups.addGroups(
-                    this.getAttribute('groups').toString().split(',')
-                );
+                this.getAttribute('groups').toString().split(',').each(function (gid) {
+                    this.$Groups.addItem(gid);
+                }.bind(this));
             }
         },
 
