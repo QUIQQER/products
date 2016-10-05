@@ -109,8 +109,6 @@ class Calc
 
     /**
      * Static instance create
-     *
-     * @return Calc
      */
     public function ignoreVatCalculation()
     {
