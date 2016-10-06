@@ -338,6 +338,11 @@
             <de><![CDATA[Preis in Abhängigkeit von Stückzahl]]></de>
             <en><![CDATA[Price depending on quantity]]></en>
         </locale>
+        <locale name="fieldtype.PriceByQuantity.frontend.text">
+            <de><![CDATA[[price] ab [quantity] Stück]]></de>
+            <en><![CDATA[[price] by [quantity] pieces]]></en>
+        </locale>
+
         <locale name="fieldtype.Textarea">
             <de><![CDATA[Langer Text]]></de>
             <en><![CDATA[Long text]]></en>
@@ -743,6 +748,10 @@
         <locale name="exceptions.system.fields.cant.be.deleted">
             <de><![CDATA[Das Feld #[id] [title] kann nicht gelöscht werden]]></de>
             <en><![CDATA[The field #[id] [title] could not be deleted]]></en>
+        </locale>
+        <locale name="message.control.product.fields.no.data">
+            <de><![CDATA[Keine Dateien enthalten.]]></de>
+            <en><![CDATA[No data included.]]></en>
         </locale>
     </groups>
 

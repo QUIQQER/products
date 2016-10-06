@@ -41,7 +41,13 @@ class View extends UniqueField
             return '';
         }
 
-        $value = htmlspecialchars($this->getValue());
+        $value = $this->getValue();
+
+        if (!is_numeric($value) && !is_string($value)) {
+            $value = '';
+        }
+
+        $value = htmlspecialchars($value);
         $title = htmlspecialchars($this->getTitle());
 
         return '<div class="quiqqer-product-field">

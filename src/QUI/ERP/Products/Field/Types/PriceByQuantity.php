@@ -93,9 +93,14 @@ class PriceByQuantity extends Price
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
 
+        $valueText = QUI::getLocale()->get('quiqqer/products', 'fieldtype.PriceByQuantity.frontend.text', array(
+            'price'    => $Price->getDisplayPrice(),
+            'quantity' => (int)$value['quantity']
+        ));
+
         return new View(array(
             'id'       => $this->getId(),
-            'value'    => $Price->getDisplayPrice(),
+            'value'    => $valueText,
             'title'    => $this->getTitle(),
             'prefix'   => $this->getAttribute('prefix'),
             'suffix'   => $this->getAttribute('suffix'),
