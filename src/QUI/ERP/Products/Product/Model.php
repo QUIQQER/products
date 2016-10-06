@@ -498,10 +498,14 @@ class Model extends QUI\QDOM
                 return $data;
             }
 
+            if (empty($data)) {
+                return false;
+            }
+
             if (isset($data[$current]) && !empty($data[$current])) {
                 return $data[$current];
             }
-
+            QUI\System\Log::writeRecursive($data);
             // search none empty
             foreach ($data as $lang => $value) {
                 if (!empty($data[$lang])) {
