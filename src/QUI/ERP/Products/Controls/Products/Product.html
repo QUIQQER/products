@@ -82,9 +82,7 @@
                 {if count($details)}
                 <table class="product-data-more-details-table">
                     {foreach $details as $Field}
-                    {if !empty($Field->getValue()) &&
-                    (is_string($Field->getValue()) || is_numeric($Field->getValue()))
-                    }
+                    {if !empty($Field->getValue()) || is_numeric($Field->getValue())}
                     <tr>
                         <td>
                             {$Field->getView()->create()}
@@ -137,7 +135,7 @@
                     {/if}
                     {foreachelse}
                     <tr>
-                        <td>Keine Dateien enthalten</td>
+                        <td>{locale group="quiqqer/products" var="message.control.product.fields.no.data"}</td>
                     </tr>
                     {/foreach}
                 </table>

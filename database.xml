@@ -11,6 +11,11 @@
             <field type="BIGINT(10) NULL">parent</field>
             <field type="TEXT">permissions</field>
 
+            <field type="timestamp NULL default NULL">c_date</field>
+            <field type="timestamp NULL default NULL">e_date</field>
+            <field type="INT(11)">c_user</field>
+            <field type="INT(11)">e_user</field>
+
             <primary>id</primary>
             <auto_increment>id</auto_increment>
         </table>

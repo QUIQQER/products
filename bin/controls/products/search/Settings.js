@@ -44,7 +44,8 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Input = null;
+            this.$Input     = null;
+            this.$confGroup = false;
 
             this.addEvents({
                 onImport: this.$onImport
@@ -57,6 +58,8 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
         $onImport: function () {
             this.$Input      = this.getElm();
             this.$Input.type = 'hidden';
+
+            this.$confGroup = this.$Input.name;
 
             // create
             this.$Elm = new Element('div', {
@@ -189,12 +192,30 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
          */
         setFields: function (searchFields) {
             return new Promise(function (resolve, reject) {
-                Ajax.post('package_quiqqer_products_ajax_search_backend_setSearchFields', resolve, {
+                var call = '';
+                switch (this.$confGroup) {
+                    case 'search.frontend':
+                        call = 'package_quiqqer_products_ajax_search_frontend_setGlobalSearchFields';
+                        break;
+
+                    case 'search.backend':
+                        call = 'package_quiqqer_products_ajax_search_backend_setSearchFields';
+                        break;
+
+                    case 'search.freetext':
+                        call = 'package_quiqqer_products_ajax_search_global_setSearchFields';
+                        break;
+
+                    default:
+                        return reject();
+                }
+
+                Ajax.post(call, resolve, {
                     'package'   : 'quiqqer/products',
                     onError     : reject,
                     searchFields: JSON.encode(searchFields)
                 });
-            });
+            }.bind(this));
         },
 
         /**

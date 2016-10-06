@@ -54,7 +54,8 @@ class ProductList extends QUI\Control
             'searchParams'         => false,
             'hideEmptyProductList' => false,
             'categoryStartNumber'  => false,
-            'showFilter'           => true // show the filter, or not
+            'showFilter'           => true, // show the filter, or not
+            'autoload'             => false
         ));
 
         $this->addCSSFile(dirname(__FILE__) . '/ProductList.css');
@@ -84,6 +85,7 @@ class ProductList extends QUI\Control
         $this->setAttribute('data-lang', $this->getSite()->getProject()->getLang());
         $this->setAttribute('data-siteid', $this->getSite()->getId());
         $this->setAttribute('data-productlist-id', $this->id);
+        $this->setAttribute('data-autoload', $this->getAttribute('autoload') ? 1 : 0);
 
         $products = '';
         $more     = false;

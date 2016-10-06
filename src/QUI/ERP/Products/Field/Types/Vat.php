@@ -32,6 +32,14 @@ class Vat extends QUI\ERP\Products\Field\Field
     }
 
     /**
+     * Return the frontend view
+     */
+    protected function getFrontendView()
+    {
+        return new VatFrontendView($this->getFieldDataForView());
+    }
+
+    /**
      * Check the value
      * is the value valid for the field type?
      *

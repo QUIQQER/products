@@ -85,6 +85,11 @@ class Products
             return self::$list[$pid];
         }
 
+        // Wenn der RAM zu voll wird, Objekte mal leeren
+        if (QUI\Utils\System::memUsageToHigh()) {
+            self::$list = array();
+        }
+
         $Product          = new QUI\ERP\Products\Product\Product($pid);
         self::$list[$pid] = $Product;
 
@@ -259,7 +264,9 @@ class Products
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
                 'fieldData'  => json_encode($fieldData),
-                'categories' => ',' . implode($categoryids, ',') . ','
+                'categories' => ',' . implode($categoryids, ',') . ',',
+                'c_user'     => QUI::getUserBySession()->getId(),
+                'c_date'     => date('Y-m-d H:i:s')
             )
         );
 
@@ -315,7 +322,6 @@ class Products
 
         // neuer media ordner erstellen
         $New->createMediaFolder(Fields::FIELD_FOLDER);
-
 
 
         // @todo titel setzen -> Kopie von

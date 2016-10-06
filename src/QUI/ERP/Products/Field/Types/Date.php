@@ -108,7 +108,7 @@ class Date extends QUI\ERP\Products\Field\Field
      */
     protected function getFrontendView()
     {
-        return new View($this->getFieldDataForView());
+        return new DateFrontendView($this->getFieldDataForView());
     }
 
     /**

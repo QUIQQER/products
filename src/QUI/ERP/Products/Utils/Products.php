@@ -87,7 +87,7 @@ class Products
             $options = $Field->getOptions();
 
             if (!isset($options['groups'])) {
-                return false;
+                return true;
             }
 
             if (isset($options['ignoreForPriceCalculation'])
@@ -99,7 +99,7 @@ class Products
             $groups = explode(',', $options['groups']);
 
             if (empty($groups)) {
-                return false;
+                return true;
             }
 
             foreach ($groups as $gid) {

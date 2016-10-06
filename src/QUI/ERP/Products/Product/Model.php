@@ -133,6 +133,11 @@ class Model extends QUI\QDOM
             }
         }
 
+        if (!isset($this->categories[0])) {
+            $this->categories[0] = QUI\ERP\Products\Handler\Categories::getCategory(0);
+        }
+
+
         // main category
         $mainCategory = $this->getAttribute('category');
 
@@ -141,6 +146,10 @@ class Model extends QUI\QDOM
                 $this->Category = Categories::getCategory($mainCategory);
             } catch (QUI\Exception $Exception) {
             }
+        }
+
+        if (!$this->Category) {
+            $this->Category = $this->categories[0];
         }
 
 
@@ -374,18 +383,29 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Return the URL for the product
+     * It uses the current project
      *
      * @return string
      */
     public function getUrl()
     {
         $Category = $this->getCategory();
+        $Site     = $Category->getSite();
 
-        if (!$Category) {
-            return '';
+        if ($Site->getAttribute('quiqqer.products.fake.type') ||
+            $Site->getAttribute('type') !== 'quiqqer/products:types/category'
+            && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
+        ) {
+            QUI\System\Log::addWarning(
+                QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', array(
+                    'productId' => $this->getId(),
+                    'title'     => $this->getTitle()
+                ))
+            );
+
+            return '/_p/' . $this->getUrlName();
         }
-
-        $Site = $Category->getSite();
 
         $url = $Site->getUrlRewritten(array(
             0              => $this->getUrlName(),
@@ -493,6 +513,10 @@ class Model extends QUI\QDOM
         try {
             $Field = $this->getField($field);
             $data  = $Field->getValue();
+
+            if (empty($data)) {
+                return false;
+            }
 
             if (is_string($data)) {
                 return $data;
@@ -806,7 +830,9 @@ class Model extends QUI\QDOM
                 'categories'  => ',' . implode(',', $categoryIds) . ',',
                 'category'    => $mainCategory,
                 'fieldData'   => json_encode($fieldData),
-                'permissions' => json_encode($this->permissions)
+                'permissions' => json_encode($this->permissions),
+                'e_user'      => QUI::getUserBySession()->getId(),
+                'e_date'      => date('Y-m-d H:i:s')
             ),
             array('id' => $this->getId())
         );
@@ -1040,6 +1066,9 @@ class Model extends QUI\QDOM
         $Locale = new QUI\Locale();
         $Locale->setCurrent($lang);
 
+        $minPrice = $this->getMinimumPrice()->getNetto();
+        $maxPrice = $this->getMaximumPrice()->getNetto();
+
         $data = array(
             'productNo' => $this->getFieldValueByLocale(
                 Fields::FIELD_PRODUCT_NO,
@@ -1050,8 +1079,8 @@ class Model extends QUI\QDOM
                 $Locale
             ),
             'active'    => $this->isActive() ? 1 : 0,
-            'minPrice'  => $this->getMinimumPrice()->getNetto(),
-            'maxPrice'  => $this->getMaximumPrice()->getNetto()
+            'minPrice'  => $minPrice ? $minPrice : 0,
+            'maxPrice'  => $maxPrice ? $maxPrice : 0
         );
 
         // permissions
@@ -1180,16 +1209,16 @@ class Model extends QUI\QDOM
      */
     public function getFields()
     {
-        $field = array();
+        $fields = array();
 
         /* @var $Field FieldInterface */
         foreach ($this->fields as $Field) {
             if (!$Field->isUnassigned()) {
-                $field[$Field->getId()] = $Field;
+                $fields[$Field->getId()] = $Field;
             }
         }
 
-        return $field;
+        return QUI\ERP\Products\Utils\Fields::sortFields($fields);
     }
 
     /**
@@ -1347,6 +1376,7 @@ class Model extends QUI\QDOM
      */
     public function getCategory()
     {
+        // fallback, but never happen
         if (is_null($this->Category)) {
             $categories = $this->getCategories();
 
@@ -1356,6 +1386,7 @@ class Model extends QUI\QDOM
             }
         }
 
+        // fallback, but never happen
         if (is_null($this->Category)) {
             try {
                 $this->Category = Categories::getMainCategory();
@@ -1433,7 +1464,8 @@ class Model extends QUI\QDOM
 
             if ($Folder) {
                 $images = $Folder->getImages(array(
-                    'limit' => 1
+                    'limit' => 1,
+                    'order' => 'priority ASC'
                 ));
 
                 if (isset($images[0])) {

@@ -17,43 +17,70 @@ use QUI\ERP\Products\Handler\Products;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_search_frontend_suggestRendered',
-    function ($project, $siteId, $searchParams) {
+    function ($project, $siteId, $searchParams, $globalsearch) {
         QUI\Permissions\Permission::checkPermission(
             Search::PERMISSION_FRONTEND_EXECUTE
         );
 
-        $Project = QUI\Projects\Manager::decode($project);
-
-        try {
-            $Site = $Project->get($siteId);
-        } catch (QUI\Exception $Exception) {
-            $Site = $Project->firstChild();
+        if (!isset($globalsearch)) {
+            $globalsearch = false;
         }
 
-        switch ($Site->getAttribute('type')) {
-            case FrontendSearch::SITETYPE_CATEGORY:
-            case FrontendSearch::SITETYPE_SEARCH:
-                break;
+        $Project = QUI\Projects\Manager::decode($project);
 
-            default:
-                $siteList = $Project->getSites(array(
-                    'where' => array(
-                        'type' => FrontendSearch::SITETYPE_SEARCH
+        // global search
+        // @todo richtige globale suche umsetzen, ist nur ein workaround
+        if ($globalsearch) {
+            $siteList = $Project->getSites(array(
+                'where' => array(
+                    'type' => FrontendSearch::SITETYPE_SEARCH
+                ),
+                'limit' => 1
+            ));
+
+            if (!isset($siteList[0])) {
+                throw new QUI\Exception(
+                    array(
+                        'quiqqer/products',
+                        'exception.sitesearch.not.found'
                     ),
-                    'limit' => 1
-                ));
+                    404
+                );
+            }
 
-                if (!isset($siteList[0])) {
-                    throw new QUI\Exception(
-                        array(
-                            'quiqqer/products',
-                            'exception.sitesearch.not.found'
+            $Site = $siteList[0];
+        } else {
+            try {
+                $Site = $Project->get($siteId);
+            } catch (QUI\Exception $Exception) {
+                $Site = $Project->firstChild();
+            }
+
+            switch ($Site->getAttribute('type')) {
+                case FrontendSearch::SITETYPE_CATEGORY:
+                case FrontendSearch::SITETYPE_SEARCH:
+                    break;
+
+                default:
+                    $siteList = $Project->getSites(array(
+                        'where' => array(
+                            'type' => FrontendSearch::SITETYPE_SEARCH
                         ),
-                        404
-                    );
-                }
+                        'limit' => 1
+                    ));
 
-                $Site = $siteList[0];
+                    if (!isset($siteList[0])) {
+                        throw new QUI\Exception(
+                            array(
+                                'quiqqer/products',
+                                'exception.sitesearch.not.found'
+                            ),
+                            404
+                        );
+                    }
+
+                    $Site = $siteList[0];
+            }
         }
 
         $Search       = Search::getFrontendSearch($Site);
@@ -107,5 +134,5 @@ QUI::$Ajax->registerFunction(
 
         return $html;
     },
-    array('project', 'siteId', 'searchParams')
+    array('project', 'siteId', 'searchParams', 'globalsearch')
 );

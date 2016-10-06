@@ -338,6 +338,11 @@
             <de><![CDATA[Preis in Abhängigkeit von Stückzahl]]></de>
             <en><![CDATA[Price depending on quantity]]></en>
         </locale>
+        <locale name="fieldtype.PriceByQuantity.frontend.text">
+            <de><![CDATA[[price] ab [quantity] Stück]]></de>
+            <en><![CDATA[[price] by [quantity] pieces]]></en>
+        </locale>
+
         <locale name="fieldtype.Textarea">
             <de><![CDATA[Langer Text]]></de>
             <en><![CDATA[Long text]]></en>
@@ -365,6 +370,10 @@
         <locale name="fieldtype.Tax">
             <de><![CDATA[Steuer]]></de>
             <en><![CDATA[Tax]]></en>
+        </locale>
+        <locale name="fieldtype.Tax.frontend.text">
+            <de><![CDATA[[title] [tax]%]]></de>
+            <en><![CDATA[[title] [tax]%]]></en>
         </locale>
         <locale name="fieldtype.Image">
             <de><![CDATA[Media Bild]]></de>
@@ -425,6 +434,10 @@
         <locale name="exception.product.not.found">
             <de><![CDATA[Das Produkt #[productId] wurde nicht gefunden.]]></de>
             <en><![CDATA[The product #[productId] not found.]]></en>
+        </locale>
+        <locale name="exception.product.url.missing">
+            <de><![CDATA[Für das Produkt #[productId] [title] konnte keine URL erzeugt werden.]]></de>
+            <en><![CDATA[An URL could not be generated for the product #[productId] [title].]]></en>
         </locale>
         <locale name="exception.product.no.image">
             <de><![CDATA[Das Produkt #[productId] besitzt kein Bild.]]></de>
@@ -538,6 +551,10 @@
         <locale name="message.field.successfully.created">
             <de><![CDATA[Das Feld wurde erfolgreich erstellt.]]></de>
             <en><![CDATA[The field has been successfully created.]]></en>
+        </locale>
+        <locale name="message.category.successfully.created">
+            <de><![CDATA[Die Kategorie wurde erfolgreich erstellt.]]></de>
+            <en><![CDATA[The category has been successfully created.]]></en>
         </locale>
 
         <!-- crons -->
@@ -735,6 +752,10 @@
         <locale name="exceptions.system.fields.cant.be.deleted">
             <de><![CDATA[Das Feld #[id] [title] kann nicht gelöscht werden]]></de>
             <en><![CDATA[The field #[id] [title] could not be deleted]]></en>
+        </locale>
+        <locale name="message.control.product.fields.no.data">
+            <de><![CDATA[Keine Dateien enthalten.]]></de>
+            <en><![CDATA[No data included.]]></en>
         </locale>
     </groups>
 
@@ -1105,11 +1126,11 @@
             <en><![CDATA[visible]]></en>
         </locale>
         <locale name="product.fields.grid.calcPriority">
-            <de><![CDATA[Priorität]]></de>
-            <en><![CDATA[Priority]]></en>
+            <de><![CDATA[Berechnungspriorität]]></de>
+            <en><![CDATA[Calculation priority]]></en>
         </locale>
         <locale name="product.fields.grid.calcPriority.desc">
-            <de><![CDATA[Berechnungs Priorität]]></de>
+            <de><![CDATA[Berechnungspriorität]]></de>
             <en><![CDATA[Calculating priority]]></en>
         </locale>
         <locale name="product.fields.grid.calcBasis">
@@ -1134,6 +1155,10 @@
             <de><![CDATA[Zur Preisberechnung]]></de>
             <en><![CDATA[For price calculation]]></en>
         </locale>
+        <locale name="product.fields.attributeList.entry.title">
+            <de><![CDATA[Listeneinträge]]></de>
+            <en><![CDATA[List entries]]></en>
+        </locale>
 
         <locale name="product.fields.attributeList.calcBasis">
             <de><![CDATA[Berechnungs-Grundlage]]></de>
@@ -1148,8 +1173,8 @@
             <en><![CDATA[Calculated price]]></en>
         </locale>
         <locale name="product.fields.attributeList.priority">
-            <de><![CDATA[Priorität]]></de>
-            <en><![CDATA[Priority]]></en>
+            <de><![CDATA[Berechnungspriorität]]></de>
+            <en><![CDATA[Calculation priority]]></en>
         </locale>
         <locale name="product.fields.attributeList.discounts">
             <de><![CDATA[Auf / Abschläge anzeigen]]></de>

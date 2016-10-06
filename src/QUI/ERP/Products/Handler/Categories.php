@@ -113,6 +113,11 @@ class Categories
             return self::$list[$id];
         }
 
+        // Wenn der RAM zu voll wird, Objekte mal leeren
+        if (QUI\Utils\System::memUsageToHigh()) {
+            self::$list = array();
+        }
+
         try {
             $categoryData = QUI\Cache\Manager::get(self::getCacheName($id));
         } catch (QUI\Exception $Eception) {
@@ -152,7 +157,7 @@ class Categories
      * Return the main category
      * New products are created automatically in this category.
      *
-     * @return QUI\ERP\Products\Category\Category
+     * @return QUI\ERP\Products\Interfaces\CategoryInterface
      * @throws QUI\Exception
      */
     public static function getMainCategory()
@@ -285,6 +290,7 @@ class Categories
 
         $Category = self::getCategory($newId);
 
+        QUI\ERP\Products\Handler\Categories::clearCache($parentId);
         QUI::getEvents()->fireEvent('onQuiqqerProductsCategoryCreate', array($Category));
 
         return $Category;

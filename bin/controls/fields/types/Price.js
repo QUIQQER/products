@@ -52,9 +52,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
             Elm.type        = 'text';
             Elm.placeholder = this.$Formatter.format(1000);
 
-            if (Elm.value !== '') {
-                Elm.value = this.$Formatter.format(parseFloat(Elm.value));
-            }
+            this.setValue(Elm.value);
 
             Elm.addEvent('change', function () {
                 self.fireEvent('change', [self]);
@@ -72,12 +70,21 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
 
         /**
          * Return the current value
-         *
-         * @returns {String}
          */
         setValue: function (value) {
-            if (value === '' || !value) {
+            if (value === '' || !value || value === 'false') {
                 this.getElm().value = '';
+                return;
+            }
+
+            var groupingSeperator = QUILocale.getGroupingSeperator();
+            var decimalSeperator  = QUILocale.getDecimalSeperator();
+
+            var foundGroupSeperator   = typeOf(value) === 'string' && value.indexOf(groupingSeperator) >= 0;
+            var foundDecimalSeperator = typeOf(value) === 'string' && value.indexOf(decimalSeperator) >= 0;
+
+            if ((foundGroupSeperator || foundDecimalSeperator) && !(foundGroupSeperator && !foundDecimalSeperator)) {
+                this.getElm().value = value;
                 return;
             }
 

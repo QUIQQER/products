@@ -520,10 +520,12 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                                     onSubmit : function () {
                                         self.Loader.show();
                                     },
-                                    onSuccess: function () {
+                                    onSuccess: function (Create, categoryData) {
                                         Sheet.hide().then(function () {
                                             Sheet.destroy();
                                             self.refresh();
+
+                                            self.updateChild(categoryData.id);
                                         });
                                     }
                                 }
@@ -573,17 +575,18 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                 events     : {
                     onSubmit: function (Win) {
                         Win.Loader.show();
+
                         Categories.deleteChild(categoryId).then(function () {
                             Win.close();
 
-                            var First  = self.$Sitemap.firstChild(),
-                                Active = self.$Sitemap.getActive();
+                            self.$Sitemap.getSelected().each(function (Entry) {
+                                if (Entry && Entry.getAttribute('value') !== '') {
+                                    Entry.destroy();
+                                }
+                            });
 
-                            if (Active && Active.getAttribute('value') !== '') {
-                                Active.destroy();
-                            }
-
-                            First.click();
+                            self.$Sitemap.firstChild().click();
+                            self.refresh();
                         });
                     }
                 }

@@ -118,47 +118,63 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        $decimalSeperator   = QUI::getLocale()->getDecimalSeperator();//'.';
-        $thousandsSeperator = QUI::getLocale()->getGroupingSeperator();//',';
+        if (trim($value) === '') {
+            return null;
+        }
 
         if (is_float($value)) {
             return round($value, 8);
         }
 
-        $value = (string)$value;
-        $value = preg_replace('#[^\d,.]#i', '', $value);
+        $localeCode = QUI::getLocale()->getLocalesByLang(
+            QUI::getLocale()->getCurrent()
+        );
 
-        if (trim($value) === '') {
-            return null;
-        }
+        $Formatter = new \NumberFormatter($localeCode[0], \NumberFormatter::DECIMAL);
 
-        $decimal   = mb_strpos($value, $decimalSeperator);
-        $thousands = mb_strpos($value, $thousandsSeperator);
+        return $Formatter->parse($value);
 
-        if ($thousands === false && $decimal === false) {
-            return round(floatval($value), 8);
-        }
-
-        if ($thousands !== false && $decimal === false) {
-            if (mb_substr($value, -8, 1) === $decimalSeperator) {
-                $value = str_replace($thousandsSeperator, '', $value);
-            }
-        }
-
-        if ($thousands === false && $decimal !== false) {
-            $value = str_replace(
-                $decimalSeperator,
-                '.',
-                $value
-            );
-        }
-
-        if ($thousands !== false && $decimal !== false) {
-            $value = str_replace($decimalSeperator, '', $value);
-            $value = str_replace($thousandsSeperator, '.', $value);
-        }
-
-        return round(floatval($value), 8);
+//        $decimalSeperator   = QUI::getLocale()->getDecimalSeperator();//'.';
+//        $thousandsSeperator = QUI::getLocale()->getGroupingSeperator();//',';
+//
+//        if (is_float($value)) {
+//            return round($value, 8);
+//        }
+//
+//        $value = (string)$value;
+//        $value = preg_replace('#[^\d,.]#i', '', $value);
+//
+//        if (trim($value) === '') {
+//            return null;
+//        }
+//
+//        $decimal   = mb_strpos($value, $decimalSeperator);
+//        $thousands = mb_strpos($value, $thousandsSeperator);
+//
+//        if ($thousands === false && $decimal === false) {
+//            return round(floatval($value), 8);
+//        }
+//
+//        if ($thousands !== false && $decimal === false) {
+//            if (mb_substr($value, -8, 1) === $decimalSeperator) {
+//                $value = str_replace($thousandsSeperator, '', $value);
+//            }
+//        }
+//
+//        if ($thousands === false && $decimal !== false) {
+//            $value = str_replace(
+//                $decimalSeperator,
+//                '.',
+//                $value
+//            );
+//        }
+//
+//        if ($thousands !== false && $decimal !== false) {
+//            $value = str_replace($decimalSeperator, '', $value);
+//            $value = str_replace($thousandsSeperator, '.', $value);
+//        }
+//
+//        return round(floatval($value), 8);
     }
 
     /**
@@ -207,8 +223,8 @@ class Price extends QUI\ERP\Products\Field\Field
         $maxTaxValue = (100 + QUI\ERP\Tax\Utils::getMaxTax()) / 100;
         $max *= $maxTaxValue;
 
-        if ($min < 1) {
-            $start = 0.1;
+        if ($min < 10) {
+            $start = 0;
         } else {
             // round down to lowest 10 (e.g.: 144 = 140; 2554 = 2550)
             $floorPrecision = 1;

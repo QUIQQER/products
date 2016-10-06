@@ -1,84 +1,43 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Search\FrontendSearch
+ * This file contains QUI\ERP\Products\Search\GlobalFrontendSearch
  */
 namespace QUI\ERP\Products\Search;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
-use QUI\ERP\Products\Handler\Categories;
-use QUI\ERP\Products\Search\Cache as SearchCache;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
 use QUI\ERP\Products\Handler\Products;
 
 /**
- * Class Search
+ * Global, site-independent frontend search - searches ALL products
  *
  * @package QUI\ERP\Products\Search
  */
-class FrontendSearch extends Search
+class GlobalFrontendSearch extends Search
 {
-    const SITETYPE_SEARCH = 'quiqqer/products:types/search';
-    const SITETYPE_CATEGORY = 'quiqqer/products:types/category';
-
     /**
-     * All site types eligible for frontend search
-     *
-     * @var array
-     */
-    protected $eligibleSiteTypes = array(
-        self::SITETYPE_CATEGORY => true,
-        self::SITETYPE_SEARCH   => true
-    );
-
-    /**
-     * The frontend Site where the search is conducted
-     *
-     * @var QUI\Projects\Site
-     */
-    protected $Site = null;
-
-    /**
-     * Site type of frontend search/category site
+     * Current search language
      *
      * @var string
      */
-    protected $siteType = null;
-
-    /**
-     * ID of product category assigned to site
-     *
-     * @var int
-     */
-    protected $categoryId = null;
+    protected $lang = null;
 
     /**
      * FrontendSearch constructor.
      *
-     * @param QUI\Projects\Site $Site - Search Site or Category Site
+     * @param string $lang (optional) - if omitted, use QUILocale::getCurrent()
      * @throws QUI\Exception
      */
-    public function __construct($Site)
+    public function __construct($lang = null)
     {
-        $type = $Site->getAttribute('type');
-
-        if (!isset($this->eligibleSiteTypes[$type])) {
-            throw new Exception(array(
-                'quiqqer/products',
-                'exception.frontendsearch.site.type.not.eligible',
-                array(
-                    'siteId' => $Site->getId()
-                )
-            ));
+        if (is_null($lang)) {
+            $lang = QUI::getLocale()->getCurrent();
         }
 
-        $this->categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
-
-        $this->Site     = $Site;
-        $this->lang     = $Site->getProject()->getLang();
-        $this->siteType = $type;
+        $this->lang = $lang;
     }
 
     /**
@@ -193,12 +152,6 @@ class FrontendSearch extends Search
             $where[]           = '`category` LIKE :category';
             $binds['category'] = array(
                 'value' => '%,' . (int)$searchParams['category'] . ',%',
-                'type'  => \PDO::PARAM_STR
-            );
-        } elseif ($this->categoryId) {
-            $where[]           = '`category` LIKE :category';
-            $binds['category'] = array(
-                'value' => '%,' . $this->categoryId . ',%',
                 'type'  => \PDO::PARAM_STR
             );
         }
@@ -418,86 +371,7 @@ class FrontendSearch extends Search
      */
     public function getSearchFieldData()
     {
-        $cname = 'products/search/frontend/searchfielddata/';
-        $cname .= $this->Site->getId() . '/';
-        $cname .= $this->lang . '/';
-        $cname .= $this->getGroupHashFromUser();
-
-        try {
-            return SearchCache::get($cname);
-        } catch (QUI\Exception $Exception) {
-            // nothing, retrieve values
-        }
-
-        $searchFieldData = array();
-        $parseFields     = $this->getSearchFields();
-        $catId           = null;
-
-        switch ($this->siteType) {
-            case self::SITETYPE_CATEGORY:
-                $catId = $this->Site->getAttribute(
-                    'quiqqer.products.settings.categoryId'
-                );
-
-                if (!$catId) {
-                    $catId = null;
-                }
-                break;
-        }
-
-        $Locale = new QUI\Locale();
-        $Locale->setCurrent($this->lang);
-
-        /** @var QUI\ERP\Products\Field\Field $Field */
-        foreach ($parseFields as $fieldId => $search) {
-            if (!$search) {
-                continue;
-            }
-
-            $Field = Fields::getField($fieldId);
-
-            if (!$this->canSearchField($Field)) {
-                continue;
-            }
-
-            $searchFieldDataContent = array(
-                'id'          => $Field->getId(),
-                'searchType'  => $Field->getSearchType(),
-                'title'       => $Field->getTitle($Locale),
-                'description' => $Field->getTitle($Locale)
-            );
-
-            if (in_array($Field->getSearchType(), $this->searchTypesWithValues)) {
-                $searchValues = $this->getValuesFromField($Field, true, $catId);
-                $searchParams = array();
-
-                foreach ($searchValues as $val) {
-                    try {
-                        $Field->setValue($val);
-                        $label = $Field->getValueByLocale($Locale);
-                    } catch (QUI\Exception $Exception) {
-                        QUI\System\Log::writeException(
-                            $Exception,
-                            QUI\System\Log::LEVEL_DEBUG
-                        );
-                        $label = $val;
-                    }
-
-                    $searchParams[] = array(
-                        'label' => $label,
-                        'value' => $val
-                    );
-                }
-
-                $searchFieldDataContent['searchData'] = $searchParams;
-            }
-
-            $searchFieldData[] = $searchFieldDataContent;
-        }
-
-        SearchCache::set($cname, $searchFieldData);
-
-        return $searchFieldData;
+        return array();
     }
 
     /**
@@ -507,29 +381,26 @@ class FrontendSearch extends Search
      */
     public function getSearchFields()
     {
-        $searchFields         = array();
-        $searchFieldsFromSite = $this->Site->getAttribute(
-            'quiqqer.products.settings.searchFieldIds'
-        );
+        $searchFields          = array();
+        $PackageCfg            = QUI\ERP\Products\Utils\Package::getConfig();
+        $searchFieldIdsFromCfg = $PackageCfg->get('search', 'freetext');
 
-        $eligibleFields = $this->getEligibleSearchFields();
-
-        if (!$searchFieldsFromSite) {
-            $searchFieldsFromSite = array();
+        if ($searchFieldIdsFromCfg === false) {
+            $searchFieldIdsFromCfg = array();
         } else {
-            $searchFieldsFromSite = json_decode($searchFieldsFromSite, true);
+            $searchFieldIdsFromCfg = explode(',', $searchFieldIdsFromCfg);
         }
+
+        $eligibleFields = self::getEligibleSearchFields();
 
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($eligibleFields as $Field) {
-            if (!isset($searchFieldsFromSite[$Field->getId()])) {
+            if (!in_array($Field->getId(), $searchFieldIdsFromCfg)) {
                 $searchFields[$Field->getId()] = false;
                 continue;
             }
 
-            $searchFields[$Field->getId()] = boolval(
-                $searchFieldsFromSite[$Field->getId()]
-            );
+            $searchFields[$Field->getId()] = true;
         }
 
         return $searchFields;
@@ -544,35 +415,6 @@ class FrontendSearch extends Search
     public function setSearchFields($searchFields)
     {
         $currentSearchFields = $this->getSearchFields();
-
-        foreach ($currentSearchFields as $fieldId => $search) {
-            if (isset($searchFields[$fieldId])) {
-                $currentSearchFields[$fieldId] = boolval($searchFields[$fieldId]);
-            }
-        }
-
-        $Edit = $this->Site->getEdit();
-
-        $Edit->setAttribute(
-            'quiqqer.products.settings.searchFieldIds',
-            json_encode($currentSearchFields)
-        );
-
-        $Edit->save();
-
-        return $currentSearchFields;
-    }
-
-    /**
-     * Set the global default / fallback fields that are searchable
-     *
-     * @param array $searchFields
-     * @return array - search fields
-     */
-    public static function setGlobalSearchFields($searchFields)
-    {
-        $GlobaleSearch       = new QUI\ERP\Products\Search\GlobalFrontendSearch();
-        $currentSearchFields = $GlobaleSearch->getSearchFields();
         $newSearchFieldIds   = array();
 
         foreach ($currentSearchFields as $fieldId => $search) {
@@ -589,37 +431,13 @@ class FrontendSearch extends Search
 
         $PackageCfg->set(
             'search',
-            'frontend',
+            'freetext',
             implode(',', $newSearchFieldIds)
         );
 
         $PackageCfg->save();
 
-
-        // field result
-        $searchFields          = array();
-        $PackageCfg            = QUI\ERP\Products\Utils\Package::getConfig();
-        $searchFieldIdsFromCfg = $PackageCfg->get('search', 'frontend');
-
-        if ($searchFieldIdsFromCfg === false) {
-            $searchFieldIdsFromCfg = array();
-        } else {
-            $searchFieldIdsFromCfg = explode(',', $searchFieldIdsFromCfg);
-        }
-
-        $eligibleFields = $GlobaleSearch->getEligibleSearchFields();
-
-        /** @var QUI\ERP\Products\Field\Field $Field */
-        foreach ($eligibleFields as $Field) {
-            if (!in_array($Field->getId(), $searchFieldIdsFromCfg)) {
-                $searchFields[$Field->getId()] = false;
-                continue;
-            }
-
-            $searchFields[$Field->getId()] = true;
-        }
-
-        return $searchFields;
+        return $this->getSearchFields();
     }
 
     /**
@@ -637,59 +455,9 @@ class FrontendSearch extends Search
             return $this->eligibleFields;
         }
 
-        switch ($this->siteType) {
-            case self::SITETYPE_CATEGORY:
-                $categoryId = $this->Site->getAttribute(
-                    'quiqqer.products.settings.categoryId'
-                );
-
-                if (!$categoryId) {
-                    QUI::getMessagesHandler()->addAttention(
-                        QUI::getLocale()->get(
-                            'quiqqer/products',
-                            'attention.frontendsearch.category.site.no.category',
-                            array(
-                                'siteId' => $this->Site->getId()
-                            )
-                        )
-                    );
-
-                    $fields = Fields::getStandardFields();
-                } else {
-                    $Category = Categories::getCategory($categoryId);
-                    $fields   = $Category->getFields();
-                }
-                break;
-
-            default:
-                $fields = Fields::getStandardFields();
-        }
-
+        $fields = Fields::getStandardFields();
         $this->eligibleFields = $this->filterEligibleSearchFields($fields);
 
         return $this->eligibleFields;
-    }
-
-    /**
-     * Gets a unique hash for a user
-     *
-     * @param QUI\Users\User $User (optional) - If ommitted, User is
-     * @return string - md5 hash
-     */
-    protected function getGroupHashFromUser($User = null)
-    {
-        if (is_null($User)) {
-            $User = QUI::getUserBySession();
-        }
-
-        $groups = $User->getGroups(false);
-
-        if (is_array($groups)) {
-            $groups = implode(',', $groups);
-        } else {
-            $groups = "";
-        }
-
-        return md5($groups);
     }
 }

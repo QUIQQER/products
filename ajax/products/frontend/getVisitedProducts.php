@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
     function ($productIds, $currentProductId) {
         $productIds = json_decode($productIds, true);
         $Products   = new QUI\ERP\Products\Handler\Products();
-        $Controls   = new QUI\ERP\Products\Controls\Products\VisitedProducts();
+        $Control    = new QUI\ERP\Products\Controls\Products\VisitedProducts();
 
         if (!isset($currentProductId)) {
             $currentProductId = 0;
@@ -27,12 +27,13 @@ QUI::$Ajax->registerFunction(
             }
 
             try {
-                $Controls->addProduct($Products->getProduct($productId));
+                $Product = $Products->getProduct($productId);
+                $Control->addProduct($Product->getViewFrontend());
             } catch (QUI\Exception $Exception) {
             }
         }
 
-        return $Controls->create();
+        return $Control->create();
     },
     array('productIds', 'currentProductId')
 );

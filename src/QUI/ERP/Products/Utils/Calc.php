@@ -90,17 +90,25 @@ class Calc
      */
     public static function getInstance($User = false)
     {
+        if (!$User && QUI::isBackend()) {
+            $User = QUI::getUsers()->getSystemUser();
+        }
+
         if (!QUI::getUsers()->isUser($User)) {
             $User = QUI::getUserBySession();
         }
 
-        return new self($User);
+        $Calc = new self($User);
+
+        if (QUI::getUsers()->isSystemUser($User) && QUI::isBackend()) {
+            $Calc->ignoreVatCalculation();
+        }
+
+        return $Calc;
     }
 
     /**
      * Static instance create
-     *
-     * @return Calc
      */
     public function ignoreVatCalculation()
     {
