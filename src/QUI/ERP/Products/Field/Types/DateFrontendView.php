@@ -26,6 +26,13 @@ class DateFrontendView extends View
             return '';
         }
 
-        return QUI::getLocale()->formatDate($this->getValue());
+        $title = htmlspecialchars($this->getTitle());
+        $title = htmlspecialchars($title);
+        $date  = QUI::getLocale()->formatDate($this->getValue());
+
+        return "<div class=\"quiqqer-product-field\">
+            <div class=\"quiqqer-product-field-title\">{$title}</div>
+            <div class=\"quiqqer-product-field-value\">{$date}</div>
+        </div>";
     }
 }
