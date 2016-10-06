@@ -371,6 +371,10 @@
             <de><![CDATA[Steuer]]></de>
             <en><![CDATA[Tax]]></en>
         </locale>
+        <locale name="fieldtype.Tax.frontend.text">
+            <de><![CDATA[[title] [tax]%]]></de>
+            <en><![CDATA[[title] [tax]%]]></en>
+        </locale>
         <locale name="fieldtype.Image">
             <de><![CDATA[Media Bild]]></de>
             <en><![CDATA[Media Image]]></en>

@@ -82,7 +82,7 @@
                 {if count($details)}
                 <table class="product-data-more-details-table">
                     {foreach $details as $Field}
-                    {if !empty($Field->getValue())}
+                    {if !empty($Field->getValue()) || is_numeric($Field->getValue())}
                     <tr>
                         <td>
                             {$Field->getView()->create()}

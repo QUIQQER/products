@@ -20,4 +20,12 @@ class Tax extends Vat
     {
         return 'package/quiqqer/products/bin/controls/fields/types/Tax';
     }
+
+    /**
+     * Return the frontend view
+     */
+    protected function getFrontendView()
+    {
+        return new TaxFrontendView($this->getFieldDataForView());
+    }
 }
