@@ -963,6 +963,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     })
                 });
 
+                return QUI.parse(self.$Information);
+            }).then(function () {
                 return self.$showCategory(self.$Information);
             });
         },

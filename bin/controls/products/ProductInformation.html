@@ -20,7 +20,6 @@
                         {{title}}
                     {{/categories}}
                 </span>
-
             </label>
         </td>
     </tr>
@@ -62,7 +61,10 @@
                     {{productEUser}}
                 </span>
                 <span class="field-container-field field-information">
-                    {{e_user}}
+                    <input type="text" disabled value="{{e_user}}"
+                           data-qui="controls/users/Input"
+                           data-qui-options-max="1"
+                    />
                 </span>
             </label>
         </td>
@@ -86,7 +88,10 @@
                     {{productCUser}}
                 </span>
                 <span class="field-container-field field-information">
-                    {{c_user}}
+                    <input type="text" disabled value="{{c_user}}"
+                           data-qui="controls/users/Input"
+                           data-qui-options-max="1"
+                    />
                 </span>
             </label>
         </td>
