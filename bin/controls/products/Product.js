@@ -330,7 +330,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 var dataTemplate = Mustache.render(templateProductData, {
                     productCategories: QUILocale.get(lg, 'productCategories'),
                     productCategory: QUILocale.get(lg, 'productCategory'),
-                    productDefaultFields: QUILocale.get(lg, 'productDefaultFields'),
+                    productAttributes: QUILocale.get(lg, 'productAttributes'),
                     productMasterData: QUILocale.get(lg, 'productMasterData')
                 });
 
