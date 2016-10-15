@@ -238,7 +238,7 @@
             <de><![CDATA[Eigenschaften]]></de>
             <en><![CDATA[Attributes]]></en>
         </locale>
-        
+
         <locale name="products.product.panel.category.images">
             <de><![CDATA[Produktbilder]]></de>
             <en><![CDATA[Product images]]></en>
