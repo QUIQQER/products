@@ -128,7 +128,7 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                 }
 
                 data.data[i].productNo = productNo.value || '';
-
+console.log(data.data[i].price_netto);
                 if (data.data[i].price_netto || data.data[i].price_netto === 0) {
                     data.data[i].price_netto = new Element('span', {
                         html   : data.data[i].price_netto.toFixed(2),

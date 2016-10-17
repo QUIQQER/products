@@ -529,7 +529,7 @@ class Model extends QUI\QDOM
             if (isset($data[$current]) && !empty($data[$current])) {
                 return $data[$current];
             }
-            QUI\System\Log::writeRecursive($data);
+
             // search none empty
             foreach ($data as $lang => $value) {
                 if (!empty($data[$lang])) {
@@ -1066,8 +1066,10 @@ class Model extends QUI\QDOM
         $Locale = new QUI\Locale();
         $Locale->setCurrent($lang);
 
-        $minPrice = $this->getMinimumPrice()->getNetto();
-        $maxPrice = $this->getMaximumPrice()->getNetto();
+        // wir nutzen system user als netto user
+        $SystemUser = QUI::getUsers()->getSystemUser();
+        $minPrice   = $this->getMinimumPrice($SystemUser)->getNetto();
+        $maxPrice   = $this->getMaximumPrice($SystemUser)->getNetto();
 
         $data = array(
             'productNo' => $this->getFieldValueByLocale(

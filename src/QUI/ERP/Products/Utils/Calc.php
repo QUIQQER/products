@@ -94,10 +94,12 @@ class Calc
             $User = QUI::getUsers()->getSystemUser();
         }
 
-        if (!QUI::getUsers()->isUser($User)) {
+        if (!QUI::getUsers()->isUser($User)
+            && !QUI::getUsers()->isSystemUser($User)
+        ) {
             $User = QUI::getUserBySession();
         }
-
+        
         $Calc = new self($User);
 
         if (QUI::getUsers()->isSystemUser($User) && QUI::isBackend()) {

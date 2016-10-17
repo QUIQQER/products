@@ -131,13 +131,15 @@ class Products
                 continue;
             }
 
-            if ($Field->getValue() === false) {
+            $value = $Field->getValue();
+
+            if ($value === false || $value === '' || $value === null) {
                 continue;
             }
 
-            if ($Field->getValue() < $PriceField->getValue()) {
+            if ($value < $PriceField->getValue()) {
                 $PriceField = $Field;
-                $priceValue = $Field->getValue();
+                $priceValue = $value;
             }
         }
 
