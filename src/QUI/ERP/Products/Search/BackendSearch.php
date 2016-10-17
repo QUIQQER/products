@@ -366,6 +366,9 @@ class BackendSearch extends Search
 
         $PackageCfg->save();
 
+        // clear search field cache
+        SearchCache::clear('products/search/backend/');
+
         return $this->getSearchFields();
     }
 
