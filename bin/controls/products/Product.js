@@ -1710,7 +1710,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
 
                 if (typeof data.categories === 'undefined') {
-                    data.categories = '';
+                    data['product-category'] = self.$Data.getElement('[name="product-category"]').value;
+                    data.categories = self.$Data.getElement('[name="categories"]').value;
                 }
 
                 var categories = data.categories.split(',');
