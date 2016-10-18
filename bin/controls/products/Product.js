@@ -1463,8 +1463,32 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 });
                             }
                         }
+                    }, {
+                        type: 'seperator'
+                    }, {
+                        name: 'remove',
+                        text: QUILocale.get(lg, 'product.fields.grid.button.removeSelectList'),
+                        textimage: 'fa fa-trash',
+                        disabled: true,
+                        events: {
+                            onClick: function () {
+                                self.openDeleteFieldDialog(self.$Grid.getSelectedData()[0].id).then(function () {
+                                    self.openAttributeList();
+                                }).catch(function (err) {
+                                    console.log(typeOf(err));
+                                    if (typeOf(err) != 'qui/controls/windows/Confirm') {
+                                        console.error(err);
+                                    }
+                                });
+                            }
+                        }
                     }],
                     columnModel: [{
+                        header: '&nbsp;',
+                        dataIndex: 'ownFieldDisplay',
+                        dataType: 'node',
+                        width: 30
+                    }, {
                         header: QUILocale.get('quiqqer/system', 'id'),
                         dataIndex: 'id',
                         dataType: 'number',
@@ -1502,6 +1526,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         dataIndex: 'workingtitle',
                         dataType: 'text',
                         width: 200
+                    }, {
+                        dataIndex: 'ownField',
+                        hidden: true
                     }]
                 });
 
@@ -1570,7 +1597,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 calcBasis: calculation_basis,
                                 id: entry.id,
                                 title: entry.title || '',
-                                workingtitle: entry.workingtitle || ''
+                                workingtitle: entry.workingtitle || '',
+                                ownField: entry.ownField,
+                                ownFieldDisplay: new Element('div', {
+                                    'class': 'fa fa-user',
+                                    styles: {
+                                        color: entry.ownField ? '' : '#dddddd'
+                                    }
+                                })
                             });
                         }
 
@@ -1582,7 +1616,19 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 };
 
                 self.$Grid.addEvents({
-                    onRefresh: refresh
+                    onRefresh: refresh,
+                    onClick: function () {
+                        var selected = self.$Grid.getSelectedData()[0],
+                            Remove = self.$Grid.getButtons().filter(function (Btn) {
+                                return Btn.getAttribute('name') == 'remove';
+                            })[0];
+
+                        if (selected.ownField) {
+                            Remove.enable();
+                        } else {
+                            Remove.disable();
+                        }
+                    }
                 });
 
                 var size = self.$AttributeList.measure(function () {
