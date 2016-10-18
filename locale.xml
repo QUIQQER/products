@@ -855,6 +855,14 @@
             <de><![CDATA[Produkt hinzufügen]]></de>
             <en><![CDATA[Add product]]></en>
         </locale>
+        <locale name="category.panel.button.products.remove">
+            <de><![CDATA[Produkt entfernen]]></de>
+            <en><![CDATA[Remove product]]></en>
+        </locale>
+        <locale name="category.panel.button.products.remove.title">
+            <de><![CDATA[Produkt aus Kategorie entfernen]]></de>
+            <en><![CDATA[Remove product from category]]></en>
+        </locale>
 
         <locale name="category.panel.window.recursiveFields.title">
             <de><![CDATA[Feld Einstellungen auf alle Produkte übernehmen]]></de>
@@ -878,6 +886,23 @@
                 All field settings are applied to all products in this category.<br />
                 It will be overwritten only fields, which are in the category of the products.<br />
                 Any settings in the products would be overwritten.
+            ]]></en>
+        </locale>
+
+        <locale name="category.panel.window.remove.title">
+            <de><![CDATA[Produkt aus Kategorie entfernen]]></de>
+            <en><![CDATA[Remove product from category]]></en>
+        </locale>
+        <locale name="category.panel.window.remove.text" html="true">
+            <de><![CDATA[Die folgenden Produkte werden aus der Kategorie entfernen: [products]]]></de>
+            <en><![CDATA[The following products would be removed from the category: [products]]]></en>
+        </locale>
+        <locale name="category.panel.window.remove.information" html="true">
+            <de><![CDATA[
+            Die Produkte werden nicht gelöscht. Die Produkte werden lediglich aus der Kategorie entfernt.
+            ]]></de>
+            <en><![CDATA[
+            The products wouldn't be deleted. The products are only removed from the category.
             ]]></en>
         </locale>
 
