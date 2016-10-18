@@ -33,14 +33,14 @@ define('package/quiqqer/products/bin/controls/products/Create', [
              template, templateField) {
     "use strict";
 
-    var lg       = 'quiqqer/products',
+    var lg = 'quiqqer/products',
         Products = new Handler(),
-        Fields   = new FieldHandler();
+        Fields = new FieldHandler();
 
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/products/Create',
+        Type: 'package/quiqqer/products/bin/controls/products/Create',
 
         Binds: [
             '$onInject'
@@ -63,15 +63,15 @@ define('package/quiqqer/products/bin/controls/products/Create', [
          */
         create: function () {
             var self = this,
-                Elm  = this.parent();
+                Elm = this.parent();
 
             Elm.set({
                 'class': 'product-create',
-                html   : Mustache.render(template, {
-                    productCategories   : QUILocale.get(lg, 'productCategories'),
-                    productCategory     : QUILocale.get(lg, 'productCategory'),
+                html: Mustache.render(template, {
+                    productCategories: QUILocale.get(lg, 'productCategories'),
+                    productCategory: QUILocale.get(lg, 'productCategory'),
                     productDefaultFields: QUILocale.get(lg, 'productDefaultFields'),
-                    productMasterData   : QUILocale.get(lg, 'productMasterData')
+                    productMasterData: QUILocale.get(lg, 'productMasterData')
                 })
             });
 
@@ -81,7 +81,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 events: {
                     onDelete: function (Select, Item) {
                         var categoryId = Item.getAttribute('categoryId');
-                        var Option     = ProductCategory.getElement(
+                        var Option = ProductCategory.getElement(
                             '[value="' + categoryId + '"]'
                         );
 
@@ -101,14 +101,14 @@ define('package/quiqqer/products/bin/controls/products/Create', [
 
                         if (!ids.length) {
                             Row.setStyles({
-                                display : 'inline-block',
+                                display: 'inline-block',
                                 overflow: 'hidden',
-                                opacity : 1,
+                                opacity: 1,
                                 position: 'relative'
                             });
 
                             moofx(Row).animate({
-                                height : 0,
+                                height: 0,
                                 opacity: 0
                             }, {
                                 duration: 200,
@@ -131,7 +131,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
 
                             new Element('option', {
                                 value: id,
-                                html : QUILocale.get(lg, 'products.category.' + id + '.title')
+                                html: QUILocale.get(lg, 'products.category.' + id + '.title')
                             }).inject(ProductCategory);
                         }
 
@@ -140,15 +140,15 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                         }
 
                         Row.setStyles({
-                            display : 'inline',
-                            'float' : 'left',
-                            height  : 0,
+                            display: 'inline',
+                            'float': 'left',
+                            height: 0,
                             overflow: 'hidden',
                             position: 'relative'
                         });
 
                         moofx(Row).animate({
-                            height : 50,
+                            height: 50,
                             opacity: 1
                         }, {
                             duration: 200,
@@ -174,17 +174,17 @@ define('package/quiqqer/products/bin/controls/products/Create', [
          */
         $onInject: function () {
             var self = this,
-                Elm  = this.getElm();
+                Elm = this.getElm();
 
             var StandardFields = Elm.getElement('.product-standardfield tbody');
-            var Data           = Elm.getElement('.product-data tbody');
+            var Data = Elm.getElement('.product-data tbody');
 
             Promise.all([
                 Fields.getSystemFields(),
                 Fields.getStandardFields()
             ]).then(function (result) {
                 var i, len, field;
-                var systemFields   = result[0],
+                var systemFields = result[0],
                     standardFields = result[1];
 
                 var diffFields = standardFields.filter(function (value) {
@@ -196,25 +196,39 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                     return true;
                 });
 
+                var useField = function (Field) {
+                    if (Field.id === 10) {
+                        return false;
+                    }
+
+                    if (Field.id >= 100) {
+                        return false;
+                    }
+
+                    if (Field.type == 'TextareaMultiLang' ||
+                        Field.type == 'Textarea' ||
+                        Field.type == 'Products'
+                    ) {
+                        return false;
+                    }
+
+                    return true;
+                };
+
                 // standard felder
                 for (i = 0, len = diffFields.length; i < len; i++) {
                     field = diffFields[i];
 
-                    if (field.type == 'TextareaMultiLang') {
-                        continue;
-                    }
-
-                    // dont show media folder field
-                    if (field.id === 10) {
+                    if (!useField(field)) {
                         continue;
                     }
 
                     new Element('tr', {
-                        'class'       : 'field',
-                        html          : Mustache.render(templateField, {
+                        'class': 'field',
+                        html: Mustache.render(templateField, {
                             fieldTitle: QUILocale.get(lg, 'products.field.' + field.id + '.title'),
-                            fieldName : 'field-' + field.id,
-                            control   : field.jsControl
+                            fieldName: 'field-' + field.id,
+                            control: field.jsControl
                         }),
                         'data-fieldid': field.id
                     }).inject(StandardFields);
@@ -224,21 +238,16 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 for (i = 0, len = systemFields.length; i < len; i++) {
                     field = systemFields[i];
 
-                    if (field.type == 'TextareaMultiLang') {
-                        continue;
-                    }
-
-                    // dont show media folder field
-                    if (field.id === 10) {
+                    if (!useField(field)) {
                         continue;
                     }
 
                     new Element('tr', {
-                        'class'       : 'field',
-                        html          : Mustache.render(templateField, {
+                        'class': 'field',
+                        html: Mustache.render(templateField, {
                             fieldTitle: QUILocale.get(lg, 'products.field.' + field.id + '.title'),
-                            fieldName : 'field-' + field.id,
-                            control   : field.jsControl
+                            fieldName: 'field-' + field.id,
+                            control: field.jsControl
                         }),
                         'data-fieldid': field.id
                     }).inject(Data);
@@ -257,12 +266,12 @@ define('package/quiqqer/products/bin/controls/products/Create', [
          */
         submit: function () {
             var self = this,
-                Elm  = this.getElm();
+                Elm = this.getElm();
 
             return new Promise(function (resolve, reject) {
                 var categories = self.$Categories.getValue().trim().split(',');
-                var Form       = Elm.getElement('form');
-                var data       = QUIFormUtils.getFormData(Form);
+                var Form = Elm.getElement('form');
+                var data = QUIFormUtils.getFormData(Form);
 
                 // fields
                 var fields = Object.filter(data, function (value, key) {
