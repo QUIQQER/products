@@ -188,16 +188,6 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         $User = QUI::getUserBySession();
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
 
-//        // wenn attribute listen existieren
-//        // dann muss der kleinste preis rausgefunden werden
-//        $attributesLists = self::getFieldsByType(
-//            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST
-//        );
-//
-//        if (count($attributesLists)) {
-//
-//        }
-
         return $Calc->getProductPrice(
             $this->Product->createUniqueProduct($User)
         );
@@ -245,17 +235,14 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getFieldsByType($type)
     {
-        $result = array();
-        $types  = $this->Product->getFieldsByType($type);
+        $types = $this->Product->getFieldsByType($type);
 
-        foreach ($types as $Field) {
-            /* @var $Field QUI\ERP\Products\Field\UniqueField */
-            if ($Field->isPublic()) {
-                $result[] = $Field;
-            }
-        }
+        $types = array_filter($types, function ($Field) {
+            /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
+            return $Field->isPublic();
+        });
 
-        return $result;
+        return $types;
     }
 
     /**

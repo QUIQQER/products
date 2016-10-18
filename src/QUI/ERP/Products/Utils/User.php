@@ -63,7 +63,7 @@ class User
         try {
             $Address = self::getUserERPAddress($User);
 
-            if ($Address->getAttribute('company')) {
+            if ($Address && $Address->getAttribute('company')) {
                 if ($Config->getValue('shop', 'companyForceBruttoPrice')) {
                     return self::IS_BRUTTO_USER;
                 }

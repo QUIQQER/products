@@ -114,6 +114,8 @@ class Product extends QUI\Control
             if ($Field->getType() == Fields::TYPE_ATTRIBUTE_LIST
                 || $Field->getType() == Fields::TYPE_FOLDER
                 || $Field->getType() == Fields::TYPE_IMAGE
+                || $Field->getType() == Fields::TYPE_TEXTAREA
+                || $Field->getType() == Fields::TYPE_TEXTAREA_MULTI_LANG
             ) {
                 return false;
             }
@@ -130,18 +132,28 @@ class Product extends QUI\Control
         ));
 
         // file / image folders
-        $mediaFolders = array();
-        $mediaFields  = $Product->getFieldsByType(Fields::TYPE_FOLDER);
+        $detailFields = array();
+        $fieldsList   = array_merge(
+            $Product->getFieldsByType(Fields::TYPE_FOLDER),
+            $Product->getFieldsByType(Fields::TYPE_TEXTAREA),
+            $Product->getFieldsByType(Fields::TYPE_TEXTAREA_MULTI_LANG)
+        );
 
         /* @var $Field QUI\ERP\Products\Field\Types\Folder */
-        foreach ($mediaFields as $Field) {
+        foreach ($fieldsList as $Field) {
             if ($Field->getId() == Fields::FIELD_FOLDER) {
                 continue;
             }
 
-            if ($Field->getMediaFolder()) {
-                $mediaFolders[] = $Field;
+            if ($Field->getId() == Fields::FIELD_CONTENT) {
+                continue;
             }
+
+            if (!$Field->hasViewPermission()) {
+                continue;
+            }
+
+            $detailFields[] = $Field;
         }
 
         // ChildrenSlider
@@ -164,7 +176,7 @@ class Product extends QUI\Control
             'Gallery'              => $Gallery,
             'fields'               => QUI\ERP\Products\Utils\Fields::sortFields($fields),
             'details'              => QUI\ERP\Products\Utils\Fields::sortFields($details),
-            'mediaFolders'         => $mediaFolders,
+            'detailFields'         => $detailFields,
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
             'PriceDisplay'         => $PriceDisplay,
             'VisitedProducts'      => new VisitedProducts(),
