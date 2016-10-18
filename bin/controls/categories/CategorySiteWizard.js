@@ -6,6 +6,7 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require package/quiqqer/products/bin/controls/categories/Sitemap
  * @require Locale
  * @require Ajax
  * @require Projects
@@ -21,7 +22,6 @@ define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [
     'Ajax',
     'Projects',
 
-
     'text!package/quiqqer/products/bin/controls/categories/CategorySiteWizard.html'
 
 ], function (QUI, QUIControl, CategorySitemap, QUILocale, Ajax, Projects, template) {
@@ -30,17 +30,17 @@ define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/categories/CategorySiteWizard',
+        Type: 'package/quiqqer/products/bin/controls/categories/CategorySiteWizard',
 
         options: {
-            Site          : false,
+            Site: false,
             categoryParent: false
         },
 
         initialize: function (options) {
             this.parent(options);
 
-            this.$Input    = null;
+            this.$Input = null;
             this.$Checkbox = null;
 
             this.addEvents({
@@ -57,14 +57,14 @@ define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [
          */
         create: function () {
             this.$Elm = new Element('div', {
-                html  : template,
+                html: template,
                 styles: {
-                    height  : '100%',
+                    height: '100%',
                     position: 'relative'
                 }
             });
 
-            this.$Input    = this.$Elm.getElement('[type="text"]');
+            this.$Input = this.$Elm.getElement('[type="text"]');
             this.$Checkbox = this.$Elm.getElement('[type="checkbox"]');
 
             this.$Input.addEvent('keyup', function (event) {
@@ -88,8 +88,8 @@ define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [
          * @returns {Promise}
          */
         submit: function () {
-            var self  = this,
-                Site  = this.getAttribute('Site'),
+            var self = this,
+                Site = this.getAttribute('Site'),
                 catId = this.getAttribute('categoryParent');
 
             if (!Site) {
@@ -110,8 +110,8 @@ define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [
                                 return Tr.refreshLocale();
                             }).then(resolve);
                         });
-
                     });
+
                 }).then(function () {
                     return self.submit();
                 });
@@ -129,18 +129,17 @@ define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [
                     }
 
                     var Child = Site.getProject().get(newSiteId);
-                    Child.fireEvent('createChild', [Child, newSiteId]);
 
+                    Site.fireEvent('createChild', [Site, newSiteId]);
                     resolve(Child);
-
                 }, {
-                    'package'     : 'quiqqer/products',
+                    'package': 'quiqqer/products',
                     createCategory: this.$Checkbox.checked ? 1 : 0,
-                    title         : this.$Input.value,
+                    title: this.$Input.value,
                     parentCategory: this.getAttribute('categoryParent'),
-                    project       : Site.getProject().encode(),
-                    siteId        : Site.getId(),
-                    onError       : function (err) {
+                    project: Site.getProject().encode(),
+                    siteId: Site.getId(),
+                    onError: function (err) {
                         console.log(err.getMessage());
                     }
                 });
@@ -160,21 +159,21 @@ define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [
                 this.fireEvent('categorySelect', [this]);
 
                 var Container = new Element('div', {
-                    html  : '<p>Bitte wählen Sie die Übergeordnete Kategorie aus:</p>',
+                    html: '<p>Bitte wählen Sie die Übergeordnete Kategorie aus:</p>',  // #locale
                     styles: {
                         background: '#fff',
-                        height    : '100%',
-                        left      : -1,
-                        position  : 'absolute',
-                        opacity   : 0,
-                        top       : -50,
-                        width     : '100%'
+                        height: '100%',
+                        left: -1,
+                        position: 'absolute',
+                        opacity: 0,
+                        top: -50,
+                        width: '100%'
                     }
                 }).inject(this.$Elm);
 
                 moofx(Container).animate({
                     opacity: 1,
-                    top    : 0
+                    top: 0
                 }, {
                     duration: 200,
                     callback: function () {
@@ -185,7 +184,7 @@ define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [
 
                                     moofx(Container).animate({
                                         opacity: 0,
-                                        top    : -50
+                                        top: -50
                                     }, {
                                         duration: 200,
                                         callback: function () {
