@@ -760,6 +760,11 @@
             <de><![CDATA[Keine Dateien enthalten.]]></de>
             <en><![CDATA[No data included.]]></en>
         </locale>
+
+        <locale name="control.product.fields.details">
+            <de><![CDATA[Details]]></de>
+            <en><![CDATA[Details]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">

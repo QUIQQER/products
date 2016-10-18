@@ -40,19 +40,23 @@
         </div>
     </div>
 
+    {assign var=ContentField value=$Product->getField(6)}
+
     <div class="product-data-more">
         <ul class="product-data-more-tabs" role="tablist">
+            {if $ContentField}
             <li class="product-data-more-tabs-tab active"
                 aria-controls="panelDescription" role="tab" tabindex="0" aria-selected="true"
             >
                 <a href="#panelDescription">
-                    Beschreibung
+                    {$ContentField->getTitle()}
                 </a>
             </li>
+            {/if}
 
             <li class="product-data-more-tabs-tab" aria-controls="panelDetails" role="tab" tabindex="-1">
                 <a href="#panelDetails">
-                    Details
+                    {locale group="quiqqer/products" var="control.product.fields.details"}
                 </a>
             </li>
 
@@ -66,11 +70,13 @@
         </ul>
 
         <div class="product-data-more-sheets">
+            {if $ContentField}
             <section class="product-data-more-sheet" id="panelDescription" role="tabpanel"
                      aria-labelledby="panelDescription" tabindex="0"
             >
                 {$Product->getContent()}
             </section>
+            {/if}
 
             <section class="product-data-more-sheet hide" id="panelDetails" role="tabpanel"
                      aria-labelledby="panelDetails" tabindex="0" aria-hidden="true"
