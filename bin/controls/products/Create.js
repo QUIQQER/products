@@ -71,7 +71,8 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                     productCategories: QUILocale.get(lg, 'productCategories'),
                     productCategory: QUILocale.get(lg, 'productCategory'),
                     productDefaultFields: QUILocale.get(lg, 'productDefaultFields'),
-                    productMasterData: QUILocale.get(lg, 'productMasterData')
+                    productMasterData: QUILocale.get(lg, 'productMasterData'),
+                    productAttributes: QUILocale.get(lg, 'productAttributes')
                 })
             });
 
