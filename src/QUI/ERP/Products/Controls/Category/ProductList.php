@@ -464,6 +464,7 @@ class ProductList extends QUI\Control
             $this->Category = Categories::getCategory($categoryId);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addWarning($Exception->getMessage());
+            return null;
         }
 
         return $this->Category->getView();
