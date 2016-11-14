@@ -127,8 +127,8 @@
         </locale>
 
         <locale name="settings.window.fieldsearch.freetext.title">
-            <de><![CDATA[Feld-Einstellung für die Produktsuche]]></de>
-            <en><![CDATA[Field settings for the product search]]></en>
+            <de><![CDATA[Feld-Einstellung für die Produkt Freitextsuche]]></de>
+            <en><![CDATA[Field settings for the product freetext search]]></en>
         </locale>
         <locale name="settings.window.fieldsearch.freetext.description">
             <de><![CDATA[Hier können Sie festlegen welche Felder bei der Produktsuche berücksichtigt werden.]]></de>
