@@ -4,45 +4,45 @@
     <global>
         <table name="products">
             <field type="BIGINT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
-            <field type="BIGINT(20)">category</field>
-            <field type="TEXT">categories</field>
+            <field type="BIGINT(20) NULL">category</field>
+            <field type="TEXT NULL">categories</field>
             <field type="LONGTEXT NULL">fieldData</field>
             <field type="TINYINT(1) DEFAULT 0">active</field>
             <field type="BIGINT(10) NULL">parent</field>
-            <field type="TEXT">permissions</field>
+            <field type="TEXT NULL">permissions</field>
 
             <field type="timestamp NULL default NULL">c_date</field>
             <field type="timestamp NULL default NULL">e_date</field>
-            <field type="INT(11)">c_user</field>
-            <field type="INT(11)">e_user</field>
+            <field type="INT(11) NULL">c_user</field>
+            <field type="INT(11) NULL">e_user</field>
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
         </table>
 
         <table name="product_categories">
-            <field type="BIGINT( 20 ) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
-            <field type="BIGINT( 20 ) DEFAULT 0">parentId</field>
-            <field type="TEXT">fields</field>
-            <field type="TEXT">sites</field>
+            <field type="BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
+            <field type="BIGINT(20) DEFAULT 0">parentId</field>
+            <field type="TEXT NULL">fields</field>
+            <field type="TEXT NULL">sites</field>
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
         </table>
 
         <table name="product_fields">
-            <field type="BIGINT( 20 ) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
-            <field type="VARCHAR( 255 ) NOT NULL">name</field>
-            <field type="VARCHAR( 255 ) NOT NULL">type</field>
-            <field type="VARCHAR( 255 ) NULL DEFAULT ''">search_type</field>
-            <field type="TEXT">prefix</field>
-            <field type="TEXT">suffix</field>
+            <field type="BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
+            <field type="VARCHAR(255) NOT NULL">name</field>
+            <field type="VARCHAR(255) NOT NULL">type</field>
+            <field type="VARCHAR(255) NULL DEFAULT ''">search_type</field>
+            <field type="TEXT NULL">prefix</field>
+            <field type="TEXT NULL">suffix</field>
             <field type="INT NOT NULL DEFAULT 0">priority</field>
             <field type="TINYINT(1) NOT NULL DEFAULT 0">systemField</field>
             <field type="TINYINT(1) NOT NULL DEFAULT 0">standardField</field>
             <field type="TINYINT(1) NOT NULL DEFAULT 0">requiredField</field>
             <field type="TINYINT(1) NOT NULL DEFAULT 0">publicField</field>
-            <field type="TEXT">options</field>
+            <field type="TEXT NULL">options</field>
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
@@ -52,14 +52,14 @@
         </table>
 
         <table name="products_cache">
-            <field type="BIGINT( 10 ) NOT NULL">id</field>
-            <field type="VARCHAR( 255 ) NULL">productNo</field>
-            <field type="DOUBLE">minPrice</field>
-            <field type="DOUBLE">maxPrice</field>
-            <field type="VARCHAR( 255 ) NOT NULL">title</field>
+            <field type="BIGINT(10) NOT NULL">id</field>
+            <field type="VARCHAR(2) NOT NULL">lang</field>
+            <field type="VARCHAR(255) NULL">productNo</field>
+            <field type="DOUBLE NULL">minPrice</field>
+            <field type="DOUBLE NULL">maxPrice</field>
+            <field type="VARCHAR(255) NOT NULL">title</field>
             <field type="VARCHAR(255) NULL">category</field>
             <field type="TINYINT(1)">active</field>
-            <field type="VARCHAR(2) NOT NULL">lang</field>
             <field type="LONGTEXT NULL">tags</field>
             <field type="TEXT NULL">viewUsersGroups</field>
 
