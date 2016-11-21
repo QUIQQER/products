@@ -16,6 +16,11 @@ use QUI\ERP\Products\Field\View;
 class PriceByQuantity extends Price
 {
     /**
+     * @var bool
+     */
+    protected $searchable = false;
+
+    /**
      * Return the price value
      *
      * @param QUI\ERP\Products\Product\UniqueProduct $Product
