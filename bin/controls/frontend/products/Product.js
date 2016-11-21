@@ -414,14 +414,20 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             var TargetSheet = this.$getSheet(Target.get('aria-controls'));
 
-            var Active      = this.$Tabbar.getElement('[aria-selected="true"]'),
+            var Active      = this.$Tabbar.getElement('[aria-selected="true"]');
+            var ActiveSheet = null;
+            var activeIndex = 0;
+            var targetIndex = 0;
+
+            if (Active) {
                 ActiveSheet = this.$getSheet(Active.get('aria-controls'));
 
-            var activeIndex = QUIElementUtils.getChildIndex(Active),
+                activeIndex = QUIElementUtils.getChildIndex(Active);
                 targetIndex = QUIElementUtils.getChildIndex(Target);
 
-            Active.set('aria-selected', 'false');
-            Active.removeClass('active');
+                Active.set('aria-selected', 'false');
+                Active.removeClass('active');
+            }
 
             Target.set('aria-selected', 'true');
             Target.addClass('active');
