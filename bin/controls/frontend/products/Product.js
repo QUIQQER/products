@@ -163,6 +163,12 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                     images[i].getParent('tr').setStyle('cursor', 'pointer');
                 }
 
+                if (this.$tabs.length) {
+                    this.$tabClick({
+                        target: this.$tabs[0]
+                    });
+                }
+
             }.bind(this));
         },
 
@@ -405,7 +411,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
         $tabClick: function (event) {
             var Target = event.target;
 
-            event.stop();
+            if ("stop" in event) {
+                event.stop();
+            }
 
             if (Target.nodeName == 'A') {
                 Target = Target.getParent();
