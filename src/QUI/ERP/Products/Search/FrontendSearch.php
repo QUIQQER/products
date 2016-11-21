@@ -370,9 +370,8 @@ class FrontendSearch extends Search
             }
         }
 
-//        if (strpos($sql, 'COUNT') === false) {
-//            QUI\System\Log::writeRecursive($sql);
-//        }
+//        QUI\System\Log::writeRecursive($sql);
+//        QUI\System\Log::writeRecursive($binds);
 
         $Stmt = $PDO->prepare($sql);
 
