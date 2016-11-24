@@ -11,5 +11,14 @@
             </description>
         </brick>
 
+        <brick control="QUI\ERP\Products\Controls\Category\Menu">
+            <title>
+                <locale group="quiqqer/products" var="brick.menu.title"/>
+            </title>
+            <description>
+                <locale group="quiqqer/products" var="brick.menu.description"/>
+            </description>
+        </brick>
+
     </bricks>
 </quiqqer>

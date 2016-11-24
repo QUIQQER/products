@@ -77,6 +77,24 @@ class BackendSearch extends Search
             );
         }
 
+        if (isset($searchParams['categories'])
+            && !empty($searchParams['categories'])
+            && is_array($searchParams['categories'])
+        ) {
+            $c = 0;
+
+            foreach ($searchParams['categories'] as $categoryId) {
+                $where[] = '`category` LIKE :category' . $c;
+
+                $binds['category' . $c] = array(
+                    'value' => '%,' . (int)$categoryId . ',%',
+                    'type'  => \PDO::PARAM_STR
+                );
+
+                $c++;
+            }
+        }
+
         if (!isset($searchParams['fields'])
             && !isset($searchParams['freetext'])
         ) {
@@ -211,7 +229,7 @@ class BackendSearch extends Search
         foreach ($binds as $var => $bind) {
             $Stmt->bindValue(':' . $var, $bind['value'], $bind['type']);
         }
-        
+
         try {
             $Stmt->execute();
             $result = $Stmt->fetchAll(\PDO::FETCH_ASSOC);

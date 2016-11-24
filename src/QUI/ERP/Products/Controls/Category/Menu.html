@@ -1,0 +1,31 @@
+{if $this->getAttribute('showTitle') && $this->getAttribute('frontendTitle')}
+<header class="control-header grid-row-header">
+    <h1>{$this->getAttribute('frontendTitle')}</h1>
+</header>
+{/if}
+
+{if $this->getAttribute('content') != ""}
+<div class="control-content">
+    {$this->getAttribute('content')}
+</div>
+{/if}
+
+<nav class="quiqqer-products-category-menu-navigation">
+    <ul>
+        {foreach from=$children item=Child}
+        {if $Child->getAttribute('quiqqer.products.settings.categoryId')}
+        <li class="quiqqer-products-category-menu-navigation-li">
+            <label class="quiqqer-products-category-menu-navigation-li-label">
+                <div class="quiqqer-products-category-menu-navigation-li-label-checkbox">
+                    <input type="checkbox" value="{$Child->getAttribute('quiqqer.products.settings.categoryId')}"/>
+                </div>
+                <a href="{url site=$Child}" class="quiqqer-products-category-menu-navigation-li-label-link">
+                    {$Child->getAttribute('title')}
+                </a>
+            </label>
+            {include file=$childrenTemplate Site=$Child}
+        </li>
+        {/if}
+        {/foreach}
+    </ul>
+</nav>

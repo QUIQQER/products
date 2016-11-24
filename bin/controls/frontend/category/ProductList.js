@@ -107,6 +107,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$fields       = {};
             this.$selectFilter = [];
             this.$selectFields = [];
+            this.$categories   = [];
 
             this.$sortingEnabled       = true;
             this.$__readWindowLocation = false;
@@ -804,11 +805,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         $getSearchParams: function () {
             var i, len, Field;
 
-            var fields   = {},
-                tags     = [],
-                sortOn   = '',
-                sortBy   = '',
-                freetext = '';
+            var fields     = {},
+                categories = this.$categories,
+                tags       = [],
+                sortOn     = '',
+                sortBy     = '',
+                freetext   = '';
 
             if (this.$FilterContainer) {
                 var value;
@@ -855,11 +857,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             return {
-                tags    : tags,
-                freetext: freetext,
-                fields  : fields,
-                sortOn  : sortOn,
-                sortBy  : sortBy
+                tags      : tags,
+                freetext  : freetext,
+                fields    : fields,
+                categories: categories,
+                sortOn    : sortOn,
+                sortBy    : sortBy
             };
         },
 
@@ -1010,6 +1013,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @returns {Promise}
          */
         search: function (params) {
+
+            console.log(params);
+
             return Search.search(this.getAttribute('siteId'), {
                     name: this.getAttribute('project'),
                     lang: this.getAttribute('lang')
@@ -1518,6 +1524,82 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     return self.$renderSearch();
                 });
             }).delay(200, this);
+        },
+
+        /**
+         * Add a category
+         *
+         * @param {Integer} categoryId
+         */
+        addCategory: function (categoryId) {
+            categoryId = parseInt(categoryId);
+
+            if (this.$categories.contains(categoryId)) {
+                return;
+            }
+
+            this.$categories.push(categoryId);
+            this.$onFilterChange();
+        },
+
+        /**
+         * Add an array of categories
+         *
+         * @param categories
+         */
+        addCategories: function (categories) {
+            if (typeOf(categories) != 'array') {
+                return;
+            }
+
+            for (var i = 0, len = categories.length; i < len; i++) {
+                if (!this.$categories.contains(categories[i])) {
+                    this.$categories.push(categories[i]);
+                }
+            }
+
+            this.$onFilterChange();
+        },
+
+        /**
+         * Removes a category
+         *
+         * @param {Integer} categoryId
+         */
+        removeCategory: function (categoryId) {
+            categoryId = parseInt(categoryId);
+
+            if (!this.$categories.contains(categoryId)) {
+                return;
+            }
+
+            this.$categories.erase(categoryId);
+            this.$onFilterChange();
+        },
+
+        /**
+         * Remove an array of categories
+         *
+         * @param categories
+         */
+        removeCategories: function (categories) {
+            if (typeOf(categories) != 'array') {
+                return;
+            }
+
+            for (var i = 0, len = categories.length; i < len; i++) {
+                this.$categories.erase(categories[i]);
+            }
+
+            this.$onFilterChange();
+        },
+
+        /**
+         * Removes all categories
+         */
+        clearCategories: function () {
+            this.$categories = [];
+            this.$onFilterChange();
         }
     });
 });

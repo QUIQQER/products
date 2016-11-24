@@ -1,0 +1,22 @@
+{assign var=children value=$this->getChildren($Site)}
+{if count($children)}
+<ul>
+    {foreach from=$children item=Child}
+    {if $Child->getAttribute('quiqqer.products.settings.categoryId')}
+    <li>
+        <label class="quiqqer-products-category-menu-navigation-li-label">
+            <span class="quiqqer-products-category-menu-navigation-li-label-checkbox">
+                <input type="checkbox" value="{$Child->getAttribute('quiqqer.products.settings.categoryId')}"/>
+            </span>
+            <a href="{url site=$Child}"
+               class="quiqqer-products-category-menu-navigation-li-label-link"
+            >
+                {$Child->getAttribute('title')}
+            </a>
+        </label>
+        {include file=$childrenTemplate Site=$Child}
+    </li>
+    {/if}
+    {/foreach}
+</ul>
+{/if}

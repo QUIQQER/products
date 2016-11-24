@@ -203,6 +203,24 @@ class FrontendSearch extends Search
             );
         }
 
+        if (isset($searchParams['categories'])
+            && !empty($searchParams['categories'])
+            && is_array($searchParams['categories'])
+        ) {
+            $c = 0;
+
+            foreach ($searchParams['categories'] as $categoryId) {
+                $where[] = '`category` LIKE :category' . $c;
+
+                $binds['category' . $c] = array(
+                    'value' => '%,' . (int)$categoryId . ',%',
+                    'type'  => \PDO::PARAM_STR
+                );
+
+                $c++;
+            }
+        }
+
         if (!isset($searchParams['fields']) && !isset($searchParams['freetext'])) {
             throw new Exception(
                 'Wrong search parameters.',

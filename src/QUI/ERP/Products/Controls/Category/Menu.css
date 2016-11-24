@@ -1,0 +1,39 @@
+.quiqqer-products-category-menu-navigation ul {
+    list-style-type: none;
+}
+
+.quiqqer-products-category-menu-navigation ul ul {
+    margin-left: 25px;
+}
+
+.quiqqer-products-category-menu-navigation-li,
+.quiqqer-products-category-menu-navigation-li-label {
+    clear: both;
+    float: left;
+    width: 100%;
+}
+
+.quiqqer-products-category-menu-navigation-li-label-checkbox {
+    cursor: pointer;
+    float: left;
+    line-height: 30px;
+    text-align: center;
+    width: 30px;
+}
+
+.quiqqer-products-category-menu-navigation-li-label-checkbox:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.quiqqer-products-category-menu-navigation-li-label-checkbox input {
+    bottom: 1px;
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+}
+
+.quiqqer-products-category-menu-navigation-li-label-link {
+    float: left;
+    padding-top: 5px;
+    width: calc(100% - 30px);
+}
