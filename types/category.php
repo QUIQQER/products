@@ -134,7 +134,23 @@ if ($siteUrl != $_REQUEST['_url']) {
         $ProductList->setAttribute('showFilter', false);
     }
 
+    // search parent category site
+    $searchParentCategorySite = function () use ($Site) {
+        $Parent = true;
+
+        while ($Parent) {
+            if ($Site->getParent()->getAttribute('type') != 'quiqqer/products:types/category') {
+                return $Site;
+            }
+
+            $Site = $Site->getParent();
+        }
+
+        return $Site;
+    };
+
     $Engine->assign(array(
-        'ProductList' => $ProductList
+        'ProductList'        => $ProductList,
+        'ParentCategorySite' => $searchParentCategorySite()
     ));
 }

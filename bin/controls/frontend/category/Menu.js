@@ -61,8 +61,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
             this.$Nav = Elm.getElement('.quiqqer-products-category-menu-navigation');
 
             this.$Nav.getElements('a').addEvent('click', function (event) {
-                event.stop();
-
                 var Target = event.target,
                     Label  = Target.getParent('label');
 
@@ -71,6 +69,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
                 }
 
                 var Input = Label.getElement('input');
+
+                if (!Input) {
+                    return;
+                }
+
+                event.stop();
 
                 Input.checked = !Input.checked;
                 Input.fireEvent('change');

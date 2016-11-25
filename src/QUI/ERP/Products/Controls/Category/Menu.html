@@ -16,9 +16,15 @@
         {if $Child->getAttribute('quiqqer.products.settings.categoryId')}
         <li class="quiqqer-products-category-menu-navigation-li">
             <label class="quiqqer-products-category-menu-navigation-li-label">
-                <div class="quiqqer-products-category-menu-navigation-li-label-checkbox">
+                {if $Child->getAttribute('quiqqer.products.settings.categoryAsFilter')}
+                <span class="quiqqer-products-category-menu-navigation-li-label-checkbox">
                     <input type="checkbox" value="{$Child->getAttribute('quiqqer.products.settings.categoryId')}"/>
-                </div>
+                </span>
+                {else}
+                <span class="quiqqer-products-category-menu-navigation-li-label-icon">
+                    <span class="fa fa-angle-right"></span>
+                </span>
+                {/if}
                 <a href="{url site=$Child}" class="quiqqer-products-category-menu-navigation-li-label-link">
                     {$Child->getAttribute('title')}
                 </a>

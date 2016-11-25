@@ -21,6 +21,7 @@
                 <attribute>quiqqer.products.settings.showFilterLeft</attribute>
                 <attribute>quiqqer.products.settings.categoryStartNumber</attribute>
                 <attribute>quiqqer.products.settings.categoryDisplay</attribute>
+                <attribute>quiqqer.products.settings.categoryAsFilter</attribute>
             </attributes>
 
             <settings>
@@ -33,6 +34,12 @@
                         <input conf="quiqqer.products.settings.showFilterLeft" type="checkbox">
                             <text>
                                 <locale group="quiqqer/products" var="quiqqer.products.settings.showFilterLeft"/>
+                            </text>
+                        </input>
+
+                        <input conf="quiqqer.products.settings.categoryAsFilter" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.categoryAsFilter"/>
                             </text>
                         </input>
 

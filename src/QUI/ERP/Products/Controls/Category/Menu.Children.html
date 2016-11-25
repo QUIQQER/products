@@ -1,13 +1,19 @@
 {assign var=children value=$this->getChildren($Site)}
-{if count($children)}
+{if count($children) && $Rewrite->isIdInPath($Site->getId())}
 <ul>
     {foreach from=$children item=Child}
     {if $Child->getAttribute('quiqqer.products.settings.categoryId')}
     <li>
         <label class="quiqqer-products-category-menu-navigation-li-label">
+            {if $Child->getAttribute('quiqqer.products.settings.categoryAsFilter')}
             <span class="quiqqer-products-category-menu-navigation-li-label-checkbox">
                 <input type="checkbox" value="{$Child->getAttribute('quiqqer.products.settings.categoryId')}"/>
             </span>
+            {else}
+            <span class="quiqqer-products-category-menu-navigation-li-label-icon">
+                <span class="fa fa-angle-right"></span>
+            </span>
+            {/if}
             <a href="{url site=$Child}"
                class="quiqqer-products-category-menu-navigation-li-label-link"
             >

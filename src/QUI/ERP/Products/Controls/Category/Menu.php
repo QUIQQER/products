@@ -52,7 +52,8 @@ class Menu extends QUI\Control
         $Engine->assign(array(
             'children'         => $children,
             'this'             => $this,
-            'childrenTemplate' => dirname(__FILE__) . '/Menu.Children.html'
+            'childrenTemplate' => dirname(__FILE__) . '/Menu.Children.html',
+            'Rewrite'          => QUI::getRewrite()
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/Menu.html');
