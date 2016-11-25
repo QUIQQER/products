@@ -6,10 +6,18 @@
         var QUIQQER_PRODUCT_ID = '{$Product->getAttribute('data-productid')}';
     </script>
 {else}
-<div class="grid-100 mobile-grid-100 grid-parent page-multible-content quiqqer-products-category">
+<section class="grid-100 mobile-grid-100 grid-parent page-multible-content quiqqer-products-category">
 
     {if $Site->getAttribute('quiqqer.products.settings.showFilterLeft')}
     <div class="content-headerpage-multible-left grid-30 hide-on-mobile">
+        <header>
+            <h2>Kategorien</h2>
+        </header>
+        {control control="QUI\ERP\Products\Controls\Category\Menu"}
+
+        <header>
+            <h2>Filter</h2>
+        </header>
         {$ProductList->createFilter()}
     </div>
     {/if}

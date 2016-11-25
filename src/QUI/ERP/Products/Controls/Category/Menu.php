@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Category\Menu
+ * This file contains QUI\ERP\Products\Controls\Category\Menu
  */
 namespace QUI\ERP\Products\Controls\Category;
 

@@ -1,5 +1,9 @@
 .quiqqer-products-category-menu-navigation ul {
+    float: left;
     list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
 }
 
 .quiqqer-products-category-menu-navigation ul ul {
@@ -16,7 +20,7 @@
 .quiqqer-products-category-menu-navigation-li-label-checkbox {
     cursor: pointer;
     float: left;
-    line-height: 30px;
+
     text-align: center;
     width: 30px;
 }
