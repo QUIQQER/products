@@ -3,7 +3,7 @@
     {assign var=c value=0}
     {foreach from=$children item=Category}
         {assign var=cssClass value=""}
-        {if $categoryStartNumber && $categoryStartNumber <= $c}
+        {if $categoryStartNumber && $categoryStartNumber <= $c || $categoryStartNumber === 0}
             {assign var=cssClass value=" quiqqer-products-catgory__hide"}
         {/if}
 
@@ -17,7 +17,7 @@
 {/strip}
 </div>
 
-{if $categoryStartNumber && $categoryStartNumber < count($children)}
+{if $categoryStartNumber && $categoryStartNumber < count($children) && $categoryStartNumber !== 0}
 <div class="quiqqer-products-categoryList-catgory-more button">
     {locale group="quiqqer/products" var="category.control.productlist.button.more"}
 </div>
