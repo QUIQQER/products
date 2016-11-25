@@ -82,6 +82,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
 
             this.$Nav.getElements('input[type="checkbox"]').addEvent('change', function () {
                 if (!self.$List) {
+                    console.log('No list found');
                     return;
                 }
 
