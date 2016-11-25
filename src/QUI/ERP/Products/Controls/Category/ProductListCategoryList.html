@@ -1,24 +1,26 @@
-<div class="quiqqer-products-categoryList">
-{strip}
-    {assign var=c value=0}
-    {foreach from=$children item=Category}
-        {assign var=cssClass value=""}
-        {if $categoryStartNumber && $categoryStartNumber <= $c || $categoryStartNumber === 0}
-            {assign var=cssClass value=" quiqqer-products-catgory__hide"}
-        {/if}
+{if $categoryStartNumber === '' || (int)$categoryStartNumber !== 0}
+    <div class="quiqqer-products-categoryList">
+    {strip}
+        {assign var=c value=0}
+        {foreach from=$children item=Category}
+            {assign var=cssClass value=""}
+            {if $categoryStartNumber && $categoryStartNumber <= $c}
+                {assign var=cssClass value=" quiqqer-products-catgory__hide"}
+            {/if}
 
-        <a href="{url site=$Category}" class="quiqqer-products-categoryList-catgory button{$cssClass}">
-            {$Category->getAttribute('title')}
-            <span class="fa fa-angle-right"></span>
-        </a>
+            <a href="{url site=$Category}" class="quiqqer-products-categoryList-catgory button{$cssClass}">
+                {$Category->getAttribute('title')}
+                <span class="fa fa-angle-right"></span>
+            </a>
 
-        {assign var=c value=$c+1}
-    {/foreach}
-{/strip}
-</div>
+            {assign var=c value=$c+1}
+        {/foreach}
+    {/strip}
+    </div>
 
-{if $categoryStartNumber && $categoryStartNumber < count($children) && $categoryStartNumber !== 0}
-<div class="quiqqer-products-categoryList-catgory-more button">
-    {locale group="quiqqer/products" var="category.control.productlist.button.more"}
-</div>
+    {if $categoryStartNumber && $categoryStartNumber < count($children)}
+    <div class="quiqqer-products-categoryList-catgory-more button">
+        {locale group="quiqqer/products" var="category.control.productlist.button.more"}
+    </div>
+    {/if}
 {/if}
