@@ -24,8 +24,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Nav  = null;
-            this.$List = null;
+            this.$Nav   = null;
+            this.$lists = {};
 
             this.addEvents({
                 onImport: this.$onImport
@@ -40,22 +40,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
                 Elm  = this.getElm();
 
             // search product list
-
-            var ProductListNode = document.getElement(
-                '[data-qui="package/quiqqer/products/bin/controls/frontend/category/ProductList"]'
-            );
-
-            var quiid = ProductListNode.get('data-quiid');
-
-            if (!quiid) {
-                ProductListNode.addEvent('load', function () {
-                    this.$List = QUI.Controls.getById(
-                        ProductListNode.get('data-quiid')
-                    );
-                }.bind(this));
-            } else {
-                this.$List = QUI.Controls.getById(quiid);
-            }
+            this.getProductLists();
 
             // element events
             this.$Nav = Elm.getElement('.quiqqer-products-category-menu-navigation');
@@ -81,11 +66,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
             });
 
             this.$Nav.getElements('input[type="checkbox"]').addEvent('change', function () {
-                if (!self.$List) {
-                    console.log('No list found');
-                    return;
-                }
-
                 var categoryId = parseInt(this.value);
 
                 if (!categoryId) {
@@ -94,11 +74,61 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
                 }
 
                 if (this.checked) {
-                    self.$List.addCategory(categoryId);
+                    Object.each(self.getProductLists(), function (List) {
+                        List.addCategory(categoryId);
+                    });
                 } else {
-                    self.$List.removeCategory(categoryId);
+                    Object.each(self.getProductLists(), function (List) {
+                        List.removeCategory(categoryId);
+                    });
                 }
             });
+        },
+
+        /**
+         * Return all availabl product lists
+         *
+         * @returns {Object}
+         */
+        getProductLists: function () {
+            if (Object.getLength(this.$lists)) {
+                return this.$lists;
+            }
+
+
+            var self  = this,
+                nodes = document.getElements(
+                    '[data-qui="package/quiqqer/products/bin/controls/frontend/category/ProductList"]'
+                );
+
+            var i, len, quiid;
+
+            var onNodeLoad = function () {
+                var qid          = this.get('data-quiid');
+                self.$lists[qid] = QUI.Controls.getById(qid);
+            };
+
+
+            for (i = 0, len = nodes.length; i < len; i++) {
+                if (!nodes.hasOwnProperty(i)) {
+                    continue;
+                }
+
+                quiid = nodes[i].get('data-quiid');
+
+                if (this.$lists.hasOwnProperty(quiid)) {
+                    continue;
+                }
+
+                if (quiid) {
+                    this.$lists[quiid] = QUI.Controls.getById(quiid);
+                    continue;
+                }
+
+                nodes[i].addEvent('load', onNodeLoad.bind(nodes[i]));
+            }
+
+            return this.$lists;
         }
     });
 });
