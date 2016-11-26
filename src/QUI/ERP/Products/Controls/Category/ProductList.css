@@ -1,3 +1,4 @@
+
 .quiqqer-products-productList-categories {
     margin-bottom: 40px;
 }
@@ -263,11 +264,21 @@
 .quiqqer-products-productList-products-container {
     float: left;
     overflow: hidden;
+    position: relative;
     width: 100%;
 }
 
 .quiqqer-products-productList-products-container-real {
     float: left;
+    width: 100%;
+}
+
+.quiqqer-products-productList-loader {
+    font-size: 50px;
+    height: 100%;
+    opacity: 0.5;
+    position: absolute;
+    text-align: center;
     width: 100%;
 }
 

@@ -95,8 +95,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$BarDisplays   = null;
             this.$More          = null;
             this.$Sort          = null;
-            this.$MoreFX        = null;
 
+            this.$FXContainer = null;
+            this.$FXLoader    = null;
+            this.$FXMore      = null;
+
+            this.$Container         = null;
+            this.$ContainerLoader   = null;
             this.$CategoryMore      = null;
             this.$FilterDisplay     = null;
             this.$FilterResultInfo  = null;
@@ -161,6 +166,18 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$FilterClearButton = Elm.getElement('.quiqqer-products-productList-resultInfo-clearbtn');
 
             this.$FilterContainer = document.getElement('.quiqqer-products-productList-filter-container-' + cid);
+
+            this.$ContainerLoader = new Element('div', {
+                'class': 'quiqqer-products-productList-loader',
+                'html' : '<span class="fa fa-spinner fa-spin"></span>',
+                styles : {
+                    display: 'none',
+                    opacity: 0
+                }
+            }).inject(this.$Container);
+
+            this.$FXContainer = moofx(this.$Container);
+            this.$FXLoader    = moofx(this.$ContainerLoader);
 
             // delete noscript tags -> because CSS
             Elm.getElements('noscript').destroy();
@@ -285,7 +302,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$parseElements(Elm);
 
             if (this.$More) {
-                this.$MoreFX = moofx(this.$More.getParent());
+                this.$FXMore = moofx(this.$More.getParent());
 
                 this.$More.addEvent('click', function () {
                     if (!this.$More.hasClass('disabled')) {
@@ -880,8 +897,16 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$Container.getSize().y
             );
 
+            this.$FXLoader.animate({
+                opacity: 0
+            }, {
+                callback: function () {
+                    self.$ContainerLoader.setStyle('display', 'none');
+                }
+            });
+
             return new Promise(function (resolve) {
-                moofx(self.$Container).animate({
+                self.$FXContainer.animate({
                     opacity: 0
                 }, {
                     duration: 500,
@@ -900,7 +925,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          */
         $showContainer: function () {
             return new Promise(function (resolve) {
-                moofx(this.$Container).animate({
+                this.$FXContainer.animate({
                     height : this.$ContainerReal.getSize().y,
                     opacity: 1
                 }, {
@@ -908,6 +933,48 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     callback: resolve
                 });
             }.bind(this));
+        },
+
+        /**
+         * Show the container
+         *
+         * @returns {Promise}
+         */
+        $hideContainer: function () {
+            return new Promise(function (resolve) {
+                this.$FXContainer.animate({
+                    opacity: 0
+                }, {
+                    duration: 250,
+                    callback: resolve
+                });
+            }.bind(this));
+        },
+
+        /**
+         * Hide the container and show a loader in the container
+         *
+         * @returns {Promise}
+         */
+        $hideContainerWithLoader: function () {
+            var self = this;
+
+            var LoaderAnimation = new Promise(function (resolve) {
+                self.$ContainerLoader.setStyle('opacity', 0);
+                self.$ContainerLoader.setStyle('display', null);
+                self.$FXLoader.animate({
+                    opacity: 1
+                }, {
+                    duration: 200,
+                    callback: resolve
+                });
+
+            });
+
+            return Promise.all([
+                LoaderAnimation,
+                this.$hideContainer()
+            ]);
         },
 
         /**
@@ -939,7 +1006,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$More.setStyle('cursor', 'default');
 
             return new Promise(function (resolve) {
-                this.$MoreFX.animate({
+                this.$FXMore.animate({
                     opacity: 0
                 }, {
                     duration: 200,
@@ -959,7 +1026,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             return new Promise(function (resolve) {
-                this.$MoreFX.animate({
+                this.$FXMore.animate({
                     opacity: 1
                 }, {
                     duration: 200,
@@ -1013,9 +1080,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @returns {Promise}
          */
         search: function (params) {
-
-            console.log(params);
-
             return Search.search(this.getAttribute('siteId'), {
                     name: this.getAttribute('project'),
                     lang: this.getAttribute('lang')
@@ -1465,6 +1529,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             this.fireEvent('filterChangeBegin');
+
+            this.$hideContainerWithLoader();
 
             this.$FilterResultInfo.set(
                 'html',
