@@ -837,7 +837,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     Field = QUI.Controls.getById(fieldNodes[i].get('data-quiid'));
                     value = Field.getSearchValue();
 
-                    if (value !== '') {
+                    if (!Field.isReady()) {
+                        continue;
+                    }
+
+                    if (value !== '' && value !== false) {
                         fields[Field.getFieldId()] = Field.getSearchValue();
                     }
                 }
@@ -1359,12 +1363,27 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return;
             }
 
+            var self    = this,
+                onReady = function () {
+                    new ProductListField({
+                        Field: this
+                    }).inject(self.$FilterFieldList);
+                };
+
             this.$FilterFieldList.set('html', '');
 
             for (var i = 0, len = this.$selectFields.length; i < len; i++) {
-                new ProductListField({
-                    Field: this.$selectFields[i]
-                }).inject(this.$FilterFieldList);
+                if (this.$selectFields[i].isReady() &&
+                    this.$selectFields[i].getSearchValue()) {
+
+                    new ProductListField({
+                        Field: this.$selectFields[i]
+                    }).inject(this.$FilterFieldList);
+
+                    continue;
+                }
+
+                this.$selectFields[i].addEvent('ready', onReady.bind(this.$selectFields[i]));
             }
         },
 
@@ -1524,7 +1543,18 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return;
             }
 
+            var self              = this,
+                searchParams      = this.$getSearchParams(),
+                searchCountParams = searchParams;
+
             if (!this.$load) {
+                // filter display
+                if (searchParams.tags.length || Object.getLength(searchParams.fields)) {
+                    self.showFilterDisplay();
+                } else {
+                    self.hideFilterDisplay();
+                }
+
                 return;
             }
 
@@ -1537,9 +1567,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 '<span class="fa fa-spinner fa-spin"></span>'
             );
 
-            var self              = this,
-                searchParams      = this.$getSearchParams(),
-                searchCountParams = searchParams;
 
             // if no tags, no result count display
             if (searchParams.tags.length || Object.getLength(searchParams.fields)) {

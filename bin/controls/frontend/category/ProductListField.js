@@ -83,6 +83,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListField
 
             text = text + Field.getSearchValueFormatted();
 
+            console.warn(this.getElm());
+            console.info(value);
+
             this.$Text.set('text', text);
             this.show();
         }

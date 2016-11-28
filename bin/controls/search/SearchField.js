@@ -214,6 +214,15 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
         },
 
         /**
+         * Is control ready?
+         *
+         * @returns {boolean}
+         */
+        isReady: function () {
+            return this.$ready;
+        },
+
+        /**
          * Set the search data for the fields
          *
          * @param {object|array} data
