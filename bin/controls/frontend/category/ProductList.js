@@ -35,6 +35,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'qui/controls/Control',
     'qui/controls/buttons/Select',
     'qui/controls/buttons/Button',
+    'qui/utils/Elements',
     'package/quiqqer/products/bin/Search',
     'package/quiqqer/products/bin/controls/search/SearchField',
     'Ajax',
@@ -43,7 +44,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'package/quiqqer/products/bin/controls/frontend/category/ProductListFilter',
     'package/quiqqer/products/bin/controls/frontend/category/ProductListField'
 
-], function (QUI, QUIControl, QUISelect, QUIButton,
+], function (QUI, QUIControl, QUISelect, QUIButton, QUIElementUtils,
              Search, SearchField, QUIAjax, QUILocale, URI, ProductListFilter, ProductListField) {
 
     "use strict";
@@ -88,6 +89,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$load = false;
 
+
             this.$ButtonDetails = null;
             this.$ButtonGallery = null;
             this.$ButtonList    = null;
@@ -116,6 +118,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$sortingEnabled       = true;
             this.$__readWindowLocation = false;
+
+            this.$moreButtonIsVisible = false;
+            this.$moreButtonClicked   = 0;
+            this.$loadingMore         = false;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -306,12 +312,38 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 this.$More.addEvent('click', function () {
                     if (!this.$More.hasClass('disabled')) {
+                        this.$moreButtonClicked++;
                         this.next();
                     }
                 }.bind(this));
 
                 this.$showMoreButton();
             }
+
+            // more button auto loading
+            QUI.addEvent('scroll', function () {
+                if (!this.$More) {
+                    return;
+                }
+
+                if (this.$moreButtonClicked < 3) {
+                    return;
+                }
+
+                if (!this.$moreButtonIsVisible) {
+                    return;
+                }
+
+                if (this.$loadingMore) {
+                    return;
+                }
+                
+                var isInView = QUIElementUtils.isInViewport(this.$More);
+
+                if (isInView) {
+                    this.next();
+                }
+            }.bind(this));
 
             // read url
             window.addEvent('popstate', function () {
@@ -529,6 +561,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 size = this.$More.getSize();
 
             this.$More.addClass('disabled');
+            this.$loadingMore = true;
 
             this.$More.setStyles({
                 height  : size.y,
@@ -564,6 +597,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     if (self.$More) {
                         self.$More.removeClass('loading');
                     }
+
+                    self.$loadingMore = false;
 
                 }).then(resolve);
             });
@@ -1008,6 +1043,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$More.addClass('disabled');
             this.$More.setStyle('cursor', 'default');
+            this.$moreButtonIsVisible = false;
 
             return new Promise(function (resolve) {
                 this.$FXMore.animate({
@@ -1037,6 +1073,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     callback: function () {
                         this.$More.removeClass('disabled');
                         this.$More.setStyle('cursor', null);
+                        this.$moreButtonIsVisible = true;
                         resolve();
                     }.bind(this)
                 });
