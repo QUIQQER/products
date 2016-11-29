@@ -32,6 +32,10 @@
             <de><![CDATA[Kategorien]]></de>
             <en><![CDATA[Categories]]></en>
         </locale>
+        <locale name="menu.erp.products.category.title">
+            <de><![CDATA[Kategorien]]></de>
+            <en><![CDATA[Categories]]></en>
+        </locale>
         <locale name="menu.erp.products.fields.title">
             <de><![CDATA[Produktfelder]]></de>
             <en><![CDATA[Product fields]]></en>
@@ -96,6 +100,14 @@
         <locale name="settings.window.products.clearcache.button">
             <de><![CDATA[Produktcache leeren]]></de>
             <en><![CDATA[Clear product cache]]></en>
+        </locale>
+        <locale name="settings.window.products.showFilterLeft.description" html="true">
+            <de><![CDATA[Bestimmt die standard Einstellung für eine neue Kategorie.]]></de>
+            <en><![CDATA[Sets the default setting for a new category.]]></en>
+        </locale>
+        <locale name="settings.window.products.categoryAsFilter.description" html="true">
+            <de><![CDATA[Bestimmt die standard Einstellung für eine neue Kategorie.]]></de>
+            <en><![CDATA[Sets the default setting for a new category.]]></en>
         </locale>
 
         <locale name="settings.window.fieldsearch.backend.title">

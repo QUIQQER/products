@@ -569,6 +569,21 @@ class EventHandling
 
         $Site->setAttribute('type', 'quiqqer/products:types/category');
         $Site->save();
+
+
+        $Package = QUI::getPackage('quiqqer/products');
+        $Site    = new QUI\Projects\Site\Edit($Project, $newId);
+        $Config  = $Package->getConfig();
+
+        if ($Config->getValue('products', 'categoryShowFilterLeft')) {
+            $Site->setAttribute('quiqqer.products.settings.showFilterLeft', 1);
+        }
+
+        if ($Config->getValue('products', 'categoryAsFilter')) {
+            $Site->setAttribute('quiqqer.products.settings.categoryAsFilter', 1);
+        }
+
+        $Site->save();
     }
 
     /**

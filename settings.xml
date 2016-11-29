@@ -19,6 +19,14 @@
                 <conf name="usePermissions">
                     <type><![CDATA[integer]]></type>
                 </conf>
+                <conf name="categoryShowFilterLeft">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
+                <conf name="categoryAsFilter">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>1</defaultvalue>
+                </conf>
             </section>
             <section name="search">
                 <conf name="backend">
@@ -75,6 +83,25 @@
                             </description>
                         </input>
 
+                        <input conf="products.folder" class="media-folder">
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.folder"/>
+                            </text>
+                        </input>
+
+                        <input type="hidden"
+                               data-qui="package/quiqqer/products/bin/controls/products/settings/ClearProductCache"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.clearcache"/>
+                            </text>
+                        </input>
+                    </settings>
+
+                    <settings>
+                        <title>
+                            <locale group="quiqqer/products" var="menu.erp.products.category.title"/>
+                        </title>
                         <input conf="products.mainCategory"
                                data-qui="package/quiqqer/products/bin/controls/categories/Select"
                                data-qui-options-max="1"
@@ -88,17 +115,25 @@
                             </description>
                         </input>
 
-                        <input conf="products.folder" class="media-folder">
+                        <input conf="products.categoryShowFilterLeft" type="checkbox">
                             <text>
-                                <locale group="quiqqer/products" var="settings.window.products.folder"/>
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.showFilterLeft"/>
                             </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.showFilterLeft.description"/>
+                            </description>
                         </input>
 
-                        <input type="hidden"
-                               data-qui="package/quiqqer/products/bin/controls/products/settings/ClearProductCache"
-                        >
+                        <input conf="products.categoryAsFilter" type="checkbox">
                             <text>
-                                <locale group="quiqqer/products" var="settings.window.products.clearcache"/>
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.categoryAsFilter"/>
+                                <description>
+                                    <locale group="quiqqer/products"
+                                            var="settings.window.products.categoryAsFilter.description"/>
+                                </description>
                             </text>
                         </input>
                     </settings>
