@@ -81,10 +81,11 @@ class BackendSearch extends Search
             && !empty($searchParams['categories'])
             && is_array($searchParams['categories'])
         ) {
-            $c = 0;
+            $c               = 0;
+            $whereCategories = array();
 
             foreach ($searchParams['categories'] as $categoryId) {
-                $where[] = '`category` LIKE :category' . $c;
+                $whereCategories[] = '`category` LIKE :category' . $c;
 
                 $binds['category' . $c] = array(
                     'value' => '%,' . (int)$categoryId . ',%',
@@ -93,6 +94,9 @@ class BackendSearch extends Search
 
                 $c++;
             }
+
+            // @todo das OR als setting (AND oder OR) (ist gedacht für die Navigation)
+            $where[] = '(' . implode(' OR ', $whereCategories) . ')';
         }
 
         if (!isset($searchParams['fields'])
