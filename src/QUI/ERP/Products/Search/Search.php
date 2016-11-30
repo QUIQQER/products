@@ -694,10 +694,8 @@ abstract class Search extends QUI\QDOM
     {
         $order = 'ORDER BY';
 
-        if (!isset($searchParams['sortOn'])
-            || empty($searchParams['sortOn'])
-        ) {
-            $order .= ' title ASC';
+        if (!isset($searchParams['sortOn']) || empty($searchParams['sortOn'])) {
+            $order .= ' F' . Fields::FIELD_PRIORITY . ' ASC';
             return $order;
         }
 

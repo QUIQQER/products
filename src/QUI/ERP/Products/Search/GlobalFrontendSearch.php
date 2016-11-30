@@ -156,6 +156,28 @@ class GlobalFrontendSearch extends Search
             );
         }
 
+        if (isset($searchParams['categories'])
+            && !empty($searchParams['categories'])
+            && is_array($searchParams['categories'])
+        ) {
+            $c               = 0;
+            $whereCategories = array();
+
+            foreach ($searchParams['categories'] as $categoryId) {
+                $whereCategories[] = '`category` LIKE :category' . $c;
+
+                $binds['category' . $c] = array(
+                    'value' => '%,' . (int)$categoryId . ',%',
+                    'type'  => \PDO::PARAM_STR
+                );
+
+                $c++;
+            }
+
+            // @todo das OR als setting (AND oder OR) (ist gedacht für die Navigation)
+            $where[] = '(' . implode(' OR ', $whereCategories) . ')';
+        }
+
         if (!isset($searchParams['fields']) && !isset($searchParams['freetext'])) {
             throw new Exception(
                 'Wrong search parameters.',

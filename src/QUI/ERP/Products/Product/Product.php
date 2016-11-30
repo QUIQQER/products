@@ -101,6 +101,16 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
     }
 
     /**
+     * Set the product priority
+     *
+     * @param integer $priority
+     */
+    public function setPriority($priority)
+    {
+        $this->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRIORITY)->setValue($priority);
+    }
+
+    /**
      * Set own product permissions
      *
      * @param string $permission

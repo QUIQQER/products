@@ -258,7 +258,7 @@ class EventHandling
                 'search_type'   => '',
                 'titles'        => array(
                     'de' => 'Produktbild',
-                    'en' => 'Product image'
+                    'en' => 'Image'
                 )
             ),
             // Produkt Mediaordner
@@ -276,6 +276,23 @@ class EventHandling
                 'titles'        => array(
                     'de' => 'Media-Ordner',
                     'en' => 'Media folder'
+                )
+            ),
+            // Produkt Priorität
+            array(
+                'id'            => Fields::FIELD_PRIORITY,
+                'type'          => 'IntType',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 8,
+                'systemField'   => 1,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField'   => 0,
+                'search_type'   => '',
+                'titles'        => array(
+                    'de' => 'Sortierung',
+                    'en' => 'Order'
                 )
             ),
             // Produkt bestand
@@ -453,7 +470,7 @@ class EventHandling
             }
         }
 
-//        self::checkProductCacheTable();
+        self::checkProductCacheTable();
 //        Crons::updateProductCache();
     }
 

@@ -331,7 +331,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     productCategories: QUILocale.get(lg, 'productCategories'),
                     productCategory  : QUILocale.get(lg, 'productCategory'),
                     productAttributes: QUILocale.get(lg, 'productAttributes'),
-                    productMasterData: QUILocale.get(lg, 'productMasterData')
+                    productMasterData: QUILocale.get(lg, 'productMasterData'),
+                    productPriority  : QUILocale.get(lg, 'productPriority')
                 });
 
                 Content.set({
@@ -352,6 +353,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 self.$Prices          = Content.getElement('.product-update-prices');
                 self.$MainCategoryRow = Content.getElement('.product-mainCategory');
                 self.$MainCategory    = Content.getElement('[name="product-category"]');
+                self.$Priority        = Content.getElement('[name="product-priority"]');
 
                 self.$FieldAdministration = Content.getElement('.product-update-fieldadministration');
                 self.$AttributeList       = Content.getElement('.product-update-attributelist');

@@ -191,15 +191,19 @@
             <en><![CDATA[Article-No]]></en>
         </locale>
         <locale name="productCategories">
-            <de><![CDATA[Produkt-Kategorien]]></de>
-            <en><![CDATA[Product categories]]></en>
+            <de><![CDATA[Kategorien]]></de>
+            <en><![CDATA[Categories]]></en>
         </locale>
         <locale name="productCategory">
-            <de><![CDATA[Produkt-Hauptkategorie]]></de>
-            <en><![CDATA[Product main category]]></en>
+            <de><![CDATA[Hauptkategorie]]></de>
+            <en><![CDATA[Main category]]></en>
+        </locale>
+        <locale name="productPriority">
+            <de><![CDATA[Priorität]]></de>
+            <en><![CDATA[priority]]></en>
         </locale>
         <locale name="productImage">
-            <de><![CDATA[Produkt-Bild]]></de>
+            <de><![CDATA[Produktbild]]></de>
             <en><![CDATA[Product image]]></en>
         </locale>
 

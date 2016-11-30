@@ -58,6 +58,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $public = true;
 
     /**
+     * @var null
+     */
+    protected $defaultValue = null;
+
+    /**
      * @var array
      */
     protected $options = array();

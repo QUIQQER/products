@@ -37,6 +37,7 @@ class Fields
     const FIELD_SIMILAR_PRODUCTS = 15;
     const FIELD_PRICE_OFFER = 16; // angebitspreis
     const FIELD_PRICE_RETAIL = 17; // UVP - RRP
+    const FIELD_PRIORITY = 18; // Product Priority
 
     /**
      * Types

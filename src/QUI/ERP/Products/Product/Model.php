@@ -383,6 +383,26 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Return the product priority
+     *
+     * @return int
+     */
+    public function getPriority()
+    {
+        return $this->getFieldValue(Fields::FIELD_PRIORITY);
+    }
+
+    /**
+     * Return the priority field object
+     *
+     * @return QUI\ERP\Products\Field\Field
+     */
+    public function getPriorityField()
+    {
+        return $this->getField(Fields::FIELD_PRIORITY);
+    }
+
+    /**
      * Return the URL for the product
      * It uses the current project
      *
@@ -819,7 +839,8 @@ class Model extends QUI\QDOM
                 'categories'  => ',' . implode(',', $categoryIds) . ',',
                 'category'    => $mainCategory,
                 'fieldData'   => json_encode($fieldData),
-                'permissions' => json_encode($this->permissions)
+                'permissions' => json_encode($this->permissions),
+                'priority'    => $this->getPriority()
             )
         );
 
@@ -832,7 +853,8 @@ class Model extends QUI\QDOM
                 'fieldData'   => json_encode($fieldData),
                 'permissions' => json_encode($this->permissions),
                 'e_user'      => QUI::getUserBySession()->getId(),
-                'e_date'      => date('Y-m-d H:i:s')
+                'e_date'      => date('Y-m-d H:i:s'),
+                'priority'    => $this->getPriority()
             ),
             array('id' => $this->getId())
         );
