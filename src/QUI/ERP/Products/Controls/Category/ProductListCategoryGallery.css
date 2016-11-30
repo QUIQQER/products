@@ -102,23 +102,24 @@
     left: 0;
     line-height: 20px;
     overflow: auto;
+    opacity: 0;
     padding: 10px;
     position: absolute;
     text-align: left;
-    top: 100%;
+    top: 0;
     width: 100%;
     z-index: 2;
 
-    -webkit-transition: top 300ms ease;
-    -moz-transition: top 300ms ease;
-    -ms-transition: top 300ms ease;
-    -o-transition: top 300ms ease;
-    transition: top 300ms ease;
+    -webkit-transition: opacity 300ms ease;
+    -moz-transition: opacity 300ms ease;
+    -ms-transition: opacity 300ms ease;
+    -o-transition: opacity 300ms ease;
+    transition: opacity 300ms ease;
 }
 
 .quiqqer-products-categoryGallery-catgory-short-open,
 .quiqqer-products-categoryGallery-catgory:hover .quiqqer-products-categoryGallery-catgory-short {
-    top: 30px;
+    opacity: 1;
 
     -webkit-transition: top 300ms ease;
     -moz-transition: top 300ms ease;
@@ -146,16 +147,16 @@
     transition: transform 300ms ease;
 }
 
-.quiqqer-products-categoryGallery-catgory:hover header {
-    bottom: auto;
-    top: 0;
+/*.quiqqer-products-categoryGallery-catgory:hover header {*/
+    /*bottom: auto;*/
+    /*top: 0;*/
 
-    -webkit-transition: all 300ms ease;
-    -moz-transition: all 300ms ease;
-    -ms-transition: all 300ms ease;
-    -o-transition: all 300ms ease;
-    transition: all 300ms ease;
-}
+    /*-webkit-transition: all 300ms ease;*/
+    /*-moz-transition: all 300ms ease;*/
+    /*-ms-transition: all 300ms ease;*/
+    /*-o-transition: all 300ms ease;*/
+    /*transition: all 300ms ease;*/
+/*}*/
 
 @media (max-width: 768px) {
     .quiqqer-products-categoryGallery-catgory:nth-child(2n+1) {

@@ -1,7 +1,7 @@
 <article class="quiqqer-products-productGallery-products-product grid-33 mobile-grid-100"
          data-pid="{$Product->getId()}"
 >
-{strip}
+    {strip}
     <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:" html"}">
     {image image=$Product->getImage() title=$Product->getTitle() width=400}
     <header>
@@ -11,8 +11,11 @@
         </div>
     </header>
     <div class="quiqqer-products-productGallery-products-product-short">
+        <div class="quiqqer-products-productGallery-products-product-short-image">
+            {image image=$Product->getImage() title=$Product->getTitle() width=100 height=200}
+        </div>
         {$Product->getDescription()}
     </div>
     </a>
-{/strip}
+    {/strip}
 </article>

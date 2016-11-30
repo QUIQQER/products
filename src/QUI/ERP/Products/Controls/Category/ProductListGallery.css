@@ -72,45 +72,48 @@
     background: #dfe4e4;
     color: #666;
     font-size: 14px;
-    height: calc(100% - 30px);
+    height: 100%;
     left: 0;
     line-height: 20px;
     overflow: auto;
+    opacity: 0;
     padding: 10px;
     position: absolute;
     text-align: left;
-    top: 100%;
+    top: 0;
     width: 100%;
-    z-index: 2;
+    z-index: 1;
 
-    -webkit-transition: top 300ms ease;
-    -moz-transition: top 300ms ease;
-    -ms-transition: top 300ms ease;
-    -o-transition: top 300ms ease;
-    transition: top 300ms ease;
+    -webkit-transition: opacity 300ms ease;
+    -moz-transition: opacity 300ms ease;
+    -ms-transition: opacity 300ms ease;
+    -o-transition: opacity 300ms ease;
+    transition: opacity 300ms ease;
 }
 
 .quiqqer-products-productGallery-products-product-short-open,
 .quiqqer-products-productGallery-products-product:hover .quiqqer-products-productGallery-products-product-short {
-    top: 30px;
-
-    -webkit-transition: top 300ms ease;
-    -moz-transition: top 300ms ease;
-    -ms-transition: top 300ms ease;
-    -o-transition: top 300ms ease;
-    transition: top 300ms ease;
-}
-
-.quiqqer-products-productGallery-products-product:hover header {
-    bottom: auto;
+    opacity: 1;
     top: 0;
 
-    -webkit-transition: all 300ms ease;
-    -moz-transition: all 300ms ease;
-    -ms-transition: all 300ms ease;
-    -o-transition: all 300ms ease;
-    transition: all 300ms ease;
+    -webkit-transition: opacity 300ms ease;
+    -moz-transition: opacity 300ms ease;
+    -ms-transition: opacity 300ms ease;
+    -o-transition: opacity 300ms ease;
+    transition: opacity 300ms ease;
 }
+
+/*.quiqqer-products-productGallery-products-product:hover header {*/
+/*!*bottom: auto;*!*/
+/*!*top: 0;*!*/
+/*opacity: 0;*/
+
+/*-webkit-transition: all 300ms ease;*/
+/*-moz-transition: all 300ms ease;*/
+/*-ms-transition: all 300ms ease;*/
+/*-o-transition: all 300ms ease;*/
+/*transition: all 300ms ease;*/
+/*}*/
 
 .quiqqer-products-productGallery-products-product .fa-sort-down {
     -webkit-transition: transform 300ms ease;
@@ -129,6 +132,17 @@
     -ms-transition: transform 300ms ease;
     -o-transition: transform 300ms ease;
     transition: transform 300ms ease;
+}
+
+.quiqqer-products-productGallery-products-product-short-image {
+    clear: both;
+    float: left;
+}
+
+.quiqqer-products-productGallery-products-product-short-image img {
+    margin-right:10px;
+    max-height: 150px;
+    max-width: 50px;
 }
 
 @media (max-width: 768px) {
