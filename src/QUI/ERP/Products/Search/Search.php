@@ -693,7 +693,7 @@ abstract class Search extends QUI\QDOM
     protected function validateOrderStatement($searchParams)
     {
         $order = 'ORDER BY';
-        
+
         if (!isset($searchParams['sortOn']) || empty($searchParams['sortOn'])) {
             $order .= ' F' . Fields::FIELD_PRIORITY . ' ASC';
             return $order;
@@ -715,6 +715,10 @@ abstract class Search extends QUI\QDOM
                 break;
 
             default:
+                if (mb_strpos($searchParams['sortOn'], 'F') === 0) {
+                    $searchParams['sortOn'] = mb_substr($searchParams['sortOn'], 1);
+                }
+
                 $orderFieldId = (int)$searchParams['sortOn'];
 
                 try {
@@ -727,14 +731,12 @@ abstract class Search extends QUI\QDOM
                     $order .= ' ' . SearchHandler::getSearchFieldColumnName($OrderField);
                 } catch (\Exception $Exception) {
                     // if field does not exist or throws some other kind of error - it is not searchable
-                    $order .= ' title ASC';
+                    $order .= ' F' . Fields::FIELD_PRIORITY;
                     return $order;
                 }
         }
 
-        if (!isset($searchParams['sortBy'])
-            || empty($searchParams['sortBy'])
-        ) {
+        if (!isset($searchParams['sortBy']) || empty($searchParams['sortBy'])) {
             $order .= ' ASC';
             return $order;
         }
