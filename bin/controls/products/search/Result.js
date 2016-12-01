@@ -207,7 +207,7 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                     dataType : 'text',
                     width    : 100
                 }, {
-                    header   : QUILocale.get('quiqqer/system', 'priority'),
+                    header   : QUILocale.get(lg, 'priority'),
                     dataIndex: 'priority',
                     dataType : 'number',
                     width    : 30

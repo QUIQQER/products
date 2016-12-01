@@ -693,7 +693,7 @@ abstract class Search extends QUI\QDOM
     protected function validateOrderStatement($searchParams)
     {
         $order = 'ORDER BY';
-
+        
         if (!isset($searchParams['sortOn']) || empty($searchParams['sortOn'])) {
             $order .= ' F' . Fields::FIELD_PRIORITY . ' ASC';
             return $order;
@@ -709,6 +709,9 @@ abstract class Search extends QUI\QDOM
             case 'lang':
             case 'tags':
                 $order .= ' ' . $searchParams['sortOn'];
+                break;
+            case 'priority':
+                $order .= ' F' . Fields::FIELD_PRIORITY;
                 break;
 
             default:
