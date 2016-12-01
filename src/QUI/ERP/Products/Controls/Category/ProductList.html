@@ -21,17 +21,24 @@
             </div>
             {/if}
             <div class="quiqqer-products-productList-sort-sorting" style="display: none">
-                {locale group="quiqqer/products" var="category.control.productlist.sortby"}
+                <label>
+                    {locale group="quiqqer/products" var="category.control.productlist.sortby"}
+                    <select name="sort" style="display: none">
+                        {foreach $sorts as $sort}
+                        <option value="{$sort.value}">{$sort.title}</option>
+                        {/foreach}
+                    </select>
+                </label>
             </div>
             <div class="quiqqer-products-productList-sort-display" style="display: none">
-                <span class="fa fa-th button quiqqer-products-productList-sort-display-gallery"
-                      data-tooltip="{locale group="quiqqer/products" var="category.control.productlist.view.gallery"}"
+                    <span class="fa fa-th button quiqqer-products-productList-sort-display-gallery"
+                          data-tooltip="{locale group=" quiqqer/products" var="category.control.productlist.view.gallery"}"
                 ></span>
                 <span class="fa fa-list-ul button quiqqer-products-productList-sort-display-details"
-                      data-tooltip="{locale group="quiqqer/products" var="category.control.productlist.view.details"}"
+                      data-tooltip="{locale group=" quiqqer/products" var="category.control.productlist.view.details"}"
                 ></span>
                 <span class="fa fa-align-justify button quiqqer-products-productList-sort-display-list"
-                      data-tooltip="{locale group="quiqqer/products" var="category.control.productlist.view.list"}"
+                      data-tooltip="{locale group=" quiqqer/products" var="category.control.productlist.view.list"}"
                 ></span>
             </div>
         </div>
@@ -45,9 +52,9 @@
         <div class="quiqqer-products-productList-fl">
             {if !empty($filter)}
             <div class="quiqqer-products-productList-filterList">
-                <span class="quiqqer-products-productList-filterList-title">
-                    {locale group="quiqqer/products" var="category.control.productlist.selectionTitle"}
-                </span>
+                    <span class="quiqqer-products-productList-filterList-title">
+                        {locale group="quiqqer/products" var="category.control.productlist.selectionTitle"}
+                    </span>
                 <div class="quiqqer-products-productList-filterList-fields"></div>
                 <div class="quiqqer-products-productList-filterList-list"></div>
             </div>
@@ -64,19 +71,19 @@
                 </div>
             </div>
         </div>
-    {/if}
+        {/if}
 
-    {if !$count && $this->getAttribute('hideEmptyProductList') && count($children)}
-    {else}
+        {if !$count && $this->getAttribute('hideEmptyProductList') && count($children)}
+        {else}
         <div class="quiqqer-products-productList-products-container">
             <div class="quiqqer-products-productList-products-container-real">
-            {if $count}
+                {if $count}
                 {$products}
-            {else}
+                {else}
                 <div class="quiqqer-products-productList-sort__noProducts">
                     {locale group="quiqqer/products" var="message.product.search.empty"}
                 </div>
-            {/if}
+                {/if}
             </div>
         </div>
 

@@ -32,6 +32,12 @@ class ProductList extends QUI\Control
     protected $filter = null;
 
     /**
+     * Sorting fields -> can be added via addSort
+     * @var array
+     */
+    protected $sort = array();
+
+    /**
      * CID
      *
      * @var null|QUI\Control
@@ -138,6 +144,7 @@ class ProductList extends QUI\Control
             'filter'    => $this->getFilter(),
             'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice(),
             'Site'      => $this->getSite(),
+            'sorts'     => $this->sort,
 
             'categoryFile'        => $categoryFile,
             'placeholder'         => $this->getProject()->getMedia()->getPlaceholder(),
@@ -170,7 +177,7 @@ class ProductList extends QUI\Control
      *
      * @return array
      */
-    protected function getFilter()
+    public function getFilter()
     {
         if (!is_null($this->filter)) {
             return $this->filter;
@@ -261,6 +268,20 @@ class ProductList extends QUI\Control
         $this->filter = $filter;
 
         return $filter;
+    }
+
+    /**
+     * Add a sorting field
+     *
+     * @param string $title
+     * @param string $value
+     */
+    public function addSort($title, $value)
+    {
+        $this->sort[] = array(
+            'title' => $title,
+            'value' => $value
+        );
     }
 
     /**

@@ -130,6 +130,29 @@ if ($siteUrl != $_REQUEST['_url']) {
         'autoload'             => false
     ));
 
+    $filterList = $ProductList->getFilter();
+
+    foreach ($filterList as $filter) {
+        if (!is_array($filter)) {
+            /* @var $filter Products\Field\Field */
+            $title = $filter->getTitle();
+            $id    = $filter->getId();
+        } else {
+            $title = $filter['title'];
+            $id    = $filter['id'];
+        }
+
+        $ProductList->addSort(
+            $title . ' aufsteigend',
+            'F' . $id . ' ASC'
+        );
+
+        $ProductList->addSort(
+            $title . ' absteigend',
+            'F' . $id . ' DESC'
+        );
+    }
+
     if ($Site->getAttribute('quiqqer.products.settings.showFilterLeft')) {
         $ProductList->setAttribute('showFilter', false);
     }

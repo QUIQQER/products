@@ -283,21 +283,26 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             // sort
             if (this.$BarSort) {
-                this.$BarSort.set('html', '');
+                var Select  = this.$BarSort.getElement('select'),
+                    options = Select.getElements('option');
 
                 this.$Sort = new QUISelect({
                     showIcons      : false,
-                    placeholderText: 'Sortieren nach...',
+                    placeholderText: 'Sortieren nach...', // locale
                     events         : {
                         onChange: this.$onFilterChange
                     }
-                }).inject(this.$BarSort);
+                });
 
-                this.$Sort.appendChild('Titel aufsteigen', 'title ASC');
-                this.$Sort.appendChild('Titel abssteigend', 'title DESC');
-                // this.$Sort.appendChild('Preis aufsteigen', 'name');
-                // this.$Sort.appendChild('Preis abssteigend', 'name');
+                for (var i = 0, len = options.length; i < len; i++) {
+                    this.$Sort.appendChild(
+                        options[i].get('html'),
+                        options[i].get('value')
+                    );
+                }
 
+                this.$BarSort.set('html', '');
+                this.$Sort.inject(this.$BarSort);
                 this.$BarSort.setStyle('display', null);
             }
 
@@ -337,7 +342,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 if (this.$loadingMore) {
                     return;
                 }
-                
+
                 var isInView = QUIElementUtils.isInViewport(this.$More);
 
                 if (isInView) {
@@ -888,18 +893,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 });
             }
 
-            if (this.$Sort) {
-                switch (this.$Sort.getValue()) {
-                    case 'title DESC':
-                        sortBy = 'DESC';
-                        sortOn = 'title';
-                        break;
+            if (this.$Sort && this.$Sort.getValue() && this.$Sort.getValue() !== '') {
+                var sort = this.$Sort.getValue().split(' ');
 
-                    case 'title ASC':
-                        sortBy = 'ASC';
-                        sortOn = 'title';
-                        break;
-                }
+                sortBy = sort[1];
+                sortOn = sort[0];
             }
 
             if (window.location.search) {
