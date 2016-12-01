@@ -43,6 +43,7 @@
             <field type="TINYINT(1) NOT NULL DEFAULT 0">requiredField</field>
             <field type="TINYINT(1) NOT NULL DEFAULT 0">publicField</field>
             <field type="TEXT NULL">options</field>
+            <field type="TEXT NULL">defaultValue</field>
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>

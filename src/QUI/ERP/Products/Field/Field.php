@@ -91,7 +91,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @var mixed
      */
-    protected $value = '';
+    protected $value = null;
 
     /**
      * Column type for database table (cache column)
@@ -150,6 +150,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         ) {
             $this->standard = $params['standard'] ? true : false;
         }
+
+        if (isset($params['defaultValue'])) {
+            $this->defaultValue = $params['defaultValue'];
+        }
+
 
         if ($this->isSystem()) {
             $this->standard = true;
@@ -266,12 +271,18 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         );
 
         $allowedAttributes = Fields::getChildAttributes();
+        $defaultValue      = '';
+
+        if (!is_null($this->defaultValue)) {
+            $defaultValue = json_encode($this->defaultValue);
+        }
 
         $data = array(
             'standardField' => $this->isStandard() ? 1 : 0,
             'systemField'   => $this->isSystem() ? 1 : 0,
             'requiredField' => $this->isRequired() ? 1 : 0,
-            'publicField'   => $this->isPublic() ? 1 : 0
+            'publicField'   => $this->isPublic() ? 1 : 0,
+            'defaultValue'  => $defaultValue
         );
 
         foreach ($allowedAttributes as $attribute) {
@@ -545,6 +556,27 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Return the default value
+     *
+     * @return mixed|null
+     */
+    public function getDefaultValue()
+    {
+        return $this->defaultValue;
+    }
+
+    /**
+     * Set the default value
+     *
+     * @param mixed $value
+     */
+    public function setDefaultValue($value)
+    {
+        $this->validate($value);
+        $this->defaultValue = $value;
+    }
+
+    /**
      * Is the field a custom field?
      *
      * @return boolean
@@ -670,10 +702,16 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Return the current value
+     *
      * @return string|array
      */
     public function getValue()
     {
+        if (is_null($this->value)) {
+            return $this->getDefaultValue();
+        }
+
         return $this->value;
     }
 
@@ -923,6 +961,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['options']      = $this->getOptions();
         $attributes['jsControl']    = $this->getJavaScriptControl();
         $attributes['searchvalue']  = $this->getSearchCacheValue();
+        $attributes['defaultValue'] = $this->getDefaultValue();
 
         $attributes['custom']     = $this->isCustomField();
         $attributes['unassigned'] = $this->isUnassigned();

@@ -206,6 +206,11 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                     dataIndex: 'c_date',
                     dataType : 'text',
                     width    : 100
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'priority'),
+                    dataIndex: 'priority',
+                    dataType : 'number',
+                    width    : 30
                 }]
             });
 

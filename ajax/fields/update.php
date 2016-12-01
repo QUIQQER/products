@@ -26,6 +26,10 @@ QUI::$Ajax->registerFunction(
             $Field->setOptions($params['options']);
         }
 
+        if (isset($params['defaultValue'])) {
+            $Field->setDefaultValue($params['defaultValue']);
+        }
+
         $Field->setAttributes($params);
         $Field->save();
 

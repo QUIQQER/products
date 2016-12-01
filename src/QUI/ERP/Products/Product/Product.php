@@ -39,6 +39,10 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
         $Exists->setUnassignedStatus($Field->isUnassigned());
         $Exists->setOwnFieldStatus($Field->isOwnField());
         $Exists->setPublicStatus($Field->isPublic());
+
+        if ($Exists->isEmpty()) {
+            $Exists->setValue($Exists->getDefaultValue());
+        }
     }
 
     /**

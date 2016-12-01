@@ -93,7 +93,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     fieldStandard    : QUILocale.get(lg, 'standardField'),
                     fieldStandardDesc: QUILocale.get(lg, 'standardFieldDesc'),
                     fieldPublic      : QUILocale.get(lg, 'publicField'),
-                    fieldPublicDesc  : QUILocale.get(lg, 'publicFieldDesc')
+                    fieldPublicDesc  : QUILocale.get(lg, 'publicFieldDesc'),
+                    fieldDefaultValue: QUILocale.get(lg, 'fieldDefaultValue')
                 })
             });
 
@@ -190,6 +191,27 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     FieldSearchType.value = fieldData.search_type;
                 }
 
+                // field value
+                switch (fieldData.type) {
+                    case 'Url':
+                    case 'BoolType':
+                    case 'FloatType':
+                    case 'Textarea':
+                    case 'IntType':
+                        var DefaultValue = Elm.getElement('.field-defaultValue');
+
+                        DefaultValue.getParent('tr').setStyle('display', null);
+
+                        new Element('input', {
+                            'class': 'field-container-field field-defaultValue',
+                            value  : fieldData.defaultValue || '',
+                            name   : 'defaultValue'
+                        }).replaces(DefaultValue);
+
+                        break;
+                }
+
+
                 // options
                 var options = fieldData.options;
 
@@ -260,6 +282,12 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     MH.setAttribute('showMessages', false);
 
                 }).then(function () {
+                    var defaultValue = null;
+
+                    if (typeof Form.elements.defaultValue !== 'undefined') {
+                        defaultValue = Form.elements.defaultValue.value;
+                    }
+
                     return Fields.updateChild(fieldId, {
                         type         : Form.elements.type.value,
                         search_type  : search_type,
@@ -269,7 +297,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                         standardField: Form.elements.standardField.checked ? 1 : 0,
                         requiredField: Form.elements.requiredField.checked ? 1 : 0,
                         publicField  : Form.elements.publicField.checked ? 1 : 0,
-                        options      : Form.elements.options.value
+                        options      : Form.elements.options.value,
+                        defaultValue : defaultValue
                     });
 
                 }).then(function (PRODUCT_ARRAY_STATUS) {

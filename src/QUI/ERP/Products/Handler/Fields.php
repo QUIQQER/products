@@ -701,9 +701,10 @@ class Fields
         }
 
         $fieldData = array(
-            'system'   => (int)$data['systemField'],
-            'required' => (int)$data['requiredField'],
-            'standard' => (int)$data['standardField']
+            'system'       => (int)$data['systemField'],
+            'required'     => (int)$data['requiredField'],
+            'standard'     => (int)$data['standardField'],
+            'defaultValue' => json_decode($data['defaultValue'], true)
         );
 
         /* @var $Field QUI\ERP\Products\Field\Field */

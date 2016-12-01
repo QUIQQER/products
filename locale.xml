@@ -160,6 +160,10 @@
             <de><![CDATA[Feld-Optionen]]></de>
             <en><![CDATA[Field options]]></en>
         </locale>
+        <locale name="fieldDefaultValue">
+            <de><![CDATA[Standard wert]]></de>
+            <en><![CDATA[Default value]]></en>
+        </locale>
         <locale name="priority">
             <de><![CDATA[Sortierung]]></de>
             <en><![CDATA[Sorting]]></en>

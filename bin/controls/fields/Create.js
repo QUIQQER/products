@@ -85,7 +85,8 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                     fieldStandard      : QUILocale.get(lg, 'standardField'),
                     fieldStandardDesc  : QUILocale.get(lg, 'standardFieldDesc'),
                     fieldPublic        : QUILocale.get(lg, 'publicField'),
-                    fieldPublicDesc    : QUILocale.get(lg, 'publicFieldDesc')
+                    fieldPublicDesc    : QUILocale.get(lg, 'publicFieldDesc'),
+                    fieldDefaultValue  : QUILocale.get(lg, 'fieldDefaultValue')
                 })
             });
 
