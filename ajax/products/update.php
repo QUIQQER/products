@@ -93,7 +93,25 @@ QUI::$Ajax->registerFunction(
             );
         }
 
-        $Product->userSave();
+        try {
+            $Product->userSave();
+        } catch (\Exception $Exception) {
+            QUI\System\Log::addError(
+                'AJAX :: package_quiqqer_products_ajax_products_update -> ' . $Exception->getMessage()
+            );
+
+            QUI::getMessagesHandler()->addError(
+                QUI::getLocale()->get(
+                    'quiqqer/products',
+                    'message.product.error.saving',
+                    array(
+                        'error' => ''
+                    )
+                )
+            );
+
+            return;
+        }
 
         QUI::getMessagesHandler()->addSuccess(
             QUI::getLocale()->get(
