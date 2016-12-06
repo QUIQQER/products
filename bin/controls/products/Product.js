@@ -198,6 +198,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     'float': 'right'
                 }
             });
+
+            this.Loader.show();
         },
 
         /**
@@ -229,7 +231,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     this.getCategory('information').click();
                 }
 
-                this.Loader.hide();
+                // this.Loader.hide();
             }.bind(this));
         },
 
@@ -754,11 +756,17 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             var self = this;
 
             var fieldClick = function (Btn) {
-                self.openField(Btn.getAttribute('fieldId'));
+                self.Loader.show();
+                self.openField(Btn.getAttribute('fieldId')).then(function () {
+                    self.Loader.hide();
+                });
             };
 
             var imageFolderClick = function (Btn) {
-                self.openMediaFolderField(Btn.getAttribute('fieldId'));
+                self.Loader.show();
+                self.openMediaFolderField(Btn.getAttribute('fieldId')).then(function () {
+                    self.Loader.hide();
+                });
             };
 
             var showCategory = function (type) {
@@ -783,7 +791,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 text  : QUILocale.get('quiqqer/system', 'information'),
                 icon  : 'fa fa-info',
                 events: {
-                    onClick: this.openInformation
+                    onClick: function () {
+                        self.Loader.show();
+                        self.openInformation().then(function () {
+                            self.Loader.hide();
+                        });
+                    }
                 }
             });
 
@@ -792,7 +805,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 text  : QUILocale.get('quiqqer/system', 'data'),
                 icon  : 'fa fa-shopping-bag',
                 events: {
-                    onClick: this.openData
+                    onClick: function () {
+                        self.Loader.show();
+                        self.openData().then(function () {
+                            self.Loader.hide();
+                        });
+                    }
                 }
             });
 
@@ -801,7 +819,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 text  : QUILocale.get(lg, 'products.product.panel.category.prices'),
                 icon  : 'fa fa-money',
                 events: {
-                    onClick: this.openPrices
+                    onClick: function () {
+                        self.Loader.show();
+                        self.openPrices().then(function () {
+                            self.Loader.hide();
+                        });
+                    }
                 }
             });
 
@@ -837,7 +860,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 text  : QUILocale.get(lg, 'products.product.panel.category.images'),
                 icon  : 'fa fa-picture-o',
                 events: {
-                    onClick: this.openImages
+                    onClick: function () {
+                        self.Loader.show();
+                        self.openImages().then(function () {
+                            self.Loader.hide();
+                        });
+                    }
                 }
             });
 
@@ -846,7 +874,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 text  : QUILocale.get(lg, 'products.product.panel.category.files'),
                 icon  : 'fa fa-file-text',
                 events: {
-                    onClick: this.openFiles
+                    onClick: function () {
+                        self.Loader.show();
+                        self.openFiles().then(function () {
+                            self.Loader.hide();
+                        });
+                    }
                 }
             });
 
@@ -876,7 +909,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 text  : QUILocale.get(lg, 'products.product.panel.category.attributelist'),
                 icon  : 'fa fa-file-text-o',
                 events: {
-                    onClick: this.openAttributeList
+                    onClick: function () {
+                        self.Loader.show();
+                        self.openAttributeList().then(function () {
+                            self.Loader.hide();
+                        });
+                    }
                 }
             });
         },
