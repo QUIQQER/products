@@ -288,7 +288,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 this.$Sort = new QUISelect({
                     showIcons      : false,
-                    placeholderText: 'Sortieren nach...', // locale
+                    placeholderText: QUILocale.get(lg, 'product.list.sort.placeholder'),
                     events         : {
                         onChange: this.$onFilterChange
                     }
@@ -1321,9 +1321,20 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 '.quiqqer-products-productList-filter-entry'
             );
 
-            var change = function (values) {
+            var change = function (values, Select) {
                 for (var i = 0, len = values.length; i < len; i++) {
                     this.addFilter(values[i]);
+                }
+
+                // removing deleted filter
+                var uncheckedFilter = Select.getChildren().filter(function (Item) {
+                    return !Item.isChecked();
+                }).map(function (Item) {
+                    return Item.getAttribute('value');
+                });
+
+                for (i = 0, len = uncheckedFilter.length; i < len; i++) {
+                    this.removeFilter(uncheckedFilter[i]);
                 }
             }.bind(this);
 

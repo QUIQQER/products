@@ -550,8 +550,10 @@
             <en><![CDATA[Product has been saved.]]></en>
         </locale>
         <locale name="message.product.error.saving">
-            <de><![CDATA[Beim speichern des Produktes ist ein Fehler aufgetreten. [error] Weitere Informationen finden Sie in den Log-Dateien.]]></de>
-            <en><![CDATA[Some error occurred during saving. [error] You can find further information in the log files.]]></en>
+            <de>
+                <![CDATA[Beim speichern des Produktes ist ein Fehler aufgetreten. [error] Weitere Informationen finden Sie in den Log-Dateien.]]></de>
+            <en>
+                <![CDATA[Some error occurred during saving. [error] You can find further information in the log files.]]></en>
         </locale>
         <locale name="message.set.maincategory.error">
             <de><![CDATA[Fehler beim Setzen der Hauptkategorie. Es wurde keine Hauptkategorie angegeben.]]></de>
@@ -706,6 +708,10 @@
         <locale name="product.list.result.count">
             <de><![CDATA[[count] Produkte gefunden]]></de>
             <en><![CDATA[[count] products found]]></en>
+        </locale>
+        <locale name="product.list.sort.placeholder">
+            <de><![CDATA[Sortieren nach...]]></de>
+            <en><![CDATA[Sort by...]]></en>
         </locale>
 
         <!-- Permissions -->
