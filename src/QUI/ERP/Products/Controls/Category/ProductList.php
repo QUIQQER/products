@@ -107,7 +107,13 @@ class ProductList extends QUI\Control
                 $this->setAttribute('data-cid', $Category->getId());
             }
 
-            $start    = $this->getStart($count);
+            if (isset($_REQUEST['sheet'])) {
+                $begin = ((int)$_REQUEST['sheet'] - 1) * $this->getMax();
+                $start = $this->getNext($begin, $count);
+            } else {
+                $start = $this->getStart($count);
+            }
+
             $products = $start['html'];
             $more     = $start['more'];
         } catch (QUI\Permissions\Exception $Exception) {
@@ -134,17 +140,27 @@ class ProductList extends QUI\Control
                 break;
         }
 
-
-        $Engine->assign(array(
-            'this'      => $this,
+        $Pagination = new QUI\Bricks\Controls\Pagination(array(
             'count'     => $count,
-            'products'  => $products,
-            'children'  => $this->getSite()->getNavigation(),
-            'more'      => $more,
-            'filter'    => $this->getFilter(),
-            'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice(),
             'Site'      => $this->getSite(),
-            'sorts'     => $this->sort,
+            'showLimit' => false,
+            'limit'     => $this->getMax(),
+            'useAjax'   => false
+        ));
+
+        $Pagination->loadFromRequest();
+        
+        $Engine->assign(array(
+            'this'       => $this,
+            'Pagination' => $Pagination,
+            'count'      => $count,
+            'products'   => $products,
+            'children'   => $this->getSite()->getNavigation(),
+            'more'       => $more,
+            'filter'     => $this->getFilter(),
+            'hidePrice'  => QUI\ERP\Products\Utils\Package::hidePrice(),
+            'Site'       => $this->getSite(),
+            'sorts'      => $this->sort,
 
             'categoryFile'        => $categoryFile,
             'placeholder'         => $this->getProject()->getMedia()->getPlaceholder(),
