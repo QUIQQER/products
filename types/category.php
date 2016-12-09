@@ -5,6 +5,9 @@ use QUI\System\Log;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Response;
 
+$_REQUEST['_url'] = ltrim($_REQUEST['_url'], '/'); // nginx fix
+$_REQUEST['_url'] = urldecode($_REQUEST['_url']);
+
 $siteUrl = $Site->getLocation();
 $url     = $_REQUEST['_url'];
 $url     = pathinfo($url);
@@ -23,8 +26,9 @@ if (strpos(QUI::getRequest()->getPathInfo(), '_p/') !== false) {
 
     $siteUrl = '';
 
-    $url = $_REQUEST['_url'];
-    $url = pathinfo($url);
+    $_REQUEST['_url'] = urldecode($_REQUEST['_url']); // nginx fix
+    $url              = $_REQUEST['_url'];
+    $url              = pathinfo($url);
 }
 
 // check product url

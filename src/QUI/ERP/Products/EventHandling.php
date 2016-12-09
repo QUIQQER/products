@@ -793,7 +793,7 @@ class EventHandling
             $Product = Handler\Products::getProduct($params[0]);
             $Project = $Rewrite->getProject();
 
-            if ('/_p/' . $url !== $Product->getUrl()) {
+            if ('/_p/' . $url !== urldecode($Product->getUrl())) {
                 $Redirect = new RedirectResponse($Product->getUrl());
                 $Redirect->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
 
@@ -806,7 +806,8 @@ class EventHandling
             $Site->setAttribute('type', 'quiqqer/products:types/category');
             $Site->setAttribute('quiqqer.products.settings.categoryId', 0);
             $Site->setAttribute('quiqqer.products.fake.type', 1);
-            $Site->setAttribute('layout', $Project->getAttribute('layout'));
+            $Site->setAttribute('layout', 'layout/noSidebar');
+            $Site->setAttribute('quiqqer.bricks.areas', '');
 
             $_REQUEST['_url'] = '';
 
