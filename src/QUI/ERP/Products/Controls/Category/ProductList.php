@@ -149,7 +149,7 @@ class ProductList extends QUI\Control
         ));
 
         $Pagination->loadFromRequest();
-        
+
         $Engine->assign(array(
             'this'       => $this,
             'Pagination' => $Pagination,

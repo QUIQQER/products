@@ -9,6 +9,7 @@ use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Product;
+use QUI\ERP\Products\Handler\Categories;
 
 /**
  * Class Category
@@ -192,7 +193,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         // exists the category?
         if ($parentId !== 0) {
-            QUI\ERP\Products\Handler\Categories::getCategory($parentId);
+            Categories::getCategory($parentId);
         }
 
         $this->parentId = $parentId;
@@ -211,7 +212,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             return false;
         }
 
-        return QUI\ERP\Products\Handler\Categories::getCategory($this->parentId);
+        return Categories::getCategory($this->parentId);
     }
 
     /**
@@ -221,14 +222,21 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      */
     public function getAttributes()
     {
-        $cacheName = QUI\ERP\Products\Handler\Categories::getCacheName($this->getId()) . '/attributes';
+        $cacheName   = Categories::getCacheName($this->getId()) . '/attributes';
+        $cacheFields = Categories::getCacheName($this->getId()) . '/fields';
 
-        $fields   = array();
-        $fieldist = $this->getFields();
+        try {
+            $fields = QUI\Cache\Manager::get($cacheFields);
+        } catch (QUI\Cache\Exception $Exception) {
+            $fields   = array();
+            $fieldist = $this->getFields();
 
-        /* @var $Field QUI\ERP\Products\Field\Field */
-        foreach ($fieldist as $Field) {
-            $fields[] = $Field->getAttributes();
+            /* @var $Field QUI\ERP\Products\Field\Field */
+            foreach ($fieldist as $Field) {
+                $fields[] = $Field->getAttributes();
+            }
+
+            QUI\Cache\Manager::set($cacheFields, $fields);
         }
 
         try {
@@ -286,7 +294,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      */
     public function getChildren()
     {
-        return QUI\ERP\Products\Handler\Categories::getCategories(array(
+        return Categories::getCategories(array(
             'where' => array(
                 'parentId' => $this->getId()
             )
@@ -795,7 +803,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             array('id' => $this->getId())
         );
 
-        QUI\ERP\Products\Handler\Categories::clearCache($this->getId());
+        Categories::clearCache($this->getId());
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsCategorySave', array($this));
     }
@@ -829,7 +837,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         $recursiveHelper = function ($parentId) use (&$ids, &$recursiveHelper) {
             try {
-                $Category = QUI\ERP\Products\Handler\Categories::getCategory($parentId);
+                $Category = Categories::getCategory($parentId);
                 $children = $Category->getChildren();
 
                 $ids[] = $Category->getId();
@@ -861,7 +869,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                 'products.category.' . $id . '.title'
             );
 
-            QUI\ERP\Products\Handler\Categories::clearCache($id);
+            Categories::clearCache($id);
         }
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsCategoryDelete', array($this));
