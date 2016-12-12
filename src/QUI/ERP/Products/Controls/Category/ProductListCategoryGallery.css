@@ -147,7 +147,8 @@
     transition: transform 300ms ease;
 }
 
-.touch .quiqqer-products-categoryGallery-catgory:hover .quiqqer-products-categoryGallery-catgory-short {
+.touch .quiqqer-products-categoryGallery-catgory:hover .quiqqer-products-categoryGallery-catgory-short,
+.touch .quiqqer-products-categoryGallery-catgory:active .quiqqer-products-categoryGallery-catgory-short {
     display: none;
     opacity: 0 !important;
 }
