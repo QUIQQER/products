@@ -43,6 +43,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'controls/projects/project/media/FolderViewer',
     'Mustache',
     'Packages',
+    'utils/Lock',
     'package/quiqqer/products/bin/Products',
     'package/quiqqer/products/bin/classes/Product',
     'package/quiqqer/products/bin/Categories',
@@ -59,7 +60,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'css!package/quiqqer/products/bin/controls/products/Product.css'
 
 ], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIButtonSwitch, QUIConfirm, QUIFormUtils, QUILocale,
-             Users, Grid, FolderViewer, Mustache, Packages,
+             Users, Grid, FolderViewer, Mustache, Packages, Locker,
              Products, Product, Categories, Fields, FieldUtils, FieldWindow,
              CategorySelect, FieldTypeSelect,
              informationTemplate, templateProductData, templateProductPrices, templateField) {
@@ -130,8 +131,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             this.$injected = false;
 
             this.addEvents({
-                onCreate: this.$onCreate,
-                onInject: this.$onInject
+                onCreate : this.$onCreate,
+                onInject : this.$onInject,
+                onDestroy: function () {
+                    if (this.$Product) {
+                        console.log('unlock');
+                        Locker.unlock('product_' + this.$Product.getId())
+                    }
+                }.bind(this)
             });
         },
 
@@ -221,15 +228,28 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     'quiqqer.erp.productPanel.open.category'
                 );
 
-                if (wantedCategory && this.getCategory(wantedCategory)) {
-                    var Category = this.getCategory(wantedCategory);
+                var Category = this.getCategory('information');
 
-                    if (typeOf(Category) === 'qui/controls/buttons/Button') {
-                        Category.click();
-                    }
-                } else if (this.getCategory('information')) {
-                    this.getCategory('information').click();
+                if (wantedCategory && this.getCategory(wantedCategory)) {
+                    Category = this.getCategory(wantedCategory);
                 }
+
+                if (typeOf(Category) === 'qui/controls/buttons/Button') {
+                    Category.click();
+                }
+
+                return Locker.isLocked('product_' + this.$Product.getId())
+                    .then(function (isLocked) {
+                        if (isLocked) {
+                            return QUI.getMessageHandler().then(function (MH) {
+                                MH.addAttention(
+                                    'Dieses Produkt wird gerade bearbeitet von ' + isLocked
+                                );
+                            });
+                        }
+
+                        return Locker.lock('product_' + this.$Product.getId());
+                    }.bind(this));
 
                 // this.Loader.hide();
             }.bind(this));
