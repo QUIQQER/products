@@ -103,6 +103,12 @@
     transition: opacity 300ms ease;
 }
 
+.touch .quiqqer-products-productGallery-products-product:hover .quiqqer-products-productGallery-products-product-short,
+.touch .quiqqer-products-productGallery-products-product:active .quiqqer-products-productGallery-products-product-short {
+    display: none;
+    opacity: 0;
+}
+
 /*.quiqqer-products-productGallery-products-product:hover header {*/
 /*!*bottom: auto;*!*/
 /*!*top: 0;*!*/
@@ -140,7 +146,7 @@
 }
 
 .quiqqer-products-productGallery-products-product-short-image img {
-    margin-right:10px;
+    margin-right: 10px;
     max-height: 150px;
     max-width: 50px;
 }
