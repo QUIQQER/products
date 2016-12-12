@@ -14,6 +14,30 @@
     width: 100%;
 }
 
+.product-update-locked {
+    background: #FFFFFF;
+    font-size: 18px;
+    height: 100%;
+    left: 0;
+    opacity: 0.9;
+    padding-top: calc(20% - 100px);
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.product-update-locked span {
+    clear: both;
+    display: block;
+    text-align: center;
+}
+
+.product-update-locked .fa {
+    font-size: 40px;
+}
+
 .product-update-data {
     left: 0;
     padding: 20px;

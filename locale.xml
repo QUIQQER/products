@@ -812,6 +812,14 @@
             <en><![CDATA[Currency]]></en>
         </locale>
 
+        <locale name="products.fields.panel.locked">
+            <de><![CDATA[Dieses Produkt wird gerade bearbeitet von [username]]]></de>
+            <en><![CDATA[This product is currently being edited by [username]]]></en>
+        </locale>
+        <locale name="products.fields.panel.locked.btn.equal">
+            <de><![CDATA[Trotzdem bearbeiten]]></de>
+            <en><![CDATA[Edit anyway]]></en>
+        </locale>
         <locale name="products.fields.panel.title">
             <de><![CDATA[Produktfelder]]></de>
             <en><![CDATA[Product fields]]></en>

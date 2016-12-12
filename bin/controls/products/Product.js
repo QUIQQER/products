@@ -241,11 +241,47 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 return Locker.isLocked('product_' + this.$Product.getId())
                     .then(function (isLocked) {
                         if (isLocked) {
-                            return QUI.getMessageHandler().then(function (MH) {
-                                MH.addAttention(
-                                    'Dieses Produkt wird gerade bearbeitet von ' + isLocked
-                                );
+                            var message = QUILocale.get(lg, 'products.fields.panel.locked', {
+                                username: isLocked.username
                             });
+
+                            var LockContainer = new Element('div', {
+                                'class': 'product-update-locked',
+                                'html' : '<span class="fa fa-edit"></span>' +
+                                         '<span>' + message + '</span>' +
+                                         '<span></span>'
+                            }).inject(this.getElm());
+
+                            new QUIButton({
+                                text  : QUILocale.get(lg, 'products.fields.panel.locked.btn.equal'),
+                                styles: {
+                                    'float': 'none',
+                                    display: 'inline-block',
+                                    margin : '20px 10px'
+                                },
+                                events: {
+                                    onClick: function () {
+                                        LockContainer.destroy();
+                                    }
+                                }
+                            }).inject(LockContainer);
+
+                            new QUIButton({
+                                text  : QUILocale.get('quiqqer/system', 'cancel'),
+                                styles: {
+                                    'float': 'none',
+                                    display: 'inline-block',
+                                    margin : '20px 10px'
+                                },
+                                events: {
+                                    onClick: function () {
+                                        this.minimize(function () {
+                                            this.destroy();
+                                        }.bind(this));
+                                    }.bind(this)
+                                }
+                            }).inject(LockContainer);
+                            return;
                         }
 
                         return Locker.lock('product_' + this.$Product.getId());
