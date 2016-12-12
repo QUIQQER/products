@@ -188,6 +188,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             // delete noscript tags -> because CSS
             Elm.getElements('noscript').destroy();
 
+            // mobile touch css helper
+            if (!!("ontouchstart" in document.documentElement)) {
+                Elm.addClass("touch");
+            }
+
             // filter
             if (this.$FilterContainer) {
                 var inner = this.$FilterContainer.get('html');
