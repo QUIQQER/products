@@ -7,9 +7,10 @@
 define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
 
     'qui/QUI',
-    'qui/controls/Control'
+    'qui/controls/Control',
+    'utils/Session'
 
-], function (QUI, QUIControl) {
+], function (QUI, QUIControl, Session) {
     "use strict";
 
     return new Class({
@@ -24,8 +25,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Nav   = null;
-            this.$lists = {};
+            this.$Nav      = null;
+            this.$lists    = {};
+            this.$selected = {};
 
             this.addEvents({
                 onImport: this.$onImport
@@ -65,7 +67,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
                 Input.fireEvent('change');
             });
 
-            this.$Nav.getElements('input[type="checkbox"]').addEvent('change', function () {
+            var categories = this.$Nav.getElements('input[type="checkbox"]');
+
+            categories.addEvent('change', function () {
                 var categoryId = parseInt(this.value);
 
                 if (!categoryId) {
@@ -81,6 +85,36 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
                     Object.each(self.getProductLists(), function (List) {
                         List.removeCategory(categoryId);
                     });
+                }
+
+                // set to the locale storage
+                if (this.checked) {
+                    self.$selected[categoryId] = true;
+                } else {
+                    Object.erase(self.$selected, categoryId);
+                }
+
+                Session.set(
+                    'quiqqer/products/productList/categories',
+                    self.$selected
+                );
+            });
+
+            Session.get(
+                'quiqqer/products/productList/categories'
+            ).then(function (keys) {
+                if (!keys) {
+                    return;
+                }
+
+                var i, len, categoryId;
+
+                for (i = 0, len = categories.length; i < len; i++) {
+                    categoryId = parseInt(categories[i].value);
+
+                    if (categoryId in keys) {
+                        categories[i].checked = true;
+                    }
                 }
             });
         },

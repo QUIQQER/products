@@ -103,15 +103,28 @@ if ($siteUrl != $_REQUEST['_url']) {
     $sortBy       = QUI::getRequest()->get('sortBy');
     $sortOn       = QUI::getRequest()->get('sortOn');
 
-    $view = QUI::getRequest()->get('v');
+    $view       = QUI::getRequest()->get('v');
+    $categories = QUI::getSession()->get('quiqqer/products/productList/categories');
+
+    if ($categories) {
+        $categories = json_decode($categories, true);
+    }
+
+    if (!is_array($categories)) {
+        $categories = array();
+    }
 
     $searchParams = array_filter(array(
         'freetext' => $search,
         'fields'   => $fields,
         'tags'     => $tags,
         'sortBy'   => $sortBy,
-        'sortOn'   => $sortOn
+        'sortOn'   => $sortOn,
     ));
+
+    if (!empty($categories)) {
+        $searchParams['categories'] = array_keys($categories);
+    }
 
     if (isset($searchParams['fields'])) {
         $searchParams['fields'] = json_decode($searchParams['fields'], true);

@@ -173,6 +173,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$FilterContainer = document.getElement('.quiqqer-products-productList-filter-container-' + cid);
 
+            if (!this.$Container) {
+                return;
+            }
+
             this.$ContainerLoader = new Element('div', {
                 'class': 'quiqqer-products-productList-loader',
                 'html' : '<span class="fa fa-spinner fa-spin"></span>',
