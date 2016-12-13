@@ -96,6 +96,27 @@ if ($siteUrl != $_REQUEST['_url']) {
         exit;
     }
 } else {
+    // category menu
+    $searchParentCategorySite = function () use ($Site) {
+        $Parent = true;
+
+        while ($Parent) {
+            if ($Site->getParent()->getAttribute('type') != 'quiqqer/products:types/category') {
+                return $Site;
+            }
+
+            $Site = $Site->getParent();
+        }
+
+        return $Site;
+    };
+
+    $CategoryMenu = new QUI\ERP\Products\Controls\Category\Menu(array(
+        'Site' => $searchParentCategorySite()
+    ));
+
+
+    // product list
     $searchParams = array();
     $search       = QUI::getRequest()->get('search');
     $fields       = QUI::getRequest()->get('f');
@@ -104,10 +125,10 @@ if ($siteUrl != $_REQUEST['_url']) {
     $sortOn       = QUI::getRequest()->get('sortOn');
 
     $view       = QUI::getRequest()->get('v');
-    $categories = QUI::getSession()->get('quiqqer/products/productList/categories');
+    $categories = QUI::getRequest()->get('c');
 
     if ($categories) {
-        $categories = json_decode($categories, true);
+        $categories = explode(',', $categories);
     }
 
     if (!is_array($categories)) {
@@ -123,7 +144,7 @@ if ($siteUrl != $_REQUEST['_url']) {
     ));
 
     if (!empty($categories)) {
-        $searchParams['categories'] = array_keys($categories);
+        $searchParams['categories'] = $categories;
     }
 
     if (isset($searchParams['fields'])) {
@@ -174,23 +195,8 @@ if ($siteUrl != $_REQUEST['_url']) {
         $ProductList->setAttribute('showFilter', false);
     }
 
-    // search parent category site
-    $searchParentCategorySite = function () use ($Site) {
-        $Parent = true;
-
-        while ($Parent) {
-            if ($Site->getParent()->getAttribute('type') != 'quiqqer/products:types/category') {
-                return $Site;
-            }
-
-            $Site = $Site->getParent();
-        }
-
-        return $Site;
-    };
-
     $Engine->assign(array(
-        'ProductList'        => $ProductList,
-        'ParentCategorySite' => $searchParentCategorySite()
+        'ProductList'  => $ProductList,
+        'CategoryMenu' => $CategoryMenu
     ));
 }

@@ -4,13 +4,25 @@
  * @require qui/QUI
  * @require qui/controls/Control
  */
+
+// uri require
+require.config({
+    paths: {
+        'URI'     : URL_OPT_DIR + 'bin/uri.js/src/URI',
+        'IPv6'    : URL_OPT_DIR + 'bin/uri.js/src/IPv6',
+        'punycode': URL_OPT_DIR + 'bin/uri.js/src/punycode',
+
+        'SecondLevelDomains': URL_OPT_DIR + 'bin/uri.js/src/SecondLevelDomains'
+    }
+});
+
 define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
 
     'qui/QUI',
     'qui/controls/Control',
-    'utils/Session'
+    'URI'
 
-], function (QUI, QUIControl, Session) {
+], function (QUI, QUIControl, URI) {
     "use strict";
 
     return new Class({
@@ -77,16 +89,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
                     return;
                 }
 
-                if (this.checked) {
-                    Object.each(self.getProductLists(), function (List) {
-                        List.addCategory(categoryId);
-                    });
-                } else {
-                    Object.each(self.getProductLists(), function (List) {
-                        List.removeCategory(categoryId);
-                    });
-                }
-
                 // set to the locale storage
                 if (this.checked) {
                     self.$selected[categoryId] = true;
@@ -94,29 +96,55 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
                     Object.erase(self.$selected, categoryId);
                 }
 
-                Session.set(
-                    'quiqqer/products/productList/categories',
-                    self.$selected
-                );
-            });
+                if (!("history" in window)) {
+                    if (this.checked) {
+                        Object.each(self.getProductLists(), function (List) {
+                            List.addCategory(categoryId);
+                        });
+                    } else {
+                        Object.each(self.getProductLists(), function (List) {
+                            List.removeCategory(categoryId);
+                        });
+                    }
 
-            Session.get(
-                'quiqqer/products/productList/categories'
-            ).then(function (keys) {
-                if (!keys) {
                     return;
                 }
 
-                var i, len, categoryId;
+                // window popstate
+                var Url = URI(window.location);
 
-                for (i = 0, len = categories.length; i < len; i++) {
-                    categoryId = parseInt(categories[i].value);
+                Url.removeSearch('c');
 
-                    if (categoryId in keys) {
-                        categories[i].checked = true;
-                    }
+                if (Object.getLength(self.$selected)) {
+                    Url.addSearch('c', Object.keys(self.$selected).join(','));
                 }
+
+                window.history.pushState({}, "", Url.toString());
             });
+
+            window.addEvent('popstate', function () {
+
+            });
+
+            // check the checkboxes
+            var Url    = URI(window.location),
+                search = Url.search(true);
+
+            if ("c" in search) {
+                var urlCategories = search.c.toString().split(',').map(function (v) {
+                    return parseInt(v);
+                });
+
+                categories.each(function (Checkbox) {
+                    Checkbox.checked = urlCategories.contains(
+                        parseInt(Checkbox.value)
+                    );
+
+                    if (Checkbox.checked) {
+                        self.$selected[parseInt(Checkbox.value)] = true;
+                    }
+                });
+            }
         },
 
         /**
@@ -163,6 +191,65 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
             }
 
             return this.$lists;
+        },
+
+        /**
+         * Return all available loaded product lists objects
+         *
+         * @returns {Promise}
+         */
+        $getLists: function () {
+            var self = this;
+
+            return new Promise(function (resolve) {
+                if (Object.getLength(self.$lists)) {
+                    return resolve(self.$lists);
+                }
+
+                var i, len, quiid;
+                var nodes = document.getElements(
+                    '[data-qui="package/quiqqer/products/bin/controls/frontend/category/ProductList"]'
+                );
+
+                var promisesList = [];
+
+                var promiseSolved = function (resolve) {
+                    this.addEvent('load', resolve);
+                };
+
+                for (i = 0, len = nodes.length; i < len; i++) {
+                    if (!nodes.hasOwnProperty(i)) {
+                        continue;
+                    }
+
+                    quiid = nodes[i].get('data-quiid');
+
+                    if (self.$lists.hasOwnProperty(quiid)) {
+                        continue;
+                    }
+
+                    if (quiid) {
+                        self.$lists[quiid] = QUI.Controls.getById(quiid);
+                        continue;
+                    }
+
+                    promisesList.push(
+                        new Promise(promiseSolved.bind(nodes[i]))
+                    );
+                }
+
+                Promise.all(promisesList).then(function () {
+                    document.getElements(
+                        '[data-qui="package/quiqqer/products/bin/controls/frontend/category/ProductList"]'
+                    ).each(function (Node) {
+                        var quiid = Node.get('data-quiid');
+
+                        self.$lists[quiid] = QUI.Controls.getById(quiid);
+                    });
+                    console.info(123);
+                    resolve(self.$lists);
+                });
+            });
         }
     });
 });

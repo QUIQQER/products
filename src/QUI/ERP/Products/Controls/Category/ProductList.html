@@ -73,8 +73,7 @@
         </div>
         {/if}
 
-        {if !$count && $this->getAttribute('hideEmptyProductList') && count($children)}
-        {else}
+
         <div class="quiqqer-products-productList-products-container">
             <div class="quiqqer-products-productList-products-container-real">
                 {if $count}
@@ -98,5 +97,5 @@
         <noscript>
             {$Pagination->create()}
         </noscript>
-    {/if}
+
 </section>
