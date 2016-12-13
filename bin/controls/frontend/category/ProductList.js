@@ -464,7 +464,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 tags.each(this.addFilter.bind(this));
 
                 // sort
-                if ("sortBy" in search && "sortOn" in search) {
+                if ("sortBy" in search && "sortOn" in search && !this.$load) {
                     this.$Sort.setValue(
                         search.sortOn + ' ' + search.sortBy
                     );
@@ -970,6 +970,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     duration: 250,
                     callback: resolve
                 });
+
+                this.$FXContainerReal.animate({
+                    opacity: 1
+                }, {
+                    duration: 250,
+                    callback: resolve
+                });
+
+                (resolve).delay(250);
             }.bind(this));
         },
 
@@ -1612,8 +1621,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 return;
             }
-
-            console.log('$onFilterChange');
 
             this.fireEvent('filterChangeBegin');
 
