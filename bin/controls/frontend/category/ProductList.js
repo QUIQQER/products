@@ -520,6 +520,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             if (!("history" in window)) {
+                window.fireEvent('popstate');
                 return;
             }
 
