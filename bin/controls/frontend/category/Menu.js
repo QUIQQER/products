@@ -122,6 +122,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
                 }
 
                 window.history.pushState({}, "", Url.toString());
+                window.fireEvent('popstate');
             });
 
             window.addEvent('popstate', function () {
