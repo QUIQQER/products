@@ -99,9 +99,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$More          = null;
             this.$Sort          = null;
 
-            this.$FXContainer = null;
-            this.$FXLoader    = null;
-            this.$FXMore      = null;
+            this.$FXContainer     = null;
+            this.$FXContainerReal = null;
+            this.$FXLoader        = null;
+            this.$FXMore          = null;
 
             this.$Container         = null;
             this.$ContainerLoader   = null;
@@ -187,8 +188,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
             }).inject(this.$Container);
 
-            this.$FXContainer = moofx(this.$ContainerReal);
-            this.$FXLoader    = moofx(this.$ContainerLoader);
+            this.$FXContainer     = moofx(this.$Container);
+            this.$FXContainerReal = moofx(this.$ContainerReal);
+            this.$FXLoader        = moofx(this.$ContainerLoader);
 
             // delete noscript tags -> because CSS
             Elm.getElements('noscript').destroy();
@@ -1004,12 +1006,20 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     duration: 200,
                     callback: resolve
                 });
+            });
 
+            var ContainerAnimation = new Promise(function (resolve) {
+                self.$FXContainerReal.animate({
+                    opacity: 0
+                }, {
+                    duration: 250,
+                    callback: resolve
+                });
             });
 
             return Promise.all([
                 LoaderAnimation,
-                this.$hideContainer()
+                ContainerAnimation
             ]);
         },
 
