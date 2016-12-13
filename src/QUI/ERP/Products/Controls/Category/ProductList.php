@@ -84,8 +84,9 @@ class ProductList extends QUI\Control
      */
     public function getBody()
     {
-        $Engine   = QUI::getTemplateManager()->getEngine();
-        $Category = $this->getCategory();
+        $Engine       = QUI::getTemplateManager()->getEngine();
+        $Category     = $this->getCategory();
+        $searchParams = $this->getAttribute('searchParams');
 
         $this->setAttribute('data-project', $this->getSite()->getProject()->getName());
         $this->setAttribute('data-lang', $this->getSite()->getProject()->getLang());
@@ -138,6 +139,13 @@ class ProductList extends QUI\Control
             case 'list':
                 $categoryFile = dirname(__FILE__) . '/ProductListCategoryList.html';
                 break;
+        }
+
+        if (is_array($searchParams) && isset($searchParams['categories'])) {
+            $this->setAttribute(
+                'data-categories',
+                implode(',', $searchParams['categories'])
+            );
         }
 
         $Pagination = new QUI\Bricks\Controls\Pagination(array(

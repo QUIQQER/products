@@ -173,6 +173,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$FilterContainer = document.getElement('.quiqqer-products-productList-filter-container-' + cid);
 
+            if (Elm.get('data-categories') !== '') {
+                this.$categories = Elm.get('data-categories').split(',');
+            }
+
+
             if (!this.$Container) {
                 return;
             }
