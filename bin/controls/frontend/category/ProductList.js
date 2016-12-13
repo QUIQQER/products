@@ -365,8 +365,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             window.addEvent('popstate', function () {
                 this.$load = false;
                 this.$readWindowLocation().then(function () {
-                    this.$onFilterChange();
                     this.$load = true;
+                    this.$onFilterChange();
                 }.bind(this));
             }.bind(this));
 
@@ -553,6 +553,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 case 'list':
                     history.v = this.getAttribute('view');
                     break;
+            }
+
+            if (this.$categories.length) {
+                history.c = this.$categories.join(',');
             }
 
             if (searchParams.fields) {
