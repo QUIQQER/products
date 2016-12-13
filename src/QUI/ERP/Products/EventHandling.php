@@ -522,6 +522,20 @@ class EventHandling
     }
 
     /**
+     * Event on site load
+     *
+     * @param \QUI\Projects\Site $Site
+     */
+    public static function onSiteLoad($Site)
+    {
+        if ($Site->getAttribute('type') == 'quiqqer/products:types/category' ||
+            $Site->getAttribute('type') == 'quiqqer/products:types/search'
+        ) {
+            $Site->setAttribute('nocache', 1);
+        }
+    }
+
+    /**
      * Event on product category site save
      *
      * @param \QUI\Projects\Site\Edit $Site
