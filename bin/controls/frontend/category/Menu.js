@@ -25,6 +25,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
 ], function (QUI, QUIControl, URI) {
     "use strict";
 
+    Element.NativeEvents.popstate = 2;
+
     return new Class({
 
         Extends: QUIControl,
@@ -246,7 +248,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
 
                         self.$lists[quiid] = QUI.Controls.getById(quiid);
                     });
-                    console.info(123);
+
                     resolve(self.$lists);
                 });
             });
