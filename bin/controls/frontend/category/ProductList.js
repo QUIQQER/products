@@ -414,6 +414,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 var Url    = URI(window.location),
                     search = Url.search(true);
 
+                this.$categories = [];
+
                 if (!Object.getLength(search)) {
                     resolve();
                     return;
