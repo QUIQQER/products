@@ -412,6 +412,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$categories = [];
 
                 if (!Object.getLength(search)) {
+                    this.hideFilterDisplay();
                     resolve();
                     return;
                 }
