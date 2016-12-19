@@ -292,6 +292,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
                     QUILocale.get(lg, 'message.product.search.empty') +
                     '</span>'
                 );
+
                 return this.$showResults();
             }
 

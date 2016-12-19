@@ -552,10 +552,19 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
             }
 
-            var url = location.pathname + '?' + Object.toQueryString(history);
+            var url = location.pathname;
+
+            if (Object.getLength(history)) {
+                url = location.pathname + '?' + Object.toQueryString(history);
+            }
 
             if ("origin" in location) {
                 url = location.origin + url;
+            }
+
+            if (window.location.toString() == url) {
+                this.hideFilterDisplay();
+                return;
             }
 
             if ("history" in window) {
