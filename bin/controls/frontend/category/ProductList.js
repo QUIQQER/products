@@ -556,6 +556,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             if (Object.getLength(history)) {
                 url = location.pathname + '?' + Object.toQueryString(history);
+            } else {
+                this.hideFilterDisplay();
             }
 
             if ("origin" in location) {
@@ -563,7 +565,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             if (window.location.toString() == url) {
-                this.hideFilterDisplay();
                 return;
             }
 
