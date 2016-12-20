@@ -20,6 +20,11 @@
                 </div>
             </div>
             {/if}
+            {if !empty($filter)}
+            <div class="quiqqer-products-productList-sort-filter-mobile button">
+                <span class="fa fa-filter"></span>
+            </div>
+            {/if}
             <div class="quiqqer-products-productList-sort-sorting" style="display: none">
                 <label>
                     {locale group="quiqqer/products" var="category.control.productlist.sortby"}
@@ -52,9 +57,9 @@
         <div class="quiqqer-products-productList-fl">
             {if !empty($filter)}
             <div class="quiqqer-products-productList-filterList">
-                    <span class="quiqqer-products-productList-filterList-title">
-                        {locale group="quiqqer/products" var="category.control.productlist.selectionTitle"}
-                    </span>
+                <span class="quiqqer-products-productList-filterList-title">
+                    {locale group="quiqqer/products" var="category.control.productlist.selectionTitle"}
+                </span>
                 <div class="quiqqer-products-productList-filterList-fields"></div>
                 <div class="quiqqer-products-productList-filterList-list"></div>
             </div>

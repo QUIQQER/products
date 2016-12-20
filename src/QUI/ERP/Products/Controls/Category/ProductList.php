@@ -501,12 +501,12 @@ class ProductList extends QUI\Control
 
         $categoryId = $this->getSite()->getAttribute('quiqqer.products.settings.categoryId');
 
-        if (!$categoryId) {
+        if ($categoryId === false) {
             return null;
         }
 
         try {
-            $this->Category = Categories::getCategory($categoryId);
+            $this->Category = Categories::getCategory((int)$categoryId);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addWarning($Exception->getMessage());
             return null;

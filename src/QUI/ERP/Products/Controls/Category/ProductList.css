@@ -207,7 +207,15 @@
     font-size: 12px !important;
 }
 
-@media (max-width: 768px) {
+.quiqqer-products-productList-sort-filter-mobile {
+    display: none;
+    float: left;
+    line-height: 28px !important;
+    margin: 4px 5px 0 0;
+    padding: 0 10px !important;
+}
+
+@media (max-width: 767px) {
     .quiqqer-products-productList-filter-entry {
         clear: none;
         width: 50%;
@@ -230,6 +238,10 @@
 
     .quiqqer-products-productList-resultInfo {
         width: 100%;
+    }
+
+    .quiqqer-products-productList-sort-filter-mobile {
+        display: inline;
     }
 }
 
@@ -256,6 +268,18 @@
         text-align: center;
         width: 100%;
     }
+}
+
+/** Mobile Filter Menu
+ ================================================= */
+
+.quiqqer-products-productList-filterMobile-content .quiqqer-products-productList-filter-container {
+    overflow: auto;
+}
+
+.quiqqer-products-productList-filterMobile-content .quiqqer-products-productList-filter-entry {
+    padding: 0 0 10px 0;
+    width: 100%;
 }
 
 /** Produkte
@@ -302,7 +326,7 @@
     width: 100%;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .quiqqer-products-productList-products-more .button {
         max-width: 100%;
         width: 200px;
