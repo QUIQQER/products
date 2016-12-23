@@ -29,9 +29,9 @@
     "quiqqer\/watcher": "*",
     "quiqqer\/translator": "dev-dev",
     "npm-asset\/mustache": "2.*",
-    "bower-asset\/uri.js": "1.*",
-    "bower-asset\/nouislider": "dev-master|8.*",
-    "bower-asset\/intl": "1.*"
+    "npm-asset/urijs": "1.*",
+    "npm-asset/nouislider": "dev-master|8.*",
+    "npm-asset/intl": "1.*"
   },
   "require-dev": {
     "phpunit\/phpunit-mock-objects": "~3.1"
