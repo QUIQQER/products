@@ -9,7 +9,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Url', [
 
     'qui/QUI',
     'qui/controls/Control',
-    URL_OPT_DIR + 'bin/uri.js/src/URI.js'
+    'URI'
 
 ], function (QUI, QUIControl, URI) {
     "use strict";

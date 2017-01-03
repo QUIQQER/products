@@ -18,17 +18,6 @@
  * @event onFilterChange [self]
  */
 
-// uri require
-require.config({
-    paths: {
-        'URI'     : URL_OPT_DIR + 'bin/uri.js/src/URI',
-        'IPv6'    : URL_OPT_DIR + 'bin/uri.js/src/IPv6',
-        'punycode': URL_OPT_DIR + 'bin/uri.js/src/punycode',
-
-        'SecondLevelDomains': URL_OPT_DIR + 'bin/uri.js/src/SecondLevelDomains'
-    }
-});
-
 define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
     'qui/QUI',

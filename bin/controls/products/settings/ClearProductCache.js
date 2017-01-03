@@ -50,6 +50,8 @@ define('package/quiqqer/products/bin/controls/products/settings/ClearProductCach
                     onClick: this.$onClick
                 }
             }).inject(this.getElm(), 'after');
+
+            this.$Button.getElm().addClass('field-container-field');
         },
 
         /**

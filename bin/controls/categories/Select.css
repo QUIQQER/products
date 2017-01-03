@@ -9,13 +9,11 @@
 }
 
 .field-container > .qui-products-categories-list {
+    border-top: 1px solid rgba(147, 128, 108, 0.25);
+    flex: 1;
+    float: none;
     max-width: none;
     padding: 0;
-}
-
-.qui-products-categories-list-list {
-    position: relative;
-    z-index: 2;
 }
 
 .qui-products-categories-list-list {
@@ -25,7 +23,9 @@
     float: left;
     height: 100px;
     overflow: auto;
+    position: relative;
     width: 100%;
+    z-index: 2;
 }
 
 .qui-products-categories-list-search {

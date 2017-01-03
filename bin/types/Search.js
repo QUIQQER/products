@@ -9,21 +9,12 @@
  * @require URI
  */
 
-// uri require
-require.config({
-    paths: {
-        'URI'     : URL_OPT_DIR + 'bin/uri.js/src/URI',
-        'IPv6'    : URL_OPT_DIR + 'bin/uri.js/src/IPv6',
-        'punycode': URL_OPT_DIR + 'bin/uri.js/src/punycode',
-
-        'SecondLevelDomains': URL_OPT_DIR + 'bin/uri.js/src/SecondLevelDomains'
-    }
-});
-
 define('package/quiqqer/products/bin/types/Search', [
+
     'qui/QUI',
     'qui/controls/Control',
     'URI'
+
 ], function (QUI, QUIControl, URI) {
     "use strict";
 
