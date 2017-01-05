@@ -13,6 +13,16 @@
         </div>
     </div>
 
+    <div class="quiqqer-productList-product-list-artno">
+        <span class="quiqqer-productList-product-list-artno-title">
+            {locale group="quiqqer/products" var="productNo"}:
+        </span>
+        <br />
+        <span class="quiqqer-productList-product-list-artno-value">
+            {$Product->getFieldValue(3)}
+        </span>
+    </div>
+
     <div class="quiqqer-productList-product-list-buttons">
         <span class="fa fa-envelope button__small quiqqer-products-product-button-purchase"></span>
         <span class="fa fa-plus button__small quiqqer-products-product-button-add"></span>

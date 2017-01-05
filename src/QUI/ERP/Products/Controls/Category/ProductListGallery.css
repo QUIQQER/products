@@ -140,6 +140,11 @@
     transition: transform 300ms ease;
 }
 
+.quiqqer-products-productGallery-products-product-short-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
 .quiqqer-products-productGallery-products-product-short-image {
     clear: both;
     float: left;
