@@ -17,6 +17,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
     'qui/controls/Control',
     'qui/utils/Elements',
     'package/quiqqer/products/bin/Products',
+
     URL_OPT_DIR + 'bin/hammerjs/hammer.min.js'
 
 ], function (QUI, QUIControl, QUIElementUtils, Products, Hammer) {

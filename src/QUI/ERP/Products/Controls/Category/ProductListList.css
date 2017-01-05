@@ -9,7 +9,15 @@
 .quiqqer-productList-product-list-text {
     float: left;
     padding: 0 10px 0 0;
-    width: calc(100% - 230px);
+    width: calc(100% - 360px);
+}
+
+.quiqqer-productList-product-list-artno {
+    float: left;
+    font-size: 12px;
+    line-height:20px;
+    padding: 10px;
+    width: 130px;
 }
 
 .quiqqer-productList-product-list-text-description {

@@ -64,9 +64,8 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
             // create
             this.$Elm = new Element('div', {
                 styles: {
-                    'float'  : 'left',
-                    marginTop: 20,
-                    width    : '100%'
+                    'float': 'left',
+                    width  : '100%'
                 }
             }).wraps(this.$Input);
 
