@@ -1639,6 +1639,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return;
             }
 
+            this.showList();
+
             var self              = this,
                 searchParams      = this.$getSearchParams(),
                 searchCountParams = searchParams;
