@@ -1894,6 +1894,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 position: 'relative'
             });
 
+            if (this.$Elm.getPrevious('.page-content-short')) {
+                children.push(this.$Elm.getPrevious('.page-content-short'));
+            }
+
             if (this.$Elm.getPrevious('.page-content-header')) {
                 children.push(this.$Elm.getPrevious('.page-content-header'));
             }
@@ -1972,6 +1976,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                         var children = self.$Elm.getChildren();
 
+                        if (self.$Elm.getPrevious('.page-content-short')) {
+                            children.push(self.$Elm.getPrevious('.page-content-short'));
+                        }
                         if (self.$Elm.getPrevious('.page-content-header')) {
                             children.push(self.$Elm.getPrevious('.page-content-header'));
                         }
