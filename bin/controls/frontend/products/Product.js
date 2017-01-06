@@ -20,7 +20,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
     URL_OPT_DIR + 'bin/hammerjs/hammer.min.js'
 
-], function (QUI, QUIControl, QUIElementUtils, Products, Hammer) {
+], function (QUI, QUIControl, QUIElementUtils, Products, Hammer, QUIAjax) {
     "use strict";
 
     return new Class({
@@ -35,6 +35,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
         ],
 
         options: {
+            closeable: false,
             productId: false
         },
 
@@ -58,9 +59,50 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * event : on inject
          */
         $onInject: function () {
-            this.$Product = Products.get(this.getAttribute('productId'));
+            var self      = this,
+                productId = this.getAttribute('productId');
 
-            Products.addToVisited(this.getAttribute('productId'));
+            this.$Product = Products.get(productId);
+
+            require(['Ajax'], function (QUIAjax) {
+                QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getProduct', function (result) {
+                    var Container = self.create(),
+                        Helper    = new Element('div', {
+                            html: result.html
+                        });
+
+                    Container.set('data-qui', self.getType());
+                    Container.set('data-productid', productId);
+                    Container.className = 'quiqqer-products-product';
+
+                    Container.set(
+                        'html',
+                        result.css +
+                        Helper.getChildren('[data-productid]').get('html')
+                    );
+
+                    Container.setStyle('margin', 0);
+
+                    Container.getElement('article').setStyles({
+                        padding: 0
+                    });
+
+                    new Element('div', {
+                        'class': 'product-close-button',
+                        html   : '<span class="fa fa-close"></span>',
+                        events : {
+                            click: function () {
+                                self.fireEvent('close');
+                            }
+                        }
+                    }).inject(Container);
+
+                    self.$onImport();
+                }, {
+                    'package': 'quiqqer/products',
+                    productId: productId
+                });
+            });
         },
 
         /**
@@ -170,6 +212,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                     });
                 }
 
+                this.fireEvent('load');
             }.bind(this));
         },
 
