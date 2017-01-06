@@ -19,6 +19,7 @@
 
 .product-close-button {
     cursor: pointer;
+    font-size: 40px;
     position: absolute;
     right: 0;
     top: 0;
