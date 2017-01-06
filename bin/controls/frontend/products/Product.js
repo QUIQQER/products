@@ -83,7 +83,13 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
                     Container.setStyle('margin', 0);
 
-                    Container.getElement('article').setStyles({
+                    var Article = Container.getElement('article');
+
+                    if (Article.getChildren('header')) {
+                        Article.getChildren('header').setStyle('padding-right', 40);
+                    }
+
+                    Article.setStyles({
                         padding: 0
                     });
 
