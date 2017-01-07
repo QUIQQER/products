@@ -16,11 +16,8 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getProduct',
     function ($productId) {
         try {
-            $Product = new Product($productId);
-            $View    = $Product->getView();
-
             $Control = new ProductControl(array(
-                'Product' => $View
+                'Product' => new Product($productId)
             ));
 
             $control = $Control->create();
