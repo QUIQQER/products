@@ -234,9 +234,10 @@ class ProductListBackendView
         }
 
         $Engine->assign(array(
-            'this'  => $this,
-            'data'  => $this->data,
-            'style' => $style
+            'this'      => $this,
+            'data'      => $this->data,
+            'style'     => $style,
+            'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice()
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/ProductListView.html');

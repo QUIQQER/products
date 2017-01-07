@@ -16,12 +16,14 @@
         <th class="products-product-header-quantity">
             {locale group="quiqqer/products" var="product.list.products.header.quantity"}
         </th>
+        {if !$hidePrice}
         <th class="products-product-header-unitprice">
             {locale group="quiqqer/products" var="product.list.products.header.unitprice"}
         </th>
         <th class="products-product-header-price">
             {locale group="quiqqer/products" var="product.list.products.header.price"}
         </th>
+        {/if}
     </tr>
     <tr>
         <td class="products-product-pos" align="top">
@@ -50,17 +52,20 @@
         <td class="products-product-quantity" align="top">
             {$product.quantity}
         </td>
+        {if !$hidePrice}
         <td class="products-product-unitprice" align="top">
             {$product.price}
         </td>
         <td class="products-product-price" align="top">
             {$product.sum}
         </td>
+        {/if}
     </tr>
 </table>
 {assign var=pos value=$pos+1}
 {/foreach}
 
+{if !$hidePrice}
 <!-- sum display -->
 <table class="products-sum">
     <tr class="products-sum-row-subsum">
@@ -123,3 +128,4 @@
         </td>
     </tr>
 </table>
+{/if}
