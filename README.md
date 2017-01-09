@@ -33,6 +33,13 @@ Installation
 
 Der Paketname ist: quiqqer/products
 
+Benötigte Server:
+
+- git@dev.quiqqer.com:quiqqer/products.git
+- git@dev.quiqqer.com:quiqqer/areas.git
+- git@dev.quiqqer.com:quiqqer/package-currency.git
+- git@dev.quiqqer.com:quiqqer/discount.git
+- git@dev.quiqqer.com:quiqqer/tax.git
 
 Mitwirken
 ----------
