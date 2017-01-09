@@ -200,8 +200,8 @@ class EventHandling
                     'html' => 1
                 ),
                 'titles'        => array(
-                    'de' => 'Inhalt',
-                    'en' => 'Content'
+                    'de' => 'Beschreibung',
+                    'en' => 'Description'
                 )
             ),
             // Lieferant
@@ -315,7 +315,7 @@ class EventHandling
             // Produkt suchbegriffe
             array(
                 'id'            => Fields::FIELD_KEYWORDS,
-                'type'          => 'Textarea',
+                'type'          => 'InputMultiLang',
                 'prefix'        => '',
                 'suffix'        => '',
                 'priority'      => 10,
