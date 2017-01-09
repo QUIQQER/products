@@ -187,7 +187,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$FXContainerReal = moofx(this.$ContainerReal);
             this.$FXLoader        = moofx(this.$ContainerLoader);
 
-            this.$FilterMobile.addEvent('click', this.openFilterMenu);
+            if (this.$FilterMobile) {
+                this.$FilterMobile.addEvent('click', this.openFilterMenu);
+            }
 
             // delete noscript tags -> because CSS
             Elm.getElements('noscript').destroy();
