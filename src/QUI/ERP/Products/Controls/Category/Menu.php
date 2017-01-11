@@ -41,13 +41,8 @@ class Menu extends QUI\Control
      */
     public function getBody()
     {
-        $Engine = QUI::getTemplateManager()->getEngine();
-
-        $children = $this->getSite()->getNavigation(array(
-            'where' => array(
-                'type' => 'quiqqer/products:types/category'
-            )
-        ));
+        $Engine   = QUI::getTemplateManager()->getEngine();
+        $children = $this->getChildren($this->getSite());
 
         $Engine->assign(array(
             'children'         => $children,
@@ -62,12 +57,36 @@ class Menu extends QUI\Control
     /**
      * Return the quiqqer/products:types/category children
      *
-     * @param QUI\Interfaces\Projects\Site $Site
+     * @param QUI\Interfaces\Projects\Site|null $Site
      * @return array
      */
-    public function getChildren(QUI\Interfaces\Projects\Site $Site)
+    public function getChildren($Site = null)
     {
+        if (!$Site) {
+            $Site = $this->getSite();
+        }
+
         return $Site->getNavigation(array(
+            'where' => array(
+                'type' => 'quiqqer/products:types/category'
+            )
+        ));
+    }
+
+    /**
+     * Return the number of the children
+     *
+     * @param null $Site
+     * @return integer
+     */
+    public function countChildren($Site = null)
+    {
+        if (!$Site) {
+            $Site = $this->getSite();
+        }
+
+        return $Site->getNavigation(array(
+            'count' => true,
             'where' => array(
                 'type' => 'quiqqer/products:types/category'
             )

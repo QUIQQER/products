@@ -9,16 +9,23 @@
 <section class="grid-100 mobile-grid-100 grid-parent page-multible-content quiqqer-products-category">
 
     {if $Site->getAttribute('quiqqer.products.settings.showFilterLeft')}
+    {assign var=filter value=$ProductList->getFilter()}
     <div class="content-headerpage-multible-left grid-30 hide-on-mobile">
         <header>
             <h2>Kategorien</h2>
         </header>
-        {$CategoryMenu->create()}
+        {if $CategoryMenu->countChildren()}
+            {$CategoryMenu->create()}
+        {else}
+            <p>Keine Kategorien vorhanden</p>
+        {/if}
 
-        <header>
-            <h2>Filter</h2>
-        </header>
-        {$ProductList->createFilter()}
+        {if !empty($filter)}
+            <header>
+                <h2>Filter</h2>
+            </header>
+            {$ProductList->createFilter()}
+        {/if}
     </div>
     {/if}
 
