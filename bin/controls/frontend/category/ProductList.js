@@ -1956,7 +1956,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$productId  = productId;
             this.$categories = [];
 
-            return new Promise(function () {
+            return new Promise(function (resolve) {
                 moofx(children).animate({
                     left   : -30,
                     opacity: 0
@@ -1979,44 +1979,45 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 var Loader = new QUILoader().inject(self.$ProductContainer);
 
-                Loader.show();
+                Loader.show().then(function () {
+                    require([
+                        'package/quiqqer/products/bin/controls/frontend/products/Product'
+                    ], function (Product) {
+                        new Fx.Scroll(window).toTop().chain(function () {
+                            self.$setWindowLocation();
 
-                require([
-                    'package/quiqqer/products/bin/controls/frontend/products/Product'
-                ], function (Product) {
-                    new Fx.Scroll(window).toTop();
+                            new Product({
+                                productId: productId,
+                                closeable: true,
+                                events   : {
+                                    onLoad: function () {
+                                        moofx(self.$Elm).animate({
+                                            height: 0
+                                        });
 
-                    self.$setWindowLocation();
+                                        if (self.$ProductContainer) {
+                                            moofx(self.$ProductContainer).animate({
+                                                opacity: 1
+                                            }, {
+                                                duration: 200
+                                            });
+                                        }
 
-                    new Product({
-                        productId: productId,
-                        closeable: true,
-                        events   : {
-                            onLoad: function () {
-                                moofx(self.$Elm).animate({
-                                    height: 0
-                                });
+                                        Loader.hide().then(function () {
+                                            Loader.destroy();
+                                            resolve();
+                                        });
+                                    },
 
-                                if (self.$ProductContainer) {
-                                    moofx(self.$ProductContainer).animate({
-                                        opacity: 1
-                                    }, {
-                                        duration: 200
-                                    });
+                                    onClose: function () {
+                                        self.$productId  = false;
+                                        self.$categories = currentCategories;
+                                        self.$setWindowLocation();
+                                    }
                                 }
-
-                                Loader.hide().then(function () {
-                                    Loader.destroy();
-                                });
-                            },
-
-                            onClose: function () {
-                                self.$productId  = false;
-                                self.$categories = currentCategories;
-                                self.$setWindowLocation();
-                            }
-                        }
-                    }).inject(self.$ProductContainer);
+                            }).inject(self.$ProductContainer);
+                        });
+                    });
                 });
             });
         },
