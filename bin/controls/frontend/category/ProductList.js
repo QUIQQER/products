@@ -1951,7 +1951,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 children.push(this.$Elm.getPrevious('.page-content-header'));
             }
 
-            this.$productId = productId;
+            this.$productId  = productId;
+            this.$categories = [];
 
             return new Promise(function () {
                 moofx(children).animate({
