@@ -1971,8 +1971,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     self.$ProductContainer = new Element('div', {
                         'class': 'quiqqer-product-container',
                         styles : {
-                            opacity : 0,
-                            position: 'relative'
+                            minHeight: 600,
+                            position : 'relative'
                         }
                     }).inject(self.$Elm, 'before');
                 }
