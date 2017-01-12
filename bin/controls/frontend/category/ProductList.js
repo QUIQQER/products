@@ -2010,7 +2010,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                             onClose: function () {
                                 self.$productId = false;
-                                self.$onFilterChange();
+                                self.$setWindowLocation();
                             }
                         }
                     }).inject(self.$ProductContainer);
