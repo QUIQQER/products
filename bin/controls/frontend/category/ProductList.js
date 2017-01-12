@@ -25,6 +25,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'qui/controls/buttons/Select',
     'qui/controls/buttons/Button',
     'qui/controls/windows/Popup',
+    'qui/controls/loader/Loader',
     'qui/utils/Elements',
     'package/quiqqer/products/bin/Search',
     'package/quiqqer/products/bin/controls/search/SearchField',
@@ -34,7 +35,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'package/quiqqer/products/bin/controls/frontend/category/ProductListFilter',
     'package/quiqqer/products/bin/controls/frontend/category/ProductListField'
 
-], function (QUI, QUIControl, QUISelect, QUIButton, QUIWindow, QUIElementUtils,
+], function (QUI, QUIControl, QUISelect, QUIButton, QUIWindow, QUILoader, QUIElementUtils,
              Search, SearchField, QUIAjax, QUILocale, URI, ProductListFilter, ProductListField) {
 
     "use strict";
@@ -1927,6 +1928,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }).inject(self.$Elm, 'before');
                 }
 
+                var Loader = new QUILoader().inject(self.$ProductContainer);
+
+                Loader.show();
+
                 require([
                     'package/quiqqer/products/bin/controls/frontend/products/Product'
                 ], function (Product) {
@@ -1945,6 +1950,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                     opacity: 1
                                 }, {
                                     duration: 200
+                                });
+
+                                Loader.hide().then(function () {
+                                    Loader.destroy();
                                 });
                             },
 
