@@ -2009,7 +2009,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                             },
 
                             onClose: function () {
-                                self.showList();
+                                self.$productId = false;
+                                self.$onFilterChange();
                             }
                         }
                     }).inject(self.$ProductContainer);
