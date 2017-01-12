@@ -439,7 +439,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     return;
                 }
 
-                if ("p" in search) {
+                if ("p" in search && Object.getLength(search) == 1) {
                     var productId = parseInt(search.p);
 
                     if (productId) {
