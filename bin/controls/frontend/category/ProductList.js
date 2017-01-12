@@ -1995,11 +1995,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                     height: 0
                                 });
 
-                                moofx(self.$ProductContainer).animate({
-                                    opacity: 1
-                                }, {
-                                    duration: 200
-                                });
+                                if (self.$ProductContainer) {
+                                    moofx(self.$ProductContainer).animate({
+                                        opacity: 1
+                                    }, {
+                                        duration: 200
+                                    });
+                                }
 
                                 Loader.hide().then(function () {
                                     Loader.destroy();
