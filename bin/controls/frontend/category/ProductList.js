@@ -1951,6 +1951,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 children.push(this.$Elm.getPrevious('.page-content-header'));
             }
 
+            var currentCategories = this.$categories;
+
             this.$productId  = productId;
             this.$categories = [];
 
@@ -2009,7 +2011,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                             },
 
                             onClose: function () {
-                                self.$productId = false;
+                                self.$productId  = false;
+                                self.$categories = currentCategories;
                                 self.$setWindowLocation();
                             }
                         }
