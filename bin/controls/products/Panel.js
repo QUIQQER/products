@@ -37,7 +37,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
     return new Class({
 
         Extends: QUIPanel,
-        Type: 'package/quiqqer/products/bin/controls/products/Panel',
+        Type   : 'package/quiqqer/products/bin/controls/products/Panel',
 
         Binds: [
             'refresh',
@@ -53,6 +53,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
         initialize: function (options) {
             this.setAttributes({
+                icon : 'fa fa-shopping-bag',
                 title: QUILocale.get(lg, 'products.panel.title')
             });
 
@@ -64,8 +65,8 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 onCreate: this.$onCreate,
                 onResize: this.$onResize,
                 onInject: this.$onInject,
-                onShow: this.$onShow,
-                onHide: this.$onHide
+                onShow  : this.$onShow,
+                onHide  : this.$onHide
             });
         },
 
@@ -78,7 +79,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             this.parent();
 
             var Delete = this.getButtons('delete'),
-                Edit = this.getButtons('edit');
+                Edit   = this.getButtons('edit');
 
             Delete.enable();
             Edit.enable();
@@ -103,20 +104,20 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             // buttons
             this.addButton({
-                name: 'add',
-                text: QUILocale.get('quiqqer/system', 'add'),
+                name     : 'add',
+                text     : QUILocale.get('quiqqer/system', 'add'),
                 textimage: 'fa fa-plus',
-                events: {
+                events   : {
                     onClick: this.createChild
                 }
             });
 
             this.addButton({
-                name: 'edit',
-                text: QUILocale.get('quiqqer/system', 'edit'),
+                name     : 'edit',
+                text     : QUILocale.get('quiqqer/system', 'edit'),
                 textimage: 'fa fa-edit',
-                disabled: true,
-                events: {
+                disabled : true,
+                events   : {
                     onClick: function () {
                         self.updateChild(
                             self.$Search.getSelected()[0]
@@ -130,11 +131,11 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             });
 
             this.addButton({
-                name: 'delete',
-                text: QUILocale.get('quiqqer/system', 'delete'),
+                name     : 'delete',
+                text     : QUILocale.get('quiqqer/system', 'delete'),
                 textimage: 'fa fa-trash',
-                disabled: true,
-                events: {
+                disabled : true,
+                events   : {
                     onClick: function (Btn) {
                         Btn.setAttribute('textimage', 'fa fa-spinner fa-spin');
 
@@ -158,10 +159,10 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             this.$Search = new Search({
                 injectShow: false,
-                events: {
+                events    : {
                     onClick: function () {
                         var Delete = self.getButtons('delete'),
-                            Edit = self.getButtons('edit');
+                            Edit   = self.getButtons('edit');
 
                         Delete.enable();
                         Edit.enable();
@@ -173,7 +174,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
                     onSearchBegin: function () {
                         var Delete = self.getButtons('delete'),
-                            Edit = self.getButtons('edit');
+                            Edit   = self.getButtons('edit');
 
                         Delete.disable();
                         Edit.disable();
@@ -213,10 +214,10 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             this.Loader.show();
 
             this.createSheet({
-                title: QUILocale.get(lg, 'products.create.title'),
-                icon: 'fa fa-edit',
+                title : QUILocale.get(lg, 'products.create.title'),
+                icon  : 'fa fa-edit',
                 events: {
-                    onShow: function (Sheet) {
+                    onShow : function (Sheet) {
 
                         Sheet.getContent().setStyle('padding', 20);
 
@@ -231,9 +232,9 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
                         Sheet.addButton(
                             new QUIButton({
-                                text: QUILocale.get('quiqqer/system', 'save'),
+                                text     : QUILocale.get('quiqqer/system', 'save'),
                                 textimage: 'fa fa-save',
-                                events: {
+                                events   : {
                                     onClick: function () {
                                         self.Loader.show();
 
@@ -307,25 +308,25 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
                     for (var i = 0, len = data.length; i < len; i++) {
                         products = products + '<li>' + data[i].id + ': ' +
-                            data[i].title + '</li>';
+                                   data[i].title + '</li>';
                     }
 
                     products = products + '</ul>';
 
                     new QUIConfirm({
-                        title: QUILocale.get(lg, 'products.window.delete.title'),
-                        text: QUILocale.get(lg, 'products.window.delete.text', {
+                        title      : QUILocale.get(lg, 'products.window.delete.title'),
+                        text       : QUILocale.get(lg, 'products.window.delete.text', {
                             products: products
                         }),
                         information: QUILocale.get(lg, 'products.window.delete.information', {
                             products: products
                         }),
-                        autoclose: false,
-                        maxHeight: 400,
-                        maxWidth: 600,
-                        icon: 'fa fa-trashcan',
-                        texticon: 'fa fa-trashcan',
-                        events: {
+                        autoclose  : false,
+                        maxHeight  : 400,
+                        maxWidth   : 600,
+                        icon       : 'fa fa-trashcan',
+                        texticon   : 'fa fa-trashcan',
+                        events     : {
                             onSubmit: function (Win) {
                                 Win.Loader.show();
 

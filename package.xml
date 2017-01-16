@@ -1,0 +1,17 @@
+<quiqqer>
+    <package>
+
+        <title>
+            <locale group="quiqqer/products" var="package.title"/>
+        </title>
+
+        <description>
+            <locale group="quiqqer/products" var="package.title"/>
+        </description>
+
+        <provider>
+            <desktopSearch src="\QUI\ERP\Products\DesktopSearch"/>
+        </provider>
+
+    </package>
+</quiqqer>
