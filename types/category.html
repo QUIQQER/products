@@ -1,56 +1,61 @@
-{if isset($Product)}
-    <div class="quiqqer-products-product">
-        {$Product->create()}
-    </div>
-    <script>
-        var QUIQQER_PRODUCT_ID = '{$Product->getAttribute('data-productid')}';
-    </script>
-{else}
-<section class="grid-100 mobile-grid-100 grid-parent page-multible-content quiqqer-products-category">
+<section class="grid-100 mobile-grid-100 grid-parent page-multible-content">
 
-    {if $Site->getAttribute('quiqqer.products.settings.showFilterLeft')}
-    {assign var=filter value=$ProductList->getFilter()}
+    {if $showFilter}
     <div class="content-headerpage-multible-left grid-30 hide-on-mobile">
         <header>
             <h2>Kategorien</h2>
         </header>
         {if $CategoryMenu->countChildren()}
             {$CategoryMenu->create()}
-        {else}
-            <p>Keine Kategorien vorhanden</p>
-        {/if}
-
-        {if !empty($filter)}
-            <header>
-                <h2>Filter</h2>
-            </header>
-            {$ProductList->createFilter()}
         {/if}
     </div>
     {/if}
 
-    {if $Site->getAttribute('quiqqer.products.settings.showFilterLeft')}
-        <div class="page-multible-right grid-70 mobile-grid-100">
-    {else}
-        <div class="page-multible-right grid-parent grid-100 mobile-grid-100">
-    {/if}
+    {if isset($Product)}
+        {assign
+            var=cssClasses
+            value="quiqqer-products-product page-multible-right grid-parent grid-100 mobile-grid-100"
+        }
+        {if $showFilter}
+            {assign
+                var=cssClasses
+                value="quiqqer-products-product page-multible-right grid-70 mobile-grid-100"
+            }
+        {/if}
 
-        {if $Site->getAttribute('content-header')}
-            {if $Site->getAttribute('image_emotion')}
-            <header class="page-content-header-emotion"
-                    style="background-image: url('{image src=$Site->getAttribute('image_emotion') width=820 onlysrc=1 rewrited=1}')"
-            >
-                <div class="page-content-header-emotion-container">
-                    <h1>{$Site->getAttribute('title')}</h1>
-                    <div class="page-content-emotion-short">
-                        {$Site->getAttribute('short')}
+        <div class="{$cssClasses}">
+            {$Product->create()}
+        </div>
+        <script>
+            var QUIQQER_PRODUCT_ID = '{$Product->getAttribute('data-productid')}';
+        </script>
+    {else}
+        {assign
+            var=cssClasses
+            value="quiqqer-products-category page-multible-right grid-parent grid-100 mobile-grid-100"
+        }
+
+        {if $showFilter}
+            {assign var=cssClasses value="quiqqer-products-category page-multible-right grid-70 mobile-grid-100"}
+        {/if}
+
+        <div class="{$cssClasses}">
+            {if $Site->getAttribute('content-header')}
+                {if $Site->getAttribute('image_emotion')}
+                <header class="page-content-header-emotion"
+                        style="background-image: url('{image src=$Site->getAttribute('image_emotion') width=820 onlysrc=1 rewrited=1}')"
+                >
+                    <div class="page-content-header-emotion-container">
+                        <h1>{$Site->getAttribute('title')}</h1>
+                        <div class="page-content-emotion-short">
+                            {$Site->getAttribute('short')}
+                        </div>
                     </div>
-                </div>
-            </header>
-            {else}
-            <header class="page-content-header">
-                <h1>{$Site->getAttribute('title')}</h1>
-            </header>
+                </header>
+                {else}
+                <header class="page-content-header">
+                    <h1>{$Site->getAttribute('title')}</h1>
+                </header>
 
                 {if $Site->getAttribute('short')}
                 <div class="page-content-short">
@@ -61,6 +66,6 @@
         {/if}
 
         {$ProductList->create()}
-    </div>
-</div>
-{/if}
+        </div>
+    {/if}
+</section>

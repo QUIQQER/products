@@ -31,6 +31,31 @@ if (strpos(QUI::getRequest()->getPathInfo(), '_p/') !== false) {
     $url              = pathinfo($url);
 }
 
+// category menu
+$searchParentCategorySite = function () use ($Site) {
+    $Parent = true;
+
+    while ($Parent) {
+        if ($Site->getParent()->getAttribute('type') != 'quiqqer/products:types/category') {
+            return $Site;
+        }
+
+        $Site = $Site->getParent();
+    }
+
+    return $Site;
+};
+
+$CategoryMenu = new QUI\ERP\Products\Controls\Category\Menu(array(
+    'Site' => $searchParentCategorySite()
+));
+
+$Engine->assign(array(
+    'showFilter'   => $Site->getAttribute('quiqqer.products.settings.showFilterLeft'),
+    'CategoryMenu' => $CategoryMenu
+));
+
+
 // check product url
 if ($siteUrl != $_REQUEST['_url']) {
     $baseName = str_replace(
@@ -96,26 +121,6 @@ if ($siteUrl != $_REQUEST['_url']) {
         exit;
     }
 } else {
-    // category menu
-    $searchParentCategorySite = function () use ($Site) {
-        $Parent = true;
-
-        while ($Parent) {
-            if ($Site->getParent()->getAttribute('type') != 'quiqqer/products:types/category') {
-                return $Site;
-            }
-
-            $Site = $Site->getParent();
-        }
-
-        return $Site;
-    };
-
-    $CategoryMenu = new QUI\ERP\Products\Controls\Category\Menu(array(
-        'Site' => $searchParentCategorySite()
-    ));
-
-
     // product list
     $searchParams = array();
     $search       = QUI::getRequest()->get('search');

@@ -51,6 +51,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
             this.$Nav = Elm.getElement('.quiqqer-products-category-menu-navigation');
 
             this.$Nav.getElements('a').addEvent('click', function (event) {
+                if (typeof window.QUIQQER_PRODUCT_ID !== 'undefined') {
+                    // Wenn die Seite ein Produkt ist, muss auf die Kategorie weitergeleitet werden
+                    return;
+                }
+
                 var Target = event.target,
                     Label  = Target.getParent('label');
 
