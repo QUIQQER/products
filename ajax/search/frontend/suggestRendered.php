@@ -109,6 +109,7 @@ QUI::$Ajax->registerFunction(
                 $Product   = Products::getProduct($productId);
                 $Image     = $Product->getImage();
                 $ArticleNo = $Product->getField(\QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO);
+                $articleNo = $ArticleNo->getValueByLocale($Locale);
                 $url       = $Product->getUrl();
 
                 $html .= '<li data-url="' . $url . '">';
@@ -124,12 +125,15 @@ QUI::$Ajax->registerFunction(
 
                 $html .= '<div class="quiqqer-products-search-suggest-dropdown-description">';
                 $html .= $Product->getDescription($Locale);
+
+                if (!empty($articleNo)) {
                     $html .= '<div class="quiqqer-products-search-suggest-dropdown-description-articlNo">';
-                        $html .= '<span>';
-                        $html .= $Locale->get('quiqqer/products', 'productNo');
-                        $html .= ':</span>';
-                        $html .= $ArticleNo->getValueByLocale($Locale);
+                    $html .= '<span>';
+                    $html .= $Locale->get('quiqqer/products', 'productNo');
+                    $html .= ':</span>';
+                    $html .= $ArticleNo->getValueByLocale($Locale);
                     $html .= '</div>';
+                }
                 $html .= '</div>';
                 $html .= '</div>';
 
