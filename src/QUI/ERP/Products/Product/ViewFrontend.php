@@ -255,6 +255,10 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     {
         $Field = $this->Product->getField($fieldId);
 
+        if ($Field->getId() === QUI\ERP\Products\Handler\Fields::FIELD_CONTENT) {
+            return $Field;
+        }
+
         return $Field->isPublic() ? $Field : false;
     }
 

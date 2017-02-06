@@ -483,7 +483,7 @@ class Fields
             if (!isset($translations[0])) {
                 QUI\Translator::addUserVar($group, $var, $data);
             } else {
-                QUI\Translator::edit($group, $var, $data);
+                QUI\Translator::edit($group, $var, 'quiqqer/products', $data);
             }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addNotice($Exception->getMessage(), array(

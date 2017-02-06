@@ -62,6 +62,7 @@
     cursor: pointer;
     float: left;
     padding: 10px;
+    position: relative;
     width: 100%;
 }
 
@@ -92,4 +93,19 @@
     clear: both;
     float: left;
     font-size: 12px;
+    padding-bottom: 40px;
+}
+
+.quiqqer-products-search-suggest-dropdown-description-articlNo {
+    bottom: 10px;
+    clear: both;
+    color: #999999;
+    position: absolute;
+    right: 10px;
+    text-align: right;
+    width: 90%;
+}
+
+.quiqqer-products-search-suggest-dropdown-description-articlNo span {
+    padding-right: 5px;
 }

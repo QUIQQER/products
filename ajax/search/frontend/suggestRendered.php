@@ -103,11 +103,13 @@ QUI::$Ajax->registerFunction(
         $Locale = $User->getLocale();
         $html   = '<ul>';
 
+        // @todo template daraus bauen
         foreach ($result as $productId) {
             try {
-                $Product = Products::getProduct($productId);
-                $Image   = $Product->getImage();
-                $url     = $Product->getUrl();
+                $Product   = Products::getProduct($productId);
+                $Image     = $Product->getImage();
+                $ArticleNo = $Product->getField(\QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO);
+                $url       = $Product->getUrl();
 
                 $html .= '<li data-url="' . $url . '">';
 
@@ -122,6 +124,12 @@ QUI::$Ajax->registerFunction(
 
                 $html .= '<div class="quiqqer-products-search-suggest-dropdown-description">';
                 $html .= $Product->getDescription($Locale);
+                    $html .= '<div class="quiqqer-products-search-suggest-dropdown-description-articlNo">';
+                        $html .= '<span>';
+                        $html .= $Locale->get('quiqqer/products', 'productNo');
+                        $html .= ':</span>';
+                        $html .= $ArticleNo->getValueByLocale($Locale);
+                    $html .= '</div>';
                 $html .= '</div>';
                 $html .= '</div>';
 
