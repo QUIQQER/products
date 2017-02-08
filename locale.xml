@@ -71,7 +71,7 @@
             ]]></en>
         </locale>
         <locale name="settings.window.products.mainCategory">
-            <de><![CDATA[Hauptkategory für Produkte]]></de>
+            <de><![CDATA[Hauptkategorie für Produkte]]></de>
             <en><![CDATA[Main category for products]]></en>
         </locale>
         <locale name="settings.window.products.mainCategory.description">
