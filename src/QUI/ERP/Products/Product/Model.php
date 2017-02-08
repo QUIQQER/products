@@ -358,6 +358,8 @@ class Model extends QUI\QDOM
 
         try {
             $Folder = $Parent->createFolder($this->getId());
+            $Folder->setAttribute('order', 'priority ASC');
+            $Folder->save();
         } catch (QUI\Exception $Exception) {
             if ($Exception->getCode() != 701) {
                 throw $Exception;
