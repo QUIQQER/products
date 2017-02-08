@@ -36,11 +36,17 @@ $searchParentCategorySite = function () use ($Site) {
     $Parent = true;
 
     while ($Parent) {
-        if ($Site->getParent()->getAttribute('type') != 'quiqqer/products:types/category') {
+        if ($Site->getParent()
+            && $Site->getParent()->getAttribute('type') != 'quiqqer/products:types/category'
+        ) {
             return $Site;
         }
 
         $Site = $Site->getParent();
+
+        if (!$Site) {
+            break;
+        }
     }
 
     return $Site;
