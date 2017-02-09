@@ -90,6 +90,29 @@ define('package/quiqqer/products/bin/controls/frontend/products/VisitedProducts'
                     }
 
                     this.$List.set('html', List.get('html'));
+                    this.$List.getElements('a').addEvents({
+                        click: function (event) {
+                            var Target = event.target;
+
+                            if (Target.nodeName !== 'A') {
+                                Target = Target.getParent('a');
+                            }
+
+                            var List = document.getElement(
+                                '[data-qui="package/quiqqer/products/bin/controls/frontend/category/ProductList"]'
+                            );
+
+                            if (!List) {
+                                return;
+                            }
+
+                            event.stop();
+
+                            List = QUI.Controls.getById(List.get('data-quiid'));
+                            List.openProduct(Target.get('data-pid'));
+                        }
+                    });
+
                     this.$Slider.resize();
                 }.bind(this), {
                     'package'       : 'quiqqer/products',
