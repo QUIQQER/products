@@ -13,8 +13,13 @@
                     {assign var=hasImage value=1}
                 {/if}
             <li class="quiqqer-bricks-children-slider-child">
-                <article class="quiqqer-bricks-children-slider-child-display quiqqer-products-control-product-childrenslider-entry">
-                    <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:" html"}">
+                <article class="quiqqer-bricks-children-slider-child-display quiqqer-products-control-product-childrenslider-entry"
+                    data-pid="{$Product->getId()}"
+                >
+                    <a href="{$Product->getUrl()}"
+                       title="{$Product->getTitle()|escape:" html"}"
+                       data-pid="{$Product->getId()}"
+                    >
                         <div class="quiqqer-products-control-product-childrenslider-entry-image">
                         {if $hasImage}
                             {image image=$Product->getImage() height=$this->getAttribute('height')}

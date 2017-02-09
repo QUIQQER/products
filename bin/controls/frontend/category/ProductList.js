@@ -1956,6 +1956,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$productId  = productId;
             this.$categories = [];
 
+            var Loader = new QUILoader();
+
             return new Promise(function (resolve) {
                 moofx(children).animate({
                     left   : -30,
@@ -1967,19 +1969,22 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }
                 });
 
-                if (!self.$ProductContainer) {
-                    self.$ProductContainer = new Element('div', {
-                        'class': 'quiqqer-product-container',
-                        styles : {
-                            minHeight: 600,
-                            position : 'relative'
-                        }
-                    }).inject(self.$Elm, 'before');
-                }
+                self.$closeProductContainer().then(function () {
+                    if (!self.$ProductContainer) {
+                        self.$ProductContainer = new Element('div', {
+                            'class': 'quiqqer-product-container',
+                            styles : {
+                                minHeight: 600,
+                                position : 'relative'
+                            }
+                        }).inject(self.$Elm, 'before');
+                    }
 
-                var Loader = new QUILoader().inject(self.$ProductContainer);
+                    Loader.inject(self.$ProductContainer);
+                    Loader.getElm().setStyle('background', 'transparent');
 
-                Loader.show().then(function () {
+                    return Loader.show();
+                }).then(function () {
                     require([
                         'package/quiqqer/products/bin/controls/frontend/products/Product'
                     ], function (Product) {
@@ -2036,6 +2041,53 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$setWindowLocation();
 
             return new Promise(function (resolve) {
+                self.$closeProductContainer().then(function () {
+                    self.$Elm.setStyle('height', null);
+
+                    var children = self.$Elm.getChildren();
+
+                    if (self.$Elm.getPrevious('.page-content-short')) {
+                        children.push(self.$Elm.getPrevious('.page-content-short'));
+                    }
+                    if (self.$Elm.getPrevious('.page-content-header')) {
+                        children.push(self.$Elm.getPrevious('.page-content-header'));
+                    }
+
+                    children.setStyles({
+                        display: null
+                    });
+
+                    moofx(children).animate({
+                        left   : 0,
+                        opacity: 1
+                    }, {
+                        duration: 200,
+                        callback: function () {
+                            children.setStyles({
+                                left   : null,
+                                opacity: null
+                            });
+
+                            resolve();
+                        }
+                    });
+                });
+            });
+        },
+
+        /**
+         * Close the current product container
+         *
+         * @returns {Promise}
+         */
+        $closeProductContainer: function () {
+            if (!this.$ProductContainer) {
+                return Promise.resolve();
+            }
+
+            var self = this;
+
+            return new Promise(function (resolve) {
                 moofx(self.$ProductContainer).animate({
                     opacity: 0
                 }, {
@@ -2043,36 +2095,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     callback: function () {
                         self.$ProductContainer.destroy();
                         self.$ProductContainer = null;
-
-                        self.$Elm.setStyle('height', null);
-
-                        var children = self.$Elm.getChildren();
-
-                        if (self.$Elm.getPrevious('.page-content-short')) {
-                            children.push(self.$Elm.getPrevious('.page-content-short'));
-                        }
-                        if (self.$Elm.getPrevious('.page-content-header')) {
-                            children.push(self.$Elm.getPrevious('.page-content-header'));
-                        }
-
-                        children.setStyles({
-                            display: null
-                        });
-
-                        moofx(children).animate({
-                            left   : 0,
-                            opacity: 1
-                        }, {
-                            duration: 200,
-                            callback: function () {
-                                children.setStyles({
-                                    left   : null,
-                                    opacity: null
-                                });
-
-                                resolve();
-                            }
-                        });
+                        resolve();
                     }
                 });
             });
