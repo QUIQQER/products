@@ -62,8 +62,10 @@ $Engine->assign(array(
 ));
 
 
-// check product url
 if ($siteUrl != $_REQUEST['_url']) {
+    /**
+     * PRODUCT
+     */
     $baseName = str_replace(
         QUI\Rewrite::getDefaultSuffix(),
         '',
@@ -91,6 +93,9 @@ if ($siteUrl != $_REQUEST['_url']) {
             $Redirect->send();
             exit;
         }
+
+        $CategoryMenu->setAttribute('disableCheckboxes', true);
+        $CategoryMenu->setAttribute('breadcrumb', true);
 
         $Engine->assign(array(
             'Product' => new Products\Controls\Products\Product(array(
@@ -127,6 +132,9 @@ if ($siteUrl != $_REQUEST['_url']) {
         exit;
     }
 } else {
+    /**
+     * CATEGORY
+     */
     // product list
     $searchParams = array();
     $search       = QUI::getRequest()->get('search');

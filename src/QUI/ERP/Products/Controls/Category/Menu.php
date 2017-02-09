@@ -24,8 +24,10 @@ class Menu extends QUI\Control
     public function __construct($attributes = array())
     {
         $this->setAttributes(array(
-            'Site'     => false,
-            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/category/Menu'
+            'Site'              => false,
+            'data-qui'          => 'package/quiqqer/products/bin/controls/frontend/category/Menu',
+            'disableCheckboxes' => false,
+            'breadcrumb'        => false
         ));
 
         $this->addCSSClass('quiqqer-products-category-menu');
@@ -91,6 +93,34 @@ class Menu extends QUI\Control
                 'type' => 'quiqqer/products:types/category'
             )
         ));
+    }
+
+    /**
+     * Return the number of the children
+     *
+     * @param QUI\Projects\Site $Site
+     * @return bool
+     */
+    public function useBreadcrumbFlag($Site)
+    {
+        if ($this->getAttribute('breadcrumb') === false) {
+            return false;
+        }
+
+        return QUI::getRewrite()->isIdInPath($Site->getId());
+    }
+
+    /**
+     * Return the css breacrumb css class, if the site is in the rewrite path
+     *
+     * @param QUI\Projects\Site $Site
+     * @return string
+     */
+    public function getBreadcrumbFlag($Site)
+    {
+        return $this->useBreadcrumbFlag($Site) ?
+            'quiqqer-products-category-menu-navigation__isInBreadcrumb' :
+            '';
     }
 
     /**
