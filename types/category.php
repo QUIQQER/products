@@ -184,7 +184,8 @@ if ($siteUrl != $_REQUEST['_url']) {
         'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
         'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
         'searchParams'         => $searchParams,
-        'autoload'             => false
+        'autoload'             => false,
+        'view'                 => $view
     ));
 
     $filterList = $ProductList->getFilter();

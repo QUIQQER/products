@@ -770,6 +770,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     Ghost.getElements(
                         '.quiqqer-products-product-button-purchase'
                     ).addEvent('click', function (event) {
+                        event.stop();
+
                         var Target    = event.target,
                             Article   = Target.getParent('article'),
                             productId = Article.get('data-pid');
@@ -801,6 +803,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     Ghost.getElements(
                         '.quiqqer-products-product-button-add'
                     ).addEvent('click', function (event) {
+                        event.stop();
+
                         var Target    = event.target,
                             Article   = Target.getParent('article'),
                             productId = Article.get('data-pid');
