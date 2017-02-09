@@ -15,8 +15,9 @@
         {foreach from=$children item=Child}
         {if $Child->getAttribute('quiqqer.products.settings.categoryId')}
         <li class="quiqqer-products-category-menu-navigation-li">
-            <label class="quiqqer-products-category-menu-navigation-li-label">
-                {if $Child->getAttribute('quiqqer.products.settings.categoryAsFilter')}
+            <label class="quiqqer-products-category-menu-navigation-li-label {$this->getBreadcrumbFlag($Child)}">
+                {if $Child->getAttribute('quiqqer.products.settings.categoryAsFilter') &&
+                    $this->getAttribute('disableCheckboxes') === false}
                 <span class="quiqqer-products-category-menu-navigation-li-label-checkbox">
                     <input type="checkbox" value="{$Child->getAttribute('quiqqer.products.settings.categoryId')}"/>
                 </span>

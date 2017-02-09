@@ -285,6 +285,7 @@ class Products
 
 
         $Product = self::getProduct($newId);
+        $Product->createMediaFolder();
         $Product->updateCache();
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreate', array($Product));

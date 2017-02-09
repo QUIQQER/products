@@ -17,6 +17,10 @@
     width: 100%;
 }
 
+.quiqqer-products-category-menu-navigation__isInBreadcrumb {
+    font-weight: bold;
+}
+
 .quiqqer-products-category-menu-navigation-li-label-icon,
 .quiqqer-products-category-menu-navigation-li-label-checkbox {
     cursor: pointer;
