@@ -143,8 +143,12 @@
             <en><![CDATA[Field settings for the product freetext search]]></en>
         </locale>
         <locale name="settings.window.fieldsearch.freetext.description">
-            <de><![CDATA[Hier können Sie festlegen welche Felder bei der Produktsuche berücksichtigt werden.]]></de>
-            <en><![CDATA[]]></en>
+            <de><![CDATA[
+            Hier können Sie festlegen welche Felder bei der Produktsuche (in der Freitextsuche) berücksichtigt werden.
+            ]]></de>
+            <en><![CDATA[
+            Here you can define which fields are considered during the product search (in the Freetext search).
+            ]]></en>
         </locale>
 
         <locale name="fieldtype">
