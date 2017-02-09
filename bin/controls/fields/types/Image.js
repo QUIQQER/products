@@ -174,9 +174,10 @@ define('package/quiqqer/products/bin/controls/fields/types/Image', [
             }
 
             new MediaPopup({
-                fileid : fileid,
-                project: project,
-                events : {
+                fileid    : fileid,
+                project   : project,
+                breadcrumb: false,
+                events    : {
                     onSubmit: function (Window, imageData) {
                         self.$Input.value = imageData.url;
                         self.refresh();
