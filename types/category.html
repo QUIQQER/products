@@ -57,10 +57,10 @@
                     <h1>{$Site->getAttribute('title')}</h1>
                 </header>
 
-                {if $Site->getAttribute('short')}
-                <div class="page-content-short">
-                    {$Site->getAttribute('short')}
-                </div>
+                {if $Site->getAttribute('content')}
+                <section class="content-body grid-100 mobile-grid-100">
+                    {$Site->getAttribute('content')}
+                </section>
                 {/if}
             {/if}
         {/if}
