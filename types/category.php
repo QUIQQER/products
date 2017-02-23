@@ -143,7 +143,17 @@ if ($siteUrl != $_REQUEST['_url']) {
     $sortBy       = QUI::getRequest()->get('sortBy');
     $sortOn       = QUI::getRequest()->get('sortOn');
 
-    $view       = QUI::getRequest()->get('v');
+    $view = '';
+
+    if (QUI::getSession()->get('productView')) {
+        $view = QUI::getSession()->get('productView');
+    }
+
+    if (QUI::getRequest()->get('v')) {
+        $view = QUI::getRequest()->get('v');
+    }
+
+
     $categories = QUI::getRequest()->get('c');
 
     if ($categories) {
