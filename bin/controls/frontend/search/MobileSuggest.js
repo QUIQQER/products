@@ -18,6 +18,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
     'qui/controls/Control',
     'qui/controls/utils/Background',
     'qui/controls/loader/Loader',
+    'qui/controls/windows/Popup',
     'Ajax',
     'Locale',
     'Mustache',
@@ -25,7 +26,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
     'text!package/quiqqer/products/bin/controls/frontend/search/MobileSuggest.html',
     'css!package/quiqqer/products/bin/controls/frontend/search/MobileSuggest.css'
 
-], function (QUI, QUIControl, QUIBackground, QUILoader, QUIAjax, QUILocale, Mustache, template) {
+], function (QUI, QUIControl, QUIBackground, QUILoader, QUIPopup, QUIAjax, QUILocale, Mustache, template) {
     "use strict";
 
     var lg      = 'quiqqer/products',
@@ -47,12 +48,14 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
 
     return new Class({
 
-        Extends: QUIControl,
+        Extends: QUIPopup,
         Type   : 'package/quiqqer/products/bin/controls/frontend/search/MobileSuggest',
 
         Binds: [
-            'open',
-            'close',
+            '$onOpen',
+            '$onOpenBegin',
+            '$onClose',
+            '$onCreate',
             '$keyup',
             '$search',
             '$renderSearch',
@@ -71,6 +74,12 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
         initialize: function (options) {
             this.parent(options);
 
+            this.setAttributes({
+                buttons           : false,
+                header            : false,
+                backgroundClosable: false
+            });
+
             this.$Background = null;
             this.$Close      = null;
             this.$Input      = null;
@@ -78,41 +87,46 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
 
             this.$created = false;
             this.$timer   = null;
+
+            this.addEvents({
+                onOpen      : this.$onOpen,
+                onOpenBegin : this.$onOpenBegin,
+                onCloseBegin: this.$onClose
+            });
         },
 
         /**
          * Create the domnode element
-         *
-         * @returns {HTMLDivElement}
          */
-        create: function () {
-
-            this.$Elm = new Element('div', {
-                'class': 'quiqqer-products-mobileSuggest',
-                html   : Mustache.render(template)
+        $onOpenBegin: function () {
+            this.getElm().setStyles({
+                display: 'none'
             });
 
-            this.$Elm.setStyles({
+            this.$Container = new Element('div', {
+                'class': 'quiqqer-products-mobileSuggest',
+                html   : Mustache.render(template)
+            }).inject(document.body);
+
+            this.$Container.setStyles({
                 opacity: 0,
                 top    : -50
             });
 
-            this.$Background = new QUIBackground({
-                opacity: 0.85,
-                styles : {
-                    backgroundColor: '#1a1c1d'
-                }
+            this.Background.setAttribute('opacity', 0.85);
+            this.Background.setAttribute('styles', {
+                backgroundColor: '#1a1c1d'
             });
 
-            this.$Background.inject(document.body);
-
-            this.$Close     = this.$Elm.getElement('.quiqqer-products-mobileSuggest-close');
-            this.$Input     = this.$Elm.getElement('.quiqqer-products-mobileSuggest-search input');
-            this.$Result    = this.$Elm.getElement('.quiqqer-products-mobileSuggest-results');
-            this.$ResultCtn = this.$Elm.getElement('.quiqqer-products-mobileSuggest-results-container');
+            this.$Close     = this.$Container.getElement('.quiqqer-products-mobileSuggest-close');
+            this.$Input     = this.$Container.getElement('.quiqqer-products-mobileSuggest-search input');
+            this.$Result    = this.$Container.getElement('.quiqqer-products-mobileSuggest-results');
+            this.$ResultCtn = this.$Container.getElement('.quiqqer-products-mobileSuggest-results-container');
 
             this.$Close.addEvents({
-                click: this.close
+                click: function () {
+                    this.close();
+                }.bind(this)
             });
 
             this.$Input.addEvents({
@@ -120,12 +134,8 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
             });
 
 
-            this.Loader = new QUILoader({
-                styles: {
-                    background: 'transparent'
-                }
-            }).inject(this.$ResultCtn);
-
+            this.Loader.getElm().setStyle('background', 'transparent');
+            this.Loader.inject(this.$ResultCtn);
 
             this.$created = true;
 
@@ -133,25 +143,21 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
         },
 
         /**
-         * Open the search
-         *
-         * @return {Promise}
+         * event : on open
          */
-        open: function () {
-            if (!this.$Elm) {
-                this.create().inject(document.body);
-            }
+        $onOpen: function () {
+            this.$Container.setStyles({
+                zIndex: this.Background.getElm().getStyle('zIndex') + 1
+            });
 
-            return this.$Background.show().then(function () {
-                return new Promise(function (resolve) {
-                    moofx(this.$Elm).animate({
-                        opacity: 1,
-                        top    : 0
-                    }, {
-                        duration: 250,
-                        callback: resolve
-                    });
-                }.bind(this));
+            return new Promise(function (resolve) {
+                moofx(this.$Container).animate({
+                    opacity: 1,
+                    top    : 0
+                }, {
+                    duration: 250,
+                    callback: resolve
+                });
             }.bind(this)).then(function () {
                 this.$Input.focus();
             }.bind(this));
@@ -162,24 +168,19 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
          *
          * @return {Promise}
          */
-        close: function () {
+        $onClose: function () {
             return new Promise(function (resolve) {
-                moofx(this.$Elm).animate({
+                moofx(this.$Container).animate({
                     opacity: 0,
                     top    : -50
                 }, {
                     duration: 200,
                     callback: function () {
-                        this.$Elm.destroy();
-                        this.$Elm = null;
+                        this.$Container.destroy();
+                        this.$Container = null;
                         resolve();
                     }.bind(this)
                 });
-            }.bind(this)).then(function () {
-                return this.$Background.hide();
-            }.bind(this)).then(function () {
-                this.$Background.destroy();
-                this.$Background = null;
             }.bind(this));
         },
 
