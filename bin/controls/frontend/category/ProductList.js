@@ -576,10 +576,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 history.t = searchParams.tags.join(',');
             }
 
-            if (searchParams.productId) {
-                history.p = parseInt(searchParams.productId);
-            }
-
             switch (this.getAttribute('view')) {
                 case 'detail':
                 case 'list':
@@ -599,6 +595,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 if (Object.getLength(fields)) {
                     history.f = JSON.encode(fields);
                 }
+            }
+
+            if (searchParams.productId) {
+                history   = {};
+                history.p = parseInt(searchParams.productId);
             }
 
             var url = location.pathname;
