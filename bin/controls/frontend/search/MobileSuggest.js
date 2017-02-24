@@ -17,6 +17,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
     'qui/QUI',
     'qui/controls/Control',
     'qui/controls/utils/Background',
+    'qui/controls/loader/Loader',
     'Ajax',
     'Locale',
     'Mustache',
@@ -24,7 +25,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
     'text!package/quiqqer/products/bin/controls/frontend/search/MobileSuggest.html',
     'css!package/quiqqer/products/bin/controls/frontend/search/MobileSuggest.css'
 
-], function (QUI, QUIControl, QUIBackground, QUIAjax, QUILocale, Mustache, template) {
+], function (QUI, QUIControl, QUIBackground, QUILoader, QUIAjax, QUILocale, Mustache, template) {
     "use strict";
 
     var lg      = 'quiqqer/products',
@@ -55,7 +56,8 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
             '$keyup',
             '$search',
             '$renderSearch',
-            '$hideResults'
+            '$hideResults',
+            '$showLoader'
         ],
 
         options: {
@@ -95,12 +97,19 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
                 top    : -50
             });
 
-            this.$Background = new QUIBackground();
+            this.$Background = new QUIBackground({
+                opacity: 0.85,
+                styles : {
+                    backgroundColor: '#1a1c1d'
+                }
+            });
+
             this.$Background.inject(document.body);
 
-            this.$Close  = this.$Elm.getElement('.quiqqer-products-mobileSuggest-close');
-            this.$Input  = this.$Elm.getElement('.quiqqer-products-mobileSuggest-search input');
-            this.$Result = this.$Elm.getElement('.quiqqer-products-mobileSuggest-results');
+            this.$Close     = this.$Elm.getElement('.quiqqer-products-mobileSuggest-close');
+            this.$Input     = this.$Elm.getElement('.quiqqer-products-mobileSuggest-search input');
+            this.$Result    = this.$Elm.getElement('.quiqqer-products-mobileSuggest-results');
+            this.$ResultCtn = this.$Elm.getElement('.quiqqer-products-mobileSuggest-results-container');
 
             this.$Close.addEvents({
                 click: this.close
@@ -109,6 +118,14 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
             this.$Input.addEvents({
                 keyup: this.$keyup
             });
+
+
+            this.Loader = new QUILoader({
+                styles: {
+                    background: 'transparent'
+                }
+            }).inject(this.$ResultCtn);
+
 
             this.$created = true;
 
@@ -179,14 +196,17 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
                 clearTimeout(this.$timer);
             }
 
+            var ShowLoader = this.$showLoader();
+
             this.$timer = (function () {
                 if (this.$Input.value === '') {
                     return this.$hideResults();
                 }
-                this.$search().then(this.$renderSearch);
+
+                ShowLoader.then(this.$search)
+                          .then(this.$renderSearch);
             }).delay(this.getAttribute('delay'), this);
         },
-
 
         /**
          * Execute search
@@ -215,7 +235,6 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
          * @return {Promise}
          */
         $renderSearch: function (data) {
-            console.warn(data);
             if (data === '') {
                 this.$Result.set(
                     'html',
@@ -227,9 +246,6 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
 
                 return this.$showResults();
             }
-
-            console.log(this.$Result);
-            console.log(data);
 
             this.$Result.set('html', data);
 
@@ -257,15 +273,17 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
          * @returns {Promise}
          */
         $showResults: function () {
-            return new Promise(function (resolve) {
-                this.$Result.setStyle('display', null);
+            return this.Loader.hide().then(function () {
+                return new Promise(function (resolve) {
+                    this.$Result.setStyle('display', null);
 
-                moofx(this.$Result).animate({
-                    opacity: 1
-                }, {
-                    duration: 200,
-                    callback: resolve
-                });
+                    moofx(this.$Result).animate({
+                        opacity: 1
+                    }, {
+                        duration: 200,
+                        callback: resolve
+                    });
+                }.bind(this));
             }.bind(this));
         },
 
@@ -286,6 +304,17 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
                         resolve();
                     }.bind(this)
                 });
+            }.bind(this));
+        },
+
+        /**
+         * Shows the loader and hide the results
+         *
+         * @returns {Promise}
+         */
+        $showLoader: function () {
+            return this.$hideResults().then(function () {
+                return this.Loader.show();
             }.bind(this));
         }
     });

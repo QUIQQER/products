@@ -144,7 +144,11 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
             require([
                 'package/quiqqer/products/bin/controls/frontend/search/MobileSuggest'
             ], function (MobileSuggest) {
-                this.$MobileSuggest = new MobileSuggest();
+                this.$MobileSuggest = new MobileSuggest({
+                    project     : this.getAttribute('project'),
+                    lang        : this.getAttribute('lang'),
+                    globalsearch: this.getAttribute('globalsearch')
+                });
             }.bind(this), function (err) {
                 console.error(err);
             });
