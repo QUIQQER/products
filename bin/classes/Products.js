@@ -189,7 +189,7 @@ define('package/quiqqer/products/bin/classes/Products', [
         /**
          * Return products for a grid
          *
-         * @param {String} params - Grid params
+         * @param {Object} params - Grid params
          * @returns {Promise}
          */
         getList: function (params) {

@@ -7,8 +7,9 @@
  * @require qui/QUI
  * @require qui/controls/Control
  * @require Ajax
+ * @require Locale
+ * @require URI
  */
-
 define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
 
     'qui/QUI',
@@ -66,10 +67,23 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
             this.$Form   = null;
             this.$loaded = false;
 
+            this.$isMobile   = false;
+            this.$isImported = false;
+
+            this.$MobileSuggest = null;
+
             this.addEvents({
                 onImport: this.$onImport,
                 onInject: this.$onInject
             });
+
+            var isMobile = function () {
+                var winX       = QUI.getWindowSize().x;
+                this.$isMobile = (winX < 768);
+            }.bind(this);
+
+            QUI.addEvent('resize', isMobile);
+            isMobile();
         },
 
         /**
@@ -88,7 +102,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
         },
 
         /**
-         *
+         * event : on inject
          */
         $onInject: function () {
             // look if template exists in html
@@ -117,10 +131,40 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
          * event: on import
          */
         $onImport: function () {
-            this.$Form  = this.$Elm.getElement('form');
-            this.$Input = this.$Form.getElement('[type="search"]');
+            if (this.$isImported) {
+                return;
+            }
+
+            this.$isImported = true;
+
+            this.$Form   = this.$Elm.getElement('form');
+            this.$Input  = this.$Form.getElement('[type="search"]');
+            this.$Button = this.$Form.getElement('.quiqqer-products-search-suggest-form-button');
+
+            require([
+                'package/quiqqer/products/bin/controls/frontend/search/MobileSuggest'
+            ], function (MobileSuggest) {
+                this.$MobileSuggest = new MobileSuggest({
+                    project     : this.getAttribute('project'),
+                    lang        : this.getAttribute('lang'),
+                    globalsearch: this.getAttribute('globalsearch')
+                });
+            }.bind(this), function (err) {
+                console.error(err);
+            });
+
+            this.$Button.addEvent('click', function () {
+                if (this.$isMobile && this.$MobileSuggest) {
+                    this.$MobileSuggest.open();
+                }
+            }.bind(this));
 
             this.$Form.addEvent('submit', function (event) {
+                if (this.$isMobile) {
+                    event.stop();
+                    return;
+                }
+
                 var Active = this.$DropDown.getElement('li.active');
 
                 if (Active) {

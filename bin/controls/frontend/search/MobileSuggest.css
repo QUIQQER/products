@@ -1,0 +1,97 @@
+.quiqqer-products-mobileSuggest {
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1001;
+}
+
+.quiqqer-products-mobileSuggest-container {
+    height: calc(100% - 200px);
+    margin: 80px auto;
+    max-width: 600px;
+    width: calc(100% - 40px);
+}
+
+.quiqqer-products-mobileSuggest-container input {
+    background: #303134;
+    border: 2px solid #646567;
+    border-radius: 3px !important;
+    color: #fff;
+    width: 100%;
+}
+
+.quiqqer-products-mobileSuggest-container input:focus {
+    border: 2px solid #DEDEDE;
+    outline: none;
+}
+
+.quiqqer-products-mobileSuggest-close {
+    color: #fff;
+    cursor: pointer;
+    font-size: 40px;
+    line-height: 40px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 40px;
+}
+
+.quiqqer-products-mobileSuggest-results-container {
+    clear: both;
+    color: #fff;
+    float: left;
+    height: 100%;
+    margin-top: 20px;
+    min-height: 200px;
+    position: relative;
+    width: 100%;
+}
+
+.quiqqer-products-mobileSuggest-results {
+    clear: both;
+    color: #fff;
+    float: left;
+    height: calc(100% - 30px);
+    overflow: auto;
+    width: 100%;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.quiqqer-products-mobileSuggest-results-noresult {
+    display: inline-block;
+    font-size: 18px;
+    text-align: center;
+    width: 100%;
+}
+
+.quiqqer-products-mobileSuggest-results ul {
+    list-style-type: none;
+    margin: 20px 0;
+}
+
+.quiqqer-products-mobileSuggest-results li {
+    background: #303134;
+    border-top: 1px solid #454649;
+    clear: both;
+    color: #fff;
+    cursor: pointer;
+    float: left;
+    margin-bottom: 5px;
+    padding: 10px;
+    width: 100%;
+}
+
+.quiqqer-products-mobileSuggest-results .quiqqer-products-search-suggest-dropdown-description {
+    padding: 0;
+}
+
+.quiqqer-products-mobileSuggest-results .quiqqer-products-search-suggest-dropdown-icon {
+    width: 100px;
+}
+
+.quiqqer-products-mobileSuggest-results .quiqqer-products-search-suggest-dropdown-text {
+    width: calc(100% - 100px);
+}

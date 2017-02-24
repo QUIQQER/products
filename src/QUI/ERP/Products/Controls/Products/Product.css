@@ -17,6 +17,11 @@
     border: 1px solid #f1f1f1;
 }
 
+.product-gallery .fa-play,
+.product-gallery .fa-random {
+    display: none;
+}
+
 .product-close-button {
     cursor: pointer;
     font-size: 40px;

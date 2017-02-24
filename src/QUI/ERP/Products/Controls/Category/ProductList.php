@@ -131,13 +131,23 @@ class ProductList extends QUI\Control
 
         // category view
         switch ($this->getAttribute('categoryView')) {
+            case 'list':
+                $categoryFile = dirname(__FILE__) . '/ProductListCategoryList.html';
+                break;
+
             default:
             case 'gallery':
                 $categoryFile = dirname(__FILE__) . '/ProductListCategoryGallery.html';
                 break;
+        }
+
+        switch ($this->getAttribute('view')) {
+            case 'detail':
+                $this->setAttribute('data-qui-options-view', 'detail');
+                break;
 
             case 'list':
-                $categoryFile = dirname(__FILE__) . '/ProductListCategoryList.html';
+                $this->setAttribute('data-qui-options-view', 'list');
                 break;
         }
 

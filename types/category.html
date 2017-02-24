@@ -8,6 +8,13 @@
         {if $CategoryMenu->countChildren()}
             {$CategoryMenu->create()}
         {/if}
+
+        {if isset($ProductList)}
+        <header>
+            <h2>Filter</h2>
+        </header>
+        {$ProductList->createFilter()}
+        {/if}
     </div>
     {/if}
 
@@ -57,10 +64,10 @@
                     <h1>{$Site->getAttribute('title')}</h1>
                 </header>
 
-                {if $Site->getAttribute('short')}
-                <div class="page-content-short">
-                    {$Site->getAttribute('short')}
-                </div>
+                {if $Site->getAttribute('content')}
+                <section class="content-body quiqqer-category-content">
+                    {$Site->getAttribute('content')}
+                </section>
                 {/if}
             {/if}
         {/if}

@@ -19,6 +19,7 @@
   "require": {
     "php": ">=5.3",
     "quiqqer\/quiqqer": "1.*|dev-master|dev-dev",
+    "quiqqer\/erp": "dev-master|dev-dev",
     "quiqqer\/areas": "1.*|dev-master|dev-dev",
     "quiqqer\/bricks": ">=0.9|dev-master|dev-dev",
     "quiqqer\/currency": "1.*|dev-master|dev-dev",

@@ -9,15 +9,19 @@
  * @require qui/controls/Control
  * @require qui/controls/buttons/Select
  * @require qui/controls/buttons/Button
+ * @require qui/controls/windows/Popup
+ * @require qui/controls/loader/Loader
+ * @require qui/utils/Elements
  * @require package/quiqqer/products/bin/Search
  * @require package/quiqqer/products/bin/controls/search/SearchField
  * @require Ajax
  * @require Locale
+ * @require URI
  * @require package/quiqqer/products/bin/controls/frontend/category/ProductListFilter
+ * @require package/quiqqer/products/bin/controls/frontend/category/ProductListField
  *
  * @event onFilterChange [self]
  */
-
 define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
     'qui/QUI',
@@ -187,8 +191,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 'class': 'quiqqer-products-productList-loader',
                 'html' : '<span class="fa fa-spinner fa-spin"></span>',
                 styles : {
-                    display: 'none',
-                    opacity: 0
+                    display  : 'none',
+                    marginTop: 20,
+                    opacity  : 0
                 }
             }).inject(this.$Container);
 
@@ -571,10 +576,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 history.t = searchParams.tags.join(',');
             }
 
-            if (searchParams.productId) {
-                history.p = parseInt(searchParams.productId);
-            }
-
             switch (this.getAttribute('view')) {
                 case 'detail':
                 case 'list':
@@ -594,6 +595,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 if (Object.getLength(fields)) {
                     history.f = JSON.encode(fields);
                 }
+            }
+
+            if (searchParams.productId) {
+                history   = {};
+                history.p = parseInt(searchParams.productId);
             }
 
             var url = location.pathname;
@@ -687,6 +693,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$ButtonGallery.addClass('active');
             this.setAttribute('view', 'gallery');
 
+            // set view to the session
+            QUIAjax.post('ajax_session_set', function () {
+            }, {
+                key  : 'productView',
+                value: 'gallery'
+            });
+
             this.$setWindowLocation();
         },
 
@@ -704,6 +717,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$ButtonDetails.addClass('active');
             this.setAttribute('view', 'detail');
 
+            // set view to the session
+            QUIAjax.post('ajax_session_set', function () {
+            }, {
+                key  : 'productView',
+                value: 'detail'
+            });
+
             this.$setWindowLocation();
         },
 
@@ -720,6 +740,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.resetButtons();
             this.$ButtonList.addClass('active');
             this.setAttribute('view', 'list');
+
+            // set view to the session
+            QUIAjax.post('ajax_session_set', function () {
+            }, {
+                key  : 'productView',
+                value: 'list'
+            });
 
             this.$setWindowLocation();
         },
@@ -1947,6 +1974,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 position: 'relative'
             });
 
+            if (this.$Elm.getPrevious('.content-body')) {
+                children.push(this.$Elm.getPrevious('.content-body'));
+            }
+
             if (this.$Elm.getPrevious('.page-content-short')) {
                 children.push(this.$Elm.getPrevious('.page-content-short'));
             }
@@ -2050,9 +2081,14 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                     var children = self.$Elm.getChildren();
 
+                    if (self.$Elm.getPrevious('.content-body')) {
+                        children.push(self.$Elm.getPrevious('.content-body'));
+                    }
+
                     if (self.$Elm.getPrevious('.page-content-short')) {
                         children.push(self.$Elm.getPrevious('.page-content-short'));
                     }
+
                     if (self.$Elm.getPrevious('.page-content-header')) {
                         children.push(self.$Elm.getPrevious('.page-content-header'));
                     }
