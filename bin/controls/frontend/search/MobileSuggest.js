@@ -53,7 +53,9 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
             'open',
             'close',
             '$keyup',
-            '$search'
+            '$search',
+            '$renderSearch',
+            '$hideResults'
         ],
 
         options: {
@@ -68,12 +70,12 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
             this.parent(options);
 
             this.$Background = null;
-
-            this.$Close = null;
-            this.$Input = null;
-            this.$timer = null;
+            this.$Close      = null;
+            this.$Input      = null;
+            this.$Result     = null;
 
             this.$created = false;
+            this.$timer   = null;
         },
 
         /**
@@ -96,8 +98,9 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
             this.$Background = new QUIBackground();
             this.$Background.inject(document.body);
 
-            this.$Close = this.$Elm.getElement('.quiqqer-products-mobileSuggest-close');
-            this.$Input = this.$Elm.getElement('.quiqqer-products-mobileSuggest-search input');
+            this.$Close  = this.$Elm.getElement('.quiqqer-products-mobileSuggest-close');
+            this.$Input  = this.$Elm.getElement('.quiqqer-products-mobileSuggest-search input');
+            this.$Result = this.$Elm.getElement('.quiqqer-products-mobileSuggest-results');
 
             this.$Close.addEvents({
                 click: this.close
@@ -205,8 +208,65 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
             }.bind(this));
         },
 
-        $renderSearch: function () {
+        /**
+         * set the results to the dropdown
+         *
+         * @param {string} data
+         * @return {Promise}
+         */
+        $renderSearch: function (data) {
+            console.warn(data);
+            if (data === '') {
+                this.$Result.set(
+                    'html',
 
+                    '<span class="quiqqer-products-mobileSuggest-results-noresult">' +
+                    QUILocale.get(lg, 'message.product.search.empty') +
+                    '</span>'
+                );
+
+                return this.$showResults();
+            }
+
+            console.log(this.$Result);
+            console.log(data);
+
+            this.$Result.set('html', data);
+
+            this.$Result.getElements('li').addEvents({
+                mousedown: function (event) {
+                    event.stop();
+                },
+                click    : function (event) {
+                    var Target = event.target;
+
+                    if (Target.nodeName !== 'LI') {
+                        Target = Target.getParent('li');
+                    }
+
+                    window.location = Target.get('data-url');
+                }
+            });
+
+            return this.$showResults();
+        },
+
+        /**
+         * Show the results dropdown
+         *
+         * @returns {Promise}
+         */
+        $showResults: function () {
+            return new Promise(function (resolve) {
+                this.$Result.setStyle('display', null);
+
+                moofx(this.$Result).animate({
+                    opacity: 1
+                }, {
+                    duration: 200,
+                    callback: resolve
+                });
+            }.bind(this));
         },
 
 
@@ -217,12 +277,12 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
          */
         $hideResults: function () {
             return new Promise(function (resolve) {
-                moofx(this.$DropDown).animate({
+                moofx(this.$Result).animate({
                     opacity: 0
                 }, {
                     duration: 200,
                     callback: function () {
-                        this.$DropDown.setStyle('display', 'none');
+                        this.$Result.setStyle('display', 'none');
                         resolve();
                     }.bind(this)
                 });

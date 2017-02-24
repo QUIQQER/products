@@ -26,3 +26,18 @@
     top: 10px;
     width: 40px;
 }
+
+.quiqqer-products-mobileSuggest-results {
+    clear: both;
+    color: #fff;
+    float: left;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.quiqqer-products-mobileSuggest-results-noresult {
+    display: inline-block;
+    font-size: 18px;
+    text-align: center;
+    width: 100%;
+}
