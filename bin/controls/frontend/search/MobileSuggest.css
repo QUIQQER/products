@@ -56,6 +56,8 @@
     height: calc(100% - 30px);
     overflow: auto;
     width: 100%;
+
+    -webkit-overflow-scrolling: touch;
 }
 
 .quiqqer-products-mobileSuggest-results-noresult {

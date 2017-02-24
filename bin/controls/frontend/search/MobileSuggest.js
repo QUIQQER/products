@@ -19,6 +19,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
     'qui/controls/utils/Background',
     'qui/controls/loader/Loader',
     'qui/controls/windows/Popup',
+    'qui/utils/System',
     'Ajax',
     'Locale',
     'Mustache',
@@ -26,10 +27,11 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
     'text!package/quiqqer/products/bin/controls/frontend/search/MobileSuggest.html',
     'css!package/quiqqer/products/bin/controls/frontend/search/MobileSuggest.css'
 
-], function (QUI, QUIControl, QUIBackground, QUILoader, QUIPopup, QUIAjax, QUILocale, Mustache, template) {
+], function (QUI, QUIControl, QUIBackground, QUILoader, QUIPopup, QUISystemUtils, QUIAjax, QUILocale, Mustache, template) {
     "use strict";
 
-    var lg      = 'quiqqer/products',
+    var ios     = QUISystemUtils.iOSversion(),
+        lg      = 'quiqqer/products',
         project = false,
         lang    = false,
         siteid  = false;
@@ -84,6 +86,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
             this.$Close      = null;
             this.$Input      = null;
             this.$Result     = null;
+            this.$ResultCtn  = null;
 
             this.$created = false;
             this.$timer   = null;
@@ -133,6 +136,14 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
                 keyup: this.$keyup
             });
 
+            if (!ios) {
+                this.$Input.set('autofocus', null);
+            } else {
+                this.$Container.setStyles({
+                    opacity: 0,
+                    top    : 0
+                });
+            }
 
             this.Loader.getElm().setStyle('background', 'transparent');
             this.Loader.inject(this.$ResultCtn);
@@ -159,7 +170,9 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
                     callback: resolve
                 });
             }.bind(this)).then(function () {
-                this.$Input.focus();
+                if (!ios) {
+                    this.$Input.focus();
+                }
             }.bind(this));
         },
 
@@ -201,11 +214,10 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
 
             this.$timer = (function () {
                 if (this.$Input.value === '') {
-                    return this.$hideResults();
+                    return this.Loader.hide().then(this.$hideResults);
                 }
 
-                ShowLoader.then(this.$search)
-                          .then(this.$renderSearch);
+                ShowLoader.then(this.$search).then(this.$renderSearch);
             }).delay(this.getAttribute('delay'), this);
         },
 
@@ -245,7 +257,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
                     '</span>'
                 );
 
-                return this.$showResults();
+                return this.Loader.hide().then(this.$showResults);
             }
 
             this.$Result.set('html', data);
@@ -275,6 +287,8 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
          */
         $showResults: function () {
             return this.Loader.hide().then(function () {
+                this.$ResultCtn.setStyle('height', null);
+
                 return new Promise(function (resolve) {
                     this.$Result.setStyle('display', null);
 
@@ -315,6 +329,8 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
          */
         $showLoader: function () {
             return this.$hideResults().then(function () {
+                this.$ResultCtn.setStyle('height', 200);
+
                 return this.Loader.show();
             }.bind(this));
         }
