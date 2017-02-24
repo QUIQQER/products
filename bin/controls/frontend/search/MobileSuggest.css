@@ -1,0 +1,28 @@
+.quiqqer-products-mobileSuggest {
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1001;
+}
+
+.quiqqer-products-mobileSuggest-container {
+    margin: 80px auto;
+    max-width: 600px;
+    width: calc(100% - 40px);
+}
+
+.quiqqer-products-mobileSuggest-container input {
+    width: 100%;
+}
+
+.quiqqer-products-mobileSuggest-close {
+    color: #fff;
+    cursor: pointer;
+    font-size: 40px;
+    line-height: 40px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 40px;
+}

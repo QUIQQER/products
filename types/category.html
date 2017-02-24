@@ -8,6 +8,13 @@
         {if $CategoryMenu->countChildren()}
             {$CategoryMenu->create()}
         {/if}
+
+        {if $ProductList}
+        <header>
+            <h2>Filter</h2>
+        </header>
+        {$ProductList->createFilter()}
+        {/if}
     </div>
     {/if}
 
@@ -58,7 +65,7 @@
                 </header>
 
                 {if $Site->getAttribute('content')}
-                <section class="content-body grid-100 mobile-grid-100">
+                <section class="content-body quiqqer-category-content">
                     {$Site->getAttribute('content')}
                 </section>
                 {/if}
