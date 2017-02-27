@@ -189,6 +189,16 @@
     width: 100%;
 }
 
+.product-data-more-prev,
+.product-data-more-next {
+    cursor: pointer;
+    display: none;
+    float: left;
+    line-height: 50px;
+    text-align: center;
+    width: 20px;
+}
+
 .product-data-more-tabs {
     display: inline-block;
     float: left;

@@ -43,8 +43,10 @@
     {assign var=ContentField value=$Product->getField(6)}
 
     <div class="product-data-more">
+        <div class="product-data-more-prev">
+            <span class="fa fa-angle-left"></span>
+        </div>
         <div class="product-data-more-tabsContainer">
-
             <ul class="product-data-more-tabs" role="tablist">
                 {if $ContentField}
                 <li class="product-data-more-tabs-tab active"
@@ -74,7 +76,9 @@
                 </li>
                 {/foreach}
             </ul>
-
+        </div>
+        <div class="product-data-more-next">
+            <span class="fa fa-angle-right"></span>
         </div>
 
         <div class="product-data-more-sheets">
