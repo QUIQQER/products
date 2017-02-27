@@ -113,6 +113,9 @@ class Product extends QUI\Control
 
             if ($Field->getType() == Fields::TYPE_ATTRIBUTE_LIST
                 || $Field->getType() == Fields::TYPE_FOLDER
+                || $Field->getType() == Fields::TYPE_PRODCUCTS
+                || $Field->getType() == Fields::TYPE_PRICE
+                || $Field->getType() == Fields::TYPE_PRICE_BY_QUANTITY
                 || $Field->getType() == Fields::TYPE_IMAGE
                 || $Field->getType() == Fields::TYPE_TEXTAREA
                 || $Field->getType() == Fields::TYPE_TEXTAREA_MULTI_LANG
@@ -133,7 +136,8 @@ class Product extends QUI\Control
 
         // file / image folders
         $detailFields = array();
-        $fieldsList   = array_merge(
+
+        $fieldsList = array_merge(
             $Product->getFieldsByType(Fields::TYPE_FOLDER),
             $Product->getFieldsByType(Fields::TYPE_TEXTAREA),
             $Product->getFieldsByType(Fields::TYPE_TEXTAREA_MULTI_LANG)
@@ -141,11 +145,9 @@ class Product extends QUI\Control
 
         /* @var $Field QUI\ERP\Products\Field\Types\Folder */
         foreach ($fieldsList as $Field) {
-            if ($Field->getId() == Fields::FIELD_FOLDER) {
-                continue;
-            }
-
-            if ($Field->getId() == Fields::FIELD_CONTENT) {
+            if ($Field->getId() == Fields::FIELD_FOLDER
+                || $Field->getId() == Fields::FIELD_CONTENT
+            ) {
                 continue;
             }
 
