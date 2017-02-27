@@ -181,11 +181,22 @@
     width: 100%;
 }
 
+.product-data-more-tabsContainer {
+    float: left;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    position: relative;
+    width: 100%;
+}
+
 .product-data-more-tabs {
+    display: inline-block;
     float: left;
     list-style-type: none;
     margin: 0 !important;
     padding: 0;
+    position: relative;
+    white-space: nowrap;
     width: 100%;
 }
 
@@ -194,7 +205,8 @@
     border-style: solid;
     border-width: 1px 1px 0 1px;
     cursor: pointer;
-    float: left;
+    display: inline-block;
+    float: none;
     line-height: 50px;
     padding: 0 20px;
 }
