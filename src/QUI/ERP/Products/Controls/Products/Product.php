@@ -158,20 +158,36 @@ class Product extends QUI\Control
             $detailFields[] = $Field;
         }
 
-        // ChildrenSlider
-        $SimilarProductField = $Product->getField(Fields::FIELD_SIMILAR_PRODUCTS);
+        // product fields
+        $productFields = array();
 
-        if ($SimilarProductField && $SimilarProductField->getValue()) {
-            $SimilarProducts = new ChildrenSlider();
-            $SimilarProducts->addProducts(
-                $Product->getFieldValue(Fields::FIELD_SIMILAR_PRODUCTS)
+        $productFieldList = array_filter($View->getFields(), function ($Field) {
+            /* @var $Field QUI\ERP\Products\Field\View */
+            if ($Field->getType() == Fields::TYPE_PRODCUCTS) {
+                return true;
+            }
+
+            return false;
+        });
+
+        foreach ($productFieldList as $Field) {
+            /* @var $Field QUI\ERP\Products\Field\View */
+            if (!$Field->getValue()) {
+                continue;
+            }
+
+            $Slider = new ChildrenSlider();
+            $Slider->addProducts($Field->getValue());
+
+            $productFields[] = array(
+                'Field'  => $Field,
+                'Slider' => $Slider
             );
-
-            $Engine->assign(array(
-                'SimilarProducts'     => $SimilarProducts,
-                'SimilarProductField' => $SimilarProductField->getView()
-            ));
         }
+
+        $Engine->assign(array(
+            'productFields' => $productFields
+        ));
 
         $Engine->assign(array(
             'Product'              => $View,
@@ -191,7 +207,10 @@ class Product extends QUI\Control
             'MediaUtils'           => new QUI\Projects\Media\Utils()
         ));
 
-        $Engine->assign('buttonsHtml', $Engine->fetch(dirname(__FILE__) . '/Product.Buttons.html'));
+        $Engine->assign(
+            'buttonsHtml',
+            $Engine->fetch(dirname(__FILE__) . '/Product.Buttons.html')
+        );
 
         return $Engine->fetch(dirname(__FILE__) . '/Product.html');
     }
