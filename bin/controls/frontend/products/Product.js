@@ -31,6 +31,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
         Binds: [
             'nextTab',
             'prevTab',
+            'resize',
             '$onInject',
             '$onImport',
             '$tabClick'
@@ -59,6 +60,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 onInject: this.$onInject,
                 onImport: this.$onImport
             });
+
+            QUI.addEvent('resize', this.resize);
         },
 
         /**
