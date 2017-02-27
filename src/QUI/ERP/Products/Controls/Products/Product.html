@@ -133,18 +133,19 @@
         </div>
     </div>
 
-    {if isset($SimilarProducts) && isset($SimilarProductField)}
-    <section class="product-similar-products">
+    {* Product Fields *}
+    {foreach $productFields as $fieldData}
+    <section class="product-fields-products">
         <header>
             <h3>
-                {$SimilarProductField->getTitle()}
+                {$fieldData.Field->getTitle()}
             </h3>
         </header>
-        {$SimilarProducts->create()}
+        {$fieldData.Slider->create()}
     </section>
-    {/if}
+    {/foreach}
 
-    {if isset($VisitedProducts) && isset($VisitedProducts)}
+    {if isset($VisitedProducts)}
     <section class="product-similar-products">
         <header>
             <h3>

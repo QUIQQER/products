@@ -372,6 +372,7 @@
     width: 50px;
 }
 
+.product-fields-products,
 .product-similar-products {
     clear: both;
     float: left;
@@ -379,6 +380,7 @@
     width: 100%;
 }
 
+.product-fields-products header,
 .product-similar-products header {
     padding-bottom: 20px;
 }
