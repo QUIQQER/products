@@ -49,8 +49,14 @@ class Product extends QUI\Control
         $Calc    = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
-            $View  = $Product->getView();
-            $Price = $Calc->getProductPrice($Product->createUniqueProduct($Calc));
+            $View = $Product->getView();
+
+            try {
+                $Price = $Calc->getProductPrice($Product->createUniqueProduct($Calc));
+            } catch (QUI\Exception $Exception) {
+                $Price = null;
+                QUI\System\Log::writeException($Exception);
+            }
         } else {
             $View  = $Product;
             $Price = $Product->getPrice();

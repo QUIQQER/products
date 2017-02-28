@@ -1148,6 +1148,14 @@ class Model extends QUI\QDOM
 
             $fieldColumnName        = SearchHandler::getSearchFieldColumnName($Field);
             $data[$fieldColumnName] = $Field->getSearchCacheValue($Locale);
+
+            if ($Field->getId() == Fields::FIELD_PRIORITY
+                && empty($data[$fieldColumnName])
+            ) {
+                // in 10 Jahren darf mor das fixen xD
+                // null und 0 wird als letztes angezeigt
+                $data[$fieldColumnName] = 999999;
+            }
         }
 
         foreach ($data as $k => $v) {

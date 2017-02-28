@@ -79,6 +79,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/VisitedProducts'
                         'ul.quiqqer-bricks-children-slider-container-slide'
                     );
 
+                    if (!List) {
+                        List = new Element('ul');
+                    }
+
                     var Result = List.getElements('li');
 
                     if (!Result.length) {

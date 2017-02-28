@@ -1082,8 +1082,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Calculates a range with individual steps between a min and a max number
      *
-     * @param number $min
-     * @param number $max
+     * @param integer|float $min
+     * @param integer|float $max
      * @return array - contains values from min to max with calculated steps inbetween
      */
     public function calculateValueRange($min, $max)
