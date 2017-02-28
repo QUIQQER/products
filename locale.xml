@@ -241,6 +241,16 @@
             <de><![CDATA[Ein vom System bereitgestelltest Feld. Diese Felder sind nicht löschbar.]]></de>
             <en><![CDATA[A provided field by the system. These fields can not be deleted.]]></en>
         </locale>
+
+        <locale name="showInDetails">
+            <de><![CDATA[In Details anzeigen]]></de>
+            <en><![CDATA[Show in details]]></en>
+        </locale>
+        <locale name="showInDetailsDesc">
+            <de><![CDATA[Legt fest ob dieses Feld in den Produktdetails angezeigt werden soll oder nicht.]]></de>
+            <en><![CDATA[Specifies whether this field should be displayed in the product details or not.]]></en>
+        </locale>
+
         <locale name="standardField">
             <de><![CDATA[Standardfeld]]></de>
             <en><![CDATA[Standard field]]></en>

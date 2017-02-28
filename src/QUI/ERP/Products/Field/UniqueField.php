@@ -111,6 +111,11 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     protected $isRequired = false;
 
     /**
+     * @var bool
+     */
+    protected $showInDetails = false;
+
+    /**
      * a field in the product, but not in any category from the product
      *
      * @var boolean
@@ -154,11 +159,16 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'unassigned',
             'value',
             'ownField',
+            'showInDetails',
             'searchvalue'
         );
 
         if (!isset($params['isPublic'])) {
             $this->isPublic = true;
+        }
+
+        if (!isset($params['showInDetails'])) {
+            $this->showInDetails = true;
         }
 
         foreach ($attributes as $attribute) {
@@ -331,13 +341,14 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'isSystem'   => $this->isSystem(),
             'isPublic'   => $this->isPublic(),
 
-            'prefix'      => $this->prefix,
-            'suffix'      => $this->suffix,
-            'priority'    => $this->priority,
-            'custom'      => $this->isCustomField(),
-            'custom_calc' => $this->custom_calc,
-            'unassigned'  => $this->isUnassigned(),
-            'value'       => $this->getValue()
+            'prefix'        => $this->prefix,
+            'suffix'        => $this->suffix,
+            'priority'      => $this->priority,
+            'custom'        => $this->isCustomField(),
+            'custom_calc'   => $this->custom_calc,
+            'unassigned'    => $this->isUnassigned(),
+            'value'         => $this->getValue(),
+            'showInDetails' => $this->showInDetails()
         );
     }
 
@@ -381,5 +392,15 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     public function isPublic()
     {
         return $this->isPublic;
+    }
+
+    /**
+     * Show the fields in the details?
+     *
+     * @return boolean
+     */
+    public function showInDetails()
+    {
+        return $this->showInDetails;
     }
 }

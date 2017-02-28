@@ -75,6 +75,12 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $searchable = true;
 
     /**
+     * Should the field be displayed in the details?
+     * @var bool
+     */
+    protected $showInDetails = false;
+
+    /**
      * @var string
      */
     protected $type = null;
@@ -149,6 +155,12 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             && (is_bool($params['standard']) || is_int($params['standard']))
         ) {
             $this->standard = $params['standard'] ? true : false;
+        }
+
+        if (isset($params['showInDetails'])
+            && (is_bool($params['showInDetails']) || is_int($params['showInDetails']))
+        ) {
+            $this->showInDetails = $params['showInDetails'] ? true : false;
         }
 
         if (isset($params['defaultValue'])) {
@@ -282,6 +294,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             'systemField'   => $this->isSystem() ? 1 : 0,
             'requiredField' => $this->isRequired() ? 1 : 0,
             'publicField'   => $this->isPublic() ? 1 : 0,
+            'showInDetails' => $this->showInDetails() ? 1 : 0,
             'defaultValue'  => $defaultValue
         );
 
@@ -290,6 +303,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 || $attribute == 'systemField'
                 || $attribute == 'requiredField'
                 || $attribute == 'publicField'
+                || $attribute == 'showInDetails'
             ) {
                 continue;
             }
@@ -542,6 +556,31 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Set the show in details field status
+     * Should the field be displayed in the details or not.
+     *
+     * @param boolean $status
+     */
+    public function setShowInDetailsStatus($status)
+    {
+        if (!is_bool($status)) {
+            $status = (bool)$status;
+        }
+
+        $this->showInDetails = $status;
+    }
+
+    /**
+     * Should the field be displayed in the details?
+     *
+     * @return bool
+     */
+    public function showInDetails()
+    {
+        return $this->showInDetails;
+    }
+
+    /**
      * Set the unassigned status
      *
      * @param boolean $status
@@ -680,6 +719,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
             case 'publicField':
                 $this->public = $val ? true : false;
+                return $this;
+
+            case 'showInDetails':
+                $this->showInDetails = $val ? true : false;
                 return $this;
 
             default:
@@ -963,15 +1006,16 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['searchvalue']  = $this->getSearchCacheValue();
         $attributes['defaultValue'] = $this->getDefaultValue();
 
-        $attributes['custom']     = $this->isCustomField();
-        $attributes['unassigned'] = $this->isUnassigned();
-        $attributes['isRequired'] = $this->isRequired();
-        $attributes['isStandard'] = $this->isStandard();
-        $attributes['isSystem']   = $this->isSystem();
-        $attributes['isPublic']   = $this->isPublic();
-        $attributes['searchable'] = $this->isSearchable();
-        $attributes['ownField']   = $this->isOwnField();
-        $attributes['jsSettings'] = '';
+        $attributes['custom']        = $this->isCustomField();
+        $attributes['unassigned']    = $this->isUnassigned();
+        $attributes['isRequired']    = $this->isRequired();
+        $attributes['isStandard']    = $this->isStandard();
+        $attributes['isSystem']      = $this->isSystem();
+        $attributes['isPublic']      = $this->isPublic();
+        $attributes['searchable']    = $this->isSearchable();
+        $attributes['ownField']      = $this->isOwnField();
+        $attributes['showInDetails'] = $this->showInDetails();
+        $attributes['jsSettings']    = '';
 
         if (method_exists($this, 'getJavaScriptSettings')) {
             $attributes['jsSettings'] = $this->getJavaScriptSettings();
@@ -1017,12 +1061,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     public function toProductArray()
     {
         return array(
-            'id'         => $this->getId(),
-            'value'      => $this->getValue(),
-            'unassigned' => $this->isUnassigned(),
-            'ownField'   => $this->isOwnField(),
-            'isPublic'   => $this->isPublic(),
-            'isRequired' => $this->isRequired()
+            'id'            => $this->getId(),
+            'value'         => $this->getValue(),
+            'unassigned'    => $this->isUnassigned(),
+            'ownField'      => $this->isOwnField(),
+            'isPublic'      => $this->isPublic(),
+            'isRequired'    => $this->isRequired(),
+            'showInDetails' => $this->showInDetails()
         );
     }
 

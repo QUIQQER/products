@@ -76,25 +76,27 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
             Elm.set({
                 'class': 'field-create',
                 html   : Mustache.render(template, {
-                    contentText      : '',
-                    tableHeader      : QUILocale.get(lg, 'control.field.create.header'),
-                    fieldTitle       : QUILocale.get('quiqqer/system', 'title'),
-                    fieldWorkingTitle: QUILocale.get(lg, 'workingTitle'),
-                    fieldType        : QUILocale.get(lg, 'fieldtype'),
-                    fieldOptions     : QUILocale.get(lg, 'fieldoptions'),
-                    fieldPriority    : QUILocale.get(lg, 'priority'),
-                    fieldPrefix      : QUILocale.get(lg, 'prefix'),
-                    fieldSuffix      : QUILocale.get(lg, 'suffix'),
-                    fieldSearchtype  : QUILocale.get(lg, 'searchtype'),
-                    fieldRequired    : QUILocale.get(lg, 'requiredField'),
-                    fieldRequiredDesc: QUILocale.get(lg, 'requiredFieldDesc'),
-                    fieldSystem      : QUILocale.get(lg, 'systemField'),
-                    fieldSystemDesc  : QUILocale.get(lg, 'systemFieldDesc'),
-                    fieldStandard    : QUILocale.get(lg, 'standardField'),
-                    fieldStandardDesc: QUILocale.get(lg, 'standardFieldDesc'),
-                    fieldPublic      : QUILocale.get(lg, 'publicField'),
-                    fieldPublicDesc  : QUILocale.get(lg, 'publicFieldDesc'),
-                    fieldDefaultValue: QUILocale.get(lg, 'fieldDefaultValue')
+                    contentText                : '',
+                    tableHeader                : QUILocale.get(lg, 'control.field.create.header'),
+                    fieldTitle                 : QUILocale.get('quiqqer/system', 'title'),
+                    fieldWorkingTitle          : QUILocale.get(lg, 'workingTitle'),
+                    fieldType                  : QUILocale.get(lg, 'fieldtype'),
+                    fieldOptions               : QUILocale.get(lg, 'fieldoptions'),
+                    fieldPriority              : QUILocale.get(lg, 'priority'),
+                    fieldPrefix                : QUILocale.get(lg, 'prefix'),
+                    fieldSuffix                : QUILocale.get(lg, 'suffix'),
+                    fieldSearchtype            : QUILocale.get(lg, 'searchtype'),
+                    fieldRequired              : QUILocale.get(lg, 'requiredField'),
+                    fieldRequiredDesc          : QUILocale.get(lg, 'requiredFieldDesc'),
+                    fieldSystem                : QUILocale.get(lg, 'systemField'),
+                    fieldSystemDesc            : QUILocale.get(lg, 'systemFieldDesc'),
+                    fieldStandard              : QUILocale.get(lg, 'standardField'),
+                    fieldStandardDesc          : QUILocale.get(lg, 'standardFieldDesc'),
+                    fieldPublic                : QUILocale.get(lg, 'publicField'),
+                    fieldPublicDesc            : QUILocale.get(lg, 'publicFieldDesc'),
+                    fieldDefaultValue          : QUILocale.get(lg, 'fieldDefaultValue'),
+                    fieldShowInDetails         : QUILocale.get(lg, 'showInDetails'),
+                    fieldfieldShowInDetailsDesc: QUILocale.get(lg, 'showInDetailsDesc')
                 })
             });
 
@@ -110,13 +112,15 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 id   = this.getAttribute('fieldId');
 
             this.$Translation = new Translation({
-                'group': 'quiqqer/products',
-                'var'  : 'products.field.' + id + '.title'
+                'group'  : 'quiqqer/products',
+                'var'    : 'products.field.' + id + '.title',
+                'package': 'quiqqer/products'
             }).inject(Elm.getElement('.field-title'));
 
             this.$WorkingTitle = new Translation({
-                'group': 'quiqqer/products',
-                'var'  : 'products.field.' + id + '.workingtitle'
+                'group'  : 'quiqqer/products',
+                'var'    : 'products.field.' + id + '.workingtitle',
+                'package': 'quiqqer/products'
             }).inject(Elm.getElement('.field-workingtitle'));
 
             Promise.all([
@@ -127,19 +131,20 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
             ]).then(function (result) {
                 var i, len, settings;
 
-                var fieldTypes    = result[1],
-                    fieldData     = result[0],
-                    fieldSettings = result[2],
-                    searchTypes   = result[3],
-                    FieldTypes    = Elm.getElement('[name="type"]'),
-                    FieldOptions  = Elm.getElement('[name="options"]'),
-                    FieldPriority = Elm.getElement('[name="priority"]'),
-                    FieldPrefix   = Elm.getElement('[name="prefix"]'),
-                    FieldSuffix   = Elm.getElement('[name="suffix"]'),
-                    FieldRequired = Elm.getElement('[name="requiredField"]'),
-                    FieldSystem   = Elm.getElement('[name="systemField"]'),
-                    FieldPublic   = Elm.getElement('[name="publicField"]'),
-                    FieldStandard = Elm.getElement('[name="standardField"]');
+                var fieldTypes         = result[1],
+                    fieldData          = result[0],
+                    fieldSettings      = result[2],
+                    searchTypes        = result[3],
+                    FieldTypes         = Elm.getElement('[name="type"]'),
+                    FieldOptions       = Elm.getElement('[name="options"]'),
+                    FieldPriority      = Elm.getElement('[name="priority"]'),
+                    FieldPrefix        = Elm.getElement('[name="prefix"]'),
+                    FieldSuffix        = Elm.getElement('[name="suffix"]'),
+                    FieldRequired      = Elm.getElement('[name="requiredField"]'),
+                    FieldSystem        = Elm.getElement('[name="systemField"]'),
+                    FieldPublic        = Elm.getElement('[name="publicField"]'),
+                    FieldShowInDetails = Elm.getElement('[name="showInDetails"]'),
+                    FieldStandard      = Elm.getElement('[name="standardField"]');
 
                 fieldTypes.sort(function (a, b) {
                     var aField = QUILocale.get(a.locale[0], a.locale[1]);
@@ -226,10 +231,11 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 FieldPrefix.value   = fieldData.prefix;
                 FieldSuffix.value   = fieldData.suffix;
 
-                FieldRequired.checked = fieldData.isRequired;
-                FieldSystem.checked   = fieldData.isSystem;
-                FieldStandard.checked = fieldData.isStandard;
-                FieldPublic.checked   = fieldData.isPublic;
+                FieldRequired.checked      = fieldData.isRequired;
+                FieldSystem.checked        = fieldData.isSystem;
+                FieldStandard.checked      = fieldData.isStandard;
+                FieldPublic.checked        = fieldData.isPublic;
+                FieldShowInDetails.checked = fieldData.showInDetails;
 
                 var loadSettings = function () {
                     self.$loadSettings(this);
@@ -297,6 +303,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                         standardField: Form.elements.standardField.checked ? 1 : 0,
                         requiredField: Form.elements.requiredField.checked ? 1 : 0,
                         publicField  : Form.elements.publicField.checked ? 1 : 0,
+                        showInDetails: Form.elements.showInDetails.checked ? 1 : 0,
                         options      : Form.elements.options.value,
                         defaultValue : defaultValue
                     });
@@ -491,8 +498,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                             computed = Container.getComputedSize();
 
                         height = height +
-                                 computed['padding-top'] +
-                                 computed['padding-bottom'];
+                            computed['padding-top'] +
+                            computed['padding-bottom'];
 
                         moofx(Label).animate({
                             height: height

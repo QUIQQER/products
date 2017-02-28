@@ -116,4 +116,11 @@ interface UniqueFieldInterface
      * @return boolean
      */
     public function isPublic();
+
+    /**
+     * Should the field be displayed in the details?
+     *
+     * @return boolean
+     */
+    public function showInDetails();
 }

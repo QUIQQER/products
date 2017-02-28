@@ -66,27 +66,29 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
             Elm.set({
                 'class': 'field-create',
                 html   : Mustache.render(template, {
-                    contentText        : '<div class="field-create-header">' +
-                                         QUILocale.get(lg, 'control.field.create.content') +
-                                         '</div>',
-                    tableHeader        : QUILocale.get(lg, 'control.field.create.header'),
-                    fieldTitle         : QUILocale.get('quiqqer/system', 'title'),
-                    fieldWorkingTitle  : QUILocale.get(lg, 'workingTitle'),
-                    fieldType          : QUILocale.get(lg, 'fieldtype'),
-                    fieldPriority      : QUILocale.get(lg, 'priority'),
-                    fieldPrefix        : QUILocale.get(lg, 'prefix'),
-                    fieldSuffix        : QUILocale.get(lg, 'suffix'),
-                    fieldSearchtype    : QUILocale.get(lg, 'searchtype'),
-                    fieldSearchtypeInfo: QUILocale.get(lg, 'fieldSearchtypeInfo'),
-                    fieldRequired      : QUILocale.get(lg, 'requiredField'),
-                    fieldRequiredDesc  : QUILocale.get(lg, 'requiredFieldDesc'),
-                    fieldSystem        : QUILocale.get(lg, 'systemField'),
-                    fieldSystemDesc    : QUILocale.get(lg, 'systemFieldDesc'),
-                    fieldStandard      : QUILocale.get(lg, 'standardField'),
-                    fieldStandardDesc  : QUILocale.get(lg, 'standardFieldDesc'),
-                    fieldPublic        : QUILocale.get(lg, 'publicField'),
-                    fieldPublicDesc    : QUILocale.get(lg, 'publicFieldDesc'),
-                    fieldDefaultValue  : QUILocale.get(lg, 'fieldDefaultValue')
+                    contentText                : '<div class="field-create-header">' +
+                    QUILocale.get(lg, 'control.field.create.content') +
+                    '</div>',
+                    tableHeader                : QUILocale.get(lg, 'control.field.create.header'),
+                    fieldTitle                 : QUILocale.get('quiqqer/system', 'title'),
+                    fieldWorkingTitle          : QUILocale.get(lg, 'workingTitle'),
+                    fieldType                  : QUILocale.get(lg, 'fieldtype'),
+                    fieldPriority              : QUILocale.get(lg, 'priority'),
+                    fieldPrefix                : QUILocale.get(lg, 'prefix'),
+                    fieldSuffix                : QUILocale.get(lg, 'suffix'),
+                    fieldSearchtype            : QUILocale.get(lg, 'searchtype'),
+                    fieldSearchtypeInfo        : QUILocale.get(lg, 'fieldSearchtypeInfo'),
+                    fieldRequired              : QUILocale.get(lg, 'requiredField'),
+                    fieldRequiredDesc          : QUILocale.get(lg, 'requiredFieldDesc'),
+                    fieldSystem                : QUILocale.get(lg, 'systemField'),
+                    fieldSystemDesc            : QUILocale.get(lg, 'systemFieldDesc'),
+                    fieldStandard              : QUILocale.get(lg, 'standardField'),
+                    fieldStandardDesc          : QUILocale.get(lg, 'standardFieldDesc'),
+                    fieldPublic                : QUILocale.get(lg, 'publicField'),
+                    fieldPublicDesc            : QUILocale.get(lg, 'publicFieldDesc'),
+                    fieldDefaultValue          : QUILocale.get(lg, 'fieldDefaultValue'),
+                    fieldShowInDetails         : QUILocale.get(lg, 'showInDetails'),
+                    fieldfieldShowInDetailsDesc: QUILocale.get(lg, 'showInDetailsDesc')
                 })
             });
 

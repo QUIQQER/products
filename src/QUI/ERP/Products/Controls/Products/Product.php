@@ -107,6 +107,10 @@ class Product extends QUI\Control
         // fields for the details
         $details = array_filter($View->getFields(), function ($Field) {
             /* @var $Field QUI\ERP\Products\Field\View */
+            if (!$Field->showInDetails()) {
+                return false;
+            }
+
             if ($Field->getId() == Fields::FIELD_TITLE
                 || $Field->getId() == Fields::FIELD_CONTENT
                 || $Field->getId() == Fields::FIELD_SHORT_DESC

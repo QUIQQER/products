@@ -42,6 +42,7 @@
             <field type="TINYINT(1) NOT NULL DEFAULT 0">standardField</field>
             <field type="TINYINT(1) NOT NULL DEFAULT 0">requiredField</field>
             <field type="TINYINT(1) NOT NULL DEFAULT 0">publicField</field>
+            <field type="TINYINT(1) NOT NULL DEFAULT 0">showInDetails</field>
             <field type="TEXT NULL">options</field>
             <field type="TEXT NULL">defaultValue</field>
 
