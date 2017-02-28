@@ -691,7 +691,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
-     * Return the main catgory
+     * Return the main category
      *
      * @return QUI\ERP\Products\Category\Category|null
      */

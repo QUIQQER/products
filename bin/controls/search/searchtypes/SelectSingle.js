@@ -47,7 +47,9 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectSingle', 
          * Reset the field
          */
         reset: function () {
-
+            this.$Select.setValue(
+                this.$Select.firstChild().getValue()
+            )
         },
 
         /**

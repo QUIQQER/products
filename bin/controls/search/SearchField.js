@@ -223,6 +223,17 @@ define('package/quiqqer/products/bin/controls/search/SearchField', [
         },
 
         /**
+         * Reset the field and set the default value
+         *
+         * @return {Promise}
+         */
+        reset: function () {
+            if (this.$Type && "reset" in this.$Type) {
+                this.$Type.reset();
+            }
+        },
+
+        /**
          * Set the search data for the fields
          *
          * @param {object|array} data

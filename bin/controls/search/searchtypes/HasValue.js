@@ -49,7 +49,8 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/HasValue', [
          * Reset the field
          */
         reset: function () {
-
+            this.$Elm.value = '';
+            this.fireEvent('change', [this]);
         },
 
         /**

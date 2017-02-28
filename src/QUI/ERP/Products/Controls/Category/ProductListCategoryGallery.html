@@ -1,12 +1,12 @@
 {if $categoryStartNumber === '' || (int)$categoryStartNumber !== 0}
-    <div class="quiqqer-products-categoryGallery-catgories">
+    <div class="quiqqer-products-categoryGallery-categories">
         {assign var=c value=0}
         {foreach from=$children item=Category}
         {assign var=cssClass value=""}
         {if $categoryStartNumber && $categoryStartNumber <= $c}
-            {assign var=cssClass value=" quiqqer-products-catgory__hide"}
+            {assign var=cssClass value=" quiqqer-products-category__hide"}
         {/if}
-        <section class="quiqqer-products-categoryGallery-catgory grid-33 mobile-grid-50{$cssClass}"
+        <section class="quiqqer-products-categoryGallery-category grid-33 mobile-grid-50{$cssClass}"
                  data-pid="{$Category->getId()}"
         >
         {strip}
@@ -18,12 +18,12 @@
             {/if}
             <header>
                 {$Category->getAttribute('title')}
-                <div class="quiqqer-products-categoryGallery-catgory-details">
+                <div class="quiqqer-products-categoryGallery-category-details">
                     <span class="fa fa-sort-down"></span>
                 </div>
             </header>
 
-            <div class="quiqqer-products-categoryGallery-catgory-short">
+            <div class="quiqqer-products-categoryGallery-category-short">
                 {$Category->getAttribute('short')}
             </div>
             </a>
@@ -34,7 +34,7 @@
     </div>
 
     {if $categoryStartNumber && $categoryStartNumber < count($children)}
-        <div class="quiqqer-products-categoryGallery-catgory-more button">
+        <div class="quiqqer-products-categoryGallery-category-more button">
             {locale group="quiqqer/products" var="category.control.productlist.button.more"}
         </div>
     {/if}

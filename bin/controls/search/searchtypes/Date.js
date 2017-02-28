@@ -55,7 +55,8 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Date', [
          * Reset the field
          */
         reset: function () {
-
+            this.$Elm.value = '';
+            this.fireEvent('change', [this]);
         },
 
         /**

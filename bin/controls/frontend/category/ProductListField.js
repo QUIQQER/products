@@ -35,11 +35,20 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListField
         create: function () {
             this.$Elm = new Element('div', {
                 'class'   : 'quiqqer-products-productList-filter',
-                html      : '<div class="quiqqer-products-productList-filter-text"></div>',
+                html      : '<div class="quiqqer-products-productList-filter-text"></div>' +
+                '<div class="quiqqer-products-productList-filter-destroy">' +
+                '    <span class="fa fa-close"></span>' +
+                '</div>',
                 'data-tag': this.getAttribute('tag')
             });
 
-            this.$Text = this.$Elm.getElement('.quiqqer-products-productList-filter-text');
+            this.$Text   = this.$Elm.getElement('.quiqqer-products-productList-filter-text');
+            this.$Cancel = this.$Elm.getElement('.quiqqer-products-productList-filter-destroy');
+
+            this.$Cancel.addEvent('click', function () {
+                this.hide();
+                this.fireEvent('close', [this]);
+            }.bind(this));
 
             return this.$Elm;
         },
@@ -55,6 +64,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListField
 
             this.getAttribute('Field').addEvent('change', this.refresh);
             this.refresh();
+        },
+
+        /**
+         * Reset the value
+         */
+        reset: function () {
+            if (this.getAttribute('Field') && 'reset' in this.getAttribute('Field')) {
+                this.getAttribute('Field').reset();
+            }
         },
 
         /**

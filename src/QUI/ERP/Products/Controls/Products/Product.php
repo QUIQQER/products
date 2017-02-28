@@ -107,25 +107,7 @@ class Product extends QUI\Control
         // fields for the details
         $details = array_filter($View->getFields(), function ($Field) {
             /* @var $Field QUI\ERP\Products\Field\View */
-            if ($Field->getId() == Fields::FIELD_TITLE
-                || $Field->getId() == Fields::FIELD_CONTENT
-                || $Field->getId() == Fields::FIELD_SHORT_DESC
-                || $Field->getId() == Fields::FIELD_PRICE
-                || $Field->getId() == Fields::FIELD_VAT
-                || $Field->getId() == Fields::FIELD_IMAGE
-            ) {
-                return false;
-            }
-
-            if ($Field->getType() == Fields::TYPE_ATTRIBUTE_LIST
-                || $Field->getType() == Fields::TYPE_FOLDER
-                || $Field->getType() == Fields::TYPE_PRODCUCTS
-                || $Field->getType() == Fields::TYPE_PRICE
-                || $Field->getType() == Fields::TYPE_PRICE_BY_QUANTITY
-                || $Field->getType() == Fields::TYPE_IMAGE
-                || $Field->getType() == Fields::TYPE_TEXTAREA
-                || $Field->getType() == Fields::TYPE_TEXTAREA_MULTI_LANG
-            ) {
+            if (!QUI\ERP\Products\Utils\Fields::showFieldInProductDetails($Field)) {
                 return false;
             }
 

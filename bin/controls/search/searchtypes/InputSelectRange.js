@@ -139,7 +139,13 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
          * Reset the field
          */
         reset: function () {
+            var min = this.$Select.getAttribute('min'),
+                max = this.$Select.getAttribute('max');
 
+            this.setSearchValue({
+                from: min,
+                to  : max
+            });
         },
 
         /**
@@ -171,10 +177,12 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
 
             this.$Select.setAttribute('min', values[0]);
             this.$Select.setAttribute('max', values[values.length - 1]);
+            this.refresh();
         },
 
         /**
          * Set the input select value
+         *
          * @param {Array|String|Object} value
          */
         setSearchValue: function (value) {
@@ -207,8 +215,8 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
         getSearchValue: function () {
             var value = this.$Select.getValue();
 
-            if (parseFloat(value.from) == this.$Select.getAttribute('min') &&
-                parseFloat(value.to) == this.$Select.getAttribute('max')) {
+            if (parseFloat(value.from) <= this.$Select.getAttribute('min') &&
+                parseFloat(value.to) >= this.$Select.getAttribute('max')) {
                 return false;
             }
 
@@ -223,8 +231,23 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
         getSearchValueFormatted: function () {
             var value = this.getSearchValue();
 
+            if (!value) {
+                value = {
+                    from: false,
+                    to  : false
+                };
+            }
+
+            if (!value.from) {
+                value.from = this.$Select.getAttribute('min');
+            }
+
+            if (!value.to) {
+                value.to = this.$Select.getAttribute('max');
+            }
+
             return NumberFormatter.format(value.from) +
-                   ' bis ' + NumberFormatter.format(value.to);
+                ' bis ' + NumberFormatter.format(value.to);
         }
     });
 });
