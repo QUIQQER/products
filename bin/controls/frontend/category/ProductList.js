@@ -384,9 +384,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
 
             if (typeof Pace !== 'undefined') {
-                var loaded = false;
-
-                Pace.on('done', function () {
+                var loaded   = false;
+                var paceDone = function () {
                     if (loaded) {
                         return;
                     }
@@ -406,8 +405,14 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                             this.$setWindowLocation();
                         }
                     }.bind(this));
-                }.bind(this));
+                }.bind(this);
 
+                // pace is already loaded
+                if (document.body.hasClass('pace-done')) {
+                    paceDone();
+                } else {
+                    Pace.on('done', paceDone);
+                }
                 return;
             }
 
@@ -1957,7 +1962,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (this.$productId == productId) {
                 return;
             }
-
+            
             var self = this,
                 size = this.$Elm.getSize();
 

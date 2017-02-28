@@ -52,6 +52,10 @@ class Price extends QUI\Control
         /* @var $Price QUI\ERP\Products\Utils\Price */
         $Price = $this->getAttribute('Price');
 
+        if (!$Price) {
+            return '';
+        }
+
         $this->setAttribute('data-qui-options-price', $Price->getNetto());
         $this->setAttribute('data-qui-options-currency', $Price->getCurrency()->getCode());
 
