@@ -102,6 +102,7 @@ class EventHandling
                 'standardField' => 1,
                 'requiredField' => 0,
                 'publicField'   => 1,
+                'showInDetails' => 1,
                 'search_type'   => Search::SEARCHTYPE_INPUTSELECTRANGE,
                 'titles'        => array(
                     'de' => 'UVP',
@@ -136,6 +137,7 @@ class EventHandling
                 'standardField' => 1,
                 'requiredField' => 0,
                 'publicField'   => 1,
+                'showInDetails' => 1,
                 'search_type'   => Search::SEARCHTYPE_TEXT,
                 'titles'        => array(
                     'de' => 'Art. Nr.',
@@ -235,6 +237,7 @@ class EventHandling
                 'standardField' => 1,
                 'requiredField' => 0,
                 'publicField'   => 1,
+                'showInDetails' => 1,
                 'search_type'   => Search::SEARCHTYPE_INPUTSELECTSINGLE,
                 'options'       => array(
                     'multipleUsers' => false

@@ -181,6 +181,10 @@ class Model extends QUI\QDOM
                     $Field->setPublicStatus((bool)$field['isPublic']);
                 }
 
+                if (isset($field['showInDetails'])) {
+                    $Field->setShowInDetailsStatus((bool)$field['showInDetails']);
+                }
+
                 $this->fields[$Field->getId()] = $Field;
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);

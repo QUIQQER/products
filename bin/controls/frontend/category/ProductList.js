@@ -232,10 +232,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$BarFilter    = Elm.getElement('.quiqqer-products-productList-sort-filter');
             this.$BarSort      = Elm.getElement('.quiqqer-products-productList-sort-sorting');
             this.$BarDisplays  = Elm.getElement('.quiqqer-products-productList-sort-display');
-            this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryGallery-catgory-more');
+            this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryGallery-category-more');
 
             if (!this.$CategoryMore) {
-                this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryList-catgory-more');
+                this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryList-category-more');
             }
 
             if (this.$FilterClearButton) {
@@ -799,66 +799,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     });
 
                     // button events
-                    Ghost.getElements(
-                        '.quiqqer-products-product-button-purchase'
-                    ).addEvent('click', function (event) {
-                        event.stop();
-
-                        var Target    = event.target,
-                            Article   = Target.getParent('article'),
-                            productId = Article.get('data-pid');
-
-                        Target.removeClass('fa-envelope');
-                        Target.addClass('fa-spinner fa-spin');
-
-                        require([
-                            'package/quiqqer/watchlist/bin/controls/frontend/PurchaseWindow',
-                            'package/quiqqer/watchlist/bin/classes/Product'
-                        ], function (Purchase, WatchlistProduct) {
-                            var Product = new WatchlistProduct({
-                                id    : productId,
-                                events: {
-                                    onChange: self.$onProductChange
-                                }
-                            });
-
-                            new Purchase({
-                                products: [Product]
-                            }).open();
-
-                            Target.removeClass('fa-spinner');
-                            Target.removeClass('fa-spin');
-                            Target.addClass('fa-envelope');
-                        });
-                    });
-
-                    Ghost.getElements(
-                        '.quiqqer-products-product-button-add'
-                    ).addEvent('click', function (event) {
-                        event.stop();
-
-                        var Target    = event.target,
-                            Article   = Target.getParent('article'),
-                            productId = Article.get('data-pid');
-
-                        Target.removeClass('fa-plus');
-                        Target.addClass('fa-spinner fa-spin');
-
-                        require([
-                            'package/quiqqer/watchlist/bin/Watchlist'
-                        ], function (Watchlist) {
-                            Watchlist.addProduct(productId).then(function () {
-                                Target.removeClass('fa-spinner');
-                                Target.removeClass('fa-spin');
-                                Target.addClass('fa-check');
-
-                                (function () {
-                                    Target.removeClass('fa-check');
-                                    Target.addClass('fa-plus');
-                                }).delay(1000, this);
-                            });
-                        });
-                    });
+                    self.$parsePurchaseButtons(Ghost);
+                    self.$parseAddButtons(Ghost);
 
 
                     var Prom = Promise.resolve();
@@ -906,9 +848,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @param Node
          */
         $parseElements: function (Node) {
-            var self     = this,
-                Products = Node.getElements('.quiqqer-products-productGallery-products-product'),
-                Details  = Node.getElements('.quiqqer-products-productGallery-products-product-details');
+            var self       = this,
+                Products   = Node.getElements('.quiqqer-products-productGallery-products-product'),
+                Details    = Node.getElements('.quiqqer-products-productGallery-products-product-details'),
+                AddButtons = Node.getElements('.quiqqer-products-product-button-add');
+
 
             Products.set({
                 tabIndex: -1,
@@ -938,8 +882,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             });
 
 
-            var Categories      = Node.getElements('.quiqqer-products-categoryGallery-catgory'),
-                CategoryDetails = Node.getElements('.quiqqer-products-categoryGallery-catgory-details');
+            AddButtons.addEvent('click', function () {
+
+            });
+
+            var Categories      = Node.getElements('.quiqqer-products-categoryGallery-category'),
+                CategoryDetails = Node.getElements('.quiqqer-products-categoryGallery-category-details');
 
             Categories.set({
                 tabIndex: -1,
@@ -953,9 +901,89 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     event.stop();
 
                     event.target.getParent(
-                        '.quiqqer-products-categoryGallery-catgory'
+                        '.quiqqer-products-categoryGallery-category'
                     ).focus();
                 }
+            });
+
+            this.$parsePurchaseButtons(Node);
+            this.$parseAddButtons(Node);
+        },
+
+        /**
+         * Parse all purchase buttons and set the click events
+         *
+         * @param Node
+         */
+        $parsePurchaseButtons: function (Node) {
+            var Buttons = Node.getElements('.quiqqer-products-product-button-purchase');
+
+            Buttons.addEvent('click', function (event) {
+                event.stop();
+
+                var Target    = event.target,
+                    Article   = Target.getParent('article'),
+                    productId = Article.get('data-pid');
+
+                Target.removeClass('fa-envelope');
+                Target.addClass('fa-spinner fa-spin');
+
+                require([
+                    'package/quiqqer/watchlist/bin/controls/frontend/PurchaseWindow',
+                    'package/quiqqer/watchlist/bin/classes/Product'
+                ], function (Purchase, WatchlistProduct) {
+                    var Product = new WatchlistProduct({
+                        id    : productId,
+                        events: {
+                            onChange: self.$onProductChange
+                        }
+                    });
+
+                    new Purchase({
+                        products: [Product]
+                    }).open();
+
+                    Target.removeClass('fa-spinner');
+                    Target.removeClass('fa-spin');
+                    Target.addClass('fa-envelope');
+                });
+            });
+        },
+
+        /**
+         * Parse all add watchlist buttons and set the click events
+         *
+         * @param Node
+         */
+        $parseAddButtons: function (Node) {
+            var Buttons = Node.getElements(
+                '.quiqqer-products-product-button-add'
+            );
+
+            Buttons.addEvent('click', function (event) {
+                event.stop();
+
+                var Target    = event.target,
+                    Article   = Target.getParent('article'),
+                    productId = Article.get('data-pid');
+
+                Target.removeClass('fa-plus');
+                Target.addClass('fa-spinner fa-spin');
+
+                require([
+                    'package/quiqqer/watchlist/bin/Watchlist'
+                ], function (Watchlist) {
+                    Watchlist.addProduct(productId).then(function () {
+                        Target.removeClass('fa-spinner');
+                        Target.removeClass('fa-spin');
+                        Target.addClass('fa-check');
+
+                        (function () {
+                            Target.removeClass('fa-check');
+                            Target.addClass('fa-plus');
+                        }).delay(1000, this);
+                    });
+                });
             });
         },
 
@@ -1273,7 +1301,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             var hiddenChildren = Categories.getElements(
-                '.quiqqer-products-catgory__hide'
+                '.quiqqer-products-category__hide'
             );
 
             if (!hiddenChildren.length) {
@@ -1287,7 +1315,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 overflow: 'hidden'
             });
 
-            hiddenChildren.removeClass('quiqqer-products-catgory__hide');
+            hiddenChildren.removeClass('quiqqer-products-category__hide');
 
             var wantedSizes = Categories.getScrollSize();
 
@@ -1962,7 +1990,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (this.$productId == productId) {
                 return;
             }
-            
+
             var self = this,
                 size = this.$Elm.getSize();
 

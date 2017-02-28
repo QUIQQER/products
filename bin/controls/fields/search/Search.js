@@ -136,11 +136,6 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                     dataIndex: 'isRequired',
                     dataType : 'node',
                     width    : 60
-                }, {
-                    header   : QUILocale.get(lg, 'showInDetails'),
-                    dataIndex: 'showInDetails',
-                    dataType : 'node',
-                    width    : 60
                 }]
             });
 
@@ -260,12 +255,6 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                         gridData.data[key].isPublic = ElmOk.clone();
                     } else {
                         gridData.data[key].isPublic = ElmFalse.clone();
-                    }
-
-                    if (value.showInDetails) {
-                        gridData.data[key].showInDetails = ElmOk.clone();
-                    } else {
-                        gridData.data[key].showInDetails = ElmFalse.clone();
                     }
 
                     value.fieldtype = QUILocale.get(lg, 'fieldtype.' + value.type);

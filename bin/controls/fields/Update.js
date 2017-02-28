@@ -26,13 +26,14 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
     'Mustache',
     'controls/lang/InputMultiLang',
     'package/quiqqer/products/bin/classes/Fields',
+    'package/quiqqer/products/bin/utils/Fields',
     'package/quiqqer/translator/bin/controls/Update',
 
     'text!package/quiqqer/products/bin/controls/fields/Create.html',
     'css!package/quiqqer/products/bin/controls/fields/Create.css'
 
 ], function (QUI, QUIControl, QUIConfirm, QUIFormUtils, QUILocale, QUIAjax,
-             Mustache, InputMultiLang, Handler, Translation, template) {
+             Mustache, InputMultiLang, Handler, FieldUtils, Translation, template) {
     "use strict";
 
     var lg     = 'quiqqer/products',
@@ -255,9 +256,26 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 FieldTypes.disabled = true;
 
                 loadSettings();
+            }.bind(this)).then(function () {
+                return FieldUtils.canUsedAsDetailField(id);
+            }).then(function (canUsedAsDetail) {
+                if (!canUsedAsDetail) {
+                    Elm.getElement('[name="showInDetails"]').checked  = false;
+                    Elm.getElement('[name="showInDetails"]').disabled = true;
+                    return;
+                }
 
+                return FieldUtils.canUsedAsDetailField(
+                    Elm.getElement('[name="type"]').value
+                );
+            }).then(function (canUsedAsDetail) {
+                if (!canUsedAsDetail) {
+                    Elm.getElement('[name="showInDetails"]').checked  = false;
+                    Elm.getElement('[name="showInDetails"]').disabled = true;
+                }
+            }).then(function () {
                 self.fireEvent('loaded');
-            }.bind(this));
+            });
         },
 
         /**

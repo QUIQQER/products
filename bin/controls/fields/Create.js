@@ -22,12 +22,13 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
     'Mustache',
     'controls/lang/InputMultiLang',
     'package/quiqqer/products/bin/classes/Fields',
+    'package/quiqqer/products/bin/utils/Fields',
     'package/quiqqer/translator/bin/controls/Create',
 
     'text!package/quiqqer/products/bin/controls/fields/Create.html',
     'css!package/quiqqer/products/bin/controls/fields/Create.css'
 
-], function (QUI, QUIControl, QUILocale, Mustache, InputMultiLang, Handler, Translation, template) {
+], function (QUI, QUIControl, QUILocale, Mustache, InputMultiLang, Handler, FieldUtils, Translation, template) {
     "use strict";
 
     var lg     = 'quiqqer/products',

@@ -5,10 +5,10 @@
         {foreach from=$children item=Category}
             {assign var=cssClass value=""}
             {if $categoryStartNumber && $categoryStartNumber <= $c}
-                {assign var=cssClass value=" quiqqer-products-catgory__hide"}
+                {assign var=cssClass value=" quiqqer-products-category__hide"}
             {/if}
 
-            <a href="{url site=$Category}" class="quiqqer-products-categoryList-catgory button{$cssClass}">
+            <a href="{url site=$Category}" class="quiqqer-products-categoryList-category button{$cssClass}">
                 {$Category->getAttribute('title')}
                 <span class="fa fa-angle-right"></span>
             </a>
@@ -19,7 +19,7 @@
     </div>
 
     {if $categoryStartNumber && $categoryStartNumber < count($children)}
-    <div class="quiqqer-products-categoryList-catgory-more button">
+    <div class="quiqqer-products-categoryList-category-more button">
         {locale group="quiqqer/products" var="category.control.productlist.button.more"}
     </div>
     {/if}

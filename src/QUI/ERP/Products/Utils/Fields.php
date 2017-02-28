@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
+use QUI\ERP\Products\Handler\Fields as FieldHandler;
 
 /**
  * Class Fields
@@ -113,5 +114,57 @@ class Fields
         });
 
         return $fields;
+    }
+
+    /**
+     * Can the field used as a detail field?
+     * JavaScript equivalent package/quiqqer/products/bin/utils/Fields
+     *
+     * @param mixed $Field
+     * @return bool
+     */
+    public static function canUsedAsDetailField($Field)
+    {
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        if (!self::isField($Field)) {
+            return false;
+        }
+
+        if ($Field->getId() == FieldHandler::FIELD_TITLE
+            || $Field->getId() == FieldHandler::FIELD_CONTENT
+            || $Field->getId() == FieldHandler::FIELD_SHORT_DESC
+            || $Field->getId() == FieldHandler::FIELD_PRICE
+            || $Field->getId() == FieldHandler::FIELD_IMAGE
+        ) {
+            return false;
+        }
+
+        if ($Field->getType() == FieldHandler::TYPE_ATTRIBUTE_LIST
+            || $Field->getType() == FieldHandler::TYPE_FOLDER
+            || $Field->getType() == FieldHandler::TYPE_PRODCUCTS
+            || $Field->getType() == FieldHandler::TYPE_IMAGE
+            || $Field->getType() == FieldHandler::TYPE_TEXTAREA
+            || $Field->getType() == FieldHandler::TYPE_TEXTAREA_MULTI_LANG
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Show the field in the details?
+     *
+     * @param mixed $Field
+     * @return bool
+     */
+    public static function showFieldInProductDetails($Field)
+    {
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        if (!self::canUsedAsDetailField($Field)) {
+            return false;
+        }
+
+        return $Field->showInDetails();
     }
 }

@@ -280,7 +280,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     }
 
     /**
-     * Return the main catgory
+     * Return the main category
      *
      * @return QUI\ERP\Products\Category\Category
      */
