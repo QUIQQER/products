@@ -175,6 +175,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
 
         /**
          * Set the input select value
+         *
          * @param {Array|String|Object} value
          */
         setSearchValue: function (value) {
@@ -207,8 +208,8 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
         getSearchValue: function () {
             var value = this.$Select.getValue();
 
-            if (parseFloat(value.from) == this.$Select.getAttribute('min') &&
-                parseFloat(value.to) == this.$Select.getAttribute('max')) {
+            if (parseFloat(value.from) > this.$Select.getAttribute('min') &&
+                parseFloat(value.to) < this.$Select.getAttribute('max')) {
                 return false;
             }
 
@@ -224,7 +225,7 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
             var value = this.getSearchValue();
 
             return NumberFormatter.format(value.from) +
-                   ' bis ' + NumberFormatter.format(value.to);
+                ' bis ' + NumberFormatter.format(value.to);
         }
     });
 });
