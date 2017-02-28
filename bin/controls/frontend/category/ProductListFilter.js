@@ -48,9 +48,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListFilte
             this.$Elm = new Element('div', {
                 'class'   : 'quiqqer-products-productList-filter',
                 html      : '<div class="quiqqer-products-productList-filter-text"></div>' +
-                            '<div class="quiqqer-products-productList-filter-destroy">' +
-                            '    <span class="fa fa-remove"></span>' +
-                            '</div>',
+                '<div class="quiqqer-products-productList-filter-destroy">' +
+                '    <span class="fa fa-close"></span>' +
+                '</div>',
                 'data-tag': this.getAttribute('tag')
             });
 
@@ -80,8 +80,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListFilte
                     this.$Text.set('text', result.title || result.tag);
                 }.bind(this), {
                     'package'  : 'quiqqer/tags',
-                    projectName: QUIQQER_PROJECT.name,
-                    projectLang: QUIQQER_PROJECT.lang,
+                    projectName: window.QUIQQER_PROJECT.name,
+                    projectLang: window.QUIQQER_PROJECT.lang,
                     tag        : this.getAttribute('tag')
                 });
             }.bind(this));

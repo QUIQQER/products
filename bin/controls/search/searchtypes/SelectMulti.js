@@ -22,7 +22,6 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectMulti', [
         ],
 
         initialize: function (options) {
-
             this.$Elm = null;
 
             this.parent(options);
@@ -44,7 +43,8 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectMulti', [
          * Reset the field
          */
         reset: function () {
-
+            this.$Elm.value = '';
+            this.fireEvent('change', [this]);
         },
 
         /**

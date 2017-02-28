@@ -79,13 +79,16 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectSing
             }
         },
 
+        reset: function () {
+
+        },
+
         /**
          * Set the input select value
          * @param value
          */
         setSearchValue: function (value) {
             this.setAttribute('value', value);
-
         },
 
         /**

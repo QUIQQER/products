@@ -1557,9 +1557,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             var self    = this,
+                onClose = function (PLF) {
+                    PLF.getAttribute('Field').reset();
+                },
                 onReady = function () {
                     new ProductListField({
-                        Field: this
+                        Field : this,
+                        events: {
+                            onClose: onClose
+                        }
                     }).inject(self.$FilterFieldList);
                 };
 
@@ -1570,7 +1576,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     this.$selectFields[i].getSearchValue()) {
 
                     new ProductListField({
-                        Field: this.$selectFields[i]
+                        Field : this.$selectFields[i],
+                        events: {
+                            onClose: onClose
+                        }
                     }).inject(this.$FilterFieldList);
 
                     continue;
