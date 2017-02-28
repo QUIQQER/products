@@ -844,8 +844,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         },
 
         /**
+         * Parse the first request, php generated html and set the events
          *
-         * @param Node
+         * @param {HTMLElement} Node
          */
         $parseElements: function (Node) {
             var self     = this,
@@ -907,7 +908,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         /**
          * Parse all purchase buttons and set the click events
          *
-         * @param Node
+         * @param {HTMLElement} Node
          */
         $parsePurchaseButtons: function (Node) {
             var Buttons = Node.getElements('.quiqqer-products-product-button-purchase');
@@ -947,7 +948,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         /**
          * Parse all add watchlist buttons and set the click events
          *
-         * @param Node
+         * @param {HTMLElement} Node
          */
         $parseAddButtons: function (Node) {
             var Buttons = Node.getElements(
