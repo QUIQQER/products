@@ -80,7 +80,8 @@
     cursor: pointer;
     float: left;
     margin-bottom: 5px;
-    padding: 10px;
+    padding: 10px 10px 40px 10px;
+    position: relative;
     width: 100%;
 }
 
