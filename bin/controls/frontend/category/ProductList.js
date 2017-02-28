@@ -848,11 +848,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @param Node
          */
         $parseElements: function (Node) {
-            var self       = this,
-                Products   = Node.getElements('.quiqqer-products-productGallery-products-product'),
-                Details    = Node.getElements('.quiqqer-products-productGallery-products-product-details'),
-                AddButtons = Node.getElements('.quiqqer-products-product-button-add');
-
+            var self     = this,
+                Products = Node.getElements('.quiqqer-products-productGallery-products-product'),
+                Details  = Node.getElements('.quiqqer-products-productGallery-products-product-details');
 
             Products.set({
                 tabIndex: -1,
@@ -881,10 +879,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
             });
 
-
-            AddButtons.addEvent('click', function () {
-
-            });
 
             var Categories      = Node.getElements('.quiqqer-products-categoryGallery-category'),
                 CategoryDetails = Node.getElements('.quiqqer-products-categoryGallery-category-details');
