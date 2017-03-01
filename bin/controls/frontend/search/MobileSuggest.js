@@ -108,7 +108,9 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
 
             this.$Container = new Element('div', {
                 'class': 'quiqqer-products-mobileSuggest',
-                html   : Mustache.render(template)
+                html   : Mustache.render(template, {
+                    title: QUILocale.get(lg, 'control.search.suggest.mobile.title')
+                })
             }).inject(document.body);
 
             this.$Container.setStyles({
@@ -141,7 +143,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
             } else {
                 this.$Container.setStyles({
                     opacity: 0,
-                    top    : 0
+                    top    : document.body.getScroll().y
                 });
             }
 
@@ -162,9 +164,15 @@ define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
             });
 
             return new Promise(function (resolve) {
+                var top = 0;
+
+                if (ios) {
+                    top = this.$Container.getStyle('top');
+                }
+
                 moofx(this.$Container).animate({
                     opacity: 1,
-                    top    : 0
+                    top    : top
                 }, {
                     duration: 250,
                     callback: resolve
