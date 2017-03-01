@@ -3,7 +3,7 @@
     {if $showFilter}
     <div class="content-headerpage-multible-left grid-30 hide-on-mobile">
         <header>
-            <h2>Kategorien</h2>
+            <h2>{locale group="quiqqer/products" var="type.category.categoryTitle"}</h2>
         </header>
         {if $CategoryMenu->countChildren()}
             {$CategoryMenu->create()}
@@ -11,7 +11,7 @@
 
         {if isset($ProductList)}
         <header>
-            <h2>Filter</h2>
+            <h2>{locale group="quiqqer/products" var="type.category.filterTitle"}</h2>
         </header>
         {$ProductList->createFilter()}
         {/if}
@@ -47,28 +47,28 @@
         {/if}
 
         <div class="{$cssClasses}">
-            {if $Site->getAttribute('content-header')}
-                {if $Site->getAttribute('image_emotion')}
-                <header class="page-content-header-emotion"
-                        style="background-image: url('{image src=$Site->getAttribute('image_emotion') width=820 onlysrc=1 rewrited=1}')"
-                >
-                    <div class="page-content-header-emotion-container">
-                        <h1>{$Site->getAttribute('title')}</h1>
-                        <div class="page-content-emotion-short">
-                            {$Site->getAttribute('short')}
-                        </div>
-                    </div>
-                </header>
-                {else}
-                <header class="page-content-header">
+        {if $Site->getAttribute('content-header')}
+            {if $Site->getAttribute('image_emotion')}
+            <header class="page-content-header-emotion"
+                    style="background-image: url('{image src=$Site->getAttribute('image_emotion') width=820 onlysrc=1 rewrited=1}')"
+            >
+                <div class="page-content-header-emotion-container">
                     <h1>{$Site->getAttribute('title')}</h1>
-                </header>
+                    <div class="page-content-emotion-short">
+                        {$Site->getAttribute('short')}
+                    </div>
+                </div>
+            </header>
+            {else}
+            <header class="page-content-header">
+                <h1>{$Site->getAttribute('title')}</h1>
+            </header>
+            {/if}
 
-                {if $Site->getAttribute('content')}
-                <section class="content-body quiqqer-category-content">
-                    {$Site->getAttribute('content')}
-                </section>
-                {/if}
+            {if $Site->getAttribute('content')}
+            <section class="content-body quiqqer-category-content">
+                {$Site->getAttribute('content')}
+            </section>
             {/if}
         {/if}
 

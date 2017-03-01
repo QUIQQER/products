@@ -63,6 +63,10 @@ define('package/quiqqer/products/bin/types/Search', [
                     }
                 }
 
+                if ("history" in window) {
+                    window.history.pushState({}, "", window.location.toString());
+                    window.fireEvent('popstate');
+                }
             }.bind(this));
 
             var Url   = URI(window.location),

@@ -1,0 +1,78 @@
+<?php
+
+/**
+ * This file contains QUI\ERP\Products\Utils\Search
+ */
+namespace QUI\ERP\Products\Utils;
+
+use QUI;
+
+/**
+ * Class Search
+ */
+class Search
+{
+    /**
+     * @return array
+     */
+    public static function getSearchParameterFromRequest()
+    {
+        $search = QUI::getRequest()->get('search');
+        $fields = QUI::getRequest()->get('f');
+        $tags   = QUI::getRequest()->get('t');
+        $sortBy = QUI::getRequest()->get('sortBy');
+        $sortOn = QUI::getRequest()->get('sortOn');
+
+        $categories = QUI::getRequest()->get('c');
+
+        if ($categories) {
+            $categories = explode(',', $categories);
+        }
+
+        if (!is_array($categories)) {
+            $categories = array();
+        }
+
+        $searchParams = array_filter(array(
+            'freetext' => $search,
+            'fields'   => $fields,
+            'tags'     => $tags,
+            'sortBy'   => $sortBy,
+            'sortOn'   => $sortOn,
+        ));
+
+        if (!empty($categories)) {
+            $searchParams['categories'] = $categories;
+        }
+
+        if (isset($searchParams['fields'])) {
+            $searchParams['fields'] = json_decode($searchParams['fields'], true);
+
+            if (is_null($searchParams['fields'])) {
+                unset($searchParams['fields']);
+            }
+        }
+
+        if (isset($searchParams['tags'])) {
+            $searchParams['tags'] = explode(',', $searchParams['tags']);
+        }
+
+        return $searchParams;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public static function getViewParameterFromRequest()
+    {
+        if (QUI::getSession()->get('productView')) {
+            return QUI::getSession()->get('productView');
+        }
+
+        if (QUI::getRequest()->get('v')) {
+            return QUI::getRequest()->get('v');
+        }
+
+        return '';
+    }
+}
