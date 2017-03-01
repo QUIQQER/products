@@ -4,11 +4,11 @@
     {if $Site->getAttribute('quiqqer.products.settings.showFilterLeft')}
     <div class="content-headerpage-multible-left grid-30 hide-on-mobile">
         <header>
-            <h2>Suche</h2>
+            <h2>{locale group="quiqqer/products" var="type.search.searchTitle"}</h2>
         </header>
         <form action="{url site=$Site}" method="GET" class="quiqqer-products-search-form">
             <input type="search" name="search" value="" autocomplete="off"
-                   placeholder="Suchbegriff eingeben..."
+                   placeholder="{locale group="quiqqer/products" var="type.search.searchPlaceholder"}"
             />
             <button class="quiqqer-products-search-form-button button--callToAction button">
                 <span class="fa fa-search quiqqer-products-search-suggest-form-button-icon"></span>
@@ -16,7 +16,7 @@
         </form>
 
         <header>
-            <h2>Filter</h2>
+            <h2>{locale group="quiqqer/products" var="type.search.filterTitle"}</h2>
         </header>
         {$ProductList->createFilter()}
     </div>
@@ -57,7 +57,7 @@
         {if !$Site->getAttribute('quiqqer.products.settings.showFilterLeft')}
         <form action="{url site=$Site}" method="GET" class="quiqqer-products-search-form">
             <input type="search" name="search" value="" autocomplete="off"
-                   placeholder="Suchbegriff eingeben..."
+                   placeholder="{locale group="quiqqer/products" var="type.search.searchPlaceholder"}"
             />
             <button class="quiqqer-products-search-form-button button--callToAction button">
                 <span class="fa fa-search quiqqer-products-search-suggest-form-button-icon"></span>

@@ -3,7 +3,7 @@
     {if $showFilter}
     <div class="content-headerpage-multible-left grid-30 hide-on-mobile">
         <header>
-            <h2>Kategorien</h2>
+            <h2>{locale group="quiqqer/products" var="type.category.categoryTitle"}</h2>
         </header>
         {if $CategoryMenu->countChildren()}
             {$CategoryMenu->create()}
@@ -11,7 +11,7 @@
 
         {if isset($ProductList)}
         <header>
-            <h2>Filter</h2>
+            <h2>{locale group="quiqqer/products" var="type.category.filterTitle"}</h2>
         </header>
         {$ProductList->createFilter()}
         {/if}

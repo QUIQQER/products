@@ -1487,6 +1487,30 @@
             <de><![CDATA[Produkt Einstellungen]]></de>
             <en><![CDATA[Product settings]]></en>
         </locale>
+
+
+        <locale name="type.category.categoryTitle">
+            <de><![CDATA[Kategorien]]></de>
+            <en><![CDATA[Categories]]></en>
+        </locale>
+        <locale name="type.category.filterTitle">
+            <de><![CDATA[Filter]]></de>
+            <en><![CDATA[Filter]]></en>
+        </locale>
+
+        <locale name="type.search.searchTitle">
+            <de><![CDATA[Suche]]></de>
+            <en><![CDATA[Search]]></en>
+        </locale>
+        <locale name="type.search.filterTitle">
+            <de><![CDATA[Filter]]></de>
+            <en><![CDATA[Filter]]></en>
+        </locale>
+        <locale name="type.search.searchPlaceholder">
+            <de><![CDATA[Suchbegriff eingeben...]]></de>
+            <en><![CDATA[Enter a search term...]]></en>
+        </locale>
+
     </groups>
 
 </locales>
