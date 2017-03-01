@@ -1315,6 +1315,11 @@
             <de><![CDATA[Die Kategorie besitzt keine übergeordnete Kategorie]]></de>
             <en><![CDATA[The category has no parent category]]></en>
         </locale>
+
+        <locale name="control.search.suggest.mobile.title">
+            <de><![CDATA[Produktsuche]]></de>
+            <en><![CDATA[Product search]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="php">

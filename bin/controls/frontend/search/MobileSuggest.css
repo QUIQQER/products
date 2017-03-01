@@ -5,6 +5,19 @@
     top: 0;
     width: 100%;
     z-index: 1001;
+    -webkit-transform: translateZ(0);
+}
+
+.quiqqer-products-mobileSuggest-title {
+    /*border-bottom: 1px solid #999;*/
+    color: #fff;
+    font-size: 16px;
+    line-height: 30px;
+    left: 20px;
+    padding-right: 60px;
+    position: absolute;
+    top: 30px;
+    width: calc(100% - 40px);
 }
 
 .quiqqer-products-mobileSuggest-container {
