@@ -1,7 +1,9 @@
 <?php
 
-use QUI\ERP\Products;
-use QUI\System\Log;
+use \QUI\ERP\Products;
+use \QUI\ERP\Products\Controls\Category\ProductList;
+
+use \QUI\System\Log;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Response;
 
@@ -135,67 +137,14 @@ if ($siteUrl != $_REQUEST['_url']) {
     /**
      * CATEGORY
      */
-    // product list
-    $searchParams = array();
-    $search       = QUI::getRequest()->get('search');
-    $fields       = QUI::getRequest()->get('f');
-    $tags         = QUI::getRequest()->get('t');
-    $sortBy       = QUI::getRequest()->get('sortBy');
-    $sortOn       = QUI::getRequest()->get('sortOn');
-
-    $view = '';
-
-    if (QUI::getSession()->get('productView')) {
-        $view = QUI::getSession()->get('productView');
-    }
-
-    if (QUI::getRequest()->get('v')) {
-        $view = QUI::getRequest()->get('v');
-    }
-
-
-    $categories = QUI::getRequest()->get('c');
-
-    if ($categories) {
-        $categories = explode(',', $categories);
-    }
-
-    if (!is_array($categories)) {
-        $categories = array();
-    }
-
-    $searchParams = array_filter(array(
-        'freetext' => $search,
-        'fields'   => $fields,
-        'tags'     => $tags,
-        'sortBy'   => $sortBy,
-        'sortOn'   => $sortOn,
-    ));
-
-    if (!empty($categories)) {
-        $searchParams['categories'] = $categories;
-    }
-
-    if (isset($searchParams['fields'])) {
-        $searchParams['fields'] = json_decode($searchParams['fields'], true);
-
-        if (is_null($searchParams['fields'])) {
-            unset($searchParams['fields']);
-        }
-    }
-
-    if (isset($searchParams['tags'])) {
-        $searchParams['tags'] = explode(',', $searchParams['tags']);
-    }
-
-    $ProductList = new Products\Controls\Category\ProductList(array(
+    $ProductList = new ProductList(array(
         'categoryId'           => $Site->getAttribute('quiqqer.products.settings.categoryId'),
         'hideEmptyProductList' => true,
         'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
         'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
-        'searchParams'         => $searchParams,
+        'searchParams'         => Products\Utils\Search::getSearchParameterFromRequest(),
         'autoload'             => false,
-        'view'                 => $view
+        'view'                 => Products\Utils\Search::getViewParameterFromRequest()
     ));
 
     $filterList = $ProductList->getFilter();

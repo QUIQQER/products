@@ -3,6 +3,21 @@
 >
     {if $Site->getAttribute('quiqqer.products.settings.showFilterLeft')}
     <div class="content-headerpage-multible-left grid-30 hide-on-mobile">
+        <header>
+            <h2>Suche</h2>
+        </header>
+        <form action="{url site=$Site}" method="GET" class="quiqqer-products-search-form">
+            <input type="search" name="search" value="" autocomplete="off"
+                   placeholder="Suchbegriff eingeben..."
+            />
+            <button class="quiqqer-products-search-form-button button--callToAction button">
+                <span class="fa fa-search quiqqer-products-search-suggest-form-button-icon"></span>
+            </button>
+        </form>
+
+        <header>
+            <h2>Filter</h2>
+        </header>
         {$ProductList->createFilter()}
     </div>
     {/if}
@@ -31,8 +46,15 @@
                 <h1>{$Site->getAttribute('title')}</h1>
             </header>
             {/if}
+
+            {if $Site->getAttribute('content')}
+            <section class="content-body quiqqer-category-content">
+                {$Site->getAttribute('content')}
+            </section>
+            {/if}
         {/if}
 
+        {if !$Site->getAttribute('quiqqer.products.settings.showFilterLeft')}
         <form action="{url site=$Site}" method="GET" class="quiqqer-products-search-form">
             <input type="search" name="search" value="" autocomplete="off"
                    placeholder="Suchbegriff eingeben..."
@@ -41,6 +63,7 @@
                 <span class="fa fa-search quiqqer-products-search-suggest-form-button-icon"></span>
             </button>
         </form>
+        {/if}
 
         {$ProductList->create()}
     </div>

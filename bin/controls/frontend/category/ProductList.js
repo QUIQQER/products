@@ -814,6 +814,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                         var articles = Ghost.getElements('article');
 
+                        if (result.count === 0) {
+                            articles = Ghost.getElements(
+                                '.quiqqer-products-productList-sort__noProducts'
+                            );
+                        }
+
                         // open products in list
                         articles.addEvent('click', function (event) {
                             event.stop();
@@ -1066,7 +1072,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          */
         $clearContainer: function () {
             var self     = this,
-                articles = this.$Container.getElements('article');
+                articles = this.$Container.getElements(
+                    'article,.quiqqer-products-productList-sort__noProducts'
+                );
 
             this.$Container.setStyle(
                 'height',
@@ -1101,8 +1109,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          */
         $showContainer: function () {
             return new Promise(function (resolve) {
+                var height = this.$ContainerReal.getSize().y;
+
                 this.$FXContainer.animate({
-                    height : this.$ContainerReal.getSize().y,
+                    height : height,
                     opacity: 1
                 }, {
                     duration: 250,
