@@ -285,6 +285,12 @@
 /** Produkte
  ================================================= */
 
+.quiqqer-products-productList-products {
+    clear: both;
+    float: left;
+    width: 100%;
+}
+
 .quiqqer-products-productList-products-container {
     float: left;
     overflow: hidden;
