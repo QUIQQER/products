@@ -64,6 +64,14 @@
                     </a>
                 </li>
 
+                {if $Files}
+                <li class="product-data-more-tabs-tab" aria-controls="panelFiles" role="tab" tabindex="-1">
+                    <a href="#panelFiles">
+                        {locale group="quiqqer/products" var="control.product.fields.files"}
+                    </a>
+                </li>
+                {/if}
+
                 {foreach $detailFields as $Field}
                 <li class="product-data-more-tabs-tab"
                     aria-controls="panelF{$Field->getId()}"
@@ -100,28 +108,36 @@
                 {if count($details)}
                 <table class="product-data-more-details-table">
                     {foreach $details as $Field}
-                    {if !empty($Field->getValue()) || is_numeric($Field->getValue())}
-                    <tr>
-                        <td>
-                            {$Field->getView()->create()}
-                        </td>
-                    </tr>
-                    {else}
-                    <tr>
-                        <td>
-                            <div class="quiqqer-product-field-title">
-                                {$Field->getTitle()}
-                            </div>
-                            <div class="quiqqer-product-field-value">
-                                ---
-                            </div>
-                        </td>
-                    </tr>
-                    {/if}
+                        {if !empty($Field->getValue()) || is_numeric($Field->getValue())}
+                        <tr>
+                            <td>
+                                {$Field->getView()->create()}
+                            </td>
+                        </tr>
+                        {else}
+                        <tr>
+                            <td>
+                                <div class="quiqqer-product-field-title">
+                                    {$Field->getTitle()}
+                                </div>
+                                <div class="quiqqer-product-field-value">
+                                    ---
+                                </div>
+                            </td>
+                        </tr>
+                        {/if}
                     {/foreach}
                 </table>
                 {/if}
             </section>
+
+            {if $Files}
+            <section class="product-data-more-sheet hide" id="panelFiles" role="tabpanel"
+                     aria-labelledby="panelFiles" tabindex="0" aria-hidden="true"
+            >
+                {$Files->create()}
+            </section>
+            {/if}
 
             {foreach $detailFields as $Field}
             <section class="product-data-more-sheet hide" id="panelF{$Field->getId()}" role="tabpanel"

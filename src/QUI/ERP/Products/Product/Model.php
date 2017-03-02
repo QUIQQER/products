@@ -1555,7 +1555,7 @@ class Model extends QUI\QDOM
      * @param array $params - optional, select params
      * @return array
      */
-    public function getFiles($params)
+    public function getFiles($params = array())
     {
         try {
             return $this->getMediaFolder()->getFiles($params);

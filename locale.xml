@@ -805,6 +805,10 @@
             <de><![CDATA[Details]]></de>
             <en><![CDATA[Details]]></en>
         </locale>
+        <locale name="control.product.fields.files">
+            <de><![CDATA[Dateien]]></de>
+            <en><![CDATA[Files]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
