@@ -22,7 +22,9 @@ class ProductFieldDetails extends QUI\Control
     {
         $this->setAttributes(array(
             'Field'   => false,
-            'Product' => false
+            'Product' => false,
+            'files'   => true, // show in a FIELD_FOLDER all files
+            'images'  => true  // show in a FIELD_FOLDER all images
         ));
 
         parent::__construct($attributes);
@@ -41,6 +43,8 @@ class ProductFieldDetails extends QUI\Control
             return '';
         }
 
+        $Engine = QUI::getTemplateManager()->getEngine();
+
         /* @var $Field QUI\ERP\Products\Field\Field */
         switch ($Field->getType()) {
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA:
@@ -48,15 +52,43 @@ class ProductFieldDetails extends QUI\Control
                 $template = dirname(__FILE__) . '/ProductFieldDetails.Content.html';
                 break;
 
-            case QUI\ERP\Products\Handler\Fields::FIELD_FOLDER:
+            case QUI\ERP\Products\Handler\Fields::TYPE_FOLDER:
+                /* @var $Field QUI\ERP\Products\Field\Types\Folder */
                 $template = dirname(__FILE__) . '/ProductFieldDetails.MediaFolder.html';
+                $Folder   = $Field->getMediaFolder();
+                $files    = array();
+
+                $showFiles  = $this->getAttribute('files');
+                $showImages = $this->getAttribute('images');
+
+                if (!$Folder) {
+                    return '';
+                }
+
+                if ($showFiles && $showImages) {
+                    $files = $Folder->getChildren();
+                } elseif (!$showFiles && $showImages) {
+                    $files = $Folder->getImages();
+                } elseif ($showFiles && !$showImages) {
+                    $files = $Folder->getFiles();
+                }
+
+                $files = array_filter($files, function ($File) {
+                    /* @var $File QUI\Projects\Media\Item $File */
+                    return $File->isActive();
+                });
+
+                $Engine->assign(array(
+                    'Utils'  => new QUI\Projects\Media\Utils(),
+                    'Folder' => $Folder,
+                    'files'  => $files
+                ));
+
                 break;
 
             default:
                 return '';
         }
-
-        $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign(array(
             'this'    => $this,

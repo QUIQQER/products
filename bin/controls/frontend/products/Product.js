@@ -411,7 +411,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 }, {
                     duration: 200,
                     callback: function () {
-                        Node.setStyles('display', 'none');
+                        Node.setStyle('display', 'none');
                         resolve();
                     }
                 });
@@ -435,7 +435,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 }, {
                     duration: 200,
                     callback: function () {
-                        Node.setStyles('display', 'none');
+                        Node.setStyle('display', 'none');
                         resolve();
                     }
                 });

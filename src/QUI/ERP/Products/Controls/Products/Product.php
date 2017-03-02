@@ -177,12 +177,25 @@ class Product extends QUI\Control
             'productFields' => $productFields
         ));
 
+        // Product File List
+        $Files = null;
+
+        if (count($Product->getFiles())) {
+            $Files = new ProductFieldDetails(array(
+                'Field'   => $Product->getField(Fields::FIELD_FOLDER),
+                'Product' => $Product,
+                'files'   => true,
+                'images'  => false
+            ));
+        }
+
         $Engine->assign(array(
             'Product'              => $View,
             'Gallery'              => $Gallery,
+            'Files'                => $Files,
             'fields'               => QUI\ERP\Products\Utils\Fields::sortFields($fields),
             'details'              => QUI\ERP\Products\Utils\Fields::sortFields($details),
-            'detailFields'         => $detailFields,
+            'detailFields'         => QUI\ERP\Products\Utils\Fields::sortFields($detailFields),
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
             'PriceDisplay'         => $PriceDisplay,
             'VisitedProducts'      => new VisitedProducts(),
