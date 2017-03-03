@@ -128,6 +128,7 @@
                 <attribute>quiqqer.products.settings.searchFieldIds.edited</attribute>
                 <attribute>quiqqer.products.settings.searchFieldsByUser</attribute>
                 <attribute>quiqqer.products.settings.showFilterLeft</attribute>
+                <attribute>quiqqer.products.settings.defaultSorting</attribute>
             </attributes>
 
             <settings>
@@ -150,6 +151,37 @@
                                 <locale group="quiqqer/products" var="quiqqer.products.settings.searchFieldIds"/>
                             </text>
                         </input>
+
+                        <select conf="quiqqer.products.settings.defaultSorting">
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.defaultSorting"/>
+                            </text>
+
+                            <option value=""/>
+                            <option value="priority">
+                                <locale group="quiqqer/products" var="sort.sorting"/>
+                            </option>
+                            <option value="c_date ASC">
+                                <locale group="quiqqer/products" var="sort.cdate.ASC"/>
+                            </option>
+                            <option value="c_date DESC">
+                                <locale group="quiqqer/products" var="sort.cdate.DESC"/>
+                            </option>
+
+                            <option value="title ASC">
+                                <locale group="quiqqer/products" var="sort.title.ASC"/>
+                            </option>
+                            <option value="title DESC">
+                                <locale group="quiqqer/products" var="sort.title.DESC"/>
+                            </option>
+
+                            <option value="productNo ASC">
+                                <locale group="quiqqer/products" var="sort.productNo.ASC"/>
+                            </option>
+                            <option value="productNo DESC">
+                                <locale group="quiqqer/products" var="sort.productNo.DESC"/>
+                            </option>
+                        </select>
                     </settings>
                 </category>
             </settings>
