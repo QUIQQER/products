@@ -160,12 +160,12 @@ if ($siteUrl != $_REQUEST['_url']) {
         }
 
         $ProductList->addSort(
-            $title . ' aufsteigend',
+            $title . ' ' . QUI::getLocale()->get('quiqqer/products', 'sortASC'),
             'F' . $id . ' ASC'
         );
 
         $ProductList->addSort(
-            $title . ' absteigend',
+            $title . ' ' . QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
             'F' . $id . ' DESC'
         );
     }

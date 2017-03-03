@@ -25,12 +25,31 @@ class Search
 
         $categories = QUI::getRequest()->get('c');
 
+        $Site           = QUI::getRewrite()->getSite();
+        $defaultSorting = $Site->getAttribute('quiqqer.products.settings.defaultSorting');
+
         if ($categories) {
             $categories = explode(',', $categories);
         }
 
         if (!is_array($categories)) {
             $categories = array();
+        }
+
+        // look for default site settings
+        if (!$sortOn && !empty($defaultSorting)) {
+            $sorting = explode(' ', $defaultSorting);
+            $sortOn  = $sorting[0];
+        }
+
+        if (!$sortBy && !empty($defaultSorting)) {
+            $sorting = explode(' ', $defaultSorting);
+
+            switch ($sorting[1]) {
+                case 'DESC':
+                case 'ASC':
+                    $sortBy = $sorting[1];
+            }
         }
 
         $searchParams = array_filter(array(
