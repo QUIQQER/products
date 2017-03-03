@@ -149,6 +149,16 @@ if ($siteUrl != $_REQUEST['_url']) {
 
     $filterList = $ProductList->getFilter();
 
+    $ProductList->addSort(
+        QUI::getLocale()->get('quiqqer/products', 'sort.cdate.ASC'),
+        'c_date ASC'
+    );
+
+    $ProductList->addSort(
+        QUI::getLocale()->get('quiqqer/products', 'sort.cdate.DESC'),
+        'c_date DESC'
+    );
+
     foreach ($filterList as $filter) {
         if (!is_array($filter)) {
             /* @var $filter Products\Field\Field */

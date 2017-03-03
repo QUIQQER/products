@@ -45,10 +45,12 @@ class Search
         if (!$sortBy && !empty($defaultSorting)) {
             $sorting = explode(' ', $defaultSorting);
 
-            switch ($sorting[1]) {
-                case 'DESC':
-                case 'ASC':
-                    $sortBy = $sorting[1];
+            if (isset($sorting[1])) {
+                switch ($sorting[1]) {
+                    case 'DESC':
+                    case 'ASC':
+                        $sortBy = $sorting[1];
+                }
             }
         }
 
