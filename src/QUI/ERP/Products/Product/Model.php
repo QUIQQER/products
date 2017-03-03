@@ -852,6 +852,8 @@ class Model extends QUI\QDOM
             )
         );
 
+        $this->setAttribute('e_date', date('Y-m-d H:i:s'));
+
         // update
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
@@ -861,7 +863,7 @@ class Model extends QUI\QDOM
                 'fieldData'   => json_encode($fieldData),
                 'permissions' => json_encode($this->permissions),
                 'e_user'      => QUI::getUserBySession()->getId(),
-                'e_date'      => date('Y-m-d H:i:s')
+                'e_date'      => $this->getAttribute('e_date')
             ),
             array('id' => $this->getId())
         );
@@ -1111,7 +1113,9 @@ class Model extends QUI\QDOM
             ),
             'active'    => $this->isActive() ? 1 : 0,
             'minPrice'  => $minPrice ? $minPrice : 0,
-            'maxPrice'  => $maxPrice ? $maxPrice : 0
+            'maxPrice'  => $maxPrice ? $maxPrice : 0,
+            'c_date'    => $this->getAttribute('c_date'),
+            'e_date'    => $this->getAttribute('e_date')
         );
 
         // permissions

@@ -708,8 +708,11 @@ abstract class Search extends QUI\QDOM
             case 'active':
             case 'lang':
             case 'tags':
+            case 'c_date':
+            case 'e_date':
                 $order .= ' ' . $searchParams['sortOn'];
                 break;
+
             case 'priority':
                 $order .= ' F' . Fields::FIELD_PRIORITY;
                 break;

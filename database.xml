@@ -64,6 +64,8 @@
             <field type="TINYINT(1)">active</field>
             <field type="LONGTEXT NULL">tags</field>
             <field type="TEXT NULL">viewUsersGroups</field>
+            <field type="timestamp NULL default NULL">c_date</field>
+            <field type="timestamp NULL default NULL">e_date</field>
 
             <primary>id,lang</primary>
         </table>

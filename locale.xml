@@ -1368,6 +1368,10 @@
             <de><![CDATA[Liste]]></de>
             <en><![CDATA[List]]></en>
         </locale>
+        <locale name="quiqqer.products.settings.defaultSorting">
+            <de><![CDATA[Standard Sortierung]]></de>
+            <en><![CDATA[Default sorting]]></en>
+        </locale>
 
         <locale name="quiqqer.products.field.header.placeholder">
             <de><![CDATA[Rechte für das Feld #[fielId] - [fieldname]]]></de>
@@ -1518,6 +1522,44 @@
         <locale name="type.search.searchPlaceholder">
             <de><![CDATA[Suchbegriff eingeben...]]></de>
             <en><![CDATA[Enter a search term...]]></en>
+        </locale>
+
+        <locale name="sortDESC">
+            <de><![CDATA[absteigend]]></de>
+            <en><![CDATA[descending]]></en>
+        </locale>
+        <locale name="sortASC">
+            <de><![CDATA[aufsteigend]]></de>
+            <en><![CDATA[ascending]]></en>
+        </locale>
+
+        <locale name="sort.title.DESC">
+            <de><![CDATA[Titel absteigend]]></de>
+            <en><![CDATA[Title descending]]></en>
+        </locale>
+        <locale name="sort.title.ASC">
+            <de><![CDATA[Titel aufsteigend]]></de>
+            <en><![CDATA[Title ascending]]></en>
+        </locale>
+        <locale name="sort.productNo.DESC">
+            <de><![CDATA[Art. Nr. absteigend]]></de>
+            <en><![CDATA[Title descending]]></en>
+        </locale>
+        <locale name="sort.productNo.ASC">
+            <de><![CDATA[Art. Nr. aufsteigend]]></de>
+            <en><![CDATA[Title ascending]]></en>
+        </locale>
+        <locale name="sort.sorting">
+            <de><![CDATA[Nach Sortierung]]></de>
+            <en><![CDATA[By sorting]]></en>
+        </locale>
+        <locale name="sort.cdate.DESC">
+            <de><![CDATA[Älteste Produkte zuerst]]></de>
+            <en><![CDATA[Oldest products first]]></en>
+        </locale>
+        <locale name="sort.cdate.ASC">
+            <de><![CDATA[Neueste Produkte zuerst]]></de>
+            <en><![CDATA[Newest products first]]></en>
         </locale>
 
     </groups>

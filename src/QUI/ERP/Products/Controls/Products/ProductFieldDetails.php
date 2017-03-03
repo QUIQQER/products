@@ -23,8 +23,8 @@ class ProductFieldDetails extends QUI\Control
         $this->setAttributes(array(
             'Field'   => false,
             'Product' => false,
-            'files'   => true, // show in a FIELD_FOLDER all files
-            'images'  => true  // show in a FIELD_FOLDER all images
+            'files'   => true, // show in a TYPE_FOLDER all files
+            'images'  => true  // show in a TYPE_FOLDER all images
         ));
 
         parent::__construct($attributes);
