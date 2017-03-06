@@ -70,16 +70,20 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $value = '';
         }
 
-        $value = htmlspecialchars($value);
+        $value  = htmlspecialchars($value);
+        $Engine = QUI::getTemplateManager()->getEngine();
 
-        // create html
-        $html = '<div class="quiqqer-product-field">';
-        $html .= '<div class="quiqqer-product-field-title">' . $this->getTitle() . '</div>';
-        $html .= '<div class="quiqqer-product-field-value">';
-        $html .= "<select name=\"{$name}\" value=\"{$value}\" {$requiredField}
-                    data-field=\"{$id}\"
-                    data-qui=\"package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeList\"
-                    disabled=\"disabled\">";
+        $Engine->assign(array(
+            'this'          => $this,
+            'id'            => $id,
+            'title'         => $this->getTitle(),
+            'name'          => $name,
+            'value'         => $value,
+            'requiredField' => $requiredField
+        ));
+
+        // options
+        $options = array();
 
         $hasDefault = function () use ($entries) {
             foreach ($entries as $key => $option) {
@@ -91,12 +95,17 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         };
 
         if ($value === '' && !$hasDefault()) {
-            $html .= '<option value="">' .
-                     QUI::getLocale()->get('quiqqer/products', 'fieldtype.ProductAttributeList.select.emptyvalue') .
-                     '</option>';
+            $options[] = array(
+                'value'    => '',
+                'text'     => QUI::getLocale()->get(
+                    'quiqqer/products',
+                    'fieldtype.ProductAttributeList.select.emptyvalue'
+                ),
+                'selected' => '',
+                'data'     => ''
+            );
         }
 
-        // patch für neue <-> alte version
         $currentLC = strtolower($current) . '_' . strtoupper($current);
         $Calc      = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
@@ -105,7 +114,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
             $text      = '';
             $selected  = '';
-            $userinput = '';
+            $userInput = '';
 
             if (isset($option['selected']) && $option['selected']) {
                 $selected = 'selected="selected" ';
@@ -120,7 +129,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             }
 
             if (isset($option['userinput']) && $option['userinput']) {
-                $userinput = ' data-userinput="1"';
+                $userInput = ' data-userinput="1"';
             }
 
             if (!isset($option['sum']) || !$option['sum']) {
@@ -145,12 +154,17 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                 $text .= ' (+' . $discount . ')';
             }
 
-            $html .= '<option ' . $selected . $userinput . 'value="' . $key . '">' . $text . '</option>';
+            $options[] = array(
+                'selected' => $selected,
+                'value'    => $key,
+                'text'     => $text,
+                'data'     => $userInput
+            );
         }
 
-        $html .= '</select></div>';
-        $html .= '</div>';
 
-        return $html;
+        $Engine->assign('options', $options);
+
+        return $Engine->fetch(dirname(__FILE__) . '/ProductAttributeListFrontendView.html');
     }
 }
