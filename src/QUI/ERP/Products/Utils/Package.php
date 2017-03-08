@@ -49,6 +49,12 @@ class Package
      */
     public static function hidePrice()
     {
+        // Wenn in Session der Preis versteckt werden soll
+        // Dann hat dies Vorrang
+        if (QUI::getSession()->get('QUIQQER_PRODUCTS_HIDE_PRICE') == 1) {
+            return true;
+        }
+
         if (!is_null(self::$hidePrice)) {
             return self::$hidePrice;
         }
