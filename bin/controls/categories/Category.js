@@ -49,7 +49,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
     return new Class({
 
         Extends: QUIPanel,
-        Type: 'package/quiqqer/products/bin/controls/categories/Category',
+        Type   : 'package/quiqqer/products/bin/controls/categories/Category',
 
         Binds: [
             'resize',
@@ -66,24 +66,24 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
         options: {
             categoryId: false,
-            icon: 'fa fa-sitemap'
+            icon      : 'fa fa-sitemap'
         },
 
         initialize: function (options) {
             this.parent(options);
 
             this.$grids = {
-                Fields: null,
+                Fields  : null,
                 Products: null
             };
 
-            this.$injected = false;
+            this.$injected     = false;
             this.$informations = {};
 
-            this.$ContainerData = null;
-            this.$ContainerSites = null;
+            this.$ContainerData     = null;
+            this.$ContainerSites    = null;
             this.$ContainerProducts = null;
-            this.$ContainerFields = null;
+            this.$ContainerFields   = null;
 
             this.$data = {};
 
@@ -97,56 +97,56 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
          * event : on create
          */
         $onCreate: function () {
-            var self = this,
+            var self    = this,
                 Content = this.getContent();
 
             Content.setStyles({
-                height: 'calc(100% - 30px)',
+                height : 'calc(100% - 30px)',
                 padding: 0
             });
 
             // buttons
             this.addButton({
-                name: 'save',
+                name     : 'save',
                 textimage: 'fa fa-save',
-                text: QUILocale.get('quiqqer/system', 'save'),
-                events: {
+                text     : QUILocale.get('quiqqer/system', 'save'),
+                events   : {
                     onClick: this.save
                 }
             });
 
             // category
             this.addCategory({
-                name: 'data',
-                image: 'fa fa-file-o',
-                text: QUILocale.get(lg, 'category.panel.button.data'),
+                name  : 'data',
+                image : 'fa fa-file-o',
+                text  : QUILocale.get(lg, 'category.panel.button.data'),
                 events: {
                     onClick: this.openData
                 }
             });
 
             this.addCategory({
-                name: 'products',
-                image: 'fa fa-shopping-bag',
-                text: QUILocale.get(lg, 'category.panel.button.products'),
+                name  : 'products',
+                image : 'fa fa-shopping-bag',
+                text  : QUILocale.get(lg, 'category.panel.button.products'),
                 events: {
                     onClick: this.openProducts
                 }
             });
 
             this.addCategory({
-                name: 'sites',
-                image: 'fa fa-file-text-o',
-                text: QUILocale.get(lg, 'category.panel.button.sites'),
+                name  : 'sites',
+                image : 'fa fa-file-text-o',
+                text  : QUILocale.get(lg, 'category.panel.button.sites'),
                 events: {
                     onClick: this.openSites
                 }
             });
 
             this.addCategory({
-                name: 'fields',
-                image: 'fa fa-files-o',
-                text: QUILocale.get(lg, 'category.panel.button.fields'),
+                name  : 'fields',
+                image : 'fa fa-files-o',
+                text  : QUILocale.get(lg, 'category.panel.button.fields'),
                 events: {
                     onClick: this.openFields
                 }
@@ -155,24 +155,24 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             // html
             Content.set({
                 html: Mustache.render(template, {
-                    textData: QUILocale.get('quiqqer/system', 'data'),
-                    textId: QUILocale.get('quiqqer/system', 'id'),
-                    textTitle: QUILocale.get('quiqqer/system', 'title'),
-                    textDescription: QUILocale.get('quiqqer/system', 'description'),
-                    textParent: QUILocale.get(lg, 'control.category.update.title.parent'),
-                    textFields: QUILocale.get(lg, 'control.category.update.title.fields'),
-                    textSites: QUILocale.get(lg, 'control.category.update.title.sites'),
-                    textInformation: QUILocale.get(lg, 'control.category.update.title.information'),
-                    textProductCount: QUILocale.get(lg, 'control.category.update.title.countProducts'),
-                    textFieldCount: QUILocale.get(lg, 'control.category.update.title.countFields'),
+                    textData           : QUILocale.get('quiqqer/system', 'data'),
+                    textId             : QUILocale.get('quiqqer/system', 'id'),
+                    textTitle          : QUILocale.get('quiqqer/system', 'title'),
+                    textDescription    : QUILocale.get('quiqqer/system', 'description'),
+                    textParent         : QUILocale.get(lg, 'control.category.update.title.parent'),
+                    textFields         : QUILocale.get(lg, 'control.category.update.title.fields'),
+                    textSites          : QUILocale.get(lg, 'control.category.update.title.sites'),
+                    textInformation    : QUILocale.get(lg, 'control.category.update.title.information'),
+                    textProductCount   : QUILocale.get(lg, 'control.category.update.title.countProducts'),
+                    textFieldCount     : QUILocale.get(lg, 'control.category.update.title.countFields'),
                     textCategoriesCount: QUILocale.get(lg, 'control.category.update.title.countCategories')
                 })
             });
 
-            this.$ContainerData = Content.getElement('.category-data');
-            this.$ContainerSites = Content.getElement('.category-sites');
+            this.$ContainerData     = Content.getElement('.category-data');
+            this.$ContainerSites    = Content.getElement('.category-sites');
             this.$ContainerProducts = Content.getElement('.category-products');
-            this.$ContainerFields = Content.getElement('.category-fields');
+            this.$ContainerFields   = Content.getElement('.category-fields');
 
             var Id = Content.getElement('.field-id');
 
@@ -183,18 +183,18 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             }).inject(this.$ContainerFields);
 
             this.$grids.Fields = new Grid(FieldContainer, {
-                perPage: 150,
-                buttons: [{
-                    name: 'add',
-                    text: QUILocale.get(lg, 'category.update.field.grid.button.add'),
+                perPage    : 150,
+                buttons    : [{
+                    name     : 'add',
+                    text     : QUILocale.get(lg, 'category.update.field.grid.button.add'),
                     textimage: 'fa fa-plus',
-                    events: {
+                    events   : {
                         onClick: function () {
                             require([
                                 'package/quiqqer/products/bin/controls/fields/search/Window'
                             ], function (Win) {
                                 new Win({
-                                    title: QUILocale.get(lg, 'category.update.window.addField.title'),
+                                    title : QUILocale.get(lg, 'category.update.window.addField.title'),
                                     events: {
                                         onSubmit: function (Win, value) {
                                             self.addField(value[0]);
@@ -207,48 +207,48 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 }, {
                     type: 'seperator'
                 }, {
-                    name: 'delete',
-                    text: QUILocale.get(lg, 'category.update.field.grid.button.delete'),
+                    name     : 'delete',
+                    text     : QUILocale.get(lg, 'category.update.field.grid.button.delete'),
                     textimage: 'fa fa-trash',
-                    disabled: true,
-                    events: {
+                    disabled : true,
+                    events   : {
                         onClick: function () {
                             self.openRemoveFieldDialog();
                         }
                     }
                 }],
                 columnModel: [{
-                    header: QUILocale.get('quiqqer/system', 'id'),
+                    header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
-                    dataType: 'number',
-                    width: 60
+                    dataType : 'number',
+                    width    : 60
                 }, {
-                    header: QUILocale.get('quiqqer/system', 'title'),
+                    header   : QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
-                    dataType: 'text',
-                    width: 200
+                    dataType : 'text',
+                    width    : 200
                 }, {
-                    header: QUILocale.get(lg, 'workingTitle'),
+                    header   : QUILocale.get(lg, 'workingTitle'),
                     dataIndex: 'workingtitle',
-                    dataType: 'text',
-                    width: 200
+                    dataType : 'text',
+                    width    : 200
                 }, {
-                    header: QUILocale.get(lg, 'fieldtype'),
+                    header   : QUILocale.get(lg, 'fieldtype'),
                     dataIndex: 'fieldtype',
-                    dataType: 'text',
-                    width: 200
+                    dataType : 'text',
+                    width    : 200
                 }, {
-                    header: QUILocale.get(lg, 'priority'),
+                    header   : QUILocale.get(lg, 'priority'),
                     dataIndex: 'priority',
-                    dataType: 'text',
-                    width: 100
+                    dataType : 'text',
+                    width    : 100
                 }]
             });
 
             this.$grids.Fields.addEvents({
                 onClick: function () {
                     var selected = this.$grids.Fields.getSelectedIndices(),
-                        Delete = this.$grids.Fields.getButtons().filter(function (Btn) {
+                        Delete   = this.$grids.Fields.getButtons().filter(function (Btn) {
                             return Btn.getAttribute('name') == 'delete';
                         })[0];
 
@@ -273,24 +273,26 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
             this.$injected = true;
 
-            var self = this,
-                categoryId = this.getAttribute('categoryId'),
-                Content = this.getContent(),
-                TranslateTitles = Content.getElement('.category-title'),
+            var self                = this,
+                categoryId          = this.getAttribute('categoryId'),
+                Content             = this.getContent(),
+                TranslateTitles     = Content.getElement('.category-title'),
                 TranslateCategories = Content.getElement('.category-description');
 
             this.refresh().then(function () {
 
                 // translations
                 this.$TitlesTranslation = new Translation({
-                    'group': 'quiqqer/products',
-                    'var': 'products.category.' + categoryId + '.title',
+                    'group'          : 'quiqqer/products',
+                    'var'            : 'products.category.' + categoryId + '.title',
+                    'package'        : 'quiqqer/products',
                     createIfNotExists: true
                 }).inject(TranslateTitles);
 
                 this.$CategoriesTranslation = new Translation({
-                    'group': 'quiqqer/products',
-                    'var': 'products.category.' + categoryId + '.description',
+                    'group'          : 'quiqqer/products',
+                    'var'            : 'products.category.' + categoryId + '.description',
+                    'package'        : 'quiqqer/products',
                     createIfNotExists: true
                 }).inject(TranslateCategories);
 
@@ -307,8 +309,8 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     new SelectItem({
                         categoryId: this.$data.parent || 0,
                         removeable: false,
-                        editable: true,
-                        events: {
+                        editable  : true,
+                        events    : {
                             onChange: function (Itm, value) {
                                 Itm.loading();
                                 Categories.setParent(categoryId, value).then(function () {
@@ -328,11 +330,11 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     field = this.$data.fields[i];
 
                     fieldGridData.push({
-                        id: field.id,
-                        title: field.title || QUILocale.get(lg, 'products.field.' + field.id + '.title'),
+                        id          : field.id,
+                        title       : field.title || QUILocale.get(lg, 'products.field.' + field.id + '.title'),
                         workingtitle: field.workingtitle || '',
-                        fieldtype: QUILocale.get(lg, 'fieldtype.' + field.type),
-                        priority: field.priority
+                        fieldtype   : QUILocale.get(lg, 'fieldtype.' + field.type),
+                        priority    : field.priority
                     });
                 }
 
@@ -345,51 +347,51 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 var ProductContainer = new Element('div', {
                     styles: {
                         height: '100%',
-                        width: '100%'
+                        width : '100%'
                     }
                 }).inject(this.$ContainerProducts);
 
                 this.$grids.Products = new Grid(ProductContainer, {
-                    perPage: 150,
-                    pagination: true,
-                    buttons: [{
-                        text: QUILocale.get(lg, 'category.panel.button.products.add'),
+                    perPage    : 150,
+                    pagination : true,
+                    buttons    : [{
+                        text     : QUILocale.get(lg, 'category.panel.button.products.add'),
                         textimage: 'fa fa-plus',
-                        events: {
+                        events   : {
                             onClick: this.openAddProductDialog
                         }
                     }, {
                         type: 'seperator'
                     }, {
-                        name: 'remove',
-                        text: QUILocale.get(lg, 'category.panel.button.products.remove'),
-                        title: QUILocale.get(lg, 'category.panel.button.products.remove.title'),
+                        name     : 'remove',
+                        text     : QUILocale.get(lg, 'category.panel.button.products.remove'),
+                        title    : QUILocale.get(lg, 'category.panel.button.products.remove.title'),
                         textimage: 'fa fa-chain-broken',
-                        disabled: true,
-                        events: {
+                        disabled : true,
+                        events   : {
                             onClick: this.openRemoveProductDialog
                         }
                     }],
                     columnModel: [{
-                        header: QUILocale.get('quiqqer/system', 'id'),
+                        header   : QUILocale.get('quiqqer/system', 'id'),
                         dataIndex: 'id',
-                        dataType: 'number',
-                        width: 60
+                        dataType : 'number',
+                        width    : 60
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'title'),
+                        header   : QUILocale.get('quiqqer/system', 'title'),
                         dataIndex: 'title',
-                        dataType: 'text',
-                        width: 200
+                        dataType : 'text',
+                        width    : 200
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'description'),
+                        header   : QUILocale.get('quiqqer/system', 'description'),
                         dataIndex: 'description',
-                        dataType: 'text',
-                        width: 200
+                        dataType : 'text',
+                        width    : 200
                     }, {
-                        header: QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
+                        header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
                         dataIndex: 'price',
-                        dataType: 'text',
-                        width: 100
+                        dataType : 'text',
+                        width    : 100
                     }]
                 });
 
@@ -402,7 +404,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     return new Promise(function (resolve, reject) {
                         Categories.getProductList(categoryId, {
                             perPage: self.$grids.Products.options.perPage,
-                            page: self.$grids.Products.options.page
+                            page   : self.$grids.Products.options.page
                         }).then(function (result) {
                             self.$grids.Products.setData(result);
                             RemoveButton.disable();
@@ -411,13 +413,13 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 };
 
                 this.$grids.Products.addEvents({
-                    refresh: refreshGrid,
+                    refresh   : refreshGrid,
                     onDblClick: function () {
                         new ProductPanel({
                             productId: self.$grids.Products.getSelectedData()[0].id
                         }).inject(self.getParent());
                     },
-                    onClick: function () {
+                    onClick   : function () {
                         RemoveButton.enable();
                     }
                 });
@@ -436,37 +438,37 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 var SitesContainer = new Element('div', {
                     styles: {
                         height: '100%',
-                        width: '100%'
+                        width : '100%'
                     }
                 }).inject(this.$ContainerSites);
 
                 this.$grids.Sites = new Grid(SitesContainer, {
-                    perPage: 150,
+                    perPage    : 150,
                     columnModel: [{
-                        header: QUILocale.get('quiqqer/system', 'id'),
+                        header   : QUILocale.get('quiqqer/system', 'id'),
                         dataIndex: 'id',
-                        dataType: 'number',
-                        width: 60
+                        dataType : 'number',
+                        width    : 60
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'project'),
+                        header   : QUILocale.get('quiqqer/system', 'project'),
                         dataIndex: 'project',
-                        dataType: 'text',
-                        width: 200
+                        dataType : 'text',
+                        width    : 200
                     }, {
-                        header: QUILocale.get('quiqqer/system', 'language'),
+                        header   : QUILocale.get('quiqqer/system', 'language'),
                         dataIndex: 'lang',
-                        dataType: 'text',
-                        width: 100
+                        dataType : 'text',
+                        width    : 100
                     }]
                 });
 
                 this.$grids.Sites.addEvents({
-                    refresh: refreshSiteGrid,
+                    refresh   : refreshSiteGrid,
                     onDblClick: function () {
-                        var data = self.$grids.Sites.getSelectedData()[0],
+                        var data    = self.$grids.Sites.getSelectedData()[0],
                             project = data.project,
-                            lang = data.lang,
-                            id = data.id;
+                            lang    = data.lang,
+                            id      = data.id;
 
                         require(['utils/Panels'], function (Utils) {
                             Utils.openSitePanel(project, lang, id);
@@ -505,7 +507,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
             return new Promise(function (resolve, reject) {
                 var proms = [],
-                    size = this.getContent().getSize();
+                    size  = this.getContent().getSize();
 
                 if (this.$grids.Fields) {
                     proms.push(this.$grids.Fields.setWidth(size.x - 40));
@@ -558,7 +560,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                                 field = this.$data.fields[i];
 
                                 fieldGridData.push({
-                                    id: field.id,
+                                    id   : field.id,
                                     title: field.title || QUILocale.get(lg, 'products.field.' + field.id + '.title')
                                 });
                             }
@@ -617,14 +619,14 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             this.getCategory('products').setActive();
 
             return this.$hideContainer()
-                .then(this.resize)
-                .then(function () {
-                    self.$grids.Products.refresh();
-                    return self.$showContainer(self.$ContainerProducts);
-                })
-                .then(function () {
-                    self.$grids.Products.resize();
-                });
+                       .then(this.resize)
+                       .then(function () {
+                           self.$grids.Products.refresh();
+                           return self.$showContainer(self.$ContainerProducts);
+                       })
+                       .then(function () {
+                           self.$grids.Products.resize();
+                       });
         },
 
         /**
@@ -636,16 +638,16 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             this.getCategory('fields').setActive();
 
             return this.$hideContainer()
-                .then(this.resize)
+                       .then(this.resize)
 
-                .then(function () {
-                    this.$grids.Fields.refresh();
-                    return this.$showContainer(this.$ContainerFields);
-                }.bind(this))
+                       .then(function () {
+                           this.$grids.Fields.refresh();
+                           return this.$showContainer(this.$ContainerFields);
+                       }.bind(this))
 
-                .then(function () {
-                    this.$grids.Fields.resize();
-                }.bind(this));
+                       .then(function () {
+                           this.$grids.Fields.resize();
+                       }.bind(this));
         },
 
         /**
@@ -658,14 +660,14 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
             return new Promise(function (resolve) {
                 new QUIConfirm({
-                    icon: 'fa fa-trash',
-                    texticon: 'fa fa-trash',
-                    title: QUILocale.get(lg, 'category.update.field.window.delete.title'),
-                    text: QUILocale.get(lg, 'category.update.field.window.delete.text'),
+                    icon       : 'fa fa-trash',
+                    texticon   : 'fa fa-trash',
+                    title      : QUILocale.get(lg, 'category.update.field.window.delete.title'),
+                    text       : QUILocale.get(lg, 'category.update.field.window.delete.text'),
                     information: QUILocale.get(lg, 'category.update.field.window.delete.information'),
-                    maxHeight: 300,
-                    maxWidth: 450,
-                    events: {
+                    maxHeight  : 300,
+                    maxWidth   : 450,
+                    events     : {
                         onSubmit: function () {
                             self.removeFields(self.$grids.Fields.getSelectedIndices());
                             resolve();
@@ -685,18 +687,18 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
             return new Promise(function (resolve) {
                 new QUIConfirm({
-                    icon: 'fa fa-object-group',
-                    texticon: false,
-                    title: QUILocale.get(lg, 'category.panel.window.recursiveFields.title'),
+                    icon       : 'fa fa-object-group',
+                    texticon   : false,
+                    title      : QUILocale.get(lg, 'category.panel.window.recursiveFields.title'),
                     information: QUILocale.get(lg, 'category.panel.window.recursiveFields.information'),
-                    text: QUILocale.get(lg, 'category.panel.window.recursiveFields.text', {
+                    text       : QUILocale.get(lg, 'category.panel.window.recursiveFields.text', {
                         category: categoryId
                     }),
 
                     maxHeight: 400,
-                    maxWidth: 600,
+                    maxWidth : 600,
                     autoclose: false,
-                    events: {
+                    events   : {
                         onSubmit: function (Win) {
                             Win.Loader.setAttribute('closetime', 100000);
                             Win.Loader.show();
@@ -733,7 +735,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
                 moofx(Container).animate({
                     opacity: 1,
-                    top: 0
+                    top    : 0
                 }, {
                     duration: 200,
                     callback: resolve
@@ -755,7 +757,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     this.$ContainerFields
                 ]).animate({
                     opacity: 0,
-                    top: -50
+                    top    : -50
                 }, {
                     duration: 200,
                     callback: function () {
@@ -778,9 +780,9 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
         save: function () {
             this.Loader.show();
 
-            var self = this,
+            var self       = this,
                 categoryId = this.getAttribute('categoryId'),
-                data = this.$grids.Fields.getData();
+                data       = this.$grids.Fields.getData();
 
             // fields
             var i, len, field;
@@ -827,8 +829,8 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             return new Promise(function (resolve, reject) {
                 Fields.getChild(fieldId).then(function () {
                     self.$grids.Fields.addRow({
-                        id: fieldId,
-                        title: QUILocale.get(lg, 'products.field.' + fieldId + '.title'),
+                        id          : fieldId,
+                        title       : QUILocale.get(lg, 'products.field.' + fieldId + '.title'),
                         publicStatus: new QUISwitch(),
                         searchStatus: new QUISwitch()
                     });
@@ -917,7 +919,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
          * @return {Promise}
          */
         openRemoveProductDialog: function () {
-            var self = this;
+            var self        = this;
             var productsIds = this.$grids.Products.getSelectedData().map(function (Entry) {
                 return Entry.id;
             });
@@ -928,21 +930,21 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
             return new Promise(function (resolve) {
                 new QUIConfirm({
-                    icon: 'fa fa-chain-broken',
-                    texticon: false,
-                    title: QUILocale.get(lg, 'category.panel.window.remove.title'),
+                    icon       : 'fa fa-chain-broken',
+                    texticon   : false,
+                    title      : QUILocale.get(lg, 'category.panel.window.remove.title'),
                     information: QUILocale.get(lg, 'category.panel.window.remove.information'),
-                    text: QUILocale.get(lg, 'category.panel.window.remove.text', {
+                    text       : QUILocale.get(lg, 'category.panel.window.remove.text', {
                         products: productsIds.join(', ')
                     }),
-                    maxHeight: 400,
-                    maxWidth: 600,
-                    autoclose: false,
-                    ok_button: {
+                    maxHeight  : 400,
+                    maxWidth   : 600,
+                    autoclose  : false,
+                    ok_button  : {
                         textimage: 'fa fa-chain-broken',
-                        text: QUILocale.get('quiqqer/system', 'remove')
+                        text     : QUILocale.get('quiqqer/system', 'remove')
                     },
-                    events: {
+                    events     : {
                         onSubmit: function (Win) {
                             Win.Loader.show();
                             self.removeProducts(productsIds).then(function () {
