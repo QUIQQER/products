@@ -10,7 +10,9 @@ define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
     'qui/QUI',
     'qui/controls/Control',
     'qui/controls/buttons/Switch',
-    'Ajax'
+    'Ajax',
+
+    'css!package/quiqqer/products/bin/controls/frontend/PriceSwitch.css'
 
 ], function (QUI, QUIControl, QUISwitch, QUIAjax) {
     "use strict";
@@ -29,11 +31,16 @@ define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
             '$onChange'
         ],
 
+        options: {
+            icon: false
+        },
+
         initialize: function (options) {
             this.parent(options);
 
             this.$Switch = null;
             this.$Elm    = null;
+            this.$Icon   = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -46,6 +53,31 @@ define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
          * @returns {*|Element|null}
          */
         create: function () {
+            if (this.getAttribute('icon')) {
+                this.$Elm = new Element('div', {
+                    'class': 'quiqqer-products-priceSwitch',
+                    html   : '<span class="fa"></span>',
+                    styles : {
+                        cursor: 'pointer'
+                    },
+                    events : {
+                        click: this.$onChange
+                    }
+                });
+
+                this.$Icon = this.$Elm.getElement('span');
+
+                this.$Icon.addClass(
+                    this.getAttribute('icon')
+                );
+
+                if (window.QUIQQER_PRODUCTS_HIDE_PRICE) {
+                    this.$Elm.addClass('quiqqer-products-priceSwitch-hidePrice');
+                }
+
+                return this.$Elm;
+            }
+
             this.$Switch = new QUISwitch({
                 status: window.QUIQQER_PRODUCTS_HIDE_PRICE,
                 events: {
@@ -62,14 +94,22 @@ define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
          * event : on inject
          */
         $onInject: function () {
-            this.$Switch.$onInject();
+            if (!this.getAttribute('icon')) {
+                this.$Switch.$onInject();
+            }
         },
 
         /**
          * event : on change
          */
         $onChange: function () {
-            var status = this.$Switch.getStatus();
+            var status;
+
+            if (this.getAttribute('icon')) {
+                status = !this.$Elm.hasClass('quiqqer-products-priceSwitch-hidePrice');
+            } else {
+                status = this.$Switch.getStatus();
+            }
 
             if (status == window.QUIQQER_PRODUCTS_HIDE_PRICE) {
                 return;
