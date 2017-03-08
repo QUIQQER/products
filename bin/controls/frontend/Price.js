@@ -20,7 +20,8 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
 
     var hidePrice = false;
 
-    if (typeof QUIQQER_PRODUCTS_HIDE_PRICE !== 'undefined' && QUIQQER_PRODUCTS_HIDE_PRICE) {
+    if (typeof window.QUIQQER_PRODUCTS_HIDE_PRICE !== 'undefined' &&
+        window.QUIQQER_PRODUCTS_HIDE_PRICE) {
         hidePrice = true;
     }
 

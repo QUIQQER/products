@@ -10,6 +10,7 @@
         </description>
 
         <provider>
+            <erp src="\QUI\ERP\Products\ErpProvider"/>
             <desktopSearch src="\QUI\ERP\Products\DesktopSearch"/>
         </provider>
 
