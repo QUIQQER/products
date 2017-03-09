@@ -204,7 +204,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
 
                 var Uri = URI(window.location);
 
-                Uri.addSearch('search', this.$Input.value);
+                Uri.setSearch('search', this.$Input.value);
 
                 window.history.pushState({}, "", Uri.toString());
 
