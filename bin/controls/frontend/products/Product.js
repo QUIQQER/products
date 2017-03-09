@@ -38,8 +38,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
         ],
 
         options: {
-            closeable: false,
-            productId: false
+            closeable    : false,
+            productId    : false,
+            galleryLoader: true
         },
 
         initialize: function (options) {
@@ -47,13 +48,15 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             this.$TabContainer = null;
 
-            this.$Tabbar = null;
-            this.$tabs   = null;
-            this.$Touch  = null;
-            this.$Price  = null;
-            this.$Next   = null;
-            this.$Prev   = null;
+            this.$Tabbar  = null;
+            this.$Touch   = null;
+            this.$Price   = null;
+            this.$Gallery = null;
 
+            this.$Next = null;
+            this.$Prev = null;
+
+            this.$tabs    = null;
             this.$isTouch = !!('ontouchstart' in window);
 
             this.addEvents({
@@ -233,7 +236,16 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             QUI.parse(Elm).then(function () {
                 // price
-                var Price = Elm.getElement('.qui-products-price-display');
+                var Price   = Elm.getElement('.qui-products-price-display'),
+                    Gallery = Elm.getElement('.quiqqer-gallery-slider');
+
+                if (Gallery) {
+                    this.$Gallery = QUI.Controls.getById(Gallery.get('data-quiid'));
+                }
+
+                if (self.getAttribute('galleryLoader') === false) {
+                    this.$Gallery.Loader.hide();
+                }
 
                 if (Price) {
                     this.$Price = QUI.Controls.getById(Price.get('data-quiid'));
