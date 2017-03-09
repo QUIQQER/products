@@ -38,11 +38,32 @@ class Suggest extends QUI\Control
     /**
      * (non-PHPdoc)
      *
+     * @return string
+     */
+    public function create()
+    {
+        $Site = $this->getSite();
+
+        if ($Site->getAttribute('quiqqer.products.settings.showFreeTextSearch')) {
+            return '';
+        }
+
+        return parent::create();
+    }
+
+    /**
+     * (non-PHPdoc)
+     *
      * @see \QUI\Control::create()
      */
     public function getBody()
     {
         $Engine = QUI::getTemplateManager()->getEngine();
+        $Site   = $this->getSite();
+
+        if ($Site->getAttribute('quiqqer.products.settings.showFreeText')) {
+            return '';
+        }
 
         if ($this->getAttribute('globalsearch')) {
             $this->setAttribute('data-qui-options-globalsearch', 1);

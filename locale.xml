@@ -809,6 +809,16 @@
             <de><![CDATA[Dateien]]></de>
             <en><![CDATA[Files]]></en>
         </locale>
+
+        <locale name="control.select.search.placeholder">
+            <de><![CDATA[Suche nach einem Produkt...]]></de>
+            <en><![CDATA[Search for a product...]]></en>
+        </locale>
+        <locale name="control.search.placeholder">
+            <de><![CDATA[Suchbegriff eingeben...]]></de>
+            <en><![CDATA[Enter a search term...]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
@@ -1000,10 +1010,6 @@
         <locale name="control.select.search.categories.placeholder">
             <de><![CDATA[Suche nach einer Produktkategorie...]]></de>
             <en><![CDATA[Search for a product category...]]></en>
-        </locale>
-        <locale name="control.select.search.placeholder">
-            <de><![CDATA[Suche nach einem Produkt...]]></de>
-            <en><![CDATA[Search for a product...]]></en>
         </locale>
 
         <locale name="control.category.update.title.fields">
@@ -1348,6 +1354,10 @@
             <de><![CDATA[Filter auf der linken Seite anzeigen]]></de>
             <en><![CDATA[Show filter at the left side]]></en>
         </locale>
+        <locale name="quiqqer.products.settings.showFreeTextSearch">
+            <de><![CDATA[Freitext Suche anzeigen]]></de>
+            <en><![CDATA[Show freetext search]]></en>
+        </locale>
         <locale name="quiqqer.products.settings.categoryStartNumber">
             <de><![CDATA[Anzahl angezeigter Kategorien]]></de>
             <en><![CDATA[Limit of displayed categories]]></en>
@@ -1509,6 +1519,14 @@
         <locale name="type.category.filterTitle">
             <de><![CDATA[Filter]]></de>
             <en><![CDATA[Filter]]></en>
+        </locale>
+        <locale name="type.category.freetextTitle">
+            <de><![CDATA[Suche]]></de>
+            <en><![CDATA[Search]]></en>
+        </locale>
+        <locale name="type.category.freetextButtonText">
+            <de><![CDATA[Suche]]></de>
+            <en><![CDATA[Search]]></en>
         </locale>
 
         <locale name="type.search.searchTitle">

@@ -98,6 +98,11 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
                 this.$Elm.setStyles(this.getAttribute('styles'));
             }
 
+            if (window.QUIQQER_SITE.type == 'quiqqer/products:types/category' &&
+                document.getElement('.quiqqer-products-category-freetextSearch')) {
+                this.$Elm.setStyle('display', 'none');
+            }
+
             return this.$Elm;
         },
 

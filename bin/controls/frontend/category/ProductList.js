@@ -112,6 +112,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$FilterList        = null;
             this.$FilterFieldList   = null;
 
+            this.$FreeText          = null;
+            this.$FreeTextContainer = null;
+
             this.$fields       = {};
             this.$selectFilter = [];
             this.$selectFields = [];
@@ -138,6 +141,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          */
         execute: function () {
             this.$setWindowLocation();
+        },
+
+        /**
+         * Has the product list a free text field?
+         *
+         * @returns {boolean}
+         */
+        hasFreeText: function () {
+            return !!this.$FreeText;
         },
 
         /**
@@ -179,7 +191,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$FilterResultInfo  = Elm.getElement('.quiqqer-products-productList-resultInfo-text');
             this.$FilterClearButton = Elm.getElement('.quiqqer-products-productList-resultInfo-clearbtn');
 
-            this.$FilterContainer = document.getElement('.quiqqer-products-productList-filter-container-' + cid);
+            this.$FreeTextContainer = document.getElement('.quiqqer-products-category-freetextSearch');
+            this.$FilterContainer   = document.getElement('.quiqqer-products-productList-filter-container-' + cid);
 
             if (Elm.get('data-categories') && Elm.get('data-categories') !== '') {
                 Elm.get('data-categories').split(',').each(function (categoryId) {
@@ -274,6 +287,27 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         });
                     }.bind(this)
                 });
+            }
+
+            // freetext
+            if (this.$FreeTextContainer) {
+                this.$FreeText = this.$FreeTextContainer.getElement('[type="search"]');
+                var Button     = this.$FreeTextContainer.getElement('[type="submit"]');
+
+                Button.setStyle('display', 'none');
+
+                new QUIButton({
+                    icon  : 'fa fa-search',
+                    events: {
+                        onClick: this.$setWindowLocation
+                    },
+                    styles: {
+                        padding: 5,
+                        width  : 50
+                    }
+                }).inject(this.$FreeTextContainer);
+
+                this.$FreeText.addEvent('change', this.$setWindowLocation);
             }
 
             this.$More = Elm.getElement('.quiqqer-products-productList-products-more .button');
@@ -1052,6 +1086,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 if ("search" in query) {
                     freetext = query.search;
                 }
+            }
+
+            if (this.$FreeText) {
+                freetext = this.$FreeText.value;
             }
 
             return {
