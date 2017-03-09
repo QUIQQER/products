@@ -2,6 +2,12 @@
 
     {if $showFilter}
     <div class="content-headerpage-multible-left grid-30 hide-on-mobile">
+        <header>
+            <h2>{locale group="quiqqer/products" var="type.category.categoryTitle"}</h2>
+        </header>
+        {if $CategoryMenu->countChildren()}
+            {$CategoryMenu->create()}
+        {/if}
 
         {if $Site->getAttribute('quiqqer.products.settings.showFreeTextSearch')}
         <header>
@@ -12,7 +18,7 @@
                    placeholder="{locale group="quiqqer/products" var="control.search.placeholder"}"
             />
             <input type="submit" name="submit" class="button"
-                value="{locale group="quiqqer/products" var="type.category.freetextButtonText"}"
+                   value="{locale group="quiqqer/products" var="type.category.freetextButtonText"}"
             />
             <noscript>
                 <style>
@@ -22,13 +28,6 @@
                 </style>
             </noscript>
         </label>
-        {/if}
-
-        <header>
-            <h2>{locale group="quiqqer/products" var="type.category.categoryTitle"}</h2>
-        </header>
-        {if $CategoryMenu->countChildren()}
-            {$CategoryMenu->create()}
         {/if}
 
         {if isset($ProductList)}

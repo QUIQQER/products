@@ -52,10 +52,14 @@ class DesktopSearch implements QUI\Workspace\Search\ProviderInterface
         $result = array();
         $Search = QUI\ERP\Products\Handler\Search::getBackendSearch();
 
-        $products = $Search->search(array(
-            'freetext' => $search,
-            'limit'    => 10
-        ));
+        try {
+            $products = $Search->search(array(
+                'freetext' => $search,
+                'limit'    => 10
+            ));
+        } catch (QUI\Permissions\Exception $Exception) {
+            return array();
+        }
 
         foreach ($products as $productId) {
             try {
