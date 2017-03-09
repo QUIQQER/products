@@ -2074,9 +2074,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                             self.$setWindowLocation();
 
                             new Product({
-                                productId: productId,
-                                closeable: true,
-                                events   : {
+                                productId    : productId,
+                                closeable    : true,
+                                galleryLoader: false,
+                                events       : {
                                     onLoad: function () {
                                         moofx(self.$Elm).animate({
                                             height: 0
