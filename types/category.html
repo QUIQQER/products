@@ -2,6 +2,28 @@
 
     {if $showFilter}
     <div class="content-headerpage-multible-left grid-30 hide-on-mobile">
+
+        {if $Site->getAttribute('quiqqer.products.settings.showFreeTextSearch')}
+        <header>
+            <h2>{locale group="quiqqer/products" var="type.category.freetextTitle"}</h2>
+        </header>
+        <label class="quiqqer-products-category-freetextSearch">
+            <input type="search" name="search"
+                   placeholder="{locale group="quiqqer/products" var="control.search.placeholder"}"
+            />
+            <input type="submit" name="submit" class="button"
+                value="{locale group="quiqqer/products" var="type.category.freetextButtonText"}"
+            />
+            <noscript>
+                <style>
+                    .quiqqer-products-category-freetextSearch [type="submit"] {
+                        display: inline;
+                    }
+                </style>
+            </noscript>
+        </label>
+        {/if}
+
         <header>
             <h2>{locale group="quiqqer/products" var="type.category.categoryTitle"}</h2>
         </header>

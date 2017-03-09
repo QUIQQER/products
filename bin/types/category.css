@@ -9,10 +9,22 @@
     margin-bottom: 20px;
 }
 
+.content-headerpage-multible-left .quiqqer-products-category-freetextSearch,
 .content-headerpage-multible-left .quiqqer-products-category-menu {
     float: left;
     margin-bottom: 40px;
     width: 100%;
+}
+
+.quiqqer-products-category-freetextSearch [type="search"] {
+    float: left;
+    width: calc(100% - 50px);
+}
+
+.quiqqer-products-category-freetextSearch [type="submit"] {
+    display: none;
+    padding: 10px;
+    width: 50px;
 }
 
 .quiqqer-category-content {
