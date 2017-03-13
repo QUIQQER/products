@@ -19,8 +19,7 @@
                     <span class="fa fa-angle-down quiqqer-products-productList-sort-filter-opener"></span>
                 </div>
             </div>
-            {/if}
-            {if !empty($filter)}
+
             <div class="quiqqer-products-productList-sort-filter-mobile button">
                 <span class="fa fa-filter"></span>
             </div>
@@ -36,8 +35,8 @@
                 </label>
             </div>
             <div class="quiqqer-products-productList-sort-display" style="display: none">
-                    <span class="fa fa-th button quiqqer-products-productList-sort-display-gallery"
-                          data-tooltip="{locale group="quiqqer/products" var="category.control.productlist.view.gallery"}"
+                <span class="fa fa-th button quiqqer-products-productList-sort-display-gallery"
+                      data-tooltip="{locale group="quiqqer/products" var="category.control.productlist.view.gallery"}"
                 ></span>
                 <span class="fa fa-list-ul button quiqqer-products-productList-sort-display-details"
                       data-tooltip="{locale group="quiqqer/products" var="category.control.productlist.view.details"}"
@@ -48,12 +47,11 @@
             </div>
         </div>
 
-        {if !empty($filter)}
-            {if $this->getAttribute('showFilter')}
-                {$this->createFilter()}
-            {/if}
+        {if !empty($filter) && $this->getAttribute('showFilter')}
+            {$this->createFilter()}
         {/if}
 
+        {if $this->getAttribute('showFilter')}
         <div class="quiqqer-products-productList-fl">
             {if !empty($filter)}
             <div class="quiqqer-products-productList-filterList">
@@ -76,31 +74,34 @@
                 </div>
             </div>
         </div>
+        {else}
+        <div class="quiqqer-products-productList-resultInfo-text"></div>
         {/if}
+    {/if}
 
 
-        <div class="quiqqer-products-productList-products-container">
-            <div class="quiqqer-products-productList-products-container-real">
-                {if $count}
-                {$products}
-                {else}
-                <div class="quiqqer-products-productList-sort__noProducts">
-                    {locale group="quiqqer/products" var="message.product.search.empty"}
-                </div>
-                {/if}
+    <div class="quiqqer-products-productList-products-container">
+        <div class="quiqqer-products-productList-products-container-real">
+            {if $count}
+            {$products}
+            {else}
+            <div class="quiqqer-products-productList-sort__noProducts">
+                {locale group="quiqqer/products" var="message.product.search.empty"}
             </div>
+            {/if}
         </div>
+    </div>
 
-        {if $count}
-        <div class="quiqqer-products-productList-products-more" {if $more == false}style="opacity: 0"{/if}>
-            <div class="button disabled">
-                {locale group="quiqqer/products" var="category.control.productlist.button.more"}
-            </div>
+    {if $count}
+    <div class="quiqqer-products-productList-products-more" {if $more == false}style="opacity: 0"{/if}>
+        <div class="button disabled">
+            {locale group="quiqqer/products" var="category.control.productlist.button.more"}
         </div>
-        {/if}
+    </div>
+    {/if}
 
-        <noscript>
-            {$Pagination->create()}
-        </noscript>
+    <noscript>
+        {$Pagination->create()}
+    </noscript>
 
 </section>

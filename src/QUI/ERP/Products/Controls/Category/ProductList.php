@@ -158,6 +158,13 @@ class ProductList extends QUI\Control
             );
         }
 
+        if (is_array($searchParams) && isset($searchParams['tags'])) {
+            $this->setAttribute(
+                'data-tags',
+                implode(',', $searchParams['tags'])
+            );
+        }
+
         $Pagination = new QUI\Bricks\Controls\Pagination(array(
             'count'     => $count,
             'Site'      => $this->getSite(),
@@ -533,7 +540,7 @@ class ProductList extends QUI\Control
     protected function getSearch()
     {
         try {
-            if (is_null($this->Search)) {
+            if ($this->Search === null) {
                 $this->Search = new QUI\ERP\Products\Search\FrontendSearch($this->getSite());
             }
         } catch (QUI\Exception $Exception) {
