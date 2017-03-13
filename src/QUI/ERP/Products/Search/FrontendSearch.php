@@ -22,6 +22,7 @@ class FrontendSearch extends Search
 {
     const SITETYPE_SEARCH = 'quiqqer/products:types/search';
     const SITETYPE_CATEGORY = 'quiqqer/products:types/category';
+    const SITETYPE_LIST = 'quiqqer/productstags:types/list';
 
     /**
      * All site types eligible for frontend search
@@ -30,7 +31,8 @@ class FrontendSearch extends Search
      */
     protected $eligibleSiteTypes = array(
         self::SITETYPE_CATEGORY => true,
-        self::SITETYPE_SEARCH   => true
+        self::SITETYPE_SEARCH   => true,
+        self::SITETYPE_LIST     => true
     );
 
     /**

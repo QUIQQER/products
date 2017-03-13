@@ -119,6 +119,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$selectFilter = [];
             this.$selectFields = [];
             this.$categories   = [];
+            this.$tags         = [];
             this.$productId    = false;
 
             this.$sortingEnabled      = true;
@@ -198,6 +199,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 Elm.get('data-categories').split(',').each(function (categoryId) {
                     this.$categories.push(parseInt(categoryId));
                 }.bind(this));
+            }
+
+            if (Elm.get('data-tags') && Elm.get('data-tags') !== '') {
+                this.$tags = Elm.get('data-tags').split(',');
             }
 
             this.$ContainerLoader = new Element('div', {
@@ -534,12 +539,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
 
                 // tags
-                var tags = [];
+                var tags = this.$tags;
 
                 if ("t" in search) {
-                    tags = search.t.split(',');
+                    tags.combine(search.t.split(','));
                 }
-
+                console.log(tags);
                 tags.each(this.addFilter.bind(this));
 
                 // sort
@@ -612,7 +617,18 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             if (searchParams.tags.length) {
-                history.t = searchParams.tags.join(',');
+                var tags    = [];
+                var locTags = searchParams.tags;
+
+                for (var i = 0, len = locTags.length; i < len; i++) {
+                    if (!this.$tags.contains(locTags[i])) {
+                        tags.push(locTags[i]);
+                    }
+                }
+
+                if (tags.length) {
+                    history.t = tags.join(',');
+                }
             }
 
             switch (this.getAttribute('view')) {
@@ -1038,7 +1054,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             var fields     = {},
                 categories = this.$categories,
-                tags       = [],
+                tags       = this.$tags,
                 sortOn     = '',
                 sortBy     = '',
                 freetext   = '',
@@ -1063,9 +1079,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             if (this.$FilterList) {
-                tags = this.$FilterList.getElements('[data-tag]').map(function (Elm) {
+                var filterTags = this.$FilterList.getElements('[data-tag]').map(function (Elm) {
                     return Elm.get('data-tag');
                 });
+
+                tags.combine(filterTags);
             }
 
             if (this.$Sort && this.$Sort.getValue() && this.$Sort.getValue() !== '') {
@@ -1740,6 +1758,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return;
             }
 
+            if (!this.$FilterList) {
+                return;
+            }
+
             if (this.$FilterClearButton.getStyle('display') === 'none') {
                 this.$FilterClearButton.setStyle('display', null);
 
@@ -1840,10 +1862,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 });
             }
 
-            if (searchParams.tags.length) {
-                this.$FilterClearButton.setStyle('display', null);
-            } else {
-                this.$FilterClearButton.setStyle('display', 'none');
+            if (this.$FilterClearButton) {
+                if (searchParams.tags.length) {
+                    this.$FilterClearButton.setStyle('display', null);
+                } else {
+                    this.$FilterClearButton.setStyle('display', 'none');
+                }
             }
 
             // refresh display
