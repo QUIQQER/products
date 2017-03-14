@@ -539,7 +539,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
 
                 // tags
-                var tags = this.$tags;
+                var tags = Array.clone(this.$tags);
 
                 if ("t" in search) {
                     tags.combine(search.t.split(','));
