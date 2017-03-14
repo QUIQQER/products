@@ -1053,7 +1053,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             var i, len, Field;
 
             var fields     = {},
-                categories = this.$categories,
+                categories = Array.clone(this.$categories),
                 tags       = Array.clone(this.$tags),
                 sortOn     = '',
                 sortBy     = '',
