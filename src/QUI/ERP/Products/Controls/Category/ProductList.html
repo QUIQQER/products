@@ -53,7 +53,6 @@
 
         {if $this->getAttribute('showFilterInfo')}
         <div class="quiqqer-products-productList-fl">
-            {if !empty($filter)}
             <div class="quiqqer-products-productList-filterList">
                 <span class="quiqqer-products-productList-filterList-title">
                     {locale group="quiqqer/products" var="category.control.productlist.selectionTitle"}
@@ -61,7 +60,6 @@
                 <div class="quiqqer-products-productList-filterList-fields"></div>
                 <div class="quiqqer-products-productList-filterList-list"></div>
             </div>
-            {/if}
             <div class="quiqqer-products-productList-resultInfo">
                 <div class="quiqqer-products-productList-resultInfo-text"></div>
                 <div class="button quiqqer-products-productList-resultInfo-clearbtn"

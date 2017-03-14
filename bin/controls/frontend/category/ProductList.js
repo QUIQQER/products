@@ -1814,6 +1814,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * event on filter change
          */
         $onFilterChange: function () {
+
             if (!this.$FilterResultInfo) {
                 return;
             }
