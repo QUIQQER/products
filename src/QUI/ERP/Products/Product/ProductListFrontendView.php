@@ -52,11 +52,7 @@ class ProductListFrontendView
         $Currency->setLocale($Locale);
 
         $productList = array();
-        $hidePrice   = false;
-
-        if (QUI\ERP\Products\Utils\Package::hidePrice()) {
-            $hidePrice = true;
-        }
+        $hidePrice   = QUI\ERP\Products\Utils\Package::hidePrice();
 
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
@@ -110,15 +106,17 @@ class ProductListFrontendView
 
                 if ($hidePrice) {
                     $product['attributes'][] = array(
-                        'title' => $Factor->getTitle(),
-                        'value' => ''
+                        'title'     => $Factor->getTitle(),
+                        'value'     => '',
+                        'valueText' => $Factor->getValueText()
                     );
                     continue;
                 }
 
                 $product['attributes'][] = array(
-                    'title' => $Factor->getTitle(),
-                    'value' => $isNetto ? $Factor->getNettoSumFormatted() : $Factor->getBruttoSumFormatted()
+                    'title'     => $Factor->getTitle(),
+                    'value'     => $isNetto ? $Factor->getNettoSumFormatted() : $Factor->getBruttoSumFormatted(),
+                    'valueText' => $Factor->getValueText()
                 );
             }
 
@@ -146,15 +144,17 @@ class ProductListFrontendView
 
             if ($hidePrice) {
                 $product['attributes'][] = array(
-                    'title' => $Factor->getTitle(),
-                    'value' => ''
+                    'title'     => $Factor->getTitle(),
+                    'value'     => '',
+                    'valueText' => $Factor->getValueText()
                 );
                 continue;
             }
 
             $result['attributes'][] = array(
-                'title' => $Factor->getTitle(),
-                'value' => $isNetto ? $Factor->getNettoSumFormatted() : $Factor->getBruttoSumFormatted()
+                'title'     => $Factor->getTitle(),
+                'value'     => $isNetto ? $Factor->getNettoSumFormatted() : $Factor->getBruttoSumFormatted(),
+                'valueText' => $Factor->getValueText()
             );
         }
 
