@@ -61,6 +61,7 @@ class ProductList extends QUI\Control
             'hideEmptyProductList' => false,
             'categoryStartNumber'  => false,
             'showFilter'           => true, // show the filter, or not
+            'showFilterInfo'       => true, // show the filter, or not
             'autoload'             => false
         ));
 
