@@ -1580,6 +1580,11 @@
             <en><![CDATA[Newest products first]]></en>
         </locale>
 
+        <locale name="product.list.products.basicPrice">
+            <de><![CDATA[Grundpreis]]></de>
+            <en><![CDATA[Basic price]]></en>
+        </locale>
+
     </groups>
 
 </locales>
