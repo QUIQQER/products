@@ -104,8 +104,9 @@ class ProductListBackendView
                 }
 
                 $product['attributes'][] = array(
-                    'title' => $Factor->getTitle(),
-                    'value' => $isNetto ? $Factor->getNettoSumFormatted() : $Factor->getBruttoSumFormatted()
+                    'title'     => $Factor->getTitle(),
+                    'value'     => $isNetto ? $Factor->getNettoSumFormatted() : $Factor->getBruttoSumFormatted(),
+                    'valueText' => $Factor->getValueText()
                 );
             }
 
@@ -132,8 +133,9 @@ class ProductListBackendView
             }
 
             $result['attributes'][] = array(
-                'title' => $Factor->getTitle(),
-                'value' => $isNetto ? $Factor->getNettoSumFormatted() : $Factor->getBruttoSumFormatted()
+                'title'     => $Factor->getTitle(),
+                'value'     => $isNetto ? $Factor->getNettoSumFormatted() : $Factor->getBruttoSumFormatted(),
+                'valueText' => $Factor->getValueText()
             );
         }
 

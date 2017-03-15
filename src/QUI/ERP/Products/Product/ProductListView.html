@@ -38,13 +38,14 @@
             </div>
 
             <div class="products-product-information-basisprice">
-                Grundpreis: {$product.basisPrice}
+                {locale group="quiqqer/products" var="product.list.products.basicPrice"}: {$product.basisPrice}
             </div>
 
             <ul class="products-product-fields">
                 {foreach $product.attributes as $attribute}
                 <li class="products-product-fields-field">
-                    {$attribute.title}: {$attribute.value}
+                    {$attribute.title}: {$attribute.valueText} <br/>
+                    {$attribute.value}
                 </li>
                 {/foreach}
             </ul>
