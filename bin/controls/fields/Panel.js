@@ -52,12 +52,12 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
         ],
 
         initialize: function (options) {
+            this.parent(options);
+
             this.setAttributes({
                 title: QUILocale.get(lg, 'products.fields.panel.title'),
-                icon : 'fa-file-text-o'
+                icon : 'fa fa-file-text-o'
             });
-
-            this.parent(options);
 
             this.$Search = null;
 

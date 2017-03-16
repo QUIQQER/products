@@ -425,7 +425,7 @@
             <en><![CDATA[Webaddress]]></en>
         </locale>
         <locale name="fieldtype.GroupList">
-            <de><![CDATA[Gruppen Zuweisung]]></de>
+            <de><![CDATA[Gruppenzuweisung]]></de>
             <en><![CDATA[Group assignment]]></en>
         </locale>
 
