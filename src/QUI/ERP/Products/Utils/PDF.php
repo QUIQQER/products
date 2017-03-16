@@ -23,7 +23,9 @@ class PDF
      */
     public static function getHeader($Project = null)
     {
-        return self::getEngine($Project)->fetch(OPT_DIR . 'quiqqer/products/template/pdf/header.html');
+        $Engine = self::getEngine($Project);
+
+        return $Engine->fetch(OPT_DIR . 'quiqqer/products/template/pdf/header.html');
     }
 
     /**
@@ -34,7 +36,13 @@ class PDF
      */
     public static function getFooter($Project = null)
     {
-        return self::getEngine($Project)->fetch(OPT_DIR . 'quiqqer/products/template/pdf/footer.html');
+        $Engine = self::getEngine($Project);
+
+        $Engine->assign(array(
+            'Locale' => QUI::getLocale()
+        ));
+
+        return $Engine->fetch(OPT_DIR . 'quiqqer/products/template/pdf/footer.html');
     }
 
     /**

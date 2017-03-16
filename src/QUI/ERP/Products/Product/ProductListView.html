@@ -1,10 +1,11 @@
 {$style}
 
 <!-- products -->
-<h1>{locale group="quiqqer/products" var="product.list.products.title"}</h1>
+<h1 class="products-header">
+    {locale group="quiqqer/products" var="product.list.products.title"}
+</h1>
 
 {assign var=pos value=1}
-{foreach $data.products as $product}
 <table class="products-product">
     <tr class="products-product-header">
         <th class="products-product-header-pos">
@@ -25,6 +26,8 @@
         </th>
         {/if}
     </tr>
+
+    {foreach $data.products as $product}
     <tr>
         <td class="products-product-pos" align="top">
             {$pos}
@@ -44,8 +47,8 @@
             <ul class="products-product-fields">
                 {foreach $product.attributes as $attribute}
                 <li class="products-product-fields-field">
-                    {$attribute.title}: {$attribute.valueText} <br/>
-                    {$attribute.value}
+                    {$attribute.title}:<br />
+                    {$attribute.valueText} {$attribute.value}
                 </li>
                 {/foreach}
             </ul>
@@ -62,9 +65,9 @@
         </td>
         {/if}
     </tr>
+    {assign var=pos value=$pos+1}
+    {/foreach}
 </table>
-{assign var=pos value=$pos+1}
-{/foreach}
 
 {if !$hidePrice}
 <!-- sum display -->
@@ -94,6 +97,7 @@
             {$attribute.title}
         </td>
         <td class="products-sum-row-sndCell">
+            {$attribute.valueText}<br/>
             {$attribute.value}
         </td>
     </tr>
