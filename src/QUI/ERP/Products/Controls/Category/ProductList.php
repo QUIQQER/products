@@ -155,15 +155,24 @@ class ProductList extends QUI\Control
         if (is_array($searchParams) && isset($searchParams['categories'])) {
             $this->setAttribute(
                 'data-categories',
-                implode(',', $searchParams['categories'])
+                htmlspecialchars(implode(',', $searchParams['categories']))
             );
         }
 
         if (is_array($searchParams) && isset($searchParams['tags'])) {
             $this->setAttribute(
                 'data-tags',
-                implode(',', $searchParams['tags'])
+                htmlspecialchars(implode(',', $searchParams['tags']))
             );
+        }
+
+        if (is_array($searchParams)
+            && isset($searchParams['sortBy'])
+            && isset($searchParams['sortOn'])
+        ) {
+            $sort = $searchParams['sortOn'] . ' ' . $searchParams['sortBy'];
+
+            $this->setAttribute('data-sort', htmlspecialchars($sort));
         }
 
         $Pagination = new QUI\Bricks\Controls\Pagination(array(

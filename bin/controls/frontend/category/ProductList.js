@@ -86,7 +86,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$load = false;
 
-
             this.$ButtonDetails = null;
             this.$ButtonGallery = null;
             this.$ButtonList    = null;
@@ -169,6 +168,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             if (parseInt(Elm.get('data-autoload')) === 0) {
                 this.setAttribute('autoload', false);
+            }
+
+            if (Elm.get('data-sort')) {
+                this.setAttribute('sort', Elm.get('data-sort'));
             }
 
             var Url    = URI(window.location),
@@ -1086,11 +1089,18 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 tags.combine(filterTags);
             }
 
-            if (this.$Sort && this.$Sort.getValue() && this.$Sort.getValue() !== '') {
+            if (this.$Sort &&
+                this.$Sort.getValue() &&
+                this.$Sort.getValue() !== '') {
                 var sort = this.$Sort.getValue().split(' ');
 
                 sortBy = sort[1];
                 sortOn = sort[0];
+            } else if (this.getAttribute('sort')) {
+                var sortAttr = this.getAttribute('sort').split(' ');
+
+                sortBy = sortAttr[1];
+                sortOn = sortAttr[0];
             }
 
             if (this.$productId) {
