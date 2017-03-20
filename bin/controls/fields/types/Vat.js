@@ -10,9 +10,10 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
 
     'qui/QUI',
     'qui/controls/Control',
-    'package/quiqqer/tax/bin/classes/TaxTypes'
+    'package/quiqqer/tax/bin/classes/TaxTypes',
+    'Locale'
 
-], function (QUI, QUIControl, TaxHandler) {
+], function (QUI, QUIControl, TaxHandler, QUILocale) {
     "use strict";
 
     var Tax = new TaxHandler();
@@ -59,6 +60,13 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
                 'html' : '<option value=""></option>',
                 name   : Elm.name
             }).inject(Elm, 'after');
+
+            // Wenn im Produkt
+            if (this.getElm().getParent('.product-update')) {
+                this.$Select.getElement('option').set({
+                    html: QUILocale.get('quiqqer/products', 'field.vat.type.default')
+                });
+            }
 
             Tax.getList().then(function (result) {
                 var i, len, html, value;

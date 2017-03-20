@@ -1330,6 +1330,11 @@
             <de><![CDATA[Produktsuche]]></de>
             <en><![CDATA[Product search]]></en>
         </locale>
+
+        <locale name="field.vat.type.default">
+            <de><![CDATA[Standard verwenden]]></de>
+            <en><![CDATA[Use default]]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="php">
