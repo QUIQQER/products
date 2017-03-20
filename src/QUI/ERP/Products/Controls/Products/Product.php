@@ -49,10 +49,11 @@ class Product extends QUI\Control
         $Calc    = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
-            $View = $Product->getView();
+            $View   = $Product->getView();
+            $Unique = $Product->createUniqueProduct($Calc);
 
             try {
-                $Price = $Calc->getProductPrice($Product->createUniqueProduct($Calc));
+                $Price = $Calc->getProductPrice($Unique);
             } catch (QUI\Exception $Exception) {
                 $Price = null;
                 QUI\System\Log::writeException($Exception);
@@ -64,6 +65,8 @@ class Product extends QUI\Control
 
         /* @var $Product QUI\ERP\Products\Product\UniqueProduct */
         $this->setAttribute('data-productid', $View->getId());
+
+        $productAttributes = isset($Unique) ? $Unique->getAttributes() : $Product->getAttributes();
 
         // gallery
         $PlaceholderImage = $this->getProject()->getMedia()->getPlaceholderImage();
@@ -114,12 +117,18 @@ class Product extends QUI\Control
             return $Field->hasViewPermission();
         });
 
+        $vatArray = array();
+
+        if (isset($productAttributes['calculated_vatArray'])) {
+            $vatArray = $productAttributes['calculated_vatArray'];
+        }
 
         // pricedisplay
         $PriceDisplay = new QUI\ERP\Products\Controls\Price(array(
             'Price'       => $Price,
             'withVatText' => true,
-            'Calc'        => $Calc
+            'Calc'        => $Calc,
+            'vatArray'    => $vatArray
         ));
 
         // file / image folders

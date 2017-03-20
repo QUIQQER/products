@@ -6,6 +6,7 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
+use QUI\ERP\Products\Handler\Fields;
 use QUI\Interfaces\Users\User as UserInterface;
 use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\ERP\Products\Product\ProductList;
@@ -99,7 +100,7 @@ class Calc
         ) {
             $User = QUI::getUserBySession();
         }
-        
+
         $Calc = new self($User);
 
         if (QUI::getUsers()->isSystemUser($User) && QUI::isBackend()) {
@@ -404,55 +405,83 @@ class Calc
             }
         }
 
-        // mwst
-        $Tax    = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
-        $vatSum = $nettoPrice * ($Tax->getValue() / 100);
 
-        $bruttoPrice = $this->round($nettoPrice + $vatSum);
+        // TAX Fields
+        $taxFields = $Product->getFieldsByType(FieldHandler::TYPE_TAX);
 
-        // sum
-        $nettoSum  = $this->round($nettoPrice * $Product->getQuantity());
-        $vatSum    = $nettoSum * ($Tax->getValue() / 100);
-        $bruttoSum = $this->round($nettoSum + $vatSum);
-
-        $price      = $isNetto ? $nettoPrice : $bruttoPrice;
-        $sum        = $isNetto ? $nettoSum : $bruttoSum;
-        $basisPrice = $isNetto ? $basisNettoPrice : $basisNettoPrice + ($basisNettoPrice * $Tax->getValue() / 100);
-
-        // vat array
-        $vatFields = $Product->getFieldsByType(FieldHandler::TYPE_VAT);
-        $vatArray  = array();
-        $vatText   = array();
-
-        /* @var $Vat QUI\ERP\Products\Field\UniqueField */
-        foreach ($vatFields as $Vat) {
-            if ($Vat->getValue() === false) {
+        /* @var $Tax QUI\ERP\Products\Field\UniqueField */
+        foreach ($taxFields as $Tax) {
+            if ($Tax->getValue() === false) {
                 continue;
             }
 
             try {
-                $TaxType  = TaxUtils::getTaxTypeByArea($Area);
+                $TaxType  = new QUI\ERP\Tax\TaxType($Tax->getValue());
                 $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeRecursive($Exception->getMessage());
+                QUI\ERP\Debug::getInstance()->log($Exception, 'quiqqer/products');
                 continue;
             }
 
-            $vatArray[] = array(
-                'vat'  => $TaxEntry->getValue(),
-                'sum'  => $this->round($nettoSum * ($TaxEntry->getValue() / 100)),
-                'text' => $this->getVatText($TaxEntry->getValue(), $this->getUser())
+            // steuern auf netto preis addieren
+            $taxNettoPrice = $this->round($nettoPrice * ($TaxEntry->getValue() / 100));
+            $nettoPrice    = $nettoPrice + $taxNettoPrice;
+        }
+
+
+        // MwSt / VAT
+        $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
+
+        // Wenn Produkt eigene VAT gesetzt hat und diese zum Benutzer passt
+        $ProductVat = $Product->getField(Fields::FIELD_VAT);
+
+        try {
+            $TaxType  = new QUI\ERP\Tax\TaxType($ProductVat->getValue());
+            $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
+            $Vat      = $TaxEntry;
+        } catch (QUI\Exception $Exception) {
+            QUI\ERP\Debug::getInstance()->log(
+                'Produt Vat ist nicht für den Benutzer gültig',
+                'quiqqer/products'
             );
         }
 
-        // pricefactoren mit mwst / pricefactros with VAT
-        if (!$isNetto && count($vatArray)) {
-            foreach ($priceFactors as $PriceFactor) {
-                $factorNettoSum = $PriceFactor->getNettoSum();
-                $factorNettoSum = $factorNettoSum + $factorNettoSum * ($vatArray[0]['vat'] / 100);
-                $PriceFactor->setBruttoSum($this, $factorNettoSum);
-            }
-        }
+        $vatSum      = $nettoPrice * ($Vat->getValue() / 100);
+        $bruttoPrice = $this->round($nettoPrice + $vatSum);
+
+        // sum
+        $nettoSum  = $this->round($nettoPrice * $Product->getQuantity());
+        $vatSum    = $nettoSum * ($Vat->getValue() / 100);
+        $bruttoSum = $this->round($nettoSum + $vatSum);
+
+        $price      = $isNetto ? $nettoPrice : $bruttoPrice;
+        $sum        = $isNetto ? $nettoSum : $bruttoSum;
+        $basisPrice = $isNetto ? $basisNettoPrice : $basisNettoPrice + ($basisNettoPrice * $Vat->getValue() / 100);
+
+        $vatArray = array(
+            'vat'  => $Vat->getValue(),
+            'sum'  => $this->round($nettoSum * ($Vat->getValue() / 100)),
+            'text' => $this->getVatText($Vat->getValue(), $this->getUser())
+        );
+
+
+        QUI\ERP\Debug::getInstance()->log(
+            'Kalkulierter Produkt Preis ' . $Product->getId(),
+            'quiqqer/products'
+        );
+
+        QUI\ERP\Debug::getInstance()->log(array(
+            'basisPrice'   => $basisPrice,
+            'price'        => $price,
+            'sum'          => $sum,
+            'nettoSum'     => $nettoSum,
+            'vatArray'     => $vatArray,
+            'isEuVat'      => $isEuVatUser,
+            'isNetto'      => $isNetto,
+            'currencyData' => $this->getCurrency()->toArray(),
+            'factors'      => $factors
+        ), 'quiqqer/products');
+
 
         $callback(array(
             'basisPrice'   => $basisPrice,
@@ -460,7 +489,7 @@ class Calc
             'sum'          => $sum,
             'nettoSum'     => $nettoSum,
             'vatArray'     => $vatArray,
-            'vatText'      => $vatText,
+            'vatText'      => $vatArray['text'],
             'isEuVat'      => $isEuVatUser,
             'isNetto'      => $isNetto,
             'currencyData' => $this->getCurrency()->toArray(),

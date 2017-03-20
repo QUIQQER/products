@@ -158,7 +158,7 @@ class User
     /**
      * Return the area of the shop
      *
-     * @return int
+     * @return QUI\ERP\Areas\Area
      * @throws QUI\Exception
      */
     public static function getShopArea()
@@ -168,6 +168,9 @@ class User
         $Config       = $Package->getConfig();
         $standardArea = $Config->getValue('shop', 'area');
 
-        return $Areas->getChild($standardArea);
+        $Area = $Areas->getChild($standardArea);
+
+        /* @var $Area QUI\ERP\Areas\Area */
+        return $Area;
     }
 }
