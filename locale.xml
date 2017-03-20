@@ -819,6 +819,12 @@
             <en><![CDATA[Enter a search term...]]></en>
         </locale>
 
+        <!-- Desktop Search -->
+        <locale name="search.group.products.label">
+            <de><![CDATA[Produkte]]></de>
+            <en><![CDATA[Products]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
