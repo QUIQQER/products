@@ -199,17 +199,19 @@ class Calc
             $subSum   = $subSum + $productAttributes['calculated_sum'];
             $nettoSum = $nettoSum + $productAttributes['calculated_nettoSum'];
 
-            foreach ($productAttributes['calculated_vatArray'] as $vatEntry) {
-                $vat = $vatEntry['vat'];
+            $productVatArray = $productAttributes['calculated_vatArray'];
+            $vat             = $productVatArray['vat'];
 
-                if (!isset($vatArray[$vat])) {
-                    $vatArray[$vat]        = $vatEntry;
-                    $vatArray[$vat]['sum'] = 0;
-                }
-
-                $vatArray[$vat]['sum'] = $vatArray[$vat]['sum'] + $vatEntry['sum'];
+            if (!isset($vatArray[$vat])) {
+                $vatArray[$vat]        = $productVatArray;
+                $vatArray[$vat]['sum'] = 0;
             }
+
+            $vatArray[$vat]['sum'] = $vatArray[$vat]['sum'] + $productVatArray['sum'];
         }
+
+        QUI\ERP\Debug::getInstance()->log('Berechnetet Produktliste MwSt', 'quiqqer/product');
+        QUI\ERP\Debug::getInstance()->log($vatArray, 'quiqqer/product');
 
         try {
             QUI::getEvents()->fireEvent(
@@ -329,8 +331,10 @@ class Calc
      * @param callable|boolean $callback - optional, callback function for the calculated data array
      * @return Price
      */
-    public function getProductPrice(UniqueProduct $Product, $callback = false)
-    {
+    public function getProductPrice(
+        UniqueProduct $Product,
+        $callback = false
+    ) {
         // calc data
         if (!is_callable($callback)) {
             $Product->calc($this);
@@ -505,8 +509,9 @@ class Calc
      * @param string $value
      * @return float|mixed
      */
-    public function round($value)
-    {
+    public function round(
+        $value
+    ) {
         $decimalSeperator  = $this->getUser()->getLocale()->getDecimalSeperator();
         $groupingSeperator = $this->getUser()->getLocale()->getGroupingSeperator();
         $precision         = 8; // nachkommstelle beim rundne -> @todo in die conf?
@@ -527,8 +532,9 @@ class Calc
      * @param int|double|float $nettoPrice - netto price
      * @return int|double|float
      */
-    public function getPrice($nettoPrice)
-    {
+    public function getPrice(
+        $nettoPrice
+    ) {
         $isNetto = QUI\ERP\Products\Utils\User::isNettoUser($this->getUser());
 
         if ($isNetto) {
@@ -565,8 +571,10 @@ class Calc
      * @param UserInterface $User
      * @return array|string
      */
-    protected function getVatText($vat, UserInterface $User)
-    {
+    protected function getVatText(
+        $vat,
+        UserInterface $User
+    ) {
         $Locale = $User->getLocale();
 
         if (ProductUserUtils::isNettoUser($User)) {
