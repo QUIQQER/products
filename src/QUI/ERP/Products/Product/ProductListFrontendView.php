@@ -86,17 +86,18 @@ class ProductListFrontendView
             $product['quantity']    = $attributes['quantity'];
             $product['attributes']  = array();
 
-            foreach ($attributes['calculated_vatArray'] as $key => $entry) {
-                $sum = $entry['sum'];
 
-                if ($sum == 0) {
-                    $sum = '';
-                } else {
-                    $sum = $Currency->format($entry['sum']);
-                }
+            $calculatedSum = $attributes['calculated_vatArray']['sum'];
+            $calculatedVat = $attributes['calculated_vatArray']['vat'];
 
-                $product['vatArray'][$key]['sum'] = $hidePrice ? '' : $sum;
+            if ($calculatedSum == 0) {
+                $calculatedSum = '';
+            } else {
+                $calculatedSum = $Currency->format($attributes['calculated_vatArray']['sum']);
             }
+
+            $product['vatArray'][$calculatedVat]['sum'] = $hidePrice ? '' : $calculatedSum;
+
 
             /* @var QUI\ERP\Products\Utils\PriceFactor $Factor */
             foreach ($PriceFactors->sort() as $Factor) {
