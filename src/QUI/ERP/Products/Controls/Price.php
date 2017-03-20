@@ -63,17 +63,26 @@ class Price extends QUI\Control
             return $Price->getDisplayPrice();
         }
 
-        $Calc = $this->getAttribute('Calc');
 
-        if (!$Calc) {
-            $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
+        $vatArray = $this->getAttribute('vatArray');
+
+        if ($vatArray && is_array($vatArray) && isset($vatArray['text'])) {
+            $vatText = $vatArray['text'];
+        } else {
+            $Calc = $this->getAttribute('Calc');
+
+            if (!$Calc) {
+                $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
+            }
+
+            $vatText = $Calc->getVatTextByUser();
         }
 
         $result = '<span class="qui-products-price-display-value">';
         $result .= $Price->getDisplayPrice();
         $result .= '</span>';
         $result .= '<span class="qui-products-price-display-vat">';
-        $result .= $Calc->getVatTextByUser();
+        $result .= $vatText;
         $result .= '</span>';
 
         return $result;
