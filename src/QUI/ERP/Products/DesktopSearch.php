@@ -6,13 +6,14 @@
 namespace QUI\ERP\Products;
 
 use QUI;
+use QUI\BackendSearch\ProviderInterface;
 
 /**
  * Class DesktopSearch
  *
  * @package QUI\Products
  */
-class DesktopSearch implements QUI\Workspace\Search\ProviderInterface
+class DesktopSearch implements ProviderInterface
 {
     const TYPE = 'products';
 
@@ -49,6 +50,12 @@ class DesktopSearch implements QUI\Workspace\Search\ProviderInterface
      */
     public function search($search, $params = array())
     {
+        if (isset($params['filterGroups'])
+            && !in_array(self::TYPE, $params['filterGroups'])
+        ) {
+            return array();
+        }
+
         $result = array();
         $Search = QUI\ERP\Products\Handler\Search::getBackendSearch();
 
@@ -61,6 +68,11 @@ class DesktopSearch implements QUI\Workspace\Search\ProviderInterface
             return array();
         }
 
+        $groupLabel = QUI::getLocale()->get(
+            'quiqqer/products',
+            'search.group.products.label'
+        );
+
         foreach ($products as $productId) {
             try {
                 $Product = QUI\ERP\Products\Handler\Products::getProduct($productId);
@@ -70,7 +82,8 @@ class DesktopSearch implements QUI\Workspace\Search\ProviderInterface
                     'title'       => $Product->getTitle(),
                     'description' => $Product->getDescription(),
                     'icon'        => 'fa fa-shopping-bag',
-                    'searchtype'  => self::TYPE
+                    'group'       => self::TYPE,
+                    'groupLabel'  => $groupLabel
                 );
             } catch (QUI\ERP\Products\Product\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
@@ -78,5 +91,24 @@ class DesktopSearch implements QUI\Workspace\Search\ProviderInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Get all available search groups of this provider.
+     * Search results can be filtered by these search groups.
+     *
+     * @return array
+     */
+    public function getFilterGroups()
+    {
+        return array(
+            array(
+                'group' => self::TYPE,
+                'label' => array(
+                    'quiqqer/products',
+                    'search.group.products.label'
+                )
+            )
+        );
     }
 }
