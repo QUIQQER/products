@@ -87,7 +87,7 @@
             {/if}
         {/if}
 
-        {if $Template->getAttribute('content-body')}
+        {if $Template->getAttribute('content-body') && $Site->getAttribute('content')}
         <section class="content-body quiqqer-category-content">
             {$Site->getAttribute('content')}
         </section>
