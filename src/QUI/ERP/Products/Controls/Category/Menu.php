@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Controls\Category\Menu
  */
+
 namespace QUI\ERP\Products\Controls\Category;
 
 use QUI;
@@ -54,6 +55,39 @@ class Menu extends QUI\Control
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/Menu.html');
+    }
+
+    /**
+     * Has the category a checkbox?
+     *
+     * @param QUI\Projects\Site $Site
+     * @return bool
+     */
+    public function hasCategoryCheckBox($Site)
+    {
+        // wenn generell aus, dann niemals checkboxen anzeigen
+        if ($this->getAttribute('disableCheckboxes')) {
+            return false;
+        }
+
+
+        $CurrentSide = QUI::getRewrite()->getSite();
+
+        if ($Site->getId() == $CurrentSide->getId()) {
+            return false;
+        }
+
+        if ($Site->getParentId() != $CurrentSide->getId()) {
+            return false;
+        }
+
+        if ($Site->getAttribute('quiqqer.products.settings.categoryAsFilter')
+            && QUI::getRewrite()->isIdInPath($Site->getParentId())
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
