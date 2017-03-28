@@ -5,8 +5,7 @@
     {if $Child->getAttribute('quiqqer.products.settings.categoryId')}
     <li>
         <label class="quiqqer-products-category-menu-navigation-li-label {$this->getBreadcrumbFlag($Child)}">
-            {if $Child->getAttribute('quiqqer.products.settings.categoryAsFilter') &&
-                $this->getAttribute('disableCheckboxes') === false}
+            {if $this->hasCategoryCheckBox($Child)}
             <span class="quiqqer-products-category-menu-navigation-li-label-checkbox">
                 <input type="checkbox" value="{$Child->getAttribute('quiqqer.products.settings.categoryId')}"/>
             </span>
