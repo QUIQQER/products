@@ -68,7 +68,7 @@
         {/if}
 
         <div class="{$cssClasses}">
-        {if $Site->getAttribute('content-header')}
+        {if $Template->getAttribute('content-header')}
             {if $Site->getAttribute('image_emotion')}
             <header class="page-content-header-emotion"
                     style="background-image: url('{image src=$Site->getAttribute('image_emotion') width=820 onlysrc=1 rewrited=1}')"
@@ -85,12 +85,12 @@
                 <h1>{$Site->getAttribute('title')}</h1>
             </header>
             {/if}
+        {/if}
 
-            {if $Site->getAttribute('content')}
-            <section class="content-body quiqqer-category-content">
-                {$Site->getAttribute('content')}
-            </section>
-            {/if}
+        {if $Template->getAttribute('content-body')}
+        <section class="content-body quiqqer-category-content">
+            {$Site->getAttribute('content')}
+        </section>
         {/if}
 
         {$ProductList->create()}
