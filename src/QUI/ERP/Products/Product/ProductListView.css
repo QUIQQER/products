@@ -55,7 +55,7 @@
 }
 
 .products-product-price {
-    color: #e91d2c;
+    /*color: #e91d2c;*/
     text-align: right;
     vertical-align: top;
 }
@@ -82,6 +82,6 @@
 }
 
 .products-sum-row-sum-value {
-    border-bottom: 3px double #e91d2c;
-    color: #e91d2c;
+    border-bottom: 3px double #999999;
+    /*color: #e91d2c;*/
 }
