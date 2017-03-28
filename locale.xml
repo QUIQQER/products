@@ -6,6 +6,22 @@
             <de><![CDATA[QUIQQER - Shop - Produkte]]></de>
             <en><![CDATA[QUIQQER - Shop - Products]]></en>
         </locale>
+        <locale name="package.description" html="true">
+            <de><![CDATA[
+            QUIQQER - Produkte<br />
+            Das Produkte-Paket liefert die Grundlage zu einer Produktverwaltung für z.B.
+            einen Onlineshop oder die Darstellung von Produkten auf einer Herstellerseite.
+            Es bringt alle Funktionalitäten mit, die für die Verwaltung unterschiedlichster Produkte benötigt werden.
+            Die Produkte sind durch frei verwertbare Produkt-Eigenschaften sehr flexibel konfigurierbar und eignen sich für fast alle Produktarten.
+            ]]></de>
+            <en><![CDATA[
+            QUIQQER Products <br />
+            The product package provides the basis for product management for e.g.
+            An online shop or the presentation of products on a manufacturer's website.
+            It brings together all the functionalities needed to manage a wide range of products.
+            The products are very flexibly configurable due to freely usable product characteristics and are suitable for almost all product types.
+            ]]></en>
+        </locale>
         <locale name="admin.types.category">
             <de><![CDATA[Produktkategorie]]></de>
             <en><![CDATA[Product category]]></en>
@@ -39,6 +55,35 @@
         <locale name="menu.erp.products.fields.title">
             <de><![CDATA[Produktfelder]]></de>
             <en><![CDATA[Product fields]]></en>
+        </locale>
+
+        <locale name="quiqqer/products:types/category.title">
+            <de><![CDATA[Produktkategorie]]></de>
+            <en><![CDATA[Product category]]></en>
+        </locale>
+        <locale name="quiqqer/products:types/category.description" html="true">
+            <de><![CDATA[
+            Dieser Seitentyp listet alle Produkte der ihm zugewiesenen Produktkategorien auf.
+            Er bietet umfangreiche Einstellungen für die Darstellung und die Filterung der Produkte. Außerdem übernimmt dieser Seitentyp auch die Darstellung einer Produktseite inkl. Produktdetails.
+            ]]></de>
+            <en><![CDATA[
+            This page type lists all the products of the product categories assigned to it.
+            It offers extensive settings for the display and the filtering of the products. In addition, this side type also takes over the representation of a product page including product details.
+            ]]></en>
+        </locale>
+        <locale name="quiqqer/products:types/search.title">
+            <de><![CDATA[Produktsuche]]></de>
+            <en><![CDATA[Product search]]></en>
+        </locale>
+        <locale name="quiqqer/products:types/search.description" html="true">
+            <de><![CDATA[
+            Die Produktsuche bietet für den Nutzer eine umfangreiche Darstellung von Produkten.
+            Sie ähnelt vom Aufbau der Produktkategorie, listet jedoch die Suchergebnisse Kategorie-übergreifend auf und kann von überall aus aufgerufen werden.
+            ]]></de>
+            <en><![CDATA[
+            The product search offers a comprehensive representation of products for the user.
+            It is similar to the structure of the product category, but lists search results across categories and can be accessed from anywhere.
+            ]]></en>
         </locale>
 
         <locale name="window.erp.title">
@@ -556,7 +601,7 @@
 
         <!-- produkte -->
         <locale name="message.product.create.missing.category">
-            <de><![CDATA[Bitte geben Sie dem Produkt eine Produkt-Kategorie.]]></de>
+            <de><![CDATA[Bitte geben Sie dem Produkt eine Produktkategorie.]]></de>
             <en><![CDATA[Please assign a product category to the product.]]></en>
         </locale>
         <locale name="product.successfully.saved">
@@ -1422,7 +1467,7 @@
         </locale>
         <locale name="attention.frontendsearch.category.site.no.category">
             <de>
-                <![CDATA[Die Produkt-Kategorie-Seite #[siteId] ist noch keiner Produkt-Kategorie zugeordnet. Daher sind nur Standard-Felder durchsuchbar.]]></de>
+                <![CDATA[Die Produktkategorie-Seite #[siteId] ist noch keiner Produktkategorie zugeordnet. Daher sind nur Standard-Felder durchsuchbar.]]></de>
             <en>
                 <![CDATA[The product category site #[siteId] is not assigned to a product category yet. Thus only standard fields are searchable.]]></en>
         </locale>
