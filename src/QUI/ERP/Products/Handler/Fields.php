@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Handler\Fields
  */
+
 namespace QUI\ERP\Products\Handler;
 
 use QUI;
@@ -477,6 +478,7 @@ class Fields
                 $data = array();
             }
 
+            $data['package']  = 'quiqqer/products';
             $data['datatype'] = 'php,js';
             $data['html']     = 1;
 

@@ -6,8 +6,11 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require qui/controls/buttons/Button
+ * @require Locale
  * @require package/quiqqer/products/bin/classes/Categories
- *
+ * @require package/quiqqer/products/bin/controls/categories/Sitemap
+ * @require package/quiqqer/translator/bin/controls/Create
  * @require css!package/quiqqer/products/bin/controls/categories/Create.css
  *
  * @event onCancel
@@ -73,10 +76,10 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
             Elm.set({
                 'class': 'category-create',
                 html   : '<div class="category-create-container">' +
-                         '<div class="category-create-sheet category-create-parentSelect"></div>' +
-                         '<div class="category-create-sheet category-create-text"></div>' +
-                         '</div>' +
-                         '<div class="category-create-buttons"></div>'
+                '<div class="category-create-sheet category-create-parentSelect"></div>' +
+                '<div class="category-create-sheet category-create-text"></div>' +
+                '</div>' +
+                '<div class="category-create-buttons"></div>'
             });
 
             this.$ParentSelect = Elm.getElement('.category-create-parentSelect');
@@ -96,13 +99,15 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
             });
 
             this.$TitleTranslate = new TranslationCreate({
-                'group' : 'quiqqer/products',
-                editable: true
+                'group'  : 'quiqqer/products',
+                'package': 'quiqqer/products',
+                editable : true
             });
 
             this.$DescTranslate = new TranslationCreate({
-                'group' : 'quiqqer/products',
-                editable: true
+                'group'  : 'quiqqer/products',
+                'package': 'quiqqer/products',
+                editable : true
             });
 
             return Elm;
@@ -121,13 +126,12 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
          * @return {Promise}
          */
         showParentSelect: function () {
-
             var self = this;
 
             this.$Buttons.set('html', '');
 
             new QUIButton({
-                text     : 'Abbrechen',
+                text     : 'Abbrechen', // #locale
                 textimage: 'fa fa-remove',
                 events   : {
                     onClick: this.cancel
@@ -138,7 +142,7 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
             }).inject(this.$Buttons);
 
             new QUIButton({
-                text     : 'Weiter',
+                text     : 'Weiter', // #locale
                 textimage: 'fa fa-angle-right',
                 events   : {
                     onClick: this.showTextEdit
@@ -152,9 +156,9 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
 
                 self.$ParentSelect.set({
                     html  : '<div class="category-create-parentSelect-description">' +
-                            'Wählen Sie bitte die Kategorie aus unter welche ' +
-                            'die neue Kategorie neu angelegt werden soll' +
-                            '</div>',
+                    'Wählen Sie bitte die Kategorie aus unter welche ' +
+                    'die neue Kategorie neu angelegt werden soll' +
+                    '</div>', // #locale
                     styles: {
                         display: null
                     }
@@ -234,8 +238,8 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
 
                 self.$Text.set({
                     html  : '<div class="category-create-text-description">' +
-                            'Geben Sie bitte einen Titel und Kurzbeschreibung für die Kategorie an' +
-                            '</div>',
+                    'Geben Sie bitte einen Titel und Kurzbeschreibung für die Kategorie an' +
+                    '</div>',
                     styles: {
                         display: null
                     }
@@ -245,13 +249,13 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
                 var Text = new Element('label', {
                     'class': 'field-container category-create-text-title',
                     html   : '<span class="field-container-item">Kategorien-Titel</span>' +
-                             '<div class="field-container-field"></div>'
+                    '<div class="field-container-field"></div>'
                 }).inject(self.$Text);
 
                 var Desc = new Element('div', {
                     'class': 'field-container category-create-text-title',
                     html   : '<span class="field-container-item">Kategorien-Beschreibung</span>' +
-                             '<div class="field-container-field"></div>'
+                    '<div class="field-container-field"></div>'
                 }).inject(self.$Text);
 
 
