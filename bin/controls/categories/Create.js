@@ -327,6 +327,9 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
                         'products.category.' + childData.id + '.description'
                     );
 
+                    self.$TitleTranslate.setAttribute('package', 'package/products');
+                    self.$DescTranslate.setAttribute('package', 'package/products');
+
                     self.$TitleTranslate.createTranslation().then(function () {
                         return self.$DescTranslate.createTranslation();
 
