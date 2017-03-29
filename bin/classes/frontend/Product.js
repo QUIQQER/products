@@ -66,6 +66,10 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          * @return {Promise}
          */
         setFieldValues: function (fields) {
+            if (!Object.getLength(fields)) {
+                return Promise.resolve(this);
+            }
+
             return new Promise(function (resolve) {
                 Ajax.post('package_quiqqer_products_ajax_products_frontend_setCustomFieldValues', function (result) {
 
@@ -191,6 +195,14 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          */
         refresh: function () {
             return new Promise(function (resolve, reject) {
+
+                if (typeof this.$data === 'undefined' || !this.$data) {
+                    this.$data = {};
+                }
+
+                if (!this.$data.hasOwnProperty('fields')) {
+                    this.$data.fields = {};
+                }
 
                 require([
                     'package/quiqqer/products/bin/Products'
