@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Products\Controller
  */
+
 namespace QUI\ERP\Products\Handler;
 
 use QUI;
@@ -223,7 +224,7 @@ class Categories
      * @param integer $parentId - optional, ID of the parent
      * @param string $title - optional, translation text for current language
      *
-     * @return QUI\ERP\Products\Product\Product
+     * @return QUI\ERP\Products\Interfaces\CategoryInterface
      */
     public static function createCategory($parentId = null, $title = '')
     {
@@ -266,9 +267,11 @@ class Categories
 
         // translation - title
         try {
-            $current      = QUI::getLocale()->getCurrent();
+            $current = QUI::getLocale()->getCurrent();
+
             $languageData = array(
-                'datatype' => 'js,php'
+                'datatype' => 'js,php',
+                'package'  => 'quiqqer/products'
             );
 
             if (!empty($title)) {

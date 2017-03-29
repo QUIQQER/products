@@ -62,10 +62,9 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
         ],
 
         initialize: function (options) {
-
             this.setAttributes({
                 title: QUILocale.get(lg, 'categories.panel.title'),
-                icon : 'fa-sitemap'
+                icon : 'fa fa-sitemap'
             });
 
             this.parent(options);
