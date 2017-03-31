@@ -3,10 +3,19 @@
 
     <cron exec="\QUI\ERP\Products\Crons::updateProductCache">
         <title>
-            <locale group="quiqqer/products" var="cron.updateProductCache.title" />
+            <locale group="quiqqer/products" var="cron.updateProductCache.title"/>
         </title>
         <description>
-            <locale group="quiqqer/products" var="cron.updateProductCache.description" />
+            <locale group="quiqqer/products" var="cron.updateProductCache.description"/>
+        </description>
+    </cron>
+
+    <cron exec="\QUI\ERP\Products\Crons::generateCacheImagesOfProducts">
+        <title>
+            <locale group="quiqqer/products" var="cron.generateCacheImagesOfProducts.title"/>
+        </title>
+        <description>
+            <locale group="quiqqer/products" var="cron.generateCacheImagesOfProducts.description"/>
         </description>
     </cron>
 
