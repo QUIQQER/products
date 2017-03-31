@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\EventHandling
  */
+
 namespace QUI\ERP\Products;
 
 use QUI;
@@ -30,13 +31,14 @@ class Crons
         // clear search cache
         QUI\ERP\Products\Search\Cache::clear();
 
-        $products = Products::getProducts();
+        $ids = Products::getProductIds();
 
         /** @var QUI\ERP\Products\Product\Model $Product */
-        foreach ($products as $Product) {
+        foreach ($ids as $id) {
             set_time_limit(self::PRODUCT_CACHE_UPDATE_TIME);
 
             try {
+                $Product = Products::getProduct($id);
                 $Product->updateCache();
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addWarning(
@@ -44,6 +46,37 @@ class Crons
                     . ' for Product #' . $Product->getId() . ' -> '
                     . $Exception->getMessage()
                 );
+            }
+        }
+    }
+
+    /**
+     * Go through all images and build the image cache
+     * So the first call is faster
+     */
+    public static function generateCacheImagesOfProducts()
+    {
+        $ids = Products::getProductIds();
+
+        /** @var QUI\ERP\Products\Product\Model $Product */
+        foreach ($ids as $id) {
+            set_time_limit(self::PRODUCT_CACHE_UPDATE_TIME);
+
+            try {
+                $Product = Products::getProduct($id);
+                $Image   = $Product->getImage();
+
+                $Image->createCache();
+
+                $Image->createSizeCache(400); // product gallery
+                $Image->createSizeCache(500); // product slider
+                $Image->createSizeCache(100, 200); // product gallery. preview
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addNotice($Exception->getMessage(), array(
+                    'stack'     => $Exception->getTraceAsString(),
+                    'productId' => $id,
+                    'cron'      => 'generateCacheImagesOfProducts'
+                ));
             }
         }
     }

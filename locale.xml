@@ -650,6 +650,16 @@
             <de><![CDATA[Aktualisiert die Cache-Tabelle für alle Produkte im System]]></de>
             <en><![CDATA[Updates the cache table for all products in the system]]></en>
         </locale>
+        <locale name="cron.generateCacheImagesOfProducts.title">
+            <de><![CDATA[Produkt-Bild aufbauen]]></de>
+            <en><![CDATA[Update Product Image Cache]]></en>
+        </locale>
+        <locale name="cron.generateCacheImagesOfProducts.description">
+            <de><![CDATA[
+            Geht durch alle Bilder und baut den Bild-Cache auf, dadurch wird der erste Anruf eines Produktes schneller
+            ]]></de>
+            <en><![CDATA[Go through all images and build the image cache, so the first call is faster]]></en>
+        </locale>
 
         <!-- searchtypes -->
         <locale name="searchtype.text.title">
@@ -1567,7 +1577,7 @@
             <de><![CDATA[Rechnungsadresse]]></de>
             <en><![CDATA[Billing address]]></en>
         </locale>
-    
+
         <locale name="user.profile.title">
             <de><![CDATA[Produkt Einstellungen]]></de>
             <en><![CDATA[Product settings]]></en>
