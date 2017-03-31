@@ -100,7 +100,6 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
          * event : on inject
          */
         $onInject: function () {
-
             var self = this,
                 Elm  = self.getElm();
 
@@ -121,14 +120,13 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
             );
 
             Fields.getFieldTypes().then(function (fieldTypes) {
-
                 var FieldTypes = Elm.getElement('[name="type"]');
 
                 fieldTypes.sort(function (a, b) {
                     var aField = QUILocale.get(a.locale[0], a.locale[1]);
                     var bField = QUILocale.get(b.locale[0], b.locale[1]);
 
-                    if (aField == bField) {
+                    if (aField === bField) {
                         return 0;
                     }
 
@@ -136,6 +134,10 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                 });
 
                 for (var i = 0, len = fieldTypes.length; i < len; i++) {
+                    if (fieldTypes[i].name === 'Vat') {
+                        continue;
+                    }
+
                     new Element('option', {
                         html : QUILocale.get(fieldTypes[i].locale[0], fieldTypes[i].locale[1]),
                         value: fieldTypes[i].name
