@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Category\ProductList
  */
+
 namespace QUI\ERP\Products\Controls\Category;
 
 use QUI;
@@ -360,6 +361,19 @@ class ProductList extends QUI\Control
     public function getNext($start = false, $count = false)
     {
         return $this->renderData($start, $this->getMax(), $count);
+    }
+
+    /**
+     * Return the product count
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return $this->getSearch()->search(
+            $this->getCountParams(),
+            true
+        );
     }
 
     /**
