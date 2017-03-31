@@ -2118,7 +2118,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             return new Promise(function (resolve) {
                 moofx(children).animate({
-                    left   : -30,
                     opacity: 0
                 }, {
                     duration: 200,
@@ -2222,13 +2221,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     });
 
                     moofx(children).animate({
-                        left   : 0,
                         opacity: 1
                     }, {
                         duration: 200,
                         callback: function () {
                             children.setStyles({
-                                left   : null,
                                 opacity: null
                             });
 
