@@ -551,9 +551,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
 
                     var complete = [].append(categoriesFields)
-                        .append(systemFields)
-                        .append(standardFields)
-                        .append(fields);
+                                     .append(systemFields)
+                                     .append(standardFields)
+                                     .append(fields);
 
                     // cleanup complete list
                     var completeIds = {};
@@ -590,7 +590,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         field = systemFields[i];
 
                         // dont show media folder field
-                        if (field.id == Fields.FIELD_FOLDER) {
+                        if (field.id === Fields.FIELD_FOLDER) {
                             new Element('input', {
                                 type          : 'hidden',
                                 'data-fieldid': field.id,
@@ -599,10 +599,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             continue;
                         }
 
-                        if (field.type == 'TextareaMultiLang' ||
-                            field.type == 'Textarea' ||
-                            field.type == 'Folder' ||
-                            field.type == 'Products'
+                        if (field.type === 'TextareaMultiLang' ||
+                            field.type === 'Textarea' ||
+                            field.type === 'Folder' ||
+                            field.type === 'Products'
                         ) {
                             continue;
                         }
@@ -633,10 +633,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     for (i = 0, len = diffFields.length; i < len; i++) {
                         field = diffFields[i];
 
-                        if (field.type == 'TextareaMultiLang' ||
-                            field.type == 'Textarea' ||
-                            field.type == 'Folder' ||
-                            field.type == 'Products'
+                        if (field.type === 'TextareaMultiLang' ||
+                            field.type === 'Textarea' ||
+                            field.type === 'Folder' ||
+                            field.type === 'Products'
                         ) {
                             continue;
                         }
@@ -828,9 +828,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             };
 
             var showCategory = function (type) {
-                if (type == 'TextareaMultiLang' ||
-                    type == 'Textarea' ||
-                    type == 'Products') {
+                if (type === 'TextareaMultiLang' ||
+                    type === 'Textarea' ||
+                    type === 'Products') {
                     return true;
                 }
 
@@ -838,7 +838,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     return true;
                 }
 
-                return fieldtypes[type].category ? true : false;
+                return !!fieldtypes[type].category;
             };
 
             this.getCategoryBar().clear();
@@ -897,13 +897,13 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 icon = 'fa fa-file-text-o';
 
-                if (type == 'Products') {
+                if (type === 'Products') {
                     icon = 'fa fa-shopping-bag';
                 }
 
                 this.addCategory({
                     name   : 'field-' + fields[i].id,
-                    text   : fields[i].workingtitle,
+                    text   : fields[i].workingtitle || fields[i].title,
                     icon   : icon,
                     fieldId: fields[i].id,
                     field  : fields[i],
@@ -942,17 +942,17 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             });
 
             for (i = 0, len = fields.length; i < len; i++) {
-                if (fields[i].type != 'Folder') {
+                if (fields[i].type !== 'Folder') {
                     continue;
                 }
 
-                if (fields[i].id == Fields.FIELD_FOLDER) {
+                if (fields[i].id === Fields.FIELD_FOLDER) {
                     continue;
                 }
 
                 this.addCategory({
                     name   : 'images',
-                    text   : fields[i].workingtitle,
+                    text   : fields[i].workingtitle || fields[i].title,
                     icon   : 'fa fa-picture-o',
                     fieldId: fields[i].id,
                     field  : fields[i],
@@ -1082,21 +1082,21 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             return self.$hideCategories().then(function () {
                 // set values
                 QUI.Controls.getControlsInElement(self.$Data)
-                    .each(function (Field) {
-                        if (!("getFieldId" in Field)) {
-                            return;
-                        }
+                   .each(function (Field) {
+                       if (!("getFieldId" in Field)) {
+                           return;
+                       }
 
-                        if (!("setValue" in Field)) {
-                            return;
-                        }
+                       if (!("setValue" in Field)) {
+                           return;
+                       }
 
-                        var fieldId = Field.getFieldId();
+                       var fieldId = Field.getFieldId();
 
-                        if (fieldId in self.$data) {
-                            Field.setValue(self.$data[fieldId].value);
-                        }
-                    });
+                       if (fieldId in self.$data) {
+                           Field.setValue(self.$data[fieldId].value);
+                       }
+                   });
 
                 return self.$showCategory(self.$Data);
             });
@@ -1906,21 +1906,21 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 Win.Loader.show();
 
                                 Products.copy(this.$Product.getId())
-                                    .then(function (newProductId) {
+                                        .then(function (newProductId) {
 
-                                        require([
-                                            'package/quiqqer/products/bin/controls/products/Product'
-                                        ], function (ProductPanel) {
+                                            require([
+                                                'package/quiqqer/products/bin/controls/products/Product'
+                                            ], function (ProductPanel) {
 
-                                            new ProductPanel({
-                                                productId: newProductId
-                                            }).inject(this.getParent());
+                                                new ProductPanel({
+                                                    productId: newProductId
+                                                }).inject(this.getParent());
 
-                                            Win.close();
+                                                Win.close();
 
-                                        }.bind(this));
+                                            }.bind(this));
 
-                                    }.bind(this)).catch(reject);
+                                        }.bind(this)).catch(reject);
 
                             }.bind(this),
 
