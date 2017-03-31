@@ -454,6 +454,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     paceDone();
                 } else {
                     Pace.on('done', paceDone);
+                    paceDone.delay(1000); // fallback, if pace dont load correct
                 }
                 return;
             }
@@ -491,7 +492,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     return;
                 }
 
-                if ("p" in search && Object.getLength(search) == 1) {
+                if ("p" in search && Object.getLength(search) === 1) {
                     var productId = parseInt(search.p);
 
                     if (productId) {
