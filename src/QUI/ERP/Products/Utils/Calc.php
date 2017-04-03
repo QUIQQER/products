@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Utils\Calc
  */
+
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
