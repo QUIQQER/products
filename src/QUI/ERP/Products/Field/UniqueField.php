@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\UniqueField
  */
+
 namespace QUI\ERP\Products\Field;
 
 use QUI;

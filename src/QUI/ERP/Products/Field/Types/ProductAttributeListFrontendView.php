@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\ProductAttributeListFrontendView
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -66,7 +67,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $requiredField = ' required="required"';
         }
 
-        if (!is_string($value)) {
+        if (!is_string($value) && !is_numeric($value)) {
             $value = '';
         }
 
@@ -116,7 +117,9 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $selected  = '';
             $userInput = '';
 
-            if (isset($option['selected']) && $option['selected']) {
+            if (isset($option['selected']) && $option['selected']
+                || $value == $key
+            ) {
                 $selected = 'selected="selected" ';
             }
 

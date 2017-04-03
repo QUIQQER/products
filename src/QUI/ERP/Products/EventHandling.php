@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\EventHandling
  */
+
 namespace QUI\ERP\Products;
 
 use QUI;
@@ -326,7 +327,7 @@ class EventHandling
                 'standardField' => 1,
                 'requiredField' => 0,
                 'publicField'   => 0,
-                'search_type'   => '',
+                'search_type'   => Search::SEARCHTYPE_TEXT,
                 'titles'        => array(
                     'de' => 'Suchbegriffe',
                     'en' => 'Search keywords'
