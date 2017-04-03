@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Product\UniqueProduct
  */
+
 namespace QUI\ERP\Products\Product;
 
 use QUI;
@@ -163,6 +164,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         if (isset($attributes['maximumPrice'])) {
             $this->maximumPrice = $attributes['maximumPrice'];
         }
+
+        $this->uid = (int)$attributes['uid'];
 
         // fields
         $this->parseFieldsFromAttributes($attributes);
