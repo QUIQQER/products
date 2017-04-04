@@ -146,7 +146,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             });
 
             this.addButton({
-                type: 'seperator'
+                type: 'separator'
             });
 
             this.addButton({
@@ -173,7 +173,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             });
 
             this.addButton({
-                type: 'seperator'
+                type: 'separator'
             });
 
             this.addButton({

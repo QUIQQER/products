@@ -205,7 +205,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                         }
                     }
                 }, {
-                    type: 'seperator'
+                    type: 'separator'
                 }, {
                     name     : 'delete',
                     text     : QUILocale.get(lg, 'category.update.field.grid.button.delete'),
@@ -361,7 +361,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                             onClick: this.openAddProductDialog
                         }
                     }, {
-                        type: 'seperator'
+                        type: 'separator'
                     }, {
                         name     : 'remove',
                         text     : QUILocale.get(lg, 'category.panel.button.products.remove'),
@@ -396,7 +396,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 });
 
                 var RemoveButton = self.$grids.Products.getButtons().filter(function (Btn) {
-                    return Btn.getAttribute('name') == 'remove';
+                    return Btn.getAttribute('name') === 'remove';
                 })[0];
 
 

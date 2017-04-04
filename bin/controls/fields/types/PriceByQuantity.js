@@ -184,13 +184,13 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
                 return;
             }
 
-            var groupingSeperator = QUILocale.getGroupingSeperator();
-            var decimalSeperator  = QUILocale.getDecimalSeperator();
+            var groupingSeparator = QUILocale.getGroupingSeparator();
+            var decimalSeparator  = QUILocale.getDecimalSeparator();
 
-            var foundGroupSeperator   = typeOf(value) === 'string' && value.indexOf(groupingSeperator) >= 0;
-            var foundDecimalSeperator = typeOf(value) === 'string' && value.indexOf(decimalSeperator) >= 0;
+            var foundGroupSeparator   = typeOf(value) === 'string' && value.indexOf(groupingSeparator) >= 0;
+            var foundDecimalSeparator = typeOf(value) === 'string' && value.indexOf(decimalSeparator) >= 0;
 
-            if ((foundGroupSeperator || foundDecimalSeperator) && !(foundGroupSeperator && !foundDecimalSeperator)) {
+            if ((foundGroupSeparator || foundDecimalSeparator) && !(foundGroupSeparator && !foundDecimalSeparator)) {
                 this.$Price.value = value;
                 return;
             }

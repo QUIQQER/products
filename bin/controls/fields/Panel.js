@@ -121,7 +121,7 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
             });
 
             this.addButton({
-                type: 'seperator'
+                type: 'separator'
             });
 
             this.addButton({
