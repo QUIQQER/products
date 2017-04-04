@@ -513,12 +513,12 @@ class Calc
     public function round(
         $value
     ) {
-        $decimalSeperator  = $this->getUser()->getLocale()->getDecimalSeperator();
-        $groupingSeperator = $this->getUser()->getLocale()->getGroupingSeperator();
+        $decimalSeparator  = $this->getUser()->getLocale()->getDecimalSeparator();
+        $groupingSeparator = $this->getUser()->getLocale()->getGroupingSeparator();
         $precision         = 8; // nachkommstelle beim rundne -> @todo in die conf?
 
-        if (strpos($value, $decimalSeperator) && $decimalSeperator != ' . ') {
-            $value = str_replace($groupingSeperator, '', $value);
+        if (strpos($value, $decimalSeparator) && $decimalSeparator != ' . ') {
+            $value = str_replace($groupingSeparator, '', $value);
         }
 
         $value = str_replace(',', ' . ', $value);

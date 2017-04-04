@@ -127,7 +127,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             });
 
             this.addButton({
-                type: 'seperator'
+                type: 'separator'
             });
 
             this.addButton({
@@ -140,7 +140,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                         Btn.setAttribute('textimage', 'fa fa-spinner fa-spin');
 
                         self.deleteChild(self.$Search.getSelected()).catch(function (Exception) {
-                            if (Exception.getType() == 'qui/controls/messages/Error') {
+                            if (Exception.getType() === 'qui/controls/messages/Error') {
                                 return;
                             }
 
@@ -308,7 +308,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
                     for (var i = 0, len = data.length; i < len; i++) {
                         products = products + '<li>' + data[i].id + ': ' +
-                                   data[i].title + '</li>';
+                            data[i].title + '</li>';
                     }
 
                     products = products + '</ul>';

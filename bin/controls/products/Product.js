@@ -181,7 +181,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             });
 
             this.addButton({
-                type: 'seperator'
+                type: 'separator'
             });
 
             this.addButton(
@@ -1380,7 +1380,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 filterChange: refresh
                             }
                         }), {
-                            type: 'seperator'
+                            type: 'separator'
                         }, {
                             text     : QUILocale.get(lg, 'product.fields.add.field'),
                             textimage: 'fa fa-plus',
@@ -1544,14 +1544,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 self.openAddFieldDialog('ProductAttributeList').then(function () {
                                     self.openAttributeList();
                                 }).catch(function (err) {
-                                    if (typeOf(err) != 'package/quiqqer/products/bin/controls/fields/search/Window') {
+                                    if (typeOf(err) !== 'package/quiqqer/products/bin/controls/fields/search/Window') {
                                         console.error(err);
                                     }
                                 });
                             }
                         }
                     }, {
-                        type: 'seperator'
+                        type: 'separator'
                     }, {
                         name     : 'remove',
                         text     : QUILocale.get(lg, 'product.fields.grid.button.removeSelectList'),
@@ -1563,7 +1563,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                     self.openAttributeList();
                                 }).catch(function (err) {
                                     console.log(typeOf(err));
-                                    if (typeOf(err) != 'qui/controls/windows/Confirm') {
+                                    if (typeOf(err) !== 'qui/controls/windows/Confirm') {
                                         console.error(err);
                                     }
                                 });

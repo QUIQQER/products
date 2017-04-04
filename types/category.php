@@ -74,7 +74,7 @@ if ($siteUrl != $_REQUEST['_url']) {
         $url['basename']
     );
 
-    $parts = explode(QUI\Rewrite::URL_PARAM_SEPERATOR, $baseName);
+    $parts = explode(QUI\Rewrite::URL_PARAM_SEPARATOR, $baseName);
     $refNo = array_pop($parts);
     $refNo = (int)$refNo;
 

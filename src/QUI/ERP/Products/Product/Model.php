@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Product\Model
  */
+
 namespace QUI\ERP\Products\Product;
 
 use QUI;
@@ -454,7 +455,7 @@ class Model extends QUI\QDOM
         $parts[] = Orthos::urlEncodeString($this->getTitle());
         $parts[] = $this->getId();
 
-        return urlencode(implode(QUI\Rewrite::URL_PARAM_SEPERATOR, $parts));
+        return urlencode(implode(QUI\Rewrite::URL_PARAM_SEPARATOR, $parts));
     }
 
     /**

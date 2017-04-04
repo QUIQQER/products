@@ -151,7 +151,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                         }.bind(this)
                     }
                 }, {
-                    type: 'seperator'
+                    type: 'separator'
                 }, {
                     name     : 'add',
                     textimage: 'fa fa-plus',
@@ -174,7 +174,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                         }
                     }
                 }, {
-                    type: 'seperator'
+                    type: 'separator'
                 }, {
                     name     : 'delete',
                     textimage: 'fa fa-trash',

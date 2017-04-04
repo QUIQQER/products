@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\FloatType
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -91,8 +92,8 @@ class FloatType extends QUI\ERP\Products\Field\Field
     public function cleanup($value)
     {
         // @TODO diese beiden Werte aus Settings nehmen (s. Price)
-        $decimalSeperator   = '.';
-        $thousandsSeperator = ',';
+        $decimalSeparator   = '.';
+        $thousandsSeparator = ',';
 
         if (is_float($value)) {
             return round($value, 4);
@@ -105,30 +106,30 @@ class FloatType extends QUI\ERP\Products\Field\Field
             return null;
         }
 
-        $decimal   = mb_strpos($value, $decimalSeperator);
-        $thousands = mb_strpos($value, $thousandsSeperator);
+        $decimal   = mb_strpos($value, $decimalSeparator);
+        $thousands = mb_strpos($value, $thousandsSeparator);
 
         if ($thousands === false && $decimal === false) {
             return round(floatval($value), 4);
         }
 
         if ($thousands !== false && $decimal === false) {
-            if (mb_substr($value, -4, 1) === $decimalSeperator) {
-                $value = str_replace($thousandsSeperator, '', $value);
+            if (mb_substr($value, -4, 1) === $decimalSeparator) {
+                $value = str_replace($thousandsSeparator, '', $value);
             }
         }
 
         if ($thousands === false && $decimal !== false) {
             $value = str_replace(
-                $decimalSeperator,
+                $decimalSeparator,
                 '.',
                 $value
             );
         }
 
         if ($thousands !== false && $decimal !== false) {
-            $value = str_replace($decimalSeperator, '', $value);
-            $value = str_replace($thousandsSeperator, '.', $value);
+            $value = str_replace($decimalSeparator, '', $value);
+            $value = str_replace($thousandsSeparator, '.', $value);
         }
 
         return round(floatval($value), 4);

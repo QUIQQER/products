@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Price
  */
+
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
@@ -45,12 +46,12 @@ class Price
     /**
      * @var string
      */
-    protected $decimalSeperator = ',';
+    protected $decimalSeparator = ',';
 
     /**
      * @var string
      */
-    protected $thousandsSeperator = '.';
+    protected $thousandsSeparator = '.';
 
     /**
      * Price constructor.
@@ -220,30 +221,30 @@ class Price
             return null;
         }
 
-        $decimal   = mb_strpos($value, $this->decimalSeperator);
-        $thousands = mb_strpos($value, $this->thousandsSeperator);
+        $decimal   = mb_strpos($value, $this->decimalSeparator);
+        $thousands = mb_strpos($value, $this->thousandsSeparator);
 
         if ($thousands === false && $decimal === false) {
             return round(floatval($value), 4);
         }
 
         if ($thousands !== false && $decimal === false) {
-            if (mb_substr($value, -4, 1) === $this->thousandsSeperator) {
-                $value = str_replace($this->thousandsSeperator, '', $value);
+            if (mb_substr($value, -4, 1) === $this->thousandsSeparator) {
+                $value = str_replace($this->thousandsSeparator, '', $value);
             }
         }
 
         if ($thousands === false && $decimal !== false) {
             $value = str_replace(
-                $this->decimalSeperator,
+                $this->decimalSeparator,
                 '.',
                 $value
             );
         }
 
         if ($thousands !== false && $decimal !== false) {
-            $value = str_replace($this->thousandsSeperator, '', $value);
-            $value = str_replace($this->decimalSeperator, '.', $value);
+            $value = str_replace($this->thousandsSeparator, '', $value);
+            $value = str_replace($this->decimalSeparator, '.', $value);
         }
 
         return round(floatval($value), 4);
