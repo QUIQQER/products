@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\EventHandling
  */
+
 namespace QUI\ERP\Products;
 
 use QUI\ERP\Api\AbstractErpProvider;
@@ -32,12 +33,6 @@ class ErpProvider extends AbstractErpProvider
             'icon'  => 'fa fa-sitemap',
             'text'  => array('quiqqer/products', 'menu.erp.products.categories.title'),
             'panel' => 'package/quiqqer/products/bin/controls/categories/Panel'
-        );
-
-        $menu[] = array(
-            'icon'  => 'fa fa-file-text-o',
-            'text'  => array('quiqqer/products', 'menu.erp.products.fields.title'),
-            'panel' => 'package/quiqqer/products/bin/controls/fields/Panel'
         );
 
         return $menu;
