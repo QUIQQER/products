@@ -6,7 +6,7 @@
         </title>
 
         <description>
-            <locale group="quiqqer/products" var="package.title"/>
+            <locale group="quiqqer/products" var="package.description"/>
         </description>
 
         <provider>
