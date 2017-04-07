@@ -740,6 +740,10 @@
             <de><![CDATA[Darf Preise sehen.]]></de>
             <en><![CDATA[Is allowed to view prices.]]></en>
         </locale>
+        <locale name="permission.product.view._header">
+            <de><![CDATA[Produktansicht]]></de>
+            <en><![CDATA[Product view]]></en>
+        </locale>
 
         <locale name="product.list.products.title">
             <de><![CDATA[Produkte]]></de>
@@ -811,6 +815,34 @@
         <locale name="permission.search.backend.configure">
             <de><![CDATA[Darf Such-Felder für die Backend-Suche konfigurieren]]></de>
             <en><![CDATA[Can configure search fields for the backend search]]></en>
+        </locale>
+        <locale name="permission.category._header">
+            <de><![CDATA[Produkt-Kategorien]]></de>
+            <en><![CDATA[Product categories]]></en>
+        </locale>
+        <locale name="permission.category.edit">
+            <de><![CDATA[Darf Produkt-Kategorien bearbeiten]]></de>
+            <en><![CDATA[Is allowed to edit product categories]]></en>
+        </locale>
+        <locale name="permission.category.delete">
+            <de><![CDATA[Darf Produkt-Kategorien löschen]]></de>
+            <en><![CDATA[Is allowed to delete product categories]]></en>
+        </locale>
+        <locale name="permission.category.create">
+            <de><![CDATA[Darf Produkt-Kategorien erstellen]]></de>
+            <en><![CDATA[Is allowed to create product categories]]></en>
+        </locale>
+        <locale name="permission.field._header">
+            <de><![CDATA[Produkt-Felder]]></de>
+            <en><![CDATA[Product fields]]></en>
+        </locale>
+        <locale name="permission.field.delete._header">
+            <de><![CDATA[Produkt-Systemfelder]]></de>
+            <en><![CDATA[Product system fields]]></en>
+        </locale>
+        <locale name="permission.field.delete.systemfield">
+            <de><![CDATA[Darf Produkt-Systemfelder löschen]]></de>
+            <en><![CDATA[Is allowed to delete product system fields]]></en>
         </locale>
 
         <locale name="control.search.suggest.placeholder">
