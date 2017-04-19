@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Model
  */
+
 namespace QUI\ERP\Products\Search;
 
 use QUI;
@@ -755,5 +756,53 @@ abstract class Search extends QUI\QDOM
         }
 
         return $order;
+    }
+
+
+    /**
+     * @param array $tags
+     */
+    protected function getTagQuery(array $tags)
+    {
+        $Tags = new QUI\Tags\Manager(QUI::getRewrite()->getProject());
+        $list = array();
+
+        foreach ($tags as $tag) {
+            $groups = $Tags->getGroupsFromTag($tag);
+
+            foreach ($groups as $group) {
+                $list[$group['id']][] = $tag;
+            }
+        }
+
+        $binds       = array();
+        $whereGroups = array();
+
+        $i = 0;
+
+        foreach ($list as $group => $tags) {
+            $tagList = array();
+
+            foreach ($tags as $tag) {
+                $tagList[] = '`tags` LIKE :tag' . $i;
+
+                $binds['tag' . $i] = array(
+                    'value' => '%,' . $tag . ',%',
+                    'type'  => \PDO::PARAM_STR
+                );
+
+                $i++;
+            }
+
+            $whereGroups[] = '(' . implode(' OR ', $tagList) . ')';
+        }
+
+
+        $where = '(' . implode(' AND ', $whereGroups) . ')';
+
+        return array(
+            'where' => $where,
+            'binds' => $binds
+        );
     }
 }
