@@ -219,12 +219,12 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      * Change the price of the product
      * Returns the price object
      *
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      */
     public function getPrice()
     {
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
-        $Price    = new QUI\ERP\Products\Utils\Price(0, $Currency);
+        $Price    = new QUI\ERP\Money\Price(0, $Currency);
 
         return $Price;
     }

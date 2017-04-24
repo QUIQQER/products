@@ -850,11 +850,6 @@
             <en><![CDATA[Enter search...]]></en>
         </locale>
 
-        <locale name="price.starting.from">
-            <de><![CDATA[ab [price]]]></de>
-            <en><![CDATA[starting from [price]]]></en>
-        </locale>
-
         <locale name="products.category.0.title">
             <de><![CDATA[Alle Produkte]]></de>
             <en><![CDATA[All products]]></en>

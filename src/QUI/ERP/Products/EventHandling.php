@@ -750,7 +750,7 @@ class EventHandling
 
         $User->setAttribute(
             'quiqqer.erp.isNettoUser',
-            QUI\ERP\Products\Utils\User::getBruttoNettoUserStatus($User)
+            QUI\ERP\Utils\User::getBruttoNettoUserStatus($User)
         );
     }
 

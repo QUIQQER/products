@@ -272,7 +272,7 @@ abstract class Search extends QUI\QDOM
             if (get_class($this) == FrontendSearch::class) {
                 $User = QUI::getUserBySession();
 
-                if (!QUI\ERP\Products\Utils\User::isNettoUser($User)
+                if (!QUI\ERP\Utils\User::isNettoUser($User)
                     && $Field->getType() == Fields::TYPE_PRICE
                 ) {
                     $Tax  = QUI\ERP\Tax\Utils::getTaxByUser(QUI::getUserBySession());
@@ -757,10 +757,12 @@ abstract class Search extends QUI\QDOM
 
         return $order;
     }
-
-
+    
     /**
+     * Build the query for the tag groups
+     *
      * @param array $tags
+     * @return array
      */
     protected function getTagQuery(array $tags)
     {

@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\VatFrontendView
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -31,7 +32,7 @@ class VatFrontendView extends View
 
         if ($value >= 0) {
             try {
-                $Area    = QUI\ERP\Products\Utils\User::getUserArea(QUI::getUserBySession());
+                $Area    = QUI\ERP\Utils\User::getUserArea(QUI::getUserBySession());
                 $TaxType = QUI\ERP\Tax\Handler::getInstance()->getTaxType($value);
                 $Tax     = QUI\ERP\Tax\Utils::getTaxEntry($TaxType, $Area);
 

@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Product\ProductListFrontendView
  */
+
 namespace QUI\ERP\Products\Product;
 
 use QUI;
@@ -36,16 +37,15 @@ class ProductListFrontendView
     }
 
     /**
-     * Return the ProductListView as an array
-     *
-     * @return array
+     * Parse the list to an array
+     * Set the internal data
      */
     protected function parse()
     {
         $list     = $this->ProductList->toArray();
         $products = $this->ProductList->getProducts();
         $User     = $this->ProductList->getUser();
-        $isNetto  = QUI\ERP\Products\Utils\User::isNettoUser($User);
+        $isNetto  = QUI\ERP\Utils\User::isNettoUser($User);
 
         $Locale   = $this->ProductList->getUser()->getLocale();
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();

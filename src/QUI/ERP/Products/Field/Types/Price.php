@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\Price
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -45,7 +46,7 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     public function getFrontendView()
     {
-        $Price = new QUI\ERP\Products\Utils\Price(
+        $Price = new QUI\ERP\Money\Price(
             $this->cleanup($this->getValue()),
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
@@ -179,7 +180,7 @@ class Price extends QUI\ERP\Products\Field\Field
     {
         // add tax to max value
         $maxTaxValue = (100 + QUI\ERP\Tax\Utils::getMaxTax()) / 100;
-        $max *= $maxTaxValue;
+        $max         *= $maxTaxValue;
 
         if ($min < 10) {
             $start = 0;
@@ -206,14 +207,14 @@ class Price extends QUI\ERP\Products\Field\Field
                 $i   = 10;
 
                 while ($value >= $i) {
-                    $i *= 10;
+                    $i   *= 10;
                     $add *= 10;
                 }
 
                 $value = floor($value / $add) * $add;
             }
 
-            $value += $add;
+            $value   += $add;
             $range[] = $value;
         }
 

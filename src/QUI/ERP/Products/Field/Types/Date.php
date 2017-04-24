@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\Year
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -98,7 +99,7 @@ class Date extends QUI\ERP\Products\Field\Field
     /**
      * Return the Backend view
      */
-    protected function getBackendView()
+    public function getBackendView()
     {
         return new View($this->getFieldDataForView());
     }
@@ -106,7 +107,7 @@ class Date extends QUI\ERP\Products\Field\Field
     /**
      * Return the frontend view
      */
-    protected function getFrontendView()
+    public function getFrontendView()
     {
         return new DateFrontendView($this->getFieldDataForView());
     }

@@ -31,7 +31,7 @@ class BruttoUserTest extends \PHPUnit_Framework_TestCase
     public function testIsBruttoUser()
     {
         $this->assertFalse(
-            QUI\ERP\Products\Utils\User::isNettoUser(
+            QUI\ERP\Utils\User::isNettoUser(
                 new BruttoUser()
             )
         );
