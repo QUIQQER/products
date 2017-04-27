@@ -320,7 +320,7 @@ class Calc
         }
 
         $callback(array(
-            'sum'          => $isNetto ? $nettoSum : $bruttoSum,
+            'sum'          => $bruttoSum,
             'subSum'       => $subSum,
             'nettoSum'     => $nettoSum,
             'nettoSubSum'  => $nettoSubSum,

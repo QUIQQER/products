@@ -14,7 +14,7 @@ require_once dirname(__FILE__) . '/Classes/ProductListHelper.php';
  */
 class NettoUserTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCasetStudyNetto()
+    public function testCaseStudyNetto()
     {
         writePhpUnitMessage('/*********************************/');
         writePhpUnitMessage('      Netto Nutzer');

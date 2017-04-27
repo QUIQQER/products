@@ -99,24 +99,6 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
             $text = $title[$currentLC];
         }
 
-        if ($displayDiscounts && $option['sum'] != 0) {
-            switch ($option['type']) {
-                case 'percent': // fallback fix
-                case QUI\ERP\Products\Utils\Calc::CALCULATION_PERCENTAGE:
-                    $discount = $option['sum'] . '%';
-                    break;
-
-                case QUI\ERP\Products\Utils\Calc::CALCULATION_COMPLEMENT:
-                default:
-                    $discount = $Currency->format(
-                        $Calc->getPrice($option['sum'])
-                    );
-                    break;
-            }
-
-            $text .= ' (+' . $discount . ')';
-        }
-
         $Engine->assign('valueText', $text);
 
         return $Engine->fetch(dirname(__FILE__) . '/ProductAttributeListBackendView.html');
