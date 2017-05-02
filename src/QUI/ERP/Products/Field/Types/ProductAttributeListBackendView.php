@@ -52,21 +52,6 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
             $entries = $options['entries'];
         }
 
-        $requiredField    = '';
-        $displayDiscounts = false;
-
-        if (isset($options['display_discounts'])) {
-            $displayDiscounts = $options['display_discounts'];
-        }
-
-        if (QUI\ERP\Products\Utils\Package::hidePrice()) {
-            $displayDiscounts = false;
-        }
-
-        if ($this->isRequired()) {
-            $requiredField = ' required="required"';
-        }
-
         if (!is_string($value) && !is_numeric($value)) {
             $value = '';
         }
@@ -75,17 +60,15 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
         $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign(array(
-            'this'          => $this,
-            'id'            => $id,
-            'title'         => $this->getTitle(),
-            'name'          => $name,
-            'value'         => $value,
-            'requiredField' => $requiredField
+            'this'  => $this,
+            'id'    => $id,
+            'title' => $this->getTitle(),
+            'name'  => $name,
+            'value' => $value
         ));
 
         // options
         $currentLC = strtolower($current) . '_' . strtoupper($current);
-        $Calc      = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
         $option = $entries[$value];
         $title  = $option['title'];

@@ -841,16 +841,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             'title'       => $this->getTitle($Locale),
             'description' => $description,
             'unitPrice'   => $this->getUnitPrice()->getNetto(),
-            'quantity'    => $this->getQuantity(),
-            'calculated'  => array(
-                'basisPrice' => $attributes['calculated_basisPrice'],
-                'price'      => $attributes['calculated_price'],
-                'sum'        => $attributes['calculated_sum'],
-                'nettoSum'   => $attributes['calculated_nettoSum'],
-                'isEuVat'    => $attributes['calculated_isEuVat'],
-                'isNetto'    => $attributes['calculated_isNetto'],
-                'vatArray'   => $attributes['calculated_vatArray']
-            )
+            'quantity'    => $this->getQuantity()
         ));
     }
 }
