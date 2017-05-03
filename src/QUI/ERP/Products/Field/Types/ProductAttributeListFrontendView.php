@@ -160,7 +160,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $options[] = array(
                 'selected' => $selected,
                 'value'    => $key,
-                'text'     => $text.'----',
+                'text'     => $text,
                 'data'     => $userInput
             );
         }
