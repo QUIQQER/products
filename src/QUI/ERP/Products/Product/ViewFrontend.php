@@ -307,7 +307,12 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getImage()
     {
-        return $this->Product->getImage();
+        try {
+            return $this->Product->getImage();
+        } catch (QUI\Exception $Exception) {
+        }
+
+        return QUI::getRewrite()->getProject()->getMedia()->getPlaceholderImage();
     }
 
     /**

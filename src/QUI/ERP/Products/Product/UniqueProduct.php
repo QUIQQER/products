@@ -819,10 +819,9 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $Locale = QUI\ERP\Products\Handler\Products::getLocale();
         }
 
-        $attributes  = $this->getAttributes();
+//        $attributes  = $this->getAttributes();
         $description = $this->getDescription($Locale);
-
-        $fields = $this->getCustomFields();
+        $fields      = $this->getCustomFields();
 
         if (count($fields)) {
             $description .= '<ul>';
