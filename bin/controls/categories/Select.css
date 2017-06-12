@@ -31,6 +31,7 @@
 .qui-products-categories-list-search {
     clear: both;
     float: left;
+    padding-left: 30px;
     width: calc(100% - 50px);
 }
 
@@ -52,6 +53,17 @@
 
 .field-container-field > .qui-products-categories-list .qui-products-categories-list-search {
     border: none;
+}
+
+.qui-products-categories-list-searchIcon {
+    bottom: -1px;
+    font-size: 14px;
+    height: 30px;
+    left: 1px;
+    line-height: 30px;
+    position: absolute;
+    text-align: center;
+    width: 30px;
 }
 
 /** DropDown
