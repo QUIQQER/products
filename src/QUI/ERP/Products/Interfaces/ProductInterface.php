@@ -3,10 +3,11 @@
 /**
  * This file contains QUI\ERP\Products\Interfaces\ProductInterface
  */
+
 namespace QUI\ERP\Products\Interfaces;
 
 use QUI\ERP\Products\Category\Category;
-use QUI\ERP\Products\Utils\Price;
+use QUI\ERP\Money\Price;
 
 /**
  * Interface Product

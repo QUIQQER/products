@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Product\View
  */
+
 namespace QUI\ERP\Products\Product;
 
 use QUI;
@@ -100,7 +101,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         }
 
 
-        /* @var $Price QUI\ERP\Products\Utils\Price */
+        /* @var $Price QUI\ERP\Money\Price */
         $Price = $this->getPrice();
 
         $attributes['price_netto']    = $Price->getNetto();
@@ -174,12 +175,12 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     }
 
     /**
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      */
     public function getPrice()
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
-            return new QUI\ERP\Products\Utils\Price(
+            return new QUI\ERP\Money\Price(
                 '',
                 QUI\ERP\Currency\Handler::getDefaultCurrency()
             );
@@ -194,7 +195,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     }
 
     /**
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      */
     public function getMinimumPrice()
     {
@@ -204,7 +205,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     }
 
     /**
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      */
     public function getMaximumPrice()
     {
@@ -306,7 +307,12 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getImage()
     {
-        return $this->Product->getImage();
+        try {
+            return $this->Product->getImage();
+        } catch (QUI\Exception $Exception) {
+        }
+
+        return QUI::getRewrite()->getProject()->getMedia()->getPlaceholderImage();
     }
 
     /**

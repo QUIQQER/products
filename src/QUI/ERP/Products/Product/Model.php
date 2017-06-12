@@ -581,7 +581,7 @@ class Model extends QUI\QDOM
      * Beachtet alle Preisfelder und sucht das zu diesem Zeitpunkt richtig Preisfeld
      *
      * @param null|QUI\Interfaces\Users\User $User - optional, default = Nobody
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      */
     public function getPrice($User = null)
     {
@@ -593,7 +593,7 @@ class Model extends QUI\QDOM
      * So, the Product has the same construction as the UniqueProduct
      *
      * @param null|QUI\Interfaces\Users\User $User
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      */
     public function getNettoPrice($User = null)
     {
@@ -604,7 +604,7 @@ class Model extends QUI\QDOM
      * Return the minimum price
      *
      * @param null $User
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      */
     public function getMinimumPrice($User = null)
     {
@@ -614,7 +614,7 @@ class Model extends QUI\QDOM
             $data     = QUI\Cache\Manager::get($cacheName);
             $Currency = QUI\ERP\Currency\Handler::getCurrency($data['currency']);
 
-            return new QUI\ERP\Products\Utils\Price($data['price'], $Currency);
+            return new QUI\ERP\Money\Price($data['price'], $Currency);
         } catch (QUI\Exception $Exception) {
         }
 
@@ -663,7 +663,7 @@ class Model extends QUI\QDOM
             }
         }
 
-        $Result = new QUI\ERP\Products\Utils\Price($currentPrice, $Price->getCurrency());
+        $Result = new QUI\ERP\Money\Price($currentPrice, $Price->getCurrency());
 
         QUI\Cache\Manager::set($cacheName, $Result->toArray());
 
@@ -674,7 +674,7 @@ class Model extends QUI\QDOM
      * Return the maximum price
      *
      * @param null $User
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      */
     public function getMaximumPrice($User = null)
     {
@@ -684,7 +684,7 @@ class Model extends QUI\QDOM
             $data     = QUI\Cache\Manager::get($cacheName);
             $Currency = QUI\ERP\Currency\Handler::getCurrency($data['currency']);
 
-            return new QUI\ERP\Products\Utils\Price($data['price'], $Currency);
+            return new QUI\ERP\Money\Price($data['price'], $Currency);
         } catch (QUI\Exception $Exception) {
         }
 
@@ -718,7 +718,7 @@ class Model extends QUI\QDOM
             }
         }
 
-        $Result = new QUI\ERP\Products\Utils\Price($currentPrice, $Price->getCurrency());
+        $Result = new QUI\ERP\Money\Price($currentPrice, $Price->getCurrency());
 
         QUI\Cache\Manager::set($cacheName, $Result->toArray());
 
@@ -747,7 +747,7 @@ class Model extends QUI\QDOM
         }
 
 
-        /* @var $Price QUI\ERP\Products\Utils\Price */
+        /* @var $Price QUI\ERP\Money\Price */
         $Price = $this->getPrice();
 
         $attributes['price_netto']    = $Price->getNetto();

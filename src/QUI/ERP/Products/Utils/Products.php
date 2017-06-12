@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Utils\Products
  */
+
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
@@ -47,7 +48,7 @@ class Products
      *
      * @param QUI\ERP\Products\Interfaces\ProductInterface|QUI\ERP\Products\Product\Model $Product
      * @param QUI\Interfaces\Users\User|null $User
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      *
      * @throws QUI\Exception
      */
@@ -73,7 +74,7 @@ class Products
         );
 
         if (empty($priceList)) {
-            return new QUI\ERP\Products\Utils\Price($PriceField->getValue(), $Currency);
+            return new QUI\ERP\Money\Price($PriceField->getValue(), $Currency);
         }
 
         $priceFields = array_filter($priceList, function ($Field) use ($User) {
@@ -143,6 +144,6 @@ class Products
             }
         }
 
-        return new QUI\ERP\Products\Utils\Price($priceValue, $Currency);
+        return new QUI\ERP\Money\Price($priceValue, $Currency);
     }
 }

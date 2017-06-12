@@ -133,7 +133,7 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
             Locale = Locale || QUILocale;
 
             return this.getFieldValue(4).then(function (field) {
-                if (typeOf(field) == 'string') {
+                if (typeOf(field) === 'string') {
                     try {
                         field = JSON.decode(field);
                     } catch (e) {

@@ -206,6 +206,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         $sum       = 0;
         $calcType  = Calc::CALCULATION_COMPLEMENT;
 
+        // @todo show amount
         if (isset($entries[$value])) {
             $sum       = $entries[$value]['sum'];
             $type      = $entries[$value]['type'];
@@ -238,7 +239,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             'basis'       => $options['calculation_basis'],
             'value'       => $sum,
             'calculation' => $calcType,
-            'valueText'   => $valueText
+            'valueText'   => $valueText . '###'
         );
     }
 

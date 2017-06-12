@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Product\Product
  */
+
 namespace QUI\ERP\Products\Product;
 
 use QUI;
@@ -17,7 +18,7 @@ class ProductList
      * is the product list calculated?
      * @var bool
      */
-    protected $calulated = false;
+    protected $calculated = false;
 
     /**
      * @var int|float|double
@@ -148,7 +149,7 @@ class ProductList
      */
     public function calc($Calc = null)
     {
-        if ($this->calulated) {
+        if ($this->calculated) {
             return $this;
         }
 
@@ -170,7 +171,7 @@ class ProductList
             $self->isNetto      = $data['isNetto'];
             $self->currencyData = $data['currencyData'];
 
-            $self->calulated = true;
+            $self->calculated = true;
         });
 
         return $this;
@@ -318,7 +319,7 @@ class ProductList
      */
     public function getView()
     {
-        if (!$this->calulated) {
+        if (!$this->calculated) {
             $this->calc();
         }
 

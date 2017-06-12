@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Search\FrontendSearch
  */
+
 namespace QUI\ERP\Products\Search;
 
 use QUI;
@@ -284,22 +285,11 @@ class FrontendSearch extends Search
             && !empty($searchParams['tags'])
             && is_array($searchParams['tags'])
         ) {
-            $tags      = $searchParams['tags'];
-            $whereTags = array();
-            $i         = 0;
+            $data = $this->getTagQuery($searchParams['tags']);
 
-            foreach ($tags as $tag) {
-                $whereTags[]       = '`tags` LIKE :tag' . $i;
-                $binds['tag' . $i] = array(
-                    'value' => '%,' . $tag . ',%',
-                    'type'  => \PDO::PARAM_STR
-                );
-
-                $i++;
-            }
-
-            if (!empty($whereTags)) {
-                $where[] = '(' . implode(' OR ', $whereTags) . ')';
+            if (!empty($data['where'])) {
+                $where[] = $data['where'];
+                $binds   = array_merge($binds, $data['binds']);
             }
         }
 
