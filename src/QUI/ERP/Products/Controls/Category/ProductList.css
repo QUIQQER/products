@@ -54,11 +54,12 @@
         float: left;
         width: calc(50% - 10px);
     }
-/*
-    .quiqqer-products-productList-sort-sorting {
-        margin-left: 10px;
-    }
-*/
+
+    /*
+        .quiqqer-products-productList-sort-sorting {
+            margin-left: 10px;
+        }
+    */
     .quiqqer-products-productList-sort-filter .fa-angle-down {
         float: right;
         line-height: 30px;
