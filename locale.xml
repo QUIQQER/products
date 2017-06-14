@@ -920,7 +920,10 @@
             <de><![CDATA[Produkt-Kategorien Menü]]></de>
             <en><![CDATA[Product Categories Menu]]></en>
         </locale>
-
+        <locale name="quiqqer.products.control.search.title">
+            <de><![CDATA[Filter]]></de>
+            <en><![CDATA[Filter]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
@@ -1501,10 +1504,6 @@
         <locale name="quiqqer.products.field.edit.placeholder">
             <de><![CDATA[Darf Feld #[fielId] - [fieldname] bearbeiten.]]></de>
             <en><![CDATA[Is allowed to edit the field #[fielId] - [fieldname].]]></en>
-        </locale>
-        <locale name="quiqqer.products.control.search.title">
-            <de><![CDATA[Filter]]></de>
-            <en><![CDATA[Filter]]></en>
         </locale>
 
         <!-- FrontendSearch -->
