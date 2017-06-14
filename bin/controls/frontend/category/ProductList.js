@@ -1829,7 +1829,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * event on filter change
          */
         $onFilterChange: function () {
-
             if (!this.$FilterResultInfo) {
                 return;
             }
@@ -2139,7 +2138,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$productId  = productId;
             this.$categories = [];
 
-            var Loader = new QUILoader();
+            var Loader         = new QUILoader(),
+                scrollPosition = window.document.getScroll();
 
             return new Promise(function (resolve) {
                 moofx(children).animate({
@@ -2200,7 +2200,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                     onClose: function () {
                                         self.$productId  = false;
                                         self.$categories = currentCategories;
-                                        self.$setWindowLocation();
+                                        //self.$setWindowLocation();
+
+                                        self.showList(false).then(function () {
+                                            var ProductElm = self.$Elm.getElement('[data-pid="' + productId + '"]');
+
+                                            if (ProductElm) {
+                                                new Fx.Scroll(window.document).start(0, scrollPosition.y);
+                                            }
+                                        });
                                     }
                                 }
                             }).inject(self.$ProductContainer);
@@ -2213,15 +2221,22 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         /**
          * Close all products and shows the list
          */
-        showList: function () {
+        showList: function (setLocation) {
             if (!this.$ProductContainer) {
                 return Promise.resolve();
             }
 
             var self = this;
 
+            if (typeof setLocation === 'undefined') {
+                setLocation = true;
+            }
+
             this.$productId = false;
-            this.$setWindowLocation();
+
+            if (setLocation) {
+                this.$setWindowLocation();
+            }
 
             return new Promise(function (resolve) {
                 self.$closeProductContainer().then(function () {
