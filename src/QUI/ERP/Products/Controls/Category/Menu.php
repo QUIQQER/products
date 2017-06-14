@@ -70,6 +70,11 @@ class Menu extends QUI\Control
             return false;
         }
 
+        if ($this->getSite()->getAttribute('quiqqer.products.settings.categoryAsFilter')
+            && QUI::getRewrite()->getSite()->getId() === 1
+        ) {
+            return true;
+        }
 
         $CurrentSide = QUI::getRewrite()->getSite();
 
@@ -81,7 +86,7 @@ class Menu extends QUI\Control
             return false;
         }
 
-        if ($Site->getAttribute('quiqqer.products.settings.categoryAsFilter')
+        if ($this->getSite()->getAttribute('quiqqer.products.settings.categoryAsFilter')
             && QUI::getRewrite()->isIdInPath($Site->getParentId())
         ) {
             return true;
