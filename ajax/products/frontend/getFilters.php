@@ -27,11 +27,68 @@ QUI::$Ajax->registerFunction(
                 'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay')
             ));
 
-            $result = $ProductList->createFilter();
+            // category menu
+            $searchParentCategorySite = function () use ($Site) {
+                $Parent = true;
+
+                while ($Parent) {
+                    if ($Site->getParent()
+                        && $Site->getParent()->getAttribute('type') != 'quiqqer/products:types/category'
+                    ) {
+                        return $Site;
+                    }
+
+                    $Site = $Site->getParent();
+
+                    if (!$Site) {
+                        break;
+                    }
+                }
+
+                return $Site;
+            };
+
+            $result = '';
+            $Parent = $searchParentCategorySite();
+
+            $CategoryMenu = new QUI\ERP\Products\Controls\Category\Menu(array(
+                'Site'              => $Parent,
+                'disableCheckboxes' => false,
+                'breadcrumb'        => true
+            ));
+
+            $Output = new QUI\Output();
+
+            if ($CategoryMenu->hasCategoryCheckBox($Site)) {
+                $result .= '<header>';
+                $result .= '<h2>' . QUI::getLocale()->get('quiqqer/products', 'type.category.categoryTitle') . '</h2>';
+                $result .= '</header>';
+                $result .= $CategoryMenu->create();
+            }
+
+            if ($Site->getAttribute('quiqqer.products.settings.showFreeTextSearch')) {
+                $placeholder = QUI::getLocale()->get("quiqqer/products", "control.search.placeholder");
+
+                $result .= '<header>';
+                $result .= '<h2>' . QUI::getLocale()->get('quiqqer/products', 'type.category.freetextTitle') . '</h2>';
+                $result .= '</header>';
+                $result .= '<label class="quiqqer-products-category-freetextSearch">';
+                $result .= '<input type="search" name="search"';
+                $result .= '    placeholder="' . $placeholder . '" />';
+                $result .= '</label>';
+            }
+
+            if ($result !== '') {
+                $result .= '<header>';
+                $result .= '<h2>' . QUI::getLocale()->get('quiqqer/products', 'type.category.filterTitle') . '</h2>';
+                $result .= '</header>';
+            }
+
+            $result .= $ProductList->createFilter();
 
             QUI::getMessagesHandler()->clear();
 
-            return $result;
+            return $Output->parse($result);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
         }

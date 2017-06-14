@@ -271,18 +271,6 @@
     }
 }
 
-/** Mobile Filter Menu
- ================================================= */
-
-.quiqqer-products-productList-filterMobile-content .quiqqer-products-productList-filter-container {
-    overflow: auto;
-}
-
-.quiqqer-products-productList-filterMobile-content .quiqqer-products-productList-filter-entry {
-    padding: 0 0 10px 0;
-    width: 100%;
-}
-
 /** Produkte
  ================================================= */
 

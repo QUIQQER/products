@@ -3,6 +3,7 @@
  *
  * @require qui/QUI
  * @require qui/controls/Control
+ * @require URI
  */
 
 define('package/quiqqer/products/bin/controls/frontend/category/Menu', [

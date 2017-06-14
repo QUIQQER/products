@@ -78,6 +78,8 @@ if ($siteUrl != $_REQUEST['_url']) {
     $refNo = array_pop($parts);
     $refNo = (int)$refNo;
 
+    $Output = new QUI\Output();
+
     try {
         $Product = Products\Handler\Products::getProduct($refNo);
         $Product->getView();
@@ -109,7 +111,7 @@ if ($siteUrl != $_REQUEST['_url']) {
 
         define('QUIQQER_ERP_IS_PRODUCT', true);
     } catch (QUI\Permissions\Exception $Exception) {
-        $url = QUI::getRewrite()->getUrlFromSite(array(
+        $url = $Output->getSiteUrl(array(
             'site' => $Site
         ));
 
@@ -122,7 +124,7 @@ if ($siteUrl != $_REQUEST['_url']) {
     } catch (QUI\Exception $Exception) {
         Log::writeException($Exception, Log::LEVEL_NOTICE);
 
-        $url = QUI::getRewrite()->getUrlFromSite(array(
+        $url = $Output->getSiteUrl(array(
             'site' => $Site
         ));
 
