@@ -78,13 +78,17 @@ QUI::$Ajax->registerFunction(
                 $result .= '</label>';
             }
 
-            if ($result !== '') {
-                $result .= '<header>';
-                $result .= '<h2>' . QUI::getLocale()->get('quiqqer/products', 'type.category.filterTitle') . '</h2>';
-                $result .= '</header>';
-            }
+            if (count($ProductList->getFilter())) {
+                if ($result !== '') {
+                    $result .= '<header>';
+                    $result .= '<h2>';
+                    $result .= QUI::getLocale()->get('quiqqer/products', 'type.category.filterTitle');
+                    $result .= '</h2>';
+                    $result .= '</header>';
+                }
 
-            $result .= $ProductList->createFilter();
+                $result .= $ProductList->createFilter();
+            }
 
             QUI::getMessagesHandler()->clear();
 

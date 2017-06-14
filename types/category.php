@@ -186,8 +186,13 @@ if ($siteUrl != $_REQUEST['_url']) {
         $ProductList->setAttribute('showFilter', false);
     }
 
+    if ($CategoryMenu->countChildren() || count($filterList)) {
+        $ProductList->setAttribute('forceMobileFilter', true);
+    }
+
     $Engine->assign(array(
         'ProductList'  => $ProductList,
-        'CategoryMenu' => $CategoryMenu
+        'CategoryMenu' => $CategoryMenu,
+        'filter'       => $filterList
     ));
 }
