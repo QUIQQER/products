@@ -102,6 +102,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/FilterWindow', [
                 self.$Container = Content.getElement('.quiqqer-products-productList-filter-container');
                 self.$Menu      = Content.getElement('.quiqqer-products-category-menu');
 
+                if (!self.$Container) {
+                    self.$Container = new Element('div');
+                }
+
                 self.$renderCategoryMenu();
                 self.$renderFilter();
 

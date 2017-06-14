@@ -30,7 +30,7 @@
         </label>
         {/if}
 
-        {if isset($ProductList) && $ProductList->count()}
+        {if isset($ProductList) && $ProductList->count() && !empty($filter)}
         <header>
             <h2>{locale group="quiqqer/products" var="type.category.filterTitle"}</h2>
         </header>

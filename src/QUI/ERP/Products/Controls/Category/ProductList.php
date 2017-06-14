@@ -63,6 +63,7 @@ class ProductList extends QUI\Control
             'categoryStartNumber'  => false,
             'showFilter'           => true, // show the filter, or not
             'showFilterInfo'       => true, // show the filter, or not
+            'forceMobileFilter'    => false,
             'autoload'             => false
         ));
 

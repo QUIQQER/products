@@ -20,7 +20,7 @@
                 </div>
             </div>
             {/if}
-            {if !empty($filter)}
+            {if !empty($filter) || $this->getAttribute('forceMobileFilter')}
             <div class="quiqqer-products-productList-sort-filter-mobile button">
                 <span class="fa fa-filter"></span>
             </div>
