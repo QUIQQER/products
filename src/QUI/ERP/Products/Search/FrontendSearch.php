@@ -384,9 +384,6 @@ class FrontendSearch extends Search
             }
         }
 
-//        QUI\System\Log::writeRecursive($sql);
-//        QUI\System\Log::writeRecursive($binds);
-
         $Stmt = $PDO->prepare($sql);
 
         // bind search values

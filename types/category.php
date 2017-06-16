@@ -63,7 +63,6 @@ $Engine->assign(array(
     'CategoryMenu' => $CategoryMenu
 ));
 
-
 if ($siteUrl != $_REQUEST['_url']) {
     /**
      * PRODUCT

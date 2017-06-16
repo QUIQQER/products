@@ -182,9 +182,11 @@ class Model extends QUI\QDOM
                     $Field->setPublicStatus((bool)$field['isPublic']);
                 }
 
-                if (isset($field['showInDetails'])) {
-                    $Field->setShowInDetailsStatus((bool)$field['showInDetails']);
-                }
+                // bin mir unsicher ob dies sinn macht (by hen)
+                // normal muss die kategorie und globale einstellung verwendet werden
+//                if (isset($field['showInDetails'])) {
+//                    $Field->setShowInDetailsStatus((bool)$field['showInDetails']);
+//                }
 
                 $this->fields[$Field->getId()] = $Field;
             } catch (QUI\Exception $Exception) {
@@ -193,7 +195,7 @@ class Model extends QUI\QDOM
         }
 
         // all standard and all system fields must be in the product
-        $systemfields = Fields::getFields(array(
+        $systemFields = Fields::getFields(array(
             'where_or' => array(
                 'systemField'   => 1,
                 'standardField' => 1
@@ -201,7 +203,7 @@ class Model extends QUI\QDOM
         ));
 
         /* @var $Field QUI\ERP\Products\Field\Field */
-        foreach ($systemfields as $Field) {
+        foreach ($systemFields as $Field) {
             if (!isset($this->fields[$Field->getId()])) {
                 $this->fields[$Field->getId()] = $Field;
                 continue;

@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Utils\Fields
  */
+
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
@@ -142,7 +143,6 @@ class Fields
         if ($Field->getType() == FieldHandler::TYPE_ATTRIBUTE_LIST
             || $Field->getType() == FieldHandler::TYPE_FOLDER
             || $Field->getType() == FieldHandler::TYPE_PRODCUCTS
-            || $Field->getType() == FieldHandler::TYPE_IMAGE
             || $Field->getType() == FieldHandler::TYPE_TEXTAREA
             || $Field->getType() == FieldHandler::TYPE_TEXTAREA_MULTI_LANG
         ) {
