@@ -221,7 +221,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 // options
                 var options = fieldData.options;
 
-                if (typeOf(options) != 'string') {
+                if (typeOf(options) !== 'string') {
                     options = JSON.encode(options);
                 }
 

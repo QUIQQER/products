@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Products\Product
  */
+
 namespace QUI\ERP\Products\Controls\Products;
 
 use QUI;

@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\UrlFrontendView
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -36,7 +37,7 @@ class UrlFrontendView extends QUI\ERP\Products\Field\View
             $link = '<a href="' . $value . '" target="_blank">' . $value . '</a>';
         }
 
-        return "<div class=\'quiqqer-product-field\'>
+        return "<div class=\"quiqqer-product-field\">
             <div class=\"quiqqer-product-field-title\">{$title}</div>
             <div class=\"quiqqer-product-field-value\">{$link}</div>
         </div>";
