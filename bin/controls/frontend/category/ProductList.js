@@ -68,7 +68,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             'scrollToLastRow',
             '$onInject',
             '$onFilterChange',
-            '$setWindowLocation'
+            '$setWindowLocation',
+            '$readWindowLocation'
         ],
 
         options: {
@@ -84,7 +85,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$load = false;
+            this.$load                = false;
+            this.$readLocationRunning = false;
 
             this.$ButtonDetails = null;
             this.$ButtonGallery = null;
@@ -419,6 +421,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             // read url
             window.addEvent('popstate', function () {
+                if (!this.$load) {
+                    return;
+                }
+
                 this.$readWindowLocation().then(function () {
                     this.$onFilterChange();
                 }.bind(this));
@@ -481,13 +487,37 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @returns {Promise}
          */
         $readWindowLocation: function () {
+            var self = this;
+
+            if (this.$readLocationRunning) {
+                return new Promise(function (resolve) {
+                    var checkRunning = function () {
+                        if (self.$readLocationRunning === false) {
+                            return Promise.resolve(true);
+                        }
+
+                        return new Promise(function (resolve) {
+                            (function () {
+                                checkRunning.then(resolve);
+                            }).delay(200);
+                        });
+                    }.bind(this);
+
+                    checkRunning().then(resolve);
+                });
+            }
+
+            this.$readLocationRunning = true;
+
             return new Promise(function (resolve) {
                 var Url    = URI(window.location),
                     search = Url.search(true);
 
                 if (!Object.getLength(search)) {
-                    this.$categories = [];
-                    this.$productId  = false;
+                    this.$categories          = [];
+                    this.$productId           = false;
+                    this.$readLocationRunning = false;
+
                     resolve();
                     return;
                 }
@@ -496,7 +526,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     var productId = parseInt(search.p);
 
                     if (productId) {
-                        this.openProduct(productId);
+                        this.openProduct(productId).then(function () {
+                            self.$readLocationRunning = false;
+                        });
+
                         return;
                     }
                 }
@@ -568,6 +601,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
 
                 if (this.$productId) {
+                    this.$readLocationRunning = false;
                     resolve();
                     return;
                 }
@@ -595,8 +629,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }
                 }
 
+                this.$readLocationRunning = false;
                 resolve();
-
             }.bind(this));
         },
 
@@ -604,6 +638,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * write a history entry
          */
         $setWindowLocation: function () {
+            if (!this.$load) {
+                return;
+            }
+
             // set history
             var history      = {},
                 searchParams = this.$getSearchParams();
