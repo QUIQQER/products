@@ -383,7 +383,7 @@ class FrontendSearch extends Search
                 $sql .= " LIMIT 20"; // @todo as settings
             }
         }
-
+        
         $Stmt = $PDO->prepare($sql);
 
         // bind search values
@@ -525,7 +525,7 @@ class FrontendSearch extends Search
         $eligibleFields = $this->getEligibleSearchFields();
 
         if (!$searchFieldsFromSite) {
-            $searchFieldsFromSite = array();
+            $searchFieldsFromSite = QUI\ERP\Products\Utils\Search::getDefaultFrontendFields();
         } else {
             $searchFieldsFromSite = json_decode($searchFieldsFromSite, true);
         }
