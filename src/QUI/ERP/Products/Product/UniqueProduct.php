@@ -775,7 +775,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         }
 
         // image
-        $Image = $this->getImage();
+        try {
+            $Image = $this->getImage();
+        } catch (QUI\Exception $Exception) {
+            $Image = null;
+        }
+
+
         if ($Image) {
             $attributes['image'] = $Image->getUrl(true);
         }

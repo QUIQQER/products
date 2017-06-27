@@ -96,7 +96,11 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         );
 
         try {
-            $attributes['image'] = $this->getImage()->getUrl(true);
+            $Image = $this->getImage();
+
+            if ($Image) {
+                $attributes['image'] = $this->getImage()->getUrl(true);
+            }
         } catch (QUI\Exception $Exception) {
         }
 
