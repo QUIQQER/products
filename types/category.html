@@ -9,7 +9,7 @@
             {$CategoryMenu->create()}
         {/if}
 
-        {if $Site->getAttribute('quiqqer.products.settings.showFreeTextSearch')}
+        {if !isset($Product) && $Site->getAttribute('quiqqer.products.settings.showFreeTextSearch')}
         <header>
             <h2>{locale group="quiqqer/products" var="type.category.freetextTitle"}</h2>
         </header>
