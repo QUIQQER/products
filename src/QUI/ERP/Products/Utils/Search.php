@@ -14,6 +14,20 @@ use QUI;
 class Search
 {
     /**
+     * List of default frontend category fields
+     *
+     * @var null
+     */
+    protected static $defaultFrontendFields = null;
+
+    /**
+     * List of default free text fields
+     *
+     * @var null
+     */
+    protected static $defaultFreeTextFields = null;
+
+    /**
      * @return array
      */
     public static function getSearchParameterFromRequest()
@@ -100,10 +114,15 @@ class Search
 
     /**
      * Return the default frontend fields
+     *
      * @return array
      */
     public static function getDefaultFrontendFields()
     {
+        if (self::$defaultFrontendFields !== null) {
+            return self::$defaultFrontendFields;
+        }
+
         $Package    = QUI::getPackage('quiqqer/products');
         $defaultIds = $Package->getConfig()->get('search', 'frontend');
         $fields     = array();
@@ -118,6 +137,40 @@ class Search
                 }
             }
         }
+
+        self::$defaultFrontendFields = $fields;
+
+        return $fields;
+    }
+
+
+    /**
+     * Return the default frontend fields
+     *
+     * @return array
+     */
+    public static function getDefaultFrontendFreeTextFields()
+    {
+        if (self::$defaultFreeTextFields !== null) {
+            return self::$defaultFreeTextFields;
+        }
+
+        $Package    = QUI::getPackage('quiqqer/products');
+        $defaultIds = $Package->getConfig()->get('search', 'freetext');
+        $fields     = array();
+
+        if ($defaultIds) {
+            $defaultIds = explode(',', $defaultIds);
+
+            foreach ($defaultIds as $fieldId) {
+                try {
+                    $fields[] = QUI\ERP\Products\Handler\Fields::getField($fieldId);
+                } catch (QUI\Exception $Exception) {
+                }
+            }
+        }
+
+        self::$defaultFreeTextFields = $fields;
 
         return $fields;
     }

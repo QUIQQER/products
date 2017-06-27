@@ -251,21 +251,18 @@ class FrontendSearch extends Search
                     'type'  => \PDO::PARAM_STR
                 );
 
-                $searchFields = $this->getSearchFields();
+                //$searchFields = $this->getSearchFields();
+                $searchFields = QUI\ERP\Products\Utils\Search::getDefaultFrontendFreeTextFields();
 
-                foreach ($searchFields as $fieldId => $search) {
-                    if (!$search) {
-                        continue;
-                    }
-
-                    $Field = Fields::getField($fieldId);
-
+                foreach ($searchFields as $Field) {
+                    /* @var $Field QUI\ERP\Products\Field\Field */
                     // can only search fields with permission
                     if (!$this->canSearchField($Field)) {
                         continue;
                     }
 
                     $columnName = SearchHandler::getSearchFieldColumnName($Field);
+                    $fieldId    = $Field->getId();
 
                     $whereFreeText[]              = '`' . $columnName . '` LIKE :freetext' . $fieldId;
                     $binds['freetext' . $fieldId] = array(
@@ -383,7 +380,7 @@ class FrontendSearch extends Search
                 $sql .= " LIMIT 20"; // @todo as settings
             }
         }
-        
+
         $Stmt = $PDO->prepare($sql);
 
         // bind search values
@@ -525,7 +522,7 @@ class FrontendSearch extends Search
         $eligibleFields = $this->getEligibleSearchFields();
 
         if (!$searchFieldsFromSite) {
-            $searchFieldsFromSite = QUI\ERP\Products\Utils\Search::getDefaultFrontendFields();
+            $searchFieldsFromSite = array();
         } else {
             $searchFieldsFromSite = json_decode($searchFieldsFromSite, true);
         }
