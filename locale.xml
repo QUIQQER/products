@@ -30,6 +30,18 @@
             <de><![CDATA[Produktsuche]]></de>
             <en><![CDATA[Product search]]></en>
         </locale>
+        <locale name="admin.types.productList">
+            <de><![CDATA[Produktliste]]></de>
+            <en><![CDATA[Product list]]></en>
+        </locale>
+        <locale name="admin.types.productList.desc">
+            <de><![CDATA[Wählen Sie einzelne Produkte aus und lassen Sie diese in einer Liste anzeigen.]]></de>
+            <en><![CDATA[Select individual products and display them in a list.]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.productIds">
+            <de><![CDATA[Produkte]]></de>
+            <en><![CDATA[Products]]></en>
+        </locale>
 
         <locale name="menu.erp.title">
             <de><![CDATA[Shop]]></de>

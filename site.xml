@@ -194,5 +194,36 @@
             </settings>
         </type>
 
+        <!-- Produktliste -->
+        <type type="types/productList" icon="fa fa-shopping-bag">
+            <locale group="quiqqer/products" var="admin.types.productList"/>
+            <desc>
+                <locale group="quiqqer/products" var="admin.types.productList.desc"/>
+            </desc>
+
+            <attributes>
+                <attribute>quiqqer.products.settings.productIds</attribute>
+            </attributes>
+
+            <settings>
+                <category name="category-settings">
+                    <settings>
+                        <title>
+                            <locale group="quiqqer/products" var="quiqqer.products.category.settings.title"/>
+                        </title>
+
+                        <input conf="quiqqer.products.settings.productIds" type="hidden"
+                               data-qui="package/quiqqer/products/bin/controls/products/Select"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.productIds"/>
+                            </text>
+                        </input>
+
+                    </settings>
+                </category>
+            </settings>
+        </type>
+
     </types>
 </site>

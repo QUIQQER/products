@@ -1,0 +1,27 @@
+{if $Template->getAttribute('content-body') && $Site->getAttribute('content')}
+<section class="content-body quiqqer-content grid-100 mobile-grid-100 grid-parent">
+    {$Site->getAttribute('content')}
+</section>
+{/if}
+
+<section class="content-template grid-100 mobile-grid-100 grid-parent">
+    {foreach $products as $Product}
+    <div class="quiqqer-products-productListType-list">
+        <header>
+            <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:" html"}">
+            {$Product->getTitle()}
+            </a>
+        </header>
+
+        <div class="quiqqer-products-productListType-list-data">
+            <span class="quiqqer-products-productListType-list-data-title">
+                {locale group="quiqqer/products" var="productNo"}:
+            </span>
+            <br/>
+            <span class="quiqqer-products-productListType-list-data-value">
+                {$Product->getFieldValue(3)}
+            </span>
+        </div>
+    </div>
+    {/foreach}
+</section>
