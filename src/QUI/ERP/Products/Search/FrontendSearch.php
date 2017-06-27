@@ -653,7 +653,7 @@ class FrontendSearch extends Search
                     'quiqqer.products.settings.categoryId'
                 );
 
-                if (!$categoryId) {
+                if ($categoryId === false || $categoryId === '') {
                     QUI::getMessagesHandler()->addAttention(
                         QUI::getLocale()->get(
                             'quiqqer/products',
