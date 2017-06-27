@@ -1528,10 +1528,14 @@
             ]]></en>
         </locale>
         <locale name="attention.frontendsearch.category.site.no.category">
-            <de>
-                <![CDATA[Die Produktkategorie-Seite #[siteId] ist noch keiner Produktkategorie zugeordnet. Daher sind nur Standard-Felder durchsuchbar.]]></de>
-            <en>
-                <![CDATA[The product category site #[siteId] is not assigned to a product category yet. Thus only standard fields are searchable.]]></en>
+            <de><![CDATA[
+                Die Produktkategorie-Seite #[siteId] ist noch keiner Produktkategorie zugeordnet.
+                Daher sind nur Standard-Felder durchsuchbar.
+            ]]></de>
+            <en><![CDATA[
+                The product category site #[siteId] is not assigned to a product category yet.
+                Thus only standard fields are searchable.
+            ]]></en>
         </locale>
         <locale name="exception.search.value.invalid">
             <de>
