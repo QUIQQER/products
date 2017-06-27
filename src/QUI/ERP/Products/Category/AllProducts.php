@@ -132,7 +132,7 @@ class AllProducts extends Category
     {
         // bin mir nicht so sicher ob wir das möchten
         // siehe bug P.Bisschop/projekt#64
-        return QUI\ERP\Products\Handler\Fields::getStandardFields();
+        return QUI\ERP\Products\Utils\Search::getDefaultFrontendFields();
     }
 
     /**

@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Utils\Search
  */
+
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
@@ -95,5 +96,29 @@ class Search
         }
 
         return '';
+    }
+
+    /**
+     * Return the default frontend fields
+     * @return array
+     */
+    public static function getDefaultFrontendFields()
+    {
+        $Package    = QUI::getPackage('quiqqer/products');
+        $defaultIds = $Package->getConfig()->get('search', 'frontend');
+        $fields     = array();
+
+        if ($defaultIds) {
+            $defaultIds = explode(',', $defaultIds);
+
+            foreach ($defaultIds as $fieldId) {
+                try {
+                    $fields[] = QUI\ERP\Products\Handler\Fields::getField($fieldId);
+                } catch (QUI\Exception $Exception) {
+                }
+            }
+        }
+
+        return $fields;
     }
 }
