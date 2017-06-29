@@ -2140,7 +2140,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          */
         openProduct: function (productId) {
             if (this.$productId === productId) {
-                return;
+                return Promise.resolve();
             }
 
             var self = this,
