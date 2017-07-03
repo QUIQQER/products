@@ -769,18 +769,32 @@ abstract class Search extends QUI\QDOM
         $Tags = new QUI\Tags\Manager(QUI::getRewrite()->getProject());
         $list = array();
 
+        $where       = '';
+        $binds       = array();
+        $whereGroups = array();
+
+        $i = 0;
+
         foreach ($tags as $tag) {
             $groups = $Tags->getGroupsFromTag($tag);
+
+            // wenn der in keiner gruppe ist, muss dieser so aufgenommen werden
+            if (empty($groups)) {
+                $whereGroups[] = '`tags` LIKE :tag' . $i;
+
+                $binds['tag' . $i] = array(
+                    'value' => '%,' . $tag . ',%',
+                    'type'  => \PDO::PARAM_STR
+                );
+
+                $i++;
+                continue;
+            }
 
             foreach ($groups as $group) {
                 $list[$group['id']][] = $tag;
             }
         }
-
-        $binds       = array();
-        $whereGroups = array();
-
-        $i = 0;
 
         foreach ($list as $group => $tags) {
             $tagList = array();
@@ -800,8 +814,8 @@ abstract class Search extends QUI\QDOM
                 $whereGroups[] = '(' . implode(' OR ', $tagList) . ')';
             }
         }
-        
-        if (empty($whereGroups)) {
+
+        if (!empty($whereGroups)) {
             $where = '(' . implode(' AND ', $whereGroups) . ')';
         }
 
