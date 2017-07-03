@@ -757,7 +757,7 @@ abstract class Search extends QUI\QDOM
 
         return $order;
     }
-    
+
     /**
      * Build the query for the tag groups
      *
@@ -796,11 +796,14 @@ abstract class Search extends QUI\QDOM
                 $i++;
             }
 
-            $whereGroups[] = '(' . implode(' OR ', $tagList) . ')';
+            if (!empty($tagList)) {
+                $whereGroups[] = '(' . implode(' OR ', $tagList) . ')';
+            }
         }
-
-
-        $where = '(' . implode(' AND ', $whereGroups) . ')';
+        
+        if (empty($whereGroups)) {
+            $where = '(' . implode(' AND ', $whereGroups) . ')';
+        }
 
         return array(
             'where' => $where,

@@ -225,7 +225,9 @@ class FrontendSearch extends Search
             }
 
             // @todo das OR als setting (AND oder OR) (ist gedacht für die Navigation)
-            $where[] = '(' . implode(' OR ', $whereCategories) . ')';
+            if (!empty($whereCategories)) {
+                $where[] = '(' . implode(' OR ', $whereCategories) . ')';
+            }
         }
 
         if (!isset($searchParams['fields']) && !isset($searchParams['freetext'])) {
@@ -380,6 +382,10 @@ class FrontendSearch extends Search
                 $sql .= " LIMIT 20"; // @todo as settings
             }
         }
+
+        QUI\System\Log::writeRecursive($sql);
+        QUI\System\Log::writeRecursive($binds);
+        QUI\System\Log::writeRecursive($where);
 
         $Stmt = $PDO->prepare($sql);
 
