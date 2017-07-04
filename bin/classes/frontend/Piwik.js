@@ -19,7 +19,9 @@ define('package/quiqqer/products/bin/classes/frontend/Piwik', function () {
             }
 
             return new Promise(function (resolve, reject) {
-                require(['PiwikTracker'], resolve, reject);
+                require(['piwikTracker'], function (piwikTracker) {
+                    piwikTracker.then(resolve);
+                }, reject);
             });
         }
     });
