@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Controls\Search\Suggest
  */
+
 namespace QUI\ERP\Products\Controls\Search;
 
 use QUI;
@@ -42,11 +43,10 @@ class Suggest extends QUI\Control
      */
     public function create()
     {
-        $Site = $this->getSite();
-
-        if ($Site->getAttribute('quiqqer.products.settings.showFreeTextSearch')) {
-            return '';
-        }
+//        $Site = $this->getSite();
+//        if ($Site->getAttribute('quiqqer.products.settings.showFreeTextSearch')) {
+//            return '';
+//        }
 
         return parent::create();
     }
