@@ -1,2 +1,3 @@
-{$WatchlistButton->create()}
-{$OfferButton->create()}
+{foreach $Buttons->toArray() as $Button}
+    {$Button->create()}
+{/foreach}
