@@ -99,6 +99,8 @@ Produkt Events
 - onQuiqqerProductsProductDeleteBegin [Product]
 - onQuiqqerProductsProductCreateMediaFolder [Product]
 
+- onQuiqqerProductsProductViewButtons [Product, Collection $List]
+
 Field Events
 ------
 
