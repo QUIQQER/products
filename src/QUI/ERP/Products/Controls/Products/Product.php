@@ -201,10 +201,6 @@ class Product extends QUI\Control
             ));
         }
 
-//        $buttonParams = array(
-//            'Product' => $View
-//        );
-
         $Engine->assign(array(
             'Product'              => $View,
             'Gallery'              => $Gallery,
@@ -215,9 +211,6 @@ class Product extends QUI\Control
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
             'PriceDisplay'         => $PriceDisplay,
             'VisitedProducts'      => new VisitedProducts(),
-//            'OrderButton'          => new QUI\ERP\Order\Controls\ProductToBasket($buttonParams),
-//            'WatchlistButton'      => new WatchlistButton($buttonParams),
-//            'OfferButton'          => new PurchaseButton($buttonParams),
             'MediaUtils'           => new QUI\Projects\Media\Utils()
         ));
 
@@ -228,8 +221,6 @@ class Product extends QUI\Control
             'quiqqerProductsProductViewButtons',
             array($View, &$Buttons)
         );
-
-        QUI\System\Log::writeRecursive($Buttons->size());
 
         $Engine->assign('Buttons', $Buttons);
 

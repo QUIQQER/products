@@ -306,10 +306,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 Button.setStyle('display', 'none');
 
+                var executeSearch = function () {
+                    this.$productId = false;
+                    this.$setWindowLocation();
+                }.bind(this)
+
                 new QUIButton({
                     icon  : 'fa fa-search',
                     events: {
-                        onClick: this.$setWindowLocation
+                        onClick: executeSearch
                     },
                     styles: {
                         padding: 5,
@@ -317,7 +322,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }
                 }).inject(this.$FreeTextContainer);
 
-                this.$FreeText.addEvent('change', this.$setWindowLocation);
+                this.$FreeText.addEvent('change', executeSearch);
             }
 
             this.$More = Elm.getElement('.quiqqer-products-productList-products-more .button');
@@ -528,6 +533,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     if (productId) {
                         this.openProduct(productId).then(function () {
                             self.$readLocationRunning = false;
+                            resolve();
                         });
 
                         return;
