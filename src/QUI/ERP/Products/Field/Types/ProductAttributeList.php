@@ -239,7 +239,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             'basis'       => $options['calculation_basis'],
             'value'       => $sum,
             'calculation' => $calcType,
-            'valueText'   => $valueText . '###'
+            'valueText'   => $valueText
         );
     }
 
