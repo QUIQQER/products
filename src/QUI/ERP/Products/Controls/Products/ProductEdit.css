@@ -41,6 +41,7 @@
 .quiqqer-products-productEdit .quiqqer-product-field {
     clear: both;
     float: left;
+    margin-bottom: 10px;
     width: 100%;
 }
 
