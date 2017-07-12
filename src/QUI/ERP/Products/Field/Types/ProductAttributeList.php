@@ -222,7 +222,20 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         $value     = $this->getValue();
         $valueText = '';
         $sum       = 0;
+        $userInput = '';
         $calcType  = ErpCalc::CALCULATION_COMPLEMENT;
+
+        if (strpos($value, '[') !== false && strpos($value, ']') !== false) {
+            $data = json_decode($value, true);
+
+            if (is_array($data)) {
+                if (isset($data[1])) {
+                    $userInput = htmlspecialchars($data[1]);
+                }
+
+                $value = $data[0];
+            }
+        }
 
         // @todo show amount
         if (isset($entries[$value])) {
@@ -250,6 +263,10 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
 
         if ($value === '') {
             $valueText = '';
+        }
+
+        if ($userInput) {
+            $valueText .= ' (' . $userInput . ')';
         }
 
         return array(
