@@ -212,7 +212,9 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
 
                 window.history.pushState({}, "", Uri.toString());
 
-                ProductList.$onFilterChange();
+                ProductList.$readWindowLocation().then(function () {
+                    ProductList.$onFilterChange();
+                }.bind(this));
             }.bind(this));
 
             this.$Input.addEvents({
