@@ -204,8 +204,9 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
 
                 var Uri = URI(window.location);
 
-                Uri.setSearch('search', this.$Input.value);
-
+                Uri.search('search', this.$Input.value);
+                //Uri.setSearch('search', this.$Input.value);
+                
                 window.history.pushState({}, "", Uri.toString());
 
                 ProductList.$onFilterChange();
