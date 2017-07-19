@@ -9,10 +9,10 @@
  * @require qui/controls/Control
  * @require qui/controls/buttons/Select
  * @require qui/controls/buttons/Button
- * @require qui/controls/windows/Popup
  * @require qui/controls/loader/Loader
  * @require qui/utils/Elements
  * @require package/quiqqer/products/bin/Search
+ * @require package/quiqqer/products/bin/Piwik
  * @require package/quiqqer/products/bin/controls/search/SearchField
  * @require Ajax
  * @require Locale
@@ -106,6 +106,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$ProductContainer = null;
 
             this.$CategoryMore      = null;
+            this.$FilterSort        = null;
             this.$FilterDisplay     = null;
             this.$FilterMobile      = null;
             this.$FilterResultInfo  = null;
@@ -190,6 +191,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$ContainerReal = Elm.getElement('.quiqqer-products-productList-products-container-real');
 
             this.$FilterFL          = Elm.getElement('.quiqqer-products-productList-fl');
+            this.$FilterSort        = Elm.getElement('.quiqqer-products-productList-sort');
             this.$FilterDisplay     = Elm.getElement('.quiqqer-products-productList-filterList');
             this.$FilterMobile      = Elm.getElement('.quiqqer-products-productList-sort-filter-mobile');
             this.$FilterList        = Elm.getElement('.quiqqer-products-productList-filterList-list');
@@ -886,6 +888,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             return new Promise(function (resolve) {
                 QUIAjax.get('package_quiqqer_products_ajax_controls_categories_productList', function (result) {
                     if (!result) {
+                        self.$FilterSort.setStyle('display', 'none');
                         resolve(result);
                         return;
                     }
@@ -917,9 +920,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         var articles = Ghost.getElements('article');
 
                         if (result.count === 0) {
+                            self.$FilterSort.setStyle('display', 'none');
+
                             articles = Ghost.getElements(
                                 '.quiqqer-products-productList-sort__noProducts'
                             );
+                        } else {
+                            self.$FilterSort.setStyle('display', null);
                         }
 
                         // open products in list
