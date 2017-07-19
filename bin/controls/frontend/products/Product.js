@@ -126,6 +126,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
                     var Article = Container.getElement('article');
 
+                    if (!Article) {
+                        Article = new Element('div');
+                    }
+
                     if (Article.getChildren('header')) {
                         Article.getChildren('header').setStyle('padding-right', 40);
                     }
