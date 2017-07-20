@@ -38,6 +38,10 @@ class Search
         $sortBy = QUI::getRequest()->get('sortBy');
         $sortOn = QUI::getRequest()->get('sortOn');
 
+        if (isset($_REQUEST['search'])) {
+            $search = $_REQUEST['search'];
+        }
+
         $categories = QUI::getRequest()->get('c');
 
         $Site           = QUI::getRewrite()->getSite();
