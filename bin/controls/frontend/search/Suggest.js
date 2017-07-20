@@ -181,7 +181,11 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
                     return;
                 }
 
-                if (QUIQQER_SITE.type !== 'quiqqer/products:types/search' &&
+                if (QUIQQER_SITE.type !== 'quiqqer/products:types/search') {
+                    return;
+                }
+
+                if (this.getAttribute('globalsearch') &&
                     QUIQQER_SITE.type !== 'quiqqer/products:types/category') {
                     return;
                 }
