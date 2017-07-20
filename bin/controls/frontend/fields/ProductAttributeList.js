@@ -95,6 +95,8 @@ define('package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeLi
                         this.$showUserInput().then(function () {
                             this.getElm().value   = value[0];
                             this.$UserInput.value = value[1];
+
+                            this.$UserInput.fireEvent('change');
                         }.bind(this));
 
                         return;
@@ -105,6 +107,7 @@ define('package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeLi
             }
 
             this.getElm().value = value;
+            this.getElm().fireEvent('change');
         },
 
         /**
