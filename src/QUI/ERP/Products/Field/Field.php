@@ -923,6 +923,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         $fieldTypes = Fields::getFieldTypes();
         $fieldTypes = array_filter($fieldTypes, function ($entry) use ($class) {
+            if (!isset($entry['src'])) {
+                return false;
+            }
+
             return trim($entry['src'], '\\') == trim($class, '\\');
         });
 
