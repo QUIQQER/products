@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\Price
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -93,7 +94,7 @@ class PriceByQuantity extends Price
     {
         $value = $this->cleanup($this->getValue());
 
-        $Price = new QUI\ERP\Products\Utils\Price(
+        $Price = new QUI\ERP\Money\Price(
             $value['price'],
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );

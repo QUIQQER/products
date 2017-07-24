@@ -55,10 +55,11 @@
         width: calc(50% - 10px);
     }
 
-    .quiqqer-products-productList-sort-sorting {
-        margin-left: 10px;
-    }
-
+    /*
+        .quiqqer-products-productList-sort-sorting {
+            margin-left: 10px;
+        }
+    */
     .quiqqer-products-productList-sort-filter .fa-angle-down {
         float: right;
         line-height: 30px;
@@ -268,18 +269,6 @@
         text-align: center;
         width: 100%;
     }
-}
-
-/** Mobile Filter Menu
- ================================================= */
-
-.quiqqer-products-productList-filterMobile-content .quiqqer-products-productList-filter-container {
-    overflow: auto;
-}
-
-.quiqqer-products-productList-filterMobile-content .quiqqer-products-productList-filter-entry {
-    padding: 0 0 10px 0;
-    width: 100%;
 }
 
 /** Produkte

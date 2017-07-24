@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\Tax
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -24,7 +25,7 @@ class Tax extends Vat
     /**
      * Return the frontend view
      */
-    protected function getFrontendView()
+    public function getFrontendView()
     {
         return new TaxFrontendView($this->getFieldDataForView());
     }

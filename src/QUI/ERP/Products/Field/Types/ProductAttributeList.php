@@ -7,7 +7,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
-use QUI\ERP\Products\Utils\Calc;
+use QUI\ERP\Accounting\Calc as ErpCalc;
 
 /**
  * Class ProductAttributeList
@@ -96,8 +96,8 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      *
      * @example $this->addEntry(array(
      *       'title' => '',    // translation json string {de: "", en: ""}
-     *       'sum' => '',      // -> 10, 100 -> numbers
-     *       'type' => '',     // optional -> QUI\ERP\Products\Utils\Calc::CALCULATION_PERCENTAGE |
+     *       'sum'   => '',      // -> 10, 100 -> numbers
+     *       'type'  => '',     // optional -> QUI\ERP\Products\Utils\Calc::CALCULATION_PERCENTAGE |
      *                                        QUI\ERP\Products\Utils\Calc::CALCULATION_COMPLEMENT
      *       'selected' => '', // optional
      *       'userinput => ''' // optional
@@ -139,7 +139,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     }
 
     /**
-     * @return string|array
+     * @return string
      */
     public function getValue()
     {
@@ -148,6 +148,24 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         }
 
         return $this->defaultValue;
+    }
+
+    /**
+     * Return the custom value entry from the user
+     *
+     * @return string|false
+     */
+    public function getUserInput()
+    {
+        if (!is_null($this->value)) {
+            $value = json_decode($this->value, true);
+
+            if (isset($value[1])) {
+                return $value[1];
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -204,8 +222,22 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         $value     = $this->getValue();
         $valueText = '';
         $sum       = 0;
-        $calcType  = Calc::CALCULATION_COMPLEMENT;
+        $userInput = '';
+        $calcType  = ErpCalc::CALCULATION_COMPLEMENT;
 
+        if (strpos($value, '[') !== false && strpos($value, ']') !== false) {
+            $data = json_decode($value, true);
+
+            if (is_array($data)) {
+                if (isset($data[1])) {
+                    $userInput = htmlspecialchars($data[1]);
+                }
+
+                $value = $data[0];
+            }
+        }
+
+        // @todo show amount
         if (isset($entries[$value])) {
             $sum       = $entries[$value]['sum'];
             $type      = $entries[$value]['type'];
@@ -223,14 +255,18 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             }
 
             switch ($type) {
-                case Calc::CALCULATION_PERCENTAGE:
-                    $calcType = Calc::CALCULATION_PERCENTAGE;
+                case ErpCalc::CALCULATION_PERCENTAGE:
+                    $calcType = ErpCalc::CALCULATION_PERCENTAGE;
                     break;
             }
         }
 
         if ($value === '') {
             $valueText = '';
+        }
+
+        if ($userInput) {
+            $valueText .= ' (' . $userInput . ')';
         }
 
         return array(
@@ -246,7 +282,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      * Check the value
      * is the value valid for the field type?
      *
-     * @param integer $value
+     * @param integer|string $value - User value = "[key, user value]"
      * @throws \QUI\ERP\Products\Field\Exception
      */
     public function validate($value)
@@ -255,45 +291,46 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             return;
         }
 
+        $invalidException = array(
+            'quiqqer/products',
+            'exception.field.invalid',
+            array(
+                'fieldId'    => $this->getId(),
+                'fieldTitle' => $this->getTitle(),
+                'fieldType'  => $this->getType()
+            )
+        );
+
         if (!is_numeric($value)) {
-            throw new QUI\ERP\Products\Field\Exception(array(
-                'quiqqer/products',
-                'exception.field.invalid',
-                array(
-                    'fieldId'    => $this->getId(),
-                    'fieldTitle' => $this->getTitle(),
-                    'fieldType'  => $this->getType()
-                )
-            ));
+            if (is_array($value)) {
+                $value = json_encode($value);
+            }
+
+            $value = json_decode($value, true);
+
+            if (!isset($value[0]) || !isset($value[1])) {
+                throw new QUI\ERP\Products\Field\Exception($invalidException);
+            }
+
+            //$customValue = $value[1];
+            $value = $value[0];
+        }
+
+        if (!is_numeric($value)) {
+            throw new QUI\ERP\Products\Field\Exception($invalidException);
         }
 
         $value   = (int)$value;
         $options = $this->getOptions();
 
         if (!isset($options['entries'])) {
-            throw new QUI\ERP\Products\Field\Exception(array(
-                'quiqqer/products',
-                'exception.field.invalid',
-                array(
-                    'fieldId'    => $this->getId(),
-                    'fieldTitle' => $this->getTitle(),
-                    'fieldType'  => $this->getType()
-                )
-            ));
+            throw new QUI\ERP\Products\Field\Exception($invalidException);
         }
 
         $entries = $options['entries'];
 
         if (!isset($entries[$value])) {
-            throw new QUI\ERP\Products\Field\Exception(array(
-                'quiqqer/products',
-                'exception.field.invalid',
-                array(
-                    'fieldId'    => $this->getId(),
-                    'fieldTitle' => $this->getTitle(),
-                    'fieldType'  => $this->getType()
-                )
-            ));
+            throw new QUI\ERP\Products\Field\Exception($invalidException);
         }
     }
 
@@ -306,6 +343,33 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      */
     public function cleanup($value)
     {
+        if (is_string($value)) {
+            $check = json_decode($value, true);
+
+            if (!isset($check[0]) || !isset($check[1])) {
+                return null;
+            }
+
+            if (!is_numeric($check[0])) {
+                return null;
+            }
+
+            return $value;
+        }
+
+        if (is_array($value)) {
+            if (!isset($check[0]) || !isset($check[1])) {
+                return null;
+            }
+
+            if (!is_numeric($check[0])) {
+                return null;
+            }
+
+            return $value;
+        }
+
+
         if (empty($value) && !is_int($value) && $value != 0) {
             return null;
         }

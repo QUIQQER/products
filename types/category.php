@@ -63,7 +63,6 @@ $Engine->assign(array(
     'CategoryMenu' => $CategoryMenu
 ));
 
-
 if ($siteUrl != $_REQUEST['_url']) {
     /**
      * PRODUCT
@@ -77,6 +76,8 @@ if ($siteUrl != $_REQUEST['_url']) {
     $parts = explode(QUI\Rewrite::URL_PARAM_SEPARATOR, $baseName);
     $refNo = array_pop($parts);
     $refNo = (int)$refNo;
+
+    $Output = new QUI\Output();
 
     try {
         $Product = Products\Handler\Products::getProduct($refNo);
@@ -109,7 +110,7 @@ if ($siteUrl != $_REQUEST['_url']) {
 
         define('QUIQQER_ERP_IS_PRODUCT', true);
     } catch (QUI\Permissions\Exception $Exception) {
-        $url = QUI::getRewrite()->getUrlFromSite(array(
+        $url = $Output->getSiteUrl(array(
             'site' => $Site
         ));
 
@@ -122,7 +123,7 @@ if ($siteUrl != $_REQUEST['_url']) {
     } catch (QUI\Exception $Exception) {
         Log::writeException($Exception, Log::LEVEL_NOTICE);
 
-        $url = QUI::getRewrite()->getUrlFromSite(array(
+        $url = $Output->getSiteUrl(array(
             'site' => $Site
         ));
 
@@ -184,8 +185,13 @@ if ($siteUrl != $_REQUEST['_url']) {
         $ProductList->setAttribute('showFilter', false);
     }
 
+    if ($CategoryMenu->countChildren() || count($filterList)) {
+        $ProductList->setAttribute('forceMobileFilter', true);
+    }
+
     $Engine->assign(array(
         'ProductList'  => $ProductList,
-        'CategoryMenu' => $CategoryMenu
+        'CategoryMenu' => $CategoryMenu,
+        'filter'       => $filterList
     ));
 }

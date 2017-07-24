@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Controls\Price
  */
+
 namespace QUI\ERP\Products\Controls;
 
 use QUI;
@@ -49,7 +50,7 @@ class Price extends QUI\Control
             return '';
         }
 
-        /* @var $Price QUI\ERP\Products\Utils\Price */
+        /* @var $Price QUI\ERP\Money\Price */
         $Price = $this->getAttribute('Price');
 
         if (!$Price) {

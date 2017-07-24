@@ -43,8 +43,8 @@ define('package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeLi
             this.$fieldId = Elm.get('data-field').toInt();
 
             Elm.addEvent('change', function () {
-                var value  = Elm.value,
-                    Option = Elm.getElement('option[value="' + value + '"]');
+                var value  = Elm.value;
+                var Option = Elm.getElement('option[value="' + value + '"]');
 
                 if (self.$UserInput) {
                     self.$UserInput.destroy();
@@ -71,7 +71,43 @@ define('package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeLi
          * @returns {*|string}
          */
         getValue: function () {
-            return this.getElm().value;
+            if (this.$UserInput) {
+                return JSON.encode([
+                    this.getElm().value,
+                    this.$UserInput.value
+                ]);
+            }
+
+            return parseInt(this.getElm().value);
+        },
+
+        /**
+         *
+         * @param value
+         * @return {void}
+         */
+        setValue: function (value) {
+            if (String(value).match(/\[/) && String(value).match(/\[/)) {
+                try {
+                    value = JSON.decode(value);
+
+                    if (value.length) {
+                        this.$showUserInput().then(function () {
+                            this.getElm().value   = value[0];
+                            this.$UserInput.value = value[1];
+
+                            this.$UserInput.fireEvent('change');
+                        }.bind(this));
+
+                        return;
+                    }
+                } catch (e) {
+                    return;
+                }
+            }
+
+            this.getElm().value = value;
+            this.getElm().fireEvent('change');
         },
 
         /**

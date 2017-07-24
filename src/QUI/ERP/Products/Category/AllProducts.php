@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Category\AllProducts
  */
+
 namespace QUI\ERP\Products\Category;
 
 use QUI;
@@ -122,6 +123,14 @@ class AllProducts extends Category
         }
 
         return Products::countProducts($query);
+    }
+
+    /**
+     * @return array
+     */
+    public function getFields()
+    {
+        return QUI\ERP\Products\Utils\Search::getDefaultFrontendFields();
     }
 
     /**

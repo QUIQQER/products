@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\Image
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -31,7 +32,7 @@ class Image extends QUI\ERP\Products\Field\Field
      */
     public function getFrontendView()
     {
-        return new View($this->getFieldDataForView());
+        return new ImageFrontendView($this->getFieldDataForView());
     }
 
     /**

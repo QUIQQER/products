@@ -28,7 +28,7 @@ class BruttoUser extends QUI\Users\User
 
         $this->setAttribute(
             'quiqqer.erp.isNettoUser',
-            QUI\ERP\Products\Utils\User::IS_BRUTTO_USER
+            QUI\ERP\Utils\User::IS_BRUTTO_USER
         );
     }
 }

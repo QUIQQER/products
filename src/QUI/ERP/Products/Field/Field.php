@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Model
  */
+
 namespace QUI\ERP\Products\Field;
 
 use QUI;
@@ -182,7 +183,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return \QUI\ERP\Products\Field\View
      */
-    protected function getBackendView()
+    public function getBackendView()
     {
         return new View($this->getFieldDataForView());
     }
@@ -192,7 +193,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return \QUI\ERP\Products\Field\View
      */
-    protected function getFrontendView()
+    public function getFrontendView()
     {
         return new View($this->getFieldDataForView());
     }
@@ -258,13 +259,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Change the price of the product
      * Returns the price object
      *
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      * @deprecated ?
      */
     public function getPrice()
     {
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
-        $Price    = new QUI\ERP\Products\Utils\Price(0, $Currency);
+        $Price    = new QUI\ERP\Money\Price(0, $Currency);
 
         return $Price;
     }
@@ -1162,14 +1163,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 $i   = 10;
 
                 while ($value >= $i) {
-                    $i *= 10;
+                    $i   *= 10;
                     $add *= 10;
                 }
 
                 $value = floor($value / $add) * $add;
             }
 
-            $value += $add;
+            $value   += $add;
             $range[] = $value;
         }
 

@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Accounting\Calc as ErpCalc;
 
 /**
  * Class ProductAttributeList - Frontend VIEW
@@ -142,11 +143,11 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             if ($displayDiscounts && $option['sum'] != 0) {
                 switch ($option['type']) {
                     case 'percent': // fallback fix
-                    case QUI\ERP\Products\Utils\Calc::CALCULATION_PERCENTAGE:
+                    case ErpCalc::CALCULATION_PERCENTAGE:
                         $discount = $option['sum'] . '%';
                         break;
 
-                    case QUI\ERP\Products\Utils\Calc::CALCULATION_COMPLEMENT:
+                    case ErpCalc::CALCULATION_COMPLEMENT:
                     default:
                         $discount = $Currency->format(
                             $Calc->getPrice($option['sum'])

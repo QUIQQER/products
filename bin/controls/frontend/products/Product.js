@@ -17,10 +17,12 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
     'qui/controls/Control',
     'qui/utils/Elements',
     'package/quiqqer/products/bin/Products',
+    'package/quiqqer/products/bin/Categories',
+    'package/quiqqer/products/bin/Piwik',
 
     URL_OPT_DIR + 'bin/hammerjs/hammer.min.js'
 
-], function (QUI, QUIControl, QUIElementUtils, Products, Hammer) {
+], function (QUI, QUIControl, QUIElementUtils, Products, Categories, Piwik, Hammer) {
     "use strict";
 
     return new Class({
@@ -124,6 +126,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
                     var Article = Container.getElement('article');
 
+                    if (!Article) {
+                        Article = new Element('div');
+                    }
+
                     if (Article.getChildren('header')) {
                         Article.getChildren('header').setStyle('padding-right', 40);
                     }
@@ -154,13 +160,40 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * event : on import
          */
         $onImport: function () {
-            var self = this,
-                Elm  = this.getElm();
+            var self      = this,
+                Elm       = this.getElm(),
+                productId = Elm.get('data-productid');
 
-            this.setAttribute('productId', Elm.get('data-productid'));
+            this.setAttribute('productId', productId);
 
             Products.addToVisited(this.getAttribute('productId'));
 
+            // stats
+            Piwik.getTracker().then(function (PiwikTracker) {
+                var Product = Products.get(productId);
+
+                Product.getCategories().then(function (categories) {
+                    return Categories.getCategories(categories);
+                }).then(function (categories) {
+                    return categories.map(function (category) {
+                        return category.title;
+                    });
+                }).then(function (categories) {
+                    Product.getTitle().then(function (title) {
+                        PiwikTracker.setEcommerceView(
+                            productId,
+                            title,
+                            categories
+                        );
+                    });
+                });
+            }).catch(function (error) {
+                if (error !== 404) {
+                    console.error(error);
+                }
+            });
+
+            // render
             this.$Next         = Elm.getElement('.product-data-more-next');
             this.$Prev         = Elm.getElement('.product-data-more-prev');
             this.$Tabbar       = Elm.getElement('.product-data-more-tabs');

@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Search\Cache
  */
+
 namespace QUI\ERP\Products\Search;
 
 use QUI;
@@ -32,7 +33,7 @@ class Cache extends QUI\QDOM
      * @param mixed $data
      * @param int|\DateTime|null $time -> sekunden oder datetime
      *
-     * @return boolean
+     * @return Stash\Interfaces\ItemInterface
      */
     public static function set($name, $data, $time = null)
     {
@@ -89,7 +90,7 @@ class Cache extends QUI\QDOM
      * Return a specific cache item
      *
      * @param string $key (optional) - cache name / cache key
-     * @return Stash\Item
+     * @return Stash\Interfaces\ItemInterface
      */
     protected static function getStashItem($key = null)
     {

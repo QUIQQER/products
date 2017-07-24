@@ -70,8 +70,13 @@ class Menu extends QUI\Control
             return false;
         }
 
-
         $CurrentSide = QUI::getRewrite()->getSite();
+
+        if ($this->getSite()->getAttribute('quiqqer.products.settings.categoryAsFilter')
+            && $CurrentSide->getId() === 1
+        ) {
+            return true;
+        }
 
         if ($Site->getId() == $CurrentSide->getId()) {
             return false;
@@ -81,7 +86,13 @@ class Menu extends QUI\Control
             return false;
         }
 
-        if ($Site->getAttribute('quiqqer.products.settings.categoryAsFilter')
+        if ($this->getSite()->getAttribute('quiqqer.products.settings.categoryAsFilter')
+            && QUI::getRewrite()->isIdInPath($Site->getParentId())
+        ) {
+            return true;
+        }
+
+        if ($CurrentSide->getAttribute('quiqqer.products.settings.categoryAsFilter')
             && QUI::getRewrite()->isIdInPath($Site->getParentId())
         ) {
             return true;

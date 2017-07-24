@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Controls\Search\Suggest
  */
+
 namespace QUI\ERP\Products\Controls\Search;
 
 use QUI;
@@ -42,11 +43,10 @@ class Suggest extends QUI\Control
      */
     public function create()
     {
-        $Site = $this->getSite();
-
-        if ($Site->getAttribute('quiqqer.products.settings.showFreeTextSearch')) {
-            return '';
-        }
+//        $Site = $this->getSite();
+//        if ($Site->getAttribute('quiqqer.products.settings.showFreeTextSearch')) {
+//            return '';
+//        }
 
         return parent::create();
     }
@@ -60,6 +60,7 @@ class Suggest extends QUI\Control
     {
         $Engine = QUI::getTemplateManager()->getEngine();
         $Site   = $this->getSite();
+        $Search = $this->getSite();
 
         if ($Site->getAttribute('quiqqer.products.settings.showFreeText')) {
             return '';
@@ -67,11 +68,13 @@ class Suggest extends QUI\Control
 
         if ($this->getAttribute('globalsearch')) {
             $this->setAttribute('data-qui-options-globalsearch', 1);
+            $Search = $this->getSearch();
         }
 
         $Engine->assign(array(
-            'this' => $this,
-            'Site' => $this->getSite()
+            'this'   => $this,
+            'Site'   => $this->getSite(),
+            'Search' => $Search
         ));
 
         return $Engine->fetch(dirname(__FILE__) . '/Suggest.html');
@@ -110,6 +113,29 @@ class Suggest extends QUI\Control
         }
 
         return $this->getAttribute('Site');
+    }
+
+    /**
+     * Return the global search
+     *
+     * @return mixed|QUI\Projects\Site
+     */
+    protected function getSearch()
+    {
+        $Project = $this->getProject();
+
+        $search = $Project->getSites(array(
+            'where' => array(
+                'type' => FrontendSearch::SITETYPE_SEARCH
+            ),
+            'limit' => 1
+        ));
+
+        if (isset($search[0])) {
+            return $search[0];
+        }
+
+        return $this->getSearch();
     }
 
     /**

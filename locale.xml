@@ -30,6 +30,18 @@
             <de><![CDATA[Produktsuche]]></de>
             <en><![CDATA[Product search]]></en>
         </locale>
+        <locale name="admin.types.productList">
+            <de><![CDATA[Produktliste]]></de>
+            <en><![CDATA[Product list]]></en>
+        </locale>
+        <locale name="admin.types.productList.desc">
+            <de><![CDATA[Wählen Sie einzelne Produkte aus und lassen Sie diese in einer Liste anzeigen.]]></de>
+            <en><![CDATA[Select individual products and display them in a list.]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.productIds">
+            <de><![CDATA[Produkte]]></de>
+            <en><![CDATA[Products]]></en>
+        </locale>
 
         <locale name="menu.erp.title">
             <de><![CDATA[Shop]]></de>
@@ -740,6 +752,10 @@
             <de><![CDATA[Darf Preise sehen.]]></de>
             <en><![CDATA[Is allowed to view prices.]]></en>
         </locale>
+        <locale name="permission.product.view._header">
+            <de><![CDATA[Produktansicht]]></de>
+            <en><![CDATA[Product view]]></en>
+        </locale>
 
         <locale name="product.list.products.title">
             <de><![CDATA[Produkte]]></de>
@@ -812,15 +828,38 @@
             <de><![CDATA[Darf Such-Felder für die Backend-Suche konfigurieren]]></de>
             <en><![CDATA[Can configure search fields for the backend search]]></en>
         </locale>
+        <locale name="permission.category._header">
+            <de><![CDATA[Produkt-Kategorien]]></de>
+            <en><![CDATA[Product categories]]></en>
+        </locale>
+        <locale name="permission.category.edit">
+            <de><![CDATA[Darf Produkt-Kategorien bearbeiten]]></de>
+            <en><![CDATA[Is allowed to edit product categories]]></en>
+        </locale>
+        <locale name="permission.category.delete">
+            <de><![CDATA[Darf Produkt-Kategorien löschen]]></de>
+            <en><![CDATA[Is allowed to delete product categories]]></en>
+        </locale>
+        <locale name="permission.category.create">
+            <de><![CDATA[Darf Produkt-Kategorien erstellen]]></de>
+            <en><![CDATA[Is allowed to create product categories]]></en>
+        </locale>
+        <locale name="permission.field._header">
+            <de><![CDATA[Produkt-Felder]]></de>
+            <en><![CDATA[Product fields]]></en>
+        </locale>
+        <locale name="permission.field.delete._header">
+            <de><![CDATA[Produkt-Systemfelder]]></de>
+            <en><![CDATA[Product system fields]]></en>
+        </locale>
+        <locale name="permission.field.delete.systemfield">
+            <de><![CDATA[Darf Produkt-Systemfelder löschen]]></de>
+            <en><![CDATA[Is allowed to delete product system fields]]></en>
+        </locale>
 
         <locale name="control.search.suggest.placeholder">
             <de><![CDATA[Suchbegriff eingeben...]]></de>
             <en><![CDATA[Enter search...]]></en>
-        </locale>
-
-        <locale name="price.starting.from">
-            <de><![CDATA[ab [price]]]></de>
-            <en><![CDATA[starting from [price]]]></en>
         </locale>
 
         <locale name="products.category.0.title">
@@ -893,7 +932,10 @@
             <de><![CDATA[Produkt-Kategorien Menü]]></de>
             <en><![CDATA[Product Categories Menu]]></en>
         </locale>
-
+        <locale name="quiqqer.products.control.search.title">
+            <de><![CDATA[Filter]]></de>
+            <en><![CDATA[Filter]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
@@ -1475,10 +1517,6 @@
             <de><![CDATA[Darf Feld #[fielId] - [fieldname] bearbeiten.]]></de>
             <en><![CDATA[Is allowed to edit the field #[fielId] - [fieldname].]]></en>
         </locale>
-        <locale name="quiqqer.products.control.search.title">
-            <de><![CDATA[Filter]]></de>
-            <en><![CDATA[Filter]]></en>
-        </locale>
 
         <!-- FrontendSearch -->
         <locale name="exception.frontendsearch.site.type.not.eligible">
@@ -1490,10 +1528,14 @@
             ]]></en>
         </locale>
         <locale name="attention.frontendsearch.category.site.no.category">
-            <de>
-                <![CDATA[Die Produktkategorie-Seite #[siteId] ist noch keiner Produktkategorie zugeordnet. Daher sind nur Standard-Felder durchsuchbar.]]></de>
-            <en>
-                <![CDATA[The product category site #[siteId] is not assigned to a product category yet. Thus only standard fields are searchable.]]></en>
+            <de><![CDATA[
+                Die Produktkategorie-Seite #[siteId] ist noch keiner Produktkategorie zugeordnet.
+                Daher sind nur Standard-Felder durchsuchbar.
+            ]]></de>
+            <en><![CDATA[
+                The product category site #[siteId] is not assigned to a product category yet.
+                Thus only standard fields are searchable.
+            ]]></en>
         </locale>
         <locale name="exception.search.value.invalid">
             <de>
@@ -1569,7 +1611,7 @@
             <de><![CDATA[Umsatzsteuer-ID]]></de>
             <en><![CDATA[Tax EU-ID]]></en>
         </locale>
-        <locale name="user.settings.taxNumber">
+        <locale name="user.settings.taxId">
             <de><![CDATA[Steuernummer]]></de>
             <en><![CDATA[Tax number]]></en>
         </locale>

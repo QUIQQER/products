@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Product\View
  */
+
 namespace QUI\ERP\Products\Product;
 
 use QUI;
@@ -54,7 +55,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
         }
 
 
-        /* @var $Price QUI\ERP\Products\Utils\Price */
+        /* @var $Price QUI\ERP\Money\Price */
         $Price = $this->getPrice();
 
         $attributes['price_netto']    = $Price->getNetto();
@@ -132,18 +133,18 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      */
     public function getPrice()
     {
-        return new QUI\ERP\Products\Utils\Price(
+        return new QUI\ERP\Money\Price(
             $this->getAttribute('price'),
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
     }
 
     /**
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      */
     public function getMinimumPrice()
     {
@@ -153,7 +154,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      */
     public function getMaximumPrice()
     {

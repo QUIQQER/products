@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\Vat
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -34,7 +35,7 @@ class Vat extends QUI\ERP\Products\Field\Field
     /**
      * Return the frontend view
      */
-    protected function getFrontendView()
+    public function getFrontendView()
     {
         return new VatFrontendView($this->getFieldDataForView());
     }

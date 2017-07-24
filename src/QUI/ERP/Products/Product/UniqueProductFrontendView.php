@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Product\UniqueProductFrontendView
  */
+
 namespace QUI\ERP\Products\Product;
 
 use QUI;
@@ -67,12 +68,12 @@ class UniqueProductFrontendView extends UniqueProduct
     /**
      * Return a price object (single price)
      *
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      */
     public function getPrice()
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
-            return new QUI\ERP\Products\Utils\Price(
+            return new QUI\ERP\Money\Price(
                 '',
                 QUI\ERP\Currency\Handler::getDefaultCurrency()
             );
@@ -84,12 +85,12 @@ class UniqueProductFrontendView extends UniqueProduct
     /**
      * Return a price object (single price)
      *
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      */
     public function getUnitPrice()
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
-            return new QUI\ERP\Products\Utils\Price(
+            return new QUI\ERP\Money\Price(
                 '',
                 QUI\ERP\Currency\Handler::getDefaultCurrency()
             );
@@ -101,12 +102,12 @@ class UniqueProductFrontendView extends UniqueProduct
     /**
      * Return the netto price of the product
      *
-     * @return QUI\ERP\Products\Utils\Price
+     * @return QUI\ERP\Money\Price
      */
     public function getNettoPrice()
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
-            return new QUI\ERP\Products\Utils\Price(
+            return new QUI\ERP\Money\Price(
                 '',
                 QUI\ERP\Currency\Handler::getDefaultCurrency()
             );

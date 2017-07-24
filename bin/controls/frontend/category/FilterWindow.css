@@ -1,0 +1,39 @@
+
+.quiqqer-products-productList-filterMobile-content .quiqqer-products-productList-filter-container {
+    overflow: auto;
+}
+
+.quiqqer-products-productList-filterMobile-content .quiqqer-products-productList-filter-entry {
+    padding: 0 0 10px 0;
+    width: 100%;
+}
+
+.quiqqer-products-productList-filterMobile-content .quiqqer-products-category-menu {
+    clear: both;
+    display: inline-block;
+}
+
+.quiqqer-products-productList-filterMobile-content header {
+    border-bottom: 1px solid #ced9d9;
+    clear: both;
+    display: block;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 20px;
+    margin: 20px 0;
+    padding-bottom: 20px;
+}
+
+.quiqqer-products-productList-filterMobile-content header h2 {
+    font-weight: 300;
+}
+
+.quiqqer-products-productList-filterMobile-content .quiqqer-products-category-freetextSearch {
+    clear: both;
+    display: inline-block;
+    width: 100%;
+}
+
+.quiqqer-products-productList-filterMobile-content .quiqqer-products-category-freetextSearch input {
+    width: 100%;
+}

@@ -1,7 +1,7 @@
 {if $count}
 
 {foreach from=$products item=Product}
-{include file=$productTpl Product=$Product}
+{include file=$productTpl Product=$Product->getView()}
 {/foreach}
 
 {else}

@@ -98,10 +98,10 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
                 this.$Elm.setStyles(this.getAttribute('styles'));
             }
 
-            if (window.QUIQQER_SITE.type == 'quiqqer/products:types/category' &&
-                document.getElement('.quiqqer-products-category-freetextSearch')) {
-                this.$Elm.setStyle('display', 'none');
-            }
+            // if (window.QUIQQER_SITE.type === 'quiqqer/products:types/category' &&
+            //     document.getElement('.quiqqer-products-category-freetextSearch')) {
+            //     this.$Elm.setStyle('display', 'none');
+            // }
 
             return this.$Elm;
         },
@@ -181,7 +181,11 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
                     return;
                 }
 
-                if (QUIQQER_SITE.type !== 'quiqqer/products:types/search' &&
+                if (QUIQQER_SITE.type !== 'quiqqer/products:types/search') {
+                    return;
+                }
+
+                if (this.getAttribute('globalsearch') &&
                     QUIQQER_SITE.type !== 'quiqqer/products:types/category') {
                     return;
                 }
@@ -204,11 +208,17 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
 
                 var Uri = URI(window.location);
 
-                Uri.setSearch('search', this.$Input.value);
+                Uri.search({
+                    search: this.$Input.value
+                });
+
+                //Uri.setSearch('search', this.$Input.value);
 
                 window.history.pushState({}, "", Uri.toString());
 
-                ProductList.$onFilterChange();
+                ProductList.$readWindowLocation().then(function () {
+                    ProductList.$onFilterChange();
+                }.bind(this));
             }.bind(this));
 
             this.$Input.addEvents({

@@ -3,28 +3,33 @@
 /**
  * This file contains QUI\ERP\Products\Utils\User
  */
+
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
 use QUI\Interfaces\Users\User as UserInterface;
+use QUI\ERP\Utils\User as Utils;
 
 /**
  * Class User
  *
  * @package QUI\ERP\Products\Utils
  * @author www.pcsg.de (Henning Leutz)
+ * @deprecated
  */
 class User
 {
     /**
      * netto flag
+     * @deprecated
      */
-    const IS_NETTO_USER = 1;
+    const IS_NETTO_USER = Utils::IS_NETTO_USER;
 
     /**
      * brutto flag
+     * @deprecated
      */
-    const IS_BRUTTO_USER = 2;
+    const IS_BRUTTO_USER = Utils::IS_BRUTTO_USER;
 
     /**
      * Return the brutto netto status
@@ -32,66 +37,11 @@ class User
      *
      * @param UserInterface $User
      * @return bool
+     * @deprecated
      */
     public static function getBruttoNettoUserStatus(UserInterface $User)
     {
-        if (QUI::getUsers()->isSystemUser($User)) {
-            return self::IS_NETTO_USER;
-        }
-
-        $nettoStatus = $User->getAttribute('quiqqer.erp.isNettoUser');
-
-        if (is_numeric($nettoStatus)) {
-            $nettoStatus = (int)$nettoStatus;
-        }
-
-        switch ($nettoStatus) {
-            case self::IS_NETTO_USER:
-            case self::IS_BRUTTO_USER:
-                return $nettoStatus;
-        }
-
-        if ($User->getAttribute('quiqqer.erp.euVatId')
-            || $User->getAttribute('quiqqer.erp.taxNumber')
-        ) {
-            return self::IS_NETTO_USER;
-        }
-
-        $Package = QUI::getPackage('quiqqer/tax');
-        $Config  = $Package->getConfig();
-
-        try {
-            $Address = self::getUserERPAddress($User);
-
-            if ($Address && $Address->getAttribute('company')) {
-                if ($Config->getValue('shop', 'companyForceBruttoPrice')) {
-                    return self::IS_BRUTTO_USER;
-                }
-
-                return self::IS_NETTO_USER;
-            }
-        } catch (QUI\Exception $Exception) {
-            // no address found
-        }
-
-        $isNetto = $Config->getValue('shop', 'isNetto');
-
-        if ($isNetto) {
-            return self::IS_NETTO_USER;
-        }
-
-
-        try {
-            $Tax = QUI\ERP\Tax\Utils::getTaxByUser($User);
-
-            if ($Tax->getValue() == 0) {
-                return self::IS_NETTO_USER;
-            }
-        } catch (QUI\Exception $Exception) {
-            return self::IS_NETTO_USER;
-        }
-
-        return self::IS_BRUTTO_USER;
+        return Utils::getBruttoNettoUserStatus($User);
     }
 
     /**
@@ -99,10 +49,11 @@ class User
      *
      * @param UserInterface $User
      * @return bool
+     * @deprecated
      */
     public static function isNettoUser(UserInterface $User)
     {
-        return self::getBruttoNettoUserStatus($User) === self::IS_NETTO_USER;
+        return Utils::isNettoUser($User);
     }
 
     /**
@@ -111,17 +62,11 @@ class User
      *
      * @param UserInterface $User
      * @return bool|QUI\ERP\Areas\Area
+     * @deprecated
      */
     public static function getUserArea(UserInterface $User)
     {
-        $Country = $User->getCountry();
-        $Area    = QUI\ERP\Areas\Utils::getAreaByCountry($Country);
-
-        if ($Area) {
-            return $Area;
-        }
-
-        return self::getShopArea();
+        return Utils::getUserArea($User);
     }
 
     /**
@@ -130,29 +75,11 @@ class User
      * @param UserInterface $User
      * @return false|QUI\Users\Address
      * @throws QUI\Exception
+     * @deprecated
      */
     public static function getUserERPAddress(UserInterface $User)
     {
-        if (!QUI::getUsers()->isUser($User)) {
-            throw new QUI\Exception(array(
-                'quiqqer/products',
-                'exception.no.user'
-            ));
-        }
-
-        /* @var $User QUI\Users\User */
-        if (!$User->getAttribute('quiqqer.erp.address')) {
-            return $User->getStandardAddress();
-        }
-
-        $erpAddress = $User->getAttribute('quiqqer.erp.address');
-
-        try {
-            return $User->getAddress($erpAddress);
-        } catch (QUI\Exception $Exception) {
-        }
-
-        return $User->getStandardAddress();
+        return Utils::getUserERPAddress($User);
     }
 
     /**
@@ -160,17 +87,10 @@ class User
      *
      * @return QUI\ERP\Areas\Area
      * @throws QUI\Exception
+     * @deprecated use QUI\ERP\Defaults::getShopArea()
      */
     public static function getShopArea()
     {
-        $Areas        = new QUI\ERP\Areas\Handler();
-        $Package      = QUI::getPackage('quiqqer/tax');
-        $Config       = $Package->getConfig();
-        $standardArea = $Config->getValue('shop', 'area');
-
-        $Area = $Areas->getChild($standardArea);
-
-        /* @var $Area QUI\ERP\Areas\Area */
-        return $Area;
+        return QUI\ERP\Defaults::getArea();
     }
 }

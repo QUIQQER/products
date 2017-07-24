@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Search\FrontendSearch
  */
+
 namespace QUI\ERP\Products\Search;
 
 use QUI;
@@ -224,7 +225,9 @@ class FrontendSearch extends Search
             }
 
             // @todo das OR als setting (AND oder OR) (ist gedacht für die Navigation)
-            $where[] = '(' . implode(' OR ', $whereCategories) . ')';
+            if (!empty($whereCategories)) {
+                $where[] = '(' . implode(' OR ', $whereCategories) . ')';
+            }
         }
 
         if (!isset($searchParams['fields']) && !isset($searchParams['freetext'])) {
@@ -250,21 +253,18 @@ class FrontendSearch extends Search
                     'type'  => \PDO::PARAM_STR
                 );
 
-                $searchFields = $this->getSearchFields();
+                //$searchFields = $this->getSearchFields();
+                $searchFields = QUI\ERP\Products\Utils\Search::getDefaultFrontendFreeTextFields();
 
-                foreach ($searchFields as $fieldId => $search) {
-                    if (!$search) {
-                        continue;
-                    }
-
-                    $Field = Fields::getField($fieldId);
-
+                foreach ($searchFields as $Field) {
+                    /* @var $Field QUI\ERP\Products\Field\Field */
                     // can only search fields with permission
                     if (!$this->canSearchField($Field)) {
                         continue;
                     }
 
                     $columnName = SearchHandler::getSearchFieldColumnName($Field);
+                    $fieldId    = $Field->getId();
 
                     $whereFreeText[]              = '`' . $columnName . '` LIKE :freetext' . $fieldId;
                     $binds['freetext' . $fieldId] = array(
@@ -284,22 +284,11 @@ class FrontendSearch extends Search
             && !empty($searchParams['tags'])
             && is_array($searchParams['tags'])
         ) {
-            $tags      = $searchParams['tags'];
-            $whereTags = array();
-            $i         = 0;
+            $data = $this->getTagQuery($searchParams['tags']);
 
-            foreach ($tags as $tag) {
-                $whereTags[]       = '`tags` LIKE :tag' . $i;
-                $binds['tag' . $i] = array(
-                    'value' => '%,' . $tag . ',%',
-                    'type'  => \PDO::PARAM_STR
-                );
-
-                $i++;
-            }
-
-            if (!empty($whereTags)) {
-                $where[] = '(' . implode(' OR ', $whereTags) . ')';
+            if (!empty($data['where'])) {
+                $where[] = $data['where'];
+                $binds   = array_merge($binds, $data['binds']);
             }
         }
 
@@ -393,9 +382,6 @@ class FrontendSearch extends Search
                 $sql .= " LIMIT 20"; // @todo as settings
             }
         }
-
-//        QUI\System\Log::writeRecursive($sql);
-//        QUI\System\Log::writeRecursive($binds);
 
         $Stmt = $PDO->prepare($sql);
 
@@ -666,7 +652,7 @@ class FrontendSearch extends Search
                     'quiqqer.products.settings.categoryId'
                 );
 
-                if (!$categoryId) {
+                if ($categoryId === false || $categoryId === '') {
                     QUI::getMessagesHandler()->addAttention(
                         QUI::getLocale()->get(
                             'quiqqer/products',

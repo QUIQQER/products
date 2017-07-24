@@ -1,14 +1,17 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Products\Product
+ * This file contains QUI\ERP\Products\Controls\Products\Product
  */
+
 namespace QUI\ERP\Products\Controls\Products;
 
+use DusanKasan\Knapsack\Collection;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
-use QUI\ERP\Watchlist\Controls\ButtonAdd as WatchlistButton;
-use QUI\ERP\Watchlist\Controls\ButtonPurchase as PurchaseButton;
+
+//use QUI\ERP\Watchlist\Controls\ButtonAdd as WatchlistButton;
+//use QUI\ERP\Watchlist\Controls\ButtonPurchase as PurchaseButton;
 
 /**
  * Class Button
@@ -208,20 +211,25 @@ class Product extends QUI\Control
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
             'PriceDisplay'         => $PriceDisplay,
             'VisitedProducts'      => new VisitedProducts(),
-            'WatchlistButton'      => new WatchlistButton(array(
-                'Product' => $View
-            )),
-            'OfferButton'          => new PurchaseButton(array(
-                'Product' => $View
-            )),
             'MediaUtils'           => new QUI\Projects\Media\Utils()
         ));
+
+        // button list
+        $Buttons = new Collection([]);
+
+        QUI::getEvents()->fireEvent(
+            'quiqqerProductsProductViewButtons',
+            array($View, &$Buttons)
+        );
+
+        $Engine->assign('Buttons', $Buttons);
 
         $Engine->assign(
             'buttonsHtml',
             $Engine->fetch(dirname(__FILE__) . '/Product.Buttons.html')
         );
 
+        // render product
         return $Engine->fetch(dirname(__FILE__) . '/Product.html');
     }
 

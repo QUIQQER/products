@@ -143,6 +143,11 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 'class': 'qui-products-categories-list-list'
             }).inject(this.$Elm);
 
+            this.$SearchIcon = new Element('span', {
+                'class': 'qui-products-categories-list-searchIcon',
+                html   : '<span class="fa fa-shopping-basket"></span>'
+            }).inject(this.$Elm);
+
             this.$Search = new Element('input', {
                 'class'    : 'qui-products-categories-list-search',
                 placeholder: QUILocale.get(lg, 'control.select.search.categories.placeholder'),
@@ -459,7 +464,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
                     Entry = new Element('div', {
                         html     : '<span class="fa fa-sitemap"></span>' +
-                                   '<span>' + nam + ' (' + id + ')</span>',
+                        '<span>' + nam + ' (' + id + ')</span>',
                         'class'  : 'box-sizing qui-products-categories-list-dropdown-entry',
                         'data-id': id,
                         events   : {
