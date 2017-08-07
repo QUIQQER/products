@@ -515,7 +515,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                         return new Promise(function (resolve) {
                             (function () {
-                                checkRunning.then(resolve);
+                                checkRunning().then(resolve);
                             }).delay(200);
                         });
                     }.bind(this);
