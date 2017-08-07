@@ -231,7 +231,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
             }
 
 
-            this.$Touch = new Hammer(this.$Sheets);
+            // this.$Touch = new Hammer(this.$Sheets);
 
             // this.$Touch.on('swipe', function (ev) {
             //     if (ev.offsetDirection === 4) {
