@@ -310,8 +310,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 var executeSearch = function () {
                     this.$productId = false;
-                    this.$setWindowLocation();
-                }.bind(this)
+                    this.$setWindowLocation(true);
+                }.bind(this);
+
+                if ("search" in search) {
+                    this.$FreeText.value = search.search;
+                }
 
                 new QUIButton({
                     icon  : 'fa fa-search',
@@ -542,6 +546,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }
                 }
 
+                if ("search" in search && this.$FreeText) {
+                    this.$FreeText.value = search.search;
+                }
+
                 this.$categories = [];
                 this.$productId  = false;
 
@@ -644,10 +652,16 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
         /**
          * write a history entry
+         *
+         * @param {Boolean} [userExecute] - flag for user execution
          */
-        $setWindowLocation: function () {
+        $setWindowLocation: function (userExecute) {
             if (!this.$load) {
                 return;
+            }
+
+            if (typeof userExecute === 'undefined') {
+                userExecute = false;
             }
 
             // set history
@@ -670,6 +684,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 history.search = searchParams.search;
             }
 
+            if (this.$FreeText.value === '' && userExecute !== false && "search" in history) {
+                delete history.search;
+            }
+            
             if (searchParams.tags.length) {
                 var tags    = [];
                 var locTags = searchParams.tags;
