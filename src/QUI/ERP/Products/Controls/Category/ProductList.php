@@ -64,16 +64,17 @@ class ProductList extends QUI\Control
             'showFilter'           => true, // show the filter, or not
             'showFilterInfo'       => true, // show the filter, or not
             'forceMobileFilter'    => false,
-            'autoload'             => false
+            'autoload'             => false,
+            'hidePrice'            => QUI\ERP\Products\Utils\Package::hidePrice(),
         ));
 
-        $this->addCSSFile(dirname(__FILE__) . '/ProductList.css');
-        $this->addCSSFile(dirname(__FILE__) . '/ProductListGallery.css');
-        $this->addCSSFile(dirname(__FILE__) . '/ProductListDetails.css');
-        $this->addCSSFile(dirname(__FILE__) . '/ProductListList.css');
+        $this->addCSSFile(dirname(__FILE__).'/ProductList.css');
+        $this->addCSSFile(dirname(__FILE__).'/ProductListGallery.css');
+        $this->addCSSFile(dirname(__FILE__).'/ProductListDetails.css');
+        $this->addCSSFile(dirname(__FILE__).'/ProductListList.css');
 
-        $this->addCSSFile(dirname(__FILE__) . '/ProductListCategoryGallery.css');
-        $this->addCSSFile(dirname(__FILE__) . '/ProductListCategoryList.css');
+        $this->addCSSFile(dirname(__FILE__).'/ProductListCategoryGallery.css');
+        $this->addCSSFile(dirname(__FILE__).'/ProductListCategoryList.css');
 
         $this->id = uniqid();
 
@@ -135,12 +136,12 @@ class ProductList extends QUI\Control
         // category view
         switch ($this->getAttribute('categoryView')) {
             case 'list':
-                $categoryFile = dirname(__FILE__) . '/ProductListCategoryList.html';
+                $categoryFile = dirname(__FILE__).'/ProductListCategoryList.html';
                 break;
 
             default:
             case 'gallery':
-                $categoryFile = dirname(__FILE__) . '/ProductListCategoryGallery.html';
+                $categoryFile = dirname(__FILE__).'/ProductListCategoryGallery.html';
                 break;
         }
 
@@ -172,7 +173,7 @@ class ProductList extends QUI\Control
             && isset($searchParams['sortBy'])
             && isset($searchParams['sortOn'])
         ) {
-            $sort = $searchParams['sortOn'] . ' ' . $searchParams['sortBy'];
+            $sort = $searchParams['sortOn'].' '.$searchParams['sortBy'];
 
             $this->setAttribute('data-sort', htmlspecialchars($sort));
         }
@@ -182,7 +183,7 @@ class ProductList extends QUI\Control
             'Site'      => $this->getSite(),
             'showLimit' => false,
             'limit'     => $this->getMax(),
-            'useAjax'   => false
+            'useAjax'   => false,
         ));
 
         $Pagination->loadFromRequest();
@@ -195,16 +196,16 @@ class ProductList extends QUI\Control
             'children'   => $this->getSite()->getNavigation(),
             'more'       => $more,
             'filter'     => $this->getFilter(),
-            'hidePrice'  => QUI\ERP\Products\Utils\Package::hidePrice(),
+            'hidePrice'  => $this->getAttribute('hidePrice'),
             'Site'       => $this->getSite(),
             'sorts'      => $this->sort,
 
             'categoryFile'        => $categoryFile,
             'placeholder'         => $this->getProject()->getMedia()->getPlaceholder(),
-            'categoryStartNumber' => $this->getAttribute('categoryStartNumber')
+            'categoryStartNumber' => $this->getAttribute('categoryStartNumber'),
         ));
 
-        return $Engine->fetch(dirname(__FILE__) . '/ProductList.html');
+        return $Engine->fetch(dirname(__FILE__).'/ProductList.html');
     }
 
     /**
@@ -219,10 +220,10 @@ class ProductList extends QUI\Control
         $Engine->assign(array(
             'this'   => $this,
             'filter' => $this->getFilter(),
-            'cid'    => $this->id
+            'cid'    => $this->id,
         ));
 
-        return $Engine->fetch(dirname(__FILE__) . '/ProductList.Filter.html');
+        return $Engine->fetch(dirname(__FILE__).'/ProductList.Filter.html');
     }
 
     /**
@@ -333,7 +334,7 @@ class ProductList extends QUI\Control
     {
         $this->sort[] = array(
             'title' => $title,
-            'value' => $value
+            'value' => $value,
         );
     }
 
@@ -393,16 +394,16 @@ class ProductList extends QUI\Control
 
         switch ($this->getAttribute('view')) {
             case 'list':
-                $productTpl = dirname(__FILE__) . '/ProductListList.html';
+                $productTpl = dirname(__FILE__).'/ProductListList.html';
                 break;
 
             case 'detail':
-                $productTpl = dirname(__FILE__) . '/ProductListDetails.html';
+                $productTpl = dirname(__FILE__).'/ProductListDetails.html';
                 break;
 
             default:
             case 'gallery':
-                $productTpl = dirname(__FILE__) . '/ProductListGallery.html';
+                $productTpl = dirname(__FILE__).'/ProductListGallery.html';
                 break;
         }
 
@@ -446,13 +447,13 @@ class ProductList extends QUI\Control
             'products'   => $products,
             'productTpl' => $productTpl,
             'hidePrice'  => QUI\ERP\Products\Utils\Package::hidePrice(),
-            'count'      => $count
+            'count'      => $count,
         ));
 
         return array(
-            'html'  => $Engine->fetch(dirname(__FILE__) . '/ProductListRow.html'),
+            'html'  => $Engine->fetch(dirname(__FILE__).'/ProductListRow.html'),
             'count' => $count,
-            'more'  => $more
+            'more'  => $more,
         );
     }
 
@@ -483,7 +484,7 @@ class ProductList extends QUI\Control
             $max = $this->getMax();
         }
 
-        $searchParams['limit'] = $start . ',' . $max;
+        $searchParams['limit'] = $start.','.$max;
 
         return $searchParams;
     }
@@ -551,6 +552,7 @@ class ProductList extends QUI\Control
             $this->Category = Categories::getCategory((int)$categoryId);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addWarning($Exception->getMessage());
+
             return null;
         }
 

@@ -41,7 +41,9 @@
             </div>
 
             <div class="products-product-information-basisprice">
-                {locale group="quiqqer/products" var="product.list.products.basicPrice"}: {$product.basisPrice}
+                {if !$hidePrice}
+                    {locale group="quiqqer/products" var="product.list.products.basicPrice"}: {$product.basisPrice}
+                {/if}
             </div>
 
             <ul class="products-product-fields">

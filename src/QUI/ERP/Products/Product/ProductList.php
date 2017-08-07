@@ -77,7 +77,7 @@ class ProductList
         'currency_sign' => '',
         'currency_code' => '',
         'user_currency' => '',
-        'currency_rate' => ''
+        'currency_rate' => '',
     );
 
     /**
@@ -99,6 +99,11 @@ class ProductList
     protected $PriceFactors = false;
 
     /**
+     * @var bool
+     */
+    protected $hidePrice;
+
+    /**
      * ProductList constructor.
      *
      * @param array $params - optional, list settings
@@ -116,6 +121,7 @@ class ProductList
 
         $this->PriceFactors = new QUI\ERP\Products\Utils\PriceFactors();
         $this->User         = $User;
+        $this->hidePrice    = QUI\ERP\Products\Utils\Package::hidePrice();
     }
 
     /**
@@ -245,6 +251,7 @@ class ProductList
 
         if ($this->duplicate) {
             $this->products[] = $Product;
+
             return;
         }
 
@@ -296,7 +303,7 @@ class ProductList
             'vatText'      => $this->vatText,
             'isEuVat'      => $this->isEuVat,
             'isNetto'      => $this->isNetto,
-            'currencyData' => $this->currencyData
+            'currencyData' => $this->currencyData,
         );
 
         return $result;
@@ -311,6 +318,36 @@ class ProductList
     {
         return json_encode($this->toArray());
     }
+
+    //region Price methods
+
+    /**
+     * Set the price to hidden
+     */
+    public function hidePrices()
+    {
+        $this->hidePrice = true;
+    }
+
+    /**
+     * Set the price to visible
+     */
+    public function showPrices()
+    {
+        $this->hidePrice = false;
+    }
+
+    /**
+     * Return if prices are hidden or not
+     *
+     * @return bool|int
+     */
+    public function isPriceHidden()
+    {
+        return $this->hidePrice;
+    }
+
+    //endregion
 
     /**
      * Return the product list view for the frontend
