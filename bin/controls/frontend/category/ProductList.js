@@ -345,7 +345,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$ButtonList.addEvent('click', this.listView);
 
             switch (this.getAttribute('view')) {
-                case 'details':
+                case 'detail':
                     this.$ButtonDetails.addClass('active');
                     break;
                 case 'gallery':
@@ -354,6 +354,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 case 'list':
                     this.$ButtonList.addClass('active');
                     break;
+            }
+
+            if (this.getAttribute('view') === 'detail' ||
+                this.getAttribute('view') === 'list') {
+                Url.addSearch('view', this.getAttribute('view'));
+                window.history.pushState({}, "", Url.toString());
             }
 
             // categories
