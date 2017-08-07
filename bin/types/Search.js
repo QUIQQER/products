@@ -58,6 +58,8 @@ define('package/quiqqer/products/bin/types/Search', [
                 for (i = 0, len = nodelist.length; i < len; i++) {
                     ProductList = QUI.Controls.getById(nodelist[i].get('data-quiid'));
 
+                    ProductList.$productId = false;
+
                     if (ProductList) {
                         ProductList.execute();
                     }

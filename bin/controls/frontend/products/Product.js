@@ -18,7 +18,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
     'qui/utils/Elements',
     'package/quiqqer/products/bin/Products',
     'package/quiqqer/products/bin/Categories',
-    'package/quiqqer/products/bin/Piwik',
+    'package/quiqqer/products/bin/Stats',
 
     URL_OPT_DIR + 'bin/hammerjs/hammer.min.js'
 

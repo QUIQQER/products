@@ -12,7 +12,7 @@
  * @require qui/controls/loader/Loader
  * @require qui/utils/Elements
  * @require package/quiqqer/products/bin/Search
- * @require package/quiqqer/products/bin/Piwik
+ * @require package/quiqqer/products/bin/Stats
  * @require package/quiqqer/products/bin/controls/search/SearchField
  * @require Ajax
  * @require Locale
@@ -31,7 +31,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'qui/controls/loader/Loader',
     'qui/utils/Elements',
     'package/quiqqer/products/bin/Search',
-    'package/quiqqer/products/bin/Piwik',
+    'package/quiqqer/products/bin/Stats',
     'package/quiqqer/products/bin/controls/search/SearchField',
     'Ajax',
     'Locale',
@@ -515,7 +515,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                         return new Promise(function (resolve) {
                             (function () {
-                                checkRunning.then(resolve);
+                                checkRunning().then(resolve);
                             }).delay(200);
                         });
                     }.bind(this);
