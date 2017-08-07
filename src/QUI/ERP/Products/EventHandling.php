@@ -504,15 +504,19 @@ class EventHandling
             $fieldId = (int)mb_substr($column, 1);
 
             try {
-                $Field              = Fields::getField($fieldId);
-                $columnTypeExpected = mb_strtolower($Field->getColumnType());
-                $columnInfo         = $DB->table()->getColumn('products_cache', $column);
-                $columnTypeActual   = preg_replace('#[\W\d]#i', '', $columnInfo['Type']);
+                $Field                     = Fields::getField($fieldId);
+                $columnTypeExpected        = mb_strtolower($Field->getColumnType());
+                $columnTypeExpectedVariant = preg_replace('#[\W\d]#i', '', $columnTypeExpected);
 
-                if ($columnTypeActual !== $columnTypeExpected) {
+                $columnInfo       = $DB->table()->getColumn('products_cache', $column);
+                $columnTypeActual = preg_replace('#[\W\d]#i', '', $columnInfo['Type']);
+
+                if ($columnTypeActual !== $columnTypeExpected
+                    && $columnTypeActual !== $columnTypeExpectedVariant) {
                     QUI\System\Log::addCritical(
                         'Column "' . $column . '" in table "products_cache" has wrong type!'
-                        . ' Expected: ' . $columnTypeExpected . ' | Actual: ' . $columnTypeActual . '.'
+                        . ' Expected: ' . $columnTypeExpected . ' or ' . $columnTypeExpectedVariant
+                        . ' | Actual: ' . $columnTypeActual . '.'
                         . ' Please fix manually!'
                     );
                 }
