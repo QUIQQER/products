@@ -2278,14 +2278,16 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                     onClose: function () {
                                         self.$productId  = false;
                                         self.$categories = currentCategories;
-                                        //self.$setWindowLocation();
+
+                                        var Url = URI(window.location);
+                                        Url.removeSearch('p');
+                                        window.history.pushState({}, "", Url.toString());
 
                                         self.showList(false).then(function () {
                                             var ProductElm = self.$Elm.getElement('[data-pid="' + productId + '"]');
 
                                             if (ProductElm) {
                                                 new Fx.Scroll(window.document).start(0, scrollPosition.y);
-                                                self.$setWindowLocation();
                                             }
                                         });
                                     }
