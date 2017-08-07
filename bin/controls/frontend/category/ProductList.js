@@ -684,10 +684,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 history.search = searchParams.search;
             }
 
-            if (this.$FreeText.value === '' && userExecute !== false && "search" in history) {
+            if (this.$FreeText &&
+                this.$FreeText.value === '' &&
+                userExecute !== false &&
+                "search" in history) {
                 delete history.search;
             }
-            
+
             if (searchParams.tags.length) {
                 var tags    = [];
                 var locTags = searchParams.tags;
@@ -2276,6 +2279,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                                             if (ProductElm) {
                                                 new Fx.Scroll(window.document).start(0, scrollPosition.y);
+                                                self.$setWindowLocation();
                                             }
                                         });
                                     }
