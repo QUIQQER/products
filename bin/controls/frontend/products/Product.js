@@ -230,38 +230,16 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 this.$TabContainer.setStyle('overflowX', 'auto');
             }
 
-            var scrollWheel = null;
-
-            this.$TabContainer.addEvents({
-                mousewheel: function (event) {
-                    event.stop();
-
-                    if (scrollWheel) {
-                        clearTimeout(scrollWheel);
-                    }
-
-                    if (event.wheel == -1) {
-                        scrollWheel = (function () {
-                            this.nextTab();
-                        }).delay(200, this);
-                        return;
-                    }
-
-                    scrollWheel = (function () {
-                        this.prevTab();
-                    }).delay(200, this);
-                }.bind(this)
-            });
 
             this.$Touch = new Hammer(this.$Sheets);
 
             this.$Touch.on('swipe', function (ev) {
-                if (ev.offsetDirection == 4) {
+                if (ev.offsetDirection === 4) {
                     this.prevTab();
                     return;
                 }
 
-                if (ev.offsetDirection == 2) {
+                if (ev.offsetDirection === 2) {
                     this.nextTab();
                 }
             }.bind(this));
@@ -596,7 +574,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 event.stop();
             }
 
-            if (Target.nodeName == 'A') {
+            if (Target.nodeName === 'A') {
                 Target = Target.getParent();
             }
 
