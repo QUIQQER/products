@@ -233,16 +233,16 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             this.$Touch = new Hammer(this.$Sheets);
 
-            this.$Touch.on('swipe', function (ev) {
-                if (ev.offsetDirection === 4) {
-                    this.prevTab();
-                    return;
-                }
-
-                if (ev.offsetDirection === 2) {
-                    this.nextTab();
-                }
-            }.bind(this));
+            // this.$Touch.on('swipe', function (ev) {
+            //     if (ev.offsetDirection === 4) {
+            //         this.prevTab();
+            //         return;
+            //     }
+            //
+            //     if (ev.offsetDirection === 2) {
+            //         this.nextTab();
+            //     }
+            // }.bind(this));
 
 
             QUI.parse(Elm).then(function () {
