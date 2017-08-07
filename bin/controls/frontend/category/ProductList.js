@@ -12,7 +12,7 @@
  * @require qui/controls/loader/Loader
  * @require qui/utils/Elements
  * @require package/quiqqer/products/bin/Search
- * @require package/quiqqer/products/bin/Piwik
+ * @require package/quiqqer/products/bin/Stats
  * @require package/quiqqer/products/bin/controls/search/SearchField
  * @require Ajax
  * @require Locale
@@ -31,7 +31,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'qui/controls/loader/Loader',
     'qui/utils/Elements',
     'package/quiqqer/products/bin/Search',
-    'package/quiqqer/products/bin/Piwik',
+    'package/quiqqer/products/bin/Stats',
     'package/quiqqer/products/bin/controls/search/SearchField',
     'Ajax',
     'Locale',
@@ -310,8 +310,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 var executeSearch = function () {
                     this.$productId = false;
-                    this.$setWindowLocation();
-                }.bind(this)
+                    this.$setWindowLocation(true);
+                }.bind(this);
+
+                if ("search" in search) {
+                    this.$FreeText.value = search.search;
+                }
 
                 new QUIButton({
                     icon  : 'fa fa-search',
@@ -341,7 +345,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$ButtonList.addEvent('click', this.listView);
 
             switch (this.getAttribute('view')) {
-                case 'details':
+                case 'detail':
                     this.$ButtonDetails.addClass('active');
                     break;
                 case 'gallery':
@@ -350,6 +354,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 case 'list':
                     this.$ButtonList.addClass('active');
                     break;
+            }
+
+            if (this.getAttribute('view') === 'detail' ||
+                this.getAttribute('view') === 'list') {
+                Url.addSearch('view', this.getAttribute('view'));
+                window.history.pushState({}, "", Url.toString());
             }
 
             // categories
@@ -505,7 +515,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                         return new Promise(function (resolve) {
                             (function () {
-                                checkRunning.then(resolve);
+                                checkRunning().then(resolve);
                             }).delay(200);
                         });
                     }.bind(this);
@@ -540,6 +550,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                         return;
                     }
+                }
+
+                if ("search" in search && this.$FreeText) {
+                    this.$FreeText.value = search.search;
                 }
 
                 this.$categories = [];
@@ -644,10 +658,16 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
         /**
          * write a history entry
+         *
+         * @param {Boolean} [userExecute] - flag for user execution
          */
-        $setWindowLocation: function () {
+        $setWindowLocation: function (userExecute) {
             if (!this.$load) {
                 return;
+            }
+
+            if (typeof userExecute === 'undefined') {
+                userExecute = false;
             }
 
             // set history
@@ -668,6 +688,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             if (searchParams.search !== '' && history.search === '') {
                 history.search = searchParams.search;
+            }
+
+            if (this.$FreeText &&
+                this.$FreeText.value === '' &&
+                userExecute !== false &&
+                "search" in history) {
+                delete history.search;
             }
 
             if (searchParams.tags.length) {
@@ -2251,7 +2278,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                     onClose: function () {
                                         self.$productId  = false;
                                         self.$categories = currentCategories;
-                                        //self.$setWindowLocation();
+
+                                        var Url = URI(window.location);
+                                        Url.removeSearch('p');
+                                        window.history.pushState({}, "", Url.toString());
 
                                         self.showList(false).then(function () {
                                             var ProductElm = self.$Elm.getElement('[data-pid="' + productId + '"]');

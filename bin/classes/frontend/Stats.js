@@ -3,7 +3,7 @@
  *
  * If quiqqer/piwik is installed, products send some stats
  */
-define('package/quiqqer/products/bin/classes/frontend/Piwik', function () {
+define('package/quiqqer/products/bin/classes/frontend/Stats', function () {
     "use strict";
 
     return new Class({
