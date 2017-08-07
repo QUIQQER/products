@@ -166,7 +166,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getDescription($Locale = false)
     {
-        return $this->Product->getTitle($Locale);
+        return $this->Product->getDescription($Locale);
     }
 
     /**
