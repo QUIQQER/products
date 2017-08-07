@@ -27,12 +27,18 @@ class ProductListBackendView
     protected $ProductList = null;
 
     /**
+     * @var bool
+     */
+    protected $hidePrice;
+
+    /**
      * ProductListView constructor.
      * @param ProductList $ProductList
      */
     public function __construct(ProductList $ProductList)
     {
         $this->ProductList = $ProductList;
+        $this->hidePrice   = $ProductList->isPriceHidden();
         $this->parse();
     }
 
@@ -61,7 +67,7 @@ class ProductListBackendView
 
             $product = array(
                 'fields'   => array(),
-                'vatArray' => array()
+                'vatArray' => array(),
             );
 
             /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
@@ -106,7 +112,7 @@ class ProductListBackendView
                 $product['attributes'][] = array(
                     'title'     => $Factor->getTitle(),
                     'value'     => $isNetto ? $Factor->getNettoSumFormatted() : $Factor->getBruttoSumFormatted(),
-                    'valueText' => $Factor->getValueText()
+                    'valueText' => $Factor->getValueText(),
                 );
             }
 
@@ -116,13 +122,13 @@ class ProductListBackendView
         // result
         $result = array(
             'attributes' => array(),
-            'vat'        => array()
+            'vat'        => array(),
         );
 
         foreach ($list['vatArray'] as $key => $entry) {
             $result['vat'][] = array(
                 'text'  => $list['vatText'][$key],
-                'value' => $Currency->format($entry['sum'])
+                'value' => $Currency->format($entry['sum']),
             );
         }
 
@@ -135,7 +141,7 @@ class ProductListBackendView
             $result['attributes'][] = array(
                 'title'     => $Factor->getTitle(),
                 'value'     => $isNetto ? $Factor->getNettoSumFormatted() : $Factor->getBruttoSumFormatted(),
-                'valueText' => $Factor->getValueText()
+                'valueText' => $Factor->getValueText(),
             );
         }
 
@@ -147,6 +153,36 @@ class ProductListBackendView
 
         $this->data = $result;
     }
+
+    //region Price methods
+
+    /**
+     * Set the price to hidden
+     */
+    public function hidePrices()
+    {
+        $this->hidePrice = true;
+    }
+
+    /**
+     * Set the price to visible
+     */
+    public function showPrices()
+    {
+        $this->hidePrice = false;
+    }
+
+    /**
+     * Return if prices are hidden or not
+     *
+     * @return bool|int
+     */
+    public function isPriceHidden()
+    {
+        return $this->hidePrice;
+    }
+
+    //endregion
 
     /**
      * Return the ProductListView as an array
@@ -231,7 +267,7 @@ class ProductListBackendView
 
         if ($css) {
             $style = '<style>';
-            $style .= file_get_contents(dirname(__FILE__) . '/ProductListView.css');
+            $style .= file_get_contents(dirname(__FILE__).'/ProductListView.css');
             $style .= '</style>';
         }
 
@@ -239,9 +275,9 @@ class ProductListBackendView
             'this'      => $this,
             'data'      => $this->data,
             'style'     => $style,
-            'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice()
+            'hidePrice' => $this->isPriceHidden(),
         ));
 
-        return $Engine->fetch(dirname(__FILE__) . '/ProductListView.html');
+        return $Engine->fetch(dirname(__FILE__).'/ProductListView.html');
     }
 }
