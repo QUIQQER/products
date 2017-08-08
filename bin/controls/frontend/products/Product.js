@@ -116,6 +116,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                     Container.set('data-productid', productId);
                     Container.className = 'quiqqer-products-product';
 
+                    document.title = result.title;
+
                     Container.set(
                         'html',
                         result.css +
@@ -143,6 +145,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                         html   : '<span class="fa fa-close"></span>',
                         events : {
                             click: function () {
+                                document.title = QUIQQER.title;
                                 self.fireEvent('close');
                             }
                         }
@@ -185,6 +188,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                             title,
                             categories
                         );
+
+                        PiwikTracker.trackPageView();
                     });
                 });
             }).catch(function (error) {

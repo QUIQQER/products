@@ -112,6 +112,11 @@ if ($siteUrl != $_REQUEST['_url']) {
         $Site->setAttribute('meta.seotitle', $Product->getTitle($Locale));
         $Site->setAttribute('meta.description', $Product->getDescription($Locale));
 
+        $Keywords = $Product->getField(Products\Handler\Fields::FIELD_KEYWORDS);
+        $keywords = $Keywords->getValueByLocale($Locale);
+
+        $Site->setAttribute('meta.keywords', $keywords);
+
         define('QUIQQER_ERP_IS_PRODUCT', true);
     } catch (QUI\Permissions\Exception $Exception) {
         $url = $Output->getSiteUrl(array(
