@@ -14,22 +14,46 @@ use QUI\ERP\Products\Controls\Products\Product as ProductControl;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getProduct',
-    function ($productId) {
+    function ($productId, $project, $siteId) {
+        $Project  = null;
+        $Site     = null;
+        $Template = null;
+        $title    = '';
+
         try {
+            $Project = QUI\Projects\Manager::getProject($project);
+            $Site    = $Project->get($siteId);
+
+            $Template = QUI::getTemplateManager();
+            $Template->setAttribute('Project', $Project);
+            $Template->setAttribute('Site', $Site);
+
+            $title = $Template->getTitle();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addInfo($Exception->getMessage());
+        }
+
+        try {
+            $Product = new Product($productId);
             $Control = new ProductControl(array(
-                'Product' => new Product($productId)
+                'Product' => $Product
             ));
 
             $control = $Control->create();
 
+            if (empty($title)) {
+                $title = $Product->getTitle();
+            }
+
             return array(
-                'css'  => QUI\Control\Manager::getCSS(),
-                'html' => $control
+                'css'   => QUI\Control\Manager::getCSS(),
+                'html'  => $control,
+                'title' => $title
             );
         } catch (QUI\Exception $Exception) {
         }
 
         return '';
     },
-    array('productId')
+    array('productId', 'project', 'siteId')
 );
