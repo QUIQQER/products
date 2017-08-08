@@ -31,6 +31,7 @@ QUI::$Ajax->registerFunction(
         try {
             $Project = QUI\Projects\Manager::decode($project);
             $Site    = $Project->get($siteId);
+            $Site->load();
 
             $Template = QUI::getTemplateManager();
             $Template->setAttribute('Project', $Project);
