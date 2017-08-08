@@ -154,7 +154,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                     self.$onImport();
                 }, {
                     'package': 'quiqqer/products',
-                    productId: productId
+                    productId: productId,
+                    project  : JSON.encode(QUIQQER_PROJECT),
+                    siteId   : QUIQQER_SITE.id
                 });
             });
         },
