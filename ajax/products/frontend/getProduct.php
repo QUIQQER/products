@@ -18,7 +18,15 @@ QUI::$Ajax->registerFunction(
         $Project  = null;
         $Site     = null;
         $Template = null;
+        $Locale   = QUI::getLocale();
         $title    = '';
+
+        try {
+            $Product = new Product($productId);
+        } catch (QUI\Exception $Exception) {
+            return '';
+        }
+
 
         try {
             $Project = QUI\Projects\Manager::decode($project);
@@ -28,13 +36,15 @@ QUI::$Ajax->registerFunction(
             $Template->setAttribute('Project', $Project);
             $Template->setAttribute('Site', $Site);
 
+            $Site->setAttribute('meta.seotitle', $Product->getTitle($Locale));
+            $Site->setAttribute('meta.description', $Product->getDescription($Locale));
+
             $title = $Template->getTitle();
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addInfo($Exception->getMessage());
         }
 
         try {
-            $Product = new Product($productId);
             $Control = new ProductControl(array(
                 'Product' => $Product
             ));
