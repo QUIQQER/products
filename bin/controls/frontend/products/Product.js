@@ -184,9 +184,15 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                         return category.title;
                     });
                 }).then(function (categories) {
-                    Product.getTitle().then(function (title) {
+                    Promise.all([
+                        Product.getTitle(),
+                        Product.getFieldValue(3)
+                    ]).then(function (result) {
+                        var title     = result[0],
+                            articleNo = result[1];
+
                         PiwikTracker.setEcommerceView(
-                            productId,
+                            articleNo, // @todo custom number
                             title,
                             categories
                         );
