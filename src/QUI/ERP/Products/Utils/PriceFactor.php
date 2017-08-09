@@ -193,12 +193,6 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function getValueText()
     {
-        // wenn im frontend und preise aus sind,
-        // dann werden keine preise angezeigt
-        if (defined('QUIQQER_FRONTEND') && QUI\ERP\Products\Utils\Package::hidePrice()) {
-            return '';
-        }
-
         // empty value = no value is set
         if ($this->valueText === '') {
             return '-';
