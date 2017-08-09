@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Utils
  */
+
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
@@ -192,6 +193,12 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function getValueText()
     {
+        // wenn im frontend und preise aus sind,
+        // dann werden keine preise angezeigt
+        if (defined('QUIQQER_FRONTEND') && QUI\ERP\Products\Utils\Package::hidePrice()) {
+            return '';
+        }
+
         // empty value = no value is set
         if ($this->valueText === '') {
             return '-';
@@ -348,7 +355,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             default:
             case Calc::CALCULATION_COMPLEMENT:
                 if ($sum > 0) {
-                    return '+' . Currencies::getDefaultCurrency()->format($sum);
+                    return '+'.Currencies::getDefaultCurrency()->format($sum);
                 }
 
                 return Currencies::getDefaultCurrency()->format($sum);
@@ -356,10 +363,11 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             case Calc::CALCULATION_PERCENTAGE:
                 if ($this->getNettoSum()) {
                     $sum = Currencies::getDefaultCurrency()->format($sum);
+
                     return $sum;
                 }
 
-                return $this->value . '%';
+                return $this->value.'%';
         }
     }
 
@@ -382,7 +390,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             default:
             case Calc::CALCULATION_COMPLEMENT:
                 if ($sum > 0) {
-                    return '+' . Currencies::getDefaultCurrency()->format($sum);
+                    return '+'.Currencies::getDefaultCurrency()->format($sum);
                 }
 
                 return Currencies::getDefaultCurrency()->format($sum);
@@ -392,7 +400,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
                     return Currencies::getDefaultCurrency()->format($sum);
                 }
 
-                return $this->value . '%';
+                return $this->value.'%';
         }
     }
 
