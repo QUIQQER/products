@@ -245,7 +245,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
 
             if ($Locale && get_class($Locale) == QUI\Locale::class) {
                 $current     = $Locale->getCurrent();
-                $currentCode = mb_strtolower($current) . '_' . mb_strtoupper($current);
+                $currentCode = mb_strtolower($current).'_'.mb_strtoupper($current);
 
                 if (isset($valueText[$current])) {
                     $valueText = $valueText[$current];
@@ -265,8 +265,10 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             $valueText = '';
         }
 
-        if ($userInput) {
-            $valueText .= ' (' . $userInput . ')';
+        if ($userInput &&
+            !(defined('QUIQQER_FRONTEND') && QUI\ERP\Products\Utils\Package::hidePrice())
+        ) {
+            $valueText .= ' ('.$userInput.')';
         }
 
         return array(
