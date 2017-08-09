@@ -175,29 +175,19 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             // stats
             Piwik.getTracker().then(function (PiwikTracker) {
-                var Product = Products.get(productId);
-
-                Product.getCategories().then(function (categories) {
-                    return Categories.getCategories(categories);
-                }).then(function (categories) {
-                    return categories.map(function (category) {
-                        return category.title;
-                    });
-                }).then(function (categories) {
-                    Promise.all([
-                        Product.getTitle(),
-                        Product.getFieldValue(3)
-                    ]).then(function (result) {
-                        var title     = result[0],
-                            articleNo = result[1];
-
+                require(['Ajax'], function (QUIAjax) {
+                    QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getTrackingDataForProduct', function (data) {
                         PiwikTracker.setEcommerceView(
-                            articleNo, // @todo custom number
-                            title,
-                            categories
+                            data.productNo,
+                            data.title,
+                            data.category,
+                            data.price
                         );
 
                         PiwikTracker.trackPageView();
+                    }, {
+                        'package': 'quiqqer/products',
+                        productId: productId
                     });
                 });
             }).catch(function (error) {
