@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Products\VisitedProducts
  */
+
 namespace QUI\ERP\Products\Controls\Products;
 
 use QUI;
@@ -31,7 +32,7 @@ class VisitedProducts extends QUI\Control
         );
 
         $this->addCSSClass('quiqqer-products-control-visitedProducts');
-        $this->addCSSFile(dirname(__FILE__) . '/VisitedProducts.css');
+        $this->addCSSFile(dirname(__FILE__).'/VisitedProducts.css');
 
         $this->Slider = new ChildrenSlider();
     }
@@ -62,5 +63,15 @@ class VisitedProducts extends QUI\Control
     public function addProducts($products)
     {
         $this->Slider->addProducts($products);
+    }
+
+    /**
+     * Return the inner children slider object
+     *
+     * @return ChildrenSlider
+     */
+    public function getSlider()
+    {
+        return $this->Slider;
     }
 }

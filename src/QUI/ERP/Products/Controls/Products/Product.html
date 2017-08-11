@@ -108,24 +108,24 @@
                 {if count($details)}
                 <table class="product-data-more-details-table">
                     {foreach $details as $Field}
-                        {if !empty($Field->getValue()) || is_numeric($Field->getValue())}
-                        <tr>
-                            <td>
-                                {$Field->getView()->create()}
-                            </td>
-                        </tr>
-                        {else}
-                        <tr>
-                            <td>
-                                <div class="quiqqer-product-field-title">
-                                    {$Field->getTitle()}
-                                </div>
-                                <div class="quiqqer-product-field-value">
-                                    ---
-                                </div>
-                            </td>
-                        </tr>
-                        {/if}
+                    {if !empty($Field->getValue()) || is_numeric($Field->getValue())}
+                    <tr>
+                        <td>
+                            {$Field->getView()->create()}
+                        </td>
+                    </tr>
+                    {else}
+                    <tr>
+                        <td>
+                            <div class="quiqqer-product-field-title">
+                                {$Field->getTitle()}
+                            </div>
+                            <div class="quiqqer-product-field-value">
+                                ---
+                            </div>
+                        </td>
+                    </tr>
+                    {/if}
                     {/foreach}
                 </table>
                 {/if}
@@ -157,6 +157,7 @@
                 {$fieldData.Field->getTitle()}
             </h3>
         </header>
+        {assign var=t value=$fieldData.Slider->setAttribute('data-qui-options-usemobile', true)}
         {$fieldData.Slider->create()}
     </section>
     {/foreach}
@@ -168,6 +169,7 @@
                 {locale group="quiqqer/products" var="brick.control.VisitedProducts.title"}
             </h3>
         </header>
+        {assign var=t value=$VisitedProducts->getSlider()->setAttribute('data-qui-options-usemobile', true)}
         {$VisitedProducts->create()}
     </section>
     {/if}
