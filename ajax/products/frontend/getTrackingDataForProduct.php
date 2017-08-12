@@ -42,7 +42,7 @@ QUI::$Ajax->registerFunction(
         // price
         $price = 0;
 
-        if (QUI\ERP\Products\Utils\Package::hidePrice()) {
+        if (QUI\ERP\Products\Utils\Package::hidePrice() !== false) {
             $price = $Product->getPrice(QUI::getUserBySession())->getPrice();
         }
 
