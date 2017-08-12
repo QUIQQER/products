@@ -139,20 +139,18 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @return {Promise}
          */
         setQuantity: function (quantity) {
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_setQuantity', function (result) {
-
                     this.$quantity = parseInt(result);
                     this.fireEvent('change', [this]);
 
                     resolve(result);
-
                 }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    quantity : quantity
+                    quantity : quantity,
+                    onError  : reject
                 });
-
             }.bind(this));
         },
 
