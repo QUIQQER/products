@@ -43,7 +43,7 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          * @param {String} value - field value
          */
         setFieldValue: function (fieldId, value) {
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_setCustomFieldValue', function (result) {
 
                     this.$fields[fieldId] = result;
@@ -54,7 +54,8 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                     'package': 'quiqqer/products',
                     productId: this.getId(),
                     fieldId  : fieldId,
-                    value    : value
+                    value    : value,
+                    onError  : reject
                 });
             });
         },
@@ -70,7 +71,7 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                 return Promise.resolve(this);
             }
 
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_frontend_setCustomFieldValues', function (result) {
 
                     for (var fieldId in result) {
@@ -85,7 +86,8 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                 }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    fields   : JSON.encode(fields)
+                    fields   : JSON.encode(fields),
+                    onError  : reject
                 });
 
             }.bind(this));
@@ -98,7 +100,7 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          * @return {Promise}
          */
         setQuantity: function (quantity) {
-            return new Promise(function (resolve) {
+            return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_setQuantity', function (result) {
                     this.$quantity = parseInt(result);
                     this.fireEvent('change', [this]);
@@ -108,7 +110,8 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                 }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    quantity : quantity
+                    quantity : quantity,
+                    onError  : reject
                 });
 
             }.bind(this));
@@ -178,11 +181,11 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
             return new Promise(function (resolve, reject) {
 
                 if (this.$loaded) {
-                    return resolve(this.$data.active ? true : false);
+                    return resolve(!!this.$data.active);
                 }
 
                 this.refresh().then(function () {
-                    resolve(this.$data.active ? true : false);
+                    resolve(!!this.$data.active);
                 }.bind(this)).catch(reject);
 
             }.bind(this));
