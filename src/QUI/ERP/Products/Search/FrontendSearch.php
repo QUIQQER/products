@@ -281,7 +281,10 @@ class FrontendSearch extends Search
 
         // tags search
         $siteTags = $this->Site->getAttribute('quiqqer.products.settings.tags');
-        $siteTags = explode(',', $siteTags);
+
+        if (!empty($siteTags)) {
+            $siteTags = explode(',', trim($siteTags, ','));
+        }
 
         if (!is_array($siteTags)) {
             $siteTags = array();
