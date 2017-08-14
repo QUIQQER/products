@@ -24,6 +24,7 @@
                 <attribute>quiqqer.products.settings.categoryDisplay</attribute>
                 <attribute>quiqqer.products.settings.categoryAsFilter</attribute>
                 <attribute>quiqqer.products.settings.defaultSorting</attribute>
+                <attribute>quiqqer.products.settings.tags</attribute>
             </attributes>
 
             <settings>
@@ -118,6 +119,18 @@
                                 <locale group="quiqqer/products" var="sort.productNo.DESC"/>
                             </option>
                         </select>
+
+                        <input conf="quiqqer.products.settings.tags"
+                               data-qui="package/quiqqer/products/bin/controls/products/settings/SiteProductTags"
+                               type="hidden"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.tags"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.tags.description"/>
+                            </description>
+                        </input>
                     </settings>
                 </category>
             </settings>

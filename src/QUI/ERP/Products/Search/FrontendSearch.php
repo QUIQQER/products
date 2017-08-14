@@ -184,7 +184,7 @@ class FrontendSearch extends Search
             $sql = "SELECT id";
         }
 
-        $sql .= " FROM " . TablesUtils::getProductCacheTableName();
+        $sql .= " FROM ".TablesUtils::getProductCacheTableName();
 
         $where[]       = 'lang = :lang';
         $binds['lang'] = array(
@@ -195,13 +195,13 @@ class FrontendSearch extends Search
         if (isset($searchParams['category']) && !empty($searchParams['category'])) {
             $where[]           = '`category` LIKE :category';
             $binds['category'] = array(
-                'value' => '%,' . (int)$searchParams['category'] . ',%',
+                'value' => '%,'.(int)$searchParams['category'].',%',
                 'type'  => \PDO::PARAM_STR
             );
         } elseif ($this->categoryId) {
             $where[]           = '`category` LIKE :category';
             $binds['category'] = array(
-                'value' => '%,' . $this->categoryId . ',%',
+                'value' => '%,'.$this->categoryId.',%',
                 'type'  => \PDO::PARAM_STR
             );
         }
@@ -214,10 +214,10 @@ class FrontendSearch extends Search
             $whereCategories = array();
 
             foreach ($searchParams['categories'] as $categoryId) {
-                $whereCategories[] = '`category` LIKE :category' . $c;
+                $whereCategories[] = '`category` LIKE :category'.$c;
 
-                $binds['category' . $c] = array(
-                    'value' => '%,' . (int)$categoryId . ',%',
+                $binds['category'.$c] = array(
+                    'value' => '%,'.(int)$categoryId.',%',
                     'type'  => \PDO::PARAM_STR
                 );
 
@@ -226,7 +226,7 @@ class FrontendSearch extends Search
 
             // @todo das OR als setting (AND oder OR) (ist gedacht für die Navigation)
             if (!empty($whereCategories)) {
-                $where[] = '(' . implode(' OR ', $whereCategories) . ')';
+                $where[] = '('.implode(' OR ', $whereCategories).')';
             }
         }
 
@@ -249,7 +249,7 @@ class FrontendSearch extends Search
                 // always search tags
                 $whereFreeText[]       = '`tags` LIKE :freetextTags';
                 $binds['freetextTags'] = array(
-                    'value' => '%,' . $value . ',%',
+                    'value' => '%,'.$value.',%',
                     'type'  => \PDO::PARAM_STR
                 );
 
@@ -266,25 +266,36 @@ class FrontendSearch extends Search
                     $columnName = SearchHandler::getSearchFieldColumnName($Field);
                     $fieldId    = $Field->getId();
 
-                    $whereFreeText[]              = '`' . $columnName . '` LIKE :freetext' . $fieldId;
-                    $binds['freetext' . $fieldId] = array(
-                        'value' => '%' . $value . '%',
+                    $whereFreeText[]            = '`'.$columnName.'` LIKE :freetext'.$fieldId;
+                    $binds['freetext'.$fieldId] = array(
+                        'value' => '%'.$value.'%',
                         'type'  => \PDO::PARAM_STR
                     );
                 }
             }
 
             if (!empty($whereFreeText)) {
-                $where[] = '(' . implode(' OR ', $whereFreeText) . ')';
+                $where[] = '('.implode(' OR ', $whereFreeText).')';
             }
         }
 
         // tags search
+        $siteTags = $this->Site->getAttribute('quiqqer.products.settings.tags');
+        $siteTags = explode(',', $siteTags);
+
+        if (!is_array($siteTags)) {
+            $siteTags = array();
+        }
+
         if (isset($searchParams['tags'])
             && !empty($searchParams['tags'])
             && is_array($searchParams['tags'])
         ) {
-            $data = $this->getTagQuery($searchParams['tags']);
+            $siteTags = array_merge($siteTags, $searchParams['tags']);
+        }
+
+        if (!empty($siteTags)) {
+            $data = $this->getTagQuery($siteTags);
 
             if (!empty($data['where'])) {
                 $where[] = $data['where'];
@@ -305,7 +316,7 @@ class FrontendSearch extends Search
                 $whereOr[] = '`viewUsersGroups` LIKE :permissionUser';
 
                 $binds['permissionUser'] = array(
-                    'value' => '%,u' . $User->getId() . ',%',
+                    'value' => '%,u'.$User->getId().',%',
                     'type'  => \PDO::PARAM_STR
                 );
             }
@@ -315,17 +326,17 @@ class FrontendSearch extends Search
             $i            = 0;
 
             foreach ($userGroupIds as $groupId) {
-                $whereOr[] = '`viewUsersGroups` LIKE :permissionGroup' . $i;
+                $whereOr[] = '`viewUsersGroups` LIKE :permissionGroup'.$i;
 
-                $binds['permissionGroup' . $i] = array(
-                    'value' => '%,g' . $groupId . ',%',
+                $binds['permissionGroup'.$i] = array(
+                    'value' => '%,g'.$groupId.',%',
                     'type'  => \PDO::PARAM_STR
                 );
 
                 $i++;
             }
 
-            $where[] = '(' . implode(' OR ', $whereOr) . ')';
+            $where[] = '('.implode(' OR ', $whereOr).')';
         }
 
         $where[] = '`active` = 1';
@@ -343,11 +354,11 @@ class FrontendSearch extends Search
 
         // build WHERE query string
         if (!empty($where)) {
-            $sql .= " WHERE " . implode(" AND ", $where);
+            $sql .= " WHERE ".implode(" AND ", $where);
         }
 
         if (!$countOnly) {
-            $sql .= " " . $this->validateOrderStatement($searchParams);
+            $sql .= " ".$this->validateOrderStatement($searchParams);
         }
 
         if (!$countOnly) {
@@ -366,7 +377,7 @@ class FrontendSearch extends Search
                     );
                 }
 
-                $sql .= " " . $queryLimit['limit'];
+                $sql .= " ".$queryLimit['limit'];
             } elseif (isset($searchParams['limit'])) {
                 $queryLimit = QUI\Database\DB::createQueryLimit($searchParams['limit']);
 
@@ -377,7 +388,7 @@ class FrontendSearch extends Search
                     );
                 }
 
-                $sql .= " " . $queryLimit['limit'];
+                $sql .= " ".$queryLimit['limit'];
             } else {
                 $sql .= " LIMIT 20"; // @todo as settings
             }
@@ -388,7 +399,7 @@ class FrontendSearch extends Search
         // bind search values
         foreach ($binds as $var => $bind) {
             if (strpos($var, ':') === false) {
-                $var = ':' . $var;
+                $var = ':'.$var;
             }
 
             $Stmt->bindValue($var, $bind['value'], $bind['type']);
@@ -428,8 +439,8 @@ class FrontendSearch extends Search
     public function getSearchFieldData()
     {
         $cname = 'products/search/frontend/searchfielddata/';
-        $cname .= $this->Site->getId() . '/';
-        $cname .= $this->lang . '/';
+        $cname .= $this->Site->getId().'/';
+        $cname .= $this->lang.'/';
         $cname .= $this->getGroupHashFromUser();
 
         try {

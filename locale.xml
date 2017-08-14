@@ -42,6 +42,14 @@
             <de><![CDATA[Produkte]]></de>
             <en><![CDATA[Products]]></en>
         </locale>
+        <locale name="quiqqer.products.settings.tags">
+            <de><![CDATA[Filter Tags]]></de>
+            <en><![CDATA[Filter tags]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.tags.description">
+            <de><![CDATA[Es werden nur Produkte angezeigt denen einer der folgenden Tags zugewiesen wurde.]]></de>
+            <en><![CDATA[Only products with one of the following tags are displayed.]]></en>
+        </locale>
 
         <locale name="menu.erp.title">
             <de><![CDATA[Shop]]></de>
