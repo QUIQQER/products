@@ -95,9 +95,9 @@ class Cache extends QUI\QDOM
     protected static function getStashItem($key = null)
     {
         if (is_null($key)) {
-            $key = md5(__FILE__) . '/products/';
+            $key = md5(__FILE__).'/products/';
         } else {
-            $key = md5(__FILE__) . '/products/' . $key;
+            $key = md5(__FILE__).'/products/'.$key;
         }
 
         return self::getStash()->getItem($key);
@@ -151,7 +151,7 @@ class Cache extends QUI\QDOM
      */
     protected static function getCacheDir()
     {
-        $cacheDir = PackageUtils::getVarDir() . 'cache/products/search/';
+        $cacheDir = PackageUtils::getVarDir().'cache/products/search/';
 
         if (!file_exists($cacheDir)
             || !is_dir($cacheDir)
