@@ -4,14 +4,6 @@
  * @module package/quiqqer/products/bin/controls/categories/Create
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require Locale
- * @require package/quiqqer/products/bin/classes/Fields
- * @require package/quiqqer/translator/bin/controls/Create
- * @require text!package/quiqqer/products/bin/controls/fields/Create.html
- * @require css!package/quiqqer/products/bin/controls/fields/Create.css
- *
  * @event onLoaded
  */
 define('package/quiqqer/products/bin/controls/fields/Create', [
@@ -23,7 +15,7 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
     'controls/lang/InputMultiLang',
     'package/quiqqer/products/bin/classes/Fields',
     'package/quiqqer/products/bin/utils/Fields',
-    'package/quiqqer/translator/bin/controls/Create',
+    'package/quiqqer/translator/bin/controls/Update',
 
     'text!package/quiqqer/products/bin/controls/fields/Create.html',
     'css!package/quiqqer/products/bin/controls/fields/Create.css'
@@ -104,11 +96,15 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                 Elm  = self.getElm();
 
             this.$Translation = new Translation({
-                group: 'quiqqer/products'
+                group    : 'quiqqer/products',
+                datatype : 'php,js',
+                'package': 'quiqqer/products'
             }).inject(Elm.getElement('.field-title'));
 
             this.$WorkingTitle = new Translation({
-                group: 'quiqqer/products'
+                group    : 'quiqqer/products',
+                datatype : 'php,js',
+                'package': 'quiqqer/products'
             }).inject(Elm.getElement('.field-workingtitle'));
 
             this.$Prefix = new InputMultiLang().imports(

@@ -16,6 +16,9 @@ QUI::$Ajax->registerFunction(
     function ($params) {
         $params     = json_decode($params, true);
         $Categories = new QUI\ERP\Products\Handler\Fields();
+
+        \QUI\System\Log::writeRecursive($params);
+
         $Field      = $Categories->createField($params);
 
         return $Field->getAttributes();
