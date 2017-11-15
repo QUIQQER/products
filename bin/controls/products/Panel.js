@@ -3,17 +3,6 @@
  *
  * @module package/quiqqer/products/bin/controls/products/Panel
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/desktop/Panel
- * @require qui/controls/buttons/Button
- * @require qui/controls/windows/Confirm
- * @require controls/grid/Grid
- * @require Locale
- * @require package/quiqqer/products/bin/Products
- * @require package/quiqqer/products/bin/controls/products/Create
- * @require package/quiqqer/products/bin/controls/products/Product
- * @require package/quiqqer/products/bin/controls/products/search/Search
  */
 define('package/quiqqer/products/bin/controls/products/Panel', [
 
@@ -246,7 +235,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                                                 self.refresh();
                                             });
                                         }).catch(function (err) {
-                                            if (typeOf(err) == 'string') {
+                                            if (typeOf(err) === 'string') {
                                                 QUI.getMessageHandler().then(function (MH) {
                                                     MH.addError(err);
                                                 });
@@ -287,11 +276,11 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             var self = this;
 
             return new Promise(function (resolve, reject) {
-                if (typeOf(productIds) == 'number') {
+                if (typeOf(productIds) === 'number') {
                     productIds = [productIds];
                 }
 
-                if (typeOf(productIds) != 'array') {
+                if (typeOf(productIds) !== 'array') {
                     return reject();
                 }
 
