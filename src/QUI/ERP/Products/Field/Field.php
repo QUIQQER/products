@@ -309,7 +309,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 continue;
             }
 
-            if ($this->getAttribute($attribute)) {
+            if ($this->existsAttribute($attribute)) {
                 $data[$attribute] = $this->getAttribute($attribute);
                 continue;
             }
@@ -324,6 +324,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         if (!empty($options)) {
             $data['options'] = json_encode($options);
         }
+
 
         QUI\Watcher::addString(
             QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.save', array(
@@ -708,6 +709,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 if ($this->isSystem()) {
                     $this->standard = true;
                 }
+
                 return $this;
 
             case 'systemField':
@@ -716,14 +718,17 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
             case 'requiredField':
                 $this->require = $val ? true : false;
+
                 return $this;
 
             case 'publicField':
                 $this->public = $val ? true : false;
+
                 return $this;
 
             case 'showInDetails':
                 $this->showInDetails = $val ? true : false;
+
                 return $this;
 
             default:
@@ -877,7 +882,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         return $Locale->get(
             'quiqqer/products',
-            'products.field.' . $this->getId() . '.title'
+            'products.field.'.$this->getId().'.title'
         );
     }
 
@@ -889,7 +894,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getWorkingTitle($Locale = null)
     {
-        $var   = 'products.field.' . $this->getId() . '.workingtitle';
+        $var   = 'products.field.'.$this->getId().'.workingtitle';
         $group = 'quiqqer/products';
 
         if (!$Locale) {
@@ -919,6 +924,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         // quiqqer/product fields
         if (strpos($class, 'QUI\ERP\Products\Field\Types\\') !== false) {
             $this->type = str_replace('QUI\ERP\Products\Field\Types\\', '', $class);
+
             return $this->type;
         }
 
@@ -1052,7 +1058,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             'where' => array(
                 'fieldData' => array(
                     'type'  => '%LIKE%',
-                    'value' => '"id":' . $this->id . ','
+                    'value' => '"id":'.$this->id.','
                 )
             )
         ));

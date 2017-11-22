@@ -293,7 +293,7 @@ class Fields
 
         $Field = self::getField($newId);
 
-
+        
         // create view permission
         QUI::getPermissionManager()->addPermission(array(
             'name'  => "permission.products.fields.field{$newId}.view",
