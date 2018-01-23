@@ -143,7 +143,9 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      *
      * @param integer $pid - Product ID
      * @param $attributes - attributes
+     *
      * @throws QUI\ERP\Products\Product\Exception
+     * @throws QUI\Users\Exception
      */
     public function __construct($pid, $attributes = array())
     {
@@ -299,6 +301,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * Unique identifier
      *
      * @return string
+     *
+     * @throws QUI\Exception
      */
     public function getCacheIdentifier()
     {
@@ -317,6 +321,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
     /**
      * @return UniqueProduct|UniqueProductFrontendView
+     *
+     * @throws QUI\Exception
      */
     public function getView()
     {
@@ -337,6 +343,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      *
      * @param QUI\ERP\Products\Utils\Calc|null $Calc - optional, calculation object
      * @return UniqueProduct
+     *
+     * @throws QUI\Users\Exception
      */
     public function calc($Calc = null)
     {
@@ -551,6 +559,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * Return a price object (single price)
      *
      * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Users\Exception
      */
     public function getPrice()
     {
@@ -574,6 +584,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             /* @var $List UniqueField */
             if ($List->isRequired() && $List->getValue() === '') {
                 $Price->changeToStartingPrice();
+
                 return $Price;
             }
         }
@@ -583,6 +594,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
     /**
      * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Users\Exception
      */
     public function getMinimumPrice()
     {
@@ -598,6 +611,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
     /**
      * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Users\Exception
      */
     public function getMaximumPrice()
     {
@@ -615,6 +630,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * Return a price object (single price)
      *
      * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Users\Exception
      */
     public function getUnitPrice()
     {
@@ -630,6 +647,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * Return the netto price of the product
      *
      * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Exception
      */
     public function getNettoPrice()
     {
@@ -755,6 +774,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * Return the product attributes
      *
      * @return array
+     *
+     * @throws QUI\Exception
      */
     public function getAttributes()
     {
@@ -806,7 +827,10 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
     /**
      * Alias for getAttributes()
+     *
      * @return array
+     *
+     * @throws QUI\Exception
      */
     public function toArray()
     {
@@ -818,6 +842,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      *
      * @param null|QUI\Locale $Locale
      * @return QUI\ERP\Accounting\Article
+     *
+     * @throws QUI\Users\Exception
      */
     public function toArticle($Locale = null)
     {
@@ -834,7 +860,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
             foreach ($fields as $Field) {
-                $description .= '<li>' . $Field->getView()->create() . '</li>';
+                $description .= '<li>'.$Field->getView()->create().'</li>';
             }
 
             $description .= '</ul>';
