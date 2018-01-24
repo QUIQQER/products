@@ -34,6 +34,8 @@ class ProductListBackendView
     /**
      * ProductListView constructor.
      * @param ProductList $ProductList
+     *
+     * @throws QUI\Exception
      */
     public function __construct(ProductList $ProductList)
     {
@@ -45,6 +47,8 @@ class ProductListBackendView
     /**
      * Parse the list to an array
      * set the internal data
+     *
+     * @throws QUI\Exception
      */
     protected function parse()
     {
@@ -259,6 +263,8 @@ class ProductListBackendView
      *
      * @param bool $css - optional, with inline style, default = true
      * @return string
+     *
+     * @throws QUI\Exception
      */
     public function toHTML($css = true)
     {
