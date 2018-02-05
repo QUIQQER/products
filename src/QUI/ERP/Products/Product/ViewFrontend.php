@@ -308,6 +308,8 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * Return the product image
      *
      * @return QUI\Projects\Media\Image
+     *
+     * @throws QUI\Exception
      */
     public function getImage()
     {

@@ -146,6 +146,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Users\Exception
+     * @throws QUI\Exception
      */
     public function __construct($pid, $attributes = array())
     {
