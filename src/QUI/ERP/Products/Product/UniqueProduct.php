@@ -115,6 +115,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected $nettoSum;
 
     /**
+     * Netto price
+     *
+     * @var float|int
+     */
+    protected $nettoPrice;
+
+    /**
      * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
      * @var array
      */
@@ -363,6 +370,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $self->price      = $data['price'];
             $self->basisPrice = $data['basisPrice'];
             $self->sum        = $data['sum'];
+            $self->nettoPrice = $data['nettoPrice'];
             $self->nettoSum   = $data['nettoSum'];
             $self->vatArray   = $data['vatArray'];
             $self->isEuVat    = $data['isEuVat'];
@@ -639,7 +647,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $this->calc();
 
         return new QUI\ERP\Money\Price(
-            $this->price,
+            $this->nettoPrice,
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
     }

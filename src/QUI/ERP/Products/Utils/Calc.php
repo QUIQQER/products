@@ -479,7 +479,7 @@ class Calc
 
 
         QUI\ERP\Debug::getInstance()->log(
-            'Kalkulierter Produkt Preis ' . $Product->getId(),
+            'Kalkulierter Produkt Preis '.$Product->getId(),
             'quiqqer/products'
         );
 
@@ -488,6 +488,7 @@ class Calc
             'price'        => $price,
             'sum'          => $sum,
             'nettoSum'     => $nettoSum,
+            'nettoPrice'   => $nettoPrice,
             'vatArray'     => $vatArray,
             'isEuVat'      => $isEuVatUser,
             'isNetto'      => $isNetto,
@@ -501,6 +502,7 @@ class Calc
             'price'        => $price,
             'sum'          => $sum,
             'nettoSum'     => $nettoSum,
+            'nettoPrice'   => $nettoPrice,
             'vatArray'     => $vatArray,
             'vatText'      => $vatArray['text'],
             'isEuVat'      => $isEuVatUser,
