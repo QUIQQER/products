@@ -3,16 +3,6 @@
  *
  * @module package/quiqqer/products/bin/controls/fields/Panel
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/desktop/Panel
- * @require qui/controls/buttons/Button
- * @require qui/controls/windows/Confirm
- * @require controls/grid/Grid
- * @require Locale
- * @require package/quiqqer/products/bin/classes/Fields
- * @require package/quiqqer/products/bin/controls/fields/Create
- * @require css!package/quiqqer/products/bin/controls/fields/Panel.css
  */
 define('package/quiqqer/products/bin/controls/fields/Panel', [
 

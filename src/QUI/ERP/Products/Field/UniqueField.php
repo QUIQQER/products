@@ -135,6 +135,13 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     protected $options = array();
 
     /**
+     * Is the field in the frontend currently changeable
+     *
+     * @var bool
+     */
+    protected $changeable = true;
+
+    /**
      * Model constructor.
      *
      * @param integer $fieldId
@@ -161,7 +168,8 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'value',
             'ownField',
             'showInDetails',
-            'searchvalue'
+            'searchvalue',
+            'changeable'
         );
 
         if (!isset($params['isPublic'])) {
@@ -193,9 +201,9 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
         $type = $this->getType();
 
         if (defined('QUIQQER_BACKEND')) {
-            $viewClass = 'QUI\ERP\Products\Field\Types\\' . $type . 'BackendView';
+            $viewClass = 'QUI\ERP\Products\Field\Types\\'.$type.'BackendView';
         } else {
-            $viewClass = 'QUI\ERP\Products\Field\Types\\' . $type . 'FrontendView';
+            $viewClass = 'QUI\ERP\Products\Field\Types\\'.$type.'FrontendView';
         }
 
         if (class_exists($viewClass)) {
@@ -258,6 +266,17 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     }
 
     /**
+     * Is the field currently changeable
+     * This flag is needed for the frontend view
+     *
+     * @return bool
+     */
+    public function isChangeable()
+    {
+        return $this->changeable;
+    }
+
+    /**
      * Return the field name
      *
      * @return string
@@ -315,13 +334,13 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
         if (!$Locale) {
             return QUI::getLocale()->get(
                 'quiqqer/products',
-                'products.field.' . $this->getId() . '.title'
+                'products.field.'.$this->getId().'.title'
             );
         }
 
         return $Locale->get(
             'quiqqer/products',
-            'products.field.' . $this->getId() . '.title'
+            'products.field.'.$this->getId().'.title'
         );
     }
 
@@ -351,6 +370,17 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'value'         => $this->getValue(),
             'showInDetails' => $this->showInDetails()
         );
+    }
+
+    /**
+     * Is the field currently changeable
+     * This flag is needed for the frontend view
+     *
+     * @param bool $status
+     */
+    public function setChangeableStatus($status)
+    {
+        $this->changeable = (bool)$status;
     }
 
     /**

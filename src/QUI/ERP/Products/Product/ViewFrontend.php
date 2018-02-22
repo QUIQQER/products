@@ -85,6 +85,9 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
     /**
      * @return array
+     *
+     * @throws QUI\Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function getAttributes()
     {
@@ -180,6 +183,9 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
     /**
      * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function getPrice()
     {
@@ -308,6 +314,8 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * Return the product image
      *
      * @return QUI\Projects\Media\Image
+     *
+     * @throws QUI\Exception
      */
     public function getImage()
     {
@@ -321,6 +329,8 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
     /**
      * @return string
+     *
+     * @throws QUI\Exception
      */
     public function getUrl()
     {

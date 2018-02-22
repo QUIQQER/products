@@ -33,7 +33,9 @@ class ProductListFrontendView
 
     /**
      * ProductListView constructor.
+     *
      * @param ProductList $ProductList
+     * @throws QUI\Exception
      */
     public function __construct(ProductList $ProductList)
     {
@@ -45,6 +47,8 @@ class ProductListFrontendView
     /**
      * Parse the list to an array
      * Set the internal data
+     *
+     * @throws QUI\Exception
      */
     protected function parse()
     {
@@ -225,6 +229,16 @@ class ProductListFrontendView
     }
 
     /**
+     * Return the quantity of products
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return $this->ProductList->count();
+    }
+
+    /**
      * Return the sum
      *
      * @return string
@@ -295,6 +309,8 @@ class ProductListFrontendView
      *
      * @param bool $css - optional, with inline style, default = true
      * @return string
+     *
+     * @throws QUI\Exception
      */
     public function toHTML($css = true)
     {

@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Handler\Products
  */
+
 namespace QUI\ERP\Products\Handler;
 
 use QUI;
@@ -77,7 +78,7 @@ class Products
      * @param integer $pid - Product-ID
      * @return QUI\ERP\Products\Product\Product
      *
-     * @throw QUI\ERP\Products\Product\Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public static function getProduct($pid)
     {
@@ -264,7 +265,7 @@ class Products
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
                 'fieldData'  => json_encode($fieldData),
-                'categories' => ',' . implode($categoryids, ',') . ',',
+                'categories' => ','.implode($categoryids, ',').',',
                 'c_user'     => QUI::getUserBySession()->getId(),
                 'c_date'     => date('Y-m-d H:i:s')
             )
@@ -279,7 +280,7 @@ class Products
             '',
             array(
                 'fieldData'  => $fieldData,
-                'categories' => ',' . implode($categoryids, ',') . ','
+                'categories' => ','.implode($categoryids, ',').','
             )
         );
 

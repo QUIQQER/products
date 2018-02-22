@@ -76,6 +76,7 @@ class Model extends QUI\QDOM
      * @param integer $pid - Product-ID
      *
      * @throws QUI\ERP\Products\Product\Exception
+     * @throws QUI\Exception
      */
     public function __construct($pid)
     {
@@ -219,6 +220,9 @@ class Model extends QUI\QDOM
      * Return the duly view
      *
      * @return ViewFrontend|ViewBackend
+     *
+     * @throws QUI\Permissions\Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function getView()
     {
@@ -233,6 +237,9 @@ class Model extends QUI\QDOM
 
     /**
      * @return ViewFrontend
+     *
+     * @throws QUI\Permissions\Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function getViewFrontend()
     {
@@ -252,6 +259,9 @@ class Model extends QUI\QDOM
      *
      * @param QUI\Interfaces\Users\User|null $User
      * @return UniqueProduct
+     *
+     * @throws QUI\Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function createUniqueProduct($User = null)
     {
@@ -397,6 +407,8 @@ class Model extends QUI\QDOM
      * Return the product priority
      *
      * @return int
+     *
+     * @throws Exception
      */
     public function getPriority()
     {
@@ -407,6 +419,8 @@ class Model extends QUI\QDOM
      * Return the priority field object
      *
      * @return QUI\ERP\Products\Field\Field
+     *
+     * @throws Exception
      */
     public function getPriorityField()
     {
@@ -418,6 +432,8 @@ class Model extends QUI\QDOM
      * It uses the current project
      *
      * @return string
+     *
+     * @throws QUI\Exception
      */
     public function getUrl()
     {
@@ -435,7 +451,7 @@ class Model extends QUI\QDOM
                 ))
             );
 
-            return '/_p/' . $this->getUrlName();
+            return '/_p/'.$this->getUrlName();
         }
 
         $url = $Site->getUrlRewritten(array(
@@ -584,6 +600,8 @@ class Model extends QUI\QDOM
      *
      * @param null|QUI\Interfaces\Users\User $User - optional, default = Nobody
      * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Exception
      */
     public function getPrice($User = null)
     {
@@ -596,6 +614,8 @@ class Model extends QUI\QDOM
      *
      * @param null|QUI\Interfaces\Users\User $User
      * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Exception
      */
     public function getNettoPrice($User = null)
     {
@@ -607,10 +627,12 @@ class Model extends QUI\QDOM
      *
      * @param null $User
      * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Exception
      */
     public function getMinimumPrice($User = null)
     {
-        $cacheName = 'quiqqer/products/' . $this->getId() . '/prices/min';
+        $cacheName = 'quiqqer/products/'.$this->getId().'/prices/min';
 
         try {
             $data     = QUI\Cache\Manager::get($cacheName);
@@ -677,10 +699,12 @@ class Model extends QUI\QDOM
      *
      * @param null $User
      * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Exception
      */
     public function getMaximumPrice($User = null)
     {
-        $cacheName = 'quiqqer/products/' . $this->getId() . '/prices/max';
+        $cacheName = 'quiqqer/products/'.$this->getId().'/prices/max';
 
         try {
             $data     = QUI\Cache\Manager::get($cacheName);
@@ -731,6 +755,8 @@ class Model extends QUI\QDOM
      * Return the attributes
      *
      * @return array
+     *
+     * @throws QUI\Exception
      */
     public function getAttributes()
     {
@@ -804,6 +830,8 @@ class Model extends QUI\QDOM
      * save / update the product data
      *
      * @throws QUI\ERP\Products\Product\Exception
+     * @throws QUI\Permissions\Exception
+     * @throws QUI\Exception
      */
     public function save()
     {
@@ -816,6 +844,8 @@ class Model extends QUI\QDOM
      * @param array $fieldData - field data
      *
      * @throws QUI\Permissions\Exception
+     * @throws QUI\Exception
+     * @throws Exception
      */
     protected function productSave($fieldData)
     {
@@ -847,7 +877,7 @@ class Model extends QUI\QDOM
             )),
             '',
             array(
-                'categories'  => ',' . implode(',', $categoryIds) . ',',
+                'categories'  => ','.implode(',', $categoryIds).',',
                 'category'    => $mainCategory,
                 'fieldData'   => json_encode($fieldData),
                 'permissions' => json_encode($this->permissions),
@@ -861,7 +891,7 @@ class Model extends QUI\QDOM
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             array(
-                'categories'  => ',' . implode(',', $categoryIds) . ',',
+                'categories'  => ','.implode(',', $categoryIds).',',
                 'category'    => $mainCategory,
                 'fieldData'   => json_encode($fieldData),
                 'permissions' => json_encode($this->permissions),
@@ -873,7 +903,7 @@ class Model extends QUI\QDOM
 
         $this->updateCache();
 
-        QUI\Cache\Manager::clear('quiqqer/products/' . $this->getId());
+        QUI\Cache\Manager::clear('quiqqer/products/'.$this->getId());
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', array($this));
     }
@@ -883,6 +913,7 @@ class Model extends QUI\QDOM
      * and check the product fields if the product is active
      *
      * @throws QUI\ERP\Products\Product\Exception
+     * @throws QUI\Exception
      */
     public function userSave()
     {
@@ -903,6 +934,7 @@ class Model extends QUI\QDOM
      * @return array
      *
      * @throws QUI\ERP\Products\Product\Exception
+     * @throws QUI\Exception
      */
     public function validateFields()
     {
@@ -1005,6 +1037,7 @@ class Model extends QUI\QDOM
             || $Field->isOwnField()
         ) {
             $Field->setUnassignedStatus(false);
+
             return;
         }
 
@@ -1016,6 +1049,7 @@ class Model extends QUI\QDOM
 
             if ($CategoryField) {
                 $Field->setUnassignedStatus(false);
+
                 return;
             }
         }
@@ -1094,6 +1128,7 @@ class Model extends QUI\QDOM
      * Write cache entry for product for specific language
      *
      * @param string $lang
+     * @throws QUI\Exception
      */
     protected function writeCacheEntry($lang)
     {
@@ -1128,7 +1163,7 @@ class Model extends QUI\QDOM
         if (isset($permissions['permission.viewable'])
             && !empty($permissions['permission.viewable'])
         ) {
-            $viewPermissions = ',' . $permissions['permission.viewable'] . ',';
+            $viewPermissions = ','.$permissions['permission.viewable'].',';
         }
 
         $data['viewUsersGroups'] = $viewPermissions;
@@ -1144,7 +1179,7 @@ class Model extends QUI\QDOM
                 $catIds[] = $Category->getId();
             }
 
-            $data['category'] = ',' . implode(',', $catIds) . ',';
+            $data['category'] = ','.implode(',', $catIds).',';
         } else {
             $data['category'] = null;
         }
@@ -1208,6 +1243,8 @@ class Model extends QUI\QDOM
 
     /**
      * delete the complete product
+     *
+     * @throws QUI\Exception
      */
     public function delete()
     {
@@ -1293,6 +1330,7 @@ class Model extends QUI\QDOM
      *
      * @param integer $fieldId
      * @return QUI\ERP\Products\Field\Field
+     *
      * @throws QUI\ERP\Products\Product\Exception
      */
     public function getField($fieldId)
@@ -1353,7 +1391,9 @@ class Model extends QUI\QDOM
     /**
      * @param $fieldId
      * @return array
+     *
      * @throws Exception
+     * @throws QUI\Exception
      */
     public function getFieldSource($fieldId)
     {
@@ -1377,7 +1417,7 @@ class Model extends QUI\QDOM
             'where' => array(
                 'fields' => array(
                     'type'  => '%LIKE%',
-                    'value' => '"id":' . $Field->getId() . ','
+                    'value' => '"id":'.$Field->getId().','
                 )
             )
         ));
@@ -1389,6 +1429,7 @@ class Model extends QUI\QDOM
                     return true;
                 }
             }
+
             return false;
         };
 
@@ -1573,6 +1614,8 @@ class Model extends QUI\QDOM
 
     /**
      * Deactivate the product
+     *
+     * @throws QUI\Exception
      */
     public function deactivate()
     {
@@ -1600,7 +1643,9 @@ class Model extends QUI\QDOM
     /**
      * Activate the product
      *
-     * @throws QUI\ERP\Products\Product\Exception|QUI\Permissions\Exception
+     * @throws QUI\ERP\Products\Product\Exception
+     * @throws QUI\Permissions\Exception
+     * @throws QUI\Exception
      */
     public function activate()
     {

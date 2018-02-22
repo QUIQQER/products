@@ -38,14 +38,13 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
             return '';
         }
 
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
-        $current  = QUI::getLocale()->getCurrent();
+        $current = QUI::getLocale()->getCurrent();
 
         $id      = $this->getId();
         $value   = $this->getValue();
         $options = $this->getOptions();
 
-        $name    = 'field-' . $id;
+        $name    = 'field-'.$id;
         $entries = array();
 
         if (isset($options['entries'])) {
@@ -56,8 +55,16 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
             $value = '';
         }
 
-        $value  = htmlspecialchars($value);
-        $Engine = QUI::getTemplateManager()->getEngine();
+        $value = htmlspecialchars($value);
+
+        try {
+            $Engine = QUI::getTemplateManager()->getEngine();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return '';
+        }
+
 
         $Engine->assign(array(
             'this'  => $this,
@@ -68,7 +75,7 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
         ));
 
         // options
-        $currentLC = strtolower($current) . '_' . strtoupper($current);
+        $currentLC = strtolower($current).'_'.strtoupper($current);
 
         $option = $entries[$value];
         $title  = $option['title'];
@@ -84,6 +91,6 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
 
         $Engine->assign('valueText', $text);
 
-        return $Engine->fetch(dirname(__FILE__) . '/ProductAttributeListBackendView.html');
+        return $Engine->fetch(dirname(__FILE__).'/ProductAttributeListBackendView.html');
     }
 }

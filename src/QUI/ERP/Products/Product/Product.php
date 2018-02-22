@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Product\Product
  */
+
 namespace QUI\ERP\Products\Product;
 
 use QUI;
@@ -25,11 +26,14 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      * Add a field to the product
      *
      * @param Field $Field
+     *
+     * @throws QUI\ERP\Products\Field\Exception
      */
     public function addField(Field $Field)
     {
         if (!isset($this->fields[$Field->getId()])) {
             $this->fields[$Field->getId()] = $Field;
+
             return;
         }
 
@@ -50,6 +54,8 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      * This field is explicit added to the product
      *
      * @param QUI\ERP\Products\Field\Field $Field
+     *
+     * @throws QUI\ERP\Products\Field\Exception
      */
     public function addOwnField(QUI\ERP\Products\Field\Field $Field)
     {
@@ -108,6 +114,9 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      * Set the product priority
      *
      * @param integer $priority
+     *
+     * @throws QUI\ERP\Products\Field\Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function setPriority($priority)
     {
@@ -120,6 +129,8 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      * @param string $permission
      * @param string $ugString - user group string
      * @param QUI\Interfaces\Users\User $User - optional
+     *
+     * @throws QUI\Permissions\Exception
      */
     public function setPermission($permission, $ugString = '', $User = null)
     {
@@ -142,6 +153,8 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      *
      * @param array $permissions - ist of permissions
      * @param QUI\Interfaces\Users\User $User - optional
+     *
+     * @throws QUI\Permissions\Exception
      */
     public function setPermissions($permissions, $User = null)
     {

@@ -234,7 +234,11 @@ class ProductList
 
     /**
      * Add a product to the list
+     *
      * @param QUI\ERP\Products\Interfaces\ProductInterface $Product
+     *
+     * @throws QUI\Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function addProduct(QUI\ERP\Products\Interfaces\ProductInterface $Product)
     {
@@ -270,6 +274,8 @@ class ProductList
      * Return the products as array list
      *
      * @return array
+     *
+     * @throws QUI\Exception
      */
     public function toArray()
     {
@@ -313,6 +319,8 @@ class ProductList
      * Return the products as json notation
      *
      * @return string
+     *
+     * @throws QUI\Exception
      */
     public function toJSON()
     {
@@ -353,6 +361,7 @@ class ProductList
      * Return the product list view for the frontend
      *
      * @return ProductListFrontendView|ProductListBackendView
+     * @throws QUI\Exception
      */
     public function getView()
     {
@@ -371,6 +380,7 @@ class ProductList
      * Return the product list view for the frontend
      *
      * @return ProductListFrontendView
+     * @throws QUI\Exception
      */
     public function getFrontendView()
     {
@@ -379,6 +389,7 @@ class ProductList
 
     /**
      * @return ProductListBackendView
+     * @throws QUI\Exception
      */
     public function getBackendView()
     {

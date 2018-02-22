@@ -39,6 +39,10 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             return '';
         }
 
+        if ($this->isChangeable() === false) {
+            return $this->notChangeableDisplay();
+        }
+
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
         $current  = QUI::getLocale()->getCurrent();
 
@@ -46,7 +50,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         $value   = $this->getValue();
         $options = $this->getOptions();
 
-        $name    = 'field-' . $id;
+        $name    = 'field-'.$id;
         $entries = array();
 
         if (isset($options['entries'])) {
@@ -72,8 +76,15 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $value = '';
         }
 
-        $value  = htmlspecialchars($value);
-        $Engine = QUI::getTemplateManager()->getEngine();
+        $value = htmlspecialchars($value);
+
+        try {
+            $Engine = QUI::getTemplateManager()->getEngine();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return '';
+        }
 
         $Engine->assign(array(
             'this'          => $this,
@@ -93,6 +104,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                     return true;
                 }
             }
+
             return false;
         };
 
@@ -108,7 +120,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             );
         }
 
-        $currentLC = strtolower($current) . '_' . strtoupper($current);
+        $currentLC = strtolower($current).'_'.strtoupper($current);
         $Calc      = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
         foreach ($entries as $key => $option) {
@@ -144,7 +156,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                 switch ($option['type']) {
                     case 'percent': // fallback fix
                     case ErpCalc::CALCULATION_PERCENTAGE:
-                        $discount = $option['sum'] . '%';
+                        $discount = $option['sum'].'%';
                         break;
 
                     case ErpCalc::CALCULATION_COMPLEMENT:
@@ -155,7 +167,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                         break;
                 }
 
-                $text .= ' (+' . $discount . ')';
+                $text .= ' (+'.$discount.')';
             }
 
             $options[] = array(
@@ -169,6 +181,67 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
         $Engine->assign('options', $options);
 
-        return $Engine->fetch(dirname(__FILE__) . '/ProductAttributeListFrontendView.html');
+        return $Engine->fetch(dirname(__FILE__).'/ProductAttributeListFrontendView.html');
+    }
+
+    /**
+     * @return string
+     */
+    protected function notChangeableDisplay()
+    {
+        $current = QUI::getLocale()->getCurrent();
+
+        $id      = $this->getId();
+        $value   = $this->getValue();
+        $options = $this->getOptions();
+
+        $name    = 'field-'.$id;
+        $entries = array();
+
+        if (isset($options['entries'])) {
+            $entries = $options['entries'];
+        }
+
+        if (!is_string($value) && !is_numeric($value)) {
+            $value = '';
+        }
+
+        $value = htmlspecialchars($value);
+
+        try {
+            $Engine = QUI::getTemplateManager()->getEngine();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return '';
+        }
+
+
+        $Engine->assign(array(
+            'this'  => $this,
+            'id'    => $id,
+            'title' => $this->getTitle(),
+            'name'  => $name,
+            'value' => $value
+        ));
+
+        // options
+        $currentLC = strtolower($current).'_'.strtoupper($current);
+
+        $option = $entries[$value];
+        $title  = $option['title'];
+        $text   = '';
+
+        if (is_string($title)) {
+            $text = $title;
+        } elseif (isset($title[$current])) {
+            $text = $title[$current];
+        } elseif (isset($title[$currentLC])) {
+            $text = $title[$currentLC];
+        }
+
+        $Engine->assign('valueText', $text);
+
+        return $Engine->fetch(dirname(__FILE__).'/ProductAttributeListFrontendViewNotChangeable.html');
     }
 }
