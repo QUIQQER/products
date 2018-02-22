@@ -234,7 +234,11 @@ class ProductList
 
     /**
      * Add a product to the list
+     *
      * @param QUI\ERP\Products\Interfaces\ProductInterface $Product
+     *
+     * @throws QUI\Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function addProduct(QUI\ERP\Products\Interfaces\ProductInterface $Product)
     {

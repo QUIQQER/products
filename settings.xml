@@ -50,7 +50,7 @@
             </params>
 
             <categories>
-                <category name="products" index="1">
+                <category name="products" index="2">
                     <text>
                         <locale group="quiqqer/products" var="menu.erp.products.products.title"/>
                     </text>

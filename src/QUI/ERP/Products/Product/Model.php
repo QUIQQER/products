@@ -1330,6 +1330,7 @@ class Model extends QUI\QDOM
      *
      * @param integer $fieldId
      * @return QUI\ERP\Products\Field\Field
+     *
      * @throws QUI\ERP\Products\Product\Exception
      */
     public function getField($fieldId)

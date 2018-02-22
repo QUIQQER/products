@@ -850,11 +850,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * Return the unique product as an ERP Article
      *
      * @param null|QUI\Locale $Locale
+     * @param bool $fieldsAreChangeable - default = true
+     *
      * @return QUI\ERP\Accounting\Article
      *
      * @throws QUI\Users\Exception
      */
-    public function toArticle($Locale = null)
+    public function toArticle($Locale = null, $fieldsAreChangeable = true)
     {
         if (!$Locale) {
             $Locale = QUI\ERP\Products\Handler\Products::getLocale();
@@ -868,7 +870,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
             foreach ($fields as $Field) {
-                $description .= '<li>'.$Field->getView()->create().'</li>';
+                $Field = $Field->getView();
+
+                if ($fieldsAreChangeable === false) {
+                    $Field->setChangeableStatus(false);
+                }
+
+                $description .= '<li>'.$Field->create().'</li>';
             }
 
             $description .= '</ul>';
