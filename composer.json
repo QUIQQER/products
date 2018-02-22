@@ -26,6 +26,7 @@
     "quiqqer\/discount": ">=0.9|dev-master|dev-dev",
     "quiqqer\/pace": "1.*|dev-master|dev-dev",
     "quiqqer\/slider": ">=0.9|dev-master|dev-dev",
+    "quiqqer\/tags": ">=1.*|0.*|dev-master|dev-dev",
     "quiqqer\/utils": ">=1.6|dev-master|dev-dev",
     "quiqqer\/watcher": ">=0.12|dev-master|dev-dev",
     "quiqqer\/translator": "1.*|dev-master|dev-dev",
