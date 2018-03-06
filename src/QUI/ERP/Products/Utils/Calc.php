@@ -170,6 +170,8 @@ class Calc
      * @param ProductList $List
      * @param callable|boolean $callback - optional, callback function for the data array
      * @return ProductList
+     *
+     * @throws QUI\Exception
      */
     public function calcProductList(ProductList $List, $callback = false)
     {
@@ -189,7 +191,7 @@ class Calc
 
         $subSum   = 0;
         $nettoSum = 0;
-        $vatArray = array();
+        $vatArray = [];
 
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
@@ -197,7 +199,7 @@ class Calc
             try {
                 QUI::getEvents()->fireEvent(
                     'onQuiqqerProductsCalcListProduct',
-                    array($this, $Product)
+                    [$this, $Product]
                 );
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_ERROR);
@@ -227,7 +229,7 @@ class Calc
         try {
             QUI::getEvents()->fireEvent(
                 'onQuiqqerProductsCalcList',
-                array($this, $List, $nettoSum)
+                [$this, $List, $nettoSum]
             );
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_ERROR);
@@ -288,10 +290,10 @@ class Calc
             $PriceFactor->setBruttoSum($this, $vatSum + $PriceFactor->getNettoSum());
 
             if (!isset($vatArray[$vat])) {
-                $vatArray[$vat] = array(
+                $vatArray[$vat] = [
                     'vat'  => $vat,
                     'text' => ErpCalc::getVatText($Vat->getValue(), $this->getUser())
-                );
+                ];
 
                 $vatArray[$vat]['sum'] = 0;
             }
@@ -300,8 +302,8 @@ class Calc
         }
 
         // vat text
-        $vatLists  = array();
-        $vatText   = array();
+        $vatLists  = [];
+        $vatText   = [];
         $bruttoSum = $nettoSum;
 
         foreach ($vatArray as $vatEntry) {
@@ -315,11 +317,11 @@ class Calc
         }
 
         if ($this->ignoreVatCalculation) {
-            $vatArray = array();
-            $vatText  = array();
+            $vatArray = [];
+            $vatText  = [];
         }
 
-        $callback(array(
+        $callback([
             'sum'          => $bruttoSum,
             'subSum'       => $subSum,
             'nettoSum'     => $nettoSum,
@@ -329,7 +331,7 @@ class Calc
             'isEuVat'      => $isEuVatUser,
             'isNetto'      => $isNetto,
             'currencyData' => $this->getCurrency()->toArray()
-        ));
+        ]);
 
         return $List;
     }
@@ -341,6 +343,9 @@ class Calc
      * @param UniqueProduct $Product
      * @param callable|boolean $callback - optional, callback function for the calculated data array
      * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Users\Exception
+     * @throws QUI\Exception
      */
     public function getProductPrice(UniqueProduct $Product, $callback = false)
     {
@@ -358,9 +363,9 @@ class Calc
         $nettoPrice   = $Product->getNettoPrice()->getNetto();
         $priceFactors = $Product->getPriceFactors()->sort();
 
-        $factors                    = array();
+        $factors                    = [];
         $basisNettoPrice            = $nettoPrice;
-        $calculationBasisBruttoList = array();
+        $calculationBasisBruttoList = [];
 
         /* @var PriceFactor $PriceFactor */
         foreach ($priceFactors as $PriceFactor) {
@@ -471,11 +476,11 @@ class Calc
         $sum        = $isNetto ? $nettoSum : $bruttoSum;
         $basisPrice = $isNetto ? $basisNettoPrice : $basisNettoPrice + ($basisNettoPrice * $Vat->getValue() / 100);
 
-        $vatArray = array(
+        $vatArray = [
             'vat'  => $Vat->getValue(),
             'sum'  => $this->round($nettoSum * ($Vat->getValue() / 100)),
             'text' => ErpCalc::getVatText($Vat->getValue(), $this->getUser())
-        );
+        ];
 
 
         QUI\ERP\Debug::getInstance()->log(
@@ -483,7 +488,7 @@ class Calc
             'quiqqer/products'
         );
 
-        QUI\ERP\Debug::getInstance()->log(array(
+        QUI\ERP\Debug::getInstance()->log([
             'basisPrice'   => $basisPrice,
             'price'        => $price,
             'sum'          => $sum,
@@ -494,10 +499,10 @@ class Calc
             'isNetto'      => $isNetto,
             'currencyData' => $this->getCurrency()->toArray(),
             'factors'      => $factors
-        ), 'quiqqer/products');
+        ], 'quiqqer/products');
 
 
-        $callback(array(
+        $callback([
             'basisPrice'   => $basisPrice,
             'price'        => $price,
             'sum'          => $sum,
@@ -509,7 +514,7 @@ class Calc
             'isNetto'      => $isNetto,
             'currencyData' => $this->getCurrency()->toArray(),
             'factors'      => $factors
-        ));
+        ]);
 
         return $Product->getPrice();
     }
@@ -530,6 +535,8 @@ class Calc
      *
      * @param int|double|float $nettoPrice - netto price
      * @return int|double|float
+     *
+     * @throws QUI\Exception
      */
     public function getPrice($nettoPrice)
     {
@@ -553,6 +560,8 @@ class Calc
      * Return the tax message for an user
      *
      * @return string
+     *
+     * @throws QUI\Exception
      */
     public function getVatTextByUser()
     {
