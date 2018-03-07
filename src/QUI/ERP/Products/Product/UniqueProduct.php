@@ -887,7 +887,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             'articleNo'   => $this->getFieldValue(Fields::FIELD_PRODUCT_NO),
             'title'       => $this->getTitle($Locale),
             'description' => $description,
-            'unitPrice'   => $this->getUnitPrice()->getNetto(),
+            'unitPrice'   => $this->getUnitPrice()->value(),
             'quantity'    => $this->getQuantity()
         ));
     }

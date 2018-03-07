@@ -360,7 +360,7 @@ class Calc
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
         $Area        = QUI\ERP\Utils\User::getUserArea($this->getUser());
 
-        $nettoPrice   = $Product->getNettoPrice()->getNetto();
+        $nettoPrice   = $Product->getNettoPrice()->value();
         $priceFactors = $Product->getPriceFactors()->sort();
 
         $factors                    = [];
