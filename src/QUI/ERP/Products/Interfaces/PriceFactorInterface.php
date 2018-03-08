@@ -131,17 +131,17 @@ interface PriceFactorInterface
      *
      * @param int|double|float $sum - sum
      */
-    public function setBruttoSum($sum);
+    public function setSum($sum);
 
     /**
      * @return bool|int|float|double
      */
-    public function getBruttoSum();
+    public function getSum();
 
     /**
      * @return string
      */
-    public function getBruttoSumFormatted();
+    public function getSumFormatted();
 
     /**
      * Returns the price factor as an array

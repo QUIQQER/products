@@ -288,7 +288,11 @@ class Calc
             $vatSum  = $PriceFactor->getNettoSum() * ($Vat->getValue() / 100);
             $vat     = $Vat->getValue();
 
-            $PriceFactor->setBruttoSum($vatSum + $PriceFactor->getNettoSum());
+            if ($isNetto) {
+                $PriceFactor->setSum($PriceFactor->getNettoSum());
+            } else {
+                $PriceFactor->setSum($vatSum + $PriceFactor->getNettoSum());
+            }
 
             if (!isset($vatArray[$vat])) {
                 $vatArray[$vat] = [
@@ -320,6 +324,30 @@ class Calc
         if ($this->ignoreVatCalculation) {
             $vatArray = [];
             $vatText  = [];
+        }
+
+        // gegenrechnung, wegen rundungsfehler
+        if ($isNetto === false) {
+            $priceFactorBruttoSums = 0;
+
+            foreach ($priceFactors as $Factor) {
+                /* @var $Factor QUI\ERP\Products\Utils\PriceFactor */
+                $priceFactorBruttoSums = $priceFactorBruttoSums + round($Factor->getSum(), 2);
+            }
+
+            $priceFactorBruttoSum = $subSum + $priceFactorBruttoSums;
+
+            if ($priceFactorBruttoSum !== round($bruttoSum, 2)) {
+                $diff = $priceFactorBruttoSum - round($bruttoSum, 2);
+
+                // if we have a diff, we change the first vat price factor
+                foreach ($priceFactors as $Factor) {
+                    if ($Factor instanceof QUI\ERP\Products\Interfaces\PriceFactorWithVatInterface) {
+                        $Factor->setSum(round($Factor->getSum() - $diff, 2));
+                        break;
+                    }
+                }
+            }
         }
 
         $callback([

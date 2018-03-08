@@ -42,19 +42,24 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     protected $value = 0;
 
     /**
-     * @var bool|integer|double|float
+     * @var int|float|double
      */
-    protected $nettoSum = false;
+    protected $sum = 0;
 
     /**
-     * @var bool
+     * @var integer|double|float
      */
-    protected $bruttoSum = false;
+    protected $nettoSum = 0;
 
     /**
-     * @var bool|integer|double|float
+     * @var integer|double|float
      */
-    protected $calculatedSum = false;
+    protected $bruttoSum = 0;
+
+    /**
+     * @var integer|double|float
+     */
+    protected $calculatedSum = 0;
 
     /**
      * @var string
@@ -62,7 +67,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     protected $valueText = false;
 
     /**
-     * Is the pricefactor visible
+     * Is the price factor visible
      *
      * @var bool
      */
@@ -185,6 +190,10 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     }
 
     /**
+     * Return the value type
+     * it can be 10% => 10
+     * it can be 10€ => 10
+     *
      * @return integer|float|double
      */
     public function getValue()
@@ -193,6 +202,9 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     }
 
     /**
+     * Return the text for the value type
+     * (Return the prefix text)
+     *
      * @return string
      */
     public function getValueText()
@@ -206,7 +218,22 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             return $this->valueText;
         }
 
-        return $this->getBruttoSumFormatted();
+        if ($this->value == 0) {
+            return '';
+        }
+
+        switch ($this->calculation) {
+            default:
+            case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
+                if ($this->value > 0) {
+                    return '+'.$this->getSumFormatted();
+                }
+
+                return Currencies::getDefaultCurrency()->format($this->value);
+
+            case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
+                return $this->value.'%';
+        }
     }
 
     /**
@@ -318,7 +345,58 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
 
     /**
-     * Set the calculated sum (brutto)
+     * Set the sum for the display
+     *
+     * @param int|double|float $sum - sum
+     */
+    public function setSum($sum)
+    {
+        if (is_numeric($sum)) {
+            $this->sum = $sum;
+        }
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getSum()
+    {
+        return $this->sum;
+    }
+
+    /**
+     * @return float|int|string
+     */
+    public function getSumFormatted()
+    {
+        $sum = $this->getSum();
+
+        if ($sum == 0) {
+            return '';
+        }
+
+        switch ($this->calculation) {
+            default:
+            case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
+                if ($sum > 0) {
+                    return '+'.Currencies::getDefaultCurrency()->format($sum);
+                }
+
+                return Currencies::getDefaultCurrency()->format($sum);
+
+            case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
+                if ($this->getSum()) {
+                    $sum = Currencies::getDefaultCurrency()->format($sum);
+
+                    return $sum;
+                }
+
+                return $this->value.'%';
+        }
+    }
+
+    /**
+     * Set the netto sum
      *
      * @param int|double|float $sum - sum
      */
@@ -367,59 +445,59 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
                 return $this->value.'%';
         }
     }
-
-    /**
-     * @return string
-     */
-    public function getBruttoSumFormatted()
-    {
-        if (!$this->bruttoSum) {
-            return $this->getNettoSumFormatted();
-        }
-
-        $sum = $this->getBruttoSum();
-
-        if ($sum == 0) {
-            return '';
-        }
-
-        switch ($this->calculation) {
-            default:
-            case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
-                if ($sum > 0) {
-                    return '+'.Currencies::getDefaultCurrency()->format($sum);
-                }
-
-                return Currencies::getDefaultCurrency()->format($sum);
-
-            case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
-                if ($this->getNettoSum()) {
-                    return Currencies::getDefaultCurrency()->format($sum);
-                }
-
-                return $this->value.'%';
-        }
-    }
-
-    /**
-     * Set the calculated sum (brutto)
-     *
-     * @param int|double|float $sum - sum
-     */
-    public function setBruttoSum($sum)
-    {
-        if (is_numeric($sum)) {
-            $this->bruttoSum = $sum;
-        }
-    }
-
-    /**
-     * @return bool|int|float|double
-     */
-    public function getBruttoSum()
-    {
-        return $this->bruttoSum;
-    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function getBruttoSumFormatted()
+//    {
+//        if (!$this->bruttoSum) {
+//            return $this->getNettoSumFormatted();
+//        }
+//
+//        $sum = $this->getBruttoSum();
+//
+//        if ($sum == 0) {
+//            return '';
+//        }
+//
+//        switch ($this->calculation) {
+//            default:
+//            case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
+//                if ($sum > 0) {
+//                    return '+'.Currencies::getDefaultCurrency()->format($sum);
+//                }
+//
+//                return Currencies::getDefaultCurrency()->format($sum);
+//
+//            case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
+//                if ($this->getNettoSum()) {
+//                    return Currencies::getDefaultCurrency()->format($sum);
+//                }
+//
+//                return $this->value.'%';
+//        }
+//    }
+//
+//    /**
+//     * Set the calculated sum (brutto)
+//     *
+//     * @param int|double|float $sum - sum
+//     */
+//    public function setBruttoSum($sum)
+//    {
+//        if (is_numeric($sum)) {
+//            $this->bruttoSum = $sum;
+//        }
+//    }
+//
+//    /**
+//     * @return bool|int|float|double
+//     */
+//    public function getBruttoSum()
+//    {
+//        return $this->bruttoSum;
+//    }
 
     /**
      * Returns the price factor as an array
@@ -433,6 +511,8 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             'description'       => $this->getDescription(),
             'calculation'       => $this->getCalculation(),
             'calculation_basis' => $this->getCalculationBasis(),
+            'nettoSum'          => $this->getNettoSum(),
+            'nettoSumFormatted' => $this->getNettoSumFormatted(),
             'value'             => $this->getValue(),
             'valueText'         => $this->getValueText(),
             'priority'          => $this->getPriority(),

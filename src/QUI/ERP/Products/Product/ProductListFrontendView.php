@@ -19,7 +19,7 @@ class ProductListFrontendView
     /**
      * @var array
      */
-    protected $data = array();
+    protected $data = [];
 
     /**
      * @var ProductList
@@ -54,14 +54,14 @@ class ProductListFrontendView
     {
         $list     = $this->ProductList->toArray();
         $products = $this->ProductList->getProducts();
-        $User     = $this->ProductList->getUser();
-        $isNetto  = QUI\ERP\Utils\User::isNettoUser($User);
+//        $User     = $this->ProductList->getUser();
+        //$isNetto  = QUI\ERP\Utils\User::isNettoUser($User);
 
         $Locale   = $this->ProductList->getUser()->getLocale();
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
         $Currency->setLocale($Locale);
 
-        $productList = array();
+        $productList = [];
         $hidePrice   = QUI\ERP\Products\Utils\Package::hidePrice();
 
         /* @var $Product UniqueProduct */
@@ -70,10 +70,10 @@ class ProductListFrontendView
             $fields       = $Product->getFields();
             $PriceFactors = $Product->getPriceFactors();
 
-            $product = array(
-                'fields'   => array(),
-                'vatArray' => array(),
-            );
+            $product = [
+                'fields'   => [],
+                'vatArray' => [],
+            ];
 
             /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             foreach ($fields as $Field) {
@@ -94,7 +94,7 @@ class ProductListFrontendView
             $product['description'] = $attributes['description'];
             $product['image']       = $attributes['image'];
             $product['quantity']    = $attributes['quantity'];
-            $product['attributes']  = array();
+            $product['attributes']  = [];
 
 
             $calculatedSum = $attributes['calculated_vatArray']['sum'];
@@ -116,35 +116,35 @@ class ProductListFrontendView
                 }
 
                 if ($hidePrice) {
-                    $product['attributes'][] = array(
+                    $product['attributes'][] = [
                         'title'     => $Factor->getTitle(),
                         'value'     => '',
                         'valueText' => $Factor->getValueText(),
-                    );
+                    ];
                     continue;
                 }
 
-                $product['attributes'][] = array(
+                $product['attributes'][] = [
                     'title'     => $Factor->getTitle(),
-                    'value'     => $isNetto ? $Factor->getNettoSumFormatted() : $Factor->getBruttoSumFormatted(),
-                    'valueText' => $Factor->getValueText(),
-                );
+                    'value'     => $Factor->getSumFormatted(),
+                    'valueText' => $Factor->getValueText()
+                ];
             }
 
             $productList[] = $product;
         }
 
         // result
-        $result = array(
-            'attributes' => array(),
-            'vat'        => array(),
-        );
+        $result = [
+            'attributes' => [],
+            'vat'        => [],
+        ];
 
         foreach ($list['vatArray'] as $key => $entry) {
-            $result['vat'][] = array(
+            $result['vat'][] = [
                 'text'  => $list['vatText'][$key],
                 'value' => $hidePrice ? '' : $Currency->format($entry['sum']),
-            );
+            ];
         }
 
         /* @var $Factor QUI\ERP\Products\Utils\PriceFactor */
@@ -154,19 +154,19 @@ class ProductListFrontendView
             }
 
             if ($hidePrice) {
-                $product['attributes'][] = array(
+                $product['attributes'][] = [
                     'title'     => $Factor->getTitle(),
                     'value'     => '',
                     'valueText' => $Factor->getValueText(),
-                );
+                ];
                 continue;
             }
 
-            $result['attributes'][] = array(
+            $result['attributes'][] = [
                 'title'     => $Factor->getTitle(),
-                'value'     => $isNetto ? $Factor->getNettoSumFormatted() : $Factor->getBruttoSumFormatted(),
-                'valueText' => $Factor->getValueText(),
-            );
+                'value'     => $Factor->getSumFormatted(),
+                'valueText' => $Factor->getValueText()
+            ];
         }
 
         $result['products']    = $productList;
@@ -323,12 +323,12 @@ class ProductListFrontendView
             $style .= '</style>';
         }
 
-        $Engine->assign(array(
+        $Engine->assign([
             'this'      => $this,
             'data'      => $this->data,
             'style'     => $style,
             'hidePrice' => $this->isPriceHidden(),
-        ));
+        ]);
 
         return $Engine->fetch(dirname(__FILE__).'/ProductListView.html');
     }
