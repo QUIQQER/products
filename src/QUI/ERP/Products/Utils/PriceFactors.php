@@ -203,19 +203,24 @@ class PriceFactors
             $end = $list['end'];
         }
 
-        QUI\System\Log::writeRecursive('######### import ');
-        QUI\System\Log::writeRecursive($list);
+        $getFactor = function ($attributes) {
+            if (isset($attributes['class']) && class_exists($attributes['class'])) {
+                return new $attributes['class']($attributes);
+            }
+
+            return new PriceFactor($attributes);
+        };
 
         foreach ($beginning as $priceFactor) {
-            $this->listBeginning[] = new PriceFactor($priceFactor);
+            $this->listBeginning[] = $getFactor($priceFactor);
         }
 
         foreach ($middle as $priceFactor) {
-            $this->list[] = new PriceFactor($priceFactor);
+            $this->list[] = $getFactor($priceFactor);
         }
 
         foreach ($end as $priceFactor) {
-            $this->listEnd[] = new PriceFactor($priceFactor);
+            $this->listEnd[] = $getFactor($priceFactor);
         }
 
         $this->sort();
