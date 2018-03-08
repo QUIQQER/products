@@ -79,13 +79,13 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      *
      * @var int
      */
-    protected $basis = Calc::CALCULATION_BASIS_NETTO;
+    protected $basis = QUI\ERP\Accounting\Calc::CALCULATION_BASIS_NETTO;
 
     /**
      * Percent or complement?
      * @var int
      */
-    protected $calculation = Calc::CALCULATION_COMPLEMENT;
+    protected $calculation = QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT;
 
     /**
      * PriceFactor constructor.
@@ -101,7 +101,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      *      'visible' => true
      * )
      */
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
         if (isset($params['title'])) {
             $this->setTitle($params['title']);
@@ -121,6 +121,10 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
 
         if (isset($params['basis'])) {
             $this->setCalculationBasis($params['basis']);
+        }
+
+        if (isset($params['calculation_basis'])) {
+            $this->setCalculationBasis($params['calculation_basis']);
         }
 
         if (isset($params['value'])) {
@@ -285,8 +289,8 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
         $calculation = (int)$calculation;
 
         switch ($calculation) {
-            case Calc::CALCULATION_COMPLEMENT:
-            case Calc::CALCULATION_PERCENTAGE:
+            case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
+            case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
                 $this->calculation = $calculation;
                 break;
         }
@@ -302,8 +306,8 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     public function setCalculationBasis($basis)
     {
         switch ($basis) {
-            case Calc::CALCULATION_BASIS_NETTO:
-            case Calc::CALCULATION_BASIS_CURRENTPRICE:
+            case QUI\ERP\Accounting\Calc::CALCULATION_BASIS_NETTO:
+            case QUI\ERP\Accounting\Calc::CALCULATION_BASIS_CURRENTPRICE:
                 $this->basis = $basis;
                 break;
         }
@@ -316,10 +320,9 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * Set the calculated sum (brutto)
      *
-     * @param Calc $Calc - calculation object
      * @param int|double|float $sum - sum
      */
-    public function setNettoSum(Calc $Calc, $sum)
+    public function setNettoSum($sum)
     {
         if (is_numeric($sum)) {
             $this->nettoSum = $sum;
@@ -347,14 +350,14 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
 
         switch ($this->calculation) {
             default:
-            case Calc::CALCULATION_COMPLEMENT:
+            case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
                 if ($sum > 0) {
                     return '+'.Currencies::getDefaultCurrency()->format($sum);
                 }
 
                 return Currencies::getDefaultCurrency()->format($sum);
 
-            case Calc::CALCULATION_PERCENTAGE:
+            case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
                 if ($this->getNettoSum()) {
                     $sum = Currencies::getDefaultCurrency()->format($sum);
 
@@ -382,14 +385,14 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
 
         switch ($this->calculation) {
             default:
-            case Calc::CALCULATION_COMPLEMENT:
+            case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
                 if ($sum > 0) {
                     return '+'.Currencies::getDefaultCurrency()->format($sum);
                 }
 
                 return Currencies::getDefaultCurrency()->format($sum);
 
-            case Calc::CALCULATION_PERCENTAGE:
+            case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
                 if ($this->getNettoSum()) {
                     return Currencies::getDefaultCurrency()->format($sum);
                 }
@@ -401,10 +404,9 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * Set the calculated sum (brutto)
      *
-     * @param Calc $Calc - calculation object
      * @param int|double|float $sum - sum
      */
-    public function setBruttoSum(Calc $Calc, $sum)
+    public function setBruttoSum($sum)
     {
         if (is_numeric($sum)) {
             $this->bruttoSum = $sum;
@@ -426,7 +428,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function toArray()
     {
-        return array(
+        return [
             'title'             => $this->getTitle(),
             'description'       => $this->getDescription(),
             'calculation'       => $this->getCalculation(),
@@ -434,7 +436,8 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             'value'             => $this->getValue(),
             'valueText'         => $this->getValueText(),
             'priority'          => $this->getPriority(),
-            'visible'           => $this->isVisible()
-        );
+            'visible'           => $this->isVisible(),
+            'class'             => get_class($this)
+        ];
     }
 }

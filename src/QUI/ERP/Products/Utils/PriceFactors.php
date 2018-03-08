@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Utils
  */
+
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
@@ -24,9 +25,9 @@ class PriceFactors
     /**
      * internal list of price factors
      *
-     * @var array
+     * @var QUI\ERP\Products\Interfaces\PriceFactorInterface[]
      */
-    protected $list = array();
+    protected $list = [];
 
     /**
      * internal list of price factors
@@ -34,7 +35,7 @@ class PriceFactors
      *
      * @var array
      */
-    protected $listBeginning = array();
+    protected $listBeginning = [];
 
     /**
      * internal list of price factors
@@ -42,7 +43,7 @@ class PriceFactors
      *
      * @var array
      */
-    protected $listEnd = array();
+    protected $listEnd = [];
 
     /**
      * PriceFactors constructor.
@@ -58,7 +59,12 @@ class PriceFactors
      */
     public function count()
     {
-        return count($this->list);
+        $count = 0;
+        $count = $count + count($this->listBeginning);
+        $count = $count + count($this->list);
+        $count = $count + count($this->listEnd);
+
+        return $count;
     }
 
     /**
@@ -95,7 +101,7 @@ class PriceFactors
      * Return all price factors prioritized
      * and with its position (begin, middle, end)
      *
-     * @return array
+     * @return QUI\ERP\Products\Interfaces\PriceFactorInterface[]
      */
     public function sort()
     {
@@ -114,5 +120,104 @@ class PriceFactors
         usort($this->listEnd, $sort);
 
         return array_merge($this->listBeginning, $this->list, $this->listEnd);
+    }
+
+    /**
+     * @return QUI\ERP\Products\Interfaces\PriceFactorInterface[]
+     */
+    public function getFactors()
+    {
+        return $this->sort();
+    }
+
+    /**
+     * Return the price factor list as an array
+     * This can be imported
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $result = [
+            'beginning' => [],
+            'middle'    => [],
+            'end'       => []
+        ];
+
+        foreach ($this->listBeginning as $PriceFactor) {
+            $result['beginning'][] = $PriceFactor->toArray();
+        }
+
+        foreach ($this->list as $PriceFactor) {
+            $result['middle'][] = $PriceFactor->toArray();
+        }
+
+        foreach ($this->listEnd as $PriceFactor) {
+            $result['end'][] = $PriceFactor->toArray();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return the list in json notation
+     *
+     * @return string
+     */
+    public function toJSON()
+    {
+        return json_encode($this->toArray());
+    }
+
+    /**
+     * Imports a price factor array list
+     *
+     * @param array $list
+     */
+    public function importList($list)
+    {
+        if (!is_array($list)) {
+            return;
+        }
+
+        if (!isset($list['beginning'])
+            && !isset($list['middle'])
+            && !isset($list['end'])
+        ) {
+            return;
+        }
+
+        $beginning = [];
+        $middle    = [];
+        $end       = [];
+
+        if (isset($list['beginning'])) {
+            $beginning = $list['beginning'];
+        }
+
+        if (isset($list['middle'])) {
+            $middle = $list['middle'];
+        }
+
+        if (isset($list['end'])) {
+            $end = $list['end'];
+        }
+
+        QUI\System\Log::writeRecursive('######### import ');
+        QUI\System\Log::writeRecursive($list);
+
+        foreach ($beginning as $priceFactor) {
+            $this->listBeginning[] = new PriceFactor($priceFactor);
+        }
+
+        foreach ($middle as $priceFactor) {
+            $this->list[] = new PriceFactor($priceFactor);
+        }
+
+        foreach ($end as $priceFactor) {
+            $this->listEnd[] = new PriceFactor($priceFactor);
+        }
+
+        $this->sort();
     }
 }

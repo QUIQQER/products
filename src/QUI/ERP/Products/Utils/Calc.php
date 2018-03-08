@@ -7,8 +7,9 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
-use QUI\ERP\Products\Handler\Fields;
 use QUI\Interfaces\Users\User as UserInterface;
+
+use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\ERP\Products\Product\ProductList;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
@@ -248,7 +249,7 @@ class Calc
                     $nettoSum       = $nettoSum + $PriceFactor->getValue();
                     $priceFactorSum = $priceFactorSum + $PriceFactor->getValue();
 
-                    $PriceFactor->setNettoSum($this, $PriceFactor->getValue());
+                    $PriceFactor->setNettoSum($PriceFactor->getValue());
                     break;
 
                 // Prozent Angabe
@@ -265,7 +266,7 @@ class Calc
                             break;
                     }
 
-                    $PriceFactor->setNettoSum($this, $percentage);
+                    $PriceFactor->setNettoSum($percentage);
 
                     $nettoSum       = $this->round($nettoSum + $percentage);
                     $priceFactorSum = $priceFactorSum + $percentage;
@@ -287,7 +288,7 @@ class Calc
             $vatSum  = $PriceFactor->getNettoSum() * ($Vat->getValue() / 100);
             $vat     = $Vat->getValue();
 
-            $PriceFactor->setBruttoSum($this, $vatSum + $PriceFactor->getNettoSum());
+            $PriceFactor->setBruttoSum($vatSum + $PriceFactor->getNettoSum());
 
             if (!isset($vatArray[$vat])) {
                 $vatArray[$vat] = [
@@ -395,7 +396,7 @@ class Calc
                     }
             }
 
-            $PriceFactor->setNettoSum($this, $priceFactorSum * $Product->getQuantity());
+            $PriceFactor->setNettoSum($priceFactorSum * $Product->getQuantity());
 
             $nettoPrice       = $nettoPrice + $priceFactorSum;
             $priceFactorArray = $PriceFactor->toArray();
@@ -411,14 +412,14 @@ class Calc
                 // einfache Zahl, Währung --- kein Prozent
                 case ErpCalc::CALCULATION_COMPLEMENT:
                     $nettoPrice = $nettoPrice + $PriceFactor->getValue();
-                    $PriceFactor->setNettoSum($this, $PriceFactor->getValue());
+                    $PriceFactor->setNettoSum($PriceFactor->getValue());
                     break;
 
                 // Prozent Angabe
                 case ErpCalc::CALCULATION_PERCENTAGE:
                     $percentage = $PriceFactor->getValue() / 100 * $nettoPrice;
                     $nettoPrice = $nettoPrice + $percentage;
-                    $PriceFactor->setNettoSum($this, $percentage);
+                    $PriceFactor->setNettoSum($percentage);
                     break;
             }
         }

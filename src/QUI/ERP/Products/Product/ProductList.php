@@ -49,7 +49,7 @@ class ProductList
      * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
      * @var array
      */
-    protected $vatArray = array();
+    protected $vatArray = [];
 
     /**
      * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
@@ -73,17 +73,17 @@ class ProductList
      * Currency information
      * @var array
      */
-    protected $currencyData = array(
+    protected $currencyData = [
         'currency_sign' => '',
         'currency_code' => '',
         'user_currency' => '',
         'currency_rate' => '',
-    );
+    ];
 
     /**
      * @var array
      */
-    protected $products = array();
+    protected $products = [];
 
     /**
      * Doublicate entries allowed?
@@ -109,7 +109,7 @@ class ProductList
      * @param array $params - optional, list settings
      * @param QUI\Interfaces\Users\User|boolean $User - optional, User for calculation
      */
-    public function __construct($params = array(), $User = false)
+    public function __construct($params = [], $User = false)
     {
         if (isset($params['duplicate'])) {
             $this->duplicate = (boolean)$params['duplicate'];
@@ -152,6 +152,8 @@ class ProductList
      *
      * @param QUI\ERP\Products\Utils\Calc|null $Calc - optional, calculation object
      * @return ProductList
+     *
+     * @throws QUI\Exception
      */
     public function calc($Calc = null)
     {
@@ -223,7 +225,7 @@ class ProductList
     }
 
     /**
-     * Reutrn the price factors list (list of price indicators)
+     * Return the price factors list (list of price indicators)
      *
      * @return QUI\ERP\Products\Utils\PriceFactors
      */
@@ -267,7 +269,7 @@ class ProductList
      */
     public function clear()
     {
-        $this->products = array();
+        $this->products = [];
     }
 
     /**
@@ -280,7 +282,7 @@ class ProductList
     public function toArray()
     {
         $this->calc();
-        $products = array();
+        $products = [];
 
         QUI\ERP\Products\Handler\Products::setLocale($this->User->getLocale());
 
@@ -289,7 +291,7 @@ class ProductList
             $attributes = $Product->getAttributes();
             $fields     = $Product->getFields();
 
-            $attributes['fields'] = array();
+            $attributes['fields'] = [];
 
             /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             foreach ($fields as $Field) {
@@ -299,7 +301,7 @@ class ProductList
             $products[] = $attributes;
         }
 
-        $result = array(
+        $result = [
             'products'     => $products,
             'sum'          => $this->sum,
             'subSum'       => $this->subSum,
@@ -310,7 +312,7 @@ class ProductList
             'isEuVat'      => $this->isEuVat,
             'isNetto'      => $this->isNetto,
             'currencyData' => $this->currencyData,
-        );
+        ];
 
         return $result;
     }
