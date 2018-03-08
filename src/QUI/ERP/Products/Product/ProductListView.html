@@ -42,14 +42,14 @@
 
             <div class="products-product-information-basisprice">
                 {if !$hidePrice}
-                    {locale group="quiqqer/products" var="product.list.products.basicPrice"}: {$product.basisPrice}
+                {locale group="quiqqer/products" var="product.list.products.basicPrice"}: {$product.basisPrice}
                 {/if}
             </div>
 
             <ul class="products-product-fields">
                 {foreach $product.attributes as $attribute}
                 <li class="products-product-fields-field">
-                    {$attribute.title}:<br />
+                    {$attribute.title}:<br/>
                     {$attribute.valueText} {$attribute.value}
                 </li>
                 {/foreach}
@@ -96,10 +96,9 @@
     {foreach $data.attributes as $attribute}
     <tr>
         <td class="products-sum-row-firstCell">
-            {$attribute.title}
+            {$attribute.title} ({$attribute.valueText})
         </td>
         <td class="products-sum-row-sndCell">
-            {$attribute.valueText}<br/>
             {$attribute.value}
         </td>
     </tr>

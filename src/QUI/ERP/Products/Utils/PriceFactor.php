@@ -147,6 +147,10 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
                 $this->visible = $params['visible'] ? true : false;
             }
         }
+
+        if (isset($params['sum'])) {
+            $this->setSum($params['sum']);
+        }
     }
 
     /**
@@ -445,59 +449,6 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
                 return $this->value.'%';
         }
     }
-//
-//    /**
-//     * @return string
-//     */
-//    public function getBruttoSumFormatted()
-//    {
-//        if (!$this->bruttoSum) {
-//            return $this->getNettoSumFormatted();
-//        }
-//
-//        $sum = $this->getBruttoSum();
-//
-//        if ($sum == 0) {
-//            return '';
-//        }
-//
-//        switch ($this->calculation) {
-//            default:
-//            case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
-//                if ($sum > 0) {
-//                    return '+'.Currencies::getDefaultCurrency()->format($sum);
-//                }
-//
-//                return Currencies::getDefaultCurrency()->format($sum);
-//
-//            case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
-//                if ($this->getNettoSum()) {
-//                    return Currencies::getDefaultCurrency()->format($sum);
-//                }
-//
-//                return $this->value.'%';
-//        }
-//    }
-//
-//    /**
-//     * Set the calculated sum (brutto)
-//     *
-//     * @param int|double|float $sum - sum
-//     */
-//    public function setBruttoSum($sum)
-//    {
-//        if (is_numeric($sum)) {
-//            $this->bruttoSum = $sum;
-//        }
-//    }
-//
-//    /**
-//     * @return bool|int|float|double
-//     */
-//    public function getBruttoSum()
-//    {
-//        return $this->bruttoSum;
-//    }
 
     /**
      * Returns the price factor as an array
@@ -511,6 +462,8 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             'description'       => $this->getDescription(),
             'calculation'       => $this->getCalculation(),
             'calculation_basis' => $this->getCalculationBasis(),
+            'sum'               => $this->getSum(),
+            'sumFormatted'      => $this->getSumFormatted(),
             'nettoSum'          => $this->getNettoSum(),
             'nettoSumFormatted' => $this->getNettoSumFormatted(),
             'value'             => $this->getValue(),
