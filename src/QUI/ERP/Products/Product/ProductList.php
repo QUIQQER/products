@@ -16,6 +16,7 @@ class ProductList
 {
     /**
      * is the product list calculated?
+     *
      * @var bool
      */
     protected $calculated = false;
@@ -68,6 +69,11 @@ class ProductList
      * @var bool
      */
     protected $isNetto = true;
+
+    /**
+     * @var null|QUI\ERP\Currency\Currency
+     */
+    protected $Currency = null;
 
     /**
      * Currency information
@@ -301,6 +307,29 @@ class ProductList
             $products[] = $attributes;
         }
 
+        // display data
+        $Currency = $this->getCurrency();
+
+        $calculations = [
+            'sum'          => $this->sum,
+            'subSum'       => $this->subSum,
+            'nettoSum'     => $this->nettoSum,
+            'nettoSubSum'  => $this->nettoSubSum,
+            'vatArray'     => $this->vatArray,
+            'vatText'      => $this->vatText,
+            'isEuVat'      => $this->isEuVat,
+            'isNetto'      => $this->isNetto,
+            'currencyData' => $this->currencyData
+        ];
+
+        $calculations['vatSum'] = QUI\ERP\Accounting\Calc::calculateTotalVatOfInvoice(
+            $calculations['vatArray']
+        );
+
+        $calculations['display_subSum'] = $Currency->format($calculations['subSum']);
+        $calculations['display_sum']    = $Currency->format($calculations['sum']);
+        $calculations['display_vatSum'] = $Currency->format($calculations['vatSum']);
+
         $result = [
             'products'     => $products,
             'sum'          => $this->sum,
@@ -312,6 +341,7 @@ class ProductList
             'isEuVat'      => $this->isEuVat,
             'isNetto'      => $this->isNetto,
             'currencyData' => $this->currencyData,
+            'calculations' => $calculations
         ];
 
         return $result;
@@ -376,6 +406,31 @@ class ProductList
         }
 
         return $this->getFrontendView();
+    }
+
+    /**
+     * Return the currency
+     *
+     * @return QUI\ERP\Currency\Currency
+     */
+    public function getCurrency()
+    {
+        if (!is_null($this->Currency)) {
+            return $this->Currency;
+        }
+
+        if (is_array($this->currencyData) && !empty($this->currencyData['currency_code'])) {
+            try {
+                $this->Currency = QUI\ERP\Currency\Handler::getCurrency(
+                    $this->currencyData['currency_code']
+                );
+
+                return $this->Currency;
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
+        return QUI\ERP\Defaults::getCurrency();
     }
 
     /**
