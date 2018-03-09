@@ -27,6 +27,10 @@ class Calc
     /**
      * Percentage calculation
      *
+     * @todo
+     * Das deprecated sollte in ERP::CALCULATION_PERCENTAGE
+     * Dazu müssten die Preisfaktoren vielleicht in ERP ren und aus Produkte
+     *
      * @deprecated use QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE
      */
     const CALCULATION_PERCENTAGE = ErpCalc::CALCULATION_PERCENTAGE;
@@ -344,6 +348,7 @@ class Calc
                 foreach ($priceFactors as $Factor) {
                     if ($Factor instanceof QUI\ERP\Products\Interfaces\PriceFactorWithVatInterface) {
                         $Factor->setSum(round($Factor->getSum() - $diff, 2));
+                        $bruttoSum = round($bruttoSum, 2);
                         break;
                     }
                 }
