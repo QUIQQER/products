@@ -225,4 +225,23 @@ class PriceFactors
 
         $this->sort();
     }
+
+    /**
+     * Return this price factor list to a none changeable erp price factor list
+     *
+     * @return QUI\ERP\Accounting\PriceFactors\FactorList
+     *
+     * @throws QUI\ERP\Exception
+     */
+    public function toErpPriceFactorList()
+    {
+        $list   = [];
+        $sorted = $this->sort();
+
+        foreach ($sorted as $PriceFactor) {
+            $list[] = $PriceFactor->toErpPriceFactor()->toArray();
+        }
+
+        return new QUI\ERP\Accounting\PriceFactors\FactorList($list);
+    }
 }

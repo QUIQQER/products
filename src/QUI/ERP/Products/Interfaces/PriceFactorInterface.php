@@ -10,6 +10,7 @@ use QUI;
 
 /**
  * Interface PriceFactor
+ *
  * @package QUI\ERP\Products\Interfaces
  */
 interface PriceFactorInterface
@@ -149,4 +150,9 @@ interface PriceFactorInterface
      * @return array
      */
     public function toArray();
+
+    /**
+     * @return QUI\ERP\Accounting\PriceFactors\Factor
+     */
+    public function toErpPriceFactor();
 }

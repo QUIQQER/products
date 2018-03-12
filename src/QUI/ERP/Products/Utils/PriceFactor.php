@@ -473,4 +473,27 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             'class'             => get_class($this)
         ];
     }
+
+    /**
+     * Parse this price factor to erp factor
+     * An ERP Factor is not changeable
+     *
+     * @return QUI\ERP\Accounting\PriceFactors\Factor
+     *
+     * @throws QUI\ERP\Exception
+     */
+    public function toErpPriceFactor()
+    {
+        return new QUI\ERP\Accounting\PriceFactors\Factor([
+            'title'             => $this->getTitle(),
+            'description'       => $this->getDescription(),
+            'sum'               => $this->getSum(),
+            'sumFormatted'      => $this->getSumFormatted(),
+            'calculation'       => $this->getCalculation(),
+            'calculation_basis' => $this->getCalculationBasis(),
+            'nettoSum'          => $this->getNettoSum(),
+            'nettoSumFormatted' => $this->getNettoSumFormatted(),
+            'visible'           => $this->isVisible()
+        ]);
+    }
 }
