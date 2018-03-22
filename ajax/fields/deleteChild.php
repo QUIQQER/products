@@ -17,6 +17,6 @@ QUI::$Ajax->registerFunction(
 
         $Field->delete();
     },
-    array('fieldId'),
+    ['fieldId'],
     'Permission::checkAdminUser'
 );

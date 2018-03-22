@@ -15,9 +15,9 @@ QUI::$Ajax->registerFunction(
         $Categories  = new QUI\ERP\Products\Handler\Categories();
         $categoryIds = json_decode($categoryIds);
 
-        $children = array();
-        $fields   = array();
-        $result   = array();
+        $children = [];
+        $fields   = [];
+        $result   = [];
 
         foreach ($categoryIds as $categoryId) {
             try {
@@ -41,6 +41,6 @@ QUI::$Ajax->registerFunction(
 
         return $result;
     },
-    array('categoryIds'),
+    ['categoryIds'],
     'Permission::checkAdminUser'
 );

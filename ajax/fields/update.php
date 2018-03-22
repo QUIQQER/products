@@ -41,6 +41,6 @@ QUI::$Ajax->registerFunction(
 
         return Fields::PRODUCT_ARRAY_UNCHANGED;
     },
-    array('fieldId', 'params'),
+    ['fieldId', 'params'],
     'Permission::checkAdminUser'
 );

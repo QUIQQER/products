@@ -44,6 +44,6 @@ QUI::$Ajax->registerFunction(
             $Category->setFieldsToAllProducts();
         }
     },
-    array('categoryId', 'params', 'updateProductFields'),
+    ['categoryId', 'params', 'updateProductFields'],
     'Permission::checkAdminUser'
 );

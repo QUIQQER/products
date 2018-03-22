@@ -19,6 +19,6 @@ QUI::$Ajax->registerFunction(
         $Category->setParentId((int)$parentId);
         $Category->save();
     },
-    array('categoryId', 'parentId'),
+    ['categoryId', 'parentId'],
     'Permission::checkAdminUser'
 );

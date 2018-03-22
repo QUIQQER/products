@@ -17,6 +17,6 @@ QUI::$Ajax->registerFunction(
         // TODO: permission?
         Cache::clear();
     },
-    array(),
+    [],
     'Permission::checkAdminUser'
 );
