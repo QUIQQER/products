@@ -3,6 +3,7 @@
 /**
  * This file contains package_quiqqer_products_ajax_products_setQuantity
  */
+
 use QUI\ERP\Products\Handler\Products;
 
 /**
@@ -21,5 +22,5 @@ QUI::$Ajax->registerFunction(
 
         return $Unique->getQuantity();
     },
-    array('productId', 'quantity')
+    ['productId', 'quantity']
 );

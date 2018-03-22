@@ -20,6 +20,6 @@ QUI::$Ajax->registerFunction(
         $Product->removeField($Field);
         $Product->save();
     },
-    array('productId', 'fieldId'),
+    ['productId', 'fieldId'],
     'Permission::checkAdminUser'
 );

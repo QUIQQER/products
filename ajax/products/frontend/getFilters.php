@@ -19,13 +19,13 @@ QUI::$Ajax->registerFunction(
 
             $Site->load();
 
-            $ProductList = new QUI\ERP\Products\Controls\Category\ProductList(array(
+            $ProductList = new QUI\ERP\Products\Controls\Category\ProductList([
                 'Site'                 => $Site,
                 'categoryId'           => $Site->getAttribute('quiqqer.products.settings.categoryId'),
                 'hideEmptyProductList' => true,
                 'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
                 'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay')
-            ));
+            ]);
 
             // category menu
             $searchParentCategorySite = function () use ($Site) {
@@ -51,17 +51,17 @@ QUI::$Ajax->registerFunction(
             $result = '';
             $Parent = $searchParentCategorySite();
 
-            $CategoryMenu = new QUI\ERP\Products\Controls\Category\Menu(array(
+            $CategoryMenu = new QUI\ERP\Products\Controls\Category\Menu([
                 'Site'              => $Parent,
                 'disableCheckboxes' => false,
                 'breadcrumb'        => true
-            ));
+            ]);
 
             $Output = new QUI\Output();
 
             if ($CategoryMenu->hasCategoryCheckBox($Site)) {
                 $result .= '<header>';
-                $result .= '<h2>' . QUI::getLocale()->get('quiqqer/products', 'type.category.categoryTitle') . '</h2>';
+                $result .= '<h2>'.QUI::getLocale()->get('quiqqer/products', 'type.category.categoryTitle').'</h2>';
                 $result .= '</header>';
                 $result .= $CategoryMenu->create();
             }
@@ -70,11 +70,11 @@ QUI::$Ajax->registerFunction(
                 $placeholder = QUI::getLocale()->get("quiqqer/products", "control.search.placeholder");
 
                 $result .= '<header>';
-                $result .= '<h2>' . QUI::getLocale()->get('quiqqer/products', 'type.category.freetextTitle') . '</h2>';
+                $result .= '<h2>'.QUI::getLocale()->get('quiqqer/products', 'type.category.freetextTitle').'</h2>';
                 $result .= '</header>';
                 $result .= '<label class="quiqqer-products-category-freetextSearch">';
                 $result .= '<input type="search" name="search"';
-                $result .= '    placeholder="' . $placeholder . '" />';
+                $result .= '    placeholder="'.$placeholder.'" />';
                 $result .= '</label>';
             }
 
@@ -99,5 +99,5 @@ QUI::$Ajax->registerFunction(
 
         return '';
     },
-    array('project', 'siteId')
+    ['project', 'siteId']
 );

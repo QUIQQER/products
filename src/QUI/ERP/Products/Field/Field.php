@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Field\Model
+ * This file contains QUI\ERP\Products\Field\Field
  */
 
 namespace QUI\ERP\Products\Field;

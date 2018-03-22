@@ -17,7 +17,7 @@ QUI::$Ajax->registerFunction(
     function ($productId, $fields) {
         $Product = Products::getProduct($productId);
         $fields  = json_decode($fields);
-        $result  = array();
+        $result  = [];
 
         foreach ($fields as $field => $value) {
             try {
@@ -31,5 +31,5 @@ QUI::$Ajax->registerFunction(
 
         return $result;
     },
-    array('productId', 'fields')
+    ['productId', 'fields']
 );

@@ -21,6 +21,6 @@ QUI::$Ajax->registerFunction(
         $Product->setPermissions($permissions);
         $Product->save();
     },
-    array('productId', 'permissions'),
+    ['productId', 'permissions'],
     'Permission::checkAdminUser'
 );
