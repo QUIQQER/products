@@ -27,7 +27,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      *
      * @param Field $Field
      *
-     * @throws QUI\ERP\Products\Field\Exception
+     * @throws QUI\Exception
      */
     public function addField(Field $Field)
     {
@@ -55,7 +55,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      *
      * @param QUI\ERP\Products\Field\Field $Field
      *
-     * @throws QUI\ERP\Products\Field\Exception
+     * @throws QUI\Exception
      */
     public function addOwnField(QUI\ERP\Products\Field\Field $Field)
     {
@@ -74,10 +74,10 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
     public function removeField(Field $Field)
     {
         if (!$Field->isOwnField()) {
-            throw new QUI\Exception(array(
+            throw new QUI\Exception([
                 'quiqqer/products',
                 'exception.only.ownFields.deletable'
-            ));
+            ]);
         }
 
         if (isset($this->fields[$Field->getId()])) {
@@ -115,8 +115,8 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      *
      * @param integer $priority
      *
-     * @throws QUI\ERP\Products\Field\Exception
      * @throws QUI\ERP\Products\Product\Exception
+     * @throws QUI\Exception
      */
     public function setPriority($priority)
     {

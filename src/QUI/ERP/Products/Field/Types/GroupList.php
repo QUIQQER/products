@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\GroupList
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -35,10 +36,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function __construct($fieldId, array $params)
     {
-        $this->setOptions(array(
+        $this->setOptions([
             'groupIds'      => false,
             'multipleUsers' => true
-        ));
+        ]);
 
         parent::__construct($fieldId, $params);
     }
@@ -90,15 +91,15 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         $groupIds      = $this->getOption('groupIds');
         $multipleUsers = $this->getOption('multipleUsers');
-        $userIds       = array();
+        $userIds       = [];
 
         if (is_numeric($value)) {
-            $userIds = array((int)$value);
+            $userIds = [(int)$value];
         } elseif (is_string($value)) {
             $userIds = json_decode($value, true);
 
             if (!is_array($userIds) && !is_numeric($userIds)) {
-                $userIds = array();
+                $userIds = [];
             }
         } elseif (is_array($value)) {
             $userIds = $value;
@@ -109,14 +110,14 @@ class GroupList extends QUI\ERP\Products\Field\Field
         }
 
         if (count($userIds) > 1 && !$multipleUsers) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.grouplist.user.limit.reached',
-                array(
+                [
                     'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle()
-                )
-            ));
+                ]
+            ]);
         }
 
 //        if (empty($userIds)) {
@@ -136,6 +137,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                     return true;
                 }
             }
+
             return false;
         };
 
@@ -143,37 +145,37 @@ class GroupList extends QUI\ERP\Products\Field\Field
         try {
             foreach ($userIds as $userId) {
                 if (!is_numeric($userId)) {
-                    throw new QUI\ERP\Products\Field\Exception(array(
+                    throw new QUI\ERP\Products\Field\Exception([
                         'quiqqer/products',
                         'exception.field.grouplist.invalid.userId'
-                    ));
+                    ]);
                 }
 
                 $User       = QUI::getUsers()->get($userId);
                 $userGroups = $User->getGroups(false);
 
                 if (!$isUserInGroups($userGroups)) {
-                    throw new QUI\ERP\Products\Field\Exception(array(
+                    throw new QUI\ERP\Products\Field\Exception([
                         'quiqqer/products',
                         'exception.field.grouplist.user.not.in.group',
-                        array(
+                        [
                             'userId'   => $User->getId(),
                             'username' => $User->getUsername(),
                             'groups'   => implode(',', $groupIds)
-                        )
-                    ));
+                        ]
+                    ]);
                 }
             }
         } catch (QUI\Exception $Exception) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.unexptected.error',
-                array(
+                [
                     'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
                     'errorMsg'   => $Exception->getMessage()
-                )
-            ));
+                ]
+            ]);
         }
     }
 
@@ -187,27 +189,27 @@ class GroupList extends QUI\ERP\Products\Field\Field
     {
         $groupIds      = $this->getOption('groupIds');
         $multipleUsers = $this->getOption('multipleUsers');
-        $userIds       = array();
-        $result        = array();
+        $userIds       = [];
+        $result        = [];
 
         if (is_numeric($value)) {
-            $userIds = array((int)$value);
+            $userIds = [(int)$value];
         } elseif (is_string($value)) {
             $userIds = json_decode($value, true);
 
             if (!is_array($userIds) && !is_numeric($userIds)) {
-                $userIds = array();
+                $userIds = [];
             }
         } elseif (is_array($value)) {
             $userIds = $value;
         }
 
         if (count($userIds) > 1 && !$multipleUsers) {
-            return array();
+            return [];
         }
 
         if (empty($userIds)) {
-            return array();
+            return [];
         }
 
         $isUserInGroups = function ($userGroups) use ($groupIds) {
@@ -216,6 +218,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                     return true;
                 }
             }
+
             return false;
         };
 
@@ -234,7 +237,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 }
             }
         } catch (QUI\Exception $Exception) {
-            return array();
+            return [];
         }
 
         return $result;
@@ -245,6 +248,8 @@ class GroupList extends QUI\ERP\Products\Field\Field
      *
      * @param QUI\Locale $Locale
      * @return string
+     *
+     * @throws QUI\Exception
      */
     public function getSearchCacheValue($Locale = null)
     {
@@ -253,7 +258,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
         }
 
         $userIds      = $this->getValue();
-        $searchValues = array();
+        $searchValues = [];
 
         foreach ($userIds as $userId) {
             $searchValues[] = QUI::getUsers()->get($userId)->getName();
@@ -263,7 +268,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
             return $searchValues[0];
         }
 
-        return ',' . implode(',', $searchValues) . ',';
+        return ','.implode(',', $searchValues).',';
     }
 
     /**
@@ -274,7 +279,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
     public function getUsers()
     {
         $groups = $this->getGroups();
-        $result = array();
+        $result = [];
 
         /* @var $Group QUI\Groups\Group */
         /* @var $User QUI\Users\User */
@@ -298,7 +303,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
     {
         $Groups   = QUI::getGroups();
         $groupIds = $this->getOption('groupIds');
-        $result   = array();
+        $result   = [];
 
         foreach ($groupIds as $groupId) {
             try {
@@ -321,13 +326,13 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function getSearchTypes()
     {
-        return array(
+        return [
             Search::SEARCHTYPE_TEXT,
             Search::SEARCHTYPE_SELECTSINGLE,
             Search::SEARCHTYPE_INPUTSELECTSINGLE,
             Search::SEARCHTYPE_SELECTMULTI,
             Search::SEARCHTYPE_HASVALUE,
-        );
+        ];
     }
 
     /**

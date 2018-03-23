@@ -74,10 +74,10 @@ class ProductListBackendView
                 'vatArray' => [],
             ];
 
-            /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
+            /* @var $Field QUI\ERP\Products\Field\UniqueField */
             foreach ($fields as $Field) {
                 if ($Field->isPublic()) {
-                    $product['fields'][] = $Field->getAttributes();
+                    $product['fields'][] = $Field->getBackendView();
                 }
             }
 

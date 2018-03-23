@@ -66,7 +66,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * Is this Field searchable?
@@ -110,7 +110,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * @var array
      */
-    protected $searchTypes = array();
+    protected $searchTypes = [];
 
     /**
      * Searchdata type for values of this field
@@ -125,7 +125,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param integer $fieldId
      * @param array $params - optional, field params (system, require, standard)
      */
-    public function __construct($fieldId, $params = array())
+    public function __construct($fieldId, $params = [])
     {
         $this->id = (int)$fieldId;
 
@@ -274,6 +274,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * saves / update the field
      *
      * @todo value check
+     *
+     * @throws QUI\Exception
+     * @throws QUI\Permissions\Exception
      */
     public function save()
     {
@@ -290,14 +293,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $defaultValue = json_encode($this->defaultValue);
         }
 
-        $data = array(
+        $data = [
             'standardField' => $this->isStandard() ? 1 : 0,
             'systemField'   => $this->isSystem() ? 1 : 0,
             'requiredField' => $this->isRequired() ? 1 : 0,
             'publicField'   => $this->isPublic() ? 1 : 0,
             'showInDetails' => $this->showInDetails() ? 1 : 0,
             'defaultValue'  => $defaultValue
-        );
+        ];
 
         foreach ($allowedAttributes as $attribute) {
             if ($attribute == 'standardField'
@@ -327,9 +330,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
 
         QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.save', array(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.save', [
                 'id' => $this->getId()
-            )),
+            ]),
             '',
             $data
         );
@@ -337,48 +340,50 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             $data,
-            array('id' => $this->getId())
+            ['id' => $this->getId()]
         );
 
         // clear field cache
         QUI\Cache\Manager::clear('quiqqer/products/fields');
 
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldSave', array($this));
+        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldSave', [$this]);
     }
 
     /**
      * Delete the field
      *
      * @throws QUI\ERP\Products\Field\Exception
+     * @throws QUI\Permissions\Exception
+     * @throws QUI\Exception
      */
     public function delete()
     {
         QUI\Permissions\Permission::checkPermission('field.delete');
 
         if ($this->isSystem()) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exceptions.system.fields.cant.be.deleted',
-                array(
+                [
                     'id'    => $this->getId(),
                     'title' => $this->getTitle()
-                )
-            ));
+                ]
+            ]);
         }
 
         QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.delete', array(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.delete', [
                 'id'    => $this->getId(),
                 'title' => $this->getTitle()
-            ))
+            ])
         );
 
         $fieldId = $this->getId();
 
         QUI::getDataBase()->delete(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
-            array('id' => $fieldId)
+            ['id' => $fieldId]
         );
 
         // delete the locale
@@ -434,7 +439,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             "permission.products.fields.field{$fieldId}.edit"
         );
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldDelete', array($this));
+        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldDelete', [$this]);
     }
 
     /**
@@ -449,7 +454,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         QUI::getDataBase()->delete(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
-            array('id' => $this->getId())
+            ['id' => $this->getId()]
         );
 
         $fieldId = $this->getId();
@@ -495,7 +500,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             Fields::getFieldCacheName($this->getId())
         );
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldDeleteSystemfield', array($this));
+        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldDeleteSystemfield', [$this]);
     }
 
     /**
@@ -610,6 +615,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Set the default value
      *
      * @param mixed $value
+     *
+     * @throws QUI\Exception
      */
     public function setDefaultValue($value)
     {
@@ -642,7 +649,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Set the field value
      *
      * @param mixed $value
-     * @throws QUI\ERP\Products\Field\Exception
+     *
+     * @throws QUI\Exception
      */
     public function setValue($value)
     {
@@ -984,7 +992,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     public function getSearchTypes()
     {
         if (!$this->isSearchable()) {
-            return array();
+            return [];
         }
 
         return Search::getSearchTypes();
@@ -1042,9 +1050,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getAttributesForUniqueField()
     {
-        $attributes          = $this->getAttributes();
-        $attributes['id']    = $this->getId();
-        $attributes['value'] = $this->getValue();
+        $attributes              = $this->getAttributes();
+        $attributes['id']        = $this->getId();
+        $attributes['value']     = $this->getValue();
+        $attributes['__class__'] = get_class($this);
 
         return $attributes;
     }
@@ -1054,14 +1063,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getProducts()
     {
-        return Products::getProducts(array(
-            'where' => array(
-                'fieldData' => array(
+        return Products::getProducts([
+            'where' => [
+                'fieldData' => [
                     'type'  => '%LIKE%',
                     'value' => '"id":'.$this->id.','
-                )
-            )
-        ));
+                ]
+            ]
+        ]);
     }
 
     /**
@@ -1071,7 +1080,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function toProductArray()
     {
-        return array(
+        return [
             'id'            => $this->getId(),
             'value'         => $this->getValue(),
             'unassigned'    => $this->isUnassigned(),
@@ -1079,7 +1088,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             'isPublic'      => $this->isPublic(),
             'isRequired'    => $this->isRequired(),
             'showInDetails' => $this->showInDetails()
-        );
+        ];
     }
 
     /**
