@@ -304,6 +304,8 @@ class Model extends QUI\QDOM
             $attributes['fields'] = $fields;
         }
 
+        QUI::getEvents()->fireEvent('quiqqerProductsToUniqueProduct', [$this, &$attributes]);
+
         return new UniqueProduct($this->getId(), $attributes);
     }
 

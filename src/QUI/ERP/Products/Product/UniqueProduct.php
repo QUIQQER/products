@@ -228,6 +228,15 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $fields = $attributes['fields'];
 
+        try {
+            QUI::getEvents()->fireEvent(
+                'quiqqerProductsUniqueProductParseFields',
+                [$this, &$fields]
+            );
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
+
         foreach ($fields as $field) {
             if (!Fields::isField($field)) {
                 $this->fields[] = new UniqueField($field['id'], $field);
@@ -872,20 +881,28 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $fields      = $this->getCustomFields();
 
         if (count($fields)) {
-            $description .= '<ul>';
+            $list = '';
 
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
             foreach ($fields as $Field) {
                 $Field = $Field->getView();
 
+                if (!$Field->hasViewPermission()) {
+                    continue;
+                }
+
                 if ($fieldsAreChangeable === false) {
                     $Field->setChangeableStatus(false);
                 }
 
-                $description .= '<li>'.$Field->create().'</li>';
+                $list .= '<li>'.$Field->create().'</li>';
             }
 
-            $description .= '</ul>';
+            if (!empty($list)) {
+                $description .= '<ul>';
+                $description .= $list;
+                $description .= '</ul>';
+            }
         }
 
         return new QUI\ERP\Accounting\Article([
