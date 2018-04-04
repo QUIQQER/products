@@ -3,10 +3,6 @@
  *
  * @module package/quiqqer/products/bin/controls/fields/SelectItem
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/controls/Control
- * @require package/quiqqer/products/bin/Fields
- * @require css!package/quiqqer/products/bin/controls/fields/SelectItem.css
  */
 define('package/quiqqer/products/bin/controls/fields/SelectItem', [
 
@@ -54,8 +50,8 @@ define('package/quiqqer/products/bin/controls/fields/SelectItem', [
             Elm.set({
                 'class': 'quiqqer-fields-selectItem smooth',
                 html   : '<span class="quiqqer-fields-selectItem-icon fa fa-file-text-o"></span>' +
-                         '<span class="quiqqer-fields-selectItem-text">&nbsp;</span>' +
-                         '<span class="quiqqer-fields-selectItem-destroy fa fa-remove"></span>'
+                '<span class="quiqqer-fields-selectItem-text">&nbsp;</span>' +
+                '<span class="quiqqer-fields-selectItem-destroy fa fa-remove"></span>'
             });
 
             this.$Icon    = Elm.getElement('.quiqqer-fields-selectItem-icon');

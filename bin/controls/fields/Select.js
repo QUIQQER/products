@@ -4,14 +4,6 @@
  * @module package/quiqqer/products/bin/controls/fields/Select
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/controls/Control
- * @require qui/controls/buttons/Button
- * @require package/quiqqer/products/bin/controls/fields/SelectItem
- * @require package/quiqqer/products/bin/Fields
- * @require Ajax
- * @require Locale
- * @require css!package/quiqqer/fields/bin/controls/Select.css
- *
  * @event onAddField [ this, id ]
  * @event onChange [ this ]
  */
@@ -95,7 +87,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
          * Return the DOMNode Element
          *
          * @method package/quiqqer/products/bin/controls/fields/Select#create
-         * @return {HTMLElement} The main DOM-Node Element
+         * @return {HTMLElement|Element} The main DOM-Node Element
          */
         create: function () {
             if (this.$Elm) {
@@ -218,7 +210,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
                 Label.inject(this.$Elm, 'top');
 
-                if (Label.get('data-desc') && Label.get('data-desc') != '&nbsp;') {
+                if (Label.get('data-desc') && Label.get('data-desc') !== '&nbsp;') {
                     new Element('div', {
                         'class': 'description',
                         html   : Label.get('data-desc'),
@@ -229,7 +221,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 }
             }
 
-            if (this.getAttribute('max') == 1) {
+            if (parseInt(this.getAttribute('max')) === 1) {
                 this.$Search.setStyle('display', 'none');
 
                 this.$List.setStyles({
@@ -266,6 +258,14 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
             this.$Elm = null;
             this.create();
+
+            if (this.$Input.value !== '') {
+                var fields = this.$Input.value.split(',');
+
+                for (var i = 0, len = fields.length; i < len; i++) {
+                    this.addField(fields[i]);
+                }
+            }
 
             this.$loaded = true;
         },
@@ -485,7 +485,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
                     Entry = new Element('div', {
                         html     : '<span class="fa fa-percent"></span>' +
-                                   '<span>' + nam + ' (' + id + ')</span>',
+                        '<span>' + nam + ' (' + id + ')</span>',
                         'class'  : 'box-sizing qui-fields-list-dropdown-entry',
                         'data-id': id,
                         events   : {
@@ -509,9 +509,9 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 return this;
             }
 
-            var max = this.getAttribute('max');
+            var max = parseInt(this.getAttribute('max'));
 
-            if (max == 1) {
+            if (max === 1) {
                 // max = 1 -> overwrites the old
                 this.$values = [];
 
@@ -550,9 +550,9 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 return this;
             }
 
-            var max = this.getAttribute('max');
+            var max = parseInt(this.getAttribute('max'));
 
-            if (max == 1) {
+            if (max === 1) {
                 // max = 1 -> overwrites the old
                 this.$values = [];
 
@@ -689,7 +689,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
          * @return {Object} this (package/quiqqer/products/bin/controls/fields/Select)
          */
         focus: function () {
-            if (this.getAttribute('max') == 1) {
+            if (parseInt(this.getAttribute('max')) === 1) {
                 this.$SearchButton.click();
             }
 
