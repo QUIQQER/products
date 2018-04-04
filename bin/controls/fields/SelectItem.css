@@ -9,6 +9,10 @@
     width: 100%;
 }
 
+.quiqqer-fields-selectItem:last-child {
+    border-bottom: 0;
+}
+
 .quiqqer-fields-selectItem:hover {
     background: rgba(0, 0, 0, 0.1);
 }
