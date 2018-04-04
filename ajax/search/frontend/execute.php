@@ -31,5 +31,5 @@ QUI::$Ajax->registerFunction(
 
         return $Search->search($searchParams);
     },
-    array('project', 'siteId', 'searchParams')
+    ['project', 'siteId', 'searchParams']
 );

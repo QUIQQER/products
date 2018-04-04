@@ -21,6 +21,6 @@ QUI::$Ajax->registerFunction(
 
         return $Field->getAttributes();
     },
-    array('params'),
+    ['params'],
     'Permission::checkAdminUser'
 );

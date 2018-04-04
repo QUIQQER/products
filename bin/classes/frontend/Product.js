@@ -48,8 +48,8 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
 
                     this.$fields[fieldId] = result;
                     this.fireEvent('change', [this]);
-                    resolve(this);
 
+                    resolve(this);
                 }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
@@ -73,7 +73,6 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
 
             return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_frontend_setCustomFieldValues', function (result) {
-
                     for (var fieldId in result) {
                         if (result.hasOwnProperty(fieldId)) {
                             this.$fields[fieldId] = result[fieldId];
@@ -82,14 +81,12 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
 
                     this.fireEvent('change', [this]);
                     resolve(this);
-
                 }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
                     fields   : JSON.encode(fields),
                     onError  : reject
                 });
-
             }.bind(this));
         },
 
@@ -106,14 +103,12 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                     this.fireEvent('change', [this]);
 
                     resolve(result);
-
                 }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
                     quantity : quantity,
                     onError  : reject
                 });
-
             }.bind(this));
         },
 
@@ -179,7 +174,6 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          */
         isActive: function () {
             return new Promise(function (resolve, reject) {
-
                 if (this.$loaded) {
                     return resolve(!!this.$data.active);
                 }
@@ -187,7 +181,6 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                 this.refresh().then(function () {
                     resolve(!!this.$data.active);
                 }.bind(this)).catch(reject);
-
             }.bind(this));
         },
 
@@ -198,7 +191,6 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          */
         refresh: function () {
             return new Promise(function (resolve, reject) {
-
                 if (typeof this.$data === 'undefined' || !this.$data) {
                     this.$data = {};
                 }
@@ -227,9 +219,7 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
 
                         this.fireEvent('refresh', [this]);
                     }.bind(this)).catch(reject);
-
                 }.bind(this));
-
             }.bind(this));
         },
 
@@ -280,7 +270,6 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
             var self = this;
 
             return new Promise(function (resolve, reject) {
-
                 if (self.$loaded) {
                     var categories = self.$data.categories.split(',').filter(function (entry) {
                         return entry !== '';
@@ -302,7 +291,6 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                 self.refresh().then(function () {
                     self.getCategories().then(resolve);
                 }).catch(reject);
-
             });
         },
 
@@ -321,7 +309,6 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                 this.refresh().then(function () {
                     resolve(this.$data.category);
                 }.bind(this)).catch(reject);
-
             }.bind(this));
         },
 

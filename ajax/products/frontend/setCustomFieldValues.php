@@ -16,8 +16,8 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_setCustomFieldValues',
     function ($productId, $fields) {
         $Product = Products::getProduct($productId);
-        $fields  = json_decode($fields);
-        $result  = array();
+        $fields  = json_decode($fields, true);
+        $result  = [];
 
         foreach ($fields as $field => $value) {
             try {
@@ -31,5 +31,5 @@ QUI::$Ajax->registerFunction(
 
         return $result;
     },
-    array('productId', 'fields')
+    ['productId', 'fields']
 );

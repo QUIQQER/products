@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_path',
     function ($categoryId) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $result     = array();
+        $result     = [];
 
         $Category = $Categories->getCategory($categoryId);
         $result[] = $Category->getId();
@@ -36,6 +36,6 @@ QUI::$Ajax->registerFunction(
 
         return $result;
     },
-    array('categoryId'),
+    ['categoryId'],
     'Permission::checkAdminUser'
 );

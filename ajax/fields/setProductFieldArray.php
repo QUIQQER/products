@@ -36,6 +36,6 @@ QUI::$Ajax->registerFunction(
             $Product->save();
         }
     },
-    array('fieldId'),
+    ['fieldId'],
     'Permission::checkAdminUser'
 );

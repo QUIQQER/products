@@ -1,4 +1,5 @@
 <article>
+    {template_event name="quiqqer::products::product::begin" Product=$Product}
 
     <header class="page-content-header">
         <h1>{$Product->getTitle()}</h1>
@@ -36,7 +37,9 @@
         </div>
 
         <div class="product-data-actionButtons">
+            {template_event name="quiqqer::products::product::buttons::begin" Product=$Product}
             {$buttonsHtml}
+            {template_event name="quiqqer::products::product::buttons::end" Product=$Product}
         </div>
     </div>
 
@@ -149,6 +152,8 @@
         </div>
     </div>
 
+    {template_event name="quiqqer::products::product::middle" Product=$Product}
+
     {* Product Fields *}
     {foreach $productFields as $fieldData}
     <section class="product-fields-products">
@@ -162,6 +167,8 @@
     </section>
     {/foreach}
 
+    {template_event name="quiqqer::products::product::middle-2" Product=$Product}
+
     {if isset($VisitedProducts)}
     <section class="product-similar-products">
         <header>
@@ -174,4 +181,5 @@
     </section>
     {/if}
 
+    {template_event name="quiqqer::products::product::end" Product=$Product}
 </article>

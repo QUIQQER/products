@@ -22,7 +22,7 @@ QUI::$Ajax->registerFunction(
 
         $fields     = json_decode($fields, true);
         $categories = json_decode($categories, true);
-        $fieldList  = array();
+        $fieldList  = [];
 
         foreach ($fields as $fieldId => $fieldData) {
             try {
@@ -42,6 +42,6 @@ QUI::$Ajax->registerFunction(
 
         return $Product->getAttributes();
     },
-    array('categories', 'fields'),
+    ['categories', 'fields'],
     'Permission::checkAdminUser'
 );

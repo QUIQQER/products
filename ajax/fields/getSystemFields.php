@@ -14,7 +14,7 @@ QUI::$Ajax->registerFunction(
     function () {
         $Fields = new QUI\ERP\Products\Handler\Fields();
         $fields = $Fields->getSystemFields();
-        $result = array();
+        $result = [];
 
         /* @var $Field \QUI\ERP\Products\Field\Field */
         foreach ($fields as $Field) {

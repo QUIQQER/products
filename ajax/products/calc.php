@@ -20,7 +20,7 @@ QUI::$Ajax->registerFunction(
         $Product = Products::getProduct($productId);
 
         if (!is_array($fields)) {
-            $fields = array();
+            $fields = [];
         }
 
         foreach ($fields as $field) {
@@ -50,5 +50,5 @@ QUI::$Ajax->registerFunction(
 
         return $Unique->getView()->toArray();
     },
-    array('productId', 'fields', 'quantity')
+    ['productId', 'fields', 'quantity']
 );

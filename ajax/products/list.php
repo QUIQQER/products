@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_list',
     function ($params) {
         $Products = new QUI\ERP\Products\Handler\Products();
-        $result   = array();
+        $result   = [];
 
         $Grid = new QUI\Utils\Grid();
 
@@ -38,7 +38,7 @@ QUI::$Ajax->registerFunction(
             }
 
             try {
-                $attributes['price'] = $Product->getPrice()->getNetto();
+                $attributes['price'] = $Product->getPrice()->value();
             } catch (QUI\Exception $Exception) {
             }
 
@@ -51,6 +51,6 @@ QUI::$Ajax->registerFunction(
 
         return $Grid->parseResult($result, $Products->countProducts());
     },
-    array('params'),
+    ['params'],
     'Permission::checkAdminUser'
 );

@@ -22,5 +22,5 @@ QUI::$Ajax->registerFunction(
 
         return $Field->getValue();
     },
-    array('productId', 'fields')
+    ['productId', 'fields']
 );

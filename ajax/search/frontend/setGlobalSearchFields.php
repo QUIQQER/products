@@ -28,6 +28,6 @@ QUI::$Ajax->registerFunction(
 
         return QUI\ERP\Products\Search\FrontendSearch::setGlobalSearchFields($searchFields);
     },
-    array('searchFields'),
+    ['searchFields'],
     'Permission::checkAdminUser'
 );

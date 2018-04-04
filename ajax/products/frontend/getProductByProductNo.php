@@ -21,5 +21,5 @@ QUI::$Ajax->registerFunction(
 
         return $Product->getView()->getAttributes();
     },
-    array('productNo')
+    ['productNo']
 );

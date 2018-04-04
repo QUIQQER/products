@@ -46,9 +46,9 @@ QUI::$Ajax->registerFunction(
         }
 
         try {
-            $Control = new ProductControl(array(
+            $Control = new ProductControl([
                 'Product' => $Product
-            ));
+            ]);
 
             $control = $Control->create();
 
@@ -56,15 +56,15 @@ QUI::$Ajax->registerFunction(
                 $title = $Product->getTitle();
             }
 
-            return array(
+            return [
                 'css'   => QUI\Control\Manager::getCSS(),
                 'html'  => $control,
                 'title' => $title
-            );
+            ];
         } catch (QUI\Exception $Exception) {
         }
 
         return '';
     },
-    array('productId', 'project', 'siteId')
+    ['productId', 'project', 'siteId']
 );

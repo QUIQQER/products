@@ -16,6 +16,7 @@ class ProductList
 {
     /**
      * is the product list calculated?
+     *
      * @var bool
      */
     protected $calculated = false;
@@ -49,7 +50,7 @@ class ProductList
      * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
      * @var array
      */
-    protected $vatArray = array();
+    protected $vatArray = [];
 
     /**
      * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
@@ -70,20 +71,25 @@ class ProductList
     protected $isNetto = true;
 
     /**
+     * @var null|QUI\ERP\Currency\Currency
+     */
+    protected $Currency = null;
+
+    /**
      * Currency information
      * @var array
      */
-    protected $currencyData = array(
+    protected $currencyData = [
         'currency_sign' => '',
         'currency_code' => '',
         'user_currency' => '',
         'currency_rate' => '',
-    );
+    ];
 
     /**
      * @var array
      */
-    protected $products = array();
+    protected $products = [];
 
     /**
      * Doublicate entries allowed?
@@ -109,7 +115,7 @@ class ProductList
      * @param array $params - optional, list settings
      * @param QUI\Interfaces\Users\User|boolean $User - optional, User for calculation
      */
-    public function __construct($params = array(), $User = false)
+    public function __construct($params = [], $User = false)
     {
         if (isset($params['duplicate'])) {
             $this->duplicate = (boolean)$params['duplicate'];
@@ -152,6 +158,8 @@ class ProductList
      *
      * @param QUI\ERP\Products\Utils\Calc|null $Calc - optional, calculation object
      * @return ProductList
+     *
+     * @throws QUI\Exception
      */
     public function calc($Calc = null)
     {
@@ -223,7 +231,7 @@ class ProductList
     }
 
     /**
-     * Reutrn the price factors list (list of price indicators)
+     * Return the price factors list (list of price indicators)
      *
      * @return QUI\ERP\Products\Utils\PriceFactors
      */
@@ -267,7 +275,7 @@ class ProductList
      */
     public function clear()
     {
-        $this->products = array();
+        $this->products = [];
     }
 
     /**
@@ -280,7 +288,7 @@ class ProductList
     public function toArray()
     {
         $this->calc();
-        $products = array();
+        $products = [];
 
         QUI\ERP\Products\Handler\Products::setLocale($this->User->getLocale());
 
@@ -289,7 +297,7 @@ class ProductList
             $attributes = $Product->getAttributes();
             $fields     = $Product->getFields();
 
-            $attributes['fields'] = array();
+            $attributes['fields'] = [];
 
             /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             foreach ($fields as $Field) {
@@ -299,7 +307,30 @@ class ProductList
             $products[] = $attributes;
         }
 
-        $result = array(
+        // display data
+        $Currency = $this->getCurrency();
+
+        $calculations = [
+            'sum'          => $this->sum,
+            'subSum'       => $this->subSum,
+            'nettoSum'     => $this->nettoSum,
+            'nettoSubSum'  => $this->nettoSubSum,
+            'vatArray'     => $this->vatArray,
+            'vatText'      => $this->vatText,
+            'isEuVat'      => $this->isEuVat,
+            'isNetto'      => $this->isNetto,
+            'currencyData' => $this->currencyData
+        ];
+
+        $calculations['vatSum'] = QUI\ERP\Accounting\Calc::calculateTotalVatOfInvoice(
+            $calculations['vatArray']
+        );
+
+        $calculations['display_subSum'] = $Currency->format($calculations['subSum']);
+        $calculations['display_sum']    = $Currency->format($calculations['sum']);
+        $calculations['display_vatSum'] = $Currency->format($calculations['vatSum']);
+
+        $result = [
             'products'     => $products,
             'sum'          => $this->sum,
             'subSum'       => $this->subSum,
@@ -310,7 +341,8 @@ class ProductList
             'isEuVat'      => $this->isEuVat,
             'isNetto'      => $this->isNetto,
             'currencyData' => $this->currencyData,
-        );
+            'calculations' => $calculations
+        ];
 
         return $result;
     }
@@ -374,6 +406,31 @@ class ProductList
         }
 
         return $this->getFrontendView();
+    }
+
+    /**
+     * Return the currency
+     *
+     * @return QUI\ERP\Currency\Currency
+     */
+    public function getCurrency()
+    {
+        if (!is_null($this->Currency)) {
+            return $this->Currency;
+        }
+
+        if (is_array($this->currencyData) && !empty($this->currencyData['currency_code'])) {
+            try {
+                $this->Currency = QUI\ERP\Currency\Handler::getCurrency(
+                    $this->currencyData['currency_code']
+                );
+
+                return $this->Currency;
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
+        return QUI\ERP\Defaults::getCurrency();
     }
 
     /**

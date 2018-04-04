@@ -15,19 +15,19 @@ QUI::$Ajax->registerFunction(
         $Categories = new QUI\ERP\Products\Handler\Categories();
         $Category   = $Categories->getCategory($categoryId);
         $sites      = $Category->getSites();
-        $result     = array();
+        $result     = [];
 
         /* @var $Site \QUI\Projects\Site */
         foreach ($sites as $Site) {
-            $result[] = array(
+            $result[] = [
                 'project' => $Site->getProject()->getName(),
                 'lang'    => $Site->getProject()->getLang(),
                 'id'      => $Site->getId()
-            );
+            ];
         }
 
         return $result;
     },
-    array('categoryId'),
+    ['categoryId'],
     'Permission::checkAdminUser'
 );

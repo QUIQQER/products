@@ -173,7 +173,7 @@ define('package/quiqqer/products/bin/classes/Product', [
             Locale = Locale || QUILocale;
 
             return this.getFieldValue(Fields.FIELD_TITLE).then(function (field) {
-                if (typeOf(field) == 'string') {
+                if (typeOf(field) === 'string') {
                     try {
                         field = JSON.decode(field);
                     } catch (e) {
@@ -202,7 +202,7 @@ define('package/quiqqer/products/bin/classes/Product', [
             Locale = Locale || QUILocale;
 
             return this.getFieldValue(Fields.FIELD_WORKING_TITLE).then(function (field) {
-                if (typeOf(field) == 'string') {
+                if (typeOf(field) === 'string') {
                     try {
                         field = JSON.decode(field);
                     } catch (e) {
@@ -231,7 +231,7 @@ define('package/quiqqer/products/bin/classes/Product', [
             Locale = Locale || QUILocale;
 
             return this.getFieldValue(Fields.FIELD_SHORT_DESC).then(function (field) {
-                if (typeOf(field) == 'string') {
+                if (typeOf(field) === 'string') {
                     try {
                         field = JSON.decode(field);
                     } catch (e) {
@@ -420,7 +420,7 @@ define('package/quiqqer/products/bin/classes/Product', [
         getFieldsByType: function (type) {
             return this.getFields().then(function (fields) {
                 return fields.filter(function (Field) {
-                    return Field.type == type;
+                    return Field.type === type;
                 });
             });
         },
@@ -440,7 +440,7 @@ define('package/quiqqer/products/bin/classes/Product', [
 
                 if (this.$loaded) {
                     var field = this.$data.fields.filter(function (item) {
-                        return (item.id == fieldId);
+                        return (item.id === fieldId);
                     });
 
                     if (field.length) {

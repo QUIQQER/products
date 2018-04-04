@@ -26,6 +26,6 @@ QUI::$Ajax->registerFunction(
 
         return $Category->getAttributes();
     },
-    array('parentId', 'params'),
+    ['parentId', 'params'],
     'Permission::checkAdminUser'
 );

@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_list',
     function ($params) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $result     = array();
+        $result     = [];
 
         $Grid = new QUI\Utils\Grid();
 
@@ -37,6 +37,6 @@ QUI::$Ajax->registerFunction(
 
         return $Grid->parseResult($result, $Categories->countCategories());
     },
-    array('params'),
+    ['params'],
     'Permission::checkAdminUser'
 );

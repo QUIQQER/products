@@ -132,7 +132,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * Is the field in the frontend currently changeable
@@ -142,16 +142,23 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     protected $changeable = true;
 
     /**
+     * The parent field class
+     *
+     * @var null
+     */
+    protected $parentFieldClass = null;
+
+    /**
      * Model constructor.
      *
      * @param integer $fieldId
      * @param array $params - optional, field params (system, require, standard)
      */
-    public function __construct($fieldId, $params = array())
+    public function __construct($fieldId, $params = [])
     {
         $this->id = (int)$fieldId;
 
-        $attributes = array(
+        $attributes = [
             'title',
             'type',
             'prefix',
@@ -170,7 +177,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'showInDetails',
             'searchvalue',
             'changeable'
-        );
+        ];
 
         if (!isset($params['isPublic'])) {
             $this->isPublic = true;
@@ -189,6 +196,10 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                 $this->$attribute = $params[$attribute];
             }
         }
+
+        if (isset($params['__class__']) && class_exists($params['__class__'])) {
+            $this->parentFieldClass = $params['__class__'];
+        }
     }
 
     /**
@@ -198,16 +209,58 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
     public function getView()
     {
-        $type = $this->getType();
-
         if (defined('QUIQQER_BACKEND')) {
-            $viewClass = 'QUI\ERP\Products\Field\Types\\'.$type.'BackendView';
-        } else {
-            $viewClass = 'QUI\ERP\Products\Field\Types\\'.$type.'FrontendView';
+            return $this->getBackendView();
         }
+
+        return $this->getFrontendView();
+    }
+
+    /**
+     * Return the Frontend View
+     *
+     * @return View
+     */
+    public function getFrontendView()
+    {
+        $type      = $this->getType();
+        $viewClass = 'QUI\ERP\Products\Field\Types\\'.$type.'FrontendView';
 
         if (class_exists($viewClass)) {
             return new $viewClass($this->getAttributes());
+        }
+
+        if ($this->parentFieldClass && class_exists($this->parentFieldClass)) {
+            $Field = new $this->parentFieldClass($this->getId(), $this->getAttributes());
+
+            if ($Field instanceof Field) {
+                return $Field->getFrontendView();
+            }
+        }
+
+        return new View($this->getAttributes());
+    }
+
+    /**
+     * Return the Backend View
+     *
+     * @return View
+     */
+    public function getBackendView()
+    {
+        $type      = $this->getType();
+        $viewClass = 'QUI\ERP\Products\Field\Types\\'.$type.'BackendView';
+
+        if (class_exists($viewClass)) {
+            return new $viewClass($this->getAttributes());
+        }
+
+        if ($this->parentFieldClass && class_exists($this->parentFieldClass)) {
+            $Field = new $this->parentFieldClass($this->getId(), $this->getAttributes());
+
+            if ($Field instanceof Field) {
+                return $Field->getBackendView();
+            }
         }
 
         return new View($this->getAttributes());
@@ -351,7 +404,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
     public function getAttributes()
     {
-        return array(
+        return [
             'id'         => $this->getId(),
             'title'      => $this->getTitle(),
             'type'       => $this->getType(),
@@ -369,7 +422,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'unassigned'    => $this->isUnassigned(),
             'value'         => $this->getValue(),
             'showInDetails' => $this->showInDetails()
-        );
+        ];
     }
 
     /**

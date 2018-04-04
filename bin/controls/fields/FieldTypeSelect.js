@@ -4,11 +4,6 @@
  * @module package/quiqqer/products/bin/controls/fields/FieldTypeSelect
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/QUI
- * @require qui/controls/buttons/Button
- * @require package/quiqqer/products/bin/Fields
- * @require Locale
- *
  * @event onFilterChange [self, filter]
  */
 define('package/quiqqer/products/bin/controls/fields/FieldTypeSelect', [

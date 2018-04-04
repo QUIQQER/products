@@ -32,6 +32,6 @@ QUI::$Ajax->registerFunction(
 
         return $FrontEndSearch->setSearchFields($searchFields);
     },
-    array('searchFields', 'siteId', 'project'),
+    ['searchFields', 'siteId', 'project'],
     'Permission::checkAdminUser'
 );

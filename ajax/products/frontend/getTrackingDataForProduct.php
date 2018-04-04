@@ -33,10 +33,10 @@ QUI::$Ajax->registerFunction(
 
         $categories = array_map(function ($Category) use ($Locale) {
             /* @var $Category \QUI\ERP\Products\Category\Category */
-            return array(
+            return [
                 'id'    => $Category->getId(),
                 'title' => $Category->getTitle($Locale)
-            );
+            ];
         }, $categories);
 
         // price
@@ -46,7 +46,7 @@ QUI::$Ajax->registerFunction(
             $price = $Product->getPrice(QUI::getUserBySession())->getPrice();
         }
 
-        return array(
+        return [
             'id'         => $Product->getId(),
             'category'   => $category,
             'categoryId' => $categoryId,
@@ -54,7 +54,7 @@ QUI::$Ajax->registerFunction(
             'title'      => $Product->getTitle($Locale),
             'productNo'  => $Product->getField(Fields::FIELD_PRODUCT_NO)->getValue(),
             'price'      => $price
-        );
+        ];
     },
-    array('productId')
+    ['productId']
 );

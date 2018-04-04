@@ -35,5 +35,5 @@ QUI::$Ajax->registerFunction(
 
         return $Control->create();
     },
-    array('productIds', 'currentProductId')
+    ['productIds', 'currentProductId']
 );

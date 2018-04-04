@@ -15,8 +15,9 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_search_backend_getSearchFieldData',
     function () {
         $BackEndSearch = SearchHandler::getBackendSearch();
+
         return $BackEndSearch->getSearchFieldData();
     },
-    array(),
+    [],
     'Permission::checkAdminUser'
 );

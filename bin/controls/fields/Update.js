@@ -4,15 +4,6 @@
  * @module package/quiqqer/products/bin/controls/categories/Create
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/utils/Form
- * @require Locale
- * @require package/quiqqer/products/bin/classes/Fields
- * @require package/quiqqer/translator/bin/controls/Update
- * @require text!package/quiqqer/products/bin/controls/fields/Create.html
- * @require css!package/quiqqer/products/bin/controls/fields/Update.css
- *
  * @event onLoaded
  */
 define('package/quiqqer/products/bin/controls/fields/Update', [

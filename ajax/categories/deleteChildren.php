@@ -24,6 +24,6 @@ QUI::$Ajax->registerFunction(
             }
         }
     },
-    array('categoryIds'),
+    ['categoryIds'],
     'Permission::checkAdminUser'
 );

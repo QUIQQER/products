@@ -23,6 +23,6 @@ QUI::$Ajax->registerFunction(
         $Product->addOwnField($Field);
         $Product->save();
     },
-    array('productId', 'fieldId'),
+    ['productId', 'fieldId'],
     'Permission::checkAdminUser'
 );

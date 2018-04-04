@@ -34,16 +34,16 @@ QUI::$Ajax->registerFunction(
                 break;
 
             default:
-                $siteList = $Project->getSites(array(
+                $siteList = $Project->getSites([
                     'type' => FrontendSearch::SITETYPE_SEARCH
-                ));
+                ]);
 
                 if (!isset($siteList[0])) {
                     throw new QUI\Exception(
-                        array(
+                        [
                             'quiqqer/products',
                             'exception.sitesearch.not.found'
-                        ),
+                        ],
                         404
                     );
                 }
@@ -62,5 +62,5 @@ QUI::$Ajax->registerFunction(
 
         return $Search->search($searchParams);
     },
-    array('project', 'siteId', 'searchParams')
+    ['project', 'siteId', 'searchParams']
 );

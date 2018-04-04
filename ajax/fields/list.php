@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_fields_list',
     function ($params) {
         $Fields = new QUI\ERP\Products\Handler\Fields();
-        $result = array();
+        $result = [];
         $params = json_decode($params, true);
 
         $Grid  = new QUI\Utils\Grid();
@@ -39,6 +39,6 @@ QUI::$Ajax->registerFunction(
 
         return $Grid->parseResult($result, $Fields->countFields($query));
     },
-    array('params'),
+    ['params'],
     'Permission::checkAdminUser'
 );

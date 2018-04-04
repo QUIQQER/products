@@ -15,14 +15,14 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_search',
     function ($fields, $params) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $result     = array();
+        $result     = [];
 
-        $query  = array();
+        $query  = [];
         $params = json_decode($params, true);
         $fields = json_decode($fields, true);
 
         if (!is_array($fields)) {
-            $fields = array();
+            $fields = [];
         }
 
         if (isset($params['order'])) {
@@ -41,10 +41,10 @@ QUI::$Ajax->registerFunction(
                 continue;
             }
 
-            $query['where_or'][$field] = array(
+            $query['where_or'][$field] = [
                 'type'  => '%LIKE%',
                 'value' => $value
-            );
+            ];
         }
 
         // search
@@ -64,6 +64,6 @@ QUI::$Ajax->registerFunction(
 
         return $result;
     },
-    array('fields', 'params'),
+    ['fields', 'params'],
     'Permission::checkAdminUser'
 );

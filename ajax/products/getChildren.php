@@ -16,7 +16,7 @@ QUI::$Ajax->registerFunction(
     function ($productIds) {
         $productIds = json_decode($productIds, true);
         $Products   = new QUI\ERP\Products\Handler\Products();
-        $result     = array();
+        $result     = [];
 
         $ExStack = new QUI\ExceptionStack();
 
@@ -35,5 +35,5 @@ QUI::$Ajax->registerFunction(
 
         return $result;
     },
-    array('productIds')
+    ['productIds']
 );

@@ -17,10 +17,10 @@ QUI::$Ajax->registerFunction(
         $Project = QUI::getProjectManager()->decode($project);
         $Site    = $Project->get($siteId);
 
-        $newChildId = $Site->createChild(array(
+        $newChildId = $Site->createChild([
             'name'  => QUI\Projects\Site\Utils::clearUrl($title, $Project),
             'title' => $title
-        ));
+        ]);
 
         if ((int)$createCategory == 0) {
             return $newChildId;
@@ -34,6 +34,6 @@ QUI::$Ajax->registerFunction(
 
         return $NewChild->getId();
     },
-    array('project', 'siteId', 'title', 'createCategory', 'parentCategory'),
+    ['project', 'siteId', 'title', 'createCategory', 'parentCategory'],
     'Permission::checkAdminUser'
 );

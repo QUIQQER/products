@@ -24,6 +24,6 @@ QUI::$Ajax->registerFunction(
 
         return $Product->getField($fieldId)->isPublic();
     },
-    array('productId', 'fieldId', 'status'),
+    ['productId', 'fieldId', 'status'],
     'Permission::checkAdminUser'
 );

@@ -17,6 +17,6 @@ QUI::$Ajax->registerFunction(
 
         $Category->delete();
     },
-    array('categoryId'),
+    ['categoryId'],
     'Permission::checkAdminUser'
 );

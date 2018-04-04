@@ -17,6 +17,6 @@ QUI::$Ajax->registerFunction(
         $Product = Products::getProduct($productId);
         $Product->deactivate();
     },
-    array('productId'),
+    ['productId'],
     'Permission::checkAdminUser'
 );
