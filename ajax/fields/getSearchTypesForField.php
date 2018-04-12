@@ -17,6 +17,6 @@ QUI::$Ajax->registerFunction(
 
         return $Field->getSearchTypes();
     },
-    array('fieldId'),
+    ['fieldId'],
     'Permission::checkAdminUser'
 );

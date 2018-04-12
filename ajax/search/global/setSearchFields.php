@@ -26,6 +26,6 @@ QUI::$Ajax->registerFunction(
 
         return $GlobaleSearch->setSearchFields($searchFields);
     },
-    array('searchFields'),
+    ['searchFields'],
     'Permission::checkAdminUser'
 );

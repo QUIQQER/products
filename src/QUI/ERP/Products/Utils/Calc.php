@@ -7,8 +7,9 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
-use QUI\ERP\Products\Handler\Fields;
 use QUI\Interfaces\Users\User as UserInterface;
+
+use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\ERP\Products\Product\ProductList;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
@@ -25,6 +26,10 @@ class Calc
 {
     /**
      * Percentage calculation
+     *
+     * @todo
+     * Das deprecated sollte in ERP::CALCULATION_PERCENTAGE
+     * Dazu müssten die Preisfaktoren vielleicht in ERP ren und aus Produkte
      *
      * @deprecated use QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE
      */
@@ -170,6 +175,8 @@ class Calc
      * @param ProductList $List
      * @param callable|boolean $callback - optional, callback function for the data array
      * @return ProductList
+     *
+     * @throws QUI\Exception
      */
     public function calcProductList(ProductList $List, $callback = false)
     {
@@ -189,7 +196,7 @@ class Calc
 
         $subSum   = 0;
         $nettoSum = 0;
-        $vatArray = array();
+        $vatArray = [];
 
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
@@ -197,7 +204,7 @@ class Calc
             try {
                 QUI::getEvents()->fireEvent(
                     'onQuiqqerProductsCalcListProduct',
-                    array($this, $Product)
+                    [$this, $Product]
                 );
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_ERROR);
@@ -227,7 +234,7 @@ class Calc
         try {
             QUI::getEvents()->fireEvent(
                 'onQuiqqerProductsCalcList',
-                array($this, $List, $nettoSum)
+                [$this, $List, $nettoSum]
             );
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_ERROR);
@@ -246,7 +253,7 @@ class Calc
                     $nettoSum       = $nettoSum + $PriceFactor->getValue();
                     $priceFactorSum = $priceFactorSum + $PriceFactor->getValue();
 
-                    $PriceFactor->setNettoSum($this, $PriceFactor->getValue());
+                    $PriceFactor->setNettoSum($PriceFactor->getValue());
                     break;
 
                 // Prozent Angabe
@@ -263,7 +270,7 @@ class Calc
                             break;
                     }
 
-                    $PriceFactor->setNettoSum($this, $percentage);
+                    $PriceFactor->setNettoSum($percentage);
 
                     $nettoSum       = $this->round($nettoSum + $percentage);
                     $priceFactorSum = $priceFactorSum + $percentage;
@@ -285,13 +292,17 @@ class Calc
             $vatSum  = $PriceFactor->getNettoSum() * ($Vat->getValue() / 100);
             $vat     = $Vat->getValue();
 
-            $PriceFactor->setBruttoSum($this, $vatSum + $PriceFactor->getNettoSum());
+            if ($isNetto) {
+                $PriceFactor->setSum($PriceFactor->getNettoSum());
+            } else {
+                $PriceFactor->setSum($vatSum + $PriceFactor->getNettoSum());
+            }
 
             if (!isset($vatArray[$vat])) {
-                $vatArray[$vat] = array(
+                $vatArray[$vat] = [
                     'vat'  => $vat,
                     'text' => ErpCalc::getVatText($Vat->getValue(), $this->getUser())
-                );
+                ];
 
                 $vatArray[$vat]['sum'] = 0;
             }
@@ -300,8 +311,8 @@ class Calc
         }
 
         // vat text
-        $vatLists  = array();
-        $vatText   = array();
+        $vatLists  = [];
+        $vatText   = [];
         $bruttoSum = $nettoSum;
 
         foreach ($vatArray as $vatEntry) {
@@ -315,11 +326,36 @@ class Calc
         }
 
         if ($this->ignoreVatCalculation) {
-            $vatArray = array();
-            $vatText  = array();
+            $vatArray = [];
+            $vatText  = [];
         }
 
-        $callback(array(
+        // gegenrechnung, wegen rundungsfehler
+        if ($isNetto === false) {
+            $priceFactorBruttoSums = 0;
+
+            foreach ($priceFactors as $Factor) {
+                /* @var $Factor QUI\ERP\Products\Utils\PriceFactor */
+                $priceFactorBruttoSums = $priceFactorBruttoSums + round($Factor->getSum(), 2);
+            }
+
+            $priceFactorBruttoSum = $subSum + $priceFactorBruttoSums;
+
+            if ($priceFactorBruttoSum !== round($bruttoSum, 2)) {
+                $diff = $priceFactorBruttoSum - round($bruttoSum, 2);
+
+                // if we have a diff, we change the first vat price factor
+                foreach ($priceFactors as $Factor) {
+                    if ($Factor instanceof QUI\ERP\Products\Interfaces\PriceFactorWithVatInterface) {
+                        $Factor->setSum(round($Factor->getSum() - $diff, 2));
+                        $bruttoSum = round($bruttoSum, 2);
+                        break;
+                    }
+                }
+            }
+        }
+
+        $callback([
             'sum'          => $bruttoSum,
             'subSum'       => $subSum,
             'nettoSum'     => $nettoSum,
@@ -329,7 +365,7 @@ class Calc
             'isEuVat'      => $isEuVatUser,
             'isNetto'      => $isNetto,
             'currencyData' => $this->getCurrency()->toArray()
-        ));
+        ]);
 
         return $List;
     }
@@ -341,6 +377,9 @@ class Calc
      * @param UniqueProduct $Product
      * @param callable|boolean $callback - optional, callback function for the calculated data array
      * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Users\Exception
+     * @throws QUI\Exception
      */
     public function getProductPrice(UniqueProduct $Product, $callback = false)
     {
@@ -355,12 +394,12 @@ class Calc
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
         $Area        = QUI\ERP\Utils\User::getUserArea($this->getUser());
 
-        $nettoPrice   = $Product->getNettoPrice()->getNetto();
+        $nettoPrice   = $Product->getNettoPrice()->value();
         $priceFactors = $Product->getPriceFactors()->sort();
 
-        $factors                    = array();
+        $factors                    = [];
         $basisNettoPrice            = $nettoPrice;
-        $calculationBasisBruttoList = array();
+        $calculationBasisBruttoList = [];
 
         /* @var PriceFactor $PriceFactor */
         foreach ($priceFactors as $PriceFactor) {
@@ -390,7 +429,7 @@ class Calc
                     }
             }
 
-            $PriceFactor->setNettoSum($this, $priceFactorSum * $Product->getQuantity());
+            $PriceFactor->setNettoSum($priceFactorSum * $Product->getQuantity());
 
             $nettoPrice       = $nettoPrice + $priceFactorSum;
             $priceFactorArray = $PriceFactor->toArray();
@@ -406,14 +445,14 @@ class Calc
                 // einfache Zahl, Währung --- kein Prozent
                 case ErpCalc::CALCULATION_COMPLEMENT:
                     $nettoPrice = $nettoPrice + $PriceFactor->getValue();
-                    $PriceFactor->setNettoSum($this, $PriceFactor->getValue());
+                    $PriceFactor->setNettoSum($PriceFactor->getValue());
                     break;
 
                 // Prozent Angabe
                 case ErpCalc::CALCULATION_PERCENTAGE:
                     $percentage = $PriceFactor->getValue() / 100 * $nettoPrice;
                     $nettoPrice = $nettoPrice + $percentage;
-                    $PriceFactor->setNettoSum($this, $percentage);
+                    $PriceFactor->setNettoSum($percentage);
                     break;
             }
         }
@@ -471,11 +510,11 @@ class Calc
         $sum        = $isNetto ? $nettoSum : $bruttoSum;
         $basisPrice = $isNetto ? $basisNettoPrice : $basisNettoPrice + ($basisNettoPrice * $Vat->getValue() / 100);
 
-        $vatArray = array(
+        $vatArray = [
             'vat'  => $Vat->getValue(),
             'sum'  => $this->round($nettoSum * ($Vat->getValue() / 100)),
             'text' => ErpCalc::getVatText($Vat->getValue(), $this->getUser())
-        );
+        ];
 
 
         QUI\ERP\Debug::getInstance()->log(
@@ -483,7 +522,7 @@ class Calc
             'quiqqer/products'
         );
 
-        QUI\ERP\Debug::getInstance()->log(array(
+        QUI\ERP\Debug::getInstance()->log([
             'basisPrice'   => $basisPrice,
             'price'        => $price,
             'sum'          => $sum,
@@ -494,10 +533,10 @@ class Calc
             'isNetto'      => $isNetto,
             'currencyData' => $this->getCurrency()->toArray(),
             'factors'      => $factors
-        ), 'quiqqer/products');
+        ], 'quiqqer/products');
 
 
-        $callback(array(
+        $callback([
             'basisPrice'   => $basisPrice,
             'price'        => $price,
             'sum'          => $sum,
@@ -509,7 +548,7 @@ class Calc
             'isNetto'      => $isNetto,
             'currencyData' => $this->getCurrency()->toArray(),
             'factors'      => $factors
-        ));
+        ]);
 
         return $Product->getPrice();
     }
@@ -530,6 +569,8 @@ class Calc
      *
      * @param int|double|float $nettoPrice - netto price
      * @return int|double|float
+     *
+     * @throws QUI\Exception
      */
     public function getPrice($nettoPrice)
     {
@@ -553,6 +594,8 @@ class Calc
      * Return the tax message for an user
      *
      * @return string
+     *
+     * @throws QUI\Exception
      */
     public function getVatTextByUser()
     {

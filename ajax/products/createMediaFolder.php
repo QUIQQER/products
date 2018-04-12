@@ -24,5 +24,5 @@ QUI::$Ajax->registerFunction(
 
         return QUI\Projects\Media\Utils::parseForMediaCenter($Folder);
     },
-    array('productId', 'fieldId')
+    ['productId', 'fieldId']
 );

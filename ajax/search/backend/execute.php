@@ -28,6 +28,6 @@ QUI::$Ajax->registerFunction(
 
         return $BackEndSearch->search($searchParams);
     },
-    array('searchParams'),
+    ['searchParams'],
     'Permission::checkAdminUser'
 );

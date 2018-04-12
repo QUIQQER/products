@@ -20,7 +20,7 @@ QUI::$Ajax->registerFunction(
             return $Field->isPublic();
         });
 
-        $result = array();
+        $result = [];
 
         /* @var $Field \QUI\ERP\Products\Field\Field */
         foreach ($fields as $Field) {

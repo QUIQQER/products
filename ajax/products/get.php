@@ -29,5 +29,5 @@ QUI::$Ajax->registerFunction(
 
         return $attributes;
     },
-    array('productId')
+    ['productId']
 );

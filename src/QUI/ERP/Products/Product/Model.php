@@ -45,18 +45,18 @@ class Model extends QUI\QDOM
     /**
      * @var array
      */
-    protected $fields = array();
+    protected $fields = [];
 
     /**
      * @var array
      */
-    protected $categories = array();
+    protected $categories = [];
 
     /**
      * Permissions list
      * @var array
      */
-    protected $permissions = array();
+    protected $permissions = [];
 
     /**
      * @var null
@@ -82,28 +82,28 @@ class Model extends QUI\QDOM
     {
         $this->id = (int)$pid;
 
-        $result = QUI::getDataBase()->fetch(array(
+        $result = QUI::getDataBase()->fetch([
             'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            'where' => array(
+            'where' => [
                 'id' => $this->getId()
-            )
-        ));
+            ]
+        ]);
 
         if (!isset($result[0])) {
             // if not exists, so we cleanup the cache table table, too
             QUI::getDataBase()->delete(
                 QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-                array('id' => $this->getId())
+                ['id' => $this->getId()]
             );
 
             throw new QUI\ERP\Products\Product\Exception(
-                array(
+                [
                     'quiqqer/products',
                     'exception.product.not.found',
-                    array('productId' => $this->getId())
-                ),
+                    ['productId' => $this->getId()]
+                ],
                 404,
-                array('id' => $this->getId())
+                ['id' => $this->getId()]
             );
         }
 
@@ -159,7 +159,7 @@ class Model extends QUI\QDOM
         $fields = json_decode($result[0]['fieldData'], true);
 
         if (!is_array($fields)) {
-            $fields = array();
+            $fields = [];
         }
 
         foreach ($fields as $field) {
@@ -196,12 +196,12 @@ class Model extends QUI\QDOM
         }
 
         // all standard and all system fields must be in the product
-        $systemFields = Fields::getFields(array(
-            'where_or' => array(
+        $systemFields = Fields::getFields([
+            'where_or' => [
                 'systemField'   => 1,
                 'standardField' => 1
-            )
-        ));
+            ]
+        ]);
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($systemFields as $Field) {
@@ -277,7 +277,7 @@ class Model extends QUI\QDOM
         $attributes['description'] = $this->getDescription($Locale);
         $attributes['uid']         = $User->getId();
 
-        $fields = array();
+        $fields = [];
 
         foreach ($fieldList as $Field) {
             /* @var $Field QUI\ERP\Products\Field\CustomField */
@@ -304,6 +304,8 @@ class Model extends QUI\QDOM
             $attributes['fields'] = $fields;
         }
 
+        QUI::getEvents()->fireEvent('quiqqerProductsToUniqueProduct', [$this, &$attributes]);
+
         return new UniqueProduct($this->getId(), $attributes);
     }
 
@@ -324,10 +326,10 @@ class Model extends QUI\QDOM
             $Field = $this->getField($fieldId);
 
             if ($Field->getType() != Fields::TYPE_FOLDER) {
-                throw new QUI\ERP\Products\Product\Exception(array(
+                throw new QUI\ERP\Products\Product\Exception([
                     'quiqqer/products',
                     'exception.product.field.is.no.media.folder'
-                ));
+                ]);
             }
 
             // exist a media folder in the field?
@@ -390,7 +392,7 @@ class Model extends QUI\QDOM
 
         $this->update();
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreateMediaFolder', array($this));
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreateMediaFolder', [$this]);
 
         return $Folder;
     }
@@ -445,19 +447,19 @@ class Model extends QUI\QDOM
             && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
         ) {
             QUI\System\Log::addWarning(
-                QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', array(
+                QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', [
                     'productId' => $this->getId(),
                     'title'     => $this->getTitle()
-                ))
+                ])
             );
 
             return '/_p/'.$this->getUrlName();
         }
 
-        $url = $Site->getUrlRewritten(array(
+        $url = $Site->getUrlRewritten([
             0              => $this->getUrlName(),
             'paramAsSites' => true
-        ));
+        ]);
 
         return $url;
     }
@@ -469,7 +471,7 @@ class Model extends QUI\QDOM
      */
     public function getUrlName()
     {
-        $parts   = array();
+        $parts   = [];
         $parts[] = Orthos::urlEncodeString($this->getTitle());
         $parts[] = $this->getId();
 
@@ -494,11 +496,11 @@ class Model extends QUI\QDOM
             QUI::getLocale()->get(
                 'quiqqer/products',
                 'warning.product.have.no.title',
-                array('id' => $this->getId())
+                ['id' => $this->getId()]
             ),
-            array(
+            [
                 'id' => $this->getId()
-            )
+            ]
         );
 
         return '';
@@ -662,7 +664,7 @@ class Model extends QUI\QDOM
         }
 
         $Price        = $Clone->createUniqueProduct()->calc($Calc)->getPrice();
-        $currentPrice = $Price->getNetto();
+        $currentPrice = $Price->value();
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($fields as $Field) {
@@ -679,7 +681,7 @@ class Model extends QUI\QDOM
             foreach ($options['entries'] as $index => $data) {
                 $Clone->getField($Field->getId())->setValue($index);
 
-                $price = $Clone->createUniqueProduct()->calc($Calc)->getPrice()->getNetto();
+                $price = $Clone->createUniqueProduct()->calc($Calc)->getPrice()->value();
 
                 if ($currentPrice > $price) {
                     $currentPrice = $price;
@@ -719,7 +721,7 @@ class Model extends QUI\QDOM
         $fields = $Clone->getFields();
 
         $Price        = $Clone->createUniqueProduct()->calc($Calc)->getPrice();
-        $currentPrice = $Price->getNetto();
+        $currentPrice = $Price->value();
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($fields as $Field) {
@@ -736,7 +738,7 @@ class Model extends QUI\QDOM
             foreach ($options['entries'] as $index => $data) {
                 $Clone->getField($Field->getId())->setValue($index);
 
-                $price = $Clone->createUniqueProduct()->calc($Calc)->getPrice()->getNetto();
+                $price = $Clone->createUniqueProduct()->calc($Calc)->getPrice()->value();
 
                 if ($currentPrice < $price) {
                     $currentPrice = $price;
@@ -778,7 +780,7 @@ class Model extends QUI\QDOM
         /* @var $Price QUI\ERP\Money\Price */
         $Price = $this->getPrice();
 
-        $attributes['price_netto']    = $Price->getNetto();
+        $attributes['price_netto']    = $Price->value();
         $attributes['price_currency'] = $Price->getCurrency()->getCode();
 
         if ($this->getCategory()) {
@@ -786,7 +788,7 @@ class Model extends QUI\QDOM
         }
 
         // fields
-        $fields    = array();
+        $fields    = [];
         $fieldList = $this->getFields();
 
         /* @var $Field QUI\ERP\Products\Field\Field */
@@ -802,7 +804,7 @@ class Model extends QUI\QDOM
         }
 
         // categories
-        $categories = array();
+        $categories = [];
         $catList    = $this->getCategories();
 
         /* @var $Category Category */
@@ -851,7 +853,7 @@ class Model extends QUI\QDOM
     {
         QUI\Permissions\Permission::checkPermission('product.edit');
 
-        $categoryIds = array();
+        $categoryIds = [];
         $categories  = $this->getCategories();
 
         /* @var $Field FieldInterface */
@@ -872,17 +874,17 @@ class Model extends QUI\QDOM
         }
 
         QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.save', array(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.save', [
                 'id' => $this->getId()
-            )),
+            ]),
             '',
-            array(
+            [
                 'categories'  => ','.implode(',', $categoryIds).',',
                 'category'    => $mainCategory,
                 'fieldData'   => json_encode($fieldData),
                 'permissions' => json_encode($this->permissions),
                 'priority'    => $this->getPriority()
-            )
+            ]
         );
 
         $this->setAttribute('e_date', date('Y-m-d H:i:s'));
@@ -890,22 +892,22 @@ class Model extends QUI\QDOM
         // update
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            array(
+            [
                 'categories'  => ','.implode(',', $categoryIds).',',
                 'category'    => $mainCategory,
                 'fieldData'   => json_encode($fieldData),
                 'permissions' => json_encode($this->permissions),
                 'e_user'      => QUI::getUserBySession()->getId(),
                 'e_date'      => $this->getAttribute('e_date')
-            ),
-            array('id' => $this->getId())
+            ],
+            ['id' => $this->getId()]
         );
 
         $this->updateCache();
 
         QUI\Cache\Manager::clear('quiqqer/products/'.$this->getId());
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', array($this));
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', [$this]);
     }
 
     /**
@@ -925,7 +927,7 @@ class Model extends QUI\QDOM
 
         $this->productSave($fieldData);
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductUserSave', array($this));
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductUserSave', [$this]);
     }
 
     /**
@@ -938,7 +940,7 @@ class Model extends QUI\QDOM
      */
     public function validateFields()
     {
-        $fieldData = array();
+        $fieldData = [];
         $fields    = $this->getAllProductFields();
 
         // generate the product field data
@@ -960,38 +962,38 @@ class Model extends QUI\QDOM
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addWarning(
                     $Exception->getMessage(),
-                    array(
+                    [
                         'id'        => $Field->getId(),
                         'title'     => $Field->getTitle(),
                         'fieldType' => $Field->getType()
-                    )
+                    ]
                 );
 
                 throw new QUI\ERP\Products\Product\Exception(
-                    array(
+                    [
                         'quiqqer/products',
                         'exception.field.invalid',
-                        array(
+                        [
                             'fieldId'    => $Field->getId(),
                             'fieldTitle' => $Field->getTitle(),
                             'fieldType'  => $Field->getType()
-                        )
-                    ),
+                        ]
+                    ],
                     1003
                 );
             }
 
             if ($Field->isEmpty()) {
                 throw new QUI\ERP\Products\Product\Exception(
-                    array(
+                    [
                         'quiqqer/products',
                         'exception.field.required.but.empty',
-                        array(
+                        [
                             'fieldId'    => $Field->getId(),
                             'fieldTitle' => $Field->getTitle(),
                             'fieldType'  => $Field->getType()
-                        )
-                    ),
+                        ]
+                    ],
                     1004
                 );
             }
@@ -1011,7 +1013,7 @@ class Model extends QUI\QDOM
     protected function getFieldData()
     {
         $fields    = $this->getAllProductFields();
-        $fieldData = array();
+        $fieldData = [];
 
         /* @var QUI\ERP\Products\Field\Field $Field */
         foreach ($fields as $Field) {
@@ -1068,7 +1070,7 @@ class Model extends QUI\QDOM
         $fields     = $this->fields;
         $categories = $this->getCategories();
 
-        $categoryFields = array();
+        $categoryFields = [];
 
         /* @var $Field FieldInterface */
         /* @var $Category Category */
@@ -1137,10 +1139,10 @@ class Model extends QUI\QDOM
 
         // wir nutzen system user als netto user
         $SystemUser = QUI::getUsers()->getSystemUser();
-        $minPrice   = $this->getMinimumPrice($SystemUser)->getNetto();
-        $maxPrice   = $this->getMaximumPrice($SystemUser)->getNetto();
+        $minPrice   = $this->getMinimumPrice($SystemUser)->value();
+        $maxPrice   = $this->getMaximumPrice($SystemUser)->value();
 
-        $data = array(
+        $data = [
             'productNo' => $this->getFieldValueByLocale(
                 Fields::FIELD_PRODUCT_NO,
                 $Locale
@@ -1154,7 +1156,7 @@ class Model extends QUI\QDOM
             'maxPrice'  => $maxPrice ? $maxPrice : 0,
             'c_date'    => $this->getAttribute('c_date'),
             'e_date'    => $this->getAttribute('e_date')
-        );
+        ];
 
         // permissions
         $permissions     = $this->getPermissions();
@@ -1172,7 +1174,7 @@ class Model extends QUI\QDOM
         $categories = $this->getCategories();
 
         if (!empty($categories)) {
-            $catIds = array();
+            $catIds = [];
 
             /** @var Category $Category */
             foreach ($categories as $Category) {
@@ -1211,13 +1213,13 @@ class Model extends QUI\QDOM
         }
 
         // test if cache entry exists first
-        $result = QUI::getDataBase()->fetch(array(
+        $result = QUI::getDataBase()->fetch([
             'from'  => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            'where' => array(
+            'where' => [
                 'id'   => $this->getId(),
                 'lang' => $lang
-            )
-        ));
+            ]
+        ]);
 
         if (empty($result)) {
             $data['id']   = $this->id;
@@ -1234,10 +1236,10 @@ class Model extends QUI\QDOM
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             $data,
-            array(
+            [
                 'id'   => $this->getId(),
                 'lang' => $lang
-            )
+            ]
         );
     }
 
@@ -1251,13 +1253,13 @@ class Model extends QUI\QDOM
         QUI\Permissions\Permission::checkPermission('product.delete');
 
         QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.delete', array(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.delete', [
                 'id'    => $this->getId(),
                 'title' => $this->getTitle(),
-            ))
+            ])
         );
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductDeleteBegin', array($this));
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductDeleteBegin', [$this]);
 
         // delete the media folder
         try {
@@ -1270,15 +1272,15 @@ class Model extends QUI\QDOM
 
         QUI::getDataBase()->delete(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            array('id' => $this->getId())
+            ['id' => $this->getId()]
         );
 
         QUI::getDataBase()->delete(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            array('id' => $this->getId())
+            ['id' => $this->getId()]
         );
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductDelete', array($this));
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductDelete', [$this]);
     }
 
     /**
@@ -1292,7 +1294,7 @@ class Model extends QUI\QDOM
      */
     public function getFields()
     {
-        $fields = array();
+        $fields = [];
 
         /* @var $Field FieldInterface */
         foreach ($this->fields as $Field) {
@@ -1312,7 +1314,7 @@ class Model extends QUI\QDOM
      */
     public function getFieldsByType($type)
     {
-        $result = array();
+        $result = [];
         $fields = $this->getFields();
 
         /* @var $Field QUI\ERP\Products\Field\Field */
@@ -1340,14 +1342,14 @@ class Model extends QUI\QDOM
         }
 
         throw new QUI\ERP\Products\Product\Exception(
-            array(
+            [
                 'quiqqer/products',
                 'exception.field.not.found',
-                array(
+                [
                     'fieldId'   => $fieldId,
                     'productId' => $this->getId()
-                )
-            ),
+                ]
+            ],
             1002
         );
     }
@@ -1397,7 +1399,7 @@ class Model extends QUI\QDOM
      */
     public function getFieldSource($fieldId)
     {
-        $sources    = array();
+        $sources    = [];
         $Field      = $this->getField($fieldId);
         $categories = $this->getCategories();
 
@@ -1413,14 +1415,14 @@ class Model extends QUI\QDOM
             $sources[] = QUI::getLocale()->get('quiqqer/products', 'standardField');
         }
 
-        $found = Categories::getCategoryIds(array(
-            'where' => array(
-                'fields' => array(
+        $found = Categories::getCategoryIds([
+            'where' => [
+                'fields' => [
                     'type'  => '%LIKE%',
                     'value' => '"id":'.$Field->getId().','
-                )
-            )
-        ));
+                ]
+            ]
+        ]);
 
         $isIdInCategories = function ($cid) use ($categories) {
             /* @var $Category Category */
@@ -1489,7 +1491,7 @@ class Model extends QUI\QDOM
      */
     public function clearCategories()
     {
-        $this->categories = array();
+        $this->categories = [];
     }
 
     /**
@@ -1524,10 +1526,10 @@ class Model extends QUI\QDOM
             return $Folder;
         }
 
-        throw new QUI\ERP\Products\Product\Exception(array(
+        throw new QUI\ERP\Products\Product\Exception([
             'quiqqer/products',
             'exception.products.media.folder.missing'
-        ));
+        ]);
     }
 
     /**
@@ -1550,10 +1552,10 @@ class Model extends QUI\QDOM
             $Folder = $this->getMediaFolder();
 
             if ($Folder) {
-                $images = $Folder->getImages(array(
+                $images = $Folder->getImages([
                     'limit' => 1,
                     'order' => 'priority ASC'
-                ));
+                ]);
 
                 if (isset($images[0])) {
                     return $images[0];
@@ -1573,13 +1575,13 @@ class Model extends QUI\QDOM
         } catch (QUI\Exception $Exception) {
         }
 
-        throw new QUI\ERP\Products\Product\Exception(array(
+        throw new QUI\ERP\Products\Product\Exception([
             'quiqqer/products',
             'exception.product.no.image',
-            array(
+            [
                 'productId' => $this->getId()
-            )
-        ));
+            ]
+        ]);
     }
 
     /**
@@ -1588,12 +1590,12 @@ class Model extends QUI\QDOM
      * @param array $params - optional, select params
      * @return array
      */
-    public function getImages($params = array())
+    public function getImages($params = [])
     {
         try {
             return $this->getMediaFolder()->getImages($params);
         } catch (QUI\Exception $Exception) {
-            return array();
+            return [];
         }
     }
 
@@ -1603,12 +1605,12 @@ class Model extends QUI\QDOM
      * @param array $params - optional, select params
      * @return array
      */
-    public function getFiles($params = array())
+    public function getFiles($params = [])
     {
         try {
             return $this->getMediaFolder()->getFiles($params);
         } catch (QUI\Exception $Exception) {
-            return array();
+            return [];
         }
     }
 
@@ -1624,20 +1626,20 @@ class Model extends QUI\QDOM
         $this->active = false;
 
         QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.activate', array(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.activate', [
                 'id' => $this->getId()
-            ))
+            ])
         );
 
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            array('active' => 0),
-            array('id' => $this->getId())
+            ['active' => 0],
+            ['id' => $this->getId()]
         );
 
         $this->updateCache();
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductDeactivate', array($this));
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductDeactivate', [$this]);
     }
 
     /**
@@ -1655,20 +1657,20 @@ class Model extends QUI\QDOM
         $Category = $this->getCategory();
 
         if (!$Category) {
-            throw new QUI\ERP\Products\Product\Exception(array(
+            throw new QUI\ERP\Products\Product\Exception([
                 'quiqqer/products',
                 'exception.product.activasion.no.category',
-                array(
+                [
                     'id'    => $this->getId(),
                     'title' => $this->getTitle()
-                )
-            ));
+                ]
+            ]);
         }
 
         QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.activate', array(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.activate', [
                 'id' => $this->getId()
-            ))
+            ])
         );
 
         // all fields correct?
@@ -1678,13 +1680,13 @@ class Model extends QUI\QDOM
 
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            array('active' => 1),
-            array('id' => $this->getId())
+            ['active' => 1],
+            ['id' => $this->getId()]
         );
 
         $this->updateCache();
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductActivate', array($this));
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductActivate', [$this]);
     }
 
     /**
@@ -1750,10 +1752,10 @@ class Model extends QUI\QDOM
                     'exception.no.permission'
                 ),
                 403,
-                array(
+                [
                     'userid'   => $User->getId(),
                     'username' => $User->getName()
-                )
+                ]
             );
         }
     }
@@ -1777,7 +1779,7 @@ class Model extends QUI\QDOM
     {
         QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
 
-        $this->permissions = array();
+        $this->permissions = [];
     }
 
     /**
@@ -1792,7 +1794,7 @@ class Model extends QUI\QDOM
         QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
 
         if (isset($this->permissions[$permission])) {
-            $this->permissions[$permission] = array();
+            $this->permissions[$permission] = [];
         }
     }
 }

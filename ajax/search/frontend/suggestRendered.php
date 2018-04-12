@@ -31,19 +31,19 @@ QUI::$Ajax->registerFunction(
         // global search
         // @todo richtige globale suche umsetzen, ist nur ein workaround
         if ($globalsearch) {
-            $siteList = $Project->getSites(array(
-                'where' => array(
+            $siteList = $Project->getSites([
+                'where' => [
                     'type' => FrontendSearch::SITETYPE_SEARCH
-                ),
+                ],
                 'limit' => 1
-            ));
+            ]);
 
             if (!isset($siteList[0])) {
                 throw new QUI\Exception(
-                    array(
+                    [
                         'quiqqer/products',
                         'exception.sitesearch.not.found'
-                    ),
+                    ],
                     404
                 );
             }
@@ -62,19 +62,19 @@ QUI::$Ajax->registerFunction(
                     break;
 
                 default:
-                    $siteList = $Project->getSites(array(
-                        'where' => array(
+                    $siteList = $Project->getSites([
+                        'where' => [
                             'type' => FrontendSearch::SITETYPE_SEARCH
-                        ),
+                        ],
                         'limit' => 1
-                    ));
+                    ]);
 
                     if (!isset($siteList[0])) {
                         throw new QUI\Exception(
-                            array(
+                            [
                                 'quiqqer/products',
                                 'exception.sitesearch.not.found'
-                            ),
+                            ],
                             404
                         );
                     }
@@ -112,10 +112,10 @@ QUI::$Ajax->registerFunction(
                 $articleNo = $ArticleNo->getValueByLocale($Locale);
                 $url       = $Product->getUrl();
 
-                $html .= '<li data-url="' . $url . '">';
+                $html .= '<li data-url="'.$url.'">';
 
                 $html .= '<div class="quiqqer-products-search-suggest-dropdown-icon">';
-                $html .= '<img src="' . $Image->getSizeCacheUrl(100, 100) . '" />';
+                $html .= '<img src="'.$Image->getSizeCacheUrl(100, 100).'" />';
                 $html .= '</div>';
 
                 $html .= '<div class="quiqqer-products-search-suggest-dropdown-text">';
@@ -146,5 +146,5 @@ QUI::$Ajax->registerFunction(
 
         return $html;
     },
-    array('project', 'siteId', 'searchParams', 'globalsearch')
+    ['project', 'siteId', 'searchParams', 'globalsearch']
 );

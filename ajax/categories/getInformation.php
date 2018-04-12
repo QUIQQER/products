@@ -15,12 +15,12 @@ QUI::$Ajax->registerFunction(
         $Categories = new QUI\ERP\Products\Handler\Categories();
         $Category   = $Categories->getCategory($categoryId);
 
-        return array(
+        return [
             'products'   => $Category->countProducts(),
             'categories' => $Category->countChildren(),
             'fields'     => count($Category->getFields())
-        );
+        ];
     },
-    array('categoryId'),
+    ['categoryId'],
     'Permission::checkAdminUser'
 );

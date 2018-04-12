@@ -99,7 +99,9 @@ Produkt Events
 - onQuiqqerProductsProductDeleteBegin [Product]
 - onQuiqqerProductsProductCreateMediaFolder [Product]
 
-- onQuiqqerProductsProductViewButtons [Product, Collection $List]
+- onQuiqqerProductsToUniqueProduct [Product, &attributes]
+
+- onQuiqqerProducts [Product, Collection $List]
 
 Field Events
 ------
@@ -108,7 +110,6 @@ Field Events
 - onQuiqqerProductsFieldDelete [Field]
 - onQuiqqerProductsFieldDeleteSystemfield [Field]
 - onQuiqqerProductsFieldSave [Field]
-
 
 Kategorien Events
 ------
@@ -119,3 +120,13 @@ Kategorien Events
 - onQuiqqerProductsCategorySave [Category]
 - onQuiqqerProductsCategoryDelete [Category]
 - onQuiqqerProductsCategorySetFieldsToAllProducts [Category]
+
+Template Events
+-------
+
+- onQuiqqer::products::product::begin [Collection, Product]
+- onQuiqqer::products::product::buttons::begin [Collection, Product]
+- onQuiqqer::products::product::buttons::end [Collection, Product]
+- onQuiqqer::products::product::middle [Collection, Product]
+- onQuiqqer::products::product::middle-2 [Collection, Product]
+- onQuiqqer::products::product::end [Collection, Product]

@@ -17,6 +17,6 @@ QUI::$Ajax->registerFunction(
     function ($productId) {
         return Products::copyProduct($productId)->getId();
     },
-    array('productId'),
+    ['productId'],
     'Permission::checkAdminUser'
 );

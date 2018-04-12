@@ -20,14 +20,14 @@ class Price extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
-        $this->setAttributes(array(
+        $this->setAttributes([
             'data-qui'    => 'package/quiqqer/products/bin/controls/frontend/Price',
             'Price'       => null,
             'withVatText' => false,
             'Calc'        => false
-        ));
+        ]);
 
         $this->addCSSClass('qui-products-price-display');
 
@@ -42,10 +42,10 @@ class Price extends QUI\Control
     public function getBody()
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
-            $this->setAttributes(array(
+            $this->setAttributes([
                 'data-qui' => '',
                 'Price'    => null
-            ));
+            ]);
 
             return '';
         }
@@ -57,7 +57,7 @@ class Price extends QUI\Control
             return '';
         }
 
-        $this->setAttribute('data-qui-options-price', $Price->getNetto());
+        $this->setAttribute('data-qui-options-price', $Price->value());
         $this->setAttribute('data-qui-options-currency', $Price->getCurrency()->getCode());
 
         if ($this->getAttribute('withVatText') === false) {

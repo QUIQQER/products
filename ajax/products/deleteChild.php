@@ -17,6 +17,6 @@ QUI::$Ajax->registerFunction(
 
         $Product->delete();
     },
-    array('productId'),
+    ['productId'],
     'Permission::checkAdminUser'
 );

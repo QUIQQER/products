@@ -35,6 +35,6 @@ QUI::$Ajax->registerFunction(
             throw $ExceptionStack;
         }
     },
-    array('categoryId', 'productIds'),
+    ['categoryId', 'productIds'],
     'Permission::checkAdminUser'
 );

@@ -19,7 +19,7 @@ QUI::$Ajax->registerFunction(
         $Category   = $Categories->getCategory($categoryId);
         $Grid       = new QUI\Utils\Grid();
 
-        $products = array();
+        $products = [];
 
         $productIds = $Category->getProductIds(
             $Grid->parseDBParams(json_decode($params, true))
@@ -37,6 +37,6 @@ QUI::$Ajax->registerFunction(
 
         return $Grid->parseResult($products, $Category->countProducts());
     },
-    array('categoryId', 'params'),
+    ['categoryId', 'params'],
     'Permission::checkAdminUser'
 );

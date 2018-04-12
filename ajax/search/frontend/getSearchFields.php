@@ -23,5 +23,5 @@ QUI::$Ajax->registerFunction(
 
         return $FrontEndSearch->getSearchFields();
     },
-    array('siteId', 'project')
+    ['siteId', 'project']
 );

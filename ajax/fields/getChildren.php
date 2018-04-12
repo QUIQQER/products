@@ -16,10 +16,10 @@ QUI::$Ajax->registerFunction(
     function ($fieldIds) {
         $Fields   = new QUI\ERP\Products\Handler\Fields();
         $fieldIds = json_decode($fieldIds, true);
-        $result   = array();
+        $result   = [];
 
         if (!is_array($fieldIds)) {
-            $fieldIds = array();
+            $fieldIds = [];
         }
 
         foreach ($fieldIds as $fieldId) {
@@ -32,6 +32,6 @@ QUI::$Ajax->registerFunction(
 
         return $result;
     },
-    array('fieldIds'),
+    ['fieldIds'],
     'Permission::checkAdminUser'
 );

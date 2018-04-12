@@ -21,12 +21,12 @@ QUI::$Ajax->registerFunction(
         // products
         $result = QUI::$Ajax->callRequestFunction(
             'package_quiqqer_products_ajax_search_backend_execute',
-            array('searchParams' => $searchParams)
+            ['searchParams' => $searchParams]
         );
 
         $page     = 1;
         $result   = $result['result'];
-        $products = array();
+        $products = [];
 
         foreach ($result as $pid) {
             try {
@@ -35,9 +35,9 @@ QUI::$Ajax->registerFunction(
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeRecursive($Exception, QUI\System\Log::LEVEL_ALERT);
 
-                $products[] = array(
+                $products[] = [
                     'id' => (int)$pid
-                );
+                ];
             }
         }
 
@@ -51,15 +51,15 @@ QUI::$Ajax->registerFunction(
 
         $count = QUI::$Ajax->callRequestFunction(
             'package_quiqqer_products_ajax_search_backend_execute',
-            array('searchParams' => json_encode($searchParams))
+            ['searchParams' => json_encode($searchParams)]
         );
 
-        return array(
+        return [
             'data'  => $products,
             'total' => $count['result'],
             'page'  => $page
-        );
+        ];
     },
-    array('searchParams'),
+    ['searchParams'],
     'Permission::checkAdminUser'
 );

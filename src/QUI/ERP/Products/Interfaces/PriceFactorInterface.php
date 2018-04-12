@@ -3,12 +3,14 @@
 /**
  * This file contains QUI\ERP\Products\Interfaces\PriceFactorInterface
  */
+
 namespace QUI\ERP\Products\Interfaces;
 
 use QUI;
 
 /**
  * Interface PriceFactor
+ *
  * @package QUI\ERP\Products\Interfaces
  */
 interface PriceFactorInterface
@@ -111,10 +113,9 @@ interface PriceFactorInterface
     /**
      * Set the netto sum
      *
-     * @param \QUI\ERP\Products\Utils\Calc $Calc - calculation object
      * @param int|double|float $sum - sum
      */
-    public function setNettoSum(QUI\ERP\Products\Utils\Calc $Calc, $sum);
+    public function setNettoSum($sum);
 
     /**
      * @return bool|int|float|double
@@ -129,20 +130,19 @@ interface PriceFactorInterface
     /**
      * Set the calculated sum
      *
-     * @param \QUI\ERP\Products\Utils\Calc $Calc - calculation object
      * @param int|double|float $sum - sum
      */
-    public function setBruttoSum(QUI\ERP\Products\Utils\Calc $Calc, $sum);
+    public function setSum($sum);
 
     /**
      * @return bool|int|float|double
      */
-    public function getBruttoSum();
+    public function getSum();
 
     /**
      * @return string
      */
-    public function getBruttoSumFormatted();
+    public function getSumFormatted();
 
     /**
      * Returns the price factor as an array
@@ -150,4 +150,9 @@ interface PriceFactorInterface
      * @return array
      */
     public function toArray();
+
+    /**
+     * @return QUI\ERP\Accounting\PriceFactors\Factor
+     */
+    public function toErpPriceFactor();
 }

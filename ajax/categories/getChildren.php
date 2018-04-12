@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
         $Categories = new QUI\ERP\Products\Handler\Categories();
         $Category   = $Categories->getCategory((int)$parentId);
         $children   = $Category->getChildren();
-        $result     = array();
+        $result     = [];
 
         /* @var $Category QUI\ERP\Products\Category\Category */
         foreach ($children as $Category) {
@@ -24,6 +24,6 @@ QUI::$Ajax->registerFunction(
 
         return $result;
     },
-    array('parentId'),
+    ['parentId'],
     'Permission::checkAdminUser'
 );

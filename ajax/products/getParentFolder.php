@@ -20,12 +20,13 @@ QUI::$Ajax->registerFunction(
             $Folder  = QUI\Projects\Media\Utils::getMediaItemByUrl($folder);
             $Project = $Folder->getProject();
 
-            return array(
+            return [
                 'project' => $Project->getName(),
                 'id'      => $Folder->getId()
-            );
+            ];
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
+
             return false;
         }
     }
