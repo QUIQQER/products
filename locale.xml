@@ -77,6 +77,11 @@
             <en><![CDATA[Product fields]]></en>
         </locale>
 
+        <locale name="erp.panel.products.text">
+            <de><![CDATA[Produktverwaltung]]></de>
+            <en><![CDATA[Product administration]]></en>
+        </locale>
+
         <locale name="quiqqer/products:types/category.title">
             <de><![CDATA[Produktkategorie]]></de>
             <en><![CDATA[Product category]]></en>

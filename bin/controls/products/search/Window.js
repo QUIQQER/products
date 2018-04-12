@@ -32,6 +32,7 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
             'search',
             'submit',
             '$onOpen',
+            '$onOpenBegin',
             '$onResize',
             '$onSearch',
             '$onSearchBegin',
@@ -53,7 +54,8 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
             this.$Search = null;
 
             this.addEvents({
-                onOpen: this.$onOpen
+                onOpen     : this.$onOpen,
+                onOpenBegin: this.$onOpenBegin
             });
         },
 
@@ -67,6 +69,27 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
         },
 
         /**
+         * event: on open begin
+         */
+        $onOpenBegin: function () {
+            var size = document.body.getSize();
+
+            var width  = size.x - 100;
+            var height = size.y - 100;
+
+            if (width > 1400) {
+                width = 1400;
+            }
+
+            if (height > 1200) {
+                height = 1200;
+            }
+
+            this.setAttribute('maxWidth', width);
+            this.setAttribute('maxHeight', height);
+        },
+
+        /**
          * Return the DOMNode Element
          *
          * @returns {HTMLDivElement}
@@ -74,6 +97,8 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
         $onOpen: function (Win) {
             var self    = this,
                 Content = Win.getContent();
+
+            this.setAttribute('maxWidth', 1400);
 
             Content.set('html', '');
 

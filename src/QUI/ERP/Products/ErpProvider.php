@@ -8,6 +8,9 @@ namespace QUI\ERP\Products;
 
 use QUI\ERP\Api\AbstractErpProvider;
 
+use QUI\Controls\Sitemap\Map;
+use QUI\Controls\Sitemap\Item;
+
 /**
  * Class ErpProvider
  * Produkte ERP Provider -> erweitert das ERP Shop Panel
@@ -17,24 +20,40 @@ use QUI\ERP\Api\AbstractErpProvider;
 class ErpProvider extends AbstractErpProvider
 {
     /**
-     * @return array
+     * @param \QUI\Controls\Sitemap\Map $Map
      */
-    public static function getMenuItems()
+    public static function addMenuItems(Map $Map)
     {
-        $menu = array();
+        $Products = $Map->getChildrenByName('products');
 
-        $menu[] = array(
-            'icon'  => 'fa fa-shopping-bag',
-            'text'  => array('quiqqer/products', 'menu.erp.products.products.title'),
-            'panel' => 'package/quiqqer/products/bin/controls/products/Panel'
+        if ($Products === null) {
+            $Products = new Item([
+                'icon'     => 'fa fa-shopping-bag',
+                'name'     => 'products',
+                'text'     => ['quiqqer/products', 'erp.panel.products.text'],
+                'opened'   => true,
+                'priority' => 2
+            ]);
+
+            $Map->appendChild($Products);
+        }
+
+        $Products->appendChild(
+            new Item([
+                'icon'    => 'fa fa-shopping-bag',
+                'name'    => 'products-products',
+                'text'    => ['quiqqer/products', 'menu.erp.products.products.title'],
+                'require' => 'package/quiqqer/products/bin/controls/products/Panel'
+            ])
         );
 
-        $menu[] = array(
-            'icon'  => 'fa fa-sitemap',
-            'text'  => array('quiqqer/products', 'menu.erp.products.categories.title'),
-            'panel' => 'package/quiqqer/products/bin/controls/categories/Panel'
+        $Products->appendChild(
+            new Item([
+                'icon'    => 'fa fa-sitemap',
+                'name'    => 'products-categories',
+                'text'    => ['quiqqer/products', 'menu.erp.products.categories.title'],
+                'require' => 'package/quiqqer/products/bin/controls/categories/Panel'
+            ])
         );
-
-        return $menu;
     }
 }
