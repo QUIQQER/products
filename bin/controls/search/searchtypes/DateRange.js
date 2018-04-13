@@ -2,10 +2,7 @@
  * @module package/quiqqer/products/bin/controls/search/searchtypes/DateRange
  * @author www.pcsg.de (Henning Leutz)
  *
- * Ein Datumsfeld von bis
- *
- * @require qui/QUI
- * @require qui/controls/Control
+ * Ein Datumsfeld von bis - A date field from to
  */
 define('package/quiqqer/products/bin/controls/search/searchtypes/DateRange', [
 

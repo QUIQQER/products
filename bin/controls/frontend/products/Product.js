@@ -4,12 +4,6 @@
  *
  * @module package/quiqqer/products/bin/controls/frontend/products/Product
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/utils/Elements
- * @require package/quiqqer/products/bin/Products
- * @require URL_OPT_DIR + 'bin/hammerjs/hammer.min.js'
  */
 define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 

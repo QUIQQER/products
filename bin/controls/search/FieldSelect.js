@@ -3,12 +3,6 @@
  * @author www.pcsg.de (Henning Leutz)
  *
  * Feld Auswahl für eine Produktkategorie oder Produktsuche
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require package/quiqqer/products/bin/Fields
- * @require package/quiqqer/products/bin/controls/fields/Select
- * @require Ajax
  */
 define('package/quiqqer/products/bin/controls/search/FieldSelect', [
 
@@ -71,7 +65,7 @@ define('package/quiqqer/products/bin/controls/search/FieldSelect', [
                 if (DomPanel) {
                     Panel = QUI.Controls.getById(DomPanel.get('data-quiid'));
 
-                    if (Panel.getType() == 'controls/projects/project/site/Panel') {
+                    if (Panel.getType() === 'controls/projects/project/site/Panel') {
                         this.setAttribute('Site', Panel.getSite());
                     }
                 }

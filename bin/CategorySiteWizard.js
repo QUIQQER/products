@@ -3,8 +3,6 @@
  *
  * @module package/quiqqer/products/bin/CategorySiteWizard
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require package/quiqqer/products/bin/classes/Fields
  */
 define('package/quiqqer/products/bin/CategorySiteWizard', [
     'package/quiqqer/products/bin/controls/categories/CategorySiteWizard'

@@ -3,15 +3,6 @@
  * @author www.pcsg.de (Henning Leutz)
  *
  * Felder suche
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/windows/Confirm
- * @require controls/grid/Grid
- * @require package/quiqqer/products/bin/Fields
- * @require Locale
- * @require package/quiqqer/products/bin/controls/fields/search/Search
- * @require css!package/quiqqer/products/bin/controls/fields/search/Window.css
  */
 define('package/quiqqer/products/bin/controls/fields/search/Window', [
 

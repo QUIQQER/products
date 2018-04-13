@@ -5,21 +5,6 @@
  * @module package/quiqqer/products/bin/controls/frontend/category/ProductList
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/buttons/Select
- * @require qui/controls/buttons/Button
- * @require qui/controls/loader/Loader
- * @require qui/utils/Elements
- * @require package/quiqqer/products/bin/Search
- * @require package/quiqqer/products/bin/Stats
- * @require package/quiqqer/products/bin/controls/search/SearchField
- * @require Ajax
- * @require Locale
- * @require URI
- * @require package/quiqqer/products/bin/controls/frontend/category/ProductListFilter
- * @require package/quiqqer/products/bin/controls/frontend/category/ProductListField
- *
  * @event onFilterChange [self]
  */
 define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [

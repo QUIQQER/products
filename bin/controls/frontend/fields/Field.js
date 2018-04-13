@@ -4,9 +4,6 @@
  * @module package/quiqqer/products/bin/controls/frontend/fields/Field
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/QUI
- * @require qui/controls/Control
- *
  * @event onChange [{Object} self, {Number} fieldId]
  */
 define('package/quiqqer/products/bin/controls/frontend/fields/Field', [

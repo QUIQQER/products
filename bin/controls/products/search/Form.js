@@ -4,17 +4,6 @@
  *
  * Backend suche für produkte, nur das suchformular
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/buttons/Button
- * @require controls/grid/Grid
- * @require package/quiqqer/products/bin/Fields
- * @require Ajax
- * @require Locale
- * @require Mustache
- * @require text!package/quiqqer/products/bin/controls/products/search/Form.html
- * @require css!package/quiqqer/products/bin/controls/products/search/Form.css
- *
  * @event onSearchBegin [this]
  */
 define('package/quiqqer/products/bin/controls/products/search/Form', [

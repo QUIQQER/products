@@ -3,12 +3,6 @@
  * @author www.pcsg.de (Henning Leutz)
  *
  * Felder suche
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require controls/grid/Grid
- * @require package/quiqqer/products/bin/Fields
- * @require Locale
  */
 define('package/quiqqer/products/bin/controls/fields/search/Search', [
 

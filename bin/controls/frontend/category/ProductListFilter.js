@@ -1,10 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/frontend/category/ProductListFilter
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require Ajax
  */
 define('package/quiqqer/products/bin/controls/frontend/category/ProductListFilter', [
 

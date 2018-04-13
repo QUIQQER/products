@@ -1,11 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/products/permissions/Permission
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require controls/Control
- * @require controls/usersAndGroups/Input
- * @require Mustache
  */
 define('package/quiqqer/products/bin/controls/products/permissions/Permission', [
 

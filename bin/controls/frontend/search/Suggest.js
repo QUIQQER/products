@@ -3,12 +3,6 @@
  * @author www.pcsg.de (Henning Leutz)
  *
  * Suggest search für produkte
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require Ajax
- * @require Locale
- * @require URI
  */
 define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
 

@@ -1,15 +1,6 @@
 /**
- *
  * @module package/quiqqer/products/bin/controls/products/search/Window
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/windows/Confirm
- * @require controls/grid/Grid
- * @require package/quiqqer/products/bin/Fields
- * @require Locale
- * @require css!package/quiqqer/products/bin/controls/products/search/Window.css
  */
 define('package/quiqqer/products/bin/controls/products/search/Window', [
 

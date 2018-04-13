@@ -3,14 +3,6 @@
  * @author www.pcsg.de (Henning Leutz)
  *
  * Backend such einstellungen
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/buttons/Switch
- * @require controls/grid/Grid
- * @require Locale
- * @require Ajax
- * @require package/quiqqer/products/bin/Fields
  */
 define('package/quiqqer/products/bin/controls/products/search/Settings', [
 

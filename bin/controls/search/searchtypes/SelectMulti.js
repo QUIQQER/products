@@ -1,9 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/search/searchtypes/SelectMulti
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
  */
 define('package/quiqqer/products/bin/controls/search/searchtypes/SelectMulti', [
 

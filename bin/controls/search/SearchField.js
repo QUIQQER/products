@@ -4,10 +4,6 @@
  *
  * Ein Feld für die Suche, hohlt sich die search types rein
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require css!package/quiqqer/products/bin/controls/search/SearchField.css
- *
  * @event onReady [this]
  * @event onChange [this]
  *

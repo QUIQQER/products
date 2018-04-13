@@ -1,9 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/frontend/category/ProductListField
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require package/quiqqer/products/bin/controls/frontend/category/ProductListFilter
  */
 define('package/quiqqer/products/bin/controls/frontend/category/ProductListField', [
 
