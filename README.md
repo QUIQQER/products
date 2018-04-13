@@ -1,10 +1,10 @@
 Produktverwaltung
 ========
 
-Erstellen Sie Ihren Shop mit den QUIQQER Produkten. 
-QUIQQER Produkte sind flexible Produkte welche flexible Eigenschaften besitzen können.
+Create your shop with QUIQQER products. 
+QUIQQER products are flexible products which can have flexible properties.
 
-Paketname:
+Package name:
 
     quiqqer/products
 
@@ -12,7 +12,7 @@ Paketname:
 ERP Stack
 ----
 
-Wir empfehlen weitere Pakete zu installieren:
+We recommend installing additional packages:
 
 - quiqqer/areas
 - quiqqer/currency
@@ -21,19 +21,20 @@ Wir empfehlen weitere Pakete zu installieren:
 - quiqqer/tax
 
 
-Features (Funktionen)
+Features
 --------
 
-- Produktkategorien
-- Produktfelder
-- Produktverwaltung
+- Product categories
+- Product fields (attributes)
+- Product administration
+
 
 Installation
 ------------
 
-Der Paketname ist: quiqqer/products
+The package name: quiqqer/products
 
-Benötigte Server:
+At the moment (needed servers):
 
 - git@dev.quiqqer.com:quiqqer/products.git
 - git@dev.quiqqer.com:quiqqer/areas.git
@@ -41,7 +42,7 @@ Benötigte Server:
 - git@dev.quiqqer.com:quiqqer/discount.git
 - git@dev.quiqqer.com:quiqqer/tax.git
 
-Mitwirken
+Contribution
 ----------
 
 - Issue Tracker: https://dev.quiqqer.com/quiqqer/products/issues
@@ -51,82 +52,10 @@ Mitwirken
 Support
 -------
 
-Falls Sie ein Fehler gefunden haben, oder Verbesserungen wünschen,
-dann können Sie gerne an support@pcsg.de eine E-Mail schreiben.
+If you have found a bug, or want improvements,
+then you are welcome to send an e-mail to support@pcsg.de
 
 
-Lizenz
+Licence
 -------
 
-
-
-Entwickler
---------
-
-```php
-
-// Ein Produkt bekommen
-QUI\ERP\Products\Handler\Products::getProduct( ID );
-
-// Ein Produkt Feld bekommen
-QUI\ERP\Products\Handler\Fields::getField( ID );
-
-```
-
-Events
-======
-
-- onQuiqqerProductsPriceFactorsInit [PriceFactors, UniqueProduct]
-- onQuiqqerProductsProductCleanup
-- onQuiqqerProductsFieldsClearCache
-- onQuiqqerProductsCategoriesClearCache
-
-- onQuiqqerProductsCalcListProduct [PriceFactor, Product]
-- onQuiqqerProductsCalcList [Product]
-
-Produkt Events
-------
-
-- onQuiqqerProductsProductCreate [Product]
-- onQuiqqerProductsProductCopy [NewProduct, OldProduct]
-
-- onQuiqqerProductsProductSave [Product]
-- onQuiqqerProductsProductUserSave [Product]
-
-- onQuiqqerProductsProductActivate [Product]
-- onQuiqqerProductsProductDeactivate [Product]
-- onQuiqqerProductsProductDelete [Product]
-- onQuiqqerProductsProductDeleteBegin [Product]
-- onQuiqqerProductsProductCreateMediaFolder [Product]
-
-- onQuiqqerProductsToUniqueProduct [Product, &attributes]
-
-- onQuiqqerProducts [Product, Collection $List]
-
-Field Events
-------
-
-- onQuiqqerProductsFieldsCreate [Field]
-- onQuiqqerProductsFieldDelete [Field]
-- onQuiqqerProductsFieldDeleteSystemfield [Field]
-- onQuiqqerProductsFieldSave [Field]
-
-Kategorien Events
-------
-
-- onQuiqqerProductsCategoryCreate [Category]
-- onQuiqqerProductsCategoryAddField [Category, Field]
-- onQuiqqerProductsCategoryClearFields [Category]
-- onQuiqqerProductsCategorySave [Category]
-- onQuiqqerProductsCategoryDelete [Category]
-- onQuiqqerProductsCategorySetFieldsToAllProducts [Category]
-
-Template Events
--------
-
-- onQuiqqer::products::product::begin [Collection, Product]
-- onQuiqqer::products::product::buttons::begin [Collection, Product]
-- onQuiqqer::products::product::buttons::end [Collection, Product]
-- onQuiqqer::products::product::middle [Collection, Product]
-- onQuiqqer::products::product::middle-2 [Collection, Product]
-- onQuiqqer::products::product::end [Collection, Product]
