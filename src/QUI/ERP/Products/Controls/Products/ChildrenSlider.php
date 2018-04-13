@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Controls\Products
  */
+
 namespace QUI\ERP\Products\Controls\Products;
 
 use QUI;
@@ -20,18 +21,18 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
      *
      * @var array
      */
-    protected $products = array();
+    protected $products = [];
 
     /**
      * ChildrenSlider constructor.
      * @param array $attributes
      */
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
         parent::__construct($attributes);
 
         $this->addCSSFile(
-            dirname(__FILE__) . '/ChildrenSlider.css'
+            dirname(__FILE__).'/ChildrenSlider.css'
         );
     }
 
@@ -42,8 +43,13 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
      */
     public function getBody()
     {
-        $Engine   = QUI::getTemplateManager()->getEngine();
-        $products = array();
+        try {
+            $Engine = QUI::getTemplateManager()->getEngine();
+        } catch (QUI\Exception $Exception) {
+            return '';
+        }
+
+        $products = [];
 
         if (!$this->getAttribute('height')) {
             $this->setAttribute('height', 200);
@@ -51,20 +57,20 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
 
         foreach ($this->products as $Product) {
             /* @var $Product QUI\ERP\Products\Interfaces\ProductInterface */
-            $products[] = array(
+            $products[] = [
                 'Product' => $Product,
-                'Price'   => new QUI\ERP\Products\Controls\Price(array(
+                'Price'   => new QUI\ERP\Products\Controls\Price([
                     'Price' => $Product->getPrice()
-                ))
-            );
+                ])
+            ];
         }
 
-        $Engine->assign(array(
+        $Engine->assign([
             'this'     => $this,
             'products' => $products
-        ));
+        ]);
 
-        return $Engine->fetch(dirname(__FILE__) . '/ChildrenSlider.html');
+        return $Engine->fetch(dirname(__FILE__).'/ChildrenSlider.html');
     }
 
     /**

@@ -36,10 +36,10 @@ class VatFrontendView extends View
                 $TaxType = QUI\ERP\Tax\Handler::getInstance()->getTaxType($value);
                 $Tax     = QUI\ERP\Tax\Utils::getTaxEntry($TaxType, $Area);
 
-                $taxTitle = QUI::getLocale()->get('quiqqer/products', 'fieldtype.Tax.frontend.text', array(
+                $taxTitle = QUI::getLocale()->get('quiqqer/products', 'fieldtype.Tax.frontend.text', [
                     'tax'   => $Tax->getValue(),
                     'title' => $TaxType->getTitle()
-                ));
+                ]);
             } catch (QUI\Exception $Exception) {
             }
         }

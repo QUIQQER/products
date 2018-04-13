@@ -50,9 +50,9 @@ class GlobalFrontendSearch extends Search
      */
     public function searchByUrl($urlParams, $countOnly = false)
     {
-        $searchData = array(
-            'fields' => array()
-        );
+        $searchData = [
+            'fields' => []
+        ];
 
         // parse all field specific parameters
         foreach ($urlParams as $k => $v) {
@@ -75,7 +75,7 @@ class GlobalFrontendSearch extends Search
             if (!empty($from)
                 || !empty($to)
             ) {
-                $value = array();
+                $value = [];
 
                 if (!empty($from)) {
                     $value['from'] = $v;
@@ -88,9 +88,9 @@ class GlobalFrontendSearch extends Search
                 $v = $value;
             }
 
-            $searchData['fields'][$fieldId] = array(
+            $searchData['fields'][$fieldId] = [
                 'value' => $v
-            );
+            ];
         }
 
         if (isset($urlParams['category']) && !empty($urlParams['category'])) {
@@ -132,8 +132,8 @@ class GlobalFrontendSearch extends Search
 
         $PDO = QUI::getDataBase()->getPDO();
 
-        $binds = array();
-        $where = array();
+        $binds = [];
+        $where = [];
 
         if ($countOnly) {
             $sql = "SELECT COUNT(*)";
@@ -141,20 +141,20 @@ class GlobalFrontendSearch extends Search
             $sql = "SELECT id";
         }
 
-        $sql .= " FROM " . TablesUtils::getProductCacheTableName();
+        $sql .= " FROM ".TablesUtils::getProductCacheTableName();
 
         $where[]       = 'lang = :lang';
-        $binds['lang'] = array(
+        $binds['lang'] = [
             'value' => $this->lang,
             'type'  => \PDO::PARAM_STR
-        );
+        ];
 
         if (isset($searchParams['category']) && !empty($searchParams['category'])) {
             $where[]           = '`category` LIKE :category';
-            $binds['category'] = array(
-                'value' => '%,' . (int)$searchParams['category'] . ',%',
+            $binds['category'] = [
+                'value' => '%,'.(int)$searchParams['category'].',%',
                 'type'  => \PDO::PARAM_STR
-            );
+            ];
         }
 
         if (isset($searchParams['categories'])
@@ -162,21 +162,21 @@ class GlobalFrontendSearch extends Search
             && is_array($searchParams['categories'])
         ) {
             $c               = 0;
-            $whereCategories = array();
+            $whereCategories = [];
 
             foreach ($searchParams['categories'] as $categoryId) {
-                $whereCategories[] = '`category` LIKE :category' . $c;
+                $whereCategories[] = '`category` LIKE :category'.$c;
 
-                $binds['category' . $c] = array(
-                    'value' => '%,' . (int)$categoryId . ',%',
+                $binds['category'.$c] = [
+                    'value' => '%,'.(int)$categoryId.',%',
                     'type'  => \PDO::PARAM_STR
-                );
+                ];
 
                 $c++;
             }
 
             // @todo das OR als setting (AND oder OR) (ist gedacht für die Navigation)
-            $where[] = '(' . implode(' OR ', $whereCategories) . ')';
+            $where[] = '('.implode(' OR ', $whereCategories).')';
         }
 
         if (!isset($searchParams['fields']) && !isset($searchParams['freetext'])) {
@@ -188,7 +188,7 @@ class GlobalFrontendSearch extends Search
 
         // freetext search
         if (isset($searchParams['freetext']) && !empty($searchParams['freetext'])) {
-            $whereFreeText = array();
+            $whereFreeText = [];
             $value         = $this->sanitizeString($searchParams['freetext']);
 
             // split search value by space
@@ -197,10 +197,10 @@ class GlobalFrontendSearch extends Search
             foreach ($freetextValues as $value) {
                 // always search tags
                 $whereFreeText[]       = '`tags` LIKE :freetextTags';
-                $binds['freetextTags'] = array(
-                    'value' => '%,' . $value . ',%',
+                $binds['freetextTags'] = [
+                    'value' => '%,'.$value.',%',
                     'type'  => \PDO::PARAM_STR
-                );
+                ];
 
                 $searchFields = $this->getSearchFields();
 
@@ -218,16 +218,16 @@ class GlobalFrontendSearch extends Search
 
                     $columnName = SearchHandler::getSearchFieldColumnName($Field);
 
-                    $whereFreeText[]              = '`' . $columnName . '` LIKE :freetext' . $fieldId;
-                    $binds['freetext' . $fieldId] = array(
-                        'value' => '%' . $value . '%',
+                    $whereFreeText[]            = '`'.$columnName.'` LIKE :freetext'.$fieldId;
+                    $binds['freetext'.$fieldId] = [
+                        'value' => '%'.$value.'%',
                         'type'  => \PDO::PARAM_STR
-                    );
+                    ];
                 }
             }
 
             if (!empty($whereFreeText)) {
-                $where[] = '(' . implode(' OR ', $whereFreeText) . ')';
+                $where[] = '('.implode(' OR ', $whereFreeText).')';
             }
         }
 
@@ -249,17 +249,17 @@ class GlobalFrontendSearch extends Search
             // user
             $User = QUI::getUserBySession();
 
-            $whereOr = array(
+            $whereOr = [
                 '`viewUsersGroups` IS NULL'
-            );
+            ];
 
             if ($User->getId()) {
                 $whereOr[] = '`viewUsersGroups` LIKE :permissionUser';
 
-                $binds['permissionUser'] = array(
-                    'value' => '%,u' . $User->getId() . ',%',
+                $binds['permissionUser'] = [
+                    'value' => '%,u'.$User->getId().',%',
                     'type'  => \PDO::PARAM_STR
-                );
+                ];
             }
 
             // user groups
@@ -267,17 +267,17 @@ class GlobalFrontendSearch extends Search
             $i            = 0;
 
             foreach ($userGroupIds as $groupId) {
-                $whereOr[] = '`viewUsersGroups` LIKE :permissionGroup' . $i;
+                $whereOr[] = '`viewUsersGroups` LIKE :permissionGroup'.$i;
 
-                $binds['permissionGroup' . $i] = array(
-                    'value' => '%,g' . $groupId . ',%',
+                $binds['permissionGroup'.$i] = [
+                    'value' => '%,g'.$groupId.',%',
                     'type'  => \PDO::PARAM_STR
-                );
+                ];
 
                 $i++;
             }
 
-            $where[] = '(' . implode(' OR ', $whereOr) . ')';
+            $where[] = '('.implode(' OR ', $whereOr).')';
         }
 
         $where[] = '`active` = 1';
@@ -295,11 +295,11 @@ class GlobalFrontendSearch extends Search
 
         // build WHERE query string
         if (!empty($where)) {
-            $sql .= " WHERE " . implode(" AND ", $where);
+            $sql .= " WHERE ".implode(" AND ", $where);
         }
 
         if (!$countOnly) {
-            $sql .= " " . $this->validateOrderStatement($searchParams);
+            $sql .= " ".$this->validateOrderStatement($searchParams);
         }
 
         if (!$countOnly) {
@@ -312,24 +312,24 @@ class GlobalFrontendSearch extends Search
                 $queryLimit       = QUI\Database\DB::createQueryLimit($paginationParams['limit']);
 
                 foreach ($queryLimit['prepare'] as $bind => $value) {
-                    $binds[$bind] = array(
+                    $binds[$bind] = [
                         'value' => $value[0],
                         'type'  => $value[1]
-                    );
+                    ];
                 }
 
-                $sql .= " " . $queryLimit['limit'];
+                $sql .= " ".$queryLimit['limit'];
             } elseif (isset($searchParams['limit'])) {
                 $queryLimit = QUI\Database\DB::createQueryLimit($searchParams['limit']);
 
                 foreach ($queryLimit['prepare'] as $bind => $value) {
-                    $binds[$bind] = array(
+                    $binds[$bind] = [
                         'value' => $value[0],
                         'type'  => $value[1]
-                    );
+                    ];
                 }
 
-                $sql .= " " . $queryLimit['limit'];
+                $sql .= " ".$queryLimit['limit'];
             } else {
                 $sql .= " LIMIT 20"; // @todo as settings
             }
@@ -344,7 +344,7 @@ class GlobalFrontendSearch extends Search
         // bind search values
         foreach ($binds as $var => $bind) {
             if (strpos($var, ':') === false) {
-                $var = ':' . $var;
+                $var = ':'.$var;
             }
 
             $Stmt->bindValue($var, $bind['value'], $bind['type']);
@@ -360,14 +360,14 @@ class GlobalFrontendSearch extends Search
                 return 0;
             }
 
-            return array();
+            return [];
         }
 
         if ($countOnly) {
             return (int)current(current($result));
         }
 
-        $productIds = array();
+        $productIds = [];
 
         foreach ($result as $row) {
             $productIds[] = $row['id'];
@@ -383,7 +383,7 @@ class GlobalFrontendSearch extends Search
      */
     public function getSearchFieldData()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -393,12 +393,12 @@ class GlobalFrontendSearch extends Search
      */
     public function getSearchFields()
     {
-        $searchFields          = array();
+        $searchFields          = [];
         $PackageCfg            = QUI\ERP\Products\Utils\Package::getConfig();
         $searchFieldIdsFromCfg = $PackageCfg->get('search', 'freetext');
 
         if ($searchFieldIdsFromCfg === false) {
-            $searchFieldIdsFromCfg = array();
+            $searchFieldIdsFromCfg = [];
         } else {
             $searchFieldIdsFromCfg = explode(',', $searchFieldIdsFromCfg);
         }
@@ -427,7 +427,7 @@ class GlobalFrontendSearch extends Search
     public function setSearchFields($searchFields)
     {
         $currentSearchFields = $this->getSearchFields();
-        $newSearchFieldIds   = array();
+        $newSearchFieldIds   = [];
 
         foreach ($currentSearchFields as $fieldId => $search) {
             if (isset($searchFields[$fieldId])

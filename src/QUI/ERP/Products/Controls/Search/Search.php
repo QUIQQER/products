@@ -26,18 +26,18 @@ class Search extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
-        $this->setAttributes(array(
+        $this->setAttributes([
             'categoryId'     => false,
             'Site'           => false,
             'data-qui'       => 'package/quiqqer/products/bin/controls/frontend/search/Search',
             'data-name'      => false,
             'freeTextSearch' => true,
             'title'          => true
-        ));
+        ]);
 
-        $this->addCSSFile(dirname(__FILE__) . '/Search.css');
+        $this->addCSSFile(dirname(__FILE__).'/Search.css');
         $this->addCSSClass('quiqqer-products-search');
 
         parent::__construct($attributes);
@@ -47,6 +47,8 @@ class Search extends QUI\Control
      * (non-PHPdoc)
      *
      * @see \QUI\Control::create()
+     *
+     * @throws QUI\Exception
      */
     public function getBody()
     {
@@ -58,12 +60,12 @@ class Search extends QUI\Control
         $this->setAttribute('data-lang', $Project->getLang());
         $this->setAttribute('data-siteid', $Site->getId());
 
-        $Engine->assign(array(
+        $Engine->assign([
             'fields' => $this->getSearchFieldData(),
             'this'   => $this
-        ));
+        ]);
 
-        return $Engine->fetch(dirname(__FILE__) . '/Search.html');
+        return $Engine->fetch(dirname(__FILE__).'/Search.html');
     }
 
     /**
@@ -107,7 +109,7 @@ class Search extends QUI\Control
             if ($Search) {
                 $this->fields = $Search->getSearchFieldData();
             } else {
-                $this->fields = array();
+                $this->fields = [];
             }
         }
 
@@ -118,6 +120,8 @@ class Search extends QUI\Control
      * Return the current site
      *
      * @return mixed|QUI\Projects\Site
+     *
+     * @throws QUI\Exception
      */
     protected function getSite()
     {

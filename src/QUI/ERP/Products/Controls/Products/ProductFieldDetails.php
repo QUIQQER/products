@@ -3,6 +3,7 @@
 /**
  * This field contains QUI\ERP\Products\Controls\Products
  */
+
 namespace QUI\ERP\Products\Controls\Products;
 
 use QUI;
@@ -18,14 +19,14 @@ class ProductFieldDetails extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
-        $this->setAttributes(array(
+        $this->setAttributes([
             'Field'   => false,
             'Product' => false,
             'files'   => true, // show in a TYPE_FOLDER all files
             'images'  => true  // show in a TYPE_FOLDER all images
-        ));
+        ]);
 
         parent::__construct($attributes);
     }
@@ -34,6 +35,7 @@ class ProductFieldDetails extends QUI\Control
      * (non-PHPdoc)
      *
      * @see \QUI\Control::create()
+     * @throws QUI\Exception
      */
     public function getBody()
     {
@@ -49,14 +51,14 @@ class ProductFieldDetails extends QUI\Control
         switch ($Field->getType()) {
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA:
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA_MULTI_LANG:
-                $template = dirname(__FILE__) . '/ProductFieldDetails.Content.html';
+                $template = dirname(__FILE__).'/ProductFieldDetails.Content.html';
                 break;
 
             case QUI\ERP\Products\Handler\Fields::TYPE_FOLDER:
                 /* @var $Field QUI\ERP\Products\Field\Types\Folder */
-                $template = dirname(__FILE__) . '/ProductFieldDetails.MediaFolder.html';
+                $template = dirname(__FILE__).'/ProductFieldDetails.MediaFolder.html';
                 $Folder   = $Field->getMediaFolder();
-                $files    = array();
+                $files    = [];
 
                 $showFiles  = $this->getAttribute('files');
                 $showImages = $this->getAttribute('images');
@@ -78,11 +80,11 @@ class ProductFieldDetails extends QUI\Control
                     return $File->isActive();
                 });
 
-                $Engine->assign(array(
+                $Engine->assign([
                     'Utils'  => new QUI\Projects\Media\Utils(),
                     'Folder' => $Folder,
                     'files'  => $files
-                ));
+                ]);
 
                 break;
 
@@ -90,11 +92,11 @@ class ProductFieldDetails extends QUI\Control
                 return '';
         }
 
-        $Engine->assign(array(
+        $Engine->assign([
             'this'    => $this,
             'Field'   => $Field,
             'Product' => $this->getAttribute('Product')
-        ));
+        ]);
 
         return $Engine->fetch($template);
     }

@@ -51,7 +51,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         $options = $this->getOptions();
 
         $name    = 'field-'.$id;
-        $entries = array();
+        $entries = [];
 
         if (isset($options['entries'])) {
             $entries = $options['entries'];
@@ -86,17 +86,17 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             return '';
         }
 
-        $Engine->assign(array(
+        $Engine->assign([
             'this'          => $this,
             'id'            => $id,
             'title'         => $this->getTitle(),
             'name'          => $name,
             'value'         => $value,
             'requiredField' => $requiredField
-        ));
+        ]);
 
         // options
-        $options = array();
+        $options = [];
 
         $hasDefault = function () use ($entries) {
             foreach ($entries as $key => $option) {
@@ -109,7 +109,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         };
 
         if ($value === '' && !$hasDefault()) {
-            $options[] = array(
+            $options[] = [
                 'value'    => '',
                 'text'     => QUI::getLocale()->get(
                     'quiqqer/products',
@@ -117,7 +117,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                 ),
                 'selected' => '',
                 'data'     => ''
-            );
+            ];
         }
 
         $currentLC = strtolower($current).'_'.strtoupper($current);
@@ -170,12 +170,12 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                 $text .= ' (+'.$discount.')';
             }
 
-            $options[] = array(
+            $options[] = [
                 'selected' => $selected,
                 'value'    => $key,
                 'text'     => $text,
                 'data'     => $userInput
-            );
+            ];
         }
 
 
@@ -196,7 +196,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         $options = $this->getOptions();
 
         $name    = 'field-'.$id;
-        $entries = array();
+        $entries = [];
 
         if (isset($options['entries'])) {
             $entries = $options['entries'];
@@ -217,13 +217,13 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         }
 
 
-        $Engine->assign(array(
+        $Engine->assign([
             'this'  => $this,
             'id'    => $id,
             'title' => $this->getTitle(),
             'name'  => $name,
             'value' => $value
-        ));
+        ]);
 
         // options
         $currentLC = strtolower($current).'_'.strtoupper($current);

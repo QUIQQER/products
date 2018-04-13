@@ -25,14 +25,14 @@ class Product extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
-        $this->setAttributes(array(
+        $this->setAttributes([
             'Product'  => false,
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/Product'
-        ));
+        ]);
 
-        $this->addCSSFile(dirname(__FILE__) . '/Product.css');
+        $this->addCSSFile(dirname(__FILE__).'/Product.css');
 
         parent::__construct($attributes);
     }
@@ -41,6 +41,8 @@ class Product extends QUI\Control
      * (non-PHPdoc)
      *
      * @see \QUI\Control::create()
+     *
+     * @throws QUI\Exception
      */
     public function getBody()
     {
@@ -48,7 +50,7 @@ class Product extends QUI\Control
         $Engine  = QUI::getTemplateManager()->getEngine();
         $Product = $this->getAttribute('Product');
         $Gallery = new QUI\Gallery\Controls\Slider();
-        $fields  = array();
+        $fields  = [];
         $Calc    = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
@@ -100,9 +102,9 @@ class Product extends QUI\Control
         $Gallery->setAttribute('data-qui-options-preview-color', '#ddd');
 
         // fields - fields for the product header
-        $displayedFields = array(
+        $displayedFields = [
             Fields::FIELD_PRODUCT_NO
-        );
+        ];
 
         foreach ($displayedFields as $field) {
             if ($View->getField($field)) {
@@ -120,22 +122,22 @@ class Product extends QUI\Control
             return $Field->hasViewPermission();
         });
 
-        $vatArray = array();
+        $vatArray = [];
 
         if (isset($productAttributes['calculated_vatArray'])) {
             $vatArray = $productAttributes['calculated_vatArray'];
         }
 
         // pricedisplay
-        $PriceDisplay = new QUI\ERP\Products\Controls\Price(array(
+        $PriceDisplay = new QUI\ERP\Products\Controls\Price([
             'Price'       => $Price,
             'withVatText' => true,
             'Calc'        => $Calc,
             'vatArray'    => $vatArray
-        ));
+        ]);
 
         // file / image folders
-        $detailFields = array();
+        $detailFields = [];
 
         $fieldsList = array_merge(
             $Product->getFieldsByType(Fields::TYPE_FOLDER),
@@ -159,7 +161,7 @@ class Product extends QUI\Control
         }
 
         // product fields
-        $productFields = array();
+        $productFields = [];
 
         $productFieldList = array_filter($View->getFields(), function ($Field) {
             /* @var $Field QUI\ERP\Products\Field\View */
@@ -179,29 +181,29 @@ class Product extends QUI\Control
             $Slider = new ChildrenSlider();
             $Slider->addProducts($Field->getValue());
 
-            $productFields[] = array(
+            $productFields[] = [
                 'Field'  => $Field,
                 'Slider' => $Slider
-            );
+            ];
         }
 
-        $Engine->assign(array(
+        $Engine->assign([
             'productFields' => $productFields
-        ));
+        ]);
 
         // Product File List
         $Files = null;
 
         if (count($Product->getFiles())) {
-            $Files = new ProductFieldDetails(array(
+            $Files = new ProductFieldDetails([
                 'Field'   => $Product->getField(Fields::FIELD_FOLDER),
                 'Product' => $Product,
                 'files'   => true,
                 'images'  => false
-            ));
+            ]);
         }
 
-        $Engine->assign(array(
+        $Engine->assign([
             'Product'              => $View,
             'Gallery'              => $Gallery,
             'Files'                => $Files,
@@ -212,29 +214,30 @@ class Product extends QUI\Control
             'PriceDisplay'         => $PriceDisplay,
             'VisitedProducts'      => new VisitedProducts(),
             'MediaUtils'           => new QUI\Projects\Media\Utils()
-        ));
+        ]);
 
         // button list
         $Buttons = new Collection([]);
 
         QUI::getEvents()->fireEvent(
             'quiqqerProductsProductViewButtons',
-            array($View, &$Buttons)
+            [$View, &$Buttons]
         );
 
         $Engine->assign('Buttons', $Buttons);
 
         $Engine->assign(
             'buttonsHtml',
-            $Engine->fetch(dirname(__FILE__) . '/Product.Buttons.html')
+            $Engine->fetch(dirname(__FILE__).'/Product.Buttons.html')
         );
 
         // render product
-        return $Engine->fetch(dirname(__FILE__) . '/Product.html');
+        return $Engine->fetch(dirname(__FILE__).'/Product.html');
     }
 
     /**
      * @return mixed|QUI\Projects\Site
+     * @throws QUI\Exception
      */
     protected function getSite()
     {

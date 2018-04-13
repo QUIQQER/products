@@ -118,25 +118,25 @@ class Cache extends QUI\QDOM
         $cacheDir = self::getCacheDir();
 
         try {
-            $handlers[] = new Stash\Driver\FileSystem(array(
+            $handlers[] = new Stash\Driver\FileSystem([
                 'path' => $cacheDir
-            ));
+            ]);
 
-            $Handler = new Stash\Driver\Composite(array(
+            $Handler = new Stash\Driver\Composite([
                 'drivers' => $handlers
-            ));
+            ]);
 
             $Stash = new Stash\Pool($Handler);
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
-            throw new Exception(array(
+            throw new Exception([
                 'quiqqer/products',
                 'exception.searchcache.initialize.error',
-                array(
+                [
                     'error' => $Exception->getMessage()
-                )
-            ));
+                ]
+            ]);
         }
 
         self::$Stash = $Stash;

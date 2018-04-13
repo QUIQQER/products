@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\BoolType
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -74,15 +75,15 @@ class BoolType extends QUI\ERP\Products\Field\Field
                 return;
         }
 
-        throw new QUI\ERP\Products\Field\Exception(array(
+        throw new QUI\ERP\Products\Field\Exception([
             'quiqqer/products',
             'exception.field.invalid',
-            array(
+            [
                 'fieldId'    => $this->getId(),
                 'fieldTitle' => $this->getTitle(),
                 'fieldType'  => $this->getType()
-            )
-        ));
+            ]
+        ]);
     }
 
     /**
@@ -131,9 +132,9 @@ class BoolType extends QUI\ERP\Products\Field\Field
      */
     public function getSearchTypes()
     {
-        return array(
+        return [
             Search::SEARCHTYPE_BOOL
-        );
+        ];
     }
 
     /**

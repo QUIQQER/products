@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Search\Exception
  */
+
 namespace QUI\ERP\Products\Search;
 
 use QUI;

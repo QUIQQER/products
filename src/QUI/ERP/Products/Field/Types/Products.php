@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\Products
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -53,15 +54,15 @@ class Products extends QUI\ERP\Products\Field\Field
         }
 
         if (!is_array($value)) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
-                array(
+                [
                     'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
                     'fieldType'  => $this->getType()
-                )
-            ));
+                ]
+            ]);
         }
     }
 
@@ -74,10 +75,10 @@ class Products extends QUI\ERP\Products\Field\Field
     public function cleanup($value)
     {
         if (!is_array($value)) {
-            return array();
+            return [];
         }
 
-        $result = array();
+        $result = [];
 
         foreach ($value as $productId) {
             if (ProductHandler::existsProduct($productId)) {

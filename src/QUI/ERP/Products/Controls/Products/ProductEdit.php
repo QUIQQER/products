@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Products\Product
  */
+
 namespace QUI\ERP\Products\Controls\Products;
 
 use QUI;
@@ -20,14 +21,14 @@ class ProductEdit extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
-        $this->setAttributes(array(
+        $this->setAttributes([
             'Product' => false
-        ));
+        ]);
 
         $this->addCSSClass('quiqqer-products-productEdit');
-        $this->addCSSFile(dirname(__FILE__) . '/ProductEdit.css');
+        $this->addCSSFile(dirname(__FILE__).'/ProductEdit.css');
 
         parent::__construct($attributes);
     }
@@ -36,6 +37,7 @@ class ProductEdit extends QUI\Control
      * (non-PHPdoc)
      *
      * @see \QUI\Control::create()
+     * @throws QUI\Exception
      */
     public function getBody()
     {
@@ -52,13 +54,13 @@ class ProductEdit extends QUI\Control
             $Price = $Product->getPrice();
         }
 
-        $Engine->assign(array(
+        $Engine->assign([
             'Product' => $View,
             'Price'   => $Price,
 
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST)
-        ));
+        ]);
 
-        return $Engine->fetch(dirname(__FILE__) . '/ProductEdit.html');
+        return $Engine->fetch(dirname(__FILE__).'/ProductEdit.html');
     }
 }

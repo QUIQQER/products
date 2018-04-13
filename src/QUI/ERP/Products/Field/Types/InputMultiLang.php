@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\InputMultiLang
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -69,7 +70,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
                 }
             }
 
-            $current = mb_strtolower($current) . '_' . mb_strtoupper($current);
+            $current = mb_strtolower($current).'_'.mb_strtoupper($current);
 
             if (isset($value[$current])) {
                 return $value[$current];
@@ -90,6 +91,8 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
 
     /**
      * @param mixed $value
+     *
+     * @throws QUI\Exception
      */
     public function setValue($value)
     {
@@ -113,15 +116,15 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
             && !is_array($value)
         ) {
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new QUI\ERP\Products\Field\Exception(array(
+                throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
-                    array(
+                    [
                         'fieldId'    => $this->getId(),
                         'fieldTitle' => $this->getTitle(),
                         'fieldType'  => $this->getType()
-                    )
-                ));
+                    ]
+                ]);
             }
         }
 
@@ -129,15 +132,15 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
             $value = json_decode($value, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new QUI\ERP\Products\Field\Exception(array(
+                throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
-                    array(
+                    [
                         'fieldId'    => $this->getId(),
                         'fieldTitle' => $this->getTitle(),
                         'fieldType'  => $this->getType()
-                    )
-                ));
+                    ]
+                ]);
             }
         }
 
@@ -149,15 +152,15 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
 
         foreach ($keys as $lang) {
             if (!is_string($lang) || strlen($lang) != 2) {
-                throw new QUI\ERP\Products\Field\Exception(array(
+                throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
-                    array(
+                    [
                         'fieldId'    => $this->getId(),
                         'fieldTitle' => $this->getTitle(),
                         'fieldType'  => $this->getType()
-                    )
-                ));
+                    ]
+                ]);
             }
         }
     }
@@ -170,13 +173,20 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        $languages = QUI\Translator::getAvailableLanguages();
+        try {
+            $languages = QUI\Translator::getAvailableLanguages();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return [];
+        }
+
 
         if (!is_array($value)) {
             return array_fill_keys($languages, '');
         }
 
-        $result = array();
+        $result = [];
 
         foreach ($value as $key => $val) {
             if (!is_string($key) || strlen($key) != 2) {
@@ -220,13 +230,13 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      */
     public function getSearchTypes()
     {
-        return array(
+        return [
             Search::SEARCHTYPE_TEXT,
             Search::SEARCHTYPE_SELECTSINGLE,
             Search::SEARCHTYPE_INPUTSELECTSINGLE,
             Search::SEARCHTYPE_SELECTMULTI,
             Search::SEARCHTYPE_HASVALUE
-        );
+        ];
     }
 
     /**

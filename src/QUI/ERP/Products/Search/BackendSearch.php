@@ -51,8 +51,8 @@ class BackendSearch extends Search
 
         $PDO = QUI::getDataBase()->getPDO();
 
-        $binds = array();
-        $where = array();
+        $binds = [];
+        $where = [];
 
         if ($countOnly) {
             $sql = "SELECT COUNT(*)";
@@ -60,22 +60,22 @@ class BackendSearch extends Search
             $sql = "SELECT id";
         }
 
-        $sql .= " FROM " . TablesUtils::getProductCacheTableName();
+        $sql .= " FROM ".TablesUtils::getProductCacheTableName();
 
         $where[]       = 'lang = :lang';
-        $binds['lang'] = array(
+        $binds['lang'] = [
             'value' => $this->lang,
             'type'  => \PDO::PARAM_STR
-        );
+        ];
 
         if (isset($searchParams['category']) &&
             !empty($searchParams['category'])
         ) {
             $where[]           = '`category` LIKE :category';
-            $binds['category'] = array(
-                'value' => '%,' . (int)$searchParams['category'] . ',%',
+            $binds['category'] = [
+                'value' => '%,'.(int)$searchParams['category'].',%',
                 'type'  => \PDO::PARAM_STR
-            );
+            ];
         }
 
         if (isset($searchParams['categories'])
@@ -83,21 +83,21 @@ class BackendSearch extends Search
             && is_array($searchParams['categories'])
         ) {
             $c               = 0;
-            $whereCategories = array();
+            $whereCategories = [];
 
             foreach ($searchParams['categories'] as $categoryId) {
-                $whereCategories[] = '`category` LIKE :category' . $c;
+                $whereCategories[] = '`category` LIKE :category'.$c;
 
-                $binds['category' . $c] = array(
-                    'value' => '%,' . (int)$categoryId . ',%',
+                $binds['category'.$c] = [
+                    'value' => '%,'.(int)$categoryId.',%',
                     'type'  => \PDO::PARAM_STR
-                );
+                ];
 
                 $c++;
             }
 
             // @todo das OR als setting (AND oder OR) (ist gedacht für die Navigation)
-            $where[] = '(' . implode(' OR ', $whereCategories) . ')';
+            $where[] = '('.implode(' OR ', $whereCategories).')';
         }
 
         if (!isset($searchParams['fields'])
@@ -123,12 +123,12 @@ class BackendSearch extends Search
 
             if (mb_strpos($value, '#') === 0) {
                 $where[]     = '`id` = :id';
-                $binds['id'] = array(
+                $binds['id'] = [
                     'value' => preg_replace('#\D#i', '', $value),
                     'type'  => \PDO::PARAM_INT
-                );
+                ];
             } else {
-                $whereFreeText = array();
+                $whereFreeText = [];
 
                 // split search value by space
                 $freetextValues = explode(' ', $value);
@@ -136,10 +136,10 @@ class BackendSearch extends Search
                 foreach ($freetextValues as $value) {
                     // always search tags
                     $whereFreeText[]       = '`tags` LIKE :freetextTags';
-                    $binds['freetextTags'] = array(
-                        'value' => '%,' . $value . ',%',
+                    $binds['freetextTags'] = [
+                        'value' => '%,'.$value.',%',
                         'type'  => \PDO::PARAM_STR
-                    );
+                    ];
 
                     $searchFields = $this->getSearchFields();
 
@@ -157,16 +157,16 @@ class BackendSearch extends Search
 
                         $columnName = SearchHandler::getSearchFieldColumnName($Field);
 
-                        $whereFreeText[]              = '`' . $columnName . '` LIKE :freetext' . $fieldId;
-                        $binds['freetext' . $fieldId] = array(
-                            'value' => '%' . $value . '%',
+                        $whereFreeText[]            = '`'.$columnName.'` LIKE :freetext'.$fieldId;
+                        $binds['freetext'.$fieldId] = [
+                            'value' => '%'.$value.'%',
                             'type'  => \PDO::PARAM_STR
-                        );
+                        ];
                     }
                 }
 
                 if (!empty($whereFreeText)) {
-                    $where[] = '(' . implode(' OR ', $whereFreeText) . ')';
+                    $where[] = '('.implode(' OR ', $whereFreeText).')';
                 }
             }
         }
@@ -197,11 +197,11 @@ class BackendSearch extends Search
 
         // build WHERE query string
         if (!empty($where)) {
-            $sql .= " WHERE " . implode(" AND ", $where);
+            $sql .= " WHERE ".implode(" AND ", $where);
         }
 
         if (!$countOnly) {
-            $sql .= " " . $this->validateOrderStatement($searchParams);
+            $sql .= " ".$this->validateOrderStatement($searchParams);
         }
 
         if (isset($searchParams['limit']) &&
@@ -210,10 +210,10 @@ class BackendSearch extends Search
         ) {
             $Pagination = new QUI\Bricks\Controls\Pagination($searchParams);
             $sqlParams  = $Pagination->getSQLParams();
-            $sql        .= " LIMIT " . $sqlParams['limit'];
+            $sql        .= " LIMIT ".$sqlParams['limit'];
         } else {
             if (!$countOnly) {
-                $sql .= " LIMIT " . (int)20; // @todo: standard-limit als setting auslagern
+                $sql .= " LIMIT ".(int)20; // @todo: standard-limit als setting auslagern
             }
         }
 
@@ -221,7 +221,7 @@ class BackendSearch extends Search
 
         // bind search values
         foreach ($binds as $var => $bind) {
-            $Stmt->bindValue(':' . $var, $bind['value'], $bind['type']);
+            $Stmt->bindValue(':'.$var, $bind['value'], $bind['type']);
         }
 
         try {
@@ -232,14 +232,14 @@ class BackendSearch extends Search
                 return 0;
             }
 
-            return array();
+            return [];
         }
 
         if ($countOnly) {
             return (int)current(current($result));
         }
 
-        $productIds = array();
+        $productIds = [];
 
         foreach ($result as $row) {
             $productIds[] = $row['id'];
@@ -255,7 +255,7 @@ class BackendSearch extends Search
      */
     public function getSearchFieldData()
     {
-        $cname = 'products/search/backend/fieldvalues/' . $this->lang;
+        $cname = 'products/search/backend/fieldvalues/'.$this->lang;
 
         try {
             return SearchCache::get($cname);
@@ -263,7 +263,7 @@ class BackendSearch extends Search
             // nothing, retrieve values
         }
 
-        $searchFieldData = array();
+        $searchFieldData = [];
         $parseFields     = $this->getSearchFields();
 
         $Locale = new QUI\Locale();
@@ -277,14 +277,14 @@ class BackendSearch extends Search
 
             $Field = Fields::getField($fieldId);
 
-            $searchFieldDataContent = array(
+            $searchFieldDataContent = [
                 'id'         => $Field->getId(),
                 'searchType' => $Field->getSearchType()
-            );
+            ];
 
             if (in_array($Field->getSearchType(), $this->searchTypesWithValues)) {
                 $searchValues = $this->getValuesFromField($Field, false);
-                $searchParams = array();
+                $searchParams = [];
 
                 foreach ($searchValues as $val) {
                     try {
@@ -298,10 +298,10 @@ class BackendSearch extends Search
                         $label = $val;
                     }
 
-                    $searchParams[] = array(
+                    $searchParams[] = [
                         'label' => $label,
                         'value' => $val
-                    );
+                    ];
                 }
 
                 $searchFieldDataContent['searchData'] = $searchParams;
@@ -322,12 +322,12 @@ class BackendSearch extends Search
      */
     public function getSearchFields()
     {
-        $searchFields          = array();
+        $searchFields          = [];
         $PackageCfg            = QUI\ERP\Products\Utils\Package::getConfig();
         $searchFieldIdsFromCfg = $PackageCfg->get('search', 'backend');
 
         if ($searchFieldIdsFromCfg === false) {
-            $searchFieldIdsFromCfg = array();
+            $searchFieldIdsFromCfg = [];
         } else {
             $searchFieldIdsFromCfg = explode(',', $searchFieldIdsFromCfg);
         }
@@ -356,7 +356,7 @@ class BackendSearch extends Search
     public function setSearchFields($searchFields)
     {
         $currentSearchFields = $this->getSearchFields();
-        $newSearchFieldIds   = array();
+        $newSearchFieldIds   = [];
 
         foreach ($currentSearchFields as $fieldId => $search) {
             if (isset($searchFields[$fieldId])

@@ -73,16 +73,16 @@ class Fields
      *
      * @var array
      */
-    protected static $cacheNames = array(
+    protected static $cacheNames = [
         'quiqqer/products/fields',
         'quiqqer/products/fields/field/',
         'quiqqer/products/fields/query/'
-    );
+    ];
 
     /**
      * @var array
      */
-    protected static $list = array();
+    protected static $list = [];
 
     /**
      * Return the child attributes
@@ -91,7 +91,7 @@ class Fields
      */
     public static function getChildAttributes()
     {
-        return array(
+        return [
             'name',
             'type',
             'search_type',
@@ -105,7 +105,7 @@ class Fields
             'options',
 //            'workingtitles',
 //            'titles'
-        );
+        ];
     }
 
     /**
@@ -115,11 +115,11 @@ class Fields
      */
     public static function getStandardFields()
     {
-        return self::getFields(array(
-            'where' => array(
+        return self::getFields([
+            'where' => [
                 'standardField' => 1
-            )
-        ));
+            ]
+        ]);
     }
 
     /**
@@ -129,11 +129,11 @@ class Fields
      */
     public static function getSystemFields()
     {
-        return self::getFields(array(
-            'where' => array(
+        return self::getFields([
+            'where' => [
                 'systemField' => 1
-            )
-        ));
+            ]
+        ]);
     }
 
     /**
@@ -145,7 +145,11 @@ class Fields
             QUI\Cache\Manager::clear($cache);
         }
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldsClearCache');
+        try {
+            QUI::getEvents()->fireEvent('onQuiqqerProductsFieldsClearCache');
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
     }
 
     /**
@@ -177,13 +181,13 @@ class Fields
      * @param array $attributes - field attributes
      * @return QUI\ERP\Products\Field\Field
      *
-     * @throws QUI\Exception
+     * @throws \Exception
      */
-    public static function createField($attributes = array())
+    public static function createField($attributes = [])
     {
         QUI\Permissions\Permission::checkPermission('field.create');
 
-        $data          = array();
+        $data          = [];
         $allowedFields = self::getChildAttributes();
 
         foreach ($allowedFields as $allowed) {
@@ -193,19 +197,19 @@ class Fields
         }
 
         if (!isset($data['type'])) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.fields.type.not.allowed'
-            ));
+            ]);
         }
 
         $isAllowed = self::getFieldTypeData($data['type']);
 
         if (empty($isAllowed)) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.fields.type.not.allowed'
-            ));
+            ]);
         }
 
         // cache colum check
@@ -214,41 +218,41 @@ class Fields
         );
 
         if (count($columns) > 1000) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.products.column.maxSize'
-            ));
+            ]);
         }
 
         // id checking
         if (isset($attributes['id'])) {
-            $result = QUI::getDataBase()->fetch(array(
+            $result = QUI::getDataBase()->fetch([
                 'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
-                'where' => array(
+                'where' => [
                     'id' => $attributes['id']
-                )
-            ));
+                ]
+            ]);
 
             if (isset($result[0])) {
-                throw new QUI\ERP\Products\Field\Exception(array(
+                throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.id.already.exists'
-                ));
+                ]);
             }
 
             $data['id'] = $attributes['id'];
         } else {
             // exist an id with 1000? field-id begin at 1000
-            $result = QUI::getDataBase()->fetch(array(
+            $result = QUI::getDataBase()->fetch([
                 'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
-                'where' => array(
-                    'id' => array(
+                'where' => [
+                    'id' => [
                         'type'  => '>=',
                         'value' => 1000
-                    )
-                ),
+                    ]
+                ],
                 'limit' => 1
-            ));
+            ]);
 
             if (!isset($result[0])) {
                 $data['id'] = 1000;
@@ -281,9 +285,9 @@ class Fields
 
 
         QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.fields.create', array(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.fields.create', [
                 'id' => $newId
-            )),
+            ]),
             '',
             $data
         );
@@ -293,26 +297,26 @@ class Fields
 
         $Field = self::getField($newId);
 
-        
+
         // create view permission
-        QUI::getPermissionManager()->addPermission(array(
+        QUI::getPermissionManager()->addPermission([
             'name'  => "permission.products.fields.field{$newId}.view",
             'title' => "quiqqer/products permission.products.fields.field{$newId}.view.title",
             'desc'  => "",
             'type'  => 'bool',
             'area'  => 'groups',
             'src'   => 'user'
-        ));
+        ]);
 
         // create edit permission
-        QUI::getPermissionManager()->addPermission(array(
+        QUI::getPermissionManager()->addPermission([
             'name'  => "permission.products.fields.field{$newId}.edit",
             'title' => "quiqqer/products permission.products.fields.field{$newId}.edit.title",
             'desc'  => "",
             'type'  => 'bool',
             'area'  => 'groups',
             'src'   => 'user'
-        ));
+        ]);
 
 
         // create new cache column and set default search type
@@ -325,7 +329,7 @@ class Fields
         // clear the field cache
         QUI\Cache\Manager::clear('quiqqer/products/fields');
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldCreate', array($Field));
+        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldCreate', [$Field]);
 
         return $Field;
     }
@@ -339,7 +343,7 @@ class Fields
     {
         QUI::getDataBase()->table()->addColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            array($columnName => $columnType)
+            [$columnName => $columnType]
         );
     }
 
@@ -347,21 +351,21 @@ class Fields
      * Create cache table column for a field
      *
      * @param integer $fieldId
-     * @throws QUI\Exception
+     * @throws \Exception
      */
     public static function createFieldCacheColumn($fieldId)
     {
         $Field = self::getField($fieldId);
 
         if (!$Field->isSearchable()) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.cache.column.not.allowed',
-                array(
+                [
                     'fieldId'    => $fieldId,
                     'fieldTitle' => $Field->getTitle()
-                )
-            ));
+                ]
+            ]);
         }
 
         self::createCacheColumn(
@@ -382,11 +386,11 @@ class Fields
         $localeGroup = 'quiqqer/products';
 
         if (!isset($attributes['titles'])) {
-            $attributes['titles'] = array();
+            $attributes['titles'] = [];
         }
 
         if (!isset($attributes['workingtitles'])) {
-            $attributes['workingtitles'] = array();
+            $attributes['workingtitles'] = [];
         }
 
         // title
@@ -407,9 +411,9 @@ class Fields
         // permission translations
         $languages = QUI\Translator::langs();
 
-        $headerTranslations = array();
-        $viewTranslations   = array();
-        $editTranslations   = array();
+        $headerTranslations = [];
+        $viewTranslations   = [];
+        $editTranslations   = [];
 
         foreach ($languages as $lang) {
             $title = $fieldId;
@@ -422,30 +426,30 @@ class Fields
                 $lang,
                 'quiqqer/products',
                 'quiqqer.products.field.header.placeholder',
-                array(
+                [
                     'fielId'    => $fieldId,
                     'fieldname' => $title
-                )
+                ]
             );
 
             $viewTranslations[$lang] = QUI::getLocale()->getByLang(
                 $lang,
                 'quiqqer/products',
                 'quiqqer.products.field.view.placeholder',
-                array(
+                [
                     'fielId'    => $fieldId,
                     'fieldname' => $title
-                )
+                ]
             );
 
             $editTranslations[$lang] = QUI::getLocale()->getByLang(
                 $lang,
                 'quiqqer/products',
                 'quiqqer.products.field.edit.placeholder',
-                array(
+                [
                     'fielId'    => $fieldId,
                     'fieldname' => $title
-                )
+                ]
             );
         }
 
@@ -479,13 +483,13 @@ class Fields
      * @param string $var
      * @param array $data
      */
-    protected static function insertTranslations($group, $var, $data = array())
+    protected static function insertTranslations($group, $var, $data = [])
     {
         try {
             $translations = QUI\Translator::get($group, $var);
 
             if (!is_array($data)) {
-                $data = array();
+                $data = [];
             }
 
             $data['package']  = 'quiqqer/products';
@@ -498,9 +502,9 @@ class Fields
                 QUI\Translator::edit($group, $var, 'quiqqer/products', $data);
             }
         } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addNotice($Exception->getMessage(), array(
+            QUI\System\Log::addNotice($Exception->getMessage(), [
                 'trace' => $Exception->getTrace()
-            ));
+            ]);
         }
     }
 
@@ -532,7 +536,7 @@ class Fields
         // exists the type?
         $dir    = dirname(dirname(__FILE__)).'/Field/Types/';
         $files  = QUI\Utils\System\File::readDir($dir);
-        $result = array();
+        $result = [];
 
         foreach ($files as $file) {
             if (strpos($file, 'View') !== false) {
@@ -541,13 +545,13 @@ class Fields
 
             $file = pathinfo($file);
 
-            $result[] = array(
+            $result[] = [
                 'plugin'   => 'quiqqer/products',
                 'src'      => 'QUI\ERP\Products\Field\Types\\'.$file['filename'],
                 'category' => 0,
-                'locale'   => array('quiqqer/products', 'fieldtype.'.$file['filename']),
+                'locale'   => ['quiqqer/products', 'fieldtype.'.$file['filename']],
                 'name'     => $file['filename']
-            );
+            ];
         }
 
         $plugins = QUI::getPackageManager()->getInstalled();
@@ -574,17 +578,21 @@ class Fields
                     continue;
                 }
 
-                $result[] = array(
+                $result[] = [
                     'plugin'   => $plugin['name'],
                     'src'      => $src,
                     'category' => $category,
                     'locale'   => QUI\Utils\DOM::getTextFromNode($Field, false),
                     'name'     => $name
-                );
+                ];
             }
         }
 
-        QUI\Cache\Manager::set($cacheName, $result);
+        try {
+            QUI\Cache\Manager::set($cacheName, $result);
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
 
         return $result;
     }
@@ -603,7 +611,7 @@ class Fields
         });
 
         if (empty($found)) {
-            return array();
+            return [];
         }
 
         return reset($found);
@@ -622,7 +630,7 @@ class Fields
     public static function getFieldByType(
         $type,
         $fieldId,
-        $fieldParams = array()
+        $fieldParams = []
     ) {
         $class = 'QUI\ERP\Products\Field\Types\\'.$type;
 
@@ -630,14 +638,14 @@ class Fields
             return new $class($fieldId, $fieldParams);
         }
 
-        throw new QUI\ERP\Products\Field\Exception(array(
+        throw new QUI\ERP\Products\Field\Exception([
             'quiqqer/products',
             'exception.field.not.found',
-            array(
+            [
                 'fieldType' => $type,
                 'fieldId'   => $fieldId
-            )
-        ));
+            ]
+        ]);
     }
 
     /**
@@ -656,7 +664,7 @@ class Fields
 
         // Wenn der RAM zu voll wird, Objekte mal leeren
         if (QUI\Utils\System::memUsageToHigh()) {
-            self::$list = array();
+            self::$list = [];
         }
 
         try {
@@ -664,20 +672,20 @@ class Fields
                 QUI\ERP\Products\Handler\Fields::getFieldCacheName($fieldId)
             );
         } catch (QUI\Exception $Exception) {
-            $result = QUI::getDataBase()->fetch(array(
+            $result = QUI::getDataBase()->fetch([
                 'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
-                'where' => array(
+                'where' => [
                     'id' => (int)$fieldId
-                ),
+                ],
                 'limit' => 1
-            ));
+            ]);
 
 
             if (!isset($result[0])) {
                 throw new QUI\ERP\Products\Field\Exception(
-                    array('quiqqer/products', 'exception.field.not.found'),
+                    ['quiqqer/products', 'exception.field.not.found'],
                     404,
-                    array('id' => (int)$fieldId)
+                    ['id' => (int)$fieldId]
                 );
             }
 
@@ -696,46 +704,46 @@ class Fields
 
         if (empty($fieldTypes)) {
             throw new QUI\ERP\Products\Field\Exception(
-                array('quiqqer/products', 'exception.field.type.not.found'),
+                ['quiqqer/products', 'exception.field.type.not.found'],
                 404,
-                array(
+                [
                     'id'   => (int)$fieldId,
                     'type' => $data['type']
-                )
+                ]
             );
         }
 
         if (!class_exists($class)) {
             throw new QUI\ERP\Products\Field\Exception(
-                array('quiqqer/products', 'exception.field.class.not.found'),
+                ['quiqqer/products', 'exception.field.class.not.found'],
                 404,
-                array(
+                [
                     'id'    => (int)$fieldId,
                     'type'  => $data['type'],
                     'class' => $class
-                )
+                ]
             );
         }
 
-        $fieldData = array(
+        $fieldData = [
             'system'       => (int)$data['systemField'],
             'required'     => (int)$data['requiredField'],
             'standard'     => (int)$data['standardField'],
             'defaultValue' => json_decode($data['defaultValue'], true)
-        );
+        ];
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         $Field = new $class($fieldId, $fieldData);
 
         if (!QUI\ERP\Products\Utils\Fields::isField($Field)) {
             throw new QUI\ERP\Products\Field\Exception(
-                array('quiqqer/products', 'exception.field.is.no.field'),
+                ['quiqqer/products', 'exception.field.is.no.field'],
                 404,
-                array(
+                [
                     'id'    => (int)$fieldId,
                     'type'  => $data['type'],
                     'class' => $class
-                )
+                ]
             );
         }
 
@@ -778,7 +786,7 @@ class Fields
      *                              $queryParams['order']
      * @return array
      */
-    public static function getFieldIds($queryParams = array())
+    public static function getFieldIds($queryParams = [])
     {
         $cacheName = 'quiqqer/products/fields/query/'.md5(serialize($queryParams));
 
@@ -787,10 +795,10 @@ class Fields
         } catch (QUI\Exception $Exception) {
         }
 
-        $query = array(
+        $query = [
             'select' => 'id',
             'from'   => QUI\ERP\Products\Utils\Tables::getFieldTableName()
-        );
+        ];
 
         if (isset($queryParams['where'])) {
             $query['where'] = $queryParams['where'];
@@ -845,7 +853,11 @@ class Fields
 
         $result = QUI::getDataBase()->fetch($query);
 
-        QUI\Cache\Manager::set($cacheName, $result);
+        try {
+            QUI\Cache\Manager::set($cacheName, $result);
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
 
         return $result;
     }
@@ -861,9 +873,9 @@ class Fields
      *                              $queryParams['order']
      * @return array
      */
-    public static function getFields($queryParams = array())
+    public static function getFields($queryParams = [])
     {
-        $result = array();
+        $result = [];
         $data   = self::getFieldIds($queryParams);
 
         foreach ($data as $entry) {
@@ -887,15 +899,15 @@ class Fields
      * @param array $queryParams - query params (where, where_or)
      * @return integer
      */
-    public static function countFields($queryParams = array())
+    public static function countFields($queryParams = [])
     {
-        $query = array(
+        $query = [
             'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
-            'count' => array(
+            'count' => [
                 'select' => 'id',
                 'as'     => 'count'
-            )
-        );
+            ]
+        ];
 
         if (isset($queryParams['where'])) {
             $query['where'] = $queryParams['where'];

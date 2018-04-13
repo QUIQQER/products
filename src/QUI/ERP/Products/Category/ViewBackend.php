@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Category\ViewBackend
  */
+
 namespace QUI\ERP\Products\Category;
 
 use QUI;
@@ -47,7 +48,7 @@ class ViewBackend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
      * @param array $params
      * @return integer
      */
-    public function countProducts($params = array())
+    public function countProducts($params = [])
     {
         $params['where']['active'] = 1;
 
@@ -150,7 +151,7 @@ class ViewBackend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
      * @param array $params
      * @return array
      */
-    public function getProducts($params = array())
+    public function getProducts($params = [])
     {
         $params['where']['active'] = 1;
 
@@ -166,7 +167,7 @@ class ViewBackend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
      * @param array $params
      * @return array
      */
-    public function getProductIds($params = array())
+    public function getProductIds($params = [])
     {
         $params['where']['active'] = 1;
 

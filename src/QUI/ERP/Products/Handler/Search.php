@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Handler\Search
  */
+
 namespace QUI\ERP\Products\Handler;
 
 use QUI;
@@ -51,7 +52,7 @@ class Search
      */
     public static function getSearchTypes()
     {
-        return array(
+        return [
             self::SEARCHTYPE_TEXT,
             self::SEARCHTYPE_SELECTRANGE,
             self::SEARCHTYPE_SELECTSINGLE,
@@ -62,7 +63,7 @@ class Search
             self::SEARCHTYPE_DATERANGE,
             self::SEARCHTYPE_INPUTSELECTRANGE,
             self::SEARCHTYPE_INPUTSELECTSINGLE
-        );
+        ];
     }
 
     /**
@@ -97,6 +98,6 @@ class Search
      */
     public static function getSearchFieldColumnName(QUI\ERP\Products\Interfaces\FieldInterface $Field)
     {
-        return 'F' . $Field->getId();
+        return 'F'.$Field->getId();
     }
 }

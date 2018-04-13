@@ -23,7 +23,7 @@ class AllProducts extends Category
      * @param int $categoryId - can't be used, id is always 0
      * @param array $data
      */
-    public function __construct($categoryId = 0, array $data = array())
+    public function __construct($categoryId = 0, array $data = [])
     {
         $data['parentId'] = 0;
 
@@ -40,11 +40,11 @@ class AllProducts extends Category
      *                              $queryParams['debug']
      * @return array
      */
-    public function getProducts($params = array())
+    public function getProducts($params = [])
     {
-        $query = array(
+        $query = [
             'limit' => 20
-        );
+        ];
 
         if (isset($params['where'])) {
             $query['where'] = $params['where'];
@@ -75,9 +75,9 @@ class AllProducts extends Category
      *                              $queryParams['debug']
      * @return array
      */
-    public function getProductIds($params = array())
+    public function getProductIds($params = [])
     {
-        $query = array();
+        $query = [];
 
         if (isset($params['where'])) {
             $query['where'] = $params['where'];
@@ -106,13 +106,13 @@ class AllProducts extends Category
      *                              $queryParams['debug']
      * @return integer
      */
-    public function countProducts($params = array())
+    public function countProducts($params = [])
     {
         if (!is_array($params)) {
-            $params = array();
+            $params = [];
         }
 
-        $query = array();
+        $query = [];
 
         if (isset($params['where'])) {
             $query['where'] = $params['where'];

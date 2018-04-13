@@ -38,6 +38,8 @@ class Price extends QUI\Control
      * (non-PHPdoc)
      *
      * @see \QUI\Control::create()
+     *
+     * @throws QUI\Exception
      */
     public function getBody()
     {

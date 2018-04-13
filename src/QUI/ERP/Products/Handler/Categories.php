@@ -19,7 +19,7 @@ class Categories
      * List of internal categories
      * @var array
      */
-    private static $list = array();
+    private static $list = [];
 
     /**
      * Clears the category cache
@@ -35,7 +35,11 @@ class Categories
             QUI\Cache\Manager::clear(self::getCacheName($categoryId));
         }
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsCategoriesClearCache');
+        try {
+            QUI::getEvents()->fireEvent('onQuiqqerProductsCategoriesClearCache');
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
     }
 
     /**
@@ -46,7 +50,7 @@ class Categories
      */
     public static function getCacheName($categoryId)
     {
-        return 'quiqqer/products/categories/' . (int)$categoryId;
+        return 'quiqqer/products/categories/'.(int)$categoryId;
     }
 
     /**
@@ -55,15 +59,15 @@ class Categories
      * @param array $queryParams - query params (where, where_or)
      * @return integer
      */
-    public function countCategories($queryParams = array())
+    public function countCategories($queryParams = [])
     {
-        $query = array(
+        $query = [
             'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
-            'count' => array(
+            'count' => [
                 'select' => 'id',
                 'as'     => 'count'
-            )
-        );
+            ]
+        ];
 
         if (isset($queryParams['where'])) {
             $query['where'] = $queryParams['where'];
@@ -87,11 +91,11 @@ class Categories
      */
     public static function getChildAttributes()
     {
-        return array(
+        return [
             'id',
             'parentId',
             'fields'
-        );
+        ];
     }
 
     /**
@@ -116,29 +120,29 @@ class Categories
 
         // Wenn der RAM zu voll wird, Objekte mal leeren
         if (QUI\Utils\System::memUsageToHigh()) {
-            self::$list = array();
+            self::$list = [];
         }
 
         try {
             $categoryData = QUI\Cache\Manager::get(self::getCacheName($id));
         } catch (QUI\Exception $Eception) {
-            $data = QUI::getDataBase()->fetch(array(
+            $data = QUI::getDataBase()->fetch([
                 'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
-                'where' => array(
+                'where' => [
                     'id' => $id
-                )
-            ));
+                ]
+            ]);
 
             if (!isset($data[0])) {
                 throw new QUI\Exception(
-                    array(
+                    [
                         'quiqqer/products',
                         'exception.category.not.found'
-                    ),
+                    ],
                     404,
-                    array(
+                    [
                         'categoryId' => $id
-                    )
+                    ]
                 );
             }
 
@@ -225,6 +229,9 @@ class Categories
      * @param string $title - optional, translation text for current language
      *
      * @return QUI\ERP\Products\Interfaces\CategoryInterface
+     *
+     * @throws \QUI\Exception
+     * @throws \QUI\Permissions\Exception
      */
     public static function createCategory($parentId = null, $title = '')
     {
@@ -234,31 +241,31 @@ class Categories
             $parentId = 0;
         }
 
-        $result = QUI::getDataBase()->fetch(array(
+        $result = QUI::getDataBase()->fetch([
             'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             'limit' => 1
-        ));
+        ]);
 
         QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.category.create', array(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.category.create', [
                 'title' => $title
-            ))
+            ])
         );
 
         if (empty($result)) {
             QUI::getDataBase()->insert(
                 QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
-                array(
+                [
                     'parentId' => $parentId,
                     'id'       => 1
-                )
+                ]
             );
         } else {
             QUI::getDataBase()->insert(
                 QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
-                array(
+                [
                     'parentId' => $parentId
-                )
+                ]
             );
         }
 
@@ -269,10 +276,10 @@ class Categories
         try {
             $current = QUI::getLocale()->getCurrent();
 
-            $languageData = array(
+            $languageData = [
                 'datatype' => 'js,php',
                 'package'  => 'quiqqer/products'
-            );
+            ];
 
             if (!empty($title)) {
                 $languageData[$current] = $title;
@@ -280,7 +287,7 @@ class Categories
 
             QUI\Translator::addUserVar(
                 'quiqqer/products',
-                'products.category.' . $newId . '.title',
+                'products.category.'.$newId.'.title',
                 $languageData
             );
         } catch (QUI\Exception $Exception) {
@@ -294,7 +301,7 @@ class Categories
         $Category = self::getCategory($newId);
 
         QUI\ERP\Products\Handler\Categories::clearCache($parentId);
-        QUI::getEvents()->fireEvent('onQuiqqerProductsCategoryCreate', array($Category));
+        QUI::getEvents()->fireEvent('onQuiqqerProductsCategoryCreate', [$Category]);
 
         return $Category;
     }
@@ -310,10 +317,10 @@ class Categories
      *                              $queryParams['order']
      * @return array
      */
-    public static function getCategories($queryParams = array())
+    public static function getCategories($queryParams = [])
     {
         $ids    = self::getCategoryIds($queryParams);
-        $result = array();
+        $result = [];
 
         foreach ($ids as $id) {
             try {
@@ -330,12 +337,12 @@ class Categories
      * @param array $queryParams
      * @return array
      */
-    public static function getCategoryIds($queryParams = array())
+    public static function getCategoryIds($queryParams = [])
     {
-        $query = array(
+        $query = [
             'select' => 'id',
             'from'   => QUI\ERP\Products\Utils\Tables::getCategoryTableName()
-        );
+        ];
 
         if (isset($queryParams['where'])) {
             $query['where'] = $queryParams['where'];
@@ -353,14 +360,11 @@ class Categories
             $query['order'] = $queryParams['order'];
         }
 
-        $result = array();
+        $result = [];
         $data   = QUI::getDataBase()->fetch($query);
 
         foreach ($data as $entry) {
-            try {
-                $result[] = $entry['id'];
-            } catch (QUI\Exception $Exception) {
-            }
+            $result[] = $entry['id'];
         }
 
         return $result;
@@ -368,6 +372,7 @@ class Categories
 
     /**
      * @param integer $id
+     * @throws QUI\Exception
      */
     public static function deleteCategory($id)
     {
