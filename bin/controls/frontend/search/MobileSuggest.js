@@ -3,14 +3,6 @@
  * @author www.pcsg.de (Henning Leutz)
  *
  * Suggest search für produkte
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require Ajax
- * @require Locale
- * @require Mustache
- * @require text!package/quiqqer/products/bin/controls/frontend/search/MobileSuggest.html
- * @require css!package/quiqqer/products/bin/controls/frontend/search/MobileSuggest.css
  */
 define('package/quiqqer/products/bin/controls/frontend/search/MobileSuggest', [
 

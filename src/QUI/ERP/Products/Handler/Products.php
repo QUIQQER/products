@@ -31,7 +31,7 @@ class Products
      * List of internal products
      * @var array
      */
-    private static $list = array();
+    private static $list = [];
 
     /**
      * Global Product Locale
@@ -52,10 +52,10 @@ class Products
         $folderUrl = $Config->get('products', 'folder');
 
         if (empty($folderUrl)) {
-            throw new QUI\Exception(array(
+            throw new QUI\Exception([
                 'quiqqer/products',
                 'exception.products.media.folder.missing'
-            ));
+            ]);
         }
 
         try {
@@ -68,10 +68,10 @@ class Products
         } catch (QUI\Exception $Exception) {
         }
 
-        throw new QUI\Exception(array(
+        throw new QUI\Exception([
             'quiqqer/products',
             'exception.products.media.folder.missing'
-        ));
+        ]);
     }
 
     /**
@@ -79,6 +79,7 @@ class Products
      * @return QUI\ERP\Products\Product\Product
      *
      * @throws QUI\ERP\Products\Product\Exception
+     * @throws QUI\Exception
      */
     public static function getProduct($pid)
     {
@@ -88,7 +89,7 @@ class Products
 
         // Wenn der RAM zu voll wird, Objekte mal leeren
         if (QUI\Utils\System::memUsageToHigh()) {
-            self::$list = array();
+            self::$list = [];
         }
 
         $Product          = new QUI\ERP\Products\Product\Product($pid);
@@ -109,12 +110,12 @@ class Products
             return true;
         }
 
-        $result = QUI::getDataBase()->fetch(array(
+        $result = QUI::getDataBase()->fetch([
             'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            'where' => array(
+            'where' => [
                 'id' => $pid
-            )
-        ));
+            ]
+        ]);
 
         return isset($result[0]);
     }
@@ -129,16 +130,16 @@ class Products
     public static function getProductByProductNo($productNo)
     {
         try {
-            $result = QUI::getDataBase()->fetch(array(
-                'select' => array(
+            $result = QUI::getDataBase()->fetch([
+                'select' => [
                     'id'
-                ),
+                ],
                 'from'   => TablesUtils::getProductCacheTableName(),
-                'where'  => array(
+                'where'  => [
                     'productNo' => $productNo
-                ),
+                ],
                 'limit'  => 1
-            ));
+            ]);
         } catch (QUI\Exception $Exception) {
             // TODO: mit Mor besprechen
             QUI\System\Log::addError(
@@ -146,26 +147,17 @@ class Products
             );
 
             throw new QUI\Exception(
-                array(
-                    'quiqqer/products',
-                    'exception.get.product.by.no.error'
-                ),
+                ['quiqqer/products', 'exception.get.product.by.no.error'],
                 $Exception->getCode(),
-                array(
-                    'productNo' => $productNo
-                )
+                ['productNo' => $productNo]
             );
         }
 
-        if (empty($result)
-            || !isset($result[0]['id'])
-        ) {
+        if (empty($result) || !isset($result[0]['id'])) {
             throw new QUI\Exception(
-                array('quiqqer/products', 'exception.product.no.not.found'),
+                ['quiqqer/products', 'exception.product.no.not.found'],
                 404,
-                array(
-                    'productNo' => $productNo
-                )
+                ['productNo' => $productNo]
             );
         }
 
@@ -183,13 +175,13 @@ class Products
      * @throws QUI\Exception
      */
     public static function createProduct(
-        $categories = array(),
-        $fields = array()
+        $categories = [],
+        $fields = []
     ) {
         QUI\Permissions\Permission::checkPermission('product.create');
 
         // categories
-        $categoryids = array();
+        $categoryids = [];
 
         if (empty($categories)) {
             $categoryids[] = Categories::getMainCategory();
@@ -213,21 +205,21 @@ class Products
                 continue;
             }
 
-            throw new QUI\Exception(array(
+            throw new QUI\Exception([
                 'quiqqer/products',
                 'exception.products.no.category'
-            ));
+            ]);
         }
 
         if (!count($categoryids)) {
-            throw new QUI\Exception(array(
+            throw new QUI\Exception([
                 'quiqqer/products',
                 'exception.products.no.category.given'
-            ));
+            ]);
         }
 
         // fields
-        $fieldData = array();
+        $fieldData = [];
 
         /* @var $Field Field|integer */
         foreach ($fields as $Field) {
@@ -244,14 +236,14 @@ class Products
 
             if ($Field->isRequired()) {
                 if ($value === '') {
-                    throw new QUI\Exception(array(
+                    throw new QUI\Exception([
                         'quiqqer/products',
                         'exception.field.is.invalid',
-                        array(
+                        [
                             'fieldId'    => $Field->getId(),
                             'fieldtitle' => $Field->getTitle()
-                        )
-                    ));
+                        ]
+                    ]);
                 }
 
                 $Field->validate($Field->getValue());
@@ -263,25 +255,25 @@ class Products
 
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            array(
+            [
                 'fieldData'  => json_encode($fieldData),
                 'categories' => ','.implode($categoryids, ',').',',
                 'c_user'     => QUI::getUserBySession()->getId(),
                 'c_date'     => date('Y-m-d H:i:s')
-            )
+            ]
         );
 
         $newId = QUI::getDataBase()->getPDO()->lastInsertId();
 
         QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.create', array(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.create', [
                 'id' => $newId
-            )),
+            ]),
             '',
-            array(
+            [
                 'fieldData'  => $fieldData,
                 'categories' => ','.implode($categoryids, ',').','
-            )
+            ]
         );
 
 
@@ -289,7 +281,7 @@ class Products
         $Product->createMediaFolder();
         $Product->updateCache();
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreate', array($Product));
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreate', [$Product]);
 
         return $Product;
     }
@@ -299,6 +291,8 @@ class Products
      *
      * @param integer $productId
      * @return QUI\ERP\Products\Product\Product
+     *
+     * @throws QUI\Exception
      */
     public static function copyProduct($productId)
     {
@@ -330,7 +324,7 @@ class Products
 
         $New->save();
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCopy', array($New, $Product));
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCopy', [$New, $Product]);
 
         return $New;
     }
@@ -346,9 +340,9 @@ class Products
      *                              $queryParams['order']
      * @return array
      */
-    public static function getProducts($queryParams = array())
+    public static function getProducts($queryParams = [])
     {
-        $result = array();
+        $result = [];
         $data   = self::getProductIds($queryParams);
 
         foreach ($data as $id) {
@@ -372,13 +366,13 @@ class Products
      *                              $queryParams['order']
      * @return array
      */
-    public static function getProductIds($queryParams = array())
+    public static function getProductIds($queryParams = [])
     {
-        $query = array(
+        $query = [
             'from' => QUI\ERP\Products\Utils\Tables::getProductTableName()
-        );
+        ];
 
-        $allowedFields = array(
+        $allowedFields = [
             'id',
             'category',
             'categories',
@@ -386,7 +380,7 @@ class Products
             'active',
             'parent',
             'permissions'
-        );
+        ];
 
         if (isset($queryParams['where']) &&
             QUI\Database\DB::isWhereValid($queryParams['where'], $allowedFields)
@@ -414,7 +408,7 @@ class Products
             $query['debug'] = $queryParams['debug'];
         }
 
-        $result = array();
+        $result = [];
         $data   = QUI::getDataBase()->fetch($query);
 
         foreach ($data as $entry) {
@@ -429,6 +423,7 @@ class Products
 
     /**
      * @param integer $pid
+     * @throws QUI\Exception
      */
     public static function deleteProduct($pid)
     {
@@ -442,15 +437,15 @@ class Products
      * @param array $queryParams - query params (where, where_or)
      * @return integer
      */
-    public static function countProducts($queryParams = array())
+    public static function countProducts($queryParams = [])
     {
-        $query = array(
+        $query = [
             'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            'count' => array(
+            'count' => [
                 'select' => 'id',
                 'as'     => 'count'
-            )
-        );
+            ]
+        ];
 
         if (isset($queryParams['where'])) {
             $query['where'] = $queryParams['where'];
@@ -503,9 +498,14 @@ class Products
         }
 
         // media cleanup
-        $MainFolder = Products::getParentMediaFolder();
-        $Media      = $MainFolder->getMedia();
-        $childIds   = $MainFolder->getChildrenIds();
+        try {
+            $MainFolder = Products::getParentMediaFolder();
+        } catch (QUI\Exception $Exception) {
+            $MainFolder = QUI::getProjectManager()->getStandard()->getMedia();
+        }
+
+        $Media    = $MainFolder->getMedia();
+        $childIds = $MainFolder->getChildrenIds();
 
         foreach ($childIds as $folderId) {
             $Folder = null;
@@ -530,7 +530,11 @@ class Products
         QUI\ERP\Products\Search\Cache::clear();
         Categories::clearCache();
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCleanup');
+        try {
+            QUI::getEvents()->fireEvent('onQuiqqerProductsProductCleanup');
+        } catch (QUi\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
     }
 
     /**
@@ -545,8 +549,14 @@ class Products
             return self::$usePermissions;
         }
 
-        $Package = QUI::getPackage('quiqqer/products');
-        $Config  = $Package->getConfig();
+        try {
+            $Package = QUI::getPackage('quiqqer/products');
+            $Config  = $Package->getConfig();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return false;
+        }
 
         $usePermission        = (int)$Config->get('products', 'usePermissions');
         self::$usePermissions = $usePermission ? true : false;

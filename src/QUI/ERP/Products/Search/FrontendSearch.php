@@ -30,11 +30,11 @@ class FrontendSearch extends Search
      *
      * @var array
      */
-    protected $eligibleSiteTypes = array(
+    protected $eligibleSiteTypes = [
         self::SITETYPE_CATEGORY => true,
         self::SITETYPE_SEARCH   => true,
         self::SITETYPE_LIST     => true
-    );
+    ];
 
     /**
      * The frontend Site where the search is conducted
@@ -68,13 +68,13 @@ class FrontendSearch extends Search
         $type = $Site->getAttribute('type');
 
         if (!isset($this->eligibleSiteTypes[$type])) {
-            throw new Exception(array(
+            throw new Exception([
                 'quiqqer/products',
                 'exception.frontendsearch.site.type.not.eligible',
-                array(
+                [
                     'siteId' => $Site->getId()
-                )
-            ));
+                ]
+            ]);
         }
 
         $this->categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
@@ -93,9 +93,9 @@ class FrontendSearch extends Search
      */
     public function searchByUrl($urlParams, $countOnly = false)
     {
-        $searchData = array(
-            'fields' => array()
-        );
+        $searchData = [
+            'fields' => []
+        ];
 
         // parse all field specific parameters
         foreach ($urlParams as $k => $v) {
@@ -118,7 +118,7 @@ class FrontendSearch extends Search
             if (!empty($from)
                 || !empty($to)
             ) {
-                $value = array();
+                $value = [];
 
                 if (!empty($from)) {
                     $value['from'] = $v;
@@ -131,9 +131,9 @@ class FrontendSearch extends Search
                 $v = $value;
             }
 
-            $searchData['fields'][$fieldId] = array(
+            $searchData['fields'][$fieldId] = [
                 'value' => $v
-            );
+            ];
         }
 
         if (isset($urlParams['category']) && !empty($urlParams['category'])) {
@@ -175,8 +175,8 @@ class FrontendSearch extends Search
 
         $PDO = QUI::getDataBase()->getPDO();
 
-        $binds = array();
-        $where = array();
+        $binds = [];
+        $where = [];
 
         if ($countOnly) {
             $sql = "SELECT COUNT(*)";
@@ -187,23 +187,23 @@ class FrontendSearch extends Search
         $sql .= " FROM ".TablesUtils::getProductCacheTableName();
 
         $where[]       = 'lang = :lang';
-        $binds['lang'] = array(
+        $binds['lang'] = [
             'value' => $this->lang,
             'type'  => \PDO::PARAM_STR
-        );
+        ];
 
         if (isset($searchParams['category']) && !empty($searchParams['category'])) {
             $where[]           = '`category` LIKE :category';
-            $binds['category'] = array(
+            $binds['category'] = [
                 'value' => '%,'.(int)$searchParams['category'].',%',
                 'type'  => \PDO::PARAM_STR
-            );
+            ];
         } elseif ($this->categoryId) {
             $where[]           = '`category` LIKE :category';
-            $binds['category'] = array(
+            $binds['category'] = [
                 'value' => '%,'.$this->categoryId.',%',
                 'type'  => \PDO::PARAM_STR
-            );
+            ];
         }
 
         if (isset($searchParams['categories'])
@@ -211,15 +211,15 @@ class FrontendSearch extends Search
             && is_array($searchParams['categories'])
         ) {
             $c               = 0;
-            $whereCategories = array();
+            $whereCategories = [];
 
             foreach ($searchParams['categories'] as $categoryId) {
                 $whereCategories[] = '`category` LIKE :category'.$c;
 
-                $binds['category'.$c] = array(
+                $binds['category'.$c] = [
                     'value' => '%,'.(int)$categoryId.',%',
                     'type'  => \PDO::PARAM_STR
-                );
+                ];
 
                 $c++;
             }
@@ -239,7 +239,7 @@ class FrontendSearch extends Search
 
         // freetext search
         if (isset($searchParams['freetext']) && !empty($searchParams['freetext'])) {
-            $whereFreeText = array();
+            $whereFreeText = [];
             $value         = $this->sanitizeString($searchParams['freetext']);
 
             // split search value by space
@@ -248,10 +248,10 @@ class FrontendSearch extends Search
             foreach ($freetextValues as $value) {
                 // always search tags
                 $whereFreeText[]       = '`tags` LIKE :freetextTags';
-                $binds['freetextTags'] = array(
+                $binds['freetextTags'] = [
                     'value' => '%,'.$value.',%',
                     'type'  => \PDO::PARAM_STR
-                );
+                ];
 
                 //$searchFields = $this->getSearchFields();
                 $searchFields = QUI\ERP\Products\Utils\Search::getDefaultFrontendFreeTextFields();
@@ -267,10 +267,10 @@ class FrontendSearch extends Search
                     $fieldId    = $Field->getId();
 
                     $whereFreeText[]            = '`'.$columnName.'` LIKE :freetext'.$fieldId;
-                    $binds['freetext'.$fieldId] = array(
+                    $binds['freetext'.$fieldId] = [
                         'value' => '%'.$value.'%',
                         'type'  => \PDO::PARAM_STR
-                    );
+                    ];
                 }
             }
 
@@ -287,7 +287,7 @@ class FrontendSearch extends Search
         }
 
         if (!is_array($siteTags)) {
-            $siteTags = array();
+            $siteTags = [];
         }
 
         if (isset($searchParams['tags'])
@@ -311,17 +311,17 @@ class FrontendSearch extends Search
             // user
             $User = QUI::getUserBySession();
 
-            $whereOr = array(
+            $whereOr = [
                 '`viewUsersGroups` IS NULL'
-            );
+            ];
 
             if ($User->getId()) {
                 $whereOr[] = '`viewUsersGroups` LIKE :permissionUser';
 
-                $binds['permissionUser'] = array(
+                $binds['permissionUser'] = [
                     'value' => '%,u'.$User->getId().',%',
                     'type'  => \PDO::PARAM_STR
-                );
+                ];
             }
 
             // user groups
@@ -331,10 +331,10 @@ class FrontendSearch extends Search
             foreach ($userGroupIds as $groupId) {
                 $whereOr[] = '`viewUsersGroups` LIKE :permissionGroup'.$i;
 
-                $binds['permissionGroup'.$i] = array(
+                $binds['permissionGroup'.$i] = [
                     'value' => '%,g'.$groupId.',%',
                     'type'  => \PDO::PARAM_STR
-                );
+                ];
 
                 $i++;
             }
@@ -374,10 +374,10 @@ class FrontendSearch extends Search
                 $queryLimit       = QUI\Database\DB::createQueryLimit($paginationParams['limit']);
 
                 foreach ($queryLimit['prepare'] as $bind => $value) {
-                    $binds[$bind] = array(
+                    $binds[$bind] = [
                         'value' => $value[0],
                         'type'  => $value[1]
-                    );
+                    ];
                 }
 
                 $sql .= " ".$queryLimit['limit'];
@@ -385,10 +385,10 @@ class FrontendSearch extends Search
                 $queryLimit = QUI\Database\DB::createQueryLimit($searchParams['limit']);
 
                 foreach ($queryLimit['prepare'] as $bind => $value) {
-                    $binds[$bind] = array(
+                    $binds[$bind] = [
                         'value' => $value[0],
                         'type'  => $value[1]
-                    );
+                    ];
                 }
 
                 $sql .= " ".$queryLimit['limit'];
@@ -418,14 +418,14 @@ class FrontendSearch extends Search
                 return 0;
             }
 
-            return array();
+            return [];
         }
 
         if ($countOnly) {
             return (int)current(current($result));
         }
 
-        $productIds = array();
+        $productIds = [];
 
         foreach ($result as $row) {
             $productIds[] = $row['id'];
@@ -452,7 +452,7 @@ class FrontendSearch extends Search
             // nothing, retrieve values
         }
 
-        $searchFieldData = array();
+        $searchFieldData = [];
         $parseFields     = $this->getSearchFields();
         $catId           = null;
 
@@ -483,16 +483,16 @@ class FrontendSearch extends Search
                 continue;
             }
 
-            $searchFieldDataContent = array(
+            $searchFieldDataContent = [
                 'id'          => $Field->getId(),
                 'searchType'  => $Field->getSearchType(),
                 'title'       => $Field->getTitle($Locale),
                 'description' => $Field->getTitle($Locale)
-            );
+            ];
 
             if (in_array($Field->getSearchType(), $this->searchTypesWithValues)) {
                 $searchValues = $this->getValuesFromField($Field, true, $catId);
-                $searchParams = array();
+                $searchParams = [];
 
                 foreach ($searchValues as $val) {
                     try {
@@ -506,10 +506,10 @@ class FrontendSearch extends Search
                         $label = $val;
                     }
 
-                    $searchParams[] = array(
+                    $searchParams[] = [
                         'label' => $label,
                         'value' => $val
-                    );
+                    ];
                 }
 
                 $searchFieldDataContent['searchData'] = $searchParams;
@@ -530,7 +530,7 @@ class FrontendSearch extends Search
      */
     public function getSearchFields()
     {
-        $searchFields         = array();
+        $searchFields         = [];
         $searchFieldsFromSite = $this->Site->getAttribute(
             'quiqqer.products.settings.searchFieldIds'
         );
@@ -538,7 +538,7 @@ class FrontendSearch extends Search
         $eligibleFields = $this->getEligibleSearchFields();
 
         if (!$searchFieldsFromSite) {
-            $searchFieldsFromSite = array();
+            $searchFieldsFromSite = [];
         } else {
             $searchFieldsFromSite = json_decode($searchFieldsFromSite, true);
         }
@@ -596,7 +596,7 @@ class FrontendSearch extends Search
     {
         $GlobaleSearch       = new QUI\ERP\Products\Search\GlobalFrontendSearch();
         $currentSearchFields = $GlobaleSearch->getSearchFields();
-        $newSearchFieldIds   = array();
+        $newSearchFieldIds   = [];
 
         foreach ($currentSearchFields as $fieldId => $search) {
             if (isset($searchFields[$fieldId])
@@ -620,12 +620,12 @@ class FrontendSearch extends Search
 
 
         // field result
-        $searchFields          = array();
+        $searchFields          = [];
         $PackageCfg            = QUI\ERP\Products\Utils\Package::getConfig();
         $searchFieldIdsFromCfg = $PackageCfg->get('search', 'frontend');
 
         if ($searchFieldIdsFromCfg === false) {
-            $searchFieldIdsFromCfg = array();
+            $searchFieldIdsFromCfg = [];
         } else {
             $searchFieldIdsFromCfg = explode(',', $searchFieldIdsFromCfg);
         }
@@ -671,9 +671,9 @@ class FrontendSearch extends Search
                         QUI::getLocale()->get(
                             'quiqqer/products',
                             'attention.frontendsearch.category.site.no.category',
-                            array(
+                            [
                                 'siteId' => $this->Site->getId()
-                            )
+                            ]
                         )
                     );
 

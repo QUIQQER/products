@@ -4,12 +4,6 @@
  * @module package/quiqqer/products/bin/controls/categories/Sitemap
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/sitemap/Map
- * @require qui/controls/sitemap/Item
- * @require package/quiqqer/products/bin/classes/Categories
- *
  * @event onClick [this, id, Item]
  * @event onChildContextMenu [this, Item, event]
  */

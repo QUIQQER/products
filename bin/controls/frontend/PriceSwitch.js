@@ -1,9 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/frontend/PriceSwitch
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/buttons/Switch
+ * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
 

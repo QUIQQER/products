@@ -2,10 +2,9 @@
  * @module package/quiqqer/products/bin/controls/fields/types/PriceSettings
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require controls/groups/Select
- * @require css!package/quiqqer/products/bin/controls/fields/types/PriceSettings.css
+ * @todo not finish
+ * @todo #locale
+ * @todo locale
  */
 define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
 

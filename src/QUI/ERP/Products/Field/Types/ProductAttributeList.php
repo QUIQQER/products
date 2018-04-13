@@ -46,13 +46,13 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      */
     public function __construct($fieldId, array $params)
     {
-        $this->setOptions(array(
-            'entries'           => array(),
+        $this->setOptions([
+            'entries'           => [],
             'priority'          => 0,
             'calculation_basis' => '',
             'display_discounts' => true,
             'generate_tags'     => false
-        ));
+        ]);
 
         parent::__construct($fieldId, $params);
 
@@ -103,7 +103,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      *       'userinput => ''' // optional
      * ));
      */
-    public function addEntry($entry = array())
+    public function addEntry($entry = [])
     {
         if (empty($entry)) {
             return;
@@ -117,14 +117,14 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             return;
         }
 
-        $data      = array();
-        $available = array(
+        $data      = [];
+        $available = [
             'title',
             'sum',
             'type',     // optional
             'selected', // optional
             'userinput' // optional
-        );
+        ];
 
         foreach ($available as $k) {
             if (isset($entry[$k])) {
@@ -215,7 +215,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         }
 
         if (!isset($options['entries'])) {
-            $options['entries'] = array();
+            $options['entries'] = [];
         }
 
         $entries   = $options['entries'];
@@ -271,13 +271,13 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             $valueText .= ' ('.$userInput.')';
         }
 
-        return array(
+        return [
             'priority'    => (int)$options['priority'],
             'basis'       => $options['calculation_basis'],
             'value'       => $sum,
             'calculation' => $calcType,
             'valueText'   => $valueText
-        );
+        ];
     }
 
     /**
@@ -293,15 +293,15 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             return;
         }
 
-        $invalidException = array(
+        $invalidException = [
             'quiqqer/products',
             'exception.field.invalid',
-            array(
+            [
                 'fieldId'    => $this->getId(),
                 'fieldTitle' => $this->getTitle(),
                 'fieldType'  => $this->getType()
-            )
-        );
+            ]
+        ];
 
         if (!is_numeric($value)) {
             if (is_array($value)) {

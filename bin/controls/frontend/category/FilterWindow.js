@@ -1,14 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/frontend/category/FilterWindow
- *
- * @require qui/QUI
- * @require qui/controls/windows/Confirm
- * @require package/quiqqer/products/bin/controls/frontend/category/ProductListField
- * @require package/quiqqer/products/bin/controls/search/SearchField
- * @require qui/controls/buttons/Select
- * @require Ajax
- * @require Locale
- * @require css!package/quiqqer/products/bin/controls/frontend/category/FilterWindow.css
+ * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/controls/frontend/category/FilterWindow', [
 

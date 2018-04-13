@@ -4,19 +4,13 @@
  * @module package/quiqqer/products/bin/controls/categories/Select
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/buttons/Button
- * @require qui/controls/windows/Confirm
- * @require package/quiqqer/products/bin/controls/categories/SelectItem
- * @require package/quiqqer/products/bin/classes/Categories
- * @require Ajax
- * @require Locale
- *
  * @event onAddCategory [ this, id ]
  * @event onChange [ this ]
  * @event onRemoveCategory [ this, categoryId ]
  * @event onClear [ this ]
+ *
+ * @todo locale
+ * @todo #locale
  */
 define('package/quiqqer/products/bin/controls/categories/Select', [
 
@@ -86,7 +80,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
             this.addEvents({
                 onImport      : this.$onImport,
-                onSetAttribute: function (attr, value) {
+                onSetAttribute: function (attr) {
                     if (attr === 'Site' && !this.$values.length) {
                         this.$showCreateButton();
                     }
@@ -241,7 +235,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
                 Label.inject(this.$Elm, 'top');
 
-                if (Label.get('data-desc') && Label.get('data-desc') != '&nbsp;') {
+                if (Label.get('data-desc') && Label.get('data-desc') !== '&nbsp;') {
                     new Element('div', {
                         'class': 'description',
                         html   : Label.get('data-desc'),

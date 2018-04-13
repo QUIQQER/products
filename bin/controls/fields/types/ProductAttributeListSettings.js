@@ -1,18 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/fields/types/ProductAttributeList
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/windows/Confirm
- * @require Locale
- * @require controls/grid/Grid
- * @require controls/lang/InputMultiLang
- * @require package/quiqqer/products/bin/utils/Calc
- * @require Mustache
- * @require text!package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings.html
- * @require text!package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettingsCreate.html
- * @require css!package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings.css
  */
 define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings', [
 
@@ -348,23 +336,23 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 buttons  = this.$Grid.getButtons();
 
             var Up = buttons.filter(function (Button) {
-                return Button.getAttribute('name') == 'up';
+                return Button.getAttribute('name') === 'up';
             })[0];
 
             var Down = buttons.filter(function (Button) {
-                return Button.getAttribute('name') == 'down';
+                return Button.getAttribute('name') === 'down';
             })[0];
 
             var Edit = buttons.filter(function (Button) {
-                return Button.getAttribute('name') == 'edit';
+                return Button.getAttribute('name') === 'edit';
             })[0];
 
             var Delete = buttons.filter(function (Button) {
-                return Button.getAttribute('name') == 'delete';
+                return Button.getAttribute('name') === 'delete';
             })[0];
 
 
-            if (selected.length == 1) {
+            if (selected.length === 1) {
                 Edit.enable();
                 Delete.enable();
                 Up.enable();
@@ -623,7 +611,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
         $movedown: function () {
             var from = this.$Grid.getSelectedIndices();
 
-            if (from == this.$data.length - 1) {
+            if (from === this.$data.length - 1) {
                 return;
             }
 
@@ -729,6 +717,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * @param {Number} sum
          * @param {String} type
          * @param {Boolean} selected
+         * @param {String} userinput
          */
         edit: function (index, title, sum, type, selected, userinput) {
             // if selected, then all others unselected

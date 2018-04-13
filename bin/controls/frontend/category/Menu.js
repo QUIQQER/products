@@ -1,11 +1,7 @@
 /**
  * @module package/quiqqer/products/bin/controls/frontend/category/Menu
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require URI
+ * @author www.pcsg.de (Henning Leutz)
  */
-
 define('package/quiqqer/products/bin/controls/frontend/category/Menu', [
 
     'qui/QUI',

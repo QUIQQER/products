@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\Url
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -65,15 +66,15 @@ class Url extends QUI\ERP\Products\Field\Field
         }
 
         if (filter_var($value, FILTER_VALIDATE_URL) === false) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
-                array(
+                [
                     'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
                     'fieldType'  => $this->getType()
-                )
-            ));
+                ]
+            ]);
         }
     }
 

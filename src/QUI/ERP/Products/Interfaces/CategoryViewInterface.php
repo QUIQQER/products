@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Interfaces\CategoryViewInterface
  */
+
 namespace QUI\ERP\Products\Interfaces;
 
 /**
@@ -111,7 +112,7 @@ interface CategoryViewInterface
      *                              $queryParams['debug']
      * @return array
      */
-    public function getProducts($params = array());
+    public function getProducts($params = []);
 
     /**
      * Return all product ids from the category
@@ -123,7 +124,7 @@ interface CategoryViewInterface
      *                              $queryParams['debug']
      * @return array
      */
-    public function getProductIds($params = array());
+    public function getProductIds($params = []);
 
     /**
      * Return the number of the products in the category
@@ -133,7 +134,7 @@ interface CategoryViewInterface
      *                              $queryParams['debug']
      * @return integer
      */
-    public function countProducts($params = array());
+    public function countProducts($params = []);
 
     /**
      * Return the category fields

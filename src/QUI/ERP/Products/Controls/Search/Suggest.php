@@ -20,17 +20,17 @@ class Suggest extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
-        $this->setAttributes(array(
+        $this->setAttributes([
             'Site'                => false,
             'Project'             => false,
             'data-qui'            => 'package/quiqqer/products/bin/controls/frontend/search/Suggest',
             'hideOnProductSearch' => false,
             'globalsearch'        => false
-        ));
+        ]);
 
-        $this->addCSSFile(dirname(__FILE__) . '/Suggest.css');
+        $this->addCSSFile(dirname(__FILE__).'/Suggest.css');
         $this->addCSSClass('quiqqer-products-search-suggest');
 
         parent::__construct($attributes);
@@ -55,10 +55,19 @@ class Suggest extends QUI\Control
      * (non-PHPdoc)
      *
      * @see \QUI\Control::create()
+     *
+     * @throws QUI\Exception
      */
     public function getBody()
     {
-        $Engine = QUI::getTemplateManager()->getEngine();
+        try {
+            $Engine = QUI::getTemplateManager()->getEngine();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return '';
+        }
+
         $Site   = $this->getSite();
         $Search = $this->getSite();
 
@@ -71,19 +80,21 @@ class Suggest extends QUI\Control
             $Search = $this->getSearch();
         }
 
-        $Engine->assign(array(
+        $Engine->assign([
             'this'   => $this,
             'Site'   => $this->getSite(),
             'Search' => $Search
-        ));
+        ]);
 
-        return $Engine->fetch(dirname(__FILE__) . '/Suggest.html');
+        return $Engine->fetch(dirname(__FILE__).'/Suggest.html');
     }
 
     /**
      * Return the current site
      *
      * @return mixed|QUI\Projects\Site
+     *
+     * @throws QUI\Exception
      */
     protected function getSite()
     {
@@ -99,12 +110,12 @@ class Suggest extends QUI\Control
 
         $Project = $this->getProject();
 
-        $search = $Project->getSites(array(
-            'where' => array(
+        $search = $Project->getSites([
+            'where' => [
                 'type' => FrontendSearch::SITETYPE_SEARCH
-            ),
+            ],
             'limit' => 1
-        ));
+        ]);
 
         if (isset($search[0])) {
             $this->setAttribute('Site', $search[0]);
@@ -119,17 +130,19 @@ class Suggest extends QUI\Control
      * Return the global search
      *
      * @return mixed|QUI\Projects\Site
+     *
+     * @throws QUI\Exception
      */
     protected function getSearch()
     {
         $Project = $this->getProject();
 
-        $search = $Project->getSites(array(
-            'where' => array(
+        $search = $Project->getSites([
+            'where' => [
                 'type' => FrontendSearch::SITETYPE_SEARCH
-            ),
+            ],
             'limit' => 1
-        ));
+        ]);
 
         if (isset($search[0])) {
             return $search[0];
@@ -142,6 +155,8 @@ class Suggest extends QUI\Control
      * Return the current project
      *
      * @return mixed|QUI\Projects\Project
+     *
+     * @throws QUI\Exception
      */
     protected function getProject()
     {

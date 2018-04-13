@@ -4,14 +4,6 @@
  * @module package/quiqqer/products/bin/controls/products/Create
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require Locale
- * @require Mustache
- * @require package/quiqqer/products/bin/classes/Products
- * @require text!package/quiqqer/products/bin/controls/products/Create.html
- * @require css!package/quiqqer/products/bin/controls/products/Create.css
- *
  * @event onLoaded
  */
 define('package/quiqqer/products/bin/controls/products/Create', [
@@ -136,7 +128,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                             }).inject(ProductCategory);
                         }
 
-                        if (Row.getStyle('display') == 'table-row') {
+                        if (Row.getStyle('display') === 'table-row') {
                             return;
                         }
 
@@ -207,9 +199,9 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                         return false;
                     }
 
-                    if (Field.type == 'TextareaMultiLang' ||
-                        Field.type == 'Textarea' ||
-                        Field.type == 'Products'
+                    if (Field.type === 'TextareaMultiLang' ||
+                        Field.type === 'Textarea' ||
+                        Field.type === 'Products'
                     ) {
                         return false;
                     }

@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\View
  */
+
 namespace QUI\ERP\Products\Field;
 
 use QUI;
@@ -51,8 +52,8 @@ class View extends UniqueField
         $title = htmlspecialchars($this->getTitle());
 
         return '<div class="quiqqer-product-field">
-            <div class="quiqqer-product-field-title">' . $title . '</div>
-            <div class="quiqqer-product-field-value">' . $value . '</div>
+            <div class="quiqqer-product-field-title">'.$title.'</div>
+            <div class="quiqqer-product-field-value">'.$value.'</div>
         </div>';
     }
 

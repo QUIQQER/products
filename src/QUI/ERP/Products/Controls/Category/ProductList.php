@@ -36,7 +36,7 @@ class ProductList extends QUI\Control
      * Sorting fields -> can be added via addSort
      * @var array
      */
-    protected $sort = array();
+    protected $sort = [];
 
     /**
      * CID
@@ -50,9 +50,9 @@ class ProductList extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
-        $this->setAttributes(array(
+        $this->setAttributes([
             'categoryId'           => false,
             'data-qui'             => 'package/quiqqer/products/bin/controls/frontend/category/ProductList',
             'data-cid'             => false,
@@ -66,7 +66,7 @@ class ProductList extends QUI\Control
             'forceMobileFilter'    => false,
             'autoload'             => false,
             'hidePrice'            => QUI\ERP\Products\Utils\Package::hidePrice(),
-        ));
+        ]);
 
         $this->addCSSFile(dirname(__FILE__).'/ProductList.css');
         $this->addCSSFile(dirname(__FILE__).'/ProductListGallery.css');
@@ -85,10 +85,18 @@ class ProductList extends QUI\Control
      * (non-PHPdoc)
      *
      * @see \QUI\Control::create()
+     * @throws QUI\Exception
      */
     public function getBody()
     {
-        $Engine       = QUI::getTemplateManager()->getEngine();
+        try {
+            $Engine = QUI::getTemplateManager()->getEngine();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return '';
+        }
+
         $Category     = $this->getCategory();
         $searchParams = $this->getAttribute('searchParams');
 
@@ -178,17 +186,17 @@ class ProductList extends QUI\Control
             $this->setAttribute('data-sort', htmlspecialchars($sort));
         }
 
-        $Pagination = new QUI\Bricks\Controls\Pagination(array(
+        $Pagination = new QUI\Bricks\Controls\Pagination([
             'count'     => $count,
             'Site'      => $this->getSite(),
             'showLimit' => false,
             'limit'     => $this->getMax(),
             'useAjax'   => false,
-        ));
+        ]);
 
         $Pagination->loadFromRequest();
 
-        $Engine->assign(array(
+        $Engine->assign([
             'this'       => $this,
             'Pagination' => $Pagination,
             'count'      => $count,
@@ -203,7 +211,7 @@ class ProductList extends QUI\Control
             'categoryFile'        => $categoryFile,
             'placeholder'         => $this->getProject()->getMedia()->getPlaceholder(),
             'categoryStartNumber' => $this->getAttribute('categoryStartNumber'),
-        ));
+        ]);
 
         return $Engine->fetch(dirname(__FILE__).'/ProductList.html');
     }
@@ -212,16 +220,24 @@ class ProductList extends QUI\Control
      * Return the html from the filter display
      *
      * @return string
+     *
+     * @throws QUI\Exception
      */
     public function createFilter()
     {
-        $Engine = QUI::getTemplateManager()->getEngine();
+        try {
+            $Engine = QUI::getTemplateManager()->getEngine();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
 
-        $Engine->assign(array(
+            return '';
+        }
+
+        $Engine->assign([
             'this'   => $this,
             'filter' => $this->getFilter(),
             'cid'    => $this->id,
-        ));
+        ]);
 
         return $Engine->fetch(dirname(__FILE__).'/ProductList.Filter.html');
     }
@@ -230,6 +246,8 @@ class ProductList extends QUI\Control
      * Return the available filter in sorted sequence
      *
      * @return array
+     *
+     * @throws QUI\Exception
      */
     public function getFilter()
     {
@@ -237,7 +255,7 @@ class ProductList extends QUI\Control
             return $this->filter;
         }
 
-        $filter    = array();
+        $filter    = [];
         $tagGroups = $this->getSite()->getAttribute('quiqqer.tags.tagGroups');
 
         if (!empty($tagGroups) && is_string($tagGroups)) {
@@ -249,6 +267,8 @@ class ProductList extends QUI\Control
                 try {
                     $filter[] = QUI\Tags\Groups\Handler::get($this->getProject(), $tagGroup);
                 } catch (QUI\Tags\Exception $Exception) {
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::writeDebugException($Exception);
                 }
             }
         }
@@ -332,10 +352,10 @@ class ProductList extends QUI\Control
      */
     public function addSort($title, $value)
     {
-        $this->sort[] = array(
+        $this->sort[] = [
             'title' => $title,
             'value' => $value,
-        );
+        ];
     }
 
     /**
@@ -372,10 +392,14 @@ class ProductList extends QUI\Control
      */
     public function count()
     {
-        return $this->getSearch()->search(
-            $this->getCountParams(),
-            true
-        );
+        try {
+            return $this->getSearch()->search(
+                $this->getCountParams(),
+                true
+            );
+        } catch (QUI\Exception $Exception) {
+            return '';
+        }
     }
 
     /**
@@ -426,14 +450,14 @@ class ProductList extends QUI\Control
             QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);
 
             $count  = 0;
-            $result = array();
+            $result = [];
         }
 
         if ($start + $max >= $count) {
             $more = false;
         }
 
-        $products = array();
+        $products = [];
 
         foreach ($result as $product) {
             try {
@@ -443,18 +467,18 @@ class ProductList extends QUI\Control
             }
         }
 
-        $Engine->assign(array(
+        $Engine->assign([
             'products'   => $products,
             'productTpl' => $productTpl,
             'hidePrice'  => QUI\ERP\Products\Utils\Package::hidePrice(),
             'count'      => $count,
-        ));
+        ]);
 
-        return array(
+        return [
             'html'  => $Engine->fetch(dirname(__FILE__).'/ProductListRow.html'),
             'count' => $count,
             'more'  => $more,
-        );
+        ];
     }
 
     /**
@@ -463,13 +487,15 @@ class ProductList extends QUI\Control
      * @param integer $start - start
      * @param integer|bool $max - optional, ax
      * @return array|mixed
+     *
+     * @throws QUI\Exception
      */
     protected function getSearchParams($start = 0, $max = false)
     {
         $searchParams = $this->getAttribute('searchParams');
 
         if (!is_array($searchParams)) {
-            $searchParams = array();
+            $searchParams = [];
         }
 
         if ($this->getCategory()) {
@@ -491,13 +517,15 @@ class ProductList extends QUI\Control
 
     /**
      * @return array|mixed
+     *
+     * @throws QUI\Exception
      */
     protected function getCountParams()
     {
         $searchParams = $this->getAttribute('searchParams');
 
         if (!is_array($searchParams)) {
-            $searchParams = array();
+            $searchParams = [];
         }
 
         if ($this->getCategory()) {
@@ -535,6 +563,8 @@ class ProductList extends QUI\Control
      * Return the product list category
      *
      * @return null|QUI\ERP\Products\Category\ViewBackend|QUI\ERP\Products\Category\ViewFrontend
+     *
+     * @throws QUI\Exception
      */
     public function getCategory()
     {
@@ -580,6 +610,7 @@ class ProductList extends QUI\Control
 
     /**
      * @return mixed|QUI\Projects\Site
+     * @throws QUI\Exception
      */
     protected function getSite()
     {

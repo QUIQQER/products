@@ -1,10 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/products/SelectItem
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/controls/Control
- * @require package/quiqqer/products/bin/classes/Products
- * @require css!package/quiqqer/products/bin/controls/products/SelectItem.css
  */
 define('package/quiqqer/products/bin/controls/products/SelectItem', [
 
@@ -54,8 +50,8 @@ define('package/quiqqer/products/bin/controls/products/SelectItem', [
             Elm.set({
                 'class': 'quiqqer-products-selectItem smooth',
                 html   : '<span class="quiqqer-products-selectItem-icon fa fa-shopping-bag"></span>' +
-                         '<span class="quiqqer-products-selectItem-text">&nbsp;</span>' +
-                         '<span class="quiqqer-products-selectItem-destroy fa fa-remove"></span>'
+                '<span class="quiqqer-products-selectItem-text">&nbsp;</span>' +
+                '<span class="quiqqer-products-selectItem-destroy fa fa-remove"></span>'
             });
 
             this.$Icon    = Elm.getElement('.quiqqer-products-selectItem-icon');

@@ -3,12 +3,7 @@
  * @author www.pcsg.de (Henning Leutz)
  *
  * Search functionality -> JavaScript
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require URI
  */
-
 define('package/quiqqer/products/bin/types/Search', [
 
     'qui/QUI',

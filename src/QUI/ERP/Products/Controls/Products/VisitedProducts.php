@@ -22,7 +22,7 @@ class VisitedProducts extends QUI\Control
      * ChildrenSlider constructor.
      * @param array $attributes
      */
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
         parent::__construct($attributes);
 

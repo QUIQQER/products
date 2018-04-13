@@ -1,11 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/search/searchtypes/SelectRange
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/buttons/Select
- * @require Locale
  */
 define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
 

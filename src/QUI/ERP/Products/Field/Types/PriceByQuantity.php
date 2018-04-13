@@ -99,19 +99,19 @@ class PriceByQuantity extends Price
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
 
-        $valueText = QUI::getLocale()->get('quiqqer/products', 'fieldtype.PriceByQuantity.frontend.text', array(
+        $valueText = QUI::getLocale()->get('quiqqer/products', 'fieldtype.PriceByQuantity.frontend.text', [
             'price'    => $Price->getDisplayPrice(),
             'quantity' => (int)$value['quantity']
-        ));
+        ]);
 
-        return new View(array(
+        return new View([
             'id'       => $this->getId(),
             'value'    => $valueText,
             'title'    => $this->getTitle(),
             'prefix'   => $this->getAttribute('prefix'),
             'suffix'   => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
-        ));
+        ]);
     }
 
     /**
@@ -157,10 +157,10 @@ class PriceByQuantity extends Price
             $value = json_decode($value, true);
         }
 
-        $defaultReturn = array(
+        $defaultReturn = [
             'price'    => '',
             'quantity' => '',
-        );
+        ];
 
         if (!isset($value['price']) || !isset($value['quantity'])) {
             return $defaultReturn;
@@ -170,10 +170,10 @@ class PriceByQuantity extends Price
         $quantity = $value['quantity'];
 
         if (is_float($price)) {
-            return array(
+            return [
                 'price'    => $price,
                 'quantity' => (int)$quantity
-            );
+            ];
         }
 
         $localeCode = QUI::getLocale()->getLocalesByLang(
@@ -183,10 +183,10 @@ class PriceByQuantity extends Price
         $Formatter = new \NumberFormatter($localeCode[0], \NumberFormatter::DECIMAL);
         $price     = $Formatter->parse($price);
 
-        return array(
+        return [
             'price'    => round(floatval($price), 8),
             'quantity' => (int)$quantity,
-        );
+        ];
     }
 
     /**

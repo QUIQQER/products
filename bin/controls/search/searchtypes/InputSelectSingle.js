@@ -2,10 +2,6 @@
  * @module package/quiqqer/products/bin/controls/search/searchtypes/InputSelectSingle
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/buttons/Select
- *
  * @event onChange [this]
  */
 define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectSingle', [

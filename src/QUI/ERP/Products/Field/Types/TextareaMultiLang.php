@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\TextareaMultiLang
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
@@ -60,15 +61,12 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
         $current = $Locale->getCurrent();
         $value   = $this->getValue();
 
-        try {
-            if (is_string($value)) {
-                return $value;
-            }
+        if (is_string($value)) {
+            return $value;
+        }
 
-            if (isset($value[$current])) {
-                return $value[$current];
-            }
-        } catch (QUI\Exception $Exception) {
+        if (isset($value[$current])) {
+            return $value[$current];
         }
 
         return $value;
@@ -85,15 +83,15 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
     {
         if (!is_string($value) && !is_array($value)) {
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new QUI\ERP\Products\Field\Exception(array(
+                throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
-                    array(
+                    [
                         'fieldId'    => $this->getId(),
                         'fieldTitle' => $this->getTitle(),
                         'fieldType'  => $this->getType()
-                    )
-                ));
+                    ]
+                ]);
             }
         }
 
@@ -101,15 +99,15 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
             $value = json_decode($value, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new QUI\ERP\Products\Field\Exception(array(
+                throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
-                    array(
+                    [
                         'fieldId'    => $this->getId(),
                         'fieldTitle' => $this->getTitle(),
                         'fieldType'  => $this->getType()
-                    )
-                ));
+                    ]
+                ]);
             }
         }
 
@@ -121,15 +119,15 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
 
         foreach ($keys as $lang) {
             if (!is_string($lang) || strlen($lang) != 2) {
-                throw new QUI\ERP\Products\Field\Exception(array(
+                throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
-                    array(
+                    [
                         'fieldId'    => $this->getId(),
                         'fieldTitle' => $this->getTitle(),
                         'fieldType'  => $this->getType()
-                    )
-                ));
+                    ]
+                ]);
             }
         }
     }
@@ -138,7 +136,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return string
+     * @return string|array
      */
     public function cleanup($value)
     {
@@ -146,7 +144,14 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
             return null;
         }
 
-        $languages = QUI\Translator::getAvailableLanguages();
+        try {
+            $languages = QUI\Translator::getAvailableLanguages();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return [];
+        }
+
 
         if (!is_string($value) && !is_array($value)) {
             return array_fill_keys($languages, '');
@@ -160,7 +165,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
             }
         }
 
-        $result = array();
+        $result = [];
 
         foreach ($value as $key => $val) {
             if (!is_string($key) || strlen($key) != 2) {
@@ -208,13 +213,13 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
      */
     public function getSearchTypes()
     {
-        return array(
+        return [
             Search::SEARCHTYPE_TEXT,
             Search::SEARCHTYPE_SELECTSINGLE,
             Search::SEARCHTYPE_INPUTSELECTSINGLE,
             Search::SEARCHTYPE_SELECTMULTI,
             Search::SEARCHTYPE_HASVALUE
-        );
+        ];
     }
 
     /**

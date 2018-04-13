@@ -45,7 +45,7 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
         $options = $this->getOptions();
 
         $name    = 'field-'.$id;
-        $entries = array();
+        $entries = [];
 
         if (isset($options['entries'])) {
             $entries = $options['entries'];
@@ -66,13 +66,13 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
         }
 
 
-        $Engine->assign(array(
+        $Engine->assign([
             'this'  => $this,
             'id'    => $id,
             'title' => $this->getTitle(),
             'name'  => $name,
             'value' => $value
-        ));
+        ]);
 
         // options
         $currentLC = strtolower($current).'_'.strtoupper($current);

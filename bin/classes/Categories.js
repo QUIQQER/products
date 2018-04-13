@@ -4,10 +4,6 @@
  *
  * @module package/quiqqer/products/bin/classes/Categories
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/classes/DOM
- * @require Ajax
  */
 define('package/quiqqer/products/bin/classes/Categories', [
 

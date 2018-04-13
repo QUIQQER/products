@@ -3,12 +3,6 @@
  * @author www.pcsg.de (Henning Leutz)
  *
  * Cache löschen in den settings
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/buttons/Button
- * @require Ajax
- * @require Locale
  */
 define('package/quiqqer/products/bin/controls/products/settings/ClearProductCache', [
 

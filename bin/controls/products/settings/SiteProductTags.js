@@ -1,8 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/products/settings/SiteProductTags
- *
- * @require qui/QUI
- * @require qui/controls/Control
+ * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/controls/products/settings/SiteProductTags', [
 

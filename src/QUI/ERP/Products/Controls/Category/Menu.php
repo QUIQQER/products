@@ -7,8 +7,6 @@
 namespace QUI\ERP\Products\Controls\Category;
 
 use QUI;
-use QUI\ERP\Products\Handler\Categories;
-use QUI\ERP\Products\Handler\Products;
 
 /**
  * Class Button
@@ -22,17 +20,17 @@ class Menu extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = array())
+    public function __construct($attributes = [])
     {
-        $this->setAttributes(array(
+        $this->setAttributes([
             'Site'              => false,
             'data-qui'          => 'package/quiqqer/products/bin/controls/frontend/category/Menu',
             'disableCheckboxes' => false,
             'breadcrumb'        => false
-        ));
+        ]);
 
         $this->addCSSClass('quiqqer-products-category-menu');
-        $this->addCSSFile(dirname(__FILE__) . '/Menu.css');
+        $this->addCSSFile(dirname(__FILE__).'/Menu.css');
 
         parent::__construct($attributes);
     }
@@ -41,20 +39,29 @@ class Menu extends QUI\Control
      * (non-PHPdoc)
      *
      * @see \QUI\Control::create()
+     *
+     * @throws QUI\Exception
      */
     public function getBody()
     {
-        $Engine   = QUI::getTemplateManager()->getEngine();
+        try {
+            $Engine = QUI::getTemplateManager()->getEngine();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return '';
+        }
+
         $children = $this->getChildren($this->getSite());
 
-        $Engine->assign(array(
+        $Engine->assign([
             'children'         => $children,
             'this'             => $this,
-            'childrenTemplate' => dirname(__FILE__) . '/Menu.Children.html',
+            'childrenTemplate' => dirname(__FILE__).'/Menu.Children.html',
             'Rewrite'          => QUI::getRewrite()
-        ));
+        ]);
 
-        return $Engine->fetch(dirname(__FILE__) . '/Menu.html');
+        return $Engine->fetch(dirname(__FILE__).'/Menu.html');
     }
 
     /**
@@ -62,6 +69,8 @@ class Menu extends QUI\Control
      *
      * @param QUI\Projects\Site $Site
      * @return bool
+     *
+     * @throws QUI\Exception
      */
     public function hasCategoryCheckBox($Site)
     {
@@ -106,6 +115,8 @@ class Menu extends QUI\Control
      *
      * @param QUI\Interfaces\Projects\Site|null $Site
      * @return array
+     *
+     * @throws QUI\Exception
      */
     public function getChildren($Site = null)
     {
@@ -113,11 +124,11 @@ class Menu extends QUI\Control
             $Site = $this->getSite();
         }
 
-        return $Site->getNavigation(array(
-            'where' => array(
+        return $Site->getNavigation([
+            'where' => [
                 'type' => 'quiqqer/products:types/category'
-            )
-        ));
+            ]
+        ]);
     }
 
     /**
@@ -125,6 +136,8 @@ class Menu extends QUI\Control
      *
      * @param null $Site
      * @return integer
+     *
+     * @throws QUI\Exception
      */
     public function countChildren($Site = null)
     {
@@ -132,12 +145,18 @@ class Menu extends QUI\Control
             $Site = $this->getSite();
         }
 
-        return $Site->getNavigation(array(
-            'count' => true,
-            'where' => array(
-                'type' => 'quiqqer/products:types/category'
-            )
-        ));
+        try {
+            return $Site->getNavigation([
+                'count' => true,
+                'where' => [
+                    'type' => 'quiqqer/products:types/category'
+                ]
+            ]);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return 0;
+        }
     }
 
     /**
@@ -145,6 +164,8 @@ class Menu extends QUI\Control
      *
      * @param QUI\Projects\Site $Site
      * @return bool
+     *
+     * @throws QUI\Exception
      */
     public function useBreadcrumbFlag($Site)
     {
@@ -160,6 +181,8 @@ class Menu extends QUI\Control
      *
      * @param QUI\Projects\Site $Site
      * @return string
+     *
+     * @throws QUI\Exception
      */
     public function getBreadcrumbFlag($Site)
     {
@@ -170,6 +193,7 @@ class Menu extends QUI\Control
 
     /**
      * @return mixed|QUI\Projects\Site
+     * @throws QUI\Exception
      */
     protected function getSite()
     {

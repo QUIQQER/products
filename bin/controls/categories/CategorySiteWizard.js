@@ -4,13 +4,6 @@
  * @module package/quiqqer/products/bin/CategorySiteWizard
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require package/quiqqer/products/bin/controls/categories/Sitemap
- * @require Locale
- * @require Ajax
- * @require Projects
- *
  * @event onCategorySelect
  */
 define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [

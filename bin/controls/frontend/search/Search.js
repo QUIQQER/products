@@ -3,14 +3,6 @@
  * @author www.pcsg.de (Henning Leutz)
  *
  * Such control für das Frontend
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require package/quiqqer/products/bin/Fields
- * @require package/quiqqer/products/bin/Search
- * @require Ajax
- * @require Locale
- * @require URL_OPT_DIR + bin/mustache/mustache.min.js
  */
 define('package/quiqqer/products/bin/controls/frontend/search/Search', [
 
@@ -76,7 +68,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/Search', [
                 }.bind(this),
 
                 keyup: function (event) {
-                    if (event.key == 'enter') {
+                    if (event.key === 'enter') {
                         event.stop();
                         this.$onChange();
                     }

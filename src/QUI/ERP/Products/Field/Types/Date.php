@@ -43,29 +43,29 @@ class Date extends QUI\ERP\Products\Field\Field
         }
 
         if ($dateTime === false) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
-                array(
+                [
                     'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
                     'fieldType'  => $this->getType()
-                )
-            ));
+                ]
+            ]);
         }
 
         $errors = \DateTime::getLastErrors();
 
         if (!empty($errors['warning_count'])) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
-                array(
+                [
                     'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
                     'fieldType'  => $this->getType()
-                )
-            ));
+                ]
+            ]);
         }
     }
 
@@ -119,10 +119,10 @@ class Date extends QUI\ERP\Products\Field\Field
      */
     public function getSearchTypes()
     {
-        return array(
+        return [
             Search::SEARCHTYPE_DATE,
             Search::SEARCHTYPE_DATERANGE
-        );
+        ];
     }
 
     /**

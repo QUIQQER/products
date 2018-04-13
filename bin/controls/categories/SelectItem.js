@@ -4,11 +4,6 @@
  * @module package/quiqqer/products/bin/controls/categories/SelectItem
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/controls/Control
- * @require Locale
- * @require package/quiqqer/products/bin/classes/Categories
- * @require css!package/quiqqer/products/bin/controls/categories/SelectItem.css
- *
  * @event onClick
  * @event onDestroy
  * @event onChange [self, value]
@@ -65,8 +60,8 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
             Elm.set({
                 'class': 'quiqqer-category-selectItem smooth',
                 html   : '<span class="quiqqer-category-selectItem-icon fa fa-sitemap"></span>' +
-                         '<span class="quiqqer-category-selectItem-text">&nbsp;</span>' +
-                         '<span class="quiqqer-category-selectItem-destroy fa fa-remove"></span>'
+                '<span class="quiqqer-category-selectItem-text">&nbsp;</span>' +
+                '<span class="quiqqer-category-selectItem-destroy fa fa-remove"></span>'
             });
 
             this.$Icon    = Elm.getElement('.quiqqer-category-selectItem-icon');

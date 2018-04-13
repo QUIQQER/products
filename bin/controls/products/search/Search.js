@@ -6,14 +6,6 @@
  * - Zeigt eine Suchmaske an
  * - Zeigt die Ergebnisse an
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/buttons/Button
- * @require Locale
- * @require package/quiqqer/products/bin/controls/products/search/Form
- * @require package/quiqqer/products/bin/controls/products/search/Result
- * @require css!package/quiqqer/products/bin/controls/products/search/Search.css
- *
  * @events onSearch [this]
  * @events onSearchBegin [this]
  * @events onClick [this, selected]

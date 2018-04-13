@@ -1,12 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/fields/types/Image
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/utils/String
- * @require controls/projects/project/media/Popup
- * @require Ajax
  */
 define('package/quiqqer/products/bin/controls/fields/types/Image', [
 

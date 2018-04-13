@@ -1,9 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/products/permissions/Permissions
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require controls/Control
  */
 define('package/quiqqer/products/bin/controls/products/permissions/Permissions', [
 
@@ -61,7 +58,7 @@ define('package/quiqqer/products/bin/controls/products/permissions/Permissions',
         $onInject: function () {
             Products.getChild(this.getAttribute('productId')).then(function (productData) {
 
-                if (typeOf(productData.permissions) != 'object') {
+                if (typeOf(productData.permissions) !== 'object') {
                     productData.permissions = {
                         'permission.viewable': '',
                         'permission.buyable' : ''
@@ -114,7 +111,6 @@ define('package/quiqqer/products/bin/controls/products/permissions/Permissions',
                 var Product = Products.get(this.getAttribute('productId'));
 
                 Product.setPermissions(this.getValue()).then(resolve, reject);
-
             }.bind(this));
         }
     });

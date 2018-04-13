@@ -1,12 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/frontend/products/VisitedProducts
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require Ajax
- * @require Locale
- * @require package/quiqqer/products/bin/Products
  */
 define('package/quiqqer/products/bin/controls/frontend/products/VisitedProducts', [
 

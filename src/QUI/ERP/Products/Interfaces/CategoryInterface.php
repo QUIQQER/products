@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Interfaces\CategoryInterface
  */
+
 namespace QUI\ERP\Products\Interfaces;
 
 use QUI;

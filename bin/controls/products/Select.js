@@ -4,11 +4,6 @@
  * @module package/quiqqer/products/bin/controls/Select
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require package/quiqqer/products/bin/classes/Products
- * @require Locale
- *
  * @event onAddProduct [ this, id ]
  * @event onChange [ this ]
  */

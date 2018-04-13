@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Field\Types\BoolTypeFrontendView
  */
+
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;

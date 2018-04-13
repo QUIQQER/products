@@ -3,20 +3,6 @@
  *
  * @module package/quiqqer/products/bin/controls/categories/Panel
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/desktop/Panel
- * @require qui/controls/buttons/Button
- * @require qui/controls/windows/Confirm
- * @require qui/controls/sitemap/Map
- * @require qui/controls/sitemap/Item
- * @require controls/grid/Grid
- * @require Locale
- * @require package/quiqqer/products/bin/controls/categories/Category
- * @require package/quiqqer/products/bin/classes/Categories
- * @require package/quiqqer/products/bin/controls/categories/Sitemap
- * @require package/quiqqer/products/bin/controls/categories/Create
- * @require css!package/quiqqer/products/bin/controls/categories/Panel.css
  */
 define('package/quiqqer/products/bin/controls/categories/Panel', [
 
@@ -307,7 +293,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             this.$SitemapContextMenu.appendChild(
                 new QUIContextItem({
                     name  : 'add',
-                    text  : 'Unterkategorie hinzufügen',
+                    text  : 'Unterkategorie hinzufügen', // #locale
                     icon  : 'fa fa-plus',
                     events: {
                         onClick: function () {

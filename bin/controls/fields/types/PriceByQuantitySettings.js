@@ -2,10 +2,9 @@
  * @module package/quiqqer/products/bin/controls/fields/types/PriceSettings
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require controls/groups/Select
- * @require css!package/quiqqer/products/bin/controls/fields/types/PriceSettings.css
+ * @todo not finish
+ * @todo #locale
+ * @todo locale
  */
 define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantitySettings', [
 
@@ -72,13 +71,13 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantitySettin
             new Element('div', {
                 'class': 'quiqqer-products-priceByQuantity-settings',
                 html   : '<div class="quiqqer-products-priceByQuantity-settings-groups">' +
-                         '    <label>' +
-                         '        <span class="quiqqer-products-priceByQuantity-settings-groups-text">' +
-                         '            Gruppenzuweisung:' +
-                         '        </span>' +
-                         '        <div class="quiqqer-products-priceByQuantity-settings-groups-values"></div>' +
-                         '    </label>' +
-                         '</div>'
+                '    <label>' +
+                '        <span class="quiqqer-products-priceByQuantity-settings-groups-text">' +
+                '            Gruppenzuweisung:' +
+                '        </span>' +
+                '        <div class="quiqqer-products-priceByQuantity-settings-groups-values"></div>' +
+                '    </label>' +
+                '</div>'
             }).inject(this.$Elm);
 
             this.$Groups = new GroupSelect({

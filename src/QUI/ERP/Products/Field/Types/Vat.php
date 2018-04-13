@@ -68,15 +68,15 @@ class Vat extends QUI\ERP\Products\Field\Field
         }
 
         if (!is_numeric($value)) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
-                array(
+                [
                     'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
                     'fieldType'  => $this->getType()
-                )
-            ));
+                ]
+            ]);
         }
 
         // exists tax?
@@ -86,15 +86,15 @@ class Vat extends QUI\ERP\Products\Field\Field
         try {
             $Taxes->getTaxType($value);
         } catch (QUI\Exception $Exception) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
-                array(
+                [
                     'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
                     'fieldType'  => $this->getType()
-                )
-            ));
+                ]
+            ]);
         }
     }
 

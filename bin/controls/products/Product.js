@@ -3,30 +3,6 @@
  *
  * @module package/quiqqer/products/bin/controls/products/Product
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/desktop/Panel
- * @require qui/controls/buttons/Button
- * @require qui/controls/buttons/Switch
- * @require qui/controls/buttons/ButtonSwitch
- * @require qui/controls/windows/Confirm
- * @require qui/utils/Form
- * @require Locale
- * @require controls/grid/Grid
- * @require controls/projects/project/media/FolderViewer
- * @require Mustache
- * @require Packages
- * @require package/quiqqer/products/bin/Products
- * @require package/quiqqer/products/bin/classes/Product
- * @require package/quiqqer/products/bin/Categories
- * @require package/quiqqer/products/bin/Fields
- * @require package/quiqqer/products/bin/utils/Fields
- * @require package/quiqqer/products/bin/controls/fields/search/Window
- * @require package/quiqqer/products/bin/controls/categories/Select
- * @require package/quiqqer/products/bin/controls/fields/FieldTypeSelect
- * @require text!package/quiqqer/products/bin/controls/products/ProductData.html
- * @require text!package/quiqqer/products/bin/controls/products/CreateField.html
- * @require css!package/quiqqer/products/bin/controls/products/Product.css
  */
 define('package/quiqqer/products/bin/controls/products/Product', [
 
@@ -100,7 +76,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         },
 
         initialize: function (options) {
-
             this.setAttributes({
                 title: QUILocale.get(lg, 'products.product.panel.title'),
                 icon : 'fa fa-shopping-bag',
@@ -136,7 +111,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 onInject : this.$onInject,
                 onDestroy: function () {
                     if (this.$Product) {
-                        console.log('unlock');
                         Locker.unlock('product_' + this.$Product.getId())
                     }
                 }.bind(this)

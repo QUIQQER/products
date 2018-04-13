@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Interfaces\FieldInterface
  */
+
 namespace QUI\ERP\Products\Interfaces;
 
 /**

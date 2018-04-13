@@ -1,12 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/fields/types/GroupList
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require controls/users/Entry
- * @require controls/users/search/Window
- * @require package/quiqqer/products/bin/Fields
  */
 define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
 

@@ -3,10 +3,6 @@
  *
  * @module package/quiqqer/products/bin/controls/Price
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require package/quiqqer/currency/bin/Currency
  */
 define('package/quiqqer/products/bin/controls/frontend/Price', [
 

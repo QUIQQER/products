@@ -71,15 +71,15 @@ class FloatType extends QUI\ERP\Products\Field\Field
         }
 
         if (!is_numeric($value)) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
-                array(
+                [
                     'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
                     'fieldType'  => $this->getType()
-                )
-            ));
+                ]
+            ]);
         }
     }
 
@@ -150,12 +150,12 @@ class FloatType extends QUI\ERP\Products\Field\Field
      */
     public function getSearchTypes()
     {
-        return array(
+        return [
             Search::SEARCHTYPE_TEXT,
             Search::SEARCHTYPE_SELECTRANGE,
             Search::SEARCHTYPE_INPUTSELECTRANGE,
             Search::SEARCHTYPE_HASVALUE
-        );
+        ];
     }
 
     /**

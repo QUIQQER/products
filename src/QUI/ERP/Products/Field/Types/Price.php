@@ -51,14 +51,14 @@ class Price extends QUI\ERP\Products\Field\Field
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
 
-        return new View(array(
+        return new View([
             'id'       => $this->getId(),
             'value'    => $Price->getDisplayPrice(),
             'title'    => $this->getTitle(),
             'prefix'   => $this->getAttribute('prefix'),
             'suffix'   => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
-        ));
+        ]);
     }
 
     /**
@@ -97,15 +97,15 @@ class Price extends QUI\ERP\Products\Field\Field
         $value = $this->cleanup($value);
 
         if (!is_numeric($value)) {
-            throw new QUI\ERP\Products\Field\Exception(array(
+            throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
-                array(
+                [
                     'fieldId'    => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
                     'fieldType'  => $this->getType()
-                )
-            ));
+                ]
+            ]);
         }
     }
 
@@ -151,12 +151,12 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     public function getSearchTypes()
     {
-        return array(
+        return [
             Search::SEARCHTYPE_TEXT,
             Search::SEARCHTYPE_SELECTRANGE,
             Search::SEARCHTYPE_INPUTSELECTRANGE,
             Search::SEARCHTYPE_HASVALUE
-        );
+        ];
     }
 
     /**
