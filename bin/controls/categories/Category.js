@@ -4,21 +4,6 @@
  *
  * @module package/quiqqer/products/bin/controls/categories/Category
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/desktop/Panel
- * @require qui/controls/buttons/Button
- * @require qui/controls/buttons/Switch
- * @require qui/controls/windows/Confirm
- * @require Locale
- * @require Mustache
- * @require controls/grid/Grid
- * @require package/quiqqer/products/bin/Categories
- * @require package/quiqqer/products/bin/Fields
- * @require package/quiqqer/products/bin/controls/categories/Sitemap
- * @require package/quiqqer/translator/bin/controls/Update
- * @require text!package/quiqqer/products/bin/controls/categories/Category.html
- * @require css!package/quiqqer/products/bin/controls/categories/Category.css
  */
 define('package/quiqqer/products/bin/controls/categories/Category', [
 

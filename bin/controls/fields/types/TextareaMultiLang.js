@@ -1,10 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require Editors
  */
 define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
 

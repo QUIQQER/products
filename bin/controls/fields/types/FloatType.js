@@ -3,9 +3,6 @@
  *
  * @module package/quiqqer/products/bin/controls/fields/types/FloatType
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
  */
 define('package/quiqqer/products/bin/controls/fields/types/FloatType', [
 

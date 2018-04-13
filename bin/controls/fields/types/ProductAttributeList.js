@@ -1,9 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/fields/types/ProductAttributeList
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
  */
 define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeList', [
 
@@ -33,9 +30,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeList'
          * event : on import
          */
         $onImport: function () {
-            var Elm = this.getElm();
-
-            Elm.addClass('field-container-field');
+            this.getElm().addClass('field-container-field');
         },
 
         /**

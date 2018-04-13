@@ -1,12 +1,6 @@
 /**
- *
  * @module package/quiqqer/products/bin/controls/categories/search/Window
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/windows/Confirm
- * @require package/quiqqer/discount/bin/classes/Handler
  */
 define('package/quiqqer/products/bin/controls/categories/search/Window', [
 
@@ -21,8 +15,6 @@ define('package/quiqqer/products/bin/controls/categories/search/Window', [
 
 ], function (QUI, QUIControl, QUIConfirm, Handler, QUILocale, Sitemap) {
     "use strict";
-
-    var lg = 'quiqqer/products';
 
     return new Class({
 

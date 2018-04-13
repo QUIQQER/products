@@ -3,10 +3,6 @@
  *
  * @module package/quiqqer/products/bin/controls/fields/types/Products
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require package/quiqqer/products/bin/controls/products/Select
  */
 define('package/quiqqer/products/bin/controls/fields/types/Products', [
 
@@ -70,7 +66,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Products', [
 
             var value = this.getAttribute('value');
 
-            if (typeOf(value) == 'array') {
+            if (typeOf(value) === 'array') {
                 for (var i = 0, len = value.length; i < len; i++) {
                     if (value[i] !== '') {
                         this.$Select.addItem(value[i]);

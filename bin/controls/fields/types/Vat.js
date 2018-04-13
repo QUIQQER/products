@@ -1,10 +1,6 @@
 /**
  * @module package/quiqqer/products/bin/controls/fields/types/Vat
  * @author www.pcsg.de (Henning Leutz)
- *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require package/quiqqer/tax/bin/classes/TaxTypes
  */
 define('package/quiqqer/products/bin/controls/fields/types/Vat', [
 

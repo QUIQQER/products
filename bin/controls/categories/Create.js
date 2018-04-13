@@ -4,18 +4,13 @@
  * @module package/quiqqer/products/bin/controls/categories/Create
  * @author www.pcsg.de (Henning Leutz)
  *
- * @require qui/QUI
- * @require qui/controls/Control
- * @require qui/controls/buttons/Button
- * @require Locale
- * @require package/quiqqer/products/bin/classes/Categories
- * @require package/quiqqer/products/bin/controls/categories/Sitemap
- * @require package/quiqqer/translator/bin/controls/Create
- * @require css!package/quiqqer/products/bin/controls/categories/Create.css
- *
  * @event onCancel
  * @event onSuccess
  * @event onSubmit
+ *
+ * @todo #locale
+ * @todo locale
+ * @todo not finish
  */
 define('package/quiqqer/products/bin/controls/categories/Create', [
 

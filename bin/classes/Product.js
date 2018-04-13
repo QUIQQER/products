@@ -2,11 +2,6 @@
  * @module package/quiqqer/products/bin/classes/Product
  * @author www.pcsg.de (henning Leutz)
  *
- * @require qui/QUI
- * @require qui/classes/DOM
- * @require Ajax
- * @require Locale
- *
  * @event onRefresh [this]
  *
  * for frontend products, please use package/quiqqer/products/bin/classes/frontend/Product
