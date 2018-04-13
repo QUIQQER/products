@@ -3,7 +3,7 @@
   "type": "quiqqer-module",
   "description": "",
   "version": "dev-master",
-  "license": "",
+  "license": "GPL-3.0+",
   "authors": [
     {
       "name": "Henning Leutz",
