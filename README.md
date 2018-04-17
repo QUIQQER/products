@@ -1,4 +1,6 @@
-Produktverwaltung
+![QUIQQER Products](bin/images/Readme.jpg)
+
+QUIQQER Products
 ========
 
 Create your shop with QUIQQER products. 
