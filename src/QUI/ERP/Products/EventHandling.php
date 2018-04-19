@@ -296,7 +296,7 @@ class EventHandling
                 'search_type'   => '',
                 'titles'        => array(
                     'de' => 'Sortierung',
-                    'en' => 'Order'
+                    'en' => 'Sorting'
                 )
             ),
             // Produkt bestand
