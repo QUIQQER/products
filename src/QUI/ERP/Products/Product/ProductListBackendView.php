@@ -71,7 +71,7 @@ class ProductListBackendView
 
             $product = [
                 'fields'   => [],
-                'vatArray' => [],
+                'vatArray' => []
             ];
 
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
@@ -95,9 +95,16 @@ class ProductListBackendView
             $product['quantity']    = $attributes['quantity'];
             $product['attributes']  = [];
 
+            $calculatedSum = 0;
+            $calculatedVat = 0;
 
-            $calculatedSum = $attributes['calculated_vatArray']['sum'];
-            $calculatedVat = $attributes['calculated_vatArray']['vat'];
+            if (isset($attributes['calculated_vatArray']['sum'])) {
+                $calculatedSum = $attributes['calculated_vatArray']['sum'];
+            }
+
+            if (isset($attributes['calculated_vatArray']['vat'])) {
+                $calculatedVat = $attributes['calculated_vatArray']['vat'];
+            }
 
             if ($calculatedSum == 0) {
                 $calculatedSum = '';

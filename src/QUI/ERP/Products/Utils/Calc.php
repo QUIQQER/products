@@ -218,7 +218,12 @@ class Calc
             $nettoSum = $nettoSum + $productAttributes['calculated_nettoSum'];
 
             $productVatArray = $productAttributes['calculated_vatArray'];
-            $vat             = $productVatArray['vat'];
+
+            if (!isset($productVatArray['vat'])) {
+                continue;
+            }
+
+            $vat = $productVatArray['vat'];
 
             if (!isset($vatArray[$vat])) {
                 $vatArray[$vat]        = $productVatArray;
@@ -298,10 +303,15 @@ class Calc
                 $PriceFactor->setSum($vatSum + $PriceFactor->getNettoSum());
             }
 
+            if (!$Vat->isVisible()) {
+                continue;
+            }
+
             if (!isset($vatArray[$vat])) {
                 $vatArray[$vat] = [
-                    'vat'  => $vat,
-                    'text' => ErpCalc::getVatText($Vat->getValue(), $this->getUser())
+                    'vat'     => $vat,
+                    'text'    => ErpCalc::getVatText($Vat->getValue(), $this->getUser()),
+                    'visible' => $Vat->isVisible()
                 ];
 
                 $vatArray[$vat]['sum'] = 0;
@@ -493,7 +503,7 @@ class Calc
             $Vat      = $TaxEntry;
         } catch (QUI\Exception $Exception) {
             QUI\ERP\Debug::getInstance()->log(
-                'Produt Vat ist nicht für den Benutzer gültig',
+                'Product Vat ist nicht für den Benutzer gültig',
                 'quiqqer/products'
             );
         }
@@ -515,6 +525,10 @@ class Calc
             'sum'  => $this->round($nettoSum * ($Vat->getValue() / 100)),
             'text' => ErpCalc::getVatText($Vat->getValue(), $this->getUser())
         ];
+
+        if (!$Vat->isVisible()) {
+            $vatArray = [];
+        }
 
 
         QUI\ERP\Debug::getInstance()->log(
@@ -543,7 +557,7 @@ class Calc
             'nettoSum'     => $nettoSum,
             'nettoPrice'   => $nettoPrice,
             'vatArray'     => $vatArray,
-            'vatText'      => $vatArray['text'],
+            'vatText'      => !empty($vatArray) ? $vatArray['text'] : '',
             'isEuVat'      => $isEuVatUser,
             'isNetto'      => $isNetto,
             'currencyData' => $this->getCurrency()->toArray(),
