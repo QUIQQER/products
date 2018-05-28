@@ -1007,7 +1007,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         self.$Product.getAttributes()
                     ]);
                 });
-
             }).then(function (data) {
                 var categories = data[3].map(function (Category) {
                     return {title: Category.title};
@@ -1055,22 +1054,21 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             return self.$hideCategories().then(function () {
                 // set values
-                QUI.Controls.getControlsInElement(self.$Data)
-                   .each(function (Field) {
-                       if (!("getFieldId" in Field)) {
-                           return;
-                       }
+                QUI.Controls.getControlsInElement(self.$Data).each(function (Field) {
+                    if (!("getFieldId" in Field)) {
+                        return;
+                    }
 
-                       if (!("setValue" in Field)) {
-                           return;
-                       }
+                    if (!("setValue" in Field)) {
+                        return;
+                    }
 
-                       var fieldId = Field.getFieldId();
+                    var fieldId = Field.getFieldId();
 
-                       if (fieldId in self.$data) {
-                           Field.setValue(self.$data[fieldId].value);
-                       }
-                   });
+                    if (fieldId in self.$data) {
+                        Field.setValue(self.$data[fieldId].value);
+                    }
+                });
 
                 return self.$showCategory(self.$Data);
             });

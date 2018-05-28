@@ -270,6 +270,11 @@ define('package/quiqqer/products/bin/classes/Product', [
 
                         // get first folder image
                         Ajax.get('ajax_media_folder_firstImage', function (file) {
+                            if (!file.length) {
+                                resolve(false);
+                                return;
+                            }
+
                             resolve(file.url);
                         }, {
                             project  : params.project,
