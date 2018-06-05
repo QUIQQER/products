@@ -48,6 +48,9 @@ class Crons
                 );
             }
         }
+
+        // reset time limit
+        set_time_limit(ini_get('max_execution_time'));
     }
 
     /**
@@ -79,5 +82,8 @@ class Crons
                 ));
             }
         }
+
+        // reset time limit
+        set_time_limit(ini_get('max_execution_time'));
     }
 }
