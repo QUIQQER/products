@@ -641,6 +641,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             }
         }
 
+        // reset time limit
+        set_time_limit(ini_get('max_execution_time'));
+
         QUI::getEvents()->fireEvent(
             'onQuiqqerProductsCategorySetFieldsToAllProducts',
             [$this]
