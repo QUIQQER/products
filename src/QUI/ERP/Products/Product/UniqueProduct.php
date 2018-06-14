@@ -877,39 +877,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $Locale = QUI\ERP\Products\Handler\Products::getLocale();
         }
 
-        $description = $this->getDescription($Locale);
-        $fields      = $this->getCustomFields();
-
-        if (count($fields)) {
-            $list = '';
-
-            /* @var $Field QUI\ERP\Products\Field\UniqueField */
-            foreach ($fields as $Field) {
-                $Field = $Field->getView();
-
-                if (!$Field->hasViewPermission()) {
-                    continue;
-                }
-
-                if ($fieldsAreChangeable === false) {
-                    $Field->setChangeableStatus(false);
-                }
-
-                $list .= '<li>'.$Field->create().'</li>';
-            }
-
-            if (!empty($list)) {
-                $description .= '<ul>';
-                $description .= $list;
-                $description .= '</ul>';
-            }
-        }
-
         return new QUI\ERP\Accounting\Article([
             'id'           => $this->getId(),
             'articleNo'    => $this->getFieldValue(Fields::FIELD_PRODUCT_NO),
             'title'        => $this->getTitle($Locale),
-            'description'  => $description,
+            'description'  => $this->getDescription($Locale),
             'unitPrice'    => $this->getUnitPrice()->value(),
             'quantity'     => $this->getQuantity(),
             'customFields' => $this->getCustomFieldsData()
@@ -932,7 +904,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         /* @var $Field QUI\ERP\Products\Field\UniqueField */
         foreach ($fields as $Field) {
-            $customFields[$Field->getId()] = $Field->getValue();
+            $attributes = $Field->getAttributes();
+
+            if (isset($attributes['options'])) {
+                unset($attributes['options']);
+            }
+
+            $customFields[$Field->getId()] = $attributes;
         }
 
         return $customFields;
