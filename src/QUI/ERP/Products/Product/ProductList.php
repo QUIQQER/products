@@ -87,7 +87,7 @@ class ProductList
     ];
 
     /**
-     * @var array
+     * @var QUI\ERP\Products\Interfaces\ProductInterface[]
      */
     protected $products = [];
 
@@ -223,7 +223,7 @@ class ProductList
     /**
      * Return the products
      *
-     * @return array
+     * @return QUI\ERP\Products\Interfaces\ProductInterface[]
      */
     public function getProducts()
     {
