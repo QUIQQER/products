@@ -54,14 +54,14 @@ $searchParentCategorySite = function () use ($Site) {
     return $Site;
 };
 
-$CategoryMenu = new QUI\ERP\Products\Controls\Category\Menu(array(
+$CategoryMenu = new QUI\ERP\Products\Controls\Category\Menu([
     'Site' => $searchParentCategorySite(),
-));
+]);
 
-$Engine->assign(array(
+$Engine->assign([
     'showFilter'   => $Site->getAttribute('quiqqer.products.settings.showFilterLeft'),
     'CategoryMenu' => $CategoryMenu,
-));
+]);
 
 if ($siteUrl != $_REQUEST['_url']) {
     /**
@@ -101,11 +101,11 @@ if ($siteUrl != $_REQUEST['_url']) {
         $CategoryMenu->setAttribute('disableCheckboxes', true);
         $CategoryMenu->setAttribute('breadcrumb', true);
 
-        $Engine->assign(array(
-            'Product' => new Products\Controls\Products\Product(array(
+        $Engine->assign([
+            'Product' => new Products\Controls\Products\Product([
                 'Product' => $Product,
-            )),
-        ));
+            ]),
+        ]);
 
         // set site data
         $Site->setAttribute('content-header', false);
@@ -119,9 +119,9 @@ if ($siteUrl != $_REQUEST['_url']) {
 
         define('QUIQQER_ERP_IS_PRODUCT', true);
     } catch (QUI\Permissions\Exception $Exception) {
-        $url = $Output->getSiteUrl(array(
+        $url = $Output->getSiteUrl([
             'site' => $Site,
-        ));
+        ]);
 
         $Redirect = new RedirectResponse($url);
         $Redirect->setStatusCode(Response::HTTP_FORBIDDEN);
@@ -132,9 +132,9 @@ if ($siteUrl != $_REQUEST['_url']) {
     } catch (QUI\Exception $Exception) {
         Log::writeException($Exception, Log::LEVEL_NOTICE);
 
-        $url = $Output->getSiteUrl(array(
+        $url = $Output->getSiteUrl([
             'site' => $Site,
-        ));
+        ]);
 
         $Redirect = new RedirectResponse($url);
         $Redirect->setStatusCode(Response::HTTP_NOT_FOUND);
@@ -147,7 +147,7 @@ if ($siteUrl != $_REQUEST['_url']) {
     /**
      * CATEGORY
      */
-    $ProductList = new ProductList(array(
+    $ProductList = new ProductList([
         'categoryId'           => $Site->getAttribute('quiqqer.products.settings.categoryId'),
         'hideEmptyProductList' => true,
         'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
@@ -155,7 +155,7 @@ if ($siteUrl != $_REQUEST['_url']) {
         'searchParams'         => Products\Utils\Search::getSearchParameterFromRequest(),
         'autoload'             => false,
         'view'                 => Products\Utils\Search::getViewParameterFromRequest(),
-    ));
+    ]);
 
     $filterList = $ProductList->getFilter();
 
@@ -198,9 +198,9 @@ if ($siteUrl != $_REQUEST['_url']) {
         $ProductList->setAttribute('forceMobileFilter', true);
     }
 
-    $Engine->assign(array(
+    $Engine->assign([
         'ProductList'  => $ProductList,
         'CategoryMenu' => $CategoryMenu,
         'filter'       => $filterList,
-    ));
+    ]);
 }
