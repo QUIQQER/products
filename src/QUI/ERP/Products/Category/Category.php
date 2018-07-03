@@ -451,6 +451,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         $id       = $this->getId();
 
         foreach ($projects as $Project) {
+            $projectName = $Project->getName();
+            $projectLang = $Project->getLang();
+
             /* @var $Project QUI\Projects\Project */
             $sites = $Project->getSites([
                 'where' => [
@@ -475,7 +478,11 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                 }
             }
 
-            $this->data['sites'][$Project->getName()][$Project->getLang()] = $idList;
+            if (!isset($this->data['sites']) || is_string($this->data['sites'])) {
+                $this->data['sites'] = [];
+            }
+
+            $this->data['sites'][$projectName][$projectLang] = $idList;
         }
 
         $this->sites = $result;
