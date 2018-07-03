@@ -51,3 +51,7 @@
     background: #2F8FC6;
     color: #FFFFFF;
 }
+
+.field-container > .qui-elements-select-single .quiqqer-products-selectItem {
+    height: 100%;
+}
