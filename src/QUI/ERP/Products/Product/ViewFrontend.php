@@ -34,17 +34,17 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
         if (!$Product->isActive()) {
             throw new QUI\ERP\Products\Product\Exception(
-                array(
+                [
                     'quiqqer/products',
                     'exception.product.not.found',
-                    array('productId' => $this->getId())
-                ),
+                    ['productId' => $this->getId()]
+                ],
                 404,
-                array(
+                [
                     'id'     => $this->getId(),
                     'view'   => 'frontend',
                     'active' => 0
-                )
+                ]
             );
         }
 
@@ -91,12 +91,12 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getAttributes()
     {
-        $attributes = array(
+        $attributes = [
             'id'          => $this->getId(),
             'title'       => $this->getTitle(),
             'description' => $this->getDescription(),
             'image'       => false
-        );
+        ];
 
         try {
             $Image = $this->getImage();
@@ -119,7 +119,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         }
 
         // fields
-        $fields    = array();
+        $fields    = [];
         $fieldList = $this->getFields();
 
         /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
@@ -139,7 +139,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         }
 
         // categories
-        $categories = array();
+        $categories = [];
         $catList    = $this->getCategories();
 
         /* @var $Category QUI\ERP\Products\Category\Category */
@@ -202,6 +202,35 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         return $Calc->getProductPrice(
             $this->Product->createUniqueProduct($User)
         );
+    }
+
+    /**
+     * Return the price display for the product
+     *
+     * @return QUI\ERP\Products\Controls\Price
+     *
+     * @throws Exception
+     * @throws QUI\Exception
+     */
+    public function getPriceDisplay()
+    {
+        $Price      = $this->getPrice();
+        $vatArray   = [];
+        $attributes = $this->getAttributes();
+
+        $User = QUI::getUserBySession();
+        $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
+        
+        if (isset($attributes['calculated_vatArray'])) {
+            $vatArray = $attributes['calculated_vatArray'];
+        }
+
+        return new QUI\ERP\Products\Controls\Price([
+            'Price'       => $Price,
+            'withVatText' => true,
+            'Calc'        => $Calc,
+            'vatArray'    => $vatArray
+        ]);
     }
 
     /**
