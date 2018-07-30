@@ -75,6 +75,14 @@ define('package/quiqqer/products/bin/controls/products/SelectItem', [
                 html: '<span class="fa fa-spinner fa-spin"></span>'
             });
 
+            if (!parseInt(this.getAttribute('id'))) {
+                (function () {
+                    this.$Destroy.click();
+                }).delay(500, this);
+
+                return Promise.resolve();
+            }
+
             Products.getChild(
                 this.getAttribute('id')
             ).then(function (data) {
