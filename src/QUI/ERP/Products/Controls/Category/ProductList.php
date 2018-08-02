@@ -468,10 +468,11 @@ class ProductList extends QUI\Control
         }
 
         $Engine->assign([
+            'this'       => $this,
             'products'   => $products,
             'productTpl' => $productTpl,
             'hidePrice'  => QUI\ERP\Products\Utils\Package::hidePrice(),
-            'count'      => $count,
+            'count'      => $count
         ]);
 
         return [
@@ -479,6 +480,47 @@ class ProductList extends QUI\Control
             'count' => $count,
             'more'  => $more,
         ];
+    }
+
+    /**
+     * Render a product for the product list
+     *
+     * @param QUI\ERP\Products\Product\Product $Product
+     * @param string $productTpl - view type tpl
+     * @return string
+     * @throws QUI\Exception
+     */
+    public function renderProduct(QUI\ERP\Products\Product\Product $Product, $productTpl)
+    {
+        $Engine = QUI::getTemplateManager()->getEngine();
+
+        $Engine->assign([
+            'Product'   => $Product->getView(),
+            'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice()
+        ]);
+
+        return $Engine->fetch($productTpl);
+    }
+
+    /**
+     * Render the category list
+     *
+     * @param array $categories - list of site categories
+     * @param string $categoryTpl - view type tpl
+     * @return string
+     * @throws QUI\Exception
+     */
+    public function renderCategories(array $categories, $categoryTpl)
+    {
+        $Engine = QUI::getTemplateManager()->getEngine();
+
+        $Engine->assign([
+            'children'            => $categories,
+            'categoryStartNumber' => $this->getAttribute('categoryStartNumber'),
+            'placeholder'         => $this->getProject()->getMedia()->getPlaceholder()
+        ]);
+
+        return $Engine->fetch($categoryTpl);
     }
 
     /**
