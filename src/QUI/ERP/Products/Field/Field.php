@@ -917,6 +917,39 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Return the help description, if the field own a help
+     *
+     * @param null $Locale
+     * @return string
+     */
+    public function getHelp($Locale = null)
+    {
+        if (!$Locale) {
+            $Locale = QUI::getLocale();
+        }
+
+        $type     = $this->getType();
+        $typeData = Fields::getFieldTypeData($type);
+
+        if (empty($typeData['help'])) {
+            return '';
+        }
+
+        if (!is_array($typeData['help'])) {
+            return '';
+        }
+
+        $group = $typeData['help'][0];
+        $var   = $typeData['help'][1];
+
+        if ($Locale->exists($group, $var)) {
+            return $Locale->get($group, $var);
+        }
+
+        return '';
+    }
+
+    /**
      * Return the field type
      *
      * @return mixed|string
@@ -1024,6 +1057,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['jsControl']    = $this->getJavaScriptControl();
         $attributes['searchvalue']  = $this->getSearchCacheValue();
         $attributes['defaultValue'] = $this->getDefaultValue();
+        $attributes['help']         = $this->getHelp();
 
         $attributes['custom']        = $this->isCustomField();
         $attributes['unassigned']    = $this->isUnassigned();

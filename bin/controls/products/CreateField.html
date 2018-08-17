@@ -2,7 +2,11 @@
     <label class="field-container">
         <span class="field-container-item" title="{{fieldTitle}}">
             {{fieldTitle}}
+
+            {{#fieldHelp}}
+            <span class="field-container-item-help" title="{{fieldHelp}}"></span>
+            {{/fieldHelp}}
         </span>
-        <input type="hidden" name="{{fieldName}}" data-qui="{{control}}" />
+        <input type="hidden" name="{{fieldName}}" data-qui="{{control}}"/>
     </label>
 </td>

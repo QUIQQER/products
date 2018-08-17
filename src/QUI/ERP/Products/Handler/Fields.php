@@ -573,9 +573,17 @@ class Fields
                 $src      = $Field->getAttribute('src');
                 $category = $Field->getAttribute('category');
                 $name     = $Field->getAttribute('name');
+                $help     = true;
 
                 if (!class_exists($src)) {
                     continue;
+                }
+
+                $Help = $Field->getElementsByTagName('help');
+
+                if ($Help->length) {
+                    $Help = $Help->item(0);
+                    $help = QUI\Utils\DOM::getTextFromNode($Help, false);
                 }
 
                 $result[] = [
@@ -583,7 +591,8 @@ class Fields
                     'src'      => $src,
                     'category' => $category,
                     'locale'   => QUI\Utils\DOM::getTextFromNode($Field, false),
-                    'name'     => $name
+                    'name'     => $name,
+                    'help'     => $help
                 ];
             }
         }

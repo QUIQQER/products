@@ -6,6 +6,21 @@
     width: 100%;
 }
 
+.product-category-help {
+    clear: both;
+    color: #777777;
+    cursor: help;
+    display: block;
+}
+
+.product-category-help:hover {
+    color: inherit;
+}
+
+.product-category-help span {
+    padding: 10px;
+}
+
 .product-update .sheet {
     left: 0;
     height: 100%;
