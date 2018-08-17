@@ -877,7 +877,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $Locale = QUI\ERP\Products\Handler\Products::getLocale();
         }
 
-        return new QUI\ERP\Accounting\Article([
+        $article = [
             'id'           => $this->getId(),
             'articleNo'    => $this->getFieldValue(Fields::FIELD_PRODUCT_NO),
             'title'        => $this->getTitle($Locale),
@@ -885,7 +885,27 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             'unitPrice'    => $this->getUnitPrice()->value(),
             'quantity'     => $this->getQuantity(),
             'customFields' => $this->getCustomFieldsData()
-        ]);
+        ];
+
+        if ($this->calculated) {
+            if (isset($this->vatArray['vat'])) {
+                $article['vat'] = $this->vatArray['vat'];
+            }
+
+            $article['calculated'] = [
+                'price'           => $this->price,
+                'basisPrice'      => $this->basisPrice,
+                'sum'             => $this->sum,
+                'nettoBasisPrice' => $this->basisPrice,
+                'nettoPrice'      => $this->nettoPrice,
+                'nettoSum'        => $this->nettoSum,
+                'vatArray'        => $this->vatArray,
+                'isEuVat'         => $this->isEuVat,
+                'isNetto'         => $this->isNetto
+            ];
+        }
+
+        return new QUI\ERP\Accounting\Article($article);
     }
 
     /**
