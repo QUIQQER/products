@@ -40,7 +40,10 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/SelectRange', [
          */
         create: function () {
             this.$Select = new QUIRange({
-                range : true,
+                range : {
+                    min: 0,
+                    max: 100
+                },
                 styles: {
                     width: '100%'
                 },
