@@ -372,6 +372,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             ]);
         }
 
+        QUI::getEvents()->fireEvent('onQuiqqerProductsFieldDeleteBefore', [$this]);
+
         QUI\Watcher::addString(
             QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.delete', [
                 'id'    => $this->getId(),
