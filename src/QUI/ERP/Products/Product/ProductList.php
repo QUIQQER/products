@@ -192,6 +192,21 @@ class ProductList
     }
 
     /**
+     * Execute a recalculation
+     *
+     * @param QUI\ERP\Products\Utils\Calc|null $Calc - optional, calculation object
+     * @return ProductList
+     *
+     * @throws QUI\Exception
+     */
+    public function recalculation($Calc = null)
+    {
+        $this->calculated = false;
+
+        return $this->calc($Calc);
+    }
+
+    /**
      * Return the length of the list
      *
      * @return int

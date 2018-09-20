@@ -118,15 +118,11 @@ class Cache extends QUI\QDOM
         $cacheDir = self::getCacheDir();
 
         try {
-            $handlers[] = new Stash\Driver\FileSystem([
-                'path' => $cacheDir
-            ]);
-
-            $Handler = new Stash\Driver\Composite([
-                'drivers' => $handlers
-            ]);
-
-            $Stash = new Stash\Pool($Handler);
+            $Stash = new Stash\Pool(
+                QUI\Cache\Manager::getDriver([
+                    'path' => $cacheDir
+                ])
+            );
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
@@ -153,9 +149,7 @@ class Cache extends QUI\QDOM
     {
         $cacheDir = PackageUtils::getVarDir().'cache/products/search/';
 
-        if (!file_exists($cacheDir)
-            || !is_dir($cacheDir)
-        ) {
+        if (!file_exists($cacheDir) || !is_dir($cacheDir)) {
             QUI\Utils\System\File::mkdir($cacheDir);
         }
 
