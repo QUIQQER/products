@@ -10,6 +10,7 @@ use QUI;
 
 /**
  * Class ProductList
+ *
  * @package QUI\ERP\Products\Product
  */
 class ProductList
@@ -119,6 +120,22 @@ class ProductList
     {
         if (isset($params['duplicate'])) {
             $this->duplicate = (boolean)$params['duplicate'];
+        }
+
+        if (isset($params['calculations'])) {
+            $calc = $params['calculations'];
+
+            $this->sum          = $calc['sum'];
+            $this->subSum       = $calc['subSum'];
+            $this->nettoSum     = $calc['nettoSum'];
+            $this->nettoSubSum  = $calc['nettoSubSum'];
+            $this->vatArray     = $calc['vatArray'];
+            $this->vatText      = $calc['vatText'];
+            $this->isEuVat      = $calc['isEuVat'];
+            $this->isNetto      = $calc['isNetto'];
+            $this->currencyData = $calc['currencyData'];
+
+            $this->calculated = true;
         }
 
         if (!QUI::getUsers()->isUser($User)) {
