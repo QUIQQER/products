@@ -224,6 +224,18 @@ class ProductList
     }
 
     /**
+     * Alias for recalculation()
+     *
+     * @param null $Calc
+     * @return ProductList
+     * @throws QUI\Exception
+     */
+    public function recalculate($Calc = null)
+    {
+        return $this->recalculation($Calc);
+    }
+
+    /**
      * Return the length of the list
      *
      * @return int
