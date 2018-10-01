@@ -54,8 +54,6 @@ class ProductListFrontendView
     {
         $list     = $this->ProductList->toArray();
         $products = $this->ProductList->getProducts();
-//        $User     = $this->ProductList->getUser();
-        //$isNetto  = QUI\ERP\Utils\User::isNettoUser($User);
 
         $Locale   = $this->ProductList->getUser()->getLocale();
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
@@ -88,14 +86,18 @@ class ProductListFrontendView
             $product['nettoSum']   = $hidePrice ? '' : $Currency->format($attributes['calculated_nettoSum']);
             $product['basisPrice'] = $hidePrice ? '' : $Currency->format($attributes['calculated_basisPrice']);
 
-            $product['id']          = $attributes['id'];
-            $product['category']    = $attributes['category'];
-            $product['title']       = $attributes['title'];
-            $product['description'] = $attributes['description'];
-            $product['image']       = $attributes['image'];
-            $product['quantity']    = $attributes['quantity'];
-            $product['attributes']  = [];
+            $product['id']           = $attributes['id'];
+            $product['category']     = $attributes['category'];
+            $product['title']        = $attributes['title'];
+            $product['description']  = $attributes['description'];
+            $product['image']        = $attributes['image'];
+            $product['quantity']     = $attributes['quantity'];
+            $product['displayPrice'] = true;
+            $product['attributes']   = [];
 
+            if (isset($attributes['displayPrice'])) {
+                $product['displayPrice'] = $attributes['displayPrice'];
+            }
 
             $calculatedSum = 0;
             $calculatedVat = 0;

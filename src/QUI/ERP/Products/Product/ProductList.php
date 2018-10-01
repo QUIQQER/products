@@ -10,6 +10,7 @@ use QUI;
 
 /**
  * Class ProductList
+ *
  * @package QUI\ERP\Products\Product
  */
 class ProductList
@@ -121,6 +122,22 @@ class ProductList
             $this->duplicate = (boolean)$params['duplicate'];
         }
 
+        if (isset($params['calculations'])) {
+            $calc = $params['calculations'];
+
+            $this->sum          = $calc['sum'];
+            $this->subSum       = $calc['subSum'];
+            $this->nettoSum     = $calc['nettoSum'];
+            $this->nettoSubSum  = $calc['nettoSubSum'];
+            $this->vatArray     = $calc['vatArray'];
+            $this->vatText      = $calc['vatText'];
+            $this->isEuVat      = $calc['isEuVat'];
+            $this->isNetto      = $calc['isNetto'];
+            $this->currencyData = $calc['currencyData'];
+
+            $this->calculated = true;
+        }
+
         if (!QUI::getUsers()->isUser($User)) {
             $User = QUI::getUserBySession();
         }
@@ -207,6 +224,18 @@ class ProductList
     }
 
     /**
+     * Alias for recalculation()
+     *
+     * @param null $Calc
+     * @return ProductList
+     * @throws QUI\Exception
+     */
+    public function recalculate($Calc = null)
+    {
+        return $this->recalculation($Calc);
+    }
+
+    /**
      * Return the length of the list
      *
      * @return int
@@ -268,7 +297,7 @@ class ProductList
         // only UniqueProduct can be calculated
 
         /* @var $Product QUI\ERP\Products\Product\Model */
-        if ($Product instanceof QUI\ERP\Products\Product\Model) {
+        if (!($Product instanceof UniqueProduct)) {
             $Product = $Product->createUniqueProduct($this->User);
         }
 

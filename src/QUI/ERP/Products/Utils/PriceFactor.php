@@ -275,7 +275,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     }
 
     /**
-     * The the value for the calculation
+     * The value for the calculation
      * 10 -> 10%, 10€, 10$
      *
      * @param integer|float|double $value - value to calc

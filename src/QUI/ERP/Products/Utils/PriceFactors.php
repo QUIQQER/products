@@ -123,6 +123,16 @@ class PriceFactors
     }
 
     /**
+     * Clear the price factors
+     */
+    public function clear()
+    {
+        $this->listBeginning = [];
+        $this->list          = [];
+        $this->listEnd       = [];
+    }
+
+    /**
      * @return QUI\ERP\Products\Interfaces\PriceFactorInterface[]
      */
     public function getFactors()

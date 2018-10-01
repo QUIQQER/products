@@ -272,10 +272,11 @@ class Model extends QUI\QDOM
         $Locale    = $User->getLocale();
         $fieldList = $this->getFields();
 
-        $attributes                = $this->getAttributes();
-        $attributes['title']       = $this->getTitle($Locale);
-        $attributes['description'] = $this->getDescription($Locale);
-        $attributes['uid']         = $User->getId();
+        $attributes                 = $this->getAttributes();
+        $attributes['title']        = $this->getTitle($Locale);
+        $attributes['description']  = $this->getDescription($Locale);
+        $attributes['uid']          = $User->getId();
+        $attributes['displayPrice'] = true;
 
         $fields = [];
 
