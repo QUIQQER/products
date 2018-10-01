@@ -31,7 +31,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected $calculated = false;
 
     /**
-     * @var integer
+     * @var integer|string
      */
     protected $id;
 
@@ -884,7 +884,9 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             'description'  => $this->getDescription($Locale),
             'unitPrice'    => $this->getUnitPrice()->value(),
             'quantity'     => $this->getQuantity(),
-            'customFields' => $this->getCustomFieldsData()
+            'customFields' => $this->getCustomFieldsData(),
+            'customData'   => $this->getCustomData(),
+            'displayPrice' => true
         ];
 
         if ($this->calculated) {
@@ -903,6 +905,10 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
                 'isEuVat'         => $this->isEuVat,
                 'isNetto'         => $this->isNetto
             ];
+        }
+
+        if ($this->existsAttribute('displayPrice')) {
+            $article['displayPrice'] = (bool)$this->getAttribute('displayPrice');
         }
 
         return new QUI\ERP\Accounting\Article($article);
@@ -934,5 +940,21 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         }
 
         return $customFields;
+    }
+
+    /**
+     * Return the custom fields for saving
+     *
+     * @return array
+     */
+    protected function getCustomData()
+    {
+        $data = $this->getAttribute('customData');
+
+        if (is_array($data)) {
+            return $data;
+        }
+
+        return [];
     }
 }

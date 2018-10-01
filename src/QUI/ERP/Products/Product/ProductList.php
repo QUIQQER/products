@@ -297,7 +297,7 @@ class ProductList
         // only UniqueProduct can be calculated
 
         /* @var $Product QUI\ERP\Products\Product\Model */
-        if ($Product instanceof QUI\ERP\Products\Product\Model) {
+        if (!($Product instanceof UniqueProduct)) {
             $Product = $Product->createUniqueProduct($this->User);
         }
 
