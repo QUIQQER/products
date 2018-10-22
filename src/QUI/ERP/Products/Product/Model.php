@@ -434,14 +434,15 @@ class Model extends QUI\QDOM
      * Return the URL for the product
      * It uses the current project
      *
+     * @param QUI\Projects\Project|null $Project
      * @return string
      *
      * @throws QUI\Exception
      */
-    public function getUrl()
+    public function getUrl($Project = null)
     {
         $Category = $this->getCategory();
-        $Site     = $Category->getSite();
+        $Site     = $Category->getSite($Project);
 
         if ($Site->getAttribute('quiqqer.products.fake.type') ||
             $Site->getAttribute('type') !== 'quiqqer/products:types/category'
@@ -458,6 +459,46 @@ class Model extends QUI\QDOM
         }
 
         $url = $Site->getUrlRewritten([
+            0              => $this->getUrlName(),
+            'paramAsSites' => true
+        ]);
+
+        return $url;
+    }
+
+    /**
+     * @param null $Project
+     * @return string
+     * @throws QUI\Exception
+     */
+    public function getUrlRewrittenWithHost($Project = null)
+    {
+        if (!$Project) {
+            $Project = QUI::getRewrite()->getProject();
+        }
+
+        $Category = $this->getCategory();
+        $Site     = $Category->getSite($Project);
+
+        if ($Site->getAttribute('quiqqer.products.fake.type') ||
+            $Site->getAttribute('type') !== 'quiqqer/products:types/category'
+            && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
+        ) {
+            QUI\System\Log::addWarning(
+                QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', [
+                    'productId' => $this->getId(),
+                    'title'     => $this->getTitle()
+                ]),
+                [
+                    'wantedLanguage' => $Project->getLang(),
+                    'wantedProject'  => $Project->getName()
+                ]
+            );
+
+            return $Project->getVHost(true, true).'/_p/'.$this->getUrlName();
+        }
+
+        $url = $Site->getUrlRewrittenWithHost([
             0              => $this->getUrlName(),
             'paramAsSites' => true
         ]);
