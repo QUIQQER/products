@@ -1379,8 +1379,8 @@ class Model extends QUI\QDOM
      */
     public function getField($fieldId)
     {
-        if (is_string($fieldId) && defined('Fields::'.$fieldId)) {
-            $fieldId = constant('Fields::'.$fieldId);
+        if (is_string($fieldId) && defined('QUI\ERP\Products\Handler\Fields::'.$fieldId)) {
+            $fieldId = constant('QUI\ERP\Products\Handler\Fields::'.$fieldId);
         }
 
         if (isset($this->fields[$fieldId])) {
