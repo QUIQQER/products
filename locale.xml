@@ -1245,7 +1245,7 @@
                 Feld-Eigenschaften haben sich geändert welche Produkte direkt betreffen.
                 ]]></de>
             <en><![CDATA[
-
+                Field properties have changed which directly affect products.
             ]]></en>
         </locale>
         <locale name="fields.window.productarray.changed.text" html="true">
@@ -1253,7 +1253,7 @@
                 Möchten Sie die Feldeigenschaften auf alle Produkte anwenden welche das Feld besitzen?
                 ]]></de>
             <en><![CDATA[
-
+                Do you want to apply the field properties to all products that contain the field?
             ]]></en>
         </locale>
         <locale name="fields.window.productarray.changed.information" html="true">
@@ -1263,7 +1263,9 @@
                 Für jedes Produkt werden die Eigenschaften des Feldes <strong>[fieldId] [fieldName]</strong> gesetzt.
                 ]]></de>
             <en><![CDATA[
-
+                Field properties have changed which directly affect products<br />
+                Do you want to customize all products which contain the field <strong>[fieldId] [fieldName]</strong>?<br />
+                For each product the properties of the field <strong>[fieldId] [fieldName]</strong> are set.
             ]]></en>
         </locale>
 
