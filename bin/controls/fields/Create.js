@@ -1,5 +1,5 @@
 /**
- * Category sitemap
+ * Create a field
  *
  * @module package/quiqqer/products/bin/controls/categories/Create
  * @author www.pcsg.de (Henning Leutz)
@@ -60,8 +60,8 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                 'class': 'field-create',
                 html   : Mustache.render(template, {
                     contentText                : '<div class="field-create-header">' +
-                    QUILocale.get(lg, 'control.field.create.content') +
-                    '</div>',
+                        QUILocale.get(lg, 'control.field.create.content') +
+                        '</div>',
                     tableHeader                : QUILocale.get(lg, 'control.field.create.header'),
                     fieldTitle                 : QUILocale.get('quiqqer/system', 'title'),
                     fieldWorkingTitle          : QUILocale.get(lg, 'workingTitle'),
@@ -84,6 +84,10 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                     fieldfieldShowInDetailsDesc: QUILocale.get(lg, 'showInDetailsDesc')
                 })
             });
+
+            if (Elm.getElement('[name="options"]')) {
+                Elm.getElement('[name="options"]').getParent('tr').setStyle('display', 'none');
+            }
 
             return Elm;
         },
