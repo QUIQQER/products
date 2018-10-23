@@ -1372,13 +1372,17 @@ class Model extends QUI\QDOM
     /**
      * Return the field
      *
-     * @param integer $fieldId
+     * @param integer|string $fieldId - Field ID or FIELD constant name -> FIELD_PRICE, FIELD_PRODUCT_NO ...
      * @return QUI\ERP\Products\Field\Field
      *
      * @throws QUI\ERP\Products\Product\Exception
      */
     public function getField($fieldId)
     {
+        if (is_string($fieldId) && defined('Fields::'.$fieldId)) {
+            $fieldId = constant('Fields::'.$fieldId);
+        }
+
         if (isset($this->fields[$fieldId])) {
             return $this->fields[$fieldId];
         }
@@ -1410,7 +1414,7 @@ class Model extends QUI\QDOM
     /**
      * Return the field value
      *
-     * @param integer $fieldId
+     * @param integer|string $fieldId - Field ID or FIELD constant name -> FIELD_PRICE, FIELD_PRODUCT_NO ...
      * @return mixed
      * @throws QUI\ERP\Products\Product\Exception
      */
