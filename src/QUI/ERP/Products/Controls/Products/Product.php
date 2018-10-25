@@ -146,7 +146,6 @@ class Product extends QUI\Control
         ]);
 
         // offer price
-        QUI\System\Log::writeRecursive($Product->getFieldValue('FIELD_PRICE_OFFER'));
         $PriceOfferDisplay = new QUI\ERP\Products\Controls\Price([
             'Price'       => new QUI\ERP\Money\Price(
                 $Product->getFieldValue('FIELD_PRICE_OFFER'),
@@ -238,7 +237,8 @@ class Product extends QUI\Control
             'PriceOfferDisplay'    => $PriceOfferDisplay,
             'priceOfferValue'      => $Product->getFieldValue('FIELD_PRICE_OFFER'),
             'VisitedProducts'      => new VisitedProducts(),
-            'MediaUtils'           => new QUI\Projects\Media\Utils()
+            'MediaUtils'           => new QUI\Projects\Media\Utils(),
+            'Site'                 => $this->getSite()
         ]);
 
         // button list
