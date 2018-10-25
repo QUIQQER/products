@@ -32,7 +32,7 @@ class Product extends QUI\Control
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/Product'
         ]);
 
-        $this->addCSSFile(dirname(__FILE__).'/Product.css');
+        $this->addCSSFile(dirname(__FILE__) . '/Product.css');
 
         parent::__construct($attributes);
     }
@@ -136,6 +136,24 @@ class Product extends QUI\Control
             'vatArray'    => $vatArray
         ]);
 
+        // retail price
+        $PriceRetailDisplay = new QUI\ERP\Products\Controls\Price([
+            'Price'       => new QUI\ERP\Money\Price(
+                $Product->getFieldValue('FIELD_PRICE_RETAIL'),
+                QUI\ERP\Currency\Handler::getDefaultCurrency()
+            ),
+            'withVatText' => false
+        ]);
+
+        // offer price
+        $PriceOfferDisplay = new QUI\ERP\Products\Controls\Price([
+            'Price'       => new QUI\ERP\Money\Price(
+                $Product->getFieldValue('FIELD_PRICE_OFFER'),
+                QUI\ERP\Currency\Handler::getDefaultCurrency()
+            ),
+            'withVatText' => false
+        ]);
+
         // file / image folders
         $detailFields = [];
 
@@ -211,9 +229,16 @@ class Product extends QUI\Control
             'details'              => QUI\ERP\Products\Utils\Fields::sortFields($details),
             'detailFields'         => QUI\ERP\Products\Utils\Fields::sortFields($detailFields),
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
+            'Price'                => $Price,
             'PriceDisplay'         => $PriceDisplay,
+            "priceValue"           => $Price->getPrice(),
+            'PriceRetailDisplay'   => $PriceRetailDisplay,
+            'priceRetailValue'     => $Product->getFieldValue('FIELD_PRICE_RETAIL'),
+            'PriceOfferDisplay'    => $PriceOfferDisplay,
+            'priceOfferValue'      => $Product->getFieldValue('FIELD_PRICE_OFFER'),
             'VisitedProducts'      => new VisitedProducts(),
-            'MediaUtils'           => new QUI\Projects\Media\Utils()
+            'MediaUtils'           => new QUI\Projects\Media\Utils(),
+            'Site'                 => $this->getSite()
         ]);
 
         // button list
@@ -228,11 +253,11 @@ class Product extends QUI\Control
 
         $Engine->assign(
             'buttonsHtml',
-            $Engine->fetch(dirname(__FILE__).'/Product.Buttons.html')
+            $Engine->fetch(dirname(__FILE__) . '/Product.Buttons.html')
         );
 
         // render product
-        return $Engine->fetch(dirname(__FILE__).'/Product.html');
+        return $Engine->fetch(dirname(__FILE__) . '/Product.html');
     }
 
     /**
