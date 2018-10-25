@@ -151,6 +151,10 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
         if (isset($params['sum'])) {
             $this->setSum($params['sum']);
         }
+
+        if (isset($params['nettoSum'])) {
+            $this->setNettoSum($params['nettoSum']);
+        }
     }
 
     /**

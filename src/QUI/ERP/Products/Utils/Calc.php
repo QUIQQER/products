@@ -285,16 +285,16 @@ class Calc
                     continue;
             }
 
-            // add pricefactor VAT
+            // add price factor VAT
             if (!($PriceFactor instanceof QUI\ERP\Products\Interfaces\PriceFactorWithVatInterface)) {
-                continue;
+                $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
+            } else {
+                $VatType = $PriceFactor->getVatType();
+                $Vat     = QUI\ERP\Tax\Utils::getTaxEntry($VatType, $Area);
             }
 
-            /* @var $PriceFactor QUI\ERP\Products\Interfaces\PriceFactorWithVatInterface */
-            $VatType = $PriceFactor->getVatType();
-            $Vat     = QUI\ERP\Tax\Utils::getTaxEntry($VatType, $Area);
-            $vatSum  = $PriceFactor->getNettoSum() * ($Vat->getValue() / 100);
-            $vat     = $Vat->getValue();
+            $vatSum = $PriceFactor->getNettoSum() * ($Vat->getValue() / 100);
+            $vat    = $Vat->getValue();
 
             if ($isNetto) {
                 $PriceFactor->setSum($PriceFactor->getNettoSum());
