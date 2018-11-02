@@ -220,6 +220,10 @@ class ProductList
     {
         $this->calculated = false;
 
+        foreach ($this->products as $Product) {
+            $Product->resetCalculation();
+        }
+
         return $this->calc($Calc);
     }
 

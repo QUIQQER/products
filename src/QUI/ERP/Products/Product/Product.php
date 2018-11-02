@@ -166,4 +166,25 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
             $this->setPermission($permission, $data, $User);
         }
     }
+
+    //region calc
+
+    /**
+     * @param null $Calc
+     * @return $this|mixed
+     */
+    public function calc($Calc = null)
+    {
+        return $this;
+    }
+
+    /**
+     * @return mixed|void
+     */
+    public function resetCalculation()
+    {
+        // nothing
+    }
+
+    //endregion
 }

@@ -220,7 +220,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
         $User = QUI::getUserBySession();
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
-        
+
         if (isset($attributes['calculated_vatArray'])) {
             $vatArray = $attributes['calculated_vatArray'];
         }
@@ -365,4 +365,30 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     {
         return $this->Product->getUrl();
     }
+
+    //region calculation
+
+    /**
+     * @param null $Calc
+     *
+     * @return mixed|UniqueProduct
+     *
+     * @throws QUI\Exception
+     * @throws QUI\Users\Exception
+     */
+    public function calc($Calc = null)
+    {
+        return $this->Product->calc($Calc);
+    }
+
+    /**
+     * @param null $Calc
+     * @return mixed
+     */
+    public function resetCalculation()
+    {
+        return $this->Product->resetCalculation();
+    }
+
+    //endregion
 }
