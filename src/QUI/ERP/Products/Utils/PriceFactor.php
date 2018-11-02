@@ -57,6 +57,11 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     protected $bruttoSum = 0;
 
     /**
+     * @var bool
+     */
+    protected $vat = false;
+
+    /**
      * @var integer|double|float
      */
     protected $calculatedSum = 0;
@@ -103,7 +108,8 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      *      'basis' => '',
      *      'value' => '',
      *      'valueText' => '',
-     *      'visible' => true
+     *      'visible' => true,
+     *      'vat' => 19 // automatic
      * )
      */
     public function __construct($params = [])
@@ -138,6 +144,10 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
 
         if (isset($params['valueText'])) {
             $this->setValueText($params['valueText']);
+        }
+
+        if (isset($params['vat'])) {
+            $this->setVat((int)$params['vat']);
         }
 
         if (isset($params['visible'])) {
@@ -349,6 +359,26 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     }
 
     /**
+     * Sets the vat % value (eq: 19%)
+     *
+     * @param $vat
+     */
+    public function setVat($vat)
+    {
+        $this->vat = (int)$vat;
+    }
+
+    /**
+     * Return the specific vat  (eq: 19%)
+     *
+     * @return bool
+     */
+    public function getVat()
+    {
+        return $this->vat;
+    }
+
+    /**
      * Sum method
      */
 
@@ -474,7 +504,8 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             'valueText'         => $this->getValueText(),
             'priority'          => $this->getPriority(),
             'visible'           => $this->isVisible(),
-            'class'             => get_class($this)
+            'class'             => get_class($this),
+            'vat'               => $this->getVat()
         ];
     }
 
@@ -497,7 +528,8 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             'calculation_basis' => $this->getCalculationBasis(),
             'nettoSum'          => $this->getNettoSum(),
             'nettoSumFormatted' => $this->getNettoSumFormatted(),
-            'visible'           => $this->isVisible()
+            'visible'           => $this->isVisible(),
+            'vat'               => $this->getVat()
         ]);
     }
 }

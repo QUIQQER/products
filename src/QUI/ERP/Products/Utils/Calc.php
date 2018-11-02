@@ -296,6 +296,8 @@ class Calc
             $vatSum = $PriceFactor->getNettoSum() * ($Vat->getValue() / 100);
             $vat    = $Vat->getValue();
 
+            $PriceFactor->setVat($vat);
+
             if ($isNetto) {
                 $PriceFactor->setSum($PriceFactor->getNettoSum());
             } else {
