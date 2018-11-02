@@ -42,12 +42,12 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      */
     public function getAttributes()
     {
-        $attributes = array(
+        $attributes = [
             'id'          => $this->getId(),
             'title'       => $this->getTitle(),
             'description' => $this->getDescription(),
             'image'       => false
-        );
+        ];
 
         try {
             $attributes['image'] = $this->getImage()->getUrl(true);
@@ -66,7 +66,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
         }
 
         // fields
-        $fields    = array();
+        $fields    = [];
         $fieldList = $this->getFields();
 
         /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
@@ -82,7 +82,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
         }
 
         // categories
-        $categories = array();
+        $categories = [];
         $catList    = $this->getCategories();
 
         /* @var $Category QUI\ERP\Products\Category\Category */
@@ -145,6 +145,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
 
     /**
      * @return QUI\ERP\Money\Price
+     * @throws QUI\Exception
      */
     public function getMinimumPrice()
     {
@@ -155,6 +156,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
 
     /**
      * @return QUI\ERP\Money\Price
+     * @throws QUI\Exception
      */
     public function getMaximumPrice()
     {
@@ -168,6 +170,8 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      *
      * @param integer $fieldId
      * @return QUI\ERP\Products\Field\View
+     *
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function getFieldView($fieldId)
     {
@@ -204,6 +208,8 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * @param int $fieldId
      * @return mixed
+     *
+     * @throws QUI\ERP\Products\Product\Exception
      */
     public function getFieldValue($fieldId)
     {
@@ -220,7 +226,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
 
     /**
      * @return QUI\Projects\Media\Image
-     * @throws Exception
+     * @throws QUI\Exception
      */
     public function getImage()
     {
@@ -234,4 +240,26 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     {
         return $this->getProduct()->getCategories();
     }
+
+    //region calculation
+
+    /**
+     * @param null $Calc
+     * @return mixed
+     */
+    public function calc($Calc = null)
+    {
+        return $this->getProduct()->calc($Calc);
+    }
+
+    /**
+     * @param null $Calc
+     * @return mixed
+     */
+    public function resetCalculation()
+    {
+        return $this->getProduct()->resetCalculation();
+    }
+
+    //endregion
 }

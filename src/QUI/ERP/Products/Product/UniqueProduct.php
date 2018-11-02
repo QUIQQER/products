@@ -355,6 +355,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         return new UniqueProductFrontendView($this->id, $attributes);
     }
 
+    //region calculation
+
     /**
      * Calculates
      *
@@ -392,6 +394,31 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         return $this;
     }
+
+    /**
+     * @return mixed|void
+     */
+    public function resetCalculation()
+    {
+        $this->calculated = false;
+    }
+
+    /**
+     * @param null $Calc
+     *
+     * @return UniqueProduct
+     *
+     * @throws QUI\Exception
+     * @throws QUI\Users\Exception
+     */
+    public function recalculation($Calc = null)
+    {
+        $this->resetCalculation();
+
+        return $this->calc($Calc);
+    }
+
+    //endregion
 
     /**
      * Return the translated title

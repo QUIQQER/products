@@ -274,4 +274,18 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     {
         return [];
     }
+
+    //region calc
+
+    public function calc($Calc = null)
+    {
+        return $this;
+    }
+
+    public function resetCalculation()
+    {
+        // nothing - placeholder
+    }
+
+    //endregion
 }
