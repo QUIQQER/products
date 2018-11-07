@@ -111,9 +111,7 @@ class Calc
             $User = QUI::getUsers()->getSystemUser();
         }
 
-        if (!QUI::getUsers()->isUser($User)
-            && !QUI::getUsers()->isSystemUser($User)
-        ) {
+        if (!QUI::getUsers()->isUser($User) && !QUI::getUsers()->isSystemUser($User)) {
             $User = QUI::getUserBySession();
         }
 
@@ -252,13 +250,19 @@ class Calc
 
         /* @var $PriceFactor PriceFactor */
         foreach ($priceFactors as $PriceFactor) {
+            $priceFactorValue = $PriceFactor->getValue();
+
             switch ($PriceFactor->getCalculation()) {
                 // einfache Zahl, Währung --- kein Prozent
                 case ErpCalc::CALCULATION_COMPLEMENT:
-                    $nettoSum       = $nettoSum + $PriceFactor->getValue();
-                    $priceFactorSum = $priceFactorSum + $PriceFactor->getValue();
+                    if ($nettoSum + $priceFactorValue <= 0) {
+                        $priceFactorValue = $priceFactorValue - ($nettoSum + $priceFactorValue);
+                    }
 
-                    $PriceFactor->setNettoSum($PriceFactor->getValue());
+                    $nettoSum       = $nettoSum + $priceFactorValue;
+                    $priceFactorSum = $priceFactorSum + $priceFactorValue;
+
+                    $PriceFactor->setNettoSum($priceFactorValue);
                     break;
 
                 // Prozent Angabe
@@ -266,13 +270,17 @@ class Calc
                     switch ($PriceFactor->getCalculationBasis()) {
                         default:
                         case ErpCalc::CALCULATION_BASIS_NETTO:
-                            $percentage = $PriceFactor->getValue() / 100 * $nettoSubSum;
+                            $percentage = $priceFactorValue / 100 * $nettoSubSum;
                             break;
 
                         case ErpCalc::CALCULATION_BASIS_BRUTTO:
                         case ErpCalc::CALCULATION_BASIS_CURRENTPRICE:
-                            $percentage = $PriceFactor->getValue() / 100 * $nettoSum;
+                            $percentage = $priceFactorValue / 100 * $nettoSum;
                             break;
+                    }
+
+                    if ($nettoSum + $percentage <= 0) {
+                        $percentage = $percentage - ($nettoSum + $percentage);
                     }
 
                     $PriceFactor->setNettoSum($percentage);
