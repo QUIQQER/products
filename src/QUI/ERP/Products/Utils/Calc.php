@@ -255,6 +255,7 @@ class Calc
             switch ($PriceFactor->getCalculation()) {
                 // einfache Zahl, Währung --- kein Prozent
                 case ErpCalc::CALCULATION_COMPLEMENT:
+                    // quiqqer/order#55
                     if ($nettoSum + $priceFactorValue <= 0) {
                         $priceFactorValue = $priceFactorValue - ($nettoSum + $priceFactorValue);
                     }
@@ -279,6 +280,7 @@ class Calc
                             break;
                     }
 
+                    // quiqqer/order#55
                     if ($nettoSum + $percentage <= 0) {
                         $percentage = $percentage - ($nettoSum + $percentage);
                     }
@@ -457,6 +459,7 @@ class Calc
                     }
             }
 
+            // quiqqer/order#55
             if ($nettoPrice + $priceFactorSum < 0) {
                 $priceFactorSum = $priceFactorSum - ($nettoPrice + $priceFactorSum);
             }
