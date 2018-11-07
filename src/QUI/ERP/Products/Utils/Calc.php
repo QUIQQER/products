@@ -457,6 +457,10 @@ class Calc
                     }
             }
 
+            if ($nettoPrice + $priceFactorSum < 0) {
+                $priceFactorSum = $priceFactorSum - ($nettoPrice + $priceFactorSum);
+            }
+
             $PriceFactor->setNettoSum($priceFactorSum * $Product->getQuantity());
 
             $nettoPrice       = $nettoPrice + $priceFactorSum;
