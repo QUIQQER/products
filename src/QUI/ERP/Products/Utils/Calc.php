@@ -464,7 +464,9 @@ class Calc
                 $priceFactorSum = $priceFactorSum - ($nettoPrice + $priceFactorSum);
             }
 
-            $PriceFactor->setNettoSum($priceFactorSum * $Product->getQuantity());
+            $PriceFactor->setNettoSum(
+                floatval($priceFactorSum * $Product->getQuantity())
+            );
 
             $nettoPrice       = $nettoPrice + $priceFactorSum;
             $priceFactorArray = $PriceFactor->toArray();
