@@ -299,8 +299,12 @@ class Calc
             if (!($PriceFactor instanceof QUI\ERP\Products\Interfaces\PriceFactorWithVatInterface)) {
                 $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
             } else {
-                $VatType = $PriceFactor->getVatType();
-                $Vat     = QUI\ERP\Tax\Utils::getTaxEntry($VatType, $Area);
+                try {
+                    $VatType = $PriceFactor->getVatType();
+                    $Vat     = QUI\ERP\Tax\Utils::getTaxEntry($VatType, $Area);
+                } catch (QUI\Exception $Exception) {
+                    $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
+                }
             }
 
             $vatSum = $PriceFactor->getNettoSum() * ($Vat->getValue() / 100);
@@ -349,6 +353,15 @@ class Calc
         if ($this->ignoreVatCalculation) {
             $vatArray = [];
             $vatText  = [];
+        }
+
+        // delete 0 % vat, 0% vat is allowed to calculate more easily
+        if (isset($vatText[0])) {
+            unset($vatText[0]);
+        }
+
+        if (isset($vatArray[0])) {
+            unset($vatArray[0]);
         }
 
         // gegenrechnung, wegen rundungsfehler
