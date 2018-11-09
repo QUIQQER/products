@@ -301,7 +301,12 @@ class Calc
             } else {
                 try {
                     $VatType = $PriceFactor->getVatType();
-                    $Vat     = QUI\ERP\Tax\Utils::getTaxEntry($VatType, $Area);
+
+                    if (!$VatType) {
+                        throw new QUI\Exception('placeholder exception');
+                    }
+
+                    $Vat = QUI\ERP\Tax\Utils::getTaxEntry($VatType, $Area);
                 } catch (QUI\Exception $Exception) {
                     $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
                 }
