@@ -69,8 +69,10 @@ class ProductListFrontendView
             $PriceFactors = $Product->getPriceFactors();
 
             $product = [
-                'fields'   => [],
-                'vatArray' => []
+                'fields'        => [],
+                'vatArray'      => [],
+                'hasOfferPrice' => $Product->hasOfferPrice(),
+                'originalPrice' => $Currency->format($Product->getOriginalPrice()->getValue())
             ];
 
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
