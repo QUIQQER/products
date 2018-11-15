@@ -318,8 +318,6 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * Unique identifier
      *
      * @return string
-     *
-     * @throws QUI\Exception
      */
     public function getCacheIdentifier()
     {
@@ -640,6 +638,54 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
+     * Has the product an offer price
+     *
+     * @return bool
+     */
+    public function hasOfferPrice()
+    {
+        $OfferPrice = $this->getField(Fields::FIELD_PRICE_OFFER);
+        $value      = $OfferPrice->getValue();
+
+        if ($value === false) {
+            return false;
+        }
+
+        return $value !== '';
+    }
+
+    /**
+     * @return false|UniqueField
+     */
+    public function getOriginalPrice()
+    {
+        $Calc         = QUI\ERP\Products\Utils\Calc::getInstance();
+        $calculations = [];
+
+        $Field = $this->getField(Fields::FIELD_PRICE);
+
+        try {
+            $Calc->getProductPrice($this, function ($calcResult) use (&$calculations) {
+                $calculations = $calcResult;
+            }, $this->getField(Fields::FIELD_PRICE));
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return $Field;
+        }
+
+        $priceAttributes          = $Field->getAttributes();
+        $priceAttributes['value'] = $calculations['sum'];
+
+        $PriceField = new UniqueField(
+            $Field->getId(),
+            $priceAttributes
+        );
+
+        return $PriceField;
+    }
+
+    /**
      * @return QUI\ERP\Money\Price
      *
      * @throws QUI\Users\Exception
@@ -824,8 +870,6 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * Return the product attributes
      *
      * @return array
-     *
-     * @throws QUI\Exception
      */
     public function getAttributes()
     {
@@ -839,10 +883,17 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $attributes['uid']         = $this->uid;
         $attributes['image']       = '';
 
+        $attributes['hasOfferPrice'] = $this->hasOfferPrice();
+        $attributes['originalPrice'] = $this->getOriginalPrice()->getValue();
+
         if ($this->getCategory()) {
             $attributes['category'] = $this->getCategory()->getId();
         } else {
-            $attributes['category'] = Categories::getMainCategory()->getId();
+            try {
+                $attributes['category'] = Categories::getMainCategory()->getId();
+            } catch (QUI\Exception $Exception) {
+                $attributes['category'] = 0;
+            }
         }
 
         // image
@@ -879,8 +930,6 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * Alias for getAttributes()
      *
      * @return array
-     *
-     * @throws QUI\Exception
      */
     public function toArray()
     {

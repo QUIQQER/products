@@ -19,10 +19,22 @@ use QUI;
 class UniqueProductFrontendView extends UniqueProduct
 {
     /**
+     * @var bool|mixed
+     */
+    protected $hasOfferPrice = false;
+
+    /**
+     * @var float|bool
+     */
+    protected $originalPrice = false;
+
+    /**
      * UniqueProductFrontendView constructor.
      *
      * @param int $pid
      * @param array $attributes
+     *
+     * @throws QUI\Exception
      */
     public function __construct($pid, array $attributes)
     {
@@ -63,6 +75,14 @@ class UniqueProductFrontendView extends UniqueProduct
         if (isset($attributes['user_data'])) {
             $this->userData = $attributes['user_data'];
         }
+
+        if (isset($attributes['hasOfferPrice'])) {
+            $this->hasOfferPrice = $attributes['hasOfferPrice'];
+        }
+
+        if (isset($attributes['originalPrice'])) {
+            $this->originalPrice = $attributes['originalPrice'];
+        }
     }
 
     /**
@@ -79,7 +99,14 @@ class UniqueProductFrontendView extends UniqueProduct
             );
         }
 
-        return parent::getPrice();
+        try {
+            return parent::getPrice();
+        } catch (QUI\Exception $Exception) {
+            return new QUI\ERP\Money\Price(
+                '',
+                QUI\ERP\Currency\Handler::getDefaultCurrency()
+            );
+        }
     }
 
     /**
@@ -96,7 +123,41 @@ class UniqueProductFrontendView extends UniqueProduct
             );
         }
 
-        return parent::getUnitPrice();
+        try {
+            return parent::getUnitPrice();
+        } catch (QUI\Exception $Exception) {
+            return new QUI\ERP\Money\Price(
+                '',
+                QUI\ERP\Currency\Handler::getDefaultCurrency()
+            );
+        }
+    }
+
+    /**
+     * Has the product an offer price?
+     *
+     * @return bool
+     */
+    public function hasOfferPrice()
+    {
+        return $this->hasOfferPrice;
+    }
+
+    /**
+     * Return the original price if an offer prices exists
+     *
+     * @return QUI\ERP\Money\Price|QUI\ERP\Products\Field\UniqueField
+     */
+    public function getOriginalPrice()
+    {
+        if ($this->originalPrice) {
+            return new QUI\ERP\Money\Price(
+                $this->originalPrice,
+                QUI\ERP\Currency\Handler::getDefaultCurrency()
+            );
+        }
+
+        return self::getPrice();
     }
 
     /**
@@ -113,7 +174,14 @@ class UniqueProductFrontendView extends UniqueProduct
             );
         }
 
-        return parent::getNettoPrice();
+        try {
+            return parent::getNettoPrice();
+        } catch (QUI\Exception $Exception) {
+            return new QUI\ERP\Money\Price(
+                '',
+                QUI\ERP\Currency\Handler::getDefaultCurrency()
+            );
+        }
     }
 
     /**

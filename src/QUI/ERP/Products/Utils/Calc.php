@@ -424,13 +424,18 @@ class Calc
      *
      * @param UniqueProduct $Product
      * @param callable|boolean $callback - optional, callback function for the calculated data array
+     * @param null|QUI\ERP\Products\Field\Types\Price $Price - optional, price object to calc with
+     *
      * @return QUI\ERP\Money\Price
      *
      * @throws QUI\Users\Exception
      * @throws QUI\Exception
      */
-    public function getProductPrice(UniqueProduct $Product, $callback = false)
-    {
+    public function getProductPrice(
+        UniqueProduct $Product,
+        $callback = false,
+        $Price = null
+    ) {
         // calc data
         if (!is_callable($callback)) {
             $Product->calc($this);
@@ -442,8 +447,13 @@ class Calc
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
         $Area        = QUI\ERP\Utils\User::getUserArea($this->getUser());
 
+
         $nettoPrice   = $Product->getNettoPrice()->value();
         $priceFactors = $Product->getPriceFactors()->sort();
+
+        if ($Price) {
+            $nettoPrice = $Price->getValue();
+        }
 
         $factors                    = [];
         $basisNettoPrice            = $nettoPrice;
