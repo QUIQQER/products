@@ -340,11 +340,12 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      * Cleanup the value, so the value is valid
      *
      * @param integer $value
-     * @throws \QUI\Exception
      * @return int|null
      */
     public function cleanup($value)
     {
+        $check = [];
+
         if (is_string($value)) {
             $check = json_decode($value, true);
 

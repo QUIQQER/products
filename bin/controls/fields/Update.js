@@ -142,7 +142,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     var aField = QUILocale.get(a.locale[0], a.locale[1]);
                     var bField = QUILocale.get(b.locale[0], b.locale[1]);
 
-                    if (aField == bField) {
+                    if (aField === bField) {
                         return 0;
                     }
 
@@ -316,7 +316,6 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                         options      : Form.elements.options.value,
                         defaultValue : defaultValue
                     });
-
                 }).then(function (PRODUCT_ARRAY_STATUS) {
                     if (PRODUCT_ARRAY_STATUS == Fields.PRODUCT_ARRAY_CHANGED) {
                         // product array changed,
@@ -355,7 +354,6 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
             var self = this;
 
             return new Promise(function (resolve) {
-
                 new QUIConfirm({
                     icon       : 'fa fa-file-text-o',
                     title      : QUILocale.get('quiqqer/products', 'fields.window.productarray.changed.title'),
@@ -385,7 +383,6 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                         onClose: resolve
                     }
                 }).open();
-
             });
         },
 
