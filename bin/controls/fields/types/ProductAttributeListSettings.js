@@ -657,6 +657,13 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     break;
             }
 
+            // if this is selected, the orthers must be deselected
+            if (Boolean(selected)) {
+                for (var i = 0, len = this.$data.length; i < len; i++) {
+                    this.$data[i].selected = false;
+                }
+            }
+
             this.$data.push({
                 title    : title,
                 sum      : sum,
