@@ -221,7 +221,6 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                 }),
                 events: {
                     onShow: function (Sheet) {
-
                         Sheet.getContent().setStyle('padding', 20);
 
                         var Field = new UpdateField({
@@ -259,12 +258,12 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
         /**
          * Opens the delete dialog
          *
-         * @param {Number} fieldId
+         * @param {Number|Array} fieldId
          */
         deleteChild: function (fieldId) {
             var self = this;
 
-            if (typeOf(fieldId) != 'array') {
+            if (typeOf(fieldId) !== 'array') {
                 fieldId = [fieldId];
             }
 

@@ -645,7 +645,12 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     public function hasOfferPrice()
     {
         $OfferPrice = $this->getField(Fields::FIELD_PRICE_OFFER);
-        $value      = $OfferPrice->getValue();
+
+        if (!$OfferPrice) {
+            return false;
+        }
+
+        $value = $OfferPrice->getValue();
 
         if ($value === false) {
             return false;

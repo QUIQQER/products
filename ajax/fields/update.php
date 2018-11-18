@@ -17,10 +17,12 @@ use QUI\ERP\Products\Handler\Fields;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_fields_update',
     function ($fieldId, $params) {
-        $Fields    = new Fields();
-        $Field     = $Fields->getField($fieldId);
-        $oldValues = $Field->toProductArray();
-        $params    = json_decode($params, true);
+        $Fields = new Fields();
+        $Field  = $Fields->getField($fieldId);
+        $params = json_decode($params, true);
+
+        $oldValues  = $Field->toProductArray();
+        $oldOptions = $Field->getOptions();
 
         if (isset($params['options'])) {
             $Field->setOptions($params['options']);
@@ -35,7 +37,12 @@ QUI::$Ajax->registerFunction(
 
         $newValues = $Field->toProductArray();
 
-        if (serialize($oldValues) != serialize($newValues)) {
+        if (serialize($oldValues) !== serialize($newValues)) {
+            return Fields::PRODUCT_ARRAY_CHANGED;
+        }
+
+        // changed options?
+        if (serialize($oldOptions) !== serialize($Field->getOptions())) {
             return Fields::PRODUCT_ARRAY_CHANGED;
         }
 
