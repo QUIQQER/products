@@ -670,6 +670,10 @@ class Model extends QUI\QDOM
             return false;
         }
 
+        if ($value === null) {
+            return false;
+        }
+
         return $value !== '';
     }
 
