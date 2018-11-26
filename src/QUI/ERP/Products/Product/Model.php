@@ -653,6 +653,37 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * @return bool
+     * @throws Exception
+     */
+    public function hasOfferPrice()
+    {
+        $OfferPrice = $this->getField(Fields::FIELD_PRICE_OFFER);
+
+        if (!$OfferPrice) {
+            return false;
+        }
+
+        $value = $OfferPrice->getValue();
+
+        if ($value === false) {
+            return false;
+        }
+
+        return $value !== '';
+    }
+
+    /**
+     * @return false|QUI\ERP\Products\Field\UniqueField
+     * @throws Exception
+     * @throws QUI\Exception
+     */
+    public function getOriginalPrice()
+    {
+        return $this->createUniqueProduct()->getOriginalPrice();
+    }
+
+    /**
      * Alias for getPrice
      * So, the Product has the same construction as the UniqueProduct
      *
