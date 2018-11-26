@@ -134,4 +134,18 @@ interface ProductInterface
      * @return array
      */
     public function getCategories();
+
+    /**
+     * Has the product an offer price
+     *
+     * @return bool
+     */
+    public function hasOfferPrice();
+
+    /**
+     * Return the original price, not the offer price
+     *
+     * @return false|UniqueFieldInterface
+     */
+    public function getOriginalPrice();
 }

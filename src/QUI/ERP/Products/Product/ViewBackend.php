@@ -241,6 +241,22 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
         return $this->getProduct()->getCategories();
     }
 
+    /**
+     * @return bool
+     */
+    public function hasOfferPrice()
+    {
+        return $this->getProduct()->hasOfferPrice();
+    }
+
+    /**
+     * @return false|QUI\ERP\Products\Interfaces\UniqueFieldInterface
+     */
+    public function getOriginalPrice()
+    {
+        return $this->getProduct()->getOriginalPrice();
+    }
+
     //region calculation
 
     /**

@@ -235,6 +235,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
     /**
      * @return QUI\ERP\Money\Price
+     * @throws QUI\Exception
      */
     public function getMinimumPrice()
     {
@@ -245,6 +246,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
     /**
      * @return QUI\ERP\Money\Price
+     * @throws QUI\Exception
      */
     public function getMaximumPrice()
     {
@@ -293,7 +295,14 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getField($fieldId)
     {
-        $Field = $this->Product->getField($fieldId);
+        try {
+            $Field = $this->Product->getField($fieldId);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return false;
+        }
+
 
         if ($Field->getId() === QUI\ERP\Products\Handler\Fields::FIELD_CONTENT) {
             return $Field;
@@ -365,6 +374,23 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     {
         return $this->Product->getUrl();
     }
+
+    /**
+     * @return bool
+     */
+    public function hasOfferPrice()
+    {
+        return $this->Product->hasOfferPrice();
+    }
+
+    /**
+     * @return false|QUI\ERP\Products\Interfaces\UniqueFieldInterface
+     */
+    public function getOriginalPrice()
+    {
+        return $this->Product->getOriginalPrice();
+    }
+
 
     //region calculation
 
