@@ -136,23 +136,29 @@ class Product extends QUI\Control
             'vatArray'    => $vatArray
         ]);
 
-        // retail price
-        $PriceRetailDisplay = new QUI\ERP\Products\Controls\Price([
-            'Price'       => new QUI\ERP\Money\Price(
-                $Product->getFieldValue('FIELD_PRICE_RETAIL'),
-                QUI\ERP\Currency\Handler::getDefaultCurrency()
-            ),
-            'withVatText' => false
-        ]);
+        // retail price (UVP)
+        $PriceRetailDisplay = false;
+        if ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
+            $PriceRetailDisplay = new QUI\ERP\Products\Controls\Price([
+                'Price'       => new QUI\ERP\Money\Price(
+                    $Product->getFieldValue('FIELD_PRICE_RETAIL'),
+                    QUI\ERP\Currency\Handler::getDefaultCurrency()
+                ),
+                'withVatText' => false
+            ]);
+        }
 
-        // offer price
-        $PriceOfferDisplay = new QUI\ERP\Products\Controls\Price([
-            'Price'       => new QUI\ERP\Money\Price(
-                $Product->getFieldValue('FIELD_PRICE_OFFER'),
-                QUI\ERP\Currency\Handler::getDefaultCurrency()
-            ),
-            'withVatText' => false
-        ]);
+        // offer price (Angebotspreis)
+        $PriceOldDisplay = false;
+        if ($View->hasOfferPrice()) {
+            $PriceOldDisplay = new QUI\ERP\Products\Controls\Price([
+                'Price'       => new QUI\ERP\Money\Price(
+                    $View->getOriginalPrice()->getValue(),
+                    QUI\ERP\Currency\Handler::getDefaultCurrency()
+                ),
+                'withVatText' => false
+            ]);
+        }
 
         // file / image folders
         $detailFields = [];
@@ -231,11 +237,9 @@ class Product extends QUI\Control
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
             'Price'                => $Price,
             'PriceDisplay'         => $PriceDisplay,
-            "priceValue"           => $Price->getPrice(),
             'PriceRetailDisplay'   => $PriceRetailDisplay,
             'priceRetailValue'     => $Product->getFieldValue('FIELD_PRICE_RETAIL'),
-            'PriceOfferDisplay'    => $PriceOfferDisplay,
-            'priceOfferValue'      => $Product->getFieldValue('FIELD_PRICE_OFFER'),
+            'PriceOldDisplay'      => $PriceOldDisplay,
             'VisitedProducts'      => new VisitedProducts(),
             'MediaUtils'           => new QUI\Projects\Media\Utils(),
             'Site'                 => $this->getSite()
