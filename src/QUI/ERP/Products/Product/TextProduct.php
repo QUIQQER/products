@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * This file contains QUI\ERP\Products\Product\TextProduct
+ */
+
 namespace QUI\ERP\Products\Product;
 
 use QUI;
@@ -289,6 +293,14 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     public function getCategories()
     {
         return [];
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasOfferPrice()
+    {
+        return false;
     }
 
     //region calc
