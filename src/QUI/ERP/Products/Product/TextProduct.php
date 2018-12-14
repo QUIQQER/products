@@ -236,6 +236,22 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
+     * @return false|QUI\ERP\Money\Price|QUI\ERP\Products\Interfaces\UniqueFieldInterface
+     */
+    public function getOriginalPrice()
+    {
+        return new QUI\ERP\Money\Price(0, QUI\ERP\Defaults::getCurrency());
+    }
+
+    /**
+     * @return false|QUI\ERP\Money\Price|QUI\ERP\Products\Interfaces\UniqueFieldInterface
+     */
+    public function getOfferPrice()
+    {
+        return new QUI\ERP\Money\Price(0, QUI\ERP\Defaults::getCurrency());
+    }
+
+    /**
      * Return the lowest possible price
      *
      * @return QUI\ERP\Money\Price
