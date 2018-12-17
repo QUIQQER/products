@@ -813,7 +813,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.resetButtons();
             this.$ButtonGallery.addClass('active');
             this.setAttribute('view', 'gallery');
-            this.$Elm.setAttribute('data-qui-options-view', this.getAttribute('view'));
 
             // set view to the session
             QUIAjax.post('ajax_session_set', function () {
@@ -838,7 +837,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.resetButtons();
             this.$ButtonDetails.addClass('active');
             this.setAttribute('view', 'detail');
-            this.$Elm.setAttribute('data-qui-options-view', this.getAttribute('view'));
 
             // set view to the session
             QUIAjax.post('ajax_session_set', function () {
@@ -863,7 +861,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.resetButtons();
             this.$ButtonList.addClass('active');
             this.setAttribute('view', 'list');
-            this.$Elm.setAttribute('data-qui-options-view', this.getAttribute('view'));
 
             // set view to the session
             QUIAjax.post('ajax_session_set', function () {
@@ -907,6 +904,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         resolve(result);
                         return;
                     }
+
+                    // set list view type as dat-qui attribute
+                    self.$Elm.setAttribute('data-qui-options-view', self.getAttribute('view'));
 
                     if ("more" in result && result.more === false) {
                         self.$hideMoreButton();
