@@ -952,7 +952,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                         articles.inject(ContainerReal);
 
-                        return self.$showContainer();
+                        return QUI.parse(ContainerReal).then(function () {
+                            return self.$showContainer();
+                        });
                     }).then(function () {
                         resolve(result);
                     });
