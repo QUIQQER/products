@@ -53,6 +53,7 @@ class ProductList extends QUI\Control
     public function __construct($attributes = [])
     {
         $this->setAttributes([
+            'class'                => 'quiqqer-product-list',
             'categoryId'           => false,
             'data-qui'             => 'package/quiqqer/products/bin/controls/frontend/category/ProductList',
             'data-cid'             => false,
@@ -161,6 +162,9 @@ class ProductList extends QUI\Control
             case 'list':
                 $this->setAttribute('data-qui-options-view', 'list');
                 break;
+            case 'gallery':
+            default:
+                $this->setAttribute('data-qui-options-view', 'gallery');
         }
 
         if (is_array($searchParams) && isset($searchParams['categories'])) {
@@ -418,16 +422,16 @@ class ProductList extends QUI\Control
 
         switch ($this->getAttribute('view')) {
             case 'list':
-                $productTpl = dirname(__FILE__).'/ProductListList.html';
+                $productTpl = dirname(__FILE__) . '/ProductListList.html';
                 break;
 
             case 'detail':
-                $productTpl = dirname(__FILE__).'/ProductListDetails.html';
+                $productTpl = dirname(__FILE__) . '/ProductListDetails.html';
                 break;
 
             default:
             case 'gallery':
-                $productTpl = dirname(__FILE__).'/ProductListGallery.html';
+                $productTpl = dirname(__FILE__) . '/ProductListGallery.html';
                 break;
         }
 
@@ -478,7 +482,7 @@ class ProductList extends QUI\Control
         return [
             'html'  => $Engine->fetch(dirname(__FILE__).'/ProductListRow.html'),
             'count' => $count,
-            'more'  => $more,
+            'more'  => $more
         ];
     }
 
