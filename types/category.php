@@ -121,19 +121,25 @@ if ($siteUrl != $_REQUEST['_url']) {
         $languages = $Project->getLanguages();
 
         foreach ($languages as $language) {
-            $LanguageProject = QUI::getProject(
-                $Project->getName(),
-                $language
-            );
+            try {
+                $LanguageProject = QUI::getProject(
+                    $Project->getName(),
+                    $language
+                );
 
-            $Site->setAttribute(
-                $language.'-link',
-                $Product->getUrlRewrittenWithHost($LanguageProject)
-            );
+                $Site->setAttribute(
+                    $language.'-link',
+                    $Product->getUrlRewrittenWithHost($LanguageProject)
+                );
+            } catch (QUI\Exception $Exception) {
+                Log::writeDebugException($Exception);
+            }
         }
 
         define('QUIQQER_ERP_IS_PRODUCT', true);
     } catch (QUI\Permissions\Exception $Exception) {
+        Log::writeDebugException($Exception);
+
         $url = $Output->getSiteUrl([
             'site' => $Site,
         ]);
