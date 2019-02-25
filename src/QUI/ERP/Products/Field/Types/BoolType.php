@@ -18,6 +18,8 @@ class BoolType extends QUI\ERP\Products\Field\Field
 {
     protected $columnType = 'TINYINT(1)';
 
+    protected $defaultValue = 0;
+
     /**
      * @return View
      */
