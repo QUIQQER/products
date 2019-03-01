@@ -32,15 +32,24 @@ class ProductListBackendView
     protected $hidePrice;
 
     /**
+     * @var null|QUI\Locale
+     */
+    protected $Locale = null;
+
+    /**
      * ProductListView constructor.
+     *
+     * @param null|QUI\Locale $Locale
      * @param ProductList $ProductList
      *
      * @throws QUI\Exception
      */
-    public function __construct(ProductList $ProductList)
+    public function __construct(ProductList $ProductList, $Locale = null)
     {
         $this->ProductList = $ProductList;
         $this->hidePrice   = $ProductList->isPriceHidden();
+        $this->Locale      = $Locale;
+
         $this->parse();
     }
 
@@ -52,7 +61,13 @@ class ProductListBackendView
      */
     protected function parse()
     {
-        $list     = $this->ProductList->toArray();
+        $Locale = $this->Locale;
+
+        if ($Locale === null) {
+            $Locale = $this->ProductList->getUser()->getLocale();
+        }
+
+        $list     = $this->ProductList->toArray($Locale);
         $products = $this->ProductList->getProducts();
 //        $User     = $this->ProductList->getUser();
 //        $isNetto  = QUI\ERP\Utils\User::isNettoUser($User);

@@ -329,16 +329,21 @@ class ProductList
     /**
      * Return the products as array list
      *
+     * @param null|QUI\Locale $Locale - optional
      * @return array
      *
      * @throws QUI\Exception
      */
-    public function toArray()
+    public function toArray($Locale = null)
     {
+        if ($Locale === null) {
+            $Locale = $this->User->getLocale();
+        }
+
+        QUI\ERP\Products\Handler\Products::setLocale($Locale);
+
         $this->calc();
         $products = [];
-
-        QUI\ERP\Products\Handler\Products::setLocale($this->User->getLocale());
 
         /* @var $Product UniqueProduct */
         foreach ($this->products as $Product) {
@@ -440,20 +445,21 @@ class ProductList
     /**
      * Return the product list view for the frontend
      *
+     * @param null|QUI\Locale $Locale
      * @return ProductListFrontendView|ProductListBackendView
      * @throws QUI\Exception
      */
-    public function getView()
+    public function getView($Locale = null)
     {
         if (!$this->calculated) {
             $this->calc();
         }
 
         if (QUI::isBackend()) {
-            return $this->getBackendView();
+            return $this->getBackendView($Locale);
         }
 
-        return $this->getFrontendView();
+        return $this->getFrontendView($Locale);
     }
 
     /**
@@ -484,20 +490,22 @@ class ProductList
     /**
      * Return the product list view for the frontend
      *
+     * @param null|QUI\Locale $Locale
      * @return ProductListFrontendView
      * @throws QUI\Exception
      */
-    public function getFrontendView()
+    public function getFrontendView($Locale = null)
     {
-        return new ProductListFrontendView($this);
+        return new ProductListFrontendView($this, $Locale);
     }
 
     /**
+     * @param null|QUI\Locale $Locale
      * @return ProductListBackendView
      * @throws QUI\Exception
      */
-    public function getBackendView()
+    public function getBackendView($Locale = null)
     {
-        return new ProductListBackendView($this);
+        return new ProductListBackendView($this, $Locale);
     }
 }
