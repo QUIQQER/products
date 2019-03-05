@@ -187,6 +187,7 @@ class Calc
         $isNetto     = QUI\ERP\Utils\User::isNettoUser($this->getUser());
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
         $Area        = QUI\ERP\Utils\User::getUserArea($this->getUser());
+        $Locale      = QUI\ERP\Products\Handler\Products::getLocale();
 
         if ($this->ignoreVatCalculation) {
             $isNetto = true;
@@ -330,7 +331,7 @@ class Calc
             if (!isset($vatArray[$vat])) {
                 $vatArray[$vat] = [
                     'vat'     => $vat,
-                    'text'    => ErpCalc::getVatText($Vat->getValue(), $this->getUser()),
+                    'text'    => ErpCalc::getVatText($Vat->getValue(), $this->getUser(), $Locale),
                     'visible' => $Vat->isVisible()
                 ];
 
@@ -352,7 +353,7 @@ class Calc
         }
 
         foreach ($vatLists as $vat => $bool) {
-            $vatText[$vat] = ErpCalc::getVatText($vat, $this->getUser());
+            $vatText[$vat] = ErpCalc::getVatText($vat, $this->getUser(), $Locale);
         }
 
         if ($this->ignoreVatCalculation) {

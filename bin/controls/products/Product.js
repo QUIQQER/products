@@ -225,8 +225,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         var LockContainer = new Element('div', {
                             'class': 'product-update-locked',
                             'html' : '<span class="fa fa-edit"></span>' +
-                            '<span>' + message + '</span>' +
-                            '<span></span>'
+                                '<span>' + message + '</span>' +
+                                '<span></span>'
                         }).inject(this.getElm());
 
                         new QUIButton({
@@ -372,13 +372,13 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 Content.set({
                     html: '<div class="product-update-information sheet"></div>' +
-                    '<div class="product-update-data sheet">' + dataTemplate + '</div>' +
-                    '<div class="product-update-field sheet"></div>' +
-                    '<div class="product-update-media sheet"></div>' +
-                    '<div class="product-update-files sheet"></div>' +
-                    '<div class="product-update-prices sheet"></div>' +
-                    '<div class="product-update-fieldadministration sheet"></div>' +
-                    '<div class="product-update-attributelist sheet"></div>'
+                        '<div class="product-update-data sheet">' + dataTemplate + '</div>' +
+                        '<div class="product-update-field sheet"></div>' +
+                        '<div class="product-update-media sheet"></div>' +
+                        '<div class="product-update-files sheet"></div>' +
+                        '<div class="product-update-prices sheet"></div>' +
+                        '<div class="product-update-fieldadministration sheet"></div>' +
+                        '<div class="product-update-attributelist sheet"></div>'
                 });
 
                 self.$Information     = Content.getElement('.product-update-information');
@@ -1314,7 +1314,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 var refresh = function () {
                     var FieldTypes = self.$Grid.getButtons().filter(function (Btn) {
-                        return Btn.getAttribute('name') == 'select';
+                        return Btn.getAttribute('name') === 'select';
                     })[0];
 
                     self.$Product.getFields().then(function (fields) {
@@ -1389,7 +1389,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                     self.openAddFieldDialog().then(function () {
                                         self.openFieldAdministration();
                                     }).catch(function (err) {
-                                        if (typeOf(err) != 'package/quiqqer/products/bin/controls/fields/search/Window') {
+                                        if (typeOf(err) !== 'package/quiqqer/products/bin/controls/fields/search/Window') {
                                             console.error(err);
                                         }
                                     });
@@ -1406,7 +1406,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                         self.openFieldAdministration();
                                     }).catch(function (err) {
                                         console.log(typeOf(err));
-                                        if (typeOf(err) != 'qui/controls/windows/Confirm') {
+                                        if (typeOf(err) !== 'qui/controls/windows/Confirm') {
                                             console.error(err);
                                         }
                                     });
@@ -1486,7 +1486,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     onClick  : function () {
                         var selected = self.$Grid.getSelectedData()[0],
                             Remove   = self.$Grid.getButtons().filter(function (Btn) {
-                                return Btn.getAttribute('name') == 'remove';
+                                return Btn.getAttribute('name') === 'remove';
                             })[0];
 
                         if (selected.ownField) {
@@ -1641,7 +1641,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         for (i = 0, len = fields.length; i < len; i++) {
                             entry = fields[i];
 
-                            if (entry.type != 'ProductAttributeList') {
+                            if (entry.type !== 'ProductAttributeList') {
                                 continue;
                             }
 
@@ -1707,7 +1707,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     onClick  : function () {
                         var selected = self.$Grid.getSelectedData()[0],
                             Remove   = self.$Grid.getButtons().filter(function (Btn) {
-                                return Btn.getAttribute('name') == 'remove';
+                                return Btn.getAttribute('name') === 'remove';
                             })[0];
 
                         if (selected.ownField) {

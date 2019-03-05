@@ -46,6 +46,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/FilterWindow', [
             }
 
             this.setAttributes({
+                class        : 'qui-window-filterWindow',
                 title        : QUILocale.get('quiqqer/products', 'quiqqer.products.control.search.title'),
                 icon         : 'fa fa-filter',
                 maxHeight    : height,

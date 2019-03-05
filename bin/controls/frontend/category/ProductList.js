@@ -6,6 +6,8 @@
  * @author www.pcsg.de (Henning Leutz)
  *
  * @event onFilterChange [self]
+ * @event onQuiqqerProductsOpenProduct [self, productId]
+ * @event onQuiqqerProductsCloseProduct [self, productId]
  */
 define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
@@ -461,7 +463,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 if (document.body.hasClass('pace-done')) {
                     paceDone();
                 } else {
-                    Pace.on('done', paceDone);
+                    window.Pace.on('done', paceDone);
                     paceDone.delay(1000); // fallback, if pace dont load correct
                 }
                 return;
@@ -905,6 +907,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         return;
                     }
 
+                    // set list view type as dat-qui attribute
+                    self.$Elm.setAttribute('data-qui-options-view', self.getAttribute('view'));
+
                     if ("more" in result && result.more === false) {
                         self.$hideMoreButton();
                     } else {
@@ -949,7 +954,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                         articles.inject(ContainerReal);
 
-                        return self.$showContainer();
+                        return QUI.parse(ContainerReal).then(function () {
+                            return self.$showContainer();
+                        });
                     }).then(function () {
                         resolve(result);
                     });
@@ -1038,7 +1045,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @param {HTMLElement} Node
          */
         $parsePurchaseButtons: function (Node) {
-            var Buttons = Node.getElements('.quiqqer-products-product-button-purchase');
+            var self    = this,
+                Buttons = Node.getElements('.quiqqer-products-product-button-purchase');
 
             Buttons.addEvent('click', function (event) {
                 event.stop();
@@ -2168,6 +2176,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return Promise.resolve();
             }
 
+            QUI.fireEvent('quiqqerProductsOpenProduct', [this, productId]);
+
             var self = this,
                 size = this.$Elm.getSize();
 
@@ -2267,6 +2277,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                         var Url = URI(window.location);
                                         Url.removeSearch('p');
                                         window.history.pushState({}, "", Url.toString());
+
+                                        QUI.fireEvent('quiqqerProductsCloseProduct', [this, productId]);
 
                                         self.showList(false).then(function () {
                                             var ProductElm = self.$Elm.getElement('[data-pid="' + productId + '"]');

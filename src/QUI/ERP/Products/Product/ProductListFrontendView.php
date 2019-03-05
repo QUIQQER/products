@@ -32,15 +32,23 @@ class ProductListFrontendView
     protected $hidePrice;
 
     /**
+     * @var null|QUI\Locale
+     */
+    protected $Locale = null;
+
+    /**
      * ProductListView constructor.
      *
      * @param ProductList $ProductList
+     * @param null|QUI\Locale $Locale
      * @throws QUI\Exception
      */
-    public function __construct(ProductList $ProductList)
+    public function __construct(ProductList $ProductList, $Locale = null)
     {
         $this->ProductList = $ProductList;
         $this->hidePrice   = $ProductList->isPriceHidden();
+        $this->Locale      = $Locale;
+
         $this->parse();
     }
 
@@ -52,10 +60,15 @@ class ProductListFrontendView
      */
     protected function parse()
     {
-        $list     = $this->ProductList->toArray();
+        $Locale = $this->Locale;
+
+        if ($Locale === null) {
+            $Locale = $this->ProductList->getUser()->getLocale();
+        }
+
+        $list     = $this->ProductList->toArray($Locale);
         $products = $this->ProductList->getProducts();
 
-        $Locale   = $this->ProductList->getUser()->getLocale();
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
         $Currency->setLocale($Locale);
 

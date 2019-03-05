@@ -99,13 +99,13 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         if (!$Locale) {
             return QUI::getLocale()->get(
                 'quiqqer/products',
-                'products.category.' . $this->getId() . '.title'
+                'products.category.'.$this->getId().'.title'
             );
         }
 
         return $Locale->get(
             'quiqqer/products',
-            'products.category.' . $this->getId() . '.title'
+            'products.category.'.$this->getId().'.title'
         );
     }
 
@@ -120,13 +120,13 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         if (!$Locale) {
             return QUI::getLocale()->get(
                 'quiqqer/products',
-                'products.category.' . $this->getId() . '.description'
+                'products.category.'.$this->getId().'.description'
             );
         }
 
         return $Locale->get(
             'quiqqer/products',
-            'products.category.' . $this->getId() . '.description'
+            'products.category.'.$this->getId().'.description'
         );
     }
 
@@ -228,8 +228,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      */
     public function getAttributes()
     {
-        $cacheName   = Categories::getCacheName($this->getId()) . '/attributes';
-        $cacheFields = Categories::getCacheName($this->getId()) . '/fields';
+        $cacheName   = Categories::getCacheName($this->getId()).'/attributes';
+        $cacheFields = Categories::getCacheName($this->getId()).'/fields';
 
         try {
             $fields = QUI\Cache\Manager::get($cacheFields);
@@ -513,7 +513,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         $where = [
             'categories' => [
                 'type'  => '%LIKE%',
-                'value' => ',' . $this->getId() . ','
+                'value' => ','.$this->getId().','
             ]
         ];
 
@@ -555,7 +555,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         $where = [
             'categories' => [
                 'type'  => '%LIKE%',
-                'value' => ',' . $this->getId() . ','
+                'value' => ','.$this->getId().','
             ]
         ];
 
@@ -599,7 +599,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         $where = [
             'categories' => [
                 'type'  => '%LIKE%',
-                'value' => ',' . $this->getId() . ','
+                'value' => ','.$this->getId().','
             ]
         ];
 
@@ -900,7 +900,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
             QUI\Translator::delete(
                 'quiqqer/products',
-                'products.category.' . $id . '.title'
+                'products.category.'.$id.'.title'
             );
 
             Categories::clearCache($id);
