@@ -151,15 +151,15 @@ abstract class Search extends QUI\QDOM
                         switch ($Field->getId()) {
                             case Fields::FIELD_PRICE:
                                 $params['select'] = [
-                                    'MIN(`minPrice`)',
-                                    'MAX(`maxPrice`)'
+                                    ['field' => 'minPrice', 'function' => 'MIN'],
+                                    ['field' => 'maxPrice', 'function' => 'MAX']
                                 ];
                                 break;
 
                             default:
                                 $params['select'] = [
-                                    'MIN(`'.$column.'`)',
-                                    'MAX(`'.$column.'`)'
+                                    ['field' => $column, 'function' => 'MIN'],
+                                    ['field' => $column, 'function' => 'MAX']
                                 ];
                         }
 
@@ -172,13 +172,13 @@ abstract class Search extends QUI\QDOM
                 switch ($Field->getSearchType()) {
                     case SearchHandler::SEARCHTYPE_SELECTSINGLE:
                     case SearchHandler::SEARCHTYPE_INPUTSELECTSINGLE:
-                        $params['select'] = ['`'.$column.'`'];
+                        $params['select'] = $column;
                         $params['group']  = $column;
 
                         break;
 
                     case SearchHandler::SEARCHTYPE_SELECTMULTI:
-                        $params['select'] = ['`'.$column.'`'];
+                        $params['select'] = $column;
                         break;
                 }
 
@@ -199,6 +199,9 @@ abstract class Search extends QUI\QDOM
         if (empty($result)) {
             return $values;
         }
+
+//        QUI\System\Log::writeRecursive('##############');
+//        QUI\System\Log::writeRecursive($result);
 
         switch ($Field->getSearchDataType()) {
             case SearchHandler::SEARCHDATATYPE_NUMERIC:
