@@ -293,7 +293,7 @@ class Calc
                     break;
 
                 default:
-                    continue;
+                    continue 2;
             }
 
             // add price factor VAT
