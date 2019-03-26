@@ -37,6 +37,11 @@ class ProductListFrontendView
     protected $Locale = null;
 
     /**
+     * @var null|QUI\ERP\Currency\Currency
+     */
+    protected $Currency = null;
+
+    /**
      * ProductListView constructor.
      *
      * @param ProductList $ProductList
@@ -46,6 +51,7 @@ class ProductListFrontendView
     public function __construct(ProductList $ProductList, $Locale = null)
     {
         $this->ProductList = $ProductList;
+        $this->Currency    = $ProductList->getCurrency();
         $this->hidePrice   = $ProductList->isPriceHidden();
         $this->Locale      = $Locale;
 
@@ -69,8 +75,9 @@ class ProductListFrontendView
         $list     = $this->ProductList->toArray($Locale);
         $products = $this->ProductList->getProducts();
 
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
-        $Currency->setLocale($Locale);
+        // currency stuff
+        $this->Currency->setLocale($Locale);
+
 
         $productList = [];
         $hidePrice   = QUI\ERP\Products\Utils\Package::hidePrice();
@@ -85,7 +92,7 @@ class ProductListFrontendView
                 'fields'        => [],
                 'vatArray'      => [],
                 'hasOfferPrice' => $Product->hasOfferPrice(),
-                'originalPrice' => $Currency->format($Product->getOriginalPrice()->getValue())
+                'originalPrice' => $this->formatPrice($Product->getOriginalPrice()->getValue())
             ];
 
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
@@ -96,10 +103,10 @@ class ProductListFrontendView
             }
 
             // format
-            $product['price']      = $hidePrice ? '' : $Currency->format($attributes['calculated_price']);
-            $product['sum']        = $hidePrice ? '' : $Currency->format($attributes['calculated_sum']);
-            $product['nettoSum']   = $hidePrice ? '' : $Currency->format($attributes['calculated_nettoSum']);
-            $product['basisPrice'] = $hidePrice ? '' : $Currency->format($attributes['calculated_basisPrice']);
+            $product['price']      = $hidePrice ? '' : $this->formatPrice($attributes['calculated_price']);
+            $product['sum']        = $hidePrice ? '' : $this->formatPrice($attributes['calculated_sum']);
+            $product['nettoSum']   = $hidePrice ? '' : $this->formatPrice($attributes['calculated_nettoSum']);
+            $product['basisPrice'] = $hidePrice ? '' : $this->formatPrice($attributes['calculated_basisPrice']);
 
             $product['id']           = $attributes['id'];
             $product['category']     = $attributes['category'];
@@ -128,7 +135,7 @@ class ProductListFrontendView
             if ($calculatedSum == 0) {
                 $calculatedSum = '';
             } else {
-                $calculatedSum = $Currency->format($attributes['calculated_vatArray']['sum']);
+                $calculatedSum = $this->formatPrice($attributes['calculated_vatArray']['sum']);
             }
 
             $product['vatArray'][$calculatedVat]['sum'] = $hidePrice ? '' : $calculatedSum;
@@ -168,7 +175,7 @@ class ProductListFrontendView
         foreach ($list['vatArray'] as $key => $entry) {
             $result['vat'][] = [
                 'text'  => $list['vatText'][$key],
-                'value' => $hidePrice ? '' : $Currency->format($entry['sum']),
+                'value' => $hidePrice ? '' : $this->formatPrice($entry['sum']),
             ];
         }
 
@@ -195,12 +202,37 @@ class ProductListFrontendView
         }
 
         $result['products']    = $productList;
-        $result['sum']         = $hidePrice ? '' : $Currency->format($list['sum']);
-        $result['subSum']      = $hidePrice ? '' : $Currency->format($list['subSum']);
-        $result['nettoSum']    = $hidePrice ? '' : $Currency->format($list['nettoSum']);
-        $result['nettoSubSum'] = $hidePrice ? '' : $Currency->format($list['nettoSubSum']);
+        $result['sum']         = $hidePrice ? '' : $this->formatPrice($list['sum']);
+        $result['subSum']      = $hidePrice ? '' : $this->formatPrice($list['subSum']);
+        $result['nettoSum']    = $hidePrice ? '' : $this->formatPrice($list['nettoSum']);
+        $result['nettoSubSum'] = $hidePrice ? '' : $this->formatPrice($list['nettoSubSum']);
 
         $this->data = $result;
+    }
+
+    /**
+     * Format the currency
+     * - or recalculate it into another currency
+     *
+     * @param int|float $price
+     * @return string
+     */
+    protected function formatPrice($price)
+    {
+//        if ($this->UserCurrency === null
+//            || $this->Currency->getCode() === $this->UserCurrency->getCode()) {
+//            return $this->Currency->format($price);
+//        }
+//
+//        try {
+//            return $this->Currency->convertFormat($price, $this->UserCurrency);
+//        } catch (QUI\Exception $Exception) {
+//            QUI\System\Log::writeDebugException($Exception);
+//
+//            return $this->Currency->format($price);
+//        }
+
+        return $this->Currency->format($price);
     }
 
     //region Price methods

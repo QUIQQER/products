@@ -11,6 +11,7 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Utils\PriceFactor;
+use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\Projects\Media\Utils as MediaUtils;
 
 /**
@@ -146,6 +147,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected $factors = [];
 
     /**
+     * @var null|QUI\ERP\Currency\Currency
+     */
+    protected $Currency = null;
+
+    /**
      * UniqueProduct constructor.
      *
      * @param integer $pid - Product ID
@@ -159,6 +165,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     {
         $this->id         = $pid;
         $this->attributes = $attributes;
+        $this->Currency   = QUI\ERP\Defaults::getCurrency();
 
         if (!isset($attributes['uid'])) {
             throw new QUI\ERP\Products\Product\Exception([
@@ -243,7 +250,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
                 continue;
             }
 
-            if (get_class($field) != UniqueField::class) {
+            if (\get_class($field) != UniqueField::class) {
                 /* @var $field QUI\ERP\Products\Field\Field */
                 $field = $field->createUniqueField();
             }
@@ -264,7 +271,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         }
 
         $list       = [];
-        $categories = explode(',', $attributes['categories']);
+        $categories = \explode(',', $attributes['categories']);
 
         foreach ($categories as $cid) {
             try {
@@ -321,7 +328,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function getCacheIdentifier()
     {
-        return md5(serialize($this->getAttributes()));
+        return \md5(\serialize($this->getAttributes()));
     }
 
     /**
@@ -416,6 +423,69 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         return $this->calc($Calc);
     }
 
+    /**
+     * Convert all prices to the new currency
+     *
+     * @param QUI\ERP\Currency\Currency $Currency
+     *
+     * @todo save original price
+     */
+    public function convert(QUI\ERP\Currency\Currency $Currency)
+    {
+        if ($this->Currency->getCode() === $Currency->getCode()) {
+            return;
+        }
+
+        try {
+            $Calc = QUI\ERP\Products\Utils\Calc::getInstance($this->getUser());
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return;
+        }
+
+
+        /* @var $Field QUI\ERP\Products\Field\UniqueField */
+        foreach ($this->fields as $key => $Field) {
+            if ($Field->getType() !== FieldHandler::TYPE_PRICE
+                && $Field->getType() !== FieldHandler::TYPE_PRICE_BY_QUANTITY) {
+                continue;
+            }
+
+            $value = $Field->getValue();
+
+            if (empty($value)) {
+                continue;
+            }
+
+            try {
+                $value = $this->Currency->convert($value, $Currency);
+                $value = $Calc->round($value);
+
+                $OriginalField = Fields::getField($Field->getId());
+                $OriginalField->setValue($value);
+            } catch (QUI\Exception $Exception) {
+                continue;
+            }
+
+            $this->fields[$key] = $OriginalField->createUniqueField();
+        }
+
+        try {
+            $this->recalculation();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+    }
+
+    /**
+     * @return QUI\ERP\Currency\Currency|null
+     */
+    public function getCurrency()
+    {
+        return $this->Currency;
+    }
+
     //endregion
 
     /**
@@ -439,7 +509,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $values = $Title->getValue();
 
-        if (is_string($values)) {
+        if (\is_string($values)) {
             return $values;
         }
 
@@ -462,7 +532,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $Description = $this->getField(Fields::FIELD_SHORT_DESC);
         $values      = $Description->getValue();
 
-        if (is_string($values)) {
+        if (\is_string($values)) {
             return $values;
         }
 
@@ -490,7 +560,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $values = $Title->getValue();
 
-        if (is_string($values)) {
+        if (\is_string($values)) {
             return $values;
         }
 
@@ -621,7 +691,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         // d.h. bei attribute listen wird der kleinste preis ausgewählt
         $attributesLists = $this->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST);
 
-        if (!count($attributesLists)) {
+        if (!\count($attributesLists)) {
             return $Price;
         }
 
@@ -854,7 +924,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function setQuantity($quantity)
     {
-        if (!is_numeric($quantity)) {
+        if (!\is_numeric($quantity)) {
             return;
         }
 
@@ -1005,7 +1075,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $fields       = $this->getCustomFields();
         $customFields = [];
 
-        if (!count($fields)) {
+        if (!\count($fields)) {
             return [];
         }
 
@@ -1032,7 +1102,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     {
         $data = $this->getAttribute('customData');
 
-        if (is_array($data)) {
+        if (\is_array($data)) {
             return $data;
         }
 
