@@ -12,6 +12,8 @@ use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Utils\PriceFactor;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
+use QUI\ERP\Accounting\Calc as ErpCalc;
+
 use QUI\Projects\Media\Utils as MediaUtils;
 
 /**
@@ -182,7 +184,16 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $this->maximumPrice = $attributes['maximumPrice'];
         }
 
+        if (isset($attributes['price_currency'])) {
+            try {
+                $this->Currency = QUI\ERP\Currency\Handler::getCurrency($attributes['price_currency']);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
+            }
+        }
+
         $this->uid = (int)$attributes['uid'];
+
 
         // fields
         $this->parseFieldsFromAttributes($attributes);
@@ -469,6 +480,23 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             }
 
             $this->fields[$key] = $OriginalField->createUniqueField();
+        }
+
+        $priceFactors = $this->getPriceFactors()->sort();
+
+        /* @var $PriceFactor PriceFactor */
+        foreach ($priceFactors as $PriceFactor) {
+            if ($PriceFactor->getCalculation() === ErpCalc::CALCULATION_COMPLEMENT) {
+                try {
+                    $value = $PriceFactor->getValue();
+                    $value = $this->Currency->convert($value, $Currency);
+                    $value = $Calc->round($value);
+
+                    $PriceFactor->setValue($value);
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::writeDebugException($Exception);
+                }
+            }
         }
 
         try {

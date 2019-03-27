@@ -191,9 +191,6 @@ class ProductList
             $Calc->setUser($this->User);
         }
 
-        QUI\System\Log::writeRecursive('+++++');
-        QUI\System\Log::writeRecursive(count($this->products));
-
         $Calc->setCurrency($this->getCurrency());
 
         $Calc->calcProductList($this, function ($data) use ($self) {
@@ -314,7 +311,9 @@ class ProductList
             return;
         }
 
-        $Product->convert($this->Currency);
+        if ($this->Currency) {
+            $Product->convert($this->Currency);
+        }
 
         if ($this->duplicate) {
             $this->products[] = $Product;
@@ -351,8 +350,6 @@ class ProductList
 
         $this->calc();
         $products = [];
-
-        QUI\System\Log::writeRecursive(count($this->products));
 
         /* @var $Product UniqueProduct */
         foreach ($this->products as $Product) {
@@ -475,10 +472,18 @@ class ProductList
      * Set the currency for the calculation
      * - Convert all product price fields
      *
-     * @param QUI\ERP\Currency\Currency $Currency
+     * @param QUI\ERP\Currency\Currency|null $Currency
      */
-    public function setCurrency(QUI\ERP\Currency\Currency $Currency)
+    public function setCurrency($Currency = null)
     {
+        if (!($Currency instanceof QUI\ERP\Currency\Currency)) {
+            $Currency = QUI\ERP\Defaults::getCurrency();
+        }
+
+        if ($this->Currency && $this->Currency->getCode() === $Currency->getCode()) {
+            return;
+        }
+
         $this->Currency = $Currency;
 
         /* @var $Product QUI\ERP\Order\Basket\Product */
