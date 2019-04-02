@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
         $Fields = new QUI\ERP\Products\Handler\Fields();
         $fields = $Fields->getFields();
 
-        $fields = array_filter($fields, function ($Field) {
+        $fields = \array_filter($fields, function ($Field) {
             /* @var $Field \QUI\ERP\Products\Field\Field */
             return $Field->isPublic();
         });

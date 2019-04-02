@@ -13,7 +13,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_getFields',
     function ($categoryIds) {
         $Categories  = new QUI\ERP\Products\Handler\Categories();
-        $categoryIds = json_decode($categoryIds);
+        $categoryIds = \json_decode($categoryIds);
 
         $children = [];
         $fields   = [];
@@ -28,7 +28,7 @@ QUI::$Ajax->registerFunction(
 
         /* @var $Category QUI\ERP\Products\Category\Category */
         foreach ($children as $Category) {
-            $fields = array_merge($fields, $Category->getFields());
+            $fields = \array_merge($fields, $Category->getFields());
         }
 
         // cleanup

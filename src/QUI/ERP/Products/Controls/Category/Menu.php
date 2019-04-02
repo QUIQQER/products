@@ -30,7 +30,7 @@ class Menu extends QUI\Control
         ]);
 
         $this->addCSSClass('quiqqer-products-category-menu');
-        $this->addCSSFile(dirname(__FILE__).'/Menu.css');
+        $this->addCSSFile(\dirname(__FILE__).'/Menu.css');
 
         parent::__construct($attributes);
     }
@@ -57,11 +57,11 @@ class Menu extends QUI\Control
         $Engine->assign([
             'children'         => $children,
             'this'             => $this,
-            'childrenTemplate' => dirname(__FILE__).'/Menu.Children.html',
+            'childrenTemplate' => \dirname(__FILE__).'/Menu.Children.html',
             'Rewrite'          => QUI::getRewrite()
         ]);
 
-        return $Engine->fetch(dirname(__FILE__).'/Menu.html');
+        return $Engine->fetch(\dirname(__FILE__).'/Menu.html');
     }
 
     /**

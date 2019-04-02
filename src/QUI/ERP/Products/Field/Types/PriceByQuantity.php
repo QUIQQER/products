@@ -64,11 +64,11 @@ class PriceByQuantity extends Price
             return false;
         }
 
-        if (is_string($value)) {
-            $value = json_decode($value, true);
+        if (\is_string($value)) {
+            $value = \json_decode($value, true);
         }
 
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             return false;
         }
 
@@ -153,8 +153,8 @@ class PriceByQuantity extends Price
      */
     public function cleanup($value)
     {
-        if (is_string($value)) {
-            $value = json_decode($value, true);
+        if (\is_string($value)) {
+            $value = \json_decode($value, true);
         }
 
         $defaultReturn = [
@@ -169,7 +169,7 @@ class PriceByQuantity extends Price
         $price    = $value['price'];
         $quantity = $value['quantity'];
 
-        if (is_float($price)) {
+        if (\is_float($price)) {
             return [
                 'price'    => $price,
                 'quantity' => (int)$quantity
@@ -184,7 +184,7 @@ class PriceByQuantity extends Price
         $price     = $Formatter->parse($price);
 
         return [
-            'price'    => round(floatval($price), 8),
+            'price'    => \round(floatval($price), 8),
             'quantity' => (int)$quantity,
         ];
     }
@@ -194,8 +194,8 @@ class PriceByQuantity extends Price
      */
     public function isEmpty()
     {
-        if (is_string($this->value)) {
-            $value = json_decode($this->value, true);
+        if (\is_string($this->value)) {
+            $value = \json_decode($this->value, true);
         } else {
             $value = $this->value;
         }

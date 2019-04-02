@@ -44,8 +44,8 @@ class VatFrontendView extends View
             }
         }
 
-        $title = htmlspecialchars($this->getTitle());
-        $title = htmlspecialchars($title);
+        $title = \htmlspecialchars($this->getTitle());
+        $title = \htmlspecialchars($title);
 
         return "<div class=\"quiqqer-product-field\">
             <div class=\"quiqqer-product-field-title\">{$title}</div>

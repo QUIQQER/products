@@ -57,8 +57,8 @@ class Vat extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        if (strpos($value, ':') !== false) {
-            $value = explode(':', $value);
+        if (\strpos($value, ':') !== false) {
+            $value = \explode(':', $value);
 
             if (isset($value[1])) {
                 $value = (int)$value[1];
@@ -67,7 +67,7 @@ class Vat extends QUI\ERP\Products\Field\Field
             }
         }
 
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
@@ -110,8 +110,8 @@ class Vat extends QUI\ERP\Products\Field\Field
             return -1;
         }
 
-        if (strpos($value, ':') !== false) {
-            $value = explode(':', $value);
+        if (\strpos($value, ':') !== false) {
+            $value = \explode(':', $value);
 
             if (isset($value[1])) {
                 $value = $value[1];

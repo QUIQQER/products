@@ -18,16 +18,16 @@ QUI::$Ajax->registerFunction(
         $Project = QUI::getProjectManager()->decode($project);
         $Site    = $Project->get($siteId);
 
-        $Control = new \QUI\ERP\Products\Controls\Search\Suggest(array(
+        $Control = new \QUI\ERP\Products\Controls\Search\Suggest([
             'Site'    => $Site,
             'Project' => $Project
-        ));
+        ]);
 
         $result = QUI\Control\Manager::getCSS();
         $result .= $Control->getBody();
 
         return $result;
     },
-    array('project', 'siteId'),
+    ['project', 'siteId'],
     false
 );

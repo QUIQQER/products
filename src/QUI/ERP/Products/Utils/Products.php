@@ -28,11 +28,11 @@ class Products
      */
     public static function isProduct($mixed)
     {
-        if (get_class($mixed) == QUI\ERP\Products\Product\Model::class) {
+        if (\get_class($mixed) == QUI\ERP\Products\Product\Model::class) {
             return true;
         }
 
-        if (get_class($mixed) == QUI\ERP\Products\Product\Product::class) {
+        if (\get_class($mixed) == QUI\ERP\Products\Product\Product::class) {
             return true;
         }
 
@@ -68,7 +68,7 @@ class Products
 
         // exists more price fields?
         // is user in group filter
-        $priceList = array_merge(
+        $priceList = \array_merge(
             $Product->getFieldsByType(FieldHandler::TYPE_PRICE),
             $Product->getFieldsByType(FieldHandler::TYPE_PRICE_BY_QUANTITY)
         );
@@ -77,7 +77,7 @@ class Products
             return new QUI\ERP\Money\Price($PriceField->getValue(), $Currency);
         }
 
-        $priceFields = array_filter($priceList, function ($Field) use ($User) {
+        $priceFields = \array_filter($priceList, function ($Field) use ($User) {
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
 
             // ignore default main price
@@ -97,7 +97,7 @@ class Products
                 return false;
             }
 
-            $groups = explode(',', $options['groups']);
+            $groups = \explode(',', $options['groups']);
 
             if (empty($groups)) {
                 return true;
@@ -115,9 +115,9 @@ class Products
         // use the lowest price?
         foreach ($priceFields as $Field) {
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
-            $type = 'QUI\\ERP\\Products\\Field\\Types\\' . $Field->getType();
+            $type = 'QUI\\ERP\\Products\\Field\\Types\\'.$Field->getType();
 
-            if (is_callable(array($type, 'onGetPriceFieldForProduct'))) {
+            if (\is_callable([$type, 'onGetPriceFieldForProduct'])) {
                 try {
                     $ParentField = FieldHandler::getField($Field->getId());
                     $value       = $ParentField->onGetPriceFieldForProduct($Product, $User);

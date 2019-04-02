@@ -500,19 +500,19 @@ class EventHandling
         $fieldColumns = $DB->table()->getColumns('products_cache');
 
         foreach ($fieldColumns as $column) {
-            if (mb_substr($column, 0, 1) !== 'F') {
+            if (\mb_substr($column, 0, 1) !== 'F') {
                 continue;
             }
 
-            $fieldId = (int)mb_substr($column, 1);
+            $fieldId = (int)\mb_substr($column, 1);
 
             try {
                 $Field                     = Fields::getField($fieldId);
-                $columnTypeExpected        = mb_strtolower($Field->getColumnType());
-                $columnTypeExpectedVariant = preg_replace('#[\W\d]#i', '', $columnTypeExpected);
+                $columnTypeExpected        = \mb_strtolower($Field->getColumnType());
+                $columnTypeExpectedVariant = \preg_replace('#[\W\d]#i', '', $columnTypeExpected);
 
                 $columnInfo       = $DB->table()->getColumn('products_cache', $column);
-                $columnTypeActual = preg_replace('#[\W\d]#i', '', $columnInfo['Type']);
+                $columnTypeActual = \preg_replace('#[\W\d]#i', '', $columnInfo['Type']);
 
                 if ($columnTypeActual !== $columnTypeExpected
                     && $columnTypeActual !== $columnTypeExpectedVariant) {
@@ -561,7 +561,7 @@ class EventHandling
             $Site->getAttribute('type') == 'quiqqer/products:types/category'
         ) {
             $url = $Site->getLocation();
-            $url = str_replace(QUI\Rewrite::URL_DEFAULT_SUFFIX, '', $url);
+            $url = \str_replace(QUI\Rewrite::URL_DEFAULT_SUFFIX, '', $url);
 
             QUI::getRewrite()->registerPath($url.'/*', $Site);
         }
@@ -648,12 +648,12 @@ class EventHandling
             $searchFieldIds = [];
         }
 
-        if (is_string($searchFieldIds)) {
-            $searchFieldIds = json_decode($searchFieldIds, true);
+        if (\is_string($searchFieldIds)) {
+            $searchFieldIds = \json_decode($searchFieldIds, true);
         }
 
         foreach ($searchFieldIds as $key => $entry) {
-            if (is_numeric($key)) {
+            if (\is_numeric($key)) {
                 $fieldsIds[] = $key;
             }
         }
@@ -665,7 +665,7 @@ class EventHandling
             $defaultIds = $Package->getConfig()->get('search', 'frontend');
 
             if ($defaultIds) {
-                $defaultIds = explode(',', $defaultIds);
+                $defaultIds = \explode(',', $defaultIds);
 
                 foreach ($defaultIds as $defaultId) {
                     $fieldsIds[$defaultId] = 1;
@@ -673,7 +673,7 @@ class EventHandling
 
                 $Site->setAttribute(
                     'quiqqer.products.settings.searchFieldIds',
-                    json_encode($fieldsIds)
+                    \json_encode($fieldsIds)
                 );
             }
         }
@@ -773,7 +773,7 @@ class EventHandling
 
         $params = $Rewrite->getUrlParamsList();
 
-        if (!count($params)) {
+        if (!\count($params)) {
             return;
         }
 
@@ -781,7 +781,7 @@ class EventHandling
             $Product = Handler\Products::getProduct($params[0]);
             $Project = $Rewrite->getProject();
 
-            if ('/_p/'.$url !== urldecode($Product->getUrl())) {
+            if ('/_p/'.$url !== \urldecode($Product->getUrl())) {
                 $Redirect = new RedirectResponse($Product->getUrl());
                 $Redirect->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
 

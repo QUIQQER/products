@@ -71,7 +71,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
 
         /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
         foreach ($fieldList as $Field) {
-            $fields[] = array_merge(
+            $fields[] = \array_merge(
                 $Field->toProductArray(),
                 $Field->getAttributes()
             );
@@ -91,7 +91,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
         }
 
         if (!empty($categories)) {
-            $attributes['categories'] = implode(',', $categories);
+            $attributes['categories'] = \implode(',', $categories);
         }
 
         return $attributes;

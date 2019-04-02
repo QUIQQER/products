@@ -42,7 +42,7 @@ QUI::$Ajax->registerFunction(
         }
 
         // count
-        $searchParams          = json_decode($searchParams, true);
+        $searchParams          = \json_decode($searchParams, true);
         $searchParams['count'] = 1;
 
         if (isset($searchParams['sheet'])) {
@@ -51,7 +51,7 @@ QUI::$Ajax->registerFunction(
 
         $count = QUI::$Ajax->callRequestFunction(
             'package_quiqqer_products_ajax_search_backend_execute',
-            ['searchParams' => json_encode($searchParams)]
+            ['searchParams' => \json_encode($searchParams)]
         );
 
         return [

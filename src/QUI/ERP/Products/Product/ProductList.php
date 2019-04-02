@@ -248,7 +248,7 @@ class ProductList
      */
     public function count()
     {
-        return count($this->getProducts());
+        return \count($this->getProducts());
     }
 
     /**
@@ -415,7 +415,7 @@ class ProductList
      */
     public function toJSON()
     {
-        return json_encode($this->toArray());
+        return \json_encode($this->toArray());
     }
 
     //region Price methods
@@ -509,7 +509,7 @@ class ProductList
             return $this->Currency;
         }
 
-        if (is_array($this->currencyData) && !empty($this->currencyData['currency_code'])) {
+        if (\is_array($this->currencyData) && !empty($this->currencyData['currency_code'])) {
             try {
                 $this->Currency = QUI\ERP\Currency\Handler::getCurrency(
                     $this->currencyData['currency_code']

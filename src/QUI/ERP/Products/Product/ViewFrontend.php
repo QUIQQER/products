@@ -148,7 +148,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         }
 
         if (!empty($categories)) {
-            $attributes['categories'] = implode(',', $categories);
+            $attributes['categories'] = \implode(',', $categories);
         }
 
         return $attributes;
@@ -279,7 +279,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     {
         $types = $this->Product->getFieldsByType($type);
 
-        $types = array_filter($types, function ($Field) {
+        $types = \array_filter($types, function ($Field) {
             /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             return $Field->isPublic();
         });
@@ -320,7 +320,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     {
         $fields = $this->Product->getFields();
 
-        $fields = array_filter($fields, function ($Field) {
+        $fields = \array_filter($fields, function ($Field) {
             /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             return $Field->isPublic();
         });

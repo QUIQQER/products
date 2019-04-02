@@ -96,7 +96,7 @@ class Price extends QUI\ERP\Products\Field\Field
 
         $value = $this->cleanup($value);
 
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
@@ -119,12 +119,12 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        if (trim($value) === '') {
+        if (\trim($value) === '') {
             return null;
         }
 
-        if (is_float($value)) {
-            return round($value, 8);
+        if (\is_float($value)) {
+            return \round($value, 8);
         }
 
         $localeCode = QUI::getLocale()->getLocalesByLang(
@@ -141,7 +141,7 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     public function isEmpty()
     {
-        return !is_float($this->value);
+        return !\is_float($this->value);
     }
 
     /**
@@ -188,11 +188,11 @@ class Price extends QUI\ERP\Products\Field\Field
             // round down to lowest 10 (e.g.: 144 = 140; 2554 = 2550)
             $floorPrecision = 1;
 
-            if ((string)mb_strlen((int)$min) > 1) {
+            if ((string)\mb_strlen((int)$min) > 1) {
                 $floorPrecision = 10;
             }
 
-            $start = floor($min / $floorPrecision) * $floorPrecision;
+            $start = \floor($min / $floorPrecision) * $floorPrecision;
             $start = (int)$start;
         }
 
@@ -200,7 +200,7 @@ class Price extends QUI\ERP\Products\Field\Field
         $range[] = $value;
 
         while ($value < $max) {
-            if (round($value, 1) < 1) {
+            if (\round($value, 1) < 1) {
                 $add = 0.1;
             } else {
                 $add = 1;
@@ -211,7 +211,7 @@ class Price extends QUI\ERP\Products\Field\Field
                     $add *= 10;
                 }
 
-                $value = floor($value / $add) * $add;
+                $value = \floor($value / $add) * $add;
             }
 
             $value   += $add;

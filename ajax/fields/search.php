@@ -18,10 +18,10 @@ QUI::$Ajax->registerFunction(
         $result = [];
 
         $query  = [];
-        $params = json_decode($params, true);
-        $fields = json_decode($fields, true);
+        $params = \json_decode($params, true);
+        $fields = \json_decode($fields, true);
 
-        if (!is_array($fields)) {
+        if (!\is_array($fields)) {
             $fields = [];
         }
 
@@ -34,7 +34,7 @@ QUI::$Ajax->registerFunction(
         }
 
         $allowedFields = $Fields->getChildAttributes();
-        $allowedFields = array_flip($allowedFields);
+        $allowedFields = \array_flip($allowedFields);
 
         foreach ($fields as $field => $value) {
             if (!isset($allowedFields[$field]) && $field != 'id') {
@@ -58,7 +58,7 @@ QUI::$Ajax->registerFunction(
             $result[] = $entry;
         }
 
-        usort($result, function ($a, $b) {
+        \usort($result, function ($a, $b) {
             return $a['title'] > $b['title'];
         });
 

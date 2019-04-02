@@ -19,16 +19,16 @@ QUI::$Ajax->registerFunction(
         $Categories = new QUI\ERP\Products\Handler\Categories();
         $Product    = $Products->getProduct($productId);
 
-        $categories = json_decode($categories, true);
-        $fields     = json_decode($fields, true);
+        $categories = \json_decode($categories, true);
+        $fields     = \json_decode($fields, true);
 
         // fields
         foreach ($fields as $fieldId => $field) {
             try {
-                $fieldId = (int)str_replace('field-', '', $fieldId);
+                $fieldId = (int)\str_replace('field-', '', $fieldId);
                 $Field   = $Fields->getField($fieldId);
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addNotice('Field not found #' . $fieldId);
+                QUI\System\Log::addNotice('Field not found #'.$fieldId);
                 continue;
             }
 
@@ -49,22 +49,22 @@ QUI::$Ajax->registerFunction(
 
                 QUI\System\Log::addNotice(
                     $Exception->getMessage(),
-                    array(
+                    [
                         'id'    => $Field->getId(),
                         'title' => $Field->getTitle(),
                         'data'  => $field
-                    )
+                    ]
                 );
 
                 throw $Exception;
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addNotice(
                     $Exception->getMessage(),
-                    array(
+                    [
                         'id'    => $Field->getId(),
                         'title' => $Field->getTitle(),
                         'data'  => $field
-                    )
+                    ]
                 );
 
                 throw $Exception;
@@ -97,16 +97,16 @@ QUI::$Ajax->registerFunction(
             $Product->userSave();
         } catch (\Exception $Exception) {
             QUI\System\Log::addError(
-                'AJAX :: package_quiqqer_products_ajax_products_update -> ' . $Exception->getMessage()
+                'AJAX :: package_quiqqer_products_ajax_products_update -> '.$Exception->getMessage()
             );
 
             QUI::getMessagesHandler()->addError(
                 QUI::getLocale()->get(
                     'quiqqer/products',
                     'message.product.error.saving',
-                    array(
+                    [
                         'error' => ''
-                    )
+                    ]
                 )
             );
 
@@ -120,6 +120,6 @@ QUI::$Ajax->registerFunction(
             )
         );
     },
-    array('productId', 'categories', 'categoryId', 'fields'),
+    ['productId', 'categories', 'categoryId', 'fields'],
     'Permission::checkAdminUser'
 );

@@ -37,9 +37,8 @@ class Price extends QUI\Control
     /**
      * (non-PHPdoc)
      *
-     * @see \QUI\Control::create()
-     *
      * @throws QUI\Exception
+     * @see \QUI\Control::create()
      */
     public function getBody()
     {
@@ -69,7 +68,7 @@ class Price extends QUI\Control
 
         $vatArray = $this->getAttribute('vatArray');
 
-        if ($vatArray && is_array($vatArray) && isset($vatArray['text'])) {
+        if ($vatArray && \is_array($vatArray) && isset($vatArray['text'])) {
             $vatText = $vatArray['text'];
         } else {
             $Calc = $this->getAttribute('Calc');

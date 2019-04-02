@@ -227,7 +227,7 @@ class ProductListBackendView
      */
     public function toJSON()
     {
-        return json_encode($this->toArray());
+        return \json_encode($this->toArray());
     }
 
     /**
@@ -295,7 +295,7 @@ class ProductListBackendView
 
         if ($css) {
             $style = '<style>';
-            $style .= file_get_contents(dirname(__FILE__).'/ProductListView.css');
+            $style .= \file_get_contents(\dirname(__FILE__).'/ProductListView.css');
             $style .= '</style>';
         }
 
@@ -306,6 +306,6 @@ class ProductListBackendView
             'hidePrice' => $this->isPriceHidden(),
         ]);
 
-        return $Engine->fetch(dirname(__FILE__).'/ProductListView.html');
+        return $Engine->fetch(\dirname(__FILE__).'/ProductListView.html');
     }
 }

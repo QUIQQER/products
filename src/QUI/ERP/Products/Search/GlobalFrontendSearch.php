@@ -34,7 +34,7 @@ class GlobalFrontendSearch extends Search
      */
     public function __construct($lang = null)
     {
-        if (is_null($lang)) {
+        if (\is_null($lang)) {
             $lang = QUI::getLocale()->getCurrent();
         }
 
@@ -56,11 +56,11 @@ class GlobalFrontendSearch extends Search
 
         // parse all field specific parameters
         foreach ($urlParams as $k => $v) {
-            if (mb_strpos($k, 'F') !== 0) {
+            if (\mb_strpos($k, 'F') !== 0) {
                 continue;
             }
 
-            preg_match('#\d*#i', $k, $matches);
+            \preg_match('#\d*#i', $k, $matches);
 
             if (empty($matches)) {
                 continue;
@@ -69,8 +69,8 @@ class GlobalFrontendSearch extends Search
             $v       = $this->sanitizeString($v);
             $fieldId = (int)$matches[0];
 
-            preg_match('#from#i', $k, $from);
-            preg_match('#to#i', $k, $to);
+            \preg_match('#from#i', $k, $from);
+            \preg_match('#to#i', $k, $to);
 
             if (!empty($from)
                 || !empty($to)
@@ -159,7 +159,7 @@ class GlobalFrontendSearch extends Search
 
         if (isset($searchParams['categories'])
             && !empty($searchParams['categories'])
-            && is_array($searchParams['categories'])
+            && \is_array($searchParams['categories'])
         ) {
             $c               = 0;
             $whereCategories = [];
@@ -176,7 +176,7 @@ class GlobalFrontendSearch extends Search
             }
 
             // @todo das OR als setting (AND oder OR) (ist gedacht für die Navigation)
-            $where[] = '('.implode(' OR ', $whereCategories).')';
+            $where[] = '('.\implode(' OR ', $whereCategories).')';
         }
 
         if (!isset($searchParams['fields']) && !isset($searchParams['freetext'])) {
@@ -192,7 +192,7 @@ class GlobalFrontendSearch extends Search
             $value         = $this->sanitizeString($searchParams['freetext']);
 
             // split search value by space
-            $freetextValues = explode(' ', $value);
+            $freetextValues = \explode(' ', $value);
 
             foreach ($freetextValues as $value) {
                 // always search tags
@@ -227,20 +227,20 @@ class GlobalFrontendSearch extends Search
             }
 
             if (!empty($whereFreeText)) {
-                $where[] = '('.implode(' OR ', $whereFreeText).')';
+                $where[] = '('.\implode(' OR ', $whereFreeText).')';
             }
         }
 
         // tags search
         if (isset($searchParams['tags'])
             && !empty($searchParams['tags'])
-            && is_array($searchParams['tags'])
+            && \is_array($searchParams['tags'])
         ) {
             $data = $this->getTagQuery($searchParams['tags']);
 
             if (!empty($data['where'])) {
                 $where[] = $data['where'];
-                $binds   = array_merge($binds, $data['binds']);
+                $binds   = \array_merge($binds, $data['binds']);
             }
         }
 
@@ -277,7 +277,7 @@ class GlobalFrontendSearch extends Search
                 $i++;
             }
 
-            $where[] = '('.implode(' OR ', $whereOr).')';
+            $where[] = '('.\implode(' OR ', $whereOr).')';
         }
 
         $where[] = '`active` = 1';
@@ -286,8 +286,8 @@ class GlobalFrontendSearch extends Search
         if (isset($searchParams['fields'])) {
             try {
                 $queryData = $this->getFieldQueryData($searchParams['fields']);
-                $where     = array_merge($where, $queryData['where']);
-                $binds     = array_merge($binds, $queryData['binds']);
+                $where     = \array_merge($where, $queryData['where']);
+                $binds     = \array_merge($binds, $queryData['binds']);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addError($Exception->getMessage());
             }
@@ -295,7 +295,7 @@ class GlobalFrontendSearch extends Search
 
         // build WHERE query string
         if (!empty($where)) {
-            $sql .= " WHERE ".implode(" AND ", $where);
+            $sql .= " WHERE ".\implode(" AND ", $where);
         }
 
         if (!$countOnly) {
@@ -343,7 +343,7 @@ class GlobalFrontendSearch extends Search
 
         // bind search values
         foreach ($binds as $var => $bind) {
-            if (strpos($var, ':') === false) {
+            if (\strpos($var, ':') === false) {
                 $var = ':'.$var;
             }
 
@@ -364,7 +364,7 @@ class GlobalFrontendSearch extends Search
         }
 
         if ($countOnly) {
-            return (int)current(current($result));
+            return (int)\current(\current($result));
         }
 
         $productIds = [];
@@ -400,14 +400,14 @@ class GlobalFrontendSearch extends Search
         if ($searchFieldIdsFromCfg === false) {
             $searchFieldIdsFromCfg = [];
         } else {
-            $searchFieldIdsFromCfg = explode(',', $searchFieldIdsFromCfg);
+            $searchFieldIdsFromCfg = \explode(',', $searchFieldIdsFromCfg);
         }
 
         $eligibleFields = self::getEligibleSearchFields();
 
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($eligibleFields as $Field) {
-            if (!in_array($Field->getId(), $searchFieldIdsFromCfg)) {
+            if (!\in_array($Field->getId(), $searchFieldIdsFromCfg)) {
                 $searchFields[$Field->getId()] = false;
                 continue;
             }
@@ -444,7 +444,7 @@ class GlobalFrontendSearch extends Search
         $PackageCfg->set(
             'search',
             'freetext',
-            implode(',', $newSearchFieldIds)
+            \implode(',', $newSearchFieldIds)
         );
 
         $PackageCfg->save();
@@ -463,7 +463,7 @@ class GlobalFrontendSearch extends Search
      */
     public function getEligibleSearchFields()
     {
-        if (!is_null($this->eligibleFields)) {
+        if (!\is_null($this->eligibleFields)) {
             return $this->eligibleFields;
         }
 

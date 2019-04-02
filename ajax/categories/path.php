@@ -32,7 +32,7 @@ QUI::$Ajax->registerFunction(
             }
         }
 
-        $result = array_reverse($result);
+        $result = \array_reverse($result);
 
         return $result;
     },

@@ -65,7 +65,7 @@ class Url extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        if (filter_var($value, FILTER_VALIDATE_URL) === false) {
+        if (\filter_var($value, FILTER_VALIDATE_URL) === false) {
             throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
@@ -86,7 +86,7 @@ class Url extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        if (filter_var($value, FILTER_VALIDATE_URL) === false) {
+        if (\filter_var($value, FILTER_VALIDATE_URL) === false) {
             return null;
         }
 

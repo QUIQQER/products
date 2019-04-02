@@ -35,7 +35,7 @@ class Crons
 
         /** @var QUI\ERP\Products\Product\Model $Product */
         foreach ($ids as $id) {
-            set_time_limit(self::PRODUCT_CACHE_UPDATE_TIME);
+            \set_time_limit(self::PRODUCT_CACHE_UPDATE_TIME);
 
             try {
                 $Product = Products::getProduct($id);
@@ -43,14 +43,14 @@ class Crons
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addWarning(
                     'cron :: updateProductCache() :: Could not update cache'
-                    . ' for Product #' . $Product->getId() . ' -> '
-                    . $Exception->getMessage()
+                    .' for Product #'.$Product->getId().' -> '
+                    .$Exception->getMessage()
                 );
             }
         }
 
         // reset time limit
-        set_time_limit(ini_get('max_execution_time'));
+        \set_time_limit(\ini_get('max_execution_time'));
     }
 
     /**
@@ -63,7 +63,7 @@ class Crons
 
         /** @var QUI\ERP\Products\Product\Model $Product */
         foreach ($ids as $id) {
-            set_time_limit(self::PRODUCT_CACHE_UPDATE_TIME);
+            \set_time_limit(self::PRODUCT_CACHE_UPDATE_TIME);
 
             try {
                 $Product = Products::getProduct($id);
@@ -75,15 +75,15 @@ class Crons
                 $Image->createSizeCache(500); // product slider
                 $Image->createSizeCache(100, 200); // product gallery. preview
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addNotice($Exception->getMessage(), array(
+                QUI\System\Log::addNotice($Exception->getMessage(), [
                     'stack'     => $Exception->getTraceAsString(),
                     'productId' => $id,
                     'cron'      => 'generateCacheImagesOfProducts'
-                ));
+                ]);
             }
         }
 
         // reset time limit
-        set_time_limit(ini_get('max_execution_time'));
+        \set_time_limit(\ini_get('max_execution_time'));
     }
 }

@@ -28,7 +28,7 @@ class UrlFrontendView extends QUI\ERP\Products\Field\View
         }
 
         $title = $this->getTitle();
-        $title = htmlspecialchars($title);
+        $title = \htmlspecialchars($title);
 
         $link  = '';
         $value = $this->getValue();

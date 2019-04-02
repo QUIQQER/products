@@ -20,7 +20,7 @@ QUI::$Ajax->registerFunction(
         $Grid = new QUI\Utils\Grid();
 
         $data = $Products->getProducts(
-            $Grid->parseDBParams(json_decode($params, true))
+            $Grid->parseDBParams(\json_decode($params, true))
         );
 
         /* @var $Product \QUI\ERP\Products\Product\Product */
@@ -45,7 +45,7 @@ QUI::$Ajax->registerFunction(
             $result[] = $attributes;
         }
 
-        usort($result, function ($a, $b) {
+        \usort($result, function ($a, $b) {
             return $a['title'] > $b['title'];
         });
 

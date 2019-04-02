@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\DesktopSearch
  */
+
 namespace QUI\ERP\Products;
 
 use QUI;
@@ -31,14 +32,14 @@ class DesktopSearch implements ProviderInterface
      */
     public function getEntry($id)
     {
-        return array(
-            'searchdata' => json_encode(array(
+        return [
+            'searchdata' => \json_encode([
                 'require' => 'package/quiqqer/products/bin/controls/products/Product',
-                'params'  => array(
+                'params'  => [
                     'productId' => (int)$id
-                )
-            ))
-        );
+                ]
+            ])
+        ];
     }
 
     /**
@@ -48,24 +49,24 @@ class DesktopSearch implements ProviderInterface
      * @param array $params
      * @return array
      */
-    public function search($search, $params = array())
+    public function search($search, $params = [])
     {
         if (isset($params['filterGroups'])
-            && !in_array(self::TYPE, $params['filterGroups'])
+            && !\in_array(self::TYPE, $params['filterGroups'])
         ) {
-            return array();
+            return [];
         }
 
-        $result = array();
+        $result = [];
         $Search = QUI\ERP\Products\Handler\Search::getBackendSearch();
 
         try {
-            $products = $Search->search(array(
+            $products = $Search->search([
                 'freetext' => $search,
                 'limit'    => 10
-            ));
+            ]);
         } catch (QUI\Permissions\Exception $Exception) {
-            return array();
+            return [];
         }
 
         $groupLabel = QUI::getLocale()->get(
@@ -77,14 +78,14 @@ class DesktopSearch implements ProviderInterface
             try {
                 $Product = QUI\ERP\Products\Handler\Products::getProduct($productId);
 
-                $result[] = array(
+                $result[] = [
                     'id'          => (int)$productId,
                     'title'       => $Product->getTitle(),
                     'description' => $Product->getDescription(),
                     'icon'        => 'fa fa-shopping-bag',
                     'group'       => self::TYPE,
                     'groupLabel'  => $groupLabel
-                );
+                ];
             } catch (QUI\ERP\Products\Product\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
             }
@@ -101,14 +102,14 @@ class DesktopSearch implements ProviderInterface
      */
     public function getFilterGroups()
     {
-        return array(
-            array(
+        return [
+            [
                 'group' => self::TYPE,
-                'label' => array(
+                'label' => [
                     'quiqqer/products',
                     'search.group.products.label'
-                )
-            )
-        );
+                ]
+            ]
+        ];
     }
 }

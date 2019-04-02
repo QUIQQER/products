@@ -26,12 +26,12 @@ QUI::$Ajax->registerFunction(
         $Project = QUI\Projects\Manager::decode($project);
         $Site    = $Project->get($siteId);
 
-        $Control = new ProductList(array(
+        $Control = new ProductList([
             'categoryId'   => $categoryId,
             'view'         => $view,
             'Site'         => $Site,
-            'searchParams' => json_decode($searchParams, true)
-        ));
+            'searchParams' => \json_decode($searchParams, true)
+        ]);
 
         if ($next) {
             return $Control->getNext($articles);
@@ -39,6 +39,6 @@ QUI::$Ajax->registerFunction(
 
         return $Control->getStart();
     },
-    array('project', 'siteId', 'categoryId', 'view', 'searchParams', 'next', 'articles'),
+    ['project', 'siteId', 'categoryId', 'view', 'searchParams', 'next', 'articles'],
     false
 );

@@ -16,7 +16,7 @@ QUI::$Ajax->registerFunction(
     function ($productId, $fieldId) {
         $Product = Products::getProduct($productId);
 
-        if (is_numeric($fieldId)) {
+        if (\is_numeric($fieldId)) {
             $Folder = $Product->createMediaFolder($fieldId);
         } else {
             $Folder = $Product->createMediaFolder();

@@ -7,30 +7,30 @@ use \QUI\System\Log;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Response;
 
-$_REQUEST['_url'] = ltrim($_REQUEST['_url'], '/'); // nginx fix
-$_REQUEST['_url'] = urldecode($_REQUEST['_url']);
+$_REQUEST['_url'] = \ltrim($_REQUEST['_url'], '/'); // nginx fix
+$_REQUEST['_url'] = \urldecode($_REQUEST['_url']);
 
 $siteUrl = $Site->getLocation();
 $url     = $_REQUEST['_url'];
-$url     = pathinfo($url);
+$url     = \pathinfo($url);
 
 // fallback url for a product, with NO category
 // this should never happen and is a configuration error
-if (strpos(QUI::getRequest()->getPathInfo(), '_p/') !== false) {
+if (\strpos(QUI::getRequest()->getPathInfo(), '_p/') !== false) {
     $_REQUEST['_url'] = QUI::getRequest()->getPathInfo();
 
-    if (strlen(URL_DIR) == 1) {
-        $_REQUEST['_url'] = ltrim($_REQUEST['_url'], URL_DIR);
+    if (\strlen(URL_DIR) == 1) {
+        $_REQUEST['_url'] = \ltrim($_REQUEST['_url'], URL_DIR);
     } else {
-        $from             = '/'.preg_quote(URL_DIR, '/').'/';
-        $_REQUEST['_url'] = preg_replace($from, '', $_REQUEST['_url'], 1);
+        $from             = '/'.\preg_quote(URL_DIR, '/').'/';
+        $_REQUEST['_url'] = \preg_replace($from, '', $_REQUEST['_url'], 1);
     }
 
     $siteUrl = '';
 
-    $_REQUEST['_url'] = urldecode($_REQUEST['_url']); // nginx fix
+    $_REQUEST['_url'] = \urldecode($_REQUEST['_url']); // nginx fix
     $url              = $_REQUEST['_url'];
-    $url              = pathinfo($url);
+    $url              = \pathinfo($url);
 }
 
 // category menu
@@ -67,14 +67,14 @@ if ($siteUrl != $_REQUEST['_url']) {
     /**
      * PRODUCT
      */
-    $baseName = str_replace(
+    $baseName = \str_replace(
         QUI\Rewrite::getDefaultSuffix(),
         '',
         $url['basename']
     );
 
-    $parts = explode(QUI\Rewrite::URL_PARAM_SEPARATOR, $baseName);
-    $refNo = array_pop($parts);
+    $parts = \explode(QUI\Rewrite::URL_PARAM_SEPARATOR, $baseName);
+    $refNo = \array_pop($parts);
     $refNo = (int)$refNo;
 
     $Output = new QUI\Output();
@@ -84,7 +84,7 @@ if ($siteUrl != $_REQUEST['_url']) {
         $Product = Products\Handler\Products::getProduct($refNo);
         $Product->getView();
 
-        $productUrl = urldecode($Product->getUrl());
+        $productUrl = \urldecode($Product->getUrl());
 
         // weiterleitung, falls das produkt eine neue URL hat
         // kann passieren, wenn das produkt vorher in "alle produkte" war
@@ -136,7 +136,7 @@ if ($siteUrl != $_REQUEST['_url']) {
             }
         }
 
-        define('QUIQQER_ERP_IS_PRODUCT', true);
+        \define('QUIQQER_ERP_IS_PRODUCT', true);
     } catch (QUI\Permissions\Exception $Exception) {
         Log::writeDebugException($Exception);
 
@@ -215,7 +215,7 @@ if ($siteUrl != $_REQUEST['_url']) {
         $ProductList->setAttribute('showFilter', false);
     }
 
-    if ($CategoryMenu->countChildren() || count($filterList)) {
+    if ($CategoryMenu->countChildren() || \count($filterList)) {
         $ProductList->setAttribute('forceMobileFilter', true);
     }
 

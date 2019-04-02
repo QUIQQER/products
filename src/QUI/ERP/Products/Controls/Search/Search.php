@@ -37,7 +37,7 @@ class Search extends QUI\Control
             'title'          => true
         ]);
 
-        $this->addCSSFile(dirname(__FILE__).'/Search.css');
+        $this->addCSSFile(\dirname(__FILE__).'/Search.css');
         $this->addCSSClass('quiqqer-products-search');
 
         parent::__construct($attributes);
@@ -46,9 +46,9 @@ class Search extends QUI\Control
     /**
      * (non-PHPdoc)
      *
+     * @throws QUI\Exception
      * @see \QUI\Control::create()
      *
-     * @throws QUI\Exception
      */
     public function getBody()
     {
@@ -65,7 +65,7 @@ class Search extends QUI\Control
             'this'   => $this
         ]);
 
-        return $Engine->fetch(dirname(__FILE__).'/Search.html');
+        return $Engine->fetch(\dirname(__FILE__).'/Search.html');
     }
 
     /**
@@ -86,7 +86,7 @@ class Search extends QUI\Control
     protected function getSearch()
     {
         try {
-            if (is_null($this->Search)) {
+            if (\is_null($this->Search)) {
                 $this->Search = new QUI\ERP\Products\Search\FrontendSearch($this->getSite());
             }
         } catch (QUI\Exception $Exception) {
@@ -103,7 +103,7 @@ class Search extends QUI\Control
      */
     protected function getSearchFieldData()
     {
-        if (is_null($this->fields)) {
+        if (\is_null($this->fields)) {
             $Search = $this->getSearch();
 
             if ($Search) {

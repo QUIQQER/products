@@ -158,7 +158,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      */
     public function setPermissions($permissions, $User = null)
     {
-        if (!is_array($permissions)) {
+        if (!\is_array($permissions)) {
             return;
         }
 

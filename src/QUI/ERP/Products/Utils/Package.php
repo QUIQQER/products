@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Utils\Package
  */
+
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
@@ -55,7 +56,7 @@ class Package
             return true;
         }
 
-        if (!is_null(self::$hidePrice)) {
+        if (!\is_null(self::$hidePrice)) {
             return self::$hidePrice;
         }
 

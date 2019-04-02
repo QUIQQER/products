@@ -44,12 +44,12 @@ class View extends UniqueField
 
         $value = $this->getValue();
 
-        if (!is_numeric($value) && !is_string($value)) {
+        if (!\is_numeric($value) && !\is_string($value)) {
             $value = '';
         }
 
-        $value = htmlspecialchars($value);
-        $title = htmlspecialchars($this->getTitle());
+        $value = \htmlspecialchars($value);
+        $title = \htmlspecialchars($this->getTitle());
 
         return '<div class="quiqqer-product-field">
             <div class="quiqqer-product-field-title">'.$title.'</div>

@@ -20,7 +20,7 @@ QUI::$Ajax->registerFunction(
         );
 
         $BackEndSearch = SearchHandler::getBackendSearch();
-        $searchParams  = json_decode($searchParams, true);
+        $searchParams  = \json_decode($searchParams, true);
 
         if (isset($searchParams['count'])) {
             return $BackEndSearch->search($searchParams, true);

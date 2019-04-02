@@ -129,7 +129,7 @@ abstract class Search extends QUI\QDOM
             ]
         ];
 
-        if (!is_null($catId)) {
+        if (!\is_null($catId)) {
             $params['where']['category'] = [
                 'type'  => '%LIKE%',
                 'value' => ','.(int)$catId.','
@@ -233,7 +233,7 @@ abstract class Search extends QUI\QDOM
                 break;
         }
 
-        sort($values);
+        \sort($values);
 
         Cache::set($cname, $values);
 
@@ -271,7 +271,7 @@ abstract class Search extends QUI\QDOM
 
             // wenn feld -> price feld
             // scheiss vorgehensweise, wollen aber kein doppelten code
-            if (get_class($this) == FrontendSearch::class) {
+            if (\get_class($this) == FrontendSearch::class) {
                 $User = QUI::getUserBySession();
 
                 if (!QUI\ERP\Utils\User::isNettoUser($User)
@@ -281,7 +281,7 @@ abstract class Search extends QUI\QDOM
                     $calc = ($Tax->getValue() + 100) / 100;
 
                     // calc netto sum
-                    if (is_array($value)
+                    if (\is_array($value)
                         && isset($value['from'])
                         && isset($value['to'])
                         && $calc
@@ -298,7 +298,7 @@ abstract class Search extends QUI\QDOM
 
             switch ($Field->getSearchType()) {
                 case SearchHandler::SEARCHTYPE_HASVALUE:
-                    if (boolval($value)) {
+                    if (\boolval($value)) {
                         $where[] = $column.' IS NOT NULL';
                     } else {
                         $where[] = $column.' IS NULL';
@@ -306,7 +306,7 @@ abstract class Search extends QUI\QDOM
                     break;
 
                 case SearchHandler::SEARCHTYPE_BOOL:
-                    if (boolval($value)) {
+                    if (\boolval($value)) {
                         $where[] = $column.' = 1';
                     } else {
                         $where[] = $column.' = 0';
@@ -319,7 +319,7 @@ abstract class Search extends QUI\QDOM
                         continue;
                     }
 
-                    if (!is_string($value)) {
+                    if (!\is_string($value)) {
                         throw new Exception([
                             'quiqqer/products',
                             'exception.search.value.invalid',
@@ -343,7 +343,7 @@ abstract class Search extends QUI\QDOM
                         continue;
                     }
 
-                    if (!is_array($value)) {
+                    if (!\is_array($value)) {
                         throw new Exception([
                             'quiqqer/products',
                             'exception.search.value.invalid',
@@ -360,7 +360,7 @@ abstract class Search extends QUI\QDOM
                     if (isset($value['from']) && !empty($value['from'])) {
                         $from = $value['from'];
 
-                        if (!is_string($from) && !is_numeric($from)) {
+                        if (!\is_string($from) && !\is_numeric($from)) {
                             throw new Exception([
                                 'quiqqer/products',
                                 'exception.search.value.invalid',
@@ -375,7 +375,7 @@ abstract class Search extends QUI\QDOM
                     if (isset($value['to']) && !empty($value['to'])) {
                         $to = $value['to'];
 
-                        if (!is_string($to) && !is_numeric($to)) {
+                        if (!\is_string($to) && !\is_numeric($to)) {
                             throw new Exception([
                                 'quiqqer/products',
                                 'exception.search.value.invalid',
@@ -421,7 +421,7 @@ abstract class Search extends QUI\QDOM
                         continue;
                     }
 
-                    if (!is_array($value)) {
+                    if (!\is_array($value)) {
                         throw new Exception([
                             'quiqqer/products',
                             'exception.search.value.invalid',
@@ -438,7 +438,7 @@ abstract class Search extends QUI\QDOM
                     if (isset($value['from']) && !empty($value['from'])) {
                         $from = $value['from'];
 
-                        if (!is_numeric($from)) {
+                        if (!\is_numeric($from)) {
                             throw new Exception([
                                 'quiqqer/products',
                                 'exception.search.value.invalid',
@@ -453,7 +453,7 @@ abstract class Search extends QUI\QDOM
                     if (isset($value['to']) && !empty($value['to'])) {
                         $to = $value['to'];
 
-                        if (!is_numeric($from)) {
+                        if (!\is_numeric($from)) {
                             throw new Exception([
                                 'quiqqer/products',
                                 'exception.search.value.invalid',
@@ -497,7 +497,7 @@ abstract class Search extends QUI\QDOM
                         continue;
                     }
 
-                    if (!is_string($value) && !is_numeric($value)) {
+                    if (!\is_string($value) && !\is_numeric($value)) {
                         throw new Exception([
                             'quiqqer/products',
                             'exception.search.value.invalid',
@@ -520,7 +520,7 @@ abstract class Search extends QUI\QDOM
                         continue;
                     }
 
-                    if (!is_array($value)) {
+                    if (!\is_array($value)) {
                         throw new Exception([
                             'quiqqer/products',
                             'exception.search.value.invalid',
@@ -531,7 +531,7 @@ abstract class Search extends QUI\QDOM
                         ]);
                     }
 
-                    for ($i = 0; $i < count($value); $i++) {
+                    for ($i = 0; $i < \count($value); $i++) {
                         $where[]               = $column.' = :'.$columnName.$i;
                         $binds[$columnName.$i] = [
                             'value' => $this->sanitizeString($value),
@@ -545,7 +545,7 @@ abstract class Search extends QUI\QDOM
                         continue;
                     }
 
-                    if (!is_string($value)) {
+                    if (!\is_string($value)) {
                         throw new Exception([
                             'quiqqer/products',
                             'exception.search.value.invalid',
@@ -590,15 +590,15 @@ abstract class Search extends QUI\QDOM
      */
     protected function canSearchField($Field, $User = null)
     {
-        if (is_null($User)) {
+        if (\is_null($User)) {
             $User = QUI::getUserBySession();
         }
 
         // calculate group hash
         $userGroups = $User->getGroups(false);
-        sort($userGroups);
+        \sort($userGroups);
 
-        $groupHash = md5(implode('', $userGroups));
+        $groupHash = \md5(\implode('', $userGroups));
         $cName     = 'products/search/userfieldids/'.$Field->getId().'/'.$groupHash;
 
         try {
@@ -637,7 +637,7 @@ abstract class Search extends QUI\QDOM
      */
     protected function sanitizeString($str)
     {
-        if (!is_string($str) && !is_numeric($str)) {
+        if (!\is_string($str) && !\is_numeric($str)) {
             return false;
         }
 
@@ -722,8 +722,8 @@ abstract class Search extends QUI\QDOM
                 break;
 
             default:
-                if (mb_strpos($searchParams['sortOn'], 'F') === 0) {
-                    $searchParams['sortOn'] = mb_substr($searchParams['sortOn'], 1);
+                if (\mb_strpos($searchParams['sortOn'], 'F') === 0) {
+                    $searchParams['sortOn'] = \mb_substr($searchParams['sortOn'], 1);
                 }
 
                 $orderFieldId = (int)$searchParams['sortOn'];
@@ -816,12 +816,12 @@ abstract class Search extends QUI\QDOM
             }
 
             if (!empty($tagList)) {
-                $whereGroups[] = '('.implode(' OR ', $tagList).')';
+                $whereGroups[] = '('.\implode(' OR ', $tagList).')';
             }
         }
 
         if (!empty($whereGroups)) {
-            $where = '('.implode(' AND ', $whereGroups).')';
+            $where = '('.\implode(' AND ', $whereGroups).')';
         }
 
         return [

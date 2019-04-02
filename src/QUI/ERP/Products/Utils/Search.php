@@ -48,21 +48,21 @@ class Search
         $defaultSorting = $Site->getAttribute('quiqqer.products.settings.defaultSorting');
 
         if ($categories) {
-            $categories = explode(',', $categories);
+            $categories = \explode(',', $categories);
         }
 
-        if (!is_array($categories)) {
-            $categories = array();
+        if (!\is_array($categories)) {
+            $categories = [];
         }
 
         // look for default site settings
         if (!$sortOn && !empty($defaultSorting)) {
-            $sorting = explode(' ', $defaultSorting);
+            $sorting = \explode(' ', $defaultSorting);
             $sortOn  = $sorting[0];
         }
 
         if (!$sortBy && !empty($defaultSorting)) {
-            $sorting = explode(' ', $defaultSorting);
+            $sorting = \explode(' ', $defaultSorting);
 
             if (isset($sorting[1])) {
                 switch ($sorting[1]) {
@@ -73,20 +73,20 @@ class Search
             }
         }
 
-        $searchParams = array_filter(array(
+        $searchParams = \array_filter([
             'freetext' => $search,
             'fields'   => $fields,
             'tags'     => $tags,
             'sortBy'   => $sortBy,
             'sortOn'   => $sortOn,
-        ));
+        ]);
 
         if (!empty($categories)) {
             $searchParams['categories'] = $categories;
         }
 
         if (isset($searchParams['fields'])) {
-            $searchParams['fields'] = json_decode($searchParams['fields'], true);
+            $searchParams['fields'] = \json_decode($searchParams['fields'], true);
 
             if (is_null($searchParams['fields'])) {
                 unset($searchParams['fields']);
@@ -94,7 +94,7 @@ class Search
         }
 
         if (isset($searchParams['tags'])) {
-            $searchParams['tags'] = explode(',', $searchParams['tags']);
+            $searchParams['tags'] = \explode(',', $searchParams['tags']);
         }
 
         return $searchParams;
@@ -129,10 +129,10 @@ class Search
 
         $Package    = QUI::getPackage('quiqqer/products');
         $defaultIds = $Package->getConfig()->get('search', 'frontend');
-        $fields     = array();
+        $fields     = [];
 
         if ($defaultIds) {
-            $defaultIds = explode(',', $defaultIds);
+            $defaultIds = \explode(',', $defaultIds);
 
             foreach ($defaultIds as $fieldId) {
                 try {
@@ -161,10 +161,10 @@ class Search
 
         $Package    = QUI::getPackage('quiqqer/products');
         $defaultIds = $Package->getConfig()->get('search', 'freetext');
-        $fields     = array();
+        $fields     = [];
 
         if ($defaultIds) {
-            $defaultIds = explode(',', $defaultIds);
+            $defaultIds = \explode(',', $defaultIds);
 
             foreach ($defaultIds as $fieldId) {
                 try {

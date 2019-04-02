@@ -78,7 +78,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         parent::setOption($option, $value);
 
         if ($option == 'entries') {
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 foreach ($value as $key => $val) {
                     if (isset($val['selected']) && $val['selected']) {
                         $this->value        = $key;
@@ -143,7 +143,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      */
     public function getValue()
     {
-        if (!is_null($this->value)) {
+        if (!\is_null($this->value)) {
             return $this->value;
         }
 
@@ -157,8 +157,8 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      */
     public function getUserInput()
     {
-        if (!is_null($this->value)) {
-            $value = json_decode($this->value, true);
+        if (!\is_null($this->value)) {
+            $value = \json_decode($this->value, true);
 
             if (isset($value[1])) {
                 return $value[1];
@@ -225,12 +225,12 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         $userInput = '';
         $calcType  = ErpCalc::CALCULATION_COMPLEMENT;
 
-        if (strpos($value, '[') !== false && strpos($value, ']') !== false) {
-            $data = json_decode($value, true);
+        if (\strpos($value, '[') !== false && \strpos($value, ']') !== false) {
+            $data = \json_decode($value, true);
 
-            if (is_array($data)) {
+            if (\is_array($data)) {
                 if (isset($data[1])) {
-                    $userInput = htmlspecialchars($data[1]);
+                    $userInput = \htmlspecialchars($data[1]);
                 }
 
                 $value = $data[0];
@@ -243,9 +243,9 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             $type      = $entries[$value]['type'];
             $valueText = $entries[$value]['title'];
 
-            if ($Locale && get_class($Locale) == QUI\Locale::class) {
+            if ($Locale && \get_class($Locale) == QUI\Locale::class) {
                 $current     = $Locale->getCurrent();
-                $currentCode = mb_strtolower($current).'_'.mb_strtoupper($current);
+                $currentCode = \mb_strtolower($current).'_'.\mb_strtoupper($current);
 
                 if (isset($valueText[$current])) {
                     $valueText = $valueText[$current];
@@ -266,7 +266,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         }
 
         if ($userInput &&
-            !(defined('QUIQQER_FRONTEND') && QUI\ERP\Products\Utils\Package::hidePrice())
+            !(\defined('QUIQQER_FRONTEND') && QUI\ERP\Products\Utils\Package::hidePrice())
         ) {
             $valueText .= ' ('.$userInput.')';
         }
@@ -303,12 +303,12 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             ]
         ];
 
-        if (!is_numeric($value)) {
-            if (is_array($value)) {
-                $value = json_encode($value);
+        if (!\is_numeric($value)) {
+            if (\is_array($value)) {
+                $value = \json_encode($value);
             }
 
-            $value = json_decode($value, true);
+            $value = \json_decode($value, true);
 
             if (!isset($value[0]) || !isset($value[1])) {
                 throw new QUI\ERP\Products\Field\Exception($invalidException);
@@ -318,7 +318,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             $value = $value[0];
         }
 
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             throw new QUI\ERP\Products\Field\Exception($invalidException);
         }
 
@@ -346,26 +346,26 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     {
         $check = [];
 
-        if (is_string($value)) {
-            $check = json_decode($value, true);
+        if (\is_string($value)) {
+            $check = \json_decode($value, true);
 
             if (!isset($check[0]) || !isset($check[1])) {
                 return null;
             }
 
-            if (!is_numeric($check[0])) {
+            if (!\is_numeric($check[0])) {
                 return null;
             }
 
             return $value;
         }
 
-        if (is_array($value)) {
+        if (\is_array($value)) {
             if (!isset($check[0]) || !isset($check[1])) {
                 return null;
             }
 
-            if (!is_numeric($check[0])) {
+            if (!\is_numeric($check[0])) {
                 return null;
             }
 
@@ -373,11 +373,11 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         }
 
 
-        if (empty($value) && !is_int($value) && $value != 0) {
+        if (empty($value) && !\is_int($value) && $value != 0) {
             return null;
         }
 
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             return null;
         }
 

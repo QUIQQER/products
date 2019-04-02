@@ -188,7 +188,7 @@ class Products
         }
 
         foreach ($categories as $Category) {
-            if (!is_object($Category)) {
+            if (!\is_object($Category)) {
                 try {
                     $Category      = Categories::getCategory($Category);
                     $categoryids[] = $Category->getId();
@@ -211,7 +211,7 @@ class Products
             ]);
         }
 
-        if (!count($categoryids)) {
+        if (!\count($categoryids)) {
             throw new QUI\Exception([
                 'quiqqer/products',
                 'exception.products.no.category.given'
@@ -223,7 +223,7 @@ class Products
 
         /* @var $Field Field|integer */
         foreach ($fields as $Field) {
-            if (!is_object($Field)) {
+            if (!\is_object($Field)) {
                 try {
                     $Field = Fields::getField($Field);
                 } catch (QUI\Exception $Exception) {
@@ -256,8 +256,8 @@ class Products
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             [
-                'fieldData'  => json_encode($fieldData),
-                'categories' => ','.implode($categoryids, ',').',',
+                'fieldData'  => \json_encode($fieldData),
+                'categories' => ','.\implode($categoryids, ',').',',
                 'c_user'     => QUI::getUserBySession()->getId(),
                 'c_date'     => date('Y-m-d H:i:s')
             ]
@@ -272,7 +272,7 @@ class Products
             '',
             [
                 'fieldData'  => $fieldData,
-                'categories' => ','.implode($categoryids, ',').','
+                'categories' => ','.\implode($categoryids, ',').','
             ]
         );
 
@@ -545,7 +545,7 @@ class Products
      */
     public static function usePermissions()
     {
-        if (!is_null(self::$usePermissions)) {
+        if (!\is_null(self::$usePermissions)) {
             return self::$usePermissions;
         }
 

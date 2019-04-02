@@ -3,6 +3,7 @@
 /**
  * This file contains QUI\ERP\Products\Utils\PDF
  */
+
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
@@ -25,7 +26,7 @@ class PDF
     {
         $Engine = self::getEngine($Project);
 
-        return $Engine->fetch(OPT_DIR . 'quiqqer/products/template/pdf/header.html');
+        return $Engine->fetch(OPT_DIR.'quiqqer/products/template/pdf/header.html');
     }
 
     /**
@@ -38,11 +39,11 @@ class PDF
     {
         $Engine = self::getEngine($Project);
 
-        $Engine->assign(array(
+        $Engine->assign([
             'Locale' => QUI::getLocale()
-        ));
+        ]);
 
-        return $Engine->fetch(OPT_DIR . 'quiqqer/products/template/pdf/footer.html');
+        return $Engine->fetch(OPT_DIR.'quiqqer/products/template/pdf/footer.html');
     }
 
     /**
@@ -61,11 +62,11 @@ class PDF
 
         $Logo = $Project->getMedia()->getLogoImage();
 
-        $Engine->assign(array(
+        $Engine->assign([
             'Project' => $Project,
             'Logo'    => $Logo,
             'logo'    => $Logo->getFullPath()
-        ));
+        ]);
 
         return $Engine;
     }

@@ -99,11 +99,11 @@ class FrontendSearch extends Search
 
         // parse all field specific parameters
         foreach ($urlParams as $k => $v) {
-            if (mb_strpos($k, 'F') !== 0) {
+            if (\mb_strpos($k, 'F') !== 0) {
                 continue;
             }
 
-            preg_match('#\d*#i', $k, $matches);
+            \preg_match('#\d*#i', $k, $matches);
 
             if (empty($matches)) {
                 continue;
@@ -112,8 +112,8 @@ class FrontendSearch extends Search
             $v       = $this->sanitizeString($v);
             $fieldId = (int)$matches[0];
 
-            preg_match('#from#i', $k, $from);
-            preg_match('#to#i', $k, $to);
+            \preg_match('#from#i', $k, $from);
+            \preg_match('#to#i', $k, $to);
 
             if (!empty($from)
                 || !empty($to)
@@ -208,7 +208,7 @@ class FrontendSearch extends Search
 
         if (isset($searchParams['categories'])
             && !empty($searchParams['categories'])
-            && is_array($searchParams['categories'])
+            && \is_array($searchParams['categories'])
         ) {
             $c               = 0;
             $whereCategories = [];
@@ -226,7 +226,7 @@ class FrontendSearch extends Search
 
             // @todo das OR als setting (AND oder OR) (ist gedacht für die Navigation)
             if (!empty($whereCategories)) {
-                $where[] = '('.implode(' OR ', $whereCategories).')';
+                $where[] = '('.\implode(' OR ', $whereCategories).')';
             }
         }
 
@@ -243,7 +243,7 @@ class FrontendSearch extends Search
             $value         = $this->sanitizeString($searchParams['freetext']);
 
             // split search value by space
-            $freetextValues = explode(' ', $value);
+            $freetextValues = \explode(' ', $value);
 
             foreach ($freetextValues as $value) {
                 // always search tags
@@ -275,7 +275,7 @@ class FrontendSearch extends Search
             }
 
             if (!empty($whereFreeText)) {
-                $where[] = '('.implode(' OR ', $whereFreeText).')';
+                $where[] = '('.\implode(' OR ', $whereFreeText).')';
             }
         }
 
@@ -283,18 +283,18 @@ class FrontendSearch extends Search
         $siteTags = $this->Site->getAttribute('quiqqer.products.settings.tags');
 
         if (!empty($siteTags)) {
-            $siteTags = explode(',', trim($siteTags, ','));
+            $siteTags = \explode(',', \trim($siteTags, ','));
         }
 
-        if (!is_array($siteTags)) {
+        if (!\is_array($siteTags)) {
             $siteTags = [];
         }
 
         if (isset($searchParams['tags'])
             && !empty($searchParams['tags'])
-            && is_array($searchParams['tags'])
+            && \is_array($searchParams['tags'])
         ) {
-            $siteTags = array_merge($siteTags, $searchParams['tags']);
+            $siteTags = \array_merge($siteTags, $searchParams['tags']);
         }
 
         if (!empty($siteTags)) {
@@ -302,7 +302,7 @@ class FrontendSearch extends Search
 
             if (!empty($data['where'])) {
                 $where[] = $data['where'];
-                $binds   = array_merge($binds, $data['binds']);
+                $binds   = \array_merge($binds, $data['binds']);
             }
         }
 
@@ -339,7 +339,7 @@ class FrontendSearch extends Search
                 $i++;
             }
 
-            $where[] = '('.implode(' OR ', $whereOr).')';
+            $where[] = '('.\implode(' OR ', $whereOr).')';
         }
 
         $where[] = '`active` = 1';
@@ -348,8 +348,8 @@ class FrontendSearch extends Search
         if (isset($searchParams['fields'])) {
             try {
                 $queryData = $this->getFieldQueryData($searchParams['fields']);
-                $where     = array_merge($where, $queryData['where']);
-                $binds     = array_merge($binds, $queryData['binds']);
+                $where     = \array_merge($where, $queryData['where']);
+                $binds     = \array_merge($binds, $queryData['binds']);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addError($Exception->getMessage());
             }
@@ -357,7 +357,7 @@ class FrontendSearch extends Search
 
         // build WHERE query string
         if (!empty($where)) {
-            $sql .= " WHERE ".implode(" AND ", $where);
+            $sql .= " WHERE ".\implode(" AND ", $where);
         }
 
         if (!$countOnly) {
@@ -401,7 +401,7 @@ class FrontendSearch extends Search
 
         // bind search values
         foreach ($binds as $var => $bind) {
-            if (strpos($var, ':') === false) {
+            if (\strpos($var, ':') === false) {
                 $var = ':'.$var;
             }
 
@@ -422,7 +422,7 @@ class FrontendSearch extends Search
         }
 
         if ($countOnly) {
-            return (int)current(current($result));
+            return (int)\current(\current($result));
         }
 
         $productIds = [];
@@ -490,7 +490,7 @@ class FrontendSearch extends Search
                 'description' => $Field->getTitle($Locale)
             ];
 
-            if (in_array($Field->getSearchType(), $this->searchTypesWithValues)) {
+            if (\in_array($Field->getSearchType(), $this->searchTypesWithValues)) {
                 $searchValues = $this->getValuesFromField($Field, true, $catId);
                 $searchParams = [];
 
@@ -540,7 +540,7 @@ class FrontendSearch extends Search
         if (!$searchFieldsFromSite) {
             $searchFieldsFromSite = [];
         } else {
-            $searchFieldsFromSite = json_decode($searchFieldsFromSite, true);
+            $searchFieldsFromSite = \json_decode($searchFieldsFromSite, true);
         }
 
         /** @var QUI\ERP\Products\Field\Field $Field */
@@ -550,7 +550,7 @@ class FrontendSearch extends Search
                 continue;
             }
 
-            $searchFields[$Field->getId()] = boolval(
+            $searchFields[$Field->getId()] = \boolval(
                 $searchFieldsFromSite[$Field->getId()]
             );
         }
@@ -570,7 +570,7 @@ class FrontendSearch extends Search
 
         foreach ($currentSearchFields as $fieldId => $search) {
             if (isset($searchFields[$fieldId])) {
-                $currentSearchFields[$fieldId] = boolval($searchFields[$fieldId]);
+                $currentSearchFields[$fieldId] = \boolval($searchFields[$fieldId]);
             }
         }
 
@@ -578,7 +578,7 @@ class FrontendSearch extends Search
 
         $Edit->setAttribute(
             'quiqqer.products.settings.searchFieldIds',
-            json_encode($currentSearchFields)
+            \json_encode($currentSearchFields)
         );
 
         $Edit->save();
@@ -599,9 +599,7 @@ class FrontendSearch extends Search
         $newSearchFieldIds   = [];
 
         foreach ($currentSearchFields as $fieldId => $search) {
-            if (isset($searchFields[$fieldId])
-                && $searchFields[$fieldId]
-            ) {
+            if (isset($searchFields[$fieldId]) && $searchFields[$fieldId]) {
                 $newSearchFieldIds[] = $fieldId;
             } else {
                 unset($currentSearchFields[$fieldId]);
@@ -613,7 +611,7 @@ class FrontendSearch extends Search
         $PackageCfg->set(
             'search',
             'frontend',
-            implode(',', $newSearchFieldIds)
+            \implode(',', $newSearchFieldIds)
         );
 
         $PackageCfg->save();
@@ -634,7 +632,7 @@ class FrontendSearch extends Search
 
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($eligibleFields as $Field) {
-            if (!in_array($Field->getId(), $searchFieldIdsFromCfg)) {
+            if (!\in_array($Field->getId(), $searchFieldIdsFromCfg)) {
                 $searchFields[$Field->getId()] = false;
                 continue;
             }
@@ -656,7 +654,7 @@ class FrontendSearch extends Search
      */
     public function getEligibleSearchFields()
     {
-        if (!is_null($this->eligibleFields)) {
+        if (!\is_null($this->eligibleFields)) {
             return $this->eligibleFields;
         }
 
@@ -701,18 +699,18 @@ class FrontendSearch extends Search
      */
     protected function getGroupHashFromUser($User = null)
     {
-        if (is_null($User)) {
+        if (\is_null($User)) {
             $User = QUI::getUserBySession();
         }
 
         $groups = $User->getGroups(false);
 
-        if (is_array($groups)) {
-            $groups = implode(',', $groups);
+        if (\is_array($groups)) {
+            $groups = \implode(',', $groups);
         } else {
             $groups = "";
         }
 
-        return md5($groups);
+        return \md5($groups);
     }
 }

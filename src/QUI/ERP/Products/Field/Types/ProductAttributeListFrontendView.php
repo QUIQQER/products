@@ -72,11 +72,11 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $requiredField = ' required="required"';
         }
 
-        if (!is_string($value) && !is_numeric($value)) {
+        if (!\is_string($value) && !\is_numeric($value)) {
             $value = '';
         }
 
-        $value = htmlspecialchars($value);
+        $value = \htmlspecialchars($value);
 
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
@@ -120,7 +120,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             ];
         }
 
-        $currentLC = strtolower($current).'_'.strtoupper($current);
+        $currentLC = \strtolower($current).'_'.\strtoupper($current);
         $Calc      = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
         foreach ($entries as $key => $option) {
@@ -136,7 +136,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                 $selected = 'selected="selected" ';
             }
 
-            if (is_string($title)) {
+            if (\is_string($title)) {
                 $text = $title;
             } elseif (isset($title[$current])) {
                 $text = $title[$current];
@@ -181,7 +181,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
         $Engine->assign('options', $options);
 
-        return $Engine->fetch(dirname(__FILE__).'/ProductAttributeListFrontendView.html');
+        return $Engine->fetch(\dirname(__FILE__).'/ProductAttributeListFrontendView.html');
     }
 
     /**
@@ -202,11 +202,11 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $entries = $options['entries'];
         }
 
-        if (!is_string($value) && !is_numeric($value)) {
+        if (!\is_string($value) && !\is_numeric($value)) {
             $value = '';
         }
 
-        $value = htmlspecialchars($value);
+        $value = \htmlspecialchars($value);
 
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
@@ -226,13 +226,13 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         ]);
 
         // options
-        $currentLC = strtolower($current).'_'.strtoupper($current);
+        $currentLC = \strtolower($current).'_'.\strtoupper($current);
 
         $option = $entries[$value];
         $title  = $option['title'];
         $text   = '';
 
-        if (is_string($title)) {
+        if (\is_string($title)) {
             $text = $title;
         } elseif (isset($title[$current])) {
             $text = $title[$current];
@@ -242,6 +242,6 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
         $Engine->assign('valueText', $text);
 
-        return $Engine->fetch(dirname(__FILE__).'/ProductAttributeListFrontendViewNotChangeable.html');
+        return $Engine->fetch(\dirname(__FILE__).'/ProductAttributeListFrontendViewNotChangeable.html');
     }
 }

@@ -32,7 +32,7 @@ class Product extends QUI\Control
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/Product'
         ]);
 
-        $this->addCSSFile(dirname(__FILE__) . '/Product.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/Product.css');
 
         parent::__construct($attributes);
     }
@@ -113,7 +113,7 @@ class Product extends QUI\Control
         }
 
         // fields for the details
-        $details = array_filter($View->getFields(), function ($Field) {
+        $details = \array_filter($View->getFields(), function ($Field) {
             /* @var $Field QUI\ERP\Products\Field\View */
             if (!QUI\ERP\Products\Utils\Fields::showFieldInProductDetails($Field)) {
                 return false;
@@ -187,7 +187,7 @@ class Product extends QUI\Control
         // product fields
         $productFields = [];
 
-        $productFieldList = array_filter($View->getFields(), function ($Field) {
+        $productFieldList = \array_filter($View->getFields(), function ($Field) {
             /* @var $Field QUI\ERP\Products\Field\View */
             if ($Field->getType() == Fields::TYPE_PRODCUCTS) {
                 return true;
@@ -218,7 +218,7 @@ class Product extends QUI\Control
         // Product File List
         $Files = null;
 
-        if (count($Product->getFiles())) {
+        if (\count($Product->getFiles())) {
             $Files = new ProductFieldDetails([
                 'Field'   => $Product->getField(Fields::FIELD_FOLDER),
                 'Product' => $Product,
@@ -257,11 +257,11 @@ class Product extends QUI\Control
 
         $Engine->assign(
             'buttonsHtml',
-            $Engine->fetch(dirname(__FILE__) . '/Product.Buttons.html')
+            $Engine->fetch(\dirname(__FILE__) . '/Product.Buttons.html')
         );
 
         // render product
-        return $Engine->fetch(dirname(__FILE__) . '/Product.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/Product.html');
     }
 
     /**

@@ -61,7 +61,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
         $current = $Locale->getCurrent();
         $value   = $this->getValue();
 
-        if (is_string($value)) {
+        if (\is_string($value)) {
             return $value;
         }
 
@@ -81,8 +81,8 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
-        if (!is_string($value) && !is_array($value)) {
-            if (json_last_error() !== JSON_ERROR_NONE) {
+        if (!\is_string($value) && !\is_array($value)) {
+            if (\json_last_error() !== JSON_ERROR_NONE) {
                 throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
@@ -95,10 +95,10 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
             }
         }
 
-        if (is_string($value)) {
+        if (\is_string($value)) {
             $value = json_decode($value, true);
 
-            if (json_last_error() !== JSON_ERROR_NONE) {
+            if (\json_last_error() !== JSON_ERROR_NONE) {
                 throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
@@ -115,10 +115,10 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        $keys = array_keys($value);
+        $keys = \array_keys($value);
 
         foreach ($keys as $lang) {
-            if (!is_string($lang) || strlen($lang) != 2) {
+            if (!\is_string($lang) || \strlen($lang) != 2) {
                 throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
@@ -153,22 +153,22 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
         }
 
 
-        if (!is_string($value) && !is_array($value)) {
-            return array_fill_keys($languages, '');
+        if (!\is_string($value) && !\is_array($value)) {
+            return \array_fill_keys($languages, '');
         }
 
-        if (is_string($value)) {
-            $value = json_decode($value, true);
+        if (\is_string($value)) {
+            $value = \json_decode($value, true);
 
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                return array_fill_keys($languages, '');
+            if (\json_last_error() !== JSON_ERROR_NONE) {
+                return \array_fill_keys($languages, '');
             }
         }
 
         $result = [];
 
         foreach ($value as $key => $val) {
-            if (!is_string($key) || strlen($key) != 2) {
+            if (!\is_string($key) || \strlen($key) != 2) {
                 continue;
             }
 

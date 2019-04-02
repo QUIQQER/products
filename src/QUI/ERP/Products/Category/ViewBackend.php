@@ -147,8 +147,8 @@ class ViewBackend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
      *                              $queryParams['order']
      *                              $queryParams['debug']
      *
-     * @return array
      * @param array $params
+     * @return array
      * @return array
      */
     public function getProducts($params = [])
