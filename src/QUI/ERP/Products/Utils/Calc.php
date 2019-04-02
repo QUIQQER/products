@@ -222,7 +222,7 @@ class Calc
             $this->getProductPrice($Product);
 
             $productAttributes = $Product->getAttributes();
-            
+
             $subSum   = $subSum + $productAttributes['calculated_sum'];
             $nettoSum = $nettoSum + $productAttributes['calculated_nettoSum'];
 

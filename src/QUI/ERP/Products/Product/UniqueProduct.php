@@ -472,6 +472,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             try {
                 $value = $this->Currency->convert($value, $Currency);
                 $value = $Calc->round($value);
+                $value = $Currency->amount($value);
 
                 $OriginalField = Fields::getField($Field->getId());
                 $OriginalField->setValue($value);
@@ -491,6 +492,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
                     $value = $PriceFactor->getValue();
                     $value = $this->Currency->convert($value, $Currency);
                     $value = $Calc->round($value);
+                    $value = $Currency->amount($value);
 
                     $PriceFactor->setValue($value);
                 } catch (QUI\Exception $Exception) {
