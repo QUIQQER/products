@@ -60,16 +60,18 @@ class GroupList extends QUI\ERP\Products\Field\Field
         $params = $this->getFieldDataForView();
         $users  = $this->getUsers();
 
-        $value = [];
-
-        foreach ($users as $User) {
-            if ($User->isActive()) {
-                $value[] = $User->getName();
+        if (\is_array($users)) {
+            $value = [];
+    
+            foreach ($users as $User) {
+                if ($User->isActive()) {
+                    $value[] = $User->getName();
+                }
             }
+    
+            $params['value'] = \implode(', ', $value);
         }
-
-        $params['value'] = \implode(', ', $value);
-
+        
         return new View($params);
     }
 
