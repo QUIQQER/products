@@ -27,7 +27,7 @@ QUI::$Ajax->registerFunction(
 
         $FrontEndSearch = SearchHandler::getFrontendSearch($Site);
         $searchFields   = QUI\Utils\Security\Orthos::clearArray(
-            json_decode($searchFields, true)
+            \json_decode($searchFields, true)
         );
 
         return $FrontEndSearch->setSearchFields($searchFields);

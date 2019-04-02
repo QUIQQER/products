@@ -16,7 +16,7 @@ QUI::$Ajax->registerFunction(
     function ($params) {
         $Fields = new QUI\ERP\Products\Handler\Fields();
         $result = [];
-        $params = json_decode($params, true);
+        $params = \json_decode($params, true);
 
         $Grid  = new QUI\Utils\Grid();
         $query = $Grid->parseDBParams($params);

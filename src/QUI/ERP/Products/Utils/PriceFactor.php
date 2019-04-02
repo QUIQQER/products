@@ -151,7 +151,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
         }
 
         if (isset($params['visible'])) {
-            if (is_bool($params['visible'])) {
+            if (\is_bool($params['visible'])) {
                 $this->visible = (bool)$params['visible'];
             } else {
                 $this->visible = $params['visible'] ? true : false;
@@ -271,7 +271,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function setTitle($title)
     {
-        if (is_string($title)) {
+        if (\is_string($title)) {
             $this->title = $title;
         }
     }
@@ -283,7 +283,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function setDescription($description)
     {
-        if (is_string($description)) {
+        if (\is_string($description)) {
             $this->description = $description;
         }
     }
@@ -296,7 +296,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function setValue($value)
     {
-        if (is_numeric($value)) {
+        if (\is_numeric($value)) {
             $this->value = $value;
         }
     }
@@ -319,7 +319,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function setPriority($priority)
     {
-        if (is_int($priority)) {
+        if (\is_int($priority)) {
             $this->priority = $priority;
         }
     }
@@ -389,7 +389,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function setSum($sum)
     {
-        if (is_numeric($sum)) {
+        if (\is_numeric($sum)) {
             $this->sum = $sum;
         }
     }
@@ -440,7 +440,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function setNettoSum($sum)
     {
-        if (is_numeric($sum)) {
+        if (\is_numeric($sum)) {
             $this->nettoSum = $sum;
         }
     }
@@ -504,7 +504,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             'valueText'         => $this->getValueText(),
             'priority'          => $this->getPriority(),
             'visible'           => $this->isVisible(),
-            'class'             => get_class($this),
+            'class'             => \get_class($this),
             'vat'               => $this->getVat()
         ];
     }

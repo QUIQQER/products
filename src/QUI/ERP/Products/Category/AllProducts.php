@@ -108,7 +108,7 @@ class AllProducts extends Category
      */
     public function countProducts($params = [])
     {
-        if (!is_array($params)) {
+        if (!\is_array($params)) {
             $params = [];
         }
 

@@ -3,9 +3,9 @@
 use QUI\ERP\Products\Handler\Products;
 
 $productIds = $Site->getAttribute('quiqqer.products.settings.productIds');
-$productIds = explode(',', $productIds);
+$productIds = \explode(',', $productIds);
 
-$products = array();
+$products = [];
 
 foreach ($productIds as $productId) {
     try {
@@ -16,6 +16,6 @@ foreach ($productIds as $productId) {
     }
 }
 
-$Engine->assign(array(
+$Engine->assign([
     'products' => $products
-));
+]);

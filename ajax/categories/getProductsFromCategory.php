@@ -22,7 +22,7 @@ QUI::$Ajax->registerFunction(
         $products = [];
 
         $productIds = $Category->getProductIds(
-            $Grid->parseDBParams(json_decode($params, true))
+            $Grid->parseDBParams(\json_decode($params, true))
         );
 
         foreach ($productIds as $productId) {

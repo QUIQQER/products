@@ -93,15 +93,15 @@ class GroupList extends QUI\ERP\Products\Field\Field
         $multipleUsers = $this->getOption('multipleUsers');
         $userIds       = [];
 
-        if (is_numeric($value)) {
+        if (\is_numeric($value)) {
             $userIds = [(int)$value];
-        } elseif (is_string($value)) {
-            $userIds = json_decode($value, true);
+        } elseif (\is_string($value)) {
+            $userIds = \json_decode($value, true);
 
-            if (!is_array($userIds) && !is_numeric($userIds)) {
+            if (!\is_array($userIds) && !\is_numeric($userIds)) {
                 $userIds = [];
             }
-        } elseif (is_array($value)) {
+        } elseif (\is_array($value)) {
             $userIds = $value;
         }
 
@@ -109,7 +109,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        if (count($userIds) > 1 && !$multipleUsers) {
+        if (\count($userIds) > 1 && !$multipleUsers) {
             throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.grouplist.user.limit.reached',
@@ -133,7 +133,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         $isUserInGroups = function ($userGroups) use ($groupIds) {
             foreach ($userGroups as $userGroup) {
-                if (!in_array($userGroup, $groupIds)) {
+                if (!\in_array($userGroup, $groupIds)) {
                     return true;
                 }
             }
@@ -192,19 +192,19 @@ class GroupList extends QUI\ERP\Products\Field\Field
         $userIds       = [];
         $result        = [];
 
-        if (is_numeric($value)) {
+        if (\is_numeric($value)) {
             $userIds = [(int)$value];
-        } elseif (is_string($value)) {
-            $userIds = json_decode($value, true);
+        } elseif (\is_string($value)) {
+            $userIds = \json_decode($value, true);
 
-            if (!is_array($userIds) && !is_numeric($userIds)) {
+            if (!\is_array($userIds) && !\is_numeric($userIds)) {
                 $userIds = [];
             }
-        } elseif (is_array($value)) {
+        } elseif (\is_array($value)) {
             $userIds = $value;
         }
 
-        if (count($userIds) > 1 && !$multipleUsers) {
+        if (\count($userIds) > 1 && !$multipleUsers) {
             return [];
         }
 
@@ -214,7 +214,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         $isUserInGroups = function ($userGroups) use ($groupIds) {
             foreach ($userGroups as $userGroup) {
-                if (!in_array($userGroup, $groupIds)) {
+                if (!\in_array($userGroup, $groupIds)) {
                     return true;
                 }
             }
@@ -225,7 +225,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         try {
             foreach ($userIds as $userId) {
-                if (!is_numeric($userId)) {
+                if (!\is_numeric($userId)) {
                     continue;
                 }
 
@@ -264,11 +264,11 @@ class GroupList extends QUI\ERP\Products\Field\Field
             $searchValues[] = QUI::getUsers()->get($userId)->getName();
         }
 
-        if (count($searchValues) === 1) {
+        if (\count($searchValues) === 1) {
             return $searchValues[0];
         }
 
-        return ','.implode(',', $searchValues).',';
+        return ','.\implode(',', $searchValues).',';
     }
 
     /**

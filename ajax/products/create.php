@@ -17,16 +17,15 @@ use QUI\ERP\Products\Handler\Products;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_create',
     function ($categories, $fields) {
+        \ini_set('display_errors', 1);
 
-        ini_set('display_errors', 1);
-
-        $fields     = json_decode($fields, true);
-        $categories = json_decode($categories, true);
+        $fields     = \json_decode($fields, true);
+        $categories = \json_decode($categories, true);
         $fieldList  = [];
 
         foreach ($fields as $fieldId => $fieldData) {
             try {
-                $fieldId = (int)str_replace('field-', '', $fieldId);
+                $fieldId = (int)\str_replace('field-', '', $fieldId);
 
                 $Field = Fields::getField($fieldId);
                 $Field->setValue($fieldData);

@@ -53,7 +53,7 @@ class Products extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
@@ -74,7 +74,7 @@ class Products extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             return [];
         }
 

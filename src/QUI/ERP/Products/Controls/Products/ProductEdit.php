@@ -28,7 +28,7 @@ class ProductEdit extends QUI\Control
         ]);
 
         $this->addCSSClass('quiqqer-products-productEdit');
-        $this->addCSSFile(dirname(__FILE__).'/ProductEdit.css');
+        $this->addCSSFile(\dirname(__FILE__).'/ProductEdit.css');
 
         parent::__construct($attributes);
     }
@@ -36,8 +36,8 @@ class ProductEdit extends QUI\Control
     /**
      * (non-PHPdoc)
      *
-     * @see \QUI\Control::create()
      * @throws QUI\Exception
+     * @see \QUI\Control::create()
      */
     public function getBody()
     {
@@ -61,6 +61,6 @@ class ProductEdit extends QUI\Control
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST)
         ]);
 
-        return $Engine->fetch(dirname(__FILE__).'/ProductEdit.html');
+        return $Engine->fetch(\dirname(__FILE__).'/ProductEdit.html');
     }
 }

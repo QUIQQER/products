@@ -27,8 +27,8 @@ class BoolTypeFrontendView extends QUI\ERP\Products\Field\View
             return '';
         }
 
-        $title = htmlspecialchars($this->getTitle());
-        $title = htmlspecialchars($title);
+        $title = \htmlspecialchars($this->getTitle());
+        $title = \htmlspecialchars($title);
 
         if ($this->getValue()) {
             $html = '<span class="fa fa-check"></span>';

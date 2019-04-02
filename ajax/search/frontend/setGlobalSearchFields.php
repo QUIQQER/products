@@ -23,7 +23,7 @@ QUI::$Ajax->registerFunction(
         );
 
         $searchFields = QUI\Utils\Security\Orthos::clearArray(
-            json_decode($searchFields, true)
+            \json_decode($searchFields, true)
         );
 
         return QUI\ERP\Products\Search\FrontendSearch::setGlobalSearchFields($searchFields);

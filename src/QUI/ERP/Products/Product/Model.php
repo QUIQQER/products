@@ -115,7 +115,7 @@ class Model extends QUI\QDOM
         $this->active = (int)$result[0]['active'] ? true : false;
 
         if (isset($result[0]['permissions'])) {
-            $this->permissions = json_decode($result[0]['permissions'], true);
+            $this->permissions = \json_decode($result[0]['permissions'], true);
         }
 
         // view permissions prüfung wird im Frontend view gemacht (ViewFrontend)
@@ -127,9 +127,9 @@ class Model extends QUI\QDOM
         $this->setAttributes($result[0]);
 
         // categories
-        $categories = explode(',', trim($result[0]['categories'], ','));
+        $categories = \explode(',', \trim($result[0]['categories'], ','));
 
-        if (is_array($categories)) {
+        if (\is_array($categories)) {
             foreach ($categories as $categoryId) {
                 try {
                     $Category = QUI\ERP\Products\Handler\Categories::getCategory($categoryId);
@@ -161,9 +161,9 @@ class Model extends QUI\QDOM
 
 
         // fields
-        $fields = json_decode($result[0]['fieldData'], true);
+        $fields = \json_decode($result[0]['fieldData'], true);
 
-        if (!is_array($fields)) {
+        if (!\is_array($fields)) {
             $fields = [];
         }
 
@@ -216,7 +216,7 @@ class Model extends QUI\QDOM
             }
         }
 
-        if (defined('QUIQQER_BACKEND')) {
+        if (\defined('QUIQQER_BACKEND')) {
             $this->setAttribute('viewType', 'backend');
         }
     }
@@ -291,7 +291,7 @@ class Model extends QUI\QDOM
             if ($Field->isCustomField()) {
                 $calcData['custom_calc'] = $Field->getCalculationData($Locale);
 
-                $fields[] = array_merge(
+                $fields[] = \array_merge(
                     $Field->toProductArray(),
                     $Field->getAttributes(),
                     $calcData
@@ -301,7 +301,7 @@ class Model extends QUI\QDOM
             }
 
             /* @var $Field QUI\ERP\Products\Field\Field */
-            $fields[] = array_merge(
+            $fields[] = \array_merge(
                 $Field->toProductArray(),
                 $Field->getAttributes()
             );
@@ -523,7 +523,7 @@ class Model extends QUI\QDOM
         $parts[] = Orthos::urlEncodeString($this->getTitle());
         $parts[] = $this->getId();
 
-        return urlencode(implode(QUI\Rewrite::URL_PARAM_SEPARATOR, $parts));
+        return \urlencode(\implode(QUI\Rewrite::URL_PARAM_SEPARATOR, $parts));
     }
 
     /**
@@ -615,7 +615,7 @@ class Model extends QUI\QDOM
                 return false;
             }
 
-            if (is_string($data)) {
+            if (\is_string($data)) {
                 return $data;
             }
 
@@ -741,7 +741,7 @@ class Model extends QUI\QDOM
 
             $options = $Field->getOptions();
 
-            if (isset($options['entries']) && count($options['entries'])) {
+            if (isset($options['entries']) && \count($options['entries'])) {
                 $Clone->getField($Field->getId())->setValue(0);
             }
         }
@@ -876,7 +876,7 @@ class Model extends QUI\QDOM
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($fieldList as $Field) {
-            $fields[] = array_merge(
+            $fields[] = \array_merge(
                 $Field->toProductArray(),
                 $Field->getAttributes()
             );
@@ -896,7 +896,7 @@ class Model extends QUI\QDOM
         }
 
         if (!empty($categories)) {
-            $attributes['categories'] = implode(',', $categories);
+            $attributes['categories'] = \implode(',', $categories);
         }
 
         return $attributes;
@@ -962,24 +962,24 @@ class Model extends QUI\QDOM
             ]),
             '',
             [
-                'categories'  => ','.implode(',', $categoryIds).',',
+                'categories'  => ','.\implode(',', $categoryIds).',',
                 'category'    => $mainCategory,
-                'fieldData'   => json_encode($fieldData),
-                'permissions' => json_encode($this->permissions),
+                'fieldData'   => \json_encode($fieldData),
+                'permissions' => \json_encode($this->permissions),
                 'priority'    => $this->getPriority()
             ]
         );
 
-        $this->setAttribute('e_date', date('Y-m-d H:i:s'));
+        $this->setAttribute('e_date', \date('Y-m-d H:i:s'));
 
         // update
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             [
-                'categories'  => ','.implode(',', $categoryIds).',',
+                'categories'  => ','.\implode(',', $categoryIds).',',
                 'category'    => $mainCategory,
-                'fieldData'   => json_encode($fieldData),
-                'permissions' => json_encode($this->permissions),
+                'fieldData'   => \json_encode($fieldData),
+                'permissions' => \json_encode($this->permissions),
                 'e_user'      => QUI::getUserBySession()->getId(),
                 'e_date'      => $this->getAttribute('e_date')
             ],
@@ -1245,9 +1245,7 @@ class Model extends QUI\QDOM
         $permissions     = $this->getPermissions();
         $viewPermissions = null;
 
-        if (isset($permissions['permission.viewable'])
-            && !empty($permissions['permission.viewable'])
-        ) {
+        if (isset($permissions['permission.viewable']) && !empty($permissions['permission.viewable'])) {
             $viewPermissions = ','.$permissions['permission.viewable'].',';
         }
 
@@ -1264,7 +1262,7 @@ class Model extends QUI\QDOM
                 $catIds[] = $Category->getId();
             }
 
-            $data['category'] = ','.implode(',', $catIds).',';
+            $data['category'] = ','.\implode(',', $catIds).',';
         } else {
             $data['category'] = null;
         }
@@ -1290,8 +1288,8 @@ class Model extends QUI\QDOM
         }
 
         foreach ($data as $k => $v) {
-            if (is_array($v)) {
-                $data[$k] = json_encode($v);
+            if (\is_array($v)) {
+                $data[$k] = \json_encode($v);
             }
         }
 
@@ -1420,8 +1418,8 @@ class Model extends QUI\QDOM
      */
     public function getField($fieldId)
     {
-        if (is_string($fieldId) && defined('QUI\ERP\Products\Handler\Fields::'.$fieldId)) {
-            $fieldId = constant('QUI\ERP\Products\Handler\Fields::'.$fieldId);
+        if (\is_string($fieldId) && \defined('QUI\ERP\Products\Handler\Fields::'.$fieldId)) {
+            $fieldId = \constant('QUI\ERP\Products\Handler\Fields::'.$fieldId);
         }
 
         if (isset($this->fields[$fieldId])) {
@@ -1553,17 +1551,17 @@ class Model extends QUI\QDOM
     public function getCategory()
     {
         // fallback, but never happen
-        if (is_null($this->Category)) {
+        if (\is_null($this->Category)) {
             $categories = $this->getCategories();
 
-            if (count($categories)) {
-                reset($categories);
-                $this->Category = current($categories);
+            if (\count($categories)) {
+                \reset($categories);
+                $this->Category = \current($categories);
             }
         }
 
         // fallback, but never happen
-        if (is_null($this->Category)) {
+        if (\is_null($this->Category)) {
             try {
                 $this->Category = Categories::getMainCategory();
             } catch (QUI\Exception $Exception) {

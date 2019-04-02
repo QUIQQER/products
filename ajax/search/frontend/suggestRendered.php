@@ -40,10 +40,7 @@ QUI::$Ajax->registerFunction(
 
             if (!isset($siteList[0])) {
                 throw new QUI\Exception(
-                    [
-                        'quiqqer/products',
-                        'exception.sitesearch.not.found'
-                    ],
+                    ['quiqqer/products', 'exception.sitesearch.not.found'],
                     404
                 );
             }
@@ -71,10 +68,7 @@ QUI::$Ajax->registerFunction(
 
                     if (!isset($siteList[0])) {
                         throw new QUI\Exception(
-                            [
-                                'quiqqer/products',
-                                'exception.sitesearch.not.found'
-                            ],
+                            ['quiqqer/products', 'exception.sitesearch.not.found'],
                             404
                         );
                     }
@@ -84,7 +78,7 @@ QUI::$Ajax->registerFunction(
         }
 
         $Search       = Search::getFrontendSearch($Site);
-        $searchParams = json_decode($searchParams, true);
+        $searchParams = \json_decode($searchParams, true);
 
         $searchParams['limit'] = '0,5';
 
@@ -95,7 +89,7 @@ QUI::$Ajax->registerFunction(
         $html   = '';
         $result = $Search->search($searchParams);
 
-        if (!count($result)) {
+        if (!\count($result)) {
             return $html;
         }
 

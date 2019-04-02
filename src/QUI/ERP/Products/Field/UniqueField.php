@@ -192,12 +192,12 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                 continue;
             }
 
-            if (property_exists($this, $attribute)) {
+            if (\property_exists($this, $attribute)) {
                 $this->$attribute = $params[$attribute];
             }
         }
 
-        if (isset($params['__class__']) && class_exists($params['__class__'])) {
+        if (isset($params['__class__']) && \class_exists($params['__class__'])) {
             $this->parentFieldClass = $params['__class__'];
         }
     }
@@ -209,7 +209,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
     public function getView()
     {
-        if (defined('QUIQQER_BACKEND')) {
+        if (\defined('QUIQQER_BACKEND')) {
             return $this->getBackendView();
         }
 
@@ -226,11 +226,11 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
         $type      = $this->getType();
         $viewClass = 'QUI\ERP\Products\Field\Types\\'.$type.'FrontendView';
 
-        if (class_exists($viewClass)) {
+        if (\class_exists($viewClass)) {
             return new $viewClass($this->getAttributes());
         }
 
-        if ($this->parentFieldClass && class_exists($this->parentFieldClass)) {
+        if ($this->parentFieldClass && \class_exists($this->parentFieldClass)) {
             $Field = new $this->parentFieldClass($this->getId(), $this->getAttributes());
 
             if ($Field instanceof Field) {
@@ -251,11 +251,11 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
         $type      = $this->getType();
         $viewClass = 'QUI\ERP\Products\Field\Types\\'.$type.'BackendView';
 
-        if (class_exists($viewClass)) {
+        if (\class_exists($viewClass)) {
             return new $viewClass($this->getAttributes());
         }
 
-        if ($this->parentFieldClass && class_exists($this->parentFieldClass)) {
+        if ($this->parentFieldClass && \class_exists($this->parentFieldClass)) {
             $Field = new $this->parentFieldClass($this->getId(), $this->getAttributes());
 
             if ($Field instanceof Field) {

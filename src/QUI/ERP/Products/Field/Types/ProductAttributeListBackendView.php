@@ -51,11 +51,11 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
             $entries = $options['entries'];
         }
 
-        if (!is_string($value) && !is_numeric($value)) {
+        if (!\is_string($value) && !\is_numeric($value)) {
             $value = '';
         }
 
-        $value = htmlspecialchars($value);
+        $value = \htmlspecialchars($value);
 
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
@@ -75,13 +75,13 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
         ]);
 
         // options
-        $currentLC = strtolower($current).'_'.strtoupper($current);
+        $currentLC = \strtolower($current).'_'.\strtoupper($current);
 
         $option = $entries[$value];
         $title  = $option['title'];
         $text   = '';
 
-        if (is_string($title)) {
+        if (\is_string($title)) {
             $text = $title;
         } elseif (isset($title[$current])) {
             $text = $title[$current];
@@ -91,6 +91,6 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
 
         $Engine->assign('valueText', $text);
 
-        return $Engine->fetch(dirname(__FILE__).'/ProductAttributeListBackendView.html');
+        return $Engine->fetch(\dirname(__FILE__).'/ProductAttributeListBackendView.html');
     }
 }

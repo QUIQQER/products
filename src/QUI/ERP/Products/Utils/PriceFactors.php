@@ -60,9 +60,9 @@ class PriceFactors
     public function count()
     {
         $count = 0;
-        $count = $count + count($this->listBeginning);
-        $count = $count + count($this->list);
-        $count = $count + count($this->listEnd);
+        $count = $count + \count($this->listBeginning);
+        $count = $count + \count($this->list);
+        $count = $count + \count($this->listEnd);
 
         return $count;
     }
@@ -115,11 +115,11 @@ class PriceFactors
             return $a->getPriority() > $b->getPriority();
         };
 
-        usort($this->listBeginning, $sort);
-        usort($this->list, $sort);
-        usort($this->listEnd, $sort);
+        \usort($this->listBeginning, $sort);
+        \usort($this->list, $sort);
+        \usort($this->listEnd, $sort);
 
-        return array_merge($this->listBeginning, $this->list, $this->listEnd);
+        return \array_merge($this->listBeginning, $this->list, $this->listEnd);
     }
 
     /**
@@ -176,7 +176,7 @@ class PriceFactors
      */
     public function toJSON()
     {
-        return json_encode($this->toArray());
+        return \json_encode($this->toArray());
     }
 
     /**
@@ -214,7 +214,7 @@ class PriceFactors
         }
 
         $getFactor = function ($attributes) {
-            if (isset($attributes['class']) && class_exists($attributes['class'])) {
+            if (isset($attributes['class']) && \class_exists($attributes['class'])) {
                 return new $attributes['class']($attributes);
             }
 

@@ -160,15 +160,15 @@ class Fields
      */
     public static function isField($mixed)
     {
-        if (!is_object($mixed)) {
+        if (!\is_object($mixed)) {
             return false;
         }
 
-        if (get_class($mixed) === QUI\ERP\Products\Field\Field::class) {
+        if (\get_class($mixed) === QUI\ERP\Products\Field\Field::class) {
             return true;
         }
 
-        if (get_class($mixed) === QUI\ERP\Products\Field\UniqueField::class) {
+        if (\get_class($mixed) === QUI\ERP\Products\Field\UniqueField::class) {
             return true;
         }
 
@@ -217,7 +217,7 @@ class Fields
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName()
         );
 
-        if (count($columns) > 1000) {
+        if (\count($columns) > 1000) {
             throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.products.column.maxSize'
@@ -259,8 +259,8 @@ class Fields
             }
         }
 
-        if (isset($data['options']) && is_array($data['options'])) {
-            $data['options'] = json_encode($data['options']);
+        if (isset($data['options']) && \is_array($data['options'])) {
+            $data['options'] = \json_encode($data['options']);
         }
 
         if (!isset($data['priority']) || empty($data['priority'])) {
@@ -488,7 +488,7 @@ class Fields
         try {
             $translations = QUI\Translator::get($group, $var);
 
-            if (!is_array($data)) {
+            if (!\is_array($data)) {
                 $data = [];
             }
 
@@ -534,7 +534,7 @@ class Fields
         }
 
         // exists the type?
-        $dir    = dirname(dirname(__FILE__)).'/Field/Types/';
+        $dir    = \dirname(\dirname(__FILE__)).'/Field/Types/';
         $files  = QUI\Utils\System\File::readDir($dir);
         $result = [];
 
@@ -559,7 +559,7 @@ class Fields
         foreach ($plugins as $plugin) {
             $xml = OPT_DIR.$plugin['name'].'/products.xml';
 
-            if (!file_exists($xml)) {
+            if (!\file_exists($xml)) {
                 continue;
             }
 
@@ -575,7 +575,7 @@ class Fields
                 $name     = $Field->getAttribute('name');
                 $help     = true;
 
-                if (!class_exists($src)) {
+                if (!\class_exists($src)) {
                     continue;
                 }
 
@@ -615,7 +615,7 @@ class Fields
     public static function getFieldTypeData($type)
     {
         $types = self::getFieldTypes();
-        $found = array_filter($types, function ($entry) use ($type) {
+        $found = \array_filter($types, function ($entry) use ($type) {
             return $entry['name'] == $type;
         });
 
@@ -623,7 +623,7 @@ class Fields
             return [];
         }
 
-        return reset($found);
+        return \reset($found);
     }
 
     /**
@@ -643,7 +643,7 @@ class Fields
     ) {
         $class = 'QUI\ERP\Products\Field\Types\\'.$type;
 
-        if (class_exists($class)) {
+        if (\class_exists($class)) {
             return new $class($fieldId, $fieldParams);
         }
 
@@ -722,7 +722,7 @@ class Fields
             );
         }
 
-        if (!class_exists($class)) {
+        if (!\class_exists($class)) {
             throw new QUI\ERP\Products\Field\Exception(
                 ['quiqqer/products', 'exception.field.class.not.found'],
                 404,
@@ -738,7 +738,7 @@ class Fields
             'system'       => (int)$data['systemField'],
             'required'     => (int)$data['requiredField'],
             'standard'     => (int)$data['standardField'],
-            'defaultValue' => json_decode($data['defaultValue'], true)
+            'defaultValue' => \json_decode($data['defaultValue'], true)
         ];
 
         /* @var $Field QUI\ERP\Products\Field\Field */
@@ -797,7 +797,7 @@ class Fields
      */
     public static function getFieldIds($queryParams = [])
     {
-        $cacheName = 'quiqqer/products/fields/query/'.md5(serialize($queryParams));
+        $cacheName = 'quiqqer/products/fields/query/'.\md5(\serialize($queryParams));
 
         try {
             return QUI\Cache\Manager::get($cacheName);

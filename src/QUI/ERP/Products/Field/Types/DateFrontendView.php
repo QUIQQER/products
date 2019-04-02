@@ -27,8 +27,8 @@ class DateFrontendView extends View
             return '';
         }
 
-        $title = htmlspecialchars($this->getTitle());
-        $title = htmlspecialchars($title);
+        $title = \htmlspecialchars($this->getTitle());
+        $title = \htmlspecialchars($title);
         $date  = QUI::getLocale()->formatDate($this->getValue());
 
         return "<div class=\"quiqqer-product-field\">

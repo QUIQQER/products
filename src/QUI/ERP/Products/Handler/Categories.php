@@ -135,14 +135,9 @@ class Categories
 
             if (!isset($data[0])) {
                 throw new QUI\Exception(
-                    [
-                        'quiqqer/products',
-                        'exception.category.not.found'
-                    ],
+                    ['quiqqer/products', 'exception.category.not.found'],
                     404,
-                    [
-                        'categoryId' => $id
-                    ]
+                    ['categoryId' => $id]
                 );
             }
 
@@ -152,7 +147,8 @@ class Categories
         }
 
 
-        $Category        = new QUI\ERP\Products\Category\Category($id, $categoryData);
+        $Category = new QUI\ERP\Products\Category\Category($id, $categoryData);
+
         self::$list[$id] = $Category;
 
         return $Category;
@@ -207,15 +203,15 @@ class Categories
      */
     public static function isCategory($Category)
     {
-        if (!is_object($Category)) {
+        if (!\is_object($Category)) {
             return false;
         }
 
-        if (get_class($Category) === QUI\ERP\Products\Category\Category::class) {
+        if (\get_class($Category) === QUI\ERP\Products\Category\Category::class) {
             return true;
         }
 
-        if (get_class($Category) === QUI\ERP\Products\Category\AllProducts::class) {
+        if (\get_class($Category) === QUI\ERP\Products\Category\AllProducts::class) {
             return true;
         }
 
@@ -237,7 +233,7 @@ class Categories
     {
         QUI\Permissions\Permission::checkPermission('category.create');
 
-        if (is_null($parentId)) {
+        if (\is_null($parentId)) {
             $parentId = 0;
         }
 

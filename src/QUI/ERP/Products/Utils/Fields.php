@@ -22,9 +22,9 @@ class Fields
      *
      * @todo wer hat diese methode gebaut? ToJson = return string, wieso array?
      */
-    public static function parseFieldsToJson($fields = array())
+    public static function parseFieldsToJson($fields = [])
     {
-        $result = array();
+        $result = [];
 
         foreach ($fields as $Field) {
             if (!self::isField($Field)) {
@@ -51,7 +51,7 @@ class Fields
      */
     public static function isField($object)
     {
-        if (!is_object($object)) {
+        if (!\is_object($object)) {
             return false;
         }
 
@@ -81,7 +81,7 @@ class Fields
      */
     public static function sortFields($fields)
     {
-        usort($fields, function ($Field1, $Field2) {
+        \usort($fields, function ($Field1, $Field2) {
             if (!self::isField($Field1)) {
                 return 1;
             }

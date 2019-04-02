@@ -32,7 +32,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
         parent::__construct($attributes);
 
         $this->addCSSFile(
-            dirname(__FILE__).'/ChildrenSlider.css'
+            \dirname(__FILE__).'/ChildrenSlider.css'
         );
     }
 
@@ -70,7 +70,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
             'products' => $products
         ]);
 
-        return $Engine->fetch(dirname(__FILE__).'/ChildrenSlider.html');
+        return $Engine->fetch(\dirname(__FILE__).'/ChildrenSlider.html');
     }
 
     /**
@@ -80,7 +80,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
      */
     public function addProduct($Product)
     {
-        if (is_numeric($Product)) {
+        if (\is_numeric($Product)) {
             try {
                 $this->products[] = Products::getProduct($Product)->getView();
             } catch (QUI\Exception $Exception) {
@@ -101,7 +101,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
      */
     public function addProducts($products)
     {
-        if (!is_array($products)) {
+        if (!\is_array($products)) {
             return;
         }
 

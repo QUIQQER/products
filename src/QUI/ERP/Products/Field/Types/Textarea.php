@@ -58,9 +58,7 @@ class Textarea extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        if (!is_string($value)
-            && !is_numeric($value)
-        ) {
+        if (!\is_string($value) && !\is_numeric($value)) {
             throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
@@ -81,9 +79,7 @@ class Textarea extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        if (!is_string($value)
-            && !is_numeric($value)
-        ) {
+        if (!\is_string($value) && !\is_numeric($value)) {
             return null;
         }
 

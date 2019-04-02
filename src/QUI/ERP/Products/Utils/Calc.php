@@ -386,7 +386,7 @@ class Calc
 
             foreach ($priceFactors as $Factor) {
                 /* @var $Factor QUI\ERP\Products\Utils\PriceFactor */
-                $priceFactorBruttoSums = $priceFactorBruttoSums + round($Factor->getSum(), 2);
+                $priceFactorBruttoSums = $priceFactorBruttoSums + \round($Factor->getSum(), 2);
             }
 
             $priceFactorBruttoSum = $subSum + $priceFactorBruttoSums;

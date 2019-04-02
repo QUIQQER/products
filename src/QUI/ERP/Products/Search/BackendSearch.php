@@ -28,7 +28,7 @@ class BackendSearch extends Search
      */
     public function __construct($lang = null)
     {
-        if (is_null($lang)) {
+        if (\is_null($lang)) {
             $lang = Products::getLocale()->getCurrent();
         }
 
@@ -68,9 +68,7 @@ class BackendSearch extends Search
             'type'  => \PDO::PARAM_STR
         ];
 
-        if (isset($searchParams['category']) &&
-            !empty($searchParams['category'])
-        ) {
+        if (isset($searchParams['category']) && !empty($searchParams['category'])) {
             $where[]           = '`category` LIKE :category';
             $binds['category'] = [
                 'value' => '%,'.(int)$searchParams['category'].',%',
@@ -80,7 +78,7 @@ class BackendSearch extends Search
 
         if (isset($searchParams['categories'])
             && !empty($searchParams['categories'])
-            && is_array($searchParams['categories'])
+            && \is_array($searchParams['categories'])
         ) {
             $c               = 0;
             $whereCategories = [];
@@ -97,41 +95,35 @@ class BackendSearch extends Search
             }
 
             // @todo das OR als setting (AND oder OR) (ist gedacht für die Navigation)
-            $where[] = '('.implode(' OR ', $whereCategories).')';
+            $where[] = '('.\implode(' OR ', $whereCategories).')';
         }
 
-        if (!isset($searchParams['fields'])
-            && !isset($searchParams['freetext'])
-        ) {
+        if (!isset($searchParams['fields']) && !isset($searchParams['freetext'])) {
             throw new Exception(
                 'Wrong search parameters.',
                 400
             );
         }
 
-        if (isset($searchParams['active'])
-            && !empty($searchParams['active'])
-        ) {
+        if (isset($searchParams['active']) && !empty($searchParams['active'])) {
             $where[] = '`active` = 1';
         }
 
         // freetext search
-        if (isset($searchParams['freetext'])
-            && !empty($searchParams['freetext'])
-        ) {
+        if (isset($searchParams['freetext']) && !empty($searchParams['freetext'])) {
             $value = $this->sanitizeString($searchParams['freetext']);
 
-            if (mb_strpos($value, '#') === 0) {
+            if (\mb_strpos($value, '#') === 0) {
                 $where[]     = '`id` = :id';
                 $binds['id'] = [
-                    'value' => preg_replace('#\D#i', '', $value),
+                    'value' => \preg_replace('#\D#i', '', $value),
                     'type'  => \PDO::PARAM_INT
                 ];
             } else {
                 $whereFreeText = [];
 
                 // split search value by space
-                $freetextValues = explode(' ', $value);
+                $freetextValues = \explode(' ', $value);
 
                 foreach ($freetextValues as $value) {
                     // always search tags
@@ -166,7 +158,7 @@ class BackendSearch extends Search
                 }
 
                 if (!empty($whereFreeText)) {
-                    $where[] = '('.implode(' OR ', $whereFreeText).')';
+                    $where[] = '('.\implode(' OR ', $whereFreeText).')';
                 }
             }
         }
@@ -174,13 +166,13 @@ class BackendSearch extends Search
         // tags search
         if (isset($searchParams['tags'])
             && !empty($searchParams['tags'])
-            && is_array($searchParams['tags'])
+            && \is_array($searchParams['tags'])
         ) {
             $data = $this->getTagQuery($searchParams['tags']);
 
             if (!empty($data['where'])) {
                 $where[] = $data['where'];
-                $binds   = array_merge($binds, $data['binds']);
+                $binds   = \array_merge($binds, $data['binds']);
             }
         }
 
@@ -188,8 +180,8 @@ class BackendSearch extends Search
         if (isset($searchParams['fields'])) {
             try {
                 $queryData = $this->getFieldQueryData($searchParams['fields']);
-                $where     = array_merge($where, $queryData['where']);
-                $binds     = array_merge($binds, $queryData['binds']);
+                $where     = \array_merge($where, $queryData['where']);
+                $binds     = \array_merge($binds, $queryData['binds']);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addError($Exception->getMessage());
             }
@@ -197,7 +189,7 @@ class BackendSearch extends Search
 
         // build WHERE query string
         if (!empty($where)) {
-            $sql .= " WHERE ".implode(" AND ", $where);
+            $sql .= " WHERE ".\implode(" AND ", $where);
         }
 
         if (!$countOnly) {
@@ -236,7 +228,7 @@ class BackendSearch extends Search
         }
 
         if ($countOnly) {
-            return (int)current(current($result));
+            return (int)\current(\current($result));
         }
 
         $productIds = [];
@@ -282,7 +274,7 @@ class BackendSearch extends Search
                 'searchType' => $Field->getSearchType()
             ];
 
-            if (in_array($Field->getSearchType(), $this->searchTypesWithValues)) {
+            if (\in_array($Field->getSearchType(), $this->searchTypesWithValues)) {
                 $searchValues = $this->getValuesFromField($Field, false);
                 $searchParams = [];
 
@@ -336,7 +328,7 @@ class BackendSearch extends Search
 
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($eligibleFields as $Field) {
-            if (!in_array($Field->getId(), $searchFieldIdsFromCfg)) {
+            if (!\in_array($Field->getId(), $searchFieldIdsFromCfg)) {
                 $searchFields[$Field->getId()] = false;
                 continue;
             }
@@ -373,7 +365,7 @@ class BackendSearch extends Search
         $PackageCfg->set(
             'search',
             'backend',
-            implode(',', $newSearchFieldIds)
+            \implode(',', $newSearchFieldIds)
         );
 
         $PackageCfg->save();
@@ -395,7 +387,7 @@ class BackendSearch extends Search
      */
     public function getEligibleSearchFields()
     {
-        if (!is_null($this->eligibleFields)) {
+        if (!\is_null($this->eligibleFields)) {
             return $this->eligibleFields;
         }
 

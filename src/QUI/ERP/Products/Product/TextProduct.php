@@ -50,9 +50,9 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
         $attributes['uid']          = $User->getId();
         $attributes['displayPrice'] = false;
 
-        $attributes['fields'] = array_map(function ($Field) {
+        $attributes['fields'] = \array_map(function ($Field) {
             /* @var $Field QUI\ERP\Products\Field\Field */
-            return array_merge(
+            return \array_merge(
                 $Field->toProductArray(),
                 $Field->getAttributes()
             );

@@ -57,15 +57,15 @@ class BoolType extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        if (is_bool($value)) {
+        if (\is_bool($value)) {
             return;
         }
 
-        if (is_int($value)) {
+        if (\is_int($value)) {
             return;
         }
 
-        if (is_numeric($value)) {
+        if (\is_numeric($value)) {
             return;
         }
 
@@ -104,7 +104,7 @@ class BoolType extends QUI\ERP\Products\Field\Field
             return 1;
         }
 
-        if (is_numeric($value)) {
+        if (\is_numeric($value)) {
             return (int)$value ? 1 : 0;
         }
 

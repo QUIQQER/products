@@ -19,7 +19,7 @@ QUI::$Ajax->registerFunction(
     function ($fieldId, $params) {
         $Fields = new Fields();
         $Field  = $Fields->getField($fieldId);
-        $params = json_decode($params, true);
+        $params = \json_decode($params, true);
 
         $oldValues  = $Field->toProductArray();
         $oldOptions = $Field->getOptions();
@@ -37,12 +37,12 @@ QUI::$Ajax->registerFunction(
 
         $newValues = $Field->toProductArray();
 
-        if (serialize($oldValues) !== serialize($newValues)) {
+        if (\serialize($oldValues) !== \serialize($newValues)) {
             return Fields::PRODUCT_ARRAY_CHANGED;
         }
 
         // changed options?
-        if (serialize($oldOptions) !== serialize($Field->getOptions())) {
+        if (\serialize($oldOptions) !== \serialize($Field->getOptions())) {
             return Fields::PRODUCT_ARRAY_CHANGED;
         }
 

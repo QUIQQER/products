@@ -30,7 +30,7 @@ class Suggest extends QUI\Control
             'globalsearch'        => false
         ]);
 
-        $this->addCSSFile(dirname(__FILE__).'/Suggest.css');
+        $this->addCSSFile(\dirname(__FILE__).'/Suggest.css');
         $this->addCSSClass('quiqqer-products-search-suggest');
 
         parent::__construct($attributes);
@@ -86,7 +86,7 @@ class Suggest extends QUI\Control
             'Search' => $Search
         ]);
 
-        return $Engine->fetch(dirname(__FILE__).'/Suggest.html');
+        return $Engine->fetch(\dirname(__FILE__).'/Suggest.html');
     }
 
     /**

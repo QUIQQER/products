@@ -51,12 +51,12 @@ class ProductFieldDetails extends QUI\Control
         switch ($Field->getType()) {
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA:
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA_MULTI_LANG:
-                $template = dirname(__FILE__).'/ProductFieldDetails.Content.html';
+                $template = \dirname(__FILE__).'/ProductFieldDetails.Content.html';
                 break;
 
             case QUI\ERP\Products\Handler\Fields::TYPE_FOLDER:
                 /* @var $Field QUI\ERP\Products\Field\Types\Folder */
-                $template = dirname(__FILE__).'/ProductFieldDetails.MediaFolder.html';
+                $template = \dirname(__FILE__).'/ProductFieldDetails.MediaFolder.html';
                 $Folder   = $Field->getMediaFolder();
                 $files    = [];
 
@@ -75,7 +75,7 @@ class ProductFieldDetails extends QUI\Control
                     $files = $Folder->getFiles();
                 }
 
-                $files = array_filter($files, function ($File) {
+                $files = \array_filter($files, function ($File) {
                     /* @var $File QUI\Projects\Media\Item $File */
                     return $File->isActive();
                 });
