@@ -988,8 +988,20 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $attributes['uid']         = $this->uid;
         $attributes['image']       = '';
 
+        $Price = $this->getOriginalPrice();
+
         $attributes['hasOfferPrice'] = $this->hasOfferPrice();
-        $attributes['originalPrice'] = $this->getOriginalPrice()->getValue();
+
+        if ($Price instanceof UniqueField) {
+            $attributes['originalPrice'] = $Price->getValue();
+        } elseif ($Price instanceof QUI\ERP\Money\Price) {
+            /* @var $Price QUI\ERP\Money\Price */
+            $attributes['originalPrice'] = $Price->getPrice();
+        } elseif ($Price instanceof QUI\ERP\Products\Field\UniqueField) {
+            /* @var $Price QUI\ERP\Products\Field\UniqueField */
+            $attributes['originalPrice'] = $Price->getPrice()->getPrice();
+        }
+
 
         if ($this->getCategory()) {
             $attributes['category'] = $this->getCategory()->getId();
