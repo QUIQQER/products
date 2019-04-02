@@ -57,7 +57,20 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function getFrontendView()
     {
-        return new View($this->getFieldDataForView());
+        $params = $this->getFieldDataForView();
+        $users  = $this->getUsers();
+
+        $value = [];
+
+        foreach ($users as $User) {
+            if ($User->isActive()) {
+                $value[] = $User->getName();
+            }
+        }
+
+        $params['value'] = \implode(', ', $value);
+
+        return new View($params);
     }
 
     /**
@@ -144,7 +157,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         try {
             foreach ($userIds as $userId) {
-                if (!is_numeric($userId)) {
+                if (!\is_numeric($userId)) {
                     throw new QUI\ERP\Products\Field\Exception([
                         'quiqqer/products',
                         'exception.field.grouplist.invalid.userId'
@@ -287,6 +300,14 @@ class GroupList extends QUI\ERP\Products\Field\Field
             $users = $Group->getUsers();
 
             foreach ($users as $User) {
+                if (\is_array($User)) {
+                    try {
+                        $User = QUI::getUsers()->get($User['id']);
+                    } catch (QUI\Exception $Exception) {
+                        continue;
+                    }
+                }
+
                 $result[$User->getId()] = $User;
             }
         }
