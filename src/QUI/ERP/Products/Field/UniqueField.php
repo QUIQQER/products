@@ -144,9 +144,9 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * The parent field class
      *
-     * @var null
+     * @var string
      */
-    protected $parentFieldClass = null;
+    protected $parentFieldClass = '';
 
     /**
      * Model constructor.
@@ -345,6 +345,17 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Return the parent class of the unique field
+     * - this is the class name from the original field
+     *
+     * @return string
+     */
+    public function getParentClass()
+    {
+        return $this->parentFieldClass;
     }
 
     /**

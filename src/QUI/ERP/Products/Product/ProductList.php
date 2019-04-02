@@ -191,6 +191,8 @@ class ProductList
             $Calc->setUser($this->User);
         }
 
+        $Calc->setCurrency($this->getCurrency());
+
         $Calc->calcProductList($this, function ($data) use ($self) {
             $self->sum          = $data['sum'];
             $self->subSum       = $data['subSum'];
@@ -307,6 +309,10 @@ class ProductList
 
         if (!($Product instanceof UniqueProduct)) {
             return;
+        }
+
+        if ($this->Currency) {
+            $Product->convert($this->Currency);
         }
 
         if ($this->duplicate) {
@@ -463,13 +469,43 @@ class ProductList
     }
 
     /**
+     * Set the currency for the calculation
+     * - Convert all product price fields
+     *
+     * @param QUI\ERP\Currency\Currency|null $Currency
+     */
+    public function setCurrency($Currency = null)
+    {
+        if (!($Currency instanceof QUI\ERP\Currency\Currency)) {
+            $Currency = QUI\ERP\Defaults::getCurrency();
+        }
+
+        if ($this->Currency && $this->Currency->getCode() === $Currency->getCode()) {
+            return;
+        }
+
+        $this->Currency = $Currency;
+
+        /* @var $Product QUI\ERP\Order\Basket\Product */
+        foreach ($this->products as $Product) {
+            $Product->convert($Currency);
+        }
+
+        try {
+            $this->recalculate();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+    }
+
+    /**
      * Return the currency
      *
      * @return QUI\ERP\Currency\Currency
      */
     public function getCurrency()
     {
-        if (!is_null($this->Currency)) {
+        if ($this->Currency !== null) {
             return $this->Currency;
         }
 

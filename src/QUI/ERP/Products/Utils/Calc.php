@@ -154,13 +154,23 @@ class Calc
     }
 
     /**
+     * Set the currency for the calculation
+     *
+     * @param QUI\ERP\Currency\Currency $Currency
+     */
+    public function setCurrency(QUI\ERP\Currency\Currency $Currency)
+    {
+        $this->Currency = $Currency;
+    }
+
+    /**
      * Return the currency
      *
      * @return QUI\ERP\Currency\Currency
      */
     public function getCurrency()
     {
-        if (is_null($this->Currency)) {
+        if (\is_null($this->Currency)) {
             $this->Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
         }
 
@@ -179,7 +189,7 @@ class Calc
     public function calcProductList(ProductList $List, $callback = false)
     {
         // calc data
-        if (!is_callable($callback)) {
+        if (!\is_callable($callback)) {
             return $List->calc();
         }
 
@@ -293,7 +303,7 @@ class Calc
                     break;
 
                 default:
-                    continue;
+                    continue 2;
             }
 
             // add price factor VAT
@@ -381,14 +391,14 @@ class Calc
 
             $priceFactorBruttoSum = $subSum + $priceFactorBruttoSums;
 
-            if ($priceFactorBruttoSum !== round($bruttoSum, 2)) {
-                $diff = $priceFactorBruttoSum - round($bruttoSum, 2);
+            if ($priceFactorBruttoSum !== \round($bruttoSum, 2)) {
+                $diff = $priceFactorBruttoSum - \round($bruttoSum, 2);
 
                 // if we have a diff, we change the first vat price factor
                 foreach ($priceFactors as $Factor) {
                     if ($Factor instanceof QUI\ERP\Products\Interfaces\PriceFactorWithVatInterface) {
-                        $Factor->setSum(round($Factor->getSum() - $diff, 2));
-                        $bruttoSum = round($bruttoSum, 2);
+                        $Factor->setSum(\round($Factor->getSum() - $diff, 2));
+                        $bruttoSum = \round($bruttoSum, 2);
                         break;
                     }
                 }
@@ -438,7 +448,7 @@ class Calc
         $Price = null
     ) {
         // calc data
-        if (!is_callable($callback)) {
+        if (!\is_callable($callback)) {
             $Product->calc($this);
 
             return $Product->getPrice();
@@ -447,7 +457,6 @@ class Calc
         $isNetto     = QUI\ERP\Utils\User::isNettoUser($this->getUser());
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
         $Area        = QUI\ERP\Utils\User::getUserArea($this->getUser());
-
 
         $nettoPrice   = $Product->getNettoPrice()->value();
         $priceFactors = $Product->getPriceFactors()->sort();
@@ -494,7 +503,7 @@ class Calc
             }
 
             $PriceFactor->setNettoSum(
-                floatval($priceFactorSum * $Product->getQuantity())
+                \floatval($priceFactorSum * $Product->getQuantity())
             );
 
             $nettoPrice       = $nettoPrice + $priceFactorSum;

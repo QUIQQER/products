@@ -64,6 +64,11 @@ class Model extends QUI\QDOM
     protected $Category = null;
 
     /**
+     * @var QUI\ERP\Currency\Currency
+     */
+    protected $Currency = null;
+
+    /**
      * Active / Deactive status
      *
      * @var bool
@@ -258,6 +263,7 @@ class Model extends QUI\QDOM
      * Return the product as unique product
      *
      * @param QUI\Interfaces\Users\User|null $User
+     * @param QUI\ERP\Currency\Currency|null $Currency - optional, the unique product can be converted into another currency
      * @return UniqueProduct
      *
      * @throws QUI\Exception
@@ -1878,4 +1884,24 @@ class Model extends QUI\QDOM
             $this->permissions[$permission] = [];
         }
     }
+
+    //region currency
+
+    /**
+     * @param QUI\ERP\Currency\Currency $Currency
+     */
+    public function setCurrency(QUI\ERP\Currency\Currency $Currency)
+    {
+        $this->Currency = $Currency;
+    }
+
+    /**
+     * @return QUI\ERP\Currency\Currency|null
+     */
+    public function getCurrency()
+    {
+        return $this->Currency;
+    }
+
+    //endregion
 }
