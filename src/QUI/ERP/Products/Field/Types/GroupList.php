@@ -327,6 +327,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
         $Groups   = QUI::getGroups();
         $groupIds = $this->getOption('groupIds');
         $result   = [];
+        
+        if (!\is_array($groupIds)) {
+            return $result;
+        }
 
         foreach ($groupIds as $groupId) {
             try {
