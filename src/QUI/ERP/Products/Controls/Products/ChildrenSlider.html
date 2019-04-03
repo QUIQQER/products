@@ -1,3 +1,4 @@
+<div class="quiqqer-bricks-children-slider-container-wrapper">
 <div class="quiqqer-bricks-children-slider-container">
     <div class="quiqqer-bricks-children-slider-container-inner">
         <ul class="quiqqer-bricks-children-slider-container-slide"
@@ -17,7 +18,7 @@
                     data-pid="{$Product->getId()}"
                 >
                     <a href="{$Product->getUrl()}"
-                       title="{$Product->getTitle()|escape:" html"}"
+                       title="{$Product->getTitle()|escape:'html'}"
                        data-pid="{$Product->getId()}"
                     >
                         <div class="quiqqer-products-control-product-childrenslider-entry-image">
@@ -36,4 +37,5 @@
             {/strip}
         </ul>
     </div>
+</div>
 </div>
