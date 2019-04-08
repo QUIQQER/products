@@ -573,7 +573,15 @@ class Calc
             );
         }
 
-        $vatSum      = $nettoPrice * ($Vat->getValue() / 100);
+        $vatValue   = $Vat->getValue();
+        $nettoPrice = \floatval($nettoPrice);
+
+        if (empty($vatValue) || empty($nettoPrice)) {
+            $vatSum = 0;
+        } else {
+            $vatSum = $nettoPrice * ($vatValue / 100);
+        }
+
         $bruttoPrice = $this->round($nettoPrice + $vatSum);
 
         // sum
