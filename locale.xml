@@ -818,12 +818,12 @@
             <en><![CDATA[Product search]]></en>
         </locale>
         <locale name="permission.search.backend._header">
-            <de><![CDATA[Frontend]]></de>
-            <en><![CDATA[Frontend]]></en>
-        </locale>
-        <locale name="permission.search.frontend._header">
             <de><![CDATA[Backend]]></de>
             <en><![CDATA[Backend]]></en>
+        </locale>
+        <locale name="permission.search.frontend._header">
+            <de><![CDATA[Frontend]]></de>
+            <en><![CDATA[Frontend]]></en>
         </locale>
         <locale name="permission.search.frontend.execute">
             <de><![CDATA[Darf Frontend-Suche ausführen]]></de>
