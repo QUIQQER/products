@@ -12,7 +12,7 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_getProductTypes',
     function () {
-        $ProductTypes = QUI\ERP\Products\Product\ProductTypes::getInstance();
+        $ProductTypes = QUI\ERP\Products\Utils\ProductTypes::getInstance();
 
         $types  = $ProductTypes->getProductTypes();
         $result = [];

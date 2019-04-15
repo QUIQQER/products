@@ -169,6 +169,7 @@ class Products
      *
      * @param array $categories - list of category IDs or category Objects
      * @param array $fields - optional, list of fields (Field, Field, Field)
+     * @param string $productType - optional, product type
      *
      * @return QUI\ERP\Products\Product\Product
      *
@@ -176,9 +177,22 @@ class Products
      */
     public static function createProduct(
         $categories = [],
-        $fields = []
+        $fields = [],
+        $productType = ''
     ) {
         QUI\Permissions\Permission::checkPermission('product.create');
+
+        // product type
+        $type = QUI\ERP\Products\Product\Types\Product::class;
+
+        if (!empty($productType) && $productType !== $type) {
+            $ProductTypes = QUI\ERP\Products\Utils\ProductTypes::getInstance();
+
+            if ($ProductTypes->exists($productType)) {
+                $type = $productType;
+            }
+        }
+
 
         // categories
         $categoryids = [];
@@ -258,6 +272,7 @@ class Products
             [
                 'fieldData'  => \json_encode($fieldData),
                 'categories' => ','.\implode($categoryids, ',').',',
+                'type'       => $type,
                 'c_user'     => QUI::getUserBySession()->getId(),
                 'c_date'     => date('Y-m-d H:i:s')
             ]

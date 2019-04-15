@@ -1,5 +1,5 @@
 /**
- * Category sitemap
+ * Create a new product
  *
  * @module package/quiqqer/products/bin/controls/products/Create
  * @author www.pcsg.de (Henning Leutz)
@@ -37,6 +37,10 @@ define('package/quiqqer/products/bin/controls/products/Create', [
         Binds: [
             '$onInject'
         ],
+
+        options: {
+            productType: ''
+        },
 
         initialize: function (options) {
             this.parent(options);

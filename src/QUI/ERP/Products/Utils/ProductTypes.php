@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Product\ProductTypes
+ * This file contains QUI\ERP\Products\Utils\ProductTypes
  */
 
-namespace QUI\ERP\Products\Product;
+namespace QUI\ERP\Products\Utils;
 
 use QUI;
 use QUI\Utils\Singleton;
@@ -55,5 +55,24 @@ class ProductTypes extends Singleton
         QUI\Cache\Manager::set($cache, $provider);
 
         return $provider;
+    }
+
+    /**
+     * Exists the wanted product type?
+     *
+     * @param string $productType
+     * @return bool
+     */
+    public function exists($productType)
+    {
+        $productTypes = $this->getProductTypes();
+
+        foreach ($productTypes as $type) {
+            if ($productType === $type) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

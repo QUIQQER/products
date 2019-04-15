@@ -222,27 +222,26 @@ define('package/quiqqer/products/bin/classes/Products', [
          *
          * @params {Array} categories - id list of categories
          * @params {Array} [fields] - product fields
+         * @params {String} [productType] - product type
          * @returns {Promise}
          */
-        createChild: function (categories, fields) {
-            fields = fields || {};
+        createChild: function (categories, fields, productType) {
+            fields      = fields || {};
+            productType = productType || '';
 
             return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_create', function (result) {
-
-                    require([
-                        'package/quiqqer/translator/bin/classes/Translator'
-                    ], function (Translator) {
+                    require(['package/quiqqer/translator/bin/classes/Translator'], function (Translator) {
                         new Translator().refreshLocale().then(function () {
                             resolve(result);
                         });
                     });
-
                 }, {
-                    'package' : 'quiqqer/products',
-                    onError   : reject,
-                    categories: JSON.encode(categories),
-                    fields    : JSON.encode(fields)
+                    'package'  : 'quiqqer/products',
+                    onError    : reject,
+                    categories : JSON.encode(categories),
+                    fields     : JSON.encode(fields),
+                    productType: productType
                 });
             });
         },

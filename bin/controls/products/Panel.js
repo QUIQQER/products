@@ -9,6 +9,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
     'qui/QUI',
     'qui/controls/desktop/Panel',
     'qui/controls/buttons/Button',
+    'qui/controls/buttons/ButtonMultiple',
     'qui/controls/windows/Confirm',
     'controls/grid/Grid',
     'Locale',
@@ -17,7 +18,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
     'package/quiqqer/products/bin/controls/products/Product',
     'package/quiqqer/products/bin/controls/products/search/Search'
 
-], function (QUI, QUIPanel, QUIButton, QUIConfirm, Grid, QUILocale,
+], function (QUI, QUIPanel, QUIButton, QUIButtonMultiple, QUIConfirm, Grid, QUILocale,
              Products, CreateProduct, ProductPanel, Search) {
     "use strict";
 
@@ -48,7 +49,8 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             this.parent(options);
 
-            this.$Search = null;
+            this.$Search    = null;
+            this.$ButtonAdd = null;
 
             this.addEvents({
                 onCreate: this.$onCreate,
@@ -92,7 +94,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             var self = this;
 
             // buttons
-            this.addButton({
+            this.$ButtonAdd = new QUIButtonMultiple({
                 disabled : true,
                 name     : 'add',
                 text     : QUILocale.get('quiqqer/system', 'add'),
@@ -101,6 +103,8 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                     onClick: this.createChild
                 }
             });
+
+            this.addButton(this.$ButtonAdd);
 
             this.addButton({
                 name     : 'edit',
@@ -179,7 +183,25 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             }).inject(this.getContent());
 
             Products.getTypes().then(function (types) {
-                console.log(types);
+                var create = function (Item) {
+                    self.createChild(Item.getAttribute('value'));
+                };
+
+                require(['qui/controls/contextmenu/Item'], function (QUIContextMenuItem) {
+                    for (var i = 0, len = types.length; i < len; i++) {
+                        self.$ButtonAdd.appendChild(
+                            new QUIContextMenuItem({
+                                text  : types[i].title,
+                                value : types[i].class,
+                                events: {
+                                    onClick: create
+                                }
+                            })
+                        );
+                    }
+
+                    self.$ButtonAdd.enable();
+                });
             });
 
             this.refresh();
@@ -201,9 +223,13 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
         /**
          * Opens the create child dialog
+         *
+         * @param {String} [productType] - Product Type
          */
-        createChild: function () {
+        createChild: function (productType) {
             var self = this;
+
+            productType = productType || '';
 
             this.Loader.show();
 
@@ -212,11 +238,11 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 icon  : 'fa fa-edit',
                 events: {
                     onShow : function (Sheet) {
-
                         Sheet.getContent().setStyle('padding', 20);
 
                         var Product = new CreateProduct({
-                            events: {
+                            productType: productType,
+                            events     : {
                                 onLoaded: function () {
                                     self.Loader.hide();
                                 }
