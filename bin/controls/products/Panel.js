@@ -93,6 +93,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             // buttons
             this.addButton({
+                disabled : true,
                 name     : 'add',
                 text     : QUILocale.get('quiqqer/system', 'add'),
                 textimage: 'fa fa-plus',
@@ -176,6 +177,10 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                     }
                 }
             }).inject(this.getContent());
+
+            Products.getTypes().then(function (types) {
+                console.log(types);
+            });
 
             this.refresh();
         },

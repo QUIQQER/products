@@ -200,6 +200,24 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Return all product types
+         *
+         * @param {Object} params - Grid params
+         * @returns {Promise}
+         */
+        getTypes: function (params) {
+            params = params || {};
+
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_getProductTypes', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    params   : JSON.encode(params)
+                });
+            });
+        },
+
+        /**
          * Create a new product
          *
          * @params {Array} categories - id list of categories

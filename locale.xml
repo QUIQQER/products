@@ -949,6 +949,37 @@
             <de><![CDATA[Filter]]></de>
             <en><![CDATA[Filter]]></en>
         </locale>
+
+        <locale name="product.type.standard.title">
+            <de><![CDATA[Produkt]]></de>
+            <en><![CDATA[Product]]></en>
+        </locale>
+        <locale name="product.type.standard.description">
+            <de><![CDATA[Dies ist ein standard Produkt.]]></de>
+            <en><![CDATA[This is a default Product.]]></en>
+        </locale>
+
+        <locale name="product.type.variant.child.title">
+            <de><![CDATA[Einzelne Variante]]></de>
+            <en><![CDATA[Single variant]]></en>
+        </locale>
+        <locale name="product.type.variant.child.description">
+            <de><![CDATA[Dies ist eine Variante eines Varianten Produkts.]]></de>
+            <en><![CDATA[This is a single variant from a Variant Product.]]></en>
+        </locale>
+
+        <locale name="product.type.variant.parent.title">
+            <de><![CDATA[Produkt Variante]]></de>
+            <en><![CDATA[Product variant]]></en>
+        </locale>
+        <locale name="product.type.variant.parent.description">
+            <de><![CDATA[
+            Dies ist ein Varianten Produkt. Dieses produkt kann verschiedene Varianten enthalten.
+            ]]></de>
+            <en><![CDATA[
+            This is a variant product. This product can contain several variants.
+            ]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">

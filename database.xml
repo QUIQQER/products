@@ -4,6 +4,7 @@
     <global>
         <table name="products">
             <field type="BIGINT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
+            <field type="VARCHAR(255) NOT NULL">type</field>
             <field type="BIGINT(20) NULL">category</field>
             <field type="TEXT NULL">categories</field>
             <field type="LONGTEXT NULL">fieldData</field>

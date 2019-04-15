@@ -12,6 +12,10 @@
         <provider>
             <erp src="\QUI\ERP\Products\ErpProvider"/>
             <desktopSearch src="\QUI\ERP\Products\DesktopSearch"/>
+
+            <productType src="\QUI\ERP\Products\Product\Types\Product"/>
+            <productType src="\QUI\ERP\Products\Product\Types\VariantChild"/>
+            <productType src="\QUI\ERP\Products\Product\Types\VariantParent"/>
         </provider>
 
     </package>

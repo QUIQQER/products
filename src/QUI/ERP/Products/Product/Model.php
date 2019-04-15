@@ -69,11 +69,16 @@ class Model extends QUI\QDOM
     protected $Currency = null;
 
     /**
-     * Active / Deactive status
+     * Activate / Deactivate status
      *
      * @var bool
      */
     protected $active = false;
+
+    /**
+     * @var
+     */
+    protected $Type = null;
 
     /**
      * Model constructor
@@ -112,22 +117,24 @@ class Model extends QUI\QDOM
             );
         }
 
-        $this->active = (int)$result[0]['active'] ? true : false;
+        $product = $result[0];
 
-        if (isset($result[0]['permissions'])) {
-            $this->permissions = \json_decode($result[0]['permissions'], true);
+        $this->active = (int)$product['active'] ? true : false;
+
+        if (isset($product['permissions'])) {
+            $this->permissions = \json_decode($product['permissions'], true);
         }
 
         // view permissions prüfung wird im Frontend view gemacht (ViewFrontend)
 
 
-        unset($result[0]['id']);
-        unset($result[0]['active']);
+        unset($product['id']);
+        unset($product['active']);
 
-        $this->setAttributes($result[0]);
+        $this->setAttributes($product);
 
         // categories
-        $categories = \explode(',', \trim($result[0]['categories'], ','));
+        $categories = \explode(',', \trim($product['categories'], ','));
 
         if (\is_array($categories)) {
             foreach ($categories as $categoryId) {
@@ -161,7 +168,7 @@ class Model extends QUI\QDOM
 
 
         // fields
-        $fields = \json_decode($result[0]['fieldData'], true);
+        $fields = \json_decode($product['fieldData'], true);
 
         if (!\is_array($fields)) {
             $fields = [];
@@ -219,6 +226,21 @@ class Model extends QUI\QDOM
         if (\defined('QUIQQER_BACKEND')) {
             $this->setAttribute('viewType', 'backend');
         }
+
+        // product type
+        $productType = $product['type'];
+
+        if (!empty($productType) && class_exists($productType)) {
+            $Type = new $productType($this);
+
+            if ($Type instanceof QUI\ERP\Products\Interfaces\ProductTypeInterface) {
+                $this->Type = $Type;
+            }
+        }
+
+        if ($this->Type === null) {
+            $this->Type = new QUI\ERP\Products\Product\Types\Product($this);
+        }
     }
 
     /**
@@ -263,7 +285,6 @@ class Model extends QUI\QDOM
      * Return the product as unique product
      *
      * @param QUI\Interfaces\Users\User|null $User
-     * @param QUI\ERP\Currency\Currency|null $Currency - optional, the unique product can be converted into another currency
      * @return UniqueProduct
      *
      * @throws QUI\Exception
