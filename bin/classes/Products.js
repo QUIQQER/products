@@ -41,6 +41,36 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Open the product panel
+         *
+         * @param productId
+         */
+        openProduct: function (productId) {
+            return this.getChild(productId).then(function (attributes) {
+                var panel = attributes.backendPanel;
+
+                if (panel === '') {
+                    panel = 'package/quiqqer/products/bin/controls/products/Product';
+                }
+console.log(attributes);
+                return new Promise(function (resolve) {
+                    var needles = [];
+                    needles.push(panel);
+                    needles.push('utils/Panels');
+
+                    require(needles, function (Panel, Utils) {
+                        var Control = new Panel({
+                            productId: productId
+                        });
+
+                        Utils.openPanelInTasks(Control);
+                        resolve(Control);
+                    });
+                });
+            });
+        },
+
+        /**
          * Activate the product
          *
          * @param {Number} productId - Product ID

@@ -6,28 +6,20 @@
 
 namespace QUI\ERP\Products\Interfaces;
 
-use QUI\ERP\Products\Product\Model;
-
 /**
  * Interface ProductTypeInterface
+ *
  * @package QUI\ERP\Products
  */
 interface ProductTypeInterface
 {
-    /**
-     * ProductTypeInterface constructor.
-     *
-     * @param Model $Product
-     */
-    public function __construct(Model $Product);
-
     /**
      * Return the title of the product type
      *
      * @param null $Locale
      * @return mixed
      */
-    public static function getTitle($Locale = null);
+    public static function getTypeTitle($Locale = null);
 
     /**
      * Return the description of the product type
@@ -35,5 +27,17 @@ interface ProductTypeInterface
      * @param null $Locale
      * @return mixed
      */
-    public static function getDescription($Locale = null);
+    public static function getTypeDescription($Locale = null);
+
+    /**
+     * Return the backend panel
+     *
+     * @return string
+     */
+    public static function getTypeBackendPanel();
+
+    /**
+     * @return mixed
+     */
+    public static function isTypeSelectable();
 }

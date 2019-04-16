@@ -20,6 +20,9 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
  * Class Controller
  * Product Model
  *
+ * This class is the main data object for a product
+ * This class handles all data from and for a product
+ *
  * @package QUI\ERP\Products\Product
  *
  * @example
@@ -76,49 +79,29 @@ class Model extends QUI\QDOM
     protected $active = false;
 
     /**
-     * @var
-     */
-    protected $Type = null;
-
-    /**
      * Model constructor
      *
      * @param integer $pid - Product-ID
+     * @param array $product - Product Data
      *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
      */
-    public function __construct($pid)
+    public function __construct($pid, $product = [])
     {
-        $this->id = (int)$pid;
-
-        $result = QUI::getDataBase()->fetch([
-            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            'where' => [
-                'id' => $this->getId()
-            ]
-        ]);
-
-        if (!isset($result[0])) {
-            // if not exists, so we cleanup the cache table table, too
-            QUI::getDataBase()->delete(
-                QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-                ['id' => $this->getId()]
-            );
-
+        if (empty($product)) {
             throw new QUI\ERP\Products\Product\Exception(
                 [
                     'quiqqer/products',
                     'exception.product.not.found',
-                    ['productId' => $this->getId()]
+                    ['productId' => $pid]
                 ],
                 404,
-                ['id' => $this->getId()]
+                ['id' => $pid]
             );
         }
 
-        $product = $result[0];
-
+        $this->id     = (int)$pid;
         $this->active = (int)$product['active'] ? true : false;
 
         if (isset($product['permissions'])) {
@@ -225,21 +208,6 @@ class Model extends QUI\QDOM
 
         if (\defined('QUIQQER_BACKEND')) {
             $this->setAttribute('viewType', 'backend');
-        }
-
-        // product type
-        $productType = $product['type'];
-
-        if (!empty($productType) && class_exists($productType)) {
-            $Type = new $productType($this);
-
-            if ($Type instanceof QUI\ERP\Products\Interfaces\ProductTypeInterface) {
-                $this->Type = $Type;
-            }
-        }
-
-        if ($this->Type === null) {
-            $this->Type = new QUI\ERP\Products\Product\Types\Product($this);
         }
     }
 

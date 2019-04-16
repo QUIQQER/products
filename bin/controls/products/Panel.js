@@ -182,17 +182,27 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 }
             }).inject(this.getContent());
 
-            Products.getTypes().then(function (types) {
+            self.$ButtonAdd.getMenu().then(function (Menu) {
+                Menu.setAttribute('showIcons', false);
+
+                return Products.getTypes();
+            }).then(function (types) {
                 var create = function (Item) {
                     self.createChild(Item.getAttribute('value'));
                 };
 
                 require(['qui/controls/contextmenu/Item'], function (QUIContextMenuItem) {
                     for (var i = 0, len = types.length; i < len; i++) {
+                        console.warn(types[i]);
+
+                        if (types[i].isTypeSelectable === false) {
+                            continue;
+                        }
+
                         self.$ButtonAdd.appendChild(
                             new QUIContextMenuItem({
-                                text  : types[i].title,
-                                value : types[i].class,
+                                text  : types[i].typeTitle,
+                                value : types[i].type,
                                 events: {
                                     onClick: create
                                 }
@@ -292,9 +302,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * @param {Number} productId
          */
         updateChild: function (productId) {
-            new ProductPanel({
-                productId: productId
-            }).inject(this.getParent());
+            Products.openProduct(productId);
         },
 
         /**

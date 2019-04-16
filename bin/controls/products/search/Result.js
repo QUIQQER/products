@@ -155,11 +155,6 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                 sortOn           : this.getAttribute('sortOn'),
                 serverSort       : true,
                 columnModel      : [{
-                    header   : QUILocale.get('quiqqer/system', 'status'),
-                    dataIndex: 'status',
-                    dataType : 'node',
-                    width    : 40
-                }, {
                     header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
                     dataType : 'number',
@@ -204,6 +199,11 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                     dataIndex: 'priority',
                     dataType : 'number',
                     width    : 30
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'status'),
+                    dataIndex: 'status',
+                    dataType : 'node',
+                    width    : 40
                 }]
             });
 

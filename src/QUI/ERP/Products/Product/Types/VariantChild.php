@@ -7,7 +7,6 @@
 namespace QUI\ERP\Products\Product\Types;
 
 use QUI;
-use QUI\ERP\Products\Interfaces\ProductTypeInterface;
 
 /**
  * Class VariantChild
@@ -15,27 +14,13 @@ use QUI\ERP\Products\Interfaces\ProductTypeInterface;
  *
  * @package QUI\ERP\Products\Product\Types
  */
-class VariantChild implements ProductTypeInterface
+class VariantChild extends AbstractType
 {
     /**
-     * @var QUI\ERP\Products\Product\Model
-     */
-    protected $Product;
-
-    /**
-     * Product constructor.
-     * @param QUI\ERP\Products\Product\Model $Product
-     */
-    public function __construct(QUI\ERP\Products\Product\Model $Product)
-    {
-        $this->Product = $Product;
-    }
-
-    /**
      * @param null $Locale
      * @return mixed
      */
-    public static function getTitle($Locale = null)
+    public static function getTypeTitle($Locale = null)
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -48,12 +33,20 @@ class VariantChild implements ProductTypeInterface
      * @param null $Locale
      * @return mixed
      */
-    public static function getDescription($Locale = null)
+    public static function getTypeDescription($Locale = null)
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
         }
 
         return $Locale->get('quiqqer/products', 'product.type.variant.child.title');
+    }
+
+    /**
+     * @return bool|mixed
+     */
+    public static function isTypeSelectable()
+    {
+        return false;
     }
 }

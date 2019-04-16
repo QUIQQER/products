@@ -18,13 +18,17 @@ QUI::$Ajax->registerFunction(
         $result = [];
 
         foreach ($types as $type) {
-            $title       = call_user_func([$type, 'getTitle']);
-            $description = call_user_func([$type, 'getDescription']);
+            $title        = call_user_func([$type, 'getTypeTitle']);
+            $description  = call_user_func([$type, 'getTypeDescription']);
+            $panel        = call_user_func([$type, 'getTypeBackendPanel']);
+            $isSelectable = call_user_func([$type, 'isTypeSelectable']);
 
             $result[] = [
-                'title'       => $title,
-                'description' => $description,
-                'class'       => $type
+                'type'             => $type,
+                'typeTitle'        => $title,
+                'typeDescription'  => $description,
+                'typeBackendPanel' => $panel,
+                'isTypeSelectable' => $isSelectable
             ];
         }
 

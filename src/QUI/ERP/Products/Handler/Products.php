@@ -75,8 +75,10 @@ class Products
     }
 
     /**
+     * Return a specific product
+     *
      * @param integer $pid - Product-ID
-     * @return QUI\ERP\Products\Product\Product
+     * @return QUI\ERP\Products\Product\Types\AbstractType
      *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
@@ -92,7 +94,42 @@ class Products
             self::$list = [];
         }
 
-        $Product          = new QUI\ERP\Products\Product\Product($pid);
+        $result = QUI::getDataBase()->fetch([
+            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            'where' => [
+                'id' => $pid
+            ],
+            'limit' => 1
+        ]);
+
+        if (!isset($result[0])) {
+            // if not exists, so we cleanup the cache table, too
+            QUI::getDataBase()->delete(
+                QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+                ['id' => $pid]
+            );
+
+            throw new QUI\ERP\Products\Product\Exception(
+                [
+                    'quiqqer/products',
+                    'exception.product.not.found',
+                    ['productId' => $pid]
+                ],
+                404,
+                ['id' => $pid]
+            );
+        }
+
+        // @todo interface check
+
+        $type = $result[0]['type'];
+
+        if (empty($type)) {
+            $type = QUI\ERP\Products\Product\Types\Product::class;
+        }
+
+        $Product = new $type($pid, $result[0]);
+
         self::$list[$pid] = $Product;
 
         return $Product;
@@ -110,12 +147,16 @@ class Products
             return true;
         }
 
-        $result = QUI::getDataBase()->fetch([
-            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            'where' => [
-                'id' => $pid
-            ]
-        ]);
+        try {
+            $result = QUI::getDataBase()->fetch([
+                'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                'where' => [
+                    'id' => $pid
+                ]
+            ]);
+        } catch (\Exception $Exception) {
+            return false;
+        }
 
         return isset($result[0]);
     }
@@ -141,10 +182,7 @@ class Products
                 'limit'  => 1
             ]);
         } catch (QUI\Exception $Exception) {
-            // TODO: mit Mor besprechen
-            QUI\System\Log::addError(
-                $Exception->getMessage()
-            );
+            QUI\System\Log::addError($Exception->getMessage());
 
             throw new QUI\Exception(
                 ['quiqqer/products', 'exception.get.product.by.no.error'],
@@ -195,17 +233,17 @@ class Products
 
 
         // categories
-        $categoryids = [];
+        $categoryIds = [];
 
         if (empty($categories)) {
-            $categoryids[] = Categories::getMainCategory();
+            $categoryIds[] = Categories::getMainCategory();
         }
 
         foreach ($categories as $Category) {
             if (!\is_object($Category)) {
                 try {
                     $Category      = Categories::getCategory($Category);
-                    $categoryids[] = $Category->getId();
+                    $categoryIds[] = $Category->getId();
                 } catch (QUI\Exception $Exception) {
                     QUI\System\Log::addWarning($Exception->getMessage());
                 }
@@ -215,7 +253,7 @@ class Products
 
             if (Categories::isCategory($Category)) {
                 /* @var $Category Category */
-                $categoryids[] = $Category->getId();
+                $categoryIds[] = $Category->getId();
                 continue;
             }
 
@@ -225,7 +263,7 @@ class Products
             ]);
         }
 
-        if (!\count($categoryids)) {
+        if (!\count($categoryIds)) {
             throw new QUI\Exception([
                 'quiqqer/products',
                 'exception.products.no.category.given'
@@ -271,7 +309,7 @@ class Products
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             [
                 'fieldData'  => \json_encode($fieldData),
-                'categories' => ','.\implode($categoryids, ',').',',
+                'categories' => ','.\implode($categoryIds, ',').',',
                 'type'       => $type,
                 'c_user'     => QUI::getUserBySession()->getId(),
                 'c_date'     => date('Y-m-d H:i:s')
@@ -287,7 +325,7 @@ class Products
             '',
             [
                 'fieldData'  => $fieldData,
-                'categories' => ','.\implode($categoryids, ',').','
+                'categories' => ','.\implode($categoryIds, ',').','
             ]
         );
 
@@ -424,13 +462,17 @@ class Products
         }
 
         $result = [];
-        $data   = QUI::getDataBase()->fetch($query);
+
+        try {
+            $data = QUI::getDataBase()->fetch($query);
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
+            return [];
+        }
 
         foreach ($data as $entry) {
-            try {
-                $result[] = $entry['id'];
-            } catch (QUI\Exception $Exception) {
-            }
+            $result[] = $entry['id'];
         }
 
         return $result;
@@ -470,7 +512,13 @@ class Products
             $query['where_or'] = $queryParams['where_or'];
         }
 
-        $data = QUI::getDataBase()->fetch($query);
+        try {
+            $data = QUI::getDataBase()->fetch($query);
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
+            return 0;
+        }
 
         if (isset($data[0]) && isset($data[0]['count'])) {
             return (int)$data[0]['count'];

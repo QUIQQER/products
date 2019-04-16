@@ -35,6 +35,15 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * Is the project already loaded?
+         *
+         * @return {boolean}
+         */
+        isLoaded: function () {
+            return this.$loaded;
+        },
+
+        /**
          * Add a field to the product
          *
          * @param {Number}  fieldId
@@ -319,13 +328,12 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         isActive: function () {
             return new Promise(function (resolve, reject) {
-
                 if (this.$loaded) {
-                    return resolve(this.$data.active ? true : false);
+                    return resolve(!!this.$data.active);
                 }
 
                 this.refresh().then(function () {
-                    resolve(this.$data.active ? true : false);
+                    resolve(!!this.$data.active);
                 }.bind(this)).catch(reject);
 
             }.bind(this));
@@ -372,11 +380,7 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         refresh: function () {
             return new Promise(function (resolve, reject) {
-
-                require([
-                    'package/quiqqer/products/bin/Products'
-                ], function (Products) {
-
+                require(['package/quiqqer/products/bin/Products'], function (Products) {
                     Products.getChild(this.getAttribute('id')).then(function (data) {
                         this.$loaded = true;
                         this.$data   = data;
@@ -387,7 +391,6 @@ define('package/quiqqer/products/bin/classes/Product', [
 
                     }.bind(this)).catch(reject);
                 }.bind(this));
-
             }.bind(this));
         },
 
