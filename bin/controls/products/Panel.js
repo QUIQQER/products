@@ -302,7 +302,11 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * @param {Number} productId
          */
         updateChild: function (productId) {
-            Products.openProduct(productId);
+            this.Loader.show();
+
+            Products.openProduct(productId).then(function () {
+                this.Loader.hide();
+            }.bind(this));
         },
 
         /**

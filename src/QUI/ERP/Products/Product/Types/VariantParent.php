@@ -49,6 +49,6 @@ class VariantParent extends AbstractType
      */
     public static function getTypeBackendPanel()
     {
-        return 'package/quiqqer/products/bin/controls/products/VariantPanel';
+        return 'package/quiqqer/products/bin/controls/products/ProductVariant';
     }
 }

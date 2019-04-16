@@ -94,6 +94,25 @@ class Products
             self::$list = [];
         }
 
+
+        $Product          = self::getNewProductInstance($pid);
+        self::$list[$pid] = $Product;
+
+        return $Product;
+    }
+
+    /**
+     * Return a new product instance
+     * this function does not look into the instance cache
+     *
+     * @param $pid
+     * @return QUI\ERP\Products\Product\Types\AbstractType
+     *
+     * @throws QUI\Database\Exception
+     * @throws QUI\ERP\Products\Product\Exception
+     */
+    public static function getNewProductInstance($pid)
+    {
         $result = QUI::getDataBase()->fetch([
             'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
             'where' => [
@@ -128,11 +147,7 @@ class Products
             $type = QUI\ERP\Products\Product\Types\Product::class;
         }
 
-        $Product = new $type($pid, $result[0]);
-
-        self::$list[$pid] = $Product;
-
-        return $Product;
+        return new $type($pid, $result[0]);
     }
 
     /**

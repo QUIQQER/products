@@ -34,8 +34,11 @@ QUI::$Ajax->registerFunction(
             }
         }
 
-        $Products = new Products();
-        $Product  = $Products->createProduct($categories, $fieldList, $productType);
+        $Product = Products::createProduct(
+            $categories,
+            $fieldList,
+            $productType
+        );
 
         return $Product->getAttributes();
     },

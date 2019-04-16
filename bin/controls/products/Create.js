@@ -287,7 +287,11 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                     return reject('No categories');
                 }
 
-                Products.createChild(categories, fields).then(resolve).catch(reject);
+                Products.createChild(
+                    categories,
+                    fields,
+                    self.getAttribute('productType')
+                ).then(resolve).catch(reject);
             });
         }
     });

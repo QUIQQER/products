@@ -642,7 +642,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             }
 
             try {
-                $Product = new Product($productId);
+                $Product = Products::getProduct($productId);
 
                 foreach ($fields as $Field) {
                     $Product->addField($Field);

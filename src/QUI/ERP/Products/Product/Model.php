@@ -717,7 +717,7 @@ class Model extends QUI\QDOM
         }
 
         // search all custom fields, and set the minimum
-        $Clone  = new Product($this->getId());
+        $Clone  = Products::getNewProductInstance($this->getId());
         $Calc   = QUI\ERP\Products\Utils\Calc::getInstance($User); // @todo netto user nutzen
         $fields = $Clone->getFields();
 
@@ -788,7 +788,7 @@ class Model extends QUI\QDOM
         } catch (QUI\Exception $Exception) {
         }
 
-        $Clone  = new Product($this->getId());
+        $Clone  = Products::getNewProductInstance($this->getId());
         $Calc   = QUI\ERP\Products\Utils\Calc::getInstance($User);
         $fields = $Clone->getFields();
 

@@ -47,12 +47,12 @@ define('package/quiqqer/products/bin/classes/Products', [
          */
         openProduct: function (productId) {
             return this.getChild(productId).then(function (attributes) {
-                var panel = attributes.backendPanel;
+                var panel = attributes.typePanel;
 
-                if (panel === '') {
+                if (panel === '' || typeof panel === 'undefined') {
                     panel = 'package/quiqqer/products/bin/controls/products/Product';
                 }
-console.log(attributes);
+
                 return new Promise(function (resolve) {
                     var needles = [];
                     needles.push(panel);
@@ -63,8 +63,9 @@ console.log(attributes);
                             productId: productId
                         });
 
-                        Utils.openPanelInTasks(Control);
-                        resolve(Control);
+                        Utils.openPanelInTasks(Control).then(function () {
+                            resolve(Control);
+                        });
                     });
                 });
             });
