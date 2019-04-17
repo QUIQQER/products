@@ -62,9 +62,6 @@ class VariantChild extends AbstractType
      * Return the parent variant product
      *
      * @return VariantParent
-     *
-     * @throws QUI\ERP\Products\Product\Exception
-     * @throws QUI\Exception
      */
     public function getParent()
     {
@@ -72,9 +69,12 @@ class VariantChild extends AbstractType
             return $this->Parent;
         }
 
-        $this->Parent = Products::getProduct(
-            $this->getAttribute('parent')
-        );
+        try {
+            $this->Parent = Products::getProduct(
+                $this->getAttribute('parent')
+            );
+        } catch (QUI\Exception $Exception) {
+        }
 
         return $this->Parent;
     }
@@ -89,11 +89,7 @@ class VariantChild extends AbstractType
      */
     public function getTitle($Locale = null)
     {
-        try {
-            return $this->getParent()->getTitle($Locale);
-        } catch (QUI\Exception $Exception) {
-            return '';
-        }
+        return $this->getParent()->getTitle($Locale);
     }
 
     /**
@@ -106,11 +102,23 @@ class VariantChild extends AbstractType
      */
     public function getDescription($Locale = null)
     {
-        try {
-            return $this->getParent()->getDescription($Locale);
-        } catch (QUI\Exception $Exception) {
-            return '';
-        }
+        return $this->getParent()->getDescription($Locale);
+    }
+
+    /**
+     * @return array|string
+     */
+    public function getCategories()
+    {
+        return $this->getParent()->getCategories();
+    }
+
+    /**
+     * @return QUI\ERP\Products\Category\Category|null
+     */
+    public function getCategory()
+    {
+        return $this->getParent()->getCategory();
     }
 
     //endregion

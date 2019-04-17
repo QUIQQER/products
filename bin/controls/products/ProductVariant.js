@@ -9,13 +9,16 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
     'qui/QUI',
     'package/quiqqer/products/bin/controls/products/Product',
     'qui/controls/buttons/Select',
+    'qui/controls/toolbar/Bar',
+    'qui/controls/toolbar/Tab',
+    'controls/grid/Grid',
     'Locale',
     'Mustache',
 
     'text!package/quiqqer/products/bin/controls/products/ProductVariant.html',
     'css!package/quiqqer/products/bin/controls/products/ProductVariant.css'
 
-], function (QUI, ProductPanel, QUISelect, QUILocale, Mustache, template) {
+], function (QUI, ProductPanel, QUISelect, QUIBar, QUITab, Grid, QUILocale, Mustache, template) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -43,6 +46,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             this.parent(options);
 
+            this.$Grid     = null;
             this.$Variants = null;
 
             this.addEvents({
@@ -98,7 +102,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             return self.$hideCategories().then(function () {
                 var Body         = self.getBody();
-                var VariantSheet = Body.getElement('variants-sheet');
+                var VariantSheet = Body.getElement('.variants-sheet');
 
                 if (!VariantSheet) {
                     VariantSheet = new Element('div', {
@@ -106,19 +110,126 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     }).inject(Body);
                 }
 
+                VariantSheet.set('html', '');
 
+                self.$Grid = new Grid(VariantSheet, {
+                    pagination : true,
+                    width      : VariantSheet.getSize().x - 40,
+                    height     : VariantSheet.getSize().y - 40,
+                    columnModel: [{
+                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        dataIndex: 'id',
+                        dataType : 'number',
+                        width    : 50
+                    }, {
+                        header   : QUILocale.get(lg, 'productNo'),
+                        dataIndex: 'productNo',
+                        dataType : 'text',
+                        width    : 100
+                    }, {
+                        header   : QUILocale.get('quiqqer/system', 'title'),
+                        dataIndex: 'title',
+                        dataType : 'text',
+                        width    : 200
+                    }, {
+                        header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
+                        dataIndex: 'price_netto',
+                        dataType : 'text',
+                        width    : 100
+                    }, {
+                        header   : QUILocale.get('quiqqer/system', 'editdate'),
+                        dataIndex: 'e_date',
+                        dataType : 'text',
+                        width    : 160
+                    }, {
+                        header   : QUILocale.get('quiqqer/system', 'createdate'),
+                        dataIndex: 'c_date',
+                        dataType : 'text',
+                        width    : 160
+                    }, {
+                        header   : QUILocale.get(lg, 'priority'),
+                        dataIndex: 'priority',
+                        dataType : 'number',
+                        width    : 60
+                    }, {
+                        header   : QUILocale.get('quiqqer/system', 'status'),
+                        dataIndex: 'status',
+                        dataType : 'text',
+                        width    : 60
+                    }]
+                });
+
+                self.$Grid.addEvents({
+                    onDblClick: function () {
+                        self.selectVariant(
+                            self.$Grid.getSelectedData()[0].id
+                        );
+                    }
+                });
+
+                return self.refreshVariantGrid();
+            }).then(function () {
+                var Body         = self.getBody();
+                var VariantSheet = Body.getElement('.variants-sheet');
+
+                return self.$showCategory(VariantSheet);
+            });
+        },
+
+        /**
+         * Refresh the variant grid
+         *
+         * @return {Promise}
+         */
+        refreshVariantGrid: function () {
+            if (this.$Grid === null) {
+                return Promise.resolve();
+            }
+
+            var self = this;
+
+            return this.$Product.getVariants().then(function (variants) {
+                var needles = [
+                    'productNo', 'title', 'price_netto',
+                    'e_date', 'c_date', 'priority', 'status'
+                ];
+
+                var fillMissing = function (variant) {
+                    var i, len, attribute;
+                    for (i = 0, len = needles.length; i < len; i++) {
+                        attribute = needles[i];
+
+                        if (typeof variant[attribute] === 'undefined' || !variant[attribute]) {
+                            variant[attribute] = '-';
+                        }
+                    }
+
+                    return variant;
+                };
+
+                for (var i = 0, len = variants.length; i < len; i++) {
+                    variants[i] = fillMissing(variants[i]);
+                }
+
+                self.$Grid.setData({
+                    data : variants,
+                    total: variants.length,
+                    page : 1
+                });
             });
         },
 
         /**
          *
+         * @param variantId
+         * @return {Promise}
          */
-        selectVariant: function () {
+        selectVariant: function (variantId) {
             var self = this;
+            var Body = self.getBody();
 
             return self.$hideCategories().then(function () {
-                var Body         = self.getBody();
-                var VariantSheet = Body.getElement('variants-sheet');
+                var VariantSheet = Body.getElement('.variants-sheet');
 
                 if (!VariantSheet) {
                     VariantSheet = new Element('div', {
@@ -126,36 +237,90 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     }).inject(Body);
                 }
 
+                self.minimizeCategory();
+                self.getElm().addClass('quiqqer-products-panel-show-variant');
 
-            });
+                VariantSheet.set('html', Mustache.render(template));
+            }).then(function () {
+                return self.$Product.getVariants();
+            }).then(function (variants) {
+                var VariantSheet = Body.getElement('.variants-sheet');
 
-            this.minimizeCategory();
-
-            VariantSheet.set('html', Mustache.render(template));
-
-
-            // @todo categorien ausgrauen wenn offen
-            // @todo categorien klein machen wenn variante ausgewählt ist
-            // @todo grid aller varianten anzeigen wenn keine variante ausgewählt ist
+                // @todo categorien wieder normal, wenn zurück
+                // @todo grid aller varianten anzeigen wenn keine variante ausgewählt ist
 
 
-            var VariantList = self.getBody().getElement('.variant-list');
-            var VariantTabs = self.getBody().getElement('.variants-tabs');
-            var VariantBody = self.getBody().getElement('.variant-body');
+                var VariantList = Body.getElement('.variant-list');
+                var VariantTabs = Body.getElement('.variants-tabs');
+                var VariantBody = Body.getElement('.variant-body');
 
-            var VariantSelect = new QUISelect({
-                placeholder: 'Variante wechseln',
-                styles     : {
-                    width: '70%'
+                // variant select
+                var VariantSelect = new QUISelect({
+                    placeholder: 'Variante wechseln',
+                    showIcons  : false,
+                    styles     : {
+                        width: '70%'
+                    }
+                }).inject(VariantList);
+
+                var i, len, name, variant, Category;
+
+                for (i = 0, len = variants.length; i < len; i++) {
+                    variant = variants[i];
+
+                    VariantSelect.appendChild(
+                        'Zu variante wechseln: ' + variant.id + ' - ' + variant.title
+                    );
                 }
-            }).inject(VariantList);
 
-            VariantSelect.appendChild('Zu variante wechseln: VC100');
-            VariantSelect.appendChild('Zu variante wechseln: VC101');
-            VariantSelect.appendChild('Zu variante wechseln: VC102');
+                VariantSelect.setValue(
+                    VariantSelect.firstChild().getAttribute('value')
+                );
 
-            VariantTabs.set('html', 'test');
-            VariantBody.set('html', 'test');
+
+                // tabs
+                var TabBar = new QUIBar({
+                    width: Body.getSize().x
+                }).inject(VariantTabs);
+
+                // workaround
+                TabBar.getElm().getElement('.qui-toolbar-tabs').setStyle('display', 'flex');
+
+                var categories = self.getCategoryBar().getChildren();
+
+                for (i = 0, len = categories.length; i < len; i++) {
+                    Category = categories[i];
+                    name     = Category.getAttribute('name');
+
+                    if (name === 'variants') {
+                        continue;
+                    }
+
+                    if (name === 'information') {
+                        continue;
+                    }
+
+                    if (name === 'attributelist') {
+                        continue;
+                    }
+
+                    TabBar.appendChild(
+                        new QUITab({
+                            name: name,
+                            text: Category.getAttribute('text')
+                        })
+                    );
+                }
+
+                TabBar.resize();
+                TabBar.firstChild().setActive();
+
+
+                // body
+                VariantBody.set('html', 'test');
+
+                return self.$showCategory(VariantSheet);
+            });
         }
     });
 });

@@ -552,6 +552,21 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         getQuantity: function () {
             return this.$quantity;
+        },
+
+        /**
+         * Return all variants of this product
+         * - variant children
+         *
+         * @return {Promise}
+         */
+        getVariants: function () {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_products_variant_getVariants', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId()
+                });
+            }.bind(this));
         }
     });
 });

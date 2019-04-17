@@ -5,12 +5,25 @@
     width: 100%;
 }
 
-.variants-tabs,
 .variant-body {
+    border-top: 1px solid #DDDDDD;
     padding: 10px 0;
+    position: relative;
+    top: -1px;
+    z-index: 2;
 }
 
 .variants-tabs {
-    background: #e1e4e9;
     margin-top: 10px;
+    padding: 10px 0 0 0;
+    position: relative;
+    z-index: 3;
+}
+
+.quiqqer-products-panel-show-variant .qui-panel-categories button {
+    opacity: 0.2;
+}
+
+.quiqqer-products-panel-show-variant .qui-panel-categories .qui-button-active {
+    opacity: 1;
 }
