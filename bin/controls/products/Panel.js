@@ -193,8 +193,6 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
                 require(['qui/controls/contextmenu/Item'], function (QUIContextMenuItem) {
                     for (var i = 0, len = types.length; i < len; i++) {
-                        console.warn(types[i]);
-
                         if (types[i].isTypeSelectable === false) {
                             continue;
                         }

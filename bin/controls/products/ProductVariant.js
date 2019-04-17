@@ -1,5 +1,5 @@
 /**
- * Edit and manage one product - Product Variant Panel
+ *
  *
  * @module package/quiqqer/products/bin/controls/products/ProductVariant
  * @author www.pcsg.de (Henning Leutz)
@@ -8,49 +8,27 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
     'qui/QUI',
     'package/quiqqer/products/bin/controls/products/Product',
-    'qui/controls/buttons/Button',
-    'qui/controls/buttons/Switch',
-    'qui/controls/buttons/ButtonSwitch',
-    'qui/controls/windows/Confirm',
-    'qui/utils/Form',
+    'qui/controls/buttons/Select',
     'Locale',
-    'Users',
-    'controls/grid/Grid',
-    'controls/projects/project/media/FolderViewer',
     'Mustache',
-    'Packages',
-    'utils/Lock',
-    'package/quiqqer/products/bin/Products',
-    'package/quiqqer/products/bin/classes/Product',
-    'package/quiqqer/products/bin/Categories',
-    'package/quiqqer/products/bin/Fields',
-    'package/quiqqer/products/bin/utils/Fields',
-    'package/quiqqer/products/bin/controls/fields/search/Window',
-    'package/quiqqer/products/bin/controls/categories/Select',
-    'package/quiqqer/products/bin/controls/fields/FieldTypeSelect',
 
-    'text!package/quiqqer/products/bin/controls/products/ProductInformation.html',
-    'text!package/quiqqer/products/bin/controls/products/ProductData.html',
-    'text!package/quiqqer/products/bin/controls/products/ProductPrices.html',
-    'text!package/quiqqer/products/bin/controls/products/CreateField.html',
-    'css!package/quiqqer/products/bin/controls/products/Product.css'
+    'text!package/quiqqer/products/bin/controls/products/ProductVariant.html',
+    'css!package/quiqqer/products/bin/controls/products/ProductVariant.css'
 
-], function (QUI, ProductPanel, QUIButton, QUISwitch, QUIButtonSwitch, QUIConfirm, QUIFormUtils, QUILocale,
-             Users, Grid, FolderViewer, Mustache, Packages, Locker,
-             Products, Product, Categories, Fields, FieldUtils, FieldWindow,
-             CategorySelect, FieldTypeSelect,
-             informationTemplate, templateProductData, templateProductPrices, templateField) {
+], function (QUI, ProductPanel, QUISelect, QUILocale, Mustache, template) {
     "use strict";
 
-    var lg   = 'quiqqer/products',
-        User = Users.getUserBySession();
+    var lg = 'quiqqer/products';
 
     return new Class({
 
         Extends: ProductPanel,
         Type   : 'package/quiqqer/products/bin/controls/products/ProductVariant',
 
-        Binds: [],
+        Binds: [
+            '$onCreate',
+            '$onInject'
+        ],
 
         options: {
             productId: false
@@ -64,6 +42,120 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             });
 
             this.parent(options);
+
+            this.$Variants = null;
+
+            this.addEvents({
+                onCreate: this.$onCreate
+            });
+        },
+
+        /**
+         * event: on create
+         */
+        $onCreate: function () {
+            this.parent();
+
+
+        },
+
+        $onInject: function () {
+            var self = this;
+
+            this.parent().then(function () {
+                self.addCategory({
+                    name  : 'variants',
+                    text  : 'VARIANTEN',
+                    icon  : 'fa fa-info',
+                    events: {
+                        onClick: function () {
+                            self.Loader.show();
+                            self.openVariants().then(function () {
+                                self.Loader.hide();
+                            });
+                        }
+                    }
+                });
+
+                self.getCategoryBar().moveChildToPos(
+                    self.getCategory('variants'),
+                    1
+                );
+            });
+        },
+
+        /**
+         * Open variants
+         *
+         * @return {Promise}
+         */
+        openVariants: function () {
+            if (this.getCategory('variants').isActive()) {
+                return Promise.resolve();
+            }
+
+            var self = this;
+
+            return self.$hideCategories().then(function () {
+                var Body         = self.getBody();
+                var VariantSheet = Body.getElement('variants-sheet');
+
+                if (!VariantSheet) {
+                    VariantSheet = new Element('div', {
+                        'class': 'variants-sheet sheet'
+                    }).inject(Body);
+                }
+
+
+            });
+        },
+
+        /**
+         *
+         */
+        selectVariant: function () {
+            var self = this;
+
+            return self.$hideCategories().then(function () {
+                var Body         = self.getBody();
+                var VariantSheet = Body.getElement('variants-sheet');
+
+                if (!VariantSheet) {
+                    VariantSheet = new Element('div', {
+                        'class': 'variants-sheet sheet'
+                    }).inject(Body);
+                }
+
+
+            });
+
+            this.minimizeCategory();
+
+            VariantSheet.set('html', Mustache.render(template));
+
+
+            // @todo categorien ausgrauen wenn offen
+            // @todo categorien klein machen wenn variante ausgewählt ist
+            // @todo grid aller varianten anzeigen wenn keine variante ausgewählt ist
+
+
+            var VariantList = self.getBody().getElement('.variant-list');
+            var VariantTabs = self.getBody().getElement('.variants-tabs');
+            var VariantBody = self.getBody().getElement('.variant-body');
+
+            var VariantSelect = new QUISelect({
+                placeholder: 'Variante wechseln',
+                styles     : {
+                    width: '70%'
+                }
+            }).inject(VariantList);
+
+            VariantSelect.appendChild('Zu variante wechseln: VC100');
+            VariantSelect.appendChild('Zu variante wechseln: VC101');
+            VariantSelect.appendChild('Zu variante wechseln: VC102');
+
+            VariantTabs.set('html', 'test');
+            VariantBody.set('html', 'test');
         }
     });
 });

@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Product\Types;
 
 use QUI;
+use QUI\ERP\Products\Handler\Products;
 
 /**
  * Class VariantChild
@@ -16,6 +17,11 @@ use QUI;
  */
 class VariantChild extends AbstractType
 {
+    /**
+     * @var VariantParent
+     */
+    protected $Parent = null;
+
     /**
      * @param null $Locale
      * @return mixed
@@ -49,4 +55,63 @@ class VariantChild extends AbstractType
     {
         return false;
     }
+
+    //region product methods
+
+    /**
+     * Return the parent variant product
+     *
+     * @return VariantParent
+     *
+     * @throws QUI\ERP\Products\Product\Exception
+     * @throws QUI\Exception
+     */
+    public function getParent()
+    {
+        if ($this->Parent !== null) {
+            return $this->Parent;
+        }
+
+        $this->Parent = Products::getProduct(
+            $this->getAttribute('parent')
+        );
+
+        return $this->Parent;
+    }
+
+    /**
+     * Return the title
+     *
+     * @param null $Locale
+     * @return string
+     *
+     * @todo overwrite title with own title
+     */
+    public function getTitle($Locale = null)
+    {
+        try {
+            return $this->getParent()->getTitle($Locale);
+        } catch (QUI\Exception $Exception) {
+            return '';
+        }
+    }
+
+    /**
+     * Return the title
+     *
+     * @param null $Locale
+     * @return string
+     *
+     * @todo overwrite description with own title
+     */
+    public function getDescription($Locale = null)
+    {
+        try {
+            return $this->getParent()->getDescription($Locale);
+        } catch (QUI\Exception $Exception) {
+            return '';
+        }
+    }
+
+    //endregion
 }

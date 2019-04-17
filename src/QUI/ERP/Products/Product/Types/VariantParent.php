@@ -7,6 +7,8 @@
 namespace QUI\ERP\Products\Product\Types;
 
 use QUI;
+use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Utils\Tables;
 
 /**
  * Class Variant
@@ -50,5 +52,61 @@ class VariantParent extends AbstractType
     public static function getTypeBackendPanel()
     {
         return 'package/quiqqer/products/bin/controls/products/ProductVariant';
+    }
+
+    /**
+     * Return all variants
+     *
+     * @return QUI\ERP\Products\Product\Types\VariantChild[]
+     *
+     * @todo cache
+     */
+    public function getVariants()
+    {
+        try {
+            $result = QUI::getDataBase()->fetch([
+                'select' => ['id', 'parent'],
+                'from'   => Tables::getProductTableName(),
+                'where'  => [
+                    'parent' => $this->getId()
+                ],
+                'debug'  => true
+            ]);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
+            return [];
+        }
+
+        $variants = [];
+
+        foreach ($result as $entry) {
+            $productId = (int)$entry['id'];
+
+            try {
+                $variants[] = Products::getProduct($productId);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
+            }
+        }
+
+        return $variants;
+    }
+
+    /**
+     * @throws QUI\Exception
+     */
+    public function createVariant()
+    {
+        $Variant = Products::createProduct(
+            $this->getCategories(),
+            [],
+            VariantChild::class
+        );
+
+        $Variant->setAttribute('parent', $this->getId());
+        $Variant->save();
+
+        return $Variant;
     }
 }

@@ -334,7 +334,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 // render
             }).then(function (data) {
-
                 var fields     = data[0],
                     categories = data[1],
                     category   = data[2],

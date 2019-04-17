@@ -24,11 +24,10 @@ class BackendSearch extends Search
      * BackendSearch constructor.
      *
      * @param string $lang (optional) - if ommitted, take lang from Product Locale
-     * @throws QUI\Exception
      */
     public function __construct($lang = null)
     {
-        if (\is_null($lang)) {
+        if ($lang === null) {
             $lang = Products::getLocale()->getCurrent();
         }
 
@@ -41,6 +40,7 @@ class BackendSearch extends Search
      * @param array $searchParams - search parameters
      * @param bool $countOnly (optional) - return count of search results only [default: false]
      * @return array|int - product ids
+     *
      * @throws QUI\Exception
      */
     public function search($searchParams, $countOnly = false)
@@ -200,7 +200,7 @@ class BackendSearch extends Search
             !empty($searchParams['limit']) &&
             !$countOnly
         ) {
-            $Pagination = new QUI\Bricks\Controls\Pagination($searchParams);
+            $Pagination = new QUI\Controls\Navigating\Pagination($searchParams);
             $sqlParams  = $Pagination->getSQLParams();
             $sql        .= " LIMIT ".$sqlParams['limit'];
         } else {
@@ -267,7 +267,12 @@ class BackendSearch extends Search
                 continue;
             }
 
-            $Field = Fields::getField($fieldId);
+            try {
+                $Field = Fields::getField($fieldId);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
+                continue;
+            }
 
             $searchFieldDataContent = [
                 'id'         => $Field->getId(),
@@ -324,7 +329,14 @@ class BackendSearch extends Search
             $searchFieldIdsFromCfg = explode(',', $searchFieldIdsFromCfg);
         }
 
-        $eligibleFields = self::getEligibleSearchFields();
+        try {
+            $eligibleFields = self::getEligibleSearchFields();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return [];
+        }
+
 
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($eligibleFields as $Field) {
@@ -368,7 +380,11 @@ class BackendSearch extends Search
             \implode(',', $newSearchFieldIds)
         );
 
-        $PackageCfg->save();
+        try {
+            $PackageCfg->save();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
 
         // clear search field cache
         SearchCache::clear('products/search/backend/');

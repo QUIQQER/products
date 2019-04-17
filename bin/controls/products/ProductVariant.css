@@ -1,0 +1,16 @@
+.variant-list,
+.variants-tabs,
+.variant-body {
+    float: left;
+    width: 100%;
+}
+
+.variants-tabs,
+.variant-body {
+    padding: 10px 0;
+}
+
+.variants-tabs {
+    background: #e1e4e9;
+    margin-top: 10px;
+}
