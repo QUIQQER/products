@@ -35,7 +35,7 @@
             <en><![CDATA[Product list]]></en>
         </locale>
         <locale name="admin.types.productList.desc">
-            <de><![CDATA[Wählen Sie einzelne Produkte aus und lassen Sie diese in einer Liste anzeigen.]]></de>
+            <de><![CDATA[Wählen einzelne Produkte aus und lassen diese in einer Liste anzeigen.]]></de>
             <en><![CDATA[Select individual products and display them in a list.]]></en>
         </locale>
         <locale name="quiqqer.products.settings.productIds">
@@ -151,7 +151,7 @@
 
         <locale name="settings.window.products.folder.desc">
             <de><![CDATA[
-            Geben Sie den Hauptordner für Produktbilder an.
+            Gebe den Hauptordner für Produktbilder an.
             Unter diesen Ordner wird für jedes Produkt ein Ordner für Produktbilder angelegt
             ]]></de>
             <en><![CDATA[
@@ -186,7 +186,7 @@
         </locale>
         <locale name="settings.window.fieldsearch.backend.description">
             <de><![CDATA[
-            Hier können Sie einstellen welche Filter in der Backendproduktsuche angezeigt werden sollen.
+            Hier kannst Du einstellen welche Filter in der Backendproduktsuche angezeigt werden sollen.
             ]]></de>
             <en><![CDATA[
             Here you can define which filters to display in the backend product search.
@@ -199,7 +199,7 @@
         </locale>
         <locale name="settings.window.fieldsearch.frontend.description">
             <de><![CDATA[
-            Hier können Sie die Felder für den Produktfilter definieren welche den Kategorieseiten
+            Hier kannst Du die Felder für den Produktfilter definieren welche den Kategorieseiten
             automatisch zugeordnet werden sollen.
             ]]></de>
             <en><![CDATA[
@@ -214,7 +214,7 @@
         </locale>
         <locale name="settings.window.fieldsearch.freetext.description">
             <de><![CDATA[
-            Hier können Sie festlegen welche Felder bei der Produktsuche (in der Freitextsuche) berücksichtigt werden.
+            Hier kannst Du festlegen welche Felder bei der Produktsuche (in der Freitextsuche) berücksichtigt werden.
             ]]></de>
             <en><![CDATA[
             Here you can define which fields are considered during the product search (in the Freetext search).
@@ -399,7 +399,7 @@
             <en><![CDATA[Filter]]></en>
         </locale>
         <locale name="category.control.productlist.javascript">
-            <de><![CDATA[Bitte aktivieren Sie JavaScript.]]></de>
+            <de><![CDATA[Bitte aktiviere JavaScript.]]></de>
             <en><![CDATA[Please activate JavaScript.]]></en>
         </locale>
         <locale name="category.control.productlist.clearFilter">
@@ -515,7 +515,7 @@
 
         <!-- exceptions -->
         <locale name="exception.field.is.invalid">
-            <de><![CDATA[Bitte füllen Sie das Feld "[fieldtitle]" korrekt aus.]]></de>
+            <de><![CDATA[Bitte fülle das Feld "[fieldtitle]" korrekt aus.]]></de>
             <en><![CDATA[Please fill in the "[fieldtitle]" field correctly.]]></en>
         </locale>
         <locale name="exception.field.not.found" html="1">
@@ -524,7 +524,7 @@
         </locale>
         <locale name="exception.field.invalid" html="1">
             <de><![CDATA[
-                Nicht erlaubter Inhalt für das Feld: #[fieldId] <b>[fieldTitle]</b>. Bitte korrigieren Sie die Eingabe.
+                Nicht erlaubter Inhalt für das Feld: #[fieldId] <b>[fieldTitle]</b>. Bitte korrigiere die Eingabe.
                 ]]></de>
             <en><![CDATA[
                 Illegal content for the field: #[fieldId] <b>[fieldTitle]</b>. Please correct the entry.
@@ -552,7 +552,7 @@
         </locale>
         <locale name="exception.product.activasion.no.category" html="true">
             <de><![CDATA[
-            Das Produkt #[productId] kann nicht aktiviert werden.<br />Bitte weisen Sie dem Produkt eine Kategorie zu.
+            Das Produkt #[productId] kann nicht aktiviert werden.<br />Bitte weise dem Produkt eine Kategorie zu.
             ]]></de>
             <en><![CDATA[
             The product #[productId] can't be activated.<br />Please set a category to the product.
@@ -569,7 +569,7 @@
 
         <locale name="exception.field.grouplist.user.limit.reached">
             <de><![CDATA[
-                Nicht erlaubter Inhalt für das Feld: #[fieldId] [fieldTitle]. Diesem Feld kann nur ein Benutzer zugeordnet werden. Bitte korrigieren Sie die Eingabe.
+                Nicht erlaubter Inhalt für das Feld: #[fieldId] [fieldTitle]. Diesem Feld kann nur ein Benutzer zugeordnet werden. Bitte korrigiere die Eingabe.
                 ]]></de>
             <en><![CDATA[
                 Illegal content for the field: #[fieldId] [fieldTitle]. Only one user can be assigned to this field. Please correct the entry.
@@ -593,7 +593,7 @@
         </locale>
         <locale name="exception.field.unexptected.error">
             <de><![CDATA[
-                Fehler bei Zuweisung des Inhalts für das Feld: #[fieldId] [fieldTitle]: [errorMsg]. Bitte korrigieren Sie die Eingabe.
+                Fehler bei Zuweisung des Inhalts für das Feld: #[fieldId] [fieldTitle]: [errorMsg]. Bitte korrigiere die Eingabe.
                 ]]></de>
             <en><![CDATA[
                 An error occurred while assigning a vlaue to this field: #[fieldId] [fieldTitle]: [errorMsg]. Please correct the entry.
@@ -626,7 +626,7 @@
 
         <!-- produkte -->
         <locale name="message.product.create.missing.category">
-            <de><![CDATA[Bitte geben Sie dem Produkt eine Produktkategorie.]]></de>
+            <de><![CDATA[Bitte gebe dem Produkt eine Produktkategorie.]]></de>
             <en><![CDATA[Please assign a product category to the product.]]></en>
         </locale>
         <locale name="product.successfully.saved">
@@ -635,7 +635,7 @@
         </locale>
         <locale name="message.product.error.saving">
             <de>
-                <![CDATA[Beim speichern des Produktes ist ein Fehler aufgetreten. [error] Weitere Informationen finden Sie in den Log-Dateien.]]></de>
+                <![CDATA[Beim speichern des Produktes ist ein Fehler aufgetreten. [error] Weitere Informationen findest Du in den Log-Dateien.]]></de>
             <en>
                 <![CDATA[Some error occurred during saving. [error] You can find further information in the log files.]]></en>
         </locale>
@@ -885,7 +885,7 @@
             <en><![CDATA[Visited products]]></en>
         </locale>
         <locale name="brick.control.VisitedProducts.empty">
-            <de><![CDATA[Sie haben noch keine Produkte besucht.]]></de>
+            <de><![CDATA[Du hast noch keine Produkte besucht.]]></de>
             <en><![CDATA[You have not visited any products.]]></en>
         </locale>
 
@@ -1093,7 +1093,7 @@
         </locale>
         <locale name="category.panel.window.recursiveFields.text">
             <de><![CDATA[
-                Möchten Sie die Felder der Kategorie [category] auf alle Produkte in der Kategorie anwenden?
+                Möchtest Du die Felder der Kategorie [category] auf alle Produkte in der Kategorie anwenden?
             ]]></de>
             <en><![CDATA[
                 Would you like to apply the category [category] fields on all products in the category?
@@ -1134,7 +1134,7 @@
             <en><![CDATA[Delete category]]></en>
         </locale>
         <locale name="categories.window.delete.text">
-            <de><![CDATA[Möchten Sie die Kategorie #[categoryId] wirklich löschen?]]></de>
+            <de><![CDATA[Möchtest Du die Kategorie #[categoryId] wirklich löschen?]]></de>
             <en><![CDATA[Do you really want to delete the category #[categoryId]?]]></en>
         </locale>
         <locale name="categories.window.delete.information">
@@ -1143,7 +1143,7 @@
         </locale>
 
         <locale name="control.field.create.content" html="true">
-            <de><![CDATA[Füllen Sie bitte alle Felder korrekt aus um ein neues Produktfeld anzulegen.]]></de>
+            <de><![CDATA[Fülle bitte alle Felder korrekt aus um ein neues Produktfeld anzulegen.]]></de>
             <en><![CDATA[Please fill in all fields correctly to create a new product field.]]></en>
         </locale>
         <locale name="control.field.create.header">
@@ -1156,7 +1156,7 @@
             <en><![CDATA[Create a new category]]></en>
         </locale>
         <locale name="categories.window.create.information">
-            <de><![CDATA[Nach dem Anlegen der Kategorie können Sie der Kategory Felder zu weisen.]]></de>
+            <de><![CDATA[Nach dem Anlegen der Kategorie kannst Du der Kategory Felder zu weisen.]]></de>
             <en><![CDATA[After creating the category, you can assign fields to it.]]></en>
         </locale>
         <locale name="categories.window.fieldtype.filter">
@@ -1215,7 +1215,7 @@
             <en><![CDATA[Remove the field?]]></en>
         </locale>
         <locale name="category.update.field.window.delete.text">
-            <de><![CDATA[Möchten Sie das Feld wirklich entfernen?]]></de>
+            <de><![CDATA[Möchtest Du das Feld wirklich entfernen?]]></de>
             <en><![CDATA[Do you realy want to temove the field?]]></en>
         </locale>
         <locale name="category.update.field.window.delete.information">
@@ -1257,7 +1257,7 @@
             <en><![CDATA[Delete the fields]]></en>
         </locale>
         <locale name="fields.window.delete.text">
-            <de><![CDATA[Möchten Sie die Produktfelder wirklich löschen?]]></de>
+            <de><![CDATA[Möchtest Du die Produktfelder wirklich löschen?]]></de>
             <en><![CDATA[Do you really want to delete the fields?]]></en>
         </locale>
         <locale name="fields.window.delete.description" html="">
@@ -1281,7 +1281,7 @@
         </locale>
         <locale name="fields.window.productarray.changed.text" html="true">
             <de><![CDATA[
-                Möchten Sie die Feldeigenschaften auf alle Produkte anwenden welche das Feld besitzen?
+                Möchtest Du die Feldeigenschaften auf alle Produkte anwenden welche das Feld besitzen?
                 ]]></de>
             <en><![CDATA[
                 Do you want to apply the field properties to all products that contain the field?
@@ -1290,7 +1290,7 @@
         <locale name="fields.window.productarray.changed.information" html="true">
             <de><![CDATA[
                 Feld-Eigenschaften haben sich geändert welche Produkte direkt betreffen.<br />
-                Möchten Sie alle Produkte welche das Feld <strong>[fieldId] [fieldName]</strong> besitzen anpassen? <br />
+                Möchtest Du alle Produkte welche das Feld <strong>[fieldId] [fieldName]</strong> besitzen anpassen? <br />
                 Für jedes Produkt werden die Eigenschaften des Feldes <strong>[fieldId] [fieldName]</strong> gesetzt.
                 ]]></de>
             <en><![CDATA[
@@ -1340,7 +1340,7 @@
             <en><![CDATA[Remove item from the list?]]></en>
         </locale>
         <locale name="fields.control.productAttributeList.remove.window.text">
-            <de><![CDATA[Möchten Sie folgende Einträge wirklich löschen?]]></de>
+            <de><![CDATA[Möchtest Du folgende Einträge wirklich löschen?]]></de>
             <en><![CDATA[Do you really want to delete the following entries?]]></en>
         </locale>
 
@@ -1471,7 +1471,7 @@
             <en><![CDATA[Copy the product]]></en>
         </locale>
         <locale name="products.window.copy.information">
-            <de><![CDATA[Möchten Sie das Produkt [id] [title] wirklich kopieren?]]></de>
+            <de><![CDATA[Möchtest Du das Produkt [id] [title] wirklich kopieren?]]></de>
             <en><![CDATA[Do you realy want to copy the product [id] [title]?]]></en>
         </locale>
         <locale name="products.window.copy.text">
@@ -1497,6 +1497,21 @@
         <locale name="field.vat.type.default">
             <de><![CDATA[Standard verwenden]]></de>
             <en><![CDATA[Use default]]]></en>
+        </locale>
+
+        <locale name="variants.OverwriteableFieldList.window.title">
+            <de><![CDATA[Überschreibbare Produktfelder]]></de>
+            <en><![CDATA[Overwritable product fields]]></en>
+        </locale>
+        <locale name="variants.OverwriteableFieldList.window.description">
+            <de><![CDATA[
+            Lege fest welche Felder von den Varianten überschrieben werden können.
+            Alle Felder welche nicht von den Varianten überschrieben werden können, werden von dem Eltern-Produkt übernommen.
+            ]]></de>
+            <en><![CDATA[
+            Specify which fields can be overwritten by the variants.
+            All fields that cannot be overwritten by the variants will be taken from the parent product.
+            ]]></en>
         </locale>
     </groups>
 

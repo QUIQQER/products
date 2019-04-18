@@ -206,6 +206,14 @@ class Model extends QUI\QDOM
             }
         }
 
+        // overwriteable Variant Fields
+        if (!empty($product['overwriteableVariantFields']) && is_string($product['overwriteableVariantFields'])) {
+            $this->setAttribute(
+                'overwriteableVariantFields',
+                \json_decode($product['overwriteableVariantFields'], true)
+            );
+        }
+
         if (\defined('QUIQQER_BACKEND')) {
             $this->setAttribute('viewType', 'backend');
         }

@@ -16,9 +16,14 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
     'Mustache',
 
     'text!package/quiqqer/products/bin/controls/products/ProductVariant.html',
+    'text!package/quiqqer/products/bin/controls/products/ProductData.html',
+    'text!package/quiqqer/products/bin/controls/products/ProductPrices.html',
+    'text!package/quiqqer/products/bin/controls/products/CreateField.html',
+
     'css!package/quiqqer/products/bin/controls/products/ProductVariant.css'
 
-], function (QUI, ProductPanel, QUISelect, QUIBar, QUITab, Grid, QUILocale, Mustache, template) {
+], function (QUI, ProductPanel, QUISelect, QUIBar, QUITab, Grid, QUILocale, Mustache,
+             template, templateProductData) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -29,8 +34,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         Type   : 'package/quiqqer/products/bin/controls/products/ProductVariant',
 
         Binds: [
-            '$onCreate',
-            '$onInject'
+            '$onInject',
+            'openVariantTab',
+            'openVariantAttributeSettings'
         ],
 
         options: {
@@ -46,30 +52,20 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             this.parent(options);
 
-            this.$Grid     = null;
-            this.$Variants = null;
-
-            this.addEvents({
-                onCreate: this.$onCreate
-            });
+            this.$Grid          = null;
+            this.$VariantFields = null;
         },
 
         /**
-         * event: on create
+         * event: on inject
          */
-        $onCreate: function () {
-            this.parent();
-
-
-        },
-
         $onInject: function () {
             var self = this;
 
             this.parent().then(function () {
                 self.addCategory({
                     name  : 'variants',
-                    text  : 'VARIANTEN',
+                    text  : 'VARIANTEN', // #locale
                     icon  : 'fa fa-info',
                     events: {
                         onClick: function () {
@@ -85,6 +81,36 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     self.getCategory('variants'),
                     1
                 );
+
+                var categories    = self.getCategoryBar().getChildren();
+                var resetMinimize = function (Category) {
+                    if (Category.getAttribute('name') === 'variants') {
+                        return;
+                    }
+
+                    self.maximizeCategory();
+                    self.$VariantFields.hide();
+                    self.getElm().removeClass('quiqqer-products-panel-show-variant');
+                };
+
+                for (var i = 0, len = categories.length; i < len; i++) {
+                    categories[i].addEvent('onClick', resetMinimize);
+                }
+
+                self.addButton({
+                    name  : 'variantFields',
+                    title : 'Überschreibbare Felder für Varianten festlegen', // #locale
+                    icon  : 'fa fa-exchange',
+                    events: {
+                        click: self.openVariantAttributeSettings
+                    },
+                    styles: {
+                        'float': 'right'
+                    }
+                });
+
+                self.$VariantFields = self.getButtons('variantFields');
+                self.$VariantFields.hide();
             });
         },
 
@@ -98,10 +124,12 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return Promise.resolve();
             }
 
-            var self = this;
+            var self = this,
+                Body = self.getBody();
+
+            self.$VariantFields.show();
 
             return self.$hideCategories().then(function () {
-                var Body         = self.getBody();
                 var VariantSheet = Body.getElement('.variants-sheet');
 
                 if (!VariantSheet) {
@@ -112,7 +140,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 VariantSheet.set('html', '');
 
-                self.$Grid = new Grid(VariantSheet, {
+                var Container = new Element('div').inject(VariantSheet);
+
+                self.$Grid = new Grid(Container, {
                     pagination : true,
                     width      : VariantSheet.getSize().x - 40,
                     height     : VariantSheet.getSize().y - 40,
@@ -173,6 +203,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 var VariantSheet = Body.getElement('.variants-sheet');
 
                 return self.$showCategory(VariantSheet);
+            }).then(function () {
+                return self.$Grid.setHeight(
+                    Body.getElement('.variants-sheet').getSize().y - 40
+                );
             });
         },
 
@@ -215,6 +249,27 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     data : variants,
                     total: variants.length,
                     page : 1
+                });
+            });
+        },
+
+        /**
+         * Opens the variant attribute inheritance setting window for this product
+         *
+         * @return {Promise}
+         */
+        openVariantAttributeSettings: function () {
+            var self = this;
+
+            return new Promise(function (resolve) {
+                require([
+                    'package/quiqqer/products/bin/controls/products/variants/OverwriteableFieldListWindow'
+                ], function (Window) {
+                    new Window({
+                        productId: self.getAttribute('productId')
+                    }).open();
+
+                    resolve();
                 });
             });
         },
@@ -306,14 +361,17 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                     TabBar.appendChild(
                         new QUITab({
-                            name: name,
-                            text: Category.getAttribute('text')
+                            name  : name,
+                            text  : Category.getAttribute('text'),
+                            events: {
+                                onClick: self.openVariantTab
+                            }
                         })
                     );
                 }
 
                 TabBar.resize();
-                TabBar.firstChild().setActive();
+                TabBar.firstChild().click();
 
 
                 // body
@@ -321,6 +379,109 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 return self.$showCategory(VariantSheet);
             });
+        },
+
+        //region variant tab handling
+
+        /**
+         * Opens the tab
+         *
+         * @param Tab
+         */
+        openVariantTab: function (Tab) {
+            var name = Tab.getAttribute('name');
+
+            console.log(name);
+
+            if (name === 'data') {
+                return this.$openVariantData();
+            }
+        },
+
+        /**
+         * opens the data
+         *
+         * @return {Promise}
+         */
+        $openVariantData: function () {
+            var self = this;
+
+            return this.$hideTabContent().then(function (Content) {
+                Content.set('html', self.$Data.get('html'));
+
+                Content.getElement('[name="categories"]')
+                       .getParent('tr')
+                       .destroy();
+
+                Content.getElement('[name="product-category"]')
+                       .getParent('tr')
+                       .destroy();
+
+                Content.getElement('form + button')
+                       .destroy();
+
+                QUI.Controls.getControlsInElement(Content).each(function (Field) {
+                    if (!("getFieldId" in Field)) {
+                        return;
+                    }
+
+                    if (!("setValue" in Field)) {
+                        return;
+                    }
+
+                    var fieldId = Field.getFieldId();
+
+                    if (fieldId in self.$data) {
+                        Field.setValue(self.$data[fieldId].value);
+                    }
+                });
+
+                return self.$showTabContent();
+            });
+        },
+
+        /**
+         * Hide the tab content
+         *
+         * @return {Promise}
+         */
+        $hideTabContent: function () {
+            var VariantBody = this.getBody().getElement('.variant-body');
+
+            return new Promise(function (resolve) {
+                moofx(VariantBody).animate({
+                    left   : -20,
+                    opacity: 0
+                }, {
+                    duration: 250,
+                    callback: function () {
+                        resolve(VariantBody);
+                    }
+                });
+            });
+        },
+
+        /**
+         * Show the tab content
+         *
+         * @return {Promise}
+         */
+        $showTabContent: function () {
+            var VariantBody = this.getBody().getElement('.variant-body');
+
+            return new Promise(function (resolve) {
+                moofx(VariantBody).animate({
+                    left   : 0,
+                    opacity: 1
+                }, {
+                    duration: 250,
+                    callback: function () {
+                        resolve(VariantBody);
+                    }
+                });
+            });
         }
+
+        //endregion variant tab
     });
 });
