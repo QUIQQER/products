@@ -36,7 +36,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         Binds: [
             '$onInject',
             'openVariantTab',
-            'openVariantAttributeSettings'
+            'openVariantAttributeSettings',
+            'openVariantGenerating',
+            'addVariant'
         ],
 
         options: {
@@ -146,6 +148,22 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     pagination : true,
                     width      : VariantSheet.getSize().x - 40,
                     height     : VariantSheet.getSize().y - 40,
+                    buttons    : [{
+                        textimage: 'fa fa-plus',
+                        text     : 'Neue Variante',
+                        events   : {
+                            click: self.addVariant
+                        }
+                    }, {
+                        textimage: 'fa fa-magic',
+                        text     : 'Varianten generieren',
+                        styles   : {
+                            'float': 'right'
+                        },
+                        events   : {
+                            click: self.openVariantGenerating
+                        }
+                    }],
                     columnModel: [{
                         header   : QUILocale.get('quiqqer/system', 'id'),
                         dataIndex: 'id',
@@ -300,18 +318,13 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return self.$Product.getVariants();
             }).then(function (variants) {
                 var VariantSheet = Body.getElement('.variants-sheet');
-
-                // @todo categorien wieder normal, wenn zurück
-                // @todo grid aller varianten anzeigen wenn keine variante ausgewählt ist
-
-
-                var VariantList = Body.getElement('.variant-list');
-                var VariantTabs = Body.getElement('.variants-tabs');
-                var VariantBody = Body.getElement('.variant-body');
+                var VariantList  = Body.getElement('.variant-list');
+                var VariantTabs  = Body.getElement('.variants-tabs');
+                var VariantBody  = Body.getElement('.variant-body');
 
                 // variant select
                 var VariantSelect = new QUISelect({
-                    placeholder: 'Variante wechseln',
+                    placeholder: 'Variante wechseln', // #locale
                     showIcons  : false,
                     styles     : {
                         width: '70%'
@@ -323,6 +336,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 for (i = 0, len = variants.length; i < len; i++) {
                     variant = variants[i];
 
+                    // #locale
                     VariantSelect.appendChild(
                         'Zu variante wechseln: ' + variant.id + ' - ' + variant.title
                     );
@@ -381,6 +395,27 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             });
         },
 
+        //region variant generating
+
+        addVariant: function () {
+
+        },
+
+        /**
+         * opens the variant generating window
+         */
+        openVariantGenerating: function () {
+            require([
+                'package/quiqqer/products/bin/controls/products/variants/GenerateVariantsWindow'
+            ], function (Window) {
+                new Window({
+                    productId: this.getAttribute('productId')
+                }).open();
+            }.bind(this));
+        },
+
+        //endregion
+
         //region variant tab handling
 
         /**
@@ -389,13 +424,20 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          * @param Tab
          */
         openVariantTab: function (Tab) {
+            this.Loader.show();
+
             var name = Tab.getAttribute('name');
+            var done = function () {
+                this.Loader.hide();
+            }.bind(this);
 
             console.log(name);
 
             if (name === 'data') {
-                return this.$openVariantData();
+                return this.$openVariantData().then(done);
             }
+
+            return Promise.resolve().then(done);
         },
 
         /**

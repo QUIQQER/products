@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Product\Types;
 
 use QUI;
+use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 
 /**
@@ -21,6 +22,8 @@ class VariantChild extends AbstractType
      * @var VariantParent
      */
     protected $Parent = null;
+
+    //region type stuff
 
     /**
      * @param null $Locale
@@ -56,6 +59,8 @@ class VariantChild extends AbstractType
         return false;
     }
 
+    //endregion
+
     //region product methods
 
     /**
@@ -84,11 +89,15 @@ class VariantChild extends AbstractType
      *
      * @param null $Locale
      * @return string
-     *
-     * @todo overwrite title with own title
      */
     public function getTitle($Locale = null)
     {
+        $result = $this->getLanguageFieldValue(Fields::FIELD_TITLE, $Locale);
+
+        if (!empty($result)) {
+            return $result;
+        }
+
         return $this->getParent()->getTitle($Locale);
     }
 
@@ -97,11 +106,15 @@ class VariantChild extends AbstractType
      *
      * @param null $Locale
      * @return string
-     *
-     * @todo overwrite description with own title
      */
     public function getDescription($Locale = null)
     {
+        $result = $this->getLanguageFieldValue(Fields::FIELD_SHORT_DESC, $Locale);
+
+        if (!empty($result)) {
+            return $result;
+        }
+
         return $this->getParent()->getDescription($Locale);
     }
 

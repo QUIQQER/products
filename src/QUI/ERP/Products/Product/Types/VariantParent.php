@@ -18,6 +18,9 @@ use QUI\ERP\Products\Utils\Tables;
  * This is a variant product
  *
  * @package QUI\ERP\Products\Product\Types
+ *
+ * @todo erp overwriteable field settings -> Globale default Liste für überschreibbare Felder
+ * @todo wenn product parent gelöscht wird, auch alle kinder löschen
  */
 class VariantParent extends AbstractType
 {
