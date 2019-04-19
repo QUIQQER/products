@@ -85,11 +85,6 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      *
      * @example $this->addEntry(array(
      *       'title' => '',    // translation json string {de: "", en: ""}
-     *       'sum'   => '',      // -> 10, 100 -> numbers
-     *       'type'  => '',     // optional -> QUI\ERP\Products\Utils\Calc::CALCULATION_PERCENTAGE |
-     *                                        QUI\ERP\Products\Utils\Calc::CALCULATION_COMPLEMENT
-     *       'selected' => '', // optional
-     *       'userinput => ''' // optional
      * ));
      */
     public function addEntry($entry = [])
@@ -106,7 +101,6 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
 
         $available = [
             'title',
-            'type',     // optional
             'selected', // optional
         ];
 

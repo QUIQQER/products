@@ -55,7 +55,7 @@ class Fields
     const TYPE_PRICE = 'Price';
     const TYPE_PRICE_BY_QUANTITY = 'PriceByQuantity';
     const TYPE_ATTRIBUTE_LIST = 'ProductAttributeList';
-    const TYPE_ATTRIBUTES = 'Attributes';
+    const TYPE_ATTRIBUTES = 'AttributeGroup';
     const TYPE_TEXTAREA = 'Textarea';
     const TYPE_TEXTAREA_MULTI_LANG = 'TextareaMultiLang';
     const TYPE_URL = 'Url';
