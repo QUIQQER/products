@@ -316,7 +316,7 @@ abstract class Search extends QUI\QDOM
                 case SearchHandler::SEARCHTYPE_SELECTSINGLE:
                 case SearchHandler::SEARCHTYPE_INPUTSELECTSINGLE:
                     if (empty($value)) {
-                        continue;
+                        break;
                     }
 
                     if (!\is_string($value)) {
@@ -340,7 +340,7 @@ abstract class Search extends QUI\QDOM
                 case SearchHandler::SEARCHTYPE_SELECTRANGE:
                 case SearchHandler::SEARCHTYPE_INPUTSELECTRANGE:
                     if (empty($value)) {
-                        continue;
+                        break;
                     }
 
                     if (!\is_array($value)) {
@@ -418,7 +418,7 @@ abstract class Search extends QUI\QDOM
 
                 case SearchHandler::SEARCHTYPE_DATERANGE:
                     if (empty($value)) {
-                        continue;
+                        break;
                     }
 
                     if (!\is_array($value)) {
@@ -494,7 +494,7 @@ abstract class Search extends QUI\QDOM
 
                 case SearchHandler::SEARCHTYPE_DATE:
                     if (empty($value)) {
-                        continue;
+                        break;
                     }
 
                     if (!\is_string($value) && !\is_numeric($value)) {
@@ -517,7 +517,7 @@ abstract class Search extends QUI\QDOM
 
                 case SearchHandler::SEARCHTYPE_SELECTMULTI:
                     if (empty($value)) {
-                        continue;
+                        break;
                     }
 
                     if (!\is_array($value)) {
@@ -542,7 +542,7 @@ abstract class Search extends QUI\QDOM
 
                 case SearchHandler::SEARCHTYPE_TEXT:
                     if (empty($value)) {
-                        continue;
+                        break;
                     }
 
                     if (!\is_string($value)) {
