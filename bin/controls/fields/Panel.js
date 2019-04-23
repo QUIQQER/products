@@ -131,6 +131,14 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
             this.$Search = new FieldSearch({
                 multiple: true,
                 events  : {
+                    onRefreshBegin: function () {
+                        self.Loader.show();
+                    },
+
+                    onRefresh: function () {
+                        self.Loader.hide();
+                    },
+
                     onClick: function () {
                         var Delete = self.getButtons('delete'),
                             Edit   = self.getButtons('edit');
@@ -138,7 +146,8 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                         Delete.enable();
                         Edit.enable();
                     },
-                    submit : function () {
+
+                    submit: function () {
                         self.updateChild(self.$Search.getSelected()[0]);
                     }
                 }

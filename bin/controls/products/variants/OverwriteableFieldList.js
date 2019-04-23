@@ -148,7 +148,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwriteableFie
                 for (i = 0, len = result.fields.length; i < len; i++) {
                     entry = result.fields[i];
 
-                    if (overwriteable.indexOf(entry.id) === -1) {
+                    if (!overwriteable.length || overwriteable.indexOf(entry.id) === -1) {
                         Status = new QUISwitch({
                             status: false
                         });

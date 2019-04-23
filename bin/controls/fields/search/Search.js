@@ -32,7 +32,11 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
 
         options: {
             multiple       : false,
-            fieldTypeFilter: false
+            fieldTypeFilter: false,
+            sortOn         : false,
+            sortBy         : false,
+            perPage        : 150,
+            page           : false
         },
 
         initialize: function (options) {
@@ -69,7 +73,10 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
             this.$Grid = new Grid(GridContainer, {
                 pagination       : true,
                 multipleSelection: this.getAttribute('multiple'),
-                perPage          : 150,
+                perPage          : this.getAttribute('perPage'),
+                page             : this.getAttribute('page'),
+                sortOn           : this.getAttribute('sortOn'),
+                serverSort       : true,
                 buttons          : [
                     new FieldTypeSelect({
                         events: {
@@ -199,13 +206,16 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
          * @return {Promise}
          */
         refresh: function () {
-            var self = this;
+            var self    = this,
+                options = this.$Grid.options;
 
-            this.fireEvent('refreshBegin');
+            this.fireEvent('refreshBegin', [this]);
 
             return Fields.getList({
-                perPage: this.$Grid.options.perPage,
-                page   : this.$Grid.options.page,
+                perPage: options.perPage,
+                page   : options.page,
+                sortOn : options.sortOn,
+                sortBy : options.sortBy,
                 type   : this.getAttribute('fieldTypeFilter')
             }).then(function (result) {
                 var i, len;

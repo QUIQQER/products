@@ -14,6 +14,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Products', [
     "use strict";
 
     return new Class({
+
         Extends: QUIControl,
         Type   : 'package/quiqqer/products/bin/controls/fields/types/Products',
 

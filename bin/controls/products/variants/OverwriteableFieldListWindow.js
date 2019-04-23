@@ -24,7 +24,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwriteableFie
 
         options: {
             productId: false,
-            maxWidth : 600,
+            maxWidth : 800,
             maxHeight: 800,
             autoclose: false
         },

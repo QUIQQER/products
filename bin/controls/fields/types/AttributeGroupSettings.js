@@ -13,9 +13,9 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
     'package/quiqqer/products/bin/utils/Calc',
     'Mustache',
 
-    'text!package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings.html',
-    'text!package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettingsCreate.html',
-    'css!package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings.css'
+    'text!package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettings.html',
+    'text!package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettingsCreate.html',
+    'css!package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettings.css'
 
 ], function (QUI, QUIControl, QUIConfirm, QUILocale, Grid, InputMultiLang, Calc, Mustache, template, templateCreate) {
     "use strict";
@@ -45,11 +45,9 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
 
             this.$Input        = null;
             this.$Grid         = null;
-            this.$Priority     = null;
             this.$GenerateTags = null;
 
             this.$data = [];
-
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -175,6 +173,12 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                     dataIndex: 'title',
                     dataType : 'string',
                     width    : 200
+                }, {
+                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.valueId'),
+                    title    : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.valueId.description'),
+                    dataIndex: 'valueId',
+                    dataType : 'string',
+                    width    : 200
                 }]
             });
 
@@ -195,13 +199,11 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
             this.$PriceCalc = new Element('div', {
                 'class': 'quiqqer-products-attributeList-settings',
                 html   : Mustache.render(template, {
-                    title       : QUILocale.get(lg, 'product.fields.attributeList.title'),
-                    priority    : QUILocale.get(lg, 'product.fields.attributeList.priority'),
+                    title       : QUILocale.get(lg, 'product.fields.attribute.group.attributeList.title'),
                     generateTags: QUILocale.get(lg, 'product.fields.attributeList.generateTags')
                 })
             }).inject(this.$Elm, 'top');
 
-            this.$Priority     = this.$PriceCalc.getElement('[name="price_priority"]');
             this.$GenerateTags = this.$PriceCalc.getElement('[name="generate_tags"]');
 
             this.refresh();
@@ -248,18 +250,12 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
             this.$Elm.wraps(this.$Input);
             this.$onInject();
 
-
-            if ("priority" in data) {
-                this.$Priority.value = data.priority;
-            }
-
             if ("generate_tags" in data) {
                 this.$GenerateTags.checked = data.generate_tags;
             } else {
                 this.$GenerateTags.checked = false;
             }
 
-            this.$Priority.addEvent('change', this.update);
             this.$GenerateTags.addEvent('change', this.update);
         },
 
@@ -312,10 +308,18 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          * refresh the grid data display
          */
         refresh: function () {
-            var i, len, entry, langTitle;
+            var i, len, entry, langTitle, Selected;
             var data = [];
 
             var currentLang = QUILocale.getCurrent();
+
+            var IsSelected = new Element('span', {
+                'class': 'fa fa-check'
+            });
+
+            var IsNotSelected = new Element('span', {
+                'class': 'fa fa-minus'
+            });
 
             for (i = 0, len = this.$data.length; i < len; i++) {
                 entry = this.$data[i];
@@ -330,9 +334,17 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                     langTitle = entry.title[currentLang];
                 }
 
+                if (typeof entry.selected !== 'undefined' && entry.selected) {
+                    Selected = IsSelected.clone();
+                } else {
+                    Selected = IsNotSelected.clone();
+                }
+
+
                 data.push({
-                    title: langTitle,
-                    id   : entry.id
+                    selected: Selected,
+                    title   : langTitle,
+                    valueId : entry.valueId
                 });
             }
 
@@ -352,7 +364,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
             var self = this;
 
             new QUIConfirm({
-                title    : QUILocale.get(lg, 'fields.control.productAttributeList.add.window.title'),
+                title    : QUILocale.get(lg, 'fields.control.attributeGroup.create.add.window.title'),
                 icon     : 'fa fa-plus',
                 texticon : false,
                 maxHeight: 400,
@@ -360,11 +372,9 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                 events   : {
                     onOpen  : function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            title         : QUILocale.get('quiqqer/system', 'title'),
-                            priceTitle    : QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
-                            deduction     : QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction'),
-                            selectedTitle : QUILocale.get(lg, 'fields.control.productAttributeList.create.selected'),
-                            userInputTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.userinput')
+                            title        : QUILocale.get('quiqqer/system', 'title'),
+                            valueId      : QUILocale.get(lg, 'fields.control.attributeGroup.create.valueId'),
+                            selectedTitle: QUILocale.get(lg, 'fields.control.attributeGroup.create.selected')
                         }));
 
                         var Form = Win.getContent().getElement('form');
@@ -379,8 +389,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
 
                         self.add(
                             Title.getData(),
-                            Form.elements.sum.value,
-                            Form.elements.id.value
+                            Form.elements.valueId.value,
+                            Form.elements.selected.value
                         );
                     }
                 }
@@ -405,24 +415,23 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                 data = this.$data[index];
 
             new QUIConfirm({
-                title    : QUILocale.get(lg, 'fields.control.productAttributeList.edit.window.title'),
+                title    : QUILocale.get(lg, 'fields.control.attributeGroup.edit.window.title'),
                 icon     : 'fa fa-edit',
                 maxHeight: 400,
                 maxWidth : 600,
                 events   : {
                     onOpen  : function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            title         : QUILocale.get('quiqqer/system', 'title'),
-                            priceTitle    : QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
-                            deduction     : QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction'),
-                            selectedTitle : QUILocale.get(lg, 'fields.control.productAttributeList.create.selected'),
-                            userInputTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.userinput')
+                            title        : QUILocale.get('quiqqer/system', 'title'),
+                            valueId      : QUILocale.get(lg, 'fields.control.attributeGroup.create.valueId'),
+                            selectedTitle: QUILocale.get(lg, 'fields.control.attributeGroup.create.selected')
                         }));
 
                         var Form = Win.getContent().getElement('form');
 
-                        Form.elements.title.value = JSON.encode(data.title);
-                        Form.elements.id.value    = data.id;
+                        Form.elements.title.value      = JSON.encode(data.title);
+                        Form.elements.valueId.value    = data.valueId;
+                        Form.elements.selected.checked = data.selected;
 
                         new InputMultiLang().imports(Form.elements.title);
                     },
@@ -435,7 +444,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                         self.edit(
                             index,
                             Title.getData(),
-                            Form.elements.id.value
+                            Form.elements.valueId.value,
+                            Form.elements.selected.value
                         );
                     }
                 }
@@ -459,10 +469,10 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
             }
 
             new QUIConfirm({
-                title      : QUILocale.get(lg, 'fields.control.productAttributeList.remove.window.title'),
+                title      : QUILocale.get(lg, 'fields.control.attributeGroup.remove.window.title'),
                 icon       : 'fa fa-trash',
                 texticon   : 'fa fa-trash',
-                text       : QUILocale.get(lg, 'fields.control.productAttributeList.remove.window.text'),
+                text       : QUILocale.get(lg, 'fields.control.attributeGroup.remove.window.text'),
                 information: titles.join(','),
                 maxHeight  : 300,
                 maxWidth   : 450,
@@ -514,7 +524,6 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
         update: function () {
             this.$Input.value = JSON.encode({
                 entries      : this.$data,
-                priority     : this.$Priority.value,
                 generate_tags: this.$GenerateTags.checked
             });
         },
@@ -523,12 +532,16 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          * Add an entry
          *
          * @param {Object|String} title
-         * @param {String} id
+         * @param {String} valueId
+         * @param {Boolean}  [selected]
          */
-        add: function (title, id) {
+        add: function (title, valueId, selected) {
+            selected = selected || false;
+
             this.$data.push({
-                title: title,
-                id   : id
+                title   : title,
+                valueId : valueId,
+                selected: selected
             });
 
             this.refresh();
@@ -580,12 +593,14 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          *
          * @param {Number} index
          * @param {Object|String} title
-         * @param {String} id
+         * @param {String} valueId
+         * @param {Boolean} [selected]
          */
-        edit: function (index, title, id) {
+        edit: function (index, title, valueId, selected) {
             this.$data[index] = {
-                title: title,
-                id   : id
+                title   : title,
+                valueId : valueId,
+                selected: selected || false
             };
 
             this.refresh();

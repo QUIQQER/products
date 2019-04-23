@@ -15,7 +15,7 @@ use QUI\ERP\Products\Utils\Tables;
  * Class Variant
  * - Variant Parent
  *
- * This is a variant product
+ * This is a variant parent product
  *
  * @package QUI\ERP\Products\Product\Types
  *

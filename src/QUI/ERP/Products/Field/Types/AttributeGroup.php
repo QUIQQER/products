@@ -153,7 +153,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      */
     public function getJavaScriptSettings()
     {
-        return 'package/quiqqer/products/bin/controls/fields/types/AttributeGroup';
+        return 'package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettings';
     }
 
 

@@ -827,6 +827,9 @@ class Fields
         }
 
         switch ($queryParams['order']) { // bad solution
+            case 'id':
+            case 'id ASC':
+            case 'id DESC':
             case 'name':
             case 'name ASC':
             case 'name DESC':
@@ -858,10 +861,19 @@ class Fields
                 break;
 
             default:
-                $query['order'] = 'priority ASC';
+                $query['order'] = 'priority ASC, id ASC';
         }
 
-        $result = QUI::getDataBase()->fetch($query);
+        //$query['debug'] = true;
+
+        try {
+            $result = QUI::getDataBase()->fetch($query);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
+            return [];
+        }
+
 
         try {
             QUI\Cache\Manager::set($cacheName, $result);

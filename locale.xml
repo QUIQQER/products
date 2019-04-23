@@ -502,6 +502,10 @@
             <de><![CDATA[Gruppenzuweisung]]></de>
             <en><![CDATA[Group assignment]]></en>
         </locale>
+        <locale name="fieldtype.AttributeGroup">
+            <de><![CDATA[Attributliste]]></de>
+            <en><![CDATA[Attribute list]]></en>
+        </locale>
 
         <locale name="fieldtype.ProductAttributeList.calcBasis.netto">
             <de><![CDATA[Netto]]></de>
@@ -1338,6 +1342,14 @@
             <de><![CDATA[Benutzerspezifische Eingabe]]></de>
             <en><![CDATA[User input]]></en>
         </locale>
+        <locale name="fields.control.productAttributeListSettings.grid.valueId">
+            <de><![CDATA[ID des Wertes]]></de>
+            <en><![CDATA[ID of the value]]></en>
+        </locale>
+        <locale name="fields.control.productAttributeListSettings.grid.valueId.description">
+            <de><![CDATA[Bestimme die ID des Wertes. Somit ist eine einfacherer Zuweisung möglich.]]></de>
+            <en><![CDATA[Determine the ID of the value. This allows a simpler assignment.]]></en>
+        </locale>
 
         <locale name="fields.control.productAttributeList.remove.window.title">
             <de><![CDATA[Eintrag aus der Auswahlliste entfernen?]]></de>
@@ -1352,10 +1364,26 @@
             <de><![CDATA[Eintrag aus der Auswahlliste editieren]]></de>
             <en><![CDATA[Edit entry from the list]]></en>
         </locale>
-
         <locale name="fields.control.productAttributeList.add.window.title">
-            <de><![CDATA[Eintrag aus der Auswahlliste hinzufügen]]></de>
-            <en><![CDATA[Add entry from the list]]></en>
+            <de><![CDATA[Eintrag der Auswahlliste hinzufügen]]></de>
+            <en><![CDATA[Add entry to the list]]></en>
+        </locale>
+
+        <locale name="fields.control.attributeGroup.edit.window.title">
+            <de><![CDATA[Eintrag aus der Attributliste editieren]]></de>
+            <en><![CDATA[Edit entry from the attribute group]]></en>
+        </locale>
+        <locale name="fields.control.attributeGroup.create.add.window.title">
+            <de><![CDATA[Eintrag der Attributliste hinzufügen]]></de>
+            <en><![CDATA[Add entry to the attribute group]]></en>
+        </locale>
+        <locale name="fields.control.attributeGroup.remove.window.title">
+            <de><![CDATA[Eintrag aus der Attributliste entfernen?]]></de>
+            <en><![CDATA[Remove item from the attribute group?]]></en>
+        </locale>
+        <locale name="fields.control.attributeGroup.remove.window.text">
+            <de><![CDATA[Möchtest Du folgende Einträge wirklich löschen?]]></de>
+            <en><![CDATA[Do you really want to delete the following entries?]]></en>
         </locale>
 
         <locale name="fields.control.productAttributeList.create.priceTitle">
@@ -1377,6 +1405,14 @@
         <locale name="fieldtype.not.searchable">
             <de><![CDATA[Felder dieses Feld-Typs sind nicht durchsuchbar.]]></de>
             <en><![CDATA[Fields of this field type are not searchable.]]></en>
+        </locale>
+        <locale name="fields.control.attributeGroup.create.valueId">
+            <de><![CDATA[ID des Wertes]]></de>
+            <en><![CDATA[Id of the value]]></en>
+        </locale>
+        <locale name="fields.control.attributeGroup.create.selected">
+            <de><![CDATA[Standard (Default)]]></de>
+            <en><![CDATA[Default]]></en>
         </locale>
 
         <locale name="product.fields.grid.visible">
@@ -1416,6 +1452,10 @@
         <locale name="product.fields.attributeList.entry.title">
             <de><![CDATA[Listeneinträge]]></de>
             <en><![CDATA[List entries]]></en>
+        </locale>
+        <locale name="product.fields.attribute.group.attributeList.title">
+            <de><![CDATA[Allgemein]]></de>
+            <en><![CDATA[Generall]]></en>
         </locale>
 
         <locale name="product.fields.attributeList.calcBasis">
@@ -1523,6 +1563,20 @@
             <en><![CDATA[Create product]]></en>
         </locale>
 
+        <locale name="variants.generating.window.description">
+            <de><![CDATA[
+            Bestimme welche Felder von einer einzelnen Variante selbst bestimmt und somit überschrieben werden kann.
+            Alle anderen Felder welche nicht überschrieben werden, werden vom Parent-Produkt übernommen.
+            ]]></de>
+            <en><![CDATA[
+            Determine which fields can be determined and overwritten by a single variant.
+            All other fields that are not overwritten are copied from the parent product.
+            ]]></en>
+        </locale>
+        <locale name="variants.generating.window.title">
+            <de><![CDATA[Überschreibbare Variaten Felder festlegen]]></de>
+            <en><![CDATA[Define Overwritable Variant Fields]]></en>
+        </locale>
 
         <locale name="panel.variants.category.title">
             <de><![CDATA[Varianten]]></de>
