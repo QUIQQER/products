@@ -276,6 +276,10 @@
             <de><![CDATA[Hauptkategorie]]></de>
             <en><![CDATA[Main category]]></en>
         </locale>
+        <locale name="productType">
+            <de><![CDATA[Produkt Art]]></de>
+            <en><![CDATA[Product type]]></en>
+        </locale>
         <locale name="productPriority">
             <de><![CDATA[Priorität]]></de>
             <en><![CDATA[priority]]></en>
@@ -1512,6 +1516,21 @@
             Specify which fields can be overwritten by the variants.
             All fields that cannot be overwritten by the variants will be taken from the parent product.
             ]]></en>
+        </locale>
+
+        <locale name="panel.product.window.create.button">
+            <de><![CDATA[Produkt anlegen]]></de>
+            <en><![CDATA[Create product]]></en>
+        </locale>
+
+
+        <locale name="panel.variants.category.title">
+            <de><![CDATA[Varianten]]></de>
+            <en><![CDATA[Variants]]></en>
+        </locale>
+        <locale name="panel.variants.overwriteable.button.title">
+            <de><![CDATA[Überschreibbare Felder für Varianten festlegen]]></de>
+            <en><![CDATA[Define Overwritable Fields for Variants]]></en>
         </locale>
     </groups>
 

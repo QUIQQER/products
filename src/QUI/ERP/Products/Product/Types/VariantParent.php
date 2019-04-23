@@ -21,6 +21,9 @@ use QUI\ERP\Products\Utils\Tables;
  *
  * @todo erp overwriteable field settings -> Globale default Liste für überschreibbare Felder
  * @todo wenn product parent gelöscht wird, auch alle kinder löschen
+ * @todo AttributeGruppen
+        -> gleich wie Auswahllisten nur ohne Preisberechnung
+ * @todo Produkttypen als Checkbox beim Anlegen
  */
 class VariantParent extends AbstractType
 {

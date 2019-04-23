@@ -18,6 +18,10 @@ QUI::$Ajax->registerFunction(
         $Product       = Products::getProduct($productId);
         $overwriteable = $Product->getAttribute('overwriteableVariantFields');
 
+        if ($overwriteable === false) {
+            // @todo get erp fields
+        }
+
         // fields
         $fields = $Product->getFields();
         $fields = \array_map(function ($Field) {

@@ -94,8 +94,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             var self = this;
 
             // buttons
-            this.$ButtonAdd = new QUIButtonMultiple({
-                disabled : true,
+            this.$ButtonAdd = new QUIButton({
                 name     : 'add',
                 text     : QUILocale.get('quiqqer/system', 'add'),
                 textimage: 'fa fa-plus',
@@ -182,6 +181,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 }
             }).inject(this.getContent());
 
+            /*
             self.$ButtonAdd.getMenu().then(function (Menu) {
                 Menu.setAttribute('showIcons', false);
 
@@ -211,6 +211,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                     self.$ButtonAdd.enable();
                 });
             });
+            */
 
             this.refresh();
         },
@@ -235,11 +236,31 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * @param {String} [productType] - Product Type
          */
         createChild: function (productType) {
+            this.Loader.show();
+
+            require([
+                'package/quiqqer/products/bin/controls/products/CreateProductWindow'
+            ], function (CreateProductWindow) {
+                new CreateProductWindow({
+                    events: {
+                        onProductCreated: function () {
+                            self.refresh();
+                        }
+                    }
+                }).open();
+
+                this.Loader.hide();
+            }.bind(this));
+
+            return;
+
             var self = this;
 
             productType = productType || '';
 
             this.Loader.show();
+
+            new QUIConfirm().open();
 
             this.createSheet({
                 title : QUILocale.get(lg, 'products.create.title'),

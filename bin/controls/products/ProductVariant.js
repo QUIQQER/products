@@ -67,7 +67,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             this.parent().then(function () {
                 self.addCategory({
                     name  : 'variants',
-                    text  : 'VARIANTEN', // #locale
+                    text  : QUILocale.get(lg, 'panel.variants.category.title'),
                     icon  : 'fa fa-info',
                     events: {
                         onClick: function () {
@@ -81,7 +81,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 self.getCategoryBar().moveChildToPos(
                     self.getCategory('variants'),
-                    1
+                    2
                 );
 
                 var categories    = self.getCategoryBar().getChildren();
@@ -101,7 +101,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 self.addButton({
                     name  : 'variantFields',
-                    title : 'Überschreibbare Felder für Varianten festlegen', // #locale
+                    title : QUILocale.get(lg, 'panel.variants.overwriteable.button.title'),
                     icon  : 'fa fa-exchange',
                     events: {
                         click: self.openVariantAttributeSettings

@@ -66,6 +66,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 html   : Mustache.render(template, {
                     productCategories   : QUILocale.get(lg, 'productCategories'),
                     productCategory     : QUILocale.get(lg, 'productCategory'),
+                    productType         : QUILocale.get(lg, 'productType'),
                     productDefaultFields: QUILocale.get(lg, 'productDefaultFields'),
                     productMasterData   : QUILocale.get(lg, 'productMasterData'),
                     productAttributes   : QUILocale.get(lg, 'productAttributes')
@@ -178,11 +179,13 @@ define('package/quiqqer/products/bin/controls/products/Create', [
 
             Promise.all([
                 Fields.getSystemFields(),
-                Fields.getStandardFields()
+                Fields.getStandardFields(),
+                Products.getTypes()
             ]).then(function (result) {
-                var i, len, field;
+                var i, len, field, entry, Label;
                 var systemFields   = result[0],
-                    standardFields = result[1];
+                    standardFields = result[1],
+                    types          = result[2];
 
                 var diffFields = standardFields.filter(function (value) {
                     for (var i = 0, len = systemFields.length; i < len; i++) {
@@ -251,6 +254,42 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                     }).inject(Data);
                 }
 
+                // types
+                var ProductTypes = Elm.getElement('.product-types');
+
+                var productTypeChange = function (event) {
+                    var Target = event.target;
+
+                    Elm.getElement('form').getElements('[name="productType"]').each(function (Node) {
+                        if (Node !== Target) {
+                            Node.set('checked', false);
+                        }
+                    });
+                };
+
+                for (i = 0, len = types.length; i < len; i++) {
+                    entry = types[i];
+
+                    if (entry.isTypeSelectable === false) {
+                        continue;
+                    }
+
+                    // default product
+                    if (entry.type === '\\QUI\\ERP\\Products\\Product\\Types\\Product') {
+                        continue;
+                    }
+
+                    Label = new Element('label', {
+                        html  : '<input type="checkbox" name="productType" value="' + entry.type + '" />' + entry.typeTitle,
+                        styles: {
+                            padding: 10,
+                            width  : '100%'
+                        }
+                    }).inject(ProductTypes);
+
+                    Label.getElement('input').addEvent('change', productTypeChange);
+                }
+
                 QUI.parse(self.getElm()).then(function () {
                     self.fireEvent('loaded');
                 });
@@ -267,7 +306,8 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 Elm  = this.getElm();
 
             return new Promise(function (resolve, reject) {
-                var categories = self.$Categories.getValue().trim().split(',');
+                var cValue     = self.$Categories.getValue().trim();
+                var categories = cValue.split(',');
                 var Form       = Elm.getElement('form');
                 var data       = QUIFormUtils.getFormData(Form);
 
@@ -276,7 +316,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                     return (key.indexOf('field-') >= 0);
                 });
 
-                if (!categories.length) {
+                if (!categories.length || cValue === '') {
                     QUI.getMessageHandler().then(function (MH) {
                         MH.addAttention(
                             QUILocale.get(lg, 'message.product.create.missing.category'),
@@ -287,10 +327,19 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                     return reject('No categories');
                 }
 
+                var productType  = '\\QUI\\ERP\\Products\\Product\\Types\\Product';
+                var productTypes = Form.getElements('[name="productType"]').filter(function (Input) {
+                    return Input.checked;
+                });
+
+                if (productTypes.length) {
+                    productType = productTypes[0].value;
+                }
+
                 Products.createChild(
                     categories,
                     fields,
-                    self.getAttribute('productType')
+                    productType
                 ).then(resolve).catch(reject);
             });
         }
