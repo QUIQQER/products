@@ -23,6 +23,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
     var lg = 'quiqqer/products';
 
     return new Class({
+
         Extends: QUIControl,
         Type   : 'package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettings',
 
@@ -390,7 +391,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                         self.add(
                             Title.getData(),
                             Form.elements.valueId.value,
-                            Form.elements.selected.value
+                            Form.elements.selected.checked
                         );
                     }
                 }
@@ -445,7 +446,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                             index,
                             Title.getData(),
                             Form.elements.valueId.value,
-                            Form.elements.selected.value
+                            Form.elements.selected.checked
                         );
                     }
                 }
