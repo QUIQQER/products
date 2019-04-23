@@ -181,38 +181,6 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 }
             }).inject(this.getContent());
 
-            /*
-            self.$ButtonAdd.getMenu().then(function (Menu) {
-                Menu.setAttribute('showIcons', false);
-
-                return Products.getTypes();
-            }).then(function (types) {
-                var create = function (Item) {
-                    self.createChild(Item.getAttribute('value'));
-                };
-
-                require(['qui/controls/contextmenu/Item'], function (QUIContextMenuItem) {
-                    for (var i = 0, len = types.length; i < len; i++) {
-                        if (types[i].isTypeSelectable === false) {
-                            continue;
-                        }
-
-                        self.$ButtonAdd.appendChild(
-                            new QUIContextMenuItem({
-                                text  : types[i].typeTitle,
-                                value : types[i].type,
-                                events: {
-                                    onClick: create
-                                }
-                            })
-                        );
-                    }
-
-                    self.$ButtonAdd.enable();
-                });
-            });
-            */
-
             this.refresh();
         },
 
@@ -236,6 +204,8 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * @param {String} [productType] - Product Type
          */
         createChild: function (productType) {
+            var self = this;
+
             this.Loader.show();
 
             require([
@@ -243,76 +213,15 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             ], function (CreateProductWindow) {
                 new CreateProductWindow({
                     events: {
-                        onProductCreated: function () {
+                        onProductCreated: function (Win, product) {
                             self.refresh();
+                            self.updateChild(product.id);
                         }
                     }
                 }).open();
 
                 this.Loader.hide();
             }.bind(this));
-
-            return;
-
-            var self = this;
-
-            productType = productType || '';
-
-            this.Loader.show();
-
-            new QUIConfirm().open();
-
-            this.createSheet({
-                title : QUILocale.get(lg, 'products.create.title'),
-                icon  : 'fa fa-edit',
-                events: {
-                    onShow : function (Sheet) {
-                        Sheet.getContent().setStyle('padding', 20);
-
-                        var Product = new CreateProduct({
-                            productType: productType,
-                            events     : {
-                                onLoaded: function () {
-                                    self.Loader.hide();
-                                }
-                            }
-                        }).inject(Sheet.getContent());
-
-
-                        Sheet.addButton(
-                            new QUIButton({
-                                text     : QUILocale.get('quiqqer/system', 'save'),
-                                textimage: 'fa fa-save',
-                                events   : {
-                                    onClick: function () {
-                                        self.Loader.show();
-
-                                        Product.submit().then(function (Product) {
-                                            self.updateChild(Product.id);
-
-                                            Sheet.hide().then(function () {
-                                                Sheet.destroy();
-                                                self.refresh();
-                                            });
-                                        }).catch(function (err) {
-                                            if (typeOf(err) === 'string') {
-                                                QUI.getMessageHandler().then(function (MH) {
-                                                    MH.addError(err);
-                                                });
-                                            }
-
-                                            self.Loader.hide();
-                                        });
-                                    }
-                                }
-                            })
-                        );
-                    },
-                    onClose: function (Sheet) {
-                        Sheet.destroy();
-                    }
-                }
-            }).show();
         },
 
         /**

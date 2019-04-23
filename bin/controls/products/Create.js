@@ -305,43 +305,42 @@ define('package/quiqqer/products/bin/controls/products/Create', [
             var self = this,
                 Elm  = this.getElm();
 
-            return new Promise(function (resolve, reject) {
-                var cValue     = self.$Categories.getValue().trim();
-                var categories = cValue.split(',');
-                var Form       = Elm.getElement('form');
-                var data       = QUIFormUtils.getFormData(Form);
 
-                // fields
-                var fields = Object.filter(data, function (value, key) {
-                    return (key.indexOf('field-') >= 0);
-                });
+            var cValue     = self.$Categories.getValue().trim();
+            var categories = cValue.split(',');
+            var Form       = Elm.getElement('form');
+            var data       = QUIFormUtils.getFormData(Form);
 
-                if (!categories.length || cValue === '') {
-                    QUI.getMessageHandler().then(function (MH) {
-                        MH.addAttention(
-                            QUILocale.get(lg, 'message.product.create.missing.category'),
-                            Elm.getElement('.product-categories')
-                        );
-                    });
-
-                    return reject('No categories');
-                }
-
-                var productType  = '\\QUI\\ERP\\Products\\Product\\Types\\Product';
-                var productTypes = Form.getElements('[name="productType"]').filter(function (Input) {
-                    return Input.checked;
-                });
-
-                if (productTypes.length) {
-                    productType = productTypes[0].value;
-                }
-
-                Products.createChild(
-                    categories,
-                    fields,
-                    productType
-                ).then(resolve).catch(reject);
+            // fields
+            var fields = Object.filter(data, function (value, key) {
+                return (key.indexOf('field-') >= 0);
             });
+
+            if (!categories.length || cValue === '') {
+                QUI.getMessageHandler().then(function (MH) {
+                    MH.addAttention(
+                        QUILocale.get(lg, 'message.product.create.missing.category'),
+                        Elm.getElement('.product-categories')
+                    );
+                });
+
+                return Promise.reject('No categories');
+            }
+
+            var productType  = '\\QUI\\ERP\\Products\\Product\\Types\\Product';
+            var productTypes = Form.getElements('[name="productType"]').filter(function (Input) {
+                return Input.checked;
+            });
+
+            if (productTypes.length) {
+                productType = productTypes[0].value;
+            }
+
+            return Products.createChild(
+                categories,
+                fields,
+                productType
+            );
         }
     });
 });

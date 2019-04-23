@@ -76,15 +76,16 @@ define('package/quiqqer/products/bin/controls/products/CreateProductWindow', [
         },
 
         /**
-         * evnt: on submit
+         * event: on submit
          */
         $onSubmit: function () {
             this.Loader.show();
 
-            this.$Create.submit().then(function (Product) {
-                this.fireEvent('productCreated', [this, Product]);
+            this.$Create.submit().then(function (product) {
                 this.close();
-            }.bind(this)).catch(function () {
+                this.fireEvent('productCreated', [this, product]);
+            }.bind(this)).catch(function (err) {
+                console.error(err);
                 this.Loader.hide();
             }.bind(this));
         }

@@ -103,7 +103,7 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
             var i, len, entry, productNo;
 
             var findProductNo = function (o) {
-                return o.id == Fields.FIELD_PRODUCT_NO;
+                return o.id === Fields.FIELD_PRODUCT_NO;
             };
 
             for (i = 0, len = data.data.length; i < len; i++) {
