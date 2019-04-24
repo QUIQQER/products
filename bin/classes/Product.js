@@ -46,7 +46,7 @@ define('package/quiqqer/products/bin/classes/Product', [
         /**
          * Add a field to the product
          *
-         * @param {Number}  fieldId
+         * @param {Number|Array}  fieldId
          * @return {Promise}
          */
         addField: function (fieldId) {
@@ -54,7 +54,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                 Ajax.get('package_quiqqer_products_ajax_products_addField', resolve, {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    fieldId  : fieldId
+                    fieldId  : JSON.encode(fieldId)
                 });
             }.bind(this));
         },

@@ -615,7 +615,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         if (field.type === 'TextareaMultiLang' ||
                             field.type === 'Textarea' ||
                             field.type === 'Folder' ||
-                            field.type === 'Products'
+                            field.type === 'Products' ||
+                            field.type === 'AttributeGroup'
                         ) {
                             continue;
                         }
@@ -1992,11 +1993,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             return new Promise(function (resolve, reject) {
                 new FieldWindow({
                     fieldTypeFilter: fieldTypeFilter,
+                    multiple       : true,
                     events         : {
                         onSubmit: function (Win, value) {
                             Win.Loader.show();
 
-                            this.addField(value[0]).then(function () {
+                            this.addField(value).then(function () {
                                 Win.close();
                                 resolve();
                             });

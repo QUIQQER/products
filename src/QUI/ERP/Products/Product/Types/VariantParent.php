@@ -20,13 +20,11 @@ use QUI\ERP\Products\Utils\Tables;
  * @package QUI\ERP\Products\Product\Types
  *
  * @todo erp overwriteable field settings -> Globale default Liste für überschreibbare Felder
- * @todo wenn product parent gelöscht wird, auch alle kinder löschen
- * @todo AttributeGruppen
-        -> gleich wie Auswahllisten nur ohne Preisberechnung
- * @todo Produkttypen als Checkbox beim Anlegen
  */
 class VariantParent extends AbstractType
 {
+    //region variant methods
+
     /**
      * @param null $Locale
      * @return mixed
@@ -59,6 +57,32 @@ class VariantParent extends AbstractType
     public static function getTypeBackendPanel()
     {
         return 'package/quiqqer/products/bin/controls/products/ProductVariant';
+    }
+
+    //endregion
+
+    /**
+     * delete the complete product with its children
+     *
+     * @throws QUI\Exception
+     */
+    public function delete()
+    {
+        QUI\Permissions\Permission::checkPermission('product.delete');
+
+        // delete children
+        $children = $this->getVariants();
+
+        foreach ($children as $Child) {
+            try {
+                $Child->delete();
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
+        }
+
+        // delete itself
+        parent::delete();
     }
 
     /**

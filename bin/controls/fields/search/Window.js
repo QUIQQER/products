@@ -57,9 +57,6 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
             this.$Search = null;
             this.$Grid   = null;
 
-            this.$ButtonCancel = null;
-            this.$ButtonSubmit = null;
-
             this.addEvents({
                 onOpen: this.$onOpen
             });
@@ -83,6 +80,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
 
             this.$Search = new Search({
                 fieldTypeFilter: this.getAttribute('fieldTypeFilter'),
+                multiple       : this.getAttribute('multiple'),
                 events         : {
                     onSubmit: this.submit
                 }
