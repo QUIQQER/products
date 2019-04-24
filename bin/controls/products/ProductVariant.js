@@ -405,13 +405,20 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          * opens the variant generating window
          */
         openVariantGenerating: function () {
+            var self = this;
+
             require([
                 'package/quiqqer/products/bin/controls/products/variants/GenerateVariantsWindow'
             ], function (Window) {
                 new Window({
-                    productId: this.getAttribute('productId')
+                    productId: self.getAttribute('productId'),
+                    events   : {
+                        onVariantCreation: function () {
+                            self.refreshVariantGrid();
+                        }
+                    }
                 }).open();
-            }.bind(this));
+            });
         },
 
         //endregion

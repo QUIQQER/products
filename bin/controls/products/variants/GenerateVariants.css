@@ -1,0 +1,24 @@
+.quiqqer-products-variant-generate {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.quiqqer-products-variant-generate-tableBody {
+    flex-grow: 1;
+    overflow: auto;
+    width: 100%;
+}
+
+.quiqqer-products-variant-generate-calcDisplay {
+    background: #FAF6D4;
+    border: 1px solid #E6C26E;
+    text-align: center;
+    width: 100%;
+    flex-shrink: 0;
+    padding: 10px;
+}
+
+.quiqqer-products-variant-generate-noValuesMessage {
+    font-style: italic;
+}

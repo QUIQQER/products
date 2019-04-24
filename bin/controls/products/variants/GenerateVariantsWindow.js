@@ -13,6 +13,8 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
 ], function (QUI, QUIConfirm, GenerateVariants, QUIAjax, QUILocale) {
     "use strict";
 
+    var lg = 'quiqqer/products';
+
     return new Class({
 
         Extends: QUIConfirm,
@@ -32,11 +34,14 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
         initialize: function (options) {
             this.parent(options);
 
-            this.setAttribute('icon', 'fa fa-magic');
-            this.setAttribute(
-                'title',
-                QUILocale.get('quiqqer/products', 'variants.generating.window.title')
-            );
+            this.setAttributes({
+                icon     : 'fa fa-magic',
+                title    : QUILocale.get(lg, 'variants.generating.window.title'),
+                ok_button: {
+                    text     : QUILocale.get(lg, 'variants.generating.window.button.generate'),
+                    textimage: 'fa fa-magic'
+                }
+            });
 
             this.$List = null;
 
@@ -53,6 +58,7 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
             var self = this;
 
             this.Loader.show();
+
             this.getContent().set('html', '');
             this.getContent().setStyles({
                 display         : 'flex',
@@ -60,7 +66,7 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
             });
 
             new Element('div', {
-                html  : QUILocale.get('quiqqer/products', 'variants.generating.window.description'),
+                html  : QUILocale.get(lg, 'variants.generating.window.description'),
                 styles: {
                     paddingBottom: 20
                 }
@@ -92,8 +98,9 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
 
             this.Loader.show();
 
-            this.$List.save().then(function () {
+            this.$List.generate().then(function () {
                 self.close();
+                self.fireEvent('variantCreation');
             }).catch(function () {
                 self.Loader.hide();
             });

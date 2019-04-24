@@ -10,6 +10,7 @@ use QUI;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Tables;
+use QUI\ERP\Products\Handler\Fields as FieldHandler;
 
 /**
  * Class Variant
@@ -124,6 +125,105 @@ class VariantParent extends AbstractType
     }
 
     /**
+     * Generate all variants from the given field combinations
+     *
+     * @param array $fields - list of field values
+     *  [
+     *      [
+     *          fieldId => 1111,
+     *          values => [1,2,3]
+     *      ],
+     *      [
+     *          fieldId => 1111,
+     *          values => ['valueId','value','value']
+     *      ]
+     *  ]
+     *
+     * @throws QUI\Exception
+     */
+    public function generateVariants($fields = [])
+    {
+        if (empty($fields)) {
+            return;
+        }
+
+        // delete all children and generate new ones
+        $children = $this->getVariants();
+
+        foreach ($children as $Child) {
+            try {
+                $Child->delete();
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
+        }
+
+        // generate permutation array
+        $list = [];
+
+        foreach ($fields as $entry) {
+            $group   = [];
+            $fieldId = $entry['fieldId'];
+            $values  = $entry['values'];
+
+            foreach ($values as $value) {
+                $group[] = ['fieldId' => $fieldId, 'value' => $value];
+            }
+
+            if (!empty($group)) {
+                $list[] = $group;
+            }
+        }
+
+        $permutations = $this->permutations($list);
+
+        // create variant children
+        foreach ($permutations as $permutation) {
+            // create child
+            $Variant = $this->createVariant();
+
+            foreach ($permutation as $entry) {
+                $Variant->getField($entry['fieldId'])->setValue($entry['value']);
+            }
+
+            $Variant->save();
+        }
+    }
+
+    /**
+     * Generate permutation array (all combinations) from a php array list
+     *
+     * @param array $lists
+     * @return array
+     */
+    protected function permutations(array $lists)
+    {
+        $permutations = [];
+        $iter         = 0;
+
+        while (true) {
+            $num  = $iter++;
+            $pick = [];
+
+            foreach ($lists as $l) {
+                $r      = $num % \count($l);
+                $num    = ($num - $r) / \count($l);
+                $pick[] = $l[$r];
+            }
+
+            if ($num > 0) {
+                break;
+            }
+
+            $permutations[] = $pick;
+        }
+
+        return $permutations;
+    }
+
+    /**
+     * Create a new variant
+     *
      * @throws QUI\Exception
      */
     public function createVariant()
@@ -135,6 +235,17 @@ class VariantParent extends AbstractType
         );
 
         $Variant->setAttribute('parent', $this->getId());
+
+        // add AttributeGroups and ProductAttributeList
+        $fields = \array_merge(
+            $this->getFieldsByType(FieldHandler::TYPE_ATTRIBUTE_LIST),
+            $this->getFieldsByType(FieldHandler::TYPE_ATTRIBUTE_GROUPS)
+        );
+
+        foreach ($fields as $Field) {
+            $Variant->addField($Field);
+        }
+
         $Variant->save();
 
         return $Variant;

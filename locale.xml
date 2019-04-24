@@ -1565,17 +1565,29 @@
 
         <locale name="variants.generating.window.description">
             <de><![CDATA[
-            Bestimme welche Felder von einer einzelnen Variante selbst bestimmt und somit überschrieben werden kann.
-            Alle anderen Felder welche nicht überschrieben werden, werden vom Parent-Produkt übernommen.
+            Bestimm aus welchen Felder neue Varianten generiert werden sollen.
+            Varianten können aus Attributgruppen und Auswahllisten generiert werden.
             ]]></de>
             <en><![CDATA[
-            Determine which fields can be determined and overwritten by a single variant.
-            All other fields that are not overwritten are copied from the parent product.
+            Determines from which fields new variants are to be generated.
+            Variants can be generated from attribute groups and attribute lists.
             ]]></en>
         </locale>
         <locale name="variants.generating.window.title">
-            <de><![CDATA[Überschreibbare Variaten Felder festlegen]]></de>
-            <en><![CDATA[Define Overwritable Variant Fields]]></en>
+            <de><![CDATA[Varianten generieren]]></de>
+            <en><![CDATA[Generate Variants]]></en>
+        </locale>
+        <locale name="variants.generating.window.calc">
+            <de><![CDATA[Es werden [count] Varianten generiert.]]></de>
+            <en><![CDATA[[count] variants wil be generated.]]></en>
+        </locale>
+        <locale name="variants.generating.window.message.no.values">
+            <de><![CDATA[Das Feld besitzt keine Einträge.]]></de>
+            <en><![CDATA[This field has no entries.]]></en>
+        </locale>
+        <locale name="variants.generating.window.button.generate">
+            <de><![CDATA[Varianten generieren]]></de>
+            <en><![CDATA[Generate Variants]]></en>
         </locale>
 
         <locale name="panel.variants.category.title">
