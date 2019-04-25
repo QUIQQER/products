@@ -969,10 +969,17 @@ class Model extends QUI\QDOM
 
         $this->setAttribute('e_date', \date('Y-m-d H:i:s'));
 
+        $parentId = (int)$this->getAttribute('parent');
+
+        if (empty($parentId)) {
+            $parentId = null;
+        }
+
         // update
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             [
+                'parent'      => $parentId,
                 'categories'  => ','.\implode(',', $categoryIds).',',
                 'category'    => $mainCategory,
                 'fieldData'   => \json_encode($fieldData),

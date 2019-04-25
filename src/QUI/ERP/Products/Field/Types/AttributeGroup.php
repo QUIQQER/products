@@ -180,37 +180,16 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             ]
         ];
 
-        if (!\is_numeric($value)) {
-            if (\is_array($value)) {
-                $value = \json_encode($value);
-            }
-
-            $value = \json_decode($value, true);
-
-            if (!isset($value[0]) || !isset($value[1])) {
-                throw new QUI\ERP\Products\Field\Exception($invalidException);
-            }
-
-            //$customValue = $value[1];
-            $value = $value[0];
-        }
-
-        if (!\is_numeric($value)) {
-            throw new QUI\ERP\Products\Field\Exception($invalidException);
-        }
-
-        $value   = (int)$value;
         $options = $this->getOptions();
-
-        if (!isset($options['entries'])) {
-            throw new QUI\ERP\Products\Field\Exception($invalidException);
-        }
-
         $entries = $options['entries'];
 
-        if (!isset($entries[$value])) {
-            throw new QUI\ERP\Products\Field\Exception($invalidException);
+        foreach ($entries as $entry) {
+            if ($entry['valueId'] === $value) {
+                return;
+            }
         }
+
+        throw new QUI\ERP\Products\Field\Exception($invalidException);
     }
 
     /**
