@@ -41,6 +41,10 @@ QUI::$Ajax->registerFunction(
                     continue;
                 }
 
+                if ($ProductField instanceof QUI\ERP\Products\Field\Types\AttributeGroup) {
+                    continue;
+                }
+
                 $ProductField->setValue($field);
             } catch (QUI\ERP\Products\Product\Exception $Exception) {
                 if ($Exception->getCode() === 1002) {

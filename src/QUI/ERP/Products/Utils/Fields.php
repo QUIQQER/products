@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Utils;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
+use QUI\ERP\Products\Interfaces\FieldInterface;
 
 /**
  * Class Fields
@@ -76,8 +77,8 @@ class Fields
     /**
      * Sort the fields by priority
      *
-     * @param array $fields
-     * @return array
+     * @param array $fields - FieldInterface[]
+     * @return FieldInterface[]
      */
     public static function sortFields($fields)
     {

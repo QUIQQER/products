@@ -6,6 +6,7 @@
 
 namespace QUI\ERP\Products\Product;
 
+use function DusanKasan\Knapsack\concat;
 use QUI;
 use QUI\ERP\Products\Interfaces\FieldInterface;
 use QUI\ERP\Products\Handler\Fields;
@@ -164,30 +165,36 @@ class Model extends QUI\QDOM
 
             try {
                 $Field = Fields::getField($field['id']);
-                $Field->setValue($field['value']);
-
-                if (isset($field['unassigned'])) {
-                    $Field->setUnassignedStatus($field['unassigned']);
-                }
-
-                if (isset($field['ownField'])) {
-                    $Field->setOwnFieldStatus($field['ownField']);
-                }
-
-                if (isset($field['isPublic'])) {
-                    $Field->setPublicStatus((bool)$field['isPublic']);
-                }
-
-                // bin mir unsicher ob dies sinn macht (by hen)
-                // normal muss die kategorie und globale einstellung verwendet werden
-//                if (isset($field['showInDetails'])) {
-//                    $Field->setShowInDetailsStatus((bool)$field['showInDetails']);
-//                }
 
                 $this->fields[$Field->getId()] = $Field;
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);
+                continue;
             }
+
+            if (isset($field['unassigned'])) {
+                $Field->setUnassignedStatus($field['unassigned']);
+            }
+
+            if (isset($field['ownField'])) {
+                $Field->setOwnFieldStatus($field['ownField']);
+            }
+
+            if (isset($field['isPublic'])) {
+                $Field->setPublicStatus((bool)$field['isPublic']);
+            }
+
+            try {
+                $Field->setValue($field['value']);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);
+            }
+
+            // bin mir unsicher ob dies sinn macht (by hen)
+            // normal muss die kategorie und globale einstellung verwendet werden
+//                if (isset($field['showInDetails'])) {
+//                    $Field->setShowInDetailsStatus((bool)$field['showInDetails']);
+//                }
         }
 
         // all standard and all system fields must be in the product
@@ -1388,7 +1395,7 @@ class Model extends QUI\QDOM
     /**
      * Return the product fields
      *
-     * @return array
+     * @return FieldInterface[]
      */
     public function getFields()
     {

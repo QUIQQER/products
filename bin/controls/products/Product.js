@@ -112,7 +112,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 onInject : this.$onInject,
                 onDestroy: function () {
                     if (this.$Product) {
-                        Locker.unlock('product_' + this.$Product.getId())
+                        Locker.unlock('product_' + this.$Product.getId());
                     }
                 }.bind(this)
             });
@@ -1373,47 +1373,51 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
 
                 self.$Grid = new Grid(GridContainer, {
-                    buttons    : [
-                        new FieldTypeSelect({
-                            name  : 'select',
-                            events: {
-                                filterChange: refresh
+                    buttons    : [new FieldTypeSelect({
+                        name  : 'select',
+                        events: {
+                            filterChange: refresh
+                        }
+                    }), {
+                        type: 'separator'
+                    }, {
+                        text     : QUILocale.get(lg, 'product.fields.add.field'),
+                        textimage: 'fa fa-plus',
+                        events   : {
+                            onClick: function () {
+                                self.openAddFieldDialog().then(function () {
+                                    self.openFieldAdministration();
+                                }).catch(function (err) {
+                                    if (typeOf(err) !== 'package/quiqqer/products/bin/controls/fields/search/Window') {
+                                        console.error(err);
+                                    }
+                                });
                             }
-                        }), {
-                            type: 'separator'
-                        }, {
-                            text     : QUILocale.get(lg, 'product.fields.add.field'),
-                            textimage: 'fa fa-plus',
-                            events   : {
-                                onClick: function () {
-                                    self.openAddFieldDialog().then(function () {
-                                        self.openFieldAdministration();
-                                    }).catch(function (err) {
-                                        if (typeOf(err) !== 'package/quiqqer/products/bin/controls/fields/search/Window') {
-                                            console.error(err);
-                                        }
-                                    });
-                                }
+                        }
+                    }, {
+                        name     : 'remove',
+                        text     : QUILocale.get(lg, 'product.fields.remove.field'),
+                        disabled : true,
+                        textimage: 'fa fa-trash',
+                        events   : {
+                            onClick: function () {
+                                self.openDeleteFieldDialog(self.$Grid.getSelectedData()[0].id).then(function () {
+                                    self.openFieldAdministration();
+                                }).catch(function (err) {
+                                    console.log(typeOf(err));
+                                    if (typeOf(err) !== 'qui/controls/windows/Confirm') {
+                                        console.error(err);
+                                    }
+                                });
                             }
-                        }, {
-                            name     : 'remove',
-                            text     : QUILocale.get(lg, 'product.fields.remove.field'),
-                            disabled : true,
-                            textimage: 'fa fa-trash',
-                            events   : {
-                                onClick: function () {
-                                    self.openDeleteFieldDialog(self.$Grid.getSelectedData()[0].id).then(function () {
-                                        self.openFieldAdministration();
-                                    }).catch(function (err) {
-                                        console.log(typeOf(err));
-                                        if (typeOf(err) !== 'qui/controls/windows/Confirm') {
-                                            console.error(err);
-                                        }
-                                    });
-                                }
-                            }
-                        }],
+                        }
+                    }],
                     columnModel: [{
+                        header   : QUILocale.get(lg, 'priority'),
+                        dataIndex: 'priority',
+                        dataType : 'number',
+                        width    : 80
+                    }, {
                         header   : QUILocale.get(lg, 'product.fields.grid.visible'),
                         dataIndex: 'visible',
                         dataType : 'QUI',
@@ -1443,11 +1447,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         dataIndex: 'fieldtype',
                         dataType : 'text',
                         width    : 200
-                    }, {
-                        header   : QUILocale.get(lg, 'priority'),
-                        dataIndex: 'priority',
-                        dataType : 'number',
-                        width    : 100
                     }, {
                         header   : QUILocale.get(lg, 'prefix'),
                         dataIndex: 'prefix',
@@ -1960,7 +1959,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         /**
          * Add a field to the product
          *
-         * @param {Number} fieldId
+         * @param {Number|Array} fieldId
          * @returns {Promise}
          */
         addField: function (fieldId) {

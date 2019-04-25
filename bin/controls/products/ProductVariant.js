@@ -241,30 +241,58 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             var self = this;
 
             return this.$Product.getVariants().then(function (variants) {
+                console.log(variants);
+
                 var needles = [
-                    'productNo', 'title', 'price_netto',
-                    'e_date', 'c_date', 'priority', 'status'
+                    'id', 'title', 'e_date', 'c_date', 'priority', 'status'
                 ];
 
-                var fillMissing = function (variant) {
-                    var i, len, attribute;
-                    for (i = 0, len = needles.length; i < len; i++) {
-                        attribute = needles[i];
+                var fields = {
+                    'productNo'  : 3,
+                    'price_netto': 1
+                };
 
-                        if (typeof variant[attribute] === 'undefined' || !variant[attribute]) {
-                            variant[attribute] = '-';
+                var i, n, len, nLen, entry, variant, needle, field, fieldId;
+                var data = [];
+
+                var filterField = function (field) {
+                    return field.id === this;
+                };
+
+                for (i = 0, len = variants.length; i < len; i++) {
+                    entry   = {};
+                    variant = variants[i];
+
+                    for (n = 0, nLen = needles.length; n < nLen; n++) {
+                        needle = needles[n];
+
+                        if (typeof variant[needle] === 'undefined' || !variant[needle]) {
+                            entry[needle] = '-';
+                        } else {
+                            entry[needle] = variant[needle];
                         }
                     }
 
-                    return variant;
-                };
+                    for (needle in fields) {
+                        if (!fields.hasOwnProperty(needle)) {
+                            continue;
+                        }
 
-                for (var i = 0, len = variants.length; i < len; i++) {
-                    variants[i] = fillMissing(variants[i]);
+                        fieldId = fields[needle];
+                        field   = variant.fields.filter(filterField.bind(fieldId));
+
+                        if (!field.length) {
+                            entry[needle] = '-';
+                        } else {
+                            entry[needle] = field[0].value;
+                        }
+                    }
+
+                    data.push(entry);
                 }
 
                 self.$Grid.setData({
-                    data : variants,
+                    data : data,
                     total: variants.length,
                     page : 1
                 });

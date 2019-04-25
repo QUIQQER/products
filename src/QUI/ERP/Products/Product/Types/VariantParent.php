@@ -175,13 +175,27 @@ class VariantParent extends AbstractType
             }
         }
 
-        $permutations = $this->permutations($list);
+        $parentProductNo = $this->getFieldValue(FieldHandler::FIELD_PRODUCT_NO);
+        $permutations    = $this->permutations($list);
+        $variantNo       = 1;
 
         // create variant children
         foreach ($permutations as $permutation) {
             // create child
             $Variant = $this->createVariant();
 
+            // set art no
+            if (empty($parentProductNo)) {
+                $productNo = $variantNo;
+            } else {
+                $productNo = $parentProductNo.'-'.$variantNo;
+            }
+
+            $Variant->getField(FieldHandler::FIELD_PRODUCT_NO)->setValue($productNo);
+
+            $variantNo++;
+
+            // attribute fields
             foreach ($permutation as $entry) {
                 $Variant->getField($entry['fieldId'])->setValue($entry['value']);
             }
