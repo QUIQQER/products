@@ -50,8 +50,8 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
 
         foreach ($options['entries'] as $key => $option) {
             if (isset($option['selected']) && $option['selected']) {
-                $this->value        = $key;
-                $this->defaultValue = $key;
+                $this->value        = $option['valueId'];
+                $this->defaultValue = $option['valueId'];
             }
         }
     }
@@ -70,8 +70,8 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             if (\is_array($value)) {
                 foreach ($value as $key => $val) {
                     if (isset($val['selected']) && $val['selected']) {
-                        $this->value        = $key;
-                        $this->defaultValue = $key;
+                        $this->value        = $val['valueId'];
+                        $this->defaultValue = $val['valueId'];
                     }
                 }
             }
@@ -101,6 +101,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
 
         $available = [
             'title',
+            'valueId',
             'selected', // optional
         ];
 
@@ -121,11 +122,19 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      */
     public function getValue()
     {
-        if (!\is_null($this->value)) {
+        if ($this->value !== null) {
             return $this->value;
         }
 
         return $this->defaultValue;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return $this->getValue() === null;
     }
 
     /**
@@ -170,16 +179,6 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        $invalidException = [
-            'quiqqer/products',
-            'exception.field.invalid',
-            [
-                'fieldId'    => $this->getId(),
-                'fieldTitle' => $this->getTitle(),
-                'fieldType'  => $this->getType()
-            ]
-        ];
-
         $options = $this->getOptions();
         $entries = $options['entries'];
 
@@ -189,7 +188,15 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             }
         }
 
-        throw new QUI\ERP\Products\Field\Exception($invalidException);
+        throw new QUI\ERP\Products\Field\Exception([
+            'quiqqer/products',
+            'exception.field.invalid',
+            [
+                'fieldId'    => $this->getId(),
+                'fieldTitle' => $this->getTitle(),
+                'fieldType'  => $this->getType()
+            ]
+        ]);
     }
 
     /**

@@ -718,6 +718,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         }).inject(Container2);
                     }
 
+                    self.refresh();
+
                     // parse qui controls
                     return QUI.parse().then(function () {
                         // field change events
@@ -766,11 +768,13 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
         /**
          * Refresh the panel
+         *
+         * @return {Promise}
          */
         refresh: function () {
             this.parent();
 
-            this.$Product.isActive().then(function (status) {
+            return this.$Product.isActive().then(function (status) {
                 var Button = this.getButtons('status');
 
                 // product is active
@@ -970,9 +974,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         loadData: function () {
             return this.$Product.refresh().then(function () {
                 return this.$Product.getTitle();
-
             }.bind(this)).then(function (title) {
-
                 this.setAttributes({
                     title: QUILocale.get(lg, 'products.product.panel.title', {
                         product: title
@@ -980,7 +982,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 });
 
                 this.refresh();
-
             }.bind(this));
         },
 

@@ -165,6 +165,11 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         }
                     }],
                     columnModel: [{
+                        header   : QUILocale.get('quiqqer/system', 'status'),
+                        dataIndex: 'status',
+                        dataType : 'node',
+                        width    : 60
+                    }, {
                         header   : QUILocale.get('quiqqer/system', 'id'),
                         dataIndex: 'id',
                         dataType : 'number',
@@ -199,11 +204,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         dataIndex: 'priority',
                         dataType : 'number',
                         width    : 60
-                    }, {
-                        header   : QUILocale.get('quiqqer/system', 'status'),
-                        dataIndex: 'status',
-                        dataType : 'text',
-                        width    : 60
                     }]
                 });
 
@@ -212,6 +212,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         self.selectVariant(
                             self.$Grid.getSelectedData()[0].id
                         );
+                    },
+                    onRefresh : function () {
+
                     }
                 });
 
@@ -244,12 +247,13 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 console.log(variants);
 
                 var needles = [
-                    'id', 'title', 'e_date', 'c_date', 'priority', 'status'
+                    'id', 'title', 'e_date', 'c_date', 'priority'
                 ];
 
                 var fields = {
                     'productNo'  : 3,
-                    'price_netto': 1
+                    'price_netto': 1,
+                    'priority'   : 18
                 };
 
                 var i, n, len, nLen, entry, variant, needle, field, fieldId;
@@ -263,6 +267,14 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     entry   = {};
                     variant = variants[i];
 
+                    // status
+                    if (variant.active) {
+                        entry.status = new Element('span', {'class': 'fa fa-check'});
+                    } else {
+                        entry.status = new Element('span', {'class': 'fa fa-close'});
+                    }
+
+                    // attributes + fields
                     for (n = 0, nLen = needles.length; n < nLen; n++) {
                         needle = needles[n];
 

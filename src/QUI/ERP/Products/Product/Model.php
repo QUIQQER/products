@@ -1157,7 +1157,7 @@ class Model extends QUI\QDOM
      * Return all product fields
      * looks at catgeories for missing fields
      *
-     * @return array
+     * @return QUI\ERP\Products\Field\Field[]
      */
     protected function getAllProductFields()
     {

@@ -12,6 +12,9 @@ use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 
+use QUI\ERP\Products\Field\Types\AttributeGroup;
+use QUI\ERP\Products\Field\Types\ProductAttributeList;
+
 /**
  * Class Variant
  * - Variant Parent
@@ -24,7 +27,7 @@ use QUI\ERP\Products\Handler\Fields as FieldHandler;
  */
 class VariantParent extends AbstractType
 {
-    //region variant methods
+    //region abstract type methods
 
     /**
      * @param null $Locale
@@ -300,5 +303,41 @@ class VariantParent extends AbstractType
         }
 
         parent::productSave($fieldData);
+    }
+
+    /**
+     * Validate the fields and return the field data
+     * - workaround for validation
+     * -> parent variant can have non valid attribute fields and non valid attribute groups.
+     * -> the children have to validate them.
+     *
+     * @return array
+     *
+     * @throws QUI\ERP\Products\Product\Exception
+     * @throws QUI\Exception
+     */
+    public function validateFields()
+    {
+        $fields = $this->getAllProductFields();
+
+        foreach ($fields as $Field) {
+            if (!($Field instanceof AttributeGroup)
+                && !($Field instanceof ProductAttributeList)) {
+                continue;
+            }
+
+            try {
+                $Field->validate($Field->getValue());
+            } catch (QUI\Exception $Exception) {
+                // if invalid, use the first option
+                $options = $Field->getOptions();
+
+                if (empty($options)) {
+                    $Field->setValue($options[0]);
+                }
+            }
+        }
+
+        return parent::validateFields();
     }
 }
