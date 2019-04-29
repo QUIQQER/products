@@ -248,7 +248,8 @@ class VariantParent extends AbstractType
         $Variant = Products::createProduct(
             $this->getCategories(),
             [],
-            VariantChild::class
+            VariantChild::class,
+            $this->getId()
         );
 
         $Variant->setAttribute('parent', $this->getId());

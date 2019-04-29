@@ -45,7 +45,7 @@ class ProductTypes extends Singleton
                 $packageProvider = $Package->getProvider();
 
                 if (isset($packageProvider['productType'])) {
-                    $provider = array_merge($provider, $packageProvider['productType']);
+                    $provider = \array_merge($provider, $packageProvider['productType']);
                 }
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
@@ -66,8 +66,11 @@ class ProductTypes extends Singleton
     public function exists($productType)
     {
         $productTypes = $this->getProductTypes();
+        $productType  = trim($productType, '\\');
 
         foreach ($productTypes as $type) {
+            $type = trim($type, '\\');
+
             if ($productType === $type) {
                 return true;
             }

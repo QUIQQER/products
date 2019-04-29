@@ -223,6 +223,7 @@ class Products
      * @param array $categories - list of category IDs or category Objects
      * @param array $fields - optional, list of fields (Field, Field, Field)
      * @param string $productType - optional, product type
+     * @param integer|null $parent - optional, parent product
      *
      * @return QUI\ERP\Products\Product\Product
      *
@@ -231,7 +232,8 @@ class Products
     public static function createProduct(
         $categories = [],
         $fields = [],
-        $productType = ''
+        $productType = '',
+        $parent = null
     ) {
         QUI\Permissions\Permission::checkPermission('product.create');
 
@@ -319,6 +321,9 @@ class Products
             $fieldData[] = $Field->toProductArray();
         }
 
+        if ($parent !== null) {
+            $parent = (int)$parent;
+        }
 
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
@@ -327,7 +332,8 @@ class Products
                 'categories' => ','.\implode($categoryIds, ',').',',
                 'type'       => $type,
                 'c_user'     => QUI::getUserBySession()->getId(),
-                'c_date'     => date('Y-m-d H:i:s')
+                'c_date'     => date('Y-m-d H:i:s'),
+                'parent'     => $parent
             ]
         );
 

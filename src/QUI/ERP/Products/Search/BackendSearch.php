@@ -171,7 +171,7 @@ class BackendSearch extends Search
         }
 
         if ($this->ignoreVariantChildren) {
-            $where[] = 'type NOT '.QUI\ERP\Products\Product\Types\VariantChild::class;
+            $where[] = "type <> '".QUI\ERP\Products\Product\Types\VariantChild::class."'";
         }
 
         // tags search

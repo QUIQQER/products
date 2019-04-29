@@ -57,6 +57,7 @@
 
         <table name="products_cache">
             <field type="BIGINT(10) NOT NULL">id</field>
+            <field type="VARCHAR(255) NOT NULL">type</field>
             <field type="VARCHAR(2) NOT NULL">lang</field>
             <field type="VARCHAR(255) NULL">productNo</field>
             <field type="DOUBLE NULL">minPrice</field>

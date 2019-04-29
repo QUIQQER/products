@@ -1249,7 +1249,17 @@ class Model extends QUI\QDOM
             $eDate = date('Y-m-d H:i:s');
         }
 
+        // type
+        $type         = QUI\ERP\Products\Product\Types\Product::class;
+        $productType  = $this->getAttribute('type');
+        $ProductTypes = QUI\ERP\Products\Utils\ProductTypes::getInstance();
+
+        if ($ProductTypes->exists($productType)) {
+            $type = $productType;
+        }
+
         $data = [
+            'type'      => $type,
             'productNo' => $this->getFieldValueByLocale(
                 Fields::FIELD_PRODUCT_NO,
                 $Locale
