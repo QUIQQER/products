@@ -27,3 +27,20 @@
 .quiqqer-products-panel-show-variant .qui-panel-categories .qui-button-active {
     opacity: 1;
 }
+
+.variants-tabs .qui-toolbar-tab {
+    background: #F2F2F2;
+    color: #666;
+    border-color: #e2dfdf;
+}
+
+.variants-tabs .qui-toolbar-tab:hover {
+    background: #666;
+    color: #fff;
+}
+
+.variants-tabs .qui-toolbar-tab.qui-toolbar-active:hover {
+    background: #F2F2F2;
+    color: #666;
+    border-color: #e2dfdf;
+}
