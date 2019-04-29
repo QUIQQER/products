@@ -327,7 +327,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 return Promise.all([
                     self.$Product.getFields(),
                     self.$Product.getCategories(),
-                    self.$Product.getCategory(),
                     Products.getParentFolder(),
                     self.$Product.isActive()
                 ]);
@@ -336,9 +335,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }).then(function (data) {
                 var fields     = data[0],
                     categories = data[1],
-                    category   = data[2],
-                    Folder     = data[3],
-                    isActive   = data[4];
+                    Folder     = data[2],
+                    isActive   = data[3];
 
                 if (typeOf(fields) !== 'array') {
                     fields = [];
@@ -361,17 +359,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 // DOM
                 Content.addClass('product-update');
 
-                var dataTemplate = Mustache.render(templateProductData, {
-                    productCategories: QUILocale.get(lg, 'productCategories'),
-                    productCategory  : QUILocale.get(lg, 'productCategory'),
-                    productAttributes: QUILocale.get(lg, 'productAttributes'),
-                    productMasterData: QUILocale.get(lg, 'productMasterData'),
-                    productPriority  : QUILocale.get(lg, 'productPriority')
-                });
-
                 Content.set({
                     html: '<div class="product-update-information sheet"></div>' +
-                        '<div class="product-update-data sheet">' + dataTemplate + '</div>' +
+                        '<div class="product-update-data sheet"></div>' +
                         '<div class="product-update-field sheet"></div>' +
                         '<div class="product-update-media sheet"></div>' +
                         '<div class="product-update-files sheet"></div>' +
@@ -380,14 +370,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         '<div class="product-update-attributelist sheet"></div>'
                 });
 
-                self.$Information     = Content.getElement('.product-update-information');
-                self.$Data            = Content.getElement('.product-update-data');
-                self.$Media           = Content.getElement('.product-update-media');
-                self.$Files           = Content.getElement('.product-update-files');
-                self.$Prices          = Content.getElement('.product-update-prices');
-                self.$MainCategoryRow = Content.getElement('.product-mainCategory');
-                self.$MainCategory    = Content.getElement('[name="product-category"]');
-                self.$Priority        = Content.getElement('[name="product-priority"]');
+                self.$Data        = Content.getElement('.product-update-data');
+                self.$Information = Content.getElement('.product-update-information');
+                self.$Media       = Content.getElement('.product-update-media');
+                self.$Files       = Content.getElement('.product-update-files');
+                self.$Prices      = Content.getElement('.product-update-prices');
+                self.$Priority    = Content.getElement('[name="product-priority"]');
 
                 self.$FieldAdministration = Content.getElement('.product-update-fieldadministration');
                 self.$AttributeList       = Content.getElement('.product-update-attributelist');
@@ -397,21 +385,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 });
 
                 self.$FieldContainer = Content.getElement('.product-update-field');
-
-                // data
-                new QUIButton({
-                    text  : QUILocale.get(lg, 'product.fields.administration'),
-                    styles: {
-                        display: 'block',
-                        'float': 'none',
-                        margin : '0 auto 20px',
-                        width  : 200
-                    },
-                    events: {
-                        onClick: self.openFieldAdministration
-                    }
-                }).inject(self.$Data);
-
 
                 // viewer
                 self.$FileViewer = new FolderViewer({
@@ -431,78 +404,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }).inject(self.$Media);
 
 
-                // categories
-                self.$CategorySelect = new CategorySelect({
-                    name  : 'categories',
-                    events: {
-                        onDelete: function (Select, Item) {
-                            var categoryId = Item.getAttribute('categoryId');
-                            var Option     = self.$MainCategory.getElement(
-                                '[value="' + categoryId + '"]'
-                            );
-
-                            if (Option) {
-                                Option.destroy();
-                            }
-                        },
-                        onChange: function () {
-                            var ids = self.$CategorySelect.getValue();
-
-                            if (ids === '') {
-                                ids = [];
-                            } else {
-                                ids = ids.split(',');
-                            }
-
-                            ids.each(function (id) {
-                                if (self.$MainCategory.getElement('[value="' + id + '"]')) {
-                                    return;
-                                }
-                                new Element('option', {
-                                    value: id,
-                                    html : QUILocale.get(lg, 'products.category.' + id + '.title')
-                                }).inject(self.$MainCategory);
-                            });
-
-                            if (ids.length) {
-                                self.$MainCategoryRow.setStyle('display', null);
-                            } else {
-                                self.$MainCategoryRow.setStyle('display', 'none');
-                            }
-                        }
-                    }
-                }).inject(
-                    Content.getElement('.product-categories')
-                );
-
-                if (categories.length) {
-                    self.$MainCategoryRow.setStyle('display', null);
-                    self.$MainCategory.set('html', '');
-                }
-
-                categories.each(function (id) {
-                    self.$CategorySelect.addCategory(id);
-
-                    if (self.$MainCategory.getElement('[value="' + id + '"]')) {
-                        return;
-                    }
-
-                    new Element('option', {
-                        value: id,
-                        html : QUILocale.get(lg, 'products.category.' + id + '.title')
-                    }).inject(self.$MainCategory);
-                });
-
-                self.$MainCategory.value = category;
-
-
                 // fields
-                var field, title, help,
-                    Data = Content.getElement('.product-data tbody');
-
-                var StandardFields = Content.getElement(
-                    '.product-standardfield tbody'
-                );
+                var field;
 
                 // Felderaufbau
                 return Promise.all([
@@ -558,17 +461,21 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                     self.$createCategories(fieldList, fieldTypes);
 
-                    // systemfields
+                    self.$dataFields   = [];
+                    self.$systemFields = [];
+
+                    // normal data fields
                     for (i = 0, len = systemFields.length; i < len; i++) {
                         field = systemFields[i];
 
                         // dont show media folder field
                         if (field.id === Fields.FIELD_FOLDER) {
-                            new Element('input', {
-                                type          : 'hidden',
-                                'data-fieldid': field.id,
-                                name          : 'field-' + field.id
-                            }).inject(self.getElm().getElement('form'));
+                            // @todo beachten
+                            // new Element('input', {
+                            //     type          : 'hidden',
+                            //     'data-fieldid': field.id,
+                            //     name          : 'field-' + field.id
+                            // }).inject(self.getElm().getElement('form'));
                             continue;
                         }
 
@@ -585,30 +492,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             continue;
                         }
 
-                        help  = false;
-                        title = QUILocale.get(lg, 'products.field.' + field.id + '.title');
-
-                        if (QUILocale.exists(lg, 'products.field.' + field.id + '.workingtitle')) {
-                            title = QUILocale.get(lg, 'products.field.' + field.id + '.workingtitle');
-                        }
-
-                        if (field.help && field.help !== '') {
-                            help = field.help;
-                        }
-
-                        new Element('tr', {
-                            'class'       : 'field',
-                            html          : Mustache.render(templateField, {
-                                fieldTitle: title,
-                                fieldHelp : help,
-                                fieldName : 'field-' + field.id,
-                                control   : field.jsControl
-                            }),
-                            'data-fieldid': field.id
-                        }).inject(Data);
+                        self.$dataFields.push(field);
                     }
 
-                    // standard felder
+                    // system fields
                     for (i = 0, len = diffFields.length; i < len; i++) {
                         field = diffFields[i];
 
@@ -632,26 +519,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             continue;
                         }
 
-                        title = QUILocale.get(lg, 'products.field.' + field.id + '.title');
-
-                        if (QUILocale.exists(lg, 'products.field.' + field.id + '.workingtitle')) {
-                            title = QUILocale.get(lg, 'products.field.' + field.id + '.workingtitle');
-                        }
-
-                        if (field.help && field.help !== '') {
-                            help = field.help;
-                        }
-
-                        new Element('tr', {
-                            'class'       : 'field',
-                            html          : Mustache.render(templateField, {
-                                fieldTitle: title,
-                                fieldHelp : help,
-                                fieldName : 'field-' + field.id,
-                                control   : field.jsControl
-                            }),
-                            'data-fieldid': field.id
-                        }).inject(StandardFields);
+                        self.$systemFields.push(field);
                     }
 
                     // field values
@@ -659,6 +527,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         productFolder = false;
 
                     fields.each(function (field) {
+                        // @todo
+                        return;
                         var Input = Form.elements['field-' + field.id];
 
                         if (typeof Input !== 'undefined') {
@@ -718,6 +588,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         }).inject(Container2);
                     }
 
+                    self.$renderData(self.$Data, self.$Product);
                     self.refresh();
 
                     // parse qui controls
@@ -998,25 +869,35 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             var self = this;
 
             return self.$hideCategories().then(function () {
-                return self.$Product.getCategories();
+                return self.$renderInformation(self.$Information, self.$Product);
+            }).then(function () {
+                return self.$showCategory(self.$Information);
+            });
+        },
 
-            }).then(function (data) {
+        /**
+         * render the information panel
+         *
+         * @param Container
+         * @param Product
+         * @return {Promise}
+         */
+        $renderInformation: function (Container, Product) {
+            return Product.getCategories().then(function (data) {
                 return Categories.getCategories(data);
-
             }).then(function (categories) {
-
                 // eigenes bild hohlen, wenn leer, oder nicht existiert, egal
                 return new Promise(function (resolve) {
-                    self.$Product.getImage().then(resolve).catch(function () {
+                    Product.getImage().then(resolve).catch(function () {
                         resolve(false);
                     });
                 }).then(function (image) {
                     return Promise.all([
-                        self.$Product.getTitle(),
-                        self.$Product.getDescription(),
+                        Product.getTitle(),
+                        Product.getDescription(),
                         image,
                         categories,
-                        self.$Product.getAttributes()
+                        Product.getAttributes()
                     ]);
                 });
             }).then(function (data) {
@@ -1026,7 +907,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 var image = data[2] ? URL_DIR + data[2] : false;
 
-                self.$Information.set({
+                Container.set({
                     html: Mustache.render(informationTemplate, {
                         title            : data[0],
                         description      : data[1],
@@ -1046,9 +927,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     })
                 });
 
-                return QUI.parse(self.$Information);
-            }).then(function () {
-                return self.$showCategory(self.$Information);
+                return QUI.parse(Container);
             });
         },
 
@@ -1065,8 +944,156 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             var self = this;
 
             return self.$hideCategories().then(function () {
+                self.$renderData(self.$Data, self.$Product);
+            }).then(function () {
+                return self.$showCategory(self.$Data);
+            });
+        },
+
+        /**
+         *
+         * @param Container
+         * @param Product
+         * @param data
+         */
+        $renderData: function (Container, Product, data) {
+            var self = this;
+
+            // get product data
+            return Promise.all([
+                Product.getFields(),
+                Product.getCategories(),
+                Product.getCategory()
+            ]).then(function (result) {
+                var fields     = result[0],
+                    categories = result[1],
+                    category   = result[2];
+
+                if (typeOf(fields) !== 'array') {
+                    fields = [];
+                }
+
+                if (typeOf(categories) !== 'array') {
+                    categories = [];
+                }
+
                 // set values
-                QUI.Controls.getControlsInElement(self.$Data).each(function (Field) {
+                if (typeof data === 'undefined') {
+                    data = {};
+
+                    fields.each(function (Field) {
+                        data[Field.id] = Field;
+                    });
+                }
+
+                Container.set('html', Mustache.render(templateProductData, {
+                    productCategories: QUILocale.get(lg, 'productCategories'),
+                    productCategory  : QUILocale.get(lg, 'productCategory'),
+                    productAttributes: QUILocale.get(lg, 'productAttributes'),
+                    productMasterData: QUILocale.get(lg, 'productMasterData'),
+                    productPriority  : QUILocale.get(lg, 'productPriority')
+                }));
+
+                var MainCategoryRow = Container.getElement('.product-mainCategory');
+                var MainCategory    = Container.getElement('[name="product-category"]');
+
+
+                // categories
+                var Select = new CategorySelect({
+                    name  : 'categories',
+                    events: {
+                        onDelete: function (Select, Item) {
+                            var categoryId = Item.getAttribute('categoryId');
+                            var Option     = MainCategory.getElement('[value="' + categoryId + '"]');
+
+                            if (Option) {
+                                Option.destroy();
+                            }
+                        },
+                        onChange: function () {
+                            var ids = Select.getValue();
+
+                            if (ids === '') {
+                                ids = [];
+                            } else {
+                                ids = ids.split(',');
+                            }
+
+                            ids.each(function (id) {
+                                if (MainCategory.getElement('[value="' + id + '"]')) {
+                                    return;
+                                }
+                                new Element('option', {
+                                    value: id,
+                                    html : QUILocale.get(lg, 'products.category.' + id + '.title')
+                                }).inject(MainCategory);
+                            });
+
+                            if (ids.length) {
+                                MainCategoryRow.setStyle('display', null);
+                            } else {
+                                MainCategoryRow.setStyle('display', 'none');
+                            }
+                        }
+                    }
+                }).inject(
+                    Container.getElement('.product-categories')
+                );
+
+                if (categories.length) {
+                    MainCategoryRow.setStyle('display', null);
+                    MainCategory.set('html', '');
+                }
+
+                categories.each(function (id) {
+                    Select.addCategory(id);
+
+                    if (MainCategory.getElement('[value="' + id + '"]')) {
+                        return;
+                    }
+
+                    new Element('option', {
+                        value: id,
+                        html : QUILocale.get(lg, 'products.category.' + id + '.title')
+                    }).inject(MainCategory);
+                });
+
+                MainCategory.value = category;
+
+
+                // render data fields
+                var i, len;
+                var DataContainer = Container.getElement('.product-data tbody');
+
+                for (i = 0, len = self.$dataFields.length; i < len; i++) {
+                    self.$renderDataField(self.$dataFields[i]).inject(DataContainer);
+                }
+
+                // render system fields
+                var SystemContainer = Container.getElement('.product-standardfield tbody');
+
+                for (i = 0, len = self.$systemFields.length; i < len; i++) {
+                    self.$renderDataField(self.$systemFields[i]).inject(SystemContainer);
+                }
+
+                return QUI.parse(Container);
+            }).then(function () {
+
+                // change fields button
+                new QUIButton({
+                    text  : QUILocale.get(lg, 'product.fields.administration'),
+                    styles: {
+                        display: 'block',
+                        'float': 'none',
+                        margin : '0 auto 20px',
+                        width  : 200
+                    },
+                    events: {
+                        onClick: self.openFieldAdministration
+                    }
+                }).inject(Container);
+
+                QUI.Controls.getControlsInElement(Container).each(function (Field) {
                     if (!("getFieldId" in Field)) {
                         return;
                     }
@@ -1077,12 +1104,40 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                     var fieldId = Field.getFieldId();
 
-                    if (fieldId in self.$data) {
-                        Field.setValue(self.$data[fieldId].value);
+                    if (fieldId in data) {
+                        Field.setValue(data[fieldId].value);
                     }
                 });
+            });
+        },
 
-                return self.$showCategory(self.$Data);
+        /**
+         * Render data fieldsets
+         *
+         * @param field
+         * @return {Element}
+         */
+        $renderDataField: function (field) {
+            var help  = false,
+                title = QUILocale.get(lg, 'products.field.' + field.id + '.title');
+
+            if (QUILocale.exists(lg, 'products.field.' + field.id + '.workingtitle')) {
+                title = QUILocale.get(lg, 'products.field.' + field.id + '.workingtitle');
+            }
+
+            if (field.help && field.help !== '') {
+                help = field.help;
+            }
+
+            return new Element('tr', {
+                'class'       : 'field',
+                html          : Mustache.render(templateField, {
+                    fieldTitle: title,
+                    fieldHelp : help,
+                    fieldName : 'field-' + field.id,
+                    control   : field.jsControl
+                }),
+                'data-fieldid': field.id
             });
         },
 
@@ -1097,12 +1152,37 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             var self = this;
 
             return self.$hideCategories().then(function () {
-                return Promise.all([
-                    self.$Product.getFieldsByType(Fields.TYPE_PRICE),
-                    self.$Product.getFieldsByType(Fields.TYPE_PRICE_BY_QUANTITY)
-                ]);
+                return self.$renderPrices(self.$Prices, self.$Product);
+            }).then(function () {
+                // change events
+                var prices   = QUI.Controls.getControlsInElement(self.$Prices),
+                    onChange = function (Price) {
+                        var fieldId = Price.getFieldId();
 
-            }).then(function (fields) {
+                        // set product field value
+                        if (fieldId in self.$data) {
+                            self.$data[fieldId].value = Price.getValue();
+                        }
+                    };
+
+                for (var i = 0, len = prices.length; i < len; i++) {
+                    prices[i].addEvent('change', onChange);
+                }
+
+                return self.$showCategory(self.$Prices);
+            });
+        },
+
+        /**
+         * Render the price html nodes
+         *
+         * @return {Promise}
+         */
+        $renderPrices: function (Container, Product) {
+            return Promise.all([
+                Product.getFieldsByType(Fields.TYPE_PRICE),
+                Product.getFieldsByType(Fields.TYPE_PRICE_BY_QUANTITY)
+            ]).then(function (fields) {
                 fields = fields.flatten();
 
                 // sort by priority and mein price as first
@@ -1110,11 +1190,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     var priorityA = parseInt(FieldA.priority),
                         priorityB = parseInt(FieldB.priority);
 
-                    if (FieldA.id == Fields.FIELD_PRICE) {
+                    if (parseInt(FieldA.id) === parseInt(Fields.FIELD_PRICE)) {
                         return -1;
                     }
 
-                    if (FieldB.id == Fields.FIELD_PRICE) {
+                    if (parseInt(FieldB.id) === parseInt(Fields.FIELD_PRICE)) {
                         return 1;
                     }
 
@@ -1137,34 +1217,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     return 0;
                 });
 
-                self.$Prices.set({
+                Container.set({
                     html: Mustache.render(templateProductPrices, {
                         title : QUILocale.get(lg, 'products.product.panel.category.prices'),
                         fields: fields
                     })
                 });
 
-                return QUI.parse(self.$Prices);
-
-            }).then(function () {
-
-                // change events
-                var prices   = QUI.Controls.getControlsInElement(self.$Prices),
-
-                    onChange = function (Price) {
-                        var fieldId = Price.getFieldId();
-
-                        // set product field value
-                        if (fieldId in self.$data) {
-                            self.$data[fieldId].value = Price.getValue();
-                        }
-                    };
-
-                for (var i = 0, len = prices.length; i < len; i++) {
-                    prices[i].addEvent('change', onChange);
-                }
-
-                return self.$showCategory(self.$Prices);
+                return QUI.parse(Container);
             });
         },
 

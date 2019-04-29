@@ -8,6 +8,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
     'qui/QUI',
     'package/quiqqer/products/bin/controls/products/Product',
+    'package/quiqqer/products/bin/classes/Product',
     'qui/controls/buttons/Select',
     'qui/controls/toolbar/Bar',
     'qui/controls/toolbar/Tab',
@@ -22,7 +23,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
     'css!package/quiqqer/products/bin/controls/products/ProductVariant.css'
 
-], function (QUI, ProductPanel, QUISelect, QUIBar, QUITab, Grid, QUILocale, Mustache,
+], function (QUI, ProductPanel, Product, QUISelect, QUIBar, QUITab, Grid, QUILocale, Mustache,
              template, templateProductData) {
     "use strict";
 
@@ -54,8 +55,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             this.parent(options);
 
-            this.$Grid          = null;
-            this.$VariantFields = null;
+            this.$Grid           = null;
+            this.$VariantFields  = null;
+            this.$CurrentVariant = null;
         },
 
         /**
@@ -244,8 +246,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             var self = this;
 
             return this.$Product.getVariants().then(function (variants) {
-                console.log(variants);
-
                 var needles = [
                     'id', 'title', 'e_date', 'c_date', 'priority'
                 ];
@@ -341,7 +341,15 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             var self = this;
             var Body = self.getBody();
 
+            this.$CurrentVariant = new Product({
+                id: variantId
+            });
+
             return self.$hideCategories().then(function () {
+                if (!self.$CurrentVariant.isLoaded()) {
+                    return self.$CurrentVariant.refresh();
+                }
+            }).then(function () {
                 var VariantSheet = Body.getElement('.variants-sheet');
 
                 if (!VariantSheet) {
@@ -438,7 +446,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         //region variant generating
 
         addVariant: function () {
-
+            alert('not implemented');
         },
 
         /**
@@ -484,6 +492,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return this.$openVariantData().then(done);
             }
 
+            if (name === 'prices') {
+                return this.$openPrices().then(done);
+            }
+
             return Promise.resolve().then(done);
         },
 
@@ -496,36 +508,40 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             var self = this;
 
             return this.$hideTabContent().then(function (Content) {
-                Content.set('html', self.$Data.get('html'));
-
-                Content.getElement('[name="categories"]')
-                       .getParent('tr')
-                       .destroy();
-
-                Content.getElement('[name="product-category"]')
-                       .getParent('tr')
-                       .destroy();
-
-                Content.getElement('form + button')
-                       .destroy();
-
-                QUI.Controls.getControlsInElement(Content).each(function (Field) {
-                    if (!("getFieldId" in Field)) {
-                        return;
-                    }
-
-                    if (!("setValue" in Field)) {
-                        return;
-                    }
-
-                    var fieldId = Field.getFieldId();
-
-                    if (fieldId in self.$data) {
-                        Field.setValue(self.$data[fieldId].value);
-                    }
-                });
-
+                return self.$renderData(Content, self.$CurrentVariant);
+            }).then(function () {
                 return self.$showTabContent();
+            });
+        },
+
+        /**
+         *
+         * @return {Promise}
+         */
+        $openPrices: function () {
+            var self = this;
+
+            return this.$hideTabContent().then(function (Content) {
+                return self.$renderPrices(Content, self.$CurrentVariant);
+            }).then(function () {
+                return self.$showTabContent();
+            });
+        },
+
+        /**
+         *
+         * @param Content
+         * @return {Promise}
+         */
+        $setDataToCategory: function (Content) {
+            var self = this;
+
+            return new Promise(function (resolve) {
+                var attributes = self.$CurrentVariant.getAttributes();
+
+                console.log(attributes);
+
+                resolve(Content);
             });
         },
 
