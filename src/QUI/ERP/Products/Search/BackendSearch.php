@@ -21,6 +21,13 @@ use QUI\ERP\Products\Handler\Products;
 class BackendSearch extends Search
 {
     /**
+     * Flag how the search should handle variant children
+     *
+     * @var bool
+     */
+    protected $ignoreVariantChildren = true;
+
+    /**
      * BackendSearch constructor.
      *
      * @param string $lang (optional) - if ommitted, take lang from Product Locale
@@ -161,6 +168,10 @@ class BackendSearch extends Search
                     $where[] = '('.\implode(' OR ', $whereFreeText).')';
                 }
             }
+        }
+
+        if ($this->ignoreVariantChildren) {
+            $where[] = 'type NOT '.QUI\ERP\Products\Product\Types\VariantChild::class;
         }
 
         // tags search
@@ -329,14 +340,7 @@ class BackendSearch extends Search
             $searchFieldIdsFromCfg = explode(',', $searchFieldIdsFromCfg);
         }
 
-        try {
-            $eligibleFields = self::getEligibleSearchFields();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return [];
-        }
-
+        $eligibleFields = self::getEligibleSearchFields();
 
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($eligibleFields as $Field) {
@@ -399,7 +403,6 @@ class BackendSearch extends Search
      *                      field is public
      *
      * @return array
-     * @throws QUI\Exception
      */
     public function getEligibleSearchFields()
     {
@@ -411,5 +414,22 @@ class BackendSearch extends Search
         $this->eligibleFields = $this->filterEligibleSearchFields($fields);
 
         return $this->eligibleFields;
+    }
+
+    /**
+     * The search considers variant children
+     */
+    public function considerVariantChildren()
+    {
+        $this->ignoreVariantChildren = false;
+    }
+
+    /**
+     * The search ignores variant children
+     * Children are therefore not displayed in the search.
+     */
+    public function ignoreVariantChildren()
+    {
+        $this->ignoreVariantChildren = true;
     }
 }
