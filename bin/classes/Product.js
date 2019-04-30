@@ -401,7 +401,6 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         getFields: function () {
             return new Promise(function (resolve, reject) {
-
                 if (this.$loaded) {
                     return resolve(this.$data.fields);
                 }
@@ -409,7 +408,6 @@ define('package/quiqqer/products/bin/classes/Product', [
                 this.refresh().then(function () {
                     resolve(this.$data.fields);
                 }.bind(this)).catch(reject);
-
             }.bind(this));
         },
 
