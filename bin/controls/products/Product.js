@@ -100,6 +100,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             this.$CurrentCategory     = null;
             this.$FieldHelpContainer  = null;
 
+            this.$productFolder = null;
+
             this.$Product = new Product({
                 id: this.getAttribute('productId')
             });
@@ -387,21 +389,21 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 self.$FieldContainer = Content.getElement('.product-update-field');
 
                 // viewer
-                self.$FileViewer = new FolderViewer({
-                    folderId     : false,
-                    Parent       : Folder,
-                    newFolderName: self.$Product.getId(),
-                    filetype     : ['file'],
-                    autoactivate : true
-                }).inject(self.$Files);
+                // self.$FileViewer = new FolderViewer({
+                //     folderId     : false,
+                //     Parent       : Folder,
+                //     newFolderName: self.$Product.getId(),
+                //     filetype     : ['file'],
+                //     autoactivate : true
+                // }).inject(self.$Files);
 
-                self.$ImageViewer = new FolderViewer({
-                    folderId     : false,
-                    Parent       : Folder,
-                    newFolderName: self.$Product.getId(),
-                    filetype     : ['image'],
-                    autoactivate : true
-                }).inject(self.$Media);
+                // self.$ImageViewer = new FolderViewer({
+                //     folderId     : false,
+                //     Parent       : Folder,
+                //     newFolderName: self.$Product.getId(),
+                //     filetype     : ['image'],
+                //     autoactivate : true
+                // }).inject(self.$Media);
 
 
                 // fields
@@ -523,113 +525,112 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
 
                     // field values
-                    var Form          = Content.getElement('form'),
-                        productFolder = false;
+                    // var Form          = Content.getElement('form'),
+                    //     productFolder = false;
 
-                    fields.each(function (field) {
-                        // @todo
-                        return;
-                        var Input = Form.elements['field-' + field.id];
-
-                        if (typeof Input !== 'undefined') {
-                            if (typeOf(field.value) !== 'string' && field.value !== null) {
-                                field.value = JSON.encode(field.value);
-                            }
-
-                            Input.value = field.value;
-
-                            if (parseInt(field.id) === parseInt(Fields.FIELD_FOLDER)) {
-                                self.$FileViewer.setAttribute('folderUrl', field.value);
-                                self.$ImageViewer.setAttribute('folderUrl', field.value);
-
-                                productFolder = field.value;
-                            }
-                        }
-                    });
+                    // fields.each(function (field) {
+                    //     // @todo
+                    //     return;
+                    //     var Input = Form.elements['field-' + field.id];
+                    //
+                    //     if (typeof Input !== 'undefined') {
+                    //         if (typeOf(field.value) !== 'string' && field.value !== null) {
+                    //             field.value = JSON.encode(field.value);
+                    //         }
+                    //
+                    //         Input.value = field.value;
+                    //
+                    //         if (parseInt(field.id) === parseInt(Fields.FIELD_FOLDER)) {
+                    //             self.$FileViewer.setAttribute('folderUrl', field.value);
+                    //             self.$ImageViewer.setAttribute('folderUrl', field.value);
+                    //
+                    //             productFolder = field.value;
+                    //         }
+                    //     }
+                    // });
 
                     // no media folder exists
                     // display create message
-                    if (!productFolder) {
-                        self.$FileViewer.hide();
-                        self.$ImageViewer.hide();
-
-                        var Container = new Element('div', {
-                            'class': 'folder-missing-container',
-                            html   : QUILocale.get(lg, 'products.product.panel.folder.missing')
-                        }).inject(self.$Media);
-
-                        new QUIButton({
-                            text     : QUILocale.get(lg, 'products.product.panel.folder.missing.button'),
-                            textimage: 'fa fa-plus',
-                            styles   : {
-                                clear : 'both',
-                                margin: '20px 0 0 0'
-                            },
-                            events   : {
-                                onClick: self.$onCreateMediaFolderClick
-                            }
-                        }).inject(Container);
-
-                        var Container2 = new Element('div', {
-                            'class': 'folder-missing-container',
-                            html   : QUILocale.get(lg, 'products.product.panel.folder.missing')
-                        }).inject(self.$Files);
-
-                        new QUIButton({
-                            text     : QUILocale.get(lg, 'products.product.panel.folder.missing.button'),
-                            textimage: 'fa fa-plus',
-                            styles   : {
-                                clear : 'both',
-                                margin: '20px 0 0 0'
-                            },
-                            events   : {
-                                onClick: self.$onCreateMediaFolderClick
-                            }
-                        }).inject(Container2);
-                    }
+                    // if (!productFolder) {
+                    // self.$FileViewer.hide();
+                    // self.$ImageViewer.hide();
+                    //
+                    // var Container = new Element('div', {
+                    //     'class': 'folder-missing-container',
+                    //     html   : QUILocale.get(lg, 'products.product.panel.folder.missing')
+                    // }).inject(self.$Media);
+                    //
+                    // new QUIButton({
+                    //     text     : QUILocale.get(lg, 'products.product.panel.folder.missing.button'),
+                    //     textimage: 'fa fa-plus',
+                    //     styles   : {
+                    //         clear : 'both',
+                    //         margin: '20px 0 0 0'
+                    //     },
+                    //     events   : {
+                    //         onClick: self.$onCreateMediaFolderClick
+                    //     }
+                    // }).inject(Container);
+                    //
+                    // var Container2 = new Element('div', {
+                    //     'class': 'folder-missing-container',
+                    //     html   : QUILocale.get(lg, 'products.product.panel.folder.missing')
+                    // }).inject(self.$Files);
+                    //
+                    // new QUIButton({
+                    //     text     : QUILocale.get(lg, 'products.product.panel.folder.missing.button'),
+                    //     textimage: 'fa fa-plus',
+                    //     styles   : {
+                    //         clear : 'both',
+                    //         margin: '20px 0 0 0'
+                    //     },
+                    //     events   : {
+                    //         onClick: self.$onCreateMediaFolderClick
+                    //     }
+                    // }).inject(Container2);
+                    // }
 
                     self.$renderData(self.$Data, self.$Product);
                     self.refresh();
 
                     // parse qui controls
-                    return QUI.parse().then(function () {
-                        // field change events
-                        var fieldChange = function (Field) {
-                            if (!("getFieldId" in Field)) {
-                                return;
-                            }
 
-                            var fieldId = Field.getFieldId();
+                    // field change events
+                    var fieldChange = function (Field) {
+                        if (!("getFieldId" in Field)) {
+                            return;
+                        }
 
-                            // set product field value
-                            if (fieldId in self.$data) {
-                                self.$data[fieldId].value = Field.getValue();
-                            }
-                        };
+                        var fieldId = Field.getFieldId();
 
-                        QUI.Controls.getControlsInElement(self.$Data).each(function (Field) {
-                            if (!Field.getType().match("controls/fields/types/")) {
-                                return;
-                            }
+                        // set product field value
+                        if (fieldId in self.$data) {
+                            self.$data[fieldId].value = Field.getValue();
+                        }
+                    };
 
-                            Field.addEvent('change', fieldChange);
-                        });
+                    QUI.Controls.getControlsInElement(self.$Data).each(function (Field) {
+                        if (!Field.getType().match("controls/fields/types/")) {
+                            return;
+                        }
 
-
-                        // image fields
-                        var images = self.getElm().getElements(
-                            '[data-qui="package/quiqqer/products/bin/controls/fields/types/Image"]'
-                        );
-
-                        images.each(function (Input) {
-                            var quiId   = Input.get('data-quiid'),
-                                Control = QUI.Controls.getById(quiId);
-
-                            if (Control) {
-                                Control.setAttribute('productFolder', productFolder);
-                            }
-                        });
+                        Field.addEvent('change', fieldChange);
                     });
+
+
+                    // // image fields
+                    // var images = self.getElm().getElements(
+                    //     '[data-qui="package/quiqqer/products/bin/controls/fields/types/Image"]'
+                    // );
+                    //
+                    // images.each(function (Input) {
+                    //     var quiId   = Input.get('data-quiid'),
+                    //         Control = QUI.Controls.getById(quiId);
+                    //
+                    //     if (Control) {
+                    //         Control.setAttribute('productFolder', productFolder);
+                    //     }
+                    // });
                 });
             }).catch(function (err) {
                 console.error(err);
@@ -857,6 +858,54 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         },
 
         /**
+         *
+         * @param Container
+         * @param Product
+         */
+        $fillDataToContainer: function (Container, Product) {
+            var Form = Container.getElement('form');
+
+            if (!Form) {
+                return;
+            }
+
+            var self       = this,
+                attributes = Product.getAttributes(),
+                fields     = attributes.fields;
+
+            // fill field values
+            fields.each(function (field) {
+                var Input = Form.elements['field-' + field.id];
+
+                if (typeof Input !== 'undefined') {
+                    if (typeOf(field.value) !== 'string' && field.value !== null) {
+                        field.value = JSON.encode(field.value);
+                    }
+
+                    Input.value = field.value;
+                }
+
+                if (parseInt(field.id) === parseInt(Fields.FIELD_FOLDER)) {
+                    self.$productFolder = field.value;
+                }
+            });
+
+            // image fields
+            var images = Container.getElements(
+                '[data-qui="package/quiqqer/products/bin/controls/fields/types/Image"]'
+            );
+
+            images.each(function (Input) {
+                var quiId   = Input.get('data-quiid'),
+                    Control = QUI.Controls.getById(quiId);
+
+                if (Control) {
+                    Control.setAttribute('productFolder', self.$productFolder);
+                }
+            });
+        },
+
+        /**
          * Open the information category tab
          *
          * @return {Promise}
@@ -1078,20 +1127,24 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 return QUI.parse(Container);
             }).then(function () {
+                self.$fillDataToContainer(Container, Product);
 
                 // change fields button
-                new QUIButton({
-                    text  : QUILocale.get(lg, 'product.fields.administration'),
-                    styles: {
-                        display: 'block',
-                        'float': 'none',
-                        margin : '0 auto 20px',
-                        width  : 200
-                    },
-                    events: {
-                        onClick: self.openFieldAdministration
-                    }
-                }).inject(Container);
+                if (!Container.getElement('[name="edit-fields"]')) {
+                    new QUIButton({
+                        text  : QUILocale.get(lg, 'product.fields.administration'),
+                        name  : 'edit-fields',
+                        styles: {
+                            display: 'block',
+                            'float': 'none',
+                            margin : '0 auto 20px',
+                            width  : 200
+                        },
+                        events: {
+                            onClick: self.openFieldAdministration
+                        }
+                    }).inject(Container);
+                }
 
                 QUI.Controls.getControlsInElement(Container).each(function (Field) {
                     if (!("getFieldId" in Field)) {
@@ -1238,11 +1291,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 return Promise.resolve();
             }
 
-            return this.$hideCategories().then(function () {
-                this.$ImageViewer.refresh();
+            var self = this;
 
-                return this.$showCategory(this.$Media);
-            }.bind(this));
+            return this.$hideCategories().then(function () {
+                return self.$renderFolderViewer(self.$Media, self.$Product);
+            }).then(function (Viewer) {
+                Viewer.refresh();
+
+                return self.$showCategory(self.$Media);
+            });
         },
 
         /**
@@ -1255,11 +1312,60 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 return Promise.resolve();
             }
 
-            return this.$hideCategories().then(function () {
-                this.$FileViewer.refresh();
+            var self = this;
 
-                return this.$showCategory(this.$Files);
-            }.bind(this));
+            return this.$hideCategories().then(function () {
+                return self.$renderFolderViewer(self.$Files, self.$Product);
+            }).then(function (Viewer) {
+                Viewer.refresh();
+
+                return self.$showCategory(self.$Files);
+            });
+        },
+
+        /**
+         *
+         * @param Container
+         * @param Product
+         * @return {Promise}
+         */
+        $renderFolderViewer: function (Container, Product) {
+            var self = this;
+
+            Container.set('html', '');
+
+            return Products.getParentFolder().then(function (Folder) {
+                var Viewer = new FolderViewer({
+                    folderUrl    : self.$productFolder,
+                    Parent       : Folder,
+                    newFolderName: Product.getId(),
+                    filetype     : ['file'],
+                    autoactivate : true
+                }).inject(Container);
+
+                if (!self.$productFolder) {
+                    Viewer.hide();
+
+                    var ButtonContainer = new Element('div', {
+                        'class': 'folder-missing-container',
+                        html   : QUILocale.get(lg, 'products.product.panel.folder.missing')
+                    }).inject(Container);
+
+                    new QUIButton({
+                        text     : QUILocale.get(lg, 'products.product.panel.folder.missing.button'),
+                        textimage: 'fa fa-plus',
+                        styles   : {
+                            clear : 'both',
+                            margin: '20px 0 0 0'
+                        },
+                        events   : {
+                            onClick: self.$onCreateMediaFolderClick
+                        }
+                    }).inject(ButtonContainer);
+                }
+
+                return Viewer;
+            });
         },
 
         /**
@@ -1280,36 +1386,36 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 this.$currentField = fieldId;
 
                 require([Field.jsControl], function (Control) {
-                    this.$Control = new Control();
+                    self.$Control = new Control();
 
-                    this.$FieldContainer.setStyles({
+                    self.$FieldContainer.setStyles({
                         height: '100%'
                     });
 
                     if (Field.help !== '') {
-                        this.$FieldHelpContainer = new Element('div', {
+                        self.$FieldHelpContainer = new Element('div', {
                             html   : '<span class="fa fa-question"></span><span>' + Field.help + '</span>',
                             'class': 'product-category-help',
                             styles : {
                                 bottom  : 10,
                                 position: 'absolute'
                             }
-                        }).inject(this.$FieldContainer, 'after');
+                        }).inject(self.$FieldContainer, 'after');
 
-                        var height = this.$FieldHelpContainer.getSize().y + 10; // padding
+                        var height = self.$FieldHelpContainer.getSize().y + 10; // padding
 
-                        this.$FieldContainer.setStyles({
+                        self.$FieldContainer.setStyles({
                             height: 'calc(100% - ' + height + 'px)'
                         });
                     }
 
                     if (Field && "value" in Field) {
-                        this.$Control.setAttribute('value', Field.value);
+                        self.$Control.setAttribute('value', Field.value);
                     }
 
-                    this.$Control.inject(this.$FieldContainer);
-                }.bind(this));
-            }.bind(this));
+                    self.$Control.inject(self.$FieldContainer);
+                });
+            });
         },
 
         /**
