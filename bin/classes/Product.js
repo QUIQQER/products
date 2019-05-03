@@ -434,7 +434,6 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         getField: function (fieldId) {
             return new Promise(function (resolve, reject) {
-
                 if (typeof fieldId === 'undefined') {
                     return reject('No field given');
                 }
@@ -454,7 +453,6 @@ define('package/quiqqer/products/bin/classes/Product', [
                 this.refresh().then(function () {
                     this.getField(fieldId).then(resolve);
                 }.bind(this)).catch(reject);
-
             }.bind(this));
         },
 
