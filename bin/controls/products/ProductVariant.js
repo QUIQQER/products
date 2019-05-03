@@ -486,7 +486,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 this.Loader.hide();
             }.bind(this);
 
-            console.log(name);
 
             if (name === 'data') {
                 return this.$openVariantData().then(done);
@@ -553,15 +552,17 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         $hideTabContent: function () {
             var VariantBody = this.getBody().getElement('.variant-body');
 
-            return new Promise(function (resolve) {
-                moofx(VariantBody).animate({
-                    left   : -20,
-                    opacity: 0
-                }, {
-                    duration: 250,
-                    callback: function () {
-                        resolve(VariantBody);
-                    }
+            return this.$unloadCategory(VariantBody, this.$CurrentVariant).then(function () {
+                return new Promise(function (resolve) {
+                    moofx(VariantBody).animate({
+                        left   : -20,
+                        opacity: 0
+                    }, {
+                        duration: 250,
+                        callback: function () {
+                            resolve(VariantBody);
+                        }
+                    });
                 });
             });
         },
