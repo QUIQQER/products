@@ -46,8 +46,9 @@
 
 .variants-tabs .qui-toolbar-tab {
     background: #F2F2F2;
-    color: #666;
     border-color: #e2dfdf;
+    color: #666;
+    cursor: pointer;
 }
 
 .variants-tabs .qui-toolbar-tab:hover {
@@ -57,6 +58,6 @@
 
 .variants-tabs .qui-toolbar-tab.qui-toolbar-active:hover {
     background: #F2F2F2;
-    color: #666;
     border-color: #e2dfdf;
+    color: #666;
 }
