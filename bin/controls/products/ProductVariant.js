@@ -144,7 +144,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 VariantSheet.set('html', '');
 
-                var Container = new Element('div').inject(VariantSheet);
+                var Container = new Element('div.variant-list-variantListContainer').inject(VariantSheet);
 
                 self.$Grid = new Grid(Container, {
                     pagination : true,
@@ -368,7 +368,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 var VariantSheet = Body.getElement('.variants-sheet');
                 var VariantList  = Body.getElement('.variant-list');
                 var VariantTabs  = Body.getElement('.variants-tabs');
-                var VariantBody  = Body.getElement('.variant-body');
 
                 // variant select
                 var VariantSelect = new QUISelect({
@@ -379,7 +378,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     }
                 }).inject(VariantList);
 
-                var i, len, name, variant, Category;
+                var i, len, name, fieldId, variant, Category;
 
                 for (i = 0, len = variants.length; i < len; i++) {
                     variant = variants[i];
@@ -408,6 +407,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 for (i = 0, len = categories.length; i < len; i++) {
                     Category = categories[i];
                     name     = Category.getAttribute('name');
+                    fieldId  = Category.getAttribute('fieldId');
 
                     if (name === 'variants') {
                         continue;
@@ -423,9 +423,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                     TabBar.appendChild(
                         new QUITab({
-                            name  : name,
-                            text  : Category.getAttribute('text'),
-                            events: {
+                            name   : name,
+                            fieldId: fieldId,
+                            text   : Category.getAttribute('text'),
+                            events : {
                                 onClick: self.openVariantTab
                             }
                         })
@@ -434,10 +435,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 TabBar.resize();
                 TabBar.firstChild().click();
-
-
-                // body
-                VariantBody.set('html', 'test');
 
                 return self.$showCategory(VariantSheet);
             });
@@ -495,7 +492,17 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return this.$openPrices().then(done);
             }
 
-            return Promise.resolve().then(done);
+            var self    = this,
+                fieldId = Tab.getAttribute('fieldId'),
+                Product = this.$CurrentVariant;
+
+            return this.$hideTabContent().then(function (Content) {
+                return self.$renderField(Content, Product, fieldId);
+            }).then(function () {
+
+
+                return self.$showTabContent();
+            }).then(done);
         },
 
         /**

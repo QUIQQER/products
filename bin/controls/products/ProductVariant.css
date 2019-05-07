@@ -5,9 +5,25 @@
     width: 100%;
 }
 
+.variant-list-variantListContainer {
+    padding: 20px;
+}
+
+.variants-sheet {
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+}
+
+.variant-list {
+    padding: 20px 20px 0 20px;
+}
+
 .variant-body {
     border-top: 1px solid #DDDDDD;
-    padding: 10px 0;
+    flex-grow: 1;
+    overflow: auto;
+    padding: 20px;
     position: relative;
     top: -1px;
     z-index: 2;

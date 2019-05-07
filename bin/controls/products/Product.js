@@ -787,7 +787,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     value   = Field.getValue();
 
                 Product.getField(fieldId).then(function (Field) {
-                    Field.setValue(value);
+                    Field.value = value;
                 });
             };
 
@@ -1269,45 +1269,59 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {Number} fieldId
          */
         openField: function (fieldId) {
-            var self  = this,
-                Field = this.$data[fieldId];
-
-            self.$FieldContainer.set('html', '');
+            var self = this;
 
             return this.$hideCategories().then(function () {
-                return self.$showCategory(self.$FieldContainer);
+                return self.$renderField(self.$FieldContainer, self.$Product, fieldId);
             }).then(function () {
-                self.$currentField = fieldId;
+                return self.$showCategory(self.$FieldContainer);
+            });
+        },
 
-                require([Field.jsControl], function (Control) {
-                    self.$Control = new Control();
+        /**
+         * Render a field
+         *
+         * @param Container
+         * @param Product
+         * @param fieldId
+         */
+        $renderField: function (Container, Product, fieldId) {
+            Container.set('html', '');
 
-                    self.$FieldContainer.setStyles({
-                        height: '100%'
-                    });
-
-                    if (Field.help !== '') {
-                        self.$FieldHelpContainer = new Element('div', {
-                            html   : '<span class="fa fa-question"></span><span>' + Field.help + '</span>',
-                            'class': 'product-category-help',
-                            styles : {
-                                bottom  : 10,
-                                position: 'absolute'
-                            }
-                        }).inject(self.$FieldContainer, 'after');
-
-                        var height = self.$FieldHelpContainer.getSize().y + 10; // padding
-
-                        self.$FieldContainer.setStyles({
-                            height: 'calc(100% - ' + height + 'px)'
+            Product.getField(fieldId).then(function (Field) {
+                return new Promise(function (resolve) {
+                    require([Field.jsControl], function (Control) {
+                        var Instance = new Control();
+/*
+                        Container.setStyles({
+                            height: '100%'
                         });
-                    }
+*/
+                        if (Field.help !== '') {
+                            var HelpContainer = new Element('div', {
+                                html   : '<span class="fa fa-question"></span><span>' + Field.help + '</span>',
+                                'class': 'product-category-help',
+                                styles : {
+                                    bottom  : 10,
+                                    position: 'absolute'
+                                }
+                            }).inject(Container, 'after');
 
-                    if (Field && "value" in Field) {
-                        self.$Control.setAttribute('value', Field.value);
-                    }
+                            var height = HelpContainer.getSize().y + 10; // padding
 
-                    self.$Control.inject(self.$FieldContainer);
+                            HelpContainer.setStyles({
+                                height: 'calc(100% - ' + height + 'px)'
+                            });
+                        }
+
+                        if (Field && "value" in Field) {
+                            Instance.setAttribute('value', Field.value);
+                        }
+
+                        Instance.inject(Container);
+
+                        resolve(Instance);
+                    });
                 });
             });
         },
