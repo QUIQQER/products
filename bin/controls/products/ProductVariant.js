@@ -10,6 +10,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
     'package/quiqqer/products/bin/controls/products/Product',
     'package/quiqqer/products/bin/classes/Product',
     'package/quiqqer/products/bin/Fields',
+    'package/quiqqer/products/bin/Products',
     'qui/controls/buttons/Select',
     'qui/controls/toolbar/Bar',
     'qui/controls/toolbar/Tab',
@@ -21,7 +22,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
     'css!package/quiqqer/products/bin/controls/products/ProductVariant.css'
 
-], function (QUI, ProductPanel, Product, Fields, QUISelect, QUIBar, QUITab, Grid, QUILocale, Mustache, template) {
+], function (QUI, ProductPanel, Product, Fields, Products, QUISelect, QUIBar, QUITab, Grid, QUILocale, Mustache, template) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -142,6 +143,48 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 self.$BackToVariantList = self.getButtons('BackToVariantFields');
                 self.$BackToVariantList.hide();
+            });
+        },
+
+        /**
+         * Update the product or the variant
+         */
+        update: function () {
+            if (!this.$CurrentVariant) {
+                return this.parent();
+            }
+
+            var self        = this;
+            var VariantBody = this.getBody().getElement('.variant-body');
+
+            return this.$unloadCategory(VariantBody, self.$CurrentVariant).then(function () {
+                return Promise.all([
+                    self.$CurrentVariant.getCategories(),
+                    self.$CurrentVariant.getCategory(),
+                    self.$CurrentVariant.getFields()
+                ]);
+            }).then(function (result) {
+                var categories = result[0];
+                var category   = result[1];
+                var fieldsList = result[2];
+
+                // parse fields to ajax field array
+                var i, len, entry;
+                var fields = {};
+
+                for (i = 0, len = fieldsList.length; i < len; i++) {
+                    entry = fieldsList[i];
+
+                    fields['field-' + entry.id] = entry.value;
+                }
+
+                console.log(fields);
+                return Products.updateChild(
+                    self.$CurrentVariant.getId(),
+                    categories,
+                    category,
+                    fields
+                );
             });
         },
 
