@@ -84,7 +84,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             this.parent(options);
 
-            this.$CategorySelect      = null;
             this.$FieldContainer      = null;
             this.$currentField        = null;
             this.$FileViewer          = null;
@@ -158,7 +157,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             });
 
             this.addButton({
-                type: 'separator'
+                type: 'separator',
+                name: 'actionSeparator'
             });
 
             this.addButton(
@@ -521,6 +521,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             return this.$Product.isActive().then(function (status) {
                 var Button = this.getButtons('status');
+                var Save   = this.getButtons('update');
+
+                Save.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'save'));
 
                 // product is active
                 if (status) {

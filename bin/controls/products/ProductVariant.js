@@ -62,6 +62,11 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             // panel extra buttons
             this.$VariantFields     = null;
             this.$BackToVariantList = null;
+
+            // panel buttons
+            this.$SaveButton      = null;
+            this.$StatusButton    = null;
+            this.$ActionSeparator = null;
         },
 
         /**
@@ -69,6 +74,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          */
         $onInject: function () {
             var self = this;
+
+            this.$SaveButton      = this.getButtons('update');
+            this.$StatusButton    = this.getButtons('status');
+            this.$ActionSeparator = this.getButtons('actionSeparator');
 
             this.parent().then(function () {
                 self.addCategory({
@@ -90,16 +99,27 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     2
                 );
 
-                var categories    = self.getCategoryBar().getChildren();
+                var categories = self.getCategoryBar().getChildren();
+
                 var resetMinimize = function (Category) {
                     if (Category.getAttribute('name') === 'variants') {
                         return;
                     }
 
                     self.maximizeCategory();
+
+                    self.$SaveButton.show();
+                    self.$StatusButton.show();
+
+                    self.$SaveButton.show();
+                    self.$StatusButton.show();
+                    self.$ActionSeparator.show();
+
                     self.$VariantFields.hide();
                     self.$CurrentVariant = null;
+
                     self.getElm().removeClass('quiqqer-products-panel-show-variant');
+                    self.refresh();
                 };
 
                 for (var i = 0, len = categories.length; i < len; i++) {
@@ -152,12 +172,14 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          * Update the product or the variant
          */
         update: function () {
+            // parent product handling
             if (!this.$CurrentVariant) {
                 return this.parent();
             }
 
+            // variant handling
             this.Loader.show();
-            
+
             var self        = this;
             var VariantBody = this.getBody().getElement('.variant-body');
 
@@ -194,13 +216,15 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         },
 
         /**
-         *
+         * event reaction to the variant status change
          */
         $onActivationStatusChange: function () {
+            // parent product handling
             if (!this.$CurrentVariant) {
                 return this.parent();
             }
 
+            // variant handling
             var self   = this,
                 Button = this.getButtons('status');
 
@@ -218,7 +242,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 if (Button.getStatus()) {
                     return self.$CurrentVariant.activate();
                 }
-            });
+            }).then(this.refresh).catch(this.refresh);
         },
 
         //region variant management
@@ -236,7 +260,11 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             var self = this,
                 Body = self.getBody();
 
-            self.$VariantFields.show();
+            this.$VariantFields.show();
+
+            this.$SaveButton.hide();
+            this.$StatusButton.hide();
+            this.$ActionSeparator.hide();
 
             return self.$hideCategories().then(function () {
                 var VariantSheet = Body.getElement('.variants-sheet');
@@ -575,6 +603,13 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 self.$VariantTabBar.firstChild().click();
 
                 return self.$showCategory(VariantSheet);
+            }).then(function () {
+                self.$SaveButton.setAttribute('text', 'Save Variant');
+                self.$StatusButton.setAttribute('text', 'Variant is deactivated');
+
+                self.$ActionSeparator.show();
+                self.$SaveButton.show();
+                self.$StatusButton.show();
             });
         },
 
