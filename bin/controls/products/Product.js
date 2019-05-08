@@ -1292,11 +1292,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 return new Promise(function (resolve) {
                     require([Field.jsControl], function (Control) {
                         var Instance = new Control();
-/*
-                        Container.setStyles({
-                            height: '100%'
-                        });
-*/
+                        /*
+                                                Container.setStyles({
+                                                    height: '100%'
+                                                });
+                        */
                         if (Field.help !== '') {
                             var HelpContainer = new Element('div', {
                                 html   : '<span class="fa fa-question"></span><span>' + Field.help + '</span>',
@@ -1859,6 +1859,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
         /**
          * Saves the product data
+         *
          * @returns {Promise}
          */
         update: function () {
@@ -2021,7 +2022,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             Prom.then(function () {
                 return self.update();
-
             }).then(function () {
                 if (Button.getStatus()) {
                     return self.$Product.activate();

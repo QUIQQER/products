@@ -37,7 +37,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             'openVariantTab',
             'openVariantAttributeSettings',
             'openVariantGenerating',
-            'addVariant'
+            'addVariant',
+            '$onActivationStatusChange'
         ],
 
         options: {
@@ -97,6 +98,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                     self.maximizeCategory();
                     self.$VariantFields.hide();
+                    self.$CurrentVariant = null;
                     self.getElm().removeClass('quiqqer-products-panel-show-variant');
                 };
 
@@ -154,6 +156,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return this.parent();
             }
 
+            this.Loader.show();
+            
             var self        = this;
             var VariantBody = this.getBody().getElement('.variant-body');
 
@@ -178,15 +182,46 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     fields['field-' + entry.id] = entry.value;
                 }
 
-                console.log(fields);
                 return Products.updateChild(
                     self.$CurrentVariant.getId(),
                     categories,
                     category,
                     fields
                 );
+            }).then(function () {
+                self.Loader.hide();
             });
         },
+
+        /**
+         *
+         */
+        $onActivationStatusChange: function () {
+            if (!this.$CurrentVariant) {
+                return this.parent();
+            }
+
+            var self   = this,
+                Button = this.getButtons('status');
+
+            Button.disable();
+
+            var Prom = Promise.resolve();
+
+            if (!Button.getStatus()) {
+                Prom = this.$CurrentVariant.deactivate();
+            }
+
+            return Prom.then(function () {
+                return self.update();
+            }).then(function () {
+                if (Button.getStatus()) {
+                    return self.$CurrentVariant.activate();
+                }
+            });
+        },
+
+        //region variant management
 
         /**
          * Open variants
@@ -562,6 +597,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             this.openVariantTab(Active);
         },
+
+        //endregion
 
         //region variant generating
 
