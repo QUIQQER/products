@@ -1192,7 +1192,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             var self = this;
 
             return this.$hideCategories().then(function () {
-                return self.$renderFolderViewer(self.$Media, self.$Product);
+                return self.$renderFolderViewer(self.$Media, self.$Product, ['image']);
             }).then(function (Viewer) {
                 Viewer.refresh();
 
@@ -1213,7 +1213,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             var self = this;
 
             return this.$hideCategories().then(function () {
-                return self.$renderFolderViewer(self.$Files, self.$Product);
+                return self.$renderFolderViewer(self.$Files, self.$Product, ['file']);
             }).then(function (Viewer) {
                 Viewer.refresh();
 
@@ -1225,9 +1225,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @param Container
          * @param Product
+         * @param {Array} types
          * @return {Promise}
          */
-        $renderFolderViewer: function (Container, Product) {
+        $renderFolderViewer: function (Container, Product, types) {
             var self = this;
 
             Container.set('html', '');
@@ -1237,7 +1238,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     folderUrl    : self.$productFolder,
                     Parent       : Folder,
                     newFolderName: Product.getId(),
-                    filetype     : ['file'],
+                    filetype     : types,
                     autoactivate : true
                 }).inject(Container);
 
@@ -1295,11 +1296,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 return new Promise(function (resolve) {
                     require([Field.jsControl], function (Control) {
                         var Instance = new Control();
-                        /*
-                                                Container.setStyles({
-                                                    height: '100%'
-                                                });
-                        */
+
                         if (Field.help !== '') {
                             var HelpContainer = new Element('div', {
                                 html   : '<span class="fa fa-question"></span><span>' + Field.help + '</span>',

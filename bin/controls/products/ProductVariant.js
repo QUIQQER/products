@@ -687,15 +687,28 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return this.$openVariantPrices().then(done);
             }
 
+            if (name === 'images') {
+                return this.$openVariantFolderViewer(['image']).then(done);
+            }
+
+            if (name === 'files') {
+                return this.$openVariantFolderViewer(['file']).then(done);
+            }
+
             var self    = this,
                 fieldId = Tab.getAttribute('fieldId'),
                 Product = this.$CurrentVariant;
 
+            if (!fieldId) {
+                console.log('missing');
+                console.log(name);
+
+                return Promise.resolve().then(done);
+            }
+
             return this.$hideTabContent().then(function (Content) {
                 return self.$renderField(Content, Product, fieldId);
             }).then(function () {
-
-
                 return self.$showTabContent();
             }).then(done);
         },
@@ -724,6 +737,22 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             return this.$hideTabContent().then(function (Content) {
                 return self.$renderPrices(Content, self.$CurrentVariant);
+            }).then(function () {
+                return self.$showTabContent();
+            });
+        },
+
+        /**
+         * Opens the variant folder viewer
+         *
+         * @param {Array} types
+         * @return {Promise<T | never>|*}
+         */
+        $openVariantFolderViewer: function (types) {
+            var self = this;
+
+            return this.$hideTabContent().then(function (Content) {
+                return self.$renderFolderViewer(Content, self.$CurrentVariant, types);
             }).then(function () {
                 return self.$showTabContent();
             });
