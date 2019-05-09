@@ -19,7 +19,8 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwriteableFie
         Type   : 'package/quiqqer/products/bin/controls/products/variants/OverwriteableFieldListWindow',
 
         Binds: [
-            '$onOpen'
+            '$onOpen',
+            '$onSubmit'
         ],
 
         options: {

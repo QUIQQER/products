@@ -1565,7 +1565,7 @@
 
         <locale name="variants.generating.window.description">
             <de><![CDATA[
-            Bestimm aus welchen Felder neue Varianten generiert werden sollen.
+            Bestimme aus welchen Felder neue Varianten generiert werden sollen.
             Varianten können aus Attributgruppen und Auswahllisten generiert werden.
             ]]></de>
             <en><![CDATA[
@@ -1597,6 +1597,29 @@
         <locale name="panel.variants.overwriteable.button.title">
             <de><![CDATA[Überschreibbare Felder für Varianten festlegen]]></de>
             <en><![CDATA[Define Overwritable Fields for Variants]]></en>
+        </locale>
+
+        <locale name="variants.addVariant.window.title">
+            <de><![CDATA[Variante hinzufügen]]></de>
+            <en><![CDATA[Add Variant]]></en>
+        </locale>
+        <locale name="variants.addVariant.window.text">
+            <de><![CDATA[Einzelne Variante hinzufügen]]></de>
+            <en><![CDATA[Add single Variant]]></en>
+        </locale>
+        <locale name="variants.addVariant.window.information">
+            <de><![CDATA[
+                Möchten Sie eine einzelne Variante für dieses Produkt hinzufügen?
+                Die neue Variante ist inaktiv und kann nach dem Anlegen bearbeitet werden.
+            ]]></de>
+            <en><![CDATA[
+                Would you like to add a single variant for this product?
+                The new variant is inactive and can be edited after it has been created.
+            ]]></en>
+        </locale>
+        <locale name="variants.addVariant.window.button">
+            <de><![CDATA[Variante anlegen]]></de>
+            <en><![CDATA[Create Variant]]></en>
         </locale>
     </groups>
 

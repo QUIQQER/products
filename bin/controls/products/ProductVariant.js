@@ -1,8 +1,15 @@
 /**
- *
+ * Variant Panel
+ * this panel shows additional variant stuff
  *
  * @module package/quiqqer/products/bin/controls/products/ProductVariant
  * @author www.pcsg.de (Henning Leutz)
+ *
+ * @todo locale
+ * @todo locale en prüfen
+ * @todo grid blätter funktion
+ * @todo varianten aktivieren über das grid (auch mehrfach)
+ * @todo varianten deaktivieren über das grid (auch mehrfach)
  */
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
@@ -527,14 +534,16 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 var i, len, name, title, fieldId, variant, Category;
                 var vId, vTitle, vProductNo;
 
+                var productNumberFilter = function (field) {
+                    return field.id === Fields.FIELD_PRODUCT_NO;
+                };
+
                 for (i = 0, len = variants.length; i < len; i++) {
                     variant = variants[i];
 
                     vId        = variant.id;
                     vTitle     = variant.title;
-                    vProductNo = variant.fields.filter(function (field) {
-                        return field.id === Fields.FIELD_PRODUCT_NO;
-                    });
+                    vProductNo = variant.fields.filter(productNumberFilter);
 
                     title = 'Zu Variante wechseln: '; // #locale
                     title = title + vId;
@@ -638,7 +647,21 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         //region variant generating
 
         addVariant: function () {
-            alert('not implemented');
+            var self = this;
+
+            require([
+                'package/quiqqer/products/bin/controls/products/variants/AddVariantWindow'
+            ], function (Window) {
+                new Window({
+                    productId: self.getAttribute('productId'),
+                    events   : {
+                        onVariantCreation: function (variantId) {
+                            //self.refreshVariantGrid();
+                            self.selectVariant(variantId);
+                        }
+                    }
+                }).open();
+            });
         },
 
         /**
