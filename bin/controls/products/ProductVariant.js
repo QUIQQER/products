@@ -284,7 +284,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 VariantSheet.set('html', '');
 
-                var Container = new Element('div.variant-list-variantListContainer').inject(VariantSheet);
+                var LC        = new Element('div.variant-list-variantListContainer').inject(VariantSheet);
+                var Container = new Element('div').inject(LC);
 
                 self.$Grid = new Grid(Container, {
                     pagination : true,
@@ -368,6 +369,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return self.$showCategory(VariantSheet);
             }).then(function () {
                 self.getCategory('variants').setActive();
+
+                console.warn(Body.getElement('.variants-sheet').getSize().y);
 
                 return self.$Grid.setHeight(
                     Body.getElement('.variants-sheet').getSize().y - 40
