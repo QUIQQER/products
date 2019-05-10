@@ -81,7 +81,7 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
         },
 
         /**
-         * Saves the overwriteable fields to the product
+         * Saves the overwritable fields to the product
          *
          * @return {Promise}
          */

@@ -213,11 +213,11 @@ class Model extends QUI\QDOM
             }
         }
 
-        // overwriteable Variant Fields
-        if (!empty($product['overwriteableVariantFields']) && is_string($product['overwriteableVariantFields'])) {
+        // overwritable Variant Fields
+        if (!empty($product['overwritableVariantFields']) && is_string($product['overwritableVariantFields'])) {
             $this->setAttribute(
-                'overwriteableVariantFields',
-                \json_decode($product['overwriteableVariantFields'], true)
+                'overwritableVariantFields',
+                \json_decode($product['overwritableVariantFields'], true)
             );
         }
 

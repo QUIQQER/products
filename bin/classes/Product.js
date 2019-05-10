@@ -469,6 +469,21 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * Return the overwritable fields of this product
+         * Makes only sense if the product is a parent product
+         *
+         * @return {Promise}
+         */
+        getOverwritableFields: function () {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_products_variant_getOverwritableFieldList', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId()
+                });
+            }.bind(this));
+        },
+
+        /**
          * Return the categories of the product
          *
          * @returns {Promise}

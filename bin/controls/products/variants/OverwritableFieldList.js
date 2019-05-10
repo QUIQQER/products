@@ -1,8 +1,8 @@
 /**
- * @module package/quiqqer/products/bin/controls/products/OverwriteableFieldList
+ * @module package/quiqqer/products/bin/controls/products/OverwritableFieldList
  * @author www.pcsg.de (Henning Leutz)
  */
-define('package/quiqqer/products/bin/controls/products/variants/OverwriteableFieldList', [
+define('package/quiqqer/products/bin/controls/products/variants/OverwritableFieldList', [
 
     'qui/QUI',
     'qui/controls/Control',
@@ -19,7 +19,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwriteableFie
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/products/variants/OverwriteableFieldList',
+        Type   : 'package/quiqqer/products/bin/controls/products/variants/OverwritableFieldList',
 
         Binds: [
             '$onInject'
@@ -48,9 +48,9 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwriteableFie
             this.parent();
 
             this.$Elm = new Element('div', {
-                'class'   : 'quiqqer-products-variant-overwriteable-fields',
+                'class'   : 'quiqqer-products-variant-overwritable-fields',
                 id        : this.getId(),
-                'data-qui': 'package/quiqqer/products/bin/controls/products/variants/OverwriteableFieldList',
+                'data-qui': 'package/quiqqer/products/bin/controls/products/variants/OverwritableFieldList',
                 styles    : {
                     height: '100%'
                 }
@@ -111,7 +111,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwriteableFie
         },
 
         /**
-         * Saves the overwriteable fields to the product
+         * Saves the overwritable fields to the product
          *
          * @return {Promise}
          */
@@ -125,10 +125,10 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwriteableFie
                     return entry.id;
                 });
 
-                QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveOverwriteableFields', resolve, {
-                    'package'    : 'quiqqer/products',
-                    productId    : self.getAttribute('productId'),
-                    overwriteable: JSON.encode(fields)
+                QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveOverwritableFields', resolve, {
+                    'package'   : 'quiqqer/products',
+                    productId   : self.getAttribute('productId'),
+                    overwritable: JSON.encode(fields)
                 });
             });
         },
@@ -139,16 +139,16 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwriteableFie
         $onInject: function () {
             var self = this;
 
-            QUIAjax.get('package_quiqqer_products_ajax_products_variant_getOverwriteableFieldList', function (result) {
+            QUIAjax.get('package_quiqqer_products_ajax_products_variant_getOverwritableFieldList', function (result) {
                 var i, len, entry, Status;
                 var data = [];
 
-                var overwriteable = result.overwriteable;
+                var overwritable = result.overwritable;
 
                 for (i = 0, len = result.fields.length; i < len; i++) {
                     entry = result.fields[i];
 
-                    if (!overwriteable.length || overwriteable.indexOf(entry.id) === -1) {
+                    if (!overwritable.length || overwritable.indexOf(entry.id) === -1) {
                         Status = new QUISwitch({
                             status: false
                         });

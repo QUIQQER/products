@@ -23,7 +23,7 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
  *
  * @package QUI\ERP\Products\Product\Types
  *
- * @todo erp overwriteable field settings -> Globale default Liste für überschreibbare Felder
+ * @todo erp overwritable field settings -> Globale default Liste für überschreibbare Felder
  */
 class VariantParent extends AbstractType
 {
@@ -282,15 +282,15 @@ class VariantParent extends AbstractType
     {
         QUI\Permissions\Permission::checkPermission('product.edit');
 
-        $fields = $this->getAttribute('overwriteableVariantFields');
+        $fields = $this->getAttribute('overwritableVariantFields');
 
-        if (is_array($fields)) {
-            $overwriteable = [];
+        if (\is_array($fields)) {
+            $overwritable = [];
 
             // check if fields exists
             foreach ($fields as $fieldId) {
                 try {
-                    $overwriteable[] = \QUI\ERP\Products\Handler\Fields::getField($fieldId)->getId();
+                    $overwritable[] = \QUI\ERP\Products\Handler\Fields::getField($fieldId)->getId();
                 } catch (\QUI\Exception $Exception) {
                     \QUI\System\Log::writeDebugException($Exception);
                 }
@@ -298,7 +298,7 @@ class VariantParent extends AbstractType
 
             QUI::getDataBase()->update(
                 QUI\ERP\Products\Utils\Tables::getProductTableName(),
-                ['overwriteableVariantFields' => \json_encode($overwriteable)],
+                ['overwritableVariantFields' => \json_encode($overwritable)],
                 ['id' => $this->getId()]
             );
         }

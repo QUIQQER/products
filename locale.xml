@@ -1543,11 +1543,11 @@
             <en><![CDATA[Use default]]]></en>
         </locale>
 
-        <locale name="variants.OverwriteableFieldList.window.title">
+        <locale name="variants.OverwritableFieldList.window.title">
             <de><![CDATA[Überschreibbare Produktfelder]]></de>
             <en><![CDATA[Overwritable product fields]]></en>
         </locale>
-        <locale name="variants.OverwriteableFieldList.window.description">
+        <locale name="variants.OverwritableFieldList.window.description">
             <de><![CDATA[
             Lege fest welche Felder von den Varianten überschrieben werden können.
             Alle Felder welche nicht von den Varianten überschrieben werden können, werden von dem Eltern-Produkt übernommen.
@@ -1594,7 +1594,7 @@
             <de><![CDATA[Varianten]]></de>
             <en><![CDATA[Variants]]></en>
         </locale>
-        <locale name="panel.variants.overwriteable.button.title">
+        <locale name="panel.variants.overwritable.button.title">
             <de><![CDATA[Überschreibbare Felder für Varianten festlegen]]></de>
             <en><![CDATA[Define Overwritable Fields for Variants]]></en>
         </locale>

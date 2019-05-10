@@ -8,7 +8,7 @@
             <field type="BIGINT(20) NULL">category</field>
             <field type="TEXT NULL">categories</field>
             <field type="LONGTEXT NULL">fieldData</field>
-            <field type="LONGTEXT NULL">overwriteableVariantFields</field>
+            <field type="LONGTEXT NULL">overwritableVariantFields</field>
             <field type="TINYINT(1) DEFAULT 0">active</field>
             <field type="BIGINT(10) NULL">parent</field>
             <field type="TEXT NULL">permissions</field>

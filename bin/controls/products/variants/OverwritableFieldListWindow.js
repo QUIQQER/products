@@ -1,22 +1,22 @@
 /**
- * @module package/quiqqer/products/bin/controls/products/OverwriteableFieldList
+ * @module package/quiqqer/products/bin/controls/products/OverwritableFieldList
  * @author www.pcsg.de (Henning Leutz)
  */
-define('package/quiqqer/products/bin/controls/products/variants/OverwriteableFieldListWindow', [
+define('package/quiqqer/products/bin/controls/products/variants/OverwritableFieldListWindow', [
 
     'qui/QUI',
     'qui/controls/windows/Confirm',
-    'package/quiqqer/products/bin/controls/products/variants/OverwriteableFieldList',
+    'package/quiqqer/products/bin/controls/products/variants/OverwritableFieldList',
     'Ajax',
     'Locale'
 
-], function (QUI, QUIConfirm, OverwriteableFieldList, QUIAjax, QUILocale) {
+], function (QUI, QUIConfirm, OverwritableFieldList, QUIAjax, QUILocale) {
     "use strict";
 
     return new Class({
 
         Extends: QUIConfirm,
-        Type   : 'package/quiqqer/products/bin/controls/products/variants/OverwriteableFieldListWindow',
+        Type   : 'package/quiqqer/products/bin/controls/products/variants/OverwritableFieldListWindow',
 
         Binds: [
             '$onOpen',
@@ -36,7 +36,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwriteableFie
             this.setAttribute('icon', 'fa fa-exchange');
             this.setAttribute(
                 'title',
-                QUILocale.get('quiqqer/products', 'variants.OverwriteableFieldList.window.title')
+                QUILocale.get('quiqqer/products', 'variants.OverwritableFieldList.window.title')
             );
 
             this.$List = null;
@@ -61,7 +61,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwriteableFie
             });
 
             new Element('div', {
-                html  : QUILocale.get('quiqqer/products', 'variants.OverwriteableFieldList.window.description'),
+                html  : QUILocale.get('quiqqer/products', 'variants.OverwritableFieldList.window.description'),
                 styles: {
                     paddingBottom: 20
                 }
@@ -73,7 +73,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwriteableFie
                 }
             }).inject(this.getContent());
 
-            this.$List = new OverwriteableFieldList({
+            this.$List = new OverwritableFieldList({
                 productId: this.getAttribute('productId'),
                 events   : {
                     onLoad: function () {

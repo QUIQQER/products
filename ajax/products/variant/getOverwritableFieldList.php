@@ -1,11 +1,10 @@
 <?php
 
 /**
- * This file contains package_quiqqer_products_ajax_products_variant_getOverwriteableFieldList
+ * This file contains package_quiqqer_products_ajax_products_variant_getOverwritableFieldList
  */
 
 use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Products\Product\Types\VariantParent;
 
 /**
  * Activate a product
@@ -13,12 +12,12 @@ use QUI\ERP\Products\Product\Types\VariantParent;
  * @param integer $productId - Product-ID
  */
 QUI::$Ajax->registerFunction(
-    'package_quiqqer_products_ajax_products_variant_getOverwriteableFieldList',
+    'package_quiqqer_products_ajax_products_variant_getOverwritableFieldList',
     function ($productId) {
-        $Product       = Products::getProduct($productId);
-        $overwriteable = $Product->getAttribute('overwriteableVariantFields');
+        $Product      = Products::getProduct($productId);
+        $overwritable = $Product->getAttribute('overwritableVariantFields');
 
-        if ($overwriteable === false) {
+        if ($overwritable === false) {
             // @todo get erp fields
         }
 
@@ -31,7 +30,7 @@ QUI::$Ajax->registerFunction(
 
 
         return [
-            'overwriteable' => $overwriteable,
+            'overwritable' => $overwritable,
             'fields'        => $fields
         ];
     },
