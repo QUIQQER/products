@@ -8,10 +8,7 @@
  * @todo locale
  * @todo locale en prüfen
  * @todo grid blätter funktion
- * @todo varianten aktivieren über das grid (auch mehrfach)
- * @todo varianten deaktivieren über das grid (auch mehrfach)
  * @todo nicht überschreibbare felder disablen
- * @todo kategorien bei varianten raus
  */
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
@@ -390,7 +387,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         self.$Menu.appendChild(
                             new QUIContextMenuItem({
                                 text  : 'Alle markierten Varianten deaktivieren',
-                                icon  : 'fa fa-cancel',
+                                icon  : 'fa fa-close',
                                 events: {
                                     onClick: self.$deactivateVariants
                                 }
@@ -842,6 +839,17 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             return this.$hideTabContent().then(function (Content) {
                 return self.$renderData(Content, self.$CurrentVariant);
             }).then(function () {
+                // hide categories
+                var VariantBody = self.getBody().getElement('.variant-body');
+                var Categories  = VariantBody.getElement('[name="categories"]');
+                var Row         = Categories.getParent('tr');
+
+                Row.setStyle('display', 'none');
+
+                // category
+                VariantBody.getElement('[name="product-category"]').disabled = true;
+
+
                 return self.$showTabContent();
             });
         },
