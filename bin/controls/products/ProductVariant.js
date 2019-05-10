@@ -10,6 +10,8 @@
  * @todo grid blätter funktion
  * @todo varianten aktivieren über das grid (auch mehrfach)
  * @todo varianten deaktivieren über das grid (auch mehrfach)
+ * @todo nicht überschreibbare felder disablen
+ * @todo kategorien bei varianten raus
  */
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
@@ -21,7 +23,11 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
     'qui/controls/buttons/Select',
     'qui/controls/toolbar/Bar',
     'qui/controls/toolbar/Tab',
+    'qui/controls/contextmenu/Menu',
+    'qui/controls/contextmenu/Item',
+    'qui/controls/contextmenu/Separator',
     'controls/grid/Grid',
+    'Ajax',
     'Locale',
     'Mustache',
 
@@ -29,7 +35,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
     'css!package/quiqqer/products/bin/controls/products/ProductVariant.css'
 
-], function (QUI, ProductPanel, Product, Fields, Products, QUISelect, QUIBar, QUITab, Grid, QUILocale, Mustache, template) {
+], function (QUI, ProductPanel, Product, Fields, Products,
+             QUISelect, QUIBar, QUITab, QUIContextMenu, QUIContextMenuItem, QUIContextMenuSeparator,
+             Grid, QUIAjax, QUILocale, Mustache, template) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -45,7 +53,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             'openVariantAttributeSettings',
             'openVariantGenerating',
             'addVariant',
-            '$onActivationStatusChange'
+            '$onActivationStatusChange',
+            '$activateVariants',
+            '$deactivateVariants'
         ],
 
         options: {
@@ -59,9 +69,20 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 '#id': "productId" in options ? options.productId : false
             });
 
+            var self = this;
+
             this.parent(options);
 
             this.$Grid = null;
+            this.$Menu = new QUIContextMenu({
+                events: {
+                    onBlur: function () {
+                        (function () {
+                            self.$Menu.hide();
+                        }).delay(200);
+                    }
+                }
+            });
 
             this.$CurrentVariant = null;
             this.$VariantTabBar  = null;
@@ -132,13 +153,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 for (var i = 0, len = categories.length; i < len; i++) {
                     categories[i].addEvent('onClick', resetMinimize);
                 }
-
-                self.addButton({
-                    type  : 'separator',
-                    styles: {
-                        'float': 'right'
-                    }
-                });
 
                 self.addButton({
                     name  : 'variantFields',
@@ -288,10 +302,11 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 var Container = new Element('div').inject(LC);
 
                 self.$Grid = new Grid(Container, {
-                    pagination : true,
-                    width      : VariantSheet.getSize().x - 40,
-                    height     : VariantSheet.getSize().y - 40,
-                    buttons    : [{
+                    pagination       : true,
+                    multipleSelection: true,
+                    width            : VariantSheet.getSize().x - 40,
+                    height           : VariantSheet.getSize().y - 40,
+                    buttons          : [{
                         textimage: 'fa fa-plus',
                         text     : 'Neue Variante',
                         events   : {
@@ -307,7 +322,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                             click: self.openVariantGenerating
                         }
                     }],
-                    columnModel: [{
+                    columnModel      : [{
                         header   : QUILocale.get('quiqqer/system', 'status'),
                         dataIndex: 'status',
                         dataType : 'node',
@@ -358,6 +373,37 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     },
                     onRefresh : function () {
 
+                    },
+
+                    onContextMenu: function (event) {
+                        self.$Menu.clearChildren();
+                        self.$Menu.appendChild(
+                            new QUIContextMenuItem({
+                                text  : 'Alle markierten Varianten aktivieren',
+                                icon  : 'fa fa-check',
+                                events: {
+                                    onClick: self.$activateVariants
+                                }
+                            })
+                        );
+
+                        self.$Menu.appendChild(
+                            new QUIContextMenuItem({
+                                text  : 'Alle markierten Varianten deaktivieren',
+                                icon  : 'fa fa-cancel',
+                                events: {
+                                    onClick: self.$deactivateVariants
+                                }
+                            })
+                        );
+
+                        self.$Menu.inject(document.body);
+                        self.$Menu.setPosition(
+                            event.event.page.x,
+                            event.event.page.y
+                        );
+                        self.$Menu.show();
+                        self.$Menu.focus();
                     }
                 });
 
@@ -369,8 +415,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return self.$showCategory(VariantSheet);
             }).then(function () {
                 self.getCategory('variants').setActive();
-
-                console.warn(Body.getElement('.variants-sheet').getSize().y);
 
                 return self.$Grid.setHeight(
                     Body.getElement('.variants-sheet').getSize().y - 40
@@ -643,6 +687,54 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             });
 
             this.openVariantTab(Active);
+        },
+
+        /**
+         * Deactivate the selected variants
+         */
+        $deactivateVariants: function () {
+            this.Loader.show();
+
+            var self     = this;
+            var selected = this.$Grid.getSelectedData().map(function (entry) {
+                return entry.id;
+            });
+
+            QUIAjax.post('package_quiqqer_products_ajax_products_variant_generate_deactivate', function () {
+                self.refreshVariantGrid();
+                self.Loader.hide();
+            }, {
+                'package' : 'quiqqer/products',
+                variantIds: JSON.encode(selected),
+                onError   : function () {
+                    self.refreshVariantGrid();
+                    self.Loader.hide();
+                }
+            });
+        },
+
+        /**
+         * activate the selected variants
+         */
+        $activateVariants: function () {
+            this.Loader.show();
+
+            var self     = this;
+            var selected = this.$Grid.getSelectedData().map(function (entry) {
+                return entry.id;
+            });
+
+            QUIAjax.post('package_quiqqer_products_ajax_products_variant_generate_activate', function () {
+                self.refreshVariantGrid();
+                self.Loader.hide();
+            }, {
+                'package' : 'quiqqer/products',
+                variantIds: JSON.encode(selected),
+                onError   : function () {
+                    self.refreshVariantGrid();
+                    self.Loader.hide();
+                }
+            });
         },
 
         //endregion

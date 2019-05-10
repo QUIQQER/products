@@ -1621,6 +1621,10 @@
             <de><![CDATA[Variante anlegen]]></de>
             <en><![CDATA[Create Variant]]></en>
         </locale>
+        <locale name="panel.variants.backToList.button.title">
+            <de><![CDATA[Zurück zur Verianten Liste]]></de>
+            <en><![CDATA[Back to the variant list]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="php">
