@@ -9,7 +9,6 @@
  * @todo locale en prüfen
  * @todo grid blätter funktion
  *
- * @todo nicht überschreibbare controls disablen
  * @todo wenn nicht überschr. felder geändert werden, refresh des aktuellen tabs
  */
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
