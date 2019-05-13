@@ -634,7 +634,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 VariantSheet.set('html', Mustache.render(template));
             }).then(function () {
                 return self.$Product.getVariants();
-            }).then(function (variants) {
+            }).then(function (result) {
+                var variants = result.data;
+
                 var VariantSheet = Body.getElement('.variants-sheet');
                 var VariantList  = Body.getElement('.variant-list');
                 var VariantTabs  = Body.getElement('.variants-tabs');
@@ -671,9 +673,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     vTitle     = variant.title;
                     vProductNo = variant.fields.filter(productNumberFilter);
 
-                    title = QUILocale.get(lg, 'panel.variants.switchTo');
+                    title = QUILocale.get(lg, 'panel.variants.switchTo') + ' <b>';
                     title = title + vId;
-                    title = title + ' - ' + vTitle;
+                    title = title + ' - ' + vTitle +'</b>';
 
                     if (vProductNo && vProductNo.length && vProductNo[0].value) {
                         title = title + ' - ' + vProductNo[0].value;
