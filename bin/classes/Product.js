@@ -571,11 +571,12 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @return {Promise}
          */
-        getVariants: function () {
+        getVariants: function (options) {
             return new Promise(function (resolve) {
                 Ajax.get('package_quiqqer_products_ajax_products_variant_getVariants', resolve, {
                     'package': 'quiqqer/products',
-                    productId: this.getId()
+                    productId: this.getId(),
+                    options  : JSON.encode(options)
                 });
             }.bind(this));
         }

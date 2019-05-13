@@ -6,6 +6,7 @@
 
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Types\VariantParent;
+use QUI\Utils\Grid;
 
 /**
  * Activate a product
@@ -14,22 +15,40 @@ use QUI\ERP\Products\Product\Types\VariantParent;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_variant_getVariants',
-    function ($productId) {
+    function ($productId, $options) {
         $Product = Products::getProduct($productId);
+        $options = \json_decode($options, true);
+
+        $page = 1;
+
+        if (isset($options['page'])) {
+            $page = (int)$options['page'];
+        }
 
         /* @var $Product VariantParent */
         if (!($Product instanceof VariantParent)) {
             return [];
         }
 
-        $variants = $Product->getVariants();
-        $variants = array_map(function ($Variant) {
+        $Grid    = new QUI\Utils\Grid();
+        $options = $Grid->parseDBParams($options);
+
+        $variants = $Product->getVariants($options);
+        $variants = \array_map(function ($Variant) {
             /* @var $Variant \QUI\ERP\Products\Product\Types\VariantChild */
             return $Variant->getAttributes();
         }, $variants);
 
-        return $variants;
+        // count
+        $options['count'] = true;
+        $count            = $Product->getVariants($options);
+
+        return [
+            'data'  => $variants,
+            'page'  => $page,
+            'total' => $count
+        ];
     },
-    ['productId'],
+    ['productId', 'options'],
     'Permission::checkAdminUser'
 );

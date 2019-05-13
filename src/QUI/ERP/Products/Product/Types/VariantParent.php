@@ -93,24 +93,64 @@ class VariantParent extends AbstractType
     /**
      * Return all variants
      *
-     * @return QUI\ERP\Products\Product\Types\VariantChild[]
+     * @param array $params - query params
+     * @return QUI\ERP\Products\Product\Types\VariantChild[]|integer
      *
      * @todo cache
      */
-    public function getVariants()
+    public function getVariants($params = [])
     {
         try {
-            $result = QUI::getDataBase()->fetch([
+            $query = [
                 'select' => ['id', 'parent'],
                 'from'   => Tables::getProductTableName(),
                 'where'  => [
                     'parent' => $this->getId()
                 ]
-            ]);
+            ];
+
+            if (isset($params['limit'])) {
+                $query['limit'] = $params['limit'];
+            }
+
+            if (isset($params['order'])) {
+                switch (\mb_strtolower($params['order'])) {
+                    case 'active':
+                    case 'active asc':
+                    case 'active desc':
+                    case 'id':
+                    case 'id asc':
+                    case 'id desc':
+                    case 'c_date':
+                    case 'c_date asc':
+                    case 'c_date desc':
+                    case 'e_date':
+                    case 'e_date asc':
+                    case 'e_date desc':
+                        $query['order'] = $params['order'];
+                }
+            }
+
+            if (isset($params['count'])) {
+                unset($query['select']);
+                unset($query['limit']);
+                unset($query['order']);
+
+                $query['count'] = [
+                    'select' => 'id',
+                    'as'     => 'count'
+                ];
+            }
+
+            $result = QUI::getDataBase()->fetch($query);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
             return [];
+        }
+
+        if (isset($params['count'])) {
+            return (int)$result[0]['count'];
         }
 
         $variants = [];

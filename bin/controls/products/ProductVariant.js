@@ -5,9 +5,7 @@
  * @module package/quiqqer/products/bin/controls/products/ProductVariant
  * @author www.pcsg.de (Henning Leutz)
  *
- * @todo grid blätter funktion
- * @todo produkt bilder -> eigener folder
- * @todo produkt dateien -> eigener folder
+ * @todo blätterfunktion bei überschreibbare produktfelder
  */
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
@@ -55,7 +53,11 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         ],
 
         options: {
-            productId: false
+            productId: false,
+            sortOn   : false,
+            sortBy   : false,
+            perPage  : 150,
+            page     : false
         },
 
         initialize: function (options) {
@@ -311,6 +313,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     multipleSelection: true,
                     width            : VariantSheet.getSize().x - 40,
                     height           : VariantSheet.getSize().y - 40,
+                    perPage          : self.getAttribute('perPage'),
+                    page             : self.getAttribute('page'),
+                    sortOn           : self.getAttribute('sortOn'),
+                    serverSort       : true,
                     buttons          : [{
                         textimage: 'fa fa-plus',
                         text     : QUILocale.get(lg, 'panel.variants.button.create'),
@@ -341,17 +347,20 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         header   : QUILocale.get(lg, 'productNo'),
                         dataIndex: 'productNo',
                         dataType : 'text',
-                        width    : 100
+                        width    : 100,
+                        sortable : false
                     }, {
                         header   : QUILocale.get('quiqqer/system', 'title'),
                         dataIndex: 'title',
                         dataType : 'text',
-                        width    : 200
+                        width    : 200,
+                        sortable : false
                     }, {
                         header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
                         dataIndex: 'price_netto',
                         dataType : 'text',
-                        width    : 100
+                        width    : 100,
+                        sortable : false
                     }, {
                         header   : QUILocale.get('quiqqer/system', 'editdate'),
                         dataIndex: 'e_date',
@@ -366,7 +375,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         header   : QUILocale.get(lg, 'priority'),
                         dataIndex: 'priority',
                         dataType : 'number',
-                        width    : 60
+                        width    : 60,
+                        sortable : false
                     }]
                 });
 
@@ -378,7 +388,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     },
 
                     onRefresh: function () {
-
+                        self.refreshVariantGrid();
                     },
 
                     onContextMenu: function (event) {
@@ -443,9 +453,22 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return Promise.resolve();
             }
 
-            var self = this;
+            this.Loader.show();
 
-            return this.$Product.getVariants().then(function (variants) {
+            var self    = this,
+                options = this.$Grid.options,
+                sortOn  = options.sortOn;
+
+            if (sortOn === 'status') {
+                sortOn = 'active';
+            }
+
+            return this.$Product.getVariants({
+                perPage: options.perPage,
+                page   : options.page,
+                sortOn : sortOn,
+                sortBy : options.sortBy
+            }).then(function (result) {
                 var needles = [
                     'id', 'title', 'e_date', 'c_date', 'priority'
                 ];
@@ -455,6 +478,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     'price_netto': 1,
                     'priority'   : 18
                 };
+
+                var variants = result.data;
 
                 var i, n, len, nLen, entry, variant, needle, field, fieldId;
                 var data = [];
@@ -505,9 +530,11 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 self.$Grid.setData({
                     data : data,
-                    total: variants.length,
-                    page : 1
+                    total: result.total,
+                    page : result.page
                 });
+
+                self.Loader.hide();
             });
         },
 
