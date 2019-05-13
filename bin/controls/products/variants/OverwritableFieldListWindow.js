@@ -95,6 +95,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
 
             this.$List.save().then(function () {
                 self.close();
+                self.fireEvent('save', [self]);
             }).catch(function () {
                 self.Loader.hide();
             });

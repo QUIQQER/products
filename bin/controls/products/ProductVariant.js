@@ -8,8 +8,6 @@
  * @todo locale
  * @todo locale en prüfen
  * @todo grid blätter funktion
- *
- * @todo wenn nicht überschr. felder geändert werden, refresh des aktuellen tabs
  */
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
@@ -93,6 +91,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             // panel buttons
             this.$SaveButton      = null;
+            this.$CopyButton      = null;
             this.$StatusButton    = null;
             this.$ActionSeparator = null;
         },
@@ -106,6 +105,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             this.$SaveButton      = this.getButtons('update');
             this.$StatusButton    = this.getButtons('status');
             this.$ActionSeparator = this.getButtons('actionSeparator');
+            this.$CopyButton      = this.getButtons('copy');
 
             this.parent().then(function () {
                 self.addCategory({
@@ -138,10 +138,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                     self.$SaveButton.show();
                     self.$StatusButton.show();
-
-                    self.$SaveButton.show();
-                    self.$StatusButton.show();
+                    self.$CopyButton.show();
                     self.$ActionSeparator.show();
+                    self.$CopyButton.show();
 
                     self.$VariantFields.hide();
                     self.$CurrentVariant = null;
@@ -288,20 +287,12 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             this.$SaveButton.hide();
             this.$StatusButton.hide();
             this.$ActionSeparator.hide();
+            this.$CopyButton.hide();
 
             return Promise.all([
-                self.$hideCategories(),
-                this.$Product.getOverwritableFields()
-            ]).then(function (result) {
-                // parse fields
-                var of = result[1].overwritable;
-
-                self.$overwritableFields = {};
-
-                for (var i = 0, len = of.length; i < len; i++) {
-                    self.$overwritableFields[of[i]] = true;
-                }
-
+                this.$hideCategories(),
+                this.refreshProductOverwritableFields()
+            ]).then(function () {
                 var VariantSheet = Body.getElement('.variants-sheet');
 
                 if (!VariantSheet) {
@@ -429,6 +420,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return self.$showCategory(VariantSheet);
             }).then(function () {
                 self.getCategory('variants').setActive();
+                self.Loader.hide();
 
                 return self.$Grid.setHeight(
                     Body.getElement('.variants-sheet').getSize().y - 40
@@ -515,6 +507,27 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         },
 
         /**
+         * Refresh the overwritable field list of the parent product
+         *
+         * @return {Promise}
+         */
+        refreshProductOverwritableFields: function () {
+            var self = this;
+
+            return this.$Product.getOverwritableFields().then(function (result) {
+                // parse fields
+                var of  = result.overwritable,
+                    len = of.length;
+
+                self.$overwritableFields = {};
+
+                for (var i = 0; i < len; i++) {
+                    self.$overwritableFields[of[i]] = true;
+                }
+            });
+        },
+
+        /**
          * Opens the variant attribute inheritance setting window for this product
          *
          * @return {Promise}
@@ -527,7 +540,26 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     'package/quiqqer/products/bin/controls/products/variants/OverwritableFieldListWindow'
                 ], function (Window) {
                     new Window({
-                        productId: self.getAttribute('productId')
+                        productId: self.getAttribute('productId'),
+                        events   : {
+                            onSave: function () {
+                                if (!self.$CurrentVariant) {
+                                    return;
+                                }
+
+                                // refresh current variant
+                                var variantId = self.$CurrentVariant.getId();
+
+                                self.Loader.show();
+                                self.$CurrentVariant = null;
+
+                                self.refreshProductOverwritableFields().then(function () {
+                                    return self.selectVariant(variantId);
+                                }).then(function () {
+                                    self.Loader.hide();
+                                });
+                            }
+                        }
                     }).open();
 
                     resolve();
@@ -536,8 +568,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         },
 
         /**
+         * Opens / Select a wanted variant
          *
-         * @param variantId
+         * @param {Number} variantId - Variant ID
          * @return {Promise}
          */
         selectVariant: function (variantId) {
@@ -762,6 +795,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
         //region variant generating
 
+        /**
+         * Opens the add variant dialog
+         */
         addVariant: function () {
             var self = this;
 
@@ -871,6 +907,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 var Row         = Categories.getParent('tr');
 
                 Row.setStyle('display', 'none');
+                VariantBody.getElements('[name="edit-fields"]').setStyle('display', 'none');
 
                 // category
                 el          = VariantBody.getElement('[name="product-category"]');
@@ -927,11 +964,15 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 el = Form.elements['field-' + fieldId];
 
-                if (typeof Form.elements['field-' + fieldId] === 'undefined') {
+                if (!el || typeof el === 'undefined') {
                     continue;
                 }
 
-                el.disabled = false;
+                if (typeof el.getParent !== 'function') {
+                    el = new Elements(el);
+                }
+
+                el.set('disabled', false);
                 el.getParent('tr').removeClass('variant-field-disabled');
             }
         },
