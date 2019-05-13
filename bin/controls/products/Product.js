@@ -1226,23 +1226,43 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param Container
          * @param Product
          * @param {Array} types
+         * @param {Number} [fileId]
          * @return {Promise}
          */
-        $renderFolderViewer: function (Container, Product, types) {
+        $renderFolderViewer: function (Container, Product, types, fileId) {
             var self = this;
 
             Container.set('html', '');
 
-            return Products.getParentFolder().then(function (Folder) {
+            if (typeof fileId === 'undefined') {
+                fileId = Fields.FIELD_FOLDER;
+            }
+
+            return Promise.all([
+                Products.getParentFolder(),
+                Product.getFields()
+            ]).then(function (result) {
+                var Folder        = result[0];
+                var fields        = result[1];
+                var productFolder = false;
+
+                var folderFields = fields.filter(function (field) {
+                    return parseInt(field.id) === parseInt(Fields.FIELD_FOLDER);
+                });
+
+                if (folderFields.length) {
+                    productFolder = folderFields[0].value;
+                }
+
                 var Viewer = new FolderViewer({
-                    folderUrl    : self.$productFolder,
+                    folderUrl    : productFolder,
                     Parent       : Folder,
                     newFolderName: Product.getId(),
                     filetype     : types,
                     autoactivate : true
                 }).inject(Container);
 
-                if (!self.$productFolder) {
+                if (!productFolder) {
                     Viewer.hide();
 
                     var ButtonContainer = new Element('div', {
@@ -1258,7 +1278,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             margin: '20px 0 0 0'
                         },
                         events   : {
-                            onClick: self.$onCreateMediaFolderClick
+                            onClick: function (Button) {
+                                self.$onCreateMediaFolderClick(Button, Product, Viewer, fileId);
+                            }
                         }
                     }).inject(ButtonContainer);
                 }
@@ -1358,7 +1380,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                                 self.Loader.show();
 
-                                self.$createMediaFolder(Field.id).then(function () {
+                                self.$createMediaFolder(Field.id, self.$Product).then(function () {
                                     self.getElm().getElements('.folder-missing-container').destroy();
                                     self.openMediaFolderField(Field.id);
                                 });
@@ -2259,15 +2281,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * Create the media folder for the product
          *
          * @param {Number|Boolean} [fieldId] - Media Folder Field-ID
+         * @param {Object} Product - Media Folder Field-ID
          * @return {Promise}
          */
-        $createMediaFolder: function (fieldId) {
+        $createMediaFolder: function (fieldId, Product) {
             var self = this;
 
             this.Loader.hide();
 
-            return this.$Product.createMediaFolder(fieldId).then(function () {
-                return self.$Product.getFields();
+            return Product.createMediaFolder(fieldId).then(function () {
+                return Product.getFields();
             }).then(function (productFields) {
                 var wantedId = fieldId || Fields.FIELD_FOLDER;
 
@@ -2275,22 +2298,26 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     return parseInt(field.id) === parseInt(wantedId);
                 });
 
-                if (!folder.length) {
-                    return self.Loader.hide();
+                self.Loader.hide();
+
+                if (folder.length) {
+                    return folder[0].value;
                 }
 
-                self.$data[wantedId] = folder[0];
+                return false;
 
-                self.$FileViewer.setAttribute('folderUrl', folder[0].value);
-                self.$ImageViewer.setAttribute('folderUrl', folder[0].value);
-
-                self.$ImageViewer.refresh();
-                self.$ImageViewer.show();
-
-                self.$FileViewer.refresh();
-                self.$FileViewer.show();
+                // self.$data[wantedId] = folder[0];
+                // self.$FileViewer.setAttribute('folderUrl', folder[0].value);
+                // self.$ImageViewer.setAttribute('folderUrl', folder[0].value);
+                //
+                // self.$ImageViewer.refresh();
+                // self.$ImageViewer.show();
+                //
+                // self.$FileViewer.refresh();
+                // self.$FileViewer.show();
 
                 // image fields
+                /*
                 var images = self.getElm().getElements(
                     '[data-qui="package/quiqqer/products/bin/controls/fields/types/Image"]'
                 );
@@ -2303,8 +2330,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         Control.setAttribute('productFolder', folder[0].value);
                     }
                 });
-
-                self.Loader.hide();
+                */
             });
         },
 
@@ -2312,13 +2338,22 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * event: click at create media folder
          *
          * @param {Object} Button - qui button
+         * @param {Object} Product
+         * @param {Object} Viewer - folder viewer
+         * @param {Number} fileId
          */
-        $onCreateMediaFolderClick: function (Button) {
+        $onCreateMediaFolderClick: function (Button, Product, Viewer, fileId) {
             var self = this;
 
             Button.setAttribute('textimage', 'fa fa-spinner fa-spin');
 
-            this.$createMediaFolder().then(function () {
+            this.$createMediaFolder(fileId, Product).then(function (folder) {
+                if (folder) {
+                    Viewer.setAttribute('folderUrl', folder);
+                    Viewer.refresh();
+                    Viewer.show();
+                }
+
                 self.getElm().getElements('.folder-missing-container').destroy();
             });
         }

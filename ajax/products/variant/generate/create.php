@@ -23,7 +23,6 @@ QUI::$Ajax->registerFunction(
         }
 
         $Variant = $Product->createVariant();
-        $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO)->setValue('');
         $Variant->save();
 
         return $Variant->getId();

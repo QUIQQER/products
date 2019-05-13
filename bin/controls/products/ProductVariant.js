@@ -1038,13 +1038,14 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          * Opens the variant folder viewer
          *
          * @param {Array} types
+         * @param {Number} [fileId]
          * @return {Promise}
          */
-        $openVariantFolderViewer: function (types) {
+        $openVariantFolderViewer: function (types, fileId) {
             var self = this;
 
             return this.$hideTabContent().then(function (Content) {
-                return self.$renderFolderViewer(Content, self.$CurrentVariant, types);
+                return self.$renderFolderViewer(Content, self.$CurrentVariant, types, fileId);
             }).then(function () {
                 return self.$showTabContent();
             });

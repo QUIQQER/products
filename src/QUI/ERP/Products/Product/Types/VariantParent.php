@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Product\Types;
 
 use QUI;
+use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Tables;
@@ -264,6 +265,9 @@ class VariantParent extends AbstractType
             $Variant->addField($Field);
         }
 
+        $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO)->setValue('');
+        $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_FOLDER)->setValue('');
+        $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_IMAGE)->setValue('');
         $Variant->save();
 
         return $Variant;
