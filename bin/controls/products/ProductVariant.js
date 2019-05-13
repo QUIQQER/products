@@ -8,7 +8,6 @@
  * @todo grid blätter funktion
  * @todo produkt bilder -> eigener folder
  * @todo produkt dateien -> eigener folder
- * @todo wenn nichts markiert, dann kein context menu
  */
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
@@ -377,11 +376,16 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                             self.$Grid.getSelectedData()[0].id
                         );
                     },
-                    onRefresh : function () {
+
+                    onRefresh: function () {
 
                     },
 
                     onContextMenu: function (event) {
+                        if (!self.$Grid.getSelectedIndices().length) {
+                            return;
+                        }
+
                         self.$Menu.clearChildren();
                         self.$Menu.appendChild(
                             new QUIContextMenuItem({
