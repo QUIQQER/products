@@ -8,6 +8,7 @@
  * @todo grid blätter funktion
  * @todo produkt bilder -> eigener folder
  * @todo produkt dateien -> eigener folder
+ * @todo wenn nichts markiert, dann kein context menu
  */
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
@@ -650,9 +651,11 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     VariantSelect.appendChild(title, variant.id);
                 }
 
-                VariantSelect.setValue(
-                    VariantSelect.firstChild().getAttribute('value')
-                );
+                if (typeof variantId === 'undefined') {
+                    variantId = VariantSelect.firstChild().getAttribute('value');
+                }
+
+                VariantSelect.setValue(variantId);
 
 
                 // tabs
@@ -714,27 +717,28 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 return self.$showCategory(VariantSheet);
             }).then(function () {
+                return self.$refreshStatusButton();
+            }).then(function () {
                 self.$SaveButton.setAttribute('text', QUILocale.get(lg, 'panel.variants.save'));
-
-                if (self.$StatusButton.getStatus()) {
-                    self.$StatusButton.setAttribute('text', QUILocale.get(lg, 'panel.variants.activated'));
-                } else {
-                    self.$StatusButton.setAttribute('text', QUILocale.get(lg, 'panel.variants.deactivated'));
-                }
+                self.$SaveButton.show();
 
                 self.$ActionSeparator.show();
-                self.$SaveButton.show();
+
                 self.$StatusButton.show();
+                self.$StatusButton.enable();
+                self.$StatusButton.resize();
             });
         },
 
         /**
          * on variant change
+         *
          * @param variantId
+         * @return {Promise}
          */
         $changeVariant: function (variantId) {
             if (this.$VariantTabBar === null) {
-                return;
+                return Promise.resolve();
             }
 
             var Active = this.$VariantTabBar.getChildren().filter(function (Tab) {
@@ -745,7 +749,32 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 id: variantId
             });
 
-            this.openVariantTab(Active);
+            // check buttons
+            return this.$refreshStatusButton().then(function () {
+                return this.openVariantTab(Active);
+            }.bind(this));
+        },
+
+        /**
+         * Refresh status button
+         *
+         * @return {Promise}
+         */
+        $refreshStatusButton: function () {
+            var self = this;
+
+            return this.$CurrentVariant.isActive().then(function (isActive) {
+                self.$StatusButton.enable();
+                self.$StatusButton.resize();
+
+                if (isActive) {
+                    self.$StatusButton.setSilentOn();
+                    self.$StatusButton.setAttribute('text', QUILocale.get(lg, 'panel.variants.activated'));
+                } else {
+                    self.$StatusButton.setSilentOff();
+                    self.$StatusButton.setAttribute('text', QUILocale.get(lg, 'panel.variants.deactivated'));
+                }
+            });
         },
 
         /**
@@ -857,7 +886,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             var done = function () {
                 this.Loader.hide();
             }.bind(this);
-
 
             if (name === 'data') {
                 return this.$openVariantData().then(done);
