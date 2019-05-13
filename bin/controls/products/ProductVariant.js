@@ -5,9 +5,9 @@
  * @module package/quiqqer/products/bin/controls/products/ProductVariant
  * @author www.pcsg.de (Henning Leutz)
  *
- * @todo locale
- * @todo locale en prüfen
  * @todo grid blätter funktion
+ * @todo produkt bilder -> eigener folder
+ * @todo produkt dateien -> eigener folder
  */
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
@@ -313,13 +313,13 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     height           : VariantSheet.getSize().y - 40,
                     buttons          : [{
                         textimage: 'fa fa-plus',
-                        text     : 'Neue Variante',
+                        text     : QUILocale.get(lg, 'panel.variants.button.create'),
                         events   : {
                             click: self.addVariant
                         }
                     }, {
                         textimage: 'fa fa-magic',
-                        text     : 'Varianten generieren',
+                        text     : QUILocale.get(lg, 'panel.variants.button.generate'),
                         styles   : {
                             'float': 'right'
                         },
@@ -384,7 +384,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         self.$Menu.clearChildren();
                         self.$Menu.appendChild(
                             new QUIContextMenuItem({
-                                text  : 'Alle markierten Varianten aktivieren',
+                                text  : QUILocale.get(lg, 'panel.variants.activate.variants'),
                                 icon  : 'fa fa-check',
                                 events: {
                                     onClick: self.$activateVariants
@@ -394,7 +394,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                         self.$Menu.appendChild(
                             new QUIContextMenuItem({
-                                text  : 'Alle markierten Varianten deaktivieren',
+                                text  : QUILocale.get(lg, 'panel.variants.deactivate.variants'),
                                 icon  : 'fa fa-close',
                                 events: {
                                     onClick: self.$deactivateVariants
@@ -609,7 +609,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
 
                 var VariantSelect = new QUISelect({
-                    placeholder: 'Variante wechseln', // #locale
+                    placeholder: QUILocale.get(lg, 'panel.variants.switch'),
                     showIcons  : false,
                     styles     : {
                         width: '100%'
@@ -639,7 +639,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     vTitle     = variant.title;
                     vProductNo = variant.fields.filter(productNumberFilter);
 
-                    title = 'Zu Variante wechseln: '; // #locale
+                    title = QUILocale.get(lg, 'panel.variants.switchTo');
                     title = title + vId;
                     title = title + ' - ' + vTitle;
 
@@ -714,8 +714,13 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 return self.$showCategory(VariantSheet);
             }).then(function () {
-                self.$SaveButton.setAttribute('text', 'Save Variant');
-                self.$StatusButton.setAttribute('text', 'Variant is deactivated');
+                self.$SaveButton.setAttribute('text', QUILocale.get(lg, 'panel.variants.save'));
+
+                if (self.$StatusButton.getStatus()) {
+                    self.$StatusButton.setAttribute('text', QUILocale.get(lg, 'panel.variants.activated'));
+                } else {
+                    self.$StatusButton.setAttribute('text', QUILocale.get(lg, 'panel.variants.deactivated'));
+                }
 
                 self.$ActionSeparator.show();
                 self.$SaveButton.show();
@@ -1001,7 +1006,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          * Opens the variant folder viewer
          *
          * @param {Array} types
-         * @return {Promise<T | never>|*}
+         * @return {Promise}
          */
         $openVariantFolderViewer: function (types) {
             var self = this;

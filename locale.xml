@@ -1609,7 +1609,7 @@
         </locale>
         <locale name="variants.addVariant.window.information">
             <de><![CDATA[
-                Möchten Sie eine einzelne Variante für dieses Produkt hinzufügen?
+                Möchtest Du eine einzelne Variante für dieses Produkt hinzufügen?
                 Die neue Variante ist inaktiv und kann nach dem Anlegen bearbeitet werden.
             ]]></de>
             <en><![CDATA[
@@ -1624,6 +1624,42 @@
         <locale name="panel.variants.backToList.button.title">
             <de><![CDATA[Zurück zur Verianten Liste]]></de>
             <en><![CDATA[Back to the variant list]]></en>
+        </locale>
+        <locale name="panel.variants.switch">
+            <de><![CDATA[Variante wechseln]]></de>
+            <en><![CDATA[Switch variant]]></en>
+        </locale>
+        <locale name="panel.variants.switchTo">
+            <de><![CDATA[Zu Variante wechseln: ]]></de>
+            <en><![CDATA[Switch to variant: ]]></en>
+        </locale>
+        <locale name="panel.variants.save">
+            <de><![CDATA[Variante speichern]]></de>
+            <en><![CDATA[Save Variant]]></en>
+        </locale>
+        <locale name="panel.variants.activated">
+            <de><![CDATA[Variante ist aktiviert]]></de>
+            <en><![CDATA[Variant is activated]]></en>
+        </locale>
+        <locale name="panel.variants.deactivated">
+            <de><![CDATA[Variante ist deaktiviert]]></de>
+            <en><![CDATA[Variant is deactivated]]></en>
+        </locale>
+        <locale name="panel.variants.deactivate.variants">
+            <de><![CDATA[Alle markierten Varianten deaktivieren]]></de>
+            <en><![CDATA[Deactivate all selected variants]]></en>
+        </locale>
+        <locale name="panel.variants.activate.variants">
+            <de><![CDATA[Alle markierten Varianten aktivieren]]></de>
+            <en><![CDATA[Activate all selected variants]]></en>
+        </locale>
+        <locale name="panel.variants.button.create">
+            <de><![CDATA[Neue Variante]]></de>
+            <en><![CDATA[Create variant]]></en>
+        </locale>
+        <locale name="panel.variants.button.generate">
+            <de><![CDATA[Varianten generieren]]></de>
+            <en><![CDATA[Generate Variants]]></en>
         </locale>
     </groups>
 
