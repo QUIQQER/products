@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_variant_generate_activate',
     function ($variantIds) {
         $variantIds     = json_decode($variantIds, true);
-        $ExceptionStack = new \QUI\ExceptionStack();
+        $ExceptionStack = new QUI\ExceptionStack();
 
         foreach ($variantIds as $variantId) {
             try {

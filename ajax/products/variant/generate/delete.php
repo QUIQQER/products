@@ -1,18 +1,18 @@
 <?php
 
 /**
- * This file contains package_quiqqer_products_ajax_products_variant_generate_deactivate
+ * This file contains package_quiqqer_products_ajax_products_variant_generate_delete
  */
 
 use QUI\ERP\Products\Handler\Products;
 
 /**
- * Deactivate a variant list
+ * Delete a variant list
  *
  * @param string $variantIds - JSON Ids of variants
  */
 QUI::$Ajax->registerFunction(
-    'package_quiqqer_products_ajax_products_variant_generate_deactivate',
+    'package_quiqqer_products_ajax_products_variant_generate_delete',
     function ($variantIds) {
         $variantIds     = json_decode($variantIds, true);
         $ExceptionStack = new QUI\ExceptionStack();
@@ -20,7 +20,7 @@ QUI::$Ajax->registerFunction(
         foreach ($variantIds as $variantId) {
             try {
                 $Variant = Products::getProduct($variantId);
-                $Variant->deactivate();
+                $Variant->delete();
             } catch (QUI\Exception $Exception) {
                 $ExceptionStack->addException($Exception);
             }

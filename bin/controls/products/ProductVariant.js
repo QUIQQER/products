@@ -6,6 +6,8 @@
  * @author www.pcsg.de (Henning Leutz)
  *
  * @todo blätterfunktion bei überschreibbare produktfelder
+ * @todo produkt liste, keine children
+ * @todo varianten löschen über produkt variante
  */
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
@@ -48,8 +50,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             'openVariantGenerating',
             'addVariant',
             '$onActivationStatusChange',
+            'deleteVariantsDialog',
             '$activateVariants',
-            '$deactivateVariants'
+            '$deactivateVariants',
+            '$deleteVariants'
         ],
 
         options: {
@@ -417,6 +421,20 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                             })
                         );
 
+                        self.$Menu.appendChild(
+                            new QUIContextMenuSeparator()
+                        );
+
+                        self.$Menu.appendChild(
+                            new QUIContextMenuItem({
+                                text  : QUILocale.get(lg, 'panel.variants.delete.variants'),
+                                icon  : 'fa fa-trash',
+                                events: {
+                                    onClick: self.deleteVariantsDialog
+                                }
+                            })
+                        );
+
                         self.$Menu.inject(document.body);
                         self.$Menu.setPosition(
                             event.event.page.x,
@@ -675,7 +693,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                     title = QUILocale.get(lg, 'panel.variants.switchTo') + ' <b>';
                     title = title + vId;
-                    title = title + ' - ' + vTitle +'</b>';
+                    title = title + ' - ' + vTitle + '</b>';
 
                     if (vProductNo && vProductNo.length && vProductNo[0].value) {
                         title = title + ' - ' + vProductNo[0].value;
@@ -846,6 +864,63 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             });
 
             QUIAjax.post('package_quiqqer_products_ajax_products_variant_generate_activate', function () {
+                self.refreshVariantGrid();
+                self.Loader.hide();
+            }, {
+                'package' : 'quiqqer/products',
+                variantIds: JSON.encode(selected),
+                onError   : function () {
+                    self.refreshVariantGrid();
+                    self.Loader.hide();
+                }
+            });
+        },
+
+        /**
+         * Opens the delete dilaog
+         */
+        deleteVariantsDialog: function () {
+            var self     = this;
+            var selected = this.$Grid.getSelectedData().map(function (entry) {
+                return '<li>' + entry.id + '</li>';
+            });
+
+            require(['qui/controls/windows/Confirm'], function (QUIConfirm) {
+                var variants = '<ul>' + selected.join('') + '</ul>';
+
+                new QUIConfirm({
+                    icon       : 'fa fa-trash',
+                    texticon   : 'fa fa-trash',
+                    title      : QUILocale.get(lg, 'window.variant.delete'),
+                    text       : QUILocale.get(lg, 'window.variant.text'),
+                    information: QUILocale.get(lg, 'window.variant.information', {
+                        variants: variants
+                    }),
+                    maxHeight  : 400,
+                    maxWidth   : 600,
+                    events     : {
+                        onSubmit: self.$deleteVariants
+                    },
+                    ok_button  : {
+                        text     : QUILocale.get('quiqqer/system', 'delete'),
+                        textimage: 'fa fa-trash'
+                    }
+                }).open();
+            });
+        },
+
+        /**
+         * delete the selected variants
+         */
+        $deleteVariants: function () {
+            this.Loader.show();
+
+            var self     = this;
+            var selected = this.$Grid.getSelectedData().map(function (entry) {
+                return entry.id;
+            });
+
+            QUIAjax.post('package_quiqqer_products_ajax_products_variant_generate_delete', function () {
                 self.refreshVariantGrid();
                 self.Loader.hide();
             }, {

@@ -1653,6 +1653,10 @@
             <de><![CDATA[Alle markierten Varianten aktivieren]]></de>
             <en><![CDATA[Activate all selected variants]]></en>
         </locale>
+        <locale name="panel.variants.delete.variants">
+            <de><![CDATA[Alle markierten Varianten löschen]]></de>
+            <en><![CDATA[Delete all selected variants]]></en>
+        </locale>
         <locale name="panel.variants.button.create">
             <de><![CDATA[Neue Variante]]></de>
             <en><![CDATA[Create variant]]></en>
@@ -1660,6 +1664,24 @@
         <locale name="panel.variants.button.generate">
             <de><![CDATA[Varianten generieren]]></de>
             <en><![CDATA[Generate Variants]]></en>
+        </locale>
+
+        <locale name="window.variant.delete">
+            <de><![CDATA[Varianten löschen]]></de>
+            <en><![CDATA[Delete variants]]></en>
+        </locale>
+        <locale name="window.variant.text">
+            <de><![CDATA[Varianten wirklich löschen ?]]></de>
+            <en><![CDATA[Really delete variants ?]]></en>
+        </locale>
+        <locale name="window.variant.information">
+            <de><![CDATA[
+            Die Varianten werden unwiederruflich gelöscht und können nicht wieder hergestellt werden.
+            Folgende Varianten werden gelöscht: [variants]
+            ]]></de>
+            <en><![CDATA[
+            The variants will be irrevocably deleted and cannot be restored. The following variants will be deleted: [variants]
+            ]]></en>
         </locale>
     </groups>
 
