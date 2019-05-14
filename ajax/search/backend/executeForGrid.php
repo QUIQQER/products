@@ -4,7 +4,8 @@
  * This file contains package_quiqqer_products_ajax_search_backend_executeForGrid
  */
 
-use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Utils\Tables;
 
 /**
  * Get all fields that are available for search for a specific Site
@@ -24,21 +25,55 @@ QUI::$Ajax->registerFunction(
             ['searchParams' => $searchParams]
         );
 
-        $page     = 1;
-        $result   = $result['result'];
-        $products = [];
+        $page       = 1;
+        $productIds = $result['result'];
+        $products   = [];
 
-        foreach ($result as $pid) {
-            try {
-                $Product    = Products::getProduct((int)$pid);
-                $products[] = $Product->getAttributes();
-            } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeRecursive($Exception, QUI\System\Log::LEVEL_ALERT);
+        // collect product data
+        $fields = [
+            'active'      => 'active',
+            'id'          => 'id',
+            'productNo'   => 'productNo',
+            'title'       => 'F'.Fields::FIELD_TITLE,
+            'description' => 'F'.Fields::FIELD_SHORT_DESC,
+            'price_netto' => 'F'.Fields::FIELD_PRICE,
+            'c_date'      => 'c_date',
+            'e_date'      => 'e_date',
+            'priority'    => 'F'.Fields::FIELD_PRIORITY
+        ];
 
-                $products[] = [
-                    'id' => (int)$pid
-                ];
+        $result = QUI::getDataBase()->fetch([
+            'from'  => Tables::getProductCacheTableName(),
+            'where' => [
+                'id'   => [
+                    'type'  => 'IN',
+                    'value' => $productIds
+                ],
+                'lang' => QUI::getLocale()->getCurrent()
+            ]
+        ]);
+
+        $currencyCode = QUI\ERP\Currency\Handler::getDefaultCurrency()->getCode();
+
+        foreach ($result as $row) {
+            $product = [
+                'price_currency' => $currencyCode
+            ];
+
+            foreach ($fields as $key => $column) {
+                $value = $row[$column];
+
+                switch ($key) {
+                    case 'price_netto':
+                        $value = (float)$value;
+                        break;
+                }
+
+
+                $product[$key] = $value;
             }
+
+            $products[] = $product;
         }
 
         // count

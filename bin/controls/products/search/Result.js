@@ -102,13 +102,8 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
         setData: function (data) {
             var i, len, entry, productNo;
 
-            var findProductNo = function (o) {
-                return o.id == Fields.FIELD_PRODUCT_NO;
-            };
-
             for (i = 0, len = data.data.length; i < len; i++) {
-                entry     = data.data[i];
-                productNo = '';
+                entry = data.data[i];
 
                 // active status
                 data.data[i].status = new Element('span', {
@@ -116,11 +111,7 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                 });
 
                 // product no
-                if ("fields" in entry) {
-                    productNo = entry.fields.find(findProductNo);
-                }
-
-                data.data[i].productNo = productNo.value || '';
+                data.data[i].productNo = entry.productNo;
 
                 if (data.data[i].price_netto || data.data[i].price_netto === 0) {
                     data.data[i].price_netto = new Element('span', {
