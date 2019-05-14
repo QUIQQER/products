@@ -512,6 +512,10 @@
             <de><![CDATA[Bitte auswählen]]></de>
             <en><![CDATA[Please select]]></en>
         </locale>
+        <locale name="fieldtype.UnitSelect">
+            <de><![CDATA[Auswahl mit Benutzereingabe]]></de>
+            <en><![CDATA[Select with user input]]></en>
+        </locale>
 
         <!-- exceptions -->
         <locale name="exception.field.is.invalid">
@@ -1442,6 +1446,37 @@
             <de><![CDATA[Tags generieren]]></de>
             <en><![CDATA[Generate tags]]></en>
         </locale>
+        
+        <!-- Field: UnitSelect -->
+        <locale name="product.fields.unitSelect.entry.title">
+            <de><![CDATA[Auswählbare Einträge]]></de>
+            <en><![CDATA[Selectable entries]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.grid.default">
+            <de><![CDATA[Standard]]></de>
+            <en><![CDATA[Default]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.grid.quantityInput">
+            <de><![CDATA[Mengen-Eingabe]]></de>
+            <en><![CDATA[Quantity Input]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.title">
+            <de><![CDATA[Eintrag hinzufügen]]></de>
+            <en><![CDATA[Add entry]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.titleLabel">
+            <de><![CDATA[Titel]]></de>
+            <en><![CDATA[Title]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.defaultLabel">
+            <de><![CDATA[Standard (vorausgewählt)]]></de>
+            <en><![CDATA[Default (preselected)]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.defaultLabel">
+            <de><![CDATA[Standard (vorausgewählt)]]></de>
+            <en><![CDATA[Default (preselected)]]></en>
+        </locale>
+        
 
         <locale name="product.fields.remove.field">
             <de><![CDATA[Feld entfernen]]></de>
