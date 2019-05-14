@@ -20,6 +20,7 @@ class Fields
     /**
      * @param array $fields
      * @return array
+     * @deprecated riesen quatsch
      *
      * @todo wer hat diese methode gebaut? ToJson = return string, wieso array?
      */
@@ -78,11 +79,55 @@ class Fields
      * Sort the fields by priority
      *
      * @param array $fields - FieldInterface[]
+     * @param string $sort - sorting field
      * @return FieldInterface[]
      */
-    public static function sortFields($fields)
+    public static function sortFields($fields, $sort = 'priority')
     {
-        \usort($fields, function ($Field1, $Field2) {
+        // allowed sorting
+        switch ($sort) {
+            case 'id':
+            case 'title':
+            case 'type':
+            case 'name':
+            case 'priority':
+            case 'workingtitle':
+                break;
+
+            default:
+                $sort = 'priority';
+        }
+
+        /**
+         * @param QUI\ERP\Products\Field\Field $Field
+         * @param string $field
+         * @return mixed
+         */
+        $getFieldSortValue = function ($Field, $field) {
+            if ($field === 'id') {
+                return (int)$Field->getId();
+            }
+
+            if ($field === 'title') {
+                return $Field->getTitle();
+            }
+
+            if ($field === 'type') {
+                return $Field->getType();
+            }
+
+            if ($field === 'name') {
+                return $Field->getName();
+            }
+
+            if ($field === 'workingtitle') {
+                return $Field->getWorkingTitle();
+            }
+
+            return (int)$Field->getAttribute($field);
+        };
+
+        \usort($fields, function ($Field1, $Field2) use ($sort, $getFieldSortValue) {
             if (!self::isField($Field1)) {
                 return 1;
             }
@@ -93,8 +138,13 @@ class Fields
 
             /* @var $Field1 QUI\ERP\Products\Field\Field */
             /* @var $Field2 QUI\ERP\Products\Field\Field */
-            $priority1 = (int)$Field1->getAttribute('priority');
-            $priority2 = (int)$Field2->getAttribute('priority');
+            $priority1 = $getFieldSortValue($Field1, $sort);
+            $priority2 = $getFieldSortValue($Field2, $sort);
+
+            if (\is_string($priority1) || \is_string($priority2)) {
+                return \strnatcmp($priority1, $priority2);
+            }
+
 
             if ($priority1 === 0) {
                 return 1;

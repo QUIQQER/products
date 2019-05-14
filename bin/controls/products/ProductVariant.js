@@ -7,7 +7,6 @@
  *
  * @todo blätterfunktion bei überschreibbare produktfelder
  * @todo produkt liste, keine children
- * @todo varianten löschen über produkt variante
  */
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
