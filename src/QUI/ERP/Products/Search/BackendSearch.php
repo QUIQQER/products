@@ -171,7 +171,12 @@ class BackendSearch extends Search
         }
 
         if ($this->ignoreVariantChildren) {
-            $where[] = "type <> '".QUI\ERP\Products\Product\Types\VariantChild::class."'";
+            $where[] = "type <> :variantClass";
+
+            $binds['variantClass'] = [
+                'value' => QUI\ERP\Products\Product\Types\VariantChild::class,
+                'type'  => \PDO::PARAM_STR
+            ];
         }
 
         // tags search

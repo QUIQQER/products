@@ -5,7 +5,6 @@
  * @module package/quiqqer/products/bin/controls/products/ProductVariant
  * @author www.pcsg.de (Henning Leutz)
  *
- * @todo blätterfunktion bei überschreibbare produktfelder
  * @todo produkt liste, keine children
  */
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
