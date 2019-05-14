@@ -26,6 +26,13 @@ class FrontendSearch extends Search
     const SITETYPE_LIST = 'quiqqer/productstags:types/list';
 
     /**
+     * Flag how the search should handle variant children
+     *
+     * @var bool
+     */
+    protected $ignoreVariantChildren = true;
+
+    /**
      * All site types eligible for frontend search
      *
      * @var array
@@ -90,6 +97,8 @@ class FrontendSearch extends Search
      * @param array $urlParams
      * @param bool $countOnly (optional) - return search result count only [default: false]
      * @return array
+     *
+     * @throws QUI\Exception
      */
     public function searchByUrl($urlParams, $countOnly = false)
     {
@@ -279,6 +288,15 @@ class FrontendSearch extends Search
             }
         }
 
+        if ($this->ignoreVariantChildren) {
+            $where[] = "type <> :variantClass";
+
+            $binds['variantClass'] = [
+                'value' => QUI\ERP\Products\Product\Types\VariantChild::class,
+                'type'  => \PDO::PARAM_STR
+            ];
+        }
+
         // tags search
         $siteTags = $this->Site->getAttribute('quiqqer.products.settings.tags');
 
@@ -369,7 +387,7 @@ class FrontendSearch extends Search
                 && !empty($searchParams['limit'])
                 && isset($searchParams['sheet'])
             ) {
-                $Pagination       = new QUI\Bricks\Controls\Pagination($searchParams);
+                $Pagination       = new QUI\Controls\Navigating\Pagination($searchParams);
                 $paginationParams = $Pagination->getSQLParams();
                 $queryLimit       = QUI\Database\DB::createQueryLimit($paginationParams['limit']);
 
@@ -441,10 +459,14 @@ class FrontendSearch extends Search
      */
     public function getSearchFieldData()
     {
-        $cname = 'products/search/frontend/searchfielddata/';
-        $cname .= $this->Site->getId().'/';
-        $cname .= $this->lang.'/';
-        $cname .= $this->getGroupHashFromUser();
+        try {
+            $cname = 'products/search/frontend/searchfielddata/';
+            $cname .= $this->Site->getId().'/';
+            $cname .= $this->lang.'/';
+            $cname .= $this->getGroupHashFromUser();
+        } catch (QUI\Exception $Exception) {
+            return [];
+        }
 
         try {
             return SearchCache::get($cname);
@@ -476,8 +498,12 @@ class FrontendSearch extends Search
             if (!$search) {
                 continue;
             }
-
-            $Field = Fields::getField($fieldId);
+            try {
+                $Field = Fields::getField($fieldId);
+            } catch (QUI\ERP\Products\Field\Exception $Exception) {
+                QUI\System\Log::addError($Exception->getMessage());
+                continue;
+            }
 
             if (!$this->canSearchField($Field)) {
                 continue;
@@ -535,7 +561,12 @@ class FrontendSearch extends Search
             'quiqqer.products.settings.searchFieldIds'
         );
 
-        $eligibleFields = $this->getEligibleSearchFields();
+        try {
+            $eligibleFields = $this->getEligibleSearchFields();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addError($Exception->getMessage());
+            $eligibleFields = [];
+        }
 
         if (!$searchFieldsFromSite) {
             $searchFieldsFromSite = [];
@@ -574,14 +605,18 @@ class FrontendSearch extends Search
             }
         }
 
-        $Edit = $this->Site->getEdit();
+        try {
+            $Edit = $this->Site->getEdit();
 
-        $Edit->setAttribute(
-            'quiqqer.products.settings.searchFieldIds',
-            \json_encode($currentSearchFields)
-        );
+            $Edit->setAttribute(
+                'quiqqer.products.settings.searchFieldIds',
+                \json_encode($currentSearchFields)
+            );
 
-        $Edit->save();
+            $Edit->save();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
 
         return $currentSearchFields;
     }
@@ -594,8 +629,8 @@ class FrontendSearch extends Search
      */
     public static function setGlobalSearchFields($searchFields)
     {
-        $GlobaleSearch       = new QUI\ERP\Products\Search\GlobalFrontendSearch();
-        $currentSearchFields = $GlobaleSearch->getSearchFields();
+        $GlobalSearch        = new QUI\ERP\Products\Search\GlobalFrontendSearch();
+        $currentSearchFields = $GlobalSearch->getSearchFields();
         $newSearchFieldIds   = [];
 
         foreach ($currentSearchFields as $fieldId => $search) {
@@ -614,7 +649,11 @@ class FrontendSearch extends Search
             \implode(',', $newSearchFieldIds)
         );
 
-        $PackageCfg->save();
+        try {
+            $PackageCfg->save();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
 
 
         // field result
@@ -628,7 +667,13 @@ class FrontendSearch extends Search
             $searchFieldIdsFromCfg = explode(',', $searchFieldIdsFromCfg);
         }
 
-        $eligibleFields = $GlobaleSearch->getEligibleSearchFields();
+        try {
+            $eligibleFields = $GlobalSearch->getEligibleSearchFields();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            $eligibleFields = [];
+        }
+
 
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($eligibleFields as $Field) {
@@ -712,5 +757,22 @@ class FrontendSearch extends Search
         }
 
         return \md5($groups);
+    }
+
+    /**
+     * The search considers variant children
+     */
+    public function considerVariantChildren()
+    {
+        $this->ignoreVariantChildren = false;
+    }
+
+    /**
+     * The search ignores variant children
+     * Children are therefore not displayed in the search.
+     */
+    public function ignoreVariantChildren()
+    {
+        $this->ignoreVariantChildren = true;
     }
 }
