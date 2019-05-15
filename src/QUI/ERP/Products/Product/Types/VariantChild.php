@@ -161,7 +161,7 @@ class VariantChild extends AbstractType
 
                 $hash[] = $VariantField->getId().':'.$variantValue;
             } catch (QUI\Exception $Exception) {
-
+                QUI\System\Log::addError($Exception->getMessage());
             }
         }
 
