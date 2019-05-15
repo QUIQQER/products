@@ -579,6 +579,20 @@ define('package/quiqqer/products/bin/classes/Product', [
                     options  : JSON.encode(options)
                 });
             }.bind(this));
+        },
+
+        /**
+         * Return the fields which can be used for variants
+         *
+         * @return {Promise}
+         */
+        getVariantFields: function () {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_products_variant_getVariantFields', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId()
+                });
+            }.bind(this));
         }
     });
 });

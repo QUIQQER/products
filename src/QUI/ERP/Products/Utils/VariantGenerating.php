@@ -3,6 +3,7 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Interfaces\FieldInterface;
 use QUI\ERP\Products\Product\Types\VariantParent;
 use QUI\Utils\Singleton;
 
@@ -18,7 +19,7 @@ class VariantGenerating extends Singleton
      * Return all relevant fields for the variants generation
      *
      * @param VariantParent $Product
-     * @return array
+     * @return FieldInterface[]
      */
     public function getFieldsForGeneration(VariantParent $Product)
     {
@@ -44,7 +45,7 @@ class VariantGenerating extends Singleton
 
         $children = $Product->getVariants();
         $exists   = array_map(function ($Variant) {
-            return $Variant->getAttribute('variant-hash');
+            return $Variant->getAttribute('variantHash');
         }, $children);
 
         return $result;

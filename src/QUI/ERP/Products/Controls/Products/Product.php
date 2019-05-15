@@ -10,9 +10,6 @@ use DusanKasan\Knapsack\Collection;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 
-//use QUI\ERP\Watchlist\Controls\ButtonAdd as WatchlistButton;
-//use QUI\ERP\Watchlist\Controls\ButtonPurchase as PurchaseButton;
-
 /**
  * Class Button
  *
@@ -32,7 +29,7 @@ class Product extends QUI\Control
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/Product'
         ]);
 
-        $this->addCSSFile(\dirname(__FILE__) . '/Product.css');
+        $this->addCSSFile(\dirname(__FILE__).'/Product.css');
 
         parent::__construct($attributes);
     }
@@ -40,9 +37,9 @@ class Product extends QUI\Control
     /**
      * (non-PHPdoc)
      *
+     * @throws QUI\Exception
      * @see \QUI\Control::create()
      *
-     * @throws QUI\Exception
      */
     public function getBody()
     {
@@ -228,21 +225,22 @@ class Product extends QUI\Control
         }
 
         $Engine->assign([
-            'Product'              => $View,
-            'Gallery'              => $Gallery,
-            'Files'                => $Files,
-            'fields'               => QUI\ERP\Products\Utils\Fields::sortFields($fields),
-            'details'              => QUI\ERP\Products\Utils\Fields::sortFields($details),
-            'detailFields'         => QUI\ERP\Products\Utils\Fields::sortFields($detailFields),
-            'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
-            'Price'                => $Price,
-            'PriceDisplay'         => $PriceDisplay,
-            'PriceRetailDisplay'   => $PriceRetailDisplay,
-            'priceRetailValue'     => $Product->getFieldValue('FIELD_PRICE_RETAIL'),
-            'PriceOldDisplay'      => $PriceOldDisplay,
-            'VisitedProducts'      => new VisitedProducts(),
-            'MediaUtils'           => new QUI\Projects\Media\Utils(),
-            'Site'                 => $this->getSite()
+            'Product'                => $View,
+            'Gallery'                => $Gallery,
+            'Files'                  => $Files,
+            'fields'                 => QUI\ERP\Products\Utils\Fields::sortFields($fields),
+            'details'                => QUI\ERP\Products\Utils\Fields::sortFields($details),
+            'detailFields'           => QUI\ERP\Products\Utils\Fields::sortFields($detailFields),
+            'productAttributeList'   => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
+            'productAttributeGroups' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS),
+            'Price'                  => $Price,
+            'PriceDisplay'           => $PriceDisplay,
+            'PriceRetailDisplay'     => $PriceRetailDisplay,
+            'priceRetailValue'       => $Product->getFieldValue('FIELD_PRICE_RETAIL'),
+            'PriceOldDisplay'        => $PriceOldDisplay,
+            'VisitedProducts'        => new VisitedProducts(),
+            'MediaUtils'             => new QUI\Projects\Media\Utils(),
+            'Site'                   => $this->getSite()
         ]);
 
         // button list
@@ -257,11 +255,19 @@ class Product extends QUI\Control
 
         $Engine->assign(
             'buttonsHtml',
-            $Engine->fetch(\dirname(__FILE__) . '/Product.Buttons.html')
+            $Engine->fetch(\dirname(__FILE__).'/Product.Buttons.html')
         );
 
         // render product
-        return $Engine->fetch(\dirname(__FILE__) . '/Product.html');
+        if ($Product->getType() === QUI\ERP\Products\Product\Types\VariantParent::class) {
+            $this->setAttributes([
+                'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant'
+            ]);
+
+            return $Engine->fetch(\dirname(__FILE__).'/ProductVariant.html');
+        }
+
+        return $Engine->fetch(\dirname(__FILE__).'/Product.html');
     }
 
     /**

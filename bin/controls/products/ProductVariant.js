@@ -5,7 +5,7 @@
  * @module package/quiqqer/products/bin/controls/products/ProductVariant
  * @author www.pcsg.de (Henning Leutz)
  *
- * @todo produkt liste, keine children
+ * @todo fields w values
  */
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
@@ -295,8 +295,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             return Promise.all([
                 this.$hideCategories(),
-                this.refreshProductOverwritableFields()
-            ]).then(function () {
+                this.refreshProductOverwritableFields(),
+                this.$Product.getVariantFields()
+            ]).then(function (result) {
                 var VariantSheet = Body.getElement('.variants-sheet');
 
                 if (!VariantSheet) {
@@ -307,8 +308,75 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 VariantSheet.set('html', '');
 
-                var LC        = new Element('div.variant-list-variantListContainer').inject(VariantSheet);
+                // grid render
+                var LC = new Element(
+                    'div.variant-list-variantListContainer'
+                ).inject(VariantSheet);
+
                 var Container = new Element('div').inject(LC);
+
+
+                // grid options
+                var columns = [{
+                    header   : QUILocale.get('quiqqer/system', 'status'),
+                    dataIndex: 'status',
+                    dataType : 'node',
+                    width    : 60
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'id'),
+                    dataIndex: 'id',
+                    dataType : 'number',
+                    width    : 50
+                }, {
+                    header   : QUILocale.get(lg, 'productNo'),
+                    dataIndex: 'productNo',
+                    dataType : 'text',
+                    width    : 100,
+                    sortable : false
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'title'),
+                    dataIndex: 'title',
+                    dataType : 'text',
+                    width    : 200,
+                    sortable : false
+                }, {
+                    header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
+                    dataIndex: 'price_netto',
+                    dataType : 'text',
+                    width    : 100,
+                    sortable : false
+                }];
+
+                var variantFields = result[2];
+
+                for (var i = 0, len = variantFields.length; i < len; i++) {
+                    columns.push({
+                        header   : variantFields[i].title,
+                        dataIndex: 'field-' + variantFields[i].id,
+                        dataType : 'text',
+                        width    : 100,
+                        sortable : false
+                    });
+                }
+
+                // end colums
+                columns = columns.concat([{
+                    header   : QUILocale.get('quiqqer/system', 'editdate'),
+                    dataIndex: 'e_date',
+                    dataType : 'text',
+                    width    : 160
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'createdate'),
+                    dataIndex: 'c_date',
+                    dataType : 'text',
+                    width    : 160
+                }, {
+                    header   : QUILocale.get(lg, 'priority'),
+                    dataIndex: 'priority',
+                    dataType : 'number',
+                    width    : 60,
+                    sortable : false
+                }]);
 
                 self.$Grid = new Grid(Container, {
                     pagination       : true,
@@ -335,51 +403,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                             click: self.openVariantGenerating
                         }
                     }],
-                    columnModel      : [{
-                        header   : QUILocale.get('quiqqer/system', 'status'),
-                        dataIndex: 'status',
-                        dataType : 'node',
-                        width    : 60
-                    }, {
-                        header   : QUILocale.get('quiqqer/system', 'id'),
-                        dataIndex: 'id',
-                        dataType : 'number',
-                        width    : 50
-                    }, {
-                        header   : QUILocale.get(lg, 'productNo'),
-                        dataIndex: 'productNo',
-                        dataType : 'text',
-                        width    : 100,
-                        sortable : false
-                    }, {
-                        header   : QUILocale.get('quiqqer/system', 'title'),
-                        dataIndex: 'title',
-                        dataType : 'text',
-                        width    : 200,
-                        sortable : false
-                    }, {
-                        header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
-                        dataIndex: 'price_netto',
-                        dataType : 'text',
-                        width    : 100,
-                        sortable : false
-                    }, {
-                        header   : QUILocale.get('quiqqer/system', 'editdate'),
-                        dataIndex: 'e_date',
-                        dataType : 'text',
-                        width    : 160
-                    }, {
-                        header   : QUILocale.get('quiqqer/system', 'createdate'),
-                        dataIndex: 'c_date',
-                        dataType : 'text',
-                        width    : 160
-                    }, {
-                        header   : QUILocale.get(lg, 'priority'),
-                        dataIndex: 'priority',
-                        dataType : 'number',
-                        width    : 60,
-                        sortable : false
-                    }]
+                    columnModel      : columns
                 });
 
                 self.$Grid.addEvents({
@@ -479,12 +503,15 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 sortOn = 'active';
             }
 
-            return this.$Product.getVariants({
-                perPage: options.perPage,
-                page   : options.page,
-                sortOn : sortOn,
-                sortBy : options.sortBy
-            }).then(function (result) {
+            return Promise.all([
+                this.$Product.getVariants({
+                    perPage: options.perPage,
+                    page   : options.page,
+                    sortOn : sortOn,
+                    sortBy : options.sortBy
+                }),
+                this.$Product.getVariantFields()
+            ]).then(function (result) {
                 var needles = [
                     'id', 'title', 'e_date', 'c_date', 'priority'
                 ];
@@ -495,7 +522,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     'priority'   : 18
                 };
 
-                var variants = result.data;
+                var variants      = result[0].data;
+                var variantFields = result[1];
 
                 var i, n, len, nLen, entry, variant, needle, field, fieldId;
                 var data = [];
@@ -504,6 +532,13 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     return field.id === this;
                 };
 
+                // add variant fields to field object
+                for (i = 0, len = variantFields.length; i < len; i++) {
+                    fields['field-' + variantFields[i].id] = variantFields[i].id;
+                }
+
+
+                // build grid data
                 for (i = 0, len = variants.length; i < len; i++) {
                     entry   = {};
                     variant = variants[i];
@@ -546,8 +581,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 self.$Grid.setData({
                     data : data,
-                    total: result.total,
-                    page : result.page
+                    total: result[0].total,
+                    page : result[0].page
                 });
 
                 self.Loader.hide();

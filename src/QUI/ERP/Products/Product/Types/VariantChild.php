@@ -9,6 +9,7 @@ namespace QUI\ERP\Products\Product\Types;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Utils\VariantGenerating;
 
 /**
  * Class VariantChild
@@ -132,6 +133,60 @@ class VariantChild extends AbstractType
     public function getCategory()
     {
         return $this->getParent()->getCategory();
+    }
+
+    /**
+     * Generate a variant hash for this variant child
+     * The variant hash depends on the used fields
+     *
+     * hash = ;fieldID:fieldValue;fieldID:fieldValue;fieldID:fieldValue;
+     *
+     * @return string
+     */
+    public function generateVariantHash()
+    {
+        $hash   = [];
+        $Parent = $this->getParent();
+        $fields = VariantGenerating::getInstance()->getFieldsForGeneration($Parent);
+
+        foreach ($fields as $Field) {
+            try {
+                $VariantField = $this->getField($Field->getId());
+                $variantValue = $VariantField->getValue();
+
+                // string to hex
+                if (!is_numeric($variantValue)) {
+                    $variantValue = implode(unpack("H*", $variantValue));
+                }
+
+                $hash[] = $VariantField->getId().':'.$variantValue;
+            } catch (QUI\Exception $Exception) {
+
+            }
+        }
+
+        $generate = ';'.implode(';', $hash).';';
+
+        return $generate;
+    }
+
+    /**
+     * @param array $fieldData
+     *
+     * @throws QUI\Database\Exception
+     * @throws QUI\ERP\Products\Product\Exception
+     * @throws QUI\Exception
+     * @throws QUI\Permissions\Exception
+     */
+    protected function productSave($fieldData)
+    {
+        parent::productSave($fieldData);
+
+        QUI::getDataBase()->update(
+            QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            ['variantHash' => $this->generateVariantHash()],
+            ['id' => $this->getId()]
+        );
     }
 
     //endregion

@@ -1002,7 +1002,7 @@
         </locale>
         <locale name="products.product.panel.grid.nettoprice">
             <de><![CDATA[Nettopreis]]></de>
-            <en><![CDATA[netto price]]></en>
+            <en><![CDATA[Netto price]]></en>
         </locale>
         <locale name="products.product.panel.grid.currency">
             <de><![CDATA[Währung]]></de>
