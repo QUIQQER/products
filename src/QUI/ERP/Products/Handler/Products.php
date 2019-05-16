@@ -81,7 +81,6 @@ class Products
      * @return QUI\ERP\Products\Product\Types\AbstractType
      *
      * @throws QUI\ERP\Products\Product\Exception
-     * @throws QUI\Exception
      */
     public static function getProduct($pid)
     {
@@ -108,25 +107,41 @@ class Products
      * @param $pid
      * @return QUI\ERP\Products\Product\Types\AbstractType
      *
-     * @throws QUI\Database\Exception
      * @throws QUI\ERP\Products\Product\Exception
      */
     public static function getNewProductInstance($pid)
     {
-        $result = QUI::getDataBase()->fetch([
-            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            'where' => [
-                'id' => $pid
-            ],
-            'limit' => 1
-        ]);
-
-        if (!isset($result[0])) {
-            // if not exists, so we cleanup the cache table, too
-            QUI::getDataBase()->delete(
-                QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+        try {
+            $result = QUI::getDataBase()->fetch([
+                'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                'where' => [
+                    'id' => $pid
+                ],
+                'limit' => 1
+            ]);
+        } catch (QUI\Exception $Exception) {
+            throw new QUI\ERP\Products\Product\Exception(
+                [
+                    'quiqqer/products',
+                    'exception.product.not.found',
+                    ['productId' => $pid]
+                ],
+                404,
                 ['id' => $pid]
             );
+        }
+
+
+        if (!isset($result[0])) {
+            try {
+                // if not exists, so we cleanup the cache table, too
+                QUI::getDataBase()->delete(
+                    QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+                    ['id' => $pid]
+                );
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
+            }
 
             throw new QUI\ERP\Products\Product\Exception(
                 [

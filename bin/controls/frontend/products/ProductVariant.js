@@ -102,9 +102,24 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             });
 
             QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getVariant', function (result) {
-                self.Loader.hide();
+                var Ghost = new Element('div', {
+                    html: result
+                });
 
-                console.log(result);
+                var Control = Ghost.getElement(
+                    '[data-qui="package/quiqqer/products/bin/controls/frontend/products/ProductVariant"]'
+                );
+
+                self.$startInit = false;
+
+                if (Control) {
+                    self.getElm().set('html', Control.get('html'));
+                }
+
+                QUI.parse(self.getElm()).then(function () {
+                    self.$init();
+                    self.Loader.hide();
+                });
             }, {
                 'package': 'quiqqer/products',
                 productId: this.getAttribute('productId'),

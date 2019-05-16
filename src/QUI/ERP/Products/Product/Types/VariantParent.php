@@ -7,7 +7,6 @@
 namespace QUI\ERP\Products\Product\Types;
 
 use QUI;
-use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Tables;
@@ -166,6 +165,50 @@ class VariantParent extends AbstractType
         }
 
         return $variants;
+    }
+
+    /**
+     * Return a variant children by its variant field hash
+     *
+     * @param string $hash
+     * @return QUI\ERP\Products\Product\Types\AbstractType
+     *
+     * @throws QUI\ERP\Products\Product\Exception
+     */
+    public function getVariantByVariantHash($hash)
+    {
+        try {
+            $result = QUI::getDataBase()->fetch([
+                'select' => 'id, variantHash',
+                'from'   => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                'where'  => [
+                    'variantHash' => $hash
+                ],
+                'limit'  => 1
+            ]);
+        } catch (QUI\Exception $Exception) {
+            throw new QUI\ERP\Products\Product\Exception(
+                [
+                    'quiqqer/products',
+                    'exception.product.not.found.unknown'
+                ],
+                404,
+                ['hash' => $hash]
+            );
+        }
+
+        if (!isset($result[0])) {
+            throw new QUI\ERP\Products\Product\Exception(
+                [
+                    'quiqqer/products',
+                    'exception.product.not.found.unknown'
+                ],
+                404,
+                ['hash' => $hash]
+            );
+        }
+
+        return Products::getProduct($result[0]['id']);
     }
 
     /**

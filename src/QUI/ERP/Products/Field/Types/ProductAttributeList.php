@@ -346,8 +346,20 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     {
         $check = [];
 
-        if (\is_string($value)) {
+        if (\is_string($value) && !\is_numeric($value)) {
             $check = \json_decode($value, true);
+
+            // if no json, check if value exist
+            if ($check === null) {
+                $options = $this->getOptions();
+                $entries = $options['entries'];
+
+                foreach ($entries as $key => $entry) {
+                    if ($entry['valueId'] == $value) {
+                        return $value;
+                    }
+                }
+            }
 
             if (!isset($check[0]) || !isset($check[1])) {
                 return null;

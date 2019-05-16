@@ -30,14 +30,17 @@ QUI::$Ajax->registerFunction(
         if (count($fields) && is_array($fields[0])) {
             $_fields = [];
 
-            foreach ($fields as $fieldId => $fieldValue) {
-
+            foreach ($fields as $field) {
+                $_fields[key($field)] = current($field);
             }
+
+            $fields = $_fields;
         }
 
         foreach ($fields as $fieldId => $fieldValue) {
             try {
                 $Product->getField($fieldId)->setValue($fieldValue);
+                $fields[$fieldId] = $Product->getField($fieldId)->getValue();
             } catch (QUI\Exception $Exception) {
                 $ExceptionStack->addException($Exception);
             }
@@ -50,11 +53,16 @@ QUI::$Ajax->registerFunction(
         }
 
 
-        // @todo search variant child
-        // @todo generate variant hash
+        try {
+            /* @var $Product \QUI\ERP\Products\Product\Types\VariantParent */
+            $fieldHash = \QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($fields);
+            $Child     = $Product->getVariantByVariantHash($fieldHash);
+        } catch (QUI\Exception $Exception) {
+            $Child = $Product;
+        }
 
         $Control = new ProductControl([
-            'Product' => $Product
+            'Product' => $Child
         ]);
 
         return $Control->create();

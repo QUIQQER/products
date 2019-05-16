@@ -158,13 +158,13 @@ class Products
     {
         $hash = [];
 
-        foreach ($fields as $Field) {
-            if ($Field instanceof QUI\ERP\Products\Interfaces\FieldInterface) {
-                $fieldId    = $Field->getId();
-                $fieldValue = $Field->getValue();
+        // get hash values
+        foreach ($fields as $Field => $fieldValue) {
+            if ($fieldValue instanceof QUI\ERP\Products\Interfaces\FieldInterface) {
+                $fieldId    = $fieldValue->getId();
+                $fieldValue = $fieldValue->getValue();
             } elseif (is_string($Field) || is_numeric($Field)) {
-                $fieldId    = $Field;
-                $fieldValue = $Field;
+                $fieldId = $Field;
             } else {
                 continue;
             }
@@ -177,6 +177,15 @@ class Products
             $hash[] = $fieldId.':'.$fieldValue;
         }
 
+        // sort fields
+        usort($hash, function ($a, $b) {
+            $aId = (int)explode(':', $a)[0];
+            $bId = (int)explode(':', $b)[0];
+
+            return $aId - $bId;
+        });
+
+        // generate hash
         $generate = ';'.implode(';', $hash).';';
 
         return $generate;

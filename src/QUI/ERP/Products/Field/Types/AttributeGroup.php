@@ -202,7 +202,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * Cleanup the value, so the value is valid
      *
-     * @param integer $value
+     * @param integer|string $value
      * @return int|null
      */
     public function cleanup($value)
@@ -213,7 +213,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             $check = \json_decode($value, true);
 
             // if no json, check if value exist
-            if ($check === null) {
+            if ($check === null && !\is_numeric($value)) {
                 $options = $this->getOptions();
                 $entries = $options['entries'];
 
@@ -221,6 +221,16 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
                     if ($entry['valueId'] == $value) {
                         return $value;
                     }
+                }
+            }
+
+            if (\is_numeric($value)) {
+                $value   = (int)$value;
+                $options = $this->getOptions();
+                $entries = $options['entries'];
+
+                if (isset($entries[$value])) {
+                    return $entries[$value]['valueId'];
                 }
             }
 
