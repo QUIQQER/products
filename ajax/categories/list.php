@@ -1,39 +1,40 @@
 <?php
 
 /**
- * This file contains package_quiqqer_products_ajax_categories_list
- */
-
-/**
  * Returns category list for a grid
  *
  * @param string $params - JSON query params
- *
  * @return array
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_list',
     function ($params) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $result     = [];
+        $Grid       = new QUI\Utils\Grid();
 
-        $Grid = new QUI\Utils\Grid();
-
-        $data = $Categories->getCategories(
+        $categoryIds = $Categories::getCategoryIds(
             $Grid->parseDBParams(\json_decode($params, true))
         );
 
-        /* @var $Category \QUI\ERP\Products\Category\Category */
-        foreach ($data as $Category) {
-            $entry          = $Category->getAttributes();
-            $entry['title'] = $Category->getTitle();
+        $L = QUI::getLocale();
 
-            $result[] = $entry;
+        foreach ($categoryIds as $categoryId) {
+            $description = '';
+
+            if ($L->exists('quiqqer/products', 'products.category.'.$categoryId.'.description')) {
+                $description = $L->get('quiqqer/products', 'products.category.'.$categoryId.'.description');
+            }
+
+            $result[] = [
+                'id'          => $categoryId,
+                'title'       => $L->get('quiqqer/products', 'products.category.'.$categoryId.'.title'),
+                'description' => $description
+            ];
         }
 
-        \usort($result, function ($a, $b) {
-            return $a['title'] > $b['title'];
-        });
+//        \usort($result, function ($a, $b) {
+//            return $a['title'] > $b['title'];
+//        });
 
         return $Grid->parseResult($result, $Categories->countCategories());
     },
