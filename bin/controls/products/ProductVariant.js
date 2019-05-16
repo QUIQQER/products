@@ -1004,6 +1004,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     productId: self.getAttribute('productId'),
                     events   : {
                         onVariantCreation: function () {
+                            self.$Grid.options.page = 1;
                             self.refreshVariantGrid();
                         }
                     }

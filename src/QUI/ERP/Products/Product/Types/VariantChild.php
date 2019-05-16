@@ -24,6 +24,21 @@ class VariantChild extends AbstractType
      */
     protected $Parent = null;
 
+    /**
+     * VariantChild constructor.
+     *
+     * @param $pid
+     * @param array $product
+     * @throws QUI\ERP\Products\Product\Exception
+     * @throws QUI\Exception
+     */
+    public function __construct($pid, $product = [])
+    {
+        parent::__construct($pid, $product);
+
+        // fields values
+    }
+
     //region type stuff
 
     /**
@@ -145,29 +160,21 @@ class VariantChild extends AbstractType
      */
     public function generateVariantHash()
     {
-        $hash   = [];
         $Parent = $this->getParent();
         $fields = VariantGenerating::getInstance()->getFieldsForGeneration($Parent);
+
+        $hashFields = [];
 
         foreach ($fields as $Field) {
             try {
                 $VariantField = $this->getField($Field->getId());
-                $variantValue = $VariantField->getValue();
-
-                // string to hex
-                if (!is_numeric($variantValue)) {
-                    $variantValue = implode(unpack("H*", $variantValue));
-                }
-
-                $hash[] = $VariantField->getId().':'.$variantValue;
+                $hashFields[] = $VariantField;
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addError($Exception->getMessage());
+                QUI\System\Log::writeDebugException($Exception);
             }
         }
 
-        $generate = ';'.implode(';', $hash).';';
-
-        return $generate;
+        return QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($hashFields);
     }
 
     /**

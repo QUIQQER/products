@@ -1589,6 +1589,10 @@
             <de><![CDATA[Varianten generieren]]></de>
             <en><![CDATA[Generate Variants]]></en>
         </locale>
+        <locale name="variants.generating.window.generating">
+            <de><![CDATA[Varianten werden generiert ...]]></de>
+            <en><![CDATA[Variants are generated ...]]></en>
+        </locale>
 
         <locale name="panel.variants.category.title">
             <de><![CDATA[Varianten]]></de>

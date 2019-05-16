@@ -24,6 +24,16 @@ QUI::$Ajax->registerFunction(
         }
 
         $ExceptionStack = new QUI\ExceptionStack();
+        $fields         = \json_decode($fields, true);
+
+        // json js <-> php
+        if (count($fields) && is_array($fields[0])) {
+            $_fields = [];
+
+            foreach ($fields as $fieldId => $fieldValue) {
+
+            }
+        }
 
         foreach ($fields as $fieldId => $fieldValue) {
             try {
@@ -38,6 +48,7 @@ QUI::$Ajax->registerFunction(
 
             throw new $list[0];
         }
+
 
         // @todo search variant child
         // @todo generate variant hash

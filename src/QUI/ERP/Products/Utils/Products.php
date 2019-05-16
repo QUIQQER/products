@@ -146,4 +146,39 @@ class Products
 
         return new QUI\ERP\Money\Price($priceValue, $Currency);
     }
+
+    /**
+     * Return generate variant hash
+     *
+     * @param array $fields - could be a field array [Field, Field, Field],
+     *                        or could be a field object list ['field-1':2, 'field-1':'value']
+     * @return string
+     */
+    public static function generateVariantHashFromFields($fields)
+    {
+        $hash = [];
+
+        foreach ($fields as $Field) {
+            if ($Field instanceof QUI\ERP\Products\Interfaces\FieldInterface) {
+                $fieldId    = $Field->getId();
+                $fieldValue = $Field->getValue();
+            } elseif (is_string($Field) || is_numeric($Field)) {
+                $fieldId    = $Field;
+                $fieldValue = $Field;
+            } else {
+                continue;
+            }
+
+            // string to hex
+            if (!is_numeric($fieldValue)) {
+                $fieldValue = implode(unpack("H*", $fieldValue));
+            }
+
+            $hash[] = $fieldId.':'.$fieldValue;
+        }
+
+        $generate = ';'.implode(';', $hash).';';
+
+        return $generate;
+    }
 }

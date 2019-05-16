@@ -106,9 +106,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                 console.log(result);
             }, {
-                'package' : 'quiqqer/products',
-                productId_: this.getAttribute('productId'),
-                fieldLists: JSON.encode(fieldLists)
+                'package': 'quiqqer/products',
+                productId: this.getAttribute('productId'),
+                fields   : JSON.encode(fieldLists)
             });
         }
     });

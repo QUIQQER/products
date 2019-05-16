@@ -96,7 +96,9 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
         $onSubmit: function () {
             var self = this;
 
-            this.Loader.show();
+            this.Loader.show(
+                QUILocale.get(lg, 'variants.generating.window.generating')
+            );
 
             this.$List.generate().then(function () {
                 self.close();

@@ -880,10 +880,12 @@ class Model extends QUI\QDOM
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($fieldList as $Field) {
-            $fields[] = \array_merge(
+            $field = \array_merge(
                 $Field->toProductArray(),
                 $Field->getAttributes()
             );
+
+            $fields[] = $field;
         }
 
         if (!empty($fields)) {
@@ -1113,14 +1115,19 @@ class Model extends QUI\QDOM
         foreach ($fields as $Field) {
             $this->setUnassignedStatusToField($Field);
 
-            $fieldData[] = $Field->toProductArray();
+            $field = \array_merge(
+                $Field->toProductArray(),
+                $Field->getAttributes()
+            );
+
+            $fieldData[] = $field;
         }
 
         return $fieldData;
     }
 
     /**
-     * Set the unasigned status to a field
+     * Set the unassigned status to a field
      * checks the unassigned status for a field
      * looks into each category
      *
