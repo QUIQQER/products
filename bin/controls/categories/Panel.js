@@ -83,9 +83,21 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             this.parent();
             this.Loader.show();
 
+            var sortOn = this.$Grid.options.sortOn;
+
+            switch (sortOn) {
+                case 'id':
+                    break;
+
+                default:
+                    sortOn = null;
+            }
+
             return Categories.getList({
                 perPage: this.$Grid.options.perPage,
-                page   : this.$Grid.options.page
+                page   : this.$Grid.options.page,
+                sortOn : sortOn,
+                sortBy : this.$Grid.options.sortBy
             }).then(function (gridData) {
 
                 self.$Grid.setData(gridData);
@@ -223,6 +235,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             this.$Grid = new Grid(GridContainer, {
                 pagination : true,
                 perPage    : 150,
+                serverSort : true,
                 columnModel: [{
                     header   : QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
@@ -236,11 +249,6 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                 }, {
                     header   : QUILocale.get('quiqqer/system', 'description'),
                     dataIndex: 'description',
-                    dataType : 'text',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get(lg, 'products.categories.grid.assigned.sites'),
-                    dataIndex: 'site',
                     dataType : 'text',
                     width    : 200
                 }]
