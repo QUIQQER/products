@@ -1937,6 +1937,11 @@
             <de><![CDATA[Grundpreis]]></de>
             <en><![CDATA[Basic price]]></en>
         </locale>
+
+        <locale name="variant.empty.select">
+            <de><![CDATA[- Auswählen -]]></de>
+            <en><![CDATA[- Select -]]></en>
+        </locale>
     </groups>
 
 </locales>
