@@ -50,6 +50,27 @@ class Product extends QUI\Control
         $fields  = [];
         $Calc    = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
+        // product variants has no default field values
+        if ($Product instanceof QUI\ERP\Products\Product\Types\VariantParent ||
+            $Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            foreach ($Product->getFields() as $Field) {
+                /* @var $Field QUI\ERP\Products\Field\Types\AttributeGroup */
+                if ($Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS) {
+                    $Field->clearDefaultValue();
+                    $Field->clearValue();
+                    $Field->disableEntries();
+                    continue;
+                }
+
+                if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST) {
+                    /* @var $Field QUI\ERP\Products\Field\Types\ProductAttributeList */
+                    $Field->clearDefaultValue();
+                    $Field->clearValue();
+                }
+            }
+        }
+
+
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
             $View   = $Product->getView();
             $Unique = $Product->createUniqueProduct($Calc);

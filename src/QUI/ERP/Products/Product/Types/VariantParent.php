@@ -27,6 +27,11 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
  */
 class VariantParent extends AbstractType
 {
+    /**
+     * @var array
+     */
+    protected $childFields = null;
+
     //region abstract type methods
 
     /**
@@ -427,5 +432,87 @@ class VariantParent extends AbstractType
         }
 
         return parent::validateFields();
+    }
+
+    /**
+     * return all available fields from the variant children
+     * this array contains all field ids and field values that are in use in the children
+     *
+     * @return array
+     */
+    public function availableChildFields()
+    {
+        if ($this->childFields !== null) {
+            return $this->childFields;
+        }
+
+        try {
+            $result = QUI::getDataBase()->fetch([
+                'select' => 'id, parent, fieldData, variantHash',
+                'from'   => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                'where'  => [
+                    'parent' => $this->getId()
+                ]
+            ]);
+        } catch (QUI\Exception $Exception) {
+            $result = [];
+        }
+
+        $fields = [];
+
+        foreach ($result as $entry) {
+            $fieldData     = \json_decode($entry['fieldData'], true);
+            $variantFields = [];
+
+            foreach ($fieldData as $field) {
+                $variantFields[$field['id']] = $field['value'];
+            }
+
+            $variantHash = $entry['variantHash'];
+            $variantHash = \trim($variantHash, ';');
+            $variantHash = \explode(';', $variantHash);
+
+            foreach ($variantHash as $fieldHash) {
+                $fieldHash = \explode(':', $fieldHash);
+                $fieldId   = (int)$fieldHash[0];
+
+                if (isset($variantFields[$fieldId])) {
+                    $fields[$fieldId][] = $variantFields[$fieldId];
+                    $fields[$fieldId]   = \array_unique($fields[$fieldId]);
+                }
+            }
+        }
+
+        $this->childFields = $fields;
+
+        return $fields;
+    }
+
+    /**
+     * Return if the field is selectable / available
+     * It will be checked if this field is present in a children
+     *
+     * @param string|int $fieldId
+     * @param string|int $fieldValue
+     *
+     * @return bool
+     */
+    public function isFieldAvailable($fieldId, $fieldValue)
+    {
+        $available = $this->availableChildFields();
+
+        if (!isset($available[$fieldId])) {
+            return false;
+        }
+
+        $fields = $available[$fieldId];
+
+        foreach ($fields as $value) {
+            if ($value == $fieldValue) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

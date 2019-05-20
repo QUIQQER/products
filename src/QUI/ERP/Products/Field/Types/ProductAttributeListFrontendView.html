@@ -8,7 +8,7 @@
                 disabled="disabled"
         >
             <option value="">
-                {locale group="quiqqer/products" var="variant.empty.select"}
+                {locale group="quiqqer/products" var="empty.select"}
             </option>
             {foreach $options as $option}
             <option {$option.selected}{$option.data} value="{$option.value|escape:'html'}">

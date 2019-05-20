@@ -1970,21 +1970,23 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @returns {Promise}
          */
         copy: function () {
+            var self = this;
+
             return new Promise(function (resolve, reject) {
-                this.$Product.getTitle().then(function (title) {
+                self.$Product.getTitle().then(function (title) {
                     new QUIConfirm({
                         icon       : 'fa fa-copy',
                         title      : QUILocale.get(lg, 'products.window.copy.title', {
-                            id   : this.$Product.getId(),
+                            id   : self.$Product.getId(),
                             title: title
                         }),
                         text       : QUILocale.get(lg, 'products.window.copy.text', {
-                            id   : this.$Product.getId(),
+                            id   : self.$Product.getId(),
                             title: title
                         }),
                         texticon   : false,
                         information: QUILocale.get(lg, 'products.window.copy.information', {
-                            id   : this.$Product.getId(),
+                            id   : self.$Product.getId(),
                             title: title
                         }),
                         autoclose  : false,
@@ -2000,31 +2002,24 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             onSubmit: function (Win) {
                                 Win.Loader.show();
 
-                                Products.copy(this.$Product.getId())
-                                        .then(function (newProductId) {
+                                Products.copy(self.$Product.getId()).then(function (newProductId) {
+                                    require([
+                                        'package/quiqqer/products/bin/controls/products/Product'
+                                    ], function (ProductPanel) {
+                                        new ProductPanel({
+                                            productId: newProductId
+                                        }).inject(self.getParent());
 
-                                            require([
-                                                'package/quiqqer/products/bin/controls/products/Product'
-                                            ], function (ProductPanel) {
-
-                                                new ProductPanel({
-                                                    productId: newProductId
-                                                }).inject(this.getParent());
-
-                                                Win.close();
-
-                                            }.bind(this));
-
-                                        }.bind(this)).catch(reject);
-
-                            }.bind(this),
+                                        Win.close();
+                                    });
+                                }).catch(reject);
+                            },
 
                             onClose: resolve
                         }
                     }).open();
-
-                }.bind(this));
-            }.bind(this));
+                });
+            });
         },
 
         /**

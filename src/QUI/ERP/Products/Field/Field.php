@@ -627,6 +627,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Clears the default value
+     */
+    public function clearDefaultValue()
+    {
+        $this->defaultValue = null;
+    }
+
+    /**
      * Is the field a custom field?
      *
      * @return boolean
@@ -658,6 +666,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     {
         $this->validate($value);
         $this->value = $this->cleanup($value);
+    }
+
+    /**
+     * clears the current value of the field
+     */
+    public function clearValue()
+    {
+        $this->value = null;
     }
 
     /**

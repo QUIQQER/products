@@ -1938,9 +1938,9 @@
             <en><![CDATA[Basic price]]></en>
         </locale>
 
-        <locale name="variant.empty.select">
-            <de><![CDATA[- Auswählen -]]></de>
-            <en><![CDATA[- Select -]]></en>
+        <locale name="empty.select">
+            <de><![CDATA[- Bitte auswählen -]]></de>
+            <en><![CDATA[- Please select one -]]></en>
         </locale>
     </groups>
 

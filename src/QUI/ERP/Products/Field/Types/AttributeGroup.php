@@ -30,6 +30,11 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     protected $defaultValue = null;
 
     /**
+     * @var array
+     */
+    protected $disabled = [];
+
+    /**
      * ProductAttributeList constructor.
      *
      * @param int $fieldId
@@ -103,6 +108,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             'title',
             'valueId',
             'selected', // optional
+            'disabled', // optional
         ];
 
         foreach ($available as $k) {
@@ -118,6 +124,36 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     }
 
     /**
+     * disable all entries
+     */
+    public function disableEntries()
+    {
+        foreach ($this->options['entries'] as $key => $option) {
+            $this->options['entries'][$key]['disabled'] = true;
+        }
+    }
+
+    /**
+     * Disable an option
+     *
+     * @param string|integer $entry
+     */
+    public function disableEntry($entry)
+    {
+        $this->options['entries'][$entry]['disabled'] = true;
+    }
+
+    /**
+     * Enable an option
+     *
+     * @param string|integer $entry
+     */
+    public function enableEntry($entry)
+    {
+        $this->options['entries'][$entry]['disabled'] = false;
+    }
+
+    /**
      * @return string
      */
     public function getValue()
@@ -127,6 +163,18 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
         }
 
         return $this->defaultValue;
+    }
+
+    /**
+     * clears the current value of the field
+     */
+    public function clearValue()
+    {
+        parent::clearValue();
+
+        foreach ($this->options['entries'] as $key => $option) {
+            $this->options['entries'][$key]['selected'] = false;
+        }
     }
 
     /**

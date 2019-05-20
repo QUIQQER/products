@@ -97,28 +97,28 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
         // options
         $options = [];
+//
+//        $hasDefault = function () use ($entries) {
+//            foreach ($entries as $key => $option) {
+//                if (isset($option['selected']) && $option['selected']) {
+//                    return true;
+//                }
+//            }
+//
+//            return false;
+//        };
 
-        $hasDefault = function () use ($entries) {
-            foreach ($entries as $key => $option) {
-                if (isset($option['selected']) && $option['selected']) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
-
-        if ($value === '' && !$hasDefault()) {
-            $options[] = [
-                'value'    => '',
-                'text'     => QUI::getLocale()->get(
-                    'quiqqer/products',
-                    'fieldtype.ProductAttributeList.select.emptyvalue'
-                ),
-                'selected' => '',
-                'data'     => ''
-            ];
-        }
+//        if ($value === '' && !$hasDefault()) {
+//            $options[] = [
+//                'value'    => '',
+//                'text'     => QUI::getLocale()->get(
+//                    'quiqqer/products',
+//                    'fieldtype.ProductAttributeList.select.emptyvalue'
+//                ),
+//                'selected' => '',
+//                'data'     => ''
+//            ];
+//        }
 
         $currentLC = \strtolower($current).'_'.\strtoupper($current);
         $Calc      = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
@@ -130,9 +130,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $selected  = '';
             $userInput = '';
 
-            if (isset($option['selected']) && $option['selected']
-                || $value == $key
-            ) {
+            if (isset($option['selected']) && $option['selected'] || $value === $key) {
                 $selected = 'selected="selected" ';
             }
 

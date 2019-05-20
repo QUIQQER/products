@@ -27,8 +27,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             return $this->notChangeableDisplay();
         }
 
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
-        $current  = QUI::getLocale()->getCurrent();
+        $current = QUI::getLocale()->getCurrent();
 
         $id      = $this->getId();
         $value   = $this->getValue();
@@ -41,16 +40,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             $entries = $options['entries'];
         }
 
-        $requiredField    = '';
-        $displayDiscounts = false;
-
-        if (isset($options['display_discounts'])) {
-            $displayDiscounts = $options['display_discounts'];
-        }
-
-        if (QUI\ERP\Products\Utils\Package::hidePrice()) {
-            $displayDiscounts = false;
-        }
+        $requiredField = '';
 
         if ($this->isRequired()) {
             $requiredField = ' required="required"';
@@ -80,44 +70,23 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         ]);
 
         // options
-        $options = [];
-
-        $hasDefault = function () use ($entries) {
-            foreach ($entries as $key => $option) {
-                if (isset($option['selected']) && $option['selected']) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
-
-        if ($value === '' && !$hasDefault()) {
-            $options[] = [
-                'value'    => '',
-                'text'     => QUI::getLocale()->get(
-                    'quiqqer/products',
-                    'fieldtype.ProductAttributeList.select.emptyvalue'
-                ),
-                'selected' => '',
-                'data'     => ''
-            ];
-        }
-
+        $options   = [];
         $currentLC = \strtolower($current).'_'.\strtoupper($current);
-        $Calc      = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
         foreach ($entries as $key => $option) {
             $title = $option['title'];
 
             $text      = '';
             $selected  = '';
+            $disabled  = '';
             $userInput = '';
 
-            if (isset($option['selected']) && $option['selected']
-                || $value == $key
-            ) {
+            if (isset($option['selected']) && $option['selected'] || $value === $key) {
                 $selected = 'selected="selected" ';
+            }
+
+            if (isset($option['disabled']) && $option['disabled'] || $value === $key) {
+                $disabled = 'disabled="disabled" ';
             }
 
             if (\is_string($title)) {
@@ -134,6 +103,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
 
             $options[] = [
                 'selected' => $selected,
+                'disabled' => $disabled,
                 'value'    => $key,
                 'text'     => $text,
                 'data'     => $userInput
