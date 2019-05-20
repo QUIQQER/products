@@ -14,7 +14,6 @@ use QUI;
  *
  * @package QUI\ERP\Products\Field
  *
- *
  * @todo eindeutige ID für option
  */
 class AttributeGroup extends QUI\ERP\Products\Field\Field
@@ -277,6 +276,14 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
                 $options = $this->getOptions();
                 $entries = $options['entries'];
 
+                // first check if a value id exists with this value
+                foreach ($entries as $key => $entry) {
+                    if ($entry['valueId'] == $value) {
+                        return $value;
+                    }
+                }
+
+                // use the key
                 if (isset($entries[$value])) {
                     return $entries[$value]['valueId'];
                 }

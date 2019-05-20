@@ -27,16 +27,17 @@ QUI::$Ajax->registerFunction(
         $fields         = \json_decode($fields, true);
 
         // json js <-> php
-        if (count($fields) && is_array($fields[0])) {
+        if (\count($fields) && \is_array($fields[0])) {
             $_fields = [];
 
             foreach ($fields as $field) {
-                $_fields[key($field)] = current($field);
+                $_fields[\key($field)] = \current($field);
             }
 
             $fields = $_fields;
         }
 
+        // set variant field values
         foreach ($fields as $fieldId => $fieldValue) {
             try {
                 $Product->getField($fieldId)->setValue($fieldValue);
@@ -55,10 +56,12 @@ QUI::$Ajax->registerFunction(
 
         try {
             /* @var $Product \QUI\ERP\Products\Product\Types\VariantParent */
-            $fieldHash = \QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($fields);
+            $fieldHash = QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($fields);
             $Child     = $Product->getVariantByVariantHash($fieldHash);
         } catch (QUI\Exception $Exception) {
             $Child = $Product;
+
+            // $Product->disablePrice();
         }
 
         $Control = new ProductControl([

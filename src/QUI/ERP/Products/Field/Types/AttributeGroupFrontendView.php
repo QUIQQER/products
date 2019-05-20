@@ -81,7 +81,8 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             $disabled  = '';
             $userInput = '';
 
-            if (isset($option['selected']) && $option['selected'] || $value === $key) {
+            if ($value === null && isset($option['selected']) && $option['selected']
+                || $value === $option['valueId']) {
                 $selected = 'selected="selected" ';
             }
 
@@ -104,7 +105,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             $options[] = [
                 'selected' => $selected,
                 'disabled' => $disabled,
-                'value'    => $key,
+                'value'    => $option['valueId'],
                 'text'     => $text,
                 'data'     => $userInput
             ];

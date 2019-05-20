@@ -344,6 +344,10 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      */
     public function cleanup($value)
     {
+        if ($value === '') {
+            return null;
+        }
+
         $check = [];
 
         if (\is_string($value) && !\is_numeric($value)) {
@@ -353,11 +357,10 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             if ($check === null) {
                 $options = $this->getOptions();
                 $entries = $options['entries'];
+                $wanted  = (int)$value;
 
-                foreach ($entries as $key => $entry) {
-                    if ($entry['valueId'] == $value) {
-                        return $value;
-                    }
+                if (isset($entries[$wanted])) {
+                    return $wanted;
                 }
             }
 
