@@ -24,17 +24,17 @@
             {/foreach}
         </div>
 
-        {if count($productAttributeList)}
+        {if count($productAttributeGroups)}
         <div class="product-data-fieldlist">
-            {foreach $productAttributeList as $Field}
+            {foreach $productAttributeGroups as $Field}
             {$Field->getView()->create()}
             {/foreach}
         </div>
         {/if}
 
-        {if count($productAttributeGroups)}
+        {if count($productAttributeList)}
         <div class="product-data-fieldlist">
-            {foreach $productAttributeGroups as $Field}
+            {foreach $productAttributeList as $Field}
             {$Field->getView()->create()}
             {/foreach}
         </div>

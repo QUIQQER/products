@@ -60,8 +60,6 @@ QUI::$Ajax->registerFunction(
             $Child     = $Product->getVariantByVariantHash($fieldHash);
         } catch (QUI\Exception $Exception) {
             $Child = $Product;
-
-            // $Product->disablePrice();
         }
 
         $Control = new ProductControl([

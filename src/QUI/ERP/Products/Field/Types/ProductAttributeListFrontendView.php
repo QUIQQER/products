@@ -74,6 +74,8 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
         if (!\is_string($value) && !\is_numeric($value)) {
             $value = '';
+        } elseif (\is_numeric($value)) {
+            $value = (int)$value;
         }
 
         $value = \htmlspecialchars($value);
@@ -130,7 +132,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $selected  = '';
             $userInput = '';
 
-            if (isset($option['selected']) && $option['selected'] || $value === $key) {
+            if (isset($option['selected']) && $option['selected'] || (int)$value === $key) {
                 $selected = 'selected="selected" ';
             }
 

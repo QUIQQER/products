@@ -80,7 +80,17 @@ class Price extends QUI\Control
             $vatText = $Calc->getVatTextByUser();
         }
 
-        $result = '<span class="qui-products-price-display-value">';
+        $pricePrefix = '';
+
+        if ($Price->isMinimalPrice()) {
+            $pricePrefix = 'ab ';
+        }
+
+        $result = '';
+        $result .= '<span class="qui-products-price-display-prefix">';
+        $result .= $pricePrefix;
+        $result .= '<span>';
+        $result .= '<span class="qui-products-price-display-value">';
         $result .= $Price->getDisplayPrice();
         $result .= '</span>';
         $result .= '<span class="qui-products-price-display-vat">';

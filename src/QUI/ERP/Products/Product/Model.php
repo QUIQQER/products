@@ -650,7 +650,7 @@ class Model extends QUI\QDOM
     /**
      * Return the price of the product
      *
-     * Beachtet alle Preisfelder und sucht das zu diesem Zeitpunkt richtig Preisfeld
+     * Observes all price fields and searches for the correct price field at this time.
      *
      * @param null|QUI\Interfaces\Users\User $User - optional, default = Nobody
      * @return QUI\ERP\Money\Price

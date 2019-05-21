@@ -26,7 +26,10 @@ class Product extends QUI\Control
     {
         $this->setAttributes([
             'Product'  => false,
-            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/Product'
+            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/Product',
+
+            'data-qui-option-show-price' => true,
+            'data-qui-option-available'  => true
         ]);
 
         $this->addCSSFile(\dirname(__FILE__).'/Product.css');
@@ -50,6 +53,17 @@ class Product extends QUI\Control
         $fields  = [];
         $Calc    = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
+        $typeDefaultProduct = ($Product->getType() === QUI\ERP\Products\Product\Product::class);
+        $typeVariantParent  = ($Product->getType() === QUI\ERP\Products\Product\Types\VariantParent::class);
+        $typeVariantChild   = ($Product->getType() === QUI\ERP\Products\Product\Types\VariantChild::class);
+
+        if ($typeVariantParent) {
+            $this->setAttributes([
+                'data-qui-option-show-price' => false,
+                'data-qui-option-available'  => false
+            ]);
+        }
+
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
             $View   = $Product->getView();
             $Unique = $Product->createUniqueProduct($Calc);
@@ -63,6 +77,10 @@ class Product extends QUI\Control
         } else {
             $View  = $Product;
             $Price = $Product->getPrice();
+        }
+
+        if ($typeVariantParent) {
+            $Price->enableMinimalPrice();
         }
 
         /* @var $Product QUI\ERP\Products\Product\UniqueProduct */
@@ -135,6 +153,7 @@ class Product extends QUI\Control
 
         // retail price (UVP)
         $PriceRetailDisplay = false;
+
         if ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
             $PriceRetailDisplay = new QUI\ERP\Products\Controls\Price([
                 'Price'       => new QUI\ERP\Money\Price(
@@ -147,6 +166,7 @@ class Product extends QUI\Control
 
         // offer price (Angebotspreis)
         $PriceOldDisplay = false;
+
         if ($View->hasOfferPrice()) {
             $PriceOldDisplay = new QUI\ERP\Products\Controls\Price([
                 'Price'       => new QUI\ERP\Money\Price(
@@ -160,7 +180,7 @@ class Product extends QUI\Control
         // file / image folders
         $detailFields = [];
 
-        $fieldsList = array_merge(
+        $fieldsList = \array_merge(
             $Product->getFieldsByType(Fields::TYPE_FOLDER),
             $Product->getFieldsByType(Fields::TYPE_TEXTAREA),
             $Product->getFieldsByType(Fields::TYPE_TEXTAREA_MULTI_LANG)
@@ -168,9 +188,7 @@ class Product extends QUI\Control
 
         /* @var $Field QUI\ERP\Products\Field\Types\Folder */
         foreach ($fieldsList as $Field) {
-            if ($Field->getId() == Fields::FIELD_FOLDER
-                || $Field->getId() == Fields::FIELD_CONTENT
-            ) {
+            if ($Field->getId() == Fields::FIELD_FOLDER || $Field->getId() == Fields::FIELD_CONTENT) {
                 continue;
             }
 
@@ -182,8 +200,7 @@ class Product extends QUI\Control
         }
 
         // product fields
-        $productFields = [];
-
+        $productFields    = [];
         $productFieldList = \array_filter($View->getFields(), function ($Field) {
             /* @var $Field QUI\ERP\Products\Field\View */
             if ($Field->getType() == Fields::TYPE_PRODCUCTS) {
@@ -248,7 +265,7 @@ class Product extends QUI\Control
 
         QUI::getEvents()->fireEvent(
             'quiqqerProductsProductViewButtons',
-            [$View, &$Buttons]
+            [$View, &$Buttons, $this]
         );
 
         $Engine->assign('Buttons', $Buttons);
@@ -259,7 +276,7 @@ class Product extends QUI\Control
         );
 
         // render product
-        if ($Product->getType() === QUI\ERP\Products\Product\Types\VariantParent::class) {
+        if ($typeVariantParent || $typeVariantChild) {
             $this->setAttributes([
                 'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant'
             ]);
