@@ -28,6 +28,11 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
 class VariantParent extends AbstractType
 {
     /**
+     * @var null
+     */
+    protected $children = null;
+
+    /**
      * @var array
      */
     protected $childFields = null;
@@ -95,6 +100,42 @@ class VariantParent extends AbstractType
     }
 
     /**
+     * @param null $User
+     * @return QUI\ERP\Money\Price|void
+     */
+    public function getMinimumPrice($User = null)
+    {
+        $MinPrice = null;
+        $children = $this->getVariants();
+
+        foreach ($children as $Child) {
+            // at frontend, considere only active products
+            if (QUIQQER_FRONTEND) {
+                if ($Child->isActive() === false) {
+                    continue;
+                }
+            }
+
+            try {
+                $Price = $Child->getMinimumPrice($User);
+
+                if ($MinPrice === null) {
+                    $MinPrice = $Price;
+                    continue;
+                }
+
+                if ($MinPrice->value() < $Price->value()) {
+                    $MinPrice = $Price;
+                }
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception->getMessage());
+            }
+        }
+
+        return $MinPrice;
+    }
+
+    /**
      * Return all variants
      *
      * @param array $params - query params
@@ -104,6 +145,10 @@ class VariantParent extends AbstractType
      */
     public function getVariants($params = [])
     {
+        if ($this->children !== null) {
+            return $this->children;
+        }
+
         try {
             $query = [
                 'select' => ['id', 'parent'],
@@ -168,6 +213,8 @@ class VariantParent extends AbstractType
                 QUI\System\Log::writeDebugException($Exception);
             }
         }
+
+        $this->children = $variants;
 
         return $variants;
     }

@@ -718,6 +718,8 @@ class Model extends QUI\QDOM
      * @return QUI\ERP\Money\Price
      *
      * @throws QUI\Exception
+     *
+     * @todo we have maybe a bug here; in theory all field combinations would have to be tested
      */
     public function getMinimumPrice($User = null)
     {
