@@ -7,8 +7,10 @@
 namespace QUI\ERP\Products\Controls\Products;
 
 use DusanKasan\Knapsack\Collection;
+
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Utils\Fields as FieldUtils;
 
 /**
  * Class Button
@@ -241,13 +243,17 @@ class Product extends QUI\Control
             ]);
         }
 
+        if ($typeVariantParent || $typeVariantChild) {
+            QUI\ERP\Products\Utils\Products::setAvailableFieldOptions($Product);
+        }
+
         $Engine->assign([
             'Product'                => $View,
             'Gallery'                => $Gallery,
             'Files'                  => $Files,
-            'fields'                 => QUI\ERP\Products\Utils\Fields::sortFields($fields),
-            'details'                => QUI\ERP\Products\Utils\Fields::sortFields($details),
-            'detailFields'           => QUI\ERP\Products\Utils\Fields::sortFields($detailFields),
+            'fields'                 => FieldUtils::sortFields($fields),
+            'details'                => FieldUtils::sortFields($details),
+            'detailFields'           => FieldUtils::sortFields($detailFields),
             'productAttributeList'   => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
             'productAttributeGroups' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS),
             'Price'                  => $Price,
@@ -275,16 +281,18 @@ class Product extends QUI\Control
             $Engine->fetch(\dirname(__FILE__).'/Product.Buttons.html')
         );
 
-        // render product
-        if ($typeVariantParent || $typeVariantChild) {
-            $this->setAttributes([
-                'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant'
-            ]);
-
-            return $Engine->fetch(\dirname(__FILE__).'/ProductVariant.html');
+        // normal product
+        if (!$typeVariantParent && !$typeVariantChild) {
+            return $Engine->fetch(\dirname(__FILE__).'/Product.html');
         }
 
-        return $Engine->fetch(\dirname(__FILE__).'/Product.html');
+
+        // variant product
+        $this->setAttributes([
+            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant'
+        ]);
+
+        return $Engine->fetch(\dirname(__FILE__).'/ProductVariant.html');
     }
 
     /**

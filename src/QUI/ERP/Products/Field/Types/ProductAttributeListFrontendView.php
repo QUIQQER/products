@@ -130,10 +130,15 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
             $text      = '';
             $selected  = '';
+            $disabled  = '';
             $userInput = '';
 
             if (isset($option['selected']) && $option['selected'] || (int)$value === $key) {
                 $selected = 'selected="selected" ';
+            }
+
+            if (isset($option['disabled']) && $option['disabled'] || $value === $key) {
+                $disabled = 'disabled="disabled" ';
             }
 
             if (\is_string($title)) {
@@ -172,6 +177,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
             $options[] = [
                 'selected' => $selected,
+                'disabled' => $disabled,
                 'value'    => $key,
                 'text'     => $text,
                 'data'     => $userInput

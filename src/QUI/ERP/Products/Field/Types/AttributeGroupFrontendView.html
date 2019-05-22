@@ -3,14 +3,14 @@
     <div class="quiqqer-product-field-value">
         <select name="{$name|escape:'html'}" value="{$value|escape:'html'}" {$requiredField}
                 data-field="{$id}"
-                data-qui=""
-                disabled="disabled"
         >
             <option value="">
                 {locale group="quiqqer/products" var="empty.select"}
             </option>
             {foreach $options as $option}
-            <option {$option.selected}{$option.disabled}{$option.data} value="{$option.value|escape:'html'}">
+            <option {$option.selected}{$option.disabled}{$option.data}
+                    value="{$option.value|escape:'html'}"
+            >
                 {$option.text}
             </option>
             {/foreach}

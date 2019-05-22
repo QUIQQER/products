@@ -163,31 +163,103 @@ class Products
             if ($fieldValue instanceof QUI\ERP\Products\Interfaces\FieldInterface) {
                 $fieldId    = $fieldValue->getId();
                 $fieldValue = $fieldValue->getValue();
-            } elseif (is_string($Field) || is_numeric($Field)) {
+            } elseif (\is_string($Field) || \is_numeric($Field)) {
                 $fieldId = $Field;
             } else {
                 continue;
             }
 
             // string to hex
-            if (!is_numeric($fieldValue)) {
-                $fieldValue = implode(unpack("H*", $fieldValue));
+            if (!\is_numeric($fieldValue)) {
+                $fieldValue = \implode(\unpack("H*", $fieldValue));
             }
 
             $hash[] = $fieldId.':'.$fieldValue;
         }
 
         // sort fields
-        usort($hash, function ($a, $b) {
-            $aId = (int)explode(':', $a)[0];
-            $bId = (int)explode(':', $b)[0];
+        \usort($hash, function ($a, $b) {
+            $aId = (int)\explode(':', $a)[0];
+            $bId = (int)\explode(':', $b)[0];
 
             return $aId - $bId;
         });
 
         // generate hash
-        $generate = ';'.implode(';', $hash).';';
+        $generate = ';'.\implode(';', $hash).';';
 
         return $generate;
+    }
+
+    /**
+     * @param QUI\ERP\Products\Product\Product $Product
+     */
+    public static function setAvailableFieldOptions(QUI\ERP\Products\Product\Product $Product)
+    {
+        if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            $Product = $Product->getParent();
+        }
+
+        if (!($Product instanceof QUI\ERP\Products\Product\Types\VariantParent)) {
+            return;
+        }
+
+        $available = $Product->availableChildFields();
+
+        // attribute groups
+        $groupList = $Product->getFieldsByType(
+            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS
+        );
+
+        foreach ($groupList as $Field) {
+            /* @var $Field QUI\ERP\Products\Field\Types\AttributeGroup */
+            $fieldId = $Field->getId();
+            $Field->disableEntries();
+
+            if (!isset($available[$fieldId])) {
+                continue;
+            }
+
+            $options = $Field->getOptions();
+            $entries = $options['entries'];
+
+            $allowed = $available[$fieldId];
+            $allowed = \array_flip($allowed);
+
+            foreach ($entries as $key => $value) {
+                $valueId = $value['valueId'];
+
+                if (isset($allowed[$valueId])) {
+                    $Field->enableEntry($key);
+                }
+            }
+        }
+
+        // attribute list
+        $attributeList = $Product->getFieldsByType(
+            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST
+        );
+
+        foreach ($attributeList as $Field) {
+            /* @var $Field QUI\ERP\Products\Field\Types\AttributeGroup */
+            $fieldId = $Field->getId();
+            $Field->disableEntries();
+
+            if (!isset($available[$fieldId])) {
+                continue;
+            }
+
+            $options = $Field->getOptions();
+            $entries = $options['entries'];
+
+            $allowed = $available[$fieldId];
+            $allowed = \array_flip($allowed);
+
+            foreach ($entries as $key => $value) {
+                if (isset($allowed[$key])) {
+                    $Field->enableEntry($key);
+                }
+            }
+        }
     }
 }

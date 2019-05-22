@@ -114,7 +114,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
 
         $Engine->assign('options', $options);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ProductAttributeListFrontendView.html');
+        return $Engine->fetch(\dirname(__FILE__).'/AttributeGroupFrontendView.html');
     }
 
     /**

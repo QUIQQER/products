@@ -39,6 +39,11 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     protected $defaultValue = null;
 
     /**
+     * @var array
+     */
+    protected $disabled = [];
+
+    /**
      * ProductAttributeList constructor.
      *
      * @param int $fieldId
@@ -397,5 +402,35 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         }
 
         return (int)$value;
+    }
+
+    /**
+     * disable all entries
+     */
+    public function disableEntries()
+    {
+        foreach ($this->options['entries'] as $key => $option) {
+            $this->options['entries'][$key]['disabled'] = true;
+        }
+    }
+
+    /**
+     * Disable an option
+     *
+     * @param string|integer $entry
+     */
+    public function disableEntry($entry)
+    {
+        $this->options['entries'][$entry]['disabled'] = true;
+    }
+
+    /**
+     * Enable an option
+     *
+     * @param string|integer $entry
+     */
+    public function enableEntry($entry)
+    {
+        $this->options['entries'][$entry]['disabled'] = false;
     }
 }

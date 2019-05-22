@@ -34,7 +34,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     protected $disabled = [];
 
     /**
-     * ProductAttributeList constructor.
+     * Attribute group constructor.
      *
      * @param int $fieldId
      * @param array $params
