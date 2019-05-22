@@ -100,7 +100,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                 return r;
             });
-console.log('$refreshVariant', fieldLists);
+
             QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getVariant', function (result) {
                 var Ghost = new Element('div', {
                     html: result

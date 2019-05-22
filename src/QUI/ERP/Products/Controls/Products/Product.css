@@ -1,4 +1,9 @@
 
+.quiqqer-products-product {
+    display: inline-block;
+    width: 100%;
+}
+
 .page-content-header-description {
     margin-bottom: 20px;
 }

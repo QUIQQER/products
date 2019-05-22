@@ -34,6 +34,7 @@ class Product extends QUI\Control
             'data-qui-option-available'  => true
         ]);
 
+        $this->addCSSClass('quiqqer-products-product');
         $this->addCSSFile(\dirname(__FILE__).'/Product.css');
 
         parent::__construct($attributes);
