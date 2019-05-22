@@ -196,5 +196,16 @@ class VariantChild extends AbstractType
         );
     }
 
+    /**
+     * return all available fields from the variant children
+     * this array contains all field ids and field values that are in use in the children
+     *
+     * @return array
+     */
+    public function availableChildFields()
+    {
+        return $this->getParent()->availableChildFields();
+    }
+
     //endregion
 }

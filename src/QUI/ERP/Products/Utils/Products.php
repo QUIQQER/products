@@ -196,11 +196,8 @@ class Products
      */
     public static function setAvailableFieldOptions(QUI\ERP\Products\Product\Product $Product)
     {
-        if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
-            $Product = $Product->getParent();
-        }
-
-        if (!($Product instanceof QUI\ERP\Products\Product\Types\VariantParent)) {
+        if (!($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) &&
+            !($Product instanceof QUI\ERP\Products\Product\Types\VariantChild)) {
             return;
         }
 
