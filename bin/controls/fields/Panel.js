@@ -224,44 +224,18 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
 
             this.Loader.show();
 
-            this.createSheet({
-                title : QUILocale.get(lg, 'fields.update.title', {
-                    fieldId: fieldId
-                }),
-                events: {
-                    onShow: function (Sheet) {
-                        Sheet.getContent().setStyle('padding', 20);
-
-                        var Field = new UpdateField({
-                            fieldId: fieldId,
-                            events : {
-                                onLoaded: function () {
-                                    self.Loader.hide();
-                                }
-                            }
-                        }).inject(Sheet.getContent());
-
-                        Sheet.addButton(
-                            new QUIButton({
-                                text     : QUILocale.get('quiqqer/system', 'save'),
-                                textimage: 'fa fa-save',
-                                events   : {
-                                    onClick: function () {
-                                        self.Loader.show();
-
-                                        Field.submit().then(function () {
-                                            Sheet.hide().then(function () {
-                                                Sheet.destroy();
-                                                self.refresh();
-                                            });
-                                        });
-                                    }
-                                }
-                            })
-                        );
+            require([
+                'package/quiqqer/products/bin/controls/fields/windows/Field'
+            ], function (FieldWindow) {
+                new FieldWindow({
+                    fieldId: fieldId,
+                    events : {
+                        onOpen: function () {
+                            self.Loader.hide();
+                        }
                     }
-                }
-            }).show();
+                }).open();
+            });
         },
 
         /**

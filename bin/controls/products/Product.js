@@ -1512,7 +1512,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         header   : QUILocale.get(lg, 'priority'),
                         dataIndex: 'priority',
                         dataType : 'number',
-                        width    : 80
+                        width    : 60
                     }, {
                         header   : QUILocale.get(lg, 'product.fields.grid.visible'),
                         dataIndex: 'visible',
@@ -1589,6 +1589,24 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         } else {
                             Remove.disable();
                         }
+                    },
+
+                    onDblClick: function () {
+                        self.Loader.show();
+                        var selected = self.$Grid.getSelectedData()[0];
+
+                        require([
+                            'package/quiqqer/products/bin/controls/fields/windows/Field'
+                        ], function (FieldWindow) {
+                            new FieldWindow({
+                                fieldId: selected.id,
+                                events : {
+                                    onOpen: function () {
+                                        self.Loader.hide();
+                                    }
+                                }
+                            }).open();
+                        });
                     }
                 });
 
