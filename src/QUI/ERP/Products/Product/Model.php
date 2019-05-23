@@ -490,9 +490,9 @@ class Model extends QUI\QDOM
         $Category = $this->getCategory();
         $Site     = $Category->getSite($Project);
 
-        if ($Site->getAttribute('quiqqer.products.fake.type') ||
-            $Site->getAttribute('type') !== 'quiqqer/products:types/category'
-            && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
+        if ($Site->getAttribute('quiqqer.products.fake.type')
+            || $Site->getAttribute('type') !== 'quiqqer/products:types/category'
+               && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
         ) {
             QUI\System\Log::addWarning(
                 QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', [

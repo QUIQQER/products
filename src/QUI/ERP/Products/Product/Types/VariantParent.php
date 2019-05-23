@@ -110,7 +110,7 @@ class VariantParent extends AbstractType
 
         foreach ($children as $Child) {
             // at frontend, considere only active products
-            if (QUIQQER_FRONTEND) {
+            if (defined('QUIQQER_FRONTEND') && QUIQQER_FRONTEND) {
                 if ($Child->isActive() === false) {
                     continue;
                 }

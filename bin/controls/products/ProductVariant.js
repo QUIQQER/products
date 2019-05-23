@@ -1149,6 +1149,12 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 el.set('disabled', false);
                 el.getParent('tr').removeClass('variant-field-disabled');
+
+                var Control = QUI.Controls.getById(el.get('data-quiid'));
+
+                if (typeof Control.enable === 'function') {
+                    Control.enable();
+                }
             }
         },
 

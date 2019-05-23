@@ -66,7 +66,11 @@ QUI::$Ajax->registerFunction(
             'Product' => $Child
         ]);
 
-        return $Control->create();
+        return [
+            'control' => $Control->create(),
+            'url'     => $Child->getUrlRewrittenWithHost(),
+            'title'   => $Child->getTitle()
+        ];
     },
     ['productId', 'fields']
 );

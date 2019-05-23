@@ -151,6 +151,56 @@ class VariantChild extends AbstractType
     }
 
     /**
+     * @param null $Project
+     * @return string
+     * @throws QUI\Exception
+     */
+    public function getUrlRewrittenWithHost($Project = null)
+    {
+        if (!$Project) {
+            $Project = QUI::getRewrite()->getProject();
+        }
+
+        $Category = $this->getCategory();
+        $Site     = $Category->getSite($Project);
+
+        $Parent = $this->getParent();
+        $fields = VariantGenerating::getInstance()->getFieldsForGeneration($Parent);
+
+        $fieldUrl = \array_map(function ($Field) {
+            /* @var $Field QUI\ERP\Products\Field\Field */
+            return $Field->getValue();
+        }, $fields);
+
+        $fieldUrl = '_'.\implode('_', $fieldUrl);
+
+        if ($Site->getAttribute('quiqqer.products.fake.type')
+            || $Site->getAttribute('type') !== 'quiqqer/products:types/category'
+               && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
+        ) {
+            QUI\System\Log::addWarning(
+                QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', [
+                    'productId' => $this->getId(),
+                    'title'     => $this->getTitle()
+                ]),
+                [
+                    'wantedLanguage' => $Project->getLang(),
+                    'wantedProject'  => $Project->getName()
+                ]
+            );
+
+            return $Project->getVHost(true, true).'/_p/'.$this->getUrlName();
+        }
+
+        $url = $Site->getUrlRewrittenWithHost([
+            0              => $this->getUrlName().$fieldUrl,
+            'paramAsSites' => true
+        ]);
+
+        return $url;
+    }
+
+    /**
      * Generate a variant hash for this variant child
      * The variant hash depends on the used fields
      *

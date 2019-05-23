@@ -103,8 +103,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
             QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getVariant', function (result) {
                 var Ghost = new Element('div', {
-                    html: result
+                    html: result.control
                 });
+
+                document.title = result.title;
 
                 var Control = Ghost.getElement(
                     '[data-qui="package/quiqqer/products/bin/controls/frontend/products/ProductVariant"]'
