@@ -368,6 +368,23 @@ class EventHandling
                     'de' => 'Ähnliche Produkte',
                     'en' => 'Similar Products'
                 ]
+            ],
+            // Produkt URL
+            [
+                'id'            => Fields::FIELD_URL,
+                'type'          => 'InputMultiLang',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 1,
+                'systemField'   => 1,
+                'standardField' => 1,
+                'requiredField' => 1,
+                'publicField'   => 0,
+                'search_type'   => Search::SEARCHTYPE_TEXT,
+                'titles'        => [
+                    'de' => 'Produkt URL',
+                    'en' => 'Product URL'
+                ]
             ]
         ];
 

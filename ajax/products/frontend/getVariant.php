@@ -62,14 +62,23 @@ QUI::$Ajax->registerFunction(
             $Child = $Product;
         }
 
+        $categoryId = null;
+
+        if ($Child->getCategory()) {
+            $categoryId = $Child->getCategory()->getId();
+        }
+
+
+        // render
         $Control = new ProductControl([
             'Product' => $Child
         ]);
 
         return [
-            'control' => $Control->create(),
-            'url'     => $Child->getUrlRewrittenWithHost(),
-            'title'   => $Child->getTitle()
+            'control'  => $Control->create(),
+            'url'      => $Child->getUrlRewrittenWithHost(),
+            'title'    => $Child->getTitle(),
+            'category' => $categoryId
         ];
     },
     ['productId', 'fields']

@@ -523,9 +523,28 @@ class Model extends QUI\QDOM
      */
     public function getUrlName()
     {
+        $url         = '';
+        $useUrlField = false;
+
+        try {
+            $Field       = $this->getField(Fields::FIELD_URL);
+            $url         = $Field->getValueByLocale();
+            $useUrlField = true;
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
+
+        if (empty($url)) {
+            $useUrlField = false;
+            $url         = $this->getTitle();
+        }
+
         $parts   = [];
-        $parts[] = Orthos::urlEncodeString($this->getTitle());
-        $parts[] = $this->getId();
+        $parts[] = Orthos::urlEncodeString($url);
+
+        if ($useUrlField === false) {
+            $parts[] = $this->getId();
+        }
 
         return \urlencode(\implode(QUI\Rewrite::URL_PARAM_SEPARATOR, $parts));
     }

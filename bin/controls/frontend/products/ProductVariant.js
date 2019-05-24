@@ -4,6 +4,8 @@
  *
  * @module package/quiqqer/products/bin/controls/frontend/products/ProductVariant
  * @author www.pcsg.de (Henning Leutz)
+ *
+ * @todo refresh details events
  */
 define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant', [
 
@@ -14,6 +16,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
 ], function (QUI, QUILoader, QUIAjax, Product) {
     "use strict";
+
+    // history popstate for mootools
+    Element.NativeEvents.popstate = 2;
 
     return new Class({
 
@@ -42,6 +47,15 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 onInject: this.$onInject,
                 onImport: this.$onImport
             });
+
+            // read url
+            window.addEvent('popstate', function () {
+                if (this.$startInit === false) {
+                    return;
+                }
+                console.log('popstate');
+                console.log(window.location.toString());
+            }.bind(this));
         },
 
         /**
@@ -107,6 +121,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 });
 
                 document.title = result.title;
+                window.history.pushState({}, "", result.url.toString());
+
+                console.log(result);
+                console.log(result.url);
 
                 var Control = Ghost.getElement(
                     '[data-qui="package/quiqqer/products/bin/controls/frontend/products/ProductVariant"]'

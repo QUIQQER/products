@@ -34,6 +34,13 @@ class Products
     private static $list = [];
 
     /**
+     * List of internal products, via its own urls
+     *
+     * @var array
+     */
+    private static $productUrls = [];
+
+    /**
      * Global Product Locale
      *
      * @var null
@@ -98,6 +105,53 @@ class Products
         self::$list[$pid] = $Product;
 
         return $Product;
+    }
+
+    /**
+     * Return a product by its own url
+     *
+     * @param string $url
+     * @param int $category
+     * @return QUI\ERP\Products\Product\Types\AbstractType
+     *
+     * @throws QUI\ERP\Products\Product\Exception
+     */
+    public static function getProductByUrl($url, $category)
+    {
+        $field = 'F'.QUI\ERP\Products\Handler\Fields::FIELD_URL;
+
+        try {
+            $result = QUI::getDataBase()->fetch([
+                'select' => [$field, 'category', 'id'],
+                'from'   => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+                'where'  => [
+                    $field     => $url,
+                    'category' => [
+                        'type'  => '%LIKE%',
+                        'value' => ','.$category.','
+                    ]
+                ],
+                'limit'  => 1
+            ]);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
+
+        if (!isset($result) || !isset($result[0])) {
+            throw new QUI\ERP\Products\Product\Exception(
+                [
+                    'quiqqer/products',
+                    'exception.product.not.found.unknown'
+                ],
+                404,
+                [
+                    'url'      => $url,
+                    'category' => $category
+                ]
+            );
+        }
+
+        return self::getNewProductInstance($result[0]['id']);
     }
 
     /**

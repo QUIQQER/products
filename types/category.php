@@ -3,6 +3,7 @@
 use \QUI\ERP\Products;
 use \QUI\ERP\Products\Controls\Category\ProductList;
 
+use QUI\Exception;
 use \QUI\System\Log;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Response;
@@ -75,20 +76,33 @@ if ($siteUrl != $_REQUEST['_url']) {
 
     $parts = \explode(QUI\Rewrite::URL_PARAM_SEPARATOR, $baseName);
     $refNo = \array_pop($parts);
-    $refNo = (int)$refNo;
 
-    $Output = new QUI\Output();
-    $Locale = QUI::getLocale();
+    $Product = null;
+    $Output  = new QUI\Output();
+    $Locale  = QUI::getLocale();
+
+    // get by url field
+    try {
+        $categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
+        $Product    = Products\Handler\Products::getProductByUrl($refNo, $categoryId);
+    } catch (QUI\Exception $Exception) {
+        Log::addDebug('Products::getProductByUrl :: '.$Exception->getMessage());
+    }
 
     try {
-        $Product = Products\Handler\Products::getProduct($refNo);
-        $Product->getView();
+        // get url by id
+        if ($Product === null) {
+            $refNo   = (int)$refNo;
+            $Product = Products\Handler\Products::getProduct($refNo);
+        }
 
+        // render product
+        $Product->getView();
         $productUrl = \urldecode($Product->getUrl());
 
-        // weiterleitung, falls das produkt eine neue URL hat
-        // kann passieren, wenn das produkt vorher in "alle produkte" war
 
+        // forwarding, if the product has a new URL
+        // can happen if the product was previously in "all products".
         if ($productUrl != URL_DIR.$_REQUEST['_url']) {
             $Redirect = new RedirectResponse($productUrl);
             $Redirect->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
