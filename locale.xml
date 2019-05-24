@@ -76,6 +76,10 @@
             <de><![CDATA[Produktfelder]]></de>
             <en><![CDATA[Product fields]]></en>
         </locale>
+        <locale name="menu.erp.products.variants.title">
+            <de><![CDATA[Varianten]]></de>
+            <en><![CDATA[Variants]]></en>
+        </locale>
 
         <locale name="erp.panel.products.text">
             <de><![CDATA[Produktverwaltung]]></de>
@@ -178,6 +182,14 @@
         <locale name="settings.window.products.categoryAsFilter.description" html="true">
             <de><![CDATA[Bestimmt die standard Einstellung für eine neue Kategorie.]]></de>
             <en><![CDATA[Sets the default setting for a new category.]]></en>
+        </locale>
+        <locale name="settings.window.products.parentHasChildImages">
+            <de><![CDATA[Varianten Kindbilder]]></de>
+            <en><![CDATA[Variants Child Images]]></en>
+        </locale>
+        <locale name="settings.window.products.parentHasChildImages.description">
+            <de><![CDATA[Bilder von Kinder in Vaterartikel laden.]]></de>
+            <en><![CDATA[Load pictures of children into father articles.]]></en>
         </locale>
 
         <locale name="settings.window.fieldsearch.backend.title">

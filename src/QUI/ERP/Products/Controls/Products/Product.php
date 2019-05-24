@@ -108,6 +108,15 @@ class Product extends QUI\Control
         } catch (QUI\Exception $Exception) {
         }
 
+        if ($typeVariantParent) {
+            $Gallery->setAttribute('folderId', false);
+            $images = $Product->getImages();
+
+            foreach ($images as $Image) {
+                $Gallery->addImage($Image);
+            }
+        }
+
         $Gallery->setAttribute('height', '400px');
         $Gallery->setAttribute('data-qui-options-show-controls-always', 0);
         $Gallery->setAttribute('data-qui-options-show-title-always', 0);

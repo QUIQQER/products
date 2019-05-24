@@ -136,6 +136,45 @@ class VariantParent extends AbstractType
     }
 
     /**
+     * Return all images of the product
+     * The Variant Parent return all images of the children, too
+     *
+     * @param array $params - optional, select params
+     * @return array
+     */
+    public function getImages($params = [])
+    {
+        $images   = [];
+        $children = $this->getVariants();
+
+        try {
+            $images = $this->getMediaFolder()->getImages($params);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
+
+        try {
+            $Config               = QUI::getPackage('quiqqer/products')->getConfig();
+            $parentHasChildImages = !!$Config->getValue('variants', 'parentHasChildImages');
+        } catch (QUI\Exception $Exception) {
+            $parentHasChildImages = true;
+        }
+
+        if ($parentHasChildImages) {
+            foreach ($children as $Child) {
+                try {
+                    $childImages = $Child->getMediaFolder()->getImages($params);
+                    $images      = \array_merge($images, $childImages);
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::addDebug($Exception->getMessage());
+                }
+            }
+        }
+
+        return $images;
+    }
+
+    /**
      * Return all variants
      *
      * @param array $params - query params

@@ -39,6 +39,13 @@
                     <type><![CDATA[string]]></type>
                 </conf>
             </section>
+            <section name="variants">
+                <conf name="parentHasChildImages">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>1</defaultvalue>
+                </conf>
+            </section>
+            <section name="overwritableFields"></section>
         </config>
 
         <window name="ERP">
@@ -135,6 +142,21 @@
                                             var="settings.window.products.categoryAsFilter.description"/>
                                 </description>
                             </text>
+                        </input>
+                    </settings>
+
+                    <settings title="variants" name="variants">
+                        <title>
+                            <locale group="quiqqer/products" var="menu.erp.products.variants.title"/>
+                        </title>
+
+                        <input conf="variants.parentHasChildImages" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.parentHasChildImages"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products" var="settings.window.products.parentHasChildImages.description"/>
+                            </description>
                         </input>
                     </settings>
                 </category>
