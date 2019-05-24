@@ -830,6 +830,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @return {Promise}
          */
         $renderInformation: function (Container, Product) {
+            var productId = this.getAttribute('productId');
+
             return Product.getCategories().then(function (data) {
                 return Categories.getCategories(data);
             }).then(function (categories) {
@@ -856,6 +858,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 Container.set({
                     html: Mustache.render(informationTemplate, {
+                        id               : productId,
                         title            : data[0],
                         description      : data[1],
                         image            : image,
