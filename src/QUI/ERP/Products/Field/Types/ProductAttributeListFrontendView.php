@@ -178,8 +178,8 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $options[] = [
                 'selected' => $selected,
                 'disabled' => $disabled,
-                'value'    => $key,
-                'text'     => $text,
+                'value'    => \htmlspecialchars($key),
+                'text'     => \htmlspecialchars($text),
                 'data'     => $userInput
             ];
         }

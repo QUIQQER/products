@@ -105,8 +105,8 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             $options[] = [
                 'selected' => $selected,
                 'disabled' => $disabled,
-                'value'    => $option['valueId'],
-                'text'     => $text,
+                'value'    => \htmlspecialchars($option['valueId']),
+                'text'     => \htmlspecialchars($text),
                 'data'     => $userInput
             ];
         }
