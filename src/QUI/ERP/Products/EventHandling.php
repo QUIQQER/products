@@ -731,8 +731,9 @@ class EventHandling
      * event: onPackageInstall
      *
      * @param Package $Package
+     * @param array $params
      */
-    public static function onPackageConfigSave($Package)
+    public static function onPackageConfigSave($Package, $params)
     {
         if ($Package->getName() != 'quiqqer/products') {
             return;

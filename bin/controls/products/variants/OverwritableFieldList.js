@@ -27,7 +27,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
         ],
 
         options: {
-            productId: false
+            productId: false // if false, global field set will be used
         },
 
         initialize: function (options) {
@@ -131,6 +131,10 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
         save: function () {
             var self = this;
 
+            if (this.getAttribute('productId') === false) {
+                return Promise.resolve();
+            }
+
             return new Promise(function (resolve) {
                 var fields = self.$Grid.getData().filter(function (entry) {
                     return entry.status.getStatus();
@@ -143,6 +147,19 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
                     productId   : self.getAttribute('productId'),
                     overwritable: JSON.encode(fields)
                 });
+            });
+        },
+
+        /**
+         * Return the active overwritable fields
+         *
+         * @return {array}
+         */
+        getOverwritableFields: function () {
+            return this.$Grid.getData().filter(function (entry) {
+                return entry.status.getStatus();
+            }).map(function (entry) {
+                return entry.id;
             });
         },
 

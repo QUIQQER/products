@@ -13,17 +13,40 @@ use QUI\ERP\Products\Handler\Products;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_variant_getOverwritableFieldList',
-    function ($productId, $options) {
-        $Product      = Products::getProduct($productId);
-        $overwritable = $Product->getAttribute('overwritableVariantFields');
+    function ($productId, $options = '') {
+        // defaults
+        $overwritable = false;
+        $fields       = false;
         $options      = \json_decode($options, true);
 
-        if ($overwritable === false) {
-            // @todo get erp fields
+        if (!\is_array($options)) {
+            $options = [];
         }
 
-        // fields
-        $fields = $Product->getFields();
+        if (!isset($options['sortOn'])) {
+            $options['sortOn'] = 'id';
+        }
+
+
+        // product fields
+        if (!empty($productId)) {
+            $Product      = Products::getProduct($productId);
+            $overwritable = $Product->getAttribute('overwritableVariantFields');
+
+            // fields
+            $fields = $Product->getFields();
+        } else {
+            $overwritable = Products::getGlobalOverwritableVariantFields();
+            $overwritable = \array_map(function ($Field) {
+                /* @var $Field \QUI\ERP\Products\Field\Field */
+                return $Field->getId();
+            }, $overwritable);
+        }
+
+        // if $overwritable is false, then use global erp field settings
+        if ($overwritable === false || $fields === false) {
+            $fields = \QUI\ERP\Products\Handler\Fields::getFields();
+        }
 
         // sorting
         if (!empty($options['sortOn'])) {

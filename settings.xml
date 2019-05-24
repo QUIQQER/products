@@ -45,7 +45,7 @@
                     <defaultvalue>1</defaultvalue>
                 </conf>
             </section>
-            <section name="overwritableFields"></section>
+            <section name="overwritableFields"/>
         </config>
 
         <window name="ERP">
@@ -155,8 +155,17 @@
                                 <locale group="quiqqer/products" var="settings.window.products.parentHasChildImages"/>
                             </text>
                             <description>
-                                <locale group="quiqqer/products" var="settings.window.products.parentHasChildImages.description"/>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.parentHasChildImages.description"/>
                             </description>
+                        </input>
+
+                        <input conf="overwritableFields"
+                               data-qui="package/quiqqer/products/bin/controls/products/variants/OverwritableFieldSettings"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.overwritableFields"/>
+                            </text>
                         </input>
                     </settings>
                 </category>

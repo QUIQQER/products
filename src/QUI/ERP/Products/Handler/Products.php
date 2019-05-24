@@ -741,4 +741,56 @@ class Products
 
         return self::$Locale;
     }
+
+    /**
+     * Return the global overwriteable variant fields
+     *
+     * @return QUI\ERP\Products\Field\Field[]
+     */
+    public static function getGlobalOverwritableVariantFields()
+    {
+        try {
+            $Config = QUI::getPackage('quiqqer/products')->getConfig();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+
+            return [];
+        }
+
+        $result = [];
+        $fields = $Config->getSection('overwritableFields');
+
+        foreach ($fields as $fieldId => $active) {
+            if (empty($active)) {
+                continue;
+            }
+
+            try {
+                $result[] = Fields::getField($fieldId);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception->getMessage());
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Set global overwritable variant fields
+     *
+     * @param array $fieldIds
+     *
+     * @throws QUI\Exception
+     */
+    public static function setGlobalOverwritableVariantFields(array $fieldIds)
+    {
+        $Config = QUI::getPackage('quiqqer/products')->getConfig();
+        $Config->setSection('overwritableFields', []);
+
+        foreach ($fieldIds as $field) {
+            $Config->setValue('overwritableFields', $field, 1);
+        }
+
+        $Config->save();
+    }
 }

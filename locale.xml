@@ -191,6 +191,10 @@
             <de><![CDATA[Bilder von Kinder in Vaterartikel laden.]]></de>
             <en><![CDATA[Load pictures of children into father articles.]]></en>
         </locale>
+        <locale name="settings.window.products.overwritableFields">
+            <de><![CDATA[Überschreibbare Varianten Felder]]></de>
+            <en><![CDATA[Overwritable Variants Fields]]></en>
+        </locale>
 
         <locale name="settings.window.fieldsearch.backend.title">
             <de><![CDATA[Felder für Backend-Filter]]></de>

@@ -685,16 +685,22 @@ class Fields
                 QUI\ERP\Products\Handler\Fields::getFieldCacheName($fieldId)
             );
         } catch (QUI\Exception $Exception) {
-            $result = QUI::getDataBase()->fetch([
-                'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
-                'where' => [
-                    'id' => (int)$fieldId
-                ],
-                'limit' => 1
-            ]);
 
+            try {
+                $result = QUI::getDataBase()->fetch([
+                    'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+                    'where' => [
+                        'id' => (int)$fieldId
+                    ],
+                    'limit' => 1
+                ]);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
 
-            if (!isset($result[0])) {
+                $result = false;
+            }
+
+            if (!$result || !isset($result[0])) {
                 throw new QUI\ERP\Products\Field\Exception(
                     ['quiqqer/products', 'exception.field.not.found'],
                     404,
@@ -942,7 +948,13 @@ class Fields
             $query['where_or'] = $queryParams['where_or'];
         }
 
-        $data = QUI::getDataBase()->fetch($query);
+        try {
+            $data = QUI::getDataBase()->fetch($query);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addError($Exception->getMessage());
+
+            return 0;
+        }
 
         if (isset($data[0]) && isset($data[0]['count'])) {
             return (int)$data[0]['count'];
