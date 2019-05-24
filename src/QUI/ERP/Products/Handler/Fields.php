@@ -685,7 +685,6 @@ class Fields
                 QUI\ERP\Products\Handler\Fields::getFieldCacheName($fieldId)
             );
         } catch (QUI\Exception $Exception) {
-
             try {
                 $result = QUI::getDataBase()->fetch([
                     'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
