@@ -1,0 +1,27 @@
+
+.quiqqer-products-variant-generate-tableBody {
+    flex-grow: 1;
+    overflow: auto;
+    width: 100%;
+}
+
+.quiqqer-products-variant-generate-tableBody tr:nth-child(even) {
+    background: #f7f7f7;
+}
+
+.quiqqer-products-variant-generate-tableBody td {
+    display: flex;
+    padding: 0;
+}
+
+
+.quiqqer-products-variant-generate-tableBody label {
+    cursor: pointer;
+    flex-grow: 1;
+    padding: 8px;
+    width: 100%;
+}
+
+.quiqqer-products-variant-generate-tableBody label:hover {
+    background: #eaeff4;
+}

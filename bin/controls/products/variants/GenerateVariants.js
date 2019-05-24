@@ -115,55 +115,28 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
          * event: on inject
          */
         $onInject: function () {
+            var self = this;
+
+            this.$CalcDisplay = new Element('div', {
+                'class': 'quiqqer-products-variant-generate-calcDisplay'
+            }).inject(this.$Elm);
+
             // get attribute fields
             QUIAjax.get('package_quiqqer_products_ajax_products_variant_getVariantFields', function (fields) {
-                var i, len, field, values;
+                require(['package/quiqqer/products/bin/utils/Fields'], function (FieldUtils) {
 
-                var Container = new Element('div', {
-                        'class': 'quiqqer-products-variant-generate-tableBody'
-                    }).inject(this.$Elm),
-                    current   = QUILocale.getCurrent(),
-                    fieldList = [];
+                    FieldUtils.renderVariantFieldSelect(fields).then(function (Node) {
+                        Node.inject(self.getElm());
+                        Node.getElements('input').addEvent('change', self.refreshCalc);
 
-                this.$CalcDisplay = new Element('div', {
-                    'class': 'quiqqer-products-variant-generate-calcDisplay'
-                }).inject(this.$Elm);
+                        self.refreshCalc();
 
-                var filterValues = function (entry, key) {
-                    if ("valueId" in entry) {
-                        key = entry.valueId;
-                    }
-
-                    return {
-                        fieldId: field.id,
-                        title  : entry.title[current],
-                        valueId: key
-                    };
-                };
-
-                for (i = 0, len = fields.length; i < len; i++) {
-                    field  = fields[i];
-                    values = field.options.entries.map(filterValues);
-
-                    fieldList.push({
-                        fieldId: field.id,
-                        title  : field.title,
-                        values : values
+                        self.resize();
+                        self.fireEvent('load', [self]);
                     });
-                }
 
-                Container.set('html', Mustache.render(template, {
-                    fields           : fieldList,
-                    message_no_values: QUILocale.get(lg, 'variants.generating.window.message.no.values')
-                }));
-
-                Container.getElements('input').addEvent('change', this.refreshCalc);
-
-                this.refreshCalc();
-
-                this.resize();
-                this.fireEvent('load', [this]);
-            }.bind(this), {
+                });
+            }, {
                 'package': 'quiqqer/products',
                 productId: this.getAttribute('productId')
             });

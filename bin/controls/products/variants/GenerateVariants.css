@@ -4,12 +4,6 @@
     position: relative;
 }
 
-.quiqqer-products-variant-generate-tableBody {
-    flex-grow: 1;
-    overflow: auto;
-    width: 100%;
-}
-
 .quiqqer-products-variant-generate-calcDisplay {
     background: #FAF6D4;
     border: 1px solid #E6C26E;

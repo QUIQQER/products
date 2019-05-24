@@ -72,5 +72,61 @@ define('package/quiqqer/products/bin/utils/Fields', {
                 return resolve(true);
             });
         });
+    },
+
+    /**
+     *
+     * @param fields
+     */
+    renderVariantFieldSelect: function (fields) {
+        "use strict";
+
+        return new Promise(function (resolve) {
+            require([
+                'Mustache',
+                'Locale',
+                'text!package/quiqqer/products/bin/utils/Fields.GenerateVariants.html',
+                'css!package/quiqqer/products/bin/utils/Fields.GenerateVariants.css'
+            ], function (Mustache, QUILocale, template) {
+                var i, len, field, values;
+                var lg = 'quiqqer/products';
+
+                var Container = new Element('div', {
+                        'class': 'quiqqer-products-variant-generate-tableBody'
+                    }),
+                    current   = QUILocale.getCurrent(),
+                    fieldList = [];
+
+                var filterValues = function (entry, key) {
+                    if ("valueId" in entry) {
+                        key = entry.valueId;
+                    }
+
+                    return {
+                        fieldId: field.id,
+                        title  : entry.title[current],
+                        valueId: key
+                    };
+                };
+
+                for (i = 0, len = fields.length; i < len; i++) {
+                    field  = fields[i];
+                    values = field.options.entries.map(filterValues);
+
+                    fieldList.push({
+                        fieldId: field.id,
+                        title  : field.title,
+                        values : values
+                    });
+                }
+
+                Container.set('html', Mustache.render(template, {
+                    fields           : fieldList,
+                    message_no_values: QUILocale.get(lg, 'variants.generating.window.message.no.values')
+                }));
+
+                resolve(Container);
+            });
+        });
     }
 });

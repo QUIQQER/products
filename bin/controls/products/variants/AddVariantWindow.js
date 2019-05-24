@@ -18,13 +18,14 @@ define('package/quiqqer/products/bin/controls/products/variants/AddVariantWindow
         Type   : 'package/quiqqer/products/bin/controls/products/variants/AddVariantWindow',
 
         Binds: [
-            '$onSubmit'
+            '$onSubmit',
+            '$onOpen'
         ],
 
         options: {
             productId: false,
             maxWidth : 600,
-            maxHeight: 400,
+            maxHeight: 800,
             autoclose: false
         },
 
@@ -55,7 +56,47 @@ define('package/quiqqer/products/bin/controls/products/variants/AddVariantWindow
             });
 
             this.addEvents({
-                onSubmit: this.$onSubmit
+                onSubmit: this.$onSubmit,
+                onOpen  : this.$onOpen
+            });
+        },
+
+        /**
+         * event: on open
+         */
+        $onOpen: function () {
+            var self = this;
+
+            this.Loader.show();
+
+            var onInputChange = function (event) {
+                var Target = event.target;
+                var Group  = Target.getParent('table');
+                var inputs = Group.getElements('input');
+
+                for (var i = 0, len = inputs.length; i < len; i++) {
+                    if (Target !== inputs[i]) {
+                        inputs[i].checked = false;
+                    }
+                }
+            };
+
+            QUIAjax.get('package_quiqqer_products_ajax_products_variant_getVariantFields', function (fields) {
+                require(['package/quiqqer/products/bin/utils/Fields'], function (FieldUtils) {
+
+                    FieldUtils.renderVariantFieldSelect(fields).then(function (Node) {
+                        Node.setStyle('display', 'inline-block');
+                        Node.setStyle('margin-top', 20);
+                        Node.inject(self.getContent());
+                        Node.getElements('input').addEvent('change', onInputChange);
+
+                        self.Loader.hide();
+                    });
+
+                });
+            }, {
+                'package': 'quiqqer/products',
+                productId: this.getAttribute('productId')
             });
         },
 
@@ -67,12 +108,20 @@ define('package/quiqqer/products/bin/controls/products/variants/AddVariantWindow
 
             this.Loader.show();
 
+            var inputs = this.getElm().getElements('input:checked');
+            var fields = {};
+
+            for (var i = 0, len = inputs.length; i < len; i++) {
+                fields[inputs[i].get('name')] = inputs[i].get('value');
+            }
+
             QUIAjax.post('package_quiqqer_products_ajax_products_variant_generate_create', function (variantId) {
                 self.fireEvent('variantCreation', [variantId]);
                 self.close();
             }, {
                 'package': 'quiqqer/products',
-                productId: this.getAttribute('productId')
+                productId: this.getAttribute('productId'),
+                fields   : JSON.encode(fields)
             });
         }
     });
