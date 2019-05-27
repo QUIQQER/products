@@ -75,11 +75,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 return;
             }
 
-            var self    = this,
-                url     = QUIQQER_SITE.url,
-                path    = window.location.pathname,
+            var self       = this,
+                url        = QUIQQER_SITE.url,
+                path       = window.location.pathname,
 
-                product = path.substring(
+                variantUrl = path.substring(
                     path.lastIndexOf(url) + url.length
                 );
 
@@ -89,7 +89,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 if (!result) {
                     self.Loader.hide();
                 }
-console.log(JSON.encode(result));
+
                 var Field;
                 var Elm    = self.getElm();
                 var fields = result.fields;
@@ -108,9 +108,9 @@ console.log(JSON.encode(result));
 
                 self.Loader.hide();
             }, {
-                'package': 'quiqqer/products',
-                url      : product,
-                productId: this.getAttribute('productId')
+                'package' : 'quiqqer/products',
+                variantUrl: variantUrl,
+                productId : this.getAttribute('productId')
             });
         },
 

@@ -16,7 +16,7 @@ use QUI\ERP\Products\Handler\Fields as FieldsHandler;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getVariantByUrl',
-    function ($productId, $url) {
+    function ($productId, $variantUrl) {
         try {
             $Product = ProductHandler::getNewProductInstance($productId);
         } catch (QUI\Exception $Exception) {
@@ -33,11 +33,11 @@ QUI::$Ajax->registerFunction(
             return '';
         }
 
-        $url        = \trim($url, '/');
+        $variantUrl = \trim($variantUrl, '/');
         $categoryId = $Product->getCategory()->getId();
 
         try {
-            $Variant = ProductHandler::getProductByUrl($url, $categoryId);
+            $Variant = ProductHandler::getProductByUrl($variantUrl, $categoryId);
         } catch (Products\Product\Exception $Exception) {
             $Variant = $Product;
         }
@@ -61,5 +61,5 @@ QUI::$Ajax->registerFunction(
             'fields'    => $fields
         ];
     },
-    ['productId', 'fields']
+    ['productId', 'variantUrl']
 );
