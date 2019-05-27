@@ -15,9 +15,8 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_variant_getOverwritableFieldList',
     function ($productId, $options = '') {
         // defaults
-        $overwritable = false;
-        $fields       = false;
-        $options      = \json_decode($options, true);
+        $fields  = false;
+        $options = \json_decode($options, true);
 
         if (!\is_array($options)) {
             $options = [];

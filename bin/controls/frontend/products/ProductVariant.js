@@ -28,7 +28,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
         Binds: [
             '$onInject',
             '$onImport',
-            '$init'
+            '$init',
+            '$onPopstateChange'
         ],
 
         options: {
@@ -48,14 +49,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 onImport: this.$onImport
             });
 
-            // read url
-            window.addEvent('popstate', function () {
-                if (this.$startInit === false) {
-                    return;
-                }
-                console.log('popstate');
-                console.log(window.location.toString());
-            }.bind(this));
+            // react for url change
+            window.addEvent('popstate', this.$onPopstateChange);
         },
 
         /**
@@ -70,6 +65,53 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          */
         $onImport: function () {
             this.parent().then(this.$init);
+        },
+
+        /**
+         * event: on popstate change
+         */
+        $onPopstateChange: function () {
+            if (this.$startInit === false) {
+                return;
+            }
+
+            var self    = this,
+                url     = QUIQQER_SITE.url,
+                path    = window.location.pathname,
+
+                product = path.substring(
+                    path.lastIndexOf(url) + url.length
+                );
+
+            this.Loader.show();
+
+            QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getVariantByUrl', function (result) {
+                if (!result) {
+                    self.Loader.hide();
+                }
+
+                var Field;
+                var Elm    = self.getElm();
+                var fields = result.fields;
+
+                for (var fieldId in fields) {
+                    if (!fields.hasOwnProperty(fieldId)) {
+                        continue;
+                    }
+
+                    Field = Elm.getElement('[name="field-' + fieldId + '"]');
+
+                    if (Field) {
+                        Field.value = fields[fieldId];
+                    }
+                }
+
+                self.Loader.hide();
+            }, {
+                'package': 'quiqqer/products',
+                url      : product,
+                productId: this.getAttribute('productId')
+            });
         },
 
         /**
