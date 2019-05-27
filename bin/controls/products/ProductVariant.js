@@ -4,8 +4,6 @@
  *
  * @module package/quiqqer/products/bin/controls/products/ProductVariant
  * @author www.pcsg.de (Henning Leutz)
- *
- * @todo fields w values
  */
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
@@ -340,6 +338,12 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     width    : 200,
                     sortable : false
                 }, {
+                    header   : QUILocale.get(lg, 'products.product.panel.grid.url'),
+                    dataIndex: 'url',
+                    dataType : 'text',
+                    width    : 200,
+                    sortable : false
+                }, {
                     header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
                     dataIndex: 'price_netto',
                     dataType : 'text',
@@ -513,7 +517,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 this.$Product.getVariantFields()
             ]).then(function (result) {
                 var needles = [
-                    'id', 'title', 'e_date', 'c_date', 'priority'
+                    'id', 'title', 'e_date', 'c_date', 'priority', 'url'
                 ];
 
                 var fields = {

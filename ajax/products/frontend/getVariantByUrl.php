@@ -25,17 +25,22 @@ QUI::$Ajax->registerFunction(
             return '';
         }
 
-        if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+        if ($Product instanceof Products\Product\Types\VariantChild) {
             $Product = $Product->getParent();
         }
 
-        if (!($Product instanceof QUI\ERP\Products\Product\Types\VariantParent)) {
+        if (!($Product instanceof Products\Product\Types\VariantParent)) {
             return '';
         }
 
-        $url        = trim($url, '/');
+        $url        = \trim($url, '/');
         $categoryId = $Product->getCategory()->getId();
-        $Variant    = QUI\ERP\Products\Handler\Products::getProductByUrl($url, $categoryId);
+
+        try {
+            $Variant = ProductHandler::getProductByUrl($url, $categoryId);
+        } catch (Products\Product\Exception $Exception) {
+            $Variant = $Product;
+        }
 
         $attributeGroups = $Variant->getFieldsByType(FieldsHandler::TYPE_ATTRIBUTE_GROUPS);
         $attributeLists  = $Variant->getFieldsByType(FieldsHandler::TYPE_ATTRIBUTE_LIST);

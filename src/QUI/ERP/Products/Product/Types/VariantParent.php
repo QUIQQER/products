@@ -185,6 +185,10 @@ class VariantParent extends AbstractType
     public function getVariants($params = [])
     {
         if ($this->children !== null) {
+            if (isset($params['count'])) {
+                return \count($this->children);
+            }
+
             return $this->children;
         }
 
@@ -253,7 +257,9 @@ class VariantParent extends AbstractType
             }
         }
 
-        $this->children = $variants;
+        if (!isset($params['limit'])) {
+            $this->children = $variants;
+        }
 
         return $variants;
     }

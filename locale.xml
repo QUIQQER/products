@@ -1028,6 +1028,10 @@
             <de><![CDATA[Währung]]></de>
             <en><![CDATA[Currency]]></en>
         </locale>
+        <locale name="products.product.panel.grid.url">
+            <de><![CDATA[Produkt URL]]></de>
+            <en><![CDATA[Product URL]]></en>
+        </locale>
 
         <locale name="products.fields.panel.locked">
             <de><![CDATA[Dieses Produkt wird gerade bearbeitet von [username]]]></de>

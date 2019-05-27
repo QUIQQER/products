@@ -89,7 +89,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 if (!result) {
                     self.Loader.hide();
                 }
-
+console.log(JSON.encode(result));
                 var Field;
                 var Elm    = self.getElm();
                 var fields = result.fields;
@@ -164,9 +164,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                 document.title = result.title;
                 window.history.pushState({}, "", result.url.toString());
-
-                console.log(result);
-                console.log(result.url);
 
                 var Control = Ghost.getElement(
                     '[data-qui="package/quiqqer/products/bin/controls/frontend/products/ProductVariant"]'

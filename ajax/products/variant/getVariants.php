@@ -6,12 +6,12 @@
 
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Types\VariantParent;
-use QUI\Utils\Grid;
 
 /**
- * Activate a product
+ * Return the variant list of a product
  *
  * @param integer $productId - Product-ID
+ * @param string $options - JSON Array - Grid options
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_variant_getVariants',
@@ -21,7 +21,7 @@ QUI::$Ajax->registerFunction(
 
         $page = 1;
 
-        if (isset($options['page'])) {
+        if (isset($options['page']) && (int)$options['page']) {
             $page = (int)$options['page'];
         }
 
@@ -30,18 +30,21 @@ QUI::$Ajax->registerFunction(
             return [];
         }
 
-        $Grid    = new QUI\Utils\Grid();
-        $options = $Grid->parseDBParams($options);
+        $Grid         = new QUI\Utils\Grid();
+        $queryOptions = $Grid->parseDBParams($options);
 
-        $variants = $Product->getVariants($options);
+        $variants = $Product->getVariants($queryOptions);
         $variants = \array_map(function ($Variant) {
             /* @var $Variant \QUI\ERP\Products\Product\Types\VariantChild */
-            return $Variant->getAttributes();
+            $attributes        = $Variant->getAttributes();
+            $attributes['url'] = $Variant->getUrl();
+
+            return $attributes;
         }, $variants);
 
         // count
-        $options['count'] = true;
-        $count            = $Product->getVariants($options);
+        $queryOptions['count'] = true;
+        $count                 = $Product->getVariants($queryOptions);
 
         return [
             'data'  => $variants,
