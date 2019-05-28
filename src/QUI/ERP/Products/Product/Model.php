@@ -799,7 +799,11 @@ class Model extends QUI\QDOM
 
         $Result = new QUI\ERP\Money\Price($currentPrice, $Price->getCurrency());
 
-        QUI\Cache\Manager::set($cacheName, $Result->toArray());
+        try {
+            QUI\Cache\Manager::set($cacheName, $Result->toArray());
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
 
         return $Result;
     }
