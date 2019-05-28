@@ -242,7 +242,7 @@ class Products
             $fieldId = $Field->getId();
             $Field->disableEntries();
 
-            if (!isset($available[$fieldId]) || !$variants) {
+            if (!isset($available[$fieldId])) {
                 continue;
             }
 
