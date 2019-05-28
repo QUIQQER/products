@@ -104,17 +104,7 @@ QUI::$Ajax->registerFunction(
                 'AJAX :: package_quiqqer_products_ajax_products_update -> '.$Exception->getMessage()
             );
 
-            QUI::getMessagesHandler()->addError(
-                QUI::getLocale()->get(
-                    'quiqqer/products',
-                    'message.product.error.saving',
-                    [
-                        'error' => ''
-                    ]
-                )
-            );
-
-            return;
+            throw $Exception;
         }
 
         QUI::getMessagesHandler()->addSuccess(

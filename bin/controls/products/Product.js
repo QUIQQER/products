@@ -146,11 +146,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 events   : {
                     onClick: function () {
                         this.update().catch(function (err) {
-                            QUI.getMessageHandler().then(function (MH) {
-                                MH.addError(QUILocale.get(lg, 'message.product.error.saving', {
-                                    error: err
-                                }));
-                            });
+                            console.error(err);
                         });
                     }.bind(this)
                 }

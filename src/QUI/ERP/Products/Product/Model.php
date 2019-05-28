@@ -1068,6 +1068,9 @@ class Model extends QUI\QDOM
                 continue;
             }
 
+            $this->checkUrlLength($url, $lang);
+            
+
             $binds[':lang'.$i]     = $lang;
             $binds[':url'.$i]      = $url;
             $binds[':category'.$i] = '%,'.$categoryId.',%';
@@ -1113,6 +1116,43 @@ class Model extends QUI\QDOM
                 'quiqqer/products',
                 'exception.url.already.exists'
             ]);
+        }
+    }
+
+    /**
+     * Checks the urls length for the product
+     *
+     * @param string $url
+     * @param string $lang
+     * @throws Exception
+     */
+    protected function checkUrlLength($url, $lang)
+    {
+        try {
+            $Category = $this->getCategory();
+            $projects = QUI::getProjectManager()->getProjects(true);
+        } catch (QUI\Exception $Exception) {
+            return;
+        }
+
+        /* @var $Project QUI\Projects\Project */
+        foreach ($projects as $Project) {
+            if ($Project->getLang() !== $lang) {
+                continue;
+            }
+
+            try {
+                $categoryUrl = $Category->getUrl($Project);
+            } catch (QUI\Exception $Exception) {
+                continue;
+            }
+
+            if (!empty($categoryUrl) && strlen($categoryUrl.'/'.$url) > 2000) {
+                throw new Exception([
+                    'quiqqer/products',
+                    'exception.url.is.too.long'
+                ]);
+            }
         }
     }
 

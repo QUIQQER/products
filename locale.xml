@@ -662,10 +662,22 @@
             <en><![CDATA[Product has been saved.]]></en>
         </locale>
         <locale name="message.product.error.saving">
-            <de>
-                <![CDATA[Beim speichern des Produktes ist ein Fehler aufgetreten. [error] Weitere Informationen findest Du in den Log-Dateien.]]></de>
-            <en>
-                <![CDATA[Some error occurred during saving. [error] You can find further information in the log files.]]></en>
+            <de><![CDATA[
+                Beim speichern des Produktes ist ein Fehler aufgetreten. [error] Weitere Informationen findest Du in den Log-Dateien.
+            ]]></de>
+            <en><![CDATA[
+                Some error occurred during saving. [error] You can find further information in the log files.
+            ]]></en>
+        </locale>
+        <locale name="exception.url.is.too.long">
+            <de><![CDATA[
+                Die URL des Produktes ist länger als 2000 Zeichen.
+                Dies sollte vermieden, bitte ändern Sie die Länge der Produkt URL.
+            ]]></de>
+            <en><![CDATA[
+                The URL of the product is longer than 2000 characters.
+                This should be avoided, please change the length of the product URL.
+            ]]></en>
         </locale>
         <locale name="message.set.maincategory.error">
             <de><![CDATA[Fehler beim Setzen der Hauptkategorie. Es wurde keine Hauptkategorie angegeben.]]></de>
