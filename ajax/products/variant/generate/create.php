@@ -4,12 +4,11 @@
  * This file contains package_quiqqer_products_ajax_products_variant_generate_create
  */
 
-use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Types\VariantParent;
 
 /**
- * Add a variant
+ * Add / create a variant
  *
  * @param integer $productId - Product-ID
  * @return int|false

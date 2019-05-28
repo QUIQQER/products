@@ -1069,7 +1069,7 @@ class Model extends QUI\QDOM
             }
 
             $this->checkUrlLength($url, $lang);
-            
+
 
             $binds[':lang'.$i]     = $lang;
             $binds[':url'.$i]      = $url;
@@ -1108,7 +1108,7 @@ class Model extends QUI\QDOM
 
 
         foreach ($result as $entry) {
-            if ($entry === $this->getId()) {
+            if ((int)$entry['id'] === $this->getId()) {
                 continue;
             }
 
