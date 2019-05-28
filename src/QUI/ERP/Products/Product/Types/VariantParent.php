@@ -102,6 +102,8 @@ class VariantParent extends AbstractType
     /**
      * @param null $User
      * @return QUI\ERP\Money\Price|void
+     *
+     * @throws QUI\Exception
      */
     public function getMinimumPrice($User = null)
     {
@@ -130,6 +132,10 @@ class VariantParent extends AbstractType
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addDebug($Exception->getMessage());
             }
+        }
+
+        if ($MinPrice === null) {
+            return parent::getMinimumPrice($User);
         }
 
         return $MinPrice;
