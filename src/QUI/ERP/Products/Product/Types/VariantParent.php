@@ -624,6 +624,38 @@ class VariantParent extends AbstractType
             $result = [];
         }
 
+        $this->childFields = $this->parseAvailableFields($result);
+
+        return $this->childFields;
+    }
+
+    /**
+     * @return array
+     */
+    public function availableActiveChildFields()
+    {
+        try {
+            $result = QUI::getDataBase()->fetch([
+                'select' => 'id, parent, fieldData, variantHash',
+                'from'   => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                'where'  => [
+                    'parent' => $this->getId(),
+                    'active' => 1
+                ]
+            ]);
+        } catch (QUI\Exception $Exception) {
+            $result = [];
+        }
+
+        return $this->parseAvailableFields($result);
+    }
+
+    /**
+     * @param array $result
+     * @return array
+     */
+    protected function parseAvailableFields($result)
+    {
         $fields = [];
 
         foreach ($result as $entry) {
@@ -648,8 +680,6 @@ class VariantParent extends AbstractType
                 }
             }
         }
-
-        $this->childFields = $fields;
 
         return $fields;
     }

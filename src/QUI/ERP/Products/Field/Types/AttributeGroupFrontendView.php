@@ -88,6 +88,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
 
             if (isset($option['disabled']) && $option['disabled'] || $value === $key) {
                 $disabled = 'disabled="disabled" ';
+                $selected = '';
             }
 
             if (\is_string($title)) {

@@ -39,6 +39,10 @@ QUI::$Ajax->registerFunction(
             $attributes        = $Variant->getAttributes();
             $attributes['url'] = $Variant->getUrl();
 
+            $attributes['price_netto_display'] = QUI\ERP\Defaults::getCurrency()->format(
+                $attributes['price_netto']
+            );
+
             return $attributes;
         }, $variants);
 

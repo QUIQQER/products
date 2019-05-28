@@ -201,7 +201,7 @@ class Products
             return;
         }
 
-        $available = $Product->availableChildFields();
+        $available = $Product->availableActiveChildFields();
 
         // attribute groups
         $groupList = $Product->getFieldsByType(
@@ -242,7 +242,7 @@ class Products
             $fieldId = $Field->getId();
             $Field->disableEntries();
 
-            if (!isset($available[$fieldId])) {
+            if (!isset($available[$fieldId]) || !$variants) {
                 continue;
             }
 

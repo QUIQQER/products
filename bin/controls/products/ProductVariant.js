@@ -345,10 +345,11 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     sortable : false
                 }, {
                     header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
-                    dataIndex: 'price_netto',
+                    dataIndex: 'price_netto_display',
                     dataType : 'text',
                     width    : 100,
-                    sortable : false
+                    sortable : false,
+                    className: 'grid-align-right'
                 }];
 
                 var variantFields = result[2];
@@ -517,7 +518,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 this.$Product.getVariantFields()
             ]).then(function (result) {
                 var needles = [
-                    'id', 'title', 'e_date', 'c_date', 'priority', 'url'
+                    'id', 'title', 'e_date', 'c_date', 'priority', 'url', 'price_netto_display'
                 ];
 
                 var fields = {
