@@ -1814,6 +1814,10 @@
             <de><![CDATA[Nur eigene Felder können von einem Produkt entfernt werden.]]></de>
             <en><![CDATA[Only own fields can be removed from a product.]]></en>
         </locale>
+        <locale name="exception.url.already.exists">
+            <de><![CDATA[Diese URL existiert in einem anderen Produkt schon und kann nicht verwendet werden.]]></de>
+            <en><![CDATA[This URL already exists in another product and cannot be used.]]></en>
+        </locale>
 
         <locale name="watcher.message.product.save">
             <de><![CDATA[Produkt [id] gespeichert.]]></de>
