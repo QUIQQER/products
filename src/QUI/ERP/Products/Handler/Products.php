@@ -760,6 +760,10 @@ class Products
         $result = [];
         $fields = $Config->getSection('overwritableFields');
 
+        if (empty($fields)) {
+            return [];
+        }
+
         foreach ($fields as $fieldId => $active) {
             if (empty($active)) {
                 continue;
