@@ -24,24 +24,7 @@ QUI::$Ajax->registerFunction(
             return false;
         }
 
-        $Variant = $Product->createVariant();
-
-        // set fields
-        foreach ($fields as $field => $value) {
-            $Variant->getField($field)->setValue($value);
-        }
-
-        // set article no
-        $parentProductNo = $Product->getFieldValue(FieldHandler::FIELD_PRODUCT_NO);
-        $newNumber       = \count($Product->getVariants()) + 1;
-
-        $Variant->getField(FieldHandler::FIELD_PRODUCT_NO)->setValue(
-            $parentProductNo.'-'.$newNumber
-        );
-
-        $Variant->save();
-
-        return $Variant->getId();
+        return $Product->generateVariant($fields)->getId();
     },
     ['productId', 'fields'],
     'Permission::checkAdminUser'

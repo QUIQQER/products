@@ -23,7 +23,7 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
  *
  * @package QUI\ERP\Products\Product\Types
  *
- * @todo erp overwritable field settings -> Globale default Liste für überschreibbare Felder
+ * @todo Löschen von Variante -> komisches verhalten von loader, loader wird zu früh beendet
  */
 class VariantParent extends AbstractType
 {
@@ -348,6 +348,8 @@ class VariantParent extends AbstractType
             }
         }
 
+        $this->children = [];
+
         // generate permutation array
         $list = [];
 
@@ -365,32 +367,17 @@ class VariantParent extends AbstractType
             }
         }
 
-        $parentProductNo = $this->getFieldValue(FieldHandler::FIELD_PRODUCT_NO);
-        $permutations    = $this->permutations($list);
-        $variantNo       = 1;
+        $permutations = $this->permutations($list);
 
         // create variant children
         foreach ($permutations as $permutation) {
-            // create child
-            $Variant = $this->createVariant();
+            $fields = [];
 
-            // set art no
-            if (empty($parentProductNo)) {
-                $productNo = $variantNo;
-            } else {
-                $productNo = $parentProductNo.'-'.$variantNo;
-            }
-
-            $Variant->getField(FieldHandler::FIELD_PRODUCT_NO)->setValue($productNo);
-
-            $variantNo++;
-
-            // attribute fields
             foreach ($permutation as $entry) {
-                $Variant->getField($entry['fieldId'])->setValue($entry['value']);
+                $fields[$entry['fieldId']] = $entry['value'];
             }
 
-            $Variant->save();
+            $this->generateVariant($fields);
         }
     }
 
@@ -428,6 +415,8 @@ class VariantParent extends AbstractType
     /**
      * Create a new variant
      *
+     * @return VariantChild
+     *
      * @throws QUI\Exception
      */
     public function createVariant()
@@ -438,6 +427,8 @@ class VariantParent extends AbstractType
             VariantChild::class,
             $this->getId()
         );
+
+        $this->children[] = $Variant;
 
         $Variant->setAttribute('parent', $this->getId());
 
@@ -454,6 +445,83 @@ class VariantParent extends AbstractType
         $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO)->setValue('');
         $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_FOLDER)->setValue('');
         $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_IMAGE)->setValue('');
+        $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_URL)->setValue([]);
+        $Variant->save();
+
+        return $Variant;
+    }
+
+    /**
+     * Create a variant by an field array
+     * - the url will be adapted to the list fields under certain circumstances
+     *
+     * @param array $fields
+     * @return VariantChild
+     *
+     * @throws Exception
+     * @throws QUI\Exception
+     * @throws QUI\Permissions\Exception
+     */
+    public function generateVariant($fields)
+    {
+        $Variant = $this->createVariant();
+        $Project = QUI::getProjectManager()->getStandard();
+
+        // set fields
+        foreach ($fields as $field => $value) {
+            $Variant->getField($field)->setValue($value);
+        }
+
+        // set article no
+        $parentProductNo = $this->getFieldValue(FieldHandler::FIELD_PRODUCT_NO);
+        $newNumber       = \count($this->getVariants()) + 1;
+
+        $Variant->getField(FieldHandler::FIELD_PRODUCT_NO)->setValue(
+            $parentProductNo.'-'.$newNumber
+        );
+
+        // set URL
+        if (!QUI::getPackage('quiqqer/products')->getConfig()->get('variants', 'useAttributesForVariantUrl')) {
+            $Variant->save();
+
+            return $Variant;
+        }
+
+        // use attributes for variant url
+        $URL      = $Variant->getField(FieldHandler::FIELD_URL);
+        $urlValue = $URL->getValue();
+
+        $attributeList = $Variant->getFieldsByType(
+            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST
+        );
+
+        $attributeGroups = $Variant->getFieldsByType(
+            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS
+        );
+
+        $listFields  = \array_merge($attributeList, $attributeGroups);
+        $LocaleClone = clone QUI::getLocale();
+
+
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        $newValues = [];
+
+        foreach ($listFields as $Field) {
+            foreach ($urlValue as $lang => $value) {
+                $LocaleClone->setCurrent($lang);
+
+                $title = $Field->getTitle($LocaleClone);
+                $value = $Field->getValueByLocale($LocaleClone);
+
+                $newValues[$lang][] = QUI\Projects\Site\Utils::clearUrl($title.'-'.$value, $Project);
+            }
+        }
+
+        foreach ($urlValue as $lang => $value) {
+            $urlValue[$lang] = \implode('-', $newValues[$lang]);
+        }
+
+        $URL->setValue($urlValue);
         $Variant->save();
 
         return $Variant;

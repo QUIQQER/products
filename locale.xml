@@ -191,6 +191,20 @@
             <de><![CDATA[Bilder von Kinder in Vaterartikel laden.]]></de>
             <en><![CDATA[Load pictures of children into father articles.]]></en>
         </locale>
+        <locale name="settings.window.products.useAttributesForVariantUrl">
+            <de><![CDATA[Attribute bei Varianten URL verwendne]]></de>
+            <en><![CDATA[Use Attributes for Variants URL]]></en>
+        </locale>
+        <locale name="settings.window.products.useAttributesForVariantUrl.description">
+            <de><![CDATA[
+            Beim Anlegen neuer Varianten werden Varianten Attribute für jede Varianten-URL verwendet.
+            Somit besitzt jede Variante eine eindeutige URL.
+            ]]></de>
+            <en><![CDATA[
+            When you create new variants, variant attributes are used for each variant URL.
+            This means that each variant has a unique URL.
+            ]]></en>
+        </locale>
         <locale name="settings.window.products.overwritableFields">
             <de><![CDATA[Überschreibbare Varianten Felder]]></de>
             <en><![CDATA[Overwritable Variants Fields]]></en>

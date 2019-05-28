@@ -9,6 +9,9 @@ namespace QUI\ERP\Products\Handler;
 use QUI;
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Field\Field;
+use QUI\ERP\Products\Product\Types\VariantChild;
+use QUI\ERP\Products\Product\Types\VariantParent;
+
 use QUI\Projects\Media\Utils as FolderUtils;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
 use QUI\Projects\Media\Utils;
@@ -294,7 +297,7 @@ class Products
      * @param string $productType - optional, product type
      * @param integer|null $parent - optional, parent product
      *
-     * @return QUI\ERP\Products\Product\Product
+     * @return QUI\ERP\Products\Product\Product|VariantChild|VariantParent
      *
      * @throws QUI\Exception
      */

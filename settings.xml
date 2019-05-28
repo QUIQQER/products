@@ -44,6 +44,10 @@
                     <type><![CDATA[bool]]></type>
                     <defaultvalue>1</defaultvalue>
                 </conf>
+                <conf name="useAttributesForVariantUrl">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>1</defaultvalue>
+                </conf>
             </section>
             <section name="overwritableFields"/>
         </config>
@@ -149,6 +153,16 @@
                         <title>
                             <locale group="quiqqer/products" var="menu.erp.products.variants.title"/>
                         </title>
+
+                        <input conf="variants.useAttributesForVariantUrl" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.useAttributesForVariantUrl"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.useAttributesForVariantUrl.description"/>
+                            </description>
+                        </input>
 
                         <input conf="variants.parentHasChildImages" type="checkbox">
                             <text>
