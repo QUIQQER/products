@@ -24,6 +24,10 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
  * @package QUI\ERP\Products\Product\Types
  *
  * @todo Löschen von Variante -> komisches verhalten von loader, loader wird zu früh beendet
+ * @todo canonical muss immer auf das Parent Produkt
+ * @todo standard variante festlegen
+ *  -> erste Variante die vorausgewählt sein soll
+ * @todo frontend -> wenn produkt in hauptkategorie ist, dann URL change, ansonsten variant=id
  */
 class VariantParent extends AbstractType
 {
