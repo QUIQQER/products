@@ -960,7 +960,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             QUIAjax.post('package_quiqqer_products_ajax_products_variant_generate_delete', function () {
                 self.refreshVariantGrid();
-                self.Loader.hide();
             }, {
                 'package' : 'quiqqer/products',
                 variantIds: JSON.encode(selected),
