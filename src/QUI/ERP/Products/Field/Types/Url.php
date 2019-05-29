@@ -11,6 +11,7 @@ use QUI\ERP\Products\Field\View;
 
 /**
  * Class FloatType
+ *
  * @package QUI\ERP\Products\Field
  */
 class Url extends QUI\ERP\Products\Field\Field

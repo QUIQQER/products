@@ -23,10 +23,10 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
  *
  * @package QUI\ERP\Products\Product\Types
  *
- * @todo canonical muss immer auf das Parent Produkt
  * @todo standard variante festlegen
  *  -> erste Variante die vorausgewählt sein soll
  * @todo frontend -> wenn produkt in hauptkategorie ist, dann URL change, ansonsten variant=id
+ * @todo beim speichern der daten, refresh der daten -> am besten produkt daten als ergebnis mitliefern
  */
 class VariantParent extends AbstractType
 {
@@ -468,7 +468,6 @@ class VariantParent extends AbstractType
     public function generateVariant($fields)
     {
         $Variant = $this->createVariant();
-        $Project = QUI::getProjectManager()->getStandard();
 
         // set fields
         foreach ($fields as $field => $value) {
@@ -516,7 +515,7 @@ class VariantParent extends AbstractType
                 $title = $Field->getTitle($LocaleClone);
                 $value = $Field->getValueByLocale($LocaleClone);
 
-                $newValues[$lang][] = QUI\Projects\Site\Utils::clearUrl($title.'-'.$value, $Project);
+                $newValues[$lang][] = QUI\Projects\Site\Utils::clearUrl($title.'-'.$value);
             }
         }
 
@@ -551,9 +550,9 @@ class VariantParent extends AbstractType
             // check if fields exists
             foreach ($fields as $fieldId) {
                 try {
-                    $overwritable[] = \QUI\ERP\Products\Handler\Fields::getField($fieldId)->getId();
-                } catch (\QUI\Exception $Exception) {
-                    \QUI\System\Log::writeDebugException($Exception);
+                    $overwritable[] = QUI\ERP\Products\Handler\Fields::getField($fieldId)->getId();
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::writeDebugException($Exception);
                 }
             }
 

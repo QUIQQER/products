@@ -3,7 +3,6 @@
 use \QUI\ERP\Products;
 use \QUI\ERP\Products\Controls\Category\ProductList;
 
-use QUI\Exception;
 use \QUI\System\Log;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Response;
@@ -98,7 +97,12 @@ if ($siteUrl != $_REQUEST['_url']) {
 
         // render product
         $Product->getView();
-        $productUrl = \urldecode($Product->getUrl());
+        $productUrl = \urldecode($Product->getUrl($Project));
+
+        // set canonical always to the parent
+        if ($Product instanceof Products\Product\Types\VariantChild) {
+            $Site->setAttribute('canonical', $Product->getParent()->getUrl($Project));
+        }
 
 
         // forwarding, if the product has a new URL

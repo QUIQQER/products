@@ -539,8 +539,7 @@ class Model extends QUI\QDOM
             $url         = $this->getTitle();
         }
 
-        $parts   = [];
-        $parts[] = Orthos::urlEncodeString($url);
+        $parts[] = $url;
 
         if ($useUrlField === false) {
             $parts[] = $this->getId();
@@ -966,6 +965,31 @@ class Model extends QUI\QDOM
     protected function productSave($fieldData)
     {
         QUI\Permissions\Permission::checkPermission('product.edit');
+
+        // cleanup urls
+        $urlField = \array_filter($fieldData, function ($field) {
+            return $field['id'] === Fields::FIELD_URL;
+        });
+
+        $urlKey   = \array_key_first($urlField);
+        $urlField = \array_values($urlField);
+        $urls     = [];
+
+        if (isset($urlField[0])) {
+            $urls = $urlField[0]['value'];
+        }
+
+        foreach ($urls as $lang => $url) {
+            if (empty($url)) {
+                continue;
+            }
+
+            $urls[$lang] = QUI\Projects\Site\Utils::clearUrl($url);
+        }
+
+        $fieldData[$urlKey]['value'] = $urls;
+        $this->getField(Fields::FIELD_URL)->setValue($urls);
+
 
         // check url
         $this->checkProductUrl($fieldData);
