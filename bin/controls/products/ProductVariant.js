@@ -49,7 +49,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             'deleteVariantsDialog',
             '$activateVariants',
             '$deactivateVariants',
-            '$deleteVariants'
+            '$deleteVariants',
+            '$changeVariant'
         ],
 
         options: {
@@ -838,7 +839,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 id: variantId
             });
 
-            // check buttons
             return this.$refreshStatusButton().then(function () {
                 return this.openVariantTab(Active);
             }.bind(this));

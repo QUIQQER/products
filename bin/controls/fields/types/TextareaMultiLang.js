@@ -4,6 +4,7 @@
  */
 define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
 
+    'QUIQQER',
     'qui/QUI',
     'qui/controls/Control',
     'qui/controls/buttons/Select',
@@ -11,12 +12,13 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
     'Locale',
     'package/quiqqer/translator/bin/classes/Translator'
 
-], function (QUI, QUIControl, QUISelect, Editors, QUILocale, TranslatorCls) {
+], function (QUIQQER, QUI, QUIControl, QUISelect, Editors, QUILocale, TranslatorCls) {
     "use strict";
 
     var Translator = new TranslatorCls();
 
     return new Class({
+
         Extends: QUIControl,
         Type   : 'package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang',
 
@@ -61,7 +63,7 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
 
             Elm.set({
                 html: '<div class="language-select"></div>' +
-                      '<div class="editor"></div>'
+                    '<div class="editor"></div>'
             });
 
             var EditorContainer = Elm.getElement('.editor');
@@ -84,7 +86,7 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
                 }
             }).inject(LangContainer);
 
-            Translator.getAvailableLanguages().then(function (languages) {
+            QUIQQER.getAvailableLanguages().then(function (languages) {
                 for (var i = 0, len = languages.length; i < len; i++) {
                     this.$Select.appendChild(
                         QUILocale.get('quiqqer/quiqqer', 'language.' + languages[i]),

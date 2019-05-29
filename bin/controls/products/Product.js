@@ -755,6 +755,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
 
                     Input.value = field.value;
+
+                    if (typeof Input.get === 'function' && Input.get('data-quiid')) {
+                        var Control = QUI.Controls.getById(Input.get('data-quiid'));
+
+                        if (typeof Control.setData === 'function') {
+                            Control.setData(Input.value);
+                        }
+                    }
                 }
 
                 if (parseInt(field.id) === parseInt(Fields.FIELD_FOLDER)) {

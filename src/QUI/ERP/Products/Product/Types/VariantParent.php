@@ -27,6 +27,7 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
  *  -> erste Variante die vorausgewählt sein soll
  * @todo frontend -> wenn produkt in hauptkategorie ist, dann URL change, ansonsten variant=id
  * @todo beim speichern der daten, refresh der daten -> am besten produkt daten als ergebnis mitliefern
+ * @todo backend -> variant select -> data refresh
  */
 class VariantParent extends AbstractType
 {

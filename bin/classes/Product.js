@@ -19,6 +19,7 @@ define('package/quiqqer/products/bin/classes/Product', [
     "use strict";
 
     return new Class({
+
         Extends: QUIDOM,
         Type   : 'package/quiqqer/products/bin/classes/Product',
 
@@ -26,9 +27,14 @@ define('package/quiqqer/products/bin/classes/Product', [
             id: false
         },
 
+        Binds: [
+            'refresh'
+        ],
+
         initialize: function (options) {
             this.parent(options);
 
+            this.$uid      = String.uniqueID();
             this.$data     = null;
             this.$loaded   = false;
             this.$quantity = 1;
@@ -381,7 +387,7 @@ define('package/quiqqer/products/bin/classes/Product', [
         refresh: function () {
             return new Promise(function (resolve, reject) {
                 require(['package/quiqqer/products/bin/Products'], function (Products) {
-                    Products.getChild(this.getAttribute('id')).then(function (data) {
+                    Products.getChild(this.getId()).then(function (data) {
                         this.$loaded = true;
                         this.$data   = data;
 
@@ -401,16 +407,20 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         getFields: function () {
             return new Promise(function (resolve, reject) {
-                if (this.$loaded) {
-                    return resolve(this.$data.fields);
-                }
+                //@todo komischerweise wenn das an ist funktioniert der variant change nicht
+                // ich habe es leider nicht herausbekommen wieso das so ist
+                
+                // if (this.$loaded) {
+                //     console.log(this.$uid);
+                //
+                //     return resolve(this.$data.fields);
+                // }
 
                 this.refresh().then(function () {
                     resolve(this.$data.fields);
                 }.bind(this)).catch(reject);
             }.bind(this));
         },
-
 
         /**
          * Return all fields from the specific type
@@ -525,7 +535,6 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         getCategory: function () {
             return new Promise(function (resolve, reject) {
-
                 if (this.$loaded) {
                     return resolve(this.$data.category);
                 }
