@@ -378,7 +378,7 @@ class EventHandling
                 'priority'      => 1,
                 'systemField'   => 1,
                 'standardField' => 1,
-                'requiredField' => 1,
+                'requiredField' => 0,
                 'publicField'   => 0,
                 'search_type'   => Search::SEARCHTYPE_TEXT,
                 'titles'        => [
