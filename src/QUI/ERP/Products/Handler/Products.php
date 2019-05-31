@@ -25,6 +25,19 @@ use QUI\Projects\Media\Utils;
 class Products
 {
     /**
+     * This global flag determines if Product data is written to the database when
+     * the Product->save() or Product->userSave() method is called.
+     *
+     * The intention is to disable expensive database queries in a context where a lot of Product
+     * objects are processed in a short time (i.e. mass imports).
+     *
+     * This also includes updating the product cache table that is used in the product search.
+     *
+     * @var bool
+     */
+    public static $writeProductDataToDb = true;
+
+    /**
      * Product permission using?
      * @var null|boolean
      */
@@ -799,5 +812,29 @@ class Products
         }
 
         $Config->save();
+    }
+
+    /**
+     * ENABLE: Write product data to database when a product is saved
+     *
+     * For further information see documentation self::$writeProductDataToDb
+     *
+     * @return void
+     */
+    public static function enableGlobalWriteProductDataToDb()
+    {
+        self::$writeProductDataToDb = true;
+    }
+
+    /**
+     * DISABLE: Write product data to database when a product is saved
+     *
+     * For further information see documentation self::$writeProductDataToDb
+     *
+     * @return void
+     */
+    public static function disableGlobalWriteProductDataToDb()
+    {
+        self::$writeProductDataToDb = false;
     }
 }
