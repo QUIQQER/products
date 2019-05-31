@@ -979,6 +979,10 @@ class Model extends QUI\QDOM
             $urls = $urlField[0]['value'];
         }
 
+        if (empty($urls)) {
+            $urls = [];
+        }
+
         foreach ($urls as $lang => $url) {
             if (empty($url)) {
                 continue;
