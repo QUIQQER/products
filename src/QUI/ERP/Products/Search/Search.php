@@ -253,6 +253,10 @@ abstract class Search extends QUI\QDOM
         $binds = [];
 
         foreach ($fieldSearchData as $fieldId => $value) {
+            if (empty($value)) {
+                continue;
+            }
+
             try {
                 $Field = Fields::getField($fieldId);
             } catch (QUI\Exception $Exception) {
