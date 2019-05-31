@@ -1042,21 +1042,23 @@ class Model extends QUI\QDOM
         }
 
         // update
-        QUI::getDataBase()->update(
-            QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            [
-                'parent'      => $parentId,
-                'categories'  => ','.\implode(',', $categoryIds).',',
-                'category'    => $mainCategory,
-                'fieldData'   => \json_encode($fieldData),
-                'permissions' => \json_encode($this->permissions),
-                'e_user'      => QUI::getUserBySession()->getId(),
-                'e_date'      => $this->getAttribute('e_date')
-            ],
-            ['id' => $this->getId()]
-        );
+        if (Products::$writeProductDataToDb) {
+            QUI::getDataBase()->update(
+                QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                [
+                    'parent'      => $parentId,
+                    'categories'  => ','.\implode(',', $categoryIds).',',
+                    'category'    => $mainCategory,
+                    'fieldData'   => \json_encode($fieldData),
+                    'permissions' => \json_encode($this->permissions),
+                    'e_user'      => QUI::getUserBySession()->getId(),
+                    'e_date'      => $this->getAttribute('e_date')
+                ],
+                ['id' => $this->getId()]
+            );
 
-        $this->updateCache();
+            $this->updateCache();
+        }
 
         QUI\Cache\Manager::clear('quiqqer/products/'.$this->getId());
 
