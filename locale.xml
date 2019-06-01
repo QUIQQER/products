@@ -1046,6 +1046,10 @@
             <de><![CDATA[Produkt: [product]]]></de>
             <en><![CDATA[Product: [product]]]></en>
         </locale>
+        <locale name="products.product.panel.grid.defaultStatus">
+            <de><![CDATA[Standard]]></de>
+            <en><![CDATA[Default]]></en>
+        </locale>
         <locale name="products.product.panel.grid.nettoprice">
             <de><![CDATA[Nettopreis]]></de>
             <en><![CDATA[Netto price]]></en>
@@ -1718,6 +1722,14 @@
         <locale name="panel.variants.button.generate">
             <de><![CDATA[Varianten generieren]]></de>
             <en><![CDATA[Generate Variants]]></en>
+        </locale>
+        <locale name="panel.variants.set.default.variant">
+            <de><![CDATA[Setze Variante als Standardvariante]]></de>
+            <en><![CDATA[Set variant as default variant]]></en>
+        </locale>
+        <locale name="panel.variants.unset.default.variant">
+            <de><![CDATA[Variante als Standardvariante deaktivieren]]></de>
+            <en><![CDATA[Unset variant as default variant]]></en>
         </locale>
 
         <locale name="window.variant.delete">

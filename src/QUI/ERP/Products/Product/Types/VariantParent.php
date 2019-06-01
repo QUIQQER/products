@@ -354,6 +354,7 @@ class VariantParent extends AbstractType
             }
         }
 
+        // reset internal cached children
         $this->children = [];
 
         // generate permutation array
@@ -546,6 +547,7 @@ class VariantParent extends AbstractType
         QUI\Permissions\Permission::checkPermission('product.edit');
 
         $fields = $this->getAttribute('overwritableVariantFields');
+        $data   = [];
 
         if (\is_array($fields)) {
             $overwritable = [];
@@ -559,9 +561,21 @@ class VariantParent extends AbstractType
                 }
             }
 
+            $data = [
+                'overwritableVariantFields' => \json_encode($overwritable)
+            ];
+        }
+
+        if ($this->getDefaultVariantId()) {
+            $data['defaultVariantId'] = $this->getDefaultVariantId();
+        } else {
+            $data['defaultVariantId'] = null;
+        }
+
+        if (!empty($data)) {
             QUI::getDataBase()->update(
                 QUI\ERP\Products\Utils\Tables::getProductTableName(),
-                ['overwritableVariantFields' => \json_encode($overwritable)],
+                $data,
                 ['id' => $this->getId()]
             );
         }
@@ -716,4 +730,85 @@ class VariantParent extends AbstractType
 
         return false;
     }
+
+    /**
+     * Return true if this product has the product id as variant
+     *
+     * @param integer $variantId - ID of the product / variant
+     * @return bool
+     */
+    public function hasVariantId($variantId)
+    {
+        $variantId = (int)$variantId;
+        $variants  = $this->getVariants();
+
+        foreach ($variants as $Variant) {
+            if ($variantId === $Variant->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //region default variant
+
+    /**
+     * Set the default variant
+     * - checks if variant id is a variant product of this product
+     * - if the product is no variant product, then the id will not be set as default variant id
+     *
+     * @param integer $variantId - ID of the product / variant
+     */
+    public function setDefaultVariant($variantId)
+    {
+        if ($this->hasVariantId($variantId) === false) {
+            return;
+        }
+
+        $this->setAttribute('defaultVariantId', $variantId);
+    }
+
+    /**
+     * Unset the default variant
+     * - no variant is the default variant anymore
+     */
+    public function unsetDefaultVariant()
+    {
+        $this->setAttribute('defaultVariantId', null);
+    }
+
+    /**
+     * Return the default variant child
+     *
+     * @throws Exception
+     */
+    public function getDefaultVariant()
+    {
+        $variantId = $this->getAttribute('defaultVariantId');
+
+        if (!$variantId) {
+            throw new QUI\ERP\Products\Product\Exception();
+        }
+
+        return Products::getProduct($variantId);
+    }
+
+    /**
+     * Return the default variant id
+     *
+     * @return false|integer
+     */
+    public function getDefaultVariantId()
+    {
+        $variantId = $this->getAttribute('defaultVariantId');
+
+        if (!empty($variantId)) {
+            return (int)$variantId;
+        }
+
+        return false;
+    }
+
+    //endregion
 }

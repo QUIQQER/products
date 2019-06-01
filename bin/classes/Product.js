@@ -165,6 +165,24 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * Set the default variant ID for the parent product
+         * Works only if the product is a VariantParent
+         *
+         * @param {String|Number} variantId
+         * @return {Promise}
+         */
+        setDefaultVariantId: function (variantId) {
+            return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_products_variant_setDefaultVariant', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
+                    variantId: variantId,
+                    onError  : reject
+                });
+            }.bind(this));
+        },
+
+        /**
          * Return the Product-ID
          *
          * @returns {Number|Boolean}

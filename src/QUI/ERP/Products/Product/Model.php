@@ -743,6 +743,12 @@ class Model extends QUI\QDOM
     {
         $cacheName = 'quiqqer/products/'.$this->getId().'/prices/min';
 
+        if ($User && $User instanceof QUI\Interfaces\Users\User) {
+            $cacheName = 'quiqqer/products/'.$this->getId().'/prices/'.$User->getId().'/min';
+        }
+
+        // @todo Setting -> Aufwahllisten beim Min Max Preis Berechnung einbeziehen
+
         try {
             $data     = QUI\Cache\Manager::get($cacheName);
             $Currency = QUI\ERP\Currency\Handler::getCurrency($data['currency']);

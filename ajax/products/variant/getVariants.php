@@ -34,14 +34,20 @@ QUI::$Ajax->registerFunction(
         $queryOptions = $Grid->parseDBParams($options);
 
         $variants = $Product->getVariants($queryOptions);
-        $variants = \array_map(function ($Variant) {
+        $variants = \array_map(function ($Variant) use ($Product) {
             /* @var $Variant \QUI\ERP\Products\Product\Types\VariantChild */
             $attributes        = $Variant->getAttributes();
             $attributes['url'] = $Variant->getUrl();
 
+            $attributes['defaultVariant']      = 0;
             $attributes['price_netto_display'] = QUI\ERP\Defaults::getCurrency()->format(
                 $attributes['price_netto']
             );
+
+            if ($Product->getDefaultVariantId() === $Variant->getId()) {
+                $attributes['defaultVariant'] = 1;
+            }
+
 
             return $attributes;
         }, $variants);

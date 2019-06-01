@@ -50,7 +50,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             '$activateVariants',
             '$deactivateVariants',
             '$deleteVariants',
-            '$changeVariant'
+            '$changeVariant',
+            '$toggleDefaultVariant'
         ],
 
         options: {
@@ -317,6 +318,11 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 // grid options
                 var columns = [{
+                    header   : QUILocale.get(lg, 'products.product.panel.grid.defaultStatus'),
+                    dataIndex: 'defaultVariant',
+                    dataType : 'node',
+                    width    : 60
+                }, {
                     header   : QUILocale.get('quiqqer/system', 'status'),
                     dataIndex: 'status',
                     dataType : 'node',
@@ -429,6 +435,33 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         }
 
                         self.$Menu.clearChildren();
+
+                        // default status toggle
+                        var text = QUILocale.get(lg, 'panel.variants.set.default.variant'),
+                            icon = 'fa fa-check-circle-o';
+
+                        var DefaultVariant = self.$Grid.getDataByRow(event.row).defaultVariant;
+
+                        if (DefaultVariant.hasClass('fa')) {
+                            text = QUILocale.get(lg, 'panel.variants.unset.default.variant');
+                            icon = 'fa fa-circle-o';
+                        }
+
+                        self.$Menu.appendChild(
+                            new QUIContextMenuItem({
+                                text     : text,
+                                icon     : icon,
+                                cellEvent: event,
+                                events   : {
+                                    onClick: self.$toggleDefaultVariant
+                                }
+                            })
+                        );
+
+                        self.$Menu.appendChild(
+                            new QUIContextMenuSeparator()
+                        );
+
                         self.$Menu.appendChild(
                             new QUIContextMenuItem({
                                 text  : QUILocale.get(lg, 'panel.variants.activate.variants'),
@@ -519,7 +552,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 this.$Product.getVariantFields()
             ]).then(function (result) {
                 var needles = [
-                    'id', 'title', 'e_date', 'c_date', 'priority', 'url', 'price_netto_display'
+                    'id', 'title', 'e_date', 'c_date', 'priority',
+                    'url', 'price_netto_display'
                 ];
 
                 var fields = {
@@ -554,6 +588,14 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         entry.status = new Element('span', {'class': 'fa fa-check'});
                     } else {
                         entry.status = new Element('span', {'class': 'fa fa-close'});
+                    }
+
+                    if (typeof variant.defaultVariant !== 'undefined' && variant.defaultVariant) {
+                        entry.defaultVariant = new Element('span', {'class': 'fa fa-check-circle-o'});
+                    } else {
+                        entry.defaultVariant = new Element('span', {
+                            html: '&nbsp;'
+                        });
                     }
 
                     // attributes + fields
@@ -967,6 +1009,31 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     self.refreshVariantGrid();
                     self.Loader.hide();
                 }
+            });
+        },
+
+        /**
+         * event: context menu click -> toggle default variant
+         *
+         * @param ContextItem
+         */
+        $toggleDefaultVariant: function (ContextItem) {
+            var self      = this,
+                cellEvent = ContextItem.getAttribute('cellEvent'),
+                row       = cellEvent.row,
+
+                variantId = this.$Grid.getDataByRow(row).id,
+                Status    = this.$Grid.getDataByRow(row).defaultVariant;
+
+            this.Loader.show();
+
+            // toggle
+            if (Status.hasClass('fa')) {
+                variantId = null;
+            }
+
+            return this.$Product.setDefaultVariantId(variantId).then(function () {
+                return self.refreshVariantGrid();
             });
         },
 
