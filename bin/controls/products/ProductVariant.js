@@ -440,12 +440,15 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         var text = QUILocale.get(lg, 'panel.variants.set.default.variant'),
                             icon = 'fa fa-check-circle-o';
 
-                        var DefaultVariant = self.$Grid.getDataByRow(event.row).defaultVariant;
+                        var rowData        = self.$Grid.getDataByRow(event.row),
+                            DefaultVariant = rowData.defaultVariant;
 
                         if (DefaultVariant.hasClass('fa')) {
                             text = QUILocale.get(lg, 'panel.variants.unset.default.variant');
                             icon = 'fa fa-circle-o';
                         }
+
+                        self.$Menu.setTitle('#' + rowData.id + ' - ' + rowData.productNo);
 
                         self.$Menu.appendChild(
                             new QUIContextMenuItem({
