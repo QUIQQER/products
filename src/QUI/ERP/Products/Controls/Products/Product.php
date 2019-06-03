@@ -126,7 +126,7 @@ class Product extends QUI\Control
         } catch (QUI\Exception $Exception) {
         }
 
-        if ($typeVariantParent) {
+        if ($typeVariantParent || $typeVariantChild) {
             $Gallery->setAttribute('folderId', false);
             $images = $Product->getImages();
 

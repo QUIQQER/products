@@ -151,6 +151,54 @@ class VariantChild extends AbstractType
     }
 
     /**
+     * @return QUI\Projects\Media\Image|void
+     * @throws QUI\Exception
+     */
+    public function getImage()
+    {
+        try {
+            $Image = parent::getImage();
+        } catch (QUI\Exception $Exception) {
+            return $this->getParent()->getImage();
+        }
+
+        try {
+            $Project     = QUI::getRewrite()->getProject();
+            $Media       = $Project->getMedia();
+            $Placeholder = $Media->getPlaceholderImage();
+
+            if ($Placeholder->getId() !== $Image->getId()) {
+                return $Image;
+            }
+        } catch (QUI\Exception $Exception) {
+        }
+
+        return $this->getParent()->getImage();
+    }
+
+    /**
+     * Return all images of the product
+     * The Variant Parent return all images of the children, too
+     *
+     * @param array $params - optional, select params
+     * @return array
+     */
+    public function getImages($params = [])
+    {
+        try {
+            $images = $this->getMediaFolder()->getImages($params);
+
+            if (\count($images)) {
+                return $images;
+            }
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
+
+        return $this->getParent()->getImages($params);
+    }
+
+    /**
      * Return a variant children by its variant field hash
      * getVariantByVariantHash will be executed at the parent product
      *
