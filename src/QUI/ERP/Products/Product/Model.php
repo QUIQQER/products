@@ -536,10 +536,10 @@ class Model extends QUI\QDOM
 
         if (empty($url)) {
             $useUrlField = false;
-            $url         = $this->getTitle();
+            $url         = QUI\Projects\Site\Utils::clearUrl($this->getTitle());
         }
 
-        $parts[] = $url;
+        $parts = [$url];
 
         if ($useUrlField === false) {
             $parts[] = $this->getId();

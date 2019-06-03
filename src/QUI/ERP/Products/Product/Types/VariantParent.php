@@ -23,8 +23,6 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
  *
  * @package QUI\ERP\Products\Product\Types
  *
- * @todo standard variante vor auswählen
- * @todo / in product url
  * @todo sprechende url bei produkt liste beachten
  * @todo frontend -> wenn produkt in hauptkategorie ist, dann URL change, ansonsten variant=id
  * @todo beim speichern der daten, refresh der daten -> am besten produkt daten als ergebnis mitliefern
@@ -119,7 +117,7 @@ class VariantParent extends AbstractType
 
         foreach ($children as $Child) {
             // at frontend, considere only active products
-            if (defined('QUIQQER_FRONTEND') && QUIQQER_FRONTEND) {
+            if (\defined('QUIQQER_FRONTEND') && QUIQQER_FRONTEND) {
                 if ($Child->isActive() === false) {
                     continue;
                 }
