@@ -61,10 +61,23 @@ class Product extends QUI\Control
         $typeVariantChild   = ($Product->getType() === QUI\ERP\Products\Product\Types\VariantChild::class);
 
         if ($typeVariantParent) {
+            /* @var $Product QUI\ERP\Products\Product\Types\VariantParent */
             $this->setAttributes([
                 'data-qui-option-show-price' => false,
                 'data-qui-option-available'  => false
             ]);
+
+            // use default variant, if a default variant exists
+            if ($Product->getDefaultVariantId()) {
+                try {
+                    $Product = $Product->getDefaultVariant();
+
+                    $typeVariantChild  = true;
+                    $typeVariantParent = false;
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::addDebug($Exception);
+                }
+            }
         }
 
         if ($Product instanceof QUI\ERP\Products\Product\Product) {

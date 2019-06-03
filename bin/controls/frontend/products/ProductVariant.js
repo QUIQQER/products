@@ -57,6 +57,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * event : on inject
          */
         $onInject: function () {
+            console.log('on inject');
             this.parent().then(this.$init);
         },
 
@@ -64,6 +65,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * event : on import
          */
         $onImport: function () {
+            console.log('on import');
             this.parent().then(this.$init);
         },
 
@@ -118,6 +120,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * init the variant stuff
          */
         $init: function () {
+            console.log('init');
             if (this.$startInit) {
                 return;
             }
@@ -132,7 +135,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             );
 
             fieldLists.removeEvents('change');
-
+console.warn(fieldLists);
             fieldLists.addEvent('change', function () {
                 self.$refreshVariant();
             });

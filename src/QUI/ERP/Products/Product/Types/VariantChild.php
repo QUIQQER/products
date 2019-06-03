@@ -192,6 +192,14 @@ class VariantChild extends AbstractType
     }
 
     /**
+     * @return array<
+     */
+    public function availableActiveChildFields()
+    {
+        return $this->getParent()->availableActiveChildFields();
+    }
+
+    /**
      * @param array $fieldData
      *
      * @throws QUI\Database\Exception
