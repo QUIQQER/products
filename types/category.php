@@ -121,7 +121,7 @@ if ($siteUrl != $_REQUEST['_url']) {
 
         $Engine->assign([
             'Product' => new Products\Controls\Products\Product([
-                'Product' => $Product,
+                'Product' => $Product
             ])
         ]);
 
