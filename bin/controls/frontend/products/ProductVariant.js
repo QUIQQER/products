@@ -57,7 +57,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * event : on inject
          */
         $onInject: function () {
-            console.log('on inject');
+            console.log('variant. $onInject');
             this.parent().then(this.$init);
         },
 
@@ -65,8 +65,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * event : on import
          */
         $onImport: function () {
-            console.log('on import');
-            this.parent().then(this.$init);
+            return this.parent().then(this.$init);
         },
 
         /**
@@ -120,7 +119,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * init the variant stuff
          */
         $init: function () {
-            console.log('init');
             if (this.$startInit) {
                 return;
             }
@@ -135,7 +133,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             );
 
             fieldLists.removeEvents('change');
-console.warn(fieldLists);
+
             fieldLists.addEvent('change', function () {
                 self.$refreshVariant();
             });
@@ -176,6 +174,11 @@ console.warn(fieldLists);
 
                 if (Control) {
                     self.getElm().set('html', Control.get('html'));
+
+                    // css
+                    new Element('div', {
+                        html: result.css
+                    }).inject(self.getElm());
                 }
 
                 QUI.parse(self.getElm()).then(function () {

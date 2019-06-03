@@ -4,6 +4,7 @@
  * This file contains package_quiqqer_products_ajax_products_frontend_getVariant
  */
 
+use QUI\Control\Manager;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
 
@@ -76,6 +77,7 @@ QUI::$Ajax->registerFunction(
 
         return [
             'control'  => $Control->create(),
+            'css'      => QUI\Control\Manager::getCSS(),
             'url'      => $Child->getUrlRewrittenWithHost(),
             'title'    => $Child->getTitle(),
             'category' => $categoryId

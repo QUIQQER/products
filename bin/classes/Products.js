@@ -41,6 +41,22 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Return the product frontend control class of the product
+         *
+         * @param productId
+         * @return {Promise}
+         */
+        getProductControlClass: function (productId) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_frontend_getProductControlClass', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: productId,
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
          * Open the product panel
          *
          * @param productId

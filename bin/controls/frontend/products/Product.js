@@ -12,11 +12,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
     'qui/utils/Elements',
     'package/quiqqer/products/bin/Products',
     'package/quiqqer/products/bin/Categories',
-    'package/quiqqer/products/bin/Stats',
+    'package/quiqqer/products/bin/Stats'
 
-    URL_OPT_DIR + 'bin/hammerjs/hammer.min.js'
-
-], function (QUI, QUIControl, QUIElementUtils, Products, Categories, Piwik, Hammer) {
+], function (QUI, QUIControl, QUIElementUtils, Products, Categories, Piwik) {
     "use strict";
 
     return new Class({
@@ -98,7 +96,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 productId = this.getAttribute('productId');
 
             this.$Product = Products.get(productId);
-
+console.log('---- $onInject');
             return new Promise(function (resolve) {
                 require(['Ajax'], function (QUIAjax) {
                     QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getProduct', function (result) {
@@ -229,21 +227,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 if (this.$isTouch) {
                     this.$TabContainer.setStyle('overflowX', 'auto');
                 }
-
-
-                // this.$Touch = new Hammer(this.$Sheets);
-
-                // this.$Touch.on('swipe', function (ev) {
-                //     if (ev.offsetDirection === 4) {
-                //         this.prevTab();
-                //         return;
-                //     }
-                //
-                //     if (ev.offsetDirection === 2) {
-                //         this.nextTab();
-                //     }
-                // }.bind(this));
-
 
                 QUI.parse(Elm).then(function () {
                     // price

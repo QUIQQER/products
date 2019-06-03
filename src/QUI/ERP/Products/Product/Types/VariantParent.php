@@ -24,6 +24,8 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
  * @package QUI\ERP\Products\Product\Types
  *
  * @todo standard variante vor auswählen
+ * @todo / in product url
+ * @todo sprechende url bei produkt liste beachten
  * @todo frontend -> wenn produkt in hauptkategorie ist, dann URL change, ansonsten variant=id
  * @todo beim speichern der daten, refresh der daten -> am besten produkt daten als ergebnis mitliefern
  * @todo product url -> validate function at on blur

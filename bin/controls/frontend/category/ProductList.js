@@ -343,8 +343,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     break;
             }
 
-            if (this.getAttribute('view') === 'detail' ||
-                this.getAttribute('view') === 'list') {
+            if (this.getAttribute('view') === 'detail' || this.getAttribute('view') === 'list') {
                 Url.addSearch('view', this.getAttribute('view'));
                 window.history.pushState({}, "", Url.toString());
             }
@@ -2175,7 +2174,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (this.$productId === productId) {
                 return Promise.resolve();
             }
-
+            console.warn('open product');
             QUI.fireEvent('quiqqerProductsOpenProduct', [this, productId]);
 
             var self = this,
@@ -2240,9 +2239,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                     return Loader.show();
                 }).then(function () {
-                    require([
-                        'package/quiqqer/products/bin/controls/frontend/products/Product'
-                    ], function (Product) {
+                    return new Promise(function (resolve) {
+                        require(['package/quiqqer/products/bin/Products'], function (Products) {
+                            Products.getProductControlClass(productId).then(resolve);
+                        });
+                    });
+                }).then(function (controlClass) {
+                    console.log(controlClass);
+
+                    require([controlClass], function (Product) {
                         new Fx.Scroll(window).toTop().chain(function () {
                             self.$setWindowLocation();
 
