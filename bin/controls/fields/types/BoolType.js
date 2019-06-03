@@ -32,12 +32,10 @@ define('package/quiqqer/products/bin/controls/fields/types/BoolType', [
          * event : on import
          */
         $onImport: function () {
-            var Elm = this.getElm();
-
-            this.$Input = Elm;
+            this.$Input = this.getElm();
 
             this.$Input.type    = 'checkbox';
-            this.$Input.checked = parseInt(this.$Input.value);
+            this.$Input.checked = !!parseInt(this.$Input.value);
 
             this.$Input.addEvent('change', function () {
                 this.value = this.checked ? 1 : 0;
@@ -46,6 +44,15 @@ define('package/quiqqer/products/bin/controls/fields/types/BoolType', [
             this.$Elm = new Element('div', {
                 'class': 'field-container-field'
             }).wraps(this.$Input);
+        },
+
+        /**
+         * Set the current value
+         *
+         * @param value
+         */
+        setData: function (value) {
+            this.$Input.checked = !!parseInt(value);
         },
 
         /**
