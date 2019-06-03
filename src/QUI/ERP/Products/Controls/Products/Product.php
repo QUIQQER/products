@@ -72,6 +72,11 @@ class Product extends QUI\Control
                 try {
                     $Product = $Product->getDefaultVariant();
 
+                    $this->setAttributes([
+                        'data-qui-option-show-price' => true,
+                        'data-qui-option-available'  => true
+                    ]);
+
                     $typeVariantChild  = true;
                     $typeVariantParent = false;
                 } catch (QUI\Exception $Exception) {

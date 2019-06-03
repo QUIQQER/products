@@ -4,7 +4,6 @@
  * This file contains package_quiqqer_products_ajax_products_frontend_getVariant
  */
 
-use QUI\Control\Manager;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
 
