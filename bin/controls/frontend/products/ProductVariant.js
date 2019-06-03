@@ -57,7 +57,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * event : on inject
          */
         $onInject: function () {
-            console.log('variant. $onInject');
             this.parent().then(this.$init);
         },
 

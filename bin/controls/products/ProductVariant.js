@@ -8,6 +8,7 @@
 define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
     'qui/QUI',
+    'qui/controls/buttons/Button',
     'package/quiqqer/products/bin/controls/products/Product',
     'package/quiqqer/products/bin/classes/Product',
     'package/quiqqer/products/bin/Fields',
@@ -27,7 +28,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
     'css!package/quiqqer/products/bin/controls/products/ProductVariant.css'
 
-], function (QUI, ProductPanel, Product, Fields, Products,
+], function (QUI, QUIButton, ProductPanel, Product, Fields, Products,
              QUISelect, QUIBar, QUITab, QUIContextMenu, QUIContextMenuItem, QUIContextMenuSeparator,
              Grid, QUIAjax, QUILocale, Mustache, template) {
     "use strict";
@@ -111,6 +112,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             this.$ActionSeparator = this.getButtons('actionSeparator');
             this.$CopyButton      = this.getButtons('copy');
 
+            // variant categories
             this.parent().then(function () {
                 self.addCategory({
                     name  : 'variants',
@@ -145,6 +147,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     self.$CopyButton.show();
                     self.$ActionSeparator.show();
                     self.$CopyButton.show();
+                    self.$CloseButton.show();
 
                     self.$VariantFields.hide();
                     self.$CurrentVariant = null;
@@ -169,7 +172,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     }
                 });
 
-                self.addButton({
+                self.$VariantFields = self.getButtons('variantFields');
+                self.$VariantFields.hide();
+
+                self.$BackToVariantList = new QUIButton({
                     name  : 'BackToVariantFields',
                     title : QUILocale.get(lg, 'panel.variants.backToList.button.title'),
                     icon  : 'fa fa-list',
@@ -182,12 +188,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     styles: {
                         'float': 'right'
                     }
-                });
+                }).inject(self.getHeader());
 
-                self.$VariantFields = self.getButtons('variantFields');
-                self.$VariantFields.hide();
-
-                self.$BackToVariantList = self.getButtons('BackToVariantFields');
                 self.$BackToVariantList.hide();
             });
         },
@@ -287,11 +289,14 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 Body = self.getBody();
 
             this.$VariantFields.show();
+            this.$BackToVariantList.hide();
 
             this.$SaveButton.hide();
             this.$StatusButton.hide();
             this.$ActionSeparator.hide();
             this.$CopyButton.hide();
+            this.$CloseButton.show();
+
 
             return Promise.all([
                 this.$hideCategories(),
@@ -712,6 +717,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             var Body = self.getBody();
 
             this.$BackToVariantList.show();
+            this.$CloseButton.hide();
 
             this.$CurrentVariant = new Product({
                 id: variantId
