@@ -96,7 +96,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 productId = this.getAttribute('productId');
 
             this.$Product = Products.get(productId);
-console.log('---- $onInject');
+
             return new Promise(function (resolve) {
                 require(['Ajax'], function (QUIAjax) {
                     QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getProduct', function (result) {

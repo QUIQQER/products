@@ -2174,7 +2174,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (this.$productId === productId) {
                 return Promise.resolve();
             }
-            console.warn('open product');
+
             QUI.fireEvent('quiqqerProductsOpenProduct', [this, productId]);
 
             var self = this,
@@ -2245,8 +2245,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         });
                     });
                 }).then(function (controlClass) {
-                    console.log(controlClass);
-
                     require([controlClass], function (Product) {
                         new Fx.Scroll(window).toTop().chain(function () {
                             self.$setWindowLocation();
