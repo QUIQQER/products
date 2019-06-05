@@ -233,30 +233,30 @@ class Products
         }
 
         // attribute list
-        $attributeList = $Product->getFieldsByType(
-            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST
-        );
-
-        foreach ($attributeList as $Field) {
-            /* @var $Field QUI\ERP\Products\Field\Types\AttributeGroup */
-            $fieldId = $Field->getId();
-            $Field->disableEntries();
-
-            if (!isset($available[$fieldId])) {
-                continue;
-            }
-
-            $options = $Field->getOptions();
-            $entries = $options['entries'];
-
-            $allowed = $available[$fieldId];
-            $allowed = \array_flip($allowed);
-
-            foreach ($entries as $key => $value) {
-                if (isset($allowed[$key])) {
-                    $Field->enableEntry($key);
-                }
-            }
-        }
+//        $attributeList = $Product->getFieldsByType(
+//            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST
+//        );
+//
+//        foreach ($attributeList as $Field) {
+//            /* @var $Field QUI\ERP\Products\Field\Types\AttributeGroup */
+//            $fieldId = $Field->getId();
+//            $Field->disableEntries();
+//
+//            if (!isset($available[$fieldId])) {
+//                continue;
+//            }
+//
+//            $options = $Field->getOptions();
+//            $entries = $options['entries'];
+//
+//            $allowed = $available[$fieldId];
+//            $allowed = \array_flip($allowed);
+//
+//            foreach ($entries as $key => $value) {
+//                if (isset($allowed[$key])) {
+//                    $Field->enableEntry($key);
+//                }
+//            }
+//        }
     }
 }

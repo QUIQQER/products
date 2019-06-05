@@ -12,9 +12,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
     'qui/QUI',
     'qui/controls/loader/Loader',
     'Ajax',
+    'URI',
     'package/quiqqer/products/bin/controls/frontend/products/Product'
 
-], function (QUI, QUILoader, QUIAjax, Product) {
+], function (QUI, QUILoader, QUIAjax, URI, Product) {
     "use strict";
 
     // history popstate for mootools
@@ -77,13 +78,19 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
             var self       = this,
                 url        = QUIQQER_SITE.url,
+                URL        = URI(window.location),
                 path       = window.location.pathname,
 
+                variantId  = '',
                 variantUrl = path.substring(
                     path.lastIndexOf(url) + url.length
                 );
 
             this.Loader.show();
+
+            if (URL.hasQuery('variant')) {
+                variantId = parseInt(URL.query(true).variant);
+            }
 
             QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getVariantByUrl', function (result) {
                 if (!result) {
@@ -110,6 +117,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             }, {
                 'package' : 'quiqqer/products',
                 variantUrl: variantUrl,
+                variantId : variantId,
                 productId : this.getAttribute('productId')
             });
         },
@@ -163,7 +171,17 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 });
 
                 document.title = result.title;
-                window.history.pushState({}, "", result.url.toString());
+
+                // only if product is in main category
+                if (typeof window.QUIQQER_PRODUCT_CATEGORY !== 'undefined' &&
+                    parseInt(result.category) === parseInt(window.QUIQQER_PRODUCT_CATEGORY)) {
+                    window.history.pushState({}, "", result.url.toString());
+                } else {
+                    var Url = URI(window.location);
+                    var url = Url.setSearch('variant', result.variantId).toString();
+
+                    window.history.pushState({}, "", url);
+                }
 
                 var Control = Ghost.getElement(
                     '[data-qui="package/quiqqer/products/bin/controls/frontend/products/ProductVariant"]'

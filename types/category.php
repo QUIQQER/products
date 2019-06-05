@@ -120,9 +120,10 @@ if ($siteUrl != $_REQUEST['_url']) {
         $CategoryMenu->setAttribute('breadcrumb', true);
 
         $Engine->assign([
-            'Product' => new Products\Controls\Products\Product([
+            'Product'    => new Products\Controls\Products\Product([
                 'Product' => $Product
-            ])
+            ]),
+            'categoryId' => $Product->getCategory()->getId()
         ]);
 
         // set site data

@@ -75,11 +75,12 @@ QUI::$Ajax->registerFunction(
         ]);
 
         return [
-            'control'  => $Control->create(),
-            'css'      => QUI\Control\Manager::getCSS(),
-            'url'      => $Child->getUrlRewrittenWithHost(),
-            'title'    => $Child->getTitle(),
-            'category' => $categoryId
+            'variantId' => $Child->getId(),
+            'control'   => $Control->create(),
+            'css'       => QUI\Control\Manager::getCSS(),
+            'url'       => $Child->getUrlRewrittenWithHost(),
+            'title'     => $Child->getTitle(),
+            'category'  => $categoryId
         ];
     },
     ['productId', 'fields']

@@ -27,6 +27,16 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
  * @todo frontend -> wenn produkt in hauptkategorie ist, dann URL change, ansonsten variant=id
  * @todo beim speichern der daten, refresh der daten -> am besten produkt daten als ergebnis mitliefern
  * @todo product url -> validate function at on blur
+ * @todo produkt liste -> varianten produkt -> kein warenkorb button -> Zur Auswahl
+ * @todo produkt liste -> varianten produkt -> ab Preis
+ * @todo canonical auf variante wenn variant=id
+ *
+ * @todo wenn field vater artikel hinzugefügt, dann kind hinzufügen
+ * @todo wenn field vater artikel gelöscht wird, dann kind beachten
+ *
+ * @todo varianten generieren -> flag
+ *  -> nur neue generieren
+ *  -> bestehende löschen
  *
  * @todo backend -> variant select -> data refresh
  */
