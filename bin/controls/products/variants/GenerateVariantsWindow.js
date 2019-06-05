@@ -38,12 +38,13 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
                 icon     : 'fa fa-magic',
                 title    : QUILocale.get(lg, 'variants.generating.window.title'),
                 ok_button: {
-                    text     : QUILocale.get(lg, 'variants.generating.window.button.generate'),
+                    text     : QUILocale.get(lg, 'variants.generating.window.button.next'),
                     textimage: 'fa fa-magic'
                 }
             });
 
-            this.$List = null;
+            this.$List         = null;
+            this.$SubmitButton = null;
 
             this.addEvents({
                 onOpen  : this.$onOpen,
@@ -58,19 +59,9 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
             var self = this;
 
             this.Loader.show();
-
             this.getContent().set('html', '');
-            this.getContent().setStyles({
-                display         : 'flex',
-                'flex-direction': 'column'
-            });
 
-            new Element('div', {
-                html  : QUILocale.get(lg, 'variants.generating.window.description'),
-                styles: {
-                    paddingBottom: 20
-                }
-            }).inject(this.getContent());
+            this.$SubmitButton = this.getButton('submit');
 
             var ListContainer = new Element('div', {
                 styles: {
@@ -81,8 +72,16 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
             this.$List = new GenerateVariants({
                 productId: this.getAttribute('productId'),
                 events   : {
-                    onLoad: function () {
+                    onLoad  : function () {
                         self.Loader.hide();
+                    },
+                    onChange: function (Control) {
+                        if (Control.isOnEndStep()) {
+                            self.$SubmitButton.setAttribute(
+                                'text',
+                                QUILocale.get(lg, 'variants.generating.window.button.generate')
+                            );
+                        }
                     }
                 }
             }).inject(ListContainer);
@@ -99,6 +98,13 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
             this.Loader.show(
                 QUILocale.get(lg, 'variants.generating.window.generating')
             );
+
+            if (this.$List.isOnEndStep() === false) {
+                this.$List.next().then(function () {
+                    self.Loader.hide();
+                });
+                return;
+            }
 
             this.$List.generate().then(function () {
                 self.close();

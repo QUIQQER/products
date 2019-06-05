@@ -1643,9 +1643,41 @@
             <de><![CDATA[Varianten generieren]]></de>
             <en><![CDATA[Generate Variants]]></en>
         </locale>
+        <locale name="variants.generating.window.button.next">
+            <de><![CDATA[Weiter]]></de>
+            <en><![CDATA[Next]]></en>
+        </locale>
         <locale name="variants.generating.window.generating">
             <de><![CDATA[Varianten werden generiert ...]]></de>
             <en><![CDATA[Variants are generated ...]]></en>
+        </locale>
+        <locale name="variants.generating.selectFields.description">
+            <de><![CDATA[
+            Bitte wähle die Felder aus die du zur Varianten Generierung nutzen möchtest.
+            Nicht zugewiesene Attributelisten werden der Variante automatisch zugewiesen.
+            ]]></de>
+            <en><![CDATA[
+            Please select the fields you would like to use for the variant generation.
+            Unassigned attribute lists are automatically assigned to the variant.
+            ]]></en>
+        </locale>
+        <locale name="variants.generating.selectFields.productAttributes.description">
+            <de><![CDATA[
+            Beachte das Auswahllisten rein für die Preisberechnung verwendet werden und nicht automatisch zugewiesen werden.
+            Falls du Auswahllisten auswählst, werden die Preise der zu generierenden Varianten dementsprechend angepasst.
+            ]]></de>
+            <en><![CDATA[
+            Note that select lists are only used for price calculation and are not automatically assigned.
+            If you select some 'select lists', the prices of the variants to be generated will be adjusted accordingly.
+            ]]></en>
+        </locale>
+        <locale name="variants.generating.attributeGroupList">
+            <de><![CDATA[Attributelisten]]></de>
+            <en><![CDATA[Attribute lists]]></en>
+        </locale>
+        <locale name="variants.generating.productAttributeList">
+            <de><![CDATA[Auswahllisten]]></de>
+            <en><![CDATA[Select lists]]></en>
         </locale>
 
         <locale name="panel.variants.category.title">

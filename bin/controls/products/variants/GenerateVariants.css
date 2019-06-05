@@ -17,3 +17,18 @@
 .quiqqer-products-variant-generate-noValuesMessage {
     font-style: italic;
 }
+
+.quiqqer-products-variant-generate-fieldSelect label {
+    cursor: pointer;
+    width: 100% !important;
+}
+
+.quiqqer-products-variant-generate .field-container-item {
+    text-align: right;
+    width: 80px;
+}
+
+.quiqqer-products-variant-generate-productAttributes-description,
+.quiqqer-products-variant-generate-fieldSelect-description {
+    margin-bottom: 20px;
+}

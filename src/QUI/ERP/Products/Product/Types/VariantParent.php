@@ -23,22 +23,24 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
  *
  * @package QUI\ERP\Products\Product\Types
  *
- * @todo sprechende url bei produkt liste beachten
- * @todo frontend -> wenn produkt in hauptkategorie ist, dann URL change, ansonsten variant=id
+ * backend
  * @todo beim speichern der daten, refresh der daten -> am besten produkt daten als ergebnis mitliefern
  * @todo product url -> validate function at on blur
- * @todo produkt liste -> varianten produkt -> kein warenkorb button -> Zur Auswahl
- * @todo produkt liste -> varianten produkt -> ab Preis
- * @todo canonical auf variante wenn variant=id
- *
  * @todo wenn field vater artikel hinzugefügt, dann kind hinzufügen
  * @todo wenn field vater artikel gelöscht wird, dann kind beachten
  *
+ * @todo variant generieren -> vorschaltfenster -> field select
  * @todo varianten generieren -> flag
  *  -> nur neue generieren
  *  -> bestehende löschen
  *
  * @todo backend -> variant select -> data refresh
+ *
+ * frontend
+ * @todo produkt liste -> varianten produkt -> kein warenkorb button -> Zur Auswahl
+ * @todo produkt liste -> varianten produkt -> ab Preis
+ * @todo canonical auf variante wenn variant=id
+ *
  */
 class VariantParent extends AbstractType
 {
@@ -370,6 +372,10 @@ class VariantParent extends AbstractType
         $list = [];
 
         foreach ($fields as $entry) {
+            if (empty($entry['fieldId'])) {
+                continue;
+            }
+
             $group   = [];
             $fieldId = $entry['fieldId'];
             $values  = $entry['values'];
@@ -437,9 +443,16 @@ class VariantParent extends AbstractType
      */
     public function createVariant()
     {
+        // set empty url, otherwise we'll have problems.
+        $UrlField = $this->getField(QUI\ERP\Products\Handler\Fields::FIELD_URL);
+        $UrlField->setValue([]);
+
+        $fields   = [];
+        $fields[] = $UrlField;
+
         $Variant = Products::createProduct(
             $this->getCategories(),
-            [],
+            $fields,
             VariantChild::class,
             $this->getId()
         );
@@ -447,17 +460,6 @@ class VariantParent extends AbstractType
         $this->children[] = $Variant;
 
         $Variant->setAttribute('parent', $this->getId());
-
-        // add AttributeGroups and ProductAttributeList
-        $fields = \array_merge(
-            $this->getFieldsByType(FieldHandler::TYPE_ATTRIBUTE_LIST),
-            $this->getFieldsByType(FieldHandler::TYPE_ATTRIBUTE_GROUPS)
-        );
-
-        foreach ($fields as $Field) {
-            $Variant->addField($Field);
-        }
-
         $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO)->setValue('');
         $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_FOLDER)->setValue('');
         $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_IMAGE)->setValue('');
@@ -480,11 +482,23 @@ class VariantParent extends AbstractType
      */
     public function generateVariant($fields)
     {
-        $Variant = $this->createVariant();
+        Products::disableGlobalWriteProductDataToDb();
 
+        $Variant = $this->createVariant();
+        
         // set fields
         foreach ($fields as $field => $value) {
-            $Variant->getField($field)->setValue($value);
+            try {
+                $Field = FieldHandler::getField($field);
+            } catch (QUI\Exception $Exception) {
+                continue;
+            }
+
+            // add only attribute groups
+            if ($Field->getType() === FieldHandler::TYPE_ATTRIBUTE_GROUPS) {
+                $Variant->addField($Field);
+                $Variant->getField($field)->setValue($value);
+            }
         }
 
         // set article no
@@ -503,25 +517,22 @@ class VariantParent extends AbstractType
         }
 
         // use attributes for variant url
-        $URL      = $Variant->getField(FieldHandler::FIELD_URL);
-        $urlValue = $URL->getValue();
-
-        $attributeList = $Variant->getFieldsByType(
-            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST
-        );
-
-        $attributeGroups = $Variant->getFieldsByType(
-            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS
-        );
-
-        $listFields  = \array_merge($attributeList, $attributeGroups);
         $LocaleClone = clone QUI::getLocale();
+        $URL         = $Variant->getField(FieldHandler::FIELD_URL);
+        $urlValue    = $URL->getValue();
 
+        $attributes = $Variant->getFieldsByType([
+            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS,
+            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST
+        ]);
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         $newValues = [];
 
-        foreach ($listFields as $Field) {
+        // first add titles to the url
+
+        // second add fields to the url
+        foreach ($attributes as $Field) {
             foreach ($urlValue as $lang => $value) {
                 $LocaleClone->setCurrent($lang);
 
@@ -533,8 +544,17 @@ class VariantParent extends AbstractType
         }
 
         foreach ($urlValue as $lang => $value) {
-            $urlValue[$lang] = \implode('-', $newValues[$lang]);
+            $LocaleClone->setCurrent($lang);
+            $productTitle = $this->getTitle($LocaleClone);
+            $productTitle = QUI\Projects\Site\Utils::clearUrl($productTitle);
+
+            $productSuffix = \implode('-', $newValues[$lang]);
+            $productSuffix = \trim($productSuffix, '-');
+
+            $urlValue[$lang] = $productTitle.'-'.$productSuffix;
         }
+
+        Products::enableGlobalWriteProductDataToDb();
 
         $URL->setValue($urlValue);
         $Variant->save();

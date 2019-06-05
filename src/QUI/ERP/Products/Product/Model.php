@@ -1617,17 +1617,23 @@ class Model extends QUI\QDOM
     /**
      * Return all fields from the specific type
      *
-     * @param string $type - field type (eq: ProductAttributeList, Price ...)
+     * @param string|array $type - field type (eq: ProductAttributeList, Price ...) or list of field types
      * @return array
      */
     public function getFieldsByType($type)
     {
+        if (!\is_array($type)) {
+            $type = [$type];
+        }
+
+        $type = \array_flip($type);
+
         $result = [];
         $fields = $this->getFields();
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($fields as $Field) {
-            if ($Field->getType() == $type) {
+            if (isset($type[$Field->getType()])) {
                 $result[] = $Field;
             }
         }

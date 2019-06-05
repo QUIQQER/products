@@ -901,7 +901,8 @@ class Fields
      *                              $queryParams['where_or'],
      *                              $queryParams['limit']
      *                              $queryParams['order']
-     * @return array
+     *
+     * @return QUI\ERP\Products\Interfaces\FieldInterface[]
      */
     public static function getFields($queryParams = [])
     {
@@ -921,6 +922,27 @@ class Fields
         }
 
         return $result;
+    }
+
+    /**
+     * Return all fields by a specific type
+     *
+     * @param $type
+     * @return QUI\ERP\Products\Interfaces\FieldInterface[]
+     */
+    public static function getFieldsByType($type)
+    {
+        $result = [];
+        $fields = self::getFields();
+
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        foreach ($fields as $Field) {
+            if ($Field->getType() == $type) {
+                $result[] = $Field;
+            }
+        }
+
+        return QUI\ERP\Products\Utils\Fields::sortFields($result);
     }
 
     /**
