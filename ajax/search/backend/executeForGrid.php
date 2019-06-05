@@ -42,16 +42,20 @@ QUI::$Ajax->registerFunction(
             'priority'    => 'F'.Fields::FIELD_PRIORITY
         ];
 
-        $result = QUI::getDataBase()->fetch([
-            'from'  => Tables::getProductCacheTableName(),
-            'where' => [
-                'id'   => [
-                    'type'  => 'IN',
-                    'value' => $productIds
-                ],
-                'lang' => QUI::getLocale()->getCurrent()
-            ]
-        ]);
+        if (!empty($productIds)) {
+            $result = QUI::getDataBase()->fetch([
+                'from'  => Tables::getProductCacheTableName(),
+                'where' => [
+                    'id'   => [
+                        'type'  => 'IN',
+                        'value' => $productIds
+                    ],
+                    'lang' => QUI::getLocale()->getCurrent()
+                ]
+            ]);
+        } else {
+            $result = [];
+        }
 
         $currencyCode = QUI\ERP\Currency\Handler::getDefaultCurrency()->getCode();
 
