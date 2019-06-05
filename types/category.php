@@ -76,6 +76,10 @@ if ($siteUrl != $_REQUEST['_url']) {
     $parts = \explode(QUI\Rewrite::URL_PARAM_SEPARATOR, $baseName);
     $refNo = \array_pop($parts);
 
+    if (!empty($_GET['variant'])) {
+        $refNo = (int)$_GET['variant'];
+    }
+
     $Product = null;
     $Output  = new QUI\Output();
     $Locale  = QUI::getLocale();
