@@ -123,7 +123,6 @@ class Products
                     $value       = $ParentField->onGetPriceFieldForProduct($Product, $User);
 
                     if ($value && $value < $PriceField->getValue()) {
-                        $PriceField = $Field;
                         $priceValue = $value;
                     }
                 } catch (QUI\Exception $Exception) {
@@ -139,7 +138,6 @@ class Products
             }
 
             if ($value < $PriceField->getValue()) {
-                $PriceField = $Field;
                 $priceValue = $value;
             }
         }
