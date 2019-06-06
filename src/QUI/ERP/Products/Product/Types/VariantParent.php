@@ -369,10 +369,30 @@ class VariantParent extends AbstractType
         $this->children = [];
 
         // generate permutation array
-        $list = [];
+        $list            = [];
+        $attributeGroups = [];
 
         foreach ($fields as $entry) {
             if (empty($entry['fieldId'])) {
+                continue;
+            }
+
+            // only group lists can be permutated
+            try {
+                $Field = FieldHandler::getField($entry['fieldId']);
+
+                if ($Field->getType() !== FieldHandler::TYPE_ATTRIBUTES) {
+                    $attributeGroups[] = [
+                        'fieldId' => $Field->getId()
+                    ];
+                    continue;
+                }
+
+                if ($Field->getType() !== FieldHandler::TYPE_ATTRIBUTES) {
+                    continue;
+                }
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception->getMessage());
                 continue;
             }
 
@@ -397,6 +417,10 @@ class VariantParent extends AbstractType
 
             foreach ($permutation as $entry) {
                 $fields[$entry['fieldId']] = $entry['value'];
+            }
+
+            foreach ($attributeGroups as $entry) {
+                $fields[$entry['fieldId']] = true;
             }
 
             $this->generateVariant($fields);
@@ -485,7 +509,7 @@ class VariantParent extends AbstractType
         Products::disableGlobalWriteProductDataToDb();
 
         $Variant = $this->createVariant();
-        
+
         // set fields
         foreach ($fields as $field => $value) {
             try {
@@ -498,6 +522,11 @@ class VariantParent extends AbstractType
             if ($Field->getType() === FieldHandler::TYPE_ATTRIBUTE_GROUPS) {
                 $Variant->addField($Field);
                 $Variant->getField($field)->setValue($value);
+                continue;
+            }
+
+            if ($Field->getType() === FieldHandler::TYPE_ATTRIBUTE_LIST) {
+                $Variant->addField($Field);
             }
         }
 
@@ -522,8 +551,7 @@ class VariantParent extends AbstractType
         $urlValue    = $URL->getValue();
 
         $attributes = $Variant->getFieldsByType([
-            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS,
-            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST
+            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS
         ]);
 
         /* @var $Field QUI\ERP\Products\Field\Field */
@@ -554,12 +582,27 @@ class VariantParent extends AbstractType
             $urlValue[$lang] = $productTitle.'-'.$productSuffix;
         }
 
+
+        $this->calcVariantPrice($Variant, $fields);
+
         Products::enableGlobalWriteProductDataToDb();
 
         $URL->setValue($urlValue);
         $Variant->save();
 
         return $Variant;
+    }
+
+    /**
+     * Calculates the price of an variant children
+     * - looks if attribute lists change the price
+     *
+     * @param VariantChild $Variant
+     * @param $fields
+     */
+    protected function calcVariantPrice(VariantChild $Variant, $fields)
+    {
+        // @todo Implement when there are surcharges and discounts for group lists
     }
 
     /**

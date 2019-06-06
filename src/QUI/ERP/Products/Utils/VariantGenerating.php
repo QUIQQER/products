@@ -25,11 +25,9 @@ class VariantGenerating extends Singleton
      */
     public function getFieldsForGeneration(VariantParent $Product)
     {
-        $attributeList = $Product->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST);
-        $attributes    = $Product->getFieldsByType(Fields::TYPE_ATTRIBUTES);
-        $fields        = \array_merge($attributes, $attributeList);
+        $attributes = $Product->getFieldsByType(Fields::TYPE_ATTRIBUTES);
 
-        return QUI\ERP\Products\Utils\Fields::sortFields($fields, 'id');
+        return QUI\ERP\Products\Utils\Fields::sortFields($attributes, 'id');
     }
 
     /**

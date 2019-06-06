@@ -108,6 +108,45 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
         },
 
         /**
+         * Reset the generate variants and shows the first step
+         *
+         * @return {Promise}
+         */
+        reset: function () {
+            this.$isOnEnd = false;
+
+            var self        = this;
+            var children    = this.getElm().getChildren();
+            var FieldSelect = this.getElm().getElement('.quiqqer-products-variant-generate-fieldSelect');
+
+            return new Promise(function (resolve) {
+                moofx(children).animate({
+                    left   : -50,
+                    opacity: 0
+                }, {
+                    duration: 300,
+                    callback: function () {
+                        self.fireEvent('change', [self]);
+
+                        children.setStyle('display', 'none');
+
+                        FieldSelect.setStyle('opacity', 0);
+                        FieldSelect.setStyle('left', -50);
+                        FieldSelect.setStyle('display', null);
+
+                        moofx(FieldSelect).animate({
+                            opacity: 1,
+                            left   : 0
+                        }, {
+                            duration: 300,
+                            callback: resolve
+                        });
+                    }
+                });
+            });
+        },
+
+        /**
          * Saves the overwritable fields to the product
          *
          * @return {Promise}

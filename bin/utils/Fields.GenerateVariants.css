@@ -25,3 +25,7 @@
 .quiqqer-products-variant-generate-tableBody label:hover {
     background: #eaeff4;
 }
+
+.quiqqer-products-variant-generate-noValuesMessage {
+    padding: 8px;
+}

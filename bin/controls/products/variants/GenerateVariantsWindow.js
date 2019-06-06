@@ -45,6 +45,7 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
 
             this.$List         = null;
             this.$SubmitButton = null;
+            this.$CancelButton = null;
 
             this.addEvents({
                 onOpen  : this.$onOpen,
@@ -62,6 +63,17 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
             this.getContent().set('html', '');
 
             this.$SubmitButton = this.getButton('submit');
+            this.$CancelButton = this.getButton('cancel');
+
+            this.$CancelButton.removeEvents('click');
+            this.$CancelButton.addEvent('click', function () {
+                if (self.$List.isOnEndStep()) {
+                    self.$List.reset();
+                    return;
+                }
+
+                self.close();
+            });
 
             var ListContainer = new Element('div', {
                 styles: {
@@ -80,6 +92,11 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
                             self.$SubmitButton.setAttribute(
                                 'text',
                                 QUILocale.get(lg, 'variants.generating.window.button.generate')
+                            );
+                        } else {
+                            self.$SubmitButton.setAttribute(
+                                'text',
+                                QUILocale.get(lg, 'variants.generating.window.button.next')
                             );
                         }
                     }
