@@ -960,7 +960,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             return;
         }
 
-        $this->quantity = $quantity;
+        $this->quantity = \floatval($quantity);
+
+        try {
+            $this->recalculation();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
     }
 
     /**
