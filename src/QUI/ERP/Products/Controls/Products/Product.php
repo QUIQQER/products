@@ -85,9 +85,11 @@ class Product extends QUI\Control
             }
         }
 
+        $User = QUI::getUserBySession();
+
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
             $View   = $Product->getView();
-            $Unique = $Product->createUniqueProduct($Calc);
+            $Unique = $Product->createUniqueProduct($User);
 
             try {
                 $Price = $Calc->getProductPrice($Unique);
@@ -97,7 +99,7 @@ class Product extends QUI\Control
             }
         } else {
             $View  = $Product;
-            $Price = $Product->getPrice();
+            $Price = $Product->getPrice($User);
         }
 
         if ($typeVariantParent) {
