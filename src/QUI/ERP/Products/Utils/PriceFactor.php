@@ -336,6 +336,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
         switch ($calculation) {
             case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
             case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
+            case QUI\ERP\Accounting\Calc::CALCULATION_COMPLETE:
                 $this->calculation = $calculation;
                 break;
         }

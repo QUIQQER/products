@@ -431,9 +431,9 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function recalculation($Calc = null)
     {
-        $this->resetCalculation();
-
         QUI::getEvents()->fireEvent('quiqqerProductsUniqueProductRecalculation', [$this]);
+
+        $this->resetCalculation();
 
         return $this->calc($Calc);
     }

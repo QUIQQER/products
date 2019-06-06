@@ -483,6 +483,12 @@ class Calc
                     $priceFactorSum = $PriceFactor->getValue();
                     break;
 
+                case ErpCalc::CALCULATION_COMPLETE:
+                    $nettoPrice     = $PriceFactor->getValue();
+                    $priceFactorSum = 0;
+                    $factors[]      = $PriceFactor->toArray();
+                    break;
+
                 // Prozent Angabe
                 case ErpCalc::CALCULATION_PERCENTAGE:
                     switch ($PriceFactor->getCalculationBasis()) {
