@@ -231,6 +231,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             'quiqqerProductsPriceFactorsInit',
             [$this->PriceFactors, $this]
         );
+
+        $this->recalculation();
     }
 
     /**
