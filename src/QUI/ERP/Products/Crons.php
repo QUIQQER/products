@@ -19,7 +19,7 @@ class Crons
     /**
      * Time for one product to update its cache (seconds)
      */
-    const PRODUCT_CACHE_UPDATE_TIME = 3;
+    const PRODUCT_CACHE_UPDATE_TIME = 5;
 
     /**
      * Updates cache values for all products
