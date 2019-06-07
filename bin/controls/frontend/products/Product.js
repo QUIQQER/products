@@ -338,6 +338,12 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
             }
 
             return Products.calcPrice(this.getAttribute('productId'), fieldData).then(function (result) {
+                if (result.price_is_minimal) {
+                    self.$Price.enableMinimalPrice();
+                } else {
+                    self.$Price.disableMinimalPrice();
+                }
+
                 self.$Price.setPrice(result.calculated_price);
             });
         },
