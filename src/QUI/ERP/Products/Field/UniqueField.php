@@ -348,6 +348,25 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     }
 
     /**
+     * Exists an empty entry in this list?
+     *
+     * @return bool
+     */
+    public function hasDefaultEntry()
+    {
+        $options = $this->getOptions();
+        $entries = $options['entries'];
+
+        foreach ($entries as $entry) {
+            if ($entry['selected']) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Return the parent class of the unique field
      * - this is the class name from the original field
      *
