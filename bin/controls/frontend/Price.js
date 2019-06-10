@@ -8,9 +8,10 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
 
     'qui/QUI',
     'qui/controls/Control',
-    'package/quiqqer/currency/bin/Currency'
+    'package/quiqqer/currency/bin/Currency',
+    'Locale'
 
-], function (QUI, QUIControl, Currency) {
+], function (QUI, QUIControl, Currency, QUILocale) {
 
     "use strict";
 
@@ -40,8 +41,9 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Price = null;
-            this.$Vat   = null;
+            this.$Price  = null;
+            this.$Vat    = null;
+            this.$Prefix = null;
 
             this.addEvents({
                 onImport : this.$onImport,
@@ -106,6 +108,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
                 this.$Price = Elm;
             }
 
+            this.$Prefix = Elm.getElement('.qui-products-price-display-prefix');
             this.$Price.addClass('quiqqer-price');
 
             this.setPrice(Elm.get('data-qui-options-price'));
@@ -156,6 +159,41 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
 
             this.setAttrbute('currency', CurrencyCode);
             this.refresh();
+        },
+
+        /**
+         * Return if the the price is minimal price and higher prices exists
+         *
+         * @return bool
+         */
+        isMinimalPrice: function () {
+            return this.$isMinimalPrice;
+        },
+
+        /**
+         * enables the minimal price
+         * -> price from
+         * -> ab
+         */
+        enableMinimalPrice: function () {
+            this.$isMinimalPrice = true;
+
+            if (this.$Prefix) {
+                this.$Prefix.set('html', QUILocale.get('quiqqer/erp', 'price.starting.from'));
+            }
+        },
+
+        /**
+         * enables the minimal price
+         * -> price from
+         * -> ab
+         */
+        disableMinimalPrice: function () {
+            this.isMinimalPrice = false;
+
+            if (this.$Prefix) {
+                this.$Prefix.set('html', '');
+            }
         }
     });
 });

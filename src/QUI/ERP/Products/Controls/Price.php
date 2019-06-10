@@ -83,13 +83,13 @@ class Price extends QUI\Control
         $pricePrefix = '';
 
         if ($Price->isMinimalPrice()) {
-            $pricePrefix = 'ab ';
+            $pricePrefix = QUI::getLocale()->get('quiqqer/erp', 'price.starting.from');
         }
 
         $result = '';
         $result .= '<span class="qui-products-price-display-prefix">';
         $result .= $pricePrefix;
-        $result .= '<span>';
+        $result .= '</span>';
         $result .= '<span class="qui-products-price-display-value">';
         $result .= $Price->getDisplayPrice();
         $result .= '</span>';

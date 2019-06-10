@@ -231,6 +231,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             'quiqqerProductsPriceFactorsInit',
             [$this->PriceFactors, $this]
         );
+
+        $this->recalculation();
     }
 
     /**
@@ -368,7 +370,9 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $attributes        = $this->getAttributes();
         $attributes['uid'] = $this->getUser()->getId();
 
-        return new UniqueProductFrontendView($this->id, $attributes);
+        $View = new UniqueProductFrontendView($this->id, $attributes);
+
+        return $View;
     }
 
     //region calculation
@@ -429,6 +433,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function recalculation($Calc = null)
     {
+        QUI::getEvents()->fireEvent('quiqqerProductsUniqueProductRecalculation', [$this]);
+
         $this->resetCalculation();
 
         return $this->calc($Calc);
@@ -728,7 +734,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         foreach ($attributesLists as $List) {
             /* @var $List UniqueField */
             if ($List->isRequired() && $List->getValue() === '') {
-                $Price->changeToStartingPrice();
+                $Price->enableMinimalPrice();
 
                 return $Price;
             }
@@ -958,7 +964,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             return;
         }
 
-        $this->quantity = $quantity;
+        $this->quantity = \floatval($quantity);
+
+        try {
+            $this->recalculation();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
     }
 
     /**
@@ -1050,7 +1062,19 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function toArray()
     {
-        return $this->getAttributes();
+        $attributes = $this->getAttributes();
+
+        try {
+            $Price = $this->getPrice();
+
+            $attributes['price_display']    = $Price->getDisplayPrice();
+            $attributes['price_is_minimal'] = $Price->isMinimalPrice();
+        } catch (QUI\Exception $Exception) {
+            $attributes['price_display']    = false;
+            $attributes['price_is_minimal'] = false;
+        }
+
+        return $attributes;
     }
 
     /**
