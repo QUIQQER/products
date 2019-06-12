@@ -4,6 +4,16 @@
     position: relative;
 }
 
+.quiqqer-products-variant-generate-type-description {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.quiqqer-products-variant-generate-type-description select {
+    margin-top: 10px;
+    width: 100%;
+}
+
 .quiqqer-products-variant-generate-calcDisplay {
     background: #FAF6D4;
     border: 1px solid #E6C26E;

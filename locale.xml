@@ -1684,6 +1684,24 @@
             <de><![CDATA[Auswahllisten nutzen]]></de>
             <en><![CDATA[Use select lists]]></en>
         </locale>
+        <locale name="variants.generating.type.description">
+            <de><![CDATA[
+            Bitte wähle die Art aus wie die Varianten generiert werden sollen.
+            ]]></de>
+            <en><![CDATA[
+            Please select the way you want the variants to be generated.
+            ]]></en>
+        </locale>
+        <locale name="variants.generating.type.createOnlyNewOne">
+            <de><![CDATA[Nur neue Varianten generieren.]]></de>
+            <en><![CDATA[Generate only new variants.]]></en>
+        </locale>
+        <locale name="variants.generating.type.deleteCurrent">
+            <de><![CDATA[Bestehende Varianten löschen und alle varianten neu generieren.]]></de>
+            <en><![CDATA[Delete existing variants and regenerate all variants.]]></en>
+        </locale>
+
+
         <locale name="variants.generating.productAttributeList">
             <de><![CDATA[Auswahllisten]]></de>
             <en><![CDATA[Select lists]]></en>

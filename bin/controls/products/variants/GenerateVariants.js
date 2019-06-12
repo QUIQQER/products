@@ -172,10 +172,11 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
 
             return new Promise(function (resolve, reject) {
                 QUIAjax.post('package_quiqqer_products_ajax_products_variant_generate_generate', resolve, {
-                    'package': 'quiqqer/products',
-                    productId: self.getAttribute('productId'),
-                    fields   : JSON.encode(fields),
-                    onError  : reject
+                    'package'     : 'quiqqer/products',
+                    productId     : self.getAttribute('productId'),
+                    fields        : JSON.encode(fields),
+                    generationType: self.getElm().getElement('[name="generation-type"]').value,
+                    onError       : reject
                 });
             });
         },
@@ -219,6 +220,9 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
                     Container.set('html', Mustache.render(templateFieldSelect, {
                         attributeGroupList        : attributeGroupList,
                         titleAttributeGroupList   : QUILocale.get(lg, 'variants.generating.attributeGroupList'),
+                        descGenerationType        : QUILocale.get(lg, 'variants.generating.type.description'),
+                        textCreateOnlyNewOne      : QUILocale.get(lg, 'variants.generating.type.createOnlyNewOne'),
+                        textDeleteCurrent         : QUILocale.get(lg, 'variants.generating.type.deleteCurrent'),
                         descAttributeGroupList    : QUILocale.get(lg, 'variants.generating.selectFields.description'),
                         textProductAttributeButton: QUILocale.get(lg, 'variants.generating.productAttributeButton'),
                         productAttributeList      : productAttributeList,
@@ -366,8 +370,6 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
                 Container.setStyle('height', 0);
                 Container.setStyle('display', 'inline-block');
 
-                console.log(Container.getScrollSize());
-
                 moofx(Container).animate({
                     height : Container.getScrollSize().y,
                     opacity: 1
@@ -392,8 +394,6 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
                     Button.getElement('.fa').removeClass('fa-minus').addClass('fa-plus');
                 }
             });
-
-            console.log(2);
         }
     });
 });

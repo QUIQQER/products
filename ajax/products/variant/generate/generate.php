@@ -14,7 +14,7 @@ use QUI\ERP\Products\Product\Types\VariantParent;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_variant_generate_generate',
-    function ($productId, $fields) {
+    function ($productId, $fields, $generationType) {
         $Product = Products::getProduct($productId);
         $fields  = \json_decode($fields, true);
 
@@ -22,8 +22,19 @@ QUI::$Ajax->registerFunction(
             return;
         }
 
-        $Product->generateVariants($fields);
+        switch ($generationType) {
+            case 'reset':
+                $generationType = VariantParent::GENERATION_TYPE_RESET;
+                break;
+
+            default:
+            case 'create-only-new-one':
+                $generationType = VariantParent::GENERATION_TYPE_ADD;
+                break;
+        }
+
+        $Product->generateVariants($fields, $generationType);
     },
-    ['productId', 'fields'],
+    ['productId', 'fields', 'generationType'],
     'Permission::checkAdminUser'
 );

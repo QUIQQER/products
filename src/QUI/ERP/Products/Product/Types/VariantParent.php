@@ -28,22 +28,25 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
  * @todo beim speichern der daten, refresh der daten -> am besten produkt daten als ergebnis mitliefern
  * @todo product url -> validate function at on blur
  * @todo produkt suche -> kind varianten finden
- *
- * @todo variant generieren -> vorschaltfenster -> field select
- * @todo varianten generieren -> flag
- *  -> nur neue generieren
- *  -> bestehende löschen
- *
  * @todo backend -> variant select -> data refresh
  *
  * frontend
  * @todo produkt liste -> varianten produkt -> kein warenkorb button -> Zur Auswahl
  * @todo produkt liste -> varianten produkt -> ab Preis
  * @todo canonical auf variante wenn variant=id
- *
  */
 class VariantParent extends AbstractType
 {
+    /**
+     * Variant generation : Delete all children and create the new ons
+     */
+    const GENERATION_TYPE_RESET = 1;
+
+    /**
+     * Variant generation : Adds only new ones
+     */
+    const GENERATION_TYPE_ADD = 2;
+
     /**
      * @var null
      */
@@ -437,23 +440,26 @@ class VariantParent extends AbstractType
      *          values => ['valueId','value','value']
      *      ]
      *  ]
+     * @param int $generationType
      *
      * @throws QUI\Exception
      */
-    public function generateVariants($fields = [])
+    public function generateVariants($fields = [], $generationType = self::GENERATION_TYPE_RESET)
     {
         if (empty($fields)) {
             return;
         }
 
         // delete all children and generate new ones
-        $children = $this->getVariants();
+        if ($generationType === self::GENERATION_TYPE_RESET) {
+            $children = $this->getVariants();
 
-        foreach ($children as $Child) {
-            try {
-                $Child->delete();
-            } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeException($Exception);
+            foreach ($children as $Child) {
+                try {
+                    $Child->delete();
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::writeException($Exception);
+                }
             }
         }
 
@@ -513,6 +519,18 @@ class VariantParent extends AbstractType
 
             foreach ($attributeGroups as $entry) {
                 $fields[$entry['fieldId']] = true;
+            }
+
+            if ($generationType === self::GENERATION_TYPE_ADD) {
+                // check if variant already exists
+                $variantHash = QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($fields);
+
+                try {
+                    $this->getVariantByVariantHash($variantHash);
+                    continue;
+                } catch (QUI\Exception $Exception) {
+                    // doesnt exists
+                }
             }
 
             $this->generateVariant($fields);
