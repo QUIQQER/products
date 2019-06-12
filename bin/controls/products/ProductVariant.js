@@ -74,7 +74,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             this.parent(options);
 
-            this.$Grid = null;
+            this.$loaded = false;
+            this.$Grid   = null;
 
             this.$Menu = new QUIContextMenu({
                 events: {
@@ -112,8 +113,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             this.$ActionSeparator = this.getButtons('actionSeparator');
             this.$CopyButton      = this.getButtons('copy');
 
-            // variant categories
             this.parent().then(function () {
+                return self.$checkProductParent();
+            }).then(function () {
                 self.addCategory({
                     name  : 'variants',
                     text  : QUILocale.get(lg, 'panel.variants.category.title'),
@@ -122,7 +124,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         onClick: function () {
                             self.Loader.show();
                             self.openVariants().then(function () {
-                                self.Loader.hide();
+                                if (self.$loaded) {
+                                    self.Loader.hide();
+                                }
                             });
                         }
                     }
@@ -191,6 +195,51 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 }).inject(self.getHeader());
 
                 self.$BackToVariantList.hide();
+
+                if (self.$CurrentVariant) {
+                    return self.openVariants().then(function () {
+                        return self.selectVariant(self.$CurrentVariant.getId());
+                    });
+                }
+            }).then(function () {
+                self.$loaded = true;
+                self.Loader.hide();
+            });
+        },
+
+        /**
+         *
+         * @return {Promise}
+         */
+        $checkProductParent: function () {
+            var self      = this,
+                productId = parseInt(this.getAttribute('productId'));
+
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_products_ajax_products_variant_getParent', function (parentId) {
+                    if (parentId === false) {
+                        reject('No variant');
+                        // @todo close and message
+                        return;
+                    }
+
+                    if (parentId === productId) {
+                        self.$CurrentVariant = null;
+                        resolve();
+                        return;
+                    }
+
+                    self.$CurrentVariant = self.$Product;
+
+                    self.$Product = new Product({
+                        id: parentId
+                    });
+
+                    resolve();
+                }, {
+                    'package': 'quiqqer/products',
+                    productId: productId
+                });
             });
         },
 
@@ -237,7 +286,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     fields
                 );
             }).then(function () {
-                self.Loader.hide();
+                if (self.$loaded) {
+                    self.Loader.hide();
+                }
             });
         },
 
@@ -522,7 +573,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return self.$showCategory(VariantSheet);
             }).then(function () {
                 self.getCategory('variants').setActive();
-                self.Loader.hide();
+
+                if (self.$loaded) {
+                    self.Loader.hide();
+                }
 
                 return self.$Grid.setHeight(
                     Body.getElement('.variants-sheet').getSize().y - 40
@@ -641,7 +695,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     page : result[0].page
                 });
 
-                self.Loader.hide();
+                if (self.$loaded) {
+                    self.Loader.hide();
+                }
             });
         },
 
@@ -1106,7 +1162,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             var name = Tab.getAttribute('name');
             var done = function () {
-                this.Loader.hide();
+                if (this.$loaded) {
+                    this.Loader.hide();
+                }
             }.bind(this);
 
             if (name === 'data') {
