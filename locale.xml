@@ -1668,11 +1668,11 @@
         </locale>
         <locale name="variants.generating.selectFields.productAttributes.description">
             <de><![CDATA[
-            Beachte das Auswahllisten rein für die Preisberechnung verwendet werden und nicht automatisch zugewiesen werden.
+            Beachte das Auswahllisten für die Preisberechnung verwendet werden und automatisch zugewiesen werden.
             Falls du Auswahllisten auswählst, werden die Preise der zu generierenden Varianten dementsprechend angepasst.
             ]]></de>
             <en><![CDATA[
-            Note that select lists are only used for price calculation and are not automatically assigned.
+            Note that select lists are used for price calculation and are not automatically assigned.
             If you select some 'select lists', the prices of the variants to be generated will be adjusted accordingly.
             ]]></en>
         </locale>
