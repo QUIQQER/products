@@ -1680,6 +1680,10 @@
             <de><![CDATA[Attributelisten]]></de>
             <en><![CDATA[Attribute lists]]></en>
         </locale>
+        <locale name="variants.generating.productAttributeButton">
+            <de><![CDATA[Auswahllisten nutzen]]></de>
+            <en><![CDATA[Use select lists]]></en>
+        </locale>
         <locale name="variants.generating.productAttributeList">
             <de><![CDATA[Auswahllisten]]></de>
             <en><![CDATA[Select lists]]></en>

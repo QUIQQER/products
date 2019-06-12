@@ -32,3 +32,19 @@
 .quiqqer-products-variant-generate-fieldSelect-description {
     margin-bottom: 20px;
 }
+
+.product-attribute-list-container {
+    display: none;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    width: 100%;
+}
+
+.product-attribute-list header {
+    margin-bottom: 10px;
+}
+
+.product-attribute-list header button {
+    margin-bottom: 10px;
+}

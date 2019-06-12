@@ -30,6 +30,7 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
 
         Binds: [
             '$onInject',
+            '$togglePAL',
             'refreshCalc'
         ],
 
@@ -43,6 +44,8 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
             this.$Grid        = null;
             this.$CalcDisplay = null;
             this.$isOnEnd     = false;
+
+            this.$ButtonUsePAL = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -197,6 +200,8 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
          * @return {Promise}
          */
         renderFieldSelect: function () {
+            var self = this;
+
             var Container = new Element('div', {
                 'class': 'quiqqer-products-variant-generate-fieldSelect'
             }).inject(this.$Elm);
@@ -212,13 +217,17 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
                     });
 
                     Container.set('html', Mustache.render(templateFieldSelect, {
-                        attributeGroupList       : attributeGroupList,
-                        titleAttributeGroupList  : QUILocale.get(lg, 'variants.generating.attributeGroupList'),
-                        descAttributeGroupList   : QUILocale.get(lg, 'variants.generating.selectFields.description'),
-                        productAttributeList     : productAttributeList,
-                        titleProductAttributeList: QUILocale.get(lg, 'variants.generating.productAttributeList'),
-                        descProductAttributeList : QUILocale.get(lg, 'variants.generating.selectFields.productAttributes.description')
+                        attributeGroupList        : attributeGroupList,
+                        titleAttributeGroupList   : QUILocale.get(lg, 'variants.generating.attributeGroupList'),
+                        descAttributeGroupList    : QUILocale.get(lg, 'variants.generating.selectFields.description'),
+                        textProductAttributeButton: QUILocale.get(lg, 'variants.generating.productAttributeButton'),
+                        productAttributeList      : productAttributeList,
+                        titleProductAttributeList : QUILocale.get(lg, 'variants.generating.productAttributeList'),
+                        descProductAttributeList  : QUILocale.get(lg, 'variants.generating.selectFields.productAttributes.description')
                     }));
+
+                    self.$ButtonUsePAL = Container.getElement('.product-attribute-list button');
+                    self.$ButtonUsePAL.addEvent('click', self.$togglePAL);
 
                     resolve();
                 }, {
@@ -341,6 +350,50 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
             this.$CalcDisplay.set('html', QUILocale.get(lg, 'variants.generating.window.calc', {
                 count: count
             }));
+        },
+
+        /**
+         * Toggle the product attribute list selection
+         */
+        $togglePAL: function () {
+            var Section   = this.getElm().getElement('.product-attribute-list');
+            var Button    = Section.getElement('button');
+            var Container = Section.getElement('.product-attribute-list-container');
+
+            // open
+            if (Container.getStyle('display') === 'none') {
+                Container.setStyle('opacity', 0);
+                Container.setStyle('height', 0);
+                Container.setStyle('display', 'inline-block');
+
+                console.log(Container.getScrollSize());
+
+                moofx(Container).animate({
+                    height : Container.getScrollSize().y,
+                    opacity: 1
+                }, {
+                    duration: 300,
+                    callback: function () {
+                        Button.getElement('.fa').removeClass('fa-plus').addClass('fa-minus');
+                    }
+                });
+
+                return;
+            }
+
+            // close
+            moofx(Container).animate({
+                height : 0,
+                opacity: 0
+            }, {
+                duration: 300,
+                callback: function () {
+                    Container.setStyle('display', 'none');
+                    Button.getElement('.fa').removeClass('fa-minus').addClass('fa-plus');
+                }
+            });
+
+            console.log(2);
         }
     });
 });
