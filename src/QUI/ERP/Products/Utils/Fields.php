@@ -145,6 +145,13 @@ class Fields
                 return \strnatcmp($priority1, $priority2);
             }
 
+            // if sorting is priority, and both are equal, than use title
+            if ($sort === 'priority' && $priority1 === $priority2) {
+                $priority1 = $getFieldSortValue($Field1, 'title');
+                $priority2 = $getFieldSortValue($Field2, 'title');
+
+                return \strnatcmp($priority1, $priority2);
+            }
 
             if ($priority1 === 0) {
                 return 1;
