@@ -1034,6 +1034,11 @@
             This is a variant product. This product can contain several variants.
             ]]></en>
         </locale>
+
+        <locale name="control.watchlist.buttonOffer.text">
+            <de><![CDATA[Angebot anfordern]]></de>
+            <en><![CDATA[Request a offer]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
