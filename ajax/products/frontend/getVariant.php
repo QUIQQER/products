@@ -6,6 +6,7 @@
 
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
+use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Return the product variant html
@@ -55,9 +56,10 @@ QUI::$Ajax->registerFunction(
 
 
         try {
-            /* @var $Product \QUI\ERP\Products\Product\Types\VariantParent */
-            $fieldHash = QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($fields);
-            $Child     = $Product->getVariantByVariantHash($fieldHash);
+            /* @var $Product QUI\ERP\Products\Product\Types\VariantParent */
+            $attributeGroups = $Product->getFieldsByType(Fields::TYPE_ATTRIBUTES);
+            $fieldHash       = QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($attributeGroups);
+            $Child           = $Product->getVariantByVariantHash($fieldHash);
         } catch (QUI\Exception $Exception) {
             $Child = $Product;
         }
