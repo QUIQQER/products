@@ -36,14 +36,15 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
         ],
 
         options: {
-            searchfields  : {},
-            searchbutton  : true,
-            sortOn        : false,
-            sortBy        : false,
-            limit         : false,
-            sheet         : 1,
-            freeTextSearch: true,
-            productTypes  : []
+            searchfields   : {},
+            searchbutton   : true,
+            sortOn         : false,
+            sortBy         : false,
+            limit          : false,
+            sheet          : 1,
+            freeTextSearch : true,
+            variantChildren: true,
+            productTypes   : []
         },
 
         initialize: function (options) {
@@ -128,8 +129,10 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                         html: Mustache.render(template, {
                             fields                  : result,
                             freeTextSearch          : this.getAttribute('freeTextSearch'),
+                            variantChildren         : this.getAttribute('variantChildren'),
                             fieldTitleFreeTextSearch: QUILocale.get(lg, 'searchtype.freeTextSearch.title'),
-                            text_no_fields          : QUILocale.get(lg, 'searchtypes.empty')
+                            text_no_fields          : QUILocale.get(lg, 'searchtypes.empty'),
+                            descConsiderChild       : QUILocale.get(lg, 'searchtypes.considerVariantChild')
                         })
                     });
 
@@ -193,7 +196,6 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                     this.$loaded = true;
 
                 }.bind(this));
-
             }.bind(this), {
                 'package': 'quiqqer/products'
             });
@@ -217,8 +219,9 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
 
                 var i, len, Field, fieldid, sortOn;
 
-                var searchvalues = {},
-                    FreeText     = this.$Elm.getElement('[name="search"]');
+                var searchvalues    = {},
+                    FreeText        = this.$Elm.getElement('[name="search"]'),
+                    VariantChildren = this.$Elm.getElement('[name="show-variant-children"]');
 
                 switch (this.getAttribute('sortOn')) {
                     case 'price_netto':
@@ -249,6 +252,10 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
 
                 if (FreeText) {
                     params.freetext = FreeText.value;
+                }
+
+                if (VariantChildren) {
+                    params.considerVariantChildren = VariantChildren.checked ? 1 : 0;
                 }
 
                 var controls = QUI.Controls.getControlsInElement(this.$Elm);

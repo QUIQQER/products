@@ -19,6 +19,10 @@
     overflow: auto;
 }
 
+.quiqqer-products-search-fieldContainer-variantChildren {
+    display: flex;
+}
+
 .quiqqer-products-search-form .qui-select {
     margin: 0;
 }
@@ -30,9 +34,13 @@
 }
 
 .quiqqer-products-search-fieldContainer-freetext {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-    margin-bottom: 30px;
-    padding-bottom: 30px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+.quiqqer-products-search-field-container-fields {
+    display: inline-block;
+    margin-top: 30px;
 }
 
 .quiqqer-products-search-field-label {

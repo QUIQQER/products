@@ -22,6 +22,10 @@ QUI::$Ajax->registerFunction(
         $BackEndSearch = SearchHandler::getBackendSearch();
         $searchParams  = \json_decode($searchParams, true);
 
+        if (!empty($searchParams['considerVariantChildren'])) {
+            $BackEndSearch->considerVariantChildren();
+        }
+
         if (isset($searchParams['count'])) {
             return $BackEndSearch->search($searchParams, true);
         }

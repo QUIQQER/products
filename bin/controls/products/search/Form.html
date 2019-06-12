@@ -5,26 +5,35 @@
             {{fieldTitleFreeTextSearch}}
         </span>
         <div class="quiqqer-products-search-field-container-field">
-            <input type="text" name="search" />
+            <input type="text" name="search"/>
         </div>
     </label>
     {{/freeTextSearch}}
 
-    {{#fields}}
-    <label class="quiqqer-products-search-field-container">
+    {{#variantChildren}}
+    <label class="quiqqer-products-search-field-container quiqqer-products-search-fieldContainer-variantChildren">
+        <input type="checkbox" name="show-variant-children"/>
+        <span>{{descConsiderChild}}</span>
+    </label>
+    {{/variantChildren}}
+
+    <div class="quiqqer-products-search-field-container-fields">
+        {{#fields}}
+        <label class="quiqqer-products-search-field-container">
         <span class="quiqqer-products-search-field-label" title="{{fieldTitle}}" data-fieldid="{{id}}">
             {{fieldTitle}}
         </span>
-        <div class="quiqqer-products-search-field-container-field"
-             data-qui-options-searchtype="{{searchType}}"
-             data-qui-options-fieldid="{{id}}"
-             data-qui="package/quiqqer/products/bin/controls/search/SearchField"
-        ></div>
-    </label>
-    {{/fields}}
-    {{^fields}}
-    <div class="quiqqer-products-search-empty">
-        {{text_no_fields}}
+            <div class="quiqqer-products-search-field-container-field"
+                 data-qui-options-searchtype="{{searchType}}"
+                 data-qui-options-fieldid="{{id}}"
+                 data-qui="package/quiqqer/products/bin/controls/search/SearchField"
+            ></div>
+        </label>
+        {{/fields}}
+        {{^fields}}
+        <div class="quiqqer-products-search-empty">
+            {{text_no_fields}}
+        </div>
+        {{/fields}}
     </div>
-    {{/fields}}
 </div>

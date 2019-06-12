@@ -213,6 +213,14 @@ class VariantChild extends AbstractType
     }
 
     /**
+     * Returns the backend panel control
+     */
+    public static function getTypeBackendPanel()
+    {
+        return 'package/quiqqer/products/bin/controls/products/ProductVariant';
+    }
+
+    /**
      * Generate a variant hash for this variant child
      * The variant hash depends on the used fields
      *
