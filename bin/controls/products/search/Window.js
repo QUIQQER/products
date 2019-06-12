@@ -31,12 +31,13 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
         ],
 
         options: {
-            maxHeight: 600,
-            maxWidth : 800,
-            icon     : 'fa fa-search',
-            title    : 'Produktsuche',
-            autoclose: true,
-            multiple : false
+            maxHeight   : 600,
+            maxWidth    : 800,
+            icon        : 'fa fa-search',
+            title       : 'Produktsuche',
+            autoclose   : true,
+            multiple    : false,
+            productTypes: []
         },
 
         initialize: function (options) {
@@ -94,6 +95,7 @@ define('package/quiqqer/products/bin/controls/products/search/Window', [
             Content.set('html', '');
 
             this.$Search = new Search({
+                productTypes: this.getAttribute('productTypes'),
                 searchbutton: false,
                 events      : {
                     onDblClick: function () {

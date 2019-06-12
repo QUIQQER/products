@@ -24,6 +24,7 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
     var lg = 'quiqqer/products';
 
     return new Class({
+
         Extends: QUIControl,
         Type   : 'package/quiqqer/products/bin/controls/products/search/Result',
 

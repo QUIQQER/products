@@ -42,7 +42,8 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
             sheet : 1,
 
             injectShow    : true,
-            freeTextSearch: true
+            freeTextSearch: true,
+            productTypes  : []
         },
 
         /**
@@ -122,6 +123,7 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
                         self.$Form.setAttribute('limit', options.perPage);
                         self.$Form.setAttribute('sortOn', options.sortOn);
                         self.$Form.setAttribute('sortBy', options.sortBy);
+                        self.$Form.setAttribute('productTypes', self.getAttribute('productTypes'));
 
                         self.$Form.search();
                     },
@@ -205,6 +207,8 @@ define('package/quiqqer/products/bin/controls/products/search/Search', [
          * @returns {Promise}
          */
         search: function () {
+            this.$Form.setAttribute('productTypes', this.getAttribute('productTypes'));
+
             return this.$Form.search();
         },
 

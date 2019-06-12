@@ -42,7 +42,8 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
             sortBy        : false,
             limit         : false,
             sheet         : 1,
-            freeTextSearch: true
+            freeTextSearch: true,
+            productTypes  : []
         },
 
         initialize: function (options) {
@@ -263,17 +264,16 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                     searchvalues[fieldid] = Field.getSearchValue();
                 }
 
-                params.fields = searchvalues;
+                params.fields       = searchvalues;
+                params.productTypes = this.getAttribute('productTypes');
 
                 Ajax.get('package_quiqqer_products_ajax_search_backend_executeForGrid', function (result) {
                     resolve(result);
                     this.fireEvent('search', [this, result]);
-
                 }.bind(this), {
                     'package'   : 'quiqqer/products',
                     searchParams: JSON.encode(params)
                 });
-
             }.bind(this));
         }
     });

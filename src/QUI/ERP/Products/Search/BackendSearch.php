@@ -170,8 +170,30 @@ class BackendSearch extends Search
             }
         }
 
-        if ($this->ignoreVariantChildren) {
-            $where[] = "type <> :variantClass";
+        // product types search
+        if (isset($searchParams['productTypes'])
+            && !empty($searchParams['productTypes'])
+            && is_array($searchParams['productTypes'])
+        ) {
+            $typeCount = 0;
+            $typeWhere = [];
+
+            foreach ($searchParams['productTypes'] as $productType) {
+                if (!\class_exists($productType)) {
+                    continue;
+                }
+
+                $typeWhere[] = 'type = :variantClass'.$typeCount;
+
+                $binds['variantClass'.$typeCount] = [
+                    'value' => $productType,
+                    'type'  => \PDO::PARAM_STR
+                ];
+            }
+
+            $where[] = '('.\implode(' OR ', $typeWhere).')';
+        } elseif ($this->ignoreVariantChildren) {
+            $where[] = 'type <> :variantClass';
 
             $binds['variantClass'] = [
                 'value' => QUI\ERP\Products\Product\Types\VariantChild::class,
