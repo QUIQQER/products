@@ -82,7 +82,8 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             $userInput = '';
 
             if ($value === null && isset($option['selected']) && $option['selected']
-                || $value === $option['valueId']) {
+                || $value === $option['valueId']
+                || is_numeric($value) && (int)$value === $option['valueId']) {
                 $selected = 'selected="selected" ';
             }
 
