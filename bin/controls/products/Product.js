@@ -180,6 +180,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
             });
 
+
+            this.Loader.setAttribute('opacity', 1);
+            this.Loader.setAttribute('styles', {
+                background: '#fff'
+            });
+
             this.Loader.show();
         },
 
@@ -533,7 +539,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 Button.setSilentOff();
                 Button.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'isDeactivate'));
                 Button.enable();
-
             }.bind(this));
         },
 
