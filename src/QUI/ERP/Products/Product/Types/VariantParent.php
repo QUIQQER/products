@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Product\Types;
 
 use QUI;
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
@@ -26,8 +27,6 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
  * backend
  * @todo beim speichern der daten, refresh der daten -> am besten produkt daten als ergebnis mitliefern
  * @todo product url -> validate function at on blur
- * @todo wenn field vater artikel hinzugefügt, dann kind hinzufügen
- * @todo wenn field vater artikel gelöscht wird, dann kind beachten
  *
  * @todo variant generieren -> vorschaltfenster -> field select
  * @todo varianten generieren -> flag
@@ -91,6 +90,58 @@ class VariantParent extends AbstractType
     }
 
     //endregion
+
+    //region overwritten product methods
+
+    /**
+     * Internal saving method
+     *
+     * @param array $fieldData - field data
+     *
+     * @throws QUI\Permissions\Exception
+     * @throws QUI\Exception
+     * @throws Exception
+     */
+    protected function productSave($fieldData)
+    {
+        QUI\Permissions\Permission::checkPermission('product.edit');
+
+        $fields = $this->getAttribute('overwritableVariantFields');
+        $data   = [];
+
+        if (\is_array($fields)) {
+            $overwritable = [];
+
+            // check if fields exists
+            foreach ($fields as $fieldId) {
+                try {
+                    $overwritable[] = QUI\ERP\Products\Handler\Fields::getField($fieldId)->getId();
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::writeDebugException($Exception);
+                }
+            }
+
+            $data = [
+                'overwritableVariantFields' => \json_encode($overwritable)
+            ];
+        }
+
+        if ($this->getDefaultVariantId()) {
+            $data['defaultVariantId'] = $this->getDefaultVariantId();
+        } else {
+            $data['defaultVariantId'] = null;
+        }
+
+        if (!empty($data)) {
+            QUI::getDataBase()->update(
+                QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                $data,
+                ['id' => $this->getId()]
+            );
+        }
+
+        parent::productSave($fieldData);
+    }
 
     /**
      * delete the complete product with its children
@@ -196,6 +247,46 @@ class VariantParent extends AbstractType
 
         return $images;
     }
+
+    /**
+     * Add a field to the product
+     *
+     * @param Field $Field
+     *
+     * @throws QUI\Exception
+     */
+    public function addField(Field $Field)
+    {
+        parent::addField($Field);
+
+        $children = $this->getVariants();
+
+        foreach ($children as $Child) {
+            $Child->addField($Field);
+            $Child->save();
+        }
+    }
+
+    /**
+     * Add a field to the product
+     *
+     * @param Field $Field
+     *
+     * @throws QUI\Exception
+     */
+    public function removeField(Field $Field)
+    {
+        parent::removeField($Field);
+
+        $children = $this->getVariants();
+
+        foreach ($children as $Child) {
+            $Child->removeField($Field);
+            $Child->save();
+        }
+    }
+
+    //endregion
 
     /**
      * Return all variants
@@ -603,56 +694,6 @@ class VariantParent extends AbstractType
     protected function calcVariantPrice(VariantChild $Variant, $fields)
     {
         // @todo Implement when there are surcharges and discounts for group lists
-    }
-
-    /**
-     * Internal saving method
-     *
-     * @param array $fieldData - field data
-     *
-     * @throws QUI\Permissions\Exception
-     * @throws QUI\Exception
-     * @throws Exception
-     */
-    protected function productSave($fieldData)
-    {
-        QUI\Permissions\Permission::checkPermission('product.edit');
-
-        $fields = $this->getAttribute('overwritableVariantFields');
-        $data   = [];
-
-        if (\is_array($fields)) {
-            $overwritable = [];
-
-            // check if fields exists
-            foreach ($fields as $fieldId) {
-                try {
-                    $overwritable[] = QUI\ERP\Products\Handler\Fields::getField($fieldId)->getId();
-                } catch (QUI\Exception $Exception) {
-                    QUI\System\Log::writeDebugException($Exception);
-                }
-            }
-
-            $data = [
-                'overwritableVariantFields' => \json_encode($overwritable)
-            ];
-        }
-
-        if ($this->getDefaultVariantId()) {
-            $data['defaultVariantId'] = $this->getDefaultVariantId();
-        } else {
-            $data['defaultVariantId'] = null;
-        }
-
-        if (!empty($data)) {
-            QUI::getDataBase()->update(
-                QUI\ERP\Products\Utils\Tables::getProductTableName(),
-                $data,
-                ['id' => $this->getId()]
-            );
-        }
-
-        parent::productSave($fieldData);
     }
 
     /**

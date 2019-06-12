@@ -66,7 +66,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
     }
 
     /**
-     * Add a field to the product
+     * Remove a field from the product
      *
      * @param Field $Field
      * @throws QUI\Exception
