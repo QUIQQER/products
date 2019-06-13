@@ -23,6 +23,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
 
         Binds: [
             '$onInject',
+            '$onStatusChange',
             'refresh'
         ],
 
@@ -33,7 +34,8 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
         initialize: function (options) {
             this.parent(options);
 
-            this.$Grid = null;
+            this.$Grid         = null;
+            this.$overwritable = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -136,16 +138,10 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
             }
 
             return new Promise(function (resolve) {
-                var fields = self.$Grid.getData().filter(function (entry) {
-                    return entry.status.getStatus();
-                }).map(function (entry) {
-                    return entry.id;
-                });
-
                 QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveOverwritableFields', resolve, {
                     'package'   : 'quiqqer/products',
                     productId   : self.getAttribute('productId'),
-                    overwritable: JSON.encode(fields)
+                    overwritable: JSON.encode(self.$overwritable)
                 });
             });
         },
@@ -167,9 +163,13 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
          * event: on inject
          */
         $onInject: function () {
-            this.refresh().then(function () {
-                this.fireEvent('load', [this]);
-            }.bind(this));
+            var self = this;
+
+            self.$loadOverwritableFields().then(function () {
+                return self.refresh();
+            }).then(function () {
+                self.fireEvent('load', [self]);
+            });
         },
 
         /**
@@ -186,18 +186,26 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
                     var i, len, entry, Status;
                     var data = [];
 
-                    var overwritable = result.overwritable;
+                    var overwritable = self.$overwritable;
 
                     for (i = 0, len = result.fields.length; i < len; i++) {
                         entry = result.fields[i];
 
                         if (!overwritable.length || overwritable.indexOf(entry.id) === -1) {
                             Status = new QUISwitch({
-                                status: false
+                                status : false,
+                                fieldId: parseInt(entry.id),
+                                events : {
+                                    onChange: self.$onStatusChange
+                                }
                             });
                         } else {
                             Status = new QUISwitch({
-                                status: true
+                                status : true,
+                                fieldId: parseInt(entry.id),
+                                events : {
+                                    onChange: self.$onStatusChange
+                                }
                             });
                         }
 
@@ -228,6 +236,46 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
                     })
                 });
             });
+        },
+
+        /**
+         * init overwritable fields from the product
+         *
+         * @return {Promise}
+         */
+        $loadOverwritableFields: function () {
+            var self = this;
+
+            return new Promise(function (resolve) {
+                QUIAjax.get('package_quiqqer_products_ajax_products_variant_getOverwritableFieldList', function (result) {
+                    self.$overwritable = result.overwritable;
+                    resolve();
+                }, {
+                    'package': 'quiqqer/products',
+                    productId: self.getAttribute('productId')
+                });
+            });
+        },
+
+        /**
+         * event: on field status change
+         * @param Switch
+         */
+        $onStatusChange: function (Switch) {
+            var fieldId = Switch.getAttribute('fieldId'),
+                status  = Switch.getStatus();
+
+            if (status) {
+                this.$overwritable.push(fieldId);
+                this.$overwritable = this.$overwritable.filter(function (value, index, self) {
+                    return self.indexOf(value) === index;
+                });
+
+                return;
+            }
+
+            var index = this.$overwritable.indexOf(fieldId);
+            this.$overwritable.splice(index, 1);
         }
     });
 });
