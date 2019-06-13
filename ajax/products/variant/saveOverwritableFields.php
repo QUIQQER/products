@@ -17,6 +17,10 @@ QUI::$Ajax->registerFunction(
     function ($productId, $overwritable) {
         $Product = Products::getProduct($productId);
 
+        if ($Product instanceof \QUI\ERP\Products\Product\Types\VariantChild) {
+            $Product = $Product->getParent();
+        }
+
         $Product->setAttribute(
             'overwritableVariantFields',
             \json_decode($overwritable, true)
