@@ -6,7 +6,6 @@
 
 namespace QUI\ERP\Products\Product;
 
-use function DusanKasan\Knapsack\concat;
 use QUI;
 use QUI\ERP\Products\Interfaces\FieldInterface;
 use QUI\ERP\Products\Handler\Fields;
@@ -14,7 +13,6 @@ use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Products;
 use QUI\Projects\Media\Utils as MediaUtils;
-use QUI\Utils\Security\Orthos;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
 
 /**
@@ -1452,20 +1450,24 @@ class Model extends QUI\QDOM
         }
 
         $data = [
-            'type'      => $type,
-            'productNo' => $this->getFieldValueByLocale(
+            'type'        => $type,
+            'productNo'   => $this->getFieldValueByLocale(
                 Fields::FIELD_PRODUCT_NO,
                 $Locale
             ),
-            'title'     => $this->getFieldValueByLocale(
+            'title'       => $this->getFieldValueByLocale(
                 Fields::FIELD_TITLE,
                 $Locale
             ),
-            'active'    => $this->isActive() ? 1 : 0,
-            'minPrice'  => $minPrice ? $minPrice : 0,
-            'maxPrice'  => $maxPrice ? $maxPrice : 0,
-            'c_date'    => $cDate,
-            'e_date'    => $eDate
+            'description' => $this->getFieldValueByLocale(
+                Fields::FIELD_SHORT_DESC,
+                $Locale
+            ),
+            'active'      => $this->isActive() ? 1 : 0,
+            'minPrice'    => $minPrice ? $minPrice : 0,
+            'maxPrice'    => $maxPrice ? $maxPrice : 0,
+            'c_date'      => $cDate,
+            'e_date'      => $eDate
         ];
 
         // permissions

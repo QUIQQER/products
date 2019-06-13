@@ -65,6 +65,7 @@
             <field type="DOUBLE NULL">minPrice</field>
             <field type="DOUBLE NULL">maxPrice</field>
             <field type="VARCHAR(255) NOT NULL">title</field>
+            <field type="TEXT NULL">description</field>
             <field type="VARCHAR(255) NULL">category</field>
             <field type="TINYINT(1)">active</field>
             <field type="LONGTEXT NULL">tags</field>
