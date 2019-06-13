@@ -42,6 +42,22 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
         },
 
         /**
+         * Disable the control
+         */
+        disable: function () {
+            this.$Price.set('disabled', true);
+            this.$Quantity.set('disabled', true);
+        },
+
+        /**
+         * Enable the control
+         */
+        enable: function () {
+            this.$Price.set('disabled', false);
+            this.$Quantity.set('disabled', false);
+        },
+
+        /**
          * event : on import
          */
         $onImport: function () {

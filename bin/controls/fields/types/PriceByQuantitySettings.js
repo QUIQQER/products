@@ -17,6 +17,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantitySettin
     "use strict";
 
     return new Class({
+
         Extends: QUIControl,
         Type   : 'package/quiqqer/products/bin/controls/fields/types/PriceByQuantitySettings',
 
