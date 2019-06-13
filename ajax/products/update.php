@@ -100,6 +100,8 @@ QUI::$Ajax->registerFunction(
         try {
             $Product->userSave();
         } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
             QUI\System\Log::addError(
                 'AJAX :: package_quiqqer_products_ajax_products_update -> '.$Exception->getMessage()
             );
