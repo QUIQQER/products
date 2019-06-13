@@ -425,14 +425,9 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         getFields: function () {
             return new Promise(function (resolve, reject) {
-                //@todo komischerweise wenn das an ist funktioniert der variant change nicht
-                // ich habe es leider nicht herausbekommen wieso das so ist
-
-                // if (this.$loaded) {
-                //     console.log(this.$uid);
-                //
-                //     return resolve(this.$data.fields);
-                // }
+                if (this.$loaded) {
+                    return resolve(this.$data.fields);
+                }
 
                 this.refresh().then(function () {
                     resolve(this.$data.fields);

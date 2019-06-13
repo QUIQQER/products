@@ -108,6 +108,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             this.$data     = {};
             this.$injected = false;
 
+            this.$executeUnloadForm = true;
+
             this.addEvents({
                 onCreate : this.$onCreate,
                 onInject : this.$onInject,
@@ -913,10 +915,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          *
          * @param Container
          * @param Product
-         * @param data
          */
-        $renderData: function (Container, Product, data) {
+        $renderData: function (Container, Product) {
             var self = this;
+            var data = {};
 
             // get product data
             return Promise.all([
@@ -937,13 +939,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
 
                 // set values
-                if (typeof data === 'undefined') {
-                    data = {};
-
-                    fields.each(function (Field) {
-                        data[Field.id] = Field;
-                    });
-                }
+                fields.each(function (Field) {
+                    data[Field.id] = Field;
+                });
 
                 Container.set('html', Mustache.render(templateProductData, {
                     productCategories: QUILocale.get(lg, 'productCategories'),
@@ -1018,7 +1016,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 });
 
                 MainCategory.value = category;
-
 
                 // render data fields
                 var i, len;
@@ -2226,6 +2223,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          */
         $unloadCategory: function (Category, Product) {
             if (Category === null || !Category) {
+                return Promise.resolve();
+            }
+
+            if (this.$executeUnloadForm === false) {
                 return Promise.resolve();
             }
 

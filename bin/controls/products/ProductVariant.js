@@ -289,6 +289,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 if (self.$loaded) {
                     self.Loader.hide();
                 }
+            }).catch(function () {
+                self.Loader.hide();
             });
         },
 
@@ -938,17 +940,23 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return Promise.resolve();
             }
 
+            var self = this;
+
             var Active = this.$VariantTabBar.getChildren().filter(function (Tab) {
                 return Tab.isActive();
             })[0];
+
+            this.$executeUnloadForm = false;
 
             this.$CurrentVariant = new Product({
                 id: variantId
             });
 
             return this.$refreshStatusButton().then(function () {
-                return this.openVariantTab(Active);
-            }.bind(this));
+                return self.openVariantTab(Active);
+            }).then(function () {
+                self.$executeUnloadForm = true;
+            });
         },
 
         /**
