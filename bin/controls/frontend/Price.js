@@ -75,6 +75,11 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
                 return;
             }
 
+            // same currency
+            if (this.getAttribute('currency') === this.getElm().get('data-qui-options-currency')) {
+                return;
+            }
+
             Currency.convertWithSign(
                 this.getAttribute('price'),
                 this.getAttribute('currency')
@@ -101,15 +106,11 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
                 this.setAttribute('currency', Elm.get('data-qui-options-currency'));
             }
 
-            if (Elm.getElement('.qui-products-price-display-vat')) {
-                this.$Price = Elm.getElement('.qui-products-price-display-value');
-                this.$Vat   = Elm.getElement('.qui-products-price-display-vat');
-            } else {
-                this.$Price = Elm;
-            }
-
-            this.$Prefix = Elm.getElement('.qui-products-price-display-prefix');
+            this.$Price = Elm.getElement('.qui-products-price-display-value');
             this.$Price.addClass('quiqqer-price');
+
+            this.$Vat    = Elm.getElement('.qui-products-price-display-vat');
+            this.$Prefix = Elm.getElement('.qui-products-price-display-prefix');
 
             this.setPrice(Elm.get('data-qui-options-price'));
         },

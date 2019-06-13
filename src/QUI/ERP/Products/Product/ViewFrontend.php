@@ -207,9 +207,22 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         $User = QUI::getUserBySession();
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
 
-        return $Calc->getProductPrice(
+        $Price = $Calc->getProductPrice(
             $this->Product->createUniqueProduct($User)
         );
+
+        if ($this->Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
+            $Price->enableMinimalPrice();
+        } else {
+            $min = $this->Product->getMinimumPrice();
+            $max = $this->Product->getMinimumPrice();
+
+            if ($min !== $max) {
+                $Price->enableMinimalPrice();
+            }
+        }
+
+        return $Price;
     }
 
     /**

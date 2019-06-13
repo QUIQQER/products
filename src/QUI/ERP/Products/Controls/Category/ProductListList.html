@@ -4,7 +4,7 @@
     <div class="quiqqer-productList-product-list-text">
         <header>
             <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:'html'}">
-            {$Product->getTitle()}
+                {$Product->getTitle()}
             </a>
         </header>
 
@@ -17,7 +17,7 @@
         <span class="quiqqer-productList-product-list-artno-title">
             {locale group="quiqqer/products" var="productNo"}:
         </span>
-        <br />
+        <br/>
         <span class="quiqqer-productList-product-list-artno-value">
             {$Product->getFieldValue(3)}
         </span>
@@ -35,11 +35,9 @@
 
     {if !$hidePrice}
     <div class="quiqqer-productList-product-list-price">
-        {locale
-            group="quiqqer/products"
-            var="price.starting.from"
-            price=$Product->getPrice()->getDisplayPrice()
-        }
+        {assign var=PriceDisplay value=$Product->getPriceDisplay()}
+        {assign var=_ value=$PriceDisplay->setAttribute('withVatText', false)}
+        {$PriceDisplay->create()}
     </div>
     {/if}
 </article>

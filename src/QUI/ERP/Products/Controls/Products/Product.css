@@ -129,6 +129,7 @@
 
 .qui-products-price-display-prefix {
     display: inline-block;
+    padding-right: 5px;
 }
 
 .qui-products-price-display-value {

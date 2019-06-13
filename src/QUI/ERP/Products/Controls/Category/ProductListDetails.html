@@ -30,11 +30,9 @@
 
     {if !$hidePrice}
     <div class="quiqqer-productList-product-detail-price">
-        {locale
-            group="quiqqer/products"
-            var="price.starting.from"
-            price=$Product->getMinimumPrice()->getDisplayPrice()
-        }
+        {assign var=PriceDisplay value=$Product->getPriceDisplay()}
+        {assign var=_ value=$PriceDisplay->setAttribute('withVatText', false)}
+        {$PriceDisplay->create()}
     </div>
     {/if}
 

@@ -61,24 +61,22 @@ class Price extends QUI\Control
         $this->setAttribute('data-qui-options-price', $Price->value());
         $this->setAttribute('data-qui-options-currency', $Price->getCurrency()->getCode());
 
-        if ($this->getAttribute('withVatText') === false) {
-            return $Price->getDisplayPrice();
-        }
+        if ($this->getAttribute('withVatText')) {
+            $vatArray = $this->getAttribute('vatArray');
 
+            if ($vatArray && \is_array($vatArray) && isset($vatArray['text'])) {
+                $vatText = $vatArray['text'];
+            } else {
+                $Calc = $this->getAttribute('Calc');
 
-        $vatArray = $this->getAttribute('vatArray');
+                if (!$Calc) {
+                    $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
+                }
 
-        if ($vatArray && \is_array($vatArray) && isset($vatArray['text'])) {
-            $vatText = $vatArray['text'];
-        } else {
-            $Calc = $this->getAttribute('Calc');
-
-            if (!$Calc) {
-                $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
+                $vatText = $Calc->getVatTextByUser();
             }
-
-            $vatText = $Calc->getVatTextByUser();
         }
+
 
         $pricePrefix = '';
 
@@ -93,9 +91,12 @@ class Price extends QUI\Control
         $result .= '<span class="qui-products-price-display-value">';
         $result .= $Price->getDisplayPrice();
         $result .= '</span>';
-        $result .= '<span class="qui-products-price-display-vat">';
-        $result .= $vatText;
-        $result .= '</span>';
+
+        if (!empty($vatText)) {
+            $result .= '<span class="qui-products-price-display-vat">';
+            $result .= $vatText;
+            $result .= '</span>';
+        }
 
         return $result;
     }

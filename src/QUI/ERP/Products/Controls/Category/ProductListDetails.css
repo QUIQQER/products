@@ -47,3 +47,7 @@
     line-height: 20px;
     text-align: right;
 }
+
+.qui-products-price-display-prefix {
+    padding-right: 5px;
+}
