@@ -31,7 +31,6 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
  *
  * frontend
  * @todo produkt liste -> varianten produkt -> kein warenkorb button -> Zur Auswahl
- * @todo produkt liste -> varianten produkt -> ab Preis
  * @todo canonical auf variante wenn variant=id
  * @todo flag Variant Children an / auszeigen
  */

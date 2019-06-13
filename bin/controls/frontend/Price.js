@@ -107,6 +107,11 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
             }
 
             this.$Price = Elm.getElement('.qui-products-price-display-value');
+
+            if (!this.$Price) {
+                return;
+            }
+
             this.$Price.addClass('quiqqer-price');
 
             this.$Vat    = Elm.getElement('.qui-products-price-display-vat');
