@@ -48,6 +48,10 @@
                     <type><![CDATA[bool]]></type>
                     <defaultvalue>1</defaultvalue>
                 </conf>
+                <conf name="findChildrenInSearch">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
             </section>
             <section name="overwritableFields"/>
         </config>
@@ -156,7 +160,8 @@
 
                         <input conf="variants.useAttributesForVariantUrl" type="checkbox">
                             <text>
-                                <locale group="quiqqer/products" var="settings.window.products.useAttributesForVariantUrl"/>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.useAttributesForVariantUrl"/>
                             </text>
                             <description>
                                 <locale group="quiqqer/products"
@@ -171,6 +176,16 @@
                             <description>
                                 <locale group="quiqqer/products"
                                         var="settings.window.products.parentHasChildImages.description"/>
+                            </description>
+                        </input>
+
+                        <input conf="variants.findChildrenInSearch" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.findChildrenInSearch"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.findChildrenInSearch.description"/>
                             </description>
                         </input>
 

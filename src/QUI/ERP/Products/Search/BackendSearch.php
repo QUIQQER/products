@@ -173,7 +173,7 @@ class BackendSearch extends Search
         // product types search
         if (isset($searchParams['productTypes'])
             && !empty($searchParams['productTypes'])
-            && is_array($searchParams['productTypes'])
+            && \is_array($searchParams['productTypes'])
         ) {
             $typeCount = 0;
             $typeWhere = [];

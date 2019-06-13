@@ -192,7 +192,7 @@
             <en><![CDATA[Load pictures of children into father articles.]]></en>
         </locale>
         <locale name="settings.window.products.useAttributesForVariantUrl">
-            <de><![CDATA[Attribute bei Varianten URL verwendne]]></de>
+            <de><![CDATA[Attribute bei Varianten URL verwenden]]></de>
             <en><![CDATA[Use Attributes for Variants URL]]></en>
         </locale>
         <locale name="settings.window.products.useAttributesForVariantUrl.description">
@@ -208,6 +208,14 @@
         <locale name="settings.window.products.overwritableFields">
             <de><![CDATA[Überschreibbare Varianten Felder]]></de>
             <en><![CDATA[Overwritable Variants Fields]]></en>
+        </locale>
+        <locale name="settings.window.products.findChildrenInSearch">
+            <de><![CDATA[Varianten Kinder in Suche beachten]]></de>
+            <en><![CDATA[Consider variant children in search]]></en>
+        </locale>
+        <locale name="settings.window.products.findChildrenInSearch.description">
+            <de><![CDATA[Varianten Kinder werden in der Frontend Suche beachtet und angezeigt]]></de>
+            <en><![CDATA[Variant children are considered and displayed in the frontend search.]]></en>
         </locale>
 
         <locale name="settings.window.fieldsearch.backend.title">

@@ -89,6 +89,11 @@ class FrontendSearch extends Search
         $this->Site     = $Site;
         $this->lang     = $Site->getProject()->getLang();
         $this->siteType = $type;
+
+        // global variant settings
+        if (QUI::getPackage('quiqqer/products')->getConfig()->get('variants', 'findChildrenInSearch')) {
+            $this->ignoreVariantChildren = false;
+        }
     }
 
     /**
@@ -287,6 +292,7 @@ class FrontendSearch extends Search
                 $where[] = '('.\implode(' OR ', $whereFreeText).')';
             }
         }
+
 
         if ($this->ignoreVariantChildren) {
             $where[] = "type <> :variantClass";
