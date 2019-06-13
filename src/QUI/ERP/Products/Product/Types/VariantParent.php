@@ -27,7 +27,6 @@ use QUI\ERP\Products\Field\Types\ProductAttributeList;
  * backend
  * @todo beim speichern der daten, refresh der daten -> am besten produkt daten als ergebnis mitliefern
  * @todo product url -> validate function at on blur
- * @todo produkt suche -> kind varianten finden
  * @todo backend -> variant select -> data refresh
  *
  * frontend

@@ -257,4 +257,24 @@ class Products
 //            }
 //        }
     }
+
+    /**
+     * Is the product a variant product
+     *
+     * @param $Product
+     * @return bool
+     */
+    public static function isVariant($Product)
+    {
+        if ($Product instanceof QUI\ERP\Products\Product\ViewFrontend) {
+            $Product = $Product->getProduct();
+        }
+
+        if ($Product instanceof QUI\ERP\Products\Product\Types\VariantParent
+            || $Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            return true;
+        }
+
+        return false;
+    }
 }

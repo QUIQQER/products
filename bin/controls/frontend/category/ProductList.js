@@ -1085,11 +1085,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @param {HTMLElement} Node
          */
         $parseAddButtons: function (Node) {
-            var Buttons = Node.getElements(
-                '.quiqqer-products-product-button-add'
-            );
+            var self = this;
 
-            Buttons.addEvent('click', function (event) {
+            Node.getElements('.quiqqer-products-product-button-add').addEvent('click', function (event) {
                 event.stop();
 
                 var Target    = event.target,
@@ -1113,6 +1111,16 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         }).delay(1000, this);
                     });
                 });
+            });
+
+            Node.getElements('.quiqqer-products-product-button-open').addEvent('click', function (event) {
+                event.stop();
+
+                var Target    = event.target,
+                    Article   = Target.getParent('article'),
+                    productId = Article.get('data-pid');
+
+                self.openProduct(productId);
             });
         },
 

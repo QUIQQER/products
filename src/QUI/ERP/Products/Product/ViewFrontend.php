@@ -76,6 +76,14 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     }
 
     /**
+     * @return Model|UniqueProduct
+     */
+    public function getProduct()
+    {
+        return $this->Product;
+    }
+
+    /**
      * @return int
      */
     public function getId()

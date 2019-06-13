@@ -2,14 +2,14 @@
          data-pid="{$Product->getId()}"
 >
     <div class="quiqqer-productList-product-detail-image">
-        <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:" html"}">
-        {image image=$Product->getImage() title=$Product->getTitle() height=48}
+        <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:'html'}">
+            {image image=$Product->getImage() title=$Product->getTitle() height=48}
         </a>
     </div>
 
     <div class="quiqqer-productList-product-detail-text">
         <header>
-            <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:" html"}">
+            <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:'html'}">
                 {$Product->getTitle()}
             </a>
         </header>
@@ -20,7 +20,12 @@
 
     <div class="quiqqer-productList-product-detail-buttons">
         <span class="fa fa-envelope button__small quiqqer-products-product-button-purchase"></span>
+
+        {if QUI\ERP\Products\Utils\Products::isVariant($Product) === false}
         <span class="fa fa-plus button__small quiqqer-products-product-button-add"></span>
+        {else}
+        <span class="fa fa-arrow-circle-o-right button__small quiqqer-products-product-button-open"></span>
+        {/if}
     </div>
 
     {if !$hidePrice}
