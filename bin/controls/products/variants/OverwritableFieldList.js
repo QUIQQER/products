@@ -141,7 +141,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
                 QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveOverwritableFields', resolve, {
                     'package'   : 'quiqqer/products',
                     productId   : self.getAttribute('productId'),
-                    overwritable: JSON.encode(self.$overwritable)
+                    overwritable: JSON.encode(self.getOverwritableFields())
                 });
             });
         },
@@ -152,11 +152,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
          * @return {array}
          */
         getOverwritableFields: function () {
-            return this.$Grid.getData().filter(function (entry) {
-                return entry.status.getStatus();
-            }).map(function (entry) {
-                return entry.id;
-            });
+            return this.$overwritable;
         },
 
         /**
