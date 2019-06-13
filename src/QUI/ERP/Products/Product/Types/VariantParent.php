@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Product\Types;
 
 use QUI;
+use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 use QUI\ERP\Products\Product\Exception;
@@ -15,6 +16,7 @@ use QUI\ERP\Products\Handler\Fields as FieldHandler;
 
 use QUI\ERP\Products\Field\Types\AttributeGroup;
 use QUI\ERP\Products\Field\Types\ProductAttributeList;
+use QUI\ERP\Products\Handler\Search as SearchHandler;
 
 /**
  * Class Variant
@@ -287,6 +289,213 @@ class VariantParent extends AbstractType
             $Child->removeField($Field);
             $Child->save();
         }
+    }
+
+    /**
+     * Write cache entry for product for specific language
+     *
+     * @param string $lang
+     * @throws QUI\Exception
+     */
+    protected function writeCacheEntry($lang)
+    {
+        $Locale = new QUI\Locale();
+        $Locale->setCurrent($lang);
+
+        // wir nutzen system user als netto user
+        $SystemUser = QUI::getUsers()->getSystemUser();
+        $minPrice   = $this->getMinimumPrice($SystemUser)->value();
+        $maxPrice   = $this->getMaximumPrice($SystemUser)->value();
+
+        // Dates
+        $cDate = $this->getAttribute('c_date');
+
+        if (empty($cDate) || $cDate === '0000-00-00 00:00:00') {
+            $cDate = date('Y-m-d H:i:s');
+        }
+
+        $eDate = $this->getAttribute('e_date');
+
+        if (empty($eDate) || $eDate === '0000-00-00 00:00:00') {
+            $eDate = date('Y-m-d H:i:s');
+        }
+
+        // type
+        $type         = QUI\ERP\Products\Product\Types\Product::class;
+        $productType  = $this->getAttribute('type');
+        $ProductTypes = QUI\ERP\Products\Utils\ProductTypes::getInstance();
+
+        if ($ProductTypes->exists($productType)) {
+            $type = $productType;
+        }
+
+        $data = [
+            'type'        => $type,
+            'productNo'   => $this->getFieldValueByLocale(
+                Fields::FIELD_PRODUCT_NO,
+                $Locale
+            ),
+            'title'       => $this->getFieldValueByLocale(
+                Fields::FIELD_TITLE,
+                $Locale
+            ),
+            'description' => $this->getFieldValueByLocale(
+                Fields::FIELD_SHORT_DESC,
+                $Locale
+            ),
+            'active'      => $this->isActive() ? 1 : 0,
+            'minPrice'    => $minPrice ? $minPrice : 0,
+            'maxPrice'    => $maxPrice ? $maxPrice : 0,
+            'c_date'      => $cDate,
+            'e_date'      => $eDate
+        ];
+
+        // permissions
+        $permissions     = $this->getPermissions();
+        $viewPermissions = null;
+
+        if (isset($permissions['permission.viewable']) && !empty($permissions['permission.viewable'])) {
+            $viewPermissions = ','.$permissions['permission.viewable'].',';
+        }
+
+        $data['viewUsersGroups'] = $viewPermissions;
+
+        // get all categories
+        $categories = $this->getCategories();
+
+        if (!empty($categories)) {
+            $catIds = [];
+
+            /** @var QUI\ERP\Products\Category\Category $Category */
+            foreach ($categories as $Category) {
+                $catIds[] = $Category->getId();
+            }
+
+            $data['category'] = ','.\implode(',', $catIds).',';
+        } else {
+            $data['category'] = null;
+        }
+
+        // VariantParent fields
+        $fields       = $this->getFields();
+        $searchFields = [];
+
+        /** @var QUI\ERP\Products\Field\Field $Field */
+        foreach ($fields as $Field) {
+            if (!$Field->isSearchable()) {
+                continue;
+            }
+
+            $fieldColumnName = SearchHandler::getSearchFieldColumnName($Field);
+            $searchValue     = $Field->getSearchCacheValue($Locale);
+
+            $data[$fieldColumnName] = $searchValue;
+
+            if ($Field->getId() == Fields::FIELD_PRIORITY
+                && empty($data[$fieldColumnName])
+            ) {
+                // in 10 Jahren darf mor das fixen xD
+                // null und 0 wird als letztes angezeigt
+                $data[$fieldColumnName] = 999999;
+            }
+
+            $searchFields[$Field->getId()] = [
+                'column' => $fieldColumnName,
+                'values' => [
+                    $searchValue => true
+                ]
+            ];
+        }
+
+        // Field values of all VariantChildren
+        /**
+         * If the VariantParent shall also be found when searching for values of its VariantChildren
+         * the search cache entries have to include all child values as well.
+         */
+        if (QUI::getPackage('quiqqer/products')->getConfig()->get('variants', 'findVariantParentByChildValues')) {
+            $result = QUI::getDataBase()->fetch([
+                'select' => ['id', 'fieldData'],
+                'from'   => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                'where'  => [
+                    'parent' => $this->getId(),
+                    'active' => 1
+                ]
+            ]);
+
+            foreach ($result as $row) {
+                $fields = json_decode($row['fieldData'], true);
+
+                foreach ($fields as $fieldData) {
+                    $fieldId = $fieldData['id'];
+                    $value   = $fieldData['value'];
+
+                    // Only parse children fields that are put in the search table
+                    if (!isset($searchFields[$fieldId])) {
+                        continue;
+                    }
+
+                    $fieldColumnName = $searchFields[$fieldId]['column'];
+                    $Field           = Fields::getField($fieldId);
+
+                    // Only parse children fields that have a non-numeric (i.e. textual) search cache value
+                    switch ($Field->getSearchType()) {
+                        case SearchHandler::SEARCHDATATYPE_NUMERIC:
+                            continue 2;
+                            break;
+                    }
+
+                    $Field->setValue($value);
+
+                    $searchValue = $Field->getSearchCacheValue($Locale);
+
+                    // Do not add duplicate search cache values
+                    if (isset($searchFields[$fieldId]['values'][$searchValue])) {
+                        continue;
+                    }
+
+                    $data[$fieldColumnName] .= ' '.$searchValue;
+
+                    $searchFields[$fieldId]['values'][$searchValue] = true;
+                }
+            }
+        }
+
+        // Prepare data for INSERT
+        foreach ($data as $k => $v) {
+            if (\is_array($v)) {
+                $data[$k] = \json_encode($v);
+            }
+        }
+
+        // test if cache entry exists first
+        $result = QUI::getDataBase()->fetch([
+            'from'  => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            'where' => [
+                'id'   => $this->getId(),
+                'lang' => $lang
+            ]
+        ]);
+
+        if (empty($result)) {
+            $data['id']   = $this->id;
+            $data['lang'] = $lang;
+
+            QUI::getDataBase()->insert(
+                QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+                $data
+            );
+
+            return;
+        }
+
+        QUI::getDataBase()->update(
+            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            $data,
+            [
+                'id'   => $this->getId(),
+                'lang' => $lang
+            ]
+        );
     }
 
     //endregion
@@ -780,8 +989,7 @@ class VariantParent extends AbstractType
     }
 
     /**
-     * Return the available child field
-     * the available fields are attribute groups and attribute lists
+     * Get all field values of attribute groups and attribute lists of children products that are active
      *
      * @return array
      */

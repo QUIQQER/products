@@ -6,6 +6,7 @@
 
 namespace QUI\ERP\Products\Product\Types;
 
+use function GuzzleHttp\Promise\queue;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
@@ -272,6 +273,25 @@ class VariantChild extends AbstractType
             ['variantHash' => $this->generateVariantHash()],
             ['id' => $this->getId()]
         );
+    }
+
+    /**
+     * Updates the cache table with current product data
+     *
+     * @return void
+     * @throws QUI\Exception
+     */
+    public function updateCache()
+    {
+        parent::updateCache();
+
+        /**
+         * If the VariantParent shall also be found when searching for values of this VariantChild
+         * the search cache for the parent has to be updated here (containing said values).
+         */
+        if (QUI::getPackage('quiqqer/products')->getConfig()->get('variants', 'findVariantParentByChildValues')) {
+            $this->getParent()->updateCache();
+        }
     }
 
     /**
