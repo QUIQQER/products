@@ -2185,13 +2185,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             var self  = this,
                 nodes = this.getContent().getElements('.sheet');
 
-            return this.$unloadCategory(
-                this.$CurrentCategory,
-                this.$Product
-            ).then(function () {
-                //  storage content fields
-                self.$saveEditorContent();
-
+            var done = function () {
                 return new Promise(function (resolve) {
                     moofx(nodes).animate({
                         opacity: 0,
@@ -2226,6 +2220,22 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         }
                     });
                 });
+            };
+
+            // no unload for variant sheets
+            // otherwise the variant data will be put into the current product
+            if (this.$CurrentCategory && this.$CurrentCategory.hasClass('variants-sheet')) {
+                return done();
+            }
+
+            return this.$unloadCategory(
+                this.$CurrentCategory,
+                this.$Product
+            ).then(function () {
+                //  storage content fields
+                self.$saveEditorContent();
+
+                return done();
             });
         },
 
