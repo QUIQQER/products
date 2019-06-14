@@ -142,7 +142,9 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
 
                     QUI.parse(this.$Elm).then(function () {
                         var Field;
+
                         var controls = QUI.Controls.getControlsInElement(this.$Container);
+                        var Search   = this.$Elm.getElement('[name="search"]');
 
                         var getControlByFieldById = function (fieldId) {
                             for (var c = 0, len = controls.length; c < len; c++) {
@@ -156,7 +158,7 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                         for (i = 0, len = result.length; i < len; i++) {
                             id = result[i].id;
 
-                            if (i === 0) {
+                            if (!Search && i === 0) {
                                 getControlByFieldById(result[i].id).focus();
                             }
 
@@ -169,6 +171,10 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                             if (Field) {
                                 Field.setSearchData(result[i].searchData);
                             }
+                        }
+
+                        if (Search) {
+                            Search.focus();
                         }
                     }.bind(this));
 
@@ -192,6 +198,7 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                             'quiqqer-products-search-form-submitButton'
                         );
                     }
+
 
                     this.$loaded = true;
 
