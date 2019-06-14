@@ -1089,105 +1089,11 @@ class Model extends QUI\QDOM
             $urls = $urlField[0]['value'];
         }
 
-        $categoryId    = $this->getCategory()->getId();
-        $urlCacheField = 'F'.Fields::FIELD_URL;
-        $table         = QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
-
-        $where = [];
-        $binds = [];
-        $i     = 0;
-
-        foreach ($urls as $lang => $url) {
-            if (empty($url)) {
-                continue;
-            }
-
-            $this->checkUrlLength($url, $lang);
-
-
-            $binds[':lang'.$i]     = $lang;
-            $binds[':url'.$i]      = $url;
-            $binds[':category'.$i] = '%,'.$categoryId.',%';
-
-            $where[] = "(F19 LIKE :url{$i} AND lang LIKE :lang{$i} AND category LIKE :category{$i})";
-            $i++;
-        }
-
-        if (empty($where)) {
-            return;
-        }
-
-        $where = \implode(' OR ', $where);
-
-        $query = "
-            SELECT id, {$urlCacheField} 
-            FROM {$table}
-            WHERE {$where}
-        ";
-
-        $PDO       = QUI::getDataBase()->getPDO();
-        $Statement = $PDO->prepare($query);
-
-        foreach ($binds as $bind => $value) {
-            $Statement->bindValue($bind, $value, \PDO::PARAM_STR);
-        }
-
-        $Statement->execute();
-        $result = $Statement->fetchAll();
-
-        // no results, all is fine
-        if (empty($result)) {
-            return;
-        }
-
-
-        foreach ($result as $entry) {
-            if ((int)$entry['id'] === $this->getId()) {
-                continue;
-            }
-
-            throw new Exception([
-                'quiqqer/products',
-                'exception.url.already.exists'
-            ]);
-        }
-    }
-
-    /**
-     * Checks the urls length for the product
-     *
-     * @param string $url
-     * @param string $lang
-     * @throws Exception
-     */
-    protected function checkUrlLength($url, $lang)
-    {
-        try {
-            $Category = $this->getCategory();
-            $projects = QUI::getProjectManager()->getProjects(true);
-        } catch (QUI\Exception $Exception) {
-            return;
-        }
-
-        /* @var $Project QUI\Projects\Project */
-        foreach ($projects as $Project) {
-            if ($Project->getLang() !== $lang) {
-                continue;
-            }
-
-            try {
-                $categoryUrl = $Category->getUrl($Project);
-            } catch (QUI\Exception $Exception) {
-                continue;
-            }
-
-            if (!empty($categoryUrl) && strlen($categoryUrl.'/'.$url) > 2000) {
-                throw new Exception([
-                    'quiqqer/products',
-                    'exception.url.is.too.long'
-                ]);
-            }
-        }
+        QUI\ERP\Products\Utils\Products::checkUrlByUrlFieldValue(
+            $urls,
+            $this->getCategory()->getId(),
+            $this->getId()
+        );
     }
 
     /**

@@ -13,6 +13,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'qui/controls/buttons/ButtonSwitch',
     'qui/controls/windows/Confirm',
     'qui/utils/Form',
+    'Ajax',
     'Locale',
     'Users',
     'controls/grid/Grid',
@@ -35,11 +36,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'text!package/quiqqer/products/bin/controls/products/CreateField.html',
     'css!package/quiqqer/products/bin/controls/products/Product.css'
 
-], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIButtonSwitch, QUIConfirm, QUIFormUtils, QUILocale,
-             Users, Grid, FolderViewer, Mustache, Packages, Locker,
+], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIButtonSwitch, QUIConfirm, QUIFormUtils,
+             QUIAjax, QUILocale, Users, Grid, FolderViewer, Mustache, Packages, Locker,
              Products, Product, Categories, Fields, FieldUtils, FieldWindow,
-             CategorySelect, FieldTypeSelect,
-             informationTemplate, templateProductData, templateProductPrices, templateField) {
+             CategorySelect, FieldTypeSelect, informationTemplate, templateProductData,
+             templateProductPrices, templateField) {
     "use strict";
 
     var lg   = 'quiqqer/products',
@@ -68,7 +69,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             'openAttributeList',
             'openFieldAdministration',
             '$onCreateMediaFolderClick',
-            '$render'
+            '$render',
+            '$checkUrl'
         ],
 
         options: {
@@ -1068,6 +1070,17 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         Field.setValue(data[fieldId].value);
                     }
                 });
+
+
+                // set url events
+                var UrlRow = Container.getElement('[data-fieldid="19"]');
+
+                if (UrlRow) {
+                    var inputs = UrlRow.getElements('input');
+
+                    inputs.removeEvents('blur');
+                    inputs.addEvent('blur', self.$checkUrl);
+                }
             });
         },
 
@@ -2331,32 +2344,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
 
                 return false;
-
-                // self.$data[wantedId] = folder[0];
-                // self.$FileViewer.setAttribute('folderUrl', folder[0].value);
-                // self.$ImageViewer.setAttribute('folderUrl', folder[0].value);
-                //
-                // self.$ImageViewer.refresh();
-                // self.$ImageViewer.show();
-                //
-                // self.$FileViewer.refresh();
-                // self.$FileViewer.show();
-
-                // image fields
-                /*
-                var images = self.getElm().getElements(
-                    '[data-qui="package/quiqqer/products/bin/controls/fields/types/Image"]'
-                );
-
-                images.each(function (Input) {
-                    var quiId   = Input.get('data-quiid'),
-                        Control = QUI.Controls.getById(quiId);
-
-                    if (Control) {
-                        Control.setAttribute('productFolder', folder[0].value);
-                    }
-                });
-                */
             });
         },
 
@@ -2381,6 +2368,31 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
 
                 self.getElm().getElements('.folder-missing-container').destroy();
+            });
+        },
+
+        /**
+         * Checks the url field
+         *
+         * @param event
+         */
+        $checkUrl: function (event) {
+            var Target     = event.target;
+            var FieldInput = Target.getParent('tr').getElement('[name="field-19"]');
+            var value      = FieldInput.value;
+
+            this.$Product.getCategory().then(function (categoryId) {
+                QUIAjax.get('package_quiqqer_products_ajax_products_checkUrl', function (result) {
+                    if (result.exists) {
+                        QUI.getMessageHandler().then(function (MH) {
+                            MH.addError(result.message, Target);
+                        });
+                    }
+                }, {
+                    'package': 'quiqqer/products',
+                    urls     : value,
+                    category : categoryId
+                });
             });
         }
     });

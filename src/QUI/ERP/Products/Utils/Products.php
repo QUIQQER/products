@@ -7,7 +7,10 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
+use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
+use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Product\Exception;
 
 /**
  * Class Products Helper
@@ -276,5 +279,112 @@ class Products
         }
 
         return false;
+    }
+
+    /**
+     * @param array $urlFieldValue
+     * @param integer $categoryId
+     * @param integer|false $ignoreProductId - optional
+     *
+     * @throws Exception
+     */
+    public static function checkUrlByUrlFieldValue($urlFieldValue, $categoryId, $ignoreProductId = false)
+    {
+        $urlCacheField = 'F'.Fields::FIELD_URL;
+        $table         = QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
+
+        $where = [];
+        $binds = [];
+        $i     = 0;
+
+        foreach ($urlFieldValue as $lang => $url) {
+            if (empty($url)) {
+                continue;
+            }
+
+            self::checkUrlLength($url, $lang, $categoryId);
+
+
+            $binds[':lang'.$i]     = $lang;
+            $binds[':url'.$i]      = $url;
+            $binds[':category'.$i] = '%,'.$categoryId.',%';
+
+            $where[] = "(F19 LIKE :url{$i} AND lang LIKE :lang{$i} AND category LIKE :category{$i})";
+            $i++;
+        }
+
+        if (empty($where)) {
+            return;
+        }
+
+        $where = \implode(' OR ', $where);
+
+        $query = "
+            SELECT id, {$urlCacheField} 
+            FROM {$table}
+            WHERE {$where}
+        ";
+
+        $PDO       = QUI::getDataBase()->getPDO();
+        $Statement = $PDO->prepare($query);
+
+        foreach ($binds as $bind => $value) {
+            $Statement->bindValue($bind, $value, \PDO::PARAM_STR);
+        }
+
+        $Statement->execute();
+        $result = $Statement->fetchAll();
+
+        // no results, all is fine
+        if (empty($result)) {
+            return;
+        }
+
+        foreach ($result as $entry) {
+            if ($ignoreProductId && (int)$entry['id'] === $ignoreProductId) {
+                continue;
+            }
+
+            throw new Exception([
+                'quiqqer/products',
+                'exception.url.already.exists'
+            ]);
+        }
+    }
+
+
+    /**
+     * Checks the urls length for the product
+     *
+     * @param string $url
+     * @param string $lang
+     * @param integer $categoryId
+     *
+     * @throws Exception
+     */
+    public static function checkUrlLength($url, $lang, $categoryId)
+    {
+        try {
+            $Category = Categories::getCategory($categoryId);
+            $projects = QUI::getProjectManager()->getProjects(true);
+        } catch (QUI\Exception $Exception) {
+            return;
+        }
+
+        /* @var $Project QUI\Projects\Project */
+        foreach ($projects as $Project) {
+            if ($Project->getLang() !== $lang) {
+                continue;
+            }
+
+            $categoryUrl = $Category->getUrl($Project);
+
+            if (!empty($categoryUrl) && \strlen($categoryUrl.'/'.$url) > 2000) {
+                throw new Exception([
+                    'quiqqer/products',
+                    'exception.url.is.too.long'
+                ]);
+            }
+        }
     }
 }
