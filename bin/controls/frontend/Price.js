@@ -77,6 +77,8 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
 
             // same currency
             if (this.getAttribute('currency') === this.getElm().get('data-qui-options-currency')) {
+                this.$Price.set('html', result);
+                this.$Price.set('title', result);
                 return;
             }
 
@@ -151,6 +153,16 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
             this.setAttribute('price', price);
             this.setAttribute('currency', CurrencyCode);
             this.refresh();
+        },
+
+        /**
+         * Only usable if the price is formated
+         *
+         * @param priceDisplay
+         */
+        setPriceDisplay: function (priceDisplay) {
+            this.$Price.set('html', priceDisplay);
+            this.$Price.set('title', priceDisplay);
         },
 
         /**

@@ -28,7 +28,6 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
  *
  * backend
  * @todo beim speichern der daten, refresh der daten -> am besten produkt daten als ergebnis mitliefern
- * @todo product url -> validate function at on blur
  * @todo backend -> variant select -> data refresh
  *
  * frontend

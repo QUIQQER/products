@@ -344,7 +344,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                     self.$Price.disableMinimalPrice();
                 }
 
-                self.$Price.setPrice(result.calculated_price);
+                self.$Price.setPriceDisplay(result.price_display);
             });
         },
 
