@@ -210,12 +210,20 @@
             <en><![CDATA[Overwritable Variants Fields]]></en>
         </locale>
         <locale name="settings.window.products.findChildrenInSearch">
-            <de><![CDATA[Varianten Kinder in Suche beachten]]></de>
-            <en><![CDATA[Consider variant children in search]]></en>
+            <de><![CDATA[Varianten: Kindartikel in Suche beachten]]></de>
+            <en><![CDATA[Variants: Consider child articles in search]]></en>
         </locale>
         <locale name="settings.window.products.findChildrenInSearch.description">
-            <de><![CDATA[Varianten Kinder werden in der Frontend Suche beachtet und angezeigt]]></de>
-            <en><![CDATA[Variant children are considered and displayed in the frontend search.]]></en>
+            <de><![CDATA[Kindartikel werden in der Frontend-Suche beachtet und angezeigt]]></de>
+            <en><![CDATA[Child articles are considered and displayed in the frontend search.]]></en>
+        </locale>
+        <locale name="settings.window.products.findVariantParentByChildValues">
+            <de><![CDATA[Varianten: Vaterartikel über Kindartikel-Werte finden]]></de>
+            <en><![CDATA[Variants: Find parent article by child article values]]></en>
+        </locale>
+        <locale name="settings.window.products.findVariantParentByChildValues.description">
+            <de><![CDATA[Wenn in der Suche (Frontend/Backend) nach Werten von Kindartikeln gesucht wird (z.B. Titel, Beschreibung) soll auch der Vaterartikel als Suchergebnis angezeigt werden.]]></de>
+            <en><![CDATA[Parent articles shall be shown in the search results if the search value contains values of child articles (e.g. title, description).]]></en>
         </locale>
 
         <locale name="settings.window.fieldsearch.backend.title">
