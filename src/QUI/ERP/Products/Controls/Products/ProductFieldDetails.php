@@ -55,11 +55,20 @@ class ProductFieldDetails extends QUI\Control
                 break;
 
             case QUI\ERP\Products\Handler\Fields::TYPE_PRODCUCTS:
-                $template = \dirname(__FILE__).'/ProductFieldDetails.Products.html';
-                $products = $Field->getValue();
+                $template   = \dirname(__FILE__).'/ProductFieldDetails.Products.html';
+                $productIds = $Field->getValue();
+                $products   = [];
+
+                foreach ($productIds as $productId) {
+                    try {
+                        $products[] = QUI\ERP\Products\Handler\Products::getProduct($productId);
+                    } catch (QUI\Exception $Exception) {
+                        QUI\System\Log::addDebug($Exception->getMessage());
+                    }
+                }
 
                 $Engine->assign([
-                    'products' => $Field->getValue()
+                    'products' => $products
                 ]);
                 break;
 

@@ -1,13 +1,11 @@
-<table class="product-data-files-table">
+<table class="product-data-files-table product-details">
     {foreach $products as $Product}
     <tr>
         <td class="product-data-files-table-title">
-            {$Product->getTitle()}
+            <a href="{$Product->getUrl()}">{$Product->getTitle()}</a>
         </td>
         <td class="product-data-files-table-download">
-            <a href="" target="_blank">
-                <span class="fa fa-plus"></span>
-            </a>
+            {template_event name="quiqqer::products::product::detail::equipment::buttons" Product=$Product}
         </td>
     </tr>
     {foreachelse}
