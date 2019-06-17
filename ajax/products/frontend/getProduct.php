@@ -58,7 +58,7 @@ QUI::$Ajax->registerFunction(
 
             return [
                 'css'   => QUI\Control\Manager::getCSS(),
-                'html'  => $control,
+                'html'  => \QUI\Output::getInstance()->parse($control),
                 'title' => $title
             ];
         } catch (QUI\Exception $Exception) {

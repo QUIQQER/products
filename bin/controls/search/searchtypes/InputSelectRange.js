@@ -107,12 +107,19 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/InputSelectRang
                     range[pc + '%'] = values[i];
                 }
 
-                this.$Select.setRange(range);
+                if (range.min !== range.max) {
+                    this.$Select.setRange(range);
+                }
+
                 return;
             }
 
 
             if ('from' in this.$data && 'to' in this.$data) {
+                if (this.$data.from === this.$data.to) {
+                    return;
+                }
+
                 this.$Select.setValue([
                     this.$data.from,
                     this.$data.to

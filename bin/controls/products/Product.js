@@ -1925,6 +1925,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @returns {Promise}
          */
         update: function () {
+            console.log('update');
+
             var self     = this,
                 Elm      = self.getElm(),
                 selfData = this.$data;
@@ -1987,7 +1989,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 categories = categories.filter(function (item) {
                     return item !== '';
                 });
-
+                console.log(fields);
                 Products.updateChild(
                     self.getAttribute('productId'),
                     categories,
@@ -2245,14 +2247,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param Product
          */
         $unloadCategory: function (Category, Product) {
+            console.log('$unloadCategory');
+
             if (Category === null || !Category) {
                 return Promise.resolve();
             }
-
+            console.log(1);
             if (this.$executeUnloadForm === false) {
                 return Promise.resolve();
             }
-
+            console.log(2);
             var Form = Category.getElement('form');
 
             if (!Form) {
@@ -2289,14 +2293,20 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * storage the content fields
          */
         $saveEditorContent: function () {
-            if (this.$Control) {
-                var currentField = this.$currentField;
+            if (!this.$CurrentCategory) {
+                return;
+            }
 
-                if (!(currentField in this.$data)) {
-                    this.$data[currentField] = {};
-                }
+            var Control = this.$CurrentCategory.getElement('.qui-control');
 
-                this.$data[currentField].value = this.$Control.save();
+            if (!Control || !Control.get('data-quiid')) {
+                return;
+            }
+
+            var QUIControl = QUI.Controls.getById(Control.get('data-quiid'));
+
+            if (QUIControl) {
+                QUIControl.save();
             }
         },
 
