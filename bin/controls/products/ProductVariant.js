@@ -153,6 +153,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     self.$CopyButton.show();
                     self.$CloseButton.show();
 
+                    self.$BackToVariantList.hide();
                     self.$VariantFields.hide();
                     self.$CurrentVariant = null;
 
