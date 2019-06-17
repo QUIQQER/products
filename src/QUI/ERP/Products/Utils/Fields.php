@@ -200,7 +200,6 @@ class Fields
 
         if ($Field->getType() == FieldHandler::TYPE_ATTRIBUTE_LIST
             || $Field->getType() == FieldHandler::TYPE_FOLDER
-            || $Field->getType() == FieldHandler::TYPE_PRODCUCTS
             || $Field->getType() == FieldHandler::TYPE_TEXTAREA
             || $Field->getType() == FieldHandler::TYPE_TEXTAREA_MULTI_LANG
         ) {

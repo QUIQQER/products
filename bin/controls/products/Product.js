@@ -2247,16 +2247,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param Product
          */
         $unloadCategory: function (Category, Product) {
-            console.log('$unloadCategory');
-
             if (Category === null || !Category) {
                 return Promise.resolve();
             }
-            console.log(1);
+
             if (this.$executeUnloadForm === false) {
                 return Promise.resolve();
             }
-            console.log(2);
+
             var Form = Category.getElement('form');
 
             if (!Form) {

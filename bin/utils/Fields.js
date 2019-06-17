@@ -64,7 +64,6 @@ define('package/quiqqer/products/bin/utils/Fields', {
 
                 if (field === FieldHandler.TYPE_ATTRIBUTE_LIST ||
                     field === FieldHandler.TYPE_FOLDER ||
-                    field === FieldHandler.TYPE_PRODCUCTS ||
                     field === FieldHandler.TYPE_TEXTAREA_MULTI_LANG
                 ) {
                     return resolve(false);

@@ -212,11 +212,12 @@ class Product extends QUI\Control
         // file / image folders
         $detailFields = [];
 
-        $fieldsList = \array_merge(
-            $Product->getFieldsByType(Fields::TYPE_FOLDER),
-            $Product->getFieldsByType(Fields::TYPE_TEXTAREA),
-            $Product->getFieldsByType(Fields::TYPE_TEXTAREA_MULTI_LANG)
-        );
+        $fieldsList = $Product->getFieldsByType([
+            Fields::TYPE_FOLDER,
+            Fields::TYPE_TEXTAREA,
+            Fields::TYPE_TEXTAREA_MULTI_LANG,
+            Fields::TYPE_PRODCUCTS
+        ]);
 
         /* @var $Field QUI\ERP\Products\Field\Types\Folder */
         foreach ($fieldsList as $Field) {
