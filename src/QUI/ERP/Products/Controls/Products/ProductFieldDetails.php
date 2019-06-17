@@ -34,8 +34,8 @@ class ProductFieldDetails extends QUI\Control
     /**
      * (non-PHPdoc)
      *
-     * @see \QUI\Control::create()
      * @throws QUI\Exception
+     * @see \QUI\Control::create()
      */
     public function getBody()
     {
@@ -52,6 +52,15 @@ class ProductFieldDetails extends QUI\Control
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA:
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA_MULTI_LANG:
                 $template = \dirname(__FILE__).'/ProductFieldDetails.Content.html';
+                break;
+
+            case QUI\ERP\Products\Handler\Fields::TYPE_PRODCUCTS:
+                $template = \dirname(__FILE__).'/ProductFieldDetails.Products.html';
+                $products = $Field->getValue();
+
+                $Engine->assign([
+                    'products' => $Field->getValue()
+                ]);
                 break;
 
             case QUI\ERP\Products\Handler\Fields::TYPE_FOLDER:

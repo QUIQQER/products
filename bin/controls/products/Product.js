@@ -1322,6 +1322,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             return this.$hideCategories().then(function () {
                 return self.$renderField(self.$FieldContainer, self.$Product, fieldId);
             }).then(function () {
+                self.$CurrentCategory = self.$FieldContainer;
+
                 return self.$showCategory(self.$FieldContainer);
             });
         },
@@ -1362,6 +1364,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             Instance.setAttribute('value', Field.value);
                         }
 
+                        Instance.setAttribute('field-id', fieldId);
                         Instance.inject(Container);
 
                         resolve(Instance);
@@ -1925,17 +1928,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @returns {Promise}
          */
         update: function () {
-            console.log('update');
-
             var self     = this,
                 Elm      = self.getElm(),
                 selfData = this.$data;
 
             this.Loader.show();
-            this.$saveEditorContent();
+            this.$saveControl();
 
             return new Promise(function (resolve, reject) {
-
                 var fields = {};
                 var Form   = Elm.getElement('form');
                 var data   = QUIFormUtils.getFormData(Form);
@@ -1989,7 +1989,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 categories = categories.filter(function (item) {
                     return item !== '';
                 });
-                console.log(fields);
+
                 Products.updateChild(
                     self.getAttribute('productId'),
                     categories,
@@ -2234,9 +2234,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 this.$CurrentCategory,
                 this.$Product
             ).then(function () {
-                //  storage content fields
-                self.$saveEditorContent();
-
                 return done();
             });
         },
@@ -2254,6 +2251,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             if (this.$executeUnloadForm === false) {
                 return Promise.resolve();
             }
+
+            this.$saveControl();
 
             var Form = Category.getElement('form');
 
@@ -2290,12 +2289,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         /**
          * storage the content fields
          */
-        $saveEditorContent: function () {
+        $saveControl: function () {
             if (!this.$CurrentCategory) {
                 return;
             }
 
             var Control = this.$CurrentCategory.getElement('.qui-control');
+
+            if (!Control) {
+                Control = this.$CurrentCategory.getElement('[data-quiid]');
+            }
 
             if (!Control || !Control.get('data-quiid')) {
                 return;
@@ -2303,8 +2306,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             var QUIControl = QUI.Controls.getById(Control.get('data-quiid'));
 
-            if (QUIControl) {
-                QUIControl.save();
+            if (QUIControl && typeof QUIControl.save === 'function') {
+                var fieldId = QUIControl.getAttribute('field-id');
+
+                this.$data[fieldId].value = QUIControl.save();
             }
         },
 

@@ -1,0 +1,18 @@
+<table class="product-data-files-table">
+    {foreach $products as $Product}
+    <tr>
+        <td class="product-data-files-table-title">
+            {$Product->getTitle()}
+        </td>
+        <td class="product-data-files-table-download">
+            <a href="" target="_blank">
+                <span class="fa fa-plus"></span>
+            </a>
+        </td>
+    </tr>
+    {foreachelse}
+    <tr>
+        <td>{locale group="quiqqer/products" var="message.control.product.fields.no.data"}</td>
+    </tr>
+    {/foreach}
+</table>
