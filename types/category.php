@@ -244,6 +244,7 @@ if ($siteUrl != $_REQUEST['_url']) {
     }
 
     $Engine->assign([
+        'categoryId'   => $Site->getAttribute('quiqqer.products.settings.categoryId'),
         'ProductList'  => $ProductList,
         'CategoryMenu' => $CategoryMenu,
         'filter'       => $filterList,
