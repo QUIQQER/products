@@ -293,7 +293,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$FreeText = this.$FreeTextContainer.getElement('[type="search"]');
                 var Button     = this.$FreeTextContainer.getElement('[type="submit"]');
 
-                Button.setStyle('display', 'none');
+                if (Button) {
+                    Button.setStyle('display', 'none');
+                }
 
                 var executeSearch = function () {
                     this.$productId = false;

@@ -78,7 +78,7 @@ QUI::$Ajax->registerFunction(
 
         return [
             'variantId' => $Child->getId(),
-            'control'   => $Control->create(),
+            'control'   => QUI\Output::getInstance()->parse($Control->create()),
             'css'       => QUI\Control\Manager::getCSS(),
             'url'       => $Child->getUrlRewrittenWithHost(),
             'title'     => $Child->getTitle(),
