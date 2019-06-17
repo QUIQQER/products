@@ -2,6 +2,16 @@
 
 }
 
+.quiqqer-products-control-visitedProducts .qui-products-price-display {
+    text-align: center;
+}
+
+.quiqqer-products-control-visitedProducts .qui-products-price-display-value {
+    font-size: initial;
+    line-height: initial;
+    text-align: center;
+}
+
 .quiqqer-products-control-visitedProducts-empty {
     color: rgba(0, 0, 0, 0.5);
 }
