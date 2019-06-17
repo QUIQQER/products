@@ -208,6 +208,21 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         },
 
         /**
+         * Refresh the panel
+         * - if current variant exists, refresh the current variant button status
+         *
+         * @return {Promise}
+         */
+        refresh: function () {
+            // parent product handling
+            if (!this.$CurrentVariant) {
+                return this.parent();
+            }
+
+            this.$refreshStatusButton();
+        },
+
+        /**
          *
          * @return {Promise}
          */
