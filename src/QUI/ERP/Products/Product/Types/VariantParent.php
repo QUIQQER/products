@@ -28,10 +28,8 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
  *
  * backend
  * @todo beim speichern der daten, refresh der daten -> am besten produkt daten als ergebnis mitliefern
- * @todo backend -> variant select -> data refresh
  *
  * frontend
- * @todo produkt liste -> varianten produkt -> kein warenkorb button -> Zur Auswahl
  * @todo canonical auf variante wenn variant=id
  */
 class VariantParent extends AbstractType
