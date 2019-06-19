@@ -1811,6 +1811,22 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Has the product an image?
+     *
+     * @return bool
+     */
+    public function hasImage()
+    {
+        try {
+            $this->getImage();
+        } catch (QUI\Exception $Exception) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Return all images for the product
      *
      * @param array $params - optional, select params

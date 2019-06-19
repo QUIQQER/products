@@ -2,7 +2,9 @@
     {foreach $products as $Product}
     <tr>
         <td>
-            {image image=$Product->getImage()}
+            {if $Product->hasImage()}
+                {image image=$Product->getImage() height=100}
+            {/if}
         </td>
         <td class="product-data-files-table-title">
             <a href="{$Product->getUrl()}">{$Product->getTitle()}</a>
