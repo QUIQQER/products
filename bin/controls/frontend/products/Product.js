@@ -192,41 +192,14 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 });
 
                 // render
-                this.$Next         = Elm.getElement('.product-data-more-next');
-                this.$Prev         = Elm.getElement('.product-data-more-prev');
-                this.$Tabbar       = Elm.getElement('.product-data-more-tabs');
-                this.$Sheets       = Elm.getElement('.product-data-more-sheets');
+                this.$Next = Elm.getElement('.product-data-more-next');
+                this.$Prev = Elm.getElement('.product-data-more-prev');
+
                 this.$TabContainer = Elm.getElement('.product-data-more-tabsContainer');
+                this.$Tabbar       = Elm.getElement('.product-data-more-tabs');
 
                 this.$Next.addEvent('click', this.nextTab);
                 this.$Prev.addEvent('click', this.prevTab);
-
-                this.$tabs = this.$Tabbar.getElements('.product-data-more-tabs-tab');
-
-                this.$tabs.addEvents({
-                    mouseenter: function () {
-                        this.addClass('hover');
-                    },
-                    mouseleave: function () {
-                        this.removeClass('hover');
-                    },
-                    click     : this.$tabClick
-                });
-
-                // calc tab height
-                this.$Sheets.setStyles({
-                    overflow: 'hidden'
-                });
-
-                moofx(this.$Sheets).animate({
-                    height: this.$Sheets.getScrollSize().y + 10
-                }, {
-                    duration: 200
-                });
-
-                if (this.$isTouch) {
-                    this.$TabContainer.setStyle('overflowX', 'auto');
-                }
 
                 QUI.parse(Elm).then(function () {
                     // price
@@ -254,49 +227,89 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                         });
                     });
 
-                    // get preview images
-                    var rowClick = function (event) {
-                        var Target = event.target;
-
-                        if (Target.nodeName === 'IMG') {
-                            return;
-                        }
-
-                        if (Target.getParent('.product-data-files-table-preview')) {
-                            return;
-                        }
-
-                        if (Target.hasClass('product-data-files-table-download')) {
-                            return;
-                        }
-
-                        if (Target.getParent('.product-data-files-table-download')) {
-                            return;
-                        }
-
-                        this.getElement('.product-data-files-table-preview img').click();
-                    };
-
-                    var images = Elm.getElements(
-                        '.product-data-files-table-preview [data-zoom="1"]'
-                    );
-
-                    for (var i = 0, len = images.length; i < len; i++) {
-                        images[i].getParent('tr').addEvent('click', rowClick);
-                        images[i].getParent('tr').setStyle('cursor', 'pointer');
-                    }
-
-                    if (this.$tabs.length) {
-                        this.$tabClick({
-                            target: this.$tabs[0]
-                        });
-                    }
-
+                    this.$initTabEvents();
                     this.resize();
                     this.fireEvent('load');
                     resolve();
                 }.bind(this));
             }.bind(this));
+        },
+
+        /**
+         * set and initialize all tab events for the detail tabs
+         */
+        $initTabEvents: function () {
+            var Elm = this.getElm();
+
+            this.$TabContainer = Elm.getElement('.product-data-more-tabsContainer');
+            this.$Tabbar       = Elm.getElement('.product-data-more-tabs');
+            this.$Sheets       = Elm.getElement('.product-data-more-sheets');
+
+            this.$tabs = this.$Tabbar.getElements('.product-data-more-tabs-tab');
+
+            this.$tabs.addEvents({
+                mouseenter: function () {
+                    this.addClass('hover');
+                },
+                mouseleave: function () {
+                    this.removeClass('hover');
+                },
+                click     : this.$tabClick
+            });
+
+            // calc tab height
+            this.$Sheets.setStyles({
+                overflow: 'hidden'
+            });
+
+            moofx(this.$Sheets).animate({
+                height: this.$Sheets.getScrollSize().y + 10
+            }, {
+                duration: 200
+            });
+
+            if (this.$isTouch) {
+                this.$TabContainer.setStyle('overflowX', 'auto');
+            }
+
+
+            // get preview images
+            var rowClick = function (event) {
+                var Target = event.target;
+
+                if (Target.nodeName === 'IMG') {
+                    return;
+                }
+
+                if (Target.getParent('.product-data-files-table-preview')) {
+                    return;
+                }
+
+                if (Target.hasClass('product-data-files-table-download')) {
+                    return;
+                }
+
+                if (Target.getParent('.product-data-files-table-download')) {
+                    return;
+                }
+
+                this.getElement('.product-data-files-table-preview img').click();
+            };
+
+            var images = Elm.getElements(
+                '.product-data-files-table-preview [data-zoom="1"]'
+            );
+
+            for (var i = 0, len = images.length; i < len; i++) {
+                images[i].getParent('tr').addEvent('click', rowClick);
+                images[i].getParent('tr').setStyle('cursor', 'pointer');
+            }
+
+            if (this.$tabs.length) {
+                this.$tabClick({
+                    target: this.$tabs[0]
+                });
+            }
         },
 
         /**
