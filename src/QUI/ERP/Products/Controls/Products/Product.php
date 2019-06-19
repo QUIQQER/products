@@ -249,6 +249,10 @@ class Product extends QUI\Control
                 continue;
             }
 
+            if ($Field->showInDetails()) {
+                continue;
+            }
+
             $Slider = new ChildrenSlider();
             $Slider->addProducts($Field->getValue());
 

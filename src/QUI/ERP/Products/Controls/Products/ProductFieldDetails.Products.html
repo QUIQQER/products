@@ -1,8 +1,12 @@
 <table class="product-data-files-table product-details">
     {foreach $products as $Product}
     <tr>
+        <td>
+            {image image=$Product->getImage()}
+        </td>
         <td class="product-data-files-table-title">
             <a href="{$Product->getUrl()}">{$Product->getTitle()}</a>
+            <p>{$Product->getDescription()}</p>
         </td>
         <td class="product-data-files-table-download">
             {template_event name="quiqqer::products::product::detail::equipment::buttons" Product=$Product}
