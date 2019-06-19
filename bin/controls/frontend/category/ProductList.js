@@ -401,6 +401,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             // more button auto loading
             QUI.addEvent('scroll', function () {
+                if (this.$productId) {
+                    return;
+                }
+
                 if (!this.$More) {
                     return;
                 }
