@@ -1440,9 +1440,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     })[0];
 
                     self.$Product.getFields().then(function (fields) {
-                        var i, len, entry;
-                        var data = [];
+                        var i, len, entry, typeTitle;
 
+                        var data      = [];
                         var fieldType = FieldTypes.getValue();
 
                         for (i = 0, len = fields.length; i < len; i++) {
@@ -1450,6 +1450,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                             if (fieldType !== '' && fieldType !== entry.type) {
                                 continue;
+                            }
+
+                            typeTitle = entry.type;
+
+                            if (QUILocale.exists('quiqqer/products', 'fieldtype.' + entry.type)) {
+                                typeTitle = QUILocale.get('quiqqer/products', 'fieldtype.' + entry.type);
                             }
 
                             data.push({
@@ -1463,7 +1469,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 id             : entry.id,
                                 title          : entry.title || '',
                                 workingtitle   : entry.workingtitle || '',
-                                fieldtype      : entry.type,
+                                fieldtype      : typeTitle,
                                 priority       : entry.priority,
                                 suffix         : entry.suffix,
                                 prefix         : entry.prefix,
