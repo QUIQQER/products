@@ -862,7 +862,7 @@
         </locale>
         <locale name="product.list.products.header.unitprice">
             <de><![CDATA[Einzelpreis]]></de>
-            <en><![CDATA[Unitprice]]></en>
+            <en><![CDATA[Unit Price]]></en>
         </locale>
         <locale name="product.list.products.header.price">
             <de><![CDATA[Preis]]></de>
