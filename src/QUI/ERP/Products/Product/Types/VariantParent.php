@@ -460,6 +460,8 @@ class VariantParent extends AbstractType
         foreach ($data as $k => $v) {
             if (\is_array($v)) {
                 $data[$k] = \json_encode($v);
+            } elseif (\is_string($v)) {
+                $data[$k] = trim($v);
             }
         }
 
