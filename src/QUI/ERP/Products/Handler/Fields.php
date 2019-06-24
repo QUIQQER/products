@@ -788,7 +788,7 @@ class Fields
         $Field->setAttribute('suffix', $data['suffix']);
         $Field->setOptions($data['options']);
 
-        self::$list[$fieldId] = $Field;
+        self::$list[$fieldId] = clone $Field;
 
         return $Field;
     }
