@@ -85,9 +85,13 @@ class Price extends QUI\Control
         }
 
         $result = '';
-        $result .= '<span class="qui-products-price-display-prefix">';
-        $result .= $pricePrefix;
-        $result .= '</span>';
+
+        if ($pricePrefix) {
+            $result .= '<span class="qui-products-price-display-prefix">';
+            $result .= $pricePrefix;
+            $result .= '</span>';
+        }
+
         $result .= '<span class="qui-products-price-display-value">';
         $result .= $Price->getDisplayPrice();
         $result .= '</span>';
