@@ -213,13 +213,51 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
         if ($this->Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
             $Price->enableMinimalPrice();
-        } else {
-            $min = $this->Product->getMinimumPrice();
-            $max = $this->Product->getMinimumPrice();
 
-            if ($min !== $max) {
-                $Price->enableMinimalPrice();
+            return $Price;
+        }
+
+
+        // use search cache
+        $minCache = 'quiqqer/products/' . $this->getId() . '/prices/min';
+        $maxName  = 'quiqqer/products/' . $this->getId() . '/prices/max';
+
+        $min = null;
+        $max = null;
+
+        try {
+            $min = QUI\Cache\Manager::get($minCache);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
+
+        try {
+            $max = QUI\Cache\Manager::get($maxName);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
+
+        if ($min === null || $max === null) {
+            $priceResult = QUI::getDataBase()->fetch([
+                'select' => 'id, minPrice, maxPrice',
+                'from'   => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+                'where'  => [
+                    'id' => $this->getId()
+                ],
+                'limit'  => 1
+            ]);
+
+            if (isset($priceResult[0])) {
+                $min = $priceResult[0]['minPrice'];
+                $max = $priceResult[0]['maxPrice'];
+            } else {
+                $min = $this->Product->getMinimumPrice();
+                $max = $this->Product->getMaximumPrice();
             }
+        }
+
+        if ($min !== $max) {
+            $Price->enableMinimalPrice();
         }
 
         return $Price;
