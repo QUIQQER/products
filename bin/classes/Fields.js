@@ -256,6 +256,22 @@ define('package/quiqqer/products/bin/classes/Fields', [
         },
 
         /**
+         * Return the options of a product field
+         *
+         * @param {Number} fieldId
+         * @returns {Promise}
+         */
+        getFieldOptions: function (fieldId) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_fields_getFieldOptions', resolve, {
+                    'package': 'quiqqer/products',
+                    fieldId  : fieldId,
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
          * Create a new field
          *
          * @params {Array} [params] - field attributes

@@ -940,6 +940,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     categories = [];
                 }
 
+                console.log(fields);
+
                 // set values
                 fields.each(function (Field) {
                     data[Field.id] = Field;
