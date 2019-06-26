@@ -15,14 +15,14 @@
 }
 
 
-.quiqqer-products-variant-generate-tableBody label {
+.quiqqer-products-variant-generate-tableBody td label {
     cursor: pointer;
     flex-grow: 1;
     padding: 8px;
     width: 100%;
 }
 
-.quiqqer-products-variant-generate-tableBody label:hover {
+.quiqqer-products-variant-generate-tableBody td label:hover {
     background: #eaeff4;
 }
 

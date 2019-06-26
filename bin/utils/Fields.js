@@ -138,6 +138,14 @@ define('package/quiqqer/products/bin/utils/Fields', {
                     message_no_values   : QUILocale.get(lg, 'variants.generating.window.message.no.values')
                 }));
 
+                Container.getElements('[name="all"]').addEvent('change', function (event) {
+                    var Checkbox = event.target;
+                    var Table    = Checkbox.getParent('table');
+                    var Tbody    = Table.getElement('tbody');
+
+                    Tbody.getElements('input').set('checked', Checkbox.checked);
+                });
+
                 resolve(Container);
             });
         });
