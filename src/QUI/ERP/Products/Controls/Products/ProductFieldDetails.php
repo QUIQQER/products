@@ -57,7 +57,12 @@ class ProductFieldDetails extends QUI\Control
             case QUI\ERP\Products\Handler\Fields::TYPE_PRODCUCTS:
                 $template   = \dirname(__FILE__).'/ProductFieldDetails.Products.html';
                 $productIds = $Field->getValue();
-                $products   = [];
+
+                if (empty($productIds)) {
+                    $productIds = [];
+                }
+
+                $products = [];
 
                 foreach ($productIds as $productId) {
                     try {
