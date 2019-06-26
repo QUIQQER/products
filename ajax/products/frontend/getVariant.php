@@ -29,9 +29,8 @@ QUI::$Ajax->registerFunction(
             return '';
         }
 
-        $ExceptionStack  = new QUI\ExceptionStack();
-        $fields          = \json_decode($fields, true);
-        $attributeGroups = $Product->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS);
+        $ExceptionStack = new QUI\ExceptionStack();
+        $fields         = \json_decode($fields, true);
 
         // json js <-> php
         if (\count($fields) && \is_array($fields[0])) {
@@ -46,19 +45,21 @@ QUI::$Ajax->registerFunction(
 
         // set variant field values
         foreach ($fields as $fieldId => $fieldValue) {
-            if (!isset($attributeGroups[$fieldId])) {
-                continue;
-            }
-
             try {
-                $F = $attributeGroups[$fieldId];
-                $F->setValue($fieldValue);
+                $Field = $Product->getField($fieldId);
+
+                if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST ||
+                    $Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS) {
+                    $Field->setValue($fieldValue);
+                }
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addDebug($Exception->getMessage());
 
                 $ExceptionStack->addException($Exception);
             }
         }
+
+        $attributeGroups = $Product->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS);
 
         if (!$ExceptionStack->isEmpty()) {
             $list = $ExceptionStack->getExceptionList();
