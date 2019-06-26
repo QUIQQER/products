@@ -273,7 +273,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             }
 
             if (\is_numeric($value)) {
-                $value   = (int)$value;
+//                $value   = (int)$value;
                 $options = $this->getOptions();
                 $entries = $options['entries'];
 
