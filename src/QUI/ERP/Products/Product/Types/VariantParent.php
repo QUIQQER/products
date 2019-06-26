@@ -381,6 +381,13 @@ class VariantParent extends AbstractType
                 continue;
             }
 
+            $columnType = mb_strtolower($Field->getColumnType());
+
+            if (mb_strpos($columnType, 'text') === false
+                && mb_strpos($columnType, 'char') === false) {
+                continue;
+            }
+
             $fieldColumnName = SearchHandler::getSearchFieldColumnName($Field);
             $searchValue     = $Field->getSearchCacheValue($Locale);
 
