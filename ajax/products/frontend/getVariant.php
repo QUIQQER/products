@@ -19,14 +19,19 @@ QUI::$Ajax->registerFunction(
     function ($productId, $fields) {
         try {
             $Product = Products::getNewProductInstance($productId);
+
+            if ($Product instanceof VariantChild) {
+                $Product = $Product->getParent();
+            }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage());
 
             return '';
         }
 
-        $ExceptionStack = new QUI\ExceptionStack();
-        $fields         = \json_decode($fields, true);
+        $ExceptionStack  = new QUI\ExceptionStack();
+        $fields          = \json_decode($fields, true);
+        $attributeGroups = $Product->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS);
 
         // json js <-> php
         if (\count($fields) && \is_array($fields[0])) {
@@ -41,10 +46,16 @@ QUI::$Ajax->registerFunction(
 
         // set variant field values
         foreach ($fields as $fieldId => $fieldValue) {
+            if (!isset($attributeGroups[$fieldId])) {
+                continue;
+            }
+
             try {
-                $Product->getField($fieldId)->setValue($fieldValue);
-                $fields[$fieldId] = $Product->getField($fieldId)->getValue();
+                $F = $attributeGroups[$fieldId];
+                $F->setValue($fieldValue);
             } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception->getMessage());
+
                 $ExceptionStack->addException($Exception);
             }
         }
@@ -57,14 +68,8 @@ QUI::$Ajax->registerFunction(
 
         try {
             /* @var $Product QUI\ERP\Products\Product\Types\VariantParent */
-            $attributeGroups = $Product->getFieldsByType(Fields::TYPE_ATTRIBUTES);
-            $fieldHash       = QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($attributeGroups);
-
-            if ($Product instanceof VariantChild) {
-                $Child = $Product->getParent()->getVariantByVariantHash($fieldHash);
-            } else {
-                $Child = $Product->getVariantByVariantHash($fieldHash);
-            }
+            $fieldHash = QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($attributeGroups);
+            $Child     = $Product->getVariantByVariantHash($fieldHash);
         } catch (QUI\Exception $Exception) {
             $Child = $Product;
         }
@@ -74,6 +79,20 @@ QUI::$Ajax->registerFunction(
         if ($Child->getCategory()) {
             $categoryId = $Child->getCategory()->getId();
         }
+
+        // set attribute lists
+        $attributeLists = $Child->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST);
+
+        foreach ($attributeLists as $Field) {
+            if (isset($fields[$Field->getId()])) {
+                try {
+                    $Child->getField($Field->getId())->setValue($fields[$Field->getId()]);
+                } catch (QUI\Exception $Exception) {
+
+                }
+            }
+        }
+
 
 
         // render
