@@ -1148,7 +1148,20 @@ class VariantParent extends AbstractType
             throw new QUI\ERP\Products\Product\Exception();
         }
 
-        return Products::getProduct($variantId);
+        $Product = Products::getProduct($variantId);
+
+        // set attribute lists
+        $attributeLists = $this->getFieldsByType(FieldHandler::TYPE_ATTRIBUTE_LIST);
+
+        foreach ($attributeLists as $Field) {
+            try {
+                $Product->getField($Field->getId())->setValue($Field->getValue());
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception->getMessage());
+            }
+        }
+
+        return $Product;
     }
 
     /**
