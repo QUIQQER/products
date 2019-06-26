@@ -88,12 +88,10 @@ QUI::$Ajax->registerFunction(
                 try {
                     $Child->getField($Field->getId())->setValue($fields[$Field->getId()]);
                 } catch (QUI\Exception $Exception) {
-
+                    QUI\System\Log::writeDebugException($Exception);
                 }
             }
         }
-
-
 
         // render
         $Control = new ProductControl([
