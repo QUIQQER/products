@@ -28,18 +28,21 @@ QUI::$Ajax->registerFunction(
 
 
         // product fields
+        $overwritable = Products::getGlobalOverwritableVariantFields();
+        $overwritable = \array_map(function ($Field) {
+            /* @var $Field \QUI\ERP\Products\Field\Field */
+            return $Field->getId();
+        }, $overwritable);
+
         if (!empty($productId)) {
-            $Product      = Products::getProduct($productId);
-            $overwritable = $Product->getAttribute('overwritableVariantFields');
+            $Product = Products::getProduct($productId);
+
+            if ($Product->getAttribute('overwritableVariantFields')) {
+                $overwritable = $Product->getAttribute('overwritableVariantFields');
+            }
 
             // fields
             $fields = $Product->getFields();
-        } else {
-            $overwritable = Products::getGlobalOverwritableVariantFields();
-            $overwritable = \array_map(function ($Field) {
-                /* @var $Field \QUI\ERP\Products\Field\Field */
-                return $Field->getId();
-            }, $overwritable);
         }
 
         // if $overwritable is false, then use global erp field settings

@@ -7,7 +7,6 @@
 namespace QUI\ERP\Products\Product\Types;
 
 use QUI;
-use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 use QUI\ERP\Products\Product\Exception;
@@ -116,7 +115,7 @@ class VariantParent extends AbstractType
             // check if fields exists
             foreach ($fields as $fieldId) {
                 try {
-                    $overwritable[] = QUI\ERP\Products\Handler\Fields::getField($fieldId)->getId();
+                    $overwritable[] = FieldHandler::getField($fieldId)->getId();
                 } catch (QUI\Exception $Exception) {
                     QUI\System\Log::writeDebugException($Exception);
                 }
@@ -328,15 +327,15 @@ class VariantParent extends AbstractType
         $data = [
             'type'        => $type,
             'productNo'   => $this->getFieldValueByLocale(
-                Fields::FIELD_PRODUCT_NO,
+                FieldHandler::FIELD_PRODUCT_NO,
                 $Locale
             ),
             'title'       => $this->getFieldValueByLocale(
-                Fields::FIELD_TITLE,
+                FieldHandler::FIELD_TITLE,
                 $Locale
             ),
             'description' => $this->getFieldValueByLocale(
-                Fields::FIELD_SHORT_DESC,
+                FieldHandler::FIELD_SHORT_DESC,
                 $Locale
             ),
             'active'      => $this->isActive() ? 1 : 0,
@@ -387,7 +386,7 @@ class VariantParent extends AbstractType
 
             $data[$fieldColumnName] = $searchValue;
 
-            if ($Field->getId() == Fields::FIELD_PRIORITY
+            if ($Field->getId() == FieldHandler::FIELD_PRIORITY
                 && empty($data[$fieldColumnName])
             ) {
                 // in 10 Jahren darf mor das fixen xD
@@ -431,7 +430,7 @@ class VariantParent extends AbstractType
                     }
 
                     $fieldColumnName = $searchFields[$fieldId]['column'];
-                    $Field           = Fields::getField($fieldId);
+                    $Field           = FieldHandler::getField($fieldId);
 
                     // Only parse children fields that have a non-numeric (i.e. textual) search cache value
                     switch ($Field->getSearchType()) {
@@ -784,7 +783,7 @@ class VariantParent extends AbstractType
     public function createVariant()
     {
         // set empty url, otherwise we'll have problems.
-        $UrlField = $this->getField(QUI\ERP\Products\Handler\Fields::FIELD_URL);
+        $UrlField = $this->getField(FieldHandler::FIELD_URL);
         $UrlField->setValue([]);
 
         $fields   = [];
@@ -800,10 +799,15 @@ class VariantParent extends AbstractType
         $this->children[] = $Variant;
 
         $Variant->setAttribute('parent', $this->getId());
-        $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO)->setValue('');
-        $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_FOLDER)->setValue('');
-        $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_IMAGE)->setValue('');
-        $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_URL)->setValue([]);
+        $Variant->getField(FieldHandler::FIELD_PRODUCT_NO)->setValue('');
+        $Variant->getField(FieldHandler::FIELD_FOLDER)->setValue('');
+        $Variant->getField(FieldHandler::FIELD_IMAGE)->setValue('');
+        $Variant->getField(FieldHandler::FIELD_URL)->setValue([]);
+
+        $Variant->getField(FieldHandler::FIELD_TITLE)->setValue(
+            $this->getFieldValue(FieldHandler::FIELD_TITLE)
+        );
+
         $Variant->save();
 
         return $Variant;
@@ -837,7 +841,13 @@ class VariantParent extends AbstractType
             // add only attribute groups
             if ($Field->getType() === FieldHandler::TYPE_ATTRIBUTE_GROUPS) {
                 $Variant->addField($Field);
-                $Variant->getField($field)->setValue($value);
+
+                try {
+                    $Variant->getField($field)->setValue($value);
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::addDebug($Exception->getMessage());
+                }
+
                 continue;
             }
 
@@ -867,7 +877,7 @@ class VariantParent extends AbstractType
         $urlValue    = $URL->getValue();
 
         $attributes = $Variant->getFieldsByType([
-            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS
+            FieldHandler::TYPE_ATTRIBUTE_GROUPS
         ]);
 
         /* @var $Field QUI\ERP\Products\Field\Field */

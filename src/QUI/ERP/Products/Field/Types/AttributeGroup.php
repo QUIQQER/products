@@ -230,7 +230,8 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
         $entries = $options['entries'];
 
         foreach ($entries as $entry) {
-            if ($entry['valueId'] == $value) {
+            if ($entry['valueId'] == $value
+                || is_numeric($value) && $entry['valueId'] == (int)$value) {
                 return;
             }
         }
