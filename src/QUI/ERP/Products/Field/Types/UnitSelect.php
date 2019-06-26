@@ -145,11 +145,11 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
     /**
      * Return the FrontendView
      *
-     * @return ProductAttributeListFrontendView
+     * @return UnitSelectFrontendView
      */
     public function getFrontendView()
     {
-        return new ProductAttributeListFrontendView(
+        return new UnitSelectFrontendView(
             $this->getFieldDataForView()
         );
     }
