@@ -1526,7 +1526,7 @@ class Model extends QUI\QDOM
      * Return all fields from the specific type
      *
      * @param string|array $type - field type (eq: ProductAttributeList, Price ...) or list of field types
-     * @return array
+     * @return FieldInterface[]
      */
     public function getFieldsByType($type)
     {
