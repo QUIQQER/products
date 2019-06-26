@@ -7,6 +7,7 @@
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Product\Types\VariantChild;
 
 /**
  * Return the product variant html
@@ -54,14 +55,17 @@ QUI::$Ajax->registerFunction(
             throw new $list[0];
         }
 
-
-        try {
-            /* @var $Product QUI\ERP\Products\Product\Types\VariantParent */
-            $attributeGroups = $Product->getFieldsByType(Fields::TYPE_ATTRIBUTES);
-            $fieldHash       = QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($attributeGroups);
-            $Child           = $Product->getVariantByVariantHash($fieldHash);
-        } catch (QUI\Exception $Exception) {
+        if ($Product instanceof VariantChild) {
             $Child = $Product;
+        } else {
+            try {
+                /* @var $Product QUI\ERP\Products\Product\Types\VariantParent */
+                $attributeGroups = $Product->getFieldsByType(Fields::TYPE_ATTRIBUTES);
+                $fieldHash       = QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($attributeGroups);
+                $Child           = $Product->getVariantByVariantHash($fieldHash);
+            } catch (QUI\Exception $Exception) {
+                $Child = $Product;
+            }
         }
 
         $categoryId = null;
