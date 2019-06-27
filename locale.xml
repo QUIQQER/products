@@ -206,8 +206,8 @@
             ]]></en>
         </locale>
         <locale name="settings.window.products.overwritableFields">
-            <de><![CDATA[Überschreibbare Varianten Felder]]></de>
-            <en><![CDATA[Overwritable Variants Fields]]></en>
+            <de><![CDATA[Editierbare Varianten Felder]]></de>
+            <en><![CDATA[Editable Variants Fields]]></en>
         </locale>
         <locale name="settings.window.products.findChildrenInSearch">
             <de><![CDATA[Varianten: Kindartikel in Suche beachten]]></de>
@@ -1623,8 +1623,8 @@
         </locale>
 
         <locale name="variants.OverwritableFieldList.window.title">
-            <de><![CDATA[Überschreibbare Produktfelder]]></de>
-            <en><![CDATA[Overwritable product fields]]></en>
+            <de><![CDATA[Editierbare Produktfelder]]></de>
+            <en><![CDATA[Editable product fields]]></en>
         </locale>
         <locale name="variants.OverwritableFieldList.window.description">
             <de><![CDATA[
@@ -1732,8 +1732,8 @@
             <en><![CDATA[Variants]]></en>
         </locale>
         <locale name="panel.variants.overwritable.button.title">
-            <de><![CDATA[Überschreibbare Felder für Varianten festlegen]]></de>
-            <en><![CDATA[Define Overwritable Fields for Variants]]></en>
+            <de><![CDATA[Editierbare Felder für Varianten festlegen. Diese Felder sind von der Variante editierbar.]]></de>
+            <en><![CDATA[Define editable Fields for Variants. These fields can be edited by the variant.]]></en>
         </locale>
 
         <locale name="variants.addVariant.window.title">
