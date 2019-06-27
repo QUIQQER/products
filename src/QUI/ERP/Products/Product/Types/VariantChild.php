@@ -38,6 +38,27 @@ class VariantChild extends AbstractType
         parent::__construct($pid, $product);
 
         // fields values
+        $overwritableFields = QUI\ERP\Products\Utils\Products::getOverwritableFieldIdsForProduct($this);
+        $overwritableFields = \array_flip($overwritableFields);
+
+        $fields = $this->getParent()->getFields();
+
+        foreach ($fields as $Field) {
+            if (!isset($overwritableFields[$Field->getId()])) {
+                continue;
+            }
+
+            /* @var $Field QUI\ERP\Products\Field\Field */
+            if ($Field->getType() === Fields::TYPE_ATTRIBUTES) {
+                continue;
+            }
+
+            if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST) {
+                continue;
+            }
+
+            $this->getField($Field->getId())->setValue($Field->getValue());
+        }
     }
 
     //region type stuff

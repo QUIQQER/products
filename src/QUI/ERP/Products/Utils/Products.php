@@ -149,6 +149,48 @@ class Products
     }
 
     /**
+     * @param null $Product
+     * @return array
+     */
+    public static function getOverwritableFieldIdsForProduct($Product = null)
+    {
+        if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Product) {
+            if ($Product->getAttribute('overwritableVariantFields')) {
+                $overwritable = $Product->getAttribute('overwritableVariantFields');
+                $overwritable = \json_decode($overwritable, true);
+
+                return $overwritable;
+            }
+        }
+
+        // global erp overwritable fields
+        try {
+            $Config = QUI::getPackage('quiqqer/products')->getConfig();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+
+            return [];
+        }
+
+        $fields = $Config->getSection('overwritableFields');
+
+        if ($fields) {
+            $result = \array_keys($fields);
+
+            return $result;
+        }
+
+
+        $fields = \QUI\ERP\Products\Handler\Fields::getFields();
+        $result = \array_map(function ($Field) {
+            /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
+            return $Field->getId();
+        }, $fields);
+
+        return $result;
+    }
+
+    /**
      * Return generate variant hash
      *
      * @param array $fields - could be a field array [Field, Field, Field],
