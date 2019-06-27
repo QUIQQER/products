@@ -1628,12 +1628,12 @@
         </locale>
         <locale name="variants.OverwritableFieldList.window.description">
             <de><![CDATA[
-            Lege fest welche Felder von den Varianten überschrieben werden können.
-            Alle Felder welche nicht von den Varianten überschrieben werden können, werden von dem Eltern-Produkt übernommen.
+            Lege fest welche Felder von den Varianten editiert werden können.
+            Alle Felder welche nicht von den Varianten editiert werden können, werden von dem Eltern-Produkt übernommen.
             ]]></de>
             <en><![CDATA[
-            Specify which fields can be overwritten by the variants.
-            All fields that cannot be overwritten by the variants will be taken from the parent product.
+            Specify which fields can be editable by the variants.
+            All fields that cannot be editable by the variants will be taken from the parent product.
             ]]></en>
         </locale>
 
