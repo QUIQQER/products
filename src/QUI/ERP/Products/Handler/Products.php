@@ -38,6 +38,27 @@ class Products
     public static $writeProductDataToDb = true;
 
     /**
+     * This global flag determines if the Product search cache is actually written when Product->updateCache()
+     * is called.
+     *
+     * The intention is to disable expensive Product data collection and database queries in a context where a lot of Product
+     * objects are processed in a short time (i.e. mass imports).
+     *
+     * @var bool
+     */
+    public static $updateProductSearchCache = true;
+
+    /**
+     * This global flag determines if Product specific events are fired when a Product is saved.
+     *
+     * The intention is to disable expensive event handler operations in a context where a lot of Product
+     * objects are processed in a short time (i.e. mass imports).
+     *
+     * @var bool
+     */
+    public static $fireEventsOnProductSave = true;
+
+    /**
      * Product permission using?
      * @var null|boolean
      */
@@ -841,5 +862,53 @@ class Products
     public static function disableGlobalWriteProductDataToDb()
     {
         self::$writeProductDataToDb = false;
+    }
+
+    /**
+     * ENABLE: Fire events when a Product is saved.
+     *
+     * For further information see documentation of self::$fireEventsOnProductSave
+     *
+     * @return void
+     */
+    public static function enableGlobalFireEventsOnProductSave()
+    {
+        self::$fireEventsOnProductSave = true;
+    }
+
+    /**
+     * DISABLE: Fire events when a Product is saved.
+     *
+     * For further information see documentation of self::$fireEventsOnProductSave
+     *
+     * @return void
+     */
+    public static function disableGlobalFireEventsOnProductSave()
+    {
+        self::$fireEventsOnProductSave = false;
+    }
+
+    /**
+     * ENABLE: Actually write the product search cache if Product->updateCache() is called.
+     *
+     * For futher information see documentation of self::$updateProductSearchCache
+     *
+     * @return void
+     */
+    public static function enableGlobalProductSearchCacheUpdate()
+    {
+        self::$updateProductSearchCache = true;
+    }
+
+    /**
+     * DISABLE: Actually write the product search cache if Product->updateCache() is called.
+     *
+     * For futher information see documentation of self::$updateProductSearchCache
+     *
+     * @return void
+     */
+    public static function disableGlobalProductSearchCacheUpdate()
+    {
+        self::$updateProductSearchCache = false;
     }
 }

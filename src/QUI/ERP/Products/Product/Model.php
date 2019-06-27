@@ -1066,7 +1066,9 @@ class Model extends QUI\QDOM
 
         QUI\Cache\Manager::clear('quiqqer/products/'.$this->getId());
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', [$this]);
+        if (Products::$fireEventsOnProductSave) {
+            QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', [$this]);
+        }
     }
 
     /**
@@ -1113,7 +1115,9 @@ class Model extends QUI\QDOM
 
         $this->productSave($fieldData);
 
-        QUI::getEvents()->fireEvent('onQuiqqerProductsProductUserSave', [$this]);
+        if (Products::$fireEventsOnProductSave) {
+            QUI::getEvents()->fireEvent('onQuiqqerProductsProductUserSave', [$this]);
+        }
     }
 
     /**
@@ -1310,6 +1314,10 @@ class Model extends QUI\QDOM
      */
     public function updateCache()
     {
+        if (!Products::$updateProductSearchCache) {
+            return;
+        }
+
         $langs = QUI::availableLanguages();
 
         foreach ($langs as $lang) {
