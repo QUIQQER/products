@@ -758,7 +758,9 @@ class Model extends QUI\QDOM
         // search all custom fields, and set the minimum
         $Clone  = Products::getNewProductInstance($this->getId());
         $Calc   = QUI\ERP\Products\Utils\Calc::getInstance($User); // @todo netto user nutzen
-        $fields = $Clone->getFields();
+        $fields = $Clone->getFieldsByType([
+            Fields::TYPE_ATTRIBUTE_LIST
+        ]);
 
         // alle felder müssen erst einmal gesetzt werden
         /* @var $Field QUI\ERP\Products\Field\Field */
@@ -769,12 +771,12 @@ class Model extends QUI\QDOM
 
             $options = $Field->getOptions();
 
-            if (isset($options['entries']) && \count($options['entries'])) {
+            if (\count($options['entries'])) {
                 $Clone->getField($Field->getId())->setValue(0);
             }
         }
 
-        $Price        = $Clone->createUniqueProduct()->calc($Calc)->getPrice();
+        $Price        = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice();
         $currentPrice = $Price->value();
 
         /* @var $Field QUI\ERP\Products\Field\Field */
@@ -785,14 +787,10 @@ class Model extends QUI\QDOM
 
             $options = $Field->getOptions();
 
-            if (!isset($options['entries'])) {
-                continue;
-            }
-
             foreach ($options['entries'] as $index => $data) {
                 $Clone->getField($Field->getId())->setValue($index);
 
-                $price = $Clone->createUniqueProduct()->calc($Calc)->getPrice()->value();
+                $price = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice()->value();
 
                 if ($currentPrice > $price) {
                     $currentPrice = $price;
@@ -833,9 +831,11 @@ class Model extends QUI\QDOM
 
         $Clone  = Products::getNewProductInstance($this->getId());
         $Calc   = QUI\ERP\Products\Utils\Calc::getInstance($User);
-        $fields = $Clone->getFields();
+        $fields = $Clone->getFieldsByType([
+            Fields::TYPE_ATTRIBUTE_LIST
+        ]);
 
-        $Price        = $Clone->createUniqueProduct()->calc($Calc)->getPrice();
+        $Price        = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice();
         $currentPrice = $Price->value();
 
         /* @var $Field QUI\ERP\Products\Field\Field */
@@ -846,14 +846,10 @@ class Model extends QUI\QDOM
 
             $options = $Field->getOptions();
 
-            if (!isset($options['entries'])) {
-                continue;
-            }
-
             foreach ($options['entries'] as $index => $data) {
                 $Clone->getField($Field->getId())->setValue($index);
 
-                $price = $Clone->createUniqueProduct()->calc($Calc)->getPrice()->value();
+                $price = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice()->value();
 
                 if ($currentPrice < $price) {
                     $currentPrice = $price;

@@ -719,7 +719,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $Price = new QUI\ERP\Money\Price(
             $this->sum,
-            QUI\ERP\Currency\Handler::getDefaultCurrency()
+            QUI\ERP\Currency\Handler::getDefaultCurrency(),
+            $this->getUser()
         );
 
         // wenn attribute listen existieren
