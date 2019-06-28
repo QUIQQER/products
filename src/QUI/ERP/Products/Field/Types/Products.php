@@ -19,6 +19,11 @@ class Products extends QUI\ERP\Products\Field\Field
     /**
      * @var bool
      */
+    protected $searchable = false;
+
+    /**
+     * @var bool
+     */
     protected $showInDetails = true;
 
     /**
