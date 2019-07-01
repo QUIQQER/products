@@ -241,6 +241,15 @@
             ]]></en>
         </locale>
 
+        <locale name="settings.window.products.useAttributeListsForMinMaxPriceCalculation.text">
+            <de><![CDATA[Preismodifikation durch Auswahllisten im Such-Cache berücksichtigen]]></de>
+            <en><![CDATA[Consider price modification by attribute lists in search cache]]></en>
+        </locale>
+        <locale name="settings.window.products.useAttributeListsForMinMaxPriceCalculation.description">
+            <de><![CDATA[Bei der Berechnung des niedrigsten und höchsten Preises für die Produkt-Suche sollen Änderungen des Preises durch Auswahllisten (Auf- bzw. Abschläge) berücksichtigt werden.]]></de>
+            <en><![CDATA[When calculating the lowest and highest price for the product search, changes in the price by attribute lists (discounts / surcharges) should be taken into account.]]></en>
+        </locale>
+
         <locale name="settings.window.fieldsearch.frontend.title">
             <de><![CDATA[Voreinstellung für Kategorie Filter]]></de>
             <en><![CDATA[Default for category filter]]></en>

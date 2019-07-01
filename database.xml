@@ -73,6 +73,7 @@
             <field type="TEXT NULL">viewUsersGroups</field>
             <field type="timestamp NULL default NULL">c_date</field>
             <field type="timestamp NULL default NULL">e_date</field>
+            <field type="BIGINT(10) NULL DEFAULT NULL">parentId</field>
 
             <primary>id,lang</primary>
         </table>

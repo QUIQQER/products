@@ -9,6 +9,7 @@ namespace QUI\ERP\Products\Search;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Categories;
+use QUI\ERP\Products\Product\Types\VariantChild;
 use QUI\ERP\Products\Search\Cache as SearchCache;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
@@ -21,9 +22,9 @@ use QUI\ERP\Products\Handler\Products;
  */
 class FrontendSearch extends Search
 {
-    const SITETYPE_SEARCH = 'quiqqer/products:types/search';
+    const SITETYPE_SEARCH   = 'quiqqer/products:types/search';
     const SITETYPE_CATEGORY = 'quiqqer/products:types/category';
-    const SITETYPE_LIST = 'quiqqer/productstags:types/list';
+    const SITETYPE_LIST     = 'quiqqer/productstags:types/list';
 
     /**
      * Flag how the search should handle variant children
@@ -189,15 +190,13 @@ class FrontendSearch extends Search
 
         $PDO = QUI::getDataBase()->getPDO();
 
-        $binds = [];
-        $where = [];
+        $binds                           = [];
+        $where                           = [];
+        $findVariantParentsByChildValues = !!(int)QUI::getPackage('quiqqer/products')
+            ->getConfig()
+            ->get('variants', 'findVariantParentByChildValues');
 
-        if ($countOnly) {
-            $sql = "SELECT COUNT(*)";
-        } else {
-            $sql = "SELECT id";
-        }
-
+        $sql = "SELECT `id`, `type`, `parentId`";
         $sql .= " FROM ".TablesUtils::getProductCacheTableName();
 
         $where[]       = 'lang = :lang';
@@ -294,7 +293,7 @@ class FrontendSearch extends Search
         }
 
 
-        if ($this->ignoreVariantChildren) {
+        if (!$findVariantParentsByChildValues && $this->ignoreVariantChildren) {
             $where[] = "type <> :variantClass";
 
             $binds['variantClass'] = [
@@ -436,7 +435,7 @@ class FrontendSearch extends Search
             $Stmt->execute();
             $result = $Stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $Exception) {
-            QUI\System\Log::addError($Exception->getMessage());
+            QUI\System\Log::writeException($Exception);
 
             if ($countOnly) {
                 return 0;
@@ -445,14 +444,26 @@ class FrontendSearch extends Search
             return [];
         }
 
-        if ($countOnly) {
-            return (int)\current(\current($result));
-        }
-
         $productIds = [];
 
-        foreach ($result as $row) {
+        foreach ($result as $k => $row) {
+            if ($row['type'] === VariantChild::class) {
+                if ($findVariantParentsByChildValues && !empty($row['parentId'])) {
+                    $productIds[] = $row['parentId'];
+                }
+
+                if ($this->ignoreVariantChildren) {
+                    continue;
+                }
+            }
+
             $productIds[] = $row['id'];
+        }
+
+        $productIds = array_values(array_unique($productIds));
+
+        if ($countOnly) {
+            return count($productIds);
         }
 
         return $productIds;

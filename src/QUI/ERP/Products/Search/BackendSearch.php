@@ -12,6 +12,8 @@ use QUI\ERP\Products\Search\Cache as SearchCache;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Product\Types\VariantChild;
+use QUI\ERP\Products\Product\Types\VariantParent;
 
 /**
  * Class Search
@@ -58,15 +60,13 @@ class BackendSearch extends Search
 
         $PDO = QUI::getDataBase()->getPDO();
 
-        $binds = [];
-        $where = [];
+        $binds                           = [];
+        $where                           = [];
+        $findVariantParentsByChildValues = !!(int)QUI::getPackage('quiqqer/products')
+            ->getConfig()
+            ->get('variants', 'findVariantParentByChildValues');
 
-        if ($countOnly) {
-            $sql = "SELECT COUNT(*)";
-        } else {
-            $sql = "SELECT id";
-        }
-
+        $sql = "SELECT `id`, `type`, `parentId`";
         $sql .= " FROM ".TablesUtils::getProductCacheTableName();
 
         $where[]       = 'lang = :lang';
@@ -171,12 +171,13 @@ class BackendSearch extends Search
         }
 
         // product types search
-        if (isset($searchParams['productTypes'])
-            && !empty($searchParams['productTypes'])
+        if (!empty($searchParams['productTypes'])
             && \is_array($searchParams['productTypes'])
         ) {
-            $typeCount = 0;
-            $typeWhere = [];
+            $typeCount               = 0;
+            $typeWhere               = [];
+            $variantParentsIncluded  = false;
+            $variantChildrenIncluded = false;
 
             foreach ($searchParams['productTypes'] as $productType) {
                 if (!\class_exists($productType)) {
@@ -189,23 +190,50 @@ class BackendSearch extends Search
                     'value' => $productType,
                     'type'  => \PDO::PARAM_STR
                 ];
+
+                switch ($productType) {
+                    case VariantParent::class:
+                        $variantParentsIncluded = true;
+                        break;
+
+                    case VariantChild::class:
+                        $variantParentsIncluded = true;
+                        break;
+                }
+
+                if ($productType === VariantChild::class) {
+                    $variantChildrenIncluded = true;
+                }
+
+                $typeCount++;
+            }
+
+            // If VariantParents should also be found by searching for VariantChildren values
+            // VariantChildren must be searched too
+            if ($findVariantParentsByChildValues
+                && $variantParentsIncluded
+                && !$variantChildrenIncluded
+            ) {
+                $typeWhere[] = 'type = :variantClass'.$typeCount;
+
+                $binds['variantClass'.$typeCount] = [
+                    'value' => VariantChild::class,
+                    'type'  => \PDO::PARAM_STR
+                ];
             }
 
             $where[] = '('.\implode(' OR ', $typeWhere).')';
-        } elseif ($this->ignoreVariantChildren) {
+        } elseif (!$findVariantParentsByChildValues && $this->ignoreVariantChildren) {
             $where[] = 'type <> :variantClass';
 
             $binds['variantClass'] = [
-                'value' => QUI\ERP\Products\Product\Types\VariantChild::class,
+                'value' => VariantChild::class,
                 'type'  => \PDO::PARAM_STR
             ];
         }
 
         // tags search
-        if (isset($searchParams['tags'])
-            && !empty($searchParams['tags'])
-            && \is_array($searchParams['tags'])
-        ) {
+        if (!empty($searchParams['tags']) && \is_array($searchParams['tags'])) {
             $data = $this->getTagQuery($searchParams['tags']);
 
             if (!empty($data['where'])) {
@@ -234,10 +262,7 @@ class BackendSearch extends Search
             $sql .= " ".$this->validateOrderStatement($searchParams);
         }
 
-        if (isset($searchParams['limit']) &&
-            !empty($searchParams['limit']) &&
-            !$countOnly
-        ) {
+        if (!empty($searchParams['limit']) && !$countOnly) {
             $Pagination = new QUI\Controls\Navigating\Pagination($searchParams);
             $sqlParams  = $Pagination->getSQLParams();
             $sql        .= " LIMIT ".$sqlParams['limit'];
@@ -258,6 +283,8 @@ class BackendSearch extends Search
             $Stmt->execute();
             $result = $Stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
             if ($countOnly) {
                 return 0;
             }
@@ -265,14 +292,26 @@ class BackendSearch extends Search
             return [];
         }
 
-        if ($countOnly) {
-            return (int)\current(\current($result));
-        }
-
         $productIds = [];
 
-        foreach ($result as $row) {
+        foreach ($result as $k => $row) {
+            if ($row['type'] === VariantChild::class) {
+                if ($findVariantParentsByChildValues && !empty($row['parentId'])) {
+                    $productIds[] = $row['parentId'];
+                }
+
+                if ($this->ignoreVariantChildren) {
+                    continue;
+                }
+            }
+
             $productIds[] = $row['id'];
+        }
+
+        $productIds = array_values(array_unique($productIds));
+
+        if ($countOnly) {
+            return count($productIds);
         }
 
         return $productIds;
