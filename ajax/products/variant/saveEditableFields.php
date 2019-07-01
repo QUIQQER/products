@@ -1,20 +1,20 @@
 <?php
 
 /**
- * This file contains package_quiqqer_products_ajax_products_variant_saveOverwritableFields
+ * This file contains package_quiqqer_products_ajax_products_variant_saveEditableFields
  */
 
 use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Products\Product\Types\VariantParent;
 
 /**
- * Activate a product
+ * Save editable fields
  *
  * @param integer $productId - Product-ID
+ * @param $editable
  */
 QUI::$Ajax->registerFunction(
-    'package_quiqqer_products_ajax_products_variant_saveOverwritableFields',
-    function ($productId, $overwritable) {
+    'package_quiqqer_products_ajax_products_variant_saveEditableFields',
+    function ($productId, $editable) {
         $Product = Products::getProduct($productId);
 
         if ($Product instanceof \QUI\ERP\Products\Product\Types\VariantChild) {
@@ -22,12 +22,12 @@ QUI::$Ajax->registerFunction(
         }
 
         $Product->setAttribute(
-            'overwritableVariantFields',
-            \json_decode($overwritable, true)
+            'editableVariantFields',
+            \json_decode($editable, true)
         );
 
         $Product->save();
     },
-    ['productId', 'overwritable'],
+    ['productId', 'editable'],
     'Permission::checkAdminUser'
 );

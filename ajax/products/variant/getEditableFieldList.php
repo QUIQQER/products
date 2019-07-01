@@ -1,18 +1,21 @@
 <?php
 
 /**
- * This file contains package_quiqqer_products_ajax_products_variant_getOverwritableFieldList
+ * This file contains package_quiqqer_products_ajax_products_variant_getEditableFieldList
  */
 
 use QUI\ERP\Products\Handler\Products;
 
 /**
- * Activate a product
+ * Return the editable variant fields
  *
  * @param integer $productId - Product-ID
+ * @param string $options - JSON
+ *
+ * @return array
  */
 QUI::$Ajax->registerFunction(
-    'package_quiqqer_products_ajax_products_variant_getOverwritableFieldList',
+    'package_quiqqer_products_ajax_products_variant_getEditableFieldList',
     function ($productId, $options = '') {
         // defaults
         $fields  = false;
@@ -28,25 +31,25 @@ QUI::$Ajax->registerFunction(
 
 
         // product fields
-        $overwritable = Products::getGlobalOverwritableVariantFields();
-        $overwritable = \array_map(function ($Field) {
+        $editable = Products::getGlobalEditableVariantFields();
+        $editable = \array_map(function ($Field) {
             /* @var $Field \QUI\ERP\Products\Field\Field */
             return $Field->getId();
-        }, $overwritable);
+        }, $editable);
 
         if (!empty($productId)) {
             $Product = Products::getProduct($productId);
 
-            if ($Product->getAttribute('overwritableVariantFields')) {
-                $overwritable = $Product->getAttribute('overwritableVariantFields');
+            if ($Product->getAttribute('editableVariantFields')) {
+                $editable = $Product->getAttribute('editableVariantFields');
             }
 
             // fields
             $fields = $Product->getFields();
         }
 
-        // if $overwritable is false, then use global erp field settings
-        if ($overwritable === false || $fields === false) {
+        // if $editable is false, then use global erp field settings
+        if ($editable === false || $fields === false) {
             $fields = \QUI\ERP\Products\Handler\Fields::getFields();
         }
 
@@ -85,10 +88,10 @@ QUI::$Ajax->registerFunction(
         );
 
         return [
-            'overwritable' => $overwritable,
-            'fields'       => $fields,
-            'total'        => $count,
-            'page'         => $page
+            'editable' => $editable,
+            'fields'   => $fields,
+            'total'    => $count,
+            'page'     => $page
         ];
     },
     ['productId', 'options'],

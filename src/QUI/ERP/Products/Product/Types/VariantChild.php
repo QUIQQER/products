@@ -37,17 +37,17 @@ class VariantChild extends AbstractType
         parent::__construct($pid, $product);
 
         // fields values
-        $overwritableFields = QUI\ERP\Products\Utils\Products::getOverwritableFieldIdsForProduct($this);
-        $overwritableFields = \array_flip($overwritableFields);
+        $editableFields = QUI\ERP\Products\Utils\Products::getEditableFieldIdsForProduct($this);
+        $editableFields = \array_flip($editableFields);
 
         $fields = $this->getParent()->getFields();
 
         foreach ($fields as $Field) {
-            if (!isset($overwritableFields[$Field->getId()])) {
+            if (!isset($editableFields[$Field->getId()])) {
                 continue;
             }
 
-            if (!$Field->isEmpty()()) {
+            if (!$Field->isEmpty()) {
                 continue;
             }
 

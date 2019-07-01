@@ -211,11 +211,11 @@ class Model extends QUI\QDOM
             }
         }
 
-        // overwritable Variant Fields
-        if (!empty($product['overwritableVariantFields']) && is_string($product['overwritableVariantFields'])) {
+        // editable Variant Fields
+        if (!empty($product['editableVariantFields']) && \is_string($product['editableVariantFields'])) {
             $this->setAttribute(
-                'overwritableVariantFields',
-                \json_decode($product['overwritableVariantFields'], true)
+                'editableVariantFields',
+                \json_decode($product['editableVariantFields'], true)
             );
         }
 
@@ -993,6 +993,11 @@ class Model extends QUI\QDOM
 
         $fieldData[$urlKey]['value'] = $urls;
         $this->getField(Fields::FIELD_URL)->setValue($urls);
+
+        // if variant child
+        // -> nicht vererbte felder speichern
+        if ($this instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+        }
 
 
         // check url

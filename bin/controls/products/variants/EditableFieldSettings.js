@@ -1,12 +1,12 @@
 /**
- * @module package/quiqqer/products/bin/controls/products/variants/OverwritableFieldSettings
+ * @module package/quiqqer/products/bin/controls/products/variants/EditableFieldSettings
  * @author www.pcsg.de (Henning Leutz)
  */
-define('package/quiqqer/products/bin/controls/products/variants/OverwritableFieldSettings', [
+define('package/quiqqer/products/bin/controls/products/variants/EditableFieldSettings', [
 
     'qui/QUI',
     'qui/controls/Control',
-    'package/quiqqer/products/bin/controls/products/variants/OverwritableFieldList',
+    'package/quiqqer/products/bin/controls/products/variants/EditableFieldList',
     'Locale',
     'Ajax'
 
@@ -16,7 +16,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/products/variants/OverwritableFieldSettings',
+        Type   : 'package/quiqqer/products/bin/controls/products/variants/EditableFieldSettings',
 
         Binds: [
             '$onImport'
@@ -73,9 +73,9 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
             var self = this;
 
             return new Promise(function (resolve) {
-                var fields = self.$List.getOverwritableFields();
+                var fields = self.$List.getEditableFields();
 
-                QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveOverwritableERPFields', resolve, {
+                QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveEditableERPFields', resolve, {
                     'package': 'quiqqer/products',
                     fields   : JSON.encode(fields)
                 });

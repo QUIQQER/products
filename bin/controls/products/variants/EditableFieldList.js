@@ -1,8 +1,8 @@
 /**
- * @module package/quiqqer/products/bin/controls/products/OverwritableFieldList
+ * @module package/quiqqer/products/bin/controls/products/EditableFieldList
  * @author www.pcsg.de (Henning Leutz)
  */
-define('package/quiqqer/products/bin/controls/products/variants/OverwritableFieldList', [
+define('package/quiqqer/products/bin/controls/products/variants/EditableFieldList', [
 
     'qui/QUI',
     'qui/controls/Control',
@@ -19,7 +19,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/products/variants/OverwritableFieldList',
+        Type   : 'package/quiqqer/products/bin/controls/products/variants/EditableFieldList',
 
         Binds: [
             '$onInject',
@@ -34,8 +34,8 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
         initialize: function (options) {
             this.parent(options);
 
-            this.$Grid         = null;
-            this.$overwritable = null;
+            this.$Grid     = null;
+            this.$editable = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -51,9 +51,9 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
             this.parent();
 
             this.$Elm = new Element('div', {
-                'class'   : 'quiqqer-products-variant-overwritable-fields',
+                'class'   : 'quiqqer-products-variant-editable-fields',
                 id        : this.getId(),
-                'data-qui': 'package/quiqqer/products/bin/controls/products/variants/OverwritableFieldList',
+                'data-qui': 'package/quiqqer/products/bin/controls/products/variants/EditableFieldList',
                 styles    : {
                     height: '100%'
                 }
@@ -126,7 +126,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
         },
 
         /**
-         * Saves the overwritable fields to the product
+         * Saves the editable fields to the product
          *
          * @return {Promise}
          */
@@ -138,21 +138,21 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
             }
 
             return new Promise(function (resolve) {
-                QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveOverwritableFields', resolve, {
-                    'package'   : 'quiqqer/products',
-                    productId   : self.getAttribute('productId'),
-                    overwritable: JSON.encode(self.getOverwritableFields())
+                QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveEditableFields', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: self.getAttribute('productId'),
+                    editable : JSON.encode(self.getEditableFields())
                 });
             });
         },
 
         /**
-         * Return the active overwritable fields
+         * Return the active editable fields
          *
          * @return {array}
          */
-        getOverwritableFields: function () {
-            return this.$overwritable;
+        getEditableFields: function () {
+            return this.$editable;
         },
 
         /**
@@ -161,7 +161,7 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
         $onInject: function () {
             var self = this;
 
-            self.$loadOverwritableFields().then(function () {
+            self.$loadEditableFields().then(function () {
                 return self.refresh();
             }).then(function () {
                 self.fireEvent('load', [self]);
@@ -178,16 +178,16 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
                 options = this.$Grid.options;
 
             return new Promise(function (resolve) {
-                QUIAjax.get('package_quiqqer_products_ajax_products_variant_getOverwritableFieldList', function (result) {
+                QUIAjax.get('package_quiqqer_products_ajax_products_variant_getEditableFieldList', function (result) {
                     var i, len, entry, Status;
                     var data = [];
 
-                    var overwritable = self.$overwritable;
+                    var editable = self.$editable;
 
                     for (i = 0, len = result.fields.length; i < len; i++) {
                         entry = result.fields[i];
 
-                        if (!overwritable.length || overwritable.indexOf(entry.id) === -1) {
+                        if (!editable.length || editable.indexOf(entry.id) === -1) {
                             Status = new QUISwitch({
                                 status : false,
                                 fieldId: parseInt(entry.id),
@@ -235,16 +235,16 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
         },
 
         /**
-         * init overwritable fields from the product
+         * init editable fields from the product
          *
          * @return {Promise}
          */
-        $loadOverwritableFields: function () {
+        $loadEditableFields: function () {
             var self = this;
 
             return new Promise(function (resolve) {
-                QUIAjax.get('package_quiqqer_products_ajax_products_variant_getOverwritableFieldList', function (result) {
-                    self.$overwritable = result.overwritable;
+                QUIAjax.get('package_quiqqer_products_ajax_products_variant_getEditableFieldList', function (result) {
+                    self.$editable = result.editable;
                     resolve();
                 }, {
                     'package': 'quiqqer/products',
@@ -262,16 +262,16 @@ define('package/quiqqer/products/bin/controls/products/variants/OverwritableFiel
                 status  = Switch.getStatus();
 
             if (status) {
-                this.$overwritable.push(fieldId);
-                this.$overwritable = this.$overwritable.filter(function (value, index, self) {
+                this.$editable.push(fieldId);
+                this.$editable = this.$editable.filter(function (value, index, self) {
                     return self.indexOf(value) === index;
                 });
 
                 return;
             }
 
-            var index = this.$overwritable.indexOf(fieldId);
-            this.$overwritable.splice(index, 1);
+            var index = this.$editable.indexOf(fieldId);
+            this.$editable.splice(index, 1);
         }
     });
 });

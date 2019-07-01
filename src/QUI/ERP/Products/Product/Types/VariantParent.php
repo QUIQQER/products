@@ -106,23 +106,23 @@ class VariantParent extends AbstractType
     {
         QUI\Permissions\Permission::checkPermission('product.edit');
 
-        $fields = $this->getAttribute('overwritableVariantFields');
+        $fields = $this->getAttribute('editableVariantFields');
         $data   = [];
 
         if (\is_array($fields)) {
-            $overwritable = [];
+            $editable = [];
 
             // check if fields exists
             foreach ($fields as $fieldId) {
                 try {
-                    $overwritable[] = FieldHandler::getField($fieldId)->getId();
+                    $editable[] = FieldHandler::getField($fieldId)->getId();
                 } catch (QUI\Exception $Exception) {
                     QUI\System\Log::writeDebugException($Exception);
                 }
             }
 
             $data = [
-                'overwritableVariantFields' => \json_encode($overwritable)
+                'editableVariantFields' => \json_encode($editable)
             ];
         }
 

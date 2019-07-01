@@ -8,7 +8,8 @@
             <field type="BIGINT(20) NULL">category</field>
             <field type="TEXT NULL">categories</field>
             <field type="LONGTEXT NULL">fieldData</field>
-            <field type="LONGTEXT NULL">overwritableVariantFields</field>
+            <field type="LONGTEXT NULL">editableVariantFields</field>
+            <field type="LONGTEXT NULL">inheritedVariantFields</field>
             <field type="BIGINT(10) NULL">defaultVariantId</field>
             <field type="text NULL">variantHash</field>
             <field type="TINYINT(1) DEFAULT 0">active</field>

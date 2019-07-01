@@ -152,18 +152,22 @@ class Products
      * @param null $Product
      * @return array
      */
-    public static function getOverwritableFieldIdsForProduct($Product = null)
+    public static function getEditableFieldIdsForProduct($Product = null)
     {
-        if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Product) {
-            if ($Product->getAttribute('overwritableVariantFields')) {
-                $overwritable = $Product->getAttribute('overwritableVariantFields');
-                $overwritable = \json_decode($overwritable, true);
+        if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            $Product = $Product->getParent();
+        }
 
-                return $overwritable;
+        if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Product) {
+            if ($Product->getAttribute('editableVariantFields')) {
+                $editable = $Product->getAttribute('editableVariantFields');
+                $editable = \json_decode($editable, true);
+
+                return $editable;
             }
         }
 
-        // global erp overwritable fields
+        // global erp editable fields
         try {
             $Config = QUI::getPackage('quiqqer/products')->getConfig();
         } catch (QUI\Exception $Exception) {
@@ -172,7 +176,7 @@ class Products
             return [];
         }
 
-        $fields = $Config->getSection('overwritableFields');
+        $fields = $Config->getSection('editableFields');
 
         if ($fields) {
             $result = \array_keys($fields);
@@ -188,6 +192,16 @@ class Products
         }, $fields);
 
         return $result;
+    }
+
+    /**
+     * Vererbte felder
+     *
+     * @param null $Product
+     * @todo
+     */
+    public static function getInheritedFieldIdsForProduct($Product = null)
+    {
     }
 
     /**
