@@ -191,37 +191,47 @@ class VariantParent extends AbstractType
     public function getMinimumPrice($User = null)
     {
         $MinPrice = null;
-        $children = $this->getVariants();
 
-        foreach ($children as $Child) {
-            // at frontend, considere only active products
-            if (\defined('QUIQQER_FRONTEND') && QUIQQER_FRONTEND) {
-                if ($Child->isActive() === false) {
-                    continue;
-                }
-            }
+        // kinder ids
+        $children = QUI::getDataBase()->fetch([
+            'select' => ['id', 'parent'],
+            'from'   => Tables::getProductTableName(),
+            'where'  => [
+                'parent' => $this->getId()
+            ]
+        ]);
 
-            try {
-                $Price = $Child->getMinimumPrice($User);
+        $childrenIds = \array_map(function ($variant) {
+            return $variant['id'];
+        }, $children);
 
-                if ($MinPrice === null) {
-                    $MinPrice = $Price;
-                    continue;
-                }
+        // filter
+        $minprices = QUI::getDataBase()->fetch([
+            'select' => 'id, minPrice, active',
+            'from'   => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            'where'  => [
+                'id'       => [
+                    'type'  => 'IN',
+                    'value' => $childrenIds
+                ],
+                'minPrice' => [
+                    'type'  => 'NOT',
+                    'value' => null
+                ],
+                'active'   => 1
+            ],
+            'order'  => 'minPrice ASC',
+            'limit'  => 1
+        ]);
 
-                if ($MinPrice->value() < $Price->value()) {
-                    $MinPrice = $Price;
-                }
-            } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addDebug($Exception->getMessage());
-            }
-        }
-
-        if ($MinPrice === null) {
+        if (empty($minprices)) {
             return parent::getMinimumPrice($User);
         }
 
-        return $MinPrice;
+        return new QUI\ERP\Money\Price(
+            $minprices[0]['minPrice'],
+            $this->getCurrency() ?: QUI\ERP\Currency\Handler::getDefaultCurrency()
+        );
     }
 
     /**
@@ -314,8 +324,8 @@ class VariantParent extends AbstractType
 
         // wir nutzen system user als netto user
         $SystemUser = QUI::getUsers()->getSystemUser();
-        $minPrice   = $this->getMinimumPrice($SystemUser)->value();
-        $maxPrice   = $this->getMaximumPrice($SystemUser)->value();
+        $minPrice   = 0;//$this->getMinimumPrice($SystemUser)->value();
+        $maxPrice   = 0;//$this->getMaximumPrice($SystemUser)->value();
 
         // Dates
         $cDate = $this->getAttribute('c_date');
