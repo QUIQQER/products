@@ -205,7 +205,7 @@
                         </input>
 
                         <input conf="editableFields"
-                               data-qui="package/quiqqer/products/bin/controls/products/variants/EditableFieldSettings"
+                               data-qui="package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldSettings"
                         >
                             <text>
                                 <locale group="quiqqer/products" var="settings.window.products.editableFields"/>

@@ -72,16 +72,16 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
                 page       : 1,
                 serverSort : true,
                 columnModel: [{
-                    header   : 'vererbt',
+                    header   : QUILocale.get(lg, 'inherited'),
                     dataIndex: 'inherited',
                     dataType : 'QUI',
-                    width    : 60,
+                    width    : 80,
                     sortable : false
                 }, {
-                    header   : 'editierbar',
+                    header   : QUILocale.get(lg, 'editable'),
                     dataIndex: 'editable',
                     dataType : 'QUI',
-                    width    : 60,
+                    width    : 80,
                     sortable : false
                 }, {
                     header   : QUILocale.get('quiqqer/system', 'id'),

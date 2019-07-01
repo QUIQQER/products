@@ -58,7 +58,28 @@ class EventHandling
             }
         }
 
+        //default variant fields
+        $editableFields  = [1, 3, 4, 5, 6, 9, 10, 12, 13, 16, 17, 19];
+        $inheritedFields = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16, 17, 18];
 
+        try {
+            $Config = QUI::getPackage('quiqqer/products')->getConfig();
+
+            foreach ($editableFields as $editableField) {
+                $Config->set('editableFields', $editableField, 1);
+            }
+
+            foreach ($inheritedFields as $inheritedField) {
+                $Config->set('inheritedField', $inheritedField, 1);
+            }
+
+            $Config->save();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addWarning($Exception->getMessage());
+        }
+
+
+        // default fields
         $standardFields = [
             // Preis
             [

@@ -1378,16 +1378,22 @@ class Model extends QUI\QDOM
             $type = $productType;
         }
 
+        $title = $this->getFieldValueByLocale(
+            Fields::FIELD_TITLE,
+            $Locale
+        );
+
+        if (empty($title)) {
+            $title = '';
+        }
+
         $data = [
             'type'        => $type,
             'productNo'   => $this->getFieldValueByLocale(
                 Fields::FIELD_PRODUCT_NO,
                 $Locale
             ),
-            'title'       => $this->getFieldValueByLocale(
-                Fields::FIELD_TITLE,
-                $Locale
-            ),
+            'title'       => $title,
             'description' => $this->getFieldValueByLocale(
                 Fields::FIELD_SHORT_DESC,
                 $Locale

@@ -36,7 +36,7 @@ class VariantChild extends AbstractType
     {
         parent::__construct($pid, $product);
 
-        // fields values
+        // inheritance
         $inheritedFields = QUI\ERP\Products\Utils\Products::getInheritedFieldIdsForProduct($this);
         $inheritedFields = \array_flip($inheritedFields);
 
@@ -47,7 +47,7 @@ class VariantChild extends AbstractType
                 continue;
             }
 
-            if (!$Field->isEmpty()) {
+            if (!$this->getField($Field->getId())->isEmpty()) {
                 continue;
             }
 

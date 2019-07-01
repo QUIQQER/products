@@ -222,8 +222,10 @@
             <en><![CDATA[Variants: Find parent article by child article values]]></en>
         </locale>
         <locale name="settings.window.products.findVariantParentByChildValues.description">
-            <de><![CDATA[Wenn in der Suche (Frontend/Backend) nach Werten von Kindartikeln gesucht wird (z.B. Titel, Beschreibung) soll auch der Vaterartikel als Suchergebnis angezeigt werden.]]></de>
-            <en><![CDATA[Parent articles shall be shown in the search results if the search value contains values of child articles (e.g. title, description).]]></en>
+            <de>
+                <![CDATA[Wenn in der Suche (Frontend/Backend) nach Werten von Kindartikeln gesucht wird (z.B. Titel, Beschreibung) soll auch der Vaterartikel als Suchergebnis angezeigt werden.]]></de>
+            <en>
+                <![CDATA[Parent articles shall be shown in the search results if the search value contains values of child articles (e.g. title, description).]]></en>
         </locale>
 
         <locale name="settings.window.fieldsearch.backend.title">
@@ -275,6 +277,14 @@
         <locale name="workingTitle">
             <de><![CDATA[Arbeitstitel]]></de>
             <en><![CDATA[Working title]]></en>
+        </locale>
+        <locale name="inherited">
+            <de><![CDATA[wird vererbt]]></de>
+            <en><![CDATA[is inherited]]></en>
+        </locale>
+        <locale name="editable">
+            <de><![CDATA[editierbar]]></de>
+            <en><![CDATA[editable]]></en>
         </locale>
         <locale name="fieldoptions">
             <de><![CDATA[Feld-Optionen]]></de>
@@ -1732,7 +1742,8 @@
             <en><![CDATA[Variants]]></en>
         </locale>
         <locale name="panel.variants.editable.button.title">
-            <de><![CDATA[Editierbare Felder für Varianten festlegen. Diese Felder sind von der Variante editierbar.]]></de>
+            <de>
+                <![CDATA[Editierbare Felder für Varianten festlegen. Diese Felder sind von der Variante editierbar.]]></de>
             <en><![CDATA[Define editable Fields for Variants. These fields can be edited by the variant.]]></en>
         </locale>
 

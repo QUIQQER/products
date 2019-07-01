@@ -2,11 +2,11 @@
  * @module package/quiqqer/products/bin/controls/products/variants/EditableFieldSettings
  * @author www.pcsg.de (Henning Leutz)
  */
-define('package/quiqqer/products/bin/controls/products/variants/EditableFieldSettings', [
+define('package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldSettings', [
 
     'qui/QUI',
     'qui/controls/Control',
-    'package/quiqqer/products/bin/controls/products/variants/EditableFieldList',
+    'package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldList',
     'Locale',
     'Ajax'
 
@@ -16,7 +16,7 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableFieldSet
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/products/variants/EditableFieldSettings',
+        Type   : 'package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldSettings',
 
         Binds: [
             '$onImport'
@@ -73,11 +73,10 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableFieldSet
             var self = this;
 
             return new Promise(function (resolve) {
-                var fields = self.$List.getEditableFields();
-
-                QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveEditableERPFields', resolve, {
+                QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveEditableInheritedERPFields', resolve, {
                     'package': 'quiqqer/products',
-                    fields   : JSON.encode(fields)
+                    editable : JSON.encode(self.$List.getEditableFields()),
+                    inherited: JSON.encode(self.$List.getInheritedFields())
                 });
             });
         }
