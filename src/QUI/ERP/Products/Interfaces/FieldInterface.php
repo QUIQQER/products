@@ -20,6 +20,13 @@ interface FieldInterface extends UniqueFieldInterface
     public function toProductArray();
 
     /**
+     * Is the field empty?
+     *
+     * @return bool
+     */
+    public function isEmpty();
+
+    /**
      * Set the field name
      *
      * @param mixed $value

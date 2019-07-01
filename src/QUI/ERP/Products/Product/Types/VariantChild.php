@@ -6,7 +6,6 @@
 
 namespace QUI\ERP\Products\Product\Types;
 
-use function GuzzleHttp\Promise\queue;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
@@ -48,12 +47,7 @@ class VariantChild extends AbstractType
                 continue;
             }
 
-            /* @var $Field QUI\ERP\Products\Field\Field */
-            if ($Field->getType() === Fields::TYPE_ATTRIBUTES) {
-                continue;
-            }
-
-            if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST) {
+            if (!$Field->isEmpty()()) {
                 continue;
             }
 
