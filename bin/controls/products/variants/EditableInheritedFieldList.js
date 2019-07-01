@@ -36,8 +36,8 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
 
             this.$Grid = null;
 
-            this.$editable  = null;
-            this.$inherited = null;
+            this.$editable  = [];
+            this.$inherited = [];
 
             this.addEvents({
                 onInject: this.$onInject

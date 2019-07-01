@@ -784,6 +784,8 @@ class Products
         return self::$Locale;
     }
 
+    //region editable
+
     /**
      * Return the global overwriteable variant fields
      *
@@ -820,6 +822,30 @@ class Products
 
         return $result;
     }
+
+    /**
+     * Set global editable variant fields
+     *
+     * @param array $fieldIds
+     *
+     * @throws QUI\Exception
+     */
+    public static function setGlobalEditableVariantFields(array $fieldIds)
+    {
+        $Config = QUI::getPackage('quiqqer/products')->getConfig();
+        $Config->setSection('editableFields', []);
+
+        foreach ($fieldIds as $field) {
+            $Config->setValue('editableFields', $field, 1);
+        }
+
+        $Config->save();
+    }
+
+    //endregion
+
+    //region inherited
+
 
     /**
      * Return the global inherited variant fields
@@ -859,23 +885,27 @@ class Products
     }
 
     /**
-     * Set global editable variant fields
+     * Set global inherited variant fields
      *
      * @param array $fieldIds
      *
      * @throws QUI\Exception
      */
-    public static function setGlobalEditableVariantFields(array $fieldIds)
+    public static function setGlobalInheritedVariantFields(array $fieldIds)
     {
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
-        $Config->setSection('editableFields', []);
+        $Config->setSection('inheritedFields', []);
 
         foreach ($fieldIds as $field) {
-            $Config->setValue('editableFields', $field, 1);
+            $Config->setValue('inheritedFields', $field, 1);
         }
 
         $Config->save();
     }
+
+    //endregion
+
+    //region cache writing flags
 
     /**
      * ENABLE: Write product data to database when a product is saved
@@ -948,4 +978,6 @@ class Products
     {
         self::$updateProductSearchCache = false;
     }
+
+    //endregion
 }

@@ -12,8 +12,10 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Products;
-use QUI\Projects\Media\Utils as MediaUtils;
+use QUI\ERP\Products\Utils\Products as ProductUtils;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
+
+use QUI\Projects\Media\Utils as MediaUtils;
 
 /**
  * Class Controller
@@ -216,6 +218,13 @@ class Model extends QUI\QDOM
             $this->setAttribute(
                 'editableVariantFields',
                 \json_decode($product['editableVariantFields'], true)
+            );
+        }
+
+        if (!empty($product['inheritedVariantFields']) && \is_string($product['inheritedVariantFields'])) {
+            $this->setAttribute(
+                'inheritedVariantFields',
+                \json_decode($product['inheritedVariantFields'], true)
             );
         }
 
@@ -675,7 +684,7 @@ class Model extends QUI\QDOM
      */
     public function getPrice($User = null)
     {
-        return QUI\ERP\Products\Utils\Products::getPriceFieldForProduct($this, $User);
+        return ProductUtils::getPriceFieldForProduct($this, $User);
     }
 
     /**
@@ -995,9 +1004,14 @@ class Model extends QUI\QDOM
         $this->getField(Fields::FIELD_URL)->setValue($urls);
 
         // if variant child
-        // -> nicht vererbte felder speichern
-        // @todo
+        // only save non inherited fields
         if ($this instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            $inheritedFields = ProductUtils::getInheritedFieldIdsForProduct($this);
+            $inheritedFields = \array_flip($inheritedFields);
+
+            $fieldData = \array_filter($fieldData, function ($field) use ($inheritedFields) {
+                return isset($inheritedFields[$field['id']]);
+            });
         }
 
         // check url
@@ -1092,7 +1106,7 @@ class Model extends QUI\QDOM
             $urls = $urlField[0]['value'];
         }
 
-        QUI\ERP\Products\Utils\Products::checkUrlByUrlFieldValue(
+        ProductUtils::checkUrlByUrlFieldValue(
             $urls,
             $this->getCategory()->getId(),
             $this->getId()

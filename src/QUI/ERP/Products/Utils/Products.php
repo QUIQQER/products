@@ -164,7 +164,10 @@ class Products
         if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Product) {
             if ($Product->getAttribute('editableVariantFields')) {
                 $editable = $Product->getAttribute('editableVariantFields');
-                $editable = \json_decode($editable, true);
+
+                if (is_string($editable)) {
+                    $editable = \json_decode($editable, true);
+                }
 
                 return $editable;
             }
@@ -212,7 +215,10 @@ class Products
         if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Product) {
             if ($Product->getAttribute('inheritedVariantFields')) {
                 $inherited = $Product->getAttribute('inheritedVariantFields');
-                $inherited = \json_decode($inherited, true);
+
+                if (is_string($inherited)) {
+                    $inherited = \json_decode($inherited, true);
+                }
 
                 return $inherited;
             }
