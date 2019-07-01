@@ -348,6 +348,22 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Get data for a product SelectItem
+         *
+         * @param {Number} productId
+         * @return {Promise}
+         */
+        getDataForSelectItem: function (productId) {
+            return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_products_getDataForSelectItem', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    productId: productId
+                });
+            });
+        },
+
+        /**
          * Opens a product panel
          *
          * @param {number} productId

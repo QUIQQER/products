@@ -83,10 +83,10 @@ define('package/quiqqer/products/bin/controls/products/SelectItem', [
                 return Promise.resolve();
             }
 
-            Products.getChild(
+            Products.getDataForSelectItem(
                 this.getAttribute('id')
             ).then(function (data) {
-                self.$Text.set('html', data.title);
+                self.$Text.set('html', '#'+data.id + ' - ' + data.articleNo + ' - ' + data.title);
             }).catch(function () {
                 self.$Icon.removeClass('fa-shopping-bag');
                 self.$Icon.addClass('fa-bolt');
