@@ -106,24 +106,39 @@ class VariantParent extends AbstractType
     {
         QUI\Permissions\Permission::checkPermission('product.edit');
 
-        $fields = $this->getAttribute('overwritableVariantFields');
-        $data   = [];
+        $editableAttribute  = $this->getAttribute('editableVariantFields');
+        $inheritedAttribute = $this->getAttribute('inheritedVariantFields');
 
-        if (\is_array($fields)) {
-            $overwritable = [];
+        $data = [];
+
+        if (\is_array($editableAttribute)) {
+            $editable = [];
 
             // check if fields exists
-            foreach ($fields as $fieldId) {
+            foreach ($editableAttribute as $fieldId) {
                 try {
-                    $overwritable[] = FieldHandler::getField($fieldId)->getId();
+                    $editable[] = FieldHandler::getField($fieldId)->getId();
                 } catch (QUI\Exception $Exception) {
                     QUI\System\Log::writeDebugException($Exception);
                 }
             }
 
-            $data = [
-                'overwritableVariantFields' => \json_encode($overwritable)
-            ];
+            $data['editableVariantFields'] = \json_encode($editable);
+        }
+
+        if (\is_array($inheritedAttribute)) {
+            $inherited = [];
+
+            // check if fields exists
+            foreach ($inheritedAttribute as $fieldId) {
+                try {
+                    $inherited[] = FieldHandler::getField($fieldId)->getId();
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::writeDebugException($Exception);
+                }
+            }
+
+            $data['inheritedVariantFields'] = \json_encode($inherited);
         }
 
         if ($this->getDefaultVariantId()) {

@@ -82,8 +82,8 @@ QUI::$Ajax->registerFunction(
             }
 
             $attributes = [
-                'id'             => $entry['id'],
-                'active'         => $entry['active'],
+                'id'             => (int)$entry['id'],
+                'active'         => (int)$entry['active'],
                 'productNo'      => $entry['productNo'],
                 'fields'         => $fields,
                 'defaultVariant' => $defaultVariantId === (int)$entry['id'] ? 1 : 0,

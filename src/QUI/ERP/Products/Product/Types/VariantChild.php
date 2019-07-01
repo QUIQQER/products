@@ -6,7 +6,6 @@
 
 namespace QUI\ERP\Products\Product\Types;
 
-use function GuzzleHttp\Promise\queue;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
@@ -38,22 +37,17 @@ class VariantChild extends AbstractType
         parent::__construct($pid, $product);
 
         // fields values
-        $overwritableFields = QUI\ERP\Products\Utils\Products::getOverwritableFieldIdsForProduct($this);
-        $overwritableFields = \array_flip($overwritableFields);
+        $inheritedFields = QUI\ERP\Products\Utils\Products::getInheritedFieldIdsForProduct($this);
+        $inheritedFields = \array_flip($inheritedFields);
 
         $fields = $this->getParent()->getFields();
 
         foreach ($fields as $Field) {
-            if (!isset($overwritableFields[$Field->getId()])) {
+            if (!isset($inheritedFields[$Field->getId()])) {
                 continue;
             }
 
-            /* @var $Field QUI\ERP\Products\Field\Field */
-            if ($Field->getType() === Fields::TYPE_ATTRIBUTES) {
-                continue;
-            }
-
-            if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST) {
+            if (!$Field->isEmpty()) {
                 continue;
             }
 

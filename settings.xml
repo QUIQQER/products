@@ -57,7 +57,7 @@
                     <defaultvalue>0</defaultvalue>
                 </conf>
             </section>
-            <section name="overwritableFields"/>
+            <section name="editableFields"/>
         </config>
 
         <window name="ERP">
@@ -195,7 +195,8 @@
 
                         <input conf="variants.findVariantParentByChildValues" type="checkbox">
                             <text>
-                                <locale group="quiqqer/products" var="settings.window.products.findVariantParentByChildValues"/>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.findVariantParentByChildValues"/>
                             </text>
                             <description>
                                 <locale group="quiqqer/products"
@@ -203,11 +204,11 @@
                             </description>
                         </input>
 
-                        <input conf="overwritableFields"
-                               data-qui="package/quiqqer/products/bin/controls/products/variants/OverwritableFieldSettings"
+                        <input conf="editableFields"
+                               data-qui="package/quiqqer/products/bin/controls/products/variants/EditableFieldSettings"
                         >
                             <text>
-                                <locale group="quiqqer/products" var="settings.window.products.overwritableFields"/>
+                                <locale group="quiqqer/products" var="settings.window.products.editableFields"/>
                             </text>
                         </input>
                     </settings>

@@ -784,12 +784,14 @@ class Products
         return self::$Locale;
     }
 
+    //region editable
+
     /**
      * Return the global overwriteable variant fields
      *
      * @return QUI\ERP\Products\Field\Field[]
      */
-    public static function getGlobalOverwritableVariantFields()
+    public static function getGlobalEditableVariantFields()
     {
         try {
             $Config = QUI::getPackage('quiqqer/products')->getConfig();
@@ -800,7 +802,7 @@ class Products
         }
 
         $result = [];
-        $fields = $Config->getSection('overwritableFields');
+        $fields = $Config->getSection('editableFields');
 
         if (empty($fields)) {
             return [];
@@ -822,23 +824,88 @@ class Products
     }
 
     /**
-     * Set global overwritable variant fields
+     * Set global editable variant fields
      *
      * @param array $fieldIds
      *
      * @throws QUI\Exception
      */
-    public static function setGlobalOverwritableVariantFields(array $fieldIds)
+    public static function setGlobalEditableVariantFields(array $fieldIds)
     {
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
-        $Config->setSection('overwritableFields', []);
+        $Config->setSection('editableFields', []);
 
         foreach ($fieldIds as $field) {
-            $Config->setValue('overwritableFields', $field, 1);
+            $Config->setValue('editableFields', $field, 1);
         }
 
         $Config->save();
     }
+
+    //endregion
+
+    //region inherited
+
+
+    /**
+     * Return the global inherited variant fields
+     *
+     * @return QUI\ERP\Products\Field\Field[]
+     */
+    public static function getGlobalInheritedVariantFields()
+    {
+        try {
+            $Config = QUI::getPackage('quiqqer/products')->getConfig();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+
+            return [];
+        }
+
+        $result = [];
+        $fields = $Config->getSection('inheritedFields');
+
+        if (empty($fields)) {
+            return [];
+        }
+
+        foreach ($fields as $fieldId => $active) {
+            if (empty($active)) {
+                continue;
+            }
+
+            try {
+                $result[] = Fields::getField($fieldId);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception->getMessage());
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Set global inherited variant fields
+     *
+     * @param array $fieldIds
+     *
+     * @throws QUI\Exception
+     */
+    public static function setGlobalInheritedVariantFields(array $fieldIds)
+    {
+        $Config = QUI::getPackage('quiqqer/products')->getConfig();
+        $Config->setSection('inheritedFields', []);
+
+        foreach ($fieldIds as $field) {
+            $Config->setValue('inheritedFields', $field, 1);
+        }
+
+        $Config->save();
+    }
+
+    //endregion
+
+    //region cache writing flags
 
     /**
      * ENABLE: Write product data to database when a product is saved
@@ -911,4 +978,6 @@ class Products
     {
         self::$updateProductSearchCache = false;
     }
+
+    //endregion
 }

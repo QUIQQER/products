@@ -205,7 +205,7 @@
             This means that each variant has a unique URL.
             ]]></en>
         </locale>
-        <locale name="settings.window.products.overwritableFields">
+        <locale name="settings.window.products.editableFields">
             <de><![CDATA[Editierbare Varianten Felder]]></de>
             <en><![CDATA[Editable Variants Fields]]></en>
         </locale>
@@ -1622,11 +1622,11 @@
             <en><![CDATA[Use default]]]></en>
         </locale>
 
-        <locale name="variants.OverwritableFieldList.window.title">
+        <locale name="variants.EditableFieldList.window.title">
             <de><![CDATA[Editierbare Produktfelder]]></de>
             <en><![CDATA[Editable product fields]]></en>
         </locale>
-        <locale name="variants.OverwritableFieldList.window.description">
+        <locale name="variants.EditableFieldList.window.description">
             <de><![CDATA[
             Lege fest welche Felder von den Varianten editiert werden können.
             Alle Felder welche nicht von den Varianten editiert werden können, werden von dem Eltern-Produkt übernommen.
@@ -1731,7 +1731,7 @@
             <de><![CDATA[Varianten]]></de>
             <en><![CDATA[Variants]]></en>
         </locale>
-        <locale name="panel.variants.overwritable.button.title">
+        <locale name="panel.variants.editable.button.title">
             <de><![CDATA[Editierbare Felder für Varianten festlegen. Diese Felder sind von der Variante editierbar.]]></de>
             <en><![CDATA[Define editable Fields for Variants. These fields can be edited by the variant.]]></en>
         </locale>

@@ -87,9 +87,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 }
             });
 
-            this.$overwritableFields = {};
-            this.$CurrentVariant     = null;
-            this.$VariantTabBar      = null;
+            this.$editableFields = {};
+            this.$CurrentVariant = null;
+            this.$VariantTabBar  = null;
 
             // panel extra buttons
             this.$VariantFields     = null;
@@ -167,7 +167,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 self.addButton({
                     name  : 'variantFields',
-                    title : QUILocale.get(lg, 'panel.variants.overwritable.button.title'),
+                    title : QUILocale.get(lg, 'panel.variants.editable.button.title'),
                     icon  : 'fa fa-exchange',
                     events: {
                         click: self.openVariantAttributeSettings
@@ -278,12 +278,16 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return Promise.all([
                     self.$CurrentVariant.getCategories(),
                     self.$CurrentVariant.getCategory(),
-                    self.$CurrentVariant.getFields()
+                    self.$CurrentVariant.getFields(),
+                    self.$CurrentVariant.getEditableFields()
                 ]);
             }).then(function (result) {
                 var categories = result[0];
                 var category   = result[1];
                 var fieldsList = result[2];
+                var editable   = result[3];
+
+                var editableFields = editable.editable;
 
                 // parse fields to ajax field array
                 var i, len, entry;
@@ -291,6 +295,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 for (i = 0, len = fieldsList.length; i < len; i++) {
                     entry = fieldsList[i];
+
+                    if (editableFields.indexOf(entry.id) === -1) {
+                        continue;
+                    }
 
                     fields['field-' + entry.id] = entry.value;
                 }
@@ -369,7 +377,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             return Promise.all([
                 this.$hideCategories(),
-                this.refreshProductOverwritableFields(),
+                this.refreshProductEditableFields(),
                 this.$Product.getVariantFields()
             ]).then(function (result) {
                 var VariantSheet = Body.getElement('.variants-sheet');
@@ -657,7 +665,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     fields['field-' + variantFields[i].id] = variantFields[i].id;
                 }
 
-
                 // build grid data
                 for (i = 0, len = variants.length; i < len; i++) {
                     entry   = {};
@@ -720,22 +727,22 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         },
 
         /**
-         * Refresh the overwritable field list of the parent product
+         * Refresh the editable field list of the parent product
          *
          * @return {Promise}
          */
-        refreshProductOverwritableFields: function () {
+        refreshProductEditableFields: function () {
             var self = this;
 
-            return this.$Product.getOverwritableFields().then(function (result) {
+            return this.$Product.getEditableFields().then(function (result) {
                 // parse fields
-                var of  = result.overwritable,
+                var of  = result.editable,
                     len = of.length;
 
-                self.$overwritableFields = {};
+                self.$editableFields = {};
 
                 for (var i = 0; i < len; i++) {
-                    self.$overwritableFields[of[i]] = true;
+                    self.$editableFields[of[i]] = true;
                 }
             });
         },
@@ -750,7 +757,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             return new Promise(function (resolve) {
                 require([
-                    'package/quiqqer/products/bin/controls/products/variants/OverwritableFieldListWindow'
+                    'package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldListWindow'
                 ], function (Window) {
                     new Window({
                         productId: self.getAttribute('productId'),
@@ -766,7 +773,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                                 self.Loader.show();
                                 self.$CurrentVariant = null;
 
-                                self.refreshProductOverwritableFields().then(function () {
+                                self.refreshProductEditableFields().then(function () {
                                     return self.selectVariant(variantId);
                                 }).then(function () {
                                     self.Loader.hide();
@@ -909,9 +916,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         continue;
                     }
 
-                    // only if field is overwritable
+                    // only if field is editable
                     if (fieldId &&
-                        (typeof self.$overwritableFields[fieldId] !== 'undefined' || !self.$overwritableFields[fieldId])) {
+                        (typeof self.$editableFields[fieldId] !== 'undefined' || !self.$editableFields[fieldId])) {
                         continue;
                     }
 
@@ -1251,8 +1258,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 el.disabled = true;
                 el.getParent('tr').addClass('variant-field-disabled');
 
-                // disable fields if not overwritable
-                self.$renderOverwritableFields(
+                // disable fields if not editable
+                self.$renderEditableFields(
                     VariantBody.getElement('form')
                 );
 
@@ -1261,12 +1268,12 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         },
 
         /**
-         * Checks if the field is overwritable
+         * Checks if the field is editable
          * render the status for these fields, hide or show fields
          *
          * @param Form
          */
-        $renderOverwritableFields: function (Form) {
+        $renderEditableFields: function (Form) {
             var el;
 
             // disable all fields
@@ -1292,7 +1299,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 }
             });
 
-            var of = this.$overwritableFields;
+            var of = this.$editableFields;
 
             for (var fieldId in of) {
                 if (!of.hasOwnProperty(fieldId)) {
@@ -1332,7 +1339,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             }).then(function () {
                 var VariantBody = self.getBody().getElement('.variant-body');
 
-                self.$renderOverwritableFields(
+                self.$renderEditableFields(
                     VariantBody.getElement('form')
                 );
 
