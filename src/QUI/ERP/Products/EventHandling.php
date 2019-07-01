@@ -70,7 +70,7 @@ class EventHandling
             }
 
             foreach ($inheritedFields as $inheritedField) {
-                $Config->set('inheritedField', $inheritedField, 1);
+                $Config->set('inheritedFields', $inheritedField, 1);
             }
 
             $Config->save();
