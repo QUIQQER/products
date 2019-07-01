@@ -183,6 +183,64 @@ class VariantParent extends AbstractType
     }
 
     /**
+     * Return the maximum price
+     *
+     * @param null $User
+     * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Exception
+     */
+    public function getMaximumPrice($User = null)
+    {
+        $MaxPrice = null;
+
+        // kinder ids
+        $children = QUI::getDataBase()->fetch([
+            'select' => ['id', 'parent'],
+            'from'   => Tables::getProductTableName(),
+            'where'  => [
+                'parent' => $this->getId()
+            ]
+        ]);
+
+        $childrenIds = \array_map(function ($variant) {
+            return $variant['id'];
+        }, $children);
+
+        $maxPrices = false;
+
+        // filter
+        if (!empty($childrenIds)) {
+            $maxPrices = QUI::getDataBase()->fetch([
+                'select' => 'id, maxPrice, active',
+                'from'   => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+                'where'  => [
+                    'id'       => [
+                        'type'  => 'IN',
+                        'value' => $childrenIds
+                    ],
+                    'maxPrice' => [
+                        'type'  => 'NOT',
+                        'value' => null
+                    ],
+                    'active'   => 1
+                ],
+                'order'  => 'maxPrice DESC',
+                'limit'  => 1
+            ]);
+        }
+
+        if (empty($maxPrices)) {
+            return parent::getMaximumPrice($User);
+        }
+
+        return new QUI\ERP\Money\Price(
+            $maxPrices[0]['maxPrice'],
+            $this->getCurrency() ?: QUI\ERP\Currency\Handler::getDefaultCurrency()
+        );
+    }
+
+    /**
      * @param null $User
      * @return QUI\ERP\Money\Price|void
      *
@@ -206,23 +264,27 @@ class VariantParent extends AbstractType
         }, $children);
 
         // filter
-        $minprices = QUI::getDataBase()->fetch([
-            'select' => 'id, minPrice, active',
-            'from'   => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            'where'  => [
-                'id'       => [
-                    'type'  => 'IN',
-                    'value' => $childrenIds
+        $minprices = false;
+
+        if (!empty($childrenIds)) {
+            $minprices = QUI::getDataBase()->fetch([
+                'select' => 'id, minPrice, active',
+                'from'   => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+                'where'  => [
+                    'id'       => [
+                        'type'  => 'IN',
+                        'value' => $childrenIds
+                    ],
+                    'minPrice' => [
+                        'type'  => 'NOT',
+                        'value' => null
+                    ],
+                    'active'   => 1
                 ],
-                'minPrice' => [
-                    'type'  => 'NOT',
-                    'value' => null
-                ],
-                'active'   => 1
-            ],
-            'order'  => 'minPrice ASC',
-            'limit'  => 1
-        ]);
+                'order'  => 'minPrice ASC',
+                'limit'  => 1
+            ]);
+        }
 
         if (empty($minprices)) {
             return parent::getMinimumPrice($User);
@@ -311,221 +373,221 @@ class VariantParent extends AbstractType
         }
     }
 
-    /**
-     * Write cache entry for product for specific language
-     *
-     * @param string $lang
-     * @throws QUI\Exception
-     */
-    protected function writeCacheEntry($lang)
-    {
-        $Locale = new QUI\Locale();
-        $Locale->setCurrent($lang);
-
-        // wir nutzen system user als netto user
-        $SystemUser = QUI::getUsers()->getSystemUser();
-        $minPrice   = 0;//$this->getMinimumPrice($SystemUser)->value();
-        $maxPrice   = 0;//$this->getMaximumPrice($SystemUser)->value();
-
-        // Dates
-        $cDate = $this->getAttribute('c_date');
-
-        if (empty($cDate) || $cDate === '0000-00-00 00:00:00') {
-            $cDate = date('Y-m-d H:i:s');
-        }
-
-        $eDate = $this->getAttribute('e_date');
-
-        if (empty($eDate) || $eDate === '0000-00-00 00:00:00') {
-            $eDate = date('Y-m-d H:i:s');
-        }
-
-        // type
-        $type         = QUI\ERP\Products\Product\Types\Product::class;
-        $productType  = $this->getAttribute('type');
-        $ProductTypes = QUI\ERP\Products\Utils\ProductTypes::getInstance();
-
-        if ($ProductTypes->exists($productType)) {
-            $type = $productType;
-        }
-
-        $data = [
-            'type'        => $type,
-            'productNo'   => $this->getFieldValueByLocale(
-                FieldHandler::FIELD_PRODUCT_NO,
-                $Locale
-            ),
-            'title'       => $this->getFieldValueByLocale(
-                FieldHandler::FIELD_TITLE,
-                $Locale
-            ),
-            'description' => $this->getFieldValueByLocale(
-                FieldHandler::FIELD_SHORT_DESC,
-                $Locale
-            ),
-            'active'      => $this->isActive() ? 1 : 0,
-            'minPrice'    => $minPrice ? $minPrice : 0,
-            'maxPrice'    => $maxPrice ? $maxPrice : 0,
-            'c_date'      => $cDate,
-            'e_date'      => $eDate
-        ];
-
-        // permissions
-        $permissions     = $this->getPermissions();
-        $viewPermissions = null;
-
-        if (isset($permissions['permission.viewable']) && !empty($permissions['permission.viewable'])) {
-            $viewPermissions = ','.$permissions['permission.viewable'].',';
-        }
-
-        $data['viewUsersGroups'] = $viewPermissions;
-
-        // get all categories
-        $categories = $this->getCategories();
-
-        if (!empty($categories)) {
-            $catIds = [];
-
-            /** @var QUI\ERP\Products\Category\Category $Category */
-            foreach ($categories as $Category) {
-                $catIds[] = $Category->getId();
-            }
-
-            $data['category'] = ','.\implode(',', $catIds).',';
-        } else {
-            $data['category'] = null;
-        }
-
-        // VariantParent fields
-        $fields       = $this->getFields();
-        $searchFields = [];
-
-        /** @var QUI\ERP\Products\Field\Field $Field */
-        foreach ($fields as $Field) {
-            if (!$Field->isSearchable()) {
-                continue;
-            }
-
-            $columnType = mb_strtolower($Field->getColumnType());
-
-            if (mb_strpos($columnType, 'text') === false
-                && mb_strpos($columnType, 'char') === false) {
-                continue;
-            }
-
-            $fieldColumnName = SearchHandler::getSearchFieldColumnName($Field);
-            $searchValue     = $Field->getSearchCacheValue($Locale);
-
-            $data[$fieldColumnName] = $searchValue;
-
-            if ($Field->getId() == FieldHandler::FIELD_PRIORITY
-                && empty($data[$fieldColumnName])
-            ) {
-                // in 10 Jahren darf mor das fixen xD
-                // null und 0 wird als letztes angezeigt
-                $data[$fieldColumnName] = 999999;
-            }
-
-            $searchFields[$Field->getId()] = [
-                'column' => $fieldColumnName,
-                'values' => [
-                    $searchValue => true
-                ]
-            ];
-        }
-
-        // Field values of all VariantChildren
-        /**
-         * If the VariantParent shall also be found when searching for values of its VariantChildren
-         * the search cache entries have to include all child values as well.
-         */
-        if (QUI::getPackage('quiqqer/products')->getConfig()->get('variants', 'findVariantParentByChildValues')) {
-            $result = QUI::getDataBase()->fetch([
-                'select' => ['id', 'fieldData'],
-                'from'   => QUI\ERP\Products\Utils\Tables::getProductTableName(),
-                'where'  => [
-                    'parent' => $this->getId(),
-                    'active' => 1
-                ]
-            ]);
-
-            foreach ($result as $row) {
-                $fields = json_decode($row['fieldData'], true);
-
-                foreach ($fields as $fieldData) {
-                    $fieldId = $fieldData['id'];
-                    $value   = $fieldData['value'];
-
-                    // Only parse children fields that are put in the search table
-                    if (!isset($searchFields[$fieldId])) {
-                        continue;
-                    }
-
-                    $fieldColumnName = $searchFields[$fieldId]['column'];
-                    $Field           = FieldHandler::getField($fieldId);
-
-                    // Only parse children fields that have a non-numeric (i.e. textual) search cache value
-                    switch ($Field->getSearchType()) {
-                        case SearchHandler::SEARCHDATATYPE_NUMERIC:
-                            continue 2;
-                            break;
-                    }
-
-                    $Field->setValue($value);
-
-                    $searchValue = $Field->getSearchCacheValue($Locale);
-
-                    // Do not add duplicate search cache values
-                    if (isset($searchFields[$fieldId]['values'][$searchValue])) {
-                        continue;
-                    }
-
-                    $data[$fieldColumnName] .= ' '.$searchValue;
-
-                    $searchFields[$fieldId]['values'][$searchValue] = true;
-                }
-            }
-        }
-
-        // Prepare data for INSERT
-        foreach ($data as $k => $v) {
-            if (\is_array($v)) {
-                $data[$k] = \json_encode($v);
-            } elseif (\is_string($v)) {
-                $data[$k] = trim($v);
-            }
-        }
-
-        // test if cache entry exists first
-        $result = QUI::getDataBase()->fetch([
-            'from'  => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            'where' => [
-                'id'   => $this->getId(),
-                'lang' => $lang
-            ]
-        ]);
-
-        if (empty($result)) {
-            $data['id']   = $this->id;
-            $data['lang'] = $lang;
-
-            QUI::getDataBase()->insert(
-                QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-                $data
-            );
-
-            return;
-        }
-
-        QUI::getDataBase()->update(
-            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-            $data,
-            [
-                'id'   => $this->getId(),
-                'lang' => $lang
-            ]
-        );
-    }
+//    /**
+//     * Write cache entry for product for specific language
+//     *
+//     * @param string $lang
+//     * @throws QUI\Exception
+//     */
+//    protected function writeCacheEntry($lang)
+//    {
+//        $Locale = new QUI\Locale();
+//        $Locale->setCurrent($lang);
+//
+//        // wir nutzen system user als netto user
+//        $SystemUser = QUI::getUsers()->getSystemUser();
+//        $minPrice   = 0;//$this->getMinimumPrice($SystemUser)->value();
+//        $maxPrice   = 0;//$this->getMaximumPrice($SystemUser)->value();
+//
+//        // Dates
+//        $cDate = $this->getAttribute('c_date');
+//
+//        if (empty($cDate) || $cDate === '0000-00-00 00:00:00') {
+//            $cDate = date('Y-m-d H:i:s');
+//        }
+//
+//        $eDate = $this->getAttribute('e_date');
+//
+//        if (empty($eDate) || $eDate === '0000-00-00 00:00:00') {
+//            $eDate = date('Y-m-d H:i:s');
+//        }
+//
+//        // type
+//        $type         = QUI\ERP\Products\Product\Types\Product::class;
+//        $productType  = $this->getAttribute('type');
+//        $ProductTypes = QUI\ERP\Products\Utils\ProductTypes::getInstance();
+//
+//        if ($ProductTypes->exists($productType)) {
+//            $type = $productType;
+//        }
+//
+//        $data = [
+//            'type'        => $type,
+//            'productNo'   => $this->getFieldValueByLocale(
+//                FieldHandler::FIELD_PRODUCT_NO,
+//                $Locale
+//            ),
+//            'title'       => $this->getFieldValueByLocale(
+//                FieldHandler::FIELD_TITLE,
+//                $Locale
+//            ),
+//            'description' => $this->getFieldValueByLocale(
+//                FieldHandler::FIELD_SHORT_DESC,
+//                $Locale
+//            ),
+//            'active'      => $this->isActive() ? 1 : 0,
+//            'minPrice'    => $minPrice ? $minPrice : 0,
+//            'maxPrice'    => $maxPrice ? $maxPrice : 0,
+//            'c_date'      => $cDate,
+//            'e_date'      => $eDate
+//        ];
+//
+//        // permissions
+//        $permissions     = $this->getPermissions();
+//        $viewPermissions = null;
+//
+//        if (isset($permissions['permission.viewable']) && !empty($permissions['permission.viewable'])) {
+//            $viewPermissions = ','.$permissions['permission.viewable'].',';
+//        }
+//
+//        $data['viewUsersGroups'] = $viewPermissions;
+//
+//        // get all categories
+//        $categories = $this->getCategories();
+//
+//        if (!empty($categories)) {
+//            $catIds = [];
+//
+//            /** @var QUI\ERP\Products\Category\Category $Category */
+//            foreach ($categories as $Category) {
+//                $catIds[] = $Category->getId();
+//            }
+//
+//            $data['category'] = ','.\implode(',', $catIds).',';
+//        } else {
+//            $data['category'] = null;
+//        }
+//
+//        // VariantParent fields
+//        $fields       = $this->getFields();
+//        $searchFields = [];
+//
+//        /** @var QUI\ERP\Products\Field\Field $Field */
+//        foreach ($fields as $Field) {
+//            if (!$Field->isSearchable()) {
+//                continue;
+//            }
+//
+//            $columnType = mb_strtolower($Field->getColumnType());
+//
+//            if (mb_strpos($columnType, 'text') === false
+//                && mb_strpos($columnType, 'char') === false) {
+//                continue;
+//            }
+//
+//            $fieldColumnName = SearchHandler::getSearchFieldColumnName($Field);
+//            $searchValue     = $Field->getSearchCacheValue($Locale);
+//
+//            $data[$fieldColumnName] = $searchValue;
+//
+//            if ($Field->getId() == FieldHandler::FIELD_PRIORITY
+//                && empty($data[$fieldColumnName])
+//            ) {
+//                // in 10 Jahren darf mor das fixen xD
+//                // null und 0 wird als letztes angezeigt
+//                $data[$fieldColumnName] = 999999;
+//            }
+//
+//            $searchFields[$Field->getId()] = [
+//                'column' => $fieldColumnName,
+//                'values' => [
+//                    $searchValue => true
+//                ]
+//            ];
+//        }
+//
+//        // Field values of all VariantChildren
+//        /**
+//         * If the VariantParent shall also be found when searching for values of its VariantChildren
+//         * the search cache entries have to include all child values as well.
+//         */
+//        if (QUI::getPackage('quiqqer/products')->getConfig()->get('variants', 'findVariantParentByChildValues')) {
+//            $result = QUI::getDataBase()->fetch([
+//                'select' => ['id', 'fieldData'],
+//                'from'   => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+//                'where'  => [
+//                    'parent' => $this->getId(),
+//                    'active' => 1
+//                ]
+//            ]);
+//
+//            foreach ($result as $row) {
+//                $fields = json_decode($row['fieldData'], true);
+//
+//                foreach ($fields as $fieldData) {
+//                    $fieldId = $fieldData['id'];
+//                    $value   = $fieldData['value'];
+//
+//                    // Only parse children fields that are put in the search table
+//                    if (!isset($searchFields[$fieldId])) {
+//                        continue;
+//                    }
+//
+//                    $fieldColumnName = $searchFields[$fieldId]['column'];
+//                    $Field           = FieldHandler::getField($fieldId);
+//
+//                    // Only parse children fields that have a non-numeric (i.e. textual) search cache value
+//                    switch ($Field->getSearchType()) {
+//                        case SearchHandler::SEARCHDATATYPE_NUMERIC:
+//                            continue 2;
+//                            break;
+//                    }
+//
+//                    $Field->setValue($value);
+//
+//                    $searchValue = $Field->getSearchCacheValue($Locale);
+//
+//                    // Do not add duplicate search cache values
+//                    if (isset($searchFields[$fieldId]['values'][$searchValue])) {
+//                        continue;
+//                    }
+//
+//                    $data[$fieldColumnName] .= ' '.$searchValue;
+//
+//                    $searchFields[$fieldId]['values'][$searchValue] = true;
+//                }
+//            }
+//        }
+//
+//        // Prepare data for INSERT
+//        foreach ($data as $k => $v) {
+//            if (\is_array($v)) {
+//                $data[$k] = \json_encode($v);
+//            } elseif (\is_string($v)) {
+//                $data[$k] = trim($v);
+//            }
+//        }
+//
+//        // test if cache entry exists first
+//        $result = QUI::getDataBase()->fetch([
+//            'from'  => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+//            'where' => [
+//                'id'   => $this->getId(),
+//                'lang' => $lang
+//            ]
+//        ]);
+//
+//        if (empty($result)) {
+//            $data['id']   = $this->id;
+//            $data['lang'] = $lang;
+//
+//            QUI::getDataBase()->insert(
+//                QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+//                $data
+//            );
+//
+//            return;
+//        }
+//
+//        QUI::getDataBase()->update(
+//            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+//            $data,
+//            [
+//                'id'   => $this->getId(),
+//                'lang' => $lang
+//            ]
+//        );
+//    }
 
     //endregion
 

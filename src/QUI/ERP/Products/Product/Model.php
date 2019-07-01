@@ -754,8 +754,6 @@ class Model extends QUI\QDOM
             $cacheName = 'quiqqer/products/'.$this->getId().'/prices/'.$User->getId().'/min';
         }
 
-        // @todo Setting -> Aufwahllisten beim Min Max Preis Berechnung einbeziehen
-
         try {
             $data     = QUI\Cache\Manager::get($cacheName);
             $Currency = QUI\ERP\Currency\Handler::getCurrency($data['currency']);
@@ -765,44 +763,49 @@ class Model extends QUI\QDOM
         }
 
         // search all custom fields, and set the minimum
-        $Clone  = Products::getNewProductInstance($this->getId());
-        $Calc   = QUI\ERP\Products\Utils\Calc::getInstance($User); // @todo netto user nutzen
-        $fields = $Clone->getFieldsByType([
-            Fields::TYPE_ATTRIBUTE_LIST
-        ]);
-
-        // alle felder müssen erst einmal gesetzt werden
-        /* @var $Field QUI\ERP\Products\Field\Field */
-        foreach ($fields as $Field) {
-            if (!$Field->isCustomField()) {
-                continue;
-            }
-
-            $options = $Field->getOptions();
-
-            if (\count($options['entries'])) {
-                $Clone->getField($Field->getId())->setValue(0);
-            }
-        }
-
+        $Clone        = Products::getNewProductInstance($this->getId());
+        $Calc         = QUI\ERP\Products\Utils\Calc::getInstance($User); // @todo netto user nutzen
         $Price        = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice();
         $currentPrice = $Price->value();
 
-        /* @var $Field QUI\ERP\Products\Field\Field */
-        foreach ($fields as $Field) {
-            if (!$Field->isCustomField()) {
-                continue;
+        if (QUI::getPackage('quiqqer/products')
+            ->getConfig()
+            ->get('products', 'useAttributeListsForMinMaxPriceCalculation')
+        ) {
+            $fields = $Clone->getFieldsByType([
+                Fields::TYPE_ATTRIBUTE_LIST
+            ]);
+
+            // alle felder müssen erst einmal gesetzt werden
+            /* @var $Field QUI\ERP\Products\Field\Field */
+            foreach ($fields as $Field) {
+                if (!$Field->isCustomField()) {
+                    continue;
+                }
+
+                $options = $Field->getOptions();
+
+                if (\count($options['entries'])) {
+                    $Clone->getField($Field->getId())->setValue(0);
+                }
             }
 
-            $options = $Field->getOptions();
+            /* @var $Field QUI\ERP\Products\Field\Field */
+            foreach ($fields as $Field) {
+                if (!$Field->isCustomField()) {
+                    continue;
+                }
 
-            foreach ($options['entries'] as $index => $data) {
-                $Clone->getField($Field->getId())->setValue($index);
+                $options = $Field->getOptions();
 
-                $price = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice()->value();
+                foreach ($options['entries'] as $index => $data) {
+                    $Clone->getField($Field->getId())->setValue($index);
 
-                if ($currentPrice > $price) {
-                    $currentPrice = $price;
+                    $price = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice()->value();
+
+                    if ($currentPrice > $price) {
+                        $currentPrice = $price;
+                    }
                 }
             }
         }
@@ -838,30 +841,35 @@ class Model extends QUI\QDOM
         } catch (QUI\Exception $Exception) {
         }
 
-        $Clone  = Products::getNewProductInstance($this->getId());
-        $Calc   = QUI\ERP\Products\Utils\Calc::getInstance($User);
-        $fields = $Clone->getFieldsByType([
-            Fields::TYPE_ATTRIBUTE_LIST
-        ]);
-
+        $Clone        = Products::getNewProductInstance($this->getId());
+        $Calc         = QUI\ERP\Products\Utils\Calc::getInstance($User);
         $Price        = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice();
         $currentPrice = $Price->value();
 
-        /* @var $Field QUI\ERP\Products\Field\Field */
-        foreach ($fields as $Field) {
-            if (!$Field->isCustomField()) {
-                continue;
-            }
+        if (QUI::getPackage('quiqqer/products')
+            ->getConfig()
+            ->get('products', 'useAttributeListsForMinMaxPriceCalculation')
+        ) {
+            $fields = $Clone->getFieldsByType([
+                Fields::TYPE_ATTRIBUTE_LIST
+            ]);
 
-            $options = $Field->getOptions();
+            /* @var $Field QUI\ERP\Products\Field\Field */
+            foreach ($fields as $Field) {
+                if (!$Field->isCustomField()) {
+                    continue;
+                }
 
-            foreach ($options['entries'] as $index => $data) {
-                $Clone->getField($Field->getId())->setValue($index);
+                $options = $Field->getOptions();
 
-                $price = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice()->value();
+                foreach ($options['entries'] as $index => $data) {
+                    $Clone->getField($Field->getId())->setValue($index);
 
-                if ($currentPrice < $price) {
-                    $currentPrice = $price;
+                    $price = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice()->value();
+
+                    if ($currentPrice < $price) {
+                        $currentPrice = $price;
+                    }
                 }
             }
         }
@@ -1348,6 +1356,9 @@ class Model extends QUI\QDOM
      */
     protected function writeCacheEntry($lang)
     {
+
+        $t = microtime(true);
+
         $Locale = new QUI\Locale();
         $Locale->setCurrent($lang);
 
@@ -1404,6 +1415,10 @@ class Model extends QUI\QDOM
             'c_date'      => $cDate,
             'e_date'      => $eDate
         ];
+
+        if ($this instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            $data['parentId'] = $this->getParent()->getId();
+        }
 
         // permissions
         $permissions     = $this->getPermissions();
@@ -1486,6 +1501,8 @@ class Model extends QUI\QDOM
                 'lang' => $lang
             ]
         );
+
+        \QUI\System\Log::writeRecursive($this->getId()." :".(microtime(true) - $t)." seconds!");
     }
 
     /**

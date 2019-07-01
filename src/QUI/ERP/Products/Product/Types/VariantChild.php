@@ -291,25 +291,6 @@ class VariantChild extends AbstractType
     }
 
     /**
-     * Updates the cache table with current product data
-     *
-     * @return void
-     * @throws QUI\Exception
-     */
-    public function updateCache()
-    {
-        parent::updateCache();
-
-        /**
-         * If the VariantParent shall also be found when searching for values of this VariantChild
-         * the search cache for the parent has to be updated here (containing said values).
-         */
-        if (QUI::getPackage('quiqqer/products')->getConfig()->get('variants', 'findVariantParentByChildValues')) {
-            $this->getParent()->updateCache();
-        }
-    }
-
-    /**
      * return all available fields from the variant children
      * this array contains all field ids and field values that are in use in the children
      *

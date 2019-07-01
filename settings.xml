@@ -27,6 +27,10 @@
                     <type><![CDATA[bool]]></type>
                     <defaultvalue>1</defaultvalue>
                 </conf>
+                <conf name="useAttributeListsForMinMaxPriceCalculation">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
             </section>
             <section name="search">
                 <conf name="backend">
@@ -106,6 +110,15 @@
                             <text>
                                 <locale group="quiqqer/products" var="settings.window.products.folder"/>
                             </text>
+                        </input>
+
+                        <input conf="products.useAttributeListsForMinMaxPriceCalculation" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.useAttributeListsForMinMaxPriceCalculation.text"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products" var="settings.window.products.useAttributeListsForMinMaxPriceCalculation.description"/>
+                            </description>
                         </input>
 
                         <input type="hidden"
