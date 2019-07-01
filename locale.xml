@@ -206,8 +206,8 @@
             ]]></en>
         </locale>
         <locale name="settings.window.products.editableFields">
-            <de><![CDATA[Editierbare Varianten Felder]]></de>
-            <en><![CDATA[Editable Variants Fields]]></en>
+            <de><![CDATA[Bestimme welche Felder vererbt werden und editierbar in den Varianten Kinder sind.]]></de>
+            <en><![CDATA[Determine which fields are inherited and editable in the children variants.]]></en>
         </locale>
         <locale name="settings.window.products.findChildrenInSearch">
             <de><![CDATA[Varianten: Kindartikel in Suche beachten]]></de>
