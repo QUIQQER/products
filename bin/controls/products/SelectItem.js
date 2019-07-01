@@ -50,8 +50,8 @@ define('package/quiqqer/products/bin/controls/products/SelectItem', [
             Elm.set({
                 'class': 'quiqqer-products-selectItem smooth',
                 html   : '<span class="quiqqer-products-selectItem-icon fa fa-shopping-bag"></span>' +
-                '<span class="quiqqer-products-selectItem-text">&nbsp;</span>' +
-                '<span class="quiqqer-products-selectItem-destroy fa fa-remove"></span>'
+                    '<span class="quiqqer-products-selectItem-text">&nbsp;</span>' +
+                    '<span class="quiqqer-products-selectItem-destroy fa fa-remove"></span>'
             });
 
             this.$Icon    = Elm.getElement('.quiqqer-products-selectItem-icon');
@@ -86,7 +86,7 @@ define('package/quiqqer/products/bin/controls/products/SelectItem', [
             Products.getDataForSelectItem(
                 this.getAttribute('id')
             ).then(function (data) {
-                self.$Text.set('html', '#'+data.id + ' - ' + data.articleNo + ' - ' + data.title);
+                self.$Text.set('html', '#' + data.id + ' - <b>' + data.articleNo + '</b> (' + data.title + ')');
             }).catch(function () {
                 self.$Icon.removeClass('fa-shopping-bag');
                 self.$Icon.addClass('fa-bolt');
