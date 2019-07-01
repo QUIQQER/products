@@ -499,7 +499,7 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         getEditableFields: function () {
             return new Promise(function (resolve) {
-                Ajax.get('package_quiqqer_products_ajax_products_variant_getEditableFieldList', resolve, {
+                Ajax.get('package_quiqqer_products_ajax_products_variant_getEditableInheritedFieldList', resolve, {
                     'package': 'quiqqer/products',
                     productId: this.getId()
                 });

@@ -822,6 +822,43 @@ class Products
     }
 
     /**
+     * Return the global inherited variant fields
+     *
+     * @return QUI\ERP\Products\Field\Field[]
+     */
+    public static function getGlobalInheritedVariantFields()
+    {
+        try {
+            $Config = QUI::getPackage('quiqqer/products')->getConfig();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+
+            return [];
+        }
+
+        $result = [];
+        $fields = $Config->getSection('inheritedFields');
+
+        if (empty($fields)) {
+            return [];
+        }
+
+        foreach ($fields as $fieldId => $active) {
+            if (empty($active)) {
+                continue;
+            }
+
+            try {
+                $result[] = Fields::getField($fieldId);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception->getMessage());
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Set global editable variant fields
      *
      * @param array $fieldIds

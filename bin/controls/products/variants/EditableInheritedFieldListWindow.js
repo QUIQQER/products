@@ -1,12 +1,12 @@
 /**
- * @module package/quiqqer/products/bin/controls/products/EditableFieldList
+ * @module package/quiqqer/products/bin/controls/products/EditableInheritedFieldListWindow
  * @author www.pcsg.de (Henning Leutz)
  */
-define('package/quiqqer/products/bin/controls/products/variants/EditableFieldListWindow', [
+define('package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldListWindow', [
 
     'qui/QUI',
     'qui/controls/windows/Confirm',
-    'package/quiqqer/products/bin/controls/products/variants/EditableFieldList',
+    'package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldList',
     'Ajax',
     'Locale'
 
@@ -16,7 +16,7 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableFieldLis
     return new Class({
 
         Extends: QUIConfirm,
-        Type   : 'package/quiqqer/products/bin/controls/products/variants/EditableFieldListWindow',
+        Type   : 'package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldListWindow',
 
         Binds: [
             '$onOpen',

@@ -149,6 +149,9 @@ class Products
     }
 
     /**
+     * Return the editable fields for the project
+     * editable fields can be changed by the user via the GUI
+     *
      * @param null $Product
      * @return array
      */
@@ -195,13 +198,51 @@ class Products
     }
 
     /**
-     * Vererbte felder
+     * Return the inherited fields for the project
      *
      * @param null $Product
-     * @todo
+     * @return array
      */
     public static function getInheritedFieldIdsForProduct($Product = null)
     {
+        if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            $Product = $Product->getParent();
+        }
+
+        if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Product) {
+            if ($Product->getAttribute('inheritedVariantFields')) {
+                $inherited = $Product->getAttribute('inheritedVariantFields');
+                $inherited = \json_decode($inherited, true);
+
+                return $inherited;
+            }
+        }
+
+        // global erp inherited fields
+        try {
+            $Config = QUI::getPackage('quiqqer/products')->getConfig();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+
+            return [];
+        }
+
+        $fields = $Config->getSection('inheritedFields');
+
+        if ($fields) {
+            $result = \array_keys($fields);
+
+            return $result;
+        }
+
+
+        $fields = \QUI\ERP\Products\Handler\Fields::getFields();
+        $result = \array_map(function ($Field) {
+            /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
+            return $Field->getId();
+        }, $fields);
+
+        return $result;
     }
 
     /**

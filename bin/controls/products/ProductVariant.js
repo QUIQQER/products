@@ -758,7 +758,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             return new Promise(function (resolve) {
                 require([
-                    'package/quiqqer/products/bin/controls/products/variants/EditableFieldListWindow'
+                    'package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldListWindow'
                 ], function (Window) {
                     new Window({
                         productId: self.getAttribute('productId'),

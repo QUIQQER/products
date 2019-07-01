@@ -996,9 +996,9 @@ class Model extends QUI\QDOM
 
         // if variant child
         // -> nicht vererbte felder speichern
+        // @todo
         if ($this instanceof QUI\ERP\Products\Product\Types\VariantChild) {
         }
-
 
         // check url
         $this->checkProductUrl($fieldData);

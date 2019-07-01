@@ -2,7 +2,7 @@
  * @module package/quiqqer/products/bin/controls/products/EditableFieldList
  * @author www.pcsg.de (Henning Leutz)
  */
-define('package/quiqqer/products/bin/controls/products/variants/EditableFieldList', [
+define('package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldList', [
 
     'qui/QUI',
     'qui/controls/Control',
@@ -19,7 +19,7 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableFieldLis
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/products/variants/EditableFieldList',
+        Type   : 'package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldList',
 
         Binds: [
             '$onInject',
@@ -34,8 +34,10 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableFieldLis
         initialize: function (options) {
             this.parent(options);
 
-            this.$Grid     = null;
-            this.$editable = null;
+            this.$Grid = null;
+
+            this.$editable  = null;
+            this.$inherited = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -53,7 +55,7 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableFieldLis
             this.$Elm = new Element('div', {
                 'class'   : 'quiqqer-products-variant-editable-fields',
                 id        : this.getId(),
-                'data-qui': 'package/quiqqer/products/bin/controls/products/variants/EditableFieldList',
+                'data-qui': 'package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldList',
                 styles    : {
                     height: '100%'
                 }
@@ -70,8 +72,14 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableFieldLis
                 page       : 1,
                 serverSort : true,
                 columnModel: [{
-                    header   : QUILocale.get('quiqqer/system', 'status'),
-                    dataIndex: 'status',
+                    header   : 'vererbt',
+                    dataIndex: 'inherited',
+                    dataType : 'QUI',
+                    width    : 60,
+                    sortable : false
+                }, {
+                    header   : 'editierbar',
+                    dataIndex: 'editable',
                     dataType : 'QUI',
                     width    : 60,
                     sortable : false
@@ -138,10 +146,11 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableFieldLis
             }
 
             return new Promise(function (resolve) {
-                QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveEditableFields', resolve, {
+                QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveEditableInheritedFields', resolve, {
                     'package': 'quiqqer/products',
                     productId: self.getAttribute('productId'),
-                    editable : JSON.encode(self.getEditableFields())
+                    editable : JSON.encode(self.getEditableFields()),
+                    inherited: JSON.encode(self.getInheritedFields())
                 });
             });
         },
@@ -156,12 +165,21 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableFieldLis
         },
 
         /**
+         * Return the active editable fields
+         *
+         * @return {array}
+         */
+        getInheritedFields: function () {
+            return this.$inherited;
+        },
+
+        /**
          * event: on inject
          */
         $onInject: function () {
             var self = this;
 
-            self.$loadEditableFields().then(function () {
+            self.$loadFields().then(function () {
                 return self.refresh();
             }).then(function () {
                 self.fireEvent('load', [self]);
@@ -178,35 +196,59 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableFieldLis
                 options = this.$Grid.options;
 
             return new Promise(function (resolve) {
-                QUIAjax.get('package_quiqqer_products_ajax_products_variant_getEditableFieldList', function (result) {
-                    var i, len, entry, Status;
+                QUIAjax.get('package_quiqqer_products_ajax_products_variant_getEditableInheritedFieldList', function (result) {
+                    var i, len, entry, Editable, Inherited;
                     var data = [];
 
-                    var editable = self.$editable;
+                    var editable  = self.$editable;
+                    var inherited = self.$inherited;
 
                     for (i = 0, len = result.fields.length; i < len; i++) {
                         entry = result.fields[i];
 
                         if (!editable.length || editable.indexOf(entry.id) === -1) {
-                            Status = new QUISwitch({
-                                status : false,
-                                fieldId: parseInt(entry.id),
-                                events : {
+                            Editable = new QUISwitch({
+                                editType: 'editable',
+                                status  : false,
+                                fieldId : parseInt(entry.id),
+                                events  : {
                                     onChange: self.$onStatusChange
                                 }
                             });
                         } else {
-                            Status = new QUISwitch({
-                                status : true,
-                                fieldId: parseInt(entry.id),
-                                events : {
+                            Editable = new QUISwitch({
+                                editType: 'editable',
+                                status  : true,
+                                fieldId : parseInt(entry.id),
+                                events  : {
+                                    onChange: self.$onStatusChange
+                                }
+                            });
+                        }
+
+                        if (!inherited.length || inherited.indexOf(entry.id) === -1) {
+                            Inherited = new QUISwitch({
+                                editType: 'inherited',
+                                status  : false,
+                                fieldId : parseInt(entry.id),
+                                events  : {
+                                    onChange: self.$onStatusChange
+                                }
+                            });
+                        } else {
+                            Inherited = new QUISwitch({
+                                editType: 'inherited',
+                                status  : true,
+                                fieldId : parseInt(entry.id),
+                                events  : {
                                     onChange: self.$onStatusChange
                                 }
                             });
                         }
 
                         data.push({
-                            status      : Status,
+                            editable    : Editable,
+                            inherited   : Inherited,
                             id          : parseInt(entry.id),
                             title       : entry.title,
                             workingtitle: entry.workingtitle,
@@ -235,16 +277,17 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableFieldLis
         },
 
         /**
-         * init editable fields from the product
+         * init editable / inherited fields from the product
          *
          * @return {Promise}
          */
-        $loadEditableFields: function () {
+        $loadFields: function () {
             var self = this;
 
             return new Promise(function (resolve) {
-                QUIAjax.get('package_quiqqer_products_ajax_products_variant_getEditableFieldList', function (result) {
-                    self.$editable = result.editable;
+                QUIAjax.get('package_quiqqer_products_ajax_products_variant_getEditableInheritedFieldList', function (result) {
+                    self.$editable  = result.editable;
+                    self.$inherited = result.inherited;
                     resolve();
                 }, {
                     'package': 'quiqqer/products',
@@ -258,20 +301,39 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableFieldLis
          * @param Switch
          */
         $onStatusChange: function (Switch) {
+            var index;
             var fieldId = Switch.getAttribute('fieldId'),
                 status  = Switch.getStatus();
 
-            if (status) {
-                this.$editable.push(fieldId);
-                this.$editable = this.$editable.filter(function (value, index, self) {
-                    return self.indexOf(value) === index;
-                });
+            if (Switch.getAttribute('editType') === 'editable') {
+                if (status) {
+                    this.$editable.push(fieldId);
+                    this.$editable = this.$editable.filter(function (value, index, self) {
+                        return self.indexOf(value) === index;
+                    });
 
+                    return;
+                }
+
+                index = this.$editable.indexOf(fieldId);
+                this.$editable.splice(index, 1);
                 return;
             }
 
-            var index = this.$editable.indexOf(fieldId);
-            this.$editable.splice(index, 1);
+
+            if (Switch.getAttribute('editType') === 'inherited') {
+                if (status) {
+                    this.$inherited.push(fieldId);
+                    this.$inherited = this.$inherited.filter(function (value, index, self) {
+                        return self.indexOf(value) === index;
+                    });
+
+                    return;
+                }
+
+                index = this.$inherited.indexOf(fieldId);
+                this.$inherited.splice(index, 1);
+            }
         }
     });
 });

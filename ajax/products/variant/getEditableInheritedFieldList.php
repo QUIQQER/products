@@ -15,7 +15,7 @@ use QUI\ERP\Products\Handler\Products;
  * @return array
  */
 QUI::$Ajax->registerFunction(
-    'package_quiqqer_products_ajax_products_variant_getEditableFieldList',
+    'package_quiqqer_products_ajax_products_variant_getEditableInheritedFieldList',
     function ($productId, $options = '') {
         // defaults
         $fields  = false;
@@ -30,12 +30,20 @@ QUI::$Ajax->registerFunction(
         }
 
 
-        // product fields
+        // editable product fields
         $editable = Products::getGlobalEditableVariantFields();
         $editable = \array_map(function ($Field) {
             /* @var $Field \QUI\ERP\Products\Field\Field */
             return $Field->getId();
         }, $editable);
+
+        // inherited product fields
+        $inherited = Products::getGlobalInheritedVariantFields();
+        $inherited = \array_map(function ($Field) {
+            /* @var $Field \QUI\ERP\Products\Field\Field */
+            return $Field->getId();
+        }, $inherited);
+
 
         if (!empty($productId)) {
             $Product = Products::getProduct($productId);
@@ -44,12 +52,16 @@ QUI::$Ajax->registerFunction(
                 $editable = $Product->getAttribute('editableVariantFields');
             }
 
+            if ($Product->getAttribute('inheritedVariantFields')) {
+                $inherited = $Product->getAttribute('inheritedVariantFields');
+            }
+
             // fields
             $fields = $Product->getFields();
         }
 
         // if $editable is false, then use global erp field settings
-        if ($editable === false || $fields === false) {
+        if ($fields === false) {
             $fields = \QUI\ERP\Products\Handler\Fields::getFields();
         }
 
@@ -88,10 +100,11 @@ QUI::$Ajax->registerFunction(
         );
 
         return [
-            'editable' => $editable,
-            'fields'   => $fields,
-            'total'    => $count,
-            'page'     => $page
+            'inherited' => $inherited,
+            'editable'  => $editable,
+            'fields'    => $fields,
+            'total'     => $count,
+            'page'      => $page
         ];
     },
     ['productId', 'options'],
