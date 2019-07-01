@@ -665,7 +665,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     fields['field-' + variantFields[i].id] = variantFields[i].id;
                 }
 
-
                 // build grid data
                 for (i = 0, len = variants.length; i < len; i++) {
                     entry   = {};
