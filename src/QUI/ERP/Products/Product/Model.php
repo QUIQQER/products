@@ -1025,18 +1025,9 @@ class Model extends QUI\QDOM
         // check url
         $this->checkProductUrl($fieldData);
 
-
-        $categoryIds = [];
-        $categories  = $this->getCategories();
+        $categoryIds = array_keys($this->categories);
 
         /* @var $Field FieldInterface */
-        /* @var $Category Category */
-
-        // get category field data
-        foreach ($categories as $Category) {
-            $categoryIds[] = $Category->getId();
-        }
-
 
         // set main category
         $mainCategory = '';
@@ -1356,7 +1347,6 @@ class Model extends QUI\QDOM
      */
     protected function writeCacheEntry($lang)
     {
-
         $t = microtime(true);
 
         $Locale = new QUI\Locale();
