@@ -1347,8 +1347,6 @@ class Model extends QUI\QDOM
      */
     protected function writeCacheEntry($lang)
     {
-        $t = microtime(true);
-
         $Locale = new QUI\Locale();
         $Locale->setCurrent($lang);
 
@@ -1491,8 +1489,6 @@ class Model extends QUI\QDOM
                 'lang' => $lang
             ]
         );
-
-        \QUI\System\Log::writeRecursive($this->getId()." :".(microtime(true) - $t)." seconds!");
     }
 
     /**
