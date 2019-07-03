@@ -1756,6 +1756,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
         /**
          * Show the filter text
+         *
          * @returns {Promise}
          */
         showFilterDisplay: function () {

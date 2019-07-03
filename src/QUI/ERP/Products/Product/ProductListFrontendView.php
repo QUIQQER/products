@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
+use QUI\ERP\Products\Field\View;
 
 /**
  * Class ProductListView
@@ -78,12 +79,15 @@ class ProductListFrontendView
         // currency stuff
         $this->Currency->setLocale($Locale);
 
-
         $productList = [];
         $hidePrice   = QUI\ERP\Products\Utils\Package::hidePrice();
 
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
+//            $ProductView = $Product->getView();
+//            $ProductView->setQuantity($Product->getQuantity());
+//            $ProductView->recalculation();
+
             $attributes   = $Product->getAttributes();
             $fields       = $Product->getFields();
             $PriceFactors = $Product->getPriceFactors();
@@ -219,19 +223,6 @@ class ProductListFrontendView
      */
     protected function formatPrice($price)
     {
-//        if ($this->UserCurrency === null
-//            || $this->Currency->getCode() === $this->UserCurrency->getCode()) {
-//            return $this->Currency->format($price);
-//        }
-//
-//        try {
-//            return $this->Currency->convertFormat($price, $this->UserCurrency);
-//        } catch (QUI\Exception $Exception) {
-//            QUI\System\Log::writeDebugException($Exception);
-//
-//            return $this->Currency->format($price);
-//        }
-
         return $this->Currency->format($price);
     }
 
@@ -272,7 +263,16 @@ class ProductListFrontendView
      */
     public function toArray()
     {
-        return $this->data;
+        $data = $this->data;
+
+        /* @var $Field View */
+        foreach ($data['products'] as $key => $product) {
+            foreach ($product['fields'] as $fKey => $Field) {
+                $data['products'][$key]['fields'][$fKey] = $Field->getAttributes();
+            }
+        }
+
+        return $data;
     }
 
     /**

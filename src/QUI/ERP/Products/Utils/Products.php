@@ -125,7 +125,7 @@ class Products
                     $ParentField = FieldHandler::getField($Field->getId());
                     $value       = $ParentField->onGetPriceFieldForProduct($Product, $User);
 
-                    if ($value && $value < $PriceField->getValue()) {
+                    if ($value && $value < $priceValue) {
                         $priceValue = $value;
                     }
                 } catch (QUI\Exception $Exception) {
@@ -140,7 +140,7 @@ class Products
                 continue;
             }
 
-            if ($value < $PriceField->getValue()) {
+            if ($value < $priceValue) {
                 $priceValue = $value;
             }
         }
