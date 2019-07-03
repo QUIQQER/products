@@ -88,7 +88,7 @@ class ProductList
     ];
 
     /**
-     * @var QUI\ERP\Products\Interfaces\ProductInterface[]
+     * @var UniqueProduct[]
      */
     protected $products = [];
 
@@ -486,7 +486,6 @@ class ProductList
 
         $this->Currency = $Currency;
 
-        /* @var $Product QUI\ERP\Order\Basket\Product */
         foreach ($this->products as $Product) {
             $Product->convert($Currency);
         }

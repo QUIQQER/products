@@ -79,12 +79,15 @@ class ProductListFrontendView
         // currency stuff
         $this->Currency->setLocale($Locale);
 
-
         $productList = [];
         $hidePrice   = QUI\ERP\Products\Utils\Package::hidePrice();
 
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
+//            $ProductView = $Product->getView();
+//            $ProductView->setQuantity($Product->getQuantity());
+//            $ProductView->recalculation();
+
             $attributes   = $Product->getAttributes();
             $fields       = $Product->getFields();
             $PriceFactors = $Product->getPriceFactors();

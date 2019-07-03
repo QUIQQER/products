@@ -453,6 +453,44 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
 
                 $valueText = \reset($option['title']);
             }
+
+            if ($valueText === '-') {
+                foreach ($options['entries'] as $option) {
+                    if (!isset($option['default']) || $option['default'] === false) {
+                        continue;
+                    }
+
+                    if (isset($option['title'][$current])) {
+                        $valueText = $option['title'][$current];
+                        break;
+                    }
+
+                    $valueText = \reset($option['title']);
+                }
+            }
+
+            if ($valueText === '-') {
+                foreach ($options['entries'] as $option) {
+                    if (!isset($option['valueId'])) {
+                        continue;
+                    }
+
+                    $numCheck = \is_numeric($value)
+                                && \is_numeric($option['valueId'])
+                                && (int)$option['valueId'] === (int)$value;
+
+                    if ($option['valueId'] !== $value && !$numCheck) {
+                        continue;
+                    }
+
+                    if (isset($option['title'][$current])) {
+                        $valueText = $option['title'][$current];
+                        break;
+                    }
+
+                    $valueText = \reset($option['title']);
+                }
+            }
         }
 
         return [
