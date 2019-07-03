@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
+use QUI\ERP\Products\Field\View;
 
 /**
  * Class ProductListView
@@ -259,7 +260,16 @@ class ProductListFrontendView
      */
     public function toArray()
     {
-        return $this->data;
+        $data = $this->data;
+
+        /* @var $Field View */
+        foreach ($data['products'] as $key => $product) {
+            foreach ($product['fields'] as $fKey => $Field) {
+                $data['products'][$key]['fields'][$fKey] = $Field->getAttributes();
+            }
+        }
+
+        return $data;
     }
 
     /**

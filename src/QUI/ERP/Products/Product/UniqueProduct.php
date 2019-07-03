@@ -206,9 +206,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         /* @var $Field QUI\ERP\Products\Field\UniqueField */
         foreach ($fields as $Field) {
-            if (!$Field->isCustomField()
-                && $Field->getType() !== Fields::TYPE_ATTRIBUTE_GROUPS
-                && $Field->getType() !== Fields::TYPE_ATTRIBUTE_LIST) {
+            if (!$Field->isCustomField()) {
                 continue;
             }
 

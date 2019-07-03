@@ -434,11 +434,32 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
     public function getAttributes()
     {
+        $options   = $this->getOptions();
+        $value     = $this->getValue();
+        $valueText = '-';
+
+        if (!empty($options) && isset($options['entries'])) {
+            $current = QUI::getLocale()->getCurrent();
+
+            foreach ($options['entries'] as $option) {
+                if (!isset($option['selected']) || $option['selected'] === false) {
+                    continue;
+                }
+
+                if (isset($option['title'][$current])) {
+                    $valueText = $option['title'][$current];
+                    break;
+                }
+
+                $valueText = \reset($option['title']);
+            }
+        }
+
         return [
             'id'         => $this->getId(),
             'title'      => $this->getTitle(),
             'type'       => $this->getType(),
-            'options'    => $this->getOptions(),
+            'options'    => $options,
             'isRequired' => $this->isRequired(),
             'isStandard' => $this->isStandard(),
             'isSystem'   => $this->isSystem(),
@@ -450,7 +471,8 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'custom'        => $this->isCustomField(),
             'custom_calc'   => $this->custom_calc,
             'unassigned'    => $this->isUnassigned(),
-            'value'         => $this->getValue(),
+            'value'         => $value,
+            'valueText'     => $valueText,
             'showInDetails' => $this->showInDetails()
         ];
     }
