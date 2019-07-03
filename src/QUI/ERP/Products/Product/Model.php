@@ -1018,6 +1018,16 @@ class Model extends QUI\QDOM
             $inheritedFields = \array_flip($inheritedFields);
 
             $fieldData = \array_filter($fieldData, function ($field) use ($inheritedFields) {
+                $Field = Fields::getField($field['id']);
+
+                if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST) {
+                    return true;
+                }
+
+                if ($Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS) {
+                    return true;
+                }
+
                 return isset($inheritedFields[$field['id']]);
             });
         }
@@ -1025,7 +1035,7 @@ class Model extends QUI\QDOM
         // check url
         $this->checkProductUrl($fieldData);
 
-        $categoryIds = array_keys($this->categories);
+        $categoryIds = \array_keys($this->categories);
 
         /* @var $Field FieldInterface */
 
@@ -1544,9 +1554,12 @@ class Model extends QUI\QDOM
     {
         $fields = [];
 
-        /* @var $Field FieldInterface */
+        /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($this->fields as $Field) {
-            if (!$Field->isUnassigned()) {
+            if (!$Field->isUnassigned()
+                || $Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS
+                || $Field->getType() === Fields::TYPE_ATTRIBUTE_LIST
+            ) {
                 $fields[$Field->getId()] = $Field;
             }
         }
