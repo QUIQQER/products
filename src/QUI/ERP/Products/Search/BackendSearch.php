@@ -62,9 +62,10 @@ class BackendSearch extends Search
 
         $binds                           = [];
         $where                           = [];
-        $findVariantParentsByChildValues = !!(int)QUI::getPackage('quiqqer/products')
-            ->getConfig()
-            ->get('variants', 'findVariantParentByChildValues');
+        $findVariantParentsByChildValues = empty($searchParams['ignoreFindVariantParentsByChildValues'])
+                                           && !!(int)QUI::getPackage('quiqqer/products')
+                ->getConfig()
+                ->get('variants', 'findVariantParentByChildValues');
 
         $sql = "SELECT `id`, `type`, `parentId`";
         $sql .= " FROM ".TablesUtils::getProductCacheTableName();
@@ -262,13 +263,22 @@ class BackendSearch extends Search
             $sql .= " ".$this->validateOrderStatement($searchParams);
         }
 
+        $limitOffset = false;
+
         if (!empty($searchParams['limit']) && !$countOnly) {
-            $Pagination = new QUI\Controls\Navigating\Pagination($searchParams);
-            $sqlParams  = $Pagination->getSQLParams();
-            $sql        .= " LIMIT ".$sqlParams['limit'];
+            if (!empty($searchParams['limitOffset'])) {
+                $sql         .= " LIMIT ".(int)$searchParams['limitOffset'].",".(int)$searchParams['limit'];
+                $limitOffset = (int)$searchParams['limitOffset'];
+            } else {
+                $Pagination  = new QUI\Controls\Navigating\Pagination($searchParams);
+                $sqlParams   = $Pagination->getSQLParams();
+                $sql         .= " LIMIT ".$sqlParams['limit'];
+                $limitOffset = $Pagination->getStart();
+            }
         } else {
             if (!$countOnly) {
-                $sql .= " LIMIT ".(int)20; // @todo: standard-limit als setting auslagern
+                $sql         .= " LIMIT ".(int)20; // @todo: standard-limit als setting auslagern
+                $limitOffset = 0;
             }
         }
 
@@ -292,7 +302,8 @@ class BackendSearch extends Search
             return [];
         }
 
-        $productIds = [];
+        $productIds      = [];
+        $childrenRemoved = 0;
 
         foreach ($result as $k => $row) {
             if ($row['type'] === VariantChild::class) {
@@ -301,11 +312,29 @@ class BackendSearch extends Search
                 }
 
                 if ($this->ignoreVariantChildren) {
+                    $childrenRemoved++;
                     continue;
                 }
             }
 
             $productIds[] = $row['id'];
+        }
+
+        /**
+         * If entries were removed from the result list repeat the search
+         * and add as many entries as needed to fill the given limit with "normal" search results.
+         */
+        if ($childrenRemoved > 0) {
+            if ($limitOffset !== false) {
+                $searchParams['limitOffset'] = $limitOffset;
+            }
+
+            $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+
+            $productIds = array_merge(
+                $productIds,
+                self::search($searchParams)
+            );
         }
 
         $productIds = array_values(array_unique($productIds));
