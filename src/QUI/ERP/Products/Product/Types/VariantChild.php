@@ -47,6 +47,15 @@ class VariantChild extends AbstractType
                 continue;
             }
 
+            try {
+                if (!$this->getField($Field->getId())->isEmpty()) {
+                    continue;
+                }
+            } catch (QUI\Exception $Exception) {
+                $this->addField($Field);
+                continue;
+            }
+
             if (!$this->getField($Field->getId())->isEmpty()) {
                 continue;
             }
