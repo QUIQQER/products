@@ -39,7 +39,10 @@ class Crons
 
             try {
                 $Product = Products::getProduct($id);
+
+                $t = microtime(true);
                 $Product->updateCache();
+                \QUI\System\Log::addDebug("#".$id." time: ".(microtime(true) - $t));
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addWarning(
                     'cron :: updateProductCache() :: Could not update cache'
