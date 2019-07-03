@@ -219,19 +219,6 @@ class ProductListFrontendView
      */
     protected function formatPrice($price)
     {
-//        if ($this->UserCurrency === null
-//            || $this->Currency->getCode() === $this->UserCurrency->getCode()) {
-//            return $this->Currency->format($price);
-//        }
-//
-//        try {
-//            return $this->Currency->convertFormat($price, $this->UserCurrency);
-//        } catch (QUI\Exception $Exception) {
-//            QUI\System\Log::writeDebugException($Exception);
-//
-//            return $this->Currency->format($price);
-//        }
-
         return $this->Currency->format($price);
     }
 
