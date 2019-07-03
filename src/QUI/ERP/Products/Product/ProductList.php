@@ -311,6 +311,7 @@ class ProductList
             return;
         }
 
+        /* @var $Product UniqueProduct */
         if ($this->Currency) {
             $Product->convert($this->Currency);
         }
