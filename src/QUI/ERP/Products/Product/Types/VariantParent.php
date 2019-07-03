@@ -832,7 +832,11 @@ class VariantParent extends AbstractType
                 }
             }
 
-            $this->generateVariant($fields);
+            $Variant = $this->generateVariant($fields);
+
+            // workaround
+            Products::enableGlobalProductSearchCacheUpdate();
+            $Variant->updateCache();
         }
     }
 
@@ -920,7 +924,7 @@ class VariantParent extends AbstractType
      */
     public function generateVariant($fields)
     {
-        Products::disableGlobalWriteProductDataToDb();
+        //Products::disableGlobalWriteProductDataToDb();
 
         $Variant = $this->createVariant();
 
@@ -1005,7 +1009,7 @@ class VariantParent extends AbstractType
 
         $this->calcVariantPrice($Variant, $fields);
 
-        Products::enableGlobalWriteProductDataToDb();
+        //Products::enableGlobalWriteProductDataToDb();
 
         $URL->setValue($urlValue);
         $Variant->save();
@@ -1124,6 +1128,10 @@ class VariantParent extends AbstractType
         foreach ($result as $entry) {
             $fieldData     = \json_decode($entry['fieldData'], true);
             $variantFields = [];
+
+            if (!is_array($fieldData)) {
+                $fieldData = [];
+            }
 
             foreach ($fieldData as $field) {
                 $variantFields[$field['id']] = $field['value'];
