@@ -696,7 +696,8 @@ class VariantParent extends AbstractType
                 'select' => 'id, variantHash',
                 'from'   => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where'  => [
-                    'variantHash' => $hash
+                    'variantHash' => $hash,
+                    'parent'      => $this->getId()
                 ],
                 'limit'  => 1
             ]);
