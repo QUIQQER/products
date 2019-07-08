@@ -654,7 +654,7 @@ class Fields
 
         throw new QUI\ERP\Products\Field\Exception([
             'quiqqer/products',
-            'exception.field.not.found',
+            'exception.field.type_not_found',
             [
                 'fieldType' => $type,
                 'fieldId'   => $fieldId
@@ -702,9 +702,9 @@ class Fields
 
             if (!$result || !isset($result[0])) {
                 throw new QUI\ERP\Products\Field\Exception(
-                    ['quiqqer/products', 'exception.field.not.found'],
+                    ['quiqqer/products', 'exception.field.id_not_found'],
                     404,
-                    ['id' => (int)$fieldId]
+                    ['fieldId' => (int)$fieldId]
                 );
             }
 

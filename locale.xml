@@ -591,9 +591,17 @@
             <de><![CDATA[Bitte fülle das Feld "[fieldtitle]" korrekt aus.]]></de>
             <en><![CDATA[Please fill in the "[fieldtitle]" field correctly.]]></en>
         </locale>
-        <locale name="exception.field.not.found" html="1">
+        <locale name="exception.field.type_not_found" html="1">
             <de><![CDATA[Das Feld "[fieldType]" #[fieldId] wurde nicht gefunden.]]></de>
             <en><![CDATA[Field "[fieldType]" #[fieldId] not found.]]></en>
+        </locale>
+        <locale name="exception.field.id_not_found" html="1">
+            <de><![CDATA[Das Feld #[fieldId] wurde nicht gefunden.]]></de>
+            <en><![CDATA[Field #[fieldId] not found.]]></en>
+        </locale>
+        <locale name="exception.field.id_in_product_not_found" html="1">
+            <de><![CDATA[Das Feld #[fieldId] wurde in Produkt #[productId] nicht gefunden.]]></de>
+            <en><![CDATA[Field #[fieldId] not found in product #[productId].]]></en>
         </locale>
         <locale name="exception.field.invalid" html="1">
             <de><![CDATA[
@@ -1894,6 +1902,11 @@
     </groups>
 
     <groups name="quiqqer/products" datatype="php">
+        <locale name="exception.Product.Types.VariantChild.parent_not_found">
+            <de><![CDATA[Vaterprodukt (#[parentId]) von Kind-Produkt (#[childId]) wurde nicht gefunden.]]></de>
+            <en><![CDATA[Parent product (#[parentId]) of child product (#[childId]) was not found.]]></en>
+        </locale>
+
         <locale name="quiqqer.products.category.settings.title">
             <de><![CDATA[Shop Einstellungen]]></de>
             <en><![CDATA[Shop settings]]></en>

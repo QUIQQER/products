@@ -1615,7 +1615,7 @@ class Model extends QUI\QDOM
         throw new QUI\ERP\Products\Product\Exception(
             [
                 'quiqqer/products',
-                'exception.field.not.found',
+                'exception.field.id_in_product_not_found',
                 [
                     'fieldId'   => $fieldId,
                     'productId' => $this->getId()
