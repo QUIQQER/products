@@ -40,7 +40,22 @@ class VariantChild extends AbstractType
         $inheritedFields = QUI\ERP\Products\Utils\Products::getInheritedFieldIdsForProduct($this);
         $inheritedFields = \array_flip($inheritedFields);
 
-        $fields = $this->getParent()->getFields();
+        $Parent = $this->getParent();
+
+        if (empty($Parent)) {
+            QUI\System\Log::addError(
+                QUI::getLocale()->get(
+                    'quiqqer/products',
+                    'exception.Product.Types.VariantChild.parent_not_found',
+                    [
+                        'childId'  => $pid,
+                        'parentId' => $this->getAttribute('parent')
+                    ]
+                )
+            );
+        }
+
+        $fields = $Parent->getFields();
 
         foreach ($fields as $Field) {
             if (!isset($inheritedFields[$Field->getId()])) {
