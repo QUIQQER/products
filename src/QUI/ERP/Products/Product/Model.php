@@ -1522,7 +1522,16 @@ class Model extends QUI\QDOM
         // delete the media folder
         try {
             $MediaFolder = $this->getMediaFolder();
-            $MediaFolder->delete();
+            $delete      = true;
+
+            if ($this instanceof QUI\ERP\Products\Product\Types\VariantChild
+                && $MediaFolder->getId() === $this->getParent()->getMediaFolder()->getId()) {
+                $delete = false;
+            }
+
+            if ($delete) {
+                $MediaFolder->delete();
+            }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addWarning($Exception->getMessage());
         }
