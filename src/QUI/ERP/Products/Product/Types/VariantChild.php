@@ -53,6 +53,8 @@ class VariantChild extends AbstractType
                     ]
                 )
             );
+
+            return;
         }
 
         $fields = $Parent->getFields();
