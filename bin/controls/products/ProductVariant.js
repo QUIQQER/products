@@ -427,12 +427,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     width    : 200,
                     sortable : false
                 }, {
-                    header   : QUILocale.get(lg, 'products.product.panel.grid.url'),
-                    dataIndex: 'url',
-                    dataType : 'text',
-                    width    : 200,
-                    sortable : false
-                }, {
                     header   : QUILocale.get(lg, 'products.product.panel.grid.nettoprice'),
                     dataIndex: 'price_netto_display',
                     dataType : 'text',
@@ -448,7 +442,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         header   : variantFields[i].title,
                         dataIndex: 'field-' + variantFields[i].id,
                         dataType : 'text',
-                        width    : 100,
+                        width    : 150,
                         sortable : false
                     });
                 }
