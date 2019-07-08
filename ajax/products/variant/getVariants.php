@@ -6,7 +6,7 @@
 
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Types\VariantParent;
-use QUI\ERP\Products\Utils\Tables;
+use QUI\ERP\Products\Utils\Tables as ProductTables;
 use QUI\ERP\Products\Handler\Fields;
 
 /**
@@ -20,6 +20,7 @@ QUI::$Ajax->registerFunction(
     function ($productId, $options) {
         $Product = Products::getProduct($productId);
         $options = \json_decode($options, true);
+        $lang    = QUI::getLocale()->getCurrent();
 
         $page = 1;
 
@@ -38,18 +39,16 @@ QUI::$Ajax->registerFunction(
         // variants w search cache
         $children = QUI::getDataBase()->fetch([
             'select' => ['id', 'parent'],
-            'from'   => Tables::getProductTableName(),
+            'from'   => ProductTables::getProductTableName(),
             'where'  => [
                 'parent' => $Product->getId()
             ]
         ]);
 
-        $childrenIds = \array_map(function ($variant) {
-            return $variant['id'];
-        }, $children);
+        $childrenIds = \array_column($children, 'id');
 
         $queryOptions['select'] = '*';
-        $queryOptions['from']   = QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
+        $queryOptions['from']   = ProductTables::getProductCacheTableName();
         $queryOptions['where']  = [
             'lang' => QUI::getLocale()->getCurrent(),
             'id'   => [
@@ -67,8 +66,83 @@ QUI::$Ajax->registerFunction(
 
         $searchResult = QUI::getDataBase()->fetch($queryOptions);
 
-        $variants = \array_map(function ($entry) use ($defaultVariantId, $Currency) {
-            $fields = [];
+        // get field data for AttributeGroup fields for every found VariantChild
+        $searchResultIds                  = \array_column($searchResult, 'id');
+        $childFieldData                   = [];
+        $parentAttributeGroupFields       = $Product->getFieldsByType([
+            'AttributeGroup'
+        ]);
+        $parentAttributeGroupFieldOptions = [];
+
+        /** @var \QUI\ERP\Products\Field\Types\AttributeGroup $ParentAttributeGroupField */
+        foreach ($parentAttributeGroupFields as $ParentAttributeGroupField) {
+            $fieldOptions = $ParentAttributeGroupField->getOptions();
+
+            if (empty($fieldOptions['entries'])) {
+                continue;
+            }
+
+            $fieldTitlesByValue = [];
+
+            foreach ($fieldOptions['entries'] as $entry) {
+                if (empty($entry['title'][$lang])) {
+                    $title = current($entry['title']);
+                } else {
+                    $title = $entry['title'][$lang];
+                }
+
+                $fieldTitlesByValue[$entry['valueId']] = $title;
+            }
+
+            $parentAttributeGroupFieldOptions[$ParentAttributeGroupField->getId()] = $fieldTitlesByValue;
+        }
+
+        $parentAttributeGroupFieldIds = \array_map(function ($AttributeGroupField) {
+            /** @var \QUI\ERP\Products\Field\Types\AttributeGroup $AttributeGroupField */
+            return $AttributeGroupField->getId();
+        }, $parentAttributeGroupFields);
+
+        if (!empty($searchResultIds)) {
+            $result = QUI::getDataBase()->fetch([
+                'select' => ['id', 'fieldData'],
+                'from'   => ProductTables::getProductTableName(),
+                'where'  => [
+                    'id' => [
+                        'type'  => 'IN',
+                        'value' => $searchResultIds
+                    ]
+                ]
+            ]);
+
+            foreach ($result as $row) {
+                $childId                     = $row['id'];
+                $fieldData                   = \json_decode($row['fieldData'], true);
+                $attributeGroupTitlesByValue = [];
+
+                // AttributeGroup fields only!
+                $fieldData = \array_filter($fieldData, function ($entry) use ($parentAttributeGroupFieldIds) {
+                    return \in_array($entry['id'], $parentAttributeGroupFieldIds);
+                });
+
+                foreach ($fieldData as $field) {
+                    $fieldId = $field['id'];
+
+                    if (empty($parentAttributeGroupFieldOptions[$fieldId][$field['value']])) {
+                        $title = '-';
+                    } else {
+                        $title = $parentAttributeGroupFieldOptions[$fieldId][$field['value']];
+                    }
+
+                    $attributeGroupTitlesByValue[$field['id']] = $title;
+                }
+
+                $childFieldData[$childId] = $attributeGroupTitlesByValue;
+            }
+        }
+
+        $variants = \array_map(function ($entry) use ($defaultVariantId, $Currency, $childFieldData) {
+            $variantId = (int)$entry['id'];
+            $fields    = [];
 
             foreach ($entry as $k => $v) {
                 if (\strpos($k, 'F') !== 0) {
@@ -81,8 +155,16 @@ QUI::$Ajax->registerFunction(
                 ];
             }
 
+            // add values of AttributeGroup fields
+            foreach ($childFieldData[$variantId] as $fieldId => $title) {
+                $fields[] = [
+                    'id'    => $fieldId,
+                    'value' => $title
+                ];
+            }
+
             $attributes = [
-                'id'             => (int)$entry['id'],
+                'id'             => $variantId,
                 'active'         => (int)$entry['active'],
                 'productNo'      => $entry['productNo'],
                 'fields'         => $fields,
