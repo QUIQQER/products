@@ -131,7 +131,7 @@ if ($siteUrl != $_REQUEST['_url']) {
         ]);
 
         // set site data
-        //$Site->setAttribute('nocache', true);
+        $Site->setAttribute('nocache', true);
         $Site->setAttribute('content-header', false);
         $Site->setAttribute('meta.seotitle', $Product->getTitle($Locale));
         $Site->setAttribute('meta.description', $Product->getDescription($Locale));
