@@ -80,7 +80,7 @@ class ProductListFrontendView
         $this->Currency->setLocale($Locale);
 
         $productList = [];
-        $hidePrice   = QUI\ERP\Products\Utils\Package::hidePrice();
+        $hidePrice   = $this->hidePrice;
 
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
