@@ -111,6 +111,7 @@ class ProductListFrontendView
 
                 if ($Field->getType() === QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST) {
                     $product['attributeFields'][] = $Field->getView();
+                    continue;
                 }
 
                 if ($Field->getType() === QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS) {
