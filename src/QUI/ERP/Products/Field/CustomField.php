@@ -39,6 +39,10 @@ abstract class CustomField extends QUI\ERP\Products\Field\Field
         $attributes                = parent::getAttributes();
         $attributes['custom_calc'] = $this->getCalculationData(Products::getLocale());
 
+        if (isset($attributes['custom_calc']['valueText'])) {
+            $attributes['valueText'] = $attributes['custom_calc']['valueText'];
+        }
+
         return $attributes;
     }
 }

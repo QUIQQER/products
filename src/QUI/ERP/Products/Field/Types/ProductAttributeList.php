@@ -273,7 +273,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         if ($userInput &&
             !(\defined('QUIQQER_FRONTEND') && QUI\ERP\Products\Utils\Package::hidePrice())
         ) {
-            $valueText .= ' ('.$userInput.')';
+            $valueText .= ' - '.$userInput;
         }
 
         return [

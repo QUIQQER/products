@@ -72,6 +72,14 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $requiredField = ' required="required"';
         }
 
+        if (\is_string($value)) {
+            $json = \json_decode($value, true);
+
+            if (\is_array($json)) {
+                $value = $json[0];
+            }
+        }
+
         if (!\is_string($value) && !\is_numeric($value)) {
             $value = '';
         } elseif (\is_numeric($value)) {
@@ -179,11 +187,11 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             }
 
             $options[] = [
-                'selected' => $selected,
-                'disabled' => $disabled,
-                'value'    => \htmlspecialchars($key),
-                'text'     => \htmlspecialchars($text),
-                'data'     => $userInput
+                'selected'  => $selected,
+                'disabled'  => $disabled,
+                'value'     => \htmlspecialchars($key),
+                'text'      => \htmlspecialchars($text),
+                'data'      => $userInput
             ];
         }
 

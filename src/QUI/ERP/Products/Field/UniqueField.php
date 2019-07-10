@@ -438,6 +438,16 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
         $value     = $this->getValue();
         $valueText = '-';
 
+        $json = null;
+
+        if (\is_string($value)) {
+            $json = \json_decode($value, true);
+
+            if (\is_array($json) && isset($json[0])) {
+                $value = $json[0];
+            }
+        }
+
         if (!empty($options) && isset($options['entries'])) {
             $current = QUI::getLocale()->getCurrent();
 
@@ -491,6 +501,10 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                     $valueText = \reset($option['title']);
                 }
             }
+        }
+
+        if (isset($this->custom_calc['valueText'])) {
+            $valueText = $this->custom_calc['valueText'];
         }
 
         return [
