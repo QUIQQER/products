@@ -199,6 +199,7 @@ class BackendSearch extends Search
 
                     case VariantChild::class:
                         $variantParentsIncluded = true;
+                        $this->ignoreVariantChildren = false;
                         break;
                 }
 
