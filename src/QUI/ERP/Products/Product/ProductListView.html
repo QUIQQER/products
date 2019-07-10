@@ -53,6 +53,21 @@
                     {$attribute.valueText} {$attribute.value}
                 </li>
                 {/foreach}
+
+
+                {foreach $product.attributeFields as $Field}
+                <li class="products-product-fields-field">
+                    {assign var=fieldAttributes value=$Field->getValue()}
+                    {$Field->getTitle()} : {$fieldAttributes.valueText}
+                </li>
+                {/foreach}
+
+                {foreach $product.groupFields as $Field}
+                <li class="products-product-fields-field">
+                    {assign var=fieldAttributes value=$Field->getValue()}
+                    {$Field->getTitle()} : {$fieldAttributes.valueText}
+                </li>
+                {/foreach}
             </ul>
         </td>
         <td class="products-product-quantity" align="top">

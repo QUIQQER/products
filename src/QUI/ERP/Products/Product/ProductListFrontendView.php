@@ -93,16 +93,28 @@ class ProductListFrontendView
             $PriceFactors = $Product->getPriceFactors();
 
             $product = [
-                'fields'        => [],
-                'vatArray'      => [],
-                'hasOfferPrice' => $Product->hasOfferPrice(),
-                'originalPrice' => $this->formatPrice($Product->getOriginalPrice()->getValue())
+                'fields'          => [],
+                'attributeFields' => [],
+                'groupFields'     => [],
+                'vatArray'        => [],
+                'hasOfferPrice'   => $Product->hasOfferPrice(),
+                'originalPrice'   => $this->formatPrice($Product->getOriginalPrice()->getValue())
             ];
 
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
             foreach ($fields as $Field) {
-                if ($Field->isPublic()) {
-                    $product['fields'][] = $Field->getView();
+                if (!$Field->isPublic()) {
+                    continue;
+                }
+
+                $product['fields'][] = $Field->getView();
+
+                if ($Field->getType() === QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST) {
+                    $product['attributeFields'][] = $Field->getView();
+                }
+
+                if ($Field->getType() === QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS) {
+                    $product['groupFields'][] = $Field->getView();
                 }
             }
 
