@@ -132,6 +132,29 @@ class Product extends QUI\Control
             $Gallery->setAttribute('folderId', false);
             $images = $Product->getImages();
 
+            try {
+                $mainImageId = $Product->getImage()->getId();
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
+                $mainImageId = false;
+            }
+
+            usort($images, function($ImageA, $ImageB) use ($mainImageId) {
+                /**
+                 * @var QUI\Projects\Media\Image $ImageA
+                 * @var QUI\Projects\Media\Image $ImageB
+                 */
+                if ($ImageA->getId() === $mainImageId) {
+                    return -1;
+                }
+
+                if ($ImageB->getId() === $mainImageId) {
+                    return 1;
+                }
+
+                return 0;
+            });
+
             foreach ($images as $Image) {
                 $Gallery->addImage($Image);
             }
