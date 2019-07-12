@@ -597,7 +597,7 @@ class Calc
 
         $price      = $isNetto ? $nettoPrice : $bruttoPrice;
         $sum        = $isNetto ? $nettoSum : $bruttoSum;
-        $basisPrice = $isNetto ? $basisNettoPrice : $basisNettoPrice + ($basisNettoPrice * $Vat->getValue() / 100);
+        $basisPrice = $isNetto ? $basisNettoPrice : \floatval($basisNettoPrice) + (\floatval($basisNettoPrice) * \floatval($Vat->getValue()) / 100);
 
         $vatArray = [
             'vat'  => $Vat->getValue(),
