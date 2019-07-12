@@ -322,6 +322,7 @@ class Categories
             try {
                 $result[] = self::getCategory($id);
             } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
             }
         }
 
