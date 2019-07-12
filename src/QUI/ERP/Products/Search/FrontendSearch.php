@@ -192,9 +192,10 @@ class FrontendSearch extends Search
 
         $binds                           = [];
         $where                           = [];
-        $findVariantParentsByChildValues = !!(int)QUI::getPackage('quiqqer/products')
-            ->getConfig()
-            ->get('variants', 'findVariantParentByChildValues');
+        $findVariantParentsByChildValues = empty($searchParams['ignoreFindVariantParentsByChildValues'])
+                                           && !!(int)QUI::getPackage('quiqqer/products')
+                ->getConfig()
+                ->get('variants', 'findVariantParentByChildValues');
 
         $sql = "SELECT `id`, `type`, `parentId`";
         $sql .= " FROM ".TablesUtils::getProductCacheTableName();
@@ -387,38 +388,63 @@ class FrontendSearch extends Search
             $sql .= " ".$this->validateOrderStatement($searchParams);
         }
 
-        if (!$countOnly) {
-            if (isset($searchParams['limit'])
-                && !empty($searchParams['limit'])
-                && isset($searchParams['sheet'])
-            ) {
-                $Pagination       = new QUI\Controls\Navigating\Pagination($searchParams);
-                $paginationParams = $Pagination->getSQLParams();
-                $queryLimit       = QUI\Database\DB::createQueryLimit($paginationParams['limit']);
+        $limitOffset = false;
 
-                foreach ($queryLimit['prepare'] as $bind => $value) {
-                    $binds[$bind] = [
-                        'value' => $value[0],
-                        'type'  => $value[1]
-                    ];
-                }
+        $searchParams['limit'] = 5;
+        $searchParams['sheet'] = 1;
 
-                $sql .= " ".$queryLimit['limit'];
-            } elseif (isset($searchParams['limit'])) {
-                $queryLimit = QUI\Database\DB::createQueryLimit($searchParams['limit']);
-
-                foreach ($queryLimit['prepare'] as $bind => $value) {
-                    $binds[$bind] = [
-                        'value' => $value[0],
-                        'type'  => $value[1]
-                    ];
-                }
-
-                $sql .= " ".$queryLimit['limit'];
+        if (!empty($searchParams['limit']) && !$countOnly) {
+            if (!empty($searchParams['limitOffset'])) {
+                $sql         .= " LIMIT ".(int)$searchParams['limitOffset'].",".(int)$searchParams['limit'];
+                $limitOffset = (int)$searchParams['limitOffset'];
             } else {
-                $sql .= " LIMIT 20"; // @todo as settings
+                $Pagination  = new QUI\Controls\Navigating\Pagination($searchParams);
+                $sqlParams   = $Pagination->getSQLParams();
+                $sql         .= " LIMIT ".$sqlParams['limit'];
+                $limitOffset = $Pagination->getStart();
+            }
+        } else {
+            if (!$countOnly) {
+                $sql         .= " LIMIT ".(int)20; // @todo: standard-limit als setting auslagern
+                $limitOffset = 0;
             }
         }
+
+//        if (!$countOnly) {
+//            if (isset($searchParams['limit'])
+//                && !empty($searchParams['limit'])
+//                && isset($searchParams['sheet'])
+//            ) {
+//                $Pagination       = new QUI\Controls\Navigating\Pagination($searchParams);
+//                $paginationParams = $Pagination->getSQLParams();
+//                $queryLimit       = QUI\Database\DB::createQueryLimit($paginationParams['limit']);
+//
+//                foreach ($queryLimit['prepare'] as $bind => $value) {
+//                    $binds[$bind] = [
+//                        'value' => $value[0],
+//                        'type'  => $value[1]
+//                    ];
+//                }
+//
+//                $sql .= " ".$queryLimit['limit'];
+//            } elseif (isset($searchParams['limit'])) {
+//                $queryLimit = QUI\Database\DB::createQueryLimit($searchParams['limit']);
+//
+//                foreach ($queryLimit['prepare'] as $bind => $value) {
+//                    $binds[$bind] = [
+//                        'value' => $value[0],
+//                        'type'  => $value[1]
+//                    ];
+//                }
+//
+//                $sql .= " ".$queryLimit['limit'];
+//            } else {
+//                $sql .= " LIMIT 20"; // @todo as settings
+//                $limitOffset = 0;
+//            }
+//        }
+
+        \QUI\System\Log::writeRecursive($sql);
 
         $Stmt = $PDO->prepare($sql);
 
@@ -444,7 +470,8 @@ class FrontendSearch extends Search
             return [];
         }
 
-        $productIds = [];
+        $productIds      = [];
+        $childrenRemoved = 0;
 
         foreach ($result as $k => $row) {
             if ($row['type'] === VariantChild::class) {
@@ -453,11 +480,29 @@ class FrontendSearch extends Search
                 }
 
                 if ($this->ignoreVariantChildren) {
+                    $childrenRemoved++;
                     continue;
                 }
             }
 
             $productIds[] = $row['id'];
+        }
+
+        /**
+         * If entries were removed from the result list repeat the search
+         * and add as many entries as needed to fill the given limit with "normal" search results.
+         */
+        if ($childrenRemoved > 0) {
+            if ($limitOffset !== false) {
+                $searchParams['limitOffset'] = $limitOffset;
+            }
+
+            $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+
+            $productIds = array_merge(
+                $productIds,
+                self::search($searchParams)
+            );
         }
 
         $productIds = array_values(array_unique($productIds));

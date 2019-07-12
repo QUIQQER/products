@@ -45,29 +45,34 @@ QUI::$Ajax->registerFunction(
             ]
         ]);
 
-        $childrenIds = \array_column($children, 'id');
+        $childrenIds     = \array_column($children, 'id');
+        $searchResultIds = [];
+        $searchResult    = [];
 
-        $queryOptions['select'] = '*';
-        $queryOptions['from']   = ProductTables::getProductCacheTableName();
-        $queryOptions['where']  = [
-            'lang' => QUI::getLocale()->getCurrent(),
-            'id'   => [
-                'type'  => 'IN',
-                'value' => $childrenIds
-            ]
-        ];
+        if (!empty($childrenIds)) {
+            $queryOptions['select'] = '*';
+            $queryOptions['from']   = ProductTables::getProductCacheTableName();
+            $queryOptions['where']  = [
+                'lang' => QUI::getLocale()->getCurrent(),
+                'id'   => [
+                    'type'  => 'IN',
+                    'value' => $childrenIds
+                ]
+            ];
 
-        $defaultVariantId = $Product->getDefaultVariantId();
-        $Currency         = $Product->getCurrency();
+            $defaultVariantId = $Product->getDefaultVariantId();
+            $Currency         = $Product->getCurrency();
 
-        if (!$Currency) {
-            $Currency = QUI\ERP\Defaults::getCurrency();
+            if (!$Currency) {
+                $Currency = QUI\ERP\Defaults::getCurrency();
+            }
+
+            $searchResult = QUI::getDataBase()->fetch($queryOptions);
+
+            // get field data for AttributeGroup fields for every found VariantChild
+            $searchResultIds = \array_column($searchResult, 'id');
         }
 
-        $searchResult = QUI::getDataBase()->fetch($queryOptions);
-
-        // get field data for AttributeGroup fields for every found VariantChild
-        $searchResultIds                  = \array_column($searchResult, 'id');
         $childFieldData                   = [];
         $parentAttributeGroupFields       = $Product->getFieldsByType([
             'AttributeGroup'
@@ -140,47 +145,51 @@ QUI::$Ajax->registerFunction(
             }
         }
 
-        $variants = \array_map(function ($entry) use ($defaultVariantId, $Currency, $childFieldData) {
-            $variantId = (int)$entry['id'];
-            $fields    = [];
+        $variants = [];
 
-            foreach ($entry as $k => $v) {
-                if (\strpos($k, 'F') !== 0) {
-                    continue;
+        if (!empty($searchResult)) {
+            $variants = \array_map(function ($entry) use ($defaultVariantId, $Currency, $childFieldData) {
+                $variantId = (int)$entry['id'];
+                $fields    = [];
+
+                foreach ($entry as $k => $v) {
+                    if (\strpos($k, 'F') !== 0) {
+                        continue;
+                    }
+
+                    $fields[] = [
+                        'id'    => (int)\mb_substr($k, 1),
+                        'value' => $v
+                    ];
                 }
 
-                $fields[] = [
-                    'id'    => (int)\mb_substr($k, 1),
-                    'value' => $v
+                // add values of AttributeGroup fields
+                foreach ($childFieldData[$variantId] as $fieldId => $title) {
+                    $fields[] = [
+                        'id'    => $fieldId,
+                        'value' => $title
+                    ];
+                }
+
+                $attributes = [
+                    'id'             => $variantId,
+                    'active'         => (int)$entry['active'],
+                    'productNo'      => $entry['productNo'],
+                    'fields'         => $fields,
+                    'defaultVariant' => $defaultVariantId === (int)$entry['id'] ? 1 : 0,
+
+                    'description'         => $entry['F'.Fields::FIELD_SHORT_DESC],
+                    'title'               => $entry['title'],
+                    'e_date'              => $entry['e_date'],
+                    'c_date'              => $entry['c_date'],
+                    'priority'            => $entry['F'.Fields::FIELD_PRIORITY],
+                    'url'                 => $entry['F'.Fields::FIELD_URL],
+                    'price_netto_display' => $Currency->format($entry['F'.Fields::FIELD_PRICE])
                 ];
-            }
 
-            // add values of AttributeGroup fields
-            foreach ($childFieldData[$variantId] as $fieldId => $title) {
-                $fields[] = [
-                    'id'    => $fieldId,
-                    'value' => $title
-                ];
-            }
-
-            $attributes = [
-                'id'             => $variantId,
-                'active'         => (int)$entry['active'],
-                'productNo'      => $entry['productNo'],
-                'fields'         => $fields,
-                'defaultVariant' => $defaultVariantId === (int)$entry['id'] ? 1 : 0,
-
-                'description'         => $entry['F'.Fields::FIELD_SHORT_DESC],
-                'title'               => $entry['title'],
-                'e_date'              => $entry['e_date'],
-                'c_date'              => $entry['c_date'],
-                'priority'            => $entry['F'.Fields::FIELD_PRIORITY],
-                'url'                 => $entry['F'.Fields::FIELD_URL],
-                'price_netto_display' => $Currency->format($entry['F'.Fields::FIELD_PRICE])
-            ];
-
-            return $attributes;
-        }, $searchResult);
+                return $attributes;
+            }, $searchResult);
+        }
 
         // count
         $queryOptions['count'] = true;

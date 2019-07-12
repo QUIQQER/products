@@ -1001,12 +1001,15 @@ class VariantParent extends AbstractType
             $productTitle = $this->getTitle($LocaleClone);
             $productTitle = QUI\Projects\Site\Utils::clearUrl($productTitle);
 
-            $productSuffix = \implode('-', $newValues[$lang]);
-            $productSuffix = \trim($productSuffix, '-');
+            $productSuffix = '';
+
+            if (!empty($newValues[$lang])) {
+                $productSuffix = \implode('-', $newValues[$lang]);
+                $productSuffix = \trim($productSuffix, '-');
+            }
 
             $urlValue[$lang] = $productTitle.'-'.$productSuffix;
         }
-
 
         $this->calcVariantPrice($Variant, $fields);
 
