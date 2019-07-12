@@ -139,7 +139,7 @@ class Product extends QUI\Control
                 $mainImageId = false;
             }
 
-            usort($images, function($ImageA, $ImageB) use ($mainImageId) {
+            usort($images, function ($ImageA, $ImageB) use ($mainImageId) {
                 /**
                  * @var QUI\Projects\Media\Image $ImageA
                  * @var QUI\Projects\Media\Image $ImageB
