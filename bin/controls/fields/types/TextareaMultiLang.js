@@ -141,6 +141,10 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
             var value   = this.getAttribute('value');
             var current = this.getAttribute('current');
 
+            if (!value) {
+                value = {};
+            }
+
             value[current] = this.$Editor.getContent();
 
             this.setAttribute('value', value);
