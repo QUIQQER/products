@@ -380,7 +380,7 @@ class FrontendSearch extends Search
         }
 
         // Add WHERE statements via event
-        $SearchQueryCollector = new SearchQueryCollector();
+        $SearchQueryCollector = new SearchQueryCollector($searchParams);
         QUI::getEvents()->fireEvent('quiqqerProductsFrontendSearchExecute', [$SearchQueryCollector]);
 
         $where = array_merge($SearchQueryCollector->getWhereStatements(), $where);
