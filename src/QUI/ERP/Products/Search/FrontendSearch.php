@@ -390,10 +390,17 @@ class FrontendSearch extends Search
 
         $limitOffset = false;
 
-        $searchParams['limit'] = 5;
-        $searchParams['sheet'] = 1;
-
         if (!empty($searchParams['limit']) && !$countOnly) {
+            $limit = explode(',', $searchParams['limit']);
+
+            if (!empty($limit[1])) {
+                $searchParams['sheet'] = (int)$limit[0] ?: 1;
+                $searchParams['limit'] = (int)$limit[1];
+            } else {
+                $searchParams['sheet'] = 1;
+                $searchParams['limit'] = (int)$limit[0];
+            }
+
             if (!empty($searchParams['limitOffset'])) {
                 $sql         .= " LIMIT ".(int)$searchParams['limitOffset'].",".(int)$searchParams['limit'];
                 $limitOffset = (int)$searchParams['limitOffset'];

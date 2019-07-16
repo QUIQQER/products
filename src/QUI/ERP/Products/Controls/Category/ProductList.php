@@ -556,7 +556,8 @@ class ProductList extends QUI\Control
             $max = $this->getMax();
         }
 
-        $searchParams['limit'] = $start.','.$max;
+        $searchParams['sheet'] = $start;
+        $searchParams['limit'] = $max;
 
         return $searchParams;
     }
