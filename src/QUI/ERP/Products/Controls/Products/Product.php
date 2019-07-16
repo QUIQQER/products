@@ -272,7 +272,7 @@ class Product extends QUI\Control
                 continue;
             }
 
-            if ($Field->showInDetails()) {
+            if (!$Field->showInDetails()) {
                 continue;
             }
 
