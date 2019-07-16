@@ -108,7 +108,7 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
 
                 // active status
                 data.data[i].status = new Element('span', {
-                    'class': entry.active ? 'fa fa-check' : 'fa fa-remove'
+                    'class': parseInt(entry.active) ? 'fa fa-check' : 'fa fa-remove'
                 });
 
                 // product no
