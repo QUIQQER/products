@@ -379,6 +379,13 @@ class FrontendSearch extends Search
             }
         }
 
+        // Add WHERE statements via event
+        $SearchQueryCollector = new SearchQueryCollector();
+        QUI::getEvents()->fireEvent('quiqqerProductsFrontendSearchExecute', [$SearchQueryCollector]);
+
+        $where = array_merge($SearchQueryCollector->getWhereStatements(), $where);
+        $binds = array_merge($SearchQueryCollector->getBinds(), $binds);
+
         // build WHERE query string
         if (!empty($where)) {
             $sql .= " WHERE ".\implode(" AND ", $where);

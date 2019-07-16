@@ -312,7 +312,8 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
                         lang: this.getAttribute('lang')
                     }),
                     searchParams: JSON.encode({
-                        freetext: this.$Input.value
+                        freetext: this.$Input.value,
+                        suggest : true
                     }),
                     globalsearch: this.getAttribute('globalsearch')
                 });
