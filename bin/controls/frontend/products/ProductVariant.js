@@ -135,6 +135,14 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             this.$startInit = true;
             this.Loader.inject(this.getElm());
 
+            // remove events from AttributeList field controls (added by parent.$onImport)
+            var fields = this.getFieldControls();
+
+            fields.each(function (Control) {
+                Control.removeEvents('onChange');
+            });
+
+            // add Variant events
             var fieldLists = this.getElm().getElements(
                 '.product-data-fieldlist .quiqqer-product-field select'
             );
