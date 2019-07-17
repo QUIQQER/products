@@ -263,4 +263,49 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
 
         return $value;
     }
+
+    /**
+     * Get field value title by value
+     *
+     * @param int $value
+     * @param QUI\Locale|null $Locale (optional) - default: QUI::getLocale()
+     * @return string
+     */
+    public function getTitleByValue($value, QUI\Locale $Locale = null)
+    {
+        if ($Locale === null) {
+            $Locale = QUI::getLocale();
+        }
+
+        $options = $this->getOptions();
+        $lang    = $Locale->getCurrent();
+
+        $displayValue = '-';
+
+        if (!empty($value)) {
+            $index    = (int)$value['index'];
+            $quantity = $value['quantity'];
+            $entries  = $options['entries'];
+
+            foreach ($entries as $k => $entry) {
+                if ((int)$k !== $index) {
+                    continue;
+                }
+
+                if (!empty($entry['title'][$lang])) {
+                    $title = $entry['title'][$lang];
+                } else {
+                    $title = array_shift($entry['title']);
+                }
+
+                if ($entry['quantityInput'] && !empty($quantity)) {
+                    $displayValue = $quantity.' '.$title;
+                } else {
+                    $displayValue = $title;
+                }
+            }
+        }
+
+        return $displayValue;
+    }
 }
