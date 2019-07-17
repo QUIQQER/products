@@ -198,16 +198,16 @@ class BackendSearch extends Search
                         break;
 
                     case VariantChild::class:
-                        $variantParentsIncluded = true;
+                        $variantChildrenIncluded = true;
                         $this->ignoreVariantChildren = false;
                         break;
                 }
 
-                if ($productType === VariantChild::class) {
-                    $variantChildrenIncluded = true;
-                }
-
                 $typeCount++;
+            }
+
+            if (!$variantParentsIncluded) {
+                $findVariantParentsByChildValues = false;
             }
 
             // If VariantParents should also be found by searching for VariantChildren values
