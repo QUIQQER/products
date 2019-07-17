@@ -386,6 +386,8 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
 
                 var refreshGrid = function () {
+                    self.Loader.show();
+
                     return new Promise(function (resolve, reject) {
                         Categories.getProductList(categoryId, {
                             perPage: self.$grids.Products.options.perPage,
@@ -393,6 +395,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                         }).then(function (result) {
                             self.$grids.Products.setData(result);
                             RemoveButton.disable();
+                            self.Loader.hide();
                         }).then(resolve, reject);
                     });
                 };
