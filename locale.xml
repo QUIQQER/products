@@ -246,7 +246,8 @@
             <en><![CDATA[Consider price modification by attribute lists in search cache]]></en>
         </locale>
         <locale name="settings.window.products.useAttributeListsForMinMaxPriceCalculation.description">
-            <de><![CDATA[Bei der Berechnung des niedrigsten und höchsten Preises für die Produkt-Suche sollen Änderungen des Preises durch Auswahllisten (Auf- bzw. Abschläge) berücksichtigt werden.]]></de>
+            <de>
+                <![CDATA[Bei der Berechnung des niedrigsten und höchsten Preises für die Produkt-Suche sollen Änderungen des Preises durch Auswahllisten (Auf- bzw. Abschläge) berücksichtigt werden.]]></de>
             <en><![CDATA[When calculating the lowest and highest price for the product search, changes in the price by attribute lists (discounts / surcharges) should be taken into account.]]></en>
         </locale>
 
@@ -517,6 +518,10 @@
         <locale name="fieldtype.PriceByQuantity.frontend.text">
             <de><![CDATA[[price] ab [quantity] Stück]]></de>
             <en><![CDATA[[price] by [quantity] pieces]]></en>
+        </locale>
+        <locale name="fieldtype.UnitSelect">
+            <de><![CDATA[Einheitenauswahl]]></de>
+            <en><![CDATA[Unit select]]></en>
         </locale>
 
         <locale name="fieldtype.Textarea">
@@ -1862,6 +1867,10 @@
             <de><![CDATA[Auswählbare Werte]]></de>
             <en><![CDATA[Selectable values]]></en>
         </locale>
+        <locale name="fields.control.UnitSelectSettings.grid.id">
+            <de><![CDATA[ID]]></de>
+            <en><![CDATA[ID]]></en>
+        </locale>
         <locale name="fields.control.UnitSelectSettings.grid.default">
             <de><![CDATA[Standard]]></de>
             <en><![CDATA[Default]]></en>
@@ -1874,8 +1883,12 @@
             <de><![CDATA[Neuer auswählbarer Wert]]></de>
             <en><![CDATA[New selectable value]]></en>
         </locale>
+        <locale name="fields.control.UnitSelectSettings.add.idLabel">
+            <de><![CDATA[Interner Identifikator]]></de>
+            <en><![CDATA[Internal identifier]]></en>
+        </locale>
         <locale name="fields.control.UnitSelectSettings.add.titleLabel">
-            <de><![CDATA[Title]]></de>
+            <de><![CDATA[Titel]]></de>
             <en><![CDATA[Title]]></en>
         </locale>
         <locale name="fields.control.UnitSelectSettings.add.defaultLabel">
@@ -1897,6 +1910,14 @@
         <locale name="fields.control.UnitSelectSettings.remove.text">
             <de><![CDATA[Sollen die folgenden Werte gelöscht werden?]]></de>
             <en><![CDATA[Shall the following values be deleted?]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.error_duplicate_id">
+            <de><![CDATA[Der interne Identifikator existiert bereits. Bitte vergeben Sie einen eindeutigen Identifikator.]]></de>
+            <en><![CDATA[The internal identifier already exists. Please choose a unique identifier.]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.empty_id">
+            <de><![CDATA[Der interne Identifikator darf nicht leer sein. Bitte vergeben Sie einen eindeutigen Identifikator.]]></de>
+            <en><![CDATA[The internal identifier must not be empty. Please choose a unique identifier.]]></en>
         </locale>
 
     </groups>
