@@ -222,10 +222,10 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
         $options      = $this->getOptions();
         $entries      = $options['entries'];
 
-        foreach ($entries as $k => $entry) {
+        foreach ($entries as $id => $entry) {
             if ($entry['default']) {
                 $defaultValue = [
-                    'id'       => $entry['id'],
+                    'id'       => $id,
                     'quantity' => false
                 ];
 
