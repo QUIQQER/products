@@ -60,6 +60,10 @@
                     <type><![CDATA[bool]]></type>
                     <defaultvalue>0</defaultvalue>
                 </conf>
+                <conf name="hideAttributeGroupsWithNoOptions">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
             </section>
             <section name="editableFields"/>
         </config>
@@ -214,6 +218,17 @@
                             <description>
                                 <locale group="quiqqer/products"
                                         var="settings.window.products.findVariantParentByChildValues.description"/>
+                            </description>
+                        </input>
+
+                        <input conf="variants.hideAttributeGroupsWithNoOptions" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.hideAttributeGroupsWithNoOptions"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.hideAttributeGroupsWithNoOptions.description"/>
                             </description>
                         </input>
 

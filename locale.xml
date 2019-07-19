@@ -227,6 +227,14 @@
             <en>
                 <![CDATA[Parent articles shall be shown in the search results if the search value contains values of child articles (e.g. title, description).]]></en>
         </locale>
+        <locale name="settings.window.products.hideAttributeGroupsWithNoOptions">
+            <de><![CDATA[Attributlisten ohne Auswahlmöglichkeit verstecken]]></de>
+            <en><![CDATA[Hide attribute lists without available options]]></en>
+        </locale>
+        <locale name="settings.window.products.hideAttributeGroupsWithNoOptions.description">
+            <de><![CDATA[Attributlisten Selects, die keine verfügbare Auswahl haben, sollen im jeweiligen Produkt ausgeblendet werden (Frontend)]]></de>
+            <en><![CDATA[Attribute list selects that have no available options shall not be displayed in the respective product (frontend)]]></en>
+        </locale>
 
         <locale name="settings.window.fieldsearch.backend.title">
             <de><![CDATA[Felder für Backend-Filter]]></de>
