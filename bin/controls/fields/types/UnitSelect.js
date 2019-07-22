@@ -28,7 +28,6 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
 
             this.$Select        = null;
             this.$fieldId       = null;
-            this.$Value         = {};
             this.$QuantityInput = null;
 
             this.addEvents({
@@ -83,31 +82,35 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
                 if (Elm.value) {
                     var value = JSON.decode(Elm.value);
 
-                    selectValue = value.index;
+                    selectValue = value.id;
 
                     if (value.quantity) {
                         self.$QuantityInput.value = value.quantity;
                     }
                 }
 
-                for (i = 0, len = Options.entries.length; i < len; i++) {
-                    var Option = Options.entries[i];
+                for (var id in Options.entries) {
+                    if (!Options.entries.hasOwnProperty(id)) {
+                        continue;
+                    }
+
+                    var Option = Options.entries[id];
                     var Title  = Option.title;
 
                     if (USER.lang in Title) {
                         label = Title[USER.lang];
                     } else {
-                        label = 'Option ' + i;
+                        label = 'Option ' + id;
                     }
 
                     new Element('option', {
                         html        : label,
-                        value       : i,
+                        value       : id,
                         'data-input': Option.quantityInput ? 1 : 0
                     }).inject(self.$Select);
 
                     if (Option.default) {
-                        defaultValue = i.toString();
+                        defaultValue = id;
                     }
                 }
 
@@ -156,7 +159,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
          */
         $setValue: function () {
             this.getElm().value = JSON.encode({
-                index   : this.$Select.value,
+                id      : this.$Select.value,
                 quantity: this.$QuantityInput ? this.$QuantityInput.value.trim() : false
             });
         },
@@ -168,7 +171,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
          */
         getValue: function () {
             return {
-                index   : this.$Select.value,
+                id      : this.$Select.value,
                 quantity: this.$QuantityInput ? this.$QuantityInput.value.trim() : false
             };
         }

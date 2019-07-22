@@ -174,7 +174,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
      * Check the value
      * is the value valid for the field type?
      *
-     * @param integer|string $value - User value = "[key, user value]"
+     * @param array
      * @throws \QUI\ERP\Products\Field\Exception
      */
     public function validate($value)
@@ -205,7 +205,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
             }
         }
 
-        if (!\array_key_exists('index', $value) || !\array_key_exists('quantity', $value)) {
+        if (!\array_key_exists('id', $value) || !\array_key_exists('quantity', $value)) {
             throw new QUI\ERP\Products\Field\Exception($invalidException);
         }
     }
@@ -222,12 +222,14 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
         $options      = $this->getOptions();
         $entries      = $options['entries'];
 
-        foreach ($entries as $k => $entry) {
+        foreach ($entries as $id => $entry) {
             if ($entry['default']) {
                 $defaultValue = [
-                    'index'    => $k,
+                    'id'       => $id,
                     'quantity' => false
                 ];
+
+                break;
             }
         }
 
@@ -247,15 +249,15 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
             }
         }
 
-        if (!\array_key_exists('index', $value) || !\array_key_exists('quantity', $value)) {
+        if (!\array_key_exists('id', $value) || !\array_key_exists('quantity', $value)) {
             return $defaultValue;
         }
 
-        if (!isset($entries[$value['index']])) {
+        if (!isset($entries[$value['id']])) {
             return $defaultValue;
         }
 
-        if ($entries[$value['index']]['quantityInput']) {
+        if ($entries[$value['id']]['quantityInput']) {
             $value['quantity'] = (int)$value['quantity'];
         } else {
             $value['quantity'] = false;
@@ -278,34 +280,17 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
         }
 
         $options = $this->getOptions();
+        $entries = $options['entries'];
         $lang    = $Locale->getCurrent();
 
-        $displayValue = '-';
-
-        if (!empty($value)) {
-            $index    = (int)$value['index'];
-            $quantity = $value['quantity'];
-            $entries  = $options['entries'];
-
-            foreach ($entries as $k => $entry) {
-                if ((int)$k !== $index) {
-                    continue;
-                }
-
-                if (!empty($entry['title'][$lang])) {
-                    $title = $entry['title'][$lang];
-                } else {
-                    $title = array_shift($entry['title']);
-                }
-
-                if ($entry['quantityInput'] && !empty($quantity)) {
-                    $displayValue = $quantity.' '.$title;
-                } else {
-                    $displayValue = $title;
-                }
-            }
+        if (empty($value['id']) || empty($entries[$value['id']])) {
+            return '-';
         }
 
-        return $displayValue;
+        if (empty($entries[$value['id']]['title'][$lang])) {
+            return '-';
+        }
+
+        return $entries[$value['id']]['title'][$lang];
     }
 }

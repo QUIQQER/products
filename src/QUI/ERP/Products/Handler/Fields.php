@@ -40,6 +40,7 @@ class Fields
     const FIELD_PRICE_RETAIL = 17; // UVP - RRP
     const FIELD_PRIORITY = 18; // Product Priority
     const FIELD_URL = 19; // Product URL
+    const FIELD_UNIT = 20;
 
     /**
      * Types

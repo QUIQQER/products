@@ -23,40 +23,14 @@ class UnitSelectFrontendView extends QUI\ERP\Products\Field\View
             return '';
         }
 
-        $Engine  = QUI::getTemplateManager()->getEngine();
-        $lang    = QUI::getLocale()->getCurrent();
-        $value   = $this->getValue();
-        $options = $this->getOptions();
+        $Engine = QUI::getTemplateManager()->getEngine();
 
-        $displayValue = '-';
-
-        if (!empty($value)) {
-            $index    = (int)$value['index'];
-            $quantity = $value['quantity'];
-            $entries  = $options['entries'];
-
-            foreach ($entries as $k => $entry) {
-                if ((int)$k !== $index) {
-                    continue;
-                }
-
-                if (!empty($entry['title'][$lang])) {
-                    $title = $entry['title'][$lang];
-                } else {
-                    $title = array_shift($entry['title']);
-                }
-
-                if ($entry['quantityInput'] && !empty($quantity)) {
-                    $displayValue = $quantity.' '.$title;
-                } else {
-                    $displayValue = $title;
-                }
-            }
-        }
+        /** @var UnitSelect $Field */
+        $Field = QUI\ERP\Products\Handler\Fields::getField($this->getId());
 
         $Engine->assign([
             'title' => $this->getTitle(),
-            'value' => $displayValue
+            'value' => $Field->getTitleByValue($this->getValue())
         ]);
 
         return $Engine->fetch(\dirname(__FILE__).'/UnitSelectFrontendView.html');

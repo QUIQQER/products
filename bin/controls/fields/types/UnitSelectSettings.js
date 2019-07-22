@@ -43,8 +43,9 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
         initialize: function (options) {
             this.parent(options);
 
-            this.$Input = null;
-            this.$data  = [];
+            this.$Input   = null;
+            this.$Data    = {};
+            this.$Entries = {};
 
             this.$Grid = null;
 
@@ -109,7 +110,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
 
             this.$Grid = new Grid(Container, {
                 perPage    : 150,
-                buttons    : [/*{
+                buttons    : [{
                     name     : 'up',
                     textimage: 'fa fa-angle-up',
                     disabled : true,
@@ -132,7 +133,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                     }
                 }, {
                     type: 'separator'
-                },*/ {
+                }, {
                     name     : 'add',
                     textimage: 'fa fa-plus',
                     text     : QUILocale.get('quiqqer/system', 'add'),
@@ -146,10 +147,10 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                     disabled : true,
                     events   : {
                         onClick: function () {
-                            var selected = self.$Grid.getSelectedIndices();
+                            var selected = self.$Grid.getSelectedData();
 
                             if (selected.length) {
-                                self.openEditDialog(selected[0]);
+                                self.openEditDialog(selected[0].id);
                             }
                         }
                     }
@@ -165,6 +166,12 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                     }
                 }],
                 columnModel: [{
+                    header   : QUILocale.get(lg, 'fields.control.UnitSelectSettings.grid.id'),
+                    title    : QUILocale.get(lg, 'fields.control.UnitSelectSettings.grid.id'),
+                    dataIndex: 'id',
+                    dataType : 'string',
+                    width    : 50
+                }, {
                     header   : QUILocale.get(lg, 'fields.control.UnitSelectSettings.grid.default'),
                     title    : QUILocale.get(lg, 'fields.control.UnitSelectSettings.grid.default'),
                     dataIndex: 'default',
@@ -174,12 +181,16 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                     header   : QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
                     dataType : 'string',
-                    width    : 175
+                    width    : 150
                 }, {
                     header   : QUILocale.get(lg, 'fields.control.UnitSelectSettings.grid.quantityInput'),
                     dataIndex: 'quantityInputCheck',
                     dataType : 'node',
                     width    : 100
+                }, {
+                    dataIndex: 'pos',
+                    dataType : 'number',
+                    hidden   : true
                 }]
             });
 
@@ -192,7 +203,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                     self.$buttonReset();
 
                     self.openEditDialog(
-                        self.$Grid.getSelectedIndices()[0]
+                        self.$Grid.getSelectedData()[0].id
                     );
                 }
             });
@@ -210,40 +221,17 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
             this.$Input = Node;
             this.$Elm   = this.create();
 
-            var data   = {},
-                result = [];
-
             try {
-                data = JSON.decode(this.$Input.value);
+                this.$Data = JSON.decode(this.$Input.value);
 
-                // parse data
-                if ("entries" in data) {
-                    for (var i = 0, len = data.entries.length; i < len; i++) {
-                        if (!("title" in data.entries[i])) {
-                            continue;
-                        }
-
-                        if (!("default" in data.entries[i])) {
-                            continue;
-                        }
-
-                        if (!("quantityInput" in data.entries[i])) {
-                            continue;
-                        }
-
-                        result.push(data.entries[i]);
-                    }
-
-                    this.$data = result;
+                if (typeOf(this.$Data.entries) !== 'object' && !this.$Data.entries.length) {
+                    this.$Entries = {};
+                } else {
+                    this.$Entries = this.$Data.entries;
                 }
-
             } catch (e) {
                 console.error(this.$Input.value);
                 console.error(e);
-            }
-
-            if (!this.$data) {
-                this.$data = [];
             }
 
             this.$Elm.wraps(this.$Input);
@@ -299,13 +287,17 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
          * refresh the grid data dispaly
          */
         refresh: function () {
-            var i, len, entry, langTitle;
+            var entry, langTitle;
             var data = [];
 
             var currentLang = QUILocale.getCurrent();
 
-            for (i = 0, len = this.$data.length; i < len; i++) {
-                entry     = this.$data[i];
+            for (var id in this.$Entries) {
+                if (!this.$Entries.hasOwnProperty(id)) {
+                    continue;
+                }
+
+                entry     = this.$Entries[id];
                 langTitle = '---';
 
                 if (typeof entry.title[currentLang] !== 'undefined') {
@@ -313,15 +305,22 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                 }
 
                 data.push({
+                    id                : id,
                     title             : langTitle,
                     default           : new Element('span', {
                         'class': entry.default ? 'fa fa-check-square-o' : 'fa fa-square-o'
                     }),
                     quantityInputCheck: new Element('span', {
                         'class': entry.quantityInput ? 'fa fa-check-square-o' : 'fa fa-square-o'
-                    })
+                    }),
+                    pos               : entry.pos
                 });
             }
+
+            // sort by pos
+            data.sort(function (a, b) {
+                return a.pos - b.pos;
+            });
 
             this.$Grid.setData({
                 data: data
@@ -346,9 +345,11 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                 texticon : false,
                 maxHeight: 400,
                 maxWidth : 600,
+                autoclose: false,
                 events   : {
                     onOpen  : function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
+                            idLabel           : QUILocale.get(lg, lgPrefix + 'add.idLabel'),
                             titleLabel        : QUILocale.get(lg, lgPrefix + 'add.titleLabel'),
                             defaultLabel      : QUILocale.get(lg, lgPrefix + 'add.defaultLabel'),
                             quantityInputLabel: QUILocale.get(lg, lgPrefix + 'add.quantityInputLabel')
@@ -357,6 +358,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                         var Form = Win.getContent().getElement('form');
 
                         new InputMultiLang().imports(Form.elements.title);
+                        Form.elements.id.focus();
                     },
                     onSubmit: function (Win) {
                         var Form  = Win.getContent().getElement('form'),
@@ -365,10 +367,17 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                             );
 
                         self.add(
+                            Form.elements.id.value,
                             Title.getData(),
                             Form.elements.default.checked,
                             Form.elements.quantityInput.checked
-                        );
+                        ).then(function () {
+                            Win.close();
+                        }, function (errorMsg) {
+                            QUI.getMessageHandler().then(function (MH) {
+                                MH.addError(errorMsg);
+                            });
+                        });
                     }
                 }
             }).open();
@@ -377,31 +386,28 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
         /**
          * opens the edit dialog
          *
-         * @param {Number} index - row index
+         * @param {String} id - entry identifier
          */
-        openEditDialog: function (index) {
-            if (typeof index === 'undefined') {
-                return;
-            }
-
-            if (typeof this.$data[index] === 'undefined') {
+        openEditDialog: function (id) {
+            if (!(id in this.$Entries)) {
                 return;
             }
 
             var self = this,
-                data = this.$data[index];
+                Data = this.$Entries[id];
 
             var lgPrefix = 'fields.control.UnitSelectSettings.';
 
             new QUIConfirm({
                 title    : QUILocale.get(lg, lgPrefix + 'edit.title'),
-                icon     : 'fa fa-edi',
+                icon     : 'fa fa-edit',
                 texticon : false,
                 maxHeight: 400,
                 maxWidth : 600,
                 events   : {
                     onOpen  : function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
+                            idLabel           : QUILocale.get(lg, lgPrefix + 'add.idLabel'),
                             titleLabel        : QUILocale.get(lg, lgPrefix + 'add.titleLabel'),
                             defaultLabel      : QUILocale.get(lg, lgPrefix + 'add.defaultLabel'),
                             quantityInputLabel: QUILocale.get(lg, lgPrefix + 'add.quantityInputLabel')
@@ -409,9 +415,12 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
 
                         var Form = Win.getContent().getElement('form');
 
-                        Form.elements.title.value           = JSON.encode(data.title);
-                        Form.elements.default.checked       = data.default;
-                        Form.elements.quantityInput.checked = data.quantityInput;
+                        Form.elements.id.value    = id;
+                        Form.elements.id.disabled = true;
+
+                        Form.elements.title.value           = JSON.encode(Data.title);
+                        Form.elements.default.checked       = Data.default;
+                        Form.elements.quantityInput.checked = Data.quantityInput;
 
                         new InputMultiLang().imports(Form.elements.title);
                     },
@@ -422,7 +431,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                             );
 
                         self.edit(
-                            index,
+                            id,
                             Title.getData(),
                             Form.elements.default.checked,
                             Form.elements.quantityInput.checked
@@ -437,14 +446,13 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
          */
         openRemoveDialog: function () {
             var self    = this,
-                data    = this.$Grid.getSelectedData(),
-                indices = this.$Grid.getSelectedIndices();
+                data    = this.$Grid.getSelectedData()
 
-            var titles = data.map(function (Entry) {
-                return Entry.title;
+            var indices = data.map(function(Entry) {
+                return Entry.id;
             });
 
-            if (!titles.length) {
+            if (!indices.length) {
                 return;
             }
 
@@ -453,7 +461,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                 icon       : 'fa fa-trash',
                 texticon   : 'fa fa-trash',
                 text       : QUILocale.get(lg, 'fields.control.UnitSelectSettings.remove.text'),
-                information: titles.join(', '),
+                information: indices.join(', '),
                 maxHeight  : 300,
                 maxWidth   : 450,
                 events     : {
@@ -468,16 +476,28 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
          * entry move up
          */
         $moveup: function () {
-            var from = this.$Grid.getSelectedIndices();
+            var Entry = this.$Grid.getSelectedData()[0];
 
-            if (from === 0) {
+            if (Entry.pos === 0) {
                 return;
             }
 
-            var to = from - 1;
+            Entry.pos -= 1;
+            this.$Entries[Entry.id].pos = Entry.pos;
 
-            this.$data.splice(to, 0, this.$data.splice(from, 1)[0]);
-            this.$Grid.moveup();
+            for (var id in this.$Entries) {
+                if (!this.$Entries.hasOwnProperty(id)) {
+                    continue;
+                }
+
+                if (id === Entry.id || this.$Entries[id].pos < Entry.pos) {
+                    continue;
+                }
+
+                this.$Entries[id].pos += 1;
+            }
+
+            this.refresh();
             this.update();
         },
 
@@ -485,16 +505,28 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
          * entry move down
          */
         $movedown: function () {
-            var from = this.$Grid.getSelectedIndices();
+            var Entry = this.$Grid.getSelectedData()[0];
 
-            if (from === this.$data.length - 1) {
+            if (Entry.pos === Object.getLength(this.$Entries)) {
                 return;
             }
 
-            var to = from + 1;
+            Entry.pos += 1;
+            this.$Entries[Entry.id].pos = Entry.pos;
 
-            this.$data.splice(to, 0, this.$data.splice(from, 1)[0]);
-            this.$Grid.movedown();
+            for (var id in this.$Entries) {
+                if (!this.$Entries.hasOwnProperty(id)) {
+                    continue;
+                }
+
+                if (id === Entry.id || this.$Entries[id].pos > Entry.pos) {
+                    continue;
+                }
+
+                this.$Entries[id].pos -= 1;
+            }
+
+            this.refresh();
             this.update();
         },
 
@@ -503,71 +535,84 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
          */
         update: function () {
             this.$Input.value = JSON.encode({
-                entries: this.$data
+                entries: this.$Entries
             });
         },
 
         /**
          * Add an entry
          *
+         * @param {String} id
          * @param {Object|String} title
          * @param {Boolean} isDefault
          * @param {Boolean} quantityInput
+         * @return {Promise}
          */
-        add: function (title, isDefault, quantityInput) {
-            // if this is selected, the orthers must be deselected
-            if (Boolean(isDefault)) {
-                for (var i = 0, len = this.$data.length; i < len; i++) {
-                    this.$data[i].selected = false;
+        add: function (id, title, isDefault, quantityInput) {
+            return new Promise(function (resolve, reject) {
+                if (id in this.$Entries) {
+                    reject(
+                        QUILocale.get(lg, 'fields.control.UnitSelectSettings.add.error_duplicate_id')
+                    );
+
+                    return;
                 }
-            }
 
-            this.$data.push({
-                title        : title,
-                'default'    : Boolean(isDefault),
-                quantityInput: Boolean(quantityInput)
-            });
+                if (!id) {
+                    reject(
+                        QUILocale.get(lg, 'fields.control.UnitSelectSettings.add.empty_id')
+                    );
 
-            this.refresh();
-            this.update();
+                    return;
+                }
+
+                // if this is selected, the orthers must be deselected
+                if (Boolean(isDefault)) {
+                    for (var entryId in this.$Entries) {
+                        if (!this.$Entries.hasOwnProperty(entryId)) {
+                            continue;
+                        }
+
+                        this.$Entries[entryId].selected = false;
+                    }
+                }
+
+                this.$Entries[id] = {
+                    title        : title,
+                    'default'    : Boolean(isDefault),
+                    quantityInput: Boolean(quantityInput),
+                    pos          : Object.getLength(this.$Entries)
+                };
+
+                this.refresh();
+                this.update();
+                resolve();
+            }.bind(this));
         },
 
         /**
          * Remove entries
          *
-         * @param {Number|Array} index - Row number(s)
+         * @param {Array} ids - entry identifiers
          */
-        remove: function (index) {
+        remove: function (ids) {
             if (!this.$Grid) {
                 return;
             }
 
-            var newData = [];
-
-            var mustBeDeleted = function (wanted) {
-                if ((typeOf(index) === 'string' || typeOf(index) === 'number') &&
-                    index == wanted) {
-                    return true;
-                }
-
-                if (typeOf(index) === 'array') {
-                    for (var i = 0, len = index.length; i < len; i++) {
-                        if (index[i] == wanted) {
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
-            };
-
-            for (var i = 0, len = this.$data.length; i < len; i++) {
-                if (mustBeDeleted(i) === false) {
-                    newData.push(this.$data[i]);
-                }
+            for (var i = 0, len = ids.length; i < len; i++) {
+                delete this.$Entries[ids[i]];
             }
 
-            this.$data = newData;
+            var pos = 0;
+
+            for (var id in this.$Entries) {
+                if (!this.$Entries.hasOwnProperty(id)) {
+                    continue;
+                }
+
+                this.$Entries[id].pos = pos++;
+            }
 
             this.refresh();
             this.update();
@@ -576,24 +621,29 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
         /**
          * Edit field entry
          *
-         * @param {Number} index
+         * @param {String} id
          * @param {String} title
          * @param {Boolean} isDefault
          * @param {Boolean} quantityInput
-         * @param {Object|String} title
+         * @param {Number} [pos]
          */
-        edit: function (index, title, isDefault, quantityInput) {
+        edit: function (id, title, isDefault, quantityInput, pos) {
             // if selected, then all others unselected
             if (isDefault) {
-                this.$data.each(function (entry, key) {
-                    this.$data[key].default = false;
-                }.bind(this));
+                for (var dataId in this.$Entries) {
+                    if (!this.$Entries.hasOwnProperty(dataId)) {
+                        continue;
+                    }
+
+                    this.$Entries[dataId].default = false;
+                }
             }
 
-            this.$data[index] = {
+            this.$Entries[id] = {
                 title        : title,
                 'default'    : Boolean(isDefault),
-                quantityInput: Boolean(quantityInput)
+                quantityInput: Boolean(quantityInput),
+                pos          : typeof pos === "undefined" ? this.$Entries[id].pos : pos
             };
 
             this.refresh();

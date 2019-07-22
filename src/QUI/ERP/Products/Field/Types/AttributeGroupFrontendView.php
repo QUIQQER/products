@@ -70,8 +70,9 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         ]);
 
         // options
-        $options   = [];
-        $currentLC = \strtolower($current).'_'.\strtoupper($current);
+        $optionsAvailable = false;
+        $options          = [];
+        $currentLC        = \strtolower($current).'_'.\strtoupper($current);
 
         foreach ($entries as $key => $option) {
             $title = $option['title'];
@@ -90,6 +91,8 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             if (isset($option['disabled']) && $option['disabled'] || $value === $key) {
                 $disabled = 'disabled="disabled" ';
                 $selected = '';
+            } else {
+                $optionsAvailable = true;
             }
 
             if (\is_string($title)) {
@@ -113,6 +116,13 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             ];
         }
 
+        if (!$optionsAvailable) {
+            $Conf = QUI\ERP\Products\Utils\Package::getConfig();
+
+            if ($Conf->getValue('variants', 'hideAttributeGroupsWithNoOptions')) {
+                return '';
+            }
+        }
 
         $Engine->assign('options', $options);
 
