@@ -204,12 +204,18 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
             );
         }
 
-        $User = QUI::getUserBySession();
-        $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
+        $User  = QUI::getUserBySession();
+        $price = $this->Product->getPrice()->getPrice();
 
-        $Price = $Calc->getProductPrice(
-            $this->Product->createUniqueProduct($User)
-        );
+        if ($price === null) {
+            $Price = $this->getProduct()->getMinimumPrice($User);
+        } else {
+            $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
+
+            $Price = $Calc->getProductPrice(
+                $this->Product->createUniqueProduct($User)
+            );
+        }
 
         if ($this->Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
             $Price->enableMinimalPrice();
@@ -219,8 +225,8 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
 
         // use search cache
-        $minCache = 'quiqqer/products/' . $this->getId() . '/prices/min';
-        $maxName  = 'quiqqer/products/' . $this->getId() . '/prices/max';
+        $minCache = 'quiqqer/products/'.$this->getId().'/prices/min';
+        $maxName  = 'quiqqer/products/'.$this->getId().'/prices/max';
 
         $min = null;
         $max = null;
