@@ -438,13 +438,18 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
         $value     = $this->getValue();
         $valueText = '-';
 
-        $json = null;
+        $json      = null;
+        $userinput = '';
 
         if (\is_string($value)) {
             $json = \json_decode($value, true);
 
             if (\is_array($json) && isset($json[0])) {
                 $value = $json[0];
+
+                if (isset($json[1])) {
+                    $userinput = $json[1];
+                }
             }
         }
 
@@ -525,6 +530,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'unassigned'    => $this->isUnassigned(),
             'value'         => $value,
             'valueText'     => $valueText,
+            'userinput'     => $userinput,
             'showInDetails' => $this->showInDetails()
         ];
     }

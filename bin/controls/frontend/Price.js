@@ -77,8 +77,6 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
 
             // same currency
             if (this.getAttribute('currency') === this.getElm().get('data-qui-options-currency')) {
-                console.log(this.getAllAttributes());
-
                 // this.$Price.set('html', result);
                 // this.$Price.set('title', result);
                 return;
