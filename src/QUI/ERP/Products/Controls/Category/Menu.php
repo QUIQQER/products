@@ -38,9 +38,9 @@ class Menu extends QUI\Control
     /**
      * (non-PHPdoc)
      *
+     * @throws QUI\Exception
      * @see \QUI\Control::create()
      *
-     * @throws QUI\Exception
      */
     public function getBody()
     {
@@ -136,14 +136,19 @@ class Menu extends QUI\Control
      *
      * @param null $Site
      * @return integer
-     *
-     * @throws QUI\Exception
      */
     public function countChildren($Site = null)
     {
-        if (!$Site) {
-            $Site = $this->getSite();
+        try {
+            if (!$Site) {
+                $Site = $this->getSite();
+            }
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return 0;
         }
+
 
         try {
             return $Site->getNavigation([

@@ -215,7 +215,7 @@ if ($siteUrl != $_REQUEST['_url']) {
     );
 
     foreach ($filterList as $filter) {
-        if (!is_array($filter)) {
+        if (!\is_array($filter)) {
             /* @var $filter Products\Field\Field */
             $title = $filter->getTitle();
             $id    = $filter->getId();

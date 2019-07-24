@@ -346,7 +346,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             if (this.getAttribute('view') === 'detail' || this.getAttribute('view') === 'list') {
-                Url.addSearch('view', this.getAttribute('view'));
+                Url.addSearch('v', this.getAttribute('view'));
                 window.history.pushState({}, "", Url.toString());
             }
 
@@ -455,7 +455,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                     this.$readWindowLocation().then(function () {
                         this.$onFilterChange();
-
                         this.$load = true;
 
                         if (this.getAttribute('autoload')) {
@@ -600,10 +599,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 tags.each(this.addFilter.bind(this));
 
                 // sort
-                if ("sortBy" in search && "sortOn" in search &&
-                    !this.$load &&
-                    this.$Sort
-                ) {
+                if ("sortBy" in search && "sortOn" in search && !this.$load && this.$Sort) {
                     this.$Sort.setValue(
                         search.sortOn + ' ' + search.sortBy
                     );
@@ -742,6 +738,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 url = location.origin + url;
             }
 
+
             if (window.location.toString() === url) {
                 return;
             }
@@ -813,7 +810,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         galleryView: function () {
-            if (!this.$sortingEnabled) {
+            if (!this.$sortingEnabled || !this.$load) {
                 return Promise.resolve();
             }
 
@@ -837,7 +834,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         detailView: function () {
-            if (!this.$sortingEnabled) {
+            if (!this.$sortingEnabled || !this.$load) {
                 return Promise.resolve();
             }
 
@@ -861,7 +858,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         listView: function () {
-            if (!this.$sortingEnabled) {
+            if (!this.$sortingEnabled || !this.$load) {
                 return Promise.resolve();
             }
 
@@ -1941,7 +1938,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             this.fireEvent('filterChangeBegin');
-
             this.$hideContainerWithLoader();
 
             this.$FilterResultInfo.set(

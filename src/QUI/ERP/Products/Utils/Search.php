@@ -88,7 +88,11 @@ class Search
         if (isset($searchParams['fields'])) {
             $searchParams['fields'] = \json_decode($searchParams['fields'], true);
 
-            if (is_null($searchParams['fields'])) {
+            if (\is_null($searchParams['fields']) && !empty($_REQUEST['f'])) {
+                $searchParams['fields'] = \json_decode($_REQUEST['f'], true);
+            }
+
+            if (\is_null($searchParams['fields'])) {
                 unset($searchParams['fields']);
             }
         }
