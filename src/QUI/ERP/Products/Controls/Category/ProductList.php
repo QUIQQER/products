@@ -190,7 +190,7 @@ class ProductList extends QUI\Control
             $this->setAttribute('data-sort', \htmlspecialchars($sort));
         }
 
-        $Pagination = new QUI\Bricks\Controls\Pagination([
+        $Pagination = new QUI\Controls\Navigating\Pagination([
             'count'     => $count,
             'Site'      => $this->getSite(),
             'showLimit' => false,
