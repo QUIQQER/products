@@ -907,6 +907,11 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                 'products.category.'.$id.'.title'
             );
 
+            QUI\Translator::delete(
+                'quiqqer/products',
+                'products.category.'.$id.'.description'
+            );
+
             Categories::clearCache($id);
         }
 
