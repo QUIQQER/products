@@ -2055,20 +2055,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 self.$FilterResultInfo.set('html', QUILocale.get(lg, 'product.list.result.count', {
                     count: result
                 }));
-
-                if (result) {
-                    moofx(self.$FilterResultInfo).animate({
-                        opacity: 1
-                    }, {
-                        duration: 200
-                    });
-                } else {
-                    moofx(self.$FilterResultInfo).animate({
-                        opacity: 0
-                    }, {
-                        duration: 200
-                    });
-                }
             });
         },
 
