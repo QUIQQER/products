@@ -729,8 +729,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             if (Object.getLength(history)) {
                 url = location.pathname + '?' + Object.toQueryString(history);
-            } else {
-                this.hideFilterDisplay();
             }
 
             if ("origin" in location) {
@@ -1998,13 +1996,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 searchParams = this.$getSearchParams();
 
             if (!this.$load) {
-                // filter display
-                if (searchParams.tags.length || Object.getLength(searchParams.fields)) {
-                    self.showFilterDisplay();
-                } else {
-                    self.hideFilterDisplay();
-                }
-
                 return;
             }
 
@@ -2026,13 +2017,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$refreshTimer = (function () {
                 this.$refreshSearchCount().then(function () {
-                    // filter display
-                    if (searchParams.tags.length || Object.getLength(searchParams.fields)) {
-                        self.showFilterDisplay();
-                    } else {
-                        self.hideFilterDisplay();
-                    }
-
                     self.fireEvent('filterChange');
 
                     return self.$renderSearch();
@@ -2211,8 +2195,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                             if (Object.getLength(history)) {
                                 url = location.pathname + '?' + Object.toQueryString(history);
-                            } else {
-                                self.hideFilterDisplay();
                             }
 
                             if ("origin" in location) {
