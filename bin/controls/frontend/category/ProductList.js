@@ -1762,9 +1762,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$selectFields[i].addEvent('ready', onReady.bind(this.$selectFields[i]));
             }
 
-            if (len) {
-                this.showClearFilterButton();
-            }
+            this.refreshClearFilterButtonStatus();
         },
 
         /**
@@ -1858,7 +1856,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$selectFilter[i].getChildren().each(uncheck);
             }
 
-            this.hideClearFilterButton();
+            this.refreshClearFilterButtonStatus();
             this.$setWindowLocation();
         },
 
@@ -1876,7 +1874,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return;
             }
 
-            this.showClearFilterButton();
+            this.refreshClearFilterButtonStatus();
 
             if (this.$FilterList.getElement('[data-tag="' + filter + '"]')) {
                 return;
@@ -1913,6 +1911,44 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             this.$setWindowLocation();
+        },
+
+        /**
+         * refresh clear filter button status
+         * if button is visible or hidden
+         */
+        refreshClearFilterButtonStatus: function () {
+            if (!this.$FilterClearButton) {
+                return;
+            }
+
+            var empty = false;
+
+            var fieldHTML  = this.$FilterFieldList.innerHTML.trim();
+            var filterHTML = this.$FilterList.innerHTML.trim();
+
+            if (fieldHTML === '' && filterHTML === '') {
+                empty = true;
+            }
+
+            if (fieldHTML !== '') {
+                var filters = this.$FilterFieldList.getElements('.quiqqer-products-productList-filter');
+
+                filters = filters.filter(function (Field) {
+                    return Field.getStyle('display') !== 'none';
+                });
+
+                if (!filters.length) {
+                    empty = true;
+                }
+            }
+
+            if (empty) {
+                this.hideClearFilterButton();
+                return;
+            }
+
+            this.showClearFilterButton();
         },
 
         /**
@@ -1981,16 +2017,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             );
 
 
-            if (this.$FilterClearButton) {
-                var tagLength   = searchParams.tags.length,
-                    fieldLength = Object.getLength(searchParams.fields);
-
-                if (tagLength || fieldLength) {
-                    this.showClearFilterButton();
-                } else {
-                    this.hideClearFilterButton();
-                }
-            }
+            this.refreshClearFilterButtonStatus();
 
             // refresh display
             if (typeof this.$refreshTimer !== 'undefined' && this.$refreshTimer) {
