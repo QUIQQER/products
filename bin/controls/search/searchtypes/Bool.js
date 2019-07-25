@@ -84,6 +84,19 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Bool', [
          */
         getSearchValue: function () {
             return this.$Select.getValue();
+        },
+
+        /**
+         * Return the search value formatted (yes, no)
+         *
+         * @return {Promise}
+         */
+        getSearchValueFormatted: function () {
+            if (this.$Select.getValue()) {
+                return QUILocale.get('quiqqer/system', 'yes');
+            }
+
+            return QUILocale.get('quiqqer/system', 'no');
         }
     });
 });
