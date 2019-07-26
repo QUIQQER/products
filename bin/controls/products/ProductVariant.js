@@ -887,8 +887,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 self.$VariantTabBar.getElm().getElement('.qui-toolbar-tabs').setStyle('display', 'flex');
 
                 var categories = self.getCategoryBar().getChildren();
-
-
+                
                 for (i = 0, len = categories.length; i < len; i++) {
                     Category = categories[i];
                     name     = Category.getAttribute('name');
@@ -911,8 +910,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     }
 
                     // only if field is editable
-                    if (fieldId &&
-                        (typeof self.$editableFields[fieldId] !== 'undefined' || !self.$editableFields[fieldId])) {
+                    if (fieldId && typeof self.$editableFields[fieldId] === 'undefined' ||
+                        (fieldId && typeof self.$editableFields[fieldId] !== 'undefined' && !self.$editableFields[fieldId])) {
                         continue;
                     }
 
@@ -1323,6 +1322,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
         /**
          * Opens the price list
+         *
          * @return {Promise}
          */
         $openVariantPrices: function () {
