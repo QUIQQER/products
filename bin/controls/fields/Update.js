@@ -265,6 +265,12 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     Elm.getElement('[name="showInDetails"]').disabled = true;
                 }
             }).then(function () {
+                // title description are always public
+                if (id === 4 || id === 5) {
+                    Elm.getElement('[name="publicField"]').checked  = true;
+                    Elm.getElement('[name="publicField"]').disabled = true;
+                }
+
                 self.fireEvent('loaded');
             });
         },

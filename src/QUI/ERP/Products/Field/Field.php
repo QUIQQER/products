@@ -140,6 +140,12 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $this->public = $params['public'] ? true : false;
         }
 
+        // title description are always public
+        if ($this->id === 4 || $this->id === 5) {
+            $this->public = true;
+        }
+
+
         if (isset($params['system'])
             && (\is_bool($params['system']) || \is_int($params['system']))
         ) {
