@@ -14,11 +14,10 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
     'qui/controls/Control',
     'controls/grid/Grid',
     'Locale',
-    'package/quiqqer/products/bin/Fields',
 
     'css!package/quiqqer/products/bin/controls/products/search/Result.css'
 
-], function (QUI, QUIControl, Grid, QUILocale, Fields) {
+], function (QUI, QUIControl, Grid, QUILocale) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -101,10 +100,26 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
          * @param {Object} data - grid data
          */
         setData: function (data) {
-            var i, len, entry, productNo;
+            var i, len, type, entry, Type;
 
             for (i = 0, len = data.data.length; i < len; i++) {
                 entry = data.data[i];
+                type  = data.data[i].type;
+
+                Type = new Element('span', {
+                    'class': 'fa fa-shopping-bag',
+                    title  : QUILocale.get(lg, 'product.type.product.title')
+                });
+
+                if (type === 'QUI\\ERP\\Products\\Product\\Types\\VariantParent') {
+                    Type.setStyle('color', '#8DA290');
+                    Type.set('title', QUILocale.get(lg, 'product.type.variant.parent.title'));
+                } else if (type === 'QUI\\ERP\\Products\\Product\\Types\\VariantChild') {
+                    Type.setStyle('color', '#BEC7B4');
+                    Type.set('title', QUILocale.get(lg, 'product.type.variant.child.title'));
+                }
+
+                data.data[i].type = Type;
 
                 // active status
                 data.data[i].status = new Element('span', {
@@ -153,10 +168,17 @@ define('package/quiqqer/products/bin/controls/products/search/Result', [
                     dataType : 'number',
                     width    : 50
                 }, {
+                    header   : QUILocale.get('quiqqer/system', 'type'),
+                    dataIndex: 'type',
+                    dataType : 'node',
+                    width    : 40,
+                    className: 'grid-align-center'
+                }, {
                     header   : QUILocale.get('quiqqer/system', 'status'),
                     dataIndex: 'status',
                     dataType : 'node',
-                    width    : 40
+                    width    : 40,
+                    className: 'grid-align-center'
                 }, {
                     header   : QUILocale.get(lg, 'productNo'),
                     dataIndex: 'productNo',

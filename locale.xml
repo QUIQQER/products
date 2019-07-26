@@ -1073,6 +1073,11 @@
             <en><![CDATA[This is a default Product.]]></en>
         </locale>
 
+        <locale name="product.type.product.title">
+            <de><![CDATA[Produkt]]></de>
+            <en><![CDATA[Product]]></en>
+        </locale>
+
         <locale name="product.type.variant.child.title">
             <de><![CDATA[Einzelne Variante]]></de>
             <en><![CDATA[Single variant]]></en>

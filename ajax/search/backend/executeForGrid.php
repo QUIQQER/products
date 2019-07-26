@@ -36,6 +36,7 @@ QUI::$Ajax->registerFunction(
             'productNo'   => 'productNo',
             'title'       => 'title',
             'description' => 'description',
+            'type'        => 'type',
             'price_netto' => 'F'.Fields::FIELD_PRICE,
             'c_date'      => 'c_date',
             'e_date'      => 'e_date',
