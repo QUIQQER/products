@@ -38,8 +38,13 @@ define('package/quiqqer/products/bin/controls/search/searchtypes/Bool', [
          * @return {HTMLDivElement}
          */
         create: function () {
-            this.$Select = new QUISelect();
-            this.$Elm    = this.$Select.create();
+            this.$Select = new QUISelect({
+                showIcons            : false,
+                placeholderText      : '---',
+                placeholderSelectable: true
+            });
+
+            this.$Elm = this.$Select.create();
             this.$Elm.addClass('quiqqer-products-searchtype-bool');
 
             this.$Select.appendChild(QUILocale.get('quiqqer/system', 'yes'), 1);
