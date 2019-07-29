@@ -1,6 +1,7 @@
 <?php
 
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Controls\Category\ProductList;
 
 $productIds = $Site->getAttribute('quiqqer.products.settings.productIds');
 $productIds = \explode(',', $productIds);
