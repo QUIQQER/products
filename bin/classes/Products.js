@@ -348,6 +348,21 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Get list of all packages that belong to the quiqqer/products ecosystem
+         * but are not necessarily required.
+         *
+         * @return {Promise}
+         */
+        getInstalledProductPackages: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_getInstalledProductPackages', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
          * Get data for a product SelectItem
          *
          * @param {Number} productId
