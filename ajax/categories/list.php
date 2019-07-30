@@ -16,7 +16,8 @@ QUI::$Ajax->registerFunction(
             $Grid->parseDBParams(\json_decode($params, true))
         );
 
-        $L = QUI::getLocale();
+        $L      = QUI::getLocale();
+        $result = [];
 
         foreach ($categoryIds as $categoryId) {
             $description = '';
