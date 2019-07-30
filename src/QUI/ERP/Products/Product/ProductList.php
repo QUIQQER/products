@@ -330,7 +330,9 @@ class ProductList
      */
     public function clear()
     {
-        $this->products = [];
+        $this->calculated   = false;
+        $this->PriceFactors = new QUI\ERP\Products\Utils\PriceFactors();
+        $this->products     = [];
     }
 
     /**
