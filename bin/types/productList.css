@@ -12,34 +12,46 @@
 
 .quiqqer-products-productList-grid .quiqqer-product-card {
     border: 1px solid #ddd;
-    flex-basis: 100px;
+    flex-basis: 0;
     flex-grow: 1;
     flex-shrink: 0;
     margin: 1rem;
     min-width: 280px;
 }
 
-.quiqqer-products-productList-grid .quiqqer-product-card__hidden {
-    height: 0;
-    border: 0;
-    margin: 0 1rem;
-    border: none;
-}
-
-.quiqqer-product-card-image {
-    padding: 20px;
-    height: 200px;
-}
-
-.quiqqer-product-card-image a {
+.quiqqer-product-card-inner {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     height: 100%;
 }
 
-.quiqqer-product-card-image  img {
+.quiqqer-products-productList-grid .quiqqer-product-card__hidden {
+    border: 0;
+    border: none;
+    height: 0;
+    margin: 0 1rem;
+}
+
+.quiqqer-product-card-image {
+    height: 200px;
+    padding: 20px;
+}
+
+.quiqqer-product-card-image a {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+}
+
+.quiqqer-product-card-image img {
     max-height: 100%;
+}
+
+.quiqqer-product-card-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .quiqqer-product-card-content-header {
@@ -47,14 +59,15 @@
 }
 
 .quiqqer-product-card-content-header a {
-    font-weight: normal;
     color: inherit;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
+    font-weight: normal;
 }
 
 .quiqqer-product-card-content-data {
     display: flex;
     padding: 0 20px;
+    margin-bottom: auto;
 }
 
 .quiqqer-product-card-content-data-title {
@@ -62,15 +75,24 @@
 }
 
 .quiqqer-product-card-content-buttons {
-    padding: 20px;
     display: flex;
     flex-wrap: wrap;
+    padding: 20px;
 }
 
 .quiqqer-product-card-content-buttons .add-to-basket {
     margin-left: auto;
 }
 
+.quiqqer-product-card-content .qui-products-price-display {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.quiqqer-product-card-content .qui-products-price-display-value.quiqqer-price {
+    font-size: 1.5rem;
+}
 
 @media screen and (max-width: 767px) {
     .quiqqer-products-productList-grid .quiqqer-product-card {
