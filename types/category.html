@@ -4,7 +4,7 @@
         var QUIQQER_PRODUCT_CATEGORY = '{$categoryId}';
     </script>
 
-    {if $showFilter}
+    {if isset($showFilter) && $showFilter}
     <div class="content-headerpage-multible-left grid-30 hide-on-mobile">
         <header>
             <h2>{locale group="quiqqer/products" var="type.category.categoryTitle"}</h2>
@@ -48,7 +48,7 @@
             var=cssClasses
             value="quiqqer-products-product page-multible-right grid-parent grid-100 mobile-grid-100"
         }
-        {if $showFilter}
+        {if isset($showFilter) && $showFilter}
             {assign
                 var=cssClasses
                 value="quiqqer-products-product page-multible-right grid-70 mobile-grid-100"
@@ -67,7 +67,7 @@
             value="quiqqer-products-category page-multible-right grid-parent grid-100 mobile-grid-100"
         }
 
-        {if $showFilter}
+        {if isset($showFilter) && $showFilter}
             {assign var=cssClasses value="quiqqer-products-category page-multible-right grid-70 mobile-grid-100"}
         {/if}
 
