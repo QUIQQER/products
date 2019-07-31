@@ -81,8 +81,6 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
                     this.$allowedGroups = fieldData.options.groupIds;
                 }
 
-                this.$allowedGroups = [1];
-
                 if (!this.$allowedGroups || !this.$allowedGroups.length) {
                     this.$Button.addClass('disabled');
                 }
@@ -157,8 +155,7 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
          * @return {Promise}
          */
         $isAllowed: function (userId) {
-            var self    = this,
-                allowed = this.$allowedGroups;
+            var allowed = this.$allowedGroups;
 
             if (!allowed.length) {
                 return Promise.resolve(true);
@@ -175,6 +172,10 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
             }).then(function (User) {
                 var i, len, groupId;
                 var groups = User.getAttribute('usergroup');
+
+                if (!groups || !groups.length) {
+                    return false;
+                }
 
                 for (i = 0, len = groups.length; i < len; i++) {
                     groupId = parseInt(groups[i]);
@@ -210,6 +211,10 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
                 searchSettings = false;
 
             if (this.$allowedGroups) {
+                this.$allowedGroups = this.$allowedGroups.map(function (g) {
+                    return parseInt(g);
+                });
+
                 searchSettings = {
                     filter: {
                         filter_group: this.$allowedGroups.join(',')
