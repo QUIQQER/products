@@ -515,6 +515,24 @@ class EventHandling
                         ]
                     ]
                 ]
+            ],
+            // EAN
+            [
+                'id'            => Fields::FIELD_EAN,
+                'type'          => 'Input',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 10,
+                'systemField'   => 1,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField'   => 1,
+                'showInDetails' => 0,
+                'search_type'   => Search::SEARCHTYPE_TEXT,
+                'titles'        => [
+                    'de' => 'GTIN / EAN',
+                    'en' => 'GTIN / EAN'
+                ]
             ]
         ];
 
