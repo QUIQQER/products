@@ -45,21 +45,15 @@
                                 {locale group="quiqqer/product-bricks" var="brick.control.product.addToCart"}
                             </label>
                         </a>
-
-                        <!--<a href="{$Product->getUrl()}"
-                           data-pid="{$Product->getId()}"
-                           class="btn btn-secondary btn-outline button-openProduct"
-                        >
-                            Zum Produkt
-                        </a>-->
                     </div>
                 </div>
             </div>
         </div>
         {/foreach}
 
+        {if $products|count > 2}
         <div class="quiqqer-product-card quiqqer-product-card__hidden"></div>
         <div class="quiqqer-product-card quiqqer-product-card__hidden"></div>
-        <div class="quiqqer-product-card quiqqer-product-card__hidden"></div>
+        {/if}
     </div>
 </section>
