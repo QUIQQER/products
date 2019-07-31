@@ -41,6 +41,7 @@ class Fields
     const FIELD_PRIORITY = 18; // Product Priority
     const FIELD_URL = 19; // Product URL
     const FIELD_UNIT = 20;
+    const FIELD_EAN = 21;
 
     /**
      * Types
