@@ -258,7 +258,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
         }
 
         if ($entries[$value['id']]['quantityInput']) {
-            $value['quantity'] = (int)$value['quantity'];
+            $value['quantity'] = (float)$value['quantity'];
         } else {
             $value['quantity'] = false;
         }
