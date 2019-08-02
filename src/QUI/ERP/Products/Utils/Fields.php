@@ -224,4 +224,60 @@ class Fields
 
         return $Field->showInDetails();
     }
+
+    /**
+     * Returns the value from a Weight Field in Kilogram
+     *
+     * @param $Field
+     * @return int
+     */
+    public static function weightFieldToKilogram(QUI\ERP\Products\Field\Field $Field)
+    {
+        if ($Field->getId() !== QUI\ERP\Products\Handler\Fields::FIELD_WEIGHT) {
+            return 0;
+        }
+
+        $value = $Field->getValue();
+
+        if (empty($value)) {
+            return 0;
+        }
+
+        return self::weightToKilogram($value['quantity'], $value['id']);
+    }
+
+    /**
+     * Parses a weight value to kilogram
+     *
+     * @param float|string|int $value
+     * @param string $unit - kg, g, t, tons, lbs, lb
+     * @return float
+     */
+    public static function weightToKilogram($value, $unit)
+    {
+        $value = \floatval($value);
+
+        if ($unit === 'kg') {
+            return $value;
+        }
+
+        if (empty($unit)) {
+            return $value;
+        }
+
+        switch ($unit) {
+            case 'g':
+                return $value / 1000;
+
+            case 't':
+            case 'tons':
+                return $value * 1000;
+
+            case 'lb':
+            case 'lbs':
+                return $value / 2.2046;
+        }
+
+        return $value;
+    }
 }
