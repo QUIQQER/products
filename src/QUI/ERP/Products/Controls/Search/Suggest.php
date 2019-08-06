@@ -129,7 +129,7 @@ class Suggest extends QUI\Control
     /**
      * Return the global search
      *
-     * @return mixed|QUI\Projects\Site
+     * @return false|QUI\Projects\Site
      *
      * @throws QUI\Exception
      */
@@ -148,7 +148,7 @@ class Suggest extends QUI\Control
             return $search[0];
         }
 
-        return $this->getSearch();
+        return $this->getSite();
     }
 
     /**
