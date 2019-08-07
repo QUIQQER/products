@@ -293,16 +293,6 @@ class FrontendSearch extends Search
             }
         }
 
-
-        if (!$findVariantParentsByChildValues && $this->ignoreVariantChildren) {
-            $where[] = "type <> :variantClass";
-
-            $binds['variantClass'] = [
-                'value' => QUI\ERP\Products\Product\Types\VariantChild::class,
-                'type'  => \PDO::PARAM_STR
-            ];
-        }
-
         // tags search
         $siteTags = $this->Site->getAttribute('quiqqer.products.settings.tags');
 
@@ -377,6 +367,15 @@ class FrontendSearch extends Search
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addError($Exception->getMessage());
             }
+        }
+
+        if (!$findVariantParentsByChildValues && $this->ignoreVariantChildren) {
+            $where[] = 'type <> :variantClass';
+
+            $binds['variantClass'] = [
+                'value' => VariantChild::class,
+                'type'  => \PDO::PARAM_STR
+            ];
         }
 
         // Add WHERE statements via event
@@ -496,14 +495,17 @@ class FrontendSearch extends Search
                     $productIds[] = $row['parentId'];
                 }
 
+                // If children are to be ignored -> do NOT add them to the result list
                 if ($this->ignoreVariantChildren) {
                     $childrenRemoved++;
                     continue;
                 }
             }
 
+            // If children are NOT to be ignored -> add them to the result list
             $productIds[] = $row['id'];
         }
+        \QUI\System\Log::writeRecursive($productIds);
 
         /**
          * If entries were removed from the result list repeat the search

@@ -559,6 +559,8 @@ class ProductList extends QUI\Control
         $searchParams['sheet'] = round($start / $max) + 1;
         $searchParams['limit'] = $max;
 
+        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+
         return $searchParams;
     }
 
