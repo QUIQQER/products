@@ -896,7 +896,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 sort          = this.getAttribute('sort'),
                 categoryId    = this.getAttribute('categoryId'),
                 ContainerReal = this.$ContainerReal,
-                articles      = this.$ContainerReal.getElements('article').length;
+                articles      = this.$ContainerReal.getElements('article').length + 1;
 
             return new Promise(function (resolve) {
                 QUIAjax.get('package_quiqqer_products_ajax_controls_categories_productList', function (result) {

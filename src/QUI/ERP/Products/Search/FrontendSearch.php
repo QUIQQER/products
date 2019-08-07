@@ -516,6 +516,10 @@ class FrontendSearch extends Search
 
             $searchParams['ignoreFindVariantParentsByChildValues'] = true;
 
+            if ($countOnly) {
+                return self::search($searchParams, $countOnly);
+            }
+
             $productIds = array_merge(
                 $productIds,
                 self::search($searchParams)
