@@ -36,6 +36,13 @@ define('package/quiqqer/products/bin/classes/Fields', [
         FIELD_KEYWORDS        : 13,
         FIELD_EQUIPMENT       : 14,
         FIELD_SIMILAR_PRODUCTS: 15,
+        FIELD_PRICE_OFFER     : 16, // angebotspreis
+        FIELD_PRICE_RETAIL    : 17, // UVP - RRP
+        FIELD_PRIORITY        : 18, // Product Priority
+        FIELD_URL             : 19, // Product URL
+        FIELD_UNIT            : 20,
+        FIELD_EAN             : 21,
+        FIELD_WEIGHT          : 22,
 
         /**
          * Types

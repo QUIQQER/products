@@ -1936,6 +1936,11 @@
     </groups>
 
     <groups name="quiqqer/products" datatype="php">
+        <locale name="exception.sitesearch.not.found">
+            <de><![CDATA[Es wurde keine Such-Seite gefunden. Bitte legen Sie eine Such-Seite an.]]></de>
+            <en><![CDATA[No search site found. Please create a search site.]]></en>
+        </locale>
+
         <locale name="exception.Product.Types.VariantChild.parent_not_found">
             <de><![CDATA[Vaterprodukt (#[parentId]) von Kind-Produkt (#[childId]) wurde nicht gefunden.]]></de>
             <en><![CDATA[Parent product (#[parentId]) of child product (#[childId]) was not found.]]></en>

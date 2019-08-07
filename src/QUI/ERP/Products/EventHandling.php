@@ -516,6 +516,67 @@ class EventHandling
                     ]
                 ]
             ],
+            // Weight / Gewicht
+            [
+                'id'            => Fields::FIELD_WEIGHT,
+                'type'          => 'UnitSelect',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 1,
+                'systemField'   => 0,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField'   => 0,
+                'search_type'   => '',
+                'titles'        => [
+                    'de' => 'Gewicht',
+                    'en' => 'Weight'
+                ],
+                'options'       => [
+                    'entries' => [
+                        'kg'   => [
+                            'title'         => [
+                                'de' => 'kg',
+                                'en' => 'kg'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'g'    => [
+                            'title'         => [
+                                'de' => 'g',
+                                'en' => 'g'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'tons' => [
+                            'title'         => [
+                                'de' => 't',
+                                'en' => 't'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'lbs'  => [
+                            'title'         => [
+                                'de' => 'Pfd.',
+                                'en' => 'lbs.'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'oz'   => [
+                            'title'         => [
+                                'de' => 'oz.',
+                                'en' => 'oz.'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                    ]
+                ]
+            ],
             // EAN
             [
                 'id'            => Fields::FIELD_EAN,

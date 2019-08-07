@@ -147,6 +147,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
 //        }
 
         $isUserInGroups = function ($userGroups) use ($groupIds) {
+            if (empty($groupIds)) {
+                return true;
+            }
+
             foreach ($userGroups as $userGroup) {
                 if (!\in_array($userGroup, $groupIds)) {
                     return true;
@@ -228,6 +232,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
         }
 
         $isUserInGroups = function ($userGroups) use ($groupIds) {
+            if (empty($groupIds)) {
+                return true;
+            }
+
             foreach ($userGroups as $userGroup) {
                 if (!\in_array($userGroup, $groupIds)) {
                     return true;

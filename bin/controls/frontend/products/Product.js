@@ -203,7 +203,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
                 QUI.parse(Elm).then(function () {
                     // price
-                    var Price   = Elm.getElement('.qui-products-price-display'),
+                    var Price   = Elm.getElement('.product-data-price-main .qui-products-price-display'),
                         Gallery = Elm.getElement('.quiqqer-gallery-slider');
 
                     if (Gallery) {
