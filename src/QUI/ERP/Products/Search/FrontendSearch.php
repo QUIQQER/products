@@ -505,7 +505,6 @@ class FrontendSearch extends Search
             // If children are NOT to be ignored -> add them to the result list
             $productIds[] = $row['id'];
         }
-        \QUI\System\Log::writeRecursive($productIds);
 
         /**
          * If entries were removed from the result list repeat the search
