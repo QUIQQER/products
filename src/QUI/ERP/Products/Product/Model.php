@@ -362,13 +362,16 @@ class Model extends QUI\QDOM
             } catch (QUI\Exception $Exception) {
             }
 
-
             $MainFolder = $this->createMediaFolder();
 
             try {
-                $Folder = $MainFolder->createFolder($fieldId);
-                $Folder->setAttribute('order', 'priority ASC');
-                $Folder->save();
+                if ($MainFolder->childWithNameExists($fieldId)) {
+                    $Folder = $MainFolder->getChildByName($fieldId);
+                } else {
+                    $Folder = $MainFolder->createFolder($fieldId);
+                    $Folder->setAttribute('order', 'priority ASC');
+                    $Folder->save();
+                }
             } catch (QUI\Exception $Exception) {
                 if ($Exception->getCode() != 701) {
                     throw $Exception;
@@ -394,9 +397,15 @@ class Model extends QUI\QDOM
         $Parent = Products::getParentMediaFolder();
 
         try {
-            $Folder = $Parent->createFolder($this->getId());
-            $Folder->setAttribute('order', 'priority ASC');
-            $Folder->save();
+            $productId = $this->getId();
+
+            if ($Parent->childWithNameExists($productId)) {
+                $Folder = $Parent->getChildByName($productId);
+            } else {
+                $Folder = $Parent->createFolder($this->getId());
+                $Folder->setAttribute('order', 'priority ASC');
+                $Folder->save();
+            }
         } catch (QUI\Exception $Exception) {
             if ($Exception->getCode() != 701) {
                 throw $Exception;
