@@ -531,6 +531,10 @@
             <de><![CDATA[Einheitenauswahl]]></de>
             <en><![CDATA[Unit select]]></en>
         </locale>
+        <locale name="fieldtype.TimePeriod">
+            <de><![CDATA[Zeitraum]]></de>
+            <en><![CDATA[Time period]]></en>
+        </locale>
 
         <locale name="fieldtype.Textarea">
             <de><![CDATA[Langer Text]]></de>
@@ -1931,6 +1935,48 @@
         <locale name="fields.control.UnitSelectSettings.add.empty_id">
             <de><![CDATA[Der interne Identifikator darf nicht leer sein. Bitte vergeben Sie einen eindeutigen Identifikator.]]></de>
             <en><![CDATA[The internal identifier must not be empty. Please choose a unique identifier.]]></en>
+        </locale>
+
+        <!-- Field type: TimePeriod -->
+        <locale name="controls.fields.types.TimePeriod.template.labelFrom">
+            <de><![CDATA[von]]></de>
+            <en><![CDATA[from]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelTo">
+            <de><![CDATA[bis]]></de>
+            <en><![CDATA[to]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnit">
+            <de><![CDATA[Zeitraum]]></de>
+            <en><![CDATA[Time period]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnitSecond">
+            <de><![CDATA[Sekunde(n)]]></de>
+            <en><![CDATA[second(s)]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnitMinute">
+            <de><![CDATA[Minute(n)]]></de>
+            <en><![CDATA[minute(s)]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnitHour">
+            <de><![CDATA[Stunde(n)]]></de>
+            <en><![CDATA[hour(s)]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnitDay">
+            <de><![CDATA[Tag(e)]]></de>
+            <en><![CDATA[day(s)]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnitWeek">
+            <de><![CDATA[Woche(n)]]></de>
+            <en><![CDATA[week(s)]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnitMonth">
+            <de><![CDATA[Monat(e)]]></de>
+            <en><![CDATA[month(s)]]></en>
+        </locale>
+        <locale name="controls.fields.types.TimePeriod.template.labelUnitYear">
+            <de><![CDATA[Jahr(e)]]></de>
+            <en><![CDATA[year(s)]]></en>
         </locale>
 
     </groups>

@@ -65,6 +65,7 @@ class Fields
     const TYPE_TAX = 'Tax';
     const TYPE_PRODCUCTS = 'Products';
     const TYPE_UNITSELECT = 'UnitSelect';
+    const TYPE_TIMEPERIOD = 'TimePeriod';
 
     const TYPE_ATTRIBUTES = 'AttributeGroup';
     const TYPE_ATTRIBUTE_GROUPS = 'AttributeGroup';

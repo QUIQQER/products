@@ -1117,11 +1117,30 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * Get all products associated with a field
+     * Get all products associated with this field
+     *
+     * @return QUI\ERP\Products\Product\Product[]
      */
     public function getProducts()
     {
         return Products::getProducts([
+            'where' => [
+                'fieldData' => [
+                    'type'  => '%LIKE%',
+                    'value' => '"id":'.$this->id.','
+                ]
+            ]
+        ]);
+    }
+
+    /**
+     * Get IDs of all products associated with this field
+     *
+     * @return int[]
+     */
+    public function getProductIds()
+    {
+        return Products::getProductIds([
             'where' => [
                 'fieldData' => [
                     'type'  => '%LIKE%',
