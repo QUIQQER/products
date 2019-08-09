@@ -36,6 +36,7 @@ define('package/quiqqer/products/bin/controls/fields/types/TimePeriod', [
             this.$fieldId    = null;
             this.$FromInput  = null;
             this.$ToInput    = null;
+            this.$Content    = null;
 
             this.addEvents({
                 onImport: this.$onImport
@@ -54,7 +55,7 @@ define('package/quiqqer/products/bin/controls/fields/types/TimePeriod', [
 
             var lgPrefix = 'controls.fields.types.TimePeriod.template.';
 
-            var Content = new Element('div', {
+            this.$Content = new Element('div', {
                 'class': 'quiqqer-products-fields-types-timeperiod field-container-field',
                 html   : Mustache.render(template, {
                     labelFrom      : QUILocale.get(lg, lgPrefix + 'labelFrom'),
@@ -71,16 +72,15 @@ define('package/quiqqer/products/bin/controls/fields/types/TimePeriod', [
             }).inject(Elm, 'after');
 
             // Value Select
-            this.$UnitSelect = Content.getElement('select');
+            this.$UnitSelect = this.$Content.getElement('select');
             this.$UnitSelect.addEvent('change', this.$setValue);
 
             // From input
-            this.$FromInput = Content.getElement('input[name="from"]');
+            this.$FromInput = this.$Content.getElement('input[name="from"]');
             this.$FromInput.addEvent('change', this.$setValue);
 
-
             // To Input
-            this.$ToInput = Content.getElement('input[name="to"]');
+            this.$ToInput = this.$Content.getElement('input[name="to"]');
             this.$ToInput.addEvent('change', this.$setValue);
 
             (function () {
