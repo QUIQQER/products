@@ -153,8 +153,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * event : on import
          */
         $onImport: function () {
-            var Elm = this.getElm(),
-                cid = Elm.get('data-productlist-id');
+            var self = this,
+                Elm  = this.getElm(),
+                cid  = Elm.get('data-productlist-id');
 
             if (parseInt(Elm.get('data-autoload')) === 0) {
                 this.setAttribute('autoload', false);
@@ -224,6 +225,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (!!("ontouchstart" in document.documentElement)) {
                 Elm.addClass("touch");
             }
+
+            // add product clicks
+            Elm.getElements('article').addEvent('click', function (event) {
+                event.stop();
+                self.openProduct(parseInt(this.get('data-pid')));
+            });
 
             // filter
             if (this.$FilterContainer) {
