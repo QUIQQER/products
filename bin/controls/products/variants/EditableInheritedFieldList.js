@@ -38,6 +38,7 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
 
             this.$editable  = [];
             this.$inherited = [];
+            this.$disabled  = false;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -140,6 +141,10 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
          */
         save: function () {
             var self = this;
+
+            if (this.$disabled) {
+                return Promise.resolve();
+            }
 
             if (this.getAttribute('productId') === false) {
                 return Promise.resolve();
@@ -277,6 +282,32 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
         },
 
         /**
+         * Enable this list
+         */
+        enable: function () {
+            this.$disabled = false;
+
+            if (!this.$Grid) {
+                return;
+            }
+
+            if (typeof this.$Grid.enable === 'function') {
+                this.$Grid.enable();
+            }
+        },
+
+        /**
+         * Disable this list
+         */
+        disable: function () {
+            this.$disabled = true;
+
+            if (typeof this.$Grid.disable === 'function') {
+                this.$Grid.disable();
+            }
+        },
+
+        /**
          * init editable / inherited fields from the product
          *
          * @return {Promise}
@@ -301,6 +332,10 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
          * @param Switch
          */
         $onStatusChange: function (Switch) {
+            if (this.$disabled) {
+                return;
+            }
+
             var index;
             var fieldId = Switch.getAttribute('fieldId'),
                 status  = Switch.getStatus();

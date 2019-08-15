@@ -232,8 +232,10 @@
             <en><![CDATA[Hide attribute lists without available options]]></en>
         </locale>
         <locale name="settings.window.products.hideAttributeGroupsWithNoOptions.description">
-            <de><![CDATA[Attributlisten Selects, die keine verfügbare Auswahl haben, sollen im jeweiligen Produkt ausgeblendet werden (Frontend)]]></de>
-            <en><![CDATA[Attribute list selects that have no available options shall not be displayed in the respective product (frontend)]]></en>
+            <de>
+                <![CDATA[Attributlisten Selects, die keine verfügbare Auswahl haben, sollen im jeweiligen Produkt ausgeblendet werden (Frontend)]]></de>
+            <en>
+                <![CDATA[Attribute list selects that have no available options shall not be displayed in the respective product (frontend)]]></en>
         </locale>
 
         <locale name="settings.window.fieldsearch.backend.title">
@@ -256,7 +258,8 @@
         <locale name="settings.window.products.useAttributeListsForMinMaxPriceCalculation.description">
             <de>
                 <![CDATA[Bei der Berechnung des niedrigsten und höchsten Preises für die Produkt-Suche sollen Änderungen des Preises durch Auswahllisten (Auf- bzw. Abschläge) berücksichtigt werden.]]></de>
-            <en><![CDATA[When calculating the lowest and highest price for the product search, changes in the price by attribute lists (discounts / surcharges) should be taken into account.]]></en>
+            <en>
+                <![CDATA[When calculating the lowest and highest price for the product search, changes in the price by attribute lists (discounts / surcharges) should be taken into account.]]></en>
         </locale>
 
         <locale name="settings.window.fieldsearch.frontend.title">
@@ -1685,6 +1688,10 @@
             All fields that cannot be editable by the variants will be taken from the parent product.
             ]]></en>
         </locale>
+        <locale name="variants.EditableFieldList.window.reset.to.global">
+            <de><![CDATA[Vererbung aufheben und globale Felder wieder verwenden.]]></de>
+            <en><![CDATA[Cancel inheritance and reuse global fields.]]></en>
+        </locale>
 
         <locale name="panel.product.window.create.button">
             <de><![CDATA[Produkt anlegen]]></de>
@@ -1929,11 +1936,13 @@
             <en><![CDATA[Shall the following values be deleted?]]></en>
         </locale>
         <locale name="fields.control.UnitSelectSettings.add.error_duplicate_id">
-            <de><![CDATA[Der interne Identifikator existiert bereits. Bitte vergeben Sie einen eindeutigen Identifikator.]]></de>
+            <de>
+                <![CDATA[Der interne Identifikator existiert bereits. Bitte vergeben Sie einen eindeutigen Identifikator.]]></de>
             <en><![CDATA[The internal identifier already exists. Please choose a unique identifier.]]></en>
         </locale>
         <locale name="fields.control.UnitSelectSettings.add.empty_id">
-            <de><![CDATA[Der interne Identifikator darf nicht leer sein. Bitte vergeben Sie einen eindeutigen Identifikator.]]></de>
+            <de>
+                <![CDATA[Der interne Identifikator darf nicht leer sein. Bitte vergeben Sie einen eindeutigen Identifikator.]]></de>
             <en><![CDATA[The internal identifier must not be empty. Please choose a unique identifier.]]></en>
         </locale>
 

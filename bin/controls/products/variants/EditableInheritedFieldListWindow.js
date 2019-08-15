@@ -67,6 +67,15 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
                 }
             }).inject(this.getContent());
 
+            new Element('label', {
+                html  : '<input type="checkbox" name="reset-fields-to-global" /> ' +
+                    QUILocale.get('quiqqer/products', 'variants.EditableFieldList.window.reset.to.global'),
+                styles: {
+                    cursor       : 'pointer',
+                    paddingBottom: 20
+                }
+            }).inject(this.getContent());
+
             var ListContainer = new Element('div', {
                 styles: {
                     'flex-grow': 1
@@ -82,6 +91,19 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
                 }
             }).inject(ListContainer);
 
+            var Reset = this.getContent().getElement('[name="reset-fields-to-global"]');
+
+            Reset.addEvent('change', function () {
+                console.log(Reset.checked);
+
+                if (Reset.checked) {
+                    self.$List.disable();
+                    return;
+                }
+
+                self.$List.enable();
+            });
+
             this.$List.resize();
         },
 
@@ -89,9 +111,25 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
          * event: on submit
          */
         $onSubmit: function () {
-            var self = this;
+            var self  = this,
+                Reset = this.getContent().getElement('[name="reset-fields-to-global"]');
 
             this.Loader.show();
+console.log('on submit', Reset.checked);
+            if (Reset.checked) {
+                require(['package/quiqqer/products/bin/Products'], function (Products) {
+                    var Product = Products.get(self.getAttribute('productId'));
+console.log(Product);
+                    Product.resetInheritedFields().then(function () {
+                        self.close();
+                        self.fireEvent('save', [self]);
+                    }).catch(function () {
+                        self.Loader.hide();
+                    });
+                });
+
+                return;
+            }
 
             this.$List.save().then(function () {
                 self.close();

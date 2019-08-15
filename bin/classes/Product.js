@@ -615,6 +615,20 @@ define('package/quiqqer/products/bin/classes/Product', [
                     productId: this.getId()
                 });
             }.bind(this));
+        },
+
+        /**
+         * Reset the inherited fields of a product to the global ones
+         *
+         * @return {Promise}
+         */
+        resetInheritedFields: function () {
+            return new Promise(function (resolve) {
+                Ajax.post('package_quiqqer_products_ajax_products_variant_resetEditableInheritedFields', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId()
+                });
+            }.bind(this));
         }
     });
 });
