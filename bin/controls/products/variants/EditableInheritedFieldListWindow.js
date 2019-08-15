@@ -115,11 +115,11 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
                 Reset = this.getContent().getElement('[name="reset-fields-to-global"]');
 
             this.Loader.show();
-console.log('on submit', Reset.checked);
+
             if (Reset.checked) {
                 require(['package/quiqqer/products/bin/Products'], function (Products) {
                     var Product = Products.get(self.getAttribute('productId'));
-console.log(Product);
+
                     Product.resetInheritedFields().then(function () {
                         self.close();
                         self.fireEvent('save', [self]);
