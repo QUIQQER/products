@@ -1545,6 +1545,10 @@
             <de><![CDATA[Standard (Default)]]></de>
             <en><![CDATA[Default]]></en>
         </locale>
+        <locale name="fields.control.price.brutto">
+            <de><![CDATA[Bruttoeingabe eines Preises]]></de>
+            <en><![CDATA[Gross entry of a price]]></en>
+        </locale>
 
         <locale name="product.fields.grid.visible">
             <de><![CDATA[sichtbar]]></de>
@@ -1986,6 +1990,23 @@
         <locale name="controls.fields.types.TimePeriod.template.labelUnitYear">
             <de><![CDATA[Jahr(e)]]></de>
             <en><![CDATA[year(s)]]></en>
+        </locale>
+
+        <locale name="control.window.price.brutto.title">
+            <de><![CDATA[Brutto Preiseingabe]]></de>
+            <en><![CDATA[Gross price input]]></en>
+        </locale>
+        <locale name="control.window.price.brutto.label">
+            <de><![CDATA[Preiseingabe]]></de>
+            <en><![CDATA[Gross price]]></en>
+        </locale>
+        <locale name="control.window.price.brutto.description" html="true">
+            <de><![CDATA[
+            <p>Bitte gebe dein Bruttopreis ein, dieser Preis wird automatisch als Nettopreis umgewandelt und eingefügt.</p>
+            ]]></de>
+            <en><![CDATA[
+            <p>Please enter your gross price, this price will automatically be converted and inserted as price.</p>
+            ]]></en>
         </locale>
 
     </groups>
