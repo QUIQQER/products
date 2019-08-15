@@ -8,11 +8,12 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
 
     'qui/QUI',
     'qui/controls/Control',
+    'package/quiqqer/products/bin/controls/fields/windows/PriceBrutto',
     'Locale',
 
     'css!package/quiqqer/products/bin/controls/fields/types/PriceByQuantity.css'
 
-], function (QUI, QUIControl, QUILocale) {
+], function (QUI, QUIControl, PriceBruttoWindow, QUILocale) {
     "use strict";
 
     return new Class({
@@ -21,7 +22,8 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
 
         Binds: [
             '$onImport',
-            'refresh'
+            'refresh',
+            'openBruttoInput'
         ],
 
         initialize: function (options) {
@@ -119,6 +121,21 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
                     blur  : this.refresh
                 }
             }).inject(this.$Elm);
+
+            this.$Button = new Element('span', {
+                'class': 'field-container-item',
+                html   : '<span class="fa fa-calculator"></span>',
+                title  : QUILocale.get('quiqqer/products', 'fields.control.price.brutto'),
+                styles : {
+                    cursor    : 'pointer',
+                    lineHeight: 30,
+                    textAlign : 'center',
+                    width     : 50
+                },
+                events : {
+                    click: this.openBruttoInput
+                }
+            }).inject(this.$Elm, 'after');
 
             this.refresh();
         },
@@ -221,6 +238,25 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
             name = parseInt(name);
 
             return name || false;
+        },
+
+        /**
+         * Opens the brutto / gross input
+         */
+        openBruttoInput: function () {
+            var self = this;
+
+            new PriceBruttoWindow({
+                events: {
+                    onOpen: function (Win) {
+                        Win.getContent().set('html', '');
+                    },
+
+                    onSubmit: function (Win, value) {
+                        self.$Price.value = value;
+                    }
+                }
+            }).open();
         }
     });
 });

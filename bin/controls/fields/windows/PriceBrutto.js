@@ -70,6 +70,8 @@ define('package/quiqqer/products/bin/controls/fields/windows/PriceBrutto', [
                 event.stop();
                 self.submit();
             });
+
+            this.getContent().getElement('input').focus();
         },
 
         /**
