@@ -678,7 +678,7 @@ class EventHandling
         foreach ($systemFields as $systemFieldsId) {
             $fieldId = (int)$systemFieldsId['id'];
 
-            if ($fieldId >= 1000 || $fieldInStandardFields($fieldId)) {
+            if ($fieldId >= 100 || $fieldInStandardFields($fieldId)) {
                 continue;
             }
 
