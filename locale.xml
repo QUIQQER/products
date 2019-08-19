@@ -2059,6 +2059,10 @@
             <de><![CDATA[Freitext Suche anzeigen]]></de>
             <en><![CDATA[Show freetext search]]></en>
         </locale>
+        <locale name="quiqqer.products.settings.productLoadNumber">
+            <de><![CDATA[Anzahl geladener Produkte]]></de>
+            <en><![CDATA[Number of loaded products]]></en>
+        </locale>
         <locale name="quiqqer.products.settings.categoryStartNumber">
             <de><![CDATA[Anzahl angezeigter Kategorien]]></de>
             <en><![CDATA[Limit of displayed categories]]></en>
