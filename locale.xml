@@ -1549,6 +1549,18 @@
             <de><![CDATA[Bruttoeingabe eines Preises]]></de>
             <en><![CDATA[Gross entry of a price]]></en>
         </locale>
+        <locale name="fields.control.price.quantity">
+            <de><![CDATA[Stückzahl]]></de>
+            <en><![CDATA[Quantity]]></en>
+        </locale>
+        <locale name="fields.control.price.quantity.short">
+            <de><![CDATA[Stk]]></de>
+            <en><![CDATA[Qty]]></en>
+        </locale>
+        <locale name="fields.control.price.quantity.title">
+            <de><![CDATA[Brutto preis: [price]]]></de>
+            <en><![CDATA[Gross price: [price]]]></en>
+        </locale>
 
         <locale name="product.fields.grid.visible">
             <de><![CDATA[sichtbar]]></de>

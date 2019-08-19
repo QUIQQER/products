@@ -15,6 +15,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
 ], function (QUI, QUIControl, PriceBruttoWindow, QUILocale, QUIAjax) {
     "use strict";
 
+    var lg = 'quiqqer/products';
+
     return new Class({
 
         Extends: QUIControl,
@@ -174,7 +176,9 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
 
             if (this.$Elm.value === '') {
                 this.$BruttoInput.innerHTML = '---';
-                this.$BruttoInput.title     = '---';
+                this.$BruttoInput.title     = QUILocale.get(lg, 'fields.control.price.quantity.title', {
+                    price: '---'
+                });
                 return;
             }
 
@@ -185,7 +189,9 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
 
                 QUIAjax.get('package_quiqqer_products_ajax_products_calcBruttoPrice', function (price) {
                     self.$BruttoInput.innerHTML = price;
-                    self.$BruttoInput.title     = price;
+                    self.$BruttoInput.title     = QUILocale.get(lg, 'fields.control.price.quantity.title', {
+                        price: price
+                    });
                 }, {
                     'package': 'quiqqer/products',
                     price    : this.$Elm.value,

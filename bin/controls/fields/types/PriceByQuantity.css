@@ -17,5 +17,13 @@
 .quiqqer-products-field-priceByQuantity-quantity {
     border: 1px solid #fff;
     float: left;
-    width: calc(50% - 10px)
+    width: calc(50% - 50px)
+}
+
+.quiqqer-products-field-priceByQuantity-quantity-apr {
+    float: left;
+    line-height: 30px;
+    overflow: hidden;
+    text-align: center;
+    width: 40px;
 }
