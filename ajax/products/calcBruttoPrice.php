@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains package_quiqqer_products_ajax_products_calcNettoPrice
+ * This file contains package_quiqqer_products_ajax_products_calcBruttoPrice
  */
 
 use QUI\ERP\Tax\TaxEntry;
@@ -9,14 +9,14 @@ use QUI\ERP\Tax\TaxType;
 use QUI\ERP\Tax\Utils as TaxUtils;
 
 /**
- * Calculate the product price
+ * Calculate the product brutto price
  *
  * @param integer|float $price - Price to calc
  * @return float
  */
 QUI::$Ajax->registerFunction(
-    'package_quiqqer_products_ajax_products_calcNettoPrice',
-    function ($price) {
+    'package_quiqqer_products_ajax_products_calcBruttoPrice',
+    function ($price, $formatted) {
         $price   = \floatval($price);
         $Area    = QUI\ERP\Defaults::getArea();
         $TaxType = TaxUtils::getTaxTypeByArea($Area);
@@ -30,11 +30,15 @@ QUI::$Ajax->registerFunction(
         }
 
         $vat = $TaxEntry->getValue();
-        $vat = ($vat / 100) + 1;
+        $vat = (100 + $vat) / 100;
 
-        $price = $price / $vat;
+        $price = $price * $vat;
+
+        if (isset($formatted) && $formatted) {
+            return QUI\ERP\Defaults::getCurrency()->format($price);
+        }
 
         return $price;
     },
-    ['price']
+    ['price', 'formatted']
 );

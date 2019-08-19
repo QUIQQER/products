@@ -10,29 +10,35 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
     'qui/controls/Control',
     'package/quiqqer/products/bin/controls/fields/windows/PriceBrutto',
     'Locale',
+    'Ajax',
 
     'css!package/quiqqer/products/bin/controls/fields/types/PriceByQuantity.css'
 
-], function (QUI, QUIControl, PriceBruttoWindow, QUILocale) {
+], function (QUI, QUIControl, PriceBruttoWindow, QUILocale, QUIAjax) {
     "use strict";
 
     return new Class({
+
         Extends: QUIControl,
         Type   : 'package/quiqqer/products/bin/controls/fields/types/PriceByQuantity',
 
         Binds: [
             '$onImport',
             'refresh',
-            'openBruttoInput'
+            'openBruttoInput',
+            '$calcBruttoPrice'
         ],
 
         initialize: function (options) {
             this.parent(options);
 
-            this.$Input    = null;
-            this.$Price    = null;
-            this.$Currency = null;
-            this.$Quantity = null;
+            this.$Input       = null;
+            this.$Price       = null;
+            this.$Currency    = null;
+            this.$BruttoInput = null;
+
+            this.$Quantity  = null;
+            this.$calcTimer = null;
 
             this.$Formatter = QUILocale.getNumberFormatter({
                 minimumFractionDigits: 8
@@ -99,8 +105,15 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
                 type       : 'text',
                 placeholder: this.$Formatter.format(1000),
                 events     : {
-                    change: this.refresh,
-                    blur  : this.refresh
+                    change: function () {
+                        this.refresh();
+                        this.$calcBruttoPrice();
+                    }.bind(this),
+
+                    blur: function () {
+                        this.refresh();
+                        this.$calcBruttoPrice();
+                    }.bind(this)
                 }
             }).inject(this.$Elm);
 
@@ -137,7 +150,18 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
                 }
             }).inject(this.$Elm, 'after');
 
+            this.$BruttoInput = new Element('span', {
+                'class': 'field-container-item',
+                html   : '<span class="fa fa-spinner fa-spin"></span>',
+                styles : {
+                    borderRight: 0,
+                    lineHeight : 30,
+                    maxWidth   : 100
+                }
+            }).inject(this.$Elm, 'after');
+
             this.refresh();
+            this.$calcBruttoPrice();
         },
 
         /**
@@ -209,6 +233,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
         setPriceValue: function (value) {
             if (value === '' || !value || value === 'false') {
                 this.$Price.value = '';
+                this.$calcBruttoPrice();
                 return;
             }
 
@@ -220,10 +245,12 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
 
             if ((foundGroupSeparator || foundDecimalSeparator) && !(foundGroupSeparator && !foundDecimalSeparator)) {
                 this.$Price.value = value;
+                this.$calcBruttoPrice();
                 return;
             }
 
             this.$Price.value = this.$Formatter.format(parseFloat(value));
+            this.$calcBruttoPrice();
         },
 
         /**
@@ -254,9 +281,44 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
 
                     onSubmit: function (Win, value) {
                         self.$Price.value = value;
+                        self.$calcBruttoPrice();
                     }
                 }
             }).open();
+        },
+
+        /**
+         * calculate the brutto price
+         */
+        $calcBruttoPrice: function () {
+            if (!this.$BruttoInput) {
+                return;
+            }
+
+            if (this.$calcTimer) {
+                clearTimeout(this.$calcTimer);
+            }
+
+            if (this.$Price.value === '') {
+                this.$BruttoInput.innerHTML = '---';
+                this.$BruttoInput.title     = '---';
+                return;
+            }
+
+            this.$BruttoInput.innerHTML = '<span class="fa fa-spinner fa-spin"></span>';
+
+            this.$calcTimer = (function () {
+                var self = this;
+
+                QUIAjax.get('package_quiqqer_products_ajax_products_calcBruttoPrice', function (price) {
+                    self.$BruttoInput.innerHTML = price;
+                    self.$BruttoInput.title     = price;
+                }, {
+                    'package': 'quiqqer/products',
+                    price    : this.$Price.value,
+                    formatted: 1
+                });
+            }).delay(500, this);
         }
     });
 });
