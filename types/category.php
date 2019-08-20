@@ -22,7 +22,7 @@ if (\strpos(QUI::getRequest()->getPathInfo(), '_p/') !== false) {
     if (\strlen(URL_DIR) == 1) {
         $_REQUEST['_url'] = \ltrim($_REQUEST['_url'], URL_DIR);
     } else {
-        $from             = '/'.\preg_quote(URL_DIR, '/').'/';
+        $from             = '/' . \preg_quote(URL_DIR, '/') . '/';
         $_REQUEST['_url'] = \preg_replace($from, '', $_REQUEST['_url'], 1);
     }
 
@@ -89,7 +89,7 @@ if ($siteUrl != $_REQUEST['_url']) {
         $categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
         $Product    = Products\Handler\Products::getProductByUrl($refNo, $categoryId);
     } catch (QUI\Exception $Exception) {
-        Log::addDebug('Products::getProductByUrl :: '.$Exception->getMessage());
+        Log::addDebug('Products::getProductByUrl :: ' . $Exception->getMessage());
     }
 
     try {
@@ -111,7 +111,7 @@ if ($siteUrl != $_REQUEST['_url']) {
 
         // forwarding, if the product has a new URL
         // can happen if the product was previously in "all products".
-        if ($productUrl != URL_DIR.$_REQUEST['_url']) {
+        if ($productUrl != URL_DIR . $_REQUEST['_url']) {
             $Redirect = new RedirectResponse($productUrl);
             $Redirect->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
 
@@ -152,7 +152,7 @@ if ($siteUrl != $_REQUEST['_url']) {
                 );
 
                 $Site->setAttribute(
-                    $language.'-link',
+                    $language . '-link',
                     $Product->getUrlRewrittenWithHost($LanguageProject)
                 );
             } catch (QUI\Exception $Exception) {
@@ -192,15 +192,22 @@ if ($siteUrl != $_REQUEST['_url']) {
     /**
      * CATEGORY
      */
-    $ProductList = new ProductList([
+    $productListAttr = [
         'categoryId'           => $Site->getAttribute('quiqqer.products.settings.categoryId'),
         'hideEmptyProductList' => true,
         'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
         'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
         'searchParams'         => Products\Utils\Search::getSearchParameterFromRequest(),
-        'autoload'             => false,
+        'autoload'             => 1,
+        'productLoadNumber'    => $Site->getAttribute('quiqqer.products.settings.productLoadNumber'),
         'view'                 => Products\Utils\Search::getViewParameterFromRequest(),
-    ]);
+    ];
+
+    if ($Site->getAttribute('quiqqer.products.settings.autoloadAfter') !== '') {
+        $productListAttr['autoloadAfter'] = $Site->getAttribute('quiqqer.products.settings.autoloadAfter');
+    }
+
+    $ProductList = new ProductList($productListAttr);
 
     $filterList = $ProductList->getFilter();
 
@@ -225,13 +232,13 @@ if ($siteUrl != $_REQUEST['_url']) {
         }
 
         $ProductList->addSort(
-            $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortASC'),
-            'F'.$id.' ASC'
+            $title . ' ' . QUI::getLocale()->get('quiqqer/products', 'sortASC'),
+            'F' . $id . ' ASC'
         );
 
         $ProductList->addSort(
-            $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
-            'F'.$id.' DESC'
+            $title . ' ' . QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
+            'F' . $id . ' DESC'
         );
     }
 

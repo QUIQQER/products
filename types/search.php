@@ -3,12 +3,20 @@
 use \QUI\ERP\Products\Utils\Search as SearchUtils;
 use \QUI\ERP\Products\Controls\Category\ProductList;
 
-$ProductList = new ProductList([
+$productListAttr = [
     'categoryId'   => $Site->getAttribute('quiqqer.products.settings.categoryId'),
     'autoload'     => false,
     'searchParams' => SearchUtils::getSearchParameterFromRequest(),
-    'view'         => SearchUtils::getViewParameterFromRequest()
-]);
+    'view'         => SearchUtils::getViewParameterFromRequest(),
+    'productLoadNumber'    => $Site->getAttribute('quiqqer.products.settings.productLoadNumber'),
+
+];
+
+if ($Site->getAttribute('quiqqer.products.settings.autoloadAfter') !== '') {
+    $productListAttr['autoloadAfter'] = $Site->getAttribute('quiqqer.products.settings.autoloadAfter');
+}
+
+$ProductList = new ProductList($productListAttr);
 
 if ($Site->getAttribute('quiqqer.products.settings.showFilterLeft')) {
     $ProductList->setAttribute('showFilter', false);

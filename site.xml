@@ -22,6 +22,7 @@
                 <attribute>quiqqer.products.settings.showFreeTextSearch</attribute>
                 <attribute>quiqqer.products.settings.productLoadNumber</attribute>
                 <attribute>quiqqer.products.settings.categoryStartNumber</attribute>
+                <attribute>quiqqer.products.settings.autoloadAfter</attribute>
                 <attribute>quiqqer.products.settings.categoryDisplay</attribute>
                 <attribute>quiqqer.products.settings.categoryAsFilter</attribute>
                 <attribute>quiqqer.products.settings.defaultSorting</attribute>
@@ -67,6 +68,24 @@
                                 <locale group="quiqqer/products" var="quiqqer.products.settings.productLoadNumber"/>
                             </text>
                         </input>
+
+                        <select conf="quiqqer.products.settings.autoloadAfter">
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.autoloadAfter"/>
+                            </text>
+
+                            <option value=""></option>
+                            <option value="0">
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.autoloadAfter.disabled"/>
+                            </option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
 
                         <input conf="quiqqer.products.settings.categoryStartNumber" type="number">
                             <text>
@@ -151,6 +170,8 @@
             </desc>
 
             <attributes>
+                <attribute>quiqqer.products.settings.productLoadNumber</attribute>
+                <attribute>quiqqer.products.settings.autoloadAfter</attribute>
                 <attribute>quiqqer.products.settings.searchFieldIds</attribute>
                 <attribute>quiqqer.products.settings.searchFieldIds.edited</attribute>
                 <attribute>quiqqer.products.settings.searchFieldsByUser</attribute>
@@ -164,6 +185,30 @@
                         <title>
                             <locale group="quiqqer/products" var="quiqqer.products.search.settings.title"/>
                         </title>
+
+                        <input conf="quiqqer.products.settings.productLoadNumber" type="number">
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.productLoadNumber"/>
+                            </text>
+                        </input>
+
+                        <select conf="quiqqer.products.settings.autoloadAfter">
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.autoloadAfter"/>
+                            </text>
+
+                            <option value=""></option>
+                            <option value="0">
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.autoloadAfter.disabled"/>
+                            </option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
 
                         <input conf="quiqqer.products.settings.showFilterLeft" type="checkbox">
                             <text>

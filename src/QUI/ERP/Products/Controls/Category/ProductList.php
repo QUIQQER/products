@@ -61,13 +61,13 @@ class ProductList extends QUI\Control
             'categoryView'         => 'gallery', // gallery, list, detail
             'searchParams'         => false,
             'hideEmptyProductList' => false,
-            'productLoadNumber'    => false,
+            'productLoadNumber'    => false, // How many products should be loaded?
             'categoryStartNumber'  => false,
             'showFilter'           => true, // show the filter, or not
             'showFilterInfo'       => true, // show the filter, or not
             'forceMobileFilter'    => false,
-            'autoload'             => 3,
-            'autoloadAfter'        => false, // After how many clicks are further products loaded automatically?
+            'autoload'             => false,
+            'autoloadAfter'        => 3, //  After how many clicks are further products loaded automatically? (false / number )
             'hidePrice'            => QUI\ERP\Products\Utils\Package::hidePrice(),
         ]);
 
@@ -109,6 +109,7 @@ class ProductList extends QUI\Control
         $this->setAttribute('data-productlist-id', $this->id);
         $this->setAttribute('data-autoload', $this->getAttribute('autoload') ? 1 : 0);
         $this->setAttribute('data-autoloadAfter', $this->getAttribute('autoloadAfter'));
+        $this->setAttribute('data-productLoadNumber', $this->getAttribute('productLoadNumber'));
 
         $products = '';
         $more     = false;
@@ -598,11 +599,11 @@ class ProductList extends QUI\Control
      */
     protected function getMax()
     {
-        if ($this->getSite()->getAttribute('quiqqer.products.settings.productLoadNumber')) {
-            return $this->getSite()->getAttribute('quiqqer.products.settings.productLoadNumber');
+        // settings
+        if ($this->getAttribute('productLoadNumber')) {
+            return $this->getAttribute('productLoadNumber');
         }
 
-        // @todo als setting machen
         switch ($this->getAttribute('view')) {
             case 'list':
                 return 10;

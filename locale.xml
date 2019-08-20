@@ -2063,6 +2063,14 @@
             <de><![CDATA[Anzahl geladener Produkte]]></de>
             <en><![CDATA[Number of loaded products]]></en>
         </locale>
+        <locale name="quiqqer.products.settings.autoloadAfter">
+            <de><![CDATA[Wie oft muss der Benutzer die nächsten Produkte manuell laden, damit diese automatisch geladen werden?]]></de>
+            <en><![CDATA[How often must the user manually load the next products so that they are loaded automatically?]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.autoloadAfter.disabled">
+            <de><![CDATA[Ausgeschaltet - Produkte werden nicht automatsich geladen]]></de>
+            <en><![CDATA[Disable - products are not loaded automatically]]></en>
+        </locale>
         <locale name="quiqqer.products.settings.categoryStartNumber">
             <de><![CDATA[Anzahl angezeigter Kategorien]]></de>
             <en><![CDATA[Limit of displayed categories]]></en>

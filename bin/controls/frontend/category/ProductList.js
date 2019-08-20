@@ -27,7 +27,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'package/quiqqer/products/bin/controls/frontend/category/ProductListField'
 
 ], function (QUI, QUIControl, QUISelect, QUIButton, QUILoader, QUIElementUtils,
-             Search, Piwik, SearchField, QUIAjax, QUILocale, URI, ProductListFilter, ProductListField) {
+    Search, Piwik, SearchField, QUIAjax, QUILocale, URI, ProductListFilter, ProductListField
+) {
 
     "use strict";
 
@@ -60,13 +61,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         ],
 
         options: {
-            categoryId: false,
-            view      : 'gallery',
-            sort      : false,
-            project   : false,
-            lang      : false,
-            siteId    : false,
-            autoload  : true
+            categoryId       : false,
+            view             : 'gallery',
+            sort             : false,
+            project          : false,
+            lang             : false,
+            siteId           : false,
+            autoload         : true,
+            autoloadAfter    : 3, // After how many clicks are further products loaded automatically? (false | number)
+            productLoadNumber: 9
         },
 
         initialize: function (options) {
@@ -115,6 +118,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$moreButtonIsVisible = false;
             this.$moreButtonClicked   = 0;
             this.$loadingMore         = false;
+            this.$autoloadAfter       = 0;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -159,6 +163,21 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             if (parseInt(Elm.get('data-autoload')) === 0) {
                 this.setAttribute('autoload', false);
+            }
+
+            this.$productLoadNumber = parseInt(Elm.get('data-productLoadNumber'));
+            this.$autoloadAfter = parseInt(Elm.get('data-autoloadAfter'));
+
+            if (this.$autoloadAfter < 0) {
+                this.$autoloadAfter = 0;
+            }
+
+            if (this.$autoloadAfter === 0) {
+                this.$autoloadAfter = false;
+            }
+
+            if (Elm.get('data-productLoadNumber')) {
+                this.setAttribute('productLoadNumber', Elm.get('data-productLoadNumber'));
             }
 
             if (Elm.get('data-sort')) {
@@ -274,25 +293,27 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (this.$BarFilter) {
                 this.$BarFilter.getElement('.button').addEvent('click', this.toggleFilter);
                 this.$BarFilter.setStyle('display', null);
-            } else if (this.$FilterContainer) {
-                // open filter, if no filter button exists
-                moofx(this.$FilterContainer).animate({
-                    background: 'transparent'
-                }, {
-                    duration: 200,
-                    callback: function () {
-                        this.$FilterContainer.addClass(
-                            'quiqqer-products-productList-filterContainerLoaded'
-                        );
-                        this.$FilterContainer.removeClass(
-                            'quiqqer-products-productList-filterContainerLoading'
-                        );
+            } else {
+                if (this.$FilterContainer) {
+                    // open filter, if no filter button exists
+                    moofx(this.$FilterContainer).animate({
+                        background: 'transparent'
+                    }, {
+                        duration: 200,
+                        callback: function () {
+                            this.$FilterContainer.addClass(
+                                'quiqqer-products-productList-filterContainerLoaded'
+                            );
+                            this.$FilterContainer.removeClass(
+                                'quiqqer-products-productList-filterContainerLoading'
+                            );
 
-                        this.$FilterContainer.setStyles({
-                            height: null
-                        });
-                    }.bind(this)
-                });
+                            this.$FilterContainer.setStyles({
+                                height: null
+                            });
+                        }.bind(this)
+                    });
+                }
             }
 
             // freetext
@@ -416,7 +437,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     return;
                 }
 
-                if (this.$moreButtonClicked < 3) {
+                if (!this.$autoloadAfter) {
+                    return;
+                }
+
+                if (this.$moreButtonClicked < this.$autoloadAfter) {
                     return;
                 }
 
@@ -898,12 +923,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         $renderSearch: function (next) {
             next = typeof next !== 'undefined';
 
-            var self          = this,
-                view          = this.getAttribute('view'),
-                sort          = this.getAttribute('sort'),
-                categoryId    = this.getAttribute('categoryId'),
-                ContainerReal = this.$ContainerReal,
-                articles      = this.$ContainerReal.getElements('article').length + 1;
+            var self              = this,
+                view              = this.getAttribute('view'),
+                sort              = this.getAttribute('sort'),
+                categoryId        = this.getAttribute('categoryId'),
+                productLoadNumber = this.getAttribute('productLoadNumber'),
+                ContainerReal     = this.$ContainerReal,
+                articles          = this.$ContainerReal.getElements('article').length + 1;
 
             return new Promise(function (resolve) {
                 QUIAjax.get('package_quiqqer_products_ajax_controls_categories_productList', function (result) {
@@ -967,18 +993,19 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         resolve(result);
                     });
                 }, {
-                    'package'   : 'quiqqer/products',
-                    view        : view,
-                    sort        : sort,
-                    articles    : articles,
-                    next        : next ? 1 : 0,
-                    categoryId  : categoryId,
-                    project     : JSON.encode({
+                    'package'        : 'quiqqer/products',
+                    view             : view,
+                    sort             : sort,
+                    articles         : articles,
+                    next             : next ? 1 : 0,
+                    categoryId       : categoryId,
+                    productLoadNumber: productLoadNumber,
+                    project          : JSON.encode({
                         name: self.getAttribute('project'),
                         lang: self.getAttribute('lang')
                     }),
-                    siteId      : self.getAttribute('siteId'),
-                    searchParams: JSON.encode(self.$getSearchParams())
+                    siteId           : self.getAttribute('siteId'),
+                    searchParams     : JSON.encode(self.$getSearchParams())
                 });
             });
         },
@@ -1186,11 +1213,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 sortBy = sort[1];
                 sortOn = sort[0];
-            } else if (this.getAttribute('sort')) {
-                var sortAttr = this.getAttribute('sort').split(' ');
+            } else {
+                if (this.getAttribute('sort')) {
+                    var sortAttr = this.getAttribute('sort').split(' ');
 
-                sortBy = sortAttr[1];
-                sortOn = sortAttr[0];
+                    sortBy = sortAttr[1];
+                    sortOn = sortAttr[0];
+                }
             }
 
             if (this.$productId) {
