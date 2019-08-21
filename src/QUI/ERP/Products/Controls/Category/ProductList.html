@@ -1,10 +1,10 @@
-{if count($children)}
-<div class="quiqqer-products-productList-categories">
+{if $this->getAttribute('categoryPos') == 'top' && count($children)}
+<div class="quiqqer-products-productList-categories quiqqer-products-productList-categories__top grid-container grid-parent">
     {include file=$categoryFile children=$children}
 </div>
 {/if}
 
-<section class="quiqqer-products-productList-products">
+<section class="quiqqer-products-productList-products grid-container grid-parent">
 
     <div class="quiqqer-products-productList-sort" {if !$count}style="display: none;"{/if}>
         <noscript>
@@ -108,3 +108,9 @@
     </noscript>
 
 </section>
+
+{if $this->getAttribute('categoryPos') == 'bottom' && count($children)}
+<div class="quiqqer-products-productList-categories  quiqqer-products-productList-categories__bottom grid-container grid-parent">
+    {include file=$categoryFile children=$children}
+</div>
+{/if}

@@ -27,6 +27,14 @@
                     <type><![CDATA[bool]]></type>
                     <defaultvalue>1</defaultvalue>
                 </conf>
+                <conf name="categoryPos">
+                    <type><![CDATA[string]]></type>
+                    <defaultvalue>top</defaultvalue>
+                </conf>
+                <conf name="productLoadNumber">
+                    <type><![CDATA[number]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
                 <conf name="useAttributeListsForMinMaxPriceCalculation">
                     <type><![CDATA[bool]]></type>
                     <defaultvalue>0</defaultvalue>
@@ -169,6 +177,34 @@
                                 <description>
                                     <locale group="quiqqer/products"
                                             var="settings.window.products.categoryAsFilter.description"/>
+                                </description>
+                            </text>
+                        </input>
+
+
+                        <select conf="products.categoryPos">
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.categoryPos"/>
+                            </text>
+
+                            <option value="top">
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.categoryPos.top"/>
+                            </option>
+                            <option value="bottom">
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.categoryPos.bottom"/>
+                            </option>
+                        </select>
+
+                        <input conf="products.productLoadNumber" type="number">
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.productLoadNumber"/>
+                                <description>
+                                    <locale group="quiqqer/products"
+                                            var="settings.window.products.productLoadNumber.description"/>
                                 </description>
                             </text>
                         </input>

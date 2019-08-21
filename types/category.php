@@ -197,6 +197,7 @@ if ($siteUrl != $_REQUEST['_url']) {
         'hideEmptyProductList' => true,
         'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
         'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
+        'categoryPos'          => $Site->getAttribute('quiqqer.products.settings.categoryPos'),
         'searchParams'         => Products\Utils\Search::getSearchParameterFromRequest(),
         'autoload'             => 1,
         'productLoadNumber'    => $Site->getAttribute('quiqqer.products.settings.productLoadNumber'),

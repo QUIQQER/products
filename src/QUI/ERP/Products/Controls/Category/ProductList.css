@@ -1,6 +1,10 @@
 
-.quiqqer-products-productList-categories {
+.quiqqer-products-productList-categories__top {
     margin-bottom: 40px;
+}
+
+.quiqqer-products-productList-categories__bottom {
+    margin-top: 40px;
 }
 
 .quiqqer-products-productList-sort {

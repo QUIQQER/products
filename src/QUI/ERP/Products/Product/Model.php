@@ -1056,20 +1056,6 @@ class Model extends QUI\QDOM
             $mainCategory = $Category->getId();
         }
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.save', [
-                'id' => $this->getId()
-            ]),
-            '',
-            [
-                'categories'  => ','.\implode(',', $categoryIds).',',
-                'category'    => $mainCategory,
-                'fieldData'   => \json_encode($fieldData),
-                'permissions' => \json_encode($this->permissions),
-                'priority'    => $this->getPriority()
-            ]
-        );
-
         $this->setAttribute('e_date', \date('Y-m-d H:i:s'));
 
         $parentId = (int)$this->getAttribute('parent');
@@ -1080,6 +1066,20 @@ class Model extends QUI\QDOM
 
         // update
         if (Products::$writeProductDataToDb) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.save', [
+                    'id' => $this->getId()
+                ]),
+                '',
+                [
+                    'categories'  => ','.\implode(',', $categoryIds).',',
+                    'category'    => $mainCategory,
+                    'fieldData'   => \json_encode($fieldData),
+                    'permissions' => \json_encode($this->permissions),
+                    'priority'    => $this->getPriority()
+                ]
+            );
+
             QUI::getDataBase()->update(
                 QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 [

@@ -280,4 +280,59 @@ class Fields
 
         return $value;
     }
+
+    /**
+     * is the value a weight specification
+     *
+     * @param $weight
+     * @return bool
+     */
+    public static function isWeight($weight)
+    {
+        switch ($weight) {
+            case 'g':
+            case 'kg':
+            case 't':
+            case 'tons':
+            case 'lb':
+            case 'lbs':
+                return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * compares to numbers
+     *
+     * @param $no1
+     * @param $no2
+     * @param $type
+     *
+     * @return bool
+     */
+    public static function compare($no1, $no2, $type)
+    {
+        if ($type === '=') {
+            return $no1 == $no2;
+        }
+
+        if ($type === 'gt') {
+            return $no1 > $no1;
+        }
+
+        if ($type === 'egt') {
+            return $no1 >= $no1;
+        }
+
+        if ($type === 'lt') {
+            return $no1 < $no1;
+        }
+
+        if ($type === 'elt') {
+            return $no1 <= $no1;
+        }
+
+        return false;
+    }
 }
