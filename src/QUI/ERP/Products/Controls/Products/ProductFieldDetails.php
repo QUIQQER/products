@@ -50,8 +50,16 @@ class ProductFieldDetails extends QUI\Control
         /* @var $Field QUI\ERP\Products\Field\Field */
         switch ($Field->getType()) {
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA:
+                $template = \dirname(__FILE__).'/ProductFieldDetails.Content.html';
+                $Engine->assign('content', $Field->getValue());
+                break;
+                
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA_MULTI_LANG:
                 $template = \dirname(__FILE__).'/ProductFieldDetails.Content.html';
+                $lang     = QUI::getLocale()->getCurrent();
+                $value    = $Field->getValue();
+
+                $Engine->assign('content', empty($value[$lang]) ? '' : $value[$lang]);
                 break;
 
             case QUI\ERP\Products\Handler\Fields::TYPE_PRODCUCTS:
