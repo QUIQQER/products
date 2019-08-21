@@ -24,6 +24,7 @@
                 <attribute>quiqqer.products.settings.categoryStartNumber</attribute>
                 <attribute>quiqqer.products.settings.autoloadAfter</attribute>
                 <attribute>quiqqer.products.settings.categoryDisplay</attribute>
+                <attribute>quiqqer.products.settings.categoryPos</attribute>
                 <attribute>quiqqer.products.settings.categoryAsFilter</attribute>
                 <attribute>quiqqer.products.settings.defaultSorting</attribute>
                 <attribute>quiqqer.products.settings.tags</attribute>
@@ -104,6 +105,22 @@
                             </option>
                             <option value="list">
                                 <locale group="quiqqer/products" var="quiqqer.products.settings.categoryDisplay.list"/>
+                            </option>
+                        </select>
+
+                        <select conf="quiqqer.products.settings.categoryPos">
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.categoryPos"/>
+                            </text>
+
+                            <option value="false"></option>
+                            <option value="top">
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.categoryPos.top"/>
+                            </option>
+                            <option value="bottom">
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.categoryPos.bottom"/>
                             </option>
                         </select>
 

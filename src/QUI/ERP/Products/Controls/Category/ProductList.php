@@ -59,6 +59,7 @@ class ProductList extends QUI\Control
             'data-cid'             => false,
             'view'                 => 'gallery', // gallery, list, detail
             'categoryView'         => 'gallery', // gallery, list, detail
+            'categoryPos'          => 'top', // top, bottom, false = take setting from products
             'searchParams'         => false,
             'hideEmptyProductList' => false,
             'productLoadNumber'    => false, // How many products should be loaded?
@@ -67,7 +68,7 @@ class ProductList extends QUI\Control
             'showFilterInfo'       => true, // show the filter, or not
             'forceMobileFilter'    => false,
             'autoload'             => false,
-            'autoloadAfter'        => 3, //  After how many clicks are further products loaded automatically? (false / number )
+            'autoloadAfter'        => 3, //  After how many clicks are further products loaded automatically? (false = disable / number )
             'hidePrice'            => QUI\ERP\Products\Utils\Package::hidePrice(),
         ]);
 
@@ -102,6 +103,28 @@ class ProductList extends QUI\Control
 
         $Category     = $this->getCategory();
         $searchParams = $this->getAttribute('searchParams');
+        $Config       = QUI::getPackage('quiqqer/products')->getConfig();
+
+        // global settings: category pos
+        $categoryPos = $this->getAttribute('categoryPos');
+
+        if ($categoryPos === 'false') {
+            $categoryPos = false;
+        }
+
+        if (!$categoryPos) {
+            $this->setAttribute('categoryPos', $Config->get('products', 'categoryPos'));
+        }
+
+        // global settings: product load number
+        if ($this->getAttribute('productLoadNumber') == '' || $this->getAttribute('productLoadNumber') == false) {
+            $this->setAttribute('productLoadNumber', $Config->get('products', 'productLoadNumber'));
+        }
+
+        // global settings: product autoload after x clicks
+        if ($this->getAttribute('autoloadAfter') == '' || $this->getAttribute('autoloadAfter') == false) {
+            $this->setAttribute('autoloadAfter', $Config->get('products', 'autoloadAfter'));
+        }
 
         $this->setAttribute('data-project', $this->getSite()->getProject()->getName());
         $this->setAttribute('data-lang', $this->getSite()->getProject()->getLang());
@@ -218,7 +241,7 @@ class ProductList extends QUI\Control
 
             'categoryFile'        => $categoryFile,
             'placeholder'         => $this->getProject()->getMedia()->getPlaceholder(),
-            'categoryStartNumber' => $this->getAttribute('categoryStartNumber'),
+            'categoryStartNumber' => $this->getAttribute('categoryStartNumber')
         ]);
 
         return $Engine->fetch(\dirname(__FILE__) . '/ProductList.html');
