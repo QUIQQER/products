@@ -15,7 +15,19 @@ use QUI\ERP\Products\Controls\Products\Product as ProductControl;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getProduct',
     function ($productId, $project, $siteId) {
-        $Project  = null;
+        $Project = QUI\Projects\Manager::decode($project);
+
+        $cache = 'quiqqer-products/control/product/';
+        $cache .= $Project->getName().'/';
+        $cache .= $Project->getLang().'/';
+        $cache .= $siteId.'/';
+
+        try {
+            return QUI\Cache\Manager::get($cache);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
         $Site     = null;
         $Template = null;
         $Locale   = QUI::getLocale();
@@ -29,8 +41,7 @@ QUI::$Ajax->registerFunction(
 
 
         try {
-            $Project = QUI\Projects\Manager::decode($project);
-            $Site    = $Project->get($siteId);
+            $Site = $Project->get($siteId);
             $Site->load();
 
             $Template = QUI::getTemplateManager();
@@ -56,11 +67,15 @@ QUI::$Ajax->registerFunction(
                 $title = $Product->getTitle();
             }
 
-            return [
+            $result = [
                 'css'   => QUI\Control\Manager::getCSS(),
-                'html'  => \QUI\Output::getInstance()->parse($control),
+                'html'  => QUI\Output::getInstance()->parse($control),
                 'title' => $title
             ];
+
+            QUI\Cache\Manager::set($cache, $result);
+
+            return $result;
         } catch (QUI\Exception $Exception) {
         }
 
