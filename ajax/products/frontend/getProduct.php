@@ -21,6 +21,7 @@ QUI::$Ajax->registerFunction(
         $cache .= $Project->getName().'/';
         $cache .= $Project->getLang().'/';
         $cache .= $siteId.'/';
+        $cache .= $productId;
 
         try {
             return QUI\Cache\Manager::get($cache);
