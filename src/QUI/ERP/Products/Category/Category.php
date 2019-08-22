@@ -223,8 +223,6 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * Return the attributes
      *
      * @return array
-     *
-     * @throws QUI\Exception
      */
     public function getAttributes()
     {
@@ -234,11 +232,11 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         try {
             $fields = QUI\Cache\Manager::get($cacheFields);
         } catch (QUI\Cache\Exception $Exception) {
-            $fields   = [];
-            $fieldist = $this->getFields();
+            $fields    = [];
+            $fieldList = $this->getFields();
 
             /* @var $Field QUI\ERP\Products\Field\Field */
-            foreach ($fieldist as $Field) {
+            foreach ($fieldList as $Field) {
                 $fields[] = $Field->getAttributes();
             }
 
@@ -251,9 +249,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             $attributes       = parent::getAttributes();
             $attributes['id'] = $this->getId();
 
-            $attributes['countChildren'] = $this->countChildren();
-            $attributes['sites']         = $this->getSites();
-            $attributes['parent']        = $this->getParentId();
+            //$attributes['countChildren'] = $this->countChildren();
+            //$attributes['sites']         = $this->getSites();
+            $attributes['parent'] = $this->getParentId();
 
             QUI\Cache\Manager::set($cacheName, $attributes);
         }
@@ -384,7 +382,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      */
     public function getSites($Project = null)
     {
-        if (!\is_null($this->sites) && !$Project) {
+        if ($this->sites !== null && !$Project) {
             return $this->sites;
         }
 
@@ -392,7 +390,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 //            // @todo load from data
 //        }
 
-        if (\is_null($this->sites)) {
+        if ($this->sites == null) {
             $this->refreshSiteBinds();
         }
 
@@ -678,60 +676,63 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      */
     public function getFields()
     {
-        if (\is_null($this->fields)) {
-            $fields = [];
-            $data   = $this->data;
-
-            $standardFields = Fields::getStandardFields();
-
-            $isFieldInArray = function ($Field, $array = []) {
-                /* @var QUI\ERP\Products\Field\Field $Field */
-                /* @var QUI\ERP\Products\Field\Field $Entry */
-                foreach ($array as $Entry) {
-                    if ($Entry->getId() == $Field->getId()) {
-                        return true;
-                    }
-                }
-
-                return false;
-            };
-
-            if (isset($data['fields'])) {
-                $jsonData = \json_decode($data['fields'], true);
-
-                if (!\is_array($jsonData)) {
-                    $jsonData = [];
-                }
-
-                foreach ($jsonData as $field) {
-                    try {
-                        $Field = Fields::getField($field['id']);
-                        $Field->setAttribute('publicStatus', $field['publicStatus']);
-                        $Field->setAttribute('searchStatus', $field['searchStatus']);
-
-                        if (isset($field['options']) && !empty($field['options'])) {
-                            $Field->setOptions($field['options']);
-                        }
-
-                        $fields[] = $Field;
-                    } catch (QUI\Exception $Exception) {
-                        QUI\System\Log::writeException(
-                            $Exception,
-                            QUI\System\Log::LEVEL_DEBUG
-                        );
-                    }
-                }
-            }
-
-            // add standard fields to the array
-            foreach ($standardFields as $Field) {
-                if (!$isFieldInArray($Field, $fields)) {
-                    $fields[] = $Field;
-                }
-            }
-
-            $this->fields = $fields;
+        if ($this->fields !== null) {
+            return $this->fields;
         }
+
+
+        $fields = [];
+        $data   = $this->data;
+
+        $standardFields = Fields::getStandardFields();
+
+        $isFieldInArray = function ($Field, $array = []) {
+            /* @var QUI\ERP\Products\Field\Field $Field */
+            /* @var QUI\ERP\Products\Field\Field $Entry */
+            foreach ($array as $Entry) {
+                if ($Entry->getId() == $Field->getId()) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        if (isset($data['fields'])) {
+            $jsonData = \json_decode($data['fields'], true);
+
+            if (!\is_array($jsonData)) {
+                $jsonData = [];
+            }
+
+            foreach ($jsonData as $field) {
+                try {
+                    $Field = Fields::getField($field['id']);
+                    $Field->setAttribute('publicStatus', $field['publicStatus']);
+                    $Field->setAttribute('searchStatus', $field['searchStatus']);
+
+                    if (isset($field['options']) && !empty($field['options'])) {
+                        $Field->setOptions($field['options']);
+                    }
+
+                    $fields[] = $Field;
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::writeException(
+                        $Exception,
+                        QUI\System\Log::LEVEL_DEBUG
+                    );
+                }
+            }
+        }
+
+        // add standard fields to the array
+        foreach ($standardFields as $Field) {
+            if (!$isFieldInArray($Field, $fields)) {
+                $fields[] = $Field;
+            }
+        }
+
+        $this->fields = $fields;
 
         return $this->fields;
     }
@@ -745,7 +746,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      */
     public function addField(QUI\ERP\Products\Field\Field $Field)
     {
-        if (is_null($this->fields)) {
+        if ($this->fields === null) {
             $this->getFields();
         }
 

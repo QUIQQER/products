@@ -94,6 +94,16 @@ class Fields
     protected static $list = [];
 
     /**
+     * @var null
+     */
+    protected static $fieldTypes = null;
+
+    /**
+     * @var array
+     */
+    protected static $fieldTypeData = [];
+
+    /**
      * Return the child attributes
      *
      * @return array
@@ -535,10 +545,17 @@ class Fields
      */
     public static function getFieldTypes()
     {
+        if (self::$fieldTypes !== null) {
+            return self::$fieldTypes;
+        }
+
         $cacheName = 'quiqqer/products/fields';
 
+
         try {
-            return QUI\Cache\Manager::get($cacheName);
+            self::$fieldTypes = QUI\Cache\Manager::get($cacheName);
+
+            return self::$fieldTypes;
         } catch (QUI\Exception $Exception) {
         }
 
@@ -548,11 +565,11 @@ class Fields
         $result = [];
 
         foreach ($files as $file) {
-            if (strpos($file, 'View') !== false) {
+            if (\strpos($file, 'View') !== false) {
                 continue;
             }
 
-            $file = pathinfo($file);
+            $file = \pathinfo($file);
 
             $result[] = [
                 'plugin'   => 'quiqqer/products',
@@ -606,11 +623,8 @@ class Fields
             }
         }
 
-        try {
-            QUI\Cache\Manager::set($cacheName, $result);
-        } catch (\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-        }
+        QUI\Cache\Manager::set($cacheName, $result);
+        self::$fieldTypes = $result;
 
         return $result;
     }
@@ -623,16 +637,24 @@ class Fields
      */
     public static function getFieldTypeData($type)
     {
+        if (isset(self::$fieldTypeData[$type])) {
+            return self::$fieldTypeData[$type];
+        }
+
         $types = self::getFieldTypes();
         $found = \array_filter($types, function ($entry) use ($type) {
             return $entry['name'] == $type;
         });
 
         if (empty($found)) {
+            self::$fieldTypeData[$type] = [];
+
             return [];
         }
 
-        return \reset($found);
+        self::$fieldTypeData[$type] = \reset($found);
+
+        return self::$fieldTypeData[$type];
     }
 
     /**
