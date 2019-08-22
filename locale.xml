@@ -2079,6 +2079,18 @@
             <de><![CDATA[Kategorie als Filter anzeigen]]></de>
             <en><![CDATA[Show category as filter]]></en>
         </locale>
+        <locale name="quiqqer.products.settings.categoryPos">
+            <de><![CDATA[Kategorie-Position]]></de>
+            <en><![CDATA[Category position]]></en>
+        </locale>
+            <locale name="quiqqer.products.settings.categoryPos.top">
+                <de><![CDATA[Über der Produktliste]]></de>
+                <en><![CDATA[About the product list]]></en>
+            </locale>
+            <locale name="quiqqer.products.settings.categoryPos.bottom">
+                <de><![CDATA[Unter der Produktliste]]></de>
+                <en><![CDATA[Under the product list]]></en>
+            </locale>
         <locale name="quiqqer.products.settings.categoryDisplay">
             <de><![CDATA[Kategorienanzeige]]></de>
             <en><![CDATA[Categorydisplay]]></en>
