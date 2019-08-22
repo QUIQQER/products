@@ -17,7 +17,7 @@ QUI::$Ajax->registerFunction(
     function ($productId, $project, $siteId) {
         $Project = QUI\Projects\Manager::decode($project);
 
-        $cache = 'quiqqer-products/control/product/';
+        $cache = 'quiqqer/products/'.$productId.'/control/product/';
         $cache .= $Project->getName().'/';
         $cache .= $Project->getLang().'/';
         $cache .= $siteId.'/';

@@ -17,6 +17,16 @@ use QUI\ERP\Products\Product\Types\VariantChild;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getVariant',
     function ($productId, $fields) {
+        $cache = 'quiqqer/products/'.$productId.'/control/variants/';
+        $cache .= $productId.'/';
+        $cache .= \md5($fields);
+
+        try {
+            return QUI\Cache\Manager::get($cache);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
         try {
             $Product = Products::getNewProductInstance($productId);
 
@@ -99,7 +109,7 @@ QUI::$Ajax->registerFunction(
             'Product' => $Child
         ]);
 
-        return [
+        $result = [
             'variantId' => $Child->getId(),
             'control'   => QUI\Output::getInstance()->parse($Control->create()),
             'css'       => QUI\Control\Manager::getCSS(),
@@ -107,6 +117,10 @@ QUI::$Ajax->registerFunction(
             'title'     => $Child->getTitle(),
             'category'  => $categoryId
         ];
+
+        QUI\Cache\Manager::set($cache, $result);
+
+        return $result;
     },
     ['productId', 'fields']
 );
