@@ -17,7 +17,7 @@ use QUI\ERP\Tax\Utils as TaxUtils;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_calcBruttoPrice',
     function ($price, $formatted) {
-        $price   = \floatval($price);
+        $price   = QUI\ERP\Money\Price::validatePrice($price);
         $Area    = QUI\ERP\Defaults::getArea();
         $TaxType = TaxUtils::getTaxTypeByArea($Area);
 
