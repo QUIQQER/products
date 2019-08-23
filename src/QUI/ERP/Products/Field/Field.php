@@ -120,6 +120,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $searchDataType = false;
 
     /**
+     * @var array
+     */
+    protected $titles = [];
+
+    /**
      * Model constructor.
      *
      * @param integer $fieldId
@@ -912,10 +917,18 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $Locale = QUI::getLocale();
         }
 
-        return $Locale->get(
+        $current = $Locale->getCurrent();
+
+        if (isset($this->titles[$current])) {
+            return $this->titles[$current];
+        }
+
+        $this->titles[$current] = $Locale->get(
             'quiqqer/products',
             'products.field.'.$this->getId().'.title'
         );
+
+        return $this->titles[$current];
     }
 
     /**

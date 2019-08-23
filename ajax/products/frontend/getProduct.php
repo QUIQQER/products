@@ -15,20 +15,7 @@ use QUI\ERP\Products\Controls\Products\Product as ProductControl;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getProduct',
     function ($productId, $project, $siteId) {
-        $Project = QUI\Projects\Manager::decode($project);
-
-        $cache = 'quiqqer/products/'.$productId.'/control/product/';
-        $cache .= $Project->getName().'/';
-        $cache .= $Project->getLang().'/';
-        $cache .= $siteId.'/';
-        $cache .= $productId;
-
-        try {
-            return QUI\Cache\Manager::get($cache);
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-        }
-
+        $Project  = QUI\Projects\Manager::decode($project);
         $Site     = null;
         $Template = null;
         $Locale   = QUI::getLocale();
@@ -57,30 +44,21 @@ QUI::$Ajax->registerFunction(
             QUI\System\Log::addInfo($Exception->getMessage());
         }
 
-        try {
-            $Control = new ProductControl([
-                'Product' => $Product
-            ]);
+        $Control = new ProductControl([
+            'Product' => $Product
+        ]);
 
-            $control = $Control->create();
+        $control = $Control->create();
 
-            if (empty($title)) {
-                $title = $Product->getTitle();
-            }
-
-            $result = [
-                'css'   => QUI\Control\Manager::getCSS(),
-                'html'  => QUI\Output::getInstance()->parse($control),
-                'title' => $title
-            ];
-
-            QUI\Cache\Manager::set($cache, $result);
-
-            return $result;
-        } catch (QUI\Exception $Exception) {
+        if (empty($title)) {
+            $title = $Product->getTitle();
         }
 
-        return '';
+        return [
+            'css'   => QUI\Control\Manager::getCSS(),
+            'html'  => QUI\Output::getInstance()->parse($control),
+            'title' => $title
+        ];
     },
     ['productId', 'project', 'siteId']
 );
