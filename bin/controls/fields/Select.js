@@ -101,6 +101,11 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 'data-quiid': this.getId()
             });
 
+            if (this.getAttribute('multiple')) {
+                this.$Elm.addClass('qui-fields-list-multiple');
+            }
+
+
             if (!this.$Input) {
                 this.$Input = new Element('input', {
                     name: this.getAttribute('name')
@@ -485,7 +490,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
                     Entry = new Element('div', {
                         html     : '<span class="fa fa-percent"></span>' +
-                        '<span>' + nam + ' (' + id + ')</span>',
+                            '<span>' + nam + ' (' + id + ')</span>',
                         'class'  : 'box-sizing qui-fields-list-dropdown-entry',
                         'data-id': id,
                         events   : {
