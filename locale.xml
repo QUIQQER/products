@@ -253,13 +253,13 @@
 
         <locale name="settings.window.products.useAttributeListsForMinMaxPriceCalculation.text">
             <de><![CDATA[Preismodifikation durch Auswahllisten im Such-Cache berücksichtigen]]></de>
-            <en><![CDATA[Consider price modification by attribute lists in search cache]]></en>
+            <en><![CDATA[Consider price modification by select lists in search cache]]></en>
         </locale>
         <locale name="settings.window.products.useAttributeListsForMinMaxPriceCalculation.description">
             <de>
                 <![CDATA[Bei der Berechnung des niedrigsten und höchsten Preises für die Produkt-Suche sollen Änderungen des Preises durch Auswahllisten (Auf- bzw. Abschläge) berücksichtigt werden.]]></de>
             <en>
-                <![CDATA[When calculating the lowest and highest price for the product search, changes in the price by attribute lists (discounts / surcharges) should be taken into account.]]></en>
+                <![CDATA[When calculating the lowest and highest price for the product search, changes in the price by select lists (discounts / surcharges) should be taken into account.]]></en>
         </locale>
 
         <locale name="settings.window.fieldsearch.frontend.title">
@@ -1502,15 +1502,15 @@
 
         <locale name="fields.control.attributeGroup.edit.window.title">
             <de><![CDATA[Eintrag aus der Attributliste editieren]]></de>
-            <en><![CDATA[Edit entry from the attribute group]]></en>
+            <en><![CDATA[Edit entry from the attribute list]]></en>
         </locale>
         <locale name="fields.control.attributeGroup.create.add.window.title">
             <de><![CDATA[Eintrag der Attributliste hinzufügen]]></de>
-            <en><![CDATA[Add entry to the attribute group]]></en>
+            <en><![CDATA[Add entry to the attribute list]]></en>
         </locale>
         <locale name="fields.control.attributeGroup.remove.window.title">
             <de><![CDATA[Eintrag aus der Attributliste entfernen?]]></de>
-            <en><![CDATA[Remove item from the attribute group?]]></en>
+            <en><![CDATA[Remove item from the attribute list?]]></en>
         </locale>
         <locale name="fields.control.attributeGroup.remove.window.text">
             <de><![CDATA[Möchtest Du folgende Einträge wirklich löschen?]]></de>
@@ -1717,11 +1717,11 @@
         <locale name="variants.generating.window.description">
             <de><![CDATA[
             Bestimme aus welchen Felder neue Varianten generiert werden sollen.
-            Varianten können aus Attributgruppen und Auswahllisten generiert werden.
+            Varianten können aus Attributlisten und Auswahllisten generiert werden.
             ]]></de>
             <en><![CDATA[
             Determines from which fields new variants are to be generated.
-            Variants can be generated from attribute groups and attribute lists.
+            Variants can be generated from attribute lists and select lists.
             ]]></en>
         </locale>
         <locale name="variants.generating.window.title">
