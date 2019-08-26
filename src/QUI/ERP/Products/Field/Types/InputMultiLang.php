@@ -70,12 +70,18 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
                 }
             }
 
-            $current = \mb_strtolower($current).'_'.\mb_strtoupper($current);
+            $current = \mb_strtolower($current) . '_' . \mb_strtoupper($current);
 
             if (isset($value[$current])) {
                 return $value[$current];
             }
         } catch (QUI\Exception $Exception) {
+        }
+
+        if (\is_array($value)) {
+            \reset($value);
+
+            return \current($value);
         }
 
         return $value;
