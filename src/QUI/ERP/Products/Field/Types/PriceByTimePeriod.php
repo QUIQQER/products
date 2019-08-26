@@ -66,9 +66,18 @@ class PriceByTimePeriod extends Price
             return false;
         }
 
-        $From = \date_create($value['from']);
-        $To   = \date_create($value['to']);
-        $Now  = \date_create();
+        $From = false;
+        $To   = false;
+
+        if (!empty($value['from'])) {
+            $From = \date_create($value['from']);
+        }
+
+        if (!empty($value['to'])) {
+            $To = \date_create($value['to']);
+        }
+
+        $Now = \date_create();
         $Now->setTime(0, 0, 0);
 
         if ($From !== false && $From > $Now) {
