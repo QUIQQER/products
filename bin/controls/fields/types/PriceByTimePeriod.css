@@ -1,0 +1,51 @@
+.quiqqer-products-field-priceByTimePeriod label {
+    width: initial !important;
+}
+
+.quiqqer-products-field-priceByTimePeriod-price {
+    border: 1px solid #fff;
+    float: left;
+    width: 35%;
+}
+
+.quiqqer-products-field-priceByTimePeriod-currency {
+    border-right: 1px solid rgba(147, 128, 108, 0.25);
+    float: left;
+    line-height: 51px;
+    margin-right: 10px;
+    padding: 0 0 0 5px;
+    text-align: left;
+    width: 10%
+}
+
+.quiqqer-products-field-priceByTimePeriod-date {
+    border: 1px solid #fff;
+    float: left;
+    /*width: calc(100% - 400px) !important;*/
+}
+
+.quiqqer-products-field-priceByTimePeriod-quantity-apr {
+    float: left;
+    line-height: 30px;
+    overflow: hidden;
+    text-align: center;
+    width: 40px;
+}
+
+.quiqqer-products-field-priceByTimePeriod-btn-bruttocalc {
+    cursor: pointer;
+    line-height: 30px;
+    text-align: center;
+    width: 60px !important;
+}
+
+.quiqqer-products-field-priceByTimePeriod-bruttoinput {
+    border-right: 0;
+    line-height: 30px;
+    max-width: 120px;
+}
+
+.quiqqer-products-field-priceByTimePeriod-inputs {
+    display: flex;
+    /*width: calc(100% - 200px);*/
+}

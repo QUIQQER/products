@@ -73,7 +73,8 @@ class Products
         // is user in group filter
         $priceList = \array_merge(
             $Product->getFieldsByType(FieldHandler::TYPE_PRICE),
-            $Product->getFieldsByType(FieldHandler::TYPE_PRICE_BY_QUANTITY)
+            $Product->getFieldsByType(FieldHandler::TYPE_PRICE_BY_QUANTITY),
+            $Product->getFieldsByType(FieldHandler::TYPE_PRICE_BY_TIMEPERIOD)
         );
 
         if (empty($priceList)) {

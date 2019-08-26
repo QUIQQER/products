@@ -530,6 +530,10 @@
             <de><![CDATA[[price] ab [quantity] Stück]]></de>
             <en><![CDATA[[price] by [quantity] pieces]]></en>
         </locale>
+        <locale name="fieldtype.PriceByTimePeriod">
+            <de><![CDATA[Preis (Zeitspanne)]]></de>
+            <en><![CDATA[Price (time period)]]></en>
+        </locale>
         <locale name="fieldtype.UnitSelect">
             <de><![CDATA[Einheitenauswahl]]></de>
             <en><![CDATA[Unit select]]></en>
@@ -2021,6 +2025,15 @@
             ]]></en>
         </locale>
 
+        <locale name="controls.fields.types.PriceByTimePeriod.template.labelFrom">
+            <de><![CDATA[gültig von]]></de>
+            <en><![CDATA[valid from]]></en>
+        </locale>
+        <locale name="controls.fields.types.PriceByTimePeriod.template.labelTo">
+            <de><![CDATA[gültig bis]]></de>
+            <en><![CDATA[valid to]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/products" datatype="php">
@@ -2083,14 +2096,14 @@
             <de><![CDATA[Kategorie-Position]]></de>
             <en><![CDATA[Category position]]></en>
         </locale>
-            <locale name="quiqqer.products.settings.categoryPos.top">
-                <de><![CDATA[Über der Produktliste]]></de>
-                <en><![CDATA[About the product list]]></en>
-            </locale>
-            <locale name="quiqqer.products.settings.categoryPos.bottom">
-                <de><![CDATA[Unter der Produktliste]]></de>
-                <en><![CDATA[Under the product list]]></en>
-            </locale>
+        <locale name="quiqqer.products.settings.categoryPos.top">
+            <de><![CDATA[Über der Produktliste]]></de>
+            <en><![CDATA[About the product list]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryPos.bottom">
+            <de><![CDATA[Unter der Produktliste]]></de>
+            <en><![CDATA[Under the product list]]></en>
+        </locale>
         <locale name="quiqqer.products.settings.categoryDisplay">
             <de><![CDATA[Kategorienanzeige]]></de>
             <en><![CDATA[Categorydisplay]]></en>

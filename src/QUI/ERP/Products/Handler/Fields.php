@@ -58,6 +58,7 @@ class Fields
     const TYPE_INT = 'IntType';
     const TYPE_PRICE = 'Price';
     const TYPE_PRICE_BY_QUANTITY = 'PriceByQuantity';
+    const TYPE_PRICE_BY_TIMEPERIOD = 'PriceByTimePeriod';
     const TYPE_TEXTAREA = 'Textarea';
     const TYPE_TEXTAREA_MULTI_LANG = 'TextareaMultiLang';
     const TYPE_URL = 'Url';

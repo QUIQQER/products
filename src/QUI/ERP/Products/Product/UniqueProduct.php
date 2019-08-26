@@ -10,8 +10,8 @@ use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Handler\Categories;
-use QUI\ERP\Products\Utils\PriceFactor;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
+use QUI\ERP\Products\Utils\PriceFactor;
 use QUI\ERP\Accounting\Calc as ErpCalc;
 
 use QUI\Projects\Media\Utils as MediaUtils;
@@ -465,7 +465,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         /* @var $Field QUI\ERP\Products\Field\UniqueField */
         foreach ($this->fields as $key => $Field) {
             if ($Field->getType() !== FieldHandler::TYPE_PRICE
-                && $Field->getType() !== FieldHandler::TYPE_PRICE_BY_QUANTITY) {
+                && $Field->getType() !== FieldHandler::TYPE_PRICE_BY_QUANTITY
+                && $Field->getType() !== FieldHandler::TYPE_PRICE_BY_TIMEPERIOD) {
                 continue;
             }
 
