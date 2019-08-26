@@ -39,6 +39,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
             var self = this,
                 Elm  = this.getElm();
 
+            Elm.type = 'hidden';
+
             // loader
             var Loader = new Element('span', {
                 'class': 'field-container-item',
@@ -54,28 +56,40 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
             this.$Select = new Element('select', {
                 'class': 'field-container-field',
                 'html' : '<option value=""></option>',
-                name   : Elm.name
+                events : {
+                    change: function () {
+                        Elm.value = self.$Select.value;
+                    }
+                }
+                //name   : Elm.name
             }).inject(Elm, 'after');
 
             // Wenn im Produkt
-            if (this.getElm().getParent('.product-update')) {
-                this.$Select.getElement('option').set({
+            var isInProduct   = !!this.getElm().getParent('.product-update');
+            var defaultOption = this.$Select.getElement('option');
+
+            if (isInProduct) {
+                defaultOption.set({
                     html: QUILocale.get('quiqqer/products', 'field.vat.type.default')
                 });
             }
 
             Tax.getList().then(function (result) {
                 var i, len, html, value;
-
                 var selectValue = '';
 
-                if (Elm.value.match(':')) {
+                if (Elm.value !== '') {
                     selectValue = Elm.value;
                 }
 
                 for (i = 0, len = result.length; i < len; i++) {
-                    html  = result[i].groupTitle + ' : ' + result[i].title;
-                    value = result[i].groupId + ':' + result[i].id;
+                    html = result[i].groupTitle + ' : ' + result[i].title;
+
+                    if (isInProduct) {
+                        value = result[i].id;
+                    } else {
+                        value = result[i].groupId + ':' + result[i].id;
+                    }
 
                     if (result[i].id == Elm.value) {
                         selectValue = value;
@@ -87,9 +101,11 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
                     }).inject(self.$Select);
                 }
 
-                self.$Select.value = selectValue;
-
-                Elm.destroy();
+                if (selectValue != -1) {
+                    self.$Select.value = selectValue;
+                } else {
+                    defaultOption.selected = 'selected';
+                }
 
                 Loader.set(
                     'html',
@@ -104,7 +120,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Vat', [
          * @returns {String}
          */
         getValue: function () {
-            return this.$Input.value;
+            return this.$Select.value;
         }
     });
 });
