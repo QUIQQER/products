@@ -1154,7 +1154,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         $renderPrices: function (Container, Product) {
             return Promise.all([
                 Product.getFieldsByType(Fields.TYPE_PRICE),
-                Product.getFieldsByType(Fields.TYPE_PRICE_BY_QUANTITY)
+                Product.getFieldsByType(Fields.TYPE_PRICE_BY_QUANTITY),
+                Product.getFieldsByType(Fields.TYPE_PRICE_BY_TIMEPERIOD)
             ]).then(function (fields) {
                 fields = fields.flatten();
 

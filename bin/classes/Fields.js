@@ -58,6 +58,7 @@ define('package/quiqqer/products/bin/classes/Fields', [
         TYPE_INT                : 'IntType',
         TYPE_PRICE              : 'Price',
         TYPE_PRICE_BY_QUANTITY  : 'PriceByQuantity',
+        TYPE_PRICE_BY_TIMEPERIOD: 'PriceByTimePeriod',
         TYPE_ATTRIBUTE_LIST     : 'ProductAttributeList',
         TYPE_TEXTAREA           : 'Textarea',
         TYPE_TEXTAREA_MULTI_LANG: 'TextareaMultiLang',
