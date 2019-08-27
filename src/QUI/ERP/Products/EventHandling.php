@@ -37,6 +37,8 @@ class EventHandling
             return;
         }
 
+        self::setDefaultSearchSettings();
+
         try {
             Products::getParentMediaFolder();
         } catch (QUI\Exception $Exception) {
@@ -1029,5 +1031,43 @@ class EventHandling
             $Rewrite->setSite($Site);
         } catch (QUI\Exception $Exception) {
         }
+    }
+
+    /**
+     * Set default search settings if none are set
+     *
+     * @return void
+     * @throws QUI\Exception
+     */
+    protected static function setDefaultSearchSettings()
+    {
+        try {
+            $Conf = QUI::getPackage('quiqqer/products')->getConfig();
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            return;
+        }
+
+        $search = $Conf->getSection('search');
+
+        // Backend search fields
+        if (empty($search['backend'])) {
+            $search['backend'] = implode(',', [
+                Fields::FIELD_PRODUCT_NO,
+                Fields::FIELD_TITLE
+            ]);
+        }
+
+        if (empty($search['freetext'])) {
+            $search['freetext'] = implode(',', [
+                Fields::FIELD_PRODUCT_NO,
+                Fields::FIELD_TITLE,
+                Fields::FIELD_SHORT_DESC,
+                Fields::FIELD_KEYWORDS
+            ]);
+        }
+
+        $Conf->setSection('search', $search);
+        $Conf->save();
     }
 }
