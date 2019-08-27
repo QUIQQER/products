@@ -31,12 +31,13 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
         ],
 
         options: {
-            multiple       : false,
-            fieldTypeFilter: false,
-            sortOn         : false,
-            sortBy         : false,
-            perPage        : 150,
-            page           : false
+            multiple          : false,
+            fieldTypeFilter   : false,
+            sortOn            : false,
+            sortBy            : false,
+            perPage           : 150,
+            page              : false,
+            showsearchableonly: false   // show searchable fields only
         },
 
         initialize: function (options) {
@@ -212,11 +213,12 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
             this.fireEvent('refreshBegin', [this]);
 
             return Fields.getList({
-                perPage: options.perPage,
-                page   : options.page,
-                sortOn : options.sortOn,
-                sortBy : options.sortBy,
-                type   : this.getAttribute('fieldTypeFilter')
+                perPage           : options.perPage,
+                page              : options.page,
+                sortOn            : options.sortOn,
+                sortBy            : options.sortBy,
+                type              : this.getAttribute('fieldTypeFilter'),
+                showSearchableOnly: this.getAttribute('showsearchableonly')
             }).then(function (result) {
                 var i, len;
                 var gridData = result;

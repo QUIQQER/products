@@ -48,7 +48,9 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
             ok_button    : {
                 text     : QUILocale.get('quiqqer/system', 'accept'),
                 textimage: 'fa fa-search'
-            }
+            },
+
+            showsearchableonly: false // only list searchable fields
         },
 
         initialize: function (options) {
@@ -79,9 +81,10 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
             Content.set('html', '');
 
             this.$Search = new Search({
-                fieldTypeFilter: this.getAttribute('fieldTypeFilter'),
-                multiple       : this.getAttribute('multiple'),
-                events         : {
+                fieldTypeFilter   : this.getAttribute('fieldTypeFilter'),
+                multiple          : this.getAttribute('multiple'),
+                showsearchableonly: this.getAttribute('showsearchableonly'),
+                events            : {
                     onSubmit: this.submit
                 }
             }).inject(Content);

@@ -636,9 +636,10 @@ class FrontendSearch extends Search
     /**
      * Return all fields that can be used in this search with search status (active/inactive)
      *
+     * @param array $options (optional) - Filter options
      * @return array
      */
-    public function getSearchFields()
+    public function getSearchFields($options = [])
     {
         $searchFields         = [];
         $searchFieldsFromSite = $this->Site->getAttribute(
@@ -660,14 +661,23 @@ class FrontendSearch extends Search
 
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($eligibleFields as $Field) {
-            if (!isset($searchFieldsFromSite[$Field->getId()])) {
-                $searchFields[$Field->getId()] = false;
-                continue;
+            $available = true;
+
+            if (!empty($options['showSearchableOnly']) && !$Field->isSearchable()) {
+                $available = false;
             }
 
-            $searchFields[$Field->getId()] = \boolval(
-                $searchFieldsFromSite[$Field->getId()]
-            );
+            if (!isset($searchFieldsFromSite[$Field->getId()])) {
+                $available = false;
+            }
+
+            if ($available) {
+                $searchFields[$Field->getId()] = \boolval(
+                    $searchFieldsFromSite[$Field->getId()]
+                );
+            } else {
+                $searchFields[$Field->getId()] = false;
+            }
         }
 
         return $searchFields;

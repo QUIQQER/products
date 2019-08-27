@@ -25,6 +25,13 @@ QUI::$Ajax->registerFunction(
             $query['where']['type'] = $params['type'];
         }
 
+        if (!empty($params['showSearchableOnly'])) {
+            $query['where']['search_type'] = [
+                'type'  => 'NOT',
+                'value' => ''
+            ];
+        }
+
         $data = $Fields->getFields($query);
 
         /* @var $Field \QUI\ERP\Products\Field\Field */

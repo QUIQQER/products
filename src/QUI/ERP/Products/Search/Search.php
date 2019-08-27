@@ -200,9 +200,6 @@ abstract class Search extends QUI\QDOM
             return $values;
         }
 
-//        QUI\System\Log::writeRecursive('##############');
-//        QUI\System\Log::writeRecursive($result);
-
         switch ($Field->getSearchDataType()) {
             case SearchHandler::SEARCHDATATYPE_NUMERIC:
                 switch ($Field->getId()) {

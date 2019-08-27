@@ -126,6 +126,7 @@
 
                         <input conf="quiqqer.products.settings.searchFieldIds" type="hidden"
                                data-qui="package/quiqqer/products/bin/controls/search/FieldSelect"
+                               data-qui-options-showsearchableonly="1"
                         >
                             <text>
                                 <locale group="quiqqer/products" var="quiqqer.products.settings.searchFieldIds"/>

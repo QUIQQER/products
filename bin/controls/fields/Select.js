@@ -59,7 +59,9 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
             // search function function(value, params) @return Promise;
             // resolve( [fieldData, fieldData, fieldData] )
-            search: false
+            search: false,
+
+            showsearchableonly: false       // only show fields that are searchable
         },
 
         initialize: function (options, Input) {
@@ -179,10 +181,11 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                             'package/quiqqer/products/bin/controls/fields/search/Window'
                         ], function (Window) {
                             new Window({
-                                autoclose: true,
-                                multiple : self.getAttribute('multiple'),
-                                search   : self.getAttribute('search'),
-                                events   : {
+                                autoclose         : true,
+                                multiple          : self.getAttribute('multiple'),
+                                search            : self.getAttribute('search'),
+                                showsearchableonly: self.getAttribute('showsearchableonly'),
+                                events            : {
                                     onSubmit: function (Win, fieldIds) {
                                         self.addFields(fieldIds);
                                     }

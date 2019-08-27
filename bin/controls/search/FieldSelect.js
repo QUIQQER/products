@@ -26,9 +26,10 @@ define('package/quiqqer/products/bin/controls/search/FieldSelect', [
         ],
 
         options: {
-            siteId : false,
-            project: false,
-            Site   : false
+            siteId            : false,
+            project           : false,
+            Site              : false,
+            showsearchableonly: false       // only show fields that are searchable
         },
 
         initialize: function (options) {
@@ -51,9 +52,10 @@ define('package/quiqqer/products/bin/controls/search/FieldSelect', [
             Elm.type = 'hidden';
 
             this.$FieldSelect = new FieldSelect({
-                disabled: true,
-                search  : this.$search,
-                events  : {
+                disabled          : true,
+                search            : this.$search,
+                showsearchableonly: this.getAttribute('showsearchableonly'),
+                events            : {
                     onChange: this.$onSelectChange
                 }
             }).inject(Elm.getParent());
@@ -164,6 +166,9 @@ define('package/quiqqer/products/bin/controls/search/FieldSelect', [
                     'package': 'quiqqer/products',
                     siteId   : Site.getId(),
                     project  : Project.encode(),
+                    options  : JSON.encode({
+                        showSearchableOnly: this.getAttribute('showsearchableonly')
+                    }),
                     onError  : reject
                 });
             }.bind(this));
