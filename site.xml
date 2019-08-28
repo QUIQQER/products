@@ -87,6 +87,9 @@
                             <option value="5">5</option>
                             <option value="6">6</option>
                         </select>
+                        <text>
+                            <locale group="quiqqer/products" var="quiqqer.products.settings.autoloadAfter.description"/>
+                        </text>
 
                         <input conf="quiqqer.products.settings.categoryStartNumber" type="number">
                             <text>

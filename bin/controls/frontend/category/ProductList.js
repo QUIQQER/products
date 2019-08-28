@@ -118,7 +118,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$moreButtonIsVisible = false;
             this.$moreButtonClicked   = 0;
             this.$loadingMore         = false;
-            this.$autoloadAfter       = 0;
 
             this.addEvents({
                 onInject: this.$onInject,

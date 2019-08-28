@@ -192,7 +192,7 @@ if ($siteUrl != $_REQUEST['_url']) {
     /**
      * CATEGORY
      */
-    $productListAttr = [
+    $ProductList = new ProductList([
         'categoryId'           => $Site->getAttribute('quiqqer.products.settings.categoryId'),
         'hideEmptyProductList' => true,
         'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
@@ -200,15 +200,10 @@ if ($siteUrl != $_REQUEST['_url']) {
         'categoryPos'          => $Site->getAttribute('quiqqer.products.settings.categoryPos'),
         'searchParams'         => Products\Utils\Search::getSearchParameterFromRequest(),
         'autoload'             => 1,
+        'autoloadAfter'        => $Site->getAttribute('quiqqer.products.settings.autoloadAfter'),
         'productLoadNumber'    => $Site->getAttribute('quiqqer.products.settings.productLoadNumber'),
         'view'                 => Products\Utils\Search::getViewParameterFromRequest(),
-    ];
-
-    if ($Site->getAttribute('quiqqer.products.settings.autoloadAfter') !== '') {
-        $productListAttr['autoloadAfter'] = $Site->getAttribute('quiqqer.products.settings.autoloadAfter');
-    }
-
-    $ProductList = new ProductList($productListAttr);
+    ]);
 
     $filterList = $ProductList->getFilter();
 

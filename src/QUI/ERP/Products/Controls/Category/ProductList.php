@@ -129,7 +129,7 @@ class ProductList extends QUI\Control
         }
 
         // global settings: product autoload after x clicks
-        if ($this->getAttribute('autoloadAfter') == '' || $this->getAttribute('autoloadAfter') == false) {
+        if ($this->getAttribute('autoloadAfter') == '' || $this->getAttribute('autoloadAfter') === false) {
             $this->setAttribute('autoloadAfter', $Config->get('products', 'autoloadAfter'));
         }
 
