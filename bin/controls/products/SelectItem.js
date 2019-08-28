@@ -87,6 +87,7 @@ define('package/quiqqer/products/bin/controls/products/SelectItem', [
                 this.getAttribute('id')
             ).then(function (data) {
                 self.$Text.set('html', '#' + data.id + ' - <b>' + data.articleNo + '</b> (' + data.title + ')');
+                self.getElm().set('title', '#' + data.id + ' - ' + data.articleNo + ' (' + data.title + ')');
             }).catch(function () {
                 self.$Icon.removeClass('fa-shopping-bag');
                 self.$Icon.addClass('fa-bolt');
