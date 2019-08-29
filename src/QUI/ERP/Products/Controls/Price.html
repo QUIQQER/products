@@ -1,0 +1,15 @@
+{if $pricePrefix}
+<span class="qui-products-price-display-prefix">
+    {$pricePrefix}
+</span>
+{/if}
+
+<span class="qui-products-price-display-value">
+    {$Price->getDisplayPrice()}
+</span>
+
+{if $vatText}
+<span class="qui-products-price-display-vat">
+    {$vatText}
+</span>
+{/if}
