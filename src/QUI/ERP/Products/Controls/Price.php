@@ -86,7 +86,7 @@ class Price extends QUI\Control
                 $vatText = $Calc->getVatTextByUser();
             }
         }
-        
+
         $pricePrefix = '';
 
         if ($Price->isMinimalPrice()) {
@@ -94,6 +94,7 @@ class Price extends QUI\Control
         }
 
         $Engine->assign([
+            'this'        => $this,
             'pricePrefix' => $pricePrefix,
             'Price'       => $Price,
             'vatText'     => $vatText
