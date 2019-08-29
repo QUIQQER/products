@@ -42,6 +42,14 @@ class Price extends QUI\Control
      */
     public function getBody()
     {
+        try {
+            $Engine = QUI::getTemplateManager()->getEngine();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return '';
+        }
+
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             $this->setAttributes([
                 'data-qui' => '',
@@ -61,6 +69,8 @@ class Price extends QUI\Control
         $this->setAttribute('data-qui-options-price', $Price->value());
         $this->setAttribute('data-qui-options-currency', $Price->getCurrency()->getCode());
 
+        $vatText = '';
+
         if ($this->getAttribute('withVatText')) {
             $vatArray = $this->getAttribute('vatArray');
 
@@ -76,32 +86,19 @@ class Price extends QUI\Control
                 $vatText = $Calc->getVatTextByUser();
             }
         }
-
-
+        
         $pricePrefix = '';
 
         if ($Price->isMinimalPrice()) {
             $pricePrefix = QUI::getLocale()->get('quiqqer/erp', 'price.starting.from');
         }
 
-        $result = '';
+        $Engine->assign([
+            'pricePrefix' => $pricePrefix,
+            'Price'       => $Price,
+            'vatText'     => $vatText
+        ]);
 
-        if ($pricePrefix) {
-            $result .= '<span class="qui-products-price-display-prefix">';
-            $result .= $pricePrefix;
-            $result .= '</span>';
-        }
-
-        $result .= '<span class="qui-products-price-display-value">';
-        $result .= $Price->getDisplayPrice();
-        $result .= '</span>';
-
-        if (!empty($vatText)) {
-            $result .= '<span class="qui-products-price-display-vat">';
-            $result .= $vatText;
-            $result .= '</span>';
-        }
-
-        return $result;
+        return $Engine->fetch(\dirname(__FILE__) . '/Price.html');
     }
 }
