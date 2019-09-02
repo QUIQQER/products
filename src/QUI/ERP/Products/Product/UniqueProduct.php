@@ -772,15 +772,24 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function getOriginalPrice()
     {
+        return $this->getCalculatedPrice(Fields::FIELD_PRICE);
+    }
+
+    /**
+     * @param $FieldId
+     * @return false|UniqueField
+     */
+    public function getCalculatedPrice($FieldId)
+    {
         $Calc         = QUI\ERP\Products\Utils\Calc::getInstance();
         $calculations = [];
 
-        $Field = $this->getField(Fields::FIELD_PRICE);
+        $Field = $this->getField($FieldId);
 
         try {
             $Calc->getProductPrice($this, function ($calcResult) use (&$calculations) {
                 $calculations = $calcResult;
-            }, $this->getField(Fields::FIELD_PRICE));
+            }, $this->getField($FieldId));
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
 

@@ -139,7 +139,7 @@ class Product extends QUI\Control
                 $mainImageId = false;
             }
 
-            usort($images, function ($ImageA, $ImageB) use ($mainImageId) {
+            \usort($images, function ($ImageA, $ImageB) use ($mainImageId) {
                 /**
                  * @var QUI\Projects\Media\Image $ImageA
                  * @var QUI\Projects\Media\Image $ImageB
@@ -212,7 +212,7 @@ class Product extends QUI\Control
         if ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
             $PriceRetailDisplay = new QUI\ERP\Products\Controls\Price([
                 'Price'       => new QUI\ERP\Money\Price(
-                    $Product->getFieldValue('FIELD_PRICE_RETAIL'),
+                    $Product->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL),
                     QUI\ERP\Currency\Handler::getDefaultCurrency()
                 ),
                 'withVatText' => false

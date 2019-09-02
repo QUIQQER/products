@@ -732,6 +732,21 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Return a calculated price field
+     *
+     * @param $FieldId
+     *
+     * @return false|QUI\ERP\Products\Field\UniqueField
+     *
+     * @throws Exception
+     * @throws QUI\Exception
+     */
+    public function getCalculatedPrice($FieldId)
+    {
+        return $this->createUniqueProduct()->getCalculatedPrice($FieldId);
+    }
+
+    /**
      * Alias for getPrice
      * So, the Product has the same construction as the UniqueProduct
      *

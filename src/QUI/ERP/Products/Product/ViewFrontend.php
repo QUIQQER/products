@@ -456,6 +456,16 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         return $this->Product->getOriginalPrice();
     }
 
+    /**
+     * Return a calculated price field
+     *
+     * @param integer $FieldId
+     * @return false|QUI\ERP\Products\Field\UniqueField
+     */
+    public function getCalculatedPrice($FieldId)
+    {
+        return $this->Product->getCalculatedPrice($FieldId);
+    }
 
     //region calculation
 
