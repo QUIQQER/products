@@ -35,7 +35,7 @@ class Product extends QUI\Control
         ]);
 
         $this->addCSSClass('quiqqer-products-product');
-        $this->addCSSFile(\dirname(__FILE__).'/Product.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/Product.css');
 
         parent::__construct($attributes);
     }
@@ -208,13 +208,11 @@ class Product extends QUI\Control
 
         // retail price (UVP)
         $PriceRetailDisplay = false;
+        $PriceRetail        = $Product->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL)->getPrice();
 
         if ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
             $PriceRetailDisplay = new QUI\ERP\Products\Controls\Price([
-                'Price'       => new QUI\ERP\Money\Price(
-                    $Product->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL),
-                    QUI\ERP\Currency\Handler::getDefaultCurrency()
-                ),
+                'Price'       => $PriceRetail,
                 'withVatText' => false
             ]);
         }
@@ -317,7 +315,7 @@ class Product extends QUI\Control
             'Price'                  => $Price,
             'PriceDisplay'           => $PriceDisplay,
             'PriceRetailDisplay'     => $PriceRetailDisplay,
-            'priceRetailValue'       => $Product->getFieldValue('FIELD_PRICE_RETAIL'),
+            'PriceRetail'            => $PriceRetail,
             'PriceOldDisplay'        => $PriceOldDisplay,
             'VisitedProducts'        => new VisitedProducts(),
             'MediaUtils'             => new QUI\Projects\Media\Utils(),
@@ -336,12 +334,12 @@ class Product extends QUI\Control
 
         $Engine->assign(
             'buttonsHtml',
-            $Engine->fetch(\dirname(__FILE__).'/Product.Buttons.html')
+            $Engine->fetch(\dirname(__FILE__) . '/Product.Buttons.html')
         );
 
         // normal product
         if (!$typeVariantParent && !$typeVariantChild) {
-            return $Engine->fetch(\dirname(__FILE__).'/Product.html');
+            return $Engine->fetch(\dirname(__FILE__) . '/Product.html');
         }
 
 
@@ -350,7 +348,7 @@ class Product extends QUI\Control
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant'
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ProductVariant.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/ProductVariant.html');
     }
 
     /**
