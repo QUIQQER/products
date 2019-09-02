@@ -16,8 +16,8 @@ use QUI\ERP\Tax\Utils as TaxUtils;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_calcNettoPrice',
-    function ($price) {
-        $price   = \floatval($price);
+    function ($price, $formatted) {
+        $price   = QUI\ERP\Money\Price::validatePrice($price);
         $Area    = QUI\ERP\Defaults::getArea();
         $TaxType = TaxUtils::getTaxTypeByArea($Area);
 
@@ -26,6 +26,10 @@ QUI::$Ajax->registerFunction(
         } elseif ($TaxType instanceof TaxEntry) {
             $TaxEntry = $TaxType;
         } else {
+            if (isset($formatted) && $formatted) {
+                return QUI\ERP\Defaults::getCurrency()->format($price);
+            }
+
             return $price;
         }
 
@@ -34,7 +38,11 @@ QUI::$Ajax->registerFunction(
 
         $price = $price / $vat;
 
+        if (isset($formatted) && $formatted) {
+            return QUI\ERP\Defaults::getCurrency()->format($price);
+        }
+
         return $price;
     },
-    ['price']
+    ['price', 'formatted']
 );

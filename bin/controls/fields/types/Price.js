@@ -125,6 +125,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
             }
 
             this.getElm().value = this.$Formatter.format(parseFloat(value));
+
             this.$calcBruttoPrice();
         },
 
@@ -155,7 +156,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
                     },
 
                     onSubmit: function (Win, value) {
-                        self.getElm().value = value;
+                        self.setValue(value);
                         self.$calcBruttoPrice();
                     }
                 }
