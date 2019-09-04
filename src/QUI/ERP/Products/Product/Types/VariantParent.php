@@ -53,6 +53,11 @@ class VariantParent extends AbstractType
      */
     protected $childFields = null;
 
+    /**
+     * @var array
+     */
+    protected $childFieldsActive = null;
+
     //region abstract type methods
 
     /**
@@ -1105,6 +1110,10 @@ class VariantParent extends AbstractType
      */
     public function availableActiveChildFields()
     {
+        if ($this->childFieldsActive !== null) {
+            return $this->childFieldsActive;
+        }
+
         try {
             $result = QUI::getDataBase()->fetch([
                 'select' => 'id, parent, fieldData, variantHash',
@@ -1118,7 +1127,9 @@ class VariantParent extends AbstractType
             $result = [];
         }
 
-        return $this->parseAvailableFields($result);
+        $this->childFieldsActive = $this->parseAvailableFields($result);
+
+        return $this->childFieldsActive;
     }
 
     /**
@@ -1133,7 +1144,7 @@ class VariantParent extends AbstractType
             $fieldData     = \json_decode($entry['fieldData'], true);
             $variantFields = [];
 
-            if (!is_array($fieldData)) {
+            if (!\is_array($fieldData)) {
                 $fieldData = [];
             }
 

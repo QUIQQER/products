@@ -137,9 +137,22 @@ class Products
             self::$list = [];
         }
 
+        // check if serialize product exists
+        if (QUI::isFrontend()) {
+            try {
+                $product          = QUI\Cache\Manager::get('quiqqer/products/'.$pid.'/db-data');
+                self::$list[$pid] = self::getProductByDataResult($pid, $product);
+
+                return self::$list[$pid];
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
+            }
+        }
 
         $Product          = self::getNewProductInstance($pid);
         self::$list[$pid] = $Product;
+
+        QUI\Cache\Manager::set('quiqqer/products/'.$pid.'/ser', \serialize($Product));
 
         return $Product;
     }
@@ -245,15 +258,36 @@ class Products
             );
         }
 
-        // @todo interface check
+        if (QUI::isFrontend()) {
+            try {
+                QUI\Cache\Manager::get('quiqqer/products/'.$pid.'/db-data');
+            } catch (QUi\Exception $Exception) {
+                QUI\Cache\Manager::Set(
+                    'quiqqer/products/'.$pid.'/db-data',
+                    $result[0]
+                );
+            }
+        }
 
-        $type = $result[0]['type'];
+        return self::getProductByDataResult($pid, $result[0]);
+    }
+
+    /**
+     * @param $pid
+     * @param $result
+     * @return QUI\ERP\Products\Product\Types\AbstractType
+     *
+     * // @todo interface check
+     */
+    protected static function getProductByDataResult($pid, $result)
+    {
+        $type = $result['type'];
 
         if (empty($type)) {
             $type = QUI\ERP\Products\Product\Types\Product::class;
         }
 
-        return new $type($pid, $result[0]);
+        return new $type($pid, $result);
     }
 
     /**

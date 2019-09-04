@@ -105,12 +105,11 @@ class Model extends QUI\QDOM
         $this->id     = (int)$pid;
         $this->active = (int)$product['active'] ? true : false;
 
-        if (isset($product['permissions'])) {
+        if (!empty($product['permissions']) && $product['permissions'] !== '[]') {
             $this->permissions = \json_decode($product['permissions'], true);
         }
 
         // view permissions prüfung wird im Frontend view gemacht (ViewFrontend)
-
 
         unset($product['id']);
         unset($product['active']);
@@ -1117,6 +1116,17 @@ class Model extends QUI\QDOM
         if (Products::$fireEventsOnProductSave) {
             QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', [$this]);
         }
+
+        // cache db attributes
+        $result = QUI::getDataBase()->fetch([
+            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            'where' => [
+                'id' => $this->getId()
+            ],
+            'limit' => 1
+        ]);
+
+        QUI\Cache\Manager::set('quiqqer/products/'.$this->getId().'/db-data', $result[0]);
     }
 
     /**

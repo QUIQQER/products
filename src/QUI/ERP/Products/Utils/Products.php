@@ -217,7 +217,7 @@ class Products
             if ($Product->getAttribute('inheritedVariantFields')) {
                 $inherited = $Product->getAttribute('inheritedVariantFields');
 
-                if (is_string($inherited)) {
+                if (\is_string($inherited)) {
                     $inherited = \json_decode($inherited, true);
                 }
 
