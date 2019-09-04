@@ -84,6 +84,10 @@ class Fields
      */
     public static function sortFields($fields, $sort = 'priority')
     {
+        if (empty($fields)) {
+            return $fields;
+        }
+
         // allowed sorting
         switch ($sort) {
             case 'id':
@@ -97,6 +101,15 @@ class Fields
             default:
                 $sort = 'priority';
         }
+
+        // if memory cache exists
+        $cache = FieldSortCache::getFieldCache($fields, $sort);
+
+        if ($cache) {
+            return $cache;
+        }
+
+        // if no memory cache exists
 
         /**
          * @param QUI\ERP\Products\Field\Field $Field
@@ -171,6 +184,15 @@ class Fields
 
             return 0;
         });
+
+        // cache the sorting
+        $cache = [];
+
+        foreach ($fields as $Field) {
+            $cache[] = $Field->getId();
+        }
+
+        FieldSortCache::setFieldCache($fields, $sort, $cache);
 
         return $fields;
     }
