@@ -195,8 +195,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     '[data-qui="package/quiqqer/products/bin/controls/frontend/products/ProductVariant"]'
                 );
 
-                self.$startInit = false;
-
                 if (Control) {
                     self.getElm().set('html', Control.get('html'));
 
@@ -210,6 +208,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     self.$init();
                     self.$initTabEvents();
                     self.Loader.hide();
+                    self.$startInit = false;
                 });
             }, {
                 'package': 'quiqqer/products',
