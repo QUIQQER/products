@@ -46,8 +46,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             this.$startInit = false;
 
             this.addEvents({
-                onInject: this.$onInject,
-                onImport: this.$onImport
+                onInject : this.$onInject,
+                onImport : this.$onImport,
+                onClose: function () {
+                    window.removeEvent('popstate', this.$onPopstateChange);
+                }.bind(this)
             });
 
             // react for url change
