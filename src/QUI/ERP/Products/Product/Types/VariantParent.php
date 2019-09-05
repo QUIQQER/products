@@ -57,6 +57,10 @@ class VariantParent extends AbstractType
      * @var array
      */
     protected $childFieldsActive = null;
+    /**
+     * @var array
+     */
+    protected $childFieldHashes = null;
 
     //region abstract type methods
 
@@ -310,6 +314,27 @@ class VariantParent extends AbstractType
      */
     public function getImages($params = [])
     {
+        $cache = 'quiqqer/products/'.$this->getId().'/images';
+
+        if (QUI::isFrontend()) {
+            try {
+                $images = QUI\Cache\Manager::get($cache);
+                $result = [];
+
+                foreach ($images as $image) {
+                    try {
+                        $result[] = QUI\Projects\Media\Utils::getImageByUrl($image);
+                    } catch (QUI\Exception $Exception) {
+                        QUI\System\Log::writeDebugException($Exception);
+                    }
+                }
+
+                return $result;
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
+            }
+        }
+
         $images   = [];
         $children = $this->getVariants();
 
@@ -336,6 +361,15 @@ class VariantParent extends AbstractType
                 }
             }
         }
+
+        /* @var $Image QUI\Projects\Media\Image */
+        $imageCache = [];
+
+        foreach ($images as $Image) {
+            $imageCache[] = $Image->getUrl();
+        }
+
+        QUI\Cache\Manager::set($cache, $imageCache);
 
         return $images;
     }
@@ -1114,6 +1148,32 @@ class VariantParent extends AbstractType
             return $this->childFieldsActive;
         }
 
+        $this->parseActiveFieldsAndHashes();
+
+        return $this->childFieldsActive;
+    }
+
+    /**
+     * Get all hashes of attribute groups and attribute lists of children products that are active
+     *
+     * @return array
+     */
+    public function availableActiveFieldHashes()
+    {
+        if ($this->childFieldHashes !== null) {
+            return $this->childFieldHashes;
+        }
+
+        $this->parseActiveFieldsAndHashes();
+
+        return $this->childFieldHashes;
+    }
+
+    /**
+     * Parse the database results from the active fields
+     */
+    protected function parseActiveFieldsAndHashes()
+    {
         try {
             $result = QUI::getDataBase()->fetch([
                 'select' => 'id, parent, fieldData, variantHash',
@@ -1127,18 +1187,20 @@ class VariantParent extends AbstractType
             $result = [];
         }
 
-        $this->childFieldsActive = $this->parseAvailableFields($result);
+        $fieldHashes = $this->parseAvailableFields($result);
 
-        return $this->childFieldsActive;
+        $this->childFieldsActive = $fieldHashes['fields'];
+        $this->childFieldHashes  = $fieldHashes['hashes'];
     }
 
     /**
-     * @param array $result
+     * @param array $result - all variant children field hashes
      * @return array
      */
     protected function parseAvailableFields($result)
     {
         $fields = [];
+        $hashes = [];
 
         foreach ($result as $entry) {
             $fieldData     = \json_decode($entry['fieldData'], true);
@@ -1153,6 +1215,8 @@ class VariantParent extends AbstractType
             }
 
             $variantHash = $entry['variantHash'];
+            $hashes[]    = $variantHash;
+
             $variantHash = \trim($variantHash, ';');
             $variantHash = \explode(';', $variantHash);
 
@@ -1167,7 +1231,10 @@ class VariantParent extends AbstractType
             }
         }
 
-        return $fields;
+        return [
+            'fields' => $fields,
+            'hashes' => $hashes
+        ];
     }
 
     /**

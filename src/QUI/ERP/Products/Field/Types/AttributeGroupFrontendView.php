@@ -77,6 +77,10 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         foreach ($entries as $key => $option) {
             $title = $option['title'];
 
+            if (isset($option['hide']) && $option['hide']) {
+                continue;
+            }
+
             $text      = '';
             $selected  = '';
             $disabled  = '';
@@ -84,7 +88,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
 
             if ($value === null && isset($option['selected']) && $option['selected']
                 || $value === $option['valueId']
-                || is_numeric($value) && (int)$value === $option['valueId']) {
+                || \is_numeric($value) && (int)$value === $option['valueId']) {
                 $selected = 'selected="selected" ';
             }
 

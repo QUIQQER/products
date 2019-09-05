@@ -306,21 +306,39 @@ class Products
             return;
         }
 
-        $available = $Product->availableActiveChildFields();
-
         // attribute groups
         $groupList = $Product->getFieldsByType(
             QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS
         );
 
+        $available        = $Product->availableActiveChildFields();
+        $availableHashes  = $Product->availableActiveFieldHashes();
+        $availableEntries = [];
+
+        foreach ($availableHashes as $hash) {
+            $hash = \explode(';', \trim($hash, ';'));
+
+            foreach ($hash as $hashEntry) {
+                list($fieldId, $fieldValue) = \explode(':', $hashEntry);
+
+                if ($fieldValue === '') {
+                    break 2;
+                }
+            }
+
+            foreach ($hash as $hashEntry) {
+                list($fieldId, $fieldValue) = \explode(':', $hashEntry);
+
+                $availableEntries[$fieldId][$fieldValue] = true;
+            }
+        }
+
+        // which field entries are exists
         foreach ($groupList as $Field) {
             /* @var $Field QUI\ERP\Products\Field\Types\AttributeGroup */
             $fieldId = $Field->getId();
+            $Field->hideEntries();
             $Field->disableEntries();
-
-            if (!isset($available[$fieldId])) {
-                continue;
-            }
 
             $options = $Field->getOptions();
             $entries = $options['entries'];
@@ -331,38 +349,17 @@ class Products
             foreach ($entries as $key => $value) {
                 $valueId = $value['valueId'];
 
-                if (isset($allowed[$valueId])) {
+                if (!isset($allowed[$valueId])) {
+                    continue;
+                }
+
+                $Field->showEntry($key);
+
+                if (isset($availableEntries[$fieldId][$valueId])) {
                     $Field->enableEntry($key);
                 }
             }
         }
-
-        // attribute list
-//        $attributeList = $Product->getFieldsByType(
-//            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST
-//        );
-//
-//        foreach ($attributeList as $Field) {
-//            /* @var $Field QUI\ERP\Products\Field\Types\AttributeGroup */
-//            $fieldId = $Field->getId();
-//            $Field->disableEntries();
-//
-//            if (!isset($available[$fieldId])) {
-//                continue;
-//            }
-//
-//            $options = $Field->getOptions();
-//            $entries = $options['entries'];
-//
-//            $allowed = $available[$fieldId];
-//            $allowed = \array_flip($allowed);
-//
-//            foreach ($entries as $key => $value) {
-//                if (isset($allowed[$key])) {
-//                    $Field->enableEntry($key);
-//                }
-//            }
-//        }
     }
 
     /**

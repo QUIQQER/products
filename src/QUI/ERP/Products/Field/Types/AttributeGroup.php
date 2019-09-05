@@ -133,6 +133,16 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     }
 
     /**
+     * hide all entries
+     */
+    public function hideEntries()
+    {
+        foreach ($this->options['entries'] as $key => $option) {
+            $this->options['entries'][$key]['hide'] = true;
+        }
+    }
+
+    /**
      * Disable an option
      *
      * @param string|integer $entry
@@ -150,6 +160,16 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     public function enableEntry($entry)
     {
         $this->options['entries'][$entry]['disabled'] = false;
+    }
+
+    /**
+     * Enable an option
+     *
+     * @param string|integer $entry
+     */
+    public function showEntry($entry)
+    {
+        $this->options['entries'][$entry]['hide'] = false;
     }
 
     /**
