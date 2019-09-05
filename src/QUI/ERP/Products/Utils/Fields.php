@@ -46,6 +46,66 @@ class Fields
     }
 
     /**
+     * @param $fieldHash
+     * @return array
+     */
+    public static function parseFieldHashToArray($fieldHash)
+    {
+        $result    = [];
+        $fieldHash = \explode(';', \trim($fieldHash, ';'));
+
+        foreach ($fieldHash as $key => $entry) {
+            $entry    = \explode(':', $entry);
+            $entry[0] = (int)$entry[0];
+
+            $result[$entry[0]] = $entry[1];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return all search hashes from one field hash
+     *
+     * @param string $hash
+     * @return array
+     */
+    public static function getSearchHashesFromFieldHash($hash)
+    {
+        $hashes           = self::parseFieldHashToArray($hash);
+        $foundEmptyValues = false;
+
+        $hashes = \array_map(function ($entry) use (&$foundEmptyValues) {
+            if ($entry === '') {
+                $foundEmptyValues = true;
+
+                return '*';
+            }
+
+            return $entry;
+        }, $hashes);
+
+        $searchHashes = [];
+
+        foreach ($hashes as $fieldId => $value) {
+            $result = [];
+            $clone  = $hashes;
+
+            if (!$foundEmptyValues) {
+                $clone[$fieldId] = '*';
+            }
+
+            foreach ($clone as $k => $ce) {
+                $result[] = $k.':'.$ce;
+            }
+
+            $searchHashes[] = ';'.\implode(';', $result).';';
+        }
+
+        return $searchHashes;
+    }
+
+    /**
      * Is the object a product field?
      *
      * @param mixed $object
