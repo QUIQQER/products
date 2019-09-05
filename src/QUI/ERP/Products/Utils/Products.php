@@ -359,16 +359,20 @@ class Products
             foreach ($entries as $key => $value) {
                 $valueId = $value['valueId'];
 
+                if (!\is_numeric($valueId)) {
+                    $valueId = \implode(\unpack("H*", $valueId));
+                }
+
                 if (!isset($allowed[$valueId])) {
                     continue;
                 }
 
                 $Field->showEntry($key);
 
-                if (isset($currentVariantHash[$fieldId]) && $currentVariantHash[$fieldId] === '') {
-                    $Field->enableEntry($key);
-                    continue;
-                }
+//                if (isset($currentVariantHash[$fieldId]) && $currentVariantHash[$fieldId] === '') {
+//                    $Field->enableEntry($key);
+//                    continue;
+//                }
 
                 if (isset($availableEntries[$fieldId][$valueId])) {
                     $Field->enableEntry($key);

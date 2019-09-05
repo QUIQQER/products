@@ -87,6 +87,13 @@
     width: 100%;
 }
 
+.product-data-fieldlist-reset {
+    cursor: pointer;
+    font-size: 12px;
+    text-align: right;
+    width: 100%;
+}
+
 .product-data-fieldlist .quiqqer-product-field {
     clear: both;
     float: left;

@@ -12,10 +12,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
     'qui/QUI',
     'qui/controls/loader/Loader',
     'Ajax',
+    'Locale',
     'URI',
     'package/quiqqer/products/bin/controls/frontend/products/Product'
 
-], function (QUI, QUILoader, QUIAjax, URI, Product) {
+], function (QUI, QUILoader, QUIAjax, QUILocale, URI, Product) {
     "use strict";
 
     // history popstate for mootools
@@ -155,6 +156,17 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             fieldLists.addEvent('change', function () {
                 self.$refreshVariant();
             });
+
+            new Element('div', {
+                class : 'product-data-fieldlist-reset',
+                html  : QUILocale.get('quiqqer/products', 'control.variant.reset.fields'),
+                events: {
+                    click: function () {
+                        fieldLists.set('value', '');
+                        self.$refreshVariant();
+                    }
+                }
+            }).inject(this.getElm().getElement('.product-data-fieldlist'));
         },
 
         /**
