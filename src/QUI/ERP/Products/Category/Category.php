@@ -447,6 +447,21 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      */
     public function refreshSiteBinds()
     {
+        try {
+            $result = [];
+            $cache  = QUI\Cache\Manager::get($this->getSiteCacheName());
+
+            foreach ($cache as $siteUrl) {
+                try {
+                    $result[] = QUI\Projects\Site\Utils::getSiteByLink($siteUrl);
+                } catch (QUI\Exception $Exception) {
+                }
+            }
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
+
         // must be cached or set it at the site save event
         $projects = QUI::getProjectManager()->getProjectList();
         $result   = [];
@@ -488,6 +503,16 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         }
 
         $this->sites = $result;
+
+        // caching
+        $cache = [];
+
+        foreach ($this->sites as $Site) {
+            $cache[] = $Site->getUrl();
+        }
+
+        QUI\Cache\Manager::set($this->getSiteCacheName(), $cache);
+
 
         return $this->sites;
     }
@@ -938,4 +963,16 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         return $searchFields;
     }
+
+    //region caching
+
+    /**
+     * @return string
+     */
+    protected function getSiteCacheName()
+    {
+        return 'quiqqer/products/category/'.$this->getId().'/sites';
+    }
+
+    //endregion
 }

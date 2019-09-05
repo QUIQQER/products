@@ -799,6 +799,8 @@ class EventHandling
 
         QUI\ERP\Products\Search\Cache::clear($cname);
         QUI\ERP\Products\Search\Cache::clear('products/search/userfieldids/');
+        QUI\ERP\Products\Search\Cache::clear('quiqqer/products/category/');
+        QUI\ERP\Products\Search\Cache::clear('quiqqer/products/categories/menu');
 
         // field cache clearing
         $searchFieldCache = 'products/search/frontend/searchfielddata/';
@@ -1045,6 +1047,7 @@ class EventHandling
             $Conf = QUI::getPackage('quiqqer/products')->getConfig();
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
+
             return;
         }
 
