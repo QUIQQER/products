@@ -234,12 +234,14 @@ class Menu extends QUI\Control
                 'project'           => $Project->getName(),
                 'lang'              => $Project->getLang(),
                 'id'                => $Site->getId(),
+                'idRewrite'         => QUI::getRewrite()->getSite()->getId(),
                 'data-qui'          => 'package/quiqqer/products/bin/controls/frontend/category/Menu',
                 'disableCheckboxes' => $this->getAttribute('disableCheckboxes'),
-                'breadcrumb'        => $this->getAttribute('breadcrumb')
+                'breadcrumb'        => $this->getAttribute('breadcrumb'),
+                'showTitle'         => $this->getAttribute('showTitle')
             ];
 
-            $cache = \md5(\serialize($params));
+            $cache = \md5(\implode('', $params));
         } catch (QUI\Exception $Exception) {
             return 'quiqqer/products/categories/menu';
         }

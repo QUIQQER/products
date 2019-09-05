@@ -457,6 +457,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                 } catch (QUI\Exception $Exception) {
                 }
             }
+
+            return $result;
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
         }
