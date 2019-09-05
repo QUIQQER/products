@@ -16,7 +16,13 @@ use QUI\ERP\Products\Product\Types\VariantChild;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getVariant',
-    function ($productId, $fields) {
+    function ($productId, $fields, $ignoreDefaultVariant) {
+        if (!isset($ignoreDefaultVariant)) {
+            $ignoreDefaultVariant = false;
+        } else {
+            $ignoreDefaultVariant = !!$ignoreDefaultVariant;
+        }
+
         try {
             $Product = Products::getNewProductInstance($productId);
 
@@ -96,7 +102,8 @@ QUI::$Ajax->registerFunction(
 
         // render
         $Control = new ProductControl([
-            'Product' => $Child
+            'Product'              => $Child,
+            'ignoreDefaultVariant' => $ignoreDefaultVariant
         ]);
 
         return [
@@ -108,5 +115,5 @@ QUI::$Ajax->registerFunction(
             'category'  => $categoryId
         ];
     },
-    ['productId', 'fields']
+    ['productId', 'fields', 'ignoreDefaultVariant']
 );

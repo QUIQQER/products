@@ -35,7 +35,7 @@ class Product extends QUI\Control
         ]);
 
         $this->addCSSClass('quiqqer-products-product');
-        $this->addCSSFile(\dirname(__FILE__) . '/Product.css');
+        $this->addCSSFile(\dirname(__FILE__).'/Product.css');
 
         parent::__construct($attributes);
     }
@@ -68,7 +68,7 @@ class Product extends QUI\Control
             ]);
 
             // use default variant, if a default variant exists
-            if ($Product->getDefaultVariantId()) {
+            if (!$this->getAttribute('ignoreDefaultVariant') && $Product->getDefaultVariantId()) {
                 try {
                     $Product = $Product->getDefaultVariant();
 
@@ -334,12 +334,12 @@ class Product extends QUI\Control
 
         $Engine->assign(
             'buttonsHtml',
-            $Engine->fetch(\dirname(__FILE__) . '/Product.Buttons.html')
+            $Engine->fetch(\dirname(__FILE__).'/Product.Buttons.html')
         );
 
         // normal product
         if (!$typeVariantParent && !$typeVariantChild) {
-            return $Engine->fetch(\dirname(__FILE__) . '/Product.html');
+            return $Engine->fetch(\dirname(__FILE__).'/Product.html');
         }
 
 
@@ -348,7 +348,7 @@ class Product extends QUI\Control
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant'
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ProductVariant.html');
+        return $Engine->fetch(\dirname(__FILE__).'/ProductVariant.html');
     }
 
     /**

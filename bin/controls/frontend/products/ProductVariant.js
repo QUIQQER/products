@@ -46,9 +46,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             this.$startInit = false;
 
             this.addEvents({
-                onInject : this.$onInject,
-                onImport : this.$onImport,
-                onClose: function () {
+                onInject: this.$onInject,
+                onImport: this.$onImport,
+                onClose : function () {
                     window.removeEvent('popstate', this.$onPopstateChange);
                 }.bind(this)
             });
@@ -215,9 +215,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     self.Loader.hide();
                 });
             }, {
-                'package': 'quiqqer/products',
-                productId: this.getAttribute('productId'),
-                fields   : JSON.encode(fieldLists)
+                'package'           : 'quiqqer/products',
+                productId           : this.getAttribute('productId'),
+                fields              : JSON.encode(fieldLists),
+                ignoreDefaultVariant: 1
             });
         }
     });

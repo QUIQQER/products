@@ -964,8 +964,6 @@ class VariantParent extends AbstractType
      */
     public function generateVariant($fields)
     {
-        //Products::disableGlobalWriteProductDataToDb();
-
         $Variant = $this->createVariant();
 
         // set fields
@@ -1051,8 +1049,6 @@ class VariantParent extends AbstractType
         }
 
         $this->calcVariantPrice($Variant, $fields);
-
-        //Products::enableGlobalWriteProductDataToDb();
 
         $URL->setValue($urlValue);
         $Variant->save();
