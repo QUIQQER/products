@@ -166,7 +166,7 @@ class Products
             if ($Product->getAttribute('editableVariantFields')) {
                 $editable = $Product->getAttribute('editableVariantFields');
 
-                if (is_string($editable)) {
+                if (\is_string($editable)) {
                     $editable = \json_decode($editable, true);
                 }
 
