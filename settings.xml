@@ -43,6 +43,10 @@
                     <type><![CDATA[bool]]></type>
                     <defaultvalue>0</defaultvalue>
                 </conf>
+                <conf name="resetFieldsAction">
+                    <type><![CDATA[string]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
             </section>
             <section name="search">
                 <conf name="backend">
@@ -130,10 +134,12 @@
 
                         <input conf="products.useAttributeListsForMinMaxPriceCalculation" type="checkbox">
                             <text>
-                                <locale group="quiqqer/products" var="settings.window.products.useAttributeListsForMinMaxPriceCalculation.text"/>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.useAttributeListsForMinMaxPriceCalculation.text"/>
                             </text>
                             <description>
-                                <locale group="quiqqer/products" var="settings.window.products.useAttributeListsForMinMaxPriceCalculation.description"/>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.useAttributeListsForMinMaxPriceCalculation.description"/>
                             </description>
                         </input>
 
@@ -144,6 +150,30 @@
                                 <locale group="quiqqer/products" var="settings.window.products.clearcache"/>
                             </text>
                         </input>
+
+                        <select conf="products.resetFieldsAction">
+                            <option value="0">
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.resetFieldsAction.option.0"
+                                />
+                            </option>
+                            <option value="1">
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.resetFieldsAction.option.1"
+                                />
+                            </option>
+
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.resetFieldsAction.title"
+                                />
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.resetFieldsAction.description"
+                                />
+                            </description>
+                        </select>
                     </settings>
 
                     <settings>

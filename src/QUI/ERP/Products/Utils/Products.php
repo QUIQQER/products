@@ -357,10 +357,15 @@ class Products
             $allowed = \array_flip($allowed);
 
             foreach ($entries as $key => $value) {
-                $valueId = $value['valueId'];
+                $valueId       = $value['valueId'];
+                $hashedValueId = false;
 
                 if (!\is_numeric($valueId)) {
-                    $valueId = \implode(\unpack("H*", $valueId));
+                    $hashedValueId = \implode(\unpack("H*", $valueId));
+
+                    if (!isset($allowed[$valueId]) && !isset($allowed[$hashedValueId])) {
+                        continue;
+                    }
                 }
 
                 if (!isset($allowed[$valueId])) {
@@ -369,13 +374,14 @@ class Products
 
                 $Field->showEntry($key);
 
-//                if (isset($currentVariantHash[$fieldId]) && $currentVariantHash[$fieldId] === '') {
-//                    $Field->enableEntry($key);
-//                    continue;
-//                }
-
                 if (isset($availableEntries[$fieldId][$valueId])) {
                     $Field->enableEntry($key);
+                    continue;
+                }
+
+                if ($hashedValueId && isset($availableEntries[$fieldId][$hashedValueId])) {
+                    $Field->enableEntry($key);
+                    continue;
                 }
             }
         }

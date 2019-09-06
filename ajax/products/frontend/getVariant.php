@@ -8,6 +8,7 @@ use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Product\Types\VariantChild;
+use QUI\ERP\Products\Utils\Package as PackageUtils;
 
 /**
  * Return the product variant html
@@ -56,6 +57,10 @@ QUI::$Ajax->registerFunction(
 
                 if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST ||
                     $Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS) {
+                    if ($ignoreDefaultVariant && PackageUtils::getConfig()->getValue('products', 'resetFieldsAction')) {
+                        $Field->clearDefaultValue();
+                    }
+
                     $Field->setValue($fieldValue);
                 }
             } catch (QUI\Exception $Exception) {
