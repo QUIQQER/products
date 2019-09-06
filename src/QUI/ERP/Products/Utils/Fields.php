@@ -88,21 +88,52 @@ class Fields
         $searchHashes = [];
 
         foreach ($hashes as $fieldId => $value) {
-            $result = [];
-            $clone  = $hashes;
+            $clone = $hashes;
 
             if (!$foundEmptyValues) {
                 $clone[$fieldId] = '*';
             }
 
-            foreach ($clone as $k => $ce) {
-                $result[] = $k.':'.$ce;
+            $searchHashes[self::generateFieldHashFromArray($clone)] = true;
+
+            if ($clone[$fieldId] === '*') {
+                continue;
             }
 
-            $searchHashes[] = ';'.\implode(';', $result).';';
+            try {
+                $Field   = FieldHandler::getField($fieldId);
+                $options = $Field->getOptions();
+
+                if (!isset($options['entries'])) {
+                    continue;
+                }
+
+                foreach ($options['entries'] as $option) {
+                    $clone[$fieldId] = $option['valueId'];
+
+                    $searchHashes[self::generateFieldHashFromArray($clone)] = true;
+                }
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception->getMessage());
+            }
         }
 
-        return $searchHashes;
+        return \array_keys($searchHashes);
+    }
+
+    /**
+     * @param $field
+     * @return string
+     */
+    protected static function generateFieldHashFromArray($field)
+    {
+        $result = [];
+
+        foreach ($field as $k => $ce) {
+            $result[] = $k.':'.$ce;
+        }
+
+        return ';'.\implode(';', $result).';';
     }
 
     /**

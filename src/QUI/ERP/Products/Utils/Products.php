@@ -337,6 +337,7 @@ class Products
                 foreach ($searchHashes as $searchHash) {
                     if (\fnmatch($searchHash, $hash)) {
                         $availableEntries[$fieldId][$fieldValue] = true;
+                        break 1;
                     }
                 }
             }
