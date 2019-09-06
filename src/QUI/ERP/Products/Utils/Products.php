@@ -329,6 +329,7 @@ class Products
                     continue;
                 }
 
+
                 if ($currentVariantHash === $hash) {
                     $availableEntries[$fieldId][$fieldValue] = true;
                     continue;

@@ -96,7 +96,7 @@ class Fields
 
             $searchHashes[self::generateFieldHashFromArray($clone)] = true;
 
-            if ($clone[$fieldId] === '*') {
+            if (!$foundEmptyValues) {
                 continue;
             }
 
@@ -110,13 +110,23 @@ class Fields
 
                 foreach ($options['entries'] as $option) {
                     $clone[$fieldId] = $option['valueId'];
+                    $generatedHash   = self::generateFieldHashFromArray($clone);
 
-                    $searchHashes[self::generateFieldHashFromArray($clone)] = true;
+                    $searchHashes[$generatedHash] = true;
+
+                    if (!\is_numeric($option['valueId'])) {
+                        $clone[$fieldId] = \implode(\unpack("H*", $option['valueId']));
+                        $generatedHash   = self::generateFieldHashFromArray($clone);
+
+                        $searchHashes[$generatedHash] = true;
+                    }
                 }
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addDebug($Exception->getMessage());
             }
         }
+
+
 
         return \array_keys($searchHashes);
     }
