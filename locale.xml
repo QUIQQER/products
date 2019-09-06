@@ -2334,6 +2334,27 @@
             <de><![CDATA[- Bitte auswählen -]]></de>
             <en><![CDATA[- Please select one -]]></en>
         </locale>
+
+        <locale name="settings.window.products.resetFieldsAction.option.0">
+            <de><![CDATA[Default Werte beachten beim zurücksetzen]]></de>
+            <en><![CDATA[Use default values when resetting]]></en>
+        </locale>
+        <locale name="settings.window.products.resetFieldsAction.option.1">
+            <de><![CDATA[Felder komplett zurücksetzen]]></de>
+            <en><![CDATA[Reset fields completely]]></en>
+        </locale>
+        <locale name="settings.window.products.resetFieldsAction.title">
+            <de><![CDATA[Feldverhalten beim Zurücksetzen]]></de>
+            <en><![CDATA[Field Behavior during Reset]]></en>
+        </locale>
+        <locale name="settings.window.products.resetFieldsAction.description">
+            <de><![CDATA[
+            Diese Einstellung bestimmt das Verhalten im Frontend eines Produktes wenn die Auswahl zurück gesetzt wird.
+            ]]></de>
+            <en><![CDATA[
+            This setting determines the behavior in the frontend of a product when the selection is reset.
+            ]]></en>
+        </locale>
     </groups>
 
 </locales>
