@@ -89,9 +89,14 @@
 
 .product-data-fieldlist-reset {
     cursor: pointer;
+    float: right;
     font-size: 12px;
     text-align: right;
-    width: 100%;
+    padding: 0 5px;
+}
+
+.product-data-fieldlist-reset:hover {
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .product-data-fieldlist .quiqqer-product-field {
