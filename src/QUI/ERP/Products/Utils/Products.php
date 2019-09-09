@@ -390,6 +390,33 @@ class Products
     }
 
     /**
+     * @param QUI\ERP\Products\Product\Product $Product
+     * @return array
+     */
+    public static function getJsFieldHashArray(QUI\ERP\Products\Product\Product $Product)
+    {
+        if (!($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) &&
+            !($Product instanceof QUI\ERP\Products\Product\Types\VariantChild)) {
+            return [];
+        }
+
+        $availableHashes = $Product->availableActiveFieldHashes();
+        $result          = [];
+
+        foreach ($availableHashes as $hash) {
+            $hashArray = FieldUtils::parseFieldHashToArray($hash);
+
+            foreach ($hashArray as $fieldId => $value) {
+                foreach ($hashArray as $fid => $v) {
+                    $result[$fieldId][$fid][$v][$hash] = true;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * Is the product a variant product
      *
      * @param $Product

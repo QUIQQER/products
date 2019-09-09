@@ -9,6 +9,7 @@ use QUI\ERP\Products\Controls\Products\Product as ProductControl;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Product\Types\VariantChild;
 use QUI\ERP\Products\Utils\Package as PackageUtils;
+use QUI\ERP\Products\Utils\Products as ProductUtils;
 
 /**
  * Return the product variant html
@@ -112,12 +113,14 @@ QUI::$Ajax->registerFunction(
         ]);
 
         return [
-            'variantId' => $Child->getId(),
-            'control'   => QUI\Output::getInstance()->parse($Control->create()),
-            'css'       => QUI\Control\Manager::getCSS(),
-            'url'       => $Child->getUrlRewrittenWithHost(),
-            'title'     => $Child->getTitle(),
-            'category'  => $categoryId
+            'variantId'       => $Child->getId(),
+            'control'         => QUI\Output::getInstance()->parse($Control->create()),
+            'css'             => QUI\Control\Manager::getCSS(),
+            'url'             => $Child->getUrlRewrittenWithHost(),
+            'title'           => $Child->getTitle(),
+            'category'        => $categoryId,
+            'fieldHashes'     => ProductUtils::getJsFieldHashArray($Product),
+            'availableHashes' => \array_flip($Product->availableActiveFieldHashes())
         ];
     },
     ['productId', 'fields', 'ignoreDefaultVariant']

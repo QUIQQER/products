@@ -4,8 +4,6 @@
  *
  * @module package/quiqqer/products/bin/controls/frontend/products/ProductVariant
  * @author www.pcsg.de (Henning Leutz)
- *
- * @todo refresh details events
  */
 define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant', [
 
@@ -69,6 +67,14 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * event : on import
          */
         $onImport: function () {
+            if (typeof window.fieldHashes !== 'undefined') {
+                this.$fieldHashes = window.fieldHashes;
+            }
+
+            if (typeof window.availableHashes !== 'undefined') {
+                this.$availableHashes = window.availableHashes;
+            }
+
             return this.parent().then(this.$init);
         },
 
@@ -151,10 +157,42 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 '.product-data-fieldlist .quiqqer-product-field select'
             );
 
+            var attributeGroups = this.getElm().getElement(
+                '[data-qui="package/pbisschop/template/bin/js/AttributeGroups"]'
+            ).getElements(
+                '.product-data-fieldlist .quiqqer-product-field select'
+            );
+
             fieldLists.removeEvents('change');
 
             fieldLists.addEvent('change', function () {
+                if (this.getParent('[data-qui="package/pbisschop/template/bin/js/AttributeGroups"]')) {
+                    var currentHash = self.getCurrentHash();
+
+                    if (typeof self.$availableHashes[currentHash] === 'undefined') {
+                        self.hidePrice();
+                        return;
+                    }
+                }
+
                 self.$refreshVariant();
+            });
+
+            attributeGroups.addEvent('focus', function () {
+                var i, len, select;
+                var values  = {};
+                var fieldId = this.name.replace('field-', '');
+                var options = this.options;
+
+                for (i = 0, len = attributeGroups.length; i < len; i++) {
+                    select = attributeGroups[i];
+
+                    values[select.name.replace('field-', '')] = select.value;
+                }
+
+                for (i = 0, len = options.length; i < len; i++) {
+                    options[i].disabled = !self.$isFieldValueInFields(fieldId, options[i].value);
+                }
             });
 
             new Element('div', {
@@ -193,7 +231,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     html: result.control
                 });
 
-                document.title = result.title;
+                document.title        = result.title;
+                self.$fieldHashes     = result.fieldHashes;
+                self.$availableHashes = result.availableHashes;
 
                 // only if product is in main category
                 if (typeof window.QUIQQER_PRODUCT_CATEGORY !== 'undefined' &&
@@ -232,6 +272,169 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 fields              : JSON.encode(fieldLists),
                 ignoreDefaultVariant: 1
             });
+        },
+
+        /**
+         * Helper to get hashes which fit at the current setting
+         *
+         * @param fieldId
+         * @param fieldValue
+         * @return {boolean}
+         */
+        $isFieldValueInFields: function (fieldId, fieldValue) {
+            var i, h, avHashes;
+            var hashes = self.$fieldHashes,
+                count  = Object.getLength(hashes),
+                found  = {};
+
+            fieldId = parseInt(fieldId);
+
+
+            if (fieldValue === '') {
+                return true;
+            }
+
+            for (var id in hashes) {
+                if (!hashes.hasOwnProperty(id)) {
+                    continue;
+                }
+
+                id = parseInt(id);
+
+                if (!isNaN(fieldValue)) {
+                    fieldValue = parseInt(fieldValue);
+                }
+
+                try {
+                    if (typeof hashes[id][fieldId][fieldValue] === 'undefined') {
+                        continue;
+                    }
+
+                    avHashes = hashes[id][fieldId][fieldValue];
+
+                    for (h in avHashes) {
+                        if (!avHashes.hasOwnProperty(h)) {
+                            continue;
+                        }
+
+                        if (typeof found[h] === 'undefined') {
+                            found[h] = 0;
+                        }
+
+                        found[h]++;
+                    }
+                } catch (e) {
+                }
+            }
+
+            if (!Object.getLength(found)) {
+                return false;
+            }
+
+            for (i in found) {
+                if (!found.hasOwnProperty(i)) {
+                    continue;
+                }
+
+                if (found[i] === count) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
+        /**
+         * Hide the price display
+         */
+        hidePrice: function () {
+            var PriceContainer = this.getElm().getElement('.product-data-price');
+
+            if (!PriceContainer) {
+                return;
+            }
+
+            moofx(PriceContainer).animate({
+                height : 0,
+                opacity: 0
+            }, {
+                duration: 200
+            });
+        },
+
+        /**
+         * Hide the price display
+         */
+        showPrice: function () {
+            var PriceContainer = this.getElm().getElement('.product-data-price');
+
+            if (!PriceContainer) {
+                return;
+            }
+
+            PriceContainer.setStyle('height', null);
+
+            moofx(PriceContainer).animate({
+                opacity: 1
+            }, {
+                duration: 200
+            });
+        },
+
+        /**
+         * Return the current hash from the product field settings
+         *
+         * @return {string}
+         */
+        getCurrentHash: function () {
+            var attributeGroups = this.getElm().getElement(
+                '[data-qui="package/pbisschop/template/bin/js/AttributeGroups"]'
+            ).getElements('.quiqqer-product-field select');
+
+            var i, len, fieldName, fieldValue;
+            var fields = {};
+
+            for (i = 0, len = attributeGroups.length; i < len; i++) {
+                fieldName  = attributeGroups[i].name.replace('field-', '');
+                fieldValue = this.stringToHex(attributeGroups[i].value);
+
+                fields[fieldName] = fieldValue;
+            }
+
+            var hash = [];
+
+            for (i in fields) {
+                if (fields.hasOwnProperty(i)) {
+                    hash.push(i + ':' + fields[i]);
+                }
+            }
+
+            return ';' + hash.join(';') + ';';
+        },
+
+        /**
+         *
+         * @param str
+         * @return {string}
+         */
+        stringToHex: function (str) {
+            if (str === '') {
+                return '';
+            }
+
+            if (!isNaN(str)) {
+                return str;
+            }
+
+            var i, len, char;
+            var result = '';
+
+            for (i = 0, len = str.length; i < len; i++) {
+                char = str.charCodeAt(i);
+                result += char.toString(16);
+            }
+
+            return result;
         }
     });
 });

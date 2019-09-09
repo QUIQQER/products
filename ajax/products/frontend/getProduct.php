@@ -6,6 +6,7 @@
 
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
+use QUI\ERP\Products\Utils\Products as ProductUtils;
 
 /**
  * Return the product html
@@ -27,6 +28,11 @@ QUI::$Ajax->registerFunction(
             return '';
         }
 
+        $availableHashes = [];
+
+        if (\method_exists($Product, 'availableActiveFieldHashes')) {
+            $availableHashes = $Product->availableActiveFieldHashes();
+        }
 
         try {
             $Site = $Project->get($siteId);
@@ -55,9 +61,11 @@ QUI::$Ajax->registerFunction(
         }
 
         return [
-            'css'   => QUI\Control\Manager::getCSS(),
-            'html'  => QUI\Output::getInstance()->parse($control),
-            'title' => $title
+            'css'             => QUI\Control\Manager::getCSS(),
+            'html'            => QUI\Output::getInstance()->parse($control),
+            'title'           => $title,
+            'fieldHashes'     => ProductUtils::getJsFieldHashArray($Product),
+            'availableHashes' => \array_flip($availableHashes)
         ];
     },
     ['productId', 'project', 'siteId']

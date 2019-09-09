@@ -11,6 +11,7 @@ use DusanKasan\Knapsack\Collection;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Utils\Fields as FieldUtils;
+use QUI\ERP\Products\Utils\Products as ProductUtils;
 
 /**
  * Class Button
@@ -300,7 +301,22 @@ class Product extends QUI\Control
         }
 
         if ($typeVariantParent || $typeVariantChild) {
-            QUI\ERP\Products\Utils\Products::setAvailableFieldOptions($Product);
+            ProductUtils::setAvailableFieldOptions($Product);
+
+            QUI::getEvents()->addEvent(
+                'onQuiqqer::products::product::end',
+                function (\Quiqqer\Engine\Collector $Collector) use ($Product) {
+                    $fieldHashes = ProductUtils::getJsFieldHashArray($Product);
+                    $fieldHashes = \json_encode($fieldHashes);
+
+                    $availableHashes = $Product->availableActiveFieldHashes();
+                    $availableHashes = \array_flip($availableHashes);
+                    $availableHashes = \json_encode($availableHashes);
+
+                    $Collector->append('<script>var fieldHashes = '.$fieldHashes.'</script>');
+                    $Collector->append('<script>var availableHashes = '.$availableHashes.'</script>');
+                }
+            );
         }
 
         $Engine->assign([
