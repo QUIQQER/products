@@ -160,7 +160,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             var attributeGroups = this.getElm().getElement(
                 '[data-qui="package/pbisschop/template/bin/js/AttributeGroups"]'
             ).getElements(
-                '.product-data-fieldlist .quiqqer-product-field select'
+                '.quiqqer-product-field select'
             );
 
             fieldLists.removeEvents('change');
@@ -171,6 +171,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                     if (typeof self.$availableHashes[currentHash] === 'undefined') {
                         self.hidePrice();
+                        self.disableButtons();
                         return;
                     }
                 }
@@ -191,7 +192,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 }
 
                 for (i = 0, len = options.length; i < len; i++) {
-                    options[i].disabled = !self.$isFieldValueInFields(fieldId, options[i].value);
+                    options[i].disabled = !self.$isFieldValueInFields(
+                        fieldId,
+                        options[i].value
+                    );
                 }
             });
 
@@ -282,17 +286,44 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * @return {boolean}
          */
         $isFieldValueInFields: function (fieldId, fieldValue) {
-            var i, h, avHashes;
-            var hashes = self.$fieldHashes,
-                count  = Object.getLength(hashes),
-                found  = {};
+            var i, len, avHashes;
+            var hashes = this.$fieldHashes;
 
             fieldId = parseInt(fieldId);
-
 
             if (fieldValue === '') {
                 return true;
             }
+
+
+            var current    = this.getCurrentFieldValues();
+            var collection = {};
+
+            var fitHashToCurrentSettings = function (h) {
+                for (var c in current) {
+                    if (!current.hasOwnProperty(c)) {
+                        continue;
+                    }
+
+                    if (!isNaN(c)) {
+                        c = parseInt(c);
+                    }
+
+                    if (c === fieldId) {
+                        continue;
+                    }
+
+                    if (current[c] === '') {
+                        continue;
+                    }
+
+                    if (h.indexOf(c + ':' + current[c]) === -1) {
+                        return false;
+                    }
+                }
+
+                return true;
+            };
 
             for (var id in hashes) {
                 if (!hashes.hasOwnProperty(id)) {
@@ -300,6 +331,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 }
 
                 id = parseInt(id);
+
+                if (id === fieldId) {
+                    continue;
+                }
 
                 if (!isNaN(fieldValue)) {
                     fieldValue = parseInt(fieldValue);
@@ -312,31 +347,19 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                     avHashes = hashes[id][fieldId][fieldValue];
 
-                    for (h in avHashes) {
-                        if (!avHashes.hasOwnProperty(h)) {
-                            continue;
-                        }
-
-                        if (typeof found[h] === 'undefined') {
-                            found[h] = 0;
-                        }
-
-                        found[h]++;
+                    for (i = 0, len = avHashes.length; i < len; i++) {
+                        collection[avHashes[i]] = true;
                     }
                 } catch (e) {
                 }
             }
 
-            if (!Object.getLength(found)) {
-                return false;
-            }
-
-            for (i in found) {
-                if (!found.hasOwnProperty(i)) {
+            for (i in collection) {
+                if (!collection.hasOwnProperty(i)) {
                     continue;
                 }
 
-                if (found[i] === count) {
+                if (fitHashToCurrentSettings(i)) {
                     return true;
                 }
             }
@@ -382,11 +405,44 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
         },
 
         /**
+         * disable buttons
+         */
+        disableButtons: function () {
+            var Container = document.getElement('.product-data-actionButtons');
+
+            Container.getElements('button').set('disabled', true);
+
+            Container.getElements('[data-quiid]').forEach(function (Node) {
+                var Control = QUI.Controls.getById(Node.get('data-quiid'));
+
+                if (typeof Control.disable !== 'undefined') {
+                    Control.disable();
+                }
+            });
+        },
+
+        /**
          * Return the current hash from the product field settings
          *
          * @return {string}
          */
         getCurrentHash: function () {
+            var fields = this.getCurrentFieldValues();
+            var hash   = [];
+
+            for (var i in fields) {
+                if (fields.hasOwnProperty(i)) {
+                    hash.push(i + ':' + fields[i]);
+                }
+            }
+
+            return ';' + hash.join(';') + ';';
+        },
+
+        /**
+         * @return {Object}
+         */
+        getCurrentFieldValues: function () {
             var attributeGroups = this.getElm().getElement(
                 '[data-qui="package/pbisschop/template/bin/js/AttributeGroups"]'
             ).getElements('.quiqqer-product-field select');
@@ -401,15 +457,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 fields[fieldName] = fieldValue;
             }
 
-            var hash = [];
-
-            for (i in fields) {
-                if (fields.hasOwnProperty(i)) {
-                    hash.push(i + ':' + fields[i]);
-                }
-            }
-
-            return ';' + hash.join(';') + ';';
+            return fields;
         },
 
         /**

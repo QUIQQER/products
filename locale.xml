@@ -2035,7 +2035,7 @@
         </locale>
 
         <locale name="control.variant.reset.fields">
-            <de><![CDATA[Auswahl zurück setzen]]></de>
+            <de><![CDATA[Auswahl zurücksetzen]]></de>
             <en><![CDATA[Reset selected fields]]></en>
         </locale>
 

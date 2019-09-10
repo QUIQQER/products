@@ -407,8 +407,12 @@ class Products
             $hashArray = FieldUtils::parseFieldHashToArray($hash);
 
             foreach ($hashArray as $fieldId => $value) {
+                if (!isset($result[$fieldId])) {
+                    $result[$fieldId] = [];
+                }
+
                 foreach ($hashArray as $fid => $v) {
-                    $result[$fieldId][$fid][$v][$hash] = true;
+                    $result[$fieldId][$fid][$v][] = $hash;
                 }
             }
         }
