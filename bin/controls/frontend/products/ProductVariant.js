@@ -181,9 +181,15 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
             attributeGroups.addEvent('focus', function () {
                 var i, len, select;
+
                 var values  = {};
                 var fieldId = this.name.replace('field-', '');
                 var options = this.options;
+
+                var enabled     = [];
+                var EmptyOption = enabled.filter(function (option) {
+                    return option.value === '';
+                })[0];
 
                 for (i = 0, len = attributeGroups.length; i < len; i++) {
                     select = attributeGroups[i];
@@ -196,6 +202,35 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                         fieldId,
                         options[i].value
                     );
+
+                    if (options[i].disabled === false) {
+                        enabled.push(options[i]);
+                    }
+                }
+
+                if (EmptyOption) {
+                    EmptyOption.disabled = false;
+                }
+
+                if (enabled.length === 1 && EmptyOption) {
+                    EmptyOption.disabled  = true;
+                }
+
+                if (enabled.length === 1) {
+                    this.value = enabled[0].value;
+                    return;
+                }
+
+                if (EmptyOption && enabled.length === 2) {
+                    var option = enabled.filter(function (option) {
+                        return option.value !== '';
+                    })[0];
+
+                    this.value = option.value;
+
+                    if (EmptyOption) {
+                        EmptyOption.disabled  = true;
+                    }
                 }
             });
 
