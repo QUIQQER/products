@@ -180,6 +180,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             });
 
             attributeGroups.addEvent('focus', function () {
+                if (attributeGroups.length === 1) {
+                    return;
+                }
+                
                 var i, len, select;
 
                 var values  = {};
@@ -213,7 +217,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 }
 
                 if (enabled.length === 1 && EmptyOption) {
-                    EmptyOption.disabled  = true;
+                    EmptyOption.disabled = true;
                 }
 
                 if (enabled.length === 1) {
@@ -229,7 +233,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     this.value = option.value;
 
                     if (EmptyOption) {
-                        EmptyOption.disabled  = true;
+                        EmptyOption.disabled = true;
                     }
                 }
             });
