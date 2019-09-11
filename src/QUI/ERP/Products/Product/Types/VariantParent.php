@@ -364,9 +364,17 @@ class VariantParent extends AbstractType
 
         /* @var $Image QUI\Projects\Media\Image */
         $imageCache = [];
+        $indexCheck = [];
 
         foreach ($images as $Image) {
-            $imageCache[] = $Image->getUrl();
+            $url = $Image->getUrl();
+
+            if (isset($indexCheck[$url])) {
+                continue;
+            }
+
+            $imageCache[]     = $url;
+            $indexCheck[$url] = true;
         }
 
         QUI\Cache\Manager::set($cache, $imageCache);
