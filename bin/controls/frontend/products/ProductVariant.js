@@ -183,7 +183,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 if (attributeGroups.length === 1) {
                     return;
                 }
-                
+
                 var i, len, select;
 
                 var values  = {};
@@ -377,6 +377,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                 if (!isNaN(fieldValue)) {
                     fieldValue = parseInt(fieldValue);
+                } else {
+                    fieldValue = this.stringToHex(fieldValue);
                 }
 
                 try {
