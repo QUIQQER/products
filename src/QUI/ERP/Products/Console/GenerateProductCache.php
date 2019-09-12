@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Console;
 
 use QUI;
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Controls\Products\Product as ProductControl;
 
 /**
  * Console tool for HKL used patches
@@ -40,10 +41,23 @@ class GenerateProductCache extends QUI\System\Console\Tool
             try {
                 $Product = Products::getNewProductInstance($productId);
 
-                if ($Product->isActive()) {
-                    $Product->setAttribute('viewType', 'frontend');
-                    $Product->getView();
+                if (!$Product->isActive()) {
+                    continue;
                 }
+
+                $Product->setAttribute('viewType', 'frontend');
+                $Product->getView()->getPrice();
+
+                if ($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
+                    $Product->getVariants();
+                }
+
+                // control cache
+                $Control = new ProductControl([
+                    'Product' => $Product
+                ]);
+
+                $Control->create();
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addInfo($Exception->getMessage());
             }
