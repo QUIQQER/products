@@ -3,4 +3,5 @@
     <tool exec="\QUI\ERP\Products\Console\GenerateProductAttributeListTags"/>
     <tool exec="\QUI\ERP\Products\Console\Cleanup"/>
     <tool exec="\QUI\ERP\Products\Console\GenerateProductCache"/>
+    <tool exec="\QUI\ERP\Products\Console\GenerateImageCache"/>
 </console>
