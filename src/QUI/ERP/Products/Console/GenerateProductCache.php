@@ -8,7 +8,7 @@ namespace QUI\ERP\Products\Console;
 
 use QUI;
 use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Products\Controls\Products\Product as ProductControl;
+use QUI\ERP\Products\Product\Cache\ProductCache;
 
 /**
  * Console tool for HKL used patches
@@ -38,29 +38,28 @@ class GenerateProductCache extends QUI\System\Console\Tool
 
         $i = 0;
 
+        $Pool      = null;
+        $poolCount = 0;
+
+        if (\class_exists('Pool')) {
+            $Pool = new \Pool(4);
+        } else {
+            $this->writeLn('No threads installed. The product cache build takes longer to build up');
+        }
+
         foreach ($productIds as $productId) {
-            try {
-                $Product = Products::getNewProductInstance($productId);
+            if ($Pool) {
+                $Pool->submit(new QUI\ERP\Products\Product\Cache\CacheThread($productId));
+                $poolCount++;
 
-                if (!$Product->isActive()) {
-                    continue;
+                if ($poolCount === 4) {
+                    while ($Pool->collect()) {
+                    }
+
+                    $poolCount = 0;
                 }
-
-                $Product->setAttribute('viewType', 'frontend');
-                $Product->getView()->getPrice();
-
-                if ($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
-                    $Product->getVariants();
-                }
-
-                // control cache
-                $Control = new ProductControl([
-                    'Product' => $Product
-                ]);
-
-                $Control->create();
-            } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addInfo($Exception->getMessage());
+            } else {
+                ProductCache::create($productId);
             }
 
             if ($i % 10 === 0) {
@@ -72,5 +71,12 @@ class GenerateProductCache extends QUI\System\Console\Tool
 
             $i++;
         }
+
+        if ($Pool) {
+            $Pool->shutdown();
+        }
+
+        $this->writeLn('Cache is successfully build');
+        $this->writeLn('');
     }
 }

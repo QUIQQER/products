@@ -355,6 +355,10 @@ class Products
             $options = $Field->getOptions();
             $entries = $options['entries'];
 
+            if (!isset($available[$fieldId])) {
+                continue;
+            }
+
             $allowed = $available[$fieldId];
             $allowed = \array_flip($allowed);
 
