@@ -38,8 +38,12 @@ class GenerateProductCache extends QUI\System\Console\Tool
 
         foreach ($productIds as $productId) {
             try {
-                $Product = Products::getProduct($productId);
-                $Product->getView();
+                $Product = Products::getNewProductInstance($productId);
+
+                if ($Product->isActive()) {
+                    $Product->setAttribute('viewType', 'frontend');
+                    $Product->getView();
+                }
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addInfo($Exception->getMessage());
             }
