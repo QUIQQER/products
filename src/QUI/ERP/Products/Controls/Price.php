@@ -25,7 +25,7 @@ class Price extends QUI\Control
         $this->setAttributes([
             'data-qui'    => 'package/quiqqer/products/bin/controls/frontend/Price',
             'Price'       => null,
-            'withVatText' => false,
+            'withVatText' => true,
             'Calc'        => false
         ]);
 
