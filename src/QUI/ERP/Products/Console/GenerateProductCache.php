@@ -34,6 +34,7 @@ class GenerateProductCache extends QUI\System\Console\Tool
     public function execute()
     {
         $productIds = Products::getProductIds();
+        $count      = \count($productIds);
 
         $i = 0;
 
@@ -62,8 +63,11 @@ class GenerateProductCache extends QUI\System\Console\Tool
                 QUI\System\Log::addInfo($Exception->getMessage());
             }
 
-            if ($i % 100 === 0) {
-                $this->writeLn('- '.$i);
+            if ($i % 10 === 0) {
+                $out  = \str_pad($i, \mb_strlen($count), '0', \STR_PAD_LEFT);
+                $time = \date('H:i:s');
+
+                $this->writeLn('- '.$time.' :: '.$out.' of '.$count);
             }
 
             $i++;
