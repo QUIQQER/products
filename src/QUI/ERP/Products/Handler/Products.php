@@ -158,6 +158,15 @@ class Products
     }
 
     /**
+     * This clean the instance cache for the product manager
+     * use this with caution
+     */
+    public static function cleanProductInstanceMemCache()
+    {
+        self::$list = [];
+    }
+
+    /**
      * Return a product by its own url
      *
      * @param string $url
