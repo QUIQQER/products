@@ -16,7 +16,7 @@ class ProductCache
     /**
      * @param $productId
      */
-    static function create($productId)
+    public static function create($productId)
     {
         try {
             $Product = Products::getNewProductInstance($productId);
