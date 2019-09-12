@@ -76,7 +76,12 @@ class Crons
 
             try {
                 $Product = Products::getNewProductInstance($id);
-                $Image   = $Product->getImage();
+
+                if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+                    continue;
+                }
+
+                $Image = $Product->getImage();
 
                 $Image->createCache();
 
