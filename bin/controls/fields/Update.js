@@ -406,6 +406,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                                             }
                                         )
                                     );
+
+                                    resolve();
                                 }, {
                                     'package': 'quiqqer/products',
                                     fieldId  : self.getAttribute('fieldId')

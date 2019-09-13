@@ -1096,6 +1096,8 @@ class Fields
                         QUI\System\Log::writeException($Exception);
                         continue;
                     }
+
+                    Products::cleanProductInstanceMemCache();
                 }
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
