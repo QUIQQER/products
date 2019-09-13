@@ -19,12 +19,13 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
     'package/quiqqer/products/bin/classes/Fields',
     'package/quiqqer/products/bin/utils/Fields',
     'package/quiqqer/translator/bin/controls/Update',
+    'package/quiqqer/products/bin/Products',
 
     'text!package/quiqqer/products/bin/controls/fields/Create.html',
     'css!package/quiqqer/products/bin/controls/fields/Create.css'
 
 ], function (QUI, QUIControl, QUIConfirm, QUIFormUtils, QUILocale, QUIAjax,
-             Mustache, InputMultiLang, Handler, FieldUtils, Translation, template) {
+             Mustache, InputMultiLang, Handler, FieldUtils, Translation, Products, template) {
     "use strict";
 
     var lg     = 'quiqqer/products',
@@ -376,8 +377,44 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     maxWidth   : 750,
                     autoclose  : false,
                     events     : {
+                        onOpen  : function (Win) {
+                            Win.Loader.show();
+
+                            var SubmitBtn = Win.getButton('submit');
+
+                            SubmitBtn.disable();
+
+                            Products.getProductCount().then(function (count) {
+                                if (count < 500) {
+                                    SubmitBtn.enable();
+                                    Win.Loader.hide();
+                                    return;
+                                }
+
+                                QUIAjax.get('package_quiqqer_products_ajax_products_getSetFieldAttributesToProductsCmd', function (cmd) {
+                                    Win.Loader.hide();
+
+                                    Win.setAttribute(
+                                        'information',
+                                        QUILocale.get(
+                                            'quiqqer/products',
+                                            'fields.window.productarray.changed.information.console_tool',
+                                            {
+                                                cmd      : cmd,
+                                                fieldId  : self.getAttribute('fieldId'),
+                                                fieldName: self.$Translation.getValue()
+                                            }
+                                        )
+                                    );
+                                }, {
+                                    'package': 'quiqqer/products',
+                                    fieldId  : self.getAttribute('fieldId')
+                                });
+                            });
+                        },
                         onSubmit: function (Win) {
                             Win.Loader.show();
+
                             QUIAjax.post('package_quiqqer_products_ajax_fields_setProductFieldArray', function () {
                                 Win.close();
                             }, {
