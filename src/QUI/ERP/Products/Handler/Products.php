@@ -316,7 +316,8 @@ class Products
                 'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
                     'id' => $pid
-                ]
+                ],
+                'limit' => 1
             ]);
         } catch (\Exception $Exception) {
             return false;

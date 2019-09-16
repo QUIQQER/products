@@ -1178,20 +1178,29 @@ class VariantParent extends AbstractType
      */
     protected function parseActiveFieldsAndHashes()
     {
-        try {
-            $result = QUI::getDataBase()->fetch([
-                'select' => 'id, parent, fieldData, variantHash',
-                'from'   => QUI\ERP\Products\Utils\Tables::getProductTableName(),
-                'where'  => [
-                    'parent' => $this->getId(),
-                    'active' => 1
-                ]
-            ]);
-        } catch (QUI\Exception $Exception) {
-            $result = [];
-        }
+        $cacheName = 'quiqqer/products/'.$this->getId().'/activeFieldHashes';
 
-        $fieldHashes = $this->parseAvailableFields($result);
+        try {
+            $fieldHashes = QUI\Cache\Manager::get($cacheName);
+        } catch (QUI\Exception $Exception) {
+            try {
+                $result = QUI::getDataBase()->fetch([
+                    'select' => 'id, parent, fieldData, variantHash',
+                    'from'   => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                    'where'  => [
+                        'parent' => $this->getId(),
+                        'active' => 1
+                    ]
+                ]);
+
+                $fieldHashes = $this->parseAvailableFields($result);
+
+                QUI\Cache\Manager::set($cacheName, $fieldHashes);
+            } catch (QUI\Exception $Exception) {
+                $result      = [];
+                $fieldHashes = $this->parseAvailableFields($result);
+            }
+        }
 
         $this->childFieldsActive = $fieldHashes['fields'];
         $this->childFieldHashes  = $fieldHashes['hashes'];

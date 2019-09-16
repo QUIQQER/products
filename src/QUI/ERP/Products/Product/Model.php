@@ -188,12 +188,6 @@ class Model extends QUI\QDOM
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);
             }
-
-            // bin mir unsicher ob dies sinn macht (by hen)
-            // normal muss die kategorie und globale einstellung verwendet werden
-//                if (isset($field['showInDetails'])) {
-//                    $Field->setShowInDetailsStatus((bool)$field['showInDetails']);
-//                }
         }
 
         // all standard and all system fields must be in the product
