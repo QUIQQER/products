@@ -33,6 +33,8 @@ class GenerateProductCache extends QUI\System\Console\Tool
      */
     public function execute()
     {
+        Products::$createFrontendCache = true;
+
         try {
             $Package = QUI::getPackage('quiqqer/products');
             $lockKey = 'products-generating';
@@ -113,5 +115,6 @@ class GenerateProductCache extends QUI\System\Console\Tool
         $this->writeLn('');
 
         QUI\Lock\Locker::unlock($Package, $lockKey);
+        Products::$createFrontendCache = false;
     }
 }

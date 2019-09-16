@@ -59,6 +59,13 @@ class Products
     public static $fireEventsOnProductSave = true;
 
     /**
+     * This enables the caching flag, equal if quiqqer is in frontend or backend
+     *
+     * @var bool
+     */
+    public static $createFrontendCache = false;
+
+    /**
      * Product permission using?
      * @var null|boolean
      */
@@ -265,7 +272,7 @@ class Products
             );
         }
 
-        if (QUI::isFrontend()) {
+        if (QUI::isFrontend() || self::$createFrontendCache) {
             try {
                 QUI\Cache\Manager::get('quiqqer/products/'.$pid.'/db-data');
             } catch (QUi\Exception $Exception) {
