@@ -13,19 +13,18 @@ use QUI\ERP\Products\Product\Cache\ProductCache;
 /**
  * Console tool for HKL used patches
  *
- * @author www.pcsg.de (Patrick Müller)
+ * @author www.pcsg.de (Henning Leutz)
  */
 class GenerateProductCache extends QUI\System\Console\Tool
 {
     /**
-     * Konstruktor
+     * Constructor
      */
     public function __construct()
     {
         $this->setName('products:generate-product-cache')
-            ->setDescription(
-                'Generate the primary product cache'
-            );
+            ->setDescription('Generate the primary product cache')
+            ->addArgument('unlock', 'Ignore the LOCK flag or unlock the LOCK flag');
     }
 
     /**
@@ -33,6 +32,26 @@ class GenerateProductCache extends QUI\System\Console\Tool
      */
     public function execute()
     {
+        try {
+            $Package = QUI::getPackage('quiqqer/products');
+            $lockKey = 'products-generating';
+
+            if ($this->getArgument('--unlock')) {
+                QUI\Lock\Locker::unlock($Package, $lockKey);
+            }
+
+            if (QUI\Lock\Locker::isLocked($Package, $lockKey)) {
+                $this->writeLn('Generating is currently running', 'red');
+                exit;
+            }
+
+            QUI\Lock\Locker::lock($Package, $lockKey);
+        } catch (QUI\Exception $Exception) {
+            $this->writeLn($Exception->getMessage(), 'red');
+            exit;
+        }
+
+
         $productIds = Products::getProductIds();
         $count      = \count($productIds);
 
@@ -78,5 +97,7 @@ class GenerateProductCache extends QUI\System\Console\Tool
 
         $this->writeLn('Cache is successfully build');
         $this->writeLn('');
+
+        QUI\Lock\Locker::unlock($Package, $lockKey);
     }
 }
