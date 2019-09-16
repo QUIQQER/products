@@ -152,8 +152,6 @@ class Products
         $Product          = self::getNewProductInstance($pid);
         self::$list[$pid] = $Product;
 
-        QUI\Cache\Manager::set('quiqqer/products/'.$pid.'/ser', \serialize($Product));
-
         return $Product;
     }
 
