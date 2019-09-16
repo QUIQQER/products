@@ -15,8 +15,9 @@ class ProductCache
 {
     /**
      * @param $productId
+     * @param $createControlCache
      */
-    public static function create($productId)
+    public static function create($productId, $createControlCache = false)
     {
         try {
             $Product = Products::getNewProductInstance($productId);
@@ -32,6 +33,15 @@ class ProductCache
                 $Product->getVariants();
                 $Product->getImages();
                 $Product->availableActiveFieldHashes();
+            }
+
+            // control cache
+            if ($createControlCache) {
+                $Control = new ProductControl([
+                    'Product' => $Product
+                ]);
+
+                $Control->create();
             }
 
             Products::cleanProductInstanceMemCache();

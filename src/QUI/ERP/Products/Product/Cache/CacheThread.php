@@ -9,16 +9,20 @@ namespace QUI\ERP\Products\Product\Cache;
  */
 class CacheThread extends \Threaded
 {
+    private $controlCache;
+
     private $productId;
 
     /**
      * CacheThread constructor.
      *
      * @param $productId
+     * @param $controlCache
      */
-    public function __construct($productId)
+    public function __construct($productId, $controlCache = false)
     {
-        $this->productId = $productId;
+        $this->productId    = $productId;
+        $this->controlCache = $controlCache;
     }
 
     /**
@@ -26,6 +30,6 @@ class CacheThread extends \Threaded
      */
     public function run()
     {
-        ProductCache::create($this->productId);
+        ProductCache::create($this->productId, $this->controlCache);
     }
 }

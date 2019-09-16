@@ -25,7 +25,8 @@ class GenerateProductCache extends QUI\System\Console\Tool
         $this->setName('products:generate-product-cache')
             ->setDescription('Generate the primary product cache')
             ->addArgument('unlock', 'Ignore the LOCK flag or unlock the LOCK flag', false, true)
-            ->addArgument('rebuild', 'Ignores the current cache and rebuild the entire cache', false, true);
+            ->addArgument('rebuild', 'Ignores the current cache and rebuild the entire cache', false, true)
+            ->addArgument('withControlCache', 'Create control cache, too', false, true);
     }
 
     /**
@@ -35,11 +36,13 @@ class GenerateProductCache extends QUI\System\Console\Tool
     {
         Products::$createFrontendCache = true;
 
+
+        // LOCK
         try {
             $Package = QUI::getPackage('quiqqer/products');
             $lockKey = 'products-generating';
 
-            if ($this->getArgument('--unlock')) {
+            if ($this->getArgument('unlock')) {
                 QUI\Lock\Locker::unlock($Package, $lockKey);
             }
 
@@ -54,48 +57,31 @@ class GenerateProductCache extends QUI\System\Console\Tool
             exit;
         }
 
+
         // check cache
-        if ($this->getArgument('--rebuild')) {
+        if ($this->getArgument('rebuild')) {
             QUI\Cache\Manager::clear('quiqqer/products');
         }
 
 
-        $productIds = Products::getProductIds();
-        $count      = \count($productIds);
+        // execute
+        $controlCache = $this->getArgument('withControlCache');
+        $productIds   = Products::getProductIds();
+        $count        = \count($productIds);
 
         $i = 0;
 
-        $Pool      = null;
-        $poolCount = 0;
-
-        if (\class_exists('Pool')) {
-            $Pool = new \Pool(4);
-        } else {
-            $this->writeLn('No threads installed. The product cache build takes longer to build up');
-        }
-
         foreach ($productIds as $productId) {
             // check cache, if no rebuild is set
-            if (!$this->getArgument('--rebuild')) {
+            if (!$this->getArgument('rebuild')) {
                 try {
-                    $cacheData = QUI\Cache\Manager::get('quiqqer/products/'.$productId);
+                    QUI\Cache\Manager::get('quiqqer/products/'.$productId);
+                    continue;
                 } catch (QUI\Exception $Exception) {
                 }
             }
 
-            if ($Pool) {
-                $Pool->submit(new QUI\ERP\Products\Product\Cache\CacheThread($productId));
-                $poolCount++;
-
-                if ($poolCount === 4) {
-                    while ($Pool->collect()) {
-                    }
-
-                    $poolCount = 0;
-                }
-            } else {
-                ProductCache::create($productId);
-            }
+            ProductCache::create($productId, $controlCache);
 
             if ($i % 10 === 0) {
                 $out  = \str_pad($i, \mb_strlen($count), '0', \STR_PAD_LEFT);
@@ -105,10 +91,6 @@ class GenerateProductCache extends QUI\System\Console\Tool
             }
 
             $i++;
-        }
-
-        if ($Pool) {
-            $Pool->shutdown();
         }
 
         $this->writeLn('Cache is successfully build');
