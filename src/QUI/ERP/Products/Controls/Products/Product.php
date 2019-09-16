@@ -12,6 +12,7 @@ use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Utils\Fields as FieldUtils;
 use QUI\ERP\Products\Utils\Products as ProductUtils;
+use function DusanKasan\Knapsack\concat;
 
 /**
  * Class Button
@@ -248,6 +249,10 @@ class Product extends QUI\Control
             }
 
             if (!$Field->hasViewPermission()) {
+                continue;
+            }
+
+            if (!$Field->isPublic()) {
                 continue;
             }
 

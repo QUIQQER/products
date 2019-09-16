@@ -1432,14 +1432,36 @@
         </locale>
         <locale name="fields.window.productarray.changed.information" html="true">
             <de><![CDATA[
-                Feld-Eigenschaften haben sich geändert welche Produkte direkt betreffen.<br />
+                Es haben sich Feld-Eigenschaften geändert, die Produkte direkt betreffen.<br />
+                Möchtest Du alle Produkte, die das Feld <strong>[fieldId] [fieldName]</strong> besitzen anpassen? <br />
+                Für jedes Produkt werden die Eigenschaften des Feldes <strong>[fieldId] [fieldName]</strong> gesetzt.
+                ]]></de>
+            <en><![CDATA[
+                Field properties have changed which directly affect products.<br />
+                Do you want to customize all products which contain the field <strong>[fieldId] [fieldName]</strong>?<br />
+                For each product the properties of the field <strong>[fieldId] [fieldName]</strong> are set.
+            ]]></en>
+        </locale>
+        <locale name="fields.window.productarray.changed.information.console_tool" html="true">
+            <de><![CDATA[
+                Es haben sich Feld-Eigenschaften geändert, die Produkte direkt betreffen.<br />
                 Möchtest Du alle Produkte welche das Feld <strong>[fieldId] [fieldName]</strong> besitzen anpassen? <br />
                 Für jedes Produkt werden die Eigenschaften des Feldes <strong>[fieldId] [fieldName]</strong> gesetzt.
+                <br/><br/>
+                <p>Es existiert eine <b>große Anzahl an Produkten</b> im System. Um die Feldeigenschaften zu übernehmen, führen Sie in der Kommandozeile des Betriebssystems bitte folgenden Befehl aus:</p>
+                <p>
+                    <pre>[cmd]</pre>
+                </p>
                 ]]></de>
             <en><![CDATA[
                 Field properties have changed which directly affect products<br />
                 Do you want to customize all products which contain the field <strong>[fieldId] [fieldName]</strong>?<br />
                 For each product the properties of the field <strong>[fieldId] [fieldName]</strong> are set.
+                <br/><br/>
+                <p>A large number of products</b> exist. To set the field properties to all products, please execute this command in your system terminal:</p>
+                <p>
+                    <pre>[cmd]</pre>
+                </p>
             ]]></en>
         </locale>
 

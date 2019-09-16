@@ -64,15 +64,24 @@ class Crons
      */
     public static function generateCacheImagesOfProducts()
     {
-        $ids = Products::getProductIds();
+        $ids     = Products::getProductIds();
+        $count   = \count($ids);
+        $current = 0;
 
         /** @var QUI\ERP\Products\Product\Model $Product */
         foreach ($ids as $id) {
+            QUI::getEvents()->fireEvent('generateCacheImagesOfProductsBegin', [$id, $current, $count]);
+
             \set_time_limit(self::PRODUCT_CACHE_UPDATE_TIME);
 
             try {
                 $Product = Products::getNewProductInstance($id);
-                $Image   = $Product->getImage();
+
+                if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+                    continue;
+                }
+
+                $Image = $Product->getImage();
 
                 $Image->createCache();
 
@@ -86,6 +95,10 @@ class Crons
                     'cron'      => 'generateCacheImagesOfProducts'
                 ]);
             }
+
+            QUI::getEvents()->fireEvent('generateCacheImagesOfProductsEnd', [$id, $current, $count]);
+
+            $current++;
         }
 
         // reset time limit
