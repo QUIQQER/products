@@ -31,14 +31,8 @@ class ProductCache
             if ($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
                 $Product->getVariants();
                 $Product->getImages();
+                $Product->availableActiveFieldHashes();
             }
-
-//            // control cache
-//            $Control = new ProductControl([
-//                'Product' => $Product
-//            ]);
-//
-//            $Control->create();
 
             Products::cleanProductInstanceMemCache();
         } catch (QUI\Exception $Exception) {
