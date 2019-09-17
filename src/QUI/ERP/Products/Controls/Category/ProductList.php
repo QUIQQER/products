@@ -619,6 +619,8 @@ class ProductList extends QUI\Control
             $searchParams['freetext'] = '';
         }
 
+        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+
         return $searchParams;
     }
 
