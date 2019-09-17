@@ -145,16 +145,16 @@ class Products
         }
 
         // check if serialize product exists
-        if (QUI::isFrontend()) {
-            try {
-                $product          = QUI\Cache\Manager::get('quiqqer/products/'.$pid.'/db-data');
-                self::$list[$pid] = self::getProductByDataResult($pid, $product);
+        //if (QUI::isFrontend()) { // -> mor wollte dies raus haben
+        try {
+            $product          = QUI\Cache\Manager::get('quiqqer/products/'.$pid.'/db-data');
+            self::$list[$pid] = self::getProductByDataResult($pid, $product);
 
-                return self::$list[$pid];
-            } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeDebugException($Exception);
-            }
+            return self::$list[$pid];
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
         }
+        //        }
 
         $Product          = self::getNewProductInstance($pid);
         self::$list[$pid] = $Product;
@@ -276,7 +276,7 @@ class Products
             try {
                 QUI\Cache\Manager::get('quiqqer/products/'.$pid.'/db-data');
             } catch (QUi\Exception $Exception) {
-                QUI\Cache\Manager::Set(
+                QUI\Cache\Manager::set(
                     'quiqqer/products/'.$pid.'/db-data',
                     $result[0]
                 );

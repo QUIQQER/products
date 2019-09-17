@@ -658,7 +658,7 @@ class VariantParent extends AbstractType
 
         try {
             $query = [
-                'select' => ['id', 'parent'],
+                'select' => '*',
                 'from'   => Tables::getProductTableName(),
                 'where'  => [
                     'parent' => $this->getId()
@@ -696,6 +696,8 @@ class VariantParent extends AbstractType
                     'select' => 'id',
                     'as'     => 'count'
                 ];
+
+                $query['select'] = ['id', 'parent'];
             }
 
             $result = QUI::getDataBase()->fetch($query);
@@ -708,6 +710,18 @@ class VariantParent extends AbstractType
         if (isset($params['count'])) {
             return (int)$result[0]['count'];
         }
+
+
+        // cache db data, so getProduct is faster
+        foreach ($result as $entry) {
+            $productId = (int)$entry['id'];
+
+            QUI\Cache\Manager::set(
+                'quiqqer/products/'.$productId.'/db-data',
+                $entry
+            );
+        }
+
 
         $variants = [];
 

@@ -23,6 +23,7 @@
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
+            <index>parent</index>
         </table>
 
         <table name="product_categories">
@@ -33,6 +34,7 @@
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
+            <index>parent</index>
         </table>
 
         <table name="product_fields">
