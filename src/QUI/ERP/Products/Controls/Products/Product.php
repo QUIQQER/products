@@ -11,6 +11,8 @@ use DusanKasan\Knapsack\Collection;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Utils\Fields as FieldUtils;
+use QUI\ERP\Products\Utils\Products as ProductUtils;
+use function DusanKasan\Knapsack\concat;
 
 /**
  * Class Button
@@ -68,7 +70,7 @@ class Product extends QUI\Control
             ]);
 
             // use default variant, if a default variant exists
-            if ($Product->getDefaultVariantId()) {
+            if (!$this->getAttribute('ignoreDefaultVariant') && $Product->getDefaultVariantId()) {
                 try {
                     $Product = $Product->getDefaultVariant();
 
@@ -139,7 +141,7 @@ class Product extends QUI\Control
                 $mainImageId = false;
             }
 
-            usort($images, function ($ImageA, $ImageB) use ($mainImageId) {
+            \usort($images, function ($ImageA, $ImageB) use ($mainImageId) {
                 /**
                  * @var QUI\Projects\Media\Image $ImageA
                  * @var QUI\Projects\Media\Image $ImageB
@@ -208,13 +210,11 @@ class Product extends QUI\Control
 
         // retail price (UVP)
         $PriceRetailDisplay = false;
+        $PriceRetail        = $Product->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL)->getPrice();
 
         if ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
             $PriceRetailDisplay = new QUI\ERP\Products\Controls\Price([
-                'Price'       => new QUI\ERP\Money\Price(
-                    $Product->getFieldValue('FIELD_PRICE_RETAIL'),
-                    QUI\ERP\Currency\Handler::getDefaultCurrency()
-                ),
+                'Price'       => $PriceRetail,
                 'withVatText' => false
             ]);
         }
@@ -249,6 +249,10 @@ class Product extends QUI\Control
             }
 
             if (!$Field->hasViewPermission()) {
+                continue;
+            }
+
+            if (!$Field->isPublic()) {
                 continue;
             }
 
@@ -302,7 +306,22 @@ class Product extends QUI\Control
         }
 
         if ($typeVariantParent || $typeVariantChild) {
-            QUI\ERP\Products\Utils\Products::setAvailableFieldOptions($Product);
+            ProductUtils::setAvailableFieldOptions($Product);
+
+            QUI::getEvents()->addEvent(
+                'onQuiqqer::products::product::end',
+                function (\Quiqqer\Engine\Collector $Collector) use ($Product) {
+                    $fieldHashes = ProductUtils::getJsFieldHashArray($Product);
+                    $fieldHashes = \json_encode($fieldHashes);
+
+                    $availableHashes = $Product->availableActiveFieldHashes();
+                    $availableHashes = \array_flip($availableHashes);
+                    $availableHashes = \json_encode($availableHashes);
+
+                    $Collector->append('<script>var fieldHashes = '.$fieldHashes.'</script>');
+                    $Collector->append('<script>var availableHashes = '.$availableHashes.'</script>');
+                }
+            );
         }
 
         $Engine->assign([
@@ -317,7 +336,7 @@ class Product extends QUI\Control
             'Price'                  => $Price,
             'PriceDisplay'           => $PriceDisplay,
             'PriceRetailDisplay'     => $PriceRetailDisplay,
-            'priceRetailValue'       => $Product->getFieldValue('FIELD_PRICE_RETAIL'),
+            'PriceRetail'            => $PriceRetail,
             'PriceOldDisplay'        => $PriceOldDisplay,
             'VisitedProducts'        => new VisitedProducts(),
             'MediaUtils'             => new QUI\Projects\Media\Utils(),

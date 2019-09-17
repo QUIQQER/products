@@ -8,6 +8,8 @@ use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Product\Types\VariantChild;
+use QUI\ERP\Products\Utils\Package as PackageUtils;
+use QUI\ERP\Products\Utils\Products as ProductUtils;
 
 /**
  * Return the product variant html
@@ -16,7 +18,13 @@ use QUI\ERP\Products\Product\Types\VariantChild;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getVariant',
-    function ($productId, $fields) {
+    function ($productId, $fields, $ignoreDefaultVariant) {
+        if (!isset($ignoreDefaultVariant)) {
+            $ignoreDefaultVariant = false;
+        } else {
+            $ignoreDefaultVariant = !!$ignoreDefaultVariant;
+        }
+
         try {
             $Product = Products::getNewProductInstance($productId);
 
@@ -50,6 +58,10 @@ QUI::$Ajax->registerFunction(
 
                 if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST ||
                     $Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS) {
+                    if ($ignoreDefaultVariant && PackageUtils::getConfig()->getValue('products', 'resetFieldsAction')) {
+                        $Field->clearDefaultValue();
+                    }
+
                     $Field->setValue($fieldValue);
                 }
             } catch (QUI\Exception $Exception) {
@@ -96,17 +108,20 @@ QUI::$Ajax->registerFunction(
 
         // render
         $Control = new ProductControl([
-            'Product' => $Child
+            'Product'              => $Child,
+            'ignoreDefaultVariant' => $ignoreDefaultVariant
         ]);
 
         return [
-            'variantId' => $Child->getId(),
-            'control'   => QUI\Output::getInstance()->parse($Control->create()),
-            'css'       => QUI\Control\Manager::getCSS(),
-            'url'       => $Child->getUrlRewrittenWithHost(),
-            'title'     => $Child->getTitle(),
-            'category'  => $categoryId
+            'variantId'       => $Child->getId(),
+            'control'         => QUI\Output::getInstance()->parse($Control->create()),
+            'css'             => QUI\Control\Manager::getCSS(),
+            'url'             => $Child->getUrlRewrittenWithHost(),
+            'title'           => $Child->getTitle(),
+            'category'        => $categoryId,
+            'fieldHashes'     => ProductUtils::getJsFieldHashArray($Product),
+            'availableHashes' => \array_flip($Product->availableActiveFieldHashes())
         ];
     },
-    ['productId', 'fields']
+    ['productId', 'fields', 'ignoreDefaultVariant']
 );

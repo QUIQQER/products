@@ -31,6 +31,17 @@ class GenerateImageCache extends QUI\System\Console\Tool
      */
     public function execute()
     {
+        $self = $this;
+
+        QUI::getEvents()->addEvent('onGenerateCacheImagesOfProductsBegin', function ($id, $i, $count) use ($self) {
+            if ($i % 10 === 0) {
+                $out  = \str_pad($i, \mb_strlen($count), '0', \STR_PAD_LEFT);
+                $time = \date('H:i:s');
+
+                $self->writeLn('- '.$time.' :: '.$out.' of '.$count);
+            }
+        });
+
         QUI\ERP\Products\Crons::generateCacheImagesOfProducts();
     }
 }

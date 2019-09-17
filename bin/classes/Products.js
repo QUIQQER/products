@@ -363,6 +363,20 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Get total product count
+         *
+         * @return {Promise}
+         */
+        getProductCount: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_getCount', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
          * Get data for a product SelectItem
          *
          * @param {Number} productId

@@ -465,6 +465,10 @@ class Calc
             $nettoPrice = $Price->getValue();
         }
 
+        if (empty($nettoPrice)) {
+            $nettoPrice = 0;
+        }
+
         $factors                    = [];
         $basisNettoPrice            = $nettoPrice;
         $calculationBasisBruttoList = [];
@@ -491,14 +495,16 @@ class Calc
 
                 // Prozent Angabe
                 case ErpCalc::CALCULATION_PERCENTAGE:
+                    $value = $PriceFactor->getValue();
+
                     switch ($PriceFactor->getCalculationBasis()) {
                         default:
                         case ErpCalc::CALCULATION_BASIS_NETTO:
-                            $priceFactorSum = $PriceFactor->getValue() / 100 * $basisNettoPrice;
+                            $priceFactorSum = $value / 100 * $basisNettoPrice;
                             break;
 
                         case ErpCalc::CALCULATION_BASIS_CURRENTPRICE:
-                            $priceFactorSum = $PriceFactor->getValue() / 100 * $nettoPrice;
+                            $priceFactorSum = $value / 100 * $nettoPrice;
                             break;
                     }
             }

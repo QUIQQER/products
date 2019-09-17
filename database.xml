@@ -23,6 +23,10 @@
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
+            <index>parent</index>
+            <index>category</index>
+            <index>active</index>
+            <index>defaultVariantId</index>
         </table>
 
         <table name="product_categories">
@@ -33,6 +37,7 @@
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
+            <index>parentId</index>
         </table>
 
         <table name="product_fields">
@@ -56,6 +61,8 @@
             <index>systemField</index>
             <index>standardField</index>
             <index>requiredField</index>
+            <index>publicField</index>
+            <index>showInDetails</index>
         </table>
 
         <table name="products_cache">

@@ -44,6 +44,14 @@ class Menu extends QUI\Control
      */
     public function getBody()
     {
+        $cache = $this->getCacheName();
+
+        try {
+            return QUI\Cache\Manager::get($cache);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
         } catch (QUI\Exception $Exception) {
@@ -61,7 +69,11 @@ class Menu extends QUI\Control
             'Rewrite'          => QUI::getRewrite()
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/Menu.html');
+        $result = $Engine->fetch(\dirname(__FILE__).'/Menu.html');
+
+        QUI\Cache\Manager::set($cache, $result);
+
+        return $result;
     }
 
     /**
@@ -207,5 +219,33 @@ class Menu extends QUI\Control
         }
 
         return QUI::getRewrite()->getSite();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getCacheName()
+    {
+        try {
+            $Site    = $this->getSite();
+            $Project = $Site->getProject();
+
+            $params = [
+                'project'           => $Project->getName(),
+                'lang'              => $Project->getLang(),
+                'id'                => $Site->getId(),
+                'idRewrite'         => QUI::getRewrite()->getSite()->getId(),
+                'data-qui'          => 'package/quiqqer/products/bin/controls/frontend/category/Menu',
+                'disableCheckboxes' => $this->getAttribute('disableCheckboxes'),
+                'breadcrumb'        => $this->getAttribute('breadcrumb'),
+                'showTitle'         => $this->getAttribute('showTitle')
+            ];
+
+            $cache = \md5(\implode('', $params));
+        } catch (QUI\Exception $Exception) {
+            return 'quiqqer/products/categories/menu';
+        }
+
+        return 'quiqqer/products/categories/menu/'.$cache;
     }
 }

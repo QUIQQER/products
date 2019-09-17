@@ -56,7 +56,7 @@ class PDF
     {
         $Engine = QUI::getTemplateManager()->getEngine();
 
-        if (QUI\Projects\Project::class != get_class($Project)) {
+        if (empty($Project) || QUI\Projects\Project::class != get_class($Project)) {
             $Project = QUI::getRewrite()->getProject();
         }
 

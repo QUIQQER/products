@@ -46,6 +46,107 @@ class Fields
     }
 
     /**
+     * @param $fieldHash
+     * @return array
+     */
+    public static function parseFieldHashToArray($fieldHash)
+    {
+        $result    = [];
+        $fieldHash = \explode(';', \trim($fieldHash, ';'));
+
+        foreach ($fieldHash as $key => $entry) {
+            $entry    = \explode(':', $entry);
+            $entry[0] = (int)$entry[0];
+
+            $result[$entry[0]] = $entry[1];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return all search hashes from one field hash
+     *
+     * @param string $hash
+     * @return array
+     */
+    public static function getSearchHashesFromFieldHash($hash)
+    {
+        $hashes           = self::parseFieldHashToArray($hash);
+        $foundEmptyValues = false;
+
+        $hashes = \array_map(function ($entry) use (&$foundEmptyValues) {
+            if ($entry === '') {
+                $foundEmptyValues = true;
+
+                return '*';
+            }
+
+            return $entry;
+        }, $hashes);
+
+        $searchHashes = [];
+
+        foreach ($hashes as $fieldId => $value) {
+            $clone = $hashes;
+
+            if (!$foundEmptyValues) {
+                $clone[$fieldId] = '*';
+            }
+
+            $searchHashes[self::generateFieldHashFromArray($clone)] = true;
+
+            if (!$foundEmptyValues) {
+                continue;
+            }
+
+            try {
+                $Field   = FieldHandler::getField($fieldId);
+                $options = $Field->getOptions();
+
+                if (!isset($options['entries'])) {
+                    continue;
+                }
+
+                foreach ($options['entries'] as $option) {
+                    $clone[$fieldId] = $option['valueId'];
+                    $generatedHash   = self::generateFieldHashFromArray($clone);
+
+                    $searchHashes[$generatedHash] = true;
+
+                    if (!\is_numeric($option['valueId'])) {
+                        $clone[$fieldId] = \implode(\unpack("H*", $option['valueId']));
+                        $generatedHash   = self::generateFieldHashFromArray($clone);
+
+                        $searchHashes[$generatedHash] = true;
+                    }
+                }
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception->getMessage());
+            }
+        }
+
+
+
+        return \array_keys($searchHashes);
+    }
+
+    /**
+     * @param $field
+     * @return string
+     */
+    protected static function generateFieldHashFromArray($field)
+    {
+        $result = [];
+
+        foreach ($field as $k => $ce) {
+            $result[] = $k.':'.$ce;
+        }
+
+        return ';'.\implode(';', $result).';';
+    }
+
+    /**
      * Is the object a product field?
      *
      * @param mixed $object
@@ -84,6 +185,10 @@ class Fields
      */
     public static function sortFields($fields, $sort = 'priority')
     {
+        if (empty($fields)) {
+            return $fields;
+        }
+
         // allowed sorting
         switch ($sort) {
             case 'id':
@@ -97,6 +202,15 @@ class Fields
             default:
                 $sort = 'priority';
         }
+
+        // if memory cache exists
+        $cache = FieldSortCache::getFieldCache($fields, $sort);
+
+        if ($cache) {
+            return $cache;
+        }
+
+        // if no memory cache exists
 
         /**
          * @param QUI\ERP\Products\Field\Field $Field
@@ -171,6 +285,15 @@ class Fields
 
             return 0;
         });
+
+        // cache the sorting
+        $cache = [];
+
+        foreach ($fields as $Field) {
+            $cache[] = $Field->getId();
+        }
+
+        FieldSortCache::setFieldCache($fields, $sort, $cache);
 
         return $fields;
     }

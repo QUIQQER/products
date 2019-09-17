@@ -59,6 +59,13 @@ class Products
     public static $fireEventsOnProductSave = true;
 
     /**
+     * This enables the caching flag, equal if quiqqer is in frontend or backend
+     *
+     * @var bool
+     */
+    public static $createFrontendCache = false;
+
+    /**
      * Product permission using?
      * @var null|boolean
      */
@@ -137,11 +144,31 @@ class Products
             self::$list = [];
         }
 
+        // check if serialize product exists
+        //if (QUI::isFrontend()) { // -> mor wollte dies raus haben
+        try {
+            $product          = QUI\Cache\Manager::get('quiqqer/products/'.$pid.'/db-data');
+            self::$list[$pid] = self::getProductByDataResult($pid, $product);
+
+            return self::$list[$pid];
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+        //        }
 
         $Product          = self::getNewProductInstance($pid);
         self::$list[$pid] = $Product;
 
         return $Product;
+    }
+
+    /**
+     * This clean the instance cache for the product manager
+     * use this with caution
+     */
+    public static function cleanProductInstanceMemCache()
+    {
+        self::$list = [];
     }
 
     /**
@@ -245,15 +272,36 @@ class Products
             );
         }
 
-        // @todo interface check
+        if (QUI::isFrontend() || self::$createFrontendCache) {
+            try {
+                QUI\Cache\Manager::get('quiqqer/products/'.$pid.'/db-data');
+            } catch (QUi\Exception $Exception) {
+                QUI\Cache\Manager::set(
+                    'quiqqer/products/'.$pid.'/db-data',
+                    $result[0]
+                );
+            }
+        }
 
-        $type = $result[0]['type'];
+        return self::getProductByDataResult($pid, $result[0]);
+    }
+
+    /**
+     * @param $pid
+     * @param $result
+     * @return QUI\ERP\Products\Product\Types\AbstractType
+     *
+     * // @todo interface check
+     */
+    protected static function getProductByDataResult($pid, $result)
+    {
+        $type = $result['type'];
 
         if (empty($type)) {
             $type = QUI\ERP\Products\Product\Types\Product::class;
         }
 
-        return new $type($pid, $result[0]);
+        return new $type($pid, $result);
     }
 
     /**
@@ -273,7 +321,8 @@ class Products
                 'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
                     'id' => $pid
-                ]
+                ],
+                'limit' => 1
             ]);
         } catch (\Exception $Exception) {
             return false;

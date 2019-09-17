@@ -1432,14 +1432,36 @@
         </locale>
         <locale name="fields.window.productarray.changed.information" html="true">
             <de><![CDATA[
-                Feld-Eigenschaften haben sich geändert welche Produkte direkt betreffen.<br />
+                Es haben sich Feld-Eigenschaften geändert, die Produkte direkt betreffen.<br />
+                Möchtest Du alle Produkte, die das Feld <strong>[fieldId] [fieldName]</strong> besitzen anpassen? <br />
+                Für jedes Produkt werden die Eigenschaften des Feldes <strong>[fieldId] [fieldName]</strong> gesetzt.
+                ]]></de>
+            <en><![CDATA[
+                Field properties have changed which directly affect products.<br />
+                Do you want to customize all products which contain the field <strong>[fieldId] [fieldName]</strong>?<br />
+                For each product the properties of the field <strong>[fieldId] [fieldName]</strong> are set.
+            ]]></en>
+        </locale>
+        <locale name="fields.window.productarray.changed.information.console_tool" html="true">
+            <de><![CDATA[
+                Es haben sich Feld-Eigenschaften geändert, die Produkte direkt betreffen.<br />
                 Möchtest Du alle Produkte welche das Feld <strong>[fieldId] [fieldName]</strong> besitzen anpassen? <br />
                 Für jedes Produkt werden die Eigenschaften des Feldes <strong>[fieldId] [fieldName]</strong> gesetzt.
+                <br/><br/>
+                <p>Es existiert eine <b>große Anzahl an Produkten</b> im System. Um die Feldeigenschaften zu übernehmen, führen Sie in der Kommandozeile des Betriebssystems bitte folgenden Befehl aus:</p>
+                <p>
+                    <pre>[cmd]</pre>
+                </p>
                 ]]></de>
             <en><![CDATA[
                 Field properties have changed which directly affect products<br />
                 Do you want to customize all products which contain the field <strong>[fieldId] [fieldName]</strong>?<br />
                 For each product the properties of the field <strong>[fieldId] [fieldName]</strong> are set.
+                <br/><br/>
+                <p>A large number of products</b> exist. To set the field properties to all products, please execute this command in your system terminal:</p>
+                <p>
+                    <pre>[cmd]</pre>
+                </p>
             ]]></en>
         </locale>
 
@@ -2034,6 +2056,11 @@
             <en><![CDATA[valid to]]></en>
         </locale>
 
+        <locale name="control.variant.reset.fields">
+            <de><![CDATA[Auswahl zurücksetzen]]></de>
+            <en><![CDATA[Reset selected fields]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/products" datatype="php">
@@ -2081,8 +2108,10 @@
             <en><![CDATA[Product autoload]]></en>
         </locale>
         <locale name="quiqqer.products.settings.autoloadAfter.description">
-            <de><![CDATA[Wie oft muss der Benutzer die nächsten Produkte manuell laden (klicken auf "Mehr Laden" Button), damit diese automatisch geladen werden?]]></de>
-            <en><![CDATA[How often must the user manually load the next products (click on "more" button) so that they are loaded automatically?]]></en>
+            <de>
+                <![CDATA[Wie oft muss der Benutzer die nächsten Produkte manuell laden (klicken auf "Mehr Laden" Button), damit diese automatisch geladen werden?]]></de>
+            <en>
+                <![CDATA[How often must the user manually load the next products (click on "more" button) so that they are loaded automatically?]]></en>
         </locale>
         <locale name="quiqqer.products.settings.autoloadAfter.disabled">
             <de><![CDATA[Ausgeschaltet - Produkte werden nicht automatsich geladen]]></de>
@@ -2326,6 +2355,27 @@
         <locale name="empty.select">
             <de><![CDATA[- Bitte auswählen -]]></de>
             <en><![CDATA[- Please select one -]]></en>
+        </locale>
+
+        <locale name="settings.window.products.resetFieldsAction.option.0">
+            <de><![CDATA[Default Werte beachten beim zurücksetzen]]></de>
+            <en><![CDATA[Use default values when resetting]]></en>
+        </locale>
+        <locale name="settings.window.products.resetFieldsAction.option.1">
+            <de><![CDATA[Felder komplett zurücksetzen]]></de>
+            <en><![CDATA[Reset fields completely]]></en>
+        </locale>
+        <locale name="settings.window.products.resetFieldsAction.title">
+            <de><![CDATA[Feldverhalten beim Zurücksetzen]]></de>
+            <en><![CDATA[Field Behavior during Reset]]></en>
+        </locale>
+        <locale name="settings.window.products.resetFieldsAction.description">
+            <de><![CDATA[
+            Diese Einstellung bestimmt das Verhalten im Frontend eines Produktes wenn die Auswahl zurück gesetzt wird.
+            ]]></de>
+            <en><![CDATA[
+            This setting determines the behavior in the frontend of a product when the selection is reset.
+            ]]></en>
         </locale>
     </groups>
 

@@ -290,11 +290,19 @@ class VariantChild extends AbstractType
     }
 
     /**
-     * @return array<
+     * @return array
      */
     public function availableActiveChildFields()
     {
         return $this->getParent()->availableActiveChildFields();
+    }
+
+    /**
+     * @return array
+     */
+    public function availableActiveFieldHashes()
+    {
+        return $this->getParent()->availableActiveFieldHashes();
     }
 
     /**

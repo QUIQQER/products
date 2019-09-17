@@ -9,7 +9,7 @@ namespace QUI\ERP\Products\Utils;
 use QUI;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
-use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Utils\Fields as FieldUtils;
 use QUI\ERP\Products\Product\Exception;
 
 /**
@@ -166,7 +166,7 @@ class Products
             if ($Product->getAttribute('editableVariantFields')) {
                 $editable = $Product->getAttribute('editableVariantFields');
 
-                if (is_string($editable)) {
+                if (\is_string($editable)) {
                     $editable = \json_decode($editable, true);
                 }
 
@@ -192,7 +192,7 @@ class Products
         }
 
 
-        $fields = \QUI\ERP\Products\Handler\Fields::getFields();
+        $fields = FieldHandler::getFields();
         $result = \array_map(function ($Field) {
             /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             return $Field->getId();
@@ -217,7 +217,7 @@ class Products
             if ($Product->getAttribute('inheritedVariantFields')) {
                 $inherited = $Product->getAttribute('inheritedVariantFields');
 
-                if (is_string($inherited)) {
+                if (\is_string($inherited)) {
                     $inherited = \json_decode($inherited, true);
                 }
 
@@ -243,7 +243,7 @@ class Products
         }
 
 
-        $fields = \QUI\ERP\Products\Handler\Fields::getFields();
+        $fields = FieldHandler::getFields();
         $result = \array_map(function ($Field) {
             /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             return $Field->getId();
@@ -306,63 +306,122 @@ class Products
             return;
         }
 
-        $available = $Product->availableActiveChildFields();
-
         // attribute groups
-        $groupList = $Product->getFieldsByType(
-            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS
-        );
+        $groupList = $Product->getFieldsByType(FieldHandler::TYPE_ATTRIBUTE_GROUPS);
 
+        $available        = $Product->availableActiveChildFields();
+        $availableHashes  = $Product->availableActiveFieldHashes();
+        $availableEntries = [];
+
+        // parse allowed field values (=options)
+        $currentVariantHash = Products::generateVariantHashFromFields($groupList);
+        $searchHashes       = FieldUtils::getSearchHashesFromFieldHash($currentVariantHash);
+
+        foreach ($availableHashes as $hash) {
+            $hashArray = FieldUtils::parseFieldHashToArray($hash);
+
+            foreach ($hashArray as $fieldId => $fieldValue) {
+                if (isset($availableEntries[$fieldId][$fieldValue])) {
+                    continue;
+                }
+
+                if ($fieldValue === '') {
+                    continue;
+                }
+
+
+                if ($currentVariantHash === $hash) {
+                    $availableEntries[$fieldId][$fieldValue] = true;
+                    continue;
+                }
+
+                foreach ($searchHashes as $searchHash) {
+                    if (\fnmatch($searchHash, $hash)) {
+                        $availableEntries[$fieldId][$fieldValue] = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        // set field option status
         foreach ($groupList as $Field) {
             /* @var $Field QUI\ERP\Products\Field\Types\AttributeGroup */
             $fieldId = $Field->getId();
+            $Field->hideEntries();
             $Field->disableEntries();
+
+            $options = $Field->getOptions();
+            $entries = $options['entries'];
 
             if (!isset($available[$fieldId])) {
                 continue;
             }
 
-            $options = $Field->getOptions();
-            $entries = $options['entries'];
-
             $allowed = $available[$fieldId];
             $allowed = \array_flip($allowed);
 
             foreach ($entries as $key => $value) {
-                $valueId = $value['valueId'];
+                $valueId       = $value['valueId'];
+                $hashedValueId = false;
 
-                if (isset($allowed[$valueId])) {
+                if (!\is_numeric($valueId)) {
+                    $hashedValueId = \implode(\unpack("H*", $valueId));
+
+                    if (!isset($allowed[$valueId]) && !isset($allowed[$hashedValueId])) {
+                        continue;
+                    }
+                }
+
+                if (!isset($allowed[$valueId])) {
+                    continue;
+                }
+
+                $Field->showEntry($key);
+
+                if (isset($availableEntries[$fieldId][$valueId])) {
                     $Field->enableEntry($key);
+                    continue;
+                }
+
+                if ($hashedValueId && isset($availableEntries[$fieldId][$hashedValueId])) {
+                    $Field->enableEntry($key);
+                    continue;
+                }
+            }
+        }
+    }
+
+    /**
+     * @param QUI\ERP\Products\Product\Product $Product
+     * @return array
+     */
+    public static function getJsFieldHashArray(QUI\ERP\Products\Product\Product $Product)
+    {
+        if (!($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) &&
+            !($Product instanceof QUI\ERP\Products\Product\Types\VariantChild)) {
+            return [];
+        }
+
+        $availableHashes = $Product->availableActiveFieldHashes();
+        $result          = [];
+
+        foreach ($availableHashes as $hash) {
+            $hashArray = FieldUtils::parseFieldHashToArray($hash);
+
+            foreach ($hashArray as $fieldId => $value) {
+                if (!isset($result[$fieldId])) {
+                    $result[$fieldId] = [];
+                }
+
+                foreach ($hashArray as $fid => $v) {
+                    $result[$fieldId][$fid][$v][] = $hash;
                 }
             }
         }
 
-        // attribute list
-//        $attributeList = $Product->getFieldsByType(
-//            QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST
-//        );
-//
-//        foreach ($attributeList as $Field) {
-//            /* @var $Field QUI\ERP\Products\Field\Types\AttributeGroup */
-//            $fieldId = $Field->getId();
-//            $Field->disableEntries();
-//
-//            if (!isset($available[$fieldId])) {
-//                continue;
-//            }
-//
-//            $options = $Field->getOptions();
-//            $entries = $options['entries'];
-//
-//            $allowed = $available[$fieldId];
-//            $allowed = \array_flip($allowed);
-//
-//            foreach ($entries as $key => $value) {
-//                if (isset($allowed[$key])) {
-//                    $Field->enableEntry($key);
-//                }
-//            }
-//        }
+        return $result;
     }
 
     /**
@@ -394,7 +453,7 @@ class Products
      */
     public static function checkUrlByUrlFieldValue($urlFieldValue, $categoryId, $ignoreProductId = false)
     {
-        $urlCacheField = 'F'.Fields::FIELD_URL;
+        $urlCacheField = 'F'.FieldHandler::FIELD_URL;
         $table         = QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
 
         $where = [];

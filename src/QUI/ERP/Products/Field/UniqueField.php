@@ -285,7 +285,12 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     public function getPrice()
     {
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
-        $Price    = new QUI\ERP\Money\Price(0, $Currency);
+
+        if (\is_numeric($this->value)) {
+            $Price = new QUI\ERP\Money\Price($this->value, $Currency);
+        } else {
+            $Price = new QUI\ERP\Money\Price(0, $Currency);
+        }
 
         return $Price;
     }
@@ -436,8 +441,6 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     {
         $options   = $this->getOptions();
         $value     = $this->getValue();
-        $valueText = '-';
-
         $json      = null;
         $userinput = '';
 
@@ -452,6 +455,66 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                 }
             }
         }
+
+        return [
+            'id'         => $this->getId(),
+            'title'      => $this->getTitle(),
+            'type'       => $this->getType(),
+            'options'    => $options,
+            'isRequired' => $this->isRequired(),
+            'isStandard' => $this->isStandard(),
+            'isSystem'   => $this->isSystem(),
+            'isPublic'   => $this->isPublic(),
+
+            'prefix'        => $this->prefix,
+            'suffix'        => $this->suffix,
+            'priority'      => $this->priority,
+            'custom'        => $this->isCustomField(),
+            'custom_calc'   => $this->custom_calc,
+            'unassigned'    => $this->isUnassigned(),
+            'value'         => $value,
+            'valueText'     => $this->getValueText(),
+            'userinput'     => $userinput,
+            'showInDetails' => $this->showInDetails()
+        ];
+    }
+
+    /**
+     * Get field value text
+     *
+     * @return string
+     */
+    protected function getValueText()
+    {
+        if (isset($this->custom_calc['valueText'])) {
+            return $this->custom_calc['valueText'];
+        }
+
+        $valueText = '-';
+
+        switch ($this->type) {
+            case QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST:
+                $valueText = $this->getValueTextProductAttributeList();
+                break;
+
+            case QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS:
+                $valueText = $this->getValueTextAttributeGroup();
+                break;
+        }
+
+        return $valueText;
+    }
+
+    /**
+     * Parse value text of field type ProductAttributeList
+     *
+     * @return string
+     */
+    protected function getValueTextProductAttributeList()
+    {
+        $options   = $this->getOptions();
+        $value     = $this->getValue();
+        $valueText = '-';
 
         if (!empty($options) && isset($options['entries'])) {
             $current = QUI::getLocale()->getCurrent();
@@ -508,31 +571,54 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             }
         }
 
-        if (isset($this->custom_calc['valueText'])) {
-            $valueText = $this->custom_calc['valueText'];
+        return $valueText;
+    }
+
+    /**
+     * Parse value text of field type AttributeGroup
+     *
+     * @return string
+     */
+    protected function getValueTextAttributeGroup()
+    {
+        $options   = $this->getOptions();
+        $value     = $this->getValue();
+        $valueText = '-';
+
+        if (empty($options['entries'])) {
+            return $valueText;
         }
 
-        return [
-            'id'         => $this->getId(),
-            'title'      => $this->getTitle(),
-            'type'       => $this->getType(),
-            'options'    => $options,
-            'isRequired' => $this->isRequired(),
-            'isStandard' => $this->isStandard(),
-            'isSystem'   => $this->isSystem(),
-            'isPublic'   => $this->isPublic(),
+        $current = QUI::getLocale()->getCurrent();
 
-            'prefix'        => $this->prefix,
-            'suffix'        => $this->suffix,
-            'priority'      => $this->priority,
-            'custom'        => $this->isCustomField(),
-            'custom_calc'   => $this->custom_calc,
-            'unassigned'    => $this->isUnassigned(),
-            'value'         => $value,
-            'valueText'     => $valueText,
-            'userinput'     => $userinput,
-            'showInDetails' => $this->showInDetails()
-        ];
+        foreach ($options['entries'] as $option) {
+            if ($value != $option['valueId']) {
+                continue;
+            }
+
+            if (!empty($option['title'][$current])) {
+                return $option['title'][$current];
+            }
+
+            // fallback to default title (first language)
+            return \reset($option['title']);
+        }
+
+        // Get default value
+        foreach ($options['entries'] as $option) {
+            if (empty($option['selected'])) {
+                continue;
+            }
+
+            if (!empty($option['title'][$current])) {
+                return $option['title'][$current];
+            }
+
+            // fallback to default title (first language)
+            return \reset($option['title']);
+        }
+
+        return $valueText;
     }
 
     /**

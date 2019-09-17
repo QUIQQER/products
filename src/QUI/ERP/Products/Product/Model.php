@@ -105,12 +105,11 @@ class Model extends QUI\QDOM
         $this->id     = (int)$pid;
         $this->active = (int)$product['active'] ? true : false;
 
-        if (isset($product['permissions'])) {
+        if (!empty($product['permissions']) && $product['permissions'] !== '[]') {
             $this->permissions = \json_decode($product['permissions'], true);
         }
 
         // view permissions prüfung wird im Frontend view gemacht (ViewFrontend)
-
 
         unset($product['id']);
         unset($product['active']);
@@ -189,12 +188,6 @@ class Model extends QUI\QDOM
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);
             }
-
-            // bin mir unsicher ob dies sinn macht (by hen)
-            // normal muss die kategorie und globale einstellung verwendet werden
-//                if (isset($field['showInDetails'])) {
-//                    $Field->setShowInDetailsStatus((bool)$field['showInDetails']);
-//                }
         }
 
         // all standard and all system fields must be in the product
@@ -732,6 +725,21 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Return a calculated price field
+     *
+     * @param $FieldId
+     *
+     * @return false|QUI\ERP\Products\Field\UniqueField
+     *
+     * @throws Exception
+     * @throws QUI\Exception
+     */
+    public function getCalculatedPrice($FieldId)
+    {
+        return $this->createUniqueProduct()->getCalculatedPrice($FieldId);
+    }
+
+    /**
      * Alias for getPrice
      * So, the Product has the same construction as the UniqueProduct
      *
@@ -1102,6 +1110,17 @@ class Model extends QUI\QDOM
         if (Products::$fireEventsOnProductSave) {
             QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', [$this]);
         }
+
+        // cache db attributes
+        $result = QUI::getDataBase()->fetch([
+            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            'where' => [
+                'id' => $this->getId()
+            ],
+            'limit' => 1
+        ]);
+
+        QUI\Cache\Manager::set('quiqqer/products/'.$this->getId().'/db-data', $result[0]);
     }
 
     /**

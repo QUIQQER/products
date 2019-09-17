@@ -40,7 +40,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$TabContainer = null;
+            this.$TabContainer    = null;
+            this.$fieldHashes     = {};
+            this.$availableHashes = {};
 
             this.$Tabbar  = null;
             this.$Touch   = null;
@@ -104,6 +106,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                             Helper    = new Element('div', {
                                 html: result.html
                             });
+
+                        self.$fieldHashes     = result.fieldHashes;
+                        self.$availableHashes = result.availableHashes;
 
                         Container.set('data-qui', self.getType());
                         Container.set('data-productid', productId);
