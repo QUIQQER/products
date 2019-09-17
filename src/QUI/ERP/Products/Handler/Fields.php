@@ -22,60 +22,60 @@ class Fields
     /**
      * Fields
      */
-    const FIELD_PRICE            = 1;
-    const FIELD_VAT              = 2;
-    const FIELD_PRODUCT_NO       = 3;
-    const FIELD_TITLE            = 4;
-    const FIELD_SHORT_DESC       = 5;
-    const FIELD_CONTENT          = 6;
-    const FIELD_SUPPLIER         = 7;
-    const FIELD_MANUFACTURER     = 8;
-    const FIELD_IMAGE            = 9; // Main product image
-    const FIELD_FOLDER           = 10; // Main media folder
-    const FIELD_STOCK            = 12;
-    const FIELD_KEYWORDS         = 13;
-    const FIELD_EQUIPMENT        = 14;
+    const FIELD_PRICE = 1;
+    const FIELD_VAT = 2;
+    const FIELD_PRODUCT_NO = 3;
+    const FIELD_TITLE = 4;
+    const FIELD_SHORT_DESC = 5;
+    const FIELD_CONTENT = 6;
+    const FIELD_SUPPLIER = 7;
+    const FIELD_MANUFACTURER = 8;
+    const FIELD_IMAGE = 9; // Main product image
+    const FIELD_FOLDER = 10; // Main media folder
+    const FIELD_STOCK = 12;
+    const FIELD_KEYWORDS = 13;
+    const FIELD_EQUIPMENT = 14;
     const FIELD_SIMILAR_PRODUCTS = 15;
-    const FIELD_PRICE_OFFER      = 16; // angebotspreis
-    const FIELD_PRICE_RETAIL     = 17; // UVP - RRP
-    const FIELD_PRIORITY         = 18; // Product Priority
-    const FIELD_URL              = 19; // Product URL
-    const FIELD_UNIT             = 20;
-    const FIELD_EAN              = 21;
-    const FIELD_WEIGHT           = 22;
+    const FIELD_PRICE_OFFER = 16; // angebotspreis
+    const FIELD_PRICE_RETAIL = 17; // UVP - RRP
+    const FIELD_PRIORITY = 18; // Product Priority
+    const FIELD_URL = 19; // Product URL
+    const FIELD_UNIT = 20;
+    const FIELD_EAN = 21;
+    const FIELD_WEIGHT = 22;
 
     /**
      * Types
      */
-    const TYPE_BOOL                = 'BoolType';
-    const TYPE_DATE                = 'Date';
-    const TYPE_FLOAT               = 'FloatType';
-    const TYPE_FOLDER              = 'Folder';
-    const TYPE_GROUP_LIST          = 'GroupList';
-    const TYPE_IMAGE               = 'Image';
-    const TYPE_INPUT               = 'Input';
-    const TYPE_INPUT_MULTI_LANG    = 'InputMultiLang';
-    const TYPE_INT                 = 'IntType';
-    const TYPE_PRICE               = 'Price';
-    const TYPE_PRICE_BY_QUANTITY   = 'PriceByQuantity';
+    const TYPE_BOOL = 'BoolType';
+    const TYPE_DATE = 'Date';
+    const TYPE_FLOAT = 'FloatType';
+    const TYPE_FOLDER = 'Folder';
+    const TYPE_GROUP_LIST = 'GroupList';
+    const TYPE_IMAGE = 'Image';
+    const TYPE_INPUT = 'Input';
+    const TYPE_INPUT_MULTI_LANG = 'InputMultiLang';
+    const TYPE_INT = 'IntType';
+    const TYPE_PRICE = 'Price';
+    const TYPE_PRICE_BY_QUANTITY = 'PriceByQuantity';
     const TYPE_PRICE_BY_TIMEPERIOD = 'PriceByTimePeriod';
-    const TYPE_TEXTAREA            = 'Textarea';
+    const TYPE_TEXTAREA = 'Textarea';
     const TYPE_TEXTAREA_MULTI_LANG = 'TextareaMultiLang';
-    const TYPE_URL                 = 'Url';
-    const TYPE_VAT                 = 'Vat';
-    const TYPE_TAX                 = 'Tax';
-    const TYPE_PRODCUCTS           = 'Products';
-    const TYPE_UNITSELECT          = 'UnitSelect';
-    const TYPE_TIMEPERIOD          = 'TimePeriod';
+    const TYPE_URL = 'Url';
+    const TYPE_VAT = 'Vat';
+    const TYPE_TAX = 'Tax';
+    const TYPE_PRODCUCTS = 'Products';
+    const TYPE_UNITSELECT = 'UnitSelect';
+    const TYPE_TIMEPERIOD = 'TimePeriod';
 
-    const TYPE_ATTRIBUTES       = 'AttributeGroup';
+    const TYPE_ATTRIBUTES = 'AttributeGroup';
     const TYPE_ATTRIBUTE_GROUPS = 'AttributeGroup';
-    const TYPE_ATTRIBUTE_LIST   = 'ProductAttributeList';
+    const TYPE_ATTRIBUTE_LIST = 'ProductAttributeList';
 
     /**
      * product array changed types
      */
-    const PRODUCT_ARRAY_CHANGED   = 'pac'; // product array has changed
+    const PRODUCT_ARRAY_CHANGED = 'pac'; // product array has changed
     const PRODUCT_ARRAY_UNCHANGED = 'pau'; // product array hasn't changed
 
     /**
@@ -552,7 +552,6 @@ class Fields
 
         $cacheName = 'quiqqer/products/fields';
 
-
         try {
             self::$fieldTypes = QUI\Cache\Manager::get($cacheName);
 
@@ -642,6 +641,15 @@ class Fields
             return self::$fieldTypeData[$type];
         }
 
+        $cacheName = 'quiqqer/products/fields/'.\md5($type);
+
+        try {
+            self::$fieldTypeData[$type] = QUI\Cache\Manager::get($cacheName);
+
+            return self::$fieldTypeData[$type];
+        } catch (QUI\Exception $Exception) {
+        }
+
         $types = self::getFieldTypes();
         $found = \array_filter($types, function ($entry) use ($type) {
             return $entry['name'] == $type;
@@ -654,6 +662,8 @@ class Fields
         }
 
         self::$fieldTypeData[$type] = \reset($found);
+
+        QUI\Cache\Manager::set($cacheName, self::$fieldTypeData[$type]);
 
         return self::$fieldTypeData[$type];
     }

@@ -20,7 +20,8 @@ class ProductCache
     public static function create($productId, $createControlCache = false)
     {
         try {
-            $Product = Products::getNewProductInstance($productId);
+            $Product  = Products::getNewProductInstance($productId);
+            $variants = [];
 
             if (!$Product->isActive()) {
                 return;
@@ -30,7 +31,8 @@ class ProductCache
             $Product->getView()->getPrice();
 
             if ($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
-                $Product->getVariants();
+                $variants = $Product->getVariants();
+
                 $Product->getImages();
                 $Product->availableActiveFieldHashes();
             }
@@ -44,7 +46,13 @@ class ProductCache
                 $Control->create();
             }
 
-            Products::cleanProductInstanceMemCache();
+            if (!($Product instanceof QUI\ERP\Products\Product\Types\VariantParent)) {
+                return;
+            }
+
+            foreach ($variants as $Variant) {
+                self::create($Variant->getId());
+            }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addInfo($Exception->getMessage());
         }
