@@ -27,7 +27,6 @@
             <index>category</index>
             <index>active</index>
             <index>defaultVariantId</index>
-            <index>variantHash</index>
         </table>
 
         <table name="product_categories">
