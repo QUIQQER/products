@@ -83,6 +83,10 @@
             <field type="BIGINT(10) NULL DEFAULT NULL">parentId</field>
 
             <primary>id,lang</primary>
+            <index>type</index>
+            <index>category</index>
+            <index>active</index>
+            <index>parentId</index>
         </table>
     </global>
 
