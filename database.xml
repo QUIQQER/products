@@ -35,7 +35,7 @@
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
-            <index>parent</index>
+            <index>parentId</index>
         </table>
 
         <table name="product_fields">
