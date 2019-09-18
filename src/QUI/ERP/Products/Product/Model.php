@@ -12,17 +12,13 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Products\Utils\Products as ProductUtils;
-use QUI\ERP\Products\Handler\Search as SearchHandler;
-
 use QUI\Projects\Media\Utils as MediaUtils;
+use QUI\Utils\Security\Orthos;
+use QUI\ERP\Products\Handler\Search as SearchHandler;
 
 /**
  * Class Controller
  * Product Model
- *
- * This class is the main data object for a product
- * This class handles all data from and for a product
  *
  * @package QUI\ERP\Products\Product
  *
@@ -73,7 +69,7 @@ class Model extends QUI\QDOM
     protected $Currency = null;
 
     /**
-     * Activate / Deactivate status
+     * Active / Deactive status
      *
      * @var bool
      */
@@ -83,41 +79,55 @@ class Model extends QUI\QDOM
      * Model constructor
      *
      * @param integer $pid - Product-ID
-     * @param array $product - Product Data
      *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
      */
-    public function __construct($pid, $product = [])
+    public function __construct($pid)
     {
-        if (empty($product)) {
+        $this->id = (int)$pid;
+
+        $result = QUI::getDataBase()->fetch([
+            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            'where' => [
+                'id' => $this->getId()
+            ]
+        ]);
+
+        if (!isset($result[0])) {
+            // if not exists, so we cleanup the cache table table, too
+            QUI::getDataBase()->delete(
+                QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+                ['id' => $this->getId()]
+            );
+
             throw new QUI\ERP\Products\Product\Exception(
                 [
                     'quiqqer/products',
                     'exception.product.not.found',
-                    ['productId' => $pid]
+                    ['productId' => $this->getId()]
                 ],
                 404,
-                ['id' => $pid]
+                ['id' => $this->getId()]
             );
         }
 
-        $this->id     = (int)$pid;
-        $this->active = (int)$product['active'] ? true : false;
+        $this->active = (int)$result[0]['active'] ? true : false;
 
-        if (!empty($product['permissions']) && $product['permissions'] !== '[]') {
-            $this->permissions = \json_decode($product['permissions'], true);
+        if (isset($result[0]['permissions'])) {
+            $this->permissions = \json_decode($result[0]['permissions'], true);
         }
 
         // view permissions prüfung wird im Frontend view gemacht (ViewFrontend)
 
-        unset($product['id']);
-        unset($product['active']);
 
-        $this->setAttributes($product);
+        unset($result[0]['id']);
+        unset($result[0]['active']);
+
+        $this->setAttributes($result[0]);
 
         // categories
-        $categories = \explode(',', \trim($product['categories'], ','));
+        $categories = \explode(',', \trim($result[0]['categories'], ','));
 
         if (\is_array($categories)) {
             foreach ($categories as $categoryId) {
@@ -151,7 +161,7 @@ class Model extends QUI\QDOM
 
 
         // fields
-        $fields = \json_decode($product['fieldData'], true);
+        $fields = \json_decode($result[0]['fieldData'], true);
 
         if (!\is_array($fields)) {
             $fields = [];
@@ -164,27 +174,27 @@ class Model extends QUI\QDOM
 
             try {
                 $Field = Fields::getField($field['id']);
+                $Field->setValue($field['value']);
+
+                if (isset($field['unassigned'])) {
+                    $Field->setUnassignedStatus($field['unassigned']);
+                }
+
+                if (isset($field['ownField'])) {
+                    $Field->setOwnFieldStatus($field['ownField']);
+                }
+
+                if (isset($field['isPublic'])) {
+                    $Field->setPublicStatus((bool)$field['isPublic']);
+                }
+
+                // bin mir unsicher ob dies sinn macht (by hen)
+                // normal muss die kategorie und globale einstellung verwendet werden
+//                if (isset($field['showInDetails'])) {
+//                    $Field->setShowInDetailsStatus((bool)$field['showInDetails']);
+//                }
 
                 $this->fields[$Field->getId()] = $Field;
-            } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);
-                continue;
-            }
-
-            if (isset($field['unassigned'])) {
-                $Field->setUnassignedStatus($field['unassigned']);
-            }
-
-            if (isset($field['ownField'])) {
-                $Field->setOwnFieldStatus($field['ownField']);
-            }
-
-            if (isset($field['isPublic'])) {
-                $Field->setPublicStatus((bool)$field['isPublic']);
-            }
-
-            try {
-                $Field->setValue($field['value']);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);
             }
@@ -204,21 +214,6 @@ class Model extends QUI\QDOM
                 $this->fields[$Field->getId()] = $Field;
                 continue;
             }
-        }
-
-        // editable Variant Fields
-        if (!empty($product['editableVariantFields']) && \is_string($product['editableVariantFields'])) {
-            $this->setAttribute(
-                'editableVariantFields',
-                \json_decode($product['editableVariantFields'], true)
-            );
-        }
-
-        if (!empty($product['inheritedVariantFields']) && \is_string($product['inheritedVariantFields'])) {
-            $this->setAttribute(
-                'inheritedVariantFields',
-                \json_decode($product['inheritedVariantFields'], true)
-            );
         }
 
         if (\defined('QUIQQER_BACKEND')) {
@@ -268,6 +263,7 @@ class Model extends QUI\QDOM
      * Return the product as unique product
      *
      * @param QUI\Interfaces\Users\User|null $User
+     * @param QUI\ERP\Currency\Currency|null $Currency - optional, the unique product can be converted into another currency
      * @return UniqueProduct
      *
      * @throws QUI\Exception
@@ -355,16 +351,13 @@ class Model extends QUI\QDOM
             } catch (QUI\Exception $Exception) {
             }
 
+
             $MainFolder = $this->createMediaFolder();
 
             try {
-                if ($MainFolder->childWithNameExists($fieldId)) {
-                    $Folder = $MainFolder->getChildByName($fieldId);
-                } else {
-                    $Folder = $MainFolder->createFolder($fieldId);
-                    $Folder->setAttribute('order', 'priority ASC');
-                    $Folder->save();
-                }
+                $Folder = $MainFolder->createFolder($fieldId);
+                $Folder->setAttribute('order', 'priority ASC');
+                $Folder->save();
             } catch (QUI\Exception $Exception) {
                 if ($Exception->getCode() != 701) {
                     throw $Exception;
@@ -390,15 +383,9 @@ class Model extends QUI\QDOM
         $Parent = Products::getParentMediaFolder();
 
         try {
-            $productId = $this->getId();
-
-            if ($Parent->childWithNameExists($productId)) {
-                $Folder = $Parent->getChildByName($productId);
-            } else {
-                $Folder = $Parent->createFolder($this->getId());
-                $Folder->setAttribute('order', 'priority ASC');
-                $Folder->save();
-            }
+            $Folder = $Parent->createFolder($this->getId());
+            $Folder->setAttribute('order', 'priority ASC');
+            $Folder->save();
         } catch (QUI\Exception $Exception) {
             if ($Exception->getCode() != 701) {
                 throw $Exception;
@@ -499,9 +486,9 @@ class Model extends QUI\QDOM
         $Category = $this->getCategory();
         $Site     = $Category->getSite($Project);
 
-        if ($Site->getAttribute('quiqqer.products.fake.type')
-            || $Site->getAttribute('type') !== 'quiqqer/products:types/category'
-               && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
+        if ($Site->getAttribute('quiqqer.products.fake.type') ||
+            $Site->getAttribute('type') !== 'quiqqer/products:types/category'
+            && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
         ) {
             QUI\System\Log::addWarning(
                 QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', [
@@ -532,27 +519,9 @@ class Model extends QUI\QDOM
      */
     public function getUrlName()
     {
-        $url         = '';
-        $useUrlField = false;
-
-        try {
-            $Field       = $this->getField(Fields::FIELD_URL);
-            $url         = $Field->getValueByLocale();
-            $useUrlField = true;
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addDebug($Exception->getMessage());
-        }
-
-        if (empty($url)) {
-            $useUrlField = false;
-            $url         = QUI\Projects\Site\Utils::clearUrl($this->getTitle());
-        }
-
-        $parts = [$url];
-
-        if ($useUrlField === false) {
-            $parts[] = $this->getId();
-        }
+        $parts   = [];
+        $parts[] = Orthos::urlEncodeString($this->getTitle());
+        $parts[] = $this->getId();
 
         return \urlencode(\implode(QUI\Rewrite::URL_PARAM_SEPARATOR, $parts));
     }
@@ -677,7 +646,7 @@ class Model extends QUI\QDOM
     /**
      * Return the price of the product
      *
-     * Observes all price fields and searches for the correct price field at this time.
+     * Beachtet alle Preisfelder und sucht das zu diesem Zeitpunkt richtig Preisfeld
      *
      * @param null|QUI\Interfaces\Users\User $User - optional, default = Nobody
      * @return QUI\ERP\Money\Price
@@ -686,7 +655,7 @@ class Model extends QUI\QDOM
      */
     public function getPrice($User = null)
     {
-        return ProductUtils::getPriceFieldForProduct($this, $User);
+        return QUI\ERP\Products\Utils\Products::getPriceFieldForProduct($this, $User);
     }
 
     /**
@@ -725,21 +694,6 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * Return a calculated price field
-     *
-     * @param $FieldId
-     *
-     * @return false|QUI\ERP\Products\Field\UniqueField
-     *
-     * @throws Exception
-     * @throws QUI\Exception
-     */
-    public function getCalculatedPrice($FieldId)
-    {
-        return $this->createUniqueProduct()->getCalculatedPrice($FieldId);
-    }
-
-    /**
      * Alias for getPrice
      * So, the Product has the same construction as the UniqueProduct
      *
@@ -760,16 +714,10 @@ class Model extends QUI\QDOM
      * @return QUI\ERP\Money\Price
      *
      * @throws QUI\Exception
-     *
-     * @todo we have maybe a bug here; in theory all field combinations would have to be tested
      */
     public function getMinimumPrice($User = null)
     {
         $cacheName = 'quiqqer/products/'.$this->getId().'/prices/min';
-
-        if ($User && $User instanceof QUI\Interfaces\Users\User) {
-            $cacheName = 'quiqqer/products/'.$this->getId().'/prices/'.$User->getId().'/min';
-        }
 
         try {
             $data     = QUI\Cache\Manager::get($cacheName);
@@ -780,60 +728,53 @@ class Model extends QUI\QDOM
         }
 
         // search all custom fields, and set the minimum
-        $Clone        = Products::getNewProductInstance($this->getId());
-        $Calc         = QUI\ERP\Products\Utils\Calc::getInstance($User); // @todo netto user nutzen
-        $Price        = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice();
-        $currentPrice = $Price->value();
+        $Clone  = new Product($this->getId());
+        $Calc   = QUI\ERP\Products\Utils\Calc::getInstance($User); // @todo netto user nutzen
+        $fields = $Clone->getFields();
 
-        if (QUI::getPackage('quiqqer/products')
-            ->getConfig()
-            ->get('products', 'useAttributeListsForMinMaxPriceCalculation')
-        ) {
-            $fields = $Clone->getFieldsByType([
-                Fields::TYPE_ATTRIBUTE_LIST
-            ]);
-
-            // alle felder müssen erst einmal gesetzt werden
-            /* @var $Field QUI\ERP\Products\Field\Field */
-            foreach ($fields as $Field) {
-                if (!$Field->isCustomField()) {
-                    continue;
-                }
-
-                $options = $Field->getOptions();
-
-                if (\count($options['entries'])) {
-                    $Clone->getField($Field->getId())->setValue(0);
-                }
+        // alle felder müssen erst einmal gesetzt werden
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        foreach ($fields as $Field) {
+            if (!$Field->isCustomField()) {
+                continue;
             }
 
-            /* @var $Field QUI\ERP\Products\Field\Field */
-            foreach ($fields as $Field) {
-                if (!$Field->isCustomField()) {
-                    continue;
-                }
+            $options = $Field->getOptions();
 
-                $options = $Field->getOptions();
+            if (isset($options['entries']) && \count($options['entries'])) {
+                $Clone->getField($Field->getId())->setValue(0);
+            }
+        }
 
-                foreach ($options['entries'] as $index => $data) {
-                    $Clone->getField($Field->getId())->setValue($index);
+        $Price        = $Clone->createUniqueProduct()->calc($Calc)->getPrice();
+        $currentPrice = $Price->value();
 
-                    $price = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice()->value();
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        foreach ($fields as $Field) {
+            if (!$Field->isCustomField()) {
+                continue;
+            }
 
-                    if ($currentPrice > $price) {
-                        $currentPrice = $price;
-                    }
+            $options = $Field->getOptions();
+
+            if (!isset($options['entries'])) {
+                continue;
+            }
+
+            foreach ($options['entries'] as $index => $data) {
+                $Clone->getField($Field->getId())->setValue($index);
+
+                $price = $Clone->createUniqueProduct()->calc($Calc)->getPrice()->value();
+
+                if ($currentPrice > $price) {
+                    $currentPrice = $price;
                 }
             }
         }
 
         $Result = new QUI\ERP\Money\Price($currentPrice, $Price->getCurrency());
 
-        try {
-            QUI\Cache\Manager::set($cacheName, $Result->toArray());
-        } catch (\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-        }
+        QUI\Cache\Manager::set($cacheName, $Result->toArray());
 
         return $Result;
     }
@@ -858,35 +799,32 @@ class Model extends QUI\QDOM
         } catch (QUI\Exception $Exception) {
         }
 
-        $Clone        = Products::getNewProductInstance($this->getId());
-        $Calc         = QUI\ERP\Products\Utils\Calc::getInstance($User);
-        $Price        = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice();
+        $Clone  = new Product($this->getId());
+        $Calc   = QUI\ERP\Products\Utils\Calc::getInstance($User);
+        $fields = $Clone->getFields();
+
+        $Price        = $Clone->createUniqueProduct()->calc($Calc)->getPrice();
         $currentPrice = $Price->value();
 
-        if (QUI::getPackage('quiqqer/products')
-            ->getConfig()
-            ->get('products', 'useAttributeListsForMinMaxPriceCalculation')
-        ) {
-            $fields = $Clone->getFieldsByType([
-                Fields::TYPE_ATTRIBUTE_LIST
-            ]);
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        foreach ($fields as $Field) {
+            if (!$Field->isCustomField()) {
+                continue;
+            }
 
-            /* @var $Field QUI\ERP\Products\Field\Field */
-            foreach ($fields as $Field) {
-                if (!$Field->isCustomField()) {
-                    continue;
-                }
+            $options = $Field->getOptions();
 
-                $options = $Field->getOptions();
+            if (!isset($options['entries'])) {
+                continue;
+            }
 
-                foreach ($options['entries'] as $index => $data) {
-                    $Clone->getField($Field->getId())->setValue($index);
+            foreach ($options['entries'] as $index => $data) {
+                $Clone->getField($Field->getId())->setValue($index);
 
-                    $price = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice()->value();
+                $price = $Clone->createUniqueProduct()->calc($Calc)->getPrice()->value();
 
-                    if ($currentPrice < $price) {
-                        $currentPrice = $price;
-                    }
+                if ($currentPrice < $price) {
+                    $currentPrice = $price;
                 }
             }
         }
@@ -938,12 +876,10 @@ class Model extends QUI\QDOM
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($fieldList as $Field) {
-            $field = \array_merge(
+            $fields[] = \array_merge(
                 $Field->toProductArray(),
                 $Field->getAttributes()
             );
-
-            $fields[] = $field;
         }
 
         if (!empty($fields)) {
@@ -1000,61 +936,17 @@ class Model extends QUI\QDOM
     {
         QUI\Permissions\Permission::checkPermission('product.edit');
 
-        // cleanup urls
-        $urlField = \array_filter($fieldData, function ($field) {
-            return $field['id'] === Fields::FIELD_URL;
-        });
-
-        $urlKey   = \array_key_first($urlField);
-        $urlField = \array_values($urlField);
-        $urls     = [];
-
-        if (isset($urlField[0])) {
-            $urls = $urlField[0]['value'];
-        }
-
-        if (empty($urls)) {
-            $urls = [];
-        }
-
-        foreach ($urls as $lang => $url) {
-            if (empty($url)) {
-                continue;
-            }
-
-            $urls[$lang] = QUI\Projects\Site\Utils::clearUrl($url);
-        }
-
-        $fieldData[$urlKey]['value'] = $urls;
-        $this->getField(Fields::FIELD_URL)->setValue($urls);
-
-        // if variant child
-        // only save non inherited fields
-        if ($this instanceof QUI\ERP\Products\Product\Types\VariantChild) {
-            $inheritedFields = ProductUtils::getInheritedFieldIdsForProduct($this);
-            $inheritedFields = \array_flip($inheritedFields);
-
-            $fieldData = \array_filter($fieldData, function ($field) use ($inheritedFields) {
-                $Field = Fields::getField($field['id']);
-
-                if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST) {
-                    return true;
-                }
-
-                if ($Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS) {
-                    return true;
-                }
-
-                return isset($inheritedFields[$field['id']]);
-            });
-        }
-
-        // check url
-        $this->checkProductUrl($fieldData);
-
-        $categoryIds = \array_keys($this->categories);
+        $categoryIds = [];
+        $categories  = $this->getCategories();
 
         /* @var $Field FieldInterface */
+        /* @var $Category Category */
+
+        // get category field data
+        foreach ($categories as $Category) {
+            $categoryIds[] = $Category->getId();
+        }
+
 
         // set main category
         $mainCategory = '';
@@ -1064,90 +956,41 @@ class Model extends QUI\QDOM
             $mainCategory = $Category->getId();
         }
 
+        QUI\Watcher::addString(
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.save', [
+                'id' => $this->getId()
+            ]),
+            '',
+            [
+                'categories'  => ','.\implode(',', $categoryIds).',',
+                'category'    => $mainCategory,
+                'fieldData'   => \json_encode($fieldData),
+                'permissions' => \json_encode($this->permissions),
+                'priority'    => $this->getPriority()
+            ]
+        );
+
         $this->setAttribute('e_date', \date('Y-m-d H:i:s'));
 
-        $parentId = (int)$this->getAttribute('parent');
-
-        if (empty($parentId)) {
-            $parentId = null;
-        }
-
         // update
-        if (Products::$writeProductDataToDb) {
-            QUI\Watcher::addString(
-                QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.save', [
-                    'id' => $this->getId()
-                ]),
-                '',
-                [
-                    'categories'  => ','.\implode(',', $categoryIds).',',
-                    'category'    => $mainCategory,
-                    'fieldData'   => \json_encode($fieldData),
-                    'permissions' => \json_encode($this->permissions),
-                    'priority'    => $this->getPriority()
-                ]
-            );
+        QUI::getDataBase()->update(
+            QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            [
+                'categories'  => ','.\implode(',', $categoryIds).',',
+                'category'    => $mainCategory,
+                'fieldData'   => \json_encode($fieldData),
+                'permissions' => \json_encode($this->permissions),
+                'e_user'      => QUI::getUserBySession()->getId(),
+                'e_date'      => $this->getAttribute('e_date')
+            ],
+            ['id' => $this->getId()]
+        );
 
-            QUI::getDataBase()->update(
-                QUI\ERP\Products\Utils\Tables::getProductTableName(),
-                [
-                    'parent'      => $parentId,
-                    'categories'  => ','.\implode(',', $categoryIds).',',
-                    'category'    => $mainCategory,
-                    'fieldData'   => \json_encode($fieldData),
-                    'permissions' => \json_encode($this->permissions),
-                    'e_user'      => QUI::getUserBySession()->getId(),
-                    'e_date'      => $this->getAttribute('e_date')
-                ],
-                ['id' => $this->getId()]
-            );
-
-            $this->updateCache();
-        }
+        $this->updateCache();
 
         QUI\Cache\Manager::clear('quiqqer/products/'.$this->getId());
 
-        if (Products::$fireEventsOnProductSave) {
-            QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', [$this]);
-        }
-
-        // cache db attributes
-        $result = QUI::getDataBase()->fetch([
-            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            'where' => [
-                'id' => $this->getId()
-            ],
-            'limit' => 1
-        ]);
-
-        QUI\Cache\Manager::set('quiqqer/products/'.$this->getId().'/db-data', $result[0]);
-    }
-
-    /**
-     * Check if the product url already exists in the category
-     *
-     * @param array $fieldData
-     * @throws Exception
-     */
-    protected function checkProductUrl($fieldData)
-    {
-        // check url
-        $urlField = \array_filter($fieldData, function ($field) {
-            return $field['id'] === Fields::FIELD_URL;
-        });
-
-        $urlField = \array_values($urlField);
-        $urls     = [];
-
-        if (isset($urlField[0])) {
-            $urls = $urlField[0]['value'];
-        }
-
-        ProductUtils::checkUrlByUrlFieldValue(
-            $urls,
-            $this->getCategory()->getId(),
-            $this->getId()
-        );
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', [$this]);
     }
 
     /**
@@ -1167,9 +1010,7 @@ class Model extends QUI\QDOM
 
         $this->productSave($fieldData);
 
-        if (Products::$fireEventsOnProductSave) {
-            QUI::getEvents()->fireEvent('onQuiqqerProductsProductUserSave', [$this]);
-        }
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductUserSave', [$this]);
     }
 
     /**
@@ -1261,19 +1102,14 @@ class Model extends QUI\QDOM
         foreach ($fields as $Field) {
             $this->setUnassignedStatusToField($Field);
 
-            $field = \array_merge(
-                $Field->toProductArray(),
-                $Field->getAttributes()
-            );
-
-            $fieldData[] = $field;
+            $fieldData[] = $Field->toProductArray();
         }
 
         return $fieldData;
     }
 
     /**
-     * Set the unassigned status to a field
+     * Set the unasigned status to a field
      * checks the unassigned status for a field
      * looks into each category
      *
@@ -1310,7 +1146,7 @@ class Model extends QUI\QDOM
      * Return all product fields
      * looks at catgeories for missing fields
      *
-     * @return QUI\ERP\Products\Field\Field[]
+     * @return array
      */
     protected function getAllProductFields()
     {
@@ -1366,10 +1202,6 @@ class Model extends QUI\QDOM
      */
     public function updateCache()
     {
-        if (!Products::$updateProductSearchCache) {
-            return;
-        }
-
         $langs = QUI::availableLanguages();
 
         foreach ($langs as $lang) {
@@ -1406,45 +1238,21 @@ class Model extends QUI\QDOM
             $eDate = date('Y-m-d H:i:s');
         }
 
-        // type
-        $type         = QUI\ERP\Products\Product\Types\Product::class;
-        $productType  = $this->getAttribute('type');
-        $ProductTypes = QUI\ERP\Products\Utils\ProductTypes::getInstance();
-
-        if ($ProductTypes->exists($productType)) {
-            $type = $productType;
-        }
-
-        $title = $this->getFieldValueByLocale(
-            Fields::FIELD_TITLE,
-            $Locale
-        );
-
-        if (empty($title)) {
-            $title = '';
-        }
-
         $data = [
-            'type'        => $type,
-            'productNo'   => $this->getFieldValueByLocale(
+            'productNo' => $this->getFieldValueByLocale(
                 Fields::FIELD_PRODUCT_NO,
                 $Locale
             ),
-            'title'       => $title,
-            'description' => $this->getFieldValueByLocale(
-                Fields::FIELD_SHORT_DESC,
+            'title'     => $this->getFieldValueByLocale(
+                Fields::FIELD_TITLE,
                 $Locale
             ),
-            'active'      => $this->isActive() ? 1 : 0,
-            'minPrice'    => $minPrice ? $minPrice : 0,
-            'maxPrice'    => $maxPrice ? $maxPrice : 0,
-            'c_date'      => $cDate,
-            'e_date'      => $eDate
+            'active'    => $this->isActive() ? 1 : 0,
+            'minPrice'  => $minPrice ? $minPrice : 0,
+            'maxPrice'  => $maxPrice ? $maxPrice : 0,
+            'c_date'    => $cDate,
+            'e_date'    => $eDate
         ];
-
-        if ($this instanceof QUI\ERP\Products\Product\Types\VariantChild) {
-            $data['parentId'] = $this->getParent()->getId();
-        }
 
         // permissions
         $permissions     = $this->getPermissions();
@@ -1550,16 +1358,7 @@ class Model extends QUI\QDOM
         // delete the media folder
         try {
             $MediaFolder = $this->getMediaFolder();
-            $delete      = true;
-
-            if ($this instanceof QUI\ERP\Products\Product\Types\VariantChild
-                && $MediaFolder->getId() === $this->getParent()->getMediaFolder()->getId()) {
-                $delete = false;
-            }
-
-            if ($delete) {
-                $MediaFolder->delete();
-            }
+            $MediaFolder->delete();
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addWarning($Exception->getMessage());
         }
@@ -1585,18 +1384,15 @@ class Model extends QUI\QDOM
     /**
      * Return the product fields
      *
-     * @return FieldInterface[]
+     * @return array
      */
     public function getFields()
     {
         $fields = [];
 
-        /* @var $Field QUI\ERP\Products\Field\Field */
+        /* @var $Field FieldInterface */
         foreach ($this->fields as $Field) {
-            if (!$Field->isUnassigned()
-                || $Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS
-                || $Field->getType() === Fields::TYPE_ATTRIBUTE_LIST
-            ) {
+            if (!$Field->isUnassigned()) {
                 $fields[$Field->getId()] = $Field;
             }
         }
@@ -1607,28 +1403,22 @@ class Model extends QUI\QDOM
     /**
      * Return all fields from the specific type
      *
-     * @param string|array $type - field type (eq: ProductAttributeList, Price ...) or list of field types
-     * @return FieldInterface[]
+     * @param string $type - field type (eq: ProductAttributeList, Price ...)
+     * @return array
      */
     public function getFieldsByType($type)
     {
-        if (!\is_array($type)) {
-            $type = [$type];
-        }
-
-        $type = \array_flip($type);
-
         $result = [];
         $fields = $this->getFields();
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($fields as $Field) {
-            if (isset($type[$Field->getType()])) {
+            if ($Field->getType() == $type) {
                 $result[] = $Field;
             }
         }
 
-        return $result;
+        return QUI\ERP\Products\Utils\Fields::sortFields($result);
     }
 
     /**
@@ -1652,7 +1442,7 @@ class Model extends QUI\QDOM
         throw new QUI\ERP\Products\Product\Exception(
             [
                 'quiqqer/products',
-                'exception.field.id_in_product_not_found',
+                'exception.field.not.found',
                 [
                     'fieldId'   => $fieldId,
                     'productId' => $this->getId()
@@ -1890,22 +1680,6 @@ class Model extends QUI\QDOM
                 'productId' => $this->getId()
             ]
         ]);
-    }
-
-    /**
-     * Has the product an image?
-     *
-     * @return bool
-     */
-    public function hasImage()
-    {
-        try {
-            $this->getImage();
-        } catch (QUI\Exception $Exception) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
