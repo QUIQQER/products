@@ -127,7 +127,6 @@ class Fields
         }
 
 
-
         return \array_keys($searchHashes);
     }
 
@@ -441,21 +440,54 @@ class Fields
         }
 
         if ($type === 'gt') {
-            return $no1 > $no1;
+            return $no1 > $no2;
         }
 
         if ($type === 'egt') {
-            return $no1 >= $no1;
+            return $no1 >= $no2;
         }
 
         if ($type === 'lt') {
-            return $no1 < $no1;
+            return $no1 < $no2;
         }
 
         if ($type === 'elt') {
-            return $no1 <= $no1;
+            return $no1 <= $no2;
         }
 
         return false;
+    }
+
+    /**
+     * Parses the term unit to human readable term
+     *
+     * egt = >=
+     *
+     * @param $term
+     * @return string
+     */
+    public static function termToHuman($term)
+    {
+        if ($term === '=') {
+            return '=';
+        }
+
+        if ($term === 'gt') {
+            return '>';
+        }
+
+        if ($term === 'egt') {
+            return '>=';
+        }
+
+        if ($term === 'lt') {
+            return '<';
+        }
+
+        if ($term === 'elt') {
+            return '<=';
+        }
+
+        return '';
     }
 }
