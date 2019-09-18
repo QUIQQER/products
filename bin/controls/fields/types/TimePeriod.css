@@ -1,0 +1,18 @@
+.quiqqer-products-fields-types-timeperiod {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.quiqqer-products-fields-types-timeperiod label {
+    float: none !important;
+    width: initial !important;
+}
+
+.quiqqer-products-fields-types-timeperiod label > span {
+    display: block;
+}
+
+.quiqqer-products-fields-types-timeperiod select {
+    min-width: 200px;
+}

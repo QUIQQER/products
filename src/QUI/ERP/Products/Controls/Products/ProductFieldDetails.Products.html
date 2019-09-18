@@ -1,0 +1,22 @@
+<table class="product-data-files-table product-details">
+    {foreach $products as $Product}
+    <tr>
+        <td>
+            {if $Product->hasImage()}
+                {image image=$Product->getImage() height=100}
+            {/if}
+        </td>
+        <td class="product-data-files-table-title">
+            <a href="{$Product->getUrl()}">{$Product->getTitle()}</a>
+            <p>{$Product->getDescription()}</p>
+        </td>
+        <td class="product-data-files-table-download">
+            {template_event name="quiqqer::products::product::detail::equipment::buttons" Product=$Product}
+        </td>
+    </tr>
+    {foreachelse}
+    <tr>
+        <td>{locale group="quiqqer/products" var="message.control.product.fields.no.data"}</td>
+    </tr>
+    {/foreach}
+</table>

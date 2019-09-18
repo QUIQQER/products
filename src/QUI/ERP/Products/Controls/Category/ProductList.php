@@ -57,15 +57,25 @@ class ProductList extends QUI\Control
             'categoryId'           => false,
             'data-qui'             => 'package/quiqqer/products/bin/controls/frontend/category/ProductList',
             'data-cid'             => false,
-            'view'                 => 'gallery', // gallery, list, detail
-            'categoryView'         => 'gallery', // gallery, list, detail
+            'view'                 => 'gallery',
+            // gallery, list, detail
+            'categoryView'         => 'gallery',
+            // gallery, list, detail
+            'categoryPos'          => 'top',
+            // top, bottom, false = take setting from products
             'searchParams'         => false,
             'hideEmptyProductList' => false,
+            'productLoadNumber'    => false,
+            // How many products should be loaded?
             'categoryStartNumber'  => false,
-            'showFilter'           => true, // show the filter, or not
-            'showFilterInfo'       => true, // show the filter, or not
+            'showFilter'           => true,
+            // show the filter, or not
+            'showFilterInfo'       => true,
+            // show the filter, or not
             'forceMobileFilter'    => false,
             'autoload'             => false,
+            'autoloadAfter'        => 3,
+            //  After how many clicks are further products loaded automatically? (false = disable / number )
             'hidePrice'            => QUI\ERP\Products\Utils\Package::hidePrice(),
         ]);
 
@@ -100,12 +110,36 @@ class ProductList extends QUI\Control
 
         $Category     = $this->getCategory();
         $searchParams = $this->getAttribute('searchParams');
+        $Config       = QUI::getPackage('quiqqer/products')->getConfig();
+
+        // global settings: category pos
+        $categoryPos = $this->getAttribute('categoryPos');
+
+        if ($categoryPos === 'false') {
+            $categoryPos = false;
+        }
+
+        if (!$categoryPos) {
+            $this->setAttribute('categoryPos', $Config->get('products', 'categoryPos'));
+        }
+
+        // global settings: product load number
+        if ($this->getAttribute('productLoadNumber') == '' || $this->getAttribute('productLoadNumber') == false) {
+            $this->setAttribute('productLoadNumber', $Config->get('products', 'productLoadNumber'));
+        }
+
+        // global settings: product autoload after x clicks
+        if ($this->getAttribute('autoloadAfter') == '' || $this->getAttribute('autoloadAfter') === false) {
+            $this->setAttribute('autoloadAfter', $Config->get('products', 'autoloadAfter'));
+        }
 
         $this->setAttribute('data-project', $this->getSite()->getProject()->getName());
         $this->setAttribute('data-lang', $this->getSite()->getProject()->getLang());
         $this->setAttribute('data-siteid', $this->getSite()->getId());
         $this->setAttribute('data-productlist-id', $this->id);
         $this->setAttribute('data-autoload', $this->getAttribute('autoload') ? 1 : 0);
+        $this->setAttribute('data-autoloadAfter', $this->getAttribute('autoloadAfter'));
+        $this->setAttribute('data-productLoadNumber', $this->getAttribute('productLoadNumber'));
 
         $products = '';
         $more     = false;
@@ -190,7 +224,7 @@ class ProductList extends QUI\Control
             $this->setAttribute('data-sort', \htmlspecialchars($sort));
         }
 
-        $Pagination = new QUI\Bricks\Controls\Pagination([
+        $Pagination = new QUI\Controls\Navigating\Pagination([
             'count'     => $count,
             'Site'      => $this->getSite(),
             'showLimit' => false,
@@ -214,7 +248,7 @@ class ProductList extends QUI\Control
 
             'categoryFile'        => $categoryFile,
             'placeholder'         => $this->getProject()->getMedia()->getPlaceholder(),
-            'categoryStartNumber' => $this->getAttribute('categoryStartNumber'),
+            'categoryStartNumber' => $this->getAttribute('categoryStartNumber')
         ]);
 
         return $Engine->fetch(\dirname(__FILE__).'/ProductList.html');
@@ -556,7 +590,10 @@ class ProductList extends QUI\Control
             $max = $this->getMax();
         }
 
-        $searchParams['limit'] = $start.','.$max;
+        $searchParams['sheet'] = round($start / $max) + 1;
+        $searchParams['limit'] = $max;
+
+        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
 
         return $searchParams;
     }
@@ -582,6 +619,8 @@ class ProductList extends QUI\Control
             $searchParams['freetext'] = '';
         }
 
+        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+
         return $searchParams;
     }
 
@@ -592,7 +631,11 @@ class ProductList extends QUI\Control
      */
     protected function getMax()
     {
-        // @todo als setting machen
+        // settings
+        if ($this->getAttribute('productLoadNumber')) {
+            return $this->getAttribute('productLoadNumber');
+        }
+
         switch ($this->getAttribute('view')) {
             case 'list':
                 return 10;

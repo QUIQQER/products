@@ -59,7 +59,9 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
             // search function function(value, params) @return Promise;
             // resolve( [fieldData, fieldData, fieldData] )
-            search: false
+            search: false,
+
+            showsearchableonly: false       // only show fields that are searchable
         },
 
         initialize: function (options, Input) {
@@ -100,6 +102,11 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 'class'     : 'qui-fields-list',
                 'data-quiid': this.getId()
             });
+
+            if (this.getAttribute('multiple')) {
+                this.$Elm.addClass('qui-fields-list-multiple');
+            }
+
 
             if (!this.$Input) {
                 this.$Input = new Element('input', {
@@ -174,10 +181,11 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                             'package/quiqqer/products/bin/controls/fields/search/Window'
                         ], function (Window) {
                             new Window({
-                                autoclose: true,
-                                multiple : self.getAttribute('multiple'),
-                                search   : self.getAttribute('search'),
-                                events   : {
+                                autoclose         : true,
+                                multiple          : self.getAttribute('multiple'),
+                                search            : self.getAttribute('search'),
+                                showsearchableonly: self.getAttribute('showsearchableonly'),
+                                events            : {
                                     onSubmit: function (Win, fieldIds) {
                                         self.addFields(fieldIds);
                                     }
@@ -485,7 +493,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
                     Entry = new Element('div', {
                         html     : '<span class="fa fa-percent"></span>' +
-                        '<span>' + nam + ' (' + id + ')</span>',
+                            '<span>' + nam + ' (' + id + ')</span>',
                         'class'  : 'box-sizing qui-fields-list-dropdown-entry',
                         'data-id': id,
                         events   : {

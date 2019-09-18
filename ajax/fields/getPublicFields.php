@@ -12,20 +12,26 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_fields_getPublicFields',
     function () {
-        $Fields = new QUI\ERP\Products\Handler\Fields();
-        $fields = $Fields->getFields();
+        $cacheName = 'quiqqer/products/fields/publicFields';
 
-        $fields = \array_filter($fields, function ($Field) {
-            /* @var $Field \QUI\ERP\Products\Field\Field */
-            return $Field->isPublic();
-        });
-
-        $result = [];
-
-        /* @var $Field \QUI\ERP\Products\Field\Field */
-        foreach ($fields as $Field) {
-            $result[] = $Field->getAttributes();
+        try {
+            return QUI\Cache\Manager::get($cacheName);
+        } catch (QUI\Exception $Exception) {
+            // nothing
         }
+
+        $Fields = new QUI\ERP\Products\Handler\Fields();
+        $fields = $Fields->getFieldIds([
+            'where' => [
+                'publicField' => 1
+            ]
+        ]);
+
+        $result = \array_map(function ($field) use ($Fields) {
+            return $Fields->getField($field['id'])->getAttributes();
+        }, $fields);
+
+        QUI\Cache\Manager::set($cacheName, $result);
 
         return $result;
     },

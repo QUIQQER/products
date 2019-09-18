@@ -34,8 +34,8 @@ class ProductFieldDetails extends QUI\Control
     /**
      * (non-PHPdoc)
      *
-     * @see \QUI\Control::create()
      * @throws QUI\Exception
+     * @see \QUI\Control::create()
      */
     public function getBody()
     {
@@ -50,8 +50,39 @@ class ProductFieldDetails extends QUI\Control
         /* @var $Field QUI\ERP\Products\Field\Field */
         switch ($Field->getType()) {
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA:
+                $template = \dirname(__FILE__).'/ProductFieldDetails.Content.html';
+                $Engine->assign('content', $Field->getValue());
+                break;
+                
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA_MULTI_LANG:
                 $template = \dirname(__FILE__).'/ProductFieldDetails.Content.html';
+                $lang     = QUI::getLocale()->getCurrent();
+                $value    = $Field->getValue();
+
+                $Engine->assign('content', empty($value[$lang]) ? '' : $value[$lang]);
+                break;
+
+            case QUI\ERP\Products\Handler\Fields::TYPE_PRODCUCTS:
+                $template   = \dirname(__FILE__).'/ProductFieldDetails.Products.html';
+                $productIds = $Field->getValue();
+
+                if (empty($productIds)) {
+                    $productIds = [];
+                }
+
+                $products = [];
+
+                foreach ($productIds as $productId) {
+                    try {
+                        $products[] = QUI\ERP\Products\Handler\Products::getProduct($productId);
+                    } catch (QUI\Exception $Exception) {
+                        QUI\System\Log::addDebug($Exception->getMessage());
+                    }
+                }
+
+                $Engine->assign([
+                    'products' => $products
+                ]);
                 break;
 
             case QUI\ERP\Products\Handler\Fields::TYPE_FOLDER:

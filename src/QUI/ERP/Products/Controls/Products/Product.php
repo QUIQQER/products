@@ -7,11 +7,12 @@
 namespace QUI\ERP\Products\Controls\Products;
 
 use DusanKasan\Knapsack\Collection;
+
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
-
-//use QUI\ERP\Watchlist\Controls\ButtonAdd as WatchlistButton;
-//use QUI\ERP\Watchlist\Controls\ButtonPurchase as PurchaseButton;
+use QUI\ERP\Products\Utils\Fields as FieldUtils;
+use QUI\ERP\Products\Utils\Products as ProductUtils;
+use function DusanKasan\Knapsack\concat;
 
 /**
  * Class Button
@@ -29,10 +30,14 @@ class Product extends QUI\Control
     {
         $this->setAttributes([
             'Product'  => false,
-            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/Product'
+            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/Product',
+
+            'data-qui-option-show-price' => true,
+            'data-qui-option-available'  => true
         ]);
 
-        $this->addCSSFile(\dirname(__FILE__) . '/Product.css');
+        $this->addCSSClass('quiqqer-products-product');
+        $this->addCSSFile(\dirname(__FILE__).'/Product.css');
 
         parent::__construct($attributes);
     }
@@ -40,9 +45,9 @@ class Product extends QUI\Control
     /**
      * (non-PHPdoc)
      *
+     * @throws QUI\Exception
      * @see \QUI\Control::create()
      *
-     * @throws QUI\Exception
      */
     public function getBody()
     {
@@ -53,9 +58,40 @@ class Product extends QUI\Control
         $fields  = [];
         $Calc    = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
+        $typeDefaultProduct = ($Product->getType() === QUI\ERP\Products\Product\Product::class);
+        $typeVariantParent  = ($Product->getType() === QUI\ERP\Products\Product\Types\VariantParent::class);
+        $typeVariantChild   = ($Product->getType() === QUI\ERP\Products\Product\Types\VariantChild::class);
+
+        if ($typeVariantParent) {
+            /* @var $Product QUI\ERP\Products\Product\Types\VariantParent */
+            $this->setAttributes([
+                'data-qui-option-show-price' => false,
+                'data-qui-option-available'  => false
+            ]);
+
+            // use default variant, if a default variant exists
+            if (!$this->getAttribute('ignoreDefaultVariant') && $Product->getDefaultVariantId()) {
+                try {
+                    $Product = $Product->getDefaultVariant();
+
+                    $this->setAttributes([
+                        'data-qui-option-show-price' => true,
+                        'data-qui-option-available'  => true
+                    ]);
+
+                    $typeVariantChild  = true;
+                    $typeVariantParent = false;
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::addDebug($Exception);
+                }
+            }
+        }
+
+        $User = QUI::getUserBySession();
+
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
             $View   = $Product->getView();
-            $Unique = $Product->createUniqueProduct($Calc);
+            $Unique = $Product->createUniqueProduct($User);
 
             try {
                 $Price = $Calc->getProductPrice($Unique);
@@ -65,7 +101,11 @@ class Product extends QUI\Control
             }
         } else {
             $View  = $Product;
-            $Price = $Product->getPrice();
+            $Price = $Product->getPrice($User);
+        }
+
+        if ($typeVariantParent) {
+            $Price->enableMinimalPrice();
         }
 
         /* @var $Product QUI\ERP\Products\Product\UniqueProduct */
@@ -88,6 +128,38 @@ class Product extends QUI\Control
         try {
             $Gallery->setAttribute('folderId', $Product->getFieldValue(Fields::FIELD_FOLDER));
         } catch (QUI\Exception $Exception) {
+        }
+
+        if ($typeVariantParent || $typeVariantChild) {
+            $Gallery->setAttribute('folderId', false);
+            $images = $Product->getImages();
+
+            try {
+                $mainImageId = $Product->getImage()->getId();
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
+                $mainImageId = false;
+            }
+
+            \usort($images, function ($ImageA, $ImageB) use ($mainImageId) {
+                /**
+                 * @var QUI\Projects\Media\Image $ImageA
+                 * @var QUI\Projects\Media\Image $ImageB
+                 */
+                if ($ImageA->getId() === $mainImageId) {
+                    return -1;
+                }
+
+                if ($ImageB->getId() === $mainImageId) {
+                    return 1;
+                }
+
+                return 0;
+            });
+
+            foreach ($images as $Image) {
+                $Gallery->addImage($Image);
+            }
         }
 
         $Gallery->setAttribute('height', '400px');
@@ -138,18 +210,18 @@ class Product extends QUI\Control
 
         // retail price (UVP)
         $PriceRetailDisplay = false;
+        $PriceRetail        = $Product->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL)->getPrice();
+
         if ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
             $PriceRetailDisplay = new QUI\ERP\Products\Controls\Price([
-                'Price'       => new QUI\ERP\Money\Price(
-                    $Product->getFieldValue('FIELD_PRICE_RETAIL'),
-                    QUI\ERP\Currency\Handler::getDefaultCurrency()
-                ),
+                'Price'       => $PriceRetail,
                 'withVatText' => false
             ]);
         }
 
         // offer price (Angebotspreis)
         $PriceOldDisplay = false;
+
         if ($View->hasOfferPrice()) {
             $PriceOldDisplay = new QUI\ERP\Products\Controls\Price([
                 'Price'       => new QUI\ERP\Money\Price(
@@ -163,17 +235,16 @@ class Product extends QUI\Control
         // file / image folders
         $detailFields = [];
 
-        $fieldsList = array_merge(
-            $Product->getFieldsByType(Fields::TYPE_FOLDER),
-            $Product->getFieldsByType(Fields::TYPE_TEXTAREA),
-            $Product->getFieldsByType(Fields::TYPE_TEXTAREA_MULTI_LANG)
-        );
+        $fieldsList = $Product->getFieldsByType([
+            Fields::TYPE_FOLDER,
+            Fields::TYPE_TEXTAREA,
+            Fields::TYPE_TEXTAREA_MULTI_LANG,
+            Fields::TYPE_PRODCUCTS
+        ]);
 
         /* @var $Field QUI\ERP\Products\Field\Types\Folder */
         foreach ($fieldsList as $Field) {
-            if ($Field->getId() == Fields::FIELD_FOLDER
-                || $Field->getId() == Fields::FIELD_CONTENT
-            ) {
+            if ($Field->getId() == Fields::FIELD_FOLDER || $Field->getId() == Fields::FIELD_CONTENT) {
                 continue;
             }
 
@@ -181,12 +252,15 @@ class Product extends QUI\Control
                 continue;
             }
 
+            if (!$Field->isPublic()) {
+                continue;
+            }
+
             $detailFields[] = $Field;
         }
 
         // product fields
-        $productFields = [];
-
+        $productFields    = [];
         $productFieldList = \array_filter($View->getFields(), function ($Field) {
             /* @var $Field QUI\ERP\Products\Field\View */
             if ($Field->getType() == Fields::TYPE_PRODCUCTS) {
@@ -199,6 +273,10 @@ class Product extends QUI\Control
         foreach ($productFieldList as $Field) {
             /* @var $Field QUI\ERP\Products\Field\View */
             if (!$Field->getValue()) {
+                continue;
+            }
+
+            if (!$Field->showInDetails()) {
                 continue;
             }
 
@@ -227,22 +305,42 @@ class Product extends QUI\Control
             ]);
         }
 
+        if ($typeVariantParent || $typeVariantChild) {
+            ProductUtils::setAvailableFieldOptions($Product);
+
+            QUI::getEvents()->addEvent(
+                'onQuiqqer::products::product::end',
+                function (\Quiqqer\Engine\Collector $Collector) use ($Product) {
+                    $fieldHashes = ProductUtils::getJsFieldHashArray($Product);
+                    $fieldHashes = \json_encode($fieldHashes);
+
+                    $availableHashes = $Product->availableActiveFieldHashes();
+                    $availableHashes = \array_flip($availableHashes);
+                    $availableHashes = \json_encode($availableHashes);
+
+                    $Collector->append('<script>var fieldHashes = '.$fieldHashes.'</script>');
+                    $Collector->append('<script>var availableHashes = '.$availableHashes.'</script>');
+                }
+            );
+        }
+
         $Engine->assign([
-            'Product'              => $View,
-            'Gallery'              => $Gallery,
-            'Files'                => $Files,
-            'fields'               => QUI\ERP\Products\Utils\Fields::sortFields($fields),
-            'details'              => QUI\ERP\Products\Utils\Fields::sortFields($details),
-            'detailFields'         => QUI\ERP\Products\Utils\Fields::sortFields($detailFields),
-            'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
-            'Price'                => $Price,
-            'PriceDisplay'         => $PriceDisplay,
-            'PriceRetailDisplay'   => $PriceRetailDisplay,
-            'priceRetailValue'     => $Product->getFieldValue('FIELD_PRICE_RETAIL'),
-            'PriceOldDisplay'      => $PriceOldDisplay,
-            'VisitedProducts'      => new VisitedProducts(),
-            'MediaUtils'           => new QUI\Projects\Media\Utils(),
-            'Site'                 => $this->getSite()
+            'Product'                => $View,
+            'Gallery'                => $Gallery,
+            'Files'                  => $Files,
+            'fields'                 => FieldUtils::sortFields($fields),
+            'details'                => FieldUtils::sortFields($details),
+            'detailFields'           => FieldUtils::sortFields($detailFields),
+            'productAttributeList'   => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
+            'productAttributeGroups' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS),
+            'Price'                  => $Price,
+            'PriceDisplay'           => $PriceDisplay,
+            'PriceRetailDisplay'     => $PriceRetailDisplay,
+            'PriceRetail'            => $PriceRetail,
+            'PriceOldDisplay'        => $PriceOldDisplay,
+            'VisitedProducts'        => new VisitedProducts(),
+            'MediaUtils'             => new QUI\Projects\Media\Utils(),
+            'Site'                   => $this->getSite()
         ]);
 
         // button list
@@ -250,18 +348,28 @@ class Product extends QUI\Control
 
         QUI::getEvents()->fireEvent(
             'quiqqerProductsProductViewButtons',
-            [$View, &$Buttons]
+            [$View, &$Buttons, $this]
         );
 
         $Engine->assign('Buttons', $Buttons);
 
         $Engine->assign(
             'buttonsHtml',
-            $Engine->fetch(\dirname(__FILE__) . '/Product.Buttons.html')
+            $Engine->fetch(\dirname(__FILE__).'/Product.Buttons.html')
         );
 
-        // render product
-        return $Engine->fetch(\dirname(__FILE__) . '/Product.html');
+        // normal product
+        if (!$typeVariantParent && !$typeVariantChild) {
+            return $Engine->fetch(\dirname(__FILE__).'/Product.html');
+        }
+
+
+        // variant product
+        $this->setAttributes([
+            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant'
+        ]);
+
+        return $Engine->fetch(\dirname(__FILE__).'/ProductVariant.html');
     }
 
     /**

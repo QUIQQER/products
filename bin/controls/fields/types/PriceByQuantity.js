@@ -8,29 +8,40 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
 
     'qui/QUI',
     'qui/controls/Control',
+    'package/quiqqer/products/bin/controls/fields/windows/PriceBrutto',
+    'package/quiqqer/erp/bin/backend/utils/Money',
     'Locale',
+    'Ajax',
 
     'css!package/quiqqer/products/bin/controls/fields/types/PriceByQuantity.css'
 
-], function (QUI, QUIControl, QUILocale) {
+], function (QUI, QUIControl, PriceBruttoWindow, MoneyUtils, QUILocale, QUIAjax) {
     "use strict";
 
+    var lg = 'quiqqer/products';
+
     return new Class({
+
         Extends: QUIControl,
         Type   : 'package/quiqqer/products/bin/controls/fields/types/PriceByQuantity',
 
         Binds: [
             '$onImport',
-            'refresh'
+            'refresh',
+            'openBruttoInput',
+            '$calcBruttoPrice'
         ],
 
         initialize: function (options) {
             this.parent(options);
 
-            this.$Input    = null;
-            this.$Price    = null;
-            this.$Currency = null;
-            this.$Quantity = null;
+            this.$Input       = null;
+            this.$Price       = null;
+            this.$Currency    = null;
+            this.$BruttoInput = null;
+
+            this.$Quantity  = null;
+            this.$calcTimer = null;
 
             this.$Formatter = QUILocale.getNumberFormatter({
                 minimumFractionDigits: 8
@@ -39,6 +50,22 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
             this.addEvents({
                 onImport: this.$onImport
             });
+        },
+
+        /**
+         * Disable the control
+         */
+        disable: function () {
+            this.$Price.set('disabled', true);
+            this.$Quantity.set('disabled', true);
+        },
+
+        /**
+         * Enable the control
+         */
+        enable: function () {
+            this.$Price.set('disabled', false);
+            this.$Quantity.set('disabled', false);
         },
 
         /**
@@ -81,22 +108,32 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
                 type       : 'text',
                 placeholder: this.$Formatter.format(1000),
                 events     : {
-                    change: this.refresh,
-                    blur  : this.refresh
+                    change: function () {
+                        this.refresh();
+                        this.$calcBruttoPrice();
+                    }.bind(this),
+
+                    blur: function () {
+                        this.refresh();
+                        this.$calcBruttoPrice();
+                    }.bind(this)
                 }
             }).inject(this.$Elm);
 
             this.setPriceValue(data.price);
 
             this.$Currency = new Element('span', {
-                'class': 'quiqqer-products-field-priceByQuantity-currency',
-                html   : '€'
+                'class': 'quiqqer-products-field-priceByQuantity-currency'
             }).inject(this.$Elm);
+
+            MoneyUtils.getCurrency().then(function (result) {
+                this.$Currency.set('html', result.sign);
+            }.bind(this));
 
             this.$Quantity = new Element('input', {
                 'class'    : 'quiqqer-products-field-priceByQuantity-quantity',
                 type       : 'number',
-                placeholder: 'Stückzahl',
+                placeholder: QUILocale.get('quiqqer/products', 'fields.control.price.quantity'),
                 value      : data.quantity,
                 events     : {
                     change: this.refresh,
@@ -104,7 +141,38 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
                 }
             }).inject(this.$Elm);
 
+            new Element('span', {
+                'class': 'quiqqer-products-field-priceByQuantity-quantity-apr',
+                html   : QUILocale.get('quiqqer/products', 'fields.control.price.quantity.short')
+            }).inject(this.$Elm);
+
+            this.$Button = new Element('span', {
+                'class': 'field-container-item',
+                html   : '<span class="fa fa-calculator"></span>',
+                title  : QUILocale.get('quiqqer/products', 'fields.control.price.brutto'),
+                styles : {
+                    cursor    : 'pointer',
+                    lineHeight: 30,
+                    textAlign : 'center',
+                    width     : 50
+                },
+                events : {
+                    click: this.openBruttoInput
+                }
+            }).inject(this.$Elm, 'after');
+
+            this.$BruttoInput = new Element('span', {
+                'class': 'field-container-item',
+                html   : '<span class="fa fa-spinner fa-spin"></span>',
+                styles : {
+                    borderRight: 0,
+                    lineHeight : 30,
+                    maxWidth   : 100
+                }
+            }).inject(this.$Elm, 'after');
+
             this.refresh();
+            this.$calcBruttoPrice();
         },
 
         /**
@@ -176,6 +244,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
         setPriceValue: function (value) {
             if (value === '' || !value || value === 'false') {
                 this.$Price.value = '';
+                this.$calcBruttoPrice();
                 return;
             }
 
@@ -187,10 +256,12 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
 
             if ((foundGroupSeparator || foundDecimalSeparator) && !(foundGroupSeparator && !foundDecimalSeparator)) {
                 this.$Price.value = value;
+                this.$calcBruttoPrice();
                 return;
             }
 
             this.$Price.value = this.$Formatter.format(parseFloat(value));
+            this.$calcBruttoPrice();
         },
 
         /**
@@ -205,6 +276,64 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
             name = parseInt(name);
 
             return name || false;
+        },
+
+        /**
+         * Opens the brutto / gross input
+         */
+        openBruttoInput: function () {
+            var self = this;
+
+            new PriceBruttoWindow({
+                events: {
+                    onOpen: function (Win) {
+                        Win.getContent().set('html', '');
+                    },
+
+                    onSubmit: function (Win, value) {
+                        self.$Price.value = value;
+                        self.$calcBruttoPrice();
+                    }
+                }
+            }).open();
+        },
+
+        /**
+         * calculate the brutto price
+         */
+        $calcBruttoPrice: function () {
+            if (!this.$BruttoInput) {
+                return;
+            }
+
+            if (this.$calcTimer) {
+                clearTimeout(this.$calcTimer);
+            }
+
+            if (this.$Price.value === '') {
+                this.$BruttoInput.innerHTML = '---';
+                this.$BruttoInput.title     = QUILocale.get(lg, 'fields.control.price.quantity.title', {
+                    price: '---'
+                });
+                return;
+            }
+
+            this.$BruttoInput.innerHTML = '<span class="fa fa-spinner fa-spin"></span>';
+
+            this.$calcTimer = (function () {
+                var self = this;
+
+                QUIAjax.get('package_quiqqer_products_ajax_products_calcBruttoPrice', function (price) {
+                    self.$BruttoInput.innerHTML = price;
+                    self.$BruttoInput.title     = QUILocale.get(lg, 'fields.control.price.quantity.title', {
+                        price: price
+                    });
+                }, {
+                    'package': 'quiqqer/products',
+                    price    : this.$Price.value,
+                    formatted: 1
+                });
+            }).delay(500, this);
         }
     });
 });

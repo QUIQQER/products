@@ -77,7 +77,14 @@ class Categories
             $query['where_or'] = $queryParams['where_or'];
         }
 
-        $data = QUI::getDataBase()->fetch($query);
+        try {
+            $data = QUI::getDataBase()->fetch($query);
+        } catch (QUI\DataBase\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
+            return 0;
+        }
+
 
         if (isset($data[0]) && isset($data[0]['count'])) {
             return (int)$data[0]['count'];
@@ -322,6 +329,7 @@ class Categories
             try {
                 $result[] = self::getCategory($id);
             } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
             }
         }
 
@@ -357,7 +365,15 @@ class Categories
         }
 
         $result = [];
-        $data   = QUI::getDataBase()->fetch($query);
+
+        try {
+            $data = QUI::getDataBase()->fetch($query);
+        } catch (QUI\DataBase\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
+            return [];
+        }
+
 
         foreach ($data as $entry) {
             $result[] = $entry['id'];

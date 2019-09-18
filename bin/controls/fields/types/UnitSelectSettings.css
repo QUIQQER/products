@@ -1,0 +1,82 @@
+.quiqqer-products-unitselect-create .field-container {
+    margin-bottom: 10px;
+}
+
+.quiqqer-products-unitselect-create .field-unitSelect-title input {
+    max-width: 300px;
+    width: 100%;
+}
+
+.quiqqer-products-unitselect-create .field-container-item:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 180px !important;
+}
+
+.quiqqer-products-unitselect-create .field-unitSelect-price input {
+    float: left;
+    max-width: 300px;
+    width: 66.666%;
+}
+
+.quiqqer-products-unitselect-create .field-unitSelect-price select {
+    float: left;
+    margin-left: 5px;
+    max-width: 300px;
+    width: calc(33% - 5px);
+}
+
+.quiqqer-products-unitSelect-settings,
+.quiqqer-products-unitSelect-settings-title,
+.quiqqer-products-unitSelect-settings-priority,
+.quiqqer-products-unitSelect-settings-calcbasis,
+.quiqqer-products-unitSelect-settings-displayDiscounts,
+.quiqqer-products-unitSelect-settings-userinput,
+.quiqqer-products-unitSelect-settings-generateTags {
+    clear: both;
+    float: left;
+    width: 100%
+}
+
+.quiqqer-products-unitSelect-settings-title {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 10px;
+}
+
+.quiqqer-products-unitSelect-settings-priority,
+.quiqqer-products-unitSelect-settings-calcbasis,
+.quiqqer-products-unitSelect-settings-displayDiscounts,
+.quiqqer-products-unitSelect-settings-userinput,
+.quiqqer-products-unitSelect-settings-generateTags {
+    border-bottom: 1px solid rgba(147, 128, 108, 0.25);
+    padding: 10px;
+}
+
+.quiqqer-products-unitSelect-settings-priority label,
+.quiqqer-products-unitSelect-settings-calcbasis label,
+.quiqqer-products-unitSelect-settings-displayDiscounts label,
+.quiqqer-products-unitSelect-settings-userinput label,
+.quiqqer-products-unitSelect-settings-generateTags label {
+    cursor: pointer;
+    width: 100% !important;
+}
+
+.quiqqer-products-unitSelect-settings-text {
+    float: left;
+    line-height: 12px;
+    padding: 10px;
+    width: 200px;
+}
+
+.quiqqer-products-unitSelect-settings-displayDiscounts input,
+.quiqqer-products-unitSelect-settings-generateTags input {
+    float: left;
+}
+
+.quiqqer-products-unitSelect-settings-input {
+    float: left;
+    height: 32px;
+    margin: 0;
+    width: calc(100% - 200px);
+}

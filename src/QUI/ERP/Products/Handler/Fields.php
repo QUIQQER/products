@@ -39,6 +39,10 @@ class Fields
     const FIELD_PRICE_OFFER = 16; // angebotspreis
     const FIELD_PRICE_RETAIL = 17; // UVP - RRP
     const FIELD_PRIORITY = 18; // Product Priority
+    const FIELD_URL = 19; // Product URL
+    const FIELD_UNIT = 20;
+    const FIELD_EAN = 21;
+    const FIELD_WEIGHT = 22;
 
     /**
      * Types
@@ -54,13 +58,19 @@ class Fields
     const TYPE_INT = 'IntType';
     const TYPE_PRICE = 'Price';
     const TYPE_PRICE_BY_QUANTITY = 'PriceByQuantity';
-    const TYPE_ATTRIBUTE_LIST = 'ProductAttributeList';
+    const TYPE_PRICE_BY_TIMEPERIOD = 'PriceByTimePeriod';
     const TYPE_TEXTAREA = 'Textarea';
     const TYPE_TEXTAREA_MULTI_LANG = 'TextareaMultiLang';
     const TYPE_URL = 'Url';
     const TYPE_VAT = 'Vat';
     const TYPE_TAX = 'Tax';
     const TYPE_PRODCUCTS = 'Products';
+    const TYPE_UNITSELECT = 'UnitSelect';
+    const TYPE_TIMEPERIOD = 'TimePeriod';
+
+    const TYPE_ATTRIBUTES = 'AttributeGroup';
+    const TYPE_ATTRIBUTE_GROUPS = 'AttributeGroup';
+    const TYPE_ATTRIBUTE_LIST = 'ProductAttributeList';
 
     /**
      * product array changed types
@@ -83,6 +93,16 @@ class Fields
      * @var array
      */
     protected static $list = [];
+
+    /**
+     * @var null
+     */
+    protected static $fieldTypes = null;
+
+    /**
+     * @var array
+     */
+    protected static $fieldTypeData = [];
 
     /**
      * Return the child attributes
@@ -526,10 +546,16 @@ class Fields
      */
     public static function getFieldTypes()
     {
+        if (self::$fieldTypes !== null) {
+            return self::$fieldTypes;
+        }
+
         $cacheName = 'quiqqer/products/fields';
 
         try {
-            return QUI\Cache\Manager::get($cacheName);
+            self::$fieldTypes = QUI\Cache\Manager::get($cacheName);
+
+            return self::$fieldTypes;
         } catch (QUI\Exception $Exception) {
         }
 
@@ -539,11 +565,11 @@ class Fields
         $result = [];
 
         foreach ($files as $file) {
-            if (strpos($file, 'View') !== false) {
+            if (\strpos($file, 'View') !== false) {
                 continue;
             }
 
-            $file = pathinfo($file);
+            $file = \pathinfo($file);
 
             $result[] = [
                 'plugin'   => 'quiqqer/products',
@@ -597,11 +623,8 @@ class Fields
             }
         }
 
-        try {
-            QUI\Cache\Manager::set($cacheName, $result);
-        } catch (\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-        }
+        QUI\Cache\Manager::set($cacheName, $result);
+        self::$fieldTypes = $result;
 
         return $result;
     }
@@ -614,16 +637,35 @@ class Fields
      */
     public static function getFieldTypeData($type)
     {
+        if (isset(self::$fieldTypeData[$type])) {
+            return self::$fieldTypeData[$type];
+        }
+
+        $cacheName = 'quiqqer/products/fields/'.\md5($type);
+
+        try {
+            self::$fieldTypeData[$type] = QUI\Cache\Manager::get($cacheName);
+
+            return self::$fieldTypeData[$type];
+        } catch (QUI\Exception $Exception) {
+        }
+
         $types = self::getFieldTypes();
         $found = \array_filter($types, function ($entry) use ($type) {
             return $entry['name'] == $type;
         });
 
         if (empty($found)) {
+            self::$fieldTypeData[$type] = [];
+
             return [];
         }
 
-        return \reset($found);
+        self::$fieldTypeData[$type] = \reset($found);
+
+        QUI\Cache\Manager::set($cacheName, self::$fieldTypeData[$type]);
+
+        return self::$fieldTypeData[$type];
     }
 
     /**
@@ -649,7 +691,7 @@ class Fields
 
         throw new QUI\ERP\Products\Field\Exception([
             'quiqqer/products',
-            'exception.field.not.found',
+            'exception.field.type_not_found',
             [
                 'fieldType' => $type,
                 'fieldId'   => $fieldId
@@ -681,20 +723,25 @@ class Fields
                 QUI\ERP\Products\Handler\Fields::getFieldCacheName($fieldId)
             );
         } catch (QUI\Exception $Exception) {
-            $result = QUI::getDataBase()->fetch([
-                'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
-                'where' => [
-                    'id' => (int)$fieldId
-                ],
-                'limit' => 1
-            ]);
+            try {
+                $result = QUI::getDataBase()->fetch([
+                    'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+                    'where' => [
+                        'id' => (int)$fieldId
+                    ],
+                    'limit' => 1
+                ]);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
 
+                $result = false;
+            }
 
-            if (!isset($result[0])) {
+            if (!$result || !isset($result[0])) {
                 throw new QUI\ERP\Products\Field\Exception(
-                    ['quiqqer/products', 'exception.field.not.found'],
+                    ['quiqqer/products', 'exception.field.id_not_found'],
                     404,
-                    ['id' => (int)$fieldId]
+                    ['fieldId' => (int)$fieldId]
                 );
             }
 
@@ -779,7 +826,7 @@ class Fields
         $Field->setAttribute('suffix', $data['suffix']);
         $Field->setOptions($data['options']);
 
-        self::$list[$fieldId] = $Field;
+        self::$list[$fieldId] = clone $Field;
 
         return $Field;
     }
@@ -826,6 +873,9 @@ class Fields
         }
 
         switch ($queryParams['order']) { // bad solution
+            case 'id':
+            case 'id ASC':
+            case 'id DESC':
             case 'name':
             case 'name ASC':
             case 'name DESC':
@@ -857,10 +907,19 @@ class Fields
                 break;
 
             default:
-                $query['order'] = 'priority ASC';
+                $query['order'] = 'priority ASC, id ASC';
         }
 
-        $result = QUI::getDataBase()->fetch($query);
+        //$query['debug'] = true;
+
+        try {
+            $result = QUI::getDataBase()->fetch($query);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
+            return [];
+        }
+
 
         try {
             QUI\Cache\Manager::set($cacheName, $result);
@@ -880,7 +939,8 @@ class Fields
      *                              $queryParams['where_or'],
      *                              $queryParams['limit']
      *                              $queryParams['order']
-     * @return array
+     *
+     * @return QUI\ERP\Products\Interfaces\FieldInterface[]
      */
     public static function getFields($queryParams = [])
     {
@@ -900,6 +960,27 @@ class Fields
         }
 
         return $result;
+    }
+
+    /**
+     * Return all fields by a specific type
+     *
+     * @param $type
+     * @return QUI\ERP\Products\Interfaces\FieldInterface[]
+     */
+    public static function getFieldsByType($type)
+    {
+        $result = [];
+        $fields = self::getFields();
+
+        /* @var $Field QUI\ERP\Products\Field\Field */
+        foreach ($fields as $Field) {
+            if ($Field->getType() == $type) {
+                $result[] = $Field;
+            }
+        }
+
+        return QUI\ERP\Products\Utils\Fields::sortFields($result);
     }
 
     /**
@@ -926,12 +1007,116 @@ class Fields
             $query['where_or'] = $queryParams['where_or'];
         }
 
-        $data = QUI::getDataBase()->fetch($query);
+        try {
+            $data = QUI::getDataBase()->fetch($query);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addError($Exception->getMessage());
+
+            return 0;
+        }
 
         if (isset($data[0]) && isset($data[0]['count'])) {
             return (int)$data[0]['count'];
         }
 
         return 0;
+    }
+
+    /**
+     * Set system attributes of all fields to all products that have these fields.
+     *
+     * This overwrites custom settings some products may have for individual fields.
+     *
+     * Attributes included:
+     * - isPublic
+     * - showInDetails
+     *
+     * @param int $fieldId (optional) - Restrict to one field [default: all fields]
+     * @param array $customaAttributes (optional) - Set custom attributes that are set to
+     * every product field
+     * @return void
+     */
+    public static function setFieldAttributesToProducts($fieldId = null, $customaAttributes = [])
+    {
+        if (!empty($fieldId)) {
+            $fieldIds = self::getFieldIds([
+                'where' => [
+                    'id' => $fieldId
+                ]
+            ]);
+        } else {
+            $fieldIds = self::getFieldIds();
+        }
+
+        // Collect field attributes
+        $fieldAttributes = [];
+
+        foreach ($fieldIds as $row) {
+            $fieldId = $row['id'];
+
+            try {
+                $Field = self::getField($fieldId);
+
+                $fieldAttributes[$fieldId] = [
+                    'isPublic'      => $Field->isPublic(),
+                    'showInDetails' => $Field->showInDetails()
+                ];
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
+        }
+
+        // Disable certain product operations for better performance
+        Products::disableGlobalFireEventsOnProductSave();
+        Products::disableGlobalProductSearchCacheUpdate();
+
+        $productIds = Products::getProductIds();
+
+        foreach ($productIds as $productId) {
+            try {
+                $Product = Products::getNewProductInstance($productId);
+
+                foreach ($fieldAttributes as $fieldId => $attributes) {
+                    if (!$Product->hasField($fieldId)) {
+                        continue;
+                    }
+
+                    try {
+                        $ProductField = $Product->getField($fieldId);
+                        $ProductField->setPublicStatus($attributes['isPublic']);
+                        $ProductField->setShowInDetailsStatus($attributes['showInDetails']);
+
+                        foreach ($customaAttributes as $k => $v) {
+                            switch ($k) {
+                                case 'ownField':
+                                    $ProductField->setOwnFieldStatus($v);
+                                    break;
+
+                                case 'unassigned':
+                                    $ProductField->setUnassignedStatus($v);
+                                    break;
+
+                                default:
+                                    $ProductField->setAttribute($k, $v);
+                            }
+                        }
+
+                        $Product->save();
+                    } catch (\Exception $Exception) {
+                        QUI\System\Log::writeException($Exception);
+                        continue;
+                    }
+
+                    Products::cleanProductInstanceMemCache();
+                }
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+                continue;
+            }
+        }
+
+        // Re-enable disabled product operations
+        Products::enableGlobalFireEventsOnProductSave();
+        Products::enableGlobalProductSearchCacheUpdate();
     }
 }

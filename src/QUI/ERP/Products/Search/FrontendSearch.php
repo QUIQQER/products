@@ -9,6 +9,7 @@ namespace QUI\ERP\Products\Search;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Categories;
+use QUI\ERP\Products\Product\Types\VariantChild;
 use QUI\ERP\Products\Search\Cache as SearchCache;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
@@ -21,9 +22,16 @@ use QUI\ERP\Products\Handler\Products;
  */
 class FrontendSearch extends Search
 {
-    const SITETYPE_SEARCH = 'quiqqer/products:types/search';
+    const SITETYPE_SEARCH   = 'quiqqer/products:types/search';
     const SITETYPE_CATEGORY = 'quiqqer/products:types/category';
-    const SITETYPE_LIST = 'quiqqer/productstags:types/list';
+    const SITETYPE_LIST     = 'quiqqer/productstags:types/list';
+
+    /**
+     * Flag how the search should handle variant children
+     *
+     * @var bool
+     */
+    protected $ignoreVariantChildren = true;
 
     /**
      * All site types eligible for frontend search
@@ -82,81 +90,11 @@ class FrontendSearch extends Search
         $this->Site     = $Site;
         $this->lang     = $Site->getProject()->getLang();
         $this->siteType = $type;
-    }
 
-    /**
-     * Perform machine search and set search parameters via GET/POST
-     *
-     * @param array $urlParams
-     * @param bool $countOnly (optional) - return search result count only [default: false]
-     * @return array
-     */
-    public function searchByUrl($urlParams, $countOnly = false)
-    {
-        $searchData = [
-            'fields' => []
-        ];
-
-        // parse all field specific parameters
-        foreach ($urlParams as $k => $v) {
-            if (\mb_strpos($k, 'F') !== 0) {
-                continue;
-            }
-
-            \preg_match('#\d*#i', $k, $matches);
-
-            if (empty($matches)) {
-                continue;
-            }
-
-            $v       = $this->sanitizeString($v);
-            $fieldId = (int)$matches[0];
-
-            \preg_match('#from#i', $k, $from);
-            \preg_match('#to#i', $k, $to);
-
-            if (!empty($from)
-                || !empty($to)
-            ) {
-                $value = [];
-
-                if (!empty($from)) {
-                    $value['from'] = $v;
-                }
-
-                if (!empty($to)) {
-                    $value['to'] = $v;
-                }
-
-                $v = $value;
-            }
-
-            $searchData['fields'][$fieldId] = [
-                'value' => $v
-            ];
+        // global variant settings
+        if (QUI::getPackage('quiqqer/products')->getConfig()->get('variants', 'findChildrenInSearch')) {
+            $this->ignoreVariantChildren = false;
         }
-
-        if (isset($urlParams['category']) && !empty($urlParams['category'])) {
-            $searchData['category'] = (int)$urlParams['category'];
-        }
-
-        if (isset($urlParams['limit']) && !empty($urlParams['limit'])) {
-            $searchData['limit'] = $urlParams['limit'];
-        }
-
-        if (isset($urlParams['sheet']) && !empty($urlParams['sheet'])) {
-            $searchData['sheet'] = (int)$urlParams['sheet'];
-        }
-
-        if (isset($urlParams['sortOn']) && !empty($urlParams['sortOn'])) {
-            $searchData['sortOn'] = $urlParams['sortOn'];
-        }
-
-        if (isset($urlParams['sortBy']) && !empty($urlParams['sortBy'])) {
-            $searchData['sortBy'] = $urlParams['sortBy'];
-        }
-
-        return $this->search($searchData, $countOnly);
     }
 
     /**
@@ -173,17 +111,15 @@ class FrontendSearch extends Search
             SearchHandler::PERMISSION_FRONTEND_EXECUTE
         );
 
-        $PDO = QUI::getDataBase()->getPDO();
+        $PDO                             = QUI::getDataBase()->getPDO();
+        $binds                           = [];
+        $where                           = [];
+        $findVariantParentsByChildValues = empty($searchParams['ignoreFindVariantParentsByChildValues'])
+                                           && !!(int)QUI::getPackage('quiqqer/products')
+                ->getConfig()
+                ->get('variants', 'findVariantParentByChildValues');
 
-        $binds = [];
-        $where = [];
-
-        if ($countOnly) {
-            $sql = "SELECT COUNT(*)";
-        } else {
-            $sql = "SELECT id";
-        }
-
+        $sql = "SELECT `id`, `type`, `parentId`";
         $sql .= " FROM ".TablesUtils::getProductCacheTableName();
 
         $where[]       = 'lang = :lang';
@@ -355,6 +291,22 @@ class FrontendSearch extends Search
             }
         }
 
+        if (!$findVariantParentsByChildValues && $this->ignoreVariantChildren) {
+            $where[] = 'type <> :variantClass';
+
+            $binds['variantClass'] = [
+                'value' => VariantChild::class,
+                'type'  => \PDO::PARAM_STR
+            ];
+        }
+
+        // Add WHERE statements via event
+        $SearchQueryCollector = new SearchQueryCollector($searchParams);
+        QUI::getEvents()->fireEvent('quiqqerProductsFrontendSearchExecute', [$SearchQueryCollector]);
+
+        $where = array_merge($SearchQueryCollector->getWhereStatements(), $where);
+        $binds = array_merge($SearchQueryCollector->getBinds(), $binds);
+
         // build WHERE query string
         if (!empty($where)) {
             $sql .= " WHERE ".\implode(" AND ", $where);
@@ -364,38 +316,73 @@ class FrontendSearch extends Search
             $sql .= " ".$this->validateOrderStatement($searchParams);
         }
 
-        if (!$countOnly) {
-            if (isset($searchParams['limit'])
-                && !empty($searchParams['limit'])
-                && isset($searchParams['sheet'])
-            ) {
-                $Pagination       = new QUI\Bricks\Controls\Pagination($searchParams);
-                $paginationParams = $Pagination->getSQLParams();
-                $queryLimit       = QUI\Database\DB::createQueryLimit($paginationParams['limit']);
+        $limitOffset = false;
 
-                foreach ($queryLimit['prepare'] as $bind => $value) {
-                    $binds[$bind] = [
-                        'value' => $value[0],
-                        'type'  => $value[1]
-                    ];
-                }
+        if (!empty($searchParams['limit']) && !$countOnly) {
+            $limit = explode(',', $searchParams['limit']);
 
-                $sql .= " ".$queryLimit['limit'];
-            } elseif (isset($searchParams['limit'])) {
-                $queryLimit = QUI\Database\DB::createQueryLimit($searchParams['limit']);
-
-                foreach ($queryLimit['prepare'] as $bind => $value) {
-                    $binds[$bind] = [
-                        'value' => $value[0],
-                        'type'  => $value[1]
-                    ];
-                }
-
-                $sql .= " ".$queryLimit['limit'];
+            if (!empty($limit[1])) {
+                $searchParams['sheet'] = (int)$limit[0] ?: 1;
+                $searchParams['limit'] = (int)$limit[1];
             } else {
-                $sql .= " LIMIT 20"; // @todo as settings
+                if (empty($searchParams['sheet'])) {
+                    $searchParams['sheet'] = 1;
+                }
+
+                if (empty($searchParams['limit'])) {
+                    $searchParams['limit'] = (int)$limit[0];
+                }
+            }
+
+            if (!empty($searchParams['limitOffset'])) {
+                $sql         .= " LIMIT ".(int)$searchParams['limitOffset'].",".(int)$searchParams['limit'];
+                $limitOffset = (int)$searchParams['limitOffset'];
+            } else {
+                $Pagination  = new QUI\Controls\Navigating\Pagination($searchParams);
+                $sqlParams   = $Pagination->getSQLParams();
+                $sql         .= " LIMIT ".$sqlParams['limit'];
+                $limitOffset = $Pagination->getStart();
+            }
+        } else {
+            if (!$countOnly) {
+                $sql         .= " LIMIT ".(int)20; // @todo: standard-limit als setting auslagern
+                $limitOffset = 0;
             }
         }
+
+//        if (!$countOnly) {
+//            if (isset($searchParams['limit'])
+//                && !empty($searchParams['limit'])
+//                && isset($searchParams['sheet'])
+//            ) {
+//                $Pagination       = new QUI\Controls\Navigating\Pagination($searchParams);
+//                $paginationParams = $Pagination->getSQLParams();
+//                $queryLimit       = QUI\Database\DB::createQueryLimit($paginationParams['limit']);
+//
+//                foreach ($queryLimit['prepare'] as $bind => $value) {
+//                    $binds[$bind] = [
+//                        'value' => $value[0],
+//                        'type'  => $value[1]
+//                    ];
+//                }
+//
+//                $sql .= " ".$queryLimit['limit'];
+//            } elseif (isset($searchParams['limit'])) {
+//                $queryLimit = QUI\Database\DB::createQueryLimit($searchParams['limit']);
+//
+//                foreach ($queryLimit['prepare'] as $bind => $value) {
+//                    $binds[$bind] = [
+//                        'value' => $value[0],
+//                        'type'  => $value[1]
+//                    ];
+//                }
+//
+//                $sql .= " ".$queryLimit['limit'];
+//            } else {
+//                $sql .= " LIMIT 20"; // @todo as settings
+//                $limitOffset = 0;
+//            }
+//        }
 
         $Stmt = $PDO->prepare($sql);
 
@@ -412,7 +399,7 @@ class FrontendSearch extends Search
             $Stmt->execute();
             $result = $Stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $Exception) {
-            QUI\System\Log::addError($Exception->getMessage());
+            QUI\System\Log::writeException($Exception);
 
             if ($countOnly) {
                 return 0;
@@ -421,14 +408,51 @@ class FrontendSearch extends Search
             return [];
         }
 
-        if ($countOnly) {
-            return (int)\current(\current($result));
+        $productIds      = [];
+        $childrenRemoved = 0;
+
+        foreach ($result as $k => $row) {
+            if ($row['type'] === VariantChild::class) {
+                if ($findVariantParentsByChildValues && !empty($row['parentId'])) {
+                    $productIds[] = $row['parentId'];
+                }
+
+                // If children are to be ignored -> do NOT add them to the result list
+                if ($this->ignoreVariantChildren) {
+                    $childrenRemoved++;
+                    continue;
+                }
+            }
+
+            // If children are NOT to be ignored -> add them to the result list
+            $productIds[] = $row['id'];
         }
 
-        $productIds = [];
+        /**
+         * If entries were removed from the result list repeat the search
+         * and add as many entries as needed to fill the given limit with "normal" search results.
+         */
+        if ($childrenRemoved > 0) {
+            if ($limitOffset !== false) {
+                $searchParams['limitOffset'] = $limitOffset;
+            }
 
-        foreach ($result as $row) {
-            $productIds[] = $row['id'];
+            $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+
+            if ($countOnly) {
+                return self::search($searchParams, $countOnly);
+            }
+
+            $productIds = array_merge(
+                $productIds,
+                self::search($searchParams)
+            );
+        }
+
+        $productIds = array_values(array_unique($productIds));
+
+        if ($countOnly) {
+            return count($productIds);
         }
 
         return $productIds;
@@ -441,10 +465,14 @@ class FrontendSearch extends Search
      */
     public function getSearchFieldData()
     {
-        $cname = 'products/search/frontend/searchfielddata/';
-        $cname .= $this->Site->getId().'/';
-        $cname .= $this->lang.'/';
-        $cname .= $this->getGroupHashFromUser();
+        try {
+            $cname = 'products/search/frontend/searchfielddata/';
+            $cname .= $this->Site->getId().'/';
+            $cname .= $this->lang.'/';
+            $cname .= $this->getGroupHashFromUser();
+        } catch (QUI\Exception $Exception) {
+            return [];
+        }
 
         try {
             return SearchCache::get($cname);
@@ -476,8 +504,12 @@ class FrontendSearch extends Search
             if (!$search) {
                 continue;
             }
-
-            $Field = Fields::getField($fieldId);
+            try {
+                $Field = Fields::getField($fieldId);
+            } catch (QUI\ERP\Products\Field\Exception $Exception) {
+                QUI\System\Log::addError($Exception->getMessage());
+                continue;
+            }
 
             if (!$this->canSearchField($Field)) {
                 continue;
@@ -526,16 +558,22 @@ class FrontendSearch extends Search
     /**
      * Return all fields that can be used in this search with search status (active/inactive)
      *
+     * @param array $options (optional) - Filter options
      * @return array
      */
-    public function getSearchFields()
+    public function getSearchFields($options = [])
     {
         $searchFields         = [];
         $searchFieldsFromSite = $this->Site->getAttribute(
             'quiqqer.products.settings.searchFieldIds'
         );
 
-        $eligibleFields = $this->getEligibleSearchFields();
+        try {
+            $eligibleFields = $this->getEligibleSearchFields();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addError($Exception->getMessage());
+            $eligibleFields = [];
+        }
 
         if (!$searchFieldsFromSite) {
             $searchFieldsFromSite = [];
@@ -545,14 +583,23 @@ class FrontendSearch extends Search
 
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($eligibleFields as $Field) {
-            if (!isset($searchFieldsFromSite[$Field->getId()])) {
-                $searchFields[$Field->getId()] = false;
-                continue;
+            $available = true;
+
+            if (!empty($options['showSearchableOnly']) && !$Field->isSearchable()) {
+                $available = false;
             }
 
-            $searchFields[$Field->getId()] = \boolval(
-                $searchFieldsFromSite[$Field->getId()]
-            );
+            if (!isset($searchFieldsFromSite[$Field->getId()])) {
+                $available = false;
+            }
+
+            if ($available) {
+                $searchFields[$Field->getId()] = \boolval(
+                    $searchFieldsFromSite[$Field->getId()]
+                );
+            } else {
+                $searchFields[$Field->getId()] = false;
+            }
         }
 
         return $searchFields;
@@ -574,14 +621,18 @@ class FrontendSearch extends Search
             }
         }
 
-        $Edit = $this->Site->getEdit();
+        try {
+            $Edit = $this->Site->getEdit();
 
-        $Edit->setAttribute(
-            'quiqqer.products.settings.searchFieldIds',
-            \json_encode($currentSearchFields)
-        );
+            $Edit->setAttribute(
+                'quiqqer.products.settings.searchFieldIds',
+                \json_encode($currentSearchFields)
+            );
 
-        $Edit->save();
+            $Edit->save();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
 
         return $currentSearchFields;
     }
@@ -594,8 +645,8 @@ class FrontendSearch extends Search
      */
     public static function setGlobalSearchFields($searchFields)
     {
-        $GlobaleSearch       = new QUI\ERP\Products\Search\GlobalFrontendSearch();
-        $currentSearchFields = $GlobaleSearch->getSearchFields();
+        $GlobalSearch        = new QUI\ERP\Products\Search\GlobalFrontendSearch();
+        $currentSearchFields = $GlobalSearch->getSearchFields();
         $newSearchFieldIds   = [];
 
         foreach ($currentSearchFields as $fieldId => $search) {
@@ -614,7 +665,11 @@ class FrontendSearch extends Search
             \implode(',', $newSearchFieldIds)
         );
 
-        $PackageCfg->save();
+        try {
+            $PackageCfg->save();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
 
 
         // field result
@@ -628,7 +683,13 @@ class FrontendSearch extends Search
             $searchFieldIdsFromCfg = explode(',', $searchFieldIdsFromCfg);
         }
 
-        $eligibleFields = $GlobaleSearch->getEligibleSearchFields();
+        try {
+            $eligibleFields = $GlobalSearch->getEligibleSearchFields();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            $eligibleFields = [];
+        }
+
 
         /** @var QUI\ERP\Products\Field\Field $Field */
         foreach ($eligibleFields as $Field) {
@@ -712,5 +773,22 @@ class FrontendSearch extends Search
         }
 
         return \md5($groups);
+    }
+
+    /**
+     * The search considers variant children
+     */
+    public function considerVariantChildren()
+    {
+        $this->ignoreVariantChildren = false;
+    }
+
+    /**
+     * The search ignores variant children
+     * Children are therefore not displayed in the search.
+     */
+    public function ignoreVariantChildren()
+    {
+        $this->ignoreVariantChildren = true;
     }
 }

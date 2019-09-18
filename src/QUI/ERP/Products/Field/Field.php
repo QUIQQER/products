@@ -120,6 +120,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $searchDataType = false;
 
     /**
+     * @var array
+     */
+    protected $titles = [];
+
+    /**
      * Model constructor.
      *
      * @param integer $fieldId
@@ -139,6 +144,12 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         ) {
             $this->public = $params['public'] ? true : false;
         }
+
+        // title description are always public
+        if ($this->id === 4 || $this->id === 5) {
+            $this->public = true;
+        }
+
 
         if (isset($params['system'])
             && (\is_bool($params['system']) || \is_int($params['system']))
@@ -627,6 +638,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Clears the default value
+     */
+    public function clearDefaultValue()
+    {
+        $this->defaultValue = null;
+    }
+
+    /**
      * Is the field a custom field?
      *
      * @return boolean
@@ -658,6 +677,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     {
         $this->validate($value);
         $this->value = $this->cleanup($value);
+    }
+
+    /**
+     * clears the current value of the field
+     */
+    public function clearValue()
+    {
+        $this->value = null;
     }
 
     /**
@@ -890,10 +917,18 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $Locale = QUI::getLocale();
         }
 
-        return $Locale->get(
+        $current = $Locale->getCurrent();
+
+        if (isset($this->titles[$current])) {
+            return $this->titles[$current];
+        }
+
+        $this->titles[$current] = $Locale->get(
             'quiqqer/products',
             'products.field.'.$this->getId().'.title'
         );
+
+        return $this->titles[$current];
     }
 
     /**
@@ -1095,11 +1130,30 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * Get all products associated with a field
+     * Get all products associated with this field
+     *
+     * @return QUI\ERP\Products\Product\Product[]
      */
     public function getProducts()
     {
         return Products::getProducts([
+            'where' => [
+                'fieldData' => [
+                    'type'  => '%LIKE%',
+                    'value' => '"id":'.$this->id.','
+                ]
+            ]
+        ]);
+    }
+
+    /**
+     * Get IDs of all products associated with this field
+     *
+     * @return int[]
+     */
+    public function getProductIds()
+    {
+        return Products::getProductIds([
             'where' => [
                 'fieldData' => [
                     'type'  => '%LIKE%',

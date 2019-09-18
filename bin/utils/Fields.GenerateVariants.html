@@ -1,0 +1,54 @@
+{{#fields}}
+<table class="data-table data-table-flexbox" data-field-id="{{fieldId}}">
+    <thead>
+    <tr>
+        <th>
+            <label>
+                <input type="checkbox" name="all" value="{{fieldId}}"/>
+                {{title}}
+            </label>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#values}}
+    <tr>
+        <td>
+            <label>
+                <input type="checkbox" name="{{fieldId}}" value="{{valueId}}"/>
+                <span>{{title}}</span>
+            </label>
+        </td>
+    </tr>
+    {{/values}}
+    {{^values}}
+    <tr>
+        <td>
+            <span class="quiqqer-products-variant-generate-noValuesMessage">
+                {{message_no_values}}
+            </span>
+        </td>
+    </tr>
+    {{/values}}
+    </tbody>
+</table>
+{{/fields}}
+
+{{#productAttributeList}}
+<table class="data-table data-table-flexbox" data-field-id="{{fieldId}}">
+    <thead>
+    <tr>
+        <th>{{title}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <span class="quiqqer-products-variant-generate-noValuesMessage">
+                Wird der Variante hinzugefügt
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+{{/productAttributeList}}

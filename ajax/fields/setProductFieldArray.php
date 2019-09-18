@@ -15,26 +15,13 @@ use QUI\ERP\Products\Handler\Products;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_fields_setProductFieldArray',
     function ($fieldId) {
-        $Fields = new Fields();
-        $Field  = $Fields->getField($fieldId);
-
-        $productIds   = Products::getProductIds();
+        $Field        = Fields::getField($fieldId);
         $productArray = $Field->toProductArray();
 
-        foreach ($productIds as $productId) {
-            $Product = Products::getProduct($productId);
-
-            if (!$Product->hasField($fieldId)) {
-                continue;
-            }
-
-            $ProductField = $Product->getField($fieldId);
-
-            $ProductField->setUnassignedStatus($productArray['unassigned']);
-            $ProductField->setOwnFieldStatus($productArray['ownField']);
-            $ProductField->setPublicStatus($productArray['isPublic']);
-            $Product->save();
-        }
+        Fields::setFieldAttributesToProducts($fieldId, [
+            'unassigned' => $productArray['unassigned'],
+            'ownField'   => $productArray['ownField']
+        ]);
     },
     ['fieldId'],
     'Permission::checkAdminUser'

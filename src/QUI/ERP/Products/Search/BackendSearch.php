@@ -12,6 +12,8 @@ use QUI\ERP\Products\Search\Cache as SearchCache;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Product\Types\VariantChild;
+use QUI\ERP\Products\Product\Types\VariantParent;
 
 /**
  * Class Search
@@ -21,14 +23,20 @@ use QUI\ERP\Products\Handler\Products;
 class BackendSearch extends Search
 {
     /**
+     * Flag how the search should handle variant children
+     *
+     * @var bool
+     */
+    protected $ignoreVariantChildren = true;
+
+    /**
      * BackendSearch constructor.
      *
      * @param string $lang (optional) - if ommitted, take lang from Product Locale
-     * @throws QUI\Exception
      */
     public function __construct($lang = null)
     {
-        if (\is_null($lang)) {
+        if ($lang === null) {
             $lang = Products::getLocale()->getCurrent();
         }
 
@@ -41,6 +49,7 @@ class BackendSearch extends Search
      * @param array $searchParams - search parameters
      * @param bool $countOnly (optional) - return count of search results only [default: false]
      * @return array|int - product ids
+     *
      * @throws QUI\Exception
      */
     public function search($searchParams, $countOnly = false)
@@ -51,15 +60,14 @@ class BackendSearch extends Search
 
         $PDO = QUI::getDataBase()->getPDO();
 
-        $binds = [];
-        $where = [];
+        $binds                           = [];
+        $where                           = [];
+        $findVariantParentsByChildValues = empty($searchParams['ignoreFindVariantParentsByChildValues'])
+                                           && !!(int)QUI::getPackage('quiqqer/products')
+                ->getConfig()
+                ->get('variants', 'findVariantParentByChildValues');
 
-        if ($countOnly) {
-            $sql = "SELECT COUNT(*)";
-        } else {
-            $sql = "SELECT id";
-        }
-
+        $sql = "SELECT `id`, `type`, `parentId`";
         $sql .= " FROM ".TablesUtils::getProductCacheTableName();
 
         $where[]       = 'lang = :lang';
@@ -163,11 +171,71 @@ class BackendSearch extends Search
             }
         }
 
-        // tags search
-        if (isset($searchParams['tags'])
-            && !empty($searchParams['tags'])
-            && \is_array($searchParams['tags'])
+        // product types search
+        if (!empty($searchParams['productTypes'])
+            && \is_array($searchParams['productTypes'])
         ) {
+            $typeCount               = 0;
+            $typeWhere               = [];
+            $variantParentsIncluded  = false;
+            $variantChildrenIncluded = false;
+
+            foreach ($searchParams['productTypes'] as $productType) {
+                if (!\class_exists($productType)) {
+                    continue;
+                }
+
+                $typeWhere[] = 'type = :variantClass'.$typeCount;
+
+                $binds['variantClass'.$typeCount] = [
+                    'value' => $productType,
+                    'type'  => \PDO::PARAM_STR
+                ];
+
+                switch ($productType) {
+                    case VariantParent::class:
+                        $variantParentsIncluded = true;
+                        break;
+
+                    case VariantChild::class:
+                        $variantChildrenIncluded = true;
+                        $this->ignoreVariantChildren = false;
+                        break;
+                }
+
+                $typeCount++;
+            }
+
+            if (!$variantParentsIncluded) {
+                $findVariantParentsByChildValues = false;
+            }
+
+            // If VariantParents should also be found by searching for VariantChildren values
+            // VariantChildren must be searched too
+            if ($findVariantParentsByChildValues
+                && $variantParentsIncluded
+                && !$variantChildrenIncluded
+            ) {
+                $typeWhere[] = 'type = :variantClass'.$typeCount;
+
+                $binds['variantClass'.$typeCount] = [
+                    'value' => VariantChild::class,
+                    'type'  => \PDO::PARAM_STR
+                ];
+            }
+
+            $where[] = '('.\implode(' OR ', $typeWhere).')';
+        } elseif (!$findVariantParentsByChildValues && $this->ignoreVariantChildren) {
+            $where[] = 'type <> :variantClass';
+
+            $binds['variantClass'] = [
+                'value' => VariantChild::class,
+                'type'  => \PDO::PARAM_STR
+            ];
+        }
+
+        // tags search
+        if (!empty($searchParams['tags']) && \is_array($searchParams['tags'])) {
             $data = $this->getTagQuery($searchParams['tags']);
 
             if (!empty($data['where'])) {
@@ -196,16 +264,22 @@ class BackendSearch extends Search
             $sql .= " ".$this->validateOrderStatement($searchParams);
         }
 
-        if (isset($searchParams['limit']) &&
-            !empty($searchParams['limit']) &&
-            !$countOnly
-        ) {
-            $Pagination = new QUI\Bricks\Controls\Pagination($searchParams);
-            $sqlParams  = $Pagination->getSQLParams();
-            $sql        .= " LIMIT ".$sqlParams['limit'];
+        $limitOffset = false;
+
+        if (!empty($searchParams['limit']) && !$countOnly) {
+            if (!empty($searchParams['limitOffset'])) {
+                $sql         .= " LIMIT ".(int)$searchParams['limitOffset'].",".(int)$searchParams['limit'];
+                $limitOffset = (int)$searchParams['limitOffset'];
+            } else {
+                $Pagination  = new QUI\Controls\Navigating\Pagination($searchParams);
+                $sqlParams   = $Pagination->getSQLParams();
+                $sql         .= " LIMIT ".$sqlParams['limit'];
+                $limitOffset = $Pagination->getStart();
+            }
         } else {
             if (!$countOnly) {
-                $sql .= " LIMIT ".(int)20; // @todo: standard-limit als setting auslagern
+                $sql         .= " LIMIT ".(int)20; // @todo: standard-limit als setting auslagern
+                $limitOffset = 0;
             }
         }
 
@@ -220,6 +294,8 @@ class BackendSearch extends Search
             $Stmt->execute();
             $result = $Stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
             if ($countOnly) {
                 return 0;
             }
@@ -227,14 +303,45 @@ class BackendSearch extends Search
             return [];
         }
 
-        if ($countOnly) {
-            return (int)\current(\current($result));
+        $productIds      = [];
+        $childrenRemoved = 0;
+
+        foreach ($result as $k => $row) {
+            if ($row['type'] === VariantChild::class) {
+                if ($findVariantParentsByChildValues && !empty($row['parentId'])) {
+                    $productIds[] = $row['parentId'];
+                }
+
+                if ($this->ignoreVariantChildren) {
+                    $childrenRemoved++;
+                    continue;
+                }
+            }
+
+            $productIds[] = $row['id'];
         }
 
-        $productIds = [];
+        /**
+         * If entries were removed from the result list repeat the search
+         * and add as many entries as needed to fill the given limit with "normal" search results.
+         */
+        if ($childrenRemoved > 0) {
+            if ($limitOffset !== false) {
+                $searchParams['limitOffset'] = $limitOffset;
+            }
 
-        foreach ($result as $row) {
-            $productIds[] = $row['id'];
+            $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+
+            $productIds = array_merge(
+                $productIds,
+                self::search($searchParams)
+            );
+        }
+
+        $productIds = array_values(array_unique($productIds));
+
+        if ($countOnly) {
+            return count($productIds);
         }
 
         return $productIds;
@@ -267,7 +374,12 @@ class BackendSearch extends Search
                 continue;
             }
 
-            $Field = Fields::getField($fieldId);
+            try {
+                $Field = Fields::getField($fieldId);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
+                continue;
+            }
 
             $searchFieldDataContent = [
                 'id'         => $Field->getId(),
@@ -368,7 +480,11 @@ class BackendSearch extends Search
             \implode(',', $newSearchFieldIds)
         );
 
-        $PackageCfg->save();
+        try {
+            $PackageCfg->save();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
 
         // clear search field cache
         SearchCache::clear('products/search/backend/');
@@ -383,7 +499,6 @@ class BackendSearch extends Search
      *                      field is public
      *
      * @return array
-     * @throws QUI\Exception
      */
     public function getEligibleSearchFields()
     {
@@ -395,5 +510,22 @@ class BackendSearch extends Search
         $this->eligibleFields = $this->filterEligibleSearchFields($fields);
 
         return $this->eligibleFields;
+    }
+
+    /**
+     * The search considers variant children
+     */
+    public function considerVariantChildren()
+    {
+        $this->ignoreVariantChildren = false;
+    }
+
+    /**
+     * The search ignores variant children
+     * Children are therefore not displayed in the search.
+     */
+    public function ignoreVariantChildren()
+    {
+        $this->ignoreVariantChildren = true;
     }
 }

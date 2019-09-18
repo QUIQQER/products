@@ -72,8 +72,18 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $requiredField = ' required="required"';
         }
 
+        if (\is_string($value)) {
+            $json = \json_decode($value, true);
+
+            if (\is_array($json)) {
+                $value = $json[0];
+            }
+        }
+
         if (!\is_string($value) && !\is_numeric($value)) {
             $value = '';
+        } elseif (\is_numeric($value)) {
+            $value = (int)$value;
         }
 
         $value = \htmlspecialchars($value);
@@ -97,28 +107,28 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
         // options
         $options = [];
+//
+//        $hasDefault = function () use ($entries) {
+//            foreach ($entries as $key => $option) {
+//                if (isset($option['selected']) && $option['selected']) {
+//                    return true;
+//                }
+//            }
+//
+//            return false;
+//        };
 
-        $hasDefault = function () use ($entries) {
-            foreach ($entries as $key => $option) {
-                if (isset($option['selected']) && $option['selected']) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
-
-        if ($value === '' && !$hasDefault()) {
-            $options[] = [
-                'value'    => '',
-                'text'     => QUI::getLocale()->get(
-                    'quiqqer/products',
-                    'fieldtype.ProductAttributeList.select.emptyvalue'
-                ),
-                'selected' => '',
-                'data'     => ''
-            ];
-        }
+//        if ($value === '' && !$hasDefault()) {
+//            $options[] = [
+//                'value'    => '',
+//                'text'     => QUI::getLocale()->get(
+//                    'quiqqer/products',
+//                    'fieldtype.ProductAttributeList.select.emptyvalue'
+//                ),
+//                'selected' => '',
+//                'data'     => ''
+//            ];
+//        }
 
         $currentLC = \strtolower($current).'_'.\strtoupper($current);
         $Calc      = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
@@ -128,12 +138,18 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
             $text      = '';
             $selected  = '';
+            $disabled  = '';
             $userInput = '';
 
             if (isset($option['selected']) && $option['selected']
-                || $value == $key
+                || (int)$value === $key && $value !== ''
             ) {
                 $selected = 'selected="selected" ';
+            }
+
+            if (isset($option['disabled']) && $option['disabled'] || $value === $key) {
+                $disabled = 'disabled="disabled" ';
+                $selected = '';
             }
 
             if (\is_string($title)) {
@@ -171,10 +187,11 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             }
 
             $options[] = [
-                'selected' => $selected,
-                'value'    => $key,
-                'text'     => $text,
-                'data'     => $userInput
+                'selected'  => $selected,
+                'disabled'  => $disabled,
+                'value'     => \htmlspecialchars($key),
+                'text'      => \htmlspecialchars($text),
+                'data'      => $userInput
             ];
         }
 

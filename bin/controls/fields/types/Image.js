@@ -145,6 +145,10 @@ define('package/quiqqer/products/bin/controls/fields/types/Image', [
          * opens the media
          */
         openMedia: function () {
+            if (this.$Input.disabled) {
+                return;
+            }
+
             var self    = this,
                 value   = this.$Input.value,
                 fileid  = false,

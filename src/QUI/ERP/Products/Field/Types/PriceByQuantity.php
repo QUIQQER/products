@@ -57,7 +57,7 @@ class PriceByQuantity extends Price
             return false;
         }
 
-        $RealProduct = new QUI\ERP\Products\Product\Product($Product->getId());
+        $RealProduct = QUI\ERP\Products\Handler\Products::getNewProductInstance($Product->getId());
         $value       = $RealProduct->getFieldValue($this->getId());
 
         if (empty($value)) {

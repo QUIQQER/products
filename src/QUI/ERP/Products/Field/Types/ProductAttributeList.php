@@ -39,6 +39,11 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     protected $defaultValue = null;
 
     /**
+     * @var array
+     */
+    protected $disabled = [];
+
+    /**
      * ProductAttributeList constructor.
      *
      * @param int $fieldId
@@ -268,7 +273,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         if ($userInput &&
             !(\defined('QUIQQER_FRONTEND') && QUI\ERP\Products\Utils\Package::hidePrice())
         ) {
-            $valueText .= ' ('.$userInput.')';
+            $valueText .= ' - '.$userInput;
         }
 
         return [
@@ -344,10 +349,25 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      */
     public function cleanup($value)
     {
+        if ($value === '') {
+            return null;
+        }
+
         $check = [];
 
-        if (\is_string($value)) {
+        if (\is_string($value) && !\is_numeric($value)) {
             $check = \json_decode($value, true);
+
+            // if no json, check if value exist
+            if ($check === null) {
+                $options = $this->getOptions();
+                $entries = $options['entries'];
+                $wanted  = (int)$value;
+
+                if (isset($entries[$wanted])) {
+                    return $wanted;
+                }
+            }
 
             if (!isset($check[0]) || !isset($check[1])) {
                 return null;
@@ -382,5 +402,35 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         }
 
         return (int)$value;
+    }
+
+    /**
+     * disable all entries
+     */
+    public function disableEntries()
+    {
+        foreach ($this->options['entries'] as $key => $option) {
+            $this->options['entries'][$key]['disabled'] = true;
+        }
+    }
+
+    /**
+     * Disable an option
+     *
+     * @param string|integer $entry
+     */
+    public function disableEntry($entry)
+    {
+        $this->options['entries'][$entry]['disabled'] = true;
+    }
+
+    /**
+     * Enable an option
+     *
+     * @param string|integer $entry
+     */
+    public function enableEntry($entry)
+    {
+        $this->options['entries'][$entry]['disabled'] = false;
     }
 }

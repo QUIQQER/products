@@ -7,7 +7,10 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
+use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
+use QUI\ERP\Products\Utils\Fields as FieldUtils;
+use QUI\ERP\Products\Product\Exception;
 
 /**
  * Class Products Helper
@@ -70,7 +73,8 @@ class Products
         // is user in group filter
         $priceList = \array_merge(
             $Product->getFieldsByType(FieldHandler::TYPE_PRICE),
-            $Product->getFieldsByType(FieldHandler::TYPE_PRICE_BY_QUANTITY)
+            $Product->getFieldsByType(FieldHandler::TYPE_PRICE_BY_QUANTITY),
+            $Product->getFieldsByType(FieldHandler::TYPE_PRICE_BY_TIMEPERIOD)
         );
 
         if (empty($priceList)) {
@@ -122,8 +126,7 @@ class Products
                     $ParentField = FieldHandler::getField($Field->getId());
                     $value       = $ParentField->onGetPriceFieldForProduct($Product, $User);
 
-                    if ($value && $value < $PriceField->getValue()) {
-                        $PriceField = $Field;
+                    if ($value && $value < $priceValue) {
                         $priceValue = $value;
                     }
                 } catch (QUI\Exception $Exception) {
@@ -138,12 +141,413 @@ class Products
                 continue;
             }
 
-            if ($value < $PriceField->getValue()) {
-                $PriceField = $Field;
+            if ($value < $priceValue) {
                 $priceValue = $value;
             }
         }
 
         return new QUI\ERP\Money\Price($priceValue, $Currency);
+    }
+
+    /**
+     * Return the editable fields for the project
+     * editable fields can be changed by the user via the GUI
+     *
+     * @param null $Product
+     * @return array
+     */
+    public static function getEditableFieldIdsForProduct($Product = null)
+    {
+        if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            $Product = $Product->getParent();
+        }
+
+        if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Product) {
+            if ($Product->getAttribute('editableVariantFields')) {
+                $editable = $Product->getAttribute('editableVariantFields');
+
+                if (\is_string($editable)) {
+                    $editable = \json_decode($editable, true);
+                }
+
+                return $editable;
+            }
+        }
+
+        // global erp editable fields
+        try {
+            $Config = QUI::getPackage('quiqqer/products')->getConfig();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+
+            return [];
+        }
+
+        $fields = $Config->getSection('editableFields');
+
+        if ($fields) {
+            $result = \array_keys($fields);
+
+            return $result;
+        }
+
+
+        $fields = FieldHandler::getFields();
+        $result = \array_map(function ($Field) {
+            /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
+            return $Field->getId();
+        }, $fields);
+
+        return $result;
+    }
+
+    /**
+     * Return the inherited fields for the project
+     *
+     * @param null $Product
+     * @return array
+     */
+    public static function getInheritedFieldIdsForProduct($Product = null)
+    {
+        if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            $Product = $Product->getParent();
+        }
+
+        if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Product) {
+            if ($Product->getAttribute('inheritedVariantFields')) {
+                $inherited = $Product->getAttribute('inheritedVariantFields');
+
+                if (\is_string($inherited)) {
+                    $inherited = \json_decode($inherited, true);
+                }
+
+                return $inherited;
+            }
+        }
+
+        // global erp inherited fields
+        try {
+            $Config = QUI::getPackage('quiqqer/products')->getConfig();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+
+            return [];
+        }
+
+        $fields = $Config->getSection('inheritedFields');
+
+        if ($fields) {
+            $result = \array_keys($fields);
+
+            return $result;
+        }
+
+
+        $fields = FieldHandler::getFields();
+        $result = \array_map(function ($Field) {
+            /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
+            return $Field->getId();
+        }, $fields);
+
+        return $result;
+    }
+
+    /**
+     * Return generate variant hash
+     *
+     * @param array $fields - could be a field array [Field, Field, Field],
+     *                        or could be a field object list ['field-1':2, 'field-1':'value']
+     * @return string
+     */
+    public static function generateVariantHashFromFields($fields)
+    {
+        $hash = [];
+
+        // get hash values
+        foreach ($fields as $Field => $fieldValue) {
+            if ($fieldValue instanceof QUI\ERP\Products\Interfaces\FieldInterface) {
+                $fieldId    = $fieldValue->getId();
+                $fieldValue = $fieldValue->getValue();
+            } elseif (\is_string($Field) || \is_numeric($Field)) {
+                $fieldId = $Field;
+            } else {
+                continue;
+            }
+
+            // string to hex
+            if (!\is_numeric($fieldValue)) {
+                $fieldValue = \implode(\unpack("H*", $fieldValue));
+            }
+
+            $hash[] = $fieldId.':'.$fieldValue;
+        }
+
+        // sort fields
+        \usort($hash, function ($a, $b) {
+            $aId = (int)\explode(':', $a)[0];
+            $bId = (int)\explode(':', $b)[0];
+
+            return $aId - $bId;
+        });
+
+        // generate hash
+        $generate = ';'.\implode(';', $hash).';';
+
+        return $generate;
+    }
+
+    /**
+     * @param QUI\ERP\Products\Product\Product $Product
+     */
+    public static function setAvailableFieldOptions(QUI\ERP\Products\Product\Product $Product)
+    {
+        if (!($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) &&
+            !($Product instanceof QUI\ERP\Products\Product\Types\VariantChild)) {
+            return;
+        }
+
+        // attribute groups
+        $groupList = $Product->getFieldsByType(FieldHandler::TYPE_ATTRIBUTE_GROUPS);
+
+        $available        = $Product->availableActiveChildFields();
+        $availableHashes  = $Product->availableActiveFieldHashes();
+        $availableEntries = [];
+
+        // parse allowed field values (=options)
+        $currentVariantHash = Products::generateVariantHashFromFields($groupList);
+        $searchHashes       = FieldUtils::getSearchHashesFromFieldHash($currentVariantHash);
+
+        foreach ($availableHashes as $hash) {
+            $hashArray = FieldUtils::parseFieldHashToArray($hash);
+
+            foreach ($hashArray as $fieldId => $fieldValue) {
+                if (isset($availableEntries[$fieldId][$fieldValue])) {
+                    continue;
+                }
+
+                if ($fieldValue === '') {
+                    continue;
+                }
+
+
+                if ($currentVariantHash === $hash) {
+                    $availableEntries[$fieldId][$fieldValue] = true;
+                    continue;
+                }
+
+                foreach ($searchHashes as $searchHash) {
+                    if (\fnmatch($searchHash, $hash)) {
+                        $availableEntries[$fieldId][$fieldValue] = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        // set field option status
+        foreach ($groupList as $Field) {
+            /* @var $Field QUI\ERP\Products\Field\Types\AttributeGroup */
+            $fieldId = $Field->getId();
+            $Field->hideEntries();
+            $Field->disableEntries();
+
+            $options = $Field->getOptions();
+            $entries = $options['entries'];
+
+            if (!isset($available[$fieldId])) {
+                continue;
+            }
+
+            $allowed = $available[$fieldId];
+            $allowed = \array_flip($allowed);
+
+            foreach ($entries as $key => $value) {
+                $valueId       = $value['valueId'];
+                $hashedValueId = false;
+
+                if (!\is_numeric($valueId)) {
+                    $hashedValueId = \implode(\unpack("H*", $valueId));
+
+                    if (!isset($allowed[$valueId]) && !isset($allowed[$hashedValueId])) {
+                        continue;
+                    }
+                }
+
+                if (!isset($allowed[$valueId])) {
+                    continue;
+                }
+
+                $Field->showEntry($key);
+
+                if (isset($availableEntries[$fieldId][$valueId])) {
+                    $Field->enableEntry($key);
+                    continue;
+                }
+
+                if ($hashedValueId && isset($availableEntries[$fieldId][$hashedValueId])) {
+                    $Field->enableEntry($key);
+                    continue;
+                }
+            }
+        }
+    }
+
+    /**
+     * @param QUI\ERP\Products\Product\Product $Product
+     * @return array
+     */
+    public static function getJsFieldHashArray(QUI\ERP\Products\Product\Product $Product)
+    {
+        if (!($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) &&
+            !($Product instanceof QUI\ERP\Products\Product\Types\VariantChild)) {
+            return [];
+        }
+
+        $availableHashes = $Product->availableActiveFieldHashes();
+        $result          = [];
+
+        foreach ($availableHashes as $hash) {
+            $hashArray = FieldUtils::parseFieldHashToArray($hash);
+
+            foreach ($hashArray as $fieldId => $value) {
+                if (!isset($result[$fieldId])) {
+                    $result[$fieldId] = [];
+                }
+
+                foreach ($hashArray as $fid => $v) {
+                    $result[$fieldId][$fid][$v][] = $hash;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Is the product a variant product
+     *
+     * @param $Product
+     * @return bool
+     */
+    public static function isVariant($Product)
+    {
+        if ($Product instanceof QUI\ERP\Products\Product\ViewFrontend) {
+            $Product = $Product->getProduct();
+        }
+
+        if ($Product instanceof QUI\ERP\Products\Product\Types\VariantParent
+            || $Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $urlFieldValue
+     * @param integer $categoryId
+     * @param integer|false $ignoreProductId - optional
+     *
+     * @throws Exception
+     */
+    public static function checkUrlByUrlFieldValue($urlFieldValue, $categoryId, $ignoreProductId = false)
+    {
+        $urlCacheField = 'F'.FieldHandler::FIELD_URL;
+        $table         = QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
+
+        $where = [];
+        $binds = [];
+        $i     = 0;
+
+        foreach ($urlFieldValue as $lang => $url) {
+            if (empty($url)) {
+                continue;
+            }
+
+            self::checkUrlLength($url, $lang, $categoryId);
+
+
+            $binds[':lang'.$i]     = $lang;
+            $binds[':url'.$i]      = $url;
+            $binds[':category'.$i] = '%,'.$categoryId.',%';
+
+            $where[] = "(F19 LIKE :url{$i} AND lang LIKE :lang{$i} AND category LIKE :category{$i})";
+            $i++;
+        }
+
+        if (empty($where)) {
+            return;
+        }
+
+        $where = \implode(' OR ', $where);
+
+        $query = "
+            SELECT id, {$urlCacheField} 
+            FROM {$table}
+            WHERE {$where}
+        ";
+
+        $PDO       = QUI::getDataBase()->getPDO();
+        $Statement = $PDO->prepare($query);
+
+        foreach ($binds as $bind => $value) {
+            $Statement->bindValue($bind, $value, \PDO::PARAM_STR);
+        }
+
+        $Statement->execute();
+        $result = $Statement->fetchAll();
+
+        // no results, all is fine
+        if (empty($result)) {
+            return;
+        }
+
+        foreach ($result as $entry) {
+            if ($ignoreProductId && (int)$entry['id'] === $ignoreProductId) {
+                continue;
+            }
+
+            throw new Exception([
+                'quiqqer/products',
+                'exception.url.already.exists'
+            ]);
+        }
+    }
+
+
+    /**
+     * Checks the urls length for the product
+     *
+     * @param string $url
+     * @param string $lang
+     * @param integer $categoryId
+     *
+     * @throws Exception
+     */
+    public static function checkUrlLength($url, $lang, $categoryId)
+    {
+        try {
+            $Category = Categories::getCategory($categoryId);
+            $projects = QUI::getProjectManager()->getProjects(true);
+        } catch (QUI\Exception $Exception) {
+            return;
+        }
+
+        /* @var $Project QUI\Projects\Project */
+        foreach ($projects as $Project) {
+            if ($Project->getLang() !== $lang) {
+                continue;
+            }
+
+            $categoryUrl = $Category->getUrl($Project);
+
+            if (!empty($categoryUrl) && \strlen($categoryUrl.'/'.$url) > 2000) {
+                throw new Exception([
+                    'quiqqer/products',
+                    'exception.url.is.too.long'
+                ]);
+            }
+        }
     }
 }

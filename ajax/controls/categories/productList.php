@@ -16,7 +16,7 @@ use QUI\ERP\Products\Controls\Category\ProductList;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_controls_categories_productList',
-    function ($project, $siteId, $categoryId, $view, $searchParams, $next, $articles) {
+    function ($project, $siteId, $categoryId, $productLoadNumber, $view, $searchParams, $next, $articles) {
         try {
             Categories::getCategory($categoryId);
         } catch (QUI\Exception $Exception) {
@@ -27,10 +27,11 @@ QUI::$Ajax->registerFunction(
         $Site    = $Project->get($siteId);
 
         $Control = new ProductList([
-            'categoryId'   => $categoryId,
-            'view'         => $view,
-            'Site'         => $Site,
-            'searchParams' => \json_decode($searchParams, true)
+            'categoryId'        => $categoryId,
+            'view'              => $view,
+            'Site'              => $Site,
+            'searchParams'      => \json_decode($searchParams, true),
+            'productLoadNumber' => $productLoadNumber
         ]);
 
         if ($next) {
@@ -39,6 +40,6 @@ QUI::$Ajax->registerFunction(
 
         return $Control->getStart();
     },
-    ['project', 'siteId', 'categoryId', 'view', 'searchParams', 'next', 'articles'],
+    ['project', 'siteId', 'categoryId', 'productLoadNumber', 'view', 'searchParams', 'next', 'articles'],
     false
 );

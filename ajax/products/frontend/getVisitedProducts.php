@@ -22,6 +22,10 @@ QUI::$Ajax->registerFunction(
         }
 
         foreach ($productIds as $productId) {
+            if (empty($productId) || !is_numeric($productId)) {
+                continue;
+            }
+
             if ($currentProductId == $productId) {
                 continue;
             }

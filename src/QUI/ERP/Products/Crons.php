@@ -19,7 +19,7 @@ class Crons
     /**
      * Time for one product to update its cache (seconds)
      */
-    const PRODUCT_CACHE_UPDATE_TIME = 3;
+    const PRODUCT_CACHE_UPDATE_TIME = 5;
 
     /**
      * Updates cache values for all products
@@ -39,8 +39,13 @@ class Crons
 
             try {
                 $Product = Products::getProduct($id);
+
+                $t = microtime(true);
                 $Product->updateCache();
+                \QUI\System\Log::addDebug("update cache for product #".$id." | time: ".(microtime(true) - $t));
             } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+
                 QUI\System\Log::addWarning(
                     'cron :: updateProductCache() :: Could not update cache'
                     .' for Product #'.$Product->getId().' -> '
@@ -59,15 +64,24 @@ class Crons
      */
     public static function generateCacheImagesOfProducts()
     {
-        $ids = Products::getProductIds();
+        $ids     = Products::getProductIds();
+        $count   = \count($ids);
+        $current = 0;
 
         /** @var QUI\ERP\Products\Product\Model $Product */
         foreach ($ids as $id) {
+            QUI::getEvents()->fireEvent('generateCacheImagesOfProductsBegin', [$id, $current, $count]);
+
             \set_time_limit(self::PRODUCT_CACHE_UPDATE_TIME);
 
             try {
-                $Product = Products::getProduct($id);
-                $Image   = $Product->getImage();
+                $Product = Products::getNewProductInstance($id);
+
+                if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+                    continue;
+                }
+
+                $Image = $Product->getImage();
 
                 $Image->createCache();
 
@@ -81,6 +95,10 @@ class Crons
                     'cron'      => 'generateCacheImagesOfProducts'
                 ]);
             }
+
+            QUI::getEvents()->fireEvent('generateCacheImagesOfProductsEnd', [$id, $current, $count]);
+
+            $current++;
         }
 
         // reset time limit

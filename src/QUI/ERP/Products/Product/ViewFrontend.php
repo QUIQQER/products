@@ -76,6 +76,14 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     }
 
     /**
+     * @return Model|UniqueProduct
+     */
+    public function getProduct()
+    {
+        return $this->Product;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -196,12 +204,69 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
             );
         }
 
-        $User = QUI::getUserBySession();
-        $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
+        $User  = QUI::getUserBySession();
+        $price = $this->Product->getPrice()->getPrice();
 
-        return $Calc->getProductPrice(
-            $this->Product->createUniqueProduct($User)
-        );
+        if ($price === null) {
+            $Price = $this->getProduct()->getMinimumPrice($User);
+        } else {
+            $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
+
+            $Price = $Calc->getProductPrice(
+                $this->Product->createUniqueProduct($User)
+            );
+        }
+
+        if ($this->Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
+            $Price->enableMinimalPrice();
+
+            return $Price;
+        }
+
+
+        // use search cache
+        $minCache = 'quiqqer/products/'.$this->getId().'/prices/min';
+        $maxName  = 'quiqqer/products/'.$this->getId().'/prices/max';
+
+        $min = null;
+        $max = null;
+
+        try {
+            $min = QUI\Cache\Manager::get($minCache);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
+
+        try {
+            $max = QUI\Cache\Manager::get($maxName);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
+
+        if ($min === null || $max === null) {
+            $priceResult = QUI::getDataBase()->fetch([
+                'select' => 'id, minPrice, maxPrice',
+                'from'   => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+                'where'  => [
+                    'id' => $this->getId()
+                ],
+                'limit'  => 1
+            ]);
+
+            if (isset($priceResult[0])) {
+                $min = $priceResult[0]['minPrice'];
+                $max = $priceResult[0]['maxPrice'];
+            } else {
+                $min = $this->Product->getMinimumPrice();
+                $max = $this->Product->getMaximumPrice();
+            }
+        }
+
+        if ($min !== $max) {
+            $Price->enableMinimalPrice();
+        }
+
+        return $Price;
     }
 
     /**
@@ -214,12 +279,19 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getPriceDisplay()
     {
-        $Price      = $this->getPrice();
-        $vatArray   = [];
-        $attributes = $this->getAttributes();
+        $Price    = $this->getPrice();
+        $vatArray = [];
 
-        $User = QUI::getUserBySession();
-        $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
+        $User    = QUI::getUserBySession();
+        $Calc    = QUI\ERP\Products\Utils\Calc::getInstance($User);
+        $Product = $this->getProduct();
+
+        if (!($Product instanceof UniqueProduct)) {
+            $Product = $Product->createUniqueProduct($User);
+        }
+
+        $Product->calc($Calc);
+        $attributes = $Product->getAttributes();
 
         if (isset($attributes['calculated_vatArray'])) {
             $vatArray = $attributes['calculated_vatArray'];
@@ -391,6 +463,16 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         return $this->Product->getOriginalPrice();
     }
 
+    /**
+     * Return a calculated price field
+     *
+     * @param integer $FieldId
+     * @return false|QUI\ERP\Products\Field\UniqueField
+     */
+    public function getCalculatedPrice($FieldId)
+    {
+        return $this->Product->getCalculatedPrice($FieldId);
+    }
 
     //region calculation
 

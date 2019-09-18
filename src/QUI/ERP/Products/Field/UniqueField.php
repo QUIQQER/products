@@ -285,7 +285,12 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     public function getPrice()
     {
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
-        $Price    = new QUI\ERP\Money\Price(0, $Currency);
+
+        if (\is_numeric($this->value)) {
+            $Price = new QUI\ERP\Money\Price($this->value, $Currency);
+        } else {
+            $Price = new QUI\ERP\Money\Price(0, $Currency);
+        }
 
         return $Price;
     }
@@ -345,6 +350,25 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Exists an empty entry in this list?
+     *
+     * @return bool
+     */
+    public function hasDefaultEntry()
+    {
+        $options = $this->getOptions();
+        $entries = $options['entries'];
+
+        foreach ($entries as $entry) {
+            if ($entry['selected']) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -415,11 +439,28 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
     public function getAttributes()
     {
+        $options   = $this->getOptions();
+        $value     = $this->getValue();
+        $json      = null;
+        $userinput = '';
+
+        if (\is_string($value)) {
+            $json = \json_decode($value, true);
+
+            if (\is_array($json) && isset($json[0])) {
+                $value = $json[0];
+
+                if (isset($json[1])) {
+                    $userinput = $json[1];
+                }
+            }
+        }
+
         return [
             'id'         => $this->getId(),
             'title'      => $this->getTitle(),
             'type'       => $this->getType(),
-            'options'    => $this->getOptions(),
+            'options'    => $options,
             'isRequired' => $this->isRequired(),
             'isStandard' => $this->isStandard(),
             'isSystem'   => $this->isSystem(),
@@ -431,9 +472,153 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'custom'        => $this->isCustomField(),
             'custom_calc'   => $this->custom_calc,
             'unassigned'    => $this->isUnassigned(),
-            'value'         => $this->getValue(),
+            'value'         => $value,
+            'valueText'     => $this->getValueText(),
+            'userinput'     => $userinput,
             'showInDetails' => $this->showInDetails()
         ];
+    }
+
+    /**
+     * Get field value text
+     *
+     * @return string
+     */
+    protected function getValueText()
+    {
+        if (isset($this->custom_calc['valueText'])) {
+            return $this->custom_calc['valueText'];
+        }
+
+        $valueText = '-';
+
+        switch ($this->type) {
+            case QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_LIST:
+                $valueText = $this->getValueTextProductAttributeList();
+                break;
+
+            case QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS:
+                $valueText = $this->getValueTextAttributeGroup();
+                break;
+        }
+
+        return $valueText;
+    }
+
+    /**
+     * Parse value text of field type ProductAttributeList
+     *
+     * @return string
+     */
+    protected function getValueTextProductAttributeList()
+    {
+        $options   = $this->getOptions();
+        $value     = $this->getValue();
+        $valueText = '-';
+
+        if (!empty($options) && isset($options['entries'])) {
+            $current = QUI::getLocale()->getCurrent();
+
+            foreach ($options['entries'] as $option) {
+                if (!isset($option['selected']) || $option['selected'] === false) {
+                    continue;
+                }
+
+                if (isset($option['title'][$current])) {
+                    $valueText = $option['title'][$current];
+                    break;
+                }
+
+                $valueText = \reset($option['title']);
+            }
+
+            if ($valueText === '-') {
+                foreach ($options['entries'] as $option) {
+                    if (!isset($option['default']) || $option['default'] === false) {
+                        continue;
+                    }
+
+                    if (isset($option['title'][$current])) {
+                        $valueText = $option['title'][$current];
+                        break;
+                    }
+
+                    $valueText = \reset($option['title']);
+                }
+            }
+
+            if ($valueText === '-') {
+                foreach ($options['entries'] as $option) {
+                    if (!isset($option['valueId'])) {
+                        continue;
+                    }
+
+                    $numCheck = \is_numeric($value)
+                                && \is_numeric($option['valueId'])
+                                && (int)$option['valueId'] === (int)$value;
+
+                    if ($option['valueId'] !== $value && !$numCheck) {
+                        continue;
+                    }
+
+                    if (isset($option['title'][$current])) {
+                        $valueText = $option['title'][$current];
+                        break;
+                    }
+
+                    $valueText = \reset($option['title']);
+                }
+            }
+        }
+
+        return $valueText;
+    }
+
+    /**
+     * Parse value text of field type AttributeGroup
+     *
+     * @return string
+     */
+    protected function getValueTextAttributeGroup()
+    {
+        $options   = $this->getOptions();
+        $value     = $this->getValue();
+        $valueText = '-';
+
+        if (empty($options['entries'])) {
+            return $valueText;
+        }
+
+        $current = QUI::getLocale()->getCurrent();
+
+        foreach ($options['entries'] as $option) {
+            if ($value != $option['valueId']) {
+                continue;
+            }
+
+            if (!empty($option['title'][$current])) {
+                return $option['title'][$current];
+            }
+
+            // fallback to default title (first language)
+            return \reset($option['title']);
+        }
+
+        // Get default value
+        foreach ($options['entries'] as $option) {
+            if (empty($option['selected'])) {
+                continue;
+            }
+
+            if (!empty($option['title'][$current])) {
+                return $option['title'][$current];
+            }
+
+            // fallback to default title (first language)
+            return \reset($option['title']);
+        }
+
+        return $valueText;
     }
 
     /**

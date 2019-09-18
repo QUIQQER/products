@@ -73,10 +73,19 @@
     line-height: 30px;
 }
 
+.product-data-id {
+    float: right;
+}
+
 .product-data .field-container-item:last-child .fa {
     font-size: 14px;
 }
 
 .product-data .field-information {
     line-height: 30px;
+}
+
+.product-data .field-information .users-input,
+.product-data .field-information .user-input-container {
+    width: 100%;
 }

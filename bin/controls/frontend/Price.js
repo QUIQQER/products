@@ -8,9 +8,10 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
 
     'qui/QUI',
     'qui/controls/Control',
-    'package/quiqqer/currency/bin/Currency'
+    'package/quiqqer/currency/bin/Currency',
+    'Locale'
 
-], function (QUI, QUIControl, Currency) {
+], function (QUI, QUIControl, Currency, QUILocale) {
 
     "use strict";
 
@@ -40,8 +41,9 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Price = null;
-            this.$Vat   = null;
+            this.$Price  = null;
+            this.$Vat    = null;
+            this.$Prefix = null;
 
             this.addEvents({
                 onImport : this.$onImport,
@@ -73,6 +75,13 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
                 return;
             }
 
+            // same currency
+            if (this.getAttribute('currency') === this.getElm().get('data-qui-options-currency')) {
+                // this.$Price.set('html', result);
+                // this.$Price.set('title', result);
+                return;
+            }
+
             Currency.convertWithSign(
                 this.getAttribute('price'),
                 this.getAttribute('currency')
@@ -99,14 +108,16 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
                 this.setAttribute('currency', Elm.get('data-qui-options-currency'));
             }
 
-            if (Elm.getElement('.qui-products-price-display-vat')) {
-                this.$Price = Elm.getElement('.qui-products-price-display-value');
-                this.$Vat   = Elm.getElement('.qui-products-price-display-vat');
-            } else {
-                this.$Price = Elm;
+            this.$Price = Elm.getElement('.qui-products-price-display-value');
+
+            if (!this.$Price) {
+                return;
             }
 
             this.$Price.addClass('quiqqer-price');
+
+            this.$Vat    = Elm.getElement('.qui-products-price-display-vat');
+            this.$Prefix = Elm.getElement('.qui-products-price-display-prefix');
 
             this.setPrice(Elm.get('data-qui-options-price'));
         },
@@ -145,6 +156,16 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
         },
 
         /**
+         * Only usable if the price is formated
+         *
+         * @param priceDisplay
+         */
+        setPriceDisplay: function (priceDisplay) {
+            this.$Price.set('html', priceDisplay);
+            this.$Price.set('title', priceDisplay);
+        },
+
+        /**
          * Set the currency for the display
          *
          * @param {String} CurrencyCode
@@ -156,6 +177,41 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
 
             this.setAttrbute('currency', CurrencyCode);
             this.refresh();
+        },
+
+        /**
+         * Return if the the price is minimal price and higher prices exists
+         *
+         * @return bool
+         */
+        isMinimalPrice: function () {
+            return this.$isMinimalPrice;
+        },
+
+        /**
+         * enables the minimal price
+         * -> price from
+         * -> ab
+         */
+        enableMinimalPrice: function () {
+            this.$isMinimalPrice = true;
+
+            if (this.$Prefix) {
+                this.$Prefix.set('html', QUILocale.get('quiqqer/erp', 'price.starting.from'));
+            }
+        },
+
+        /**
+         * enables the minimal price
+         * -> price from
+         * -> ab
+         */
+        disableMinimalPrice: function () {
+            this.isMinimalPrice = false;
+
+            if (this.$Prefix) {
+                this.$Prefix.set('html', '');
+            }
         }
     });
 });

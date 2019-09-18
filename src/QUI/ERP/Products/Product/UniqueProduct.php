@@ -10,8 +10,8 @@ use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Handler\Categories;
-use QUI\ERP\Products\Utils\PriceFactor;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
+use QUI\ERP\Products\Utils\PriceFactor;
 use QUI\ERP\Accounting\Calc as ErpCalc;
 
 use QUI\Projects\Media\Utils as MediaUtils;
@@ -231,6 +231,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             'quiqqerProductsPriceFactorsInit',
             [$this->PriceFactors, $this]
         );
+
+        $this->recalculation();
     }
 
     /**
@@ -368,7 +370,9 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $attributes        = $this->getAttributes();
         $attributes['uid'] = $this->getUser()->getId();
 
-        return new UniqueProductFrontendView($this->id, $attributes);
+        $View = new UniqueProductFrontendView($this->id, $attributes);
+
+        return $View;
     }
 
     //region calculation
@@ -429,6 +433,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function recalculation($Calc = null)
     {
+        QUI::getEvents()->fireEvent('quiqqerProductsUniqueProductRecalculation', [$this]);
+
         $this->resetCalculation();
 
         return $this->calc($Calc);
@@ -459,7 +465,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         /* @var $Field QUI\ERP\Products\Field\UniqueField */
         foreach ($this->fields as $key => $Field) {
             if ($Field->getType() !== FieldHandler::TYPE_PRICE
-                && $Field->getType() !== FieldHandler::TYPE_PRICE_BY_QUANTITY) {
+                && $Field->getType() !== FieldHandler::TYPE_PRICE_BY_QUANTITY
+                && $Field->getType() !== FieldHandler::TYPE_PRICE_BY_TIMEPERIOD) {
                 continue;
             }
 
@@ -713,7 +720,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $Price = new QUI\ERP\Money\Price(
             $this->sum,
-            QUI\ERP\Currency\Handler::getDefaultCurrency()
+            QUI\ERP\Currency\Handler::getDefaultCurrency(),
+            $this->getUser()
         );
 
         // wenn attribute listen existieren
@@ -728,7 +736,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         foreach ($attributesLists as $List) {
             /* @var $List UniqueField */
             if ($List->isRequired() && $List->getValue() === '') {
-                $Price->changeToStartingPrice();
+                $Price->enableMinimalPrice();
 
                 return $Price;
             }
@@ -764,15 +772,24 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function getOriginalPrice()
     {
+        return $this->getCalculatedPrice(Fields::FIELD_PRICE);
+    }
+
+    /**
+     * @param $FieldId
+     * @return false|UniqueField
+     */
+    public function getCalculatedPrice($FieldId)
+    {
         $Calc         = QUI\ERP\Products\Utils\Calc::getInstance();
         $calculations = [];
 
-        $Field = $this->getField(Fields::FIELD_PRICE);
+        $Field = $this->getField($FieldId);
 
         try {
             $Calc->getProductPrice($this, function ($calcResult) use (&$calculations) {
                 $calculations = $calcResult;
-            }, $this->getField(Fields::FIELD_PRICE));
+            }, $this->getField($FieldId));
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
 
@@ -958,7 +975,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             return;
         }
 
-        $this->quantity = $quantity;
+        $this->quantity = \floatval($quantity);
+
+        try {
+            $this->recalculation();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
     }
 
     /**
@@ -1050,7 +1073,19 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function toArray()
     {
-        return $this->getAttributes();
+        $attributes = $this->getAttributes();
+
+        try {
+            $Price = $this->getPrice();
+
+            $attributes['price_display']    = $Price->getDisplayPrice();
+            $attributes['price_is_minimal'] = $Price->isMinimalPrice();
+        } catch (QUI\Exception $Exception) {
+            $attributes['price_display']    = false;
+            $attributes['price_is_minimal'] = false;
+        }
+
+        return $attributes;
     }
 
     /**

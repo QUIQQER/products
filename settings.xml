@@ -27,6 +27,26 @@
                     <type><![CDATA[bool]]></type>
                     <defaultvalue>1</defaultvalue>
                 </conf>
+                <conf name="categoryPos">
+                    <type><![CDATA[string]]></type>
+                    <defaultvalue>top</defaultvalue>
+                </conf>
+                <conf name="productLoadNumber">
+                    <type><![CDATA[number]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
+                <conf name="autoloadAfter">
+                    <type><![CDATA[number]]></type>
+                    <defaultvalue>3</defaultvalue>
+                </conf>
+                <conf name="useAttributeListsForMinMaxPriceCalculation">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
+                <conf name="resetFieldsAction">
+                    <type><![CDATA[string]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
             </section>
             <section name="search">
                 <conf name="backend">
@@ -39,6 +59,29 @@
                     <type><![CDATA[string]]></type>
                 </conf>
             </section>
+            <section name="variants">
+                <conf name="parentHasChildImages">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>1</defaultvalue>
+                </conf>
+                <conf name="useAttributesForVariantUrl">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>1</defaultvalue>
+                </conf>
+                <conf name="findChildrenInSearch">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
+                <conf name="findVariantParentByChildValues">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
+                <conf name="hideAttributeGroupsWithNoOptions">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
+            </section>
+            <section name="editableFields"/>
         </config>
 
         <window name="ERP">
@@ -89,6 +132,17 @@
                             </text>
                         </input>
 
+                        <input conf="products.useAttributeListsForMinMaxPriceCalculation" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.useAttributeListsForMinMaxPriceCalculation.text"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.useAttributeListsForMinMaxPriceCalculation.description"/>
+                            </description>
+                        </input>
+
                         <input type="hidden"
                                data-qui="package/quiqqer/products/bin/controls/products/settings/ClearProductCache"
                         >
@@ -96,6 +150,30 @@
                                 <locale group="quiqqer/products" var="settings.window.products.clearcache"/>
                             </text>
                         </input>
+
+                        <select conf="products.resetFieldsAction">
+                            <option value="0">
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.resetFieldsAction.option.0"
+                                />
+                            </option>
+                            <option value="1">
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.resetFieldsAction.option.1"
+                                />
+                            </option>
+
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.resetFieldsAction.title"
+                                />
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.resetFieldsAction.description"
+                                />
+                            </description>
+                        </select>
                     </settings>
 
                     <settings>
@@ -134,6 +212,119 @@
                                     <locale group="quiqqer/products"
                                             var="settings.window.products.categoryAsFilter.description"/>
                                 </description>
+                            </text>
+                        </input>
+
+
+                        <select conf="products.categoryPos">
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.categoryPos"/>
+                            </text>
+
+                            <option value="top">
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.categoryPos.top"/>
+                            </option>
+                            <option value="bottom">
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.categoryPos.bottom"/>
+                            </option>
+                        </select>
+
+                        <input conf="products.productLoadNumber" type="number">
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.productLoadNumber"/>
+                            </text>
+                        </input>
+                        <select conf="products.autoloadAfter">
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.autoloadAfter"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.autoloadAfter.description"/>
+                            </description>
+
+                            <option value="0">
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.autoloadAfter.disabled"/>
+                            </option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+
+                    </settings>
+
+                    <settings title="variants" name="variants">
+                        <title>
+                            <locale group="quiqqer/products" var="menu.erp.products.variants.title"/>
+                        </title>
+
+                        <input conf="variants.useAttributesForVariantUrl" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.useAttributesForVariantUrl"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.useAttributesForVariantUrl.description"/>
+                            </description>
+                        </input>
+
+                        <input conf="variants.parentHasChildImages" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.parentHasChildImages"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.parentHasChildImages.description"/>
+                            </description>
+                        </input>
+
+                        <input conf="variants.findChildrenInSearch" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.findChildrenInSearch"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.findChildrenInSearch.description"/>
+                            </description>
+                        </input>
+
+                        <input conf="variants.findVariantParentByChildValues" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.findVariantParentByChildValues"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.findVariantParentByChildValues.description"/>
+                            </description>
+                        </input>
+
+                        <input conf="variants.hideAttributeGroupsWithNoOptions" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.hideAttributeGroupsWithNoOptions"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.hideAttributeGroupsWithNoOptions.description"/>
+                            </description>
+                        </input>
+
+                        <input conf="editableFields"
+                               data-qui="package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldSettings"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.editableFields"/>
                             </text>
                         </input>
                     </settings>

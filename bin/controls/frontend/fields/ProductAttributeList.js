@@ -17,7 +17,8 @@ define('package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeLi
         Type   : 'package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeList',
 
         Binds: [
-            '$onImport'
+            '$onImport',
+            '$onChange'
         ],
 
         initialize: function (options) {
@@ -34,32 +35,40 @@ define('package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeLi
          * event : on import
          */
         $onImport: function () {
-            var self = this,
-                Elm  = this.getElm();
+            var Elm = this.getElm();
 
             this.$fieldId = Elm.get('data-field').toInt();
 
-            Elm.addEvent('change', function () {
-                var value  = Elm.value;
-                var Option = Elm.getElement('option[value="' + value + '"]');
+            Elm.addEvent('change', this.$onChange);
+            Elm.disabled = false;
 
-                if (self.$UserInput) {
-                    self.$UserInput.destroy();
+            this.$onChange();
+        },
+
+        /**
+         * event: on change
+         */
+        $onChange: function () {
+            var self = this,
+                Elm  = this.getElm();
+
+            var value  = Elm.value;
+            var Option = Elm.getElement('option[value="' + value + '"]');
+
+            if (self.$UserInput) {
+                self.$UserInput.destroy();
+            }
+
+            self.$hideUserInput().then(function () {
+                if (Option.get('data-userinput') && Option.get('data-userinput').toInt()) {
+                    return self.$showUserInput();
                 }
 
-                self.$hideUserInput().then(function () {
-                    if (Option.get('data-userinput') && Option.get('data-userinput').toInt()) {
-                        return self.$showUserInput();
-                    }
-
-                    return Promise.resolve();
-                }).then(function () {
-                    self.fireEvent('change', [self]);
-                    self.getElm().focus();
-                });
+                return Promise.resolve();
+            }).then(function () {
+                self.fireEvent('change', [self]);
+                self.getElm().focus();
             });
-
-            Elm.disabled = false;
         },
 
         /**

@@ -3,8 +3,8 @@
 >
     <div class="quiqqer-productList-product-list-text">
         <header>
-            <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:" html"}">
-            {$Product->getTitle()}
+            <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:'html'}">
+                {$Product->getTitle()}
             </a>
         </header>
 
@@ -17,7 +17,7 @@
         <span class="quiqqer-productList-product-list-artno-title">
             {locale group="quiqqer/products" var="productNo"}:
         </span>
-        <br />
+        <br/>
         <span class="quiqqer-productList-product-list-artno-value">
             {$Product->getFieldValue(3)}
         </span>
@@ -25,16 +25,19 @@
 
     <div class="quiqqer-productList-product-list-buttons">
         <span class="fa fa-envelope button__small quiqqer-products-product-button-purchase"></span>
+
+        {if QUI\ERP\Products\Utils\Products::isVariant($Product) === false}
         <span class="fa fa-plus button__small quiqqer-products-product-button-add"></span>
+        {else}
+        <span class="fa fa-arrow-circle-o-right button__small quiqqer-products-product-button-open"></span>
+        {/if}
     </div>
 
     {if !$hidePrice}
     <div class="quiqqer-productList-product-list-price">
-        {locale
-            group="quiqqer/products"
-            var="price.starting.from"
-            price=$Product->getPrice()->getDisplayPrice()
-        }
+        {assign var=PriceDisplay value=$Product->getPriceDisplay()}
+        {assign var=_ value=$PriceDisplay->setAttribute('withVatText', false)}
+        {$PriceDisplay->create()}
     </div>
     {/if}
 </article>

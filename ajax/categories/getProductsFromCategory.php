@@ -5,6 +5,8 @@
  */
 
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Utils\Tables;
+use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Update all product fields with the category id fields
@@ -25,14 +27,31 @@ QUI::$Ajax->registerFunction(
             $Grid->parseDBParams(\json_decode($params, true))
         );
 
-        foreach ($productIds as $productId) {
-            $Product    = Products::getProduct($productId);
-            $attributes = $Product->getAttributes();
+        // Get data from cache
+        $result = QUI::getDataBase()->fetch([
+            'select' => [
+                'id',
+                'title',
+                'description',
+                'F'.Fields::FIELD_PRICE
+            ],
+            'from'   => Tables::getProductCacheTableName(),
+            'where'  => [
+                'id'   => [
+                    'type'  => 'IN',
+                    'value' => $productIds
+                ],
+                'lang' => QUI::getLocale()->getCurrent()
+            ]
+        ]);
 
-            $attributes['title']       = $Product->getTitle();
-            $attributes['description'] = $Product->getDescription();
-
-            $products[] = $attributes;
+        foreach ($result as $row) {
+            $products[] = [
+                'id'          => $row['id'],
+                'title'       => $row['title'],
+                'description' => $row['description'],
+                'price'       => $row['F'.Fields::FIELD_PRICE]
+            ];
         }
 
         return $Grid->parseResult($products, $Category->countProducts());

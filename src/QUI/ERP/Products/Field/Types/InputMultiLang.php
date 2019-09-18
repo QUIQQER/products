@@ -70,12 +70,18 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
                 }
             }
 
-            $current = \mb_strtolower($current).'_'.\mb_strtoupper($current);
+            $current = \mb_strtolower($current) . '_' . \mb_strtoupper($current);
 
             if (isset($value[$current])) {
                 return $value[$current];
             }
         } catch (QUI\Exception $Exception) {
+        }
+
+        if (\is_array($value)) {
+            \reset($value);
+
+            return \current($value);
         }
 
         return $value;
@@ -112,6 +118,10 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      */
     public function validate($value)
     {
+        if (empty($value)) {
+            return;
+        }
+
         if (!\is_string($value) && !\is_array($value)) {
             if (\json_last_error() !== JSON_ERROR_NONE) {
                 throw new QUI\ERP\Products\Field\Exception([

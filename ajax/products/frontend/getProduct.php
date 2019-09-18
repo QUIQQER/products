@@ -4,8 +4,9 @@
  * This file contains package_quiqqer_products_ajax_products_frontend_getProduct
  */
 
-use QUI\ERP\Products\Product\Product;
+use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
+use QUI\ERP\Products\Utils\Products as ProductUtils;
 
 /**
  * Return the product html
@@ -15,22 +16,26 @@ use QUI\ERP\Products\Controls\Products\Product as ProductControl;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getProduct',
     function ($productId, $project, $siteId) {
-        $Project  = null;
+        $Project  = QUI\Projects\Manager::decode($project);
         $Site     = null;
         $Template = null;
         $Locale   = QUI::getLocale();
         $title    = '';
 
         try {
-            $Product = new Product($productId);
+            $Product = Products::getNewProductInstance($productId);
         } catch (QUI\Exception $Exception) {
             return '';
         }
 
+        $availableHashes = [];
+
+        if (\method_exists($Product, 'availableActiveFieldHashes')) {
+            $availableHashes = $Product->availableActiveFieldHashes();
+        }
 
         try {
-            $Project = QUI\Projects\Manager::decode($project);
-            $Site    = $Project->get($siteId);
+            $Site = $Project->get($siteId);
             $Site->load();
 
             $Template = QUI::getTemplateManager();
@@ -45,26 +50,23 @@ QUI::$Ajax->registerFunction(
             QUI\System\Log::addInfo($Exception->getMessage());
         }
 
-        try {
-            $Control = new ProductControl([
-                'Product' => $Product
-            ]);
+        $Control = new ProductControl([
+            'Product' => $Product
+        ]);
 
-            $control = $Control->create();
+        $control = $Control->create();
 
-            if (empty($title)) {
-                $title = $Product->getTitle();
-            }
-
-            return [
-                'css'   => QUI\Control\Manager::getCSS(),
-                'html'  => $control,
-                'title' => $title
-            ];
-        } catch (QUI\Exception $Exception) {
+        if (empty($title)) {
+            $title = $Product->getTitle();
         }
 
-        return '';
+        return [
+            'css'             => QUI\Control\Manager::getCSS(),
+            'html'            => QUI\Output::getInstance()->parse($control),
+            'title'           => $title,
+            'fieldHashes'     => ProductUtils::getJsFieldHashArray($Product),
+            'availableHashes' => \array_flip($availableHashes)
+        ];
     },
     ['productId', 'project', 'siteId']
 );

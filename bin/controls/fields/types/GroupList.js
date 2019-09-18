@@ -8,12 +8,14 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
     'qui/controls/Control',
     'controls/users/Entry',
     'controls/users/search/Window',
-    'package/quiqqer/products/bin/Fields'
+    'package/quiqqer/products/bin/Fields',
+    'Users'
 
-], function (QUI, QUIControl, UserDisplay, UserSearch, Fields) {
+], function (QUI, QUIControl, UserDisplay, UserSearch, Fields, Users) {
     "use strict";
 
     return new Class({
+
         Extends: QUIControl,
         Type   : 'package/quiqqer/products/bin/controls/fields/types/GroupList',
 
@@ -73,7 +75,6 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
 
             // get field settings
             Fields.getChild(this.$fieldId).then(function (fieldData) {
-
                 this.$allowedGroups = [];
 
                 if ("groupIds" in fieldData.options) {
@@ -113,28 +114,79 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
          * @param {Number} userId - User-ID
          */
         addUser: function (userId) {
-            if (!this.$allowedGroups || !this.$allowedGroups.length) {
-                return;
-            }
+            userId = parseInt(userId);
 
             for (var i = 0, len = this.$uids.length; i < len; i++) {
-                if (this.$uids[i] == userId) {
+                if (this.$uids[i] === userId) {
                     return;
                 }
             }
 
-            var self = this;
+            // check if user is allowed
+            var self  = this,
+                Check = Promise.resolve(true);
 
-            this.$uids.push(userId);
-            this.$updateInput();
+            if (this.$allowedGroups && this.$allowedGroups.length) {
+                Check = this.$isAllowed(userId);
+            }
 
-            new UserDisplay(userId, {
-                events: {
-                    onDestroy: function (UD) {
-                        self.removeUser(UD.getUser().getId());
+            Check.then(function (isAllowed) {
+                if (isAllowed === false) {
+                    return;
+                }
+
+                self.$uids.push(userId);
+                self.$updateInput();
+
+                new UserDisplay(userId, {
+                    events: {
+                        onDestroy: function (UD) {
+                            self.removeUser(UD.getUser().getId());
+                        }
+                    }
+                }).inject(self.$Display);
+            });
+        },
+
+        /**
+         * Is the user id allowed to add?
+         *
+         * @param {Number} userId
+         * @return {Promise}
+         */
+        $isAllowed: function (userId) {
+            var allowed = this.$allowedGroups;
+
+            if (!allowed.length) {
+                return Promise.resolve(true);
+            }
+
+            return new Promise(function (resolve) {
+                var User = Users.get(userId);
+
+                if (User.isLoaded()) {
+                    return resolve(User);
+                }
+
+                return User.load();
+            }).then(function (User) {
+                var i, len, groupId;
+                var groups = User.getAttribute('usergroup');
+
+                if (!groups || !groups.length) {
+                    return false;
+                }
+
+                for (i = 0, len = groups.length; i < len; i++) {
+                    groupId = parseInt(groups[i]);
+
+                    if (allowed.indexOf(groupId) !== -1) {
+                        return true;
                     }
                 }
-            }).inject(this.$Display);
+
+                return false;
+            });
         },
 
         /**
@@ -145,7 +197,7 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
         removeUser: function (uid) {
 
             this.$uids = this.$uids.filter(function (entry) {
-                return entry != uid;
+                return entry !== uid;
             });
 
             this.$updateInput();
@@ -159,6 +211,10 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
                 searchSettings = false;
 
             if (this.$allowedGroups) {
+                this.$allowedGroups = this.$allowedGroups.map(function (g) {
+                    return parseInt(g);
+                });
+
                 searchSettings = {
                     filter: {
                         filter_group: this.$allowedGroups.join(',')

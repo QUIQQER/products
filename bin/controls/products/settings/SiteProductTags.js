@@ -6,9 +6,9 @@ define('package/quiqqer/products/bin/controls/products/settings/SiteProductTags'
 
     'qui/QUI',
     'qui/controls/Control',
-    'Packages'
+    'package/quiqqer/products/bin/Products'
 
-], function (QUI, QUIControl, Packages) {
+], function (QUI, QUIControl, Products) {
     "use strict";
 
     return new Class({
@@ -27,34 +27,17 @@ define('package/quiqqer/products/bin/controls/products/settings/SiteProductTags'
          * event: on import
          */
         $onImport: function () {
-            var self = this,
-                Elm  = this.getElm();
+            var Elm = this.getElm();
 
-            var onError = function (err) {
-                // package not exists
-                console.error(err);
+            Products.getInstalledProductPackages().then(function (Packages) {
+                if (!Packages['quiqqer/productstags']) {
+                    var Row = Elm.getParent('tr');
 
-                var Row = Elm.getParent('.qui-xml-panel-row');
-
-                if (Row) {
-                    Row.setStyle('display', 'none');
+                    if (Row) {
+                        Row.setStyle('display', 'none');
+                    }
                 }
-            };
-
-            Packages.getPackage('quiqqer/productstags').then(function () {
-                require(['package/quiqqer/tags/bin/tags/Select'], function () {
-                    Elm.set('data-qui', 'package/quiqqer/tags/bin/tags/Select');
-                    Elm.set('data-quiid', '');
-
-                    QUI.parse(Elm.getParent()).then(function () {
-                        var Site    = self.getAttribute('Site'),
-                            Control = QUI.Controls.getById(Elm.get('data-quiid'));
-
-                        Control.setProject(Site.getProject());
-                    });
-                }, onError);
-            }).catch(onError);
+            });
         }
-
     });
 });

@@ -33,9 +33,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListField
             this.$Elm = new Element('div', {
                 'class'   : 'quiqqer-products-productList-filter',
                 html      : '<div class="quiqqer-products-productList-filter-text"></div>' +
-                '<div class="quiqqer-products-productList-filter-destroy">' +
-                '    <span class="fa fa-close"></span>' +
-                '</div>',
+                    '<div class="quiqqer-products-productList-filter-destroy">' +
+                    '    <span class="fa fa-close"></span>' +
+                    '</div>',
                 'data-tag': this.getAttribute('tag')
             });
 

@@ -41,6 +41,53 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Return the product frontend control class of the product
+         *
+         * @param productId
+         * @return {Promise}
+         */
+        getProductControlClass: function (productId) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_frontend_getProductControlClass', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: productId,
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
+         * Open the product panel
+         *
+         * @param productId
+         */
+        openProduct: function (productId) {
+            return this.getChild(productId).then(function (attributes) {
+                var panel = attributes.typePanel;
+
+                if (panel === '' || typeof panel === 'undefined') {
+                    panel = 'package/quiqqer/products/bin/controls/products/Product';
+                }
+
+                return new Promise(function (resolve) {
+                    var needles = [];
+                    needles.push(panel);
+                    needles.push('utils/Panels');
+
+                    require(needles, function (Panel, Utils) {
+                        var Control = new Panel({
+                            productId: productId
+                        });
+
+                        Utils.openPanelInTasks(Control).then(function () {
+                            resolve(Control);
+                        });
+                    });
+                });
+            });
+        },
+
+        /**
          * Activate the product
          *
          * @param {Number} productId - Product ID
@@ -200,31 +247,48 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Return all product types
+         *
+         * @param {Object} params - Grid params
+         * @returns {Promise}
+         */
+        getTypes: function (params) {
+            params = params || {};
+
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_getProductTypes', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    params   : JSON.encode(params)
+                });
+            });
+        },
+
+        /**
          * Create a new product
          *
          * @params {Array} categories - id list of categories
          * @params {Array} [fields] - product fields
+         * @params {String} [productType] - product type
          * @returns {Promise}
          */
-        createChild: function (categories, fields) {
-            fields = fields || {};
+        createChild: function (categories, fields, productType) {
+            fields      = fields || {};
+            productType = productType || '';
 
             return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_create', function (result) {
-
-                    require([
-                        'package/quiqqer/translator/bin/classes/Translator'
-                    ], function (Translator) {
+                    require(['package/quiqqer/translator/bin/classes/Translator'], function (Translator) {
                         new Translator().refreshLocale().then(function () {
                             resolve(result);
                         });
                     });
-
                 }, {
-                    'package' : 'quiqqer/products',
-                    onError   : reject,
-                    categories: JSON.encode(categories),
-                    fields    : JSON.encode(fields)
+                    'package'  : 'quiqqer/products',
+                    onError    : reject,
+                    categories : JSON.encode(categories),
+                    fields     : JSON.encode(fields),
+                    productType: productType
                 });
             });
         },
@@ -279,6 +343,51 @@ define('package/quiqqer/products/bin/classes/Products', [
                     categories: JSON.encode(categories),
                     categoryId: categoryId,
                     fields    : JSON.encode(fields)
+                });
+            });
+        },
+
+        /**
+         * Get list of all packages that belong to the quiqqer/products ecosystem
+         * but are not necessarily required.
+         *
+         * @return {Promise}
+         */
+        getInstalledProductPackages: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_getInstalledProductPackages', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
+         * Get total product count
+         *
+         * @return {Promise}
+         */
+        getProductCount: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_getCount', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
+         * Get data for a product SelectItem
+         *
+         * @param {Number} productId
+         * @return {Promise}
+         */
+        getDataForSelectItem: function (productId) {
+            return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_products_getDataForSelectItem', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    productId: productId
                 });
             });
         },

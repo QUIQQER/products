@@ -1,0 +1,86 @@
+.quiqqer-products-attributeList-entry-create .field-container {
+    margin-bottom: 10px;
+}
+
+.quiqqer-products-attributeList-entry-create .field-attributeList-title input {
+    max-width: 300px;
+    width: 100%;
+}
+
+.quiqqer-products-attributeList-entry-create .field-container-item:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 180px !important;
+}
+
+.quiqqer-products-attributeList-entry-create .field-attributeList-price input {
+    float: left;
+    max-width: 300px;
+    width: 66.666%;
+}
+
+.quiqqer-products-attributeList-entry-create .field-attributeList-price select {
+    float: left;
+    margin-left: 5px;
+    max-width: 300px;
+    width: calc(33% - 5px);
+}
+
+.quiqqer-products-attributeList-settings,
+.quiqqer-products-attributeList-settings-title,
+.quiqqer-products-attributeList-settings-priority,
+.quiqqer-products-attributeList-settings-calcbasis,
+.quiqqer-products-attributeList-settings-displayDiscounts,
+.quiqqer-products-attributeList-settings-userinput,
+.quiqqer-products-attributeList-settings-generateTags {
+    clear: both;
+    float: left;
+    width: 100%
+}
+
+.quiqqer-products-attributeList-settings-title {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 10px;
+}
+
+.quiqqer-products-attributeList-settings-priority,
+.quiqqer-products-attributeList-settings-calcbasis,
+.quiqqer-products-attributeList-settings-displayDiscounts,
+.quiqqer-products-attributeList-settings-userinput,
+.quiqqer-products-attributeList-settings-generateTags {
+    border-bottom: 1px solid rgba(147, 128, 108, 0.25);
+    padding: 10px;
+}
+
+.quiqqer-products-attributeList-settings-priority label,
+.quiqqer-products-attributeList-settings-calcbasis label,
+.quiqqer-products-attributeList-settings-displayDiscounts label,
+.quiqqer-products-attributeList-settings-userinput label,
+.quiqqer-products-attributeList-settings-generateTags label {
+    cursor: pointer;
+    width: 100% !important;
+}
+
+.quiqqer-products-attributeList-settings-text {
+    float: left;
+    line-height: 12px;
+    padding: 10px;
+    width: 200px;
+}
+
+.quiqqer-products-attributeList-settings-displayDiscounts input,
+.quiqqer-products-attributeList-settings-generateTags input {
+    float: left;
+}
+
+.quiqqer-products-attributeList-settings-input {
+    float: left;
+    height: 32px;
+    margin: 0;
+    width: calc(100% - 200px);
+}
+
+.quiqqer-products-attributeList-settings-title {
+
+}

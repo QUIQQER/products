@@ -41,6 +41,10 @@ QUI::$Ajax->registerFunction(
                     continue;
                 }
 
+                if ($ProductField instanceof QUI\ERP\Products\Field\Types\AttributeGroup) {
+                    continue;
+                }
+
                 $ProductField->setValue($field);
             } catch (QUI\ERP\Products\Product\Exception $Exception) {
                 if ($Exception->getCode() === 1002) {
@@ -96,21 +100,13 @@ QUI::$Ajax->registerFunction(
         try {
             $Product->userSave();
         } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
             QUI\System\Log::addError(
                 'AJAX :: package_quiqqer_products_ajax_products_update -> '.$Exception->getMessage()
             );
 
-            QUI::getMessagesHandler()->addError(
-                QUI::getLocale()->get(
-                    'quiqqer/products',
-                    'message.product.error.saving',
-                    [
-                        'error' => ''
-                    ]
-                )
-            );
-
-            return;
+            throw $Exception;
         }
 
         QUI::getMessagesHandler()->addSuccess(

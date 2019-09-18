@@ -1,15 +1,20 @@
 <div class="quiqqer-product-field">
     <div class="quiqqer-product-field-title">{$title}</div>
     <div class="quiqqer-product-field-value">
-        <select name="{$name|escape:"html"}" value="{$value|escape:"html"}" {$requiredField}
+        <select name="{$name|escape:'html'}" value="{$value|escape:'html'}"
+                {$requiredField}
                 data-field="{$id}"
                 data-qui="package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeList"
-                disabled="disabled">
-        {foreach $options as $option}
-            <option {$option.selected}{$option.data} value="{$option.value|escape:"html"}">
+                disabled="disabled"
+        >
+            <option value="">
+                {locale group="quiqqer/products" var="empty.select"}
+            </option>
+            {foreach $options as $option}
+            <option {$option.selected}{$option.disabled}{$option.data} value="{$option.value|escape:'html'}">
                 {$option.text}
             </option>
-        {/foreach}
+            {/foreach}
         </select>
     </div>
 </div>

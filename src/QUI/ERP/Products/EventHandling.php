@@ -37,6 +37,8 @@ class EventHandling
             return;
         }
 
+        self::setDefaultSearchSettings();
+
         try {
             Products::getParentMediaFolder();
         } catch (QUI\Exception $Exception) {
@@ -58,7 +60,28 @@ class EventHandling
             }
         }
 
+        //default variant fields
+        $editableFields  = [1, 3, 4, 5, 6, 9, 10, 12, 13, 16, 17, 19];
+        $inheritedFields = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16, 17, 18];
 
+        try {
+            $Config = QUI::getPackage('quiqqer/products')->getConfig();
+
+            foreach ($editableFields as $editableField) {
+                $Config->set('editableFields', $editableField, 1);
+            }
+
+            foreach ($inheritedFields as $inheritedField) {
+                $Config->set('inheritedFields', $inheritedField, 1);
+            }
+
+            $Config->save();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addWarning($Exception->getMessage());
+        }
+
+
+        // default fields
         $standardFields = [
             // Preis
             [
@@ -368,6 +391,211 @@ class EventHandling
                     'de' => 'Ähnliche Produkte',
                     'en' => 'Similar Products'
                 ]
+            ],
+            // Produkt URL
+            [
+                'id'            => Fields::FIELD_URL,
+                'type'          => 'InputMultiLang',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 1,
+                'systemField'   => 1,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField'   => 0,
+                'search_type'   => Search::SEARCHTYPE_TEXT,
+                'titles'        => [
+                    'de' => 'Produkt URL',
+                    'en' => 'Product URL'
+                ]
+            ],
+            // Unit / Einheit
+            [
+                'id'            => Fields::FIELD_UNIT,
+                'type'          => 'UnitSelect',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 1,
+                'systemField'   => 0,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField'   => 0,
+                'search_type'   => '',
+                'titles'        => [
+                    'de' => 'Einheit',
+                    'en' => 'Unit'
+                ],
+                'options'       => [
+                    'entries' => [
+                        'kg'    => [
+                            'title'         => [
+                                'de' => 'kg',
+                                'en' => 'kg'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'lbs'   => [
+                            'title'         => [
+                                'de' => 'Pfd.',
+                                'en' => 'lbs.'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'g'     => [
+                            'title'         => [
+                                'de' => 'g',
+                                'en' => 'g'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'l'     => [
+                            'title'         => [
+                                'de' => 'l',
+                                'en' => 'l'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'm'     => [
+                            'title'         => [
+                                'de' => 'm',
+                                'en' => 'm'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'mm'    => [
+                            'title'         => [
+                                'de' => 'mm',
+                                'en' => 'mm'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'sqm'   => [
+                            'title'         => [
+                                'de' => 'm²',
+                                'en' => 'm²'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'pair'  => [
+                            'title'         => [
+                                'de' => 'Paar',
+                                'en' => 'pair'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => false
+                        ],
+                        'piece' => [
+                            'title'         => [
+                                'de' => 'Stück',
+                                'en' => 'piece'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'tons'  => [
+                            'title'         => [
+                                'de' => 't',
+                                'en' => 't'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'hours' => [
+                            'title'         => [
+                                'de' => 'Std.',
+                                'en' => 'hrs.'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ]
+                    ]
+                ]
+            ],
+            // Weight / Gewicht
+            [
+                'id'            => Fields::FIELD_WEIGHT,
+                'type'          => 'UnitSelect',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 1,
+                'systemField'   => 0,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField'   => 0,
+                'search_type'   => '',
+                'titles'        => [
+                    'de' => 'Gewicht',
+                    'en' => 'Weight'
+                ],
+                'options'       => [
+                    'entries' => [
+                        'kg'   => [
+                            'title'         => [
+                                'de' => 'kg',
+                                'en' => 'kg'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'g'    => [
+                            'title'         => [
+                                'de' => 'g',
+                                'en' => 'g'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'tons' => [
+                            'title'         => [
+                                'de' => 't',
+                                'en' => 't'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'lbs'  => [
+                            'title'         => [
+                                'de' => 'Pfd.',
+                                'en' => 'lbs.'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                        'oz'   => [
+                            'title'         => [
+                                'de' => 'oz.',
+                                'en' => 'oz.'
+                            ],
+                            'default'       => false,
+                            'quantityInput' => true
+                        ],
+                    ]
+                ]
+            ],
+            // EAN
+            [
+                'id'            => Fields::FIELD_EAN,
+                'type'          => 'Input',
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 10,
+                'systemField'   => 1,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField'   => 1,
+                'showInDetails' => 0,
+                'search_type'   => Search::SEARCHTYPE_TEXT,
+                'titles'        => [
+                    'de' => 'GTIN / EAN',
+                    'en' => 'GTIN / EAN'
+                ]
             ]
         ];
 
@@ -452,7 +680,7 @@ class EventHandling
         foreach ($systemFields as $systemFieldsId) {
             $fieldId = (int)$systemFieldsId['id'];
 
-            if ($fieldId >= 1000 || $fieldInStandardFields($fieldId)) {
+            if ($fieldId >= 100 || $fieldInStandardFields($fieldId)) {
                 continue;
             }
 
@@ -571,6 +799,8 @@ class EventHandling
 
         QUI\ERP\Products\Search\Cache::clear($cname);
         QUI\ERP\Products\Search\Cache::clear('products/search/userfieldids/');
+        QUI\ERP\Products\Search\Cache::clear('quiqqer/products/category/');
+        QUI\ERP\Products\Search\Cache::clear('quiqqer/products/categories/menu');
 
         // field cache clearing
         $searchFieldCache = 'products/search/frontend/searchfielddata/';
@@ -714,8 +944,9 @@ class EventHandling
      * event: onPackageInstall
      *
      * @param Package $Package
+     * @param array $params
      */
-    public static function onPackageConfigSave($Package)
+    public static function onPackageConfigSave($Package, $params)
     {
         if ($Package->getName() != 'quiqqer/products') {
             return;
@@ -802,5 +1033,44 @@ class EventHandling
             $Rewrite->setSite($Site);
         } catch (QUI\Exception $Exception) {
         }
+    }
+
+    /**
+     * Set default search settings if none are set
+     *
+     * @return void
+     * @throws QUI\Exception
+     */
+    protected static function setDefaultSearchSettings()
+    {
+        try {
+            $Conf = QUI::getPackage('quiqqer/products')->getConfig();
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+
+            return;
+        }
+
+        $search = $Conf->getSection('search');
+
+        // Backend search fields
+        if (empty($search['backend'])) {
+            $search['backend'] = implode(',', [
+                Fields::FIELD_PRODUCT_NO,
+                Fields::FIELD_TITLE
+            ]);
+        }
+
+        if (empty($search['freetext'])) {
+            $search['freetext'] = implode(',', [
+                Fields::FIELD_PRODUCT_NO,
+                Fields::FIELD_TITLE,
+                Fields::FIELD_SHORT_DESC,
+                Fields::FIELD_KEYWORDS
+            ]);
+        }
+
+        $Conf->setSection('search', $search);
+        $Conf->save();
     }
 }

@@ -17,6 +17,16 @@ use QUI\ERP\Products\Handler\Products as ProductHandler;
 class Products extends QUI\ERP\Products\Field\Field
 {
     /**
+     * @var bool
+     */
+    protected $searchable = false;
+
+    /**
+     * @var bool
+     */
+    protected $showInDetails = true;
+
+    /**
      * @return View
      */
     public function getBackendView()

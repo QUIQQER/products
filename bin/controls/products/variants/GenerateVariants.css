@@ -1,0 +1,60 @@
+.quiqqer-products-variant-generate {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.quiqqer-products-variant-generate-type-description {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.quiqqer-products-variant-generate-type-description select {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.quiqqer-products-variant-generate-calcDisplay {
+    background: #FAF6D4;
+    border: 1px solid #E6C26E;
+    flex-shrink: 0;
+    margin-bottom: 10px;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+.quiqqer-products-variant-generate-noValuesMessage {
+    font-style: italic;
+}
+
+.quiqqer-products-variant-generate-fieldSelect label {
+    cursor: pointer;
+    width: 100% !important;
+}
+
+.quiqqer-products-variant-generate .field-container-item {
+    text-align: right;
+    width: 80px;
+}
+
+.quiqqer-products-variant-generate-productAttributes-description,
+.quiqqer-products-variant-generate-fieldSelect-description {
+    margin-bottom: 20px;
+}
+
+.product-attribute-list-container {
+    display: none;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    width: 100%;
+}
+
+.product-attribute-list header {
+    margin-bottom: 10px;
+}
+
+.product-attribute-list header button {
+    margin-bottom: 10px;
+}

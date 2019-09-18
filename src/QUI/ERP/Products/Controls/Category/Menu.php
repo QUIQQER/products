@@ -38,12 +38,20 @@ class Menu extends QUI\Control
     /**
      * (non-PHPdoc)
      *
+     * @throws QUI\Exception
      * @see \QUI\Control::create()
      *
-     * @throws QUI\Exception
      */
     public function getBody()
     {
+        $cache = $this->getCacheName();
+
+        try {
+            return QUI\Cache\Manager::get($cache);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
         } catch (QUI\Exception $Exception) {
@@ -61,7 +69,11 @@ class Menu extends QUI\Control
             'Rewrite'          => QUI::getRewrite()
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/Menu.html');
+        $result = $Engine->fetch(\dirname(__FILE__).'/Menu.html');
+
+        QUI\Cache\Manager::set($cache, $result);
+
+        return $result;
     }
 
     /**
@@ -136,14 +148,19 @@ class Menu extends QUI\Control
      *
      * @param null $Site
      * @return integer
-     *
-     * @throws QUI\Exception
      */
     public function countChildren($Site = null)
     {
-        if (!$Site) {
-            $Site = $this->getSite();
+        try {
+            if (!$Site) {
+                $Site = $this->getSite();
+            }
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return 0;
         }
+
 
         try {
             return $Site->getNavigation([
@@ -202,5 +219,33 @@ class Menu extends QUI\Control
         }
 
         return QUI::getRewrite()->getSite();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getCacheName()
+    {
+        try {
+            $Site    = $this->getSite();
+            $Project = $Site->getProject();
+
+            $params = [
+                'project'           => $Project->getName(),
+                'lang'              => $Project->getLang(),
+                'id'                => $Site->getId(),
+                'idRewrite'         => QUI::getRewrite()->getSite()->getId(),
+                'data-qui'          => 'package/quiqqer/products/bin/controls/frontend/category/Menu',
+                'disableCheckboxes' => $this->getAttribute('disableCheckboxes'),
+                'breadcrumb'        => $this->getAttribute('breadcrumb'),
+                'showTitle'         => $this->getAttribute('showTitle')
+            ];
+
+            $cache = \md5(\implode('', $params));
+        } catch (QUI\Exception $Exception) {
+            return 'quiqqer/products/categories/menu';
+        }
+
+        return 'quiqqer/products/categories/menu/'.$cache;
     }
 }

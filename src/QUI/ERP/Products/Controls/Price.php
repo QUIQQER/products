@@ -25,7 +25,7 @@ class Price extends QUI\Control
         $this->setAttributes([
             'data-qui'    => 'package/quiqqer/products/bin/controls/frontend/Price',
             'Price'       => null,
-            'withVatText' => false,
+            'withVatText' => true,
             'Calc'        => false
         ]);
 
@@ -42,6 +42,14 @@ class Price extends QUI\Control
      */
     public function getBody()
     {
+        try {
+            $Engine = QUI::getTemplateManager()->getEngine();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+
+            return '';
+        }
+
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             $this->setAttributes([
                 'data-qui' => '',
@@ -61,32 +69,37 @@ class Price extends QUI\Control
         $this->setAttribute('data-qui-options-price', $Price->value());
         $this->setAttribute('data-qui-options-currency', $Price->getCurrency()->getCode());
 
-        if ($this->getAttribute('withVatText') === false) {
-            return $Price->getDisplayPrice();
-        }
+        $vatText = '';
 
+        if ($this->getAttribute('withVatText')) {
+            $vatArray = $this->getAttribute('vatArray');
 
-        $vatArray = $this->getAttribute('vatArray');
+            if ($vatArray && \is_array($vatArray) && isset($vatArray['text'])) {
+                $vatText = $vatArray['text'];
+            } else {
+                $Calc = $this->getAttribute('Calc');
 
-        if ($vatArray && \is_array($vatArray) && isset($vatArray['text'])) {
-            $vatText = $vatArray['text'];
-        } else {
-            $Calc = $this->getAttribute('Calc');
+                if (!$Calc) {
+                    $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
+                }
 
-            if (!$Calc) {
-                $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
+                $vatText = $Calc->getVatTextByUser();
             }
-
-            $vatText = $Calc->getVatTextByUser();
         }
 
-        $result = '<span class="qui-products-price-display-value">';
-        $result .= $Price->getDisplayPrice();
-        $result .= '</span>';
-        $result .= '<span class="qui-products-price-display-vat">';
-        $result .= $vatText;
-        $result .= '</span>';
+        $pricePrefix = '';
 
-        return $result;
+        if ($Price->isMinimalPrice()) {
+            $pricePrefix = QUI::getLocale()->get('quiqqer/erp', 'price.starting.from');
+        }
+
+        $Engine->assign([
+            'this'        => $this,
+            'pricePrefix' => $pricePrefix,
+            'Price'       => $Price,
+            'vatText'     => $vatText
+        ]);
+
+        return $Engine->fetch(\dirname(__FILE__) . '/Price.html');
     }
 }

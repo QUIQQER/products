@@ -24,6 +24,10 @@
     height: 100%;
 }
 
+.field-container > .qui-fields-list-multiple > button {
+    height: inherit;
+}
+
 .qui-fields-list-list {
     position: relative;
     z-index: 2;
@@ -51,16 +55,19 @@
     width: calc(100% - 50px) !important;
 }
 
+.field-container > .qui-fields-list,
 .field-container-field > .qui-fields-list {
     max-width: none;
     padding: 0;
 }
 
+.field-container > .qui-fields-list .qui-fields-list-list,
 .field-container-field > .qui-fields-list .qui-fields-list-list {
     border-radius: 0;
     border-width: 0 0 1px 0;
 }
 
+.field-container > .qui-fields-list .qui-fields-list-search,
 .field-container-field > .qui-fields-list .qui-fields-list-search {
     border: none;
 }

@@ -36,6 +36,13 @@ define('package/quiqqer/products/bin/classes/Fields', [
         FIELD_KEYWORDS        : 13,
         FIELD_EQUIPMENT       : 14,
         FIELD_SIMILAR_PRODUCTS: 15,
+        FIELD_PRICE_OFFER     : 16, // angebotspreis
+        FIELD_PRICE_RETAIL    : 17, // UVP - RRP
+        FIELD_PRIORITY        : 18, // Product Priority
+        FIELD_URL             : 19, // Product URL
+        FIELD_UNIT            : 20,
+        FIELD_EAN             : 21,
+        FIELD_WEIGHT          : 22,
 
         /**
          * Types
@@ -51,6 +58,7 @@ define('package/quiqqer/products/bin/classes/Fields', [
         TYPE_INT                : 'IntType',
         TYPE_PRICE              : 'Price',
         TYPE_PRICE_BY_QUANTITY  : 'PriceByQuantity',
+        TYPE_PRICE_BY_TIMEPERIOD: 'PriceByTimePeriod',
         TYPE_ATTRIBUTE_LIST     : 'ProductAttributeList',
         TYPE_TEXTAREA           : 'Textarea',
         TYPE_TEXTAREA_MULTI_LANG: 'TextareaMultiLang',
@@ -250,6 +258,22 @@ define('package/quiqqer/products/bin/classes/Fields', [
             return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_fields_getFieldTypeSettings', resolve, {
                     'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
+         * Return the options of a product field
+         *
+         * @param {Number} fieldId
+         * @returns {Promise}
+         */
+        getFieldOptions: function (fieldId) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_fields_getFieldOptions', resolve, {
+                    'package': 'quiqqer/products',
+                    fieldId  : fieldId,
                     onError  : reject
                 });
             });

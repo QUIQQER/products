@@ -19,6 +19,7 @@ define('package/quiqqer/products/bin/classes/Product', [
     "use strict";
 
     return new Class({
+
         Extends: QUIDOM,
         Type   : 'package/quiqqer/products/bin/classes/Product',
 
@@ -26,18 +27,32 @@ define('package/quiqqer/products/bin/classes/Product', [
             id: false
         },
 
+        Binds: [
+            'refresh'
+        ],
+
         initialize: function (options) {
             this.parent(options);
 
+            this.$uid      = String.uniqueID();
             this.$data     = null;
             this.$loaded   = false;
             this.$quantity = 1;
         },
 
         /**
+         * Is the project already loaded?
+         *
+         * @return {boolean}
+         */
+        isLoaded: function () {
+            return this.$loaded;
+        },
+
+        /**
          * Add a field to the product
          *
-         * @param {Number}  fieldId
+         * @param {Number|Array}  fieldId
          * @return {Promise}
          */
         addField: function (fieldId) {
@@ -45,7 +60,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                 Ajax.get('package_quiqqer_products_ajax_products_addField', resolve, {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    fieldId  : fieldId
+                    fieldId  : JSON.encode(fieldId)
                 });
             }.bind(this));
         },
@@ -144,6 +159,24 @@ define('package/quiqqer/products/bin/classes/Product', [
                     'package': 'quiqqer/products',
                     productId: this.getId(),
                     quantity : quantity,
+                    onError  : reject
+                });
+            }.bind(this));
+        },
+
+        /**
+         * Set the default variant ID for the parent product
+         * Works only if the product is a VariantParent
+         *
+         * @param {String|Number} variantId
+         * @return {Promise}
+         */
+        setDefaultVariantId: function (variantId) {
+            return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_products_variant_setDefaultVariant', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
+                    variantId: variantId,
                     onError  : reject
                 });
             }.bind(this));
@@ -319,13 +352,12 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         isActive: function () {
             return new Promise(function (resolve, reject) {
-
                 if (this.$loaded) {
-                    return resolve(this.$data.active ? true : false);
+                    return resolve(!!this.$data.active);
                 }
 
                 this.refresh().then(function () {
-                    resolve(this.$data.active ? true : false);
+                    resolve(!!this.$data.active);
                 }.bind(this)).catch(reject);
 
             }.bind(this));
@@ -372,12 +404,8 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         refresh: function () {
             return new Promise(function (resolve, reject) {
-
-                require([
-                    'package/quiqqer/products/bin/Products'
-                ], function (Products) {
-
-                    Products.getChild(this.getAttribute('id')).then(function (data) {
+                require(['package/quiqqer/products/bin/Products'], function (Products) {
+                    Products.getChild(this.getId()).then(function (data) {
                         this.$loaded = true;
                         this.$data   = data;
 
@@ -387,7 +415,6 @@ define('package/quiqqer/products/bin/classes/Product', [
 
                     }.bind(this)).catch(reject);
                 }.bind(this));
-
             }.bind(this));
         },
 
@@ -398,7 +425,6 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         getFields: function () {
             return new Promise(function (resolve, reject) {
-
                 if (this.$loaded) {
                     return resolve(this.$data.fields);
                 }
@@ -406,10 +432,8 @@ define('package/quiqqer/products/bin/classes/Product', [
                 this.refresh().then(function () {
                     resolve(this.$data.fields);
                 }.bind(this)).catch(reject);
-
             }.bind(this));
         },
-
 
         /**
          * Return all fields from the specific type
@@ -433,7 +457,6 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         getField: function (fieldId) {
             return new Promise(function (resolve, reject) {
-
                 if (typeof fieldId === 'undefined') {
                     return reject('No field given');
                 }
@@ -453,7 +476,6 @@ define('package/quiqqer/products/bin/classes/Product', [
                 this.refresh().then(function () {
                     this.getField(fieldId).then(resolve);
                 }.bind(this)).catch(reject);
-
             }.bind(this));
         },
 
@@ -467,6 +489,21 @@ define('package/quiqqer/products/bin/classes/Product', [
             return this.getField(fieldId).then(function (field) {
                 return field.value;
             });
+        },
+
+        /**
+         * Return the editable fields of this product
+         * Makes only sense if the product is a parent product
+         *
+         * @return {Promise}
+         */
+        getEditableFields: function () {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_products_variant_getEditableInheritedFieldList', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId()
+                });
+            }.bind(this));
         },
 
         /**
@@ -511,7 +548,6 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         getCategory: function () {
             return new Promise(function (resolve, reject) {
-
                 if (this.$loaded) {
                     return resolve(this.$data.category);
                 }
@@ -549,6 +585,50 @@ define('package/quiqqer/products/bin/classes/Product', [
          */
         getQuantity: function () {
             return this.$quantity;
+        },
+
+        /**
+         * Return all variants of this product
+         * - variant children
+         *
+         * @return {Promise}
+         */
+        getVariants: function (options) {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_products_variant_getVariants', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
+                    options  : JSON.encode(options)
+                });
+            }.bind(this));
+        },
+
+        /**
+         * Return the fields which can be used for variants
+         *
+         * @return {Promise}
+         */
+        getVariantFields: function () {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_products_variant_getVariantFields', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId()
+                });
+            }.bind(this));
+        },
+
+        /**
+         * Reset the inherited fields of a product to the global ones
+         *
+         * @return {Promise}
+         */
+        resetInheritedFields: function () {
+            return new Promise(function (resolve) {
+                Ajax.post('package_quiqqer_products_ajax_products_variant_resetEditableInheritedFields', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId()
+                });
+            }.bind(this));
         }
     });
 });

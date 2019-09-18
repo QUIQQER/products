@@ -38,6 +38,10 @@ define('package/quiqqer/products/bin/controls/products/Select', [
             'productSearch'
         ],
 
+        options: {
+            productTypes: [] // restrict search to certain product types
+        },
+
         initialize: function (options) {
             this.parent(options);
 
@@ -80,7 +84,8 @@ define('package/quiqqer/products/bin/controls/products/Select', [
                 'package/quiqqer/products/bin/controls/products/search/Window'
             ], function (Search) {
                 new Search({
-                    events: {
+                    productTypes: self.getAttribute('productTypes'),
+                    events      : {
                         onSubmit: function (Win, values) {
                             for (var i = 0, len = values.length; i < len; i++) {
                                 self.addItem(values[i]);

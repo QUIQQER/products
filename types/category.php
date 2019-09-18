@@ -22,7 +22,7 @@ if (\strpos(QUI::getRequest()->getPathInfo(), '_p/') !== false) {
     if (\strlen(URL_DIR) == 1) {
         $_REQUEST['_url'] = \ltrim($_REQUEST['_url'], URL_DIR);
     } else {
-        $from             = '/'.\preg_quote(URL_DIR, '/').'/';
+        $from             = '/' . \preg_quote(URL_DIR, '/') . '/';
         $_REQUEST['_url'] = \preg_replace($from, '', $_REQUEST['_url'], 1);
     }
 
@@ -75,21 +75,43 @@ if ($siteUrl != $_REQUEST['_url']) {
 
     $parts = \explode(QUI\Rewrite::URL_PARAM_SEPARATOR, $baseName);
     $refNo = \array_pop($parts);
-    $refNo = (int)$refNo;
 
-    $Output = new QUI\Output();
-    $Locale = QUI::getLocale();
+    if (!empty($_GET['variant'])) {
+        $refNo = (int)$_GET['variant'];
+    }
+
+    $Product = null;
+    $Output  = new QUI\Output();
+    $Locale  = QUI::getLocale();
+
+    // get by url field
+    try {
+        $categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
+        $Product    = Products\Handler\Products::getProductByUrl($refNo, $categoryId);
+    } catch (QUI\Exception $Exception) {
+        Log::addDebug('Products::getProductByUrl :: ' . $Exception->getMessage());
+    }
 
     try {
-        $Product = Products\Handler\Products::getProduct($refNo);
+        // get url by id
+        if ($Product === null) {
+            $refNo   = (int)$refNo;
+            $Product = Products\Handler\Products::getProduct($refNo);
+        }
+
+        // render product
         $Product->getView();
+        $productUrl = \urldecode($Product->getUrl($Project));
 
-        $productUrl = \urldecode($Product->getUrl());
+        // set canonical always to the parent
+        if ($Product instanceof Products\Product\Types\VariantChild) {
+            $Site->setAttribute('canonical', $Product->getParent()->getUrl($Project));
+        }
 
-        // weiterleitung, falls das produkt eine neue URL hat
-        // kann passieren, wenn das produkt vorher in "alle produkte" war
 
-        if ($productUrl != URL_DIR.$_REQUEST['_url']) {
+        // forwarding, if the product has a new URL
+        // can happen if the product was previously in "all products".
+        if ($productUrl != URL_DIR . $_REQUEST['_url']) {
             $Redirect = new RedirectResponse($productUrl);
             $Redirect->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
 
@@ -102,12 +124,14 @@ if ($siteUrl != $_REQUEST['_url']) {
         $CategoryMenu->setAttribute('breadcrumb', true);
 
         $Engine->assign([
-            'Product' => new Products\Controls\Products\Product([
-                'Product' => $Product,
+            'Product'    => new Products\Controls\Products\Product([
+                'Product' => $Product
             ]),
+            'categoryId' => $Product->getCategory()->getId()
         ]);
 
         // set site data
+        $Site->setAttribute('nocache', true);
         $Site->setAttribute('content-header', false);
         $Site->setAttribute('meta.seotitle', $Product->getTitle($Locale));
         $Site->setAttribute('meta.description', $Product->getDescription($Locale));
@@ -128,7 +152,7 @@ if ($siteUrl != $_REQUEST['_url']) {
                 );
 
                 $Site->setAttribute(
-                    $language.'-link',
+                    $language . '-link',
                     $Product->getUrlRewrittenWithHost($LanguageProject)
                 );
             } catch (QUI\Exception $Exception) {
@@ -173,8 +197,11 @@ if ($siteUrl != $_REQUEST['_url']) {
         'hideEmptyProductList' => true,
         'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
         'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
+        'categoryPos'          => $Site->getAttribute('quiqqer.products.settings.categoryPos'),
         'searchParams'         => Products\Utils\Search::getSearchParameterFromRequest(),
-        'autoload'             => false,
+        'autoload'             => 1,
+        'autoloadAfter'        => $Site->getAttribute('quiqqer.products.settings.autoloadAfter'),
+        'productLoadNumber'    => $Site->getAttribute('quiqqer.products.settings.productLoadNumber'),
         'view'                 => Products\Utils\Search::getViewParameterFromRequest(),
     ]);
 
@@ -191,7 +218,7 @@ if ($siteUrl != $_REQUEST['_url']) {
     );
 
     foreach ($filterList as $filter) {
-        if (!is_array($filter)) {
+        if (!\is_array($filter)) {
             /* @var $filter Products\Field\Field */
             $title = $filter->getTitle();
             $id    = $filter->getId();
@@ -201,13 +228,13 @@ if ($siteUrl != $_REQUEST['_url']) {
         }
 
         $ProductList->addSort(
-            $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortASC'),
-            'F'.$id.' ASC'
+            $title . ' ' . QUI::getLocale()->get('quiqqer/products', 'sortASC'),
+            'F' . $id . ' ASC'
         );
 
         $ProductList->addSort(
-            $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
-            'F'.$id.' DESC'
+            $title . ' ' . QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
+            'F' . $id . ' DESC'
         );
     }
 
@@ -220,6 +247,7 @@ if ($siteUrl != $_REQUEST['_url']) {
     }
 
     $Engine->assign([
+        'categoryId'   => $Site->getAttribute('quiqqer.products.settings.categoryId'),
         'ProductList'  => $ProductList,
         'CategoryMenu' => $CategoryMenu,
         'filter'       => $filterList,

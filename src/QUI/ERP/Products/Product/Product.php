@@ -32,7 +32,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
     public function addField(Field $Field)
     {
         if (!isset($this->fields[$Field->getId()])) {
-            $this->fields[$Field->getId()] = $Field;
+            $this->fields[$Field->getId()] = clone $Field;
 
             return;
         }
@@ -66,7 +66,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
     }
 
     /**
-     * Add a field to the product
+     * Remove a field from the product
      *
      * @param Field $Field
      * @throws QUI\Exception

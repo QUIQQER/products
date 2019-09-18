@@ -1,0 +1,23 @@
+.quiqqer-products-priceByTimePeriod-settings,
+.quiqqer-products-priceByTimePeriod-settings-groups {
+    clear: both;
+    float: left;
+    width: 100%
+}
+
+.quiqqer-products-priceByTimePeriod-settings-groups {
+    border-bottom: 1px solid rgba(147, 128, 108, 0.25);
+    padding: 10px;
+}
+
+.quiqqer-products-priceByTimePeriod-settings-groups label {
+    cursor: pointer;
+    width: 100% !important;
+}
+
+.quiqqer-products-priceByTimePeriod-settings-groups-text {
+    float: left;
+    line-height: 12px;
+    padding: 10px;
+    width: 200px;
+}

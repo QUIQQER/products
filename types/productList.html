@@ -4,24 +4,56 @@
 </section>
 {/if}
 
-<section class="content-template grid-100 mobile-grid-100 grid-parent">
-    {foreach $products as $Product}
-    <div class="quiqqer-products-productListType-list">
-        <header>
-            <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:" html"}">
-            {$Product->getTitle()}
-            </a>
-        </header>
+{* <!-- List type: grid--> *}
+<section class="content-template grid-100 mobile-grid-100 grid-parent quiqqer-products-productList-grid">
+    <div class="quiqqer-products-productList-grid-container">
+        {foreach $products as $Product}
+        <div class="quiqqer-product-card">
+            <div class="quiqqer-product-card-inner">
+                <div class="quiqqer-product-card-image">
+                    <a href="{$Product->getUrl()}" data-pid="{$Product->getId()}" title="{$Product->getTitle()|escape:'html'}">
+                    {image image=$Product->getImage() width=400 title=$Product->getTitle()|escape:'html'
+                        alt=$Product->getTitle()|escape:'html'}
+                    </a>
+                </div>
+                <div class="quiqqer-product-card-content">
+                    <header class="quiqqer-product-card-content-header">
+                        <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:'html'}">
+                            {$Product->getTitle()}
+                        </a>
+                    </header>
 
-        <div class="quiqqer-products-productListType-list-data">
-            <span class="quiqqer-products-productListType-list-data-title">
-                {locale group="quiqqer/products" var="productNo"}:
-            </span>
-            <br/>
-            <span class="quiqqer-products-productListType-list-data-value">
-                {$Product->getFieldValue(3)}
-            </span>
+                    <div class="quiqqer-product-card-content-data">
+                        <span class="quiqqer-product-card-content-data-title text-muted">
+                            {locale group="quiqqer/products" var="productNo"}:
+                        </span>
+                        <span class="quiqqer-product-card-content-data-value">
+                            {$Product->getFieldValue(3)}
+                        </span>
+                    </div>
+
+                    {$Product->getPriceDisplay()->create()}
+
+                    <div class="quiqqer-product-card-content-buttons">
+                        <a href="{$Product->getUrl()}"
+                           class="btn btn-primary btn-outline add-to-basket"
+                           data-product-id="{$Product->getId()}"
+                           data-product-animatable="1"
+                           data-qui="package/quiqqer/product-bricks/bin/controls/basket/AddToBasket"
+                        >
+                            <label>
+                                {locale group="quiqqer/product-bricks" var="brick.control.product.addToCart"}
+                            </label>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
+        {/foreach}
+
+        {if $products|count > 2}
+        <div class="quiqqer-product-card quiqqer-product-card__hidden"></div>
+        <div class="quiqqer-product-card quiqqer-product-card__hidden"></div>
+        {/if}
     </div>
-    {/foreach}
 </section>

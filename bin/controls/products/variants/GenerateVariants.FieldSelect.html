@@ -1,0 +1,73 @@
+<label class="quiqqer-products-variant-generate-type-description">
+    {{descGenerationType}}
+    <select name="generation-type">
+        <option value="create-only-new-one">{{textCreateOnlyNewOne}}</option>
+        <option value="reset">{{textDeleteCurrent}}</option>
+    </select>
+</label>
+
+<div class="quiqqer-products-variant-generate-fieldSelect-description">
+    {{descAttributeGroupList}}
+</div>
+
+<table class="data-table data-table-flexbox">
+    <thead>
+    <tr>
+        <th>{{titleAttributeGroupList}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#attributeGroupList}}
+    <tr>
+        <td>
+            <label class="field-container">
+                <span class="field-container-field">
+                     <input type="checkbox" value="{{id}}"/> {{title}}
+                </span>
+                <span class="field-container-item">
+                    #{{id}}
+                </span>
+            </label>
+        </td>
+    </tr>
+    {{/attributeGroupList}}
+    </tbody>
+</table>
+
+<section class="product-attribute-list">
+    <header>
+        <button class="qui-button">
+            <span class="fa fa-plus"></span>
+            <span>{{textProductAttributeButton}}</span>
+        </button>
+    </header>
+    <div class="product-attribute-list-container">
+        <div class="quiqqer-products-variant-generate-productAttributes-description">
+            {{descProductAttributeList}}
+        </div>
+
+        <table class="data-table data-table-flexbox">
+            <thead>
+            <tr>
+                <th>{{titleProductAttributeList}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#productAttributeList}}
+            <tr>
+                <td>
+                    <label class="field-container">
+                <span class="field-container-field">
+                     <input type="checkbox" value="{{id}}"/> {{title}}
+                </span>
+                        <span class="field-container-item">
+                    #{{id}}
+                </span>
+                    </label>
+                </td>
+            </tr>
+            {{/productAttributeList}}
+            </tbody>
+        </table>
+    </div>
+</section>

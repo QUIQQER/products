@@ -53,10 +53,6 @@ class Vat extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        if ($value === -1) {
-            return;
-        }
-
         if (\strpos($value, ':') !== false) {
             $value = \explode(':', $value);
 
@@ -77,6 +73,12 @@ class Vat extends QUI\ERP\Products\Field\Field
                     'fieldType'  => $this->getType()
                 ]
             ]);
+        }
+
+        $value = (int)$value;
+
+        if ($value === -1) {
+            return;
         }
 
         // exists tax?

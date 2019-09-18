@@ -165,12 +165,12 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
                 Item.removeIcon('fa-sitemap');
                 Item.addIcon('fa fa-spinner fa-spin');
 
-                Categories.getChildren(categoryId || 0).then(function (data) {
-
+                Categories.getChildren(categoryId || 0, {
+                    countChildren: 1
+                }).then(function (data) {
                     var i, len, entry;
 
                     for (i = 0, len = data.length; i < len; i++) {
-
                         entry = data[i];
 
                         new QUISitemapItem({

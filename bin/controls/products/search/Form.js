@@ -36,13 +36,15 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
         ],
 
         options: {
-            searchfields  : {},
-            searchbutton  : true,
-            sortOn        : false,
-            sortBy        : false,
-            limit         : false,
-            sheet         : 1,
-            freeTextSearch: true
+            searchfields   : {},
+            searchbutton   : true,
+            sortOn         : false,
+            sortBy         : false,
+            limit          : false,
+            sheet          : 1,
+            freeTextSearch : true,
+            variantChildren: true,
+            productTypes   : []
         },
 
         initialize: function (options) {
@@ -127,8 +129,10 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                         html: Mustache.render(template, {
                             fields                  : result,
                             freeTextSearch          : this.getAttribute('freeTextSearch'),
+                            variantChildren         : this.getAttribute('variantChildren'),
                             fieldTitleFreeTextSearch: QUILocale.get(lg, 'searchtype.freeTextSearch.title'),
-                            text_no_fields          : QUILocale.get(lg, 'searchtypes.empty')
+                            text_no_fields          : QUILocale.get(lg, 'searchtypes.empty'),
+                            descConsiderChild       : QUILocale.get(lg, 'searchtypes.considerVariantChild')
                         })
                     });
 
@@ -138,7 +142,9 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
 
                     QUI.parse(this.$Elm).then(function () {
                         var Field;
+
                         var controls = QUI.Controls.getControlsInElement(this.$Container);
+                        var Search   = this.$Elm.getElement('[name="search"]');
 
                         var getControlByFieldById = function (fieldId) {
                             for (var c = 0, len = controls.length; c < len; c++) {
@@ -152,7 +158,7 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                         for (i = 0, len = result.length; i < len; i++) {
                             id = result[i].id;
 
-                            if (i === 0) {
+                            if (!Search && i === 0) {
                                 getControlByFieldById(result[i].id).focus();
                             }
 
@@ -165,6 +171,10 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                             if (Field) {
                                 Field.setSearchData(result[i].searchData);
                             }
+                        }
+
+                        if (Search) {
+                            Search.focus();
                         }
                     }.bind(this));
 
@@ -189,10 +199,10 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                         );
                     }
 
+
                     this.$loaded = true;
 
                 }.bind(this));
-
             }.bind(this), {
                 'package': 'quiqqer/products'
             });
@@ -216,8 +226,9 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
 
                 var i, len, Field, fieldid, sortOn;
 
-                var searchvalues = {},
-                    FreeText     = this.$Elm.getElement('[name="search"]');
+                var searchvalues    = {},
+                    FreeText        = this.$Elm.getElement('[name="search"]'),
+                    VariantChildren = this.$Elm.getElement('[name="show-variant-children"]');
 
                 switch (this.getAttribute('sortOn')) {
                     case 'price_netto':
@@ -250,6 +261,10 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                     params.freetext = FreeText.value;
                 }
 
+                if (VariantChildren) {
+                    params.considerVariantChildren = VariantChildren.checked ? 1 : 0;
+                }
+
                 var controls = QUI.Controls.getControlsInElement(this.$Elm);
 
                 var searchfields = controls.filter(function (Control) {
@@ -263,17 +278,16 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                     searchvalues[fieldid] = Field.getSearchValue();
                 }
 
-                params.fields = searchvalues;
+                params.fields       = searchvalues;
+                params.productTypes = this.getAttribute('productTypes');
 
                 Ajax.get('package_quiqqer_products_ajax_search_backend_executeForGrid', function (result) {
                     resolve(result);
                     this.fireEvent('search', [this, result]);
-
                 }.bind(this), {
                     'package'   : 'quiqqer/products',
                     searchParams: JSON.encode(params)
                 });
-
             }.bind(this));
         }
     });

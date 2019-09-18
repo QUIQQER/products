@@ -4,9 +4,14 @@
     <global>
         <table name="products">
             <field type="BIGINT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY">id</field>
+            <field type="VARCHAR(255) NOT NULL">type</field>
             <field type="BIGINT(20) NULL">category</field>
             <field type="TEXT NULL">categories</field>
             <field type="LONGTEXT NULL">fieldData</field>
+            <field type="LONGTEXT NULL">editableVariantFields</field>
+            <field type="LONGTEXT NULL">inheritedVariantFields</field>
+            <field type="BIGINT(10) NULL">defaultVariantId</field>
+            <field type="text NULL">variantHash</field>
             <field type="TINYINT(1) DEFAULT 0">active</field>
             <field type="BIGINT(10) NULL">parent</field>
             <field type="TEXT NULL">permissions</field>
@@ -18,6 +23,10 @@
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
+            <index>parent</index>
+            <index>category</index>
+            <index>active</index>
+            <index>defaultVariantId</index>
         </table>
 
         <table name="product_categories">
@@ -28,6 +37,7 @@
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
+            <index>parentId</index>
         </table>
 
         <table name="product_fields">
@@ -51,23 +61,32 @@
             <index>systemField</index>
             <index>standardField</index>
             <index>requiredField</index>
+            <index>publicField</index>
+            <index>showInDetails</index>
         </table>
 
         <table name="products_cache">
             <field type="BIGINT(10) NOT NULL">id</field>
+            <field type="VARCHAR(255) NOT NULL">type</field>
             <field type="VARCHAR(2) NOT NULL">lang</field>
             <field type="VARCHAR(255) NULL">productNo</field>
             <field type="DOUBLE NULL">minPrice</field>
             <field type="DOUBLE NULL">maxPrice</field>
             <field type="VARCHAR(255) NOT NULL">title</field>
+            <field type="TEXT NULL">description</field>
             <field type="VARCHAR(255) NULL">category</field>
             <field type="TINYINT(1)">active</field>
             <field type="LONGTEXT NULL">tags</field>
             <field type="TEXT NULL">viewUsersGroups</field>
             <field type="timestamp NULL default NULL">c_date</field>
             <field type="timestamp NULL default NULL">e_date</field>
+            <field type="BIGINT(10) NULL DEFAULT NULL">parentId</field>
 
             <primary>id,lang</primary>
+            <index>type</index>
+            <index>category</index>
+            <index>active</index>
+            <index>parentId</index>
         </table>
     </global>
 

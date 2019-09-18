@@ -16,9 +16,7 @@ use QUI\ERP\Products\Handler\Products;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_create',
-    function ($categories, $fields) {
-        \ini_set('display_errors', 1);
-
+    function ($categories, $fields, $productType) {
         $fields     = \json_decode($fields, true);
         $categories = \json_decode($categories, true);
         $fieldList  = [];
@@ -36,11 +34,14 @@ QUI::$Ajax->registerFunction(
             }
         }
 
-        $Products = new Products();
-        $Product  = $Products->createProduct($categories, $fieldList);
+        $Product = Products::createProduct(
+            $categories,
+            $fieldList,
+            $productType
+        );
 
         return $Product->getAttributes();
     },
-    ['categories', 'fields'],
+    ['categories', 'fields', 'productType'],
     'Permission::checkAdminUser'
 );

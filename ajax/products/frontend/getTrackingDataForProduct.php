@@ -4,7 +4,7 @@
  * This file contains package_quiqqer_products_ajax_products_frontend_getProduct
  */
 
-use QUI\ERP\Products\Product\Product;
+use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Handler\Fields;
 
 /**
@@ -17,7 +17,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getTrackingDataForProduct',
     function ($productId) {
         $Locale  = QUI::getLocale();
-        $Product = new Product($productId);
+        $Product = Products::getNewProductInstance($productId);
 
         // categories
         $Category   = $Product->getCategory();

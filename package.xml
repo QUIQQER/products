@@ -9,9 +9,28 @@
             <locale group="quiqqer/products" var="package.description"/>
         </description>
 
+        <image src="URL_OPT_DIR/quiqqer/products/bin/images/Logo.png"/>
+
+        <support>
+            <email><![CDATA[support@pcsg.de]]></email>
+            <forum><![CDATA[https://community.quiqqer.com]]></forum>
+            <source><![CDATA[https://dev.quiqqer.com/quiqqer/products]]></source>
+            <issues><![CDATA[https://dev.quiqqer.com/quiqqer/products/issues]]></issues>
+            <wiki><![CDATA[https://dev.quiqqer.com/quiqqer/products/wikis/home]]></wiki>
+        </support>
+
+        <copyright>
+            <name><![CDATA[PCSG - Computer & Internet Service OHG]]></name>
+            <license><![CDATA[GPL-3.0+]]></license>
+        </copyright>
+
         <provider>
             <erp src="\QUI\ERP\Products\ErpProvider"/>
             <desktopSearch src="\QUI\ERP\Products\DesktopSearch"/>
+
+            <productType src="\QUI\ERP\Products\Product\Types\Product"/>
+            <productType src="\QUI\ERP\Products\Product\Types\VariantChild"/>
+            <productType src="\QUI\ERP\Products\Product\Types\VariantParent"/>
         </provider>
 
     </package>

@@ -12,11 +12,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
     'qui/utils/Elements',
     'package/quiqqer/products/bin/Products',
     'package/quiqqer/products/bin/Categories',
-    'package/quiqqer/products/bin/Stats',
+    'package/quiqqer/products/bin/Stats'
 
-    URL_OPT_DIR + 'bin/hammerjs/hammer.min.js'
-
-], function (QUI, QUIControl, QUIElementUtils, Products, Categories, Piwik, Hammer) {
+], function (QUI, QUIControl, QUIElementUtils, Products, Categories, Piwik) {
     "use strict";
 
     return new Class({
@@ -42,7 +40,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$TabContainer = null;
+            this.$TabContainer    = null;
+            this.$fieldHashes     = {};
+            this.$availableHashes = {};
 
             this.$Tabbar  = null;
             this.$Touch   = null;
@@ -99,58 +99,63 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
             this.$Product = Products.get(productId);
 
-            require(['Ajax'], function (QUIAjax) {
-                QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getProduct', function (result) {
-                    var Container = self.create(),
-                        Helper    = new Element('div', {
-                            html: result.html
+            return new Promise(function (resolve) {
+                require(['Ajax'], function (QUIAjax) {
+                    QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getProduct', function (result) {
+                        var Container = self.create(),
+                            Helper    = new Element('div', {
+                                html: result.html
+                            });
+
+                        self.$fieldHashes     = result.fieldHashes;
+                        self.$availableHashes = result.availableHashes;
+
+                        Container.set('data-qui', self.getType());
+                        Container.set('data-productid', productId);
+                        Container.className = 'quiqqer-products-product';
+
+                        document.title = result.title;
+
+                        Container.set(
+                            'html',
+                            result.css +
+                            Helper.getChildren('[data-productid]').get('html')
+                        );
+
+                        Container.setStyle('margin', 0);
+
+                        var Article = Container.getElement('article');
+
+                        if (!Article) {
+                            Article = new Element('div');
+                        }
+
+                        if (Article.getChildren('header')) {
+                            Article.getChildren('header').setStyle('padding-right', 40);
+                        }
+
+                        Article.setStyles({
+                            padding: 0
                         });
 
-                    Container.set('data-qui', self.getType());
-                    Container.set('data-productid', productId);
-                    Container.className = 'quiqqer-products-product';
-
-                    document.title = result.title;
-
-                    Container.set(
-                        'html',
-                        result.css +
-                        Helper.getChildren('[data-productid]').get('html')
-                    );
-
-                    Container.setStyle('margin', 0);
-
-                    var Article = Container.getElement('article');
-
-                    if (!Article) {
-                        Article = new Element('div');
-                    }
-
-                    if (Article.getChildren('header')) {
-                        Article.getChildren('header').setStyle('padding-right', 40);
-                    }
-
-                    Article.setStyles({
-                        padding: 0
-                    });
-
-                    new Element('div', {
-                        'class': 'product-close-button',
-                        html   : '<span class="fa fa-close"></span>',
-                        events : {
-                            click: function () {
-                                document.title = QUIQQER.title;
-                                self.fireEvent('close');
+                        new Element('div', {
+                            'class': 'product-close-button',
+                            html   : '<span class="fa fa-close"></span>',
+                            events : {
+                                click: function () {
+                                    document.title = QUIQQER.title;
+                                    self.fireEvent('close');
+                                }
                             }
-                        }
-                    }).inject(Container);
+                        }).inject(Container);
 
-                    self.$onImport();
-                }, {
-                    'package': 'quiqqer/products',
-                    productId: productId,
-                    project  : JSON.encode(QUIQQER_PROJECT),
-                    siteId   : QUIQQER_SITE.id
+                        self.$onImport().then(resolve);
+                    }, {
+                        'package': 'quiqqer/products',
+                        productId: productId,
+                        project  : JSON.encode(QUIQQER_PROJECT),
+                        siteId   : QUIQQER_SITE.id
+                    });
                 });
             });
         },
@@ -159,46 +164,91 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
          * event : on import
          */
         $onImport: function () {
-            var self      = this,
-                Elm       = this.getElm(),
-                productId = Elm.get('data-productid');
+            return new Promise(function (resolve) {
+                var self      = this,
+                    Elm       = this.getElm(),
+                    productId = Elm.get('data-productid');
 
-            this.setAttribute('productId', productId);
+                this.setAttribute('productId', productId);
 
-            Products.addToVisited(this.getAttribute('productId'));
+                Products.addToVisited(this.getAttribute('productId'));
 
-            // stats
-            Piwik.getTracker().then(function (PiwikTracker) {
-                require(['Ajax'], function (QUIAjax) {
-                    QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getTrackingDataForProduct', function (data) {
-                        PiwikTracker.setEcommerceView(
-                            data.productNo,
-                            data.title,
-                            data.category,
-                            data.price
-                        );
+                // stats
+                Piwik.getTracker().then(function (PiwikTracker) {
+                    require(['Ajax'], function (QUIAjax) {
+                        QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getTrackingDataForProduct', function (data) {
+                            PiwikTracker.setEcommerceView(
+                                data.productNo,
+                                data.title,
+                                data.category,
+                                data.price
+                            );
 
-                        PiwikTracker.trackPageView();
-                    }, {
-                        'package': 'quiqqer/products',
-                        productId: productId
+                            PiwikTracker.trackPageView();
+                        }, {
+                            'package': 'quiqqer/products',
+                            productId: productId
+                        });
                     });
+                }).catch(function (error) {
+                    if (error !== 404) {
+                        console.error(error);
+                    }
                 });
-            }).catch(function (error) {
-                if (error !== 404) {
-                    console.error(error);
-                }
-            });
 
-            // render
-            this.$Next         = Elm.getElement('.product-data-more-next');
-            this.$Prev         = Elm.getElement('.product-data-more-prev');
+                // render
+                this.$Next = Elm.getElement('.product-data-more-next');
+                this.$Prev = Elm.getElement('.product-data-more-prev');
+
+                this.$TabContainer = Elm.getElement('.product-data-more-tabsContainer');
+                this.$Tabbar       = Elm.getElement('.product-data-more-tabs');
+
+                this.$Next.addEvent('click', this.nextTab);
+                this.$Prev.addEvent('click', this.prevTab);
+
+                QUI.parse(Elm).then(function () {
+                    // price
+                    var Price   = Elm.getElement('.product-data-price-main .qui-products-price-display'),
+                        Gallery = Elm.getElement('.quiqqer-gallery-slider');
+
+                    if (Gallery) {
+                        this.$Gallery = QUI.Controls.getById(Gallery.get('data-quiid'));
+                    }
+
+                    if (self.getAttribute('galleryLoader') === false) {
+                        this.$Gallery.Loader.hide();
+                    }
+
+                    if (Price) {
+                        this.$Price = QUI.Controls.getById(Price.get('data-quiid'));
+                    }
+
+                    // field events
+                    var fields = this.getFieldControls();
+
+                    fields.each(function (Control) {
+                        Control.addEvent('onChange', function () {
+                            self.calcPrice();
+                        });
+                    });
+
+                    this.$initTabEvents();
+                    this.resize();
+                    this.fireEvent('load');
+                    resolve();
+                }.bind(this));
+            }.bind(this));
+        },
+
+        /**
+         * set and initialize all tab events for the detail tabs
+         */
+        $initTabEvents: function () {
+            var Elm = this.getElm();
+
+            this.$TabContainer = Elm.getElement('.product-data-more-tabsContainer');
             this.$Tabbar       = Elm.getElement('.product-data-more-tabs');
             this.$Sheets       = Elm.getElement('.product-data-more-sheets');
-            this.$TabContainer = Elm.getElement('.product-data-more-tabsContainer');
-
-            this.$Next.addEvent('click', this.nextTab);
-            this.$Prev.addEvent('click', this.prevTab);
 
             this.$tabs = this.$Tabbar.getElements('.product-data-more-tabs-tab');
 
@@ -228,87 +278,43 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
             }
 
 
-            // this.$Touch = new Hammer(this.$Sheets);
+            // get preview images
+            var rowClick = function (event) {
+                var Target = event.target;
 
-            // this.$Touch.on('swipe', function (ev) {
-            //     if (ev.offsetDirection === 4) {
-            //         this.prevTab();
-            //         return;
-            //     }
-            //
-            //     if (ev.offsetDirection === 2) {
-            //         this.nextTab();
-            //     }
-            // }.bind(this));
-
-
-            QUI.parse(Elm).then(function () {
-                // price
-                var Price   = Elm.getElement('.qui-products-price-display'),
-                    Gallery = Elm.getElement('.quiqqer-gallery-slider');
-
-                if (Gallery) {
-                    this.$Gallery = QUI.Controls.getById(Gallery.get('data-quiid'));
+                if (Target.nodeName === 'IMG') {
+                    return;
                 }
 
-                if (self.getAttribute('galleryLoader') === false) {
-                    this.$Gallery.Loader.hide();
+                if (Target.getParent('.product-data-files-table-preview')) {
+                    return;
                 }
 
-                if (Price) {
-                    this.$Price = QUI.Controls.getById(Price.get('data-quiid'));
+                if (Target.hasClass('product-data-files-table-download')) {
+                    return;
                 }
 
-                // field events
-                var fields = this.getFieldControls();
+                if (Target.getParent('.product-data-files-table-download')) {
+                    return;
+                }
 
-                fields.each(function (Control) {
-                    Control.addEvent('onChange', function () {
-                        self.calcPrice();
-                    });
+                this.getElement('.product-data-files-table-preview img').click();
+            };
+
+            var images = Elm.getElements(
+                '.product-data-files-table-preview [data-zoom="1"]'
+            );
+
+            for (var i = 0, len = images.length; i < len; i++) {
+                images[i].getParent('tr').addEvent('click', rowClick);
+                images[i].getParent('tr').setStyle('cursor', 'pointer');
+            }
+
+            if (this.$tabs.length) {
+                this.$tabClick({
+                    target: this.$tabs[0]
                 });
-
-                // get preview images
-                var rowClick = function (event) {
-                    var Target = event.target;
-
-                    if (Target.nodeName === 'IMG') {
-                        return;
-                    }
-
-                    if (Target.getParent('.product-data-files-table-preview')) {
-                        return;
-                    }
-
-                    if (Target.hasClass('product-data-files-table-download')) {
-                        return;
-                    }
-
-                    if (Target.getParent('.product-data-files-table-download')) {
-                        return;
-                    }
-
-                    this.getElement('.product-data-files-table-preview img').click();
-                };
-
-                var images = Elm.getElements(
-                    '.product-data-files-table-preview [data-zoom="1"]'
-                );
-
-                for (var i = 0, len = images.length; i < len; i++) {
-                    images[i].getParent('tr').addEvent('click', rowClick);
-                    images[i].getParent('tr').setStyle('cursor', 'pointer');
-                }
-
-                if (this.$tabs.length) {
-                    this.$tabClick({
-                        target: this.$tabs[0]
-                    });
-                }
-
-                this.resize();
-                this.fireEvent('load');
-            }.bind(this));
+            }
         },
 
         /**
@@ -350,7 +356,13 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
             }
 
             return Products.calcPrice(this.getAttribute('productId'), fieldData).then(function (result) {
-                self.$Price.setPrice(result.calculated_price);
+                if (result.price_is_minimal) {
+                    self.$Price.enableMinimalPrice();
+                } else {
+                    self.$Price.disableMinimalPrice();
+                }
+
+                self.$Price.setPriceDisplay(result.price_display);
             });
         },
 
