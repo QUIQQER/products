@@ -27,7 +27,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'package/quiqqer/products/bin/controls/frontend/category/ProductListField'
 
 ], function (QUI, QUIControl, QUISelect, QUIButton, QUILoader, QUIElementUtils,
-    Search, Piwik, SearchField, QUIAjax, QUILocale, URI, ProductListFilter, ProductListField
+             Search, Piwik, SearchField, QUIAjax, QUILocale, URI, ProductListFilter, ProductListField
 ) {
 
     "use strict";
@@ -165,7 +165,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             this.$productLoadNumber = parseInt(Elm.get('data-productLoadNumber'));
-            this.$autoloadAfter = parseInt(Elm.get('data-autoloadAfter'));
+            this.$autoloadAfter     = parseInt(Elm.get('data-autoloadAfter'));
 
             if (this.$autoloadAfter < 0) {
                 this.$autoloadAfter = 0;
@@ -2027,8 +2027,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.showList();
 
-            var self         = this,
-                searchParams = this.$getSearchParams();
+            var self = this;
 
             if (!this.$load) {
                 return;
@@ -2330,10 +2329,25 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }).then(function () {
                     return new Promise(function (resolve) {
                         require(['package/quiqqer/products/bin/Products'], function (Products) {
-                            Products.getProductControlClass(productId).then(resolve);
+                            Products.getProductControlClass(productId).then(resolve).catch(function () {
+                                self.$productId  = false;
+                                self.$categories = currentCategories;
+
+                                var Url = URI(window.location);
+                                Url.removeSearch('p');
+                                window.history.pushState({}, "", Url.toString());
+
+                                self.showList(false);
+                                resolve(false);
+
+                            });
                         });
                     });
                 }).then(function (controlClass) {
+                    if (!controlClass) {
+                        return;
+                    }
+
                     require([controlClass], function (Product) {
                         new Fx.Scroll(window).toTop().chain(function () {
                             self.$setWindowLocation();
