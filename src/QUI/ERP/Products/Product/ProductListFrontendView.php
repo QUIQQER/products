@@ -93,6 +93,7 @@ class ProductListFrontendView
             $PriceFactors = $Product->getPriceFactors();
 
             $product = [
+                'productNo'       => '',
                 'fields'          => [],
                 'attributeFields' => [],
                 'groupFields'     => [],
@@ -116,6 +117,10 @@ class ProductListFrontendView
 
                 if ($Field->getType() === QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS) {
                     $product['groupFields'][] = $Field->getView();
+                }
+
+                if ($Field->getId() === QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO) {
+                    $product['productNo'] = $Field->getValue();
                 }
             }
 
