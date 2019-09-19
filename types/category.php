@@ -22,7 +22,7 @@ if (\strpos(QUI::getRequest()->getPathInfo(), '_p/') !== false) {
     if (\strlen(URL_DIR) == 1) {
         $_REQUEST['_url'] = \ltrim($_REQUEST['_url'], URL_DIR);
     } else {
-        $from             = '/' . \preg_quote(URL_DIR, '/') . '/';
+        $from             = '/'.\preg_quote(URL_DIR, '/').'/';
         $_REQUEST['_url'] = \preg_replace($from, '', $_REQUEST['_url'], 1);
     }
 
@@ -63,7 +63,7 @@ $Engine->assign([
     'CategoryMenu' => $CategoryMenu,
 ]);
 
-if ($siteUrl != $_REQUEST['_url']) {
+if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p'])) {
     /**
      * PRODUCT
      */
@@ -75,6 +75,10 @@ if ($siteUrl != $_REQUEST['_url']) {
 
     $parts = \explode(QUI\Rewrite::URL_PARAM_SEPARATOR, $baseName);
     $refNo = \array_pop($parts);
+
+    if (!empty($_GET['p'])) {
+        $refNo = (int)$_GET['p'];
+    }
 
     if (!empty($_GET['variant'])) {
         $refNo = (int)$_GET['variant'];
@@ -89,7 +93,7 @@ if ($siteUrl != $_REQUEST['_url']) {
         $categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
         $Product    = Products\Handler\Products::getProductByUrl($refNo, $categoryId);
     } catch (QUI\Exception $Exception) {
-        Log::addDebug('Products::getProductByUrl :: ' . $Exception->getMessage());
+        Log::addDebug('Products::getProductByUrl :: '.$Exception->getMessage());
     }
 
     try {
@@ -111,8 +115,11 @@ if ($siteUrl != $_REQUEST['_url']) {
 
         // forwarding, if the product has a new URL
         // can happen if the product was previously in "all products".
-        if ($productUrl != URL_DIR . $_REQUEST['_url']) {
-            $Redirect = new RedirectResponse($productUrl);
+        if ($productUrl != URL_DIR.$_REQUEST['_url']) {
+            $urlencoded = \urlencode($productUrl);
+            $urlencoded = \str_replace('%2F', '/', $urlencoded);
+
+            $Redirect = new RedirectResponse($urlencoded);
             $Redirect->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
 
             echo $Redirect->getContent();
@@ -152,7 +159,7 @@ if ($siteUrl != $_REQUEST['_url']) {
                 );
 
                 $Site->setAttribute(
-                    $language . '-link',
+                    $language.'-link',
                     $Product->getUrlRewrittenWithHost($LanguageProject)
                 );
             } catch (QUI\Exception $Exception) {
@@ -228,13 +235,13 @@ if ($siteUrl != $_REQUEST['_url']) {
         }
 
         $ProductList->addSort(
-            $title . ' ' . QUI::getLocale()->get('quiqqer/products', 'sortASC'),
-            'F' . $id . ' ASC'
+            $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortASC'),
+            'F'.$id.' ASC'
         );
 
         $ProductList->addSort(
-            $title . ' ' . QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
-            'F' . $id . ' DESC'
+            $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
+            'F'.$id.' DESC'
         );
     }
 
