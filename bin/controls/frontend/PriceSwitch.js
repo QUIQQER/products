@@ -8,10 +8,11 @@ define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
     'qui/controls/Control',
     'qui/controls/buttons/Switch',
     'Ajax',
+    'Locale',
 
     'css!package/quiqqer/products/bin/controls/frontend/PriceSwitch.css'
 
-], function (QUI, QUIControl, QUISwitch, QUIAjax) {
+], function (QUI, QUIControl, QUISwitch, QUIAjax, QUILocale) {
     "use strict";
 
     if (typeof window.QUIQQER_PRODUCTS_HIDE_PRICE === 'undefined') {
@@ -54,6 +55,10 @@ define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
                 this.$Elm = new Element('div', {
                     'class': 'quiqqer-products-priceSwitch',
                     html   : '<span class="fa"></span>',
+                    title  : QUILocale.get(
+                        'quiqqer/products',
+                        'controls.PriceSwitch.title.hide_prices'
+                    ),
                     styles : {
                         cursor: 'pointer'
                     },
@@ -69,6 +74,11 @@ define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
                 );
 
                 if (window.QUIQQER_PRODUCTS_HIDE_PRICE) {
+                    this.$Elm.set('title', QUILocale.get(
+                        'quiqqer/products',
+                        'controls.PriceSwitch.title.show_prices'
+                    ));
+
                     this.$Elm.addClass('quiqqer-products-priceSwitch-hidePrice');
                 }
 
@@ -113,6 +123,18 @@ define('package/quiqqer/products/bin/controls/frontend/PriceSwitch', [
             }
 
             window.QUIQQER_PRODUCTS_HIDE_PRICE = status;
+
+            if (status) {
+                this.$Elm.set('title', QUILocale.get(
+                    'quiqqer/products',
+                    'controls.PriceSwitch.title.show_prices'
+                ));
+            } else {
+                this.$Elm.set('title', QUILocale.get(
+                    'quiqqer/products',
+                    'controls.PriceSwitch.title.hide_prices'
+                ));
+            }
 
             QUIAjax.post('ajax_session_set', function () {
                 window.location.reload();

@@ -186,7 +186,7 @@ class PriceFactors
      */
     public function importList($list)
     {
-        if (!is_array($list)) {
+        if (!\is_array($list)) {
             return;
         }
 
