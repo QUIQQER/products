@@ -52,7 +52,17 @@ class Fields
     public static function parseFieldHashToArray($fieldHash)
     {
         $result    = [];
-        $fieldHash = \explode(';', \trim($fieldHash, ';'));
+        $fieldHash = \trim($fieldHash, ';');
+
+        if (empty($fieldHash)) {
+            return $result;
+        }
+
+        $fieldHash = \explode(';', $fieldHash);
+
+        if (empty($fieldHash)) {
+            return $result;
+        }
 
         foreach ($fieldHash as $key => $entry) {
             $entry    = \explode(':', $entry);
