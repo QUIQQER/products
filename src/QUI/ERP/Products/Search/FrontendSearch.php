@@ -111,6 +111,7 @@ class FrontendSearch extends Search
             SearchHandler::PERMISSION_FRONTEND_EXECUTE
         );
 
+        $searchTerm                      = false;
         $PDO                             = QUI::getDataBase()->getPDO();
         $binds                           = [];
         $where                           = [];
@@ -119,7 +120,7 @@ class FrontendSearch extends Search
                 ->getConfig()
                 ->get('variants', 'findVariantParentByChildValues');
 
-        $sql = "SELECT `id`, `type`, `parentId`";
+        $sql = "SELECT `id`, `type`, `parentId`, `productNo`";
         $sql .= " FROM ".TablesUtils::getProductCacheTableName();
 
         $where[]       = 'lang = :lang';
@@ -177,6 +178,7 @@ class FrontendSearch extends Search
         if (isset($searchParams['freetext']) && !empty($searchParams['freetext'])) {
             $whereFreeText = [];
             $value         = $this->sanitizeString($searchParams['freetext']);
+            $searchTerm    = $value;
 
             // split search value by space
             $freetextValues = \explode(' ', $value);
@@ -410,6 +412,24 @@ class FrontendSearch extends Search
 
         $productIds      = [];
         $childrenRemoved = 0;
+
+        // Sort by productNo
+        if ($searchTerm) {
+            $lettersSearch = preg_split("//u", $searchTerm, -1, PREG_SPLIT_NO_EMPTY);
+
+            \usort($result, function ($a, $b) use ($lettersSearch) {
+                $lettersA = preg_split("//u", $a['productNo'], -1, PREG_SPLIT_NO_EMPTY);
+                $lettersB = preg_split("//u", $b['productNo'], -1, PREG_SPLIT_NO_EMPTY);
+                $matchesA = count(\array_intersect($lettersSearch, $lettersA)) + \mb_strlen($a['productNo']);
+                $matchesB = count(\array_intersect($lettersSearch, $lettersB)) + \mb_strlen($b['productNo']);
+
+                if ($matchesA === $matchesB) {
+                    return \strnatcmp($a['productNo'], $b['productNo']);
+                }
+
+                return $matchesA - $matchesB;
+            });
+        }
 
         foreach ($result as $k => $row) {
             if ($row['type'] === VariantChild::class) {
