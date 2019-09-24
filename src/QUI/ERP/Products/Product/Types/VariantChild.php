@@ -326,6 +326,8 @@ class VariantChild extends AbstractType
             // save only different field values
             if ($field['value'] !== $parentFieldValue) {
                 $filteredFields[] = $field;
+            } else {
+                $field['value'] = null;
             }
         }
 
