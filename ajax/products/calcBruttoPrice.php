@@ -4,6 +4,9 @@
  * This file contains package_quiqqer_products_ajax_products_calcBruttoPrice
  */
 
+use QUI\ERP\Products\Field\Types\Vat;
+use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Tax\TaxEntry;
 use QUI\ERP\Tax\TaxType;
 use QUI\ERP\Tax\Utils as TaxUtils;
@@ -16,17 +19,34 @@ use QUI\ERP\Tax\Utils as TaxUtils;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_calcBruttoPrice',
-    function ($price, $formatted) {
-        $price   = QUI\ERP\Money\Price::validatePrice($price);
-        $Area    = QUI\ERP\Defaults::getArea();
-        $TaxType = TaxUtils::getTaxTypeByArea($Area);
+    function ($price, $formatted, $productId) {
+        $price    = QUI\ERP\Money\Price::validatePrice($price);
+        $Area     = QUI\ERP\Defaults::getArea();
+        $TaxEntry = null;
 
-        if ($TaxType instanceof TaxType) {
-            $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
-        } elseif ($TaxType instanceof TaxEntry) {
-            $TaxEntry = $TaxType;
-        } else {
-            return $price;
+        if (!empty($productId)) {
+            $Product = Products::getProduct((int)$productId);
+
+            /* @var $Field Vat */
+            $Vat = $Product->getField(Fields::FIELD_VAT);
+
+            try {
+                $TaxType  = new QUI\ERP\Tax\TaxType($Vat->getValue());
+                $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
+        if (!$TaxEntry) {
+            $TaxType = TaxUtils::getTaxTypeByArea($Area);
+
+            if ($TaxType instanceof TaxType) {
+                $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
+            } elseif ($TaxType instanceof TaxEntry) {
+                $TaxEntry = $TaxType;
+            } else {
+                return $price;
+            }
         }
 
         $vat = $TaxEntry->getValue();
@@ -40,5 +60,5 @@ QUI::$Ajax->registerFunction(
 
         return $price;
     },
-    ['price', 'formatted']
+    ['price', 'formatted', 'productId']
 );
