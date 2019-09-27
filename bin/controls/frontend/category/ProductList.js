@@ -23,11 +23,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'Ajax',
     'Locale',
     'URI',
+    'utils/Session',
     'package/quiqqer/products/bin/controls/frontend/category/ProductListFilter',
     'package/quiqqer/products/bin/controls/frontend/category/ProductListField'
 
 ], function (QUI, QUIControl, QUISelect, QUIButton, QUILoader, QUIElementUtils,
-             Search, Piwik, SearchField, QUIAjax, QUILocale, URI, ProductListFilter, ProductListField
+             Search, Piwik, SearchField, QUIAjax, QUILocale, URI, Session,
+             ProductListFilter, ProductListField
 ) {
 
     "use strict";
@@ -846,12 +848,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$ButtonGallery.addClass('active');
             this.setAttribute('view', 'gallery');
 
-            // set view to the session
-            QUIAjax.post('ajax_session_set', function () {
-            }, {
-                key  : 'productView',
-                value: 'gallery'
-            });
+            Session.set('productView', 'gallery');
 
             this.$setWindowLocation();
         },
@@ -870,12 +867,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$ButtonDetails.addClass('active');
             this.setAttribute('view', 'detail');
 
-            // set view to the session
-            QUIAjax.post('ajax_session_set', function () {
-            }, {
-                key  : 'productView',
-                value: 'detail'
-            });
+            Session.set('productView', 'detail');
 
             this.$setWindowLocation();
         },
@@ -895,11 +887,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.setAttribute('view', 'list');
 
             // set view to the session
-            QUIAjax.post('ajax_session_set', function () {
-            }, {
-                key  : 'productView',
-                value: 'list'
-            });
+            Session.set('productView', 'list');
 
             this.$setWindowLocation();
         },
