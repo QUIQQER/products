@@ -41,6 +41,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
             this.$Button       = null;
             this.$$BruttoInput = null;
             this.$calcTimer    = null;
+            this.$productId    = null;
 
             this.addEvents({
                 onImport: this.$onImport
@@ -82,6 +83,14 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
                     maxWidth   : 100
                 }
             }).inject(Elm, 'after');
+
+            if (Elm.getParent('.qui-panel')) {
+                var Panel = QUI.Controls.getById(Elm.getParent('.qui-panel').get('data-quiid'));
+
+                if (Panel.getAttribute('productId')) {
+                    this.$productId = Panel.getAttribute('productId');
+                }
+            }
 
 
             this.setValue(Elm.value);
@@ -196,7 +205,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
                 }, {
                     'package': 'quiqqer/products',
                     price    : this.$Elm.value,
-                    formatted: 1
+                    formatted: 1,
+                    productId: this.$productId
                 });
             }).delay(500, this);
         }

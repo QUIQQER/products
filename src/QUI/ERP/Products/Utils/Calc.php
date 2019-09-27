@@ -307,8 +307,15 @@ class Calc
             }
 
             // add price factor VAT
+            $Vat = null;
+
             if (!($PriceFactor instanceof QUI\ERP\Products\Interfaces\PriceFactorWithVatInterface)) {
-                $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
+                $vatValue = $PriceFactor->getVat();
+
+                if ($vatValue === false) {
+                    $Vat      = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
+                    $vatValue = $Vat->getValue();
+                }
             } else {
                 try {
                     $VatType = $PriceFactor->getVatType();
@@ -321,12 +328,13 @@ class Calc
                 } catch (QUI\Exception $Exception) {
                     $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
                 }
+
+                $vatValue = $Vat->getValue();
             }
 
-            $vatSum = $PriceFactor->getNettoSum() * ($Vat->getValue() / 100);
-            $vat    = $Vat->getValue();
+            $vatSum = $PriceFactor->getNettoSum() * ($vatValue / 100);
 
-            $PriceFactor->setVat($vat);
+            $PriceFactor->setVat($vatValue);
 
             if ($isNetto) {
                 $PriceFactor->setSum($PriceFactor->getNettoSum());
@@ -334,21 +342,21 @@ class Calc
                 $PriceFactor->setSum($vatSum + $PriceFactor->getNettoSum());
             }
 
-            if (!$Vat->isVisible()) {
+            if ($Vat && !$Vat->isVisible()) {
                 continue;
             }
 
-            if (!isset($vatArray[$vat])) {
-                $vatArray[$vat] = [
-                    'vat'     => $vat,
+            if (!isset($vatArray[$vatValue])) {
+                $vatArray[$vatValue] = [
+                    'vat'     => $vatValue,
                     'text'    => ErpCalc::getVatText($Vat->getValue(), $this->getUser(), $Locale),
                     'visible' => $Vat->isVisible()
                 ];
 
-                $vatArray[$vat]['sum'] = 0;
+                $vatArray[$vatValue]['sum'] = 0;
             }
 
-            $vatArray[$vat]['sum'] = $vatArray[$vat]['sum'] + $vatSum;
+            $vatArray[$vatValue]['sum'] = $vatArray[$vatValue]['sum'] + $vatSum;
         }
 
         // vat text

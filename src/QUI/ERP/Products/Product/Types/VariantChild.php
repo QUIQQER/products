@@ -315,6 +315,23 @@ class VariantChild extends AbstractType
      */
     protected function productSave($fieldData)
     {
+        // check fields with parent fields
+        $Parent         = $this->getParent();
+        $filteredFields = [];
+
+        foreach ($fieldData as $field) {
+            $FieldParent      = $Parent->getField($field['id']);
+            $parentFieldValue = $FieldParent->getValue();
+
+            // save only different field values
+            if ($field['value'] !== $parentFieldValue) {
+                $filteredFields[] = $field;
+            } else {
+                $field['value'] = null;
+            }
+        }
+
+
         parent::productSave($fieldData);
 
         QUI::getDataBase()->update(
