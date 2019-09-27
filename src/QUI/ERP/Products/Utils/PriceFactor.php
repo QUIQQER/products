@@ -362,7 +362,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * Sets the vat % value (eq: 19%)
      *
-     * @param $vat
+     * @param integer $vat - 7 = 7%, 19 = 19%
      */
     public function setVat($vat)
     {
