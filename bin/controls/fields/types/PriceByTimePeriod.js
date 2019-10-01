@@ -42,6 +42,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
             this.$Price       = null;
             this.$Currency    = null;
             this.$BruttoInput = null;
+            this.$productId   = null;
 
             this.$From      = null;
             this.$To        = null;
@@ -163,6 +164,14 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
             this.$Brutto.addEvent('click', this.openBruttoInput);
 
             this.$BruttoInput = this.$Elm.getElement('span.quiqqer-products-field-priceByTimePeriod-bruttoinput');
+
+            if (this.$Elm.getParent('.qui-panel')) {
+                var Panel = QUI.Controls.getById(this.$Elm.getParent('.qui-panel').get('data-quiid'));
+
+                if (Panel.getAttribute('productId')) {
+                    this.$productId = Panel.getAttribute('productId');
+                }
+            }
 
             this.refresh();
             this.$calcBruttoPrice();
@@ -287,7 +296,8 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
             var self = this;
 
             new PriceBruttoWindow({
-                events: {
+                productId: this.$productId,
+                events   : {
                     onOpen: function (Win) {
                         Win.getContent().set('html', '');
                     },

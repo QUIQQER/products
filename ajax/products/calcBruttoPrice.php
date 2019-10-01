@@ -4,61 +4,33 @@
  * This file contains package_quiqqer_products_ajax_products_calcBruttoPrice
  */
 
-use QUI\ERP\Products\Field\Types\Vat;
-use QUI\ERP\Products\Handler\Fields;
-use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Tax\TaxEntry;
-use QUI\ERP\Tax\TaxType;
-use QUI\ERP\Tax\Utils as TaxUtils;
+use QUI\ERP\Products\Utils\Calc;
 
 /**
  * Calculate the product brutto price
  *
- * @param integer|float $price - Price to calc
+ * @param integer|float $price - Price to calc (netto price)
+ * @param bool $formatted - output formatted?
+ * @param integer $productId - optional
+ *
  * @return float
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_calcBruttoPrice',
     function ($price, $formatted, $productId) {
-        $price    = QUI\ERP\Money\Price::validatePrice($price);
-        $Area     = QUI\ERP\Defaults::getArea();
-        $TaxEntry = null;
+        $price         = QUI\ERP\Money\Price::validatePrice($price);
+        $baseFormatted = QUI\ERP\Defaults::getCurrency()->format($price);
 
-        if (!empty($productId)) {
-            $Product = Products::getProduct((int)$productId);
+        $bruttoPrice         = Calc::calcBruttoPrice($price, false, $productId);
+        $nettoPriceFormatted = Calc::calcNettoPrice($bruttoPrice, true, $productId);
 
-            /* @var $Field Vat */
-            $Vat = $Product->getField(Fields::FIELD_VAT);
-
-            try {
-                $TaxType  = new QUI\ERP\Tax\TaxType($Vat->getValue());
-                $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
-            } catch (QUI\Exception $Exception) {
-            }
+        if ($baseFormatted === $nettoPriceFormatted) {
+            return Calc::calcBruttoPrice($price, $formatted, $productId);
         }
 
-        if (!$TaxEntry) {
-            $TaxType = TaxUtils::getTaxTypeByArea($Area);
+        // @todo +1 -1 cent
 
-            if ($TaxType instanceof TaxType) {
-                $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
-            } elseif ($TaxType instanceof TaxEntry) {
-                $TaxEntry = $TaxType;
-            } else {
-                return $price;
-            }
-        }
-
-        $vat = $TaxEntry->getValue();
-        $vat = (100 + $vat) / 100;
-
-        $price = $price * $vat;
-
-        if (isset($formatted) && $formatted) {
-            return QUI\ERP\Defaults::getCurrency()->format($price);
-        }
-
-        return $price;
+        return Calc::calcBruttoPrice($price, $formatted, $productId);
     },
     ['price', 'formatted', 'productId']
 );

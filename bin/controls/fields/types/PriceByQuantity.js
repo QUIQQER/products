@@ -39,6 +39,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
             this.$Price       = null;
             this.$Currency    = null;
             this.$BruttoInput = null;
+            this.$productId   = null;
 
             this.$Quantity  = null;
             this.$calcTimer = null;
@@ -171,6 +172,14 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
                 }
             }).inject(this.$Elm, 'after');
 
+            if (this.$Elm.getParent('.qui-panel')) {
+                var Panel = QUI.Controls.getById(this.$Elm.getParent('.qui-panel').get('data-quiid'));
+
+                if (Panel.getAttribute('productId')) {
+                    this.$productId = Panel.getAttribute('productId');
+                }
+            }
+
             this.refresh();
             this.$calcBruttoPrice();
         },
@@ -285,7 +294,8 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [
             var self = this;
 
             new PriceBruttoWindow({
-                events: {
+                productId: this.$productId,
+                events   : {
                     onOpen: function (Win) {
                         Win.getContent().set('html', '');
                     },

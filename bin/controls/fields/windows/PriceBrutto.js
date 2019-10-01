@@ -23,6 +23,10 @@ define('package/quiqqer/products/bin/controls/fields/windows/PriceBrutto', [
         Extends: QUIConfirm,
         Type   : 'package/quiqqer/products/bin/controls/fields/windows/PriceBrutto',
 
+        options: {
+            productId: false
+        },
+
         Binds: [
             '$onOpen'
         ],
@@ -87,7 +91,8 @@ define('package/quiqqer/products/bin/controls/fields/windows/PriceBrutto', [
                 self.close();
             }, {
                 'package': 'quiqqer/products',
-                price    : this.getContent().getElement('input').value
+                price    : this.getContent().getElement('input').value,
+                productId: this.getAttribute('productId')
             });
         }
     });
