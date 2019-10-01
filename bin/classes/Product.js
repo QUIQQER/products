@@ -470,7 +470,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                         return resolve(field[0]);
                     }
 
-                    return reject('Field not found');
+                    return reject('Field #' + fieldId + ' not found');
                 }
 
                 this.refresh().then(function () {
