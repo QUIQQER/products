@@ -4,45 +4,38 @@
  * This file contains package_quiqqer_products_ajax_products_calcNettoPrice
  */
 
-use QUI\ERP\Tax\TaxEntry;
-use QUI\ERP\Tax\TaxType;
-use QUI\ERP\Tax\Utils as TaxUtils;
+use QUI\ERP\Products\Utils\Calc;
 
 /**
- * Calculate the product price
+ * Calculate the netto price
  *
- * @param integer|float $price - Price to calc
+ * @param integer|float $price - Price to calc (brutto price)
+ * @param bool $formatted - output formatted?
+ * @param integer $productId - optional
+ *
  * @return float
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_calcNettoPrice',
-    function ($price, $formatted) {
-        $price   = QUI\ERP\Money\Price::validatePrice($price);
-        $Area    = QUI\ERP\Defaults::getArea();
-        $TaxType = TaxUtils::getTaxTypeByArea($Area);
+    function ($price, $formatted, $productId) {
+        $price         = QUI\ERP\Money\Price::validatePrice($price);
+        $baseFormatted = QUI\ERP\Defaults::getCurrency()->format($price);
 
-        if ($TaxType instanceof TaxType) {
-            $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
-        } elseif ($TaxType instanceof TaxEntry) {
-            $TaxEntry = $TaxType;
-        } else {
-            if (isset($formatted) && $formatted) {
-                return QUI\ERP\Defaults::getCurrency()->format($price);
-            }
+        $nettoPrice           = Calc::calcNettoPrice($price, false, $productId);
+        $nettoPriceFormatted  = Calc::calcNettoPrice($price, true, $productId);
+        $bruttoPriceFormatted = Calc::calcBruttoPrice(
+            \floatval($nettoPriceFormatted),
+            true,
+            $productId
+        );
 
-            return $price;
+        if ($baseFormatted === $bruttoPriceFormatted) {
+            return Calc::calcNettoPrice($price, $formatted, $productId);
         }
 
-        $vat = $TaxEntry->getValue();
-        $vat = ($vat / 100) + 1;
+        // @todo +1 -1 cent
 
-        $price = $price / $vat;
-
-        if (isset($formatted) && $formatted) {
-            return QUI\ERP\Defaults::getCurrency()->format($price);
-        }
-
-        return $price;
+        return Calc::calcNettoPrice($price, $formatted, $productId);
     },
-    ['price', 'formatted']
+    ['price', 'formatted', 'productId']
 );

@@ -159,7 +159,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
             var self = this;
 
             new PriceBruttoWindow({
-                events: {
+                productId: this.$productId,
+                events   : {
                     onOpen: function (Win) {
                         Win.getContent().set('html', '');
                     },

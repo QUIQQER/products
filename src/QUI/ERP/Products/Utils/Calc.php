@@ -12,8 +12,14 @@ use QUI\Interfaces\Users\User as UserInterface;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\ERP\Products\Product\ProductList;
+use QUI\ERP\Products\Field\Types\Vat;
+use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
+
 use QUI\ERP\Tax\Utils as TaxUtils;
+use QUI\ERP\Tax\TaxEntry;
+use QUI\ERP\Tax\TaxType;
+
 use QUI\ERP\Accounting\Calc as ErpCalc;
 
 /**
@@ -691,6 +697,118 @@ class Calc
         $vatSum = $nettoPrice * ($Tax->getValue() / 100);
 
         return $this->round($nettoPrice + $vatSum);
+    }
+
+    /**
+     * @param $price
+     * @param $formatted
+     * @param $productId - optional, id of the product
+     *
+     * @return float|int|string|null
+     *
+     * @throws QUI\Exception
+     */
+    public static function calcBruttoPrice($price, $formatted, $productId = false)
+    {
+        $price    = QUI\ERP\Money\Price::validatePrice($price);
+        $Area     = QUI\ERP\Defaults::getArea();
+        $TaxEntry = null;
+
+        if (!empty($productId)) {
+            $Product = Products::getProduct((int)$productId);
+
+            /* @var $Field Vat */
+            $Vat = $Product->getField(Fields::FIELD_VAT);
+
+            try {
+                $TaxType  = new QUI\ERP\Tax\TaxType($Vat->getValue());
+                $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
+        if (!$TaxEntry) {
+            $TaxType = TaxUtils::getTaxTypeByArea($Area);
+
+            if ($TaxType instanceof TaxType) {
+                $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
+            } elseif ($TaxType instanceof TaxEntry) {
+                $TaxEntry = $TaxType;
+            } else {
+                if (isset($formatted) && $formatted) {
+                    return QUI\ERP\Defaults::getCurrency()->format($price);
+                }
+
+                return $price;
+            }
+        }
+
+        $vat = $TaxEntry->getValue();
+        $vat = (100 + $vat) / 100;
+
+        $price = $price * $vat;
+
+        if (isset($formatted) && $formatted) {
+            return QUI\ERP\Defaults::getCurrency()->format($price);
+        }
+
+        return $price;
+    }
+
+    /**
+     * @param $price
+     * @param $formatted
+     * @param $productId - optional, id of the product
+     *
+     * @return float|int|string|null
+     *
+     * @throws QUI\Exception
+     */
+    public static function calcNettoPrice($price, $formatted, $productId)
+    {
+        $price    = QUI\ERP\Money\Price::validatePrice($price);
+        $Area     = QUI\ERP\Defaults::getArea();
+        $TaxEntry = null;
+
+        if (!empty($productId)) {
+            $Product = Products::getProduct((int)$productId);
+
+            /* @var $Field Vat */
+            $Vat = $Product->getField(Fields::FIELD_VAT);
+
+            try {
+                $TaxType  = new QUI\ERP\Tax\TaxType($Vat->getValue());
+                $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
+        if (!$TaxEntry) {
+            $TaxType = TaxUtils::getTaxTypeByArea($Area);
+
+            if ($TaxType instanceof TaxType) {
+                $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
+            } elseif ($TaxType instanceof TaxEntry) {
+                $TaxEntry = $TaxType;
+            } else {
+                if (isset($formatted) && $formatted) {
+                    return QUI\ERP\Defaults::getCurrency()->format($price);
+                }
+
+                return $price;
+            }
+        }
+
+        $vat = $TaxEntry->getValue();
+        $vat = ($vat / 100) + 1;
+
+        $price = $price / $vat;
+
+        if (isset($formatted) && $formatted) {
+            return QUI\ERP\Defaults::getCurrency()->format($price);
+        }
+
+        return $price;
     }
 
     /**
