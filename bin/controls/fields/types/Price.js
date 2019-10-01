@@ -31,17 +31,12 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
         initialize: function (options) {
             this.parent(options);
 
-            // admin format
-            this.$Formatter = QUILocale.getNumberFormatter({
-                //style                : 'currency',
-                //currency             : 'EUR',
-                minimumFractionDigits: 8
-            });
-
             this.$Button       = null;
             this.$$BruttoInput = null;
-            this.$calcTimer    = null;
-            this.$productId    = null;
+            this.$Formatter    = null;
+
+            this.$calcTimer = null;
+            this.$productId = null;
 
             this.addEvents({
                 onImport: this.$onImport
@@ -56,8 +51,11 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
                 Elm  = this.getElm();
 
             this.$Elm.addClass('field-container-field');
-            this.$Elm.type        = 'text';
-            this.$Elm.placeholder = this.$Formatter.format(1000);
+            this.$Elm.type = 'text';
+
+            this.getFormatter().then(function (Formatter) {
+                self.$Elm.placeholder = Formatter.format(1000);
+            });
 
             this.$Button = new Element('span', {
                 'class': 'field-container-item',
@@ -133,7 +131,9 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
                 return;
             }
 
-            this.getElm().value = this.$Formatter.format(parseFloat(value));
+            this.getFormatter().then(function (Formatter) {
+                this.getElm().value = Formatter.format(parseFloat(value));
+            }.bind(this));
 
             this.$calcBruttoPrice();
         },
@@ -210,6 +210,26 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
                     productId: this.$productId
                 });
             }).delay(500, this);
+        },
+
+        /**
+         * Return formatter
+         *
+         * @return {Promise}
+         */
+        getFormatter: function () {
+            if (this.$Formatter !== null) {
+                return Promise.resolve(this.$Formatter);
+            }
+
+            return QUILocale.getSystemLocale().then(function (SystemLocale) {
+                // admin format
+                this.$Formatter = SystemLocale.getNumberFormatter({
+                    minimumFractionDigits: 8
+                });
+
+                return this.$Formatter;
+            }.bind(this));
         }
     });
 });

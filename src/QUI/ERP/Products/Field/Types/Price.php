@@ -127,6 +127,8 @@ class Price extends QUI\ERP\Products\Field\Field
             return \round($value, 8);
         }
 
+        $value = QUI\ERP\Money\Price::validatePrice($value);
+
         $localeCode = QUI::getLocale()->getLocalesByLang(
             QUI::getLocale()->getCurrent()
         );
