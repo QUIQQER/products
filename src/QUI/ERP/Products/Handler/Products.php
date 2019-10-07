@@ -135,6 +135,18 @@ class Products
      */
     public static function getProduct($pid)
     {
+        if (!\is_numeric($pid)) {
+            throw new QUI\ERP\Products\Product\Exception(
+                [
+                    'quiqqer/products',
+                    'exception.product.not.found',
+                    ['productId' => $pid]
+                ],
+                404,
+                ['id' => $pid]
+            );
+        }
+
         if (isset(self::$list[$pid])) {
             return self::$list[$pid];
         }
@@ -229,6 +241,18 @@ class Products
      */
     public static function getNewProductInstance($pid)
     {
+        if (!\is_numeric($pid)) {
+            throw new QUI\ERP\Products\Product\Exception(
+                [
+                    'quiqqer/products',
+                    'exception.product.not.found',
+                    ['productId' => $pid]
+                ],
+                404,
+                ['id' => $pid]
+            );
+        }
+
         try {
             $result = QUI::getDataBase()->fetch([
                 'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
