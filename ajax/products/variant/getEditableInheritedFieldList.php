@@ -56,13 +56,25 @@ QUI::$Ajax->registerFunction(
                 $inherited = $Product->getAttribute('inheritedVariantFields');
             }
 
+            if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+                $Parent = $Product->getParent();
+
+                if ($Parent->getAttribute('editableVariantFields')) {
+                    $editable = $Parent->getAttribute('editableVariantFields');
+                }
+
+                if ($Parent->getAttribute('inheritedVariantFields')) {
+                    $inherited = $Parent->getAttribute('inheritedVariantFields');
+                }
+            }
+
             // fields
             $fields = $Product->getFields();
         }
 
         // if $editable is false, then use global erp field settings
         if ($fields === false) {
-            $fields = \QUI\ERP\Products\Handler\Fields::getFields();
+            $fields = QUI\ERP\Products\Handler\Fields::getFields();
         }
 
         // sorting
