@@ -91,14 +91,14 @@ class Products
 
             $options = $Field->getOptions();
 
-            if (!isset($options['groups'])) {
-                return true;
-            }
-
             if (isset($options['ignoreForPriceCalculation'])
                 && $options['ignoreForPriceCalculation'] == 1
             ) {
                 return false;
+            }
+
+            if (!isset($options['groups'])) {
+                return true;
             }
 
             $groups = \explode(',', $options['groups']);
