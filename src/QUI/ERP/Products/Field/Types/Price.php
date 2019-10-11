@@ -127,15 +127,7 @@ class Price extends QUI\ERP\Products\Field\Field
             return \round($value, 8);
         }
 
-        $value = QUI\ERP\Money\Price::validatePrice($value);
-
-        $localeCode = QUI::getLocale()->getLocalesByLang(
-            QUI::getLocale()->getCurrent()
-        );
-
-        $Formatter = new \NumberFormatter($localeCode[0], \NumberFormatter::DECIMAL);
-
-        return $Formatter->parse($value);
+        return QUI\ERP\Money\Price::validatePrice($value);
     }
 
     /**

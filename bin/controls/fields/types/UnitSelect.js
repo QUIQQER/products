@@ -20,7 +20,9 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
             '$onImport',
             '$getOptions',
             '$onSelectChange',
-            '$setValue'
+            '$setValue',
+            'enable',
+            'disable'
         ],
 
         initialize: function (options) {
@@ -174,6 +176,22 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
                 id      : this.$Select.value,
                 quantity: this.$QuantityInput ? this.$QuantityInput.value.trim() : false
             };
+        },
+
+        /**
+         * Enable control
+         */
+        enable: function() {
+            this.$QuantityInput.disabled = false;
+            this.$Select.disabled = false;
+        },
+
+        /**
+         * Disable control
+         */
+        disable: function() {
+            this.$QuantityInput.disabled = true;
+            this.$Select.disabled = true;
         }
     });
 });
