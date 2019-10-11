@@ -210,7 +210,15 @@ class Product extends QUI\Control
 
         // retail price (UVP)
         $PriceRetailDisplay = false;
-        $PriceRetail        = $Product->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL)->getPrice();
+
+        if (isset($Unique)) {
+            $PriceRetail = $Unique->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL)->getPrice();
+        } else {
+            $PriceRetail = $Product->createUniqueProduct()
+                ->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL)
+                ->getPrice();
+        }
+
 
         if ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
             $PriceRetailDisplay = new QUI\ERP\Products\Controls\Price([
@@ -235,12 +243,12 @@ class Product extends QUI\Control
         // file / image folders
         $detailFields = [];
 
-        $fieldsList = $Product->getFieldsByType([
-            Fields::TYPE_FOLDER,
-            Fields::TYPE_TEXTAREA,
-            Fields::TYPE_TEXTAREA_MULTI_LANG,
-            Fields::TYPE_PRODCUCTS
-        ]);
+        $fieldsList = \array_merge(
+            $Product->getFieldsByType(Fields::TYPE_FOLDER),
+            $Product->getFieldsByType(Fields::TYPE_TEXTAREA),
+            $Product->getFieldsByType(Fields::TYPE_TEXTAREA_MULTI_LANG),
+            $Product->getFieldsByType(Fields::TYPE_PRODCUCTS)
+        );
 
         /* @var $Field QUI\ERP\Products\Field\Types\Folder */
         foreach ($fieldsList as $Field) {
