@@ -951,7 +951,9 @@ class Fields
             try {
                 $result[] = self::getField($entry['id']);
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeException(
+                QUI\System\Log::addNotice($Exception->getMessage());
+                
+                QUI\System\Log::writeDebugException(
                     $Exception,
                     QUI\System\Log::LEVEL_NOTICE,
                     $Exception->getContext()
