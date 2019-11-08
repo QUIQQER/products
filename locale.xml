@@ -732,6 +732,10 @@
             <de><![CDATA[Die Kategorie #[categoryId] wurde nicht gefunden.]]></de>
             <en><![CDATA[The category #[categoryId] wasn't found.]]></en>
         </locale>
+        <locale name="exception.field.class.not.found">
+            <de><![CDATA[Feld [id] [type] wurde nicht gefunden.]]></de>
+            <en><![CDATA[Field [id]] [type] not found.]></en>
+        </locale>
 
         <!-- produkte -->
         <locale name="message.product.create.missing.category">
@@ -2060,7 +2064,7 @@
             <de><![CDATA[Auswahl zurücksetzen]]></de>
             <en><![CDATA[Reset selected fields]]></en>
         </locale>
-        
+
         <locale name="controls.PriceSwitch.title.show_prices">
             <de><![CDATA[Preise anzeigen]]></de>
             <en><![CDATA[Show prices]]></en>
@@ -2069,7 +2073,7 @@
             <de><![CDATA[Preise ausblenden]]></de>
             <en><![CDATA[Hide prices]]></en>
         </locale>
-        
+
     </groups>
 
     <groups name="quiqqer/products" datatype="php">
