@@ -38,7 +38,7 @@ class Crons
             \set_time_limit(self::PRODUCT_CACHE_UPDATE_TIME);
 
             try {
-                $Product = Products::getProduct($id);
+                $Product = Products::getNewProductInstance($id);
 
                 $t = microtime(true);
                 $Product->updateCache();

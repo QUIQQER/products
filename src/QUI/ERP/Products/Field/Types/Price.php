@@ -119,7 +119,11 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        if (\trim($value) === '') {
+        if (\is_array($value)) {
+            return null;
+        }
+
+        if (\is_string($value) && \trim($value) === '') {
             return null;
         }
 
