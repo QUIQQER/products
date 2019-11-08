@@ -734,7 +734,7 @@
         </locale>
         <locale name="exception.field.class.not.found">
             <de><![CDATA[Feld [id] [type] wurde nicht gefunden.]]></de>
-            <en><![CDATA[Field [id]] [type] not found.]></en>
+            <en><![CDATA[Field [id]] [type] not found.]]></en>
         </locale>
 
         <!-- produkte -->
