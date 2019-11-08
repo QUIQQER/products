@@ -28,30 +28,32 @@ QUI::$Ajax->registerFunction(
         );
 
         // Get data from cache
-        $result = QUI::getDataBase()->fetch([
-            'select' => [
-                'id',
-                'title',
-                'description',
-                'F'.Fields::FIELD_PRICE
-            ],
-            'from'   => Tables::getProductCacheTableName(),
-            'where'  => [
-                'id'   => [
-                    'type'  => 'IN',
-                    'value' => $productIds
+        if (!empty($productIds)) {
+            $result = QUI::getDataBase()->fetch([
+                'select' => [
+                    'id',
+                    'title',
+                    'description',
+                    'F'.Fields::FIELD_PRICE
                 ],
-                'lang' => QUI::getLocale()->getCurrent()
-            ]
-        ]);
+                'from'   => Tables::getProductCacheTableName(),
+                'where'  => [
+                    'id'   => [
+                        'type'  => 'IN',
+                        'value' => $productIds
+                    ],
+                    'lang' => QUI::getLocale()->getCurrent()
+                ]
+            ]);
 
-        foreach ($result as $row) {
-            $products[] = [
-                'id'          => $row['id'],
-                'title'       => $row['title'],
-                'description' => $row['description'],
-                'price'       => $row['F'.Fields::FIELD_PRICE]
-            ];
+            foreach ($result as $row) {
+                $products[] = [
+                    'id'          => $row['id'],
+                    'title'       => $row['title'],
+                    'description' => $row['description'],
+                    'price'       => $row['F'.Fields::FIELD_PRICE]
+                ];
+            }
         }
 
         return $Grid->parseResult($products, $Category->countProducts());
