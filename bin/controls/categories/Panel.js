@@ -126,7 +126,6 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          * event : on create
          */
         $onCreate: function () {
-
             var self    = this,
                 Content = this.getContent();
 
@@ -251,6 +250,11 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     dataIndex: 'description',
                     dataType : 'text',
                     width    : 200
+                }, {
+                    header   : QUILocale.get('quiqqer/system', 'path'),
+                    dataIndex: 'path',
+                    dataType : 'text',
+                    width    : 300
                 }]
             });
 

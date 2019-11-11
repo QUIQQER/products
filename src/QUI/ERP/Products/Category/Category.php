@@ -9,7 +9,6 @@ namespace QUI\ERP\Products\Category;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Products\Product\Product;
 use QUI\ERP\Products\Handler\Categories;
 
 /**
@@ -164,6 +163,63 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         }
 
         return '';
+    }
+
+    /**
+     * @param null $Locale
+     * @return string
+     */
+    public function getPath($Locale = null)
+    {
+        if ($Locale === null) {
+            $Locale = QUI::getLocale();
+        }
+
+        $parents = $this->getParents();
+        $parents = \array_reverse($parents);
+        $path    = '';
+
+        \array_shift($parents);
+
+        foreach ($parents as $Parent) {
+            $path .= '/'.$Parent->getTitle($Locale);
+        }
+
+        return $path;
+    }
+
+    /**
+     * @return QUI\ERP\Products\Interfaces\CategoryInterface[]
+     */
+    public function getParents()
+    {
+        $parents = [];
+
+        try {
+            $Parent = $this->getParent();
+
+            if ($Parent) {
+                $parents[] = $Parent;
+            }
+        } catch (QUI\Exception $Exception) {
+            return $parents;
+        }
+
+        while ($Parent) {
+            try {
+                $Parent = $Parent->getParent();
+
+                if (!$Parent) {
+                    break;
+                }
+
+                $parents[] = $Parent;
+            } catch (QUI\Exception $Exception) {
+                break;
+            }
+        }
+
+        return $parents;
     }
 
     /**
