@@ -1,5 +1,7 @@
 <?php
 
+use QUI\ERP\Products\Handler\Categories;
+
 /**
  * Returns category list for a grid
  *
@@ -16,20 +18,17 @@ QUI::$Ajax->registerFunction(
             $Grid->parseDBParams(\json_decode($params, true))
         );
 
-        $L      = QUI::getLocale();
+        $Locale = QUI::getLocale();
         $result = [];
 
         foreach ($categoryIds as $categoryId) {
-            $description = '';
-
-            if ($L->exists('quiqqer/products', 'products.category.'.$categoryId.'.description')) {
-                $description = $L->get('quiqqer/products', 'products.category.'.$categoryId.'.description');
-            }
+            $Category = Categories::getCategory($categoryId);
 
             $result[] = [
-                'id'          => $categoryId,
-                'title'       => $L->get('quiqqer/products', 'products.category.'.$categoryId.'.title'),
-                'description' => $description
+                'id'          => $Category->getId(),
+                'title'       => $Category->getTitle($Locale),
+                'description' => $Category->getDescription($Locale),
+                'path'        => $Category->getPath($Locale)
             ];
         }
 
