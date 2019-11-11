@@ -2084,14 +2084,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             if (!Button.getStatus()) {
                 Prom = this.$Product.deactivate();
+            } else {
+                Prom = self.$Product.activate()
             }
 
             Prom.then(function () {
                 return self.update();
-            }).then(function () {
-                if (Button.getStatus()) {
-                    return self.$Product.activate();
-                }
             }).then(self.refresh).catch(self.refresh);
         },
 
