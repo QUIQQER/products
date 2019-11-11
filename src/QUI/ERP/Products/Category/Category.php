@@ -179,8 +179,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         $parents = \array_reverse($parents);
         $path    = '';
 
+        \array_shift($parents);
+
         foreach ($parents as $Parent) {
-            $path .= $Parent->getTitle($Locale).'/';
+            $path .= '/'.$Parent->getTitle($Locale);
         }
 
         return $path;
