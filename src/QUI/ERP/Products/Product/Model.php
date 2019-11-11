@@ -1111,16 +1111,29 @@ class Model extends QUI\QDOM
             QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', [$this]);
         }
 
-        // cache db attributes
-        $result = QUI::getDataBase()->fetch([
-            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
-            'where' => [
-                'id' => $this->getId()
-            ],
-            'limit' => 1
-        ]);
+        $this->buildCache();
+    }
 
-        QUI\Cache\Manager::set('quiqqer/products/'.$this->getId().'/db-data', $result[0]);
+    /**
+     * Build the mem cache for the product (not the db table cache)
+     * its the faster cache
+     */
+    public function buildCache()
+    {
+        try {
+            // cache db attributes
+            $result = QUI::getDataBase()->fetch([
+                'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                'where' => [
+                    'id' => $this->getId()
+                ],
+                'limit' => 1
+            ]);
+
+            QUI\Cache\Manager::set('quiqqer/products/'.$this->getId().'/db-data', $result[0]);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
     }
 
     /**
@@ -1370,9 +1383,9 @@ class Model extends QUI\QDOM
             return;
         }
 
-        $langs = QUI::availableLanguages();
+        $languages = QUI::availableLanguages();
 
-        foreach ($langs as $lang) {
+        foreach ($languages as $lang) {
             $this->writeCacheEntry($lang);
         }
     }
@@ -1962,6 +1975,7 @@ class Model extends QUI\QDOM
         );
 
         $this->updateCache();
+        $this->buildCache();
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsProductDeactivate', [$this]);
     }
@@ -2009,6 +2023,7 @@ class Model extends QUI\QDOM
         );
 
         $this->updateCache();
+        $this->buildCache();
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsProductActivate', [$this]);
     }
