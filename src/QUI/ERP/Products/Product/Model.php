@@ -125,6 +125,11 @@ class Model extends QUI\QDOM
                     $Category = QUI\ERP\Products\Handler\Categories::getCategory($categoryId);
 
                     $this->categories[$Category->getId()] = $Category;
+
+                    /** @var QUI\ERP\Products\Field\Field $CategoryField */
+                    foreach ($Category->getFields() as $CategoryField) {
+                        $this->fields[$CategoryField->getId()] = $CategoryField;
+                    }
                 } catch (QUI\Exception $Exception) {
                 }
             }
