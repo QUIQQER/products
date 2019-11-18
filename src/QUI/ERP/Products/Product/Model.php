@@ -128,7 +128,7 @@ class Model extends QUI\QDOM
 
                     /** @var QUI\ERP\Products\Field\Field $CategoryField */
                     foreach ($Category->getFields() as $CategoryField) {
-                        $this->fields[$CategoryField->getId()] = $CategoryField;
+                        $this->fields[$CategoryField->getId()] = clone $CategoryField;
                     }
                 } catch (QUI\Exception $Exception) {
                 }
