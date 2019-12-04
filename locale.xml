@@ -595,6 +595,10 @@
             <de><![CDATA[Attributliste]]></de>
             <en><![CDATA[Attribute list]]></en>
         </locale>
+        <locale name="fieldtype.CheckboxInput">
+            <de><![CDATA[Eingabefeld mit Checkbox]]></de>
+            <en><![CDATA[Input with checkbox]]></en>
+        </locale>
 
         <locale name="fieldtype.ProductAttributeList.calcBasis.netto">
             <de><![CDATA[Netto]]></de>
