@@ -328,6 +328,14 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     }
 
     /**
+     * @return bool|float|int|mixed
+     */
+    public function getMaximumQuantity()
+    {
+        return $this->Product->getMaximumQuantity();
+    }
+
+    /**
      * Get value of field
      *
      * @param integer $fieldId

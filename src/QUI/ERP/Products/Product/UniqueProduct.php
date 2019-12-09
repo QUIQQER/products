@@ -112,6 +112,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected $maximumPrice;
 
     /**
+     * @var mixed
+     */
+    protected $maximumQuantity = false;
+
+    /**
      * calculated nettosum
      * @var float|int
      */
@@ -182,6 +187,10 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         if (isset($attributes['maximumPrice'])) {
             $this->maximumPrice = $attributes['maximumPrice'];
+        }
+
+        if (isset($attributes['maximumQuantity'])) {
+            $this->maximumQuantity = $attributes['maximumQuantity'];
         }
 
         if (isset($attributes['price_currency'])) {
@@ -367,12 +376,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             return $this;
         }
 
-        $attributes        = $this->getAttributes();
-        $attributes['uid'] = $this->getUser()->getId();
+        $attributes                    = $this->getAttributes();
+        $attributes['uid']             = $this->getUser()->getId();
+        $attributes['maximumQuantity'] = $this->getMaximumQuantity();
 
-        $View = new UniqueProductFrontendView($this->id, $attributes);
-
-        return $View;
+        return new UniqueProductFrontendView($this->id, $attributes);
     }
 
     //region calculation
@@ -844,6 +852,14 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
+     * @return bool|float|int|mixed
+     */
+    public function getMaximumQuantity()
+    {
+        return $this->maximumQuantity;
+    }
+
+    /**
      * Return a price object (single price)
      *
      * @return QUI\ERP\Money\Price
@@ -975,6 +991,14 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             return;
         }
 
+        IF ($quantity < 0) {
+            $quantity = 0;
+        }
+
+        if ($this->getMaximumQuantity() && $this->getMaximumQuantity() > $quantity) {
+            $quantity = $this->getMaximumQuantity();
+        }
+
         $this->quantity = \floatval($quantity);
 
         try {
@@ -1003,13 +1027,14 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     {
         $attributes = parent::getAttributes();
 
-        $attributes['title']       = $this->getTitle();
-        $attributes['description'] = $this->getDescription();
-        $attributes['quantity']    = $this->getQuantity();
-        $attributes['id']          = $this->getId();
-        $attributes['fields']      = $this->getFields();
-        $attributes['uid']         = $this->uid;
-        $attributes['image']       = '';
+        $attributes['title']           = $this->getTitle();
+        $attributes['description']     = $this->getDescription();
+        $attributes['quantity']        = $this->getQuantity();
+        $attributes['id']              = $this->getId();
+        $attributes['fields']          = $this->getFields();
+        $attributes['uid']             = $this->uid;
+        $attributes['image']           = '';
+        $attributes['maximumQuantity'] = $this->getMaximumQuantity();
 
         $Price = $this->getOriginalPrice();
 

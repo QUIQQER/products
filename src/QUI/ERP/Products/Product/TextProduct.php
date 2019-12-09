@@ -44,11 +44,12 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
             $User = QUI::getUsers()->getNobody();
         }
 
-        $attributes                 = $this->getAttributes();
-        $attributes['title']        = $this->getTitle();
-        $attributes['description']  = $this->getDescription();
-        $attributes['uid']          = $User->getId();
-        $attributes['displayPrice'] = false;
+        $attributes                    = $this->getAttributes();
+        $attributes['title']           = $this->getTitle();
+        $attributes['description']     = $this->getDescription();
+        $attributes['uid']             = $User->getId();
+        $attributes['displayPrice']    = false;
+        $attributes['maximumQuantity'] = $this->getMaximumQuantity();
 
         $attributes['fields'] = \array_map(function ($Field) {
             /* @var $Field QUI\ERP\Products\Field\Field */
@@ -273,6 +274,14 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     public function getMaximumPrice()
     {
         return new QUI\ERP\Money\Price(0, QUI\ERP\Defaults::getCurrency());
+    }
+
+    /**
+     * @return bool|float|int
+     */
+    public function getMaximumQuantity()
+    {
+        return 1;
     }
 
     /**
