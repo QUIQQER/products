@@ -125,6 +125,11 @@ class Model extends QUI\QDOM
                     $Category = QUI\ERP\Products\Handler\Categories::getCategory($categoryId);
 
                     $this->categories[$Category->getId()] = $Category;
+
+                    /** @var QUI\ERP\Products\Field\Field $CategoryField */
+                    foreach ($Category->getFields() as $CategoryField) {
+                        $this->fields[$CategoryField->getId()] = clone $CategoryField;
+                    }
                 } catch (QUI\Exception $Exception) {
                 }
             }
@@ -282,11 +287,12 @@ class Model extends QUI\QDOM
         $Locale    = $User->getLocale();
         $fieldList = $this->getFields();
 
-        $attributes                 = $this->getAttributes();
-        $attributes['title']        = $this->getTitle($Locale);
-        $attributes['description']  = $this->getDescription($Locale);
-        $attributes['uid']          = $User->getId();
-        $attributes['displayPrice'] = true;
+        $attributes                    = $this->getAttributes();
+        $attributes['title']           = $this->getTitle($Locale);
+        $attributes['description']     = $this->getDescription($Locale);
+        $attributes['uid']             = $User->getId();
+        $attributes['displayPrice']    = true;
+        $attributes['maximumQuantity'] = $this->getMaximumQuantity();
 
         $fields = [];
 
@@ -896,6 +902,24 @@ class Model extends QUI\QDOM
         QUI\Cache\Manager::set($cacheName, $Result->toArray());
 
         return $Result;
+    }
+
+    /**
+     * Return the maximum quantity for this product
+     *
+     * @return bool|integer|float
+     */
+    public function getMaximumQuantity()
+    {
+        $quantity = false;
+
+        try {
+            QUI::getEvents()->fireEvent('onQuiqqerProductsProductGetMaxQuantity', [$this, &$quantity]);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
+
+        return $quantity;
     }
 
     /**

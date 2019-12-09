@@ -413,9 +413,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
 
                     var complete = [].append(categoriesFields)
-                                     .append(systemFields)
-                                     .append(standardFields)
-                                     .append(fields);
+                        .append(systemFields)
+                        .append(standardFields)
+                        .append(fields);
 
                     // cleanup complete list
                     var completeIds = {};
@@ -2393,6 +2393,17 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     Viewer.setAttribute('folderUrl', folder);
                     Viewer.refresh();
                     Viewer.show();
+                }
+
+                for (var id in self.$data) {
+                    if (!self.$data.hasOwnProperty(id)) {
+                        continue;
+                    }
+
+                    if (self.$data[id].id === fileId) {
+                        self.$data[id].value = folder;
+                        break;
+                    }
                 }
 
                 self.getElm().getElements('.folder-missing-container').destroy();

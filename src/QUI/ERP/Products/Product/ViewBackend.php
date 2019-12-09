@@ -166,6 +166,14 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
+     * @return bool|float|int
+     */
+    public function getMaximumQuantity()
+    {
+        return $this->Product->getMaximumQuantity();
+    }
+
+    /**
      * Get a FieldView
      *
      * @param integer $fieldId

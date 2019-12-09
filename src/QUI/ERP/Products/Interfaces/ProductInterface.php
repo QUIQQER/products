@@ -114,6 +114,13 @@ interface ProductInterface
     public function getMaximumPrice();
 
     /**
+     * Return the maximum quantity for this product
+     *
+     * @return bool|integer|float
+     */
+    public function getMaximumQuantity();
+
+    /**
      * Return an attribute of the product
      *
      * @param string $name - name of the attribute

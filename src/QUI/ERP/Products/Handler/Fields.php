@@ -67,6 +67,7 @@ class Fields
     const TYPE_PRODCUCTS = 'Products';
     const TYPE_UNITSELECT = 'UnitSelect';
     const TYPE_TIMEPERIOD = 'TimePeriod';
+    const TYPE_CHECKBOX_INPUT = 'CheckboxInput';
 
     const TYPE_ATTRIBUTES = 'AttributeGroup';
     const TYPE_ATTRIBUTE_GROUPS = 'AttributeGroup';
@@ -952,7 +953,7 @@ class Fields
                 $result[] = self::getField($entry['id']);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addNotice($Exception->getMessage());
-                
+
                 QUI\System\Log::writeDebugException(
                     $Exception,
                     QUI\System\Log::LEVEL_NOTICE,

@@ -84,10 +84,6 @@ class ProductListFrontendView
 
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
-//            $ProductView = $Product->getView();
-//            $ProductView->setQuantity($Product->getQuantity());
-//            $ProductView->recalculation();
-
             $attributes   = $Product->getAttributes();
             $fields       = $Product->getFields();
             $PriceFactors = $Product->getPriceFactors();
@@ -125,10 +121,11 @@ class ProductListFrontendView
             }
 
             // format
-            $product['price']      = $hidePrice ? '' : $this->formatPrice($attributes['calculated_price']);
-            $product['sum']        = $hidePrice ? '' : $this->formatPrice($attributes['calculated_sum']);
-            $product['nettoSum']   = $hidePrice ? '' : $this->formatPrice($attributes['calculated_nettoSum']);
-            $product['basisPrice'] = $hidePrice ? '' : $this->formatPrice($attributes['calculated_basisPrice']);
+            $product['price']           = $hidePrice ? '' : $this->formatPrice($attributes['calculated_price']);
+            $product['sum']             = $hidePrice ? '' : $this->formatPrice($attributes['calculated_sum']);
+            $product['nettoSum']        = $hidePrice ? '' : $this->formatPrice($attributes['calculated_nettoSum']);
+            $product['basisPrice']      = $hidePrice ? '' : $this->formatPrice($attributes['calculated_basisPrice']);
+            $product['maximumQuantity'] = $Product->getMaximumQuantity();
 
             $product['id']           = $attributes['id'];
             $product['category']     = $attributes['category'];
