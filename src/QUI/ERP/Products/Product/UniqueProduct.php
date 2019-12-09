@@ -991,7 +991,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             return;
         }
 
-        IF ($quantity < 0) {
+        if ($quantity < 0) {
             $quantity = 0;
         }
 
