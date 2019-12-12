@@ -65,3 +65,19 @@
     border-color: #e2dfdf;
     color: #666;
 }
+
+.variants-tabs-image-own-folder {
+    display: inline-block;
+    float: left;
+    padding-bottom: 20px;
+    width: 100%;
+}
+
+.variants-tabs-image-own-folder-text {
+    float: left;
+    padding: 0 0 0 1rem;
+}
+
+.variant-body .folder-missing-container {
+    padding-top: 1rem;
+}

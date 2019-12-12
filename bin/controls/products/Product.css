@@ -89,3 +89,13 @@
 .product-data .field-information .user-input-container {
     width: 100%;
 }
+
+.folder-missing-container {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+
+.folder-missing-container button {
+    float: none;
+}

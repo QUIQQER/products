@@ -629,6 +629,20 @@ define('package/quiqqer/products/bin/classes/Product', [
                     productId: this.getId()
                 });
             }.bind(this));
+        },
+
+        /**
+         * Has the product its own folder ?
+         *
+         * @return {Promise}
+         */
+        hasOwnMediaFolder: function () {
+            return new Promise(function (resolve) {
+                Ajax.post('package_quiqqer_products_ajax_products_variant_hasOwnFolder', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getId()
+                });
+            }.bind(this));
         }
     });
 });

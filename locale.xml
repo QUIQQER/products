@@ -443,8 +443,10 @@
         </locale>
 
         <locale name="products.product.panel.folder.missing" html="true">
-            <de><![CDATA[<p>Das Produkt besitzt noch keinen Media Ordner.</p>]]></de>
-            <en><![CDATA[<p>The product does not have a Media folder.</p>]]></en>
+            <de><![CDATA[
+            <p>Das Produkt besitzt noch keinen Media Ordner. Möchten Sie einen neuen Ordner anlegen?</p>
+            ]]></de>
+            <en><![CDATA[<p>The product does not have a Media folder. Would you like to create a new folder?</p>]]></en>
         </locale>
         <locale name="products.product.panel.folder.missing.button">
             <de><![CDATA[Neuen Media Ordner anlegen]]></de>
@@ -2076,6 +2078,29 @@
         <locale name="controls.PriceSwitch.title.hide_prices">
             <de><![CDATA[Preise ausblenden]]></de>
             <en><![CDATA[Hide prices]]></en>
+        </locale>
+        <locale name="controls.product.variants.own.folder">
+            <de><![CDATA[Eigenen Media Ordner nutzen]]></de>
+            <en><![CDATA[Use own media folder]]></en>
+        </locale>
+
+        <locale name="product.variant.change.folder.status.title">
+            <de><![CDATA[Eigenen Media Ordner nutzen]]></de>
+            <en><![CDATA[Use own media folder]]></en>
+        </locale>
+        <locale name="product.variant.change.folder.status.text">
+            <de><![CDATA[Möchtest du einen eigenen Media Ordner für die Variante nutzen?]]></de>
+            <en><![CDATA[Would you like to use your own media folder for the variant?]]></en>
+        </locale>
+        <locale name="product.variant.change.folder.status.information">
+            <de><![CDATA[
+            Beachte bitte: Die Bilder des Vaterartikels werden danach nicht mehr verwendet und für die Variante
+            wird ein eigener Media Order angelegt.
+            ]]></de>
+            <en><![CDATA[
+            Notice, please: The images of the parent article will no longer be used and a
+            separate Media Order will be created for the variant.
+            ]]></en>
         </locale>
 
     </groups>
