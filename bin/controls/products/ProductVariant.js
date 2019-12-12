@@ -19,6 +19,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
     'qui/controls/contextmenu/Menu',
     'qui/controls/contextmenu/Item',
     'qui/controls/contextmenu/Separator',
+    'qui/controls/buttons/Switch',
     'controls/grid/Grid',
     'Ajax',
     'Locale',
@@ -29,7 +30,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
     'css!package/quiqqer/products/bin/controls/products/ProductVariant.css'
 
 ], function (QUI, QUIButton, ProductPanel, Product, Fields, Products,
-             QUISelect, QUIBar, QUITab, QUIContextMenu, QUIContextMenuItem, QUIContextMenuSeparator,
+             QUISelect, QUIBar, QUITab, QUIContextMenu, QUIContextMenuItem, QUIContextMenuSeparator, QUISwitch,
              Grid, QUIAjax, QUILocale, Mustache, template) {
     "use strict";
 
@@ -52,7 +53,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             '$deactivateVariants',
             '$deleteVariants',
             '$changeVariant',
-            '$toggleDefaultVariant'
+            '$toggleDefaultVariant',
+            '$changeOwnFolderStatus'
         ],
 
         options: {
@@ -887,7 +889,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 self.$VariantTabBar.getElm().getElement('.qui-toolbar-tabs').setStyle('display', 'flex');
 
                 var categories = self.getCategoryBar().getChildren();
-                
+
                 for (i = 0, len = categories.length; i < len; i++) {
                     Category = categories[i];
                     name     = Category.getAttribute('name');
@@ -1346,15 +1348,86 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          *
          * @param {Array} types
          * @param {Number} [fileId]
+         *
          * @return {Promise}
          */
         $openVariantFolderViewer: function (types, fileId) {
             var self = this;
 
             return this.$hideTabContent().then(function (Content) {
-                return self.$renderFolderViewer(Content, self.$CurrentVariant, types, fileId);
+                return Promise.all([
+                    self.$CurrentVariant.hasOwnMediaFolder(),
+                    Content
+                ]);
+            }).then(function (result) {
+                var hasOwnMediaFolder = result[0];
+                var Content           = result[1];
+
+                Content.set('html', '');
+
+                if (hasOwnMediaFolder) {
+                    return self.$renderFolderViewer(Content, self.$CurrentVariant, types, fileId);
+                }
+
+                var VariantBody        = self.getBody().getElement('.variant-body');
+                var OwnFolderContainer = new Element('div', {
+                    'class': 'variants-tabs-image-own-folder'
+                }).inject(VariantBody, 'top');
+
+                new QUISwitch({
+                    status: false,
+                    events: {
+                        onChange: self.$changeOwnFolderStatus
+                    }
+                }).inject(OwnFolderContainer);
+
+                new Element('div', {
+                    'class': 'variants-tabs-image-own-folder-text',
+                    html   : QUILocale.get(lg, 'controls.product.variants.own.folder')
+                }).inject(OwnFolderContainer);
+
             }).then(function () {
                 return self.$showTabContent();
+            });
+        },
+
+        /**
+         * change own folder status
+         */
+        $changeOwnFolderStatus: function () {
+            var self = this;
+
+            self.Loader.hide();
+
+            require(['qui/controls/windows/Confirm'], function (QUIConfirm) {
+                new QUIConfirm({
+                    icon       : 'fa fa-picture-o',
+                    texticon   : 'fa fa-picture-o',
+                    title      : QUILocale.get(lg, 'product.variant.change.folder.status.title'),
+                    information: QUILocale.get(lg, 'product.variant.change.folder.status.information'),
+                    text       : QUILocale.get(lg, 'product.variant.change.folder.status.text'),
+                    maxHeight  : 300,
+                    maxWidth   : 600,
+                    events     : {
+                        onCancel: function () {
+                            self.$VariantTabBar.getActive().click();
+                        },
+
+                        onSubmit: function (Win) {
+                            Win.Loader.show();
+
+                            QUIAjax.post('package_quiqqer_products_ajax_products_variant_changeOwnFolderStatus', function () {
+                                self.$CurrentVariant.refresh().then(function () {
+                                    self.$VariantTabBar.getActive().click();
+                                    Win.close();
+                                });
+                            }, {
+                                'package': 'quiqqer/products',
+                                productId: self.$CurrentVariant.getId()
+                            });
+                        }
+                    }
+                }).open();
             });
         },
 
