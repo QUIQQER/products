@@ -10,6 +10,7 @@ use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Utils\VariantGenerating;
+use QUI\Projects\Media\Utils as MediaUtils;
 
 /**
  * Class VariantChild
@@ -25,6 +26,11 @@ class VariantChild extends AbstractType
     protected $Parent = null;
 
     /**
+     * @var null|QUI\ERP\Products\Field\Field
+     */
+    protected $OwnMediaFolderField = null;
+
+    /**
      * VariantChild constructor.
      *
      * @param $pid
@@ -35,6 +41,14 @@ class VariantChild extends AbstractType
     public function __construct($pid, $product = [])
     {
         parent::__construct($pid, $product);
+
+        if (isset($this->fields[Fields::FIELD_FOLDER])) {
+            $MediaField = $this->fields[Fields::FIELD_FOLDER];
+
+            if ($MediaField->getValue()) {
+                $this->OwnMediaFolderField = $MediaField;
+            }
+        }
 
         // inheritance
         $inheritedFields = QUI\ERP\Products\Utils\Products::getInheritedFieldIdsForProduct($this);
@@ -216,6 +230,114 @@ class VariantChild extends AbstractType
         }
 
         return $this->getParent()->getImage();
+    }
+
+    /**
+     * Return the product media folder
+     *
+     * @return QUI\Projects\Media\Folder
+     * @throws QUI\Exception|QUI\ERP\Products\Product\Exception
+     */
+    public function getMediaFolder()
+    {
+        try {
+            if ($this->OwnMediaFolderField) {
+                $Folder = $this->OwnMediaFolderField;
+            } else {
+                $folderUrl = $this->getFieldValue(Fields::FIELD_FOLDER);
+                $Folder    = MediaUtils::getMediaItemByUrl($folderUrl);
+            }
+
+            if (MediaUtils::isFolder($Folder)) {
+                /* @var $Folder QUI\Projects\Media\Folder */
+                return $Folder;
+            }
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
+
+        return parent::getMediaFolder();
+    }
+
+    /**
+     * Has the variant its own media folder
+     *
+     * @return bool
+     */
+    public function hasOwnMediaFolder()
+    {
+        if ($this->OwnMediaFolderField) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return QUI\Projects\Media\Folder|void
+     * @return QUI\Projects\Media\Folder
+     *
+     * @throws QUI\Exception
+     */
+    public function createOwnMediaFolder()
+    {
+        if (!$this->OwnMediaFolderField) {
+            $this->OwnMediaFolderField = $this->getField(Fields::FIELD_FOLDER);
+            $this->OwnMediaFolderField->clearValue();
+        }
+
+        $fieldId = $this->OwnMediaFolderField->getId();
+        $Field   = $this->getField($fieldId);
+
+        if ($Field->getType() != Fields::TYPE_FOLDER) {
+            throw new QUI\ERP\Products\Product\Exception([
+                'quiqqer/products',
+                'exception.product.field.is.no.media.folder'
+            ]);
+        }
+
+        // exist a media folder in the field?
+        try {
+            $folderUrl = $this->getFieldValue($fieldId);
+            $Folder    = MediaUtils::getMediaItemByUrl($folderUrl);
+
+            if (MediaUtils::isFolder($Folder)) {
+                /* @var $Folder QUI\Projects\Media\Folder */
+                return $Folder;
+            }
+        } catch (QUI\Exception $Exception) {
+        }
+
+
+        // create folder
+        $Parent = Products::getParentMediaFolder();
+
+        try {
+            $productId = $this->getId();
+
+            if ($Parent->childWithNameExists($productId)) {
+                $Folder = $Parent->getChildByName($productId);
+            } else {
+                $Folder = $Parent->createFolder($this->getId());
+                $Folder->setAttribute('order', 'priority ASC');
+                $Folder->save();
+            }
+        } catch (QUI\Exception $Exception) {
+            if ($Exception->getCode() != 701) {
+                throw $Exception;
+            }
+
+            $Folder = $Parent->getChildByName($this->getId());
+        }
+
+        $Field = $this->getField(Fields::FIELD_FOLDER);
+        $Field->setValue($Folder->getUrl());
+
+        $this->update();
+
+        QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreateMediaFolder', [$this]);
+
+        return $Folder;
     }
 
     /**

@@ -30,18 +30,6 @@ class TimePeriod extends QUI\ERP\Products\Field\Field
     protected $defaultValue = null;
 
     /**
-     * @return string
-     */
-    public function getValue()
-    {
-        if (!\is_null($this->value)) {
-            return $this->value;
-        }
-
-        return $this->defaultValue;
-    }
-
-    /**
      * Return the FrontendView
      *
      * @return UnitSelectFrontendView

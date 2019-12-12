@@ -32,7 +32,6 @@ class Fields
     const FIELD_MANUFACTURER = 8;
     const FIELD_IMAGE = 9; // Main product image
     const FIELD_FOLDER = 10; // Main media folder
-    const FIELD_STOCK = 12;
     const FIELD_KEYWORDS = 13;
     const FIELD_EQUIPMENT = 14;
     const FIELD_SIMILAR_PRODUCTS = 15;

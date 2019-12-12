@@ -324,23 +324,23 @@ class EventHandling
                     'en' => 'Sorting'
                 ]
             ],
-            // Produkt bestand
-            [
-                'id'            => Fields::FIELD_STOCK,
-                'type'          => 'IntType',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 9,
-                'systemField'   => 0,
-                'standardField' => 1,
-                'requiredField' => 0,
-                'publicField'   => 0,
-                'search_type'   => '',
-                'titles'        => [
-                    'de' => 'Lagerbestand',
-                    'en' => 'Total stock'
-                ]
-            ],
+            // Stock / Lagerbestand (now supplied by quiqqer/stock-management
+//            [
+//                'id'            => Fields::FIELD_STOCK,
+//                'type'          => 'IntType',
+//                'prefix'        => '',
+//                'suffix'        => '',
+//                'priority'      => 9,
+//                'systemField'   => 0,
+//                'standardField' => 1,
+//                'requiredField' => 0,
+//                'publicField'   => 0,
+//                'search_type'   => '',
+//                'titles'        => [
+//                    'de' => 'Lagerbestand',
+//                    'en' => 'Total stock'
+//                ]
+//            ],
             // Produkt suchbegriffe
             [
                 'id'            => Fields::FIELD_KEYWORDS,
