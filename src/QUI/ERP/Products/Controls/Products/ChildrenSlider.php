@@ -1,12 +1,13 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Controls\Products
+ * This file contains QUI\ERP\Products\Controls\Products\ChildrenSlider
  */
 
 namespace QUI\ERP\Products\Controls\Products;
 
 use QUI;
+use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 
 /**
@@ -32,7 +33,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
         parent::__construct($attributes);
 
         $this->addCSSFile(
-            \dirname(__FILE__).'/ChildrenSlider.css'
+            \dirname(__FILE__) . '/ChildrenSlider.css'
         );
     }
 
@@ -52,16 +53,17 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
         $products = [];
 
         if (!$this->getAttribute('height')) {
-            $this->setAttribute('height', 200);
+            $this->setAttribute('height', 300);
         }
 
         foreach ($this->products as $Product) {
             /* @var $Product QUI\ERP\Products\Interfaces\ProductInterface */
             $products[] = [
-                'Product' => $Product,
-                'Price'   => new QUI\ERP\Products\Controls\Price([
+                'Product'     => $Product,
+                'Price'       => new QUI\ERP\Products\Controls\Price([
                     'Price' => $Product->getPrice()
-                ])
+                ]),
+                'RetailPrice' => $this->getRetailPrice($Product)
             ];
         }
 
@@ -70,7 +72,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
             'products' => $products
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ChildrenSlider.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/ChildrenSlider.html');
     }
 
     /**
@@ -107,6 +109,53 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
 
         foreach ($products as $Product) {
             $this->addProduct($Product);
+        }
+    }
+
+    /**
+     * Get retail price object
+     *
+     * @param $Product QUI\ERP\Products\Product\ViewFrontend
+     * @return QUI\ERP\Products\Controls\Price | null
+     *
+     * @throws QUI\Exception
+     */
+    public function getRetailPrice($Product)
+    {
+        if ($this->getAttribute('hideRetailPrice')) {
+            return null;
+        }
+
+        $CrossedOutPrice = null;
+        $Price           = $Product->getPrice();
+
+        try {
+            // Offer price (Angebotspreis) - it has higher priority than retail price
+            if ($Product->hasOfferPrice()) {
+                $CrossedOutPrice = new QUI\ERP\Products\Controls\Price([
+                    'Price'       => new QUI\ERP\Money\Price(
+                        $Product->getOriginalPrice()->getValue(),
+                        QUI\ERP\Currency\Handler::getDefaultCurrency()
+                    ),
+                    'withVatText' => false
+                ]);
+            } else {
+                // retail price (UVP)
+                if ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
+                    $PriceRetail = $Product->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL)->getPrice();
+
+                    if ($Price->getPrice() < $PriceRetail->getPrice()) {
+                        $CrossedOutPrice = new QUI\ERP\Products\Controls\Price([
+                            'Price'       => $PriceRetail,
+                            'withVatText' => false
+                        ]);
+                    }
+                }
+            }
+
+            return $CrossedOutPrice;
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
         }
     }
 }

@@ -35,6 +35,7 @@ class VisitedProducts extends QUI\Control
         $this->addCSSFile(\dirname(__FILE__).'/VisitedProducts.css');
 
         $this->Slider = new ChildrenSlider();
+        $this->Slider->setAttribute('height', 350);
     }
 
     /**
