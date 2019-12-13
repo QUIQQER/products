@@ -991,11 +991,14 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             return;
         }
 
+        $quantity = \floatval($quantity);
+        $max      = $this->getMaximumQuantity();
+
         if ($quantity < 0) {
             $quantity = 0;
         }
 
-        if ($this->getMaximumQuantity() && $this->getMaximumQuantity() > $quantity) {
+        if ($max && $max < $quantity) {
             $quantity = $this->getMaximumQuantity();
         }
 
