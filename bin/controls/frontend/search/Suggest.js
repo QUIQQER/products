@@ -139,6 +139,13 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
             this.$Form   = this.$Elm.getElement('form');
             this.$Input  = this.$Form.getElement('[type="search"]');
             this.$Button = this.$Form.getElement('.quiqqer-products-search-suggest-form-button');
+            this.$SearchIcon = this.$Form.getElement('.input-search-icon');
+
+            if (this.$SearchIcon) {
+                this.$SearchIcon.addEvent('click', function () {
+                    this.$Form.submit();
+                }.bind(this));
+            }
 
             require([
                 'package/quiqqer/products/bin/controls/frontend/search/MobileSuggest'
@@ -159,10 +166,12 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
             }.bind(this));
 
             this.$Form.addEvent('submit', function (event) {
+                console.log(1)
                 if (this.$isMobile) {
                     event.stop();
                     return;
                 }
+                console.log(2)
 
                 var Active = this.$DropDown.getElement('li.active');
 
@@ -170,19 +179,23 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
                     event.stop();
                     return;
                 }
+                console.log(3)
 
                 if (!("history" in window)) {
                     return;
                 }
+                console.log(4)
 
                 if (QUIQQER_SITE.type !== 'quiqqer/products:types/search') {
                     return;
                 }
+                console.log(5)
 
                 if (this.getAttribute('globalsearch') &&
                     QUIQQER_SITE.type !== 'quiqqer/products:types/category') {
                     return;
                 }
+                console.log(6)
 
                 event.stop();
 
@@ -193,12 +206,14 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
                 if (!ProductListNode) {
                     return;
                 }
+                console.log(7)
 
                 var ProductList = QUI.Controls.getById(ProductListNode.get('data-quiid'));
 
                 if (!ProductList) {
                     return;
                 }
+                console.log(8)
 
                 var Uri = URI(window.location);
 
