@@ -258,6 +258,13 @@ class JsonLd
             $offerEntry['@type'] = 'AggregateOffer';
         }
 
+        if ($offerEntry['highPrice'] === $offerEntry['lowPrice']) {
+            unset($offerEntry['lowPrice']);
+            unset($offerEntry['highPrice']);
+
+            $offerEntry['price'] = $offerEntry['highPrice'];
+        }
+
         return $offerEntry;
     }
 }
