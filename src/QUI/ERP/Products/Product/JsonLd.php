@@ -93,8 +93,11 @@ class JsonLd
         $images = [];
 
         try {
-            $Image    = $Product->getImage();
-            $images[] = $Image->getSizeCacheUrl();
+            $Image = $Product->getImage();
+
+            if ($Image) {
+                $images[] = $Image->getSizeCacheUrl();
+            }
         } catch (QUI\Exception $Exception) {
             // nothing
         }

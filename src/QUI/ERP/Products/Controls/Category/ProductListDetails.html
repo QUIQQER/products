@@ -1,6 +1,8 @@
 <article class="quiqqer-productList-product-detail grid-33 mobile-grid-100"
          data-pid="{$Product->getId()}"
 >
+    {$JsonLd->getJsonLd($Product)}
+
     <div class="quiqqer-productList-product-detail-image">
         <a href="{$Product->getUrl()}" title="{$Product->getTitle()|escape:'html'}">
             {image image=$Product->getImage() title=$Product->getTitle() height=48}
