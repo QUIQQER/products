@@ -242,6 +242,14 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
+     * @return array|QUI\Projects\Media\Image[]
+     */
+    public function getImages()
+    {
+        return $this->Product->getImages();
+    }
+
+    /**
      * @return array
      */
     public function getCategories()
@@ -254,7 +262,11 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      */
     public function hasOfferPrice()
     {
-        return $this->getProduct()->hasOfferPrice();
+        try {
+            return $this->getProduct()->hasOfferPrice();
+        } catch (\Exception $Exception) {
+            return false;
+        }
     }
 
     /**
@@ -262,7 +274,11 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      */
     public function getOriginalPrice()
     {
-        return $this->getProduct()->getOriginalPrice();
+        try {
+            return $this->getProduct()->getOriginalPrice();
+        } catch (\Exception $Exception) {
+            return false;
+        }
     }
 
     //region calculation

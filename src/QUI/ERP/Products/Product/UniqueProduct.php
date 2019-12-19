@@ -666,6 +666,25 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
+     * @return array|QUI\Projects\Media\Image[]
+     */
+    public function getImages()
+    {
+        try {
+            $Folder = MediaUtils::getMediaItemByUrl(
+                $this->getFieldValue(Fields::FIELD_FOLDER)
+            );
+
+            if (MediaUtils::isFolder($Folder)) {
+                return $Folder->getImages();
+            }
+        } catch (QUI\Exception $Exception) {
+        }
+
+        return [];
+    }
+
+    /**
      * Return the the wanted field
      *
      * @param int $fieldId

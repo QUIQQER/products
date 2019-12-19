@@ -739,7 +739,14 @@ class Fields
 
             if (!$result || !isset($result[0])) {
                 throw new QUI\ERP\Products\Field\Exception(
-                    ['quiqqer/products', 'exception.field.id_not_found'],
+                    [
+                        'quiqqer/products',
+                        'exception.field.id_not_found',
+                        [
+                            'id'   => $fieldId,
+                            'type' => ''
+                        ]
+                    ],
                     404,
                     ['fieldId' => (int)$fieldId]
                 );
@@ -760,7 +767,14 @@ class Fields
 
         if (empty($fieldTypes)) {
             throw new QUI\ERP\Products\Field\Exception(
-                ['quiqqer/products', 'exception.field.type.not.found'],
+                [
+                    'quiqqer/products',
+                    'exception.field.type.not.found',
+                    [
+                        'id'   => $fieldId,
+                        'type' => ''
+                    ]
+                ],
                 404,
                 [
                     'id'   => (int)$fieldId,
@@ -771,7 +785,14 @@ class Fields
 
         if (!\class_exists($class)) {
             throw new QUI\ERP\Products\Field\Exception(
-                ['quiqqer/products', 'exception.field.class.not.found'],
+                [
+                    'quiqqer/products',
+                    'exception.field.class.not.found',
+                    [
+                        'id'   => $fieldId,
+                        'type' => ''
+                    ]
+                ],
                 404,
                 [
                     'id'    => (int)$fieldId,
@@ -793,7 +814,14 @@ class Fields
 
         if (!QUI\ERP\Products\Utils\Fields::isField($Field)) {
             throw new QUI\ERP\Products\Field\Exception(
-                ['quiqqer/products', 'exception.field.is.no.field'],
+                [
+                    'quiqqer/products',
+                    'exception.field.is.no.field',
+                    [
+                        'id'   => $fieldId,
+                        'type' => ''
+                    ]
+                ],
                 404,
                 [
                     'id'    => (int)$fieldId,
@@ -953,11 +981,13 @@ class Fields
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addNotice($Exception->getMessage());
 
-                QUI\System\Log::writeDebugException(
-                    $Exception,
-                    QUI\System\Log::LEVEL_NOTICE,
-                    $Exception->getContext()
-                );
+                if (DEVELOPMENT || DEBUG_MODE) {
+                    QUI\System\Log::writeDebugException(
+                        $Exception,
+                        QUI\System\Log::LEVEL_NOTICE,
+                        $Exception->getContext()
+                    );
+                }
             }
         }
 

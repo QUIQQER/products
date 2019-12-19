@@ -1,6 +1,8 @@
 <article>
     {template_event name="quiqqer::products::product::begin" Product=$Product}
 
+    {$jsonLd}
+
     <header class="page-content-header">
         <h1>{$Product->getTitle()}</h1>
         <div class="page-content-header-description">
