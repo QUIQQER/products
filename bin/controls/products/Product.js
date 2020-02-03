@@ -413,9 +413,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
 
                     var complete = [].append(categoriesFields)
-                        .append(systemFields)
-                        .append(standardFields)
-                        .append(fields);
+                                     .append(systemFields)
+                                     .append(standardFields)
+                                     .append(fields);
 
                     // cleanup complete list
                     var completeIds = {};
@@ -2217,6 +2217,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                             if (self.$FieldAdministration) {
                                 self.$FieldAdministration.set('html', '');
                             }
+
+                            // destroy controls
+                            QUI.Controls.getControlsInElement(self.getContent()).forEach(function (Control) {
+                                Control.destroy();
+                            });
+
 
                             nodes.setStyles({
                                 display: 'none',

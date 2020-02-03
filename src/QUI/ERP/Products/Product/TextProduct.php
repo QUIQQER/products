@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Product;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\Projects\Media\Image;
 
 /**
  * Class TextProduct
@@ -310,6 +311,16 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     public function hasOfferPrice()
     {
         return false;
+    }
+
+    /**
+     * Return all images of the product
+     *
+     * @return Image[]
+     */
+    public function getImages()
+    {
+        return [];
     }
 
     //region calc

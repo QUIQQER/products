@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Interfaces;
 
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Money\Price;
+use QUI\Projects\Media\Image;
 
 /**
  * Interface Product
@@ -91,6 +92,13 @@ interface ProductInterface
      * @throws \QUI\Exception
      */
     public function getImage();
+
+    /**
+     * Return all images of the product
+     *
+     * @return Image[]
+     */
+    public function getImages();
 
     /**
      * Return the price object of the product

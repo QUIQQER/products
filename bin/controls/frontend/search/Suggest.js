@@ -139,6 +139,13 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
             this.$Form   = this.$Elm.getElement('form');
             this.$Input  = this.$Form.getElement('[type="search"]');
             this.$Button = this.$Form.getElement('.quiqqer-products-search-suggest-form-button');
+            this.$SearchIcon = this.$Form.getElement('.input-search-icon');
+
+            if (this.$SearchIcon) {
+                this.$SearchIcon.addEvent('click', function () {
+                    this.$Form.submit();
+                }.bind(this));
+            }
 
             require([
                 'package/quiqqer/products/bin/controls/frontend/search/MobileSuggest'

@@ -10,9 +10,9 @@ use DusanKasan\Knapsack\Collection;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Product\JsonLd;
 use QUI\ERP\Products\Utils\Fields as FieldUtils;
 use QUI\ERP\Products\Utils\Products as ProductUtils;
-use function DusanKasan\Knapsack\concat;
 
 /**
  * Class Button
@@ -333,6 +333,7 @@ class Product extends QUI\Control
         }
 
         $Engine->assign([
+            'jsonLd'                 => JsonLd::getJsonLd($Product),
             'Product'                => $View,
             'Gallery'                => $Gallery,
             'Files'                  => $Files,

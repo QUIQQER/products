@@ -1,17 +1,5 @@
-.quiqqer-products-control-visitedProducts {
-
-}
-
-.quiqqer-bricks-children-slider-container-slide .qui-products-price-display,
-.quiqqer-products-control-visitedProducts .qui-products-price-display {
-    text-align: center;
-}
-
-.quiqqer-bricks-children-slider-container-slide .qui-products-price-display-value,
-.quiqqer-products-control-visitedProducts .qui-products-price-display-value {
-    font-size: initial;
-    line-height: initial;
-    text-align: center;
+.quiqqer-products-control-visitedProducts .quiqqer-products-control-product-childrenslider-entry-image {
+    height: 40%;
 }
 
 .quiqqer-products-control-visitedProducts-empty {

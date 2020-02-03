@@ -510,7 +510,8 @@ class ProductList extends QUI\Control
             'products'   => $products,
             'productTpl' => $productTpl,
             'hidePrice'  => QUI\ERP\Products\Utils\Package::hidePrice(),
-            'count'      => $count
+            'count'      => $count,
+            'JsonLd'     => new QUI\ERP\Products\Product\JsonLd()
         ]);
 
         return [
@@ -533,6 +534,7 @@ class ProductList extends QUI\Control
         $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([
+            'JsonLd'    => new QUI\ERP\Products\Product\JsonLd(),
             'Product'   => $Product->getView(),
             'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice()
         ]);
