@@ -375,7 +375,12 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     continue;
                 }
 
-                if (!isNaN(fieldValue)) {
+                /**
+                 * Strings with more than 1 character that begin with "0" (e.g. "00") must not be parsed to int,
+                 * since the "0" at the beginning would be deleted that way.
+                 */
+                if (!isNaN(fieldValue) &&
+                    !(fieldValue.length > 1 && fieldValue.indexOf("0") === 0)) {
                     fieldValue = parseInt(fieldValue);
                 } else {
                     fieldValue = this.stringToHex(fieldValue);
