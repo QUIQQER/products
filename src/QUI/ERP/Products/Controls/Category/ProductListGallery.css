@@ -61,6 +61,7 @@
 }
 
 .quiqqer-products-productGallery-products-product img {
+    height: auto;
     left: 0;
     max-height: 100%;
     max-width: 100%;
