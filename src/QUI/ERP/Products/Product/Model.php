@@ -918,7 +918,7 @@ class Model extends QUI\QDOM
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
         }
-        $quantity = 10;
+
         return $quantity;
     }
 
