@@ -107,8 +107,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                                 html: result.html
                             });
 
-                        console.log(result.html);
-
                         self.$fieldHashes     = result.fieldHashes;
                         self.$availableHashes = result.availableHashes;
 
