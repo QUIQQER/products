@@ -198,6 +198,10 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
             this.$calcTimer = (function () {
                 var self = this;
 
+                if (!self.$Elm) {
+                    return;
+                }
+
                 QUIAjax.get('package_quiqqer_products_ajax_products_calcBruttoPrice', function (price) {
                     self.$BruttoInput.innerHTML = price;
                     self.$BruttoInput.title     = QUILocale.get(lg, 'fields.control.price.quantity.title', {
@@ -205,9 +209,9 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
                     });
                 }, {
                     'package': 'quiqqer/products',
-                    price    : this.$Elm.value,
+                    price    : self.$Elm.value,
                     formatted: 1,
-                    productId: this.$productId
+                    productId: self.$productId
                 });
             }).delay(500, this);
         },
