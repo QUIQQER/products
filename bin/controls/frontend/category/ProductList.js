@@ -247,6 +247,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             // add product clicks
+            Elm.getElements('article').addEvent('dblclick', function (event) {
+                event.stop();
+            });
+
             Elm.getElements('article').addEvent('click', function (event) {
                 event.stop();
                 self.openProduct(parseInt(this.get('data-pid')));
