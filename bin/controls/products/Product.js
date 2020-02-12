@@ -1987,8 +1987,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
 
                 if (typeof data.categories === 'undefined') {
-                    data['product-category'] = self.$Data.getElement('[name="product-category"]').value;
-                    data.categories          = self.$Data.getElement('[name="categories"]').value;
+                    if (self.$Data.getElement('[name="product-category"]')) {
+                        data['product-category'] = self.$Data.getElement('[name="product-category"]').value;
+                    }
+
+                    if (self.$Data.getElement('[name="categories"]')) {
+                        data.categories = self.$Data.getElement('[name="categories"]').value;
+                    } else {
+                        data.categories = '';
+                    }
                 }
 
                 var categories = data.categories.split(',');
