@@ -203,8 +203,13 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 this.$TabContainer = Elm.getElement('.product-data-more-tabsContainer');
                 this.$Tabbar       = Elm.getElement('.product-data-more-tabs');
 
-                this.$Next.addEvent('click', this.nextTab);
-                this.$Prev.addEvent('click', this.prevTab);
+                if (this.$Next) {
+                    this.$Next.addEvent('click', this.nextTab);
+                }
+
+                if (this.$Prev) {
+                    this.$Prev.addEvent('click', this.prevTab);
+                }
 
                 QUI.parse(Elm).then(function () {
                     // price
@@ -215,7 +220,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                         this.$Gallery = QUI.Controls.getById(Gallery.get('data-quiid'));
                     }
 
-                    if (self.getAttribute('galleryLoader') === false) {
+                    if (this.$Gallery && self.getAttribute('galleryLoader') === false) {
                         this.$Gallery.Loader.hide();
                     }
 
@@ -249,6 +254,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
             this.$TabContainer = Elm.getElement('.product-data-more-tabsContainer');
             this.$Tabbar       = Elm.getElement('.product-data-more-tabs');
             this.$Sheets       = Elm.getElement('.product-data-more-sheets');
+
+            if (!this.$Tabbar) {
+                return;
+            }
 
             this.$tabs = this.$Tabbar.getElements('.product-data-more-tabs-tab');
 

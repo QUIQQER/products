@@ -1460,7 +1460,7 @@
                 <br/><br/>
                 <p>Es existiert eine <b>große Anzahl an Produkten</b> im System. Um die Feldeigenschaften zu übernehmen, führen Sie in der Kommandozeile des Betriebssystems bitte folgenden Befehl aus:</p>
                 <p>
-                    <pre>[cmd]</pre>
+                    <pre class="console">[cmd]</pre>
                 </p>
                 ]]></de>
             <en><![CDATA[
@@ -1470,7 +1470,7 @@
                 <br/><br/>
                 <p>A large number of products</b> exist. To set the field properties to all products, please execute this command in your system terminal:</p>
                 <p>
-                    <pre>[cmd]</pre>
+                    <pre class="console">[cmd]</pre>
                 </p>
             ]]></en>
         </locale>
