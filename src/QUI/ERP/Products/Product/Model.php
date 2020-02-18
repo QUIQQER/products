@@ -287,38 +287,51 @@ class Model extends QUI\QDOM
         $Locale    = $User->getLocale();
         $fieldList = $this->getFields();
 
-        $attributes                    = $this->getAttributes();
-        $attributes['title']           = $this->getTitle($Locale);
-        $attributes['description']     = $this->getDescription($Locale);
-        $attributes['uid']             = $User->getId();
-        $attributes['displayPrice']    = true;
-        $attributes['maximumQuantity'] = $this->getMaximumQuantity();
+        $cacheName = 'quiqqer/products/'.$this->getId().'/';
+        $cacheName .= \md5(\serialize([
+            $Locale->getCurrent(),
+            \serialize($fieldList),
+            $User->getId()
+        ]));
 
-        $fields = [];
+        try {
+            $attributes = QUI\Cache\Manager::get($cacheName);
+        } catch (QUI\Exception $Exception) {
+            $attributes                    = $this->getAttributes();
+            $attributes['title']           = $this->getTitle($Locale);
+            $attributes['description']     = $this->getDescription($Locale);
+            $attributes['uid']             = $User->getId();
+            $attributes['displayPrice']    = true;
+            $attributes['maximumQuantity'] = $this->getMaximumQuantity();
 
-        foreach ($fieldList as $Field) {
-            /* @var $Field QUI\ERP\Products\Field\CustomField */
-            if ($Field->isCustomField()) {
-                $calcData['custom_calc'] = $Field->getCalculationData($Locale);
+            $fields = [];
 
+            foreach ($fieldList as $Field) {
+                /* @var $Field QUI\ERP\Products\Field\CustomField */
+                if ($Field->isCustomField()) {
+                    $calcData['custom_calc'] = $Field->getCalculationData($Locale);
+
+                    $fields[] = \array_merge(
+                        $Field->toProductArray(),
+                        $Field->getAttributes(),
+                        $calcData
+                    );
+
+                    continue;
+                }
+
+                /* @var $Field QUI\ERP\Products\Field\Field */
                 $fields[] = \array_merge(
                     $Field->toProductArray(),
-                    $Field->getAttributes(),
-                    $calcData
+                    $Field->getAttributes()
                 );
-
-                continue;
             }
 
-            /* @var $Field QUI\ERP\Products\Field\Field */
-            $fields[] = \array_merge(
-                $Field->toProductArray(),
-                $Field->getAttributes()
-            );
-        }
+            if (!empty($fields)) {
+                $attributes['fields'] = $fields;
+            }
 
-        if (!empty($fields)) {
-            $attributes['fields'] = $fields;
+            QUI\Cache\Manager::set($cacheName, $attributes);
         }
 
         QUI::getEvents()->fireEvent('quiqqerProductsToUniqueProduct', [$this, &$attributes]);

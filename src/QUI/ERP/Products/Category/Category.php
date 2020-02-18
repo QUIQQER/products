@@ -766,22 +766,23 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         }
 
 
-        $fields = [];
-        $data   = $this->data;
+        $fields     = [];
+        $fieldCheck = [];
 
+        $data           = $this->data;
         $standardFields = Fields::getStandardFields();
 
-        $isFieldInArray = function ($Field, $array = []) {
-            /* @var QUI\ERP\Products\Field\Field $Field */
-            /* @var QUI\ERP\Products\Field\Field $Entry */
-            foreach ($array as $Entry) {
-                if ($Entry->getId() == $Field->getId()) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
+//        $isFieldInArray = function ($Field, $array = []) {
+//            /* @var QUI\ERP\Products\Field\Field $Field */
+//            /* @var QUI\ERP\Products\Field\Field $Entry */
+//            foreach ($array as $Entry) {
+//                if ($Entry->getId() == $Field->getId()) {
+//                    return true;
+//                }
+//            }
+//
+//            return false;
+//        };
 
         if (isset($data['fields'])) {
             $jsonData = \json_decode($data['fields'], true);
@@ -801,6 +802,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                     }
 
                     $fields[] = $Field;
+
+                    $fieldCheck[$Field->getId()] = true;
                 } catch (QUI\Exception $Exception) {
                     QUI\System\Log::writeException(
                         $Exception,
@@ -812,8 +815,11 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         // add standard fields to the array
         foreach ($standardFields as $Field) {
-            if (!$isFieldInArray($Field, $fields)) {
-                $fields[] = $Field;
+            $fieldId = $Field->getId();
+
+            if (!isset($fieldCheck[$fieldId])) {
+                $fields[]             = $Field;
+                $fieldCheck[$fieldId] = true;
             }
         }
 
