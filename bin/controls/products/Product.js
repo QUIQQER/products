@@ -1986,13 +1986,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
                 }
 
-                if (typeof data.categories === 'undefined') {
+                if (typeof data.categories === 'undefined' || !data.categories.length) {
                     if (self.$Data.getElement('[name="product-category"]')) {
                         data['product-category'] = self.$Data.getElement('[name="product-category"]').value;
                     }
 
                     if (self.$Data.getElement('[name="categories"]')) {
                         data.categories = self.$Data.getElement('[name="categories"]').value;
+                    } else if (typeof self.$categories !== 'undefined') {
+                        data.categories = self.$categories;
                     } else {
                         data.categories = '';
                     }
@@ -2288,6 +2290,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             for (i = 0, len = elements.length; i < len; i++) {
                 Felm = elements[i];
+
+                if (Felm.name === 'categories') {
+                    this.$categories = Felm.value;
+                }
 
                 if (Felm.name.indexOf('field-') === -1) {
                     continue;
