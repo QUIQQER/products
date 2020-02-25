@@ -1997,6 +1997,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         data.categories = self.$categories;
                     } else {
                         data.categories = '';
+
+                        if (typeof self.$Product.$data.categories !== 'undefined') {
+                            data.categories = self.$Product.$data.categories;
+                        }
                     }
                 }
 
@@ -2014,7 +2018,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 ).then(function () {
                     self.Loader.hide();
                     return self.loadData().then(resolve);
-
                 }, function (err) {
                     self.Loader.hide();
                     reject(err);
