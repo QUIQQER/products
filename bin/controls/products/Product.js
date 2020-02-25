@@ -1288,10 +1288,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 if (!productFolder) {
                     Viewer.hide();
 
-                    var ButtonContainer = new Element('div', {
-                        'class': 'folder-missing-container',
-                        html   : QUILocale.get(lg, 'products.product.panel.folder.missing')
-                    }).inject(Container);
+                    var ButtonContainer = Container.getElement('.folder-missing-container');
+
+                    if (!Container.getElement('.folder-missing-container')) {
+                        ButtonContainer = new Element('div', {
+                            'class': 'folder-missing-container',
+                            html   : QUILocale.get(lg, 'products.product.panel.folder.missing')
+                        }).inject(Container);
+                    }
+
 
                     new QUIButton({
                         text     : QUILocale.get(lg, 'products.product.panel.folder.missing.button'),
