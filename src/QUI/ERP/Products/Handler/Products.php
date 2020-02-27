@@ -299,7 +299,7 @@ class Products
         if (QUI::isFrontend() || self::$createFrontendCache) {
             try {
                 QUI\Cache\Manager::get('quiqqer/products/'.$pid.'/db-data');
-            } catch (QUi\Exception $Exception) {
+            } catch (QUI\Exception $Exception) {
                 QUI\Cache\Manager::set(
                     'quiqqer/products/'.$pid.'/db-data',
                     $result[0]

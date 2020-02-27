@@ -128,7 +128,7 @@ class Price extends QUI\ERP\Products\Field\Field
         }
 
         if (\is_float($value)) {
-            return \round($value, 8);
+            return \round($value, QUI\ERP\Defaults::getPrecision());
         }
 
         return QUI\ERP\Money\Price::validatePrice($value);

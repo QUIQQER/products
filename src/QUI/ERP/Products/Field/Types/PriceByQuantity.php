@@ -184,7 +184,7 @@ class PriceByQuantity extends Price
         $price     = $Formatter->parse($price);
 
         return [
-            'price'    => \round(floatval($price), 8),
+            'price'    => \round(floatval($price), QUI\ERP\Defaults::getPrecision()),
             'quantity' => (int)$quantity,
         ];
     }
