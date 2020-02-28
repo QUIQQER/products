@@ -781,6 +781,16 @@ abstract class Search extends QUI\QDOM
 
         $i = 0;
 
+        $isInList = function ($tag, $list) {
+            foreach ($list as $group => $tags) {
+                if (\in_array($tag, $tags)) {
+                    return true;
+                }
+
+                return false;
+            }
+        };
+
         foreach ($tags as $tag) {
             $groups = $Tags->getGroupsFromTag($tag);
 
@@ -798,7 +808,9 @@ abstract class Search extends QUI\QDOM
             }
 
             foreach ($groups as $group) {
-                $list[$group['id']][] = $tag;
+                if (!$isInList($tag, $list)) {
+                    $list[$group['id']][] = $tag;
+                }
             }
         }
 
