@@ -188,6 +188,10 @@ class Model extends QUI\QDOM
                 $Field->setPublicStatus((bool)$field['isPublic']);
             }
 
+            if ($Field instanceof QUI\ERP\Products\Field\Types\Price && !empty($field['value'])) {
+                $field['value'] = \floatval($field['value']);
+            }
+
             try {
                 $Field->setValue($field['value']);
             } catch (QUI\Exception $Exception) {
