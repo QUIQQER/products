@@ -84,6 +84,12 @@ class Cache extends QUI\QDOM
     public static function clear($key = null)
     {
         self::getStashItem($key)->clear();
+
+        try {
+            self::getStash()->getItem('quiqqer/products')->clear();
+        } catch (\Exception $Exception) {
+            QUI\System\Log::addError($Exception->getMessage());
+        }
     }
 
     /**
