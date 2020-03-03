@@ -34,10 +34,18 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
     "use strict";
 
-    var lg = 'quiqqer/products';
+    var lg            = 'quiqqer/products';
+    var productOpened = false;
 
     // history popstate for mootools
     Element.NativeEvents.popstate = 2;
+
+    window.addEvent('load', function () {
+        // browser workaround, to add the first page to the history
+        if (window.location.hash === '') {
+            history.pushState({}, '', '/#');
+        }
+    });
 
     return new Class({
 
@@ -570,6 +578,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 if ("p" in search && Object.getLength(search) === 1) {
                     var productId = parseInt(search.p);
 
+                    if (productOpened) {
+                        this.$readLocationRunning = false;
+                        resolve();
+                        return;
+                    }
+
                     if (productId) {
                         this.openProduct(productId).then(function () {
                             self.$readLocationRunning = false;
@@ -650,6 +664,16 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     this.$readLocationRunning = false;
                     resolve();
                     return;
+                }
+
+                if (productOpened && this.$ProductContainer) {
+                    var Close = this.$ProductContainer.getElement('.product-close-button');
+
+                    if (Close) {
+                        this.$readLocationRunning = false;
+                        Close.click();
+                        return Promise.resolve();
+                    }
                 }
 
                 // view
@@ -2255,6 +2279,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return Promise.resolve();
             }
 
+            productOpened = true;
             QUI.fireEvent('quiqqerProductsOpenProduct', [this, productId]);
 
             var self = this,
@@ -2402,7 +2427,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return Promise.resolve();
             }
 
-            var self = this;
+            var self      = this;
+            productOpened = false;
 
             if (typeof setLocation === 'undefined') {
                 setLocation = true;
