@@ -1073,4 +1073,14 @@ class EventHandling
         $Conf->setSection('search', $search);
         $Conf->save();
     }
+
+    /**
+     * events: frontend cache clearing
+     */
+    public static function onFrontendCacheClear()
+    {
+        QUI\Cache\Manager::clear(
+            QUI\ERP\Products\Handler\Cache::frontendCacheName()
+        );
+    }
 }

@@ -16,7 +16,10 @@ use QUI\ERP\Products\Utils\Products as ProductUtils;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getProduct',
     function ($productId, $project, $siteId) {
-        $cacheName = 'quiqqer/products/frontendCache/'.\md5(\serialize([$productId, $project, $siteId]));
+        $cacheName = \QUI\ERP\Products\Handler\Cache::frontendProductCacheName(
+            $productId,
+            [$project, $siteId]
+        );
 
         // caching only if prices are hidden
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
