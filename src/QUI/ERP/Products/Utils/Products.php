@@ -453,6 +453,10 @@ class Products
      */
     public static function checkUrlByUrlFieldValue($urlFieldValue, $categoryId, $ignoreProductId = false)
     {
+        if (empty($urlFieldValue)) {
+            return;
+        }
+
         $urlCacheField = 'F'.FieldHandler::FIELD_URL;
         $table         = QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
 
