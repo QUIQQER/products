@@ -532,12 +532,10 @@ class Products
 
         $Product = self::getProduct($newId);
 
-        /**
-         * The value of the "Media Folder" default field is explicitly removed here
-         * because otherwise it would contain the ID of the parent products media folder.
-         */
-        $Product->getField(QUI\ERP\Products\Handler\Fields::FIELD_FOLDER)->setValue('');
-        $Product->createMediaFolder(); // the product is also saved in this method
+        if (!($Product instanceof VariantChild)) {
+//            $Product->getField(QUI\ERP\Products\Handler\Fields::FIELD_FOLDER)->setValue('');
+            $Product->createMediaFolder(); // the product is also saved in this method
+        }
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreate', [$Product]);
 
