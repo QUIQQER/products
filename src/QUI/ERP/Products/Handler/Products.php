@@ -508,7 +508,7 @@ class Products
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             [
                 'fieldData'  => \json_encode($fieldData),
-                'categories' => ','.\implode($categoryIds, ',').',',
+                'categories' => ','.\implode(',', $categoryIds).',',
                 'type'       => $type,
                 'c_user'     => QUI::getUserBySession()->getId(),
                 'c_date'     => date('Y-m-d H:i:s'),
@@ -525,7 +525,7 @@ class Products
             '',
             [
                 'fieldData'  => $fieldData,
-                'categories' => ','.\implode($categoryIds, ',').','
+                'categories' => ','.\implode(',', $categoryIds).','
             ]
         );
 
