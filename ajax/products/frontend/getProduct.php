@@ -16,6 +16,16 @@ use QUI\ERP\Products\Utils\Products as ProductUtils;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getProduct',
     function ($productId, $project, $siteId) {
+        $cacheName = 'quiqqer/products/frontendCache/'.\md5(\serialize([$productId, $project, $siteId]));
+
+        // caching only if prices are hidden
+        if (QUI\ERP\Products\Utils\Package::hidePrice()) {
+            try {
+                return QUI\Cache\Manager::get($cacheName);
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
         $Project  = QUI\Projects\Manager::decode($project);
         $Site     = null;
         $Template = null;
@@ -60,13 +70,19 @@ QUI::$Ajax->registerFunction(
             $title = $Product->getTitle();
         }
 
-        return [
+        $result = [
             'css'             => QUI\Control\Manager::getCSS(),
             'html'            => QUI\Output::getInstance()->parse($control),
             'title'           => $title,
             'fieldHashes'     => ProductUtils::getJsFieldHashArray($Product),
             'availableHashes' => \array_flip($availableHashes)
         ];
+
+        if (QUI\ERP\Products\Utils\Package::hidePrice()) {
+            QUI\Cache\Manager::set($cacheName, $result);
+        }
+
+        return $result;
     },
     ['productId', 'project', 'siteId']
 );

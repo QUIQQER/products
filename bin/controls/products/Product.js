@@ -759,7 +759,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 var Input = Form.elements['field-' + field.id];
 
                 if (typeof Input !== 'undefined') {
-                    if (typeOf(field.value) !== 'string' && field.value !== null) {
+                    if (typeOf(field.value) !== 'string'
+                        && field.value !== null
+                        && typeOf(field.value) !== 'number'
+                    ) {
                         field.value = JSON.encode(field.value);
                     }
 
