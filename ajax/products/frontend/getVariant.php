@@ -19,8 +19,10 @@ use QUI\ERP\Products\Utils\Products as ProductUtils;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getVariant',
     function ($productId, $fields, $ignoreDefaultVariant) {
-        $cacheName = 'quiqqer/products/frontendCache/'.
-                     \md5(\serialize([$productId, $fields, $ignoreDefaultVariant]));
+        $cacheName = \QUI\ERP\Products\Handler\Cache::frontendProductCacheName(
+            $productId,
+            [$fields, $ignoreDefaultVariant]
+        );
 
         // caching only if prices are hidden
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {

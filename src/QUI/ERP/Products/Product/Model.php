@@ -1149,6 +1149,7 @@ class Model extends QUI\QDOM
         }
 
         QUI\Cache\Manager::clear('quiqqer/products/'.$this->getId());
+        QUI\ERP\Products\Handler\Cache::clearProductFrontendCache($this->getId());
 
         if (Products::$fireEventsOnProductSave) {
             QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', [$this]);
