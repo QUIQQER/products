@@ -19,6 +19,17 @@ use QUI\ERP\Products\Utils\Products as ProductUtils;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getVariant',
     function ($productId, $fields, $ignoreDefaultVariant) {
+        $cacheName = 'quiqqer/products/frontendCache/'.
+                     \md5(\serialize([$productId, $fields, $ignoreDefaultVariant]));
+
+        // caching only if prices are hidden
+        if (QUI\ERP\Products\Utils\Package::hidePrice()) {
+            try {
+                return QUI\Cache\Manager::get($cacheName);
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
         if (!isset($ignoreDefaultVariant)) {
             $ignoreDefaultVariant = false;
         } else {
@@ -112,7 +123,7 @@ QUI::$Ajax->registerFunction(
             'ignoreDefaultVariant' => $ignoreDefaultVariant
         ]);
 
-        return [
+        $result = [
             'variantId'       => $Child->getId(),
             'control'         => QUI\Output::getInstance()->parse($Control->create()),
             'css'             => QUI\Control\Manager::getCSS(),
@@ -122,6 +133,12 @@ QUI::$Ajax->registerFunction(
             'fieldHashes'     => ProductUtils::getJsFieldHashArray($Product),
             'availableHashes' => \array_flip($Product->availableActiveFieldHashes())
         ];
+
+        if (QUI\ERP\Products\Utils\Package::hidePrice()) {
+            QUI\Cache\Manager::set($cacheName, $result);
+        }
+
+        return $result;
     },
     ['productId', 'fields', 'ignoreDefaultVariant']
 );
