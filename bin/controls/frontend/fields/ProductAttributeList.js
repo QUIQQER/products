@@ -67,7 +67,7 @@ define('package/quiqqer/products/bin/controls/frontend/fields/ProductAttributeLi
                 return Promise.resolve();
             }).then(function () {
                 self.fireEvent('change', [self]);
-                self.getElm().focus();
+                //self.getElm().focus();
             });
         },
 
