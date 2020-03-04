@@ -996,6 +996,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         // open products in list
                         articles.addEvent('click', function (event) {
                             event.stop();
+
                             self.openProduct(parseInt(this.get('data-pid')));
                         });
 
@@ -2279,6 +2280,16 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return Promise.resolve();
             }
 
+            var ListContainer = this.getElm().getElement('.quiqqer-products-productList-products');
+
+            if (ListContainer) {
+                var height = this.getElm().getSize().y;
+
+                if (height) {
+                    this.getElm().setStyle('height', height);
+                }
+            }
+
             productOpened = true;
             QUI.fireEvent('quiqqerProductsOpenProduct', [this, productId]);
 
@@ -2413,6 +2424,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                     }
                                 }
                             }).inject(self.$ProductContainer);
+
+                            self.getElm().setStyle('height', null);
                         });
                     });
                 });
