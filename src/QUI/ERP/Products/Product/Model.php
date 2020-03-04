@@ -483,8 +483,60 @@ class Model extends QUI\QDOM
      */
     public function getUrl($Project = null)
     {
+        if ($Project === null) {
+            $Project = QUI::getRewrite()->getProject();
+        }
+
+        $cacheName = QUI\ERP\Products\Handler\Cache::productCacheName($this->getId());
+        $cacheName .= '/url';
+        $cacheName .= '/'.$Project->getName();
+        $cacheName .= '/'.$Project->getLang();
+
+        try {
+            return QUI\Cache\Manager::get($cacheName);
+        } catch (QUI\Exception $Exception) {
+        }
+
+        // look if category is in product and it is the correct site
         $Category = $this->getCategory();
-        $Site     = $Category->getSite($Project);
+        $sites    = $Category->getSites($Project);
+
+        $checkSitePath = function ($list) {
+            foreach ($list as $Site) {
+                $catId = $Site->getAttribute('quiqqer.products.settings.categoryId');
+                $type  = $Site->getAttribute('type');
+
+                if ($type !== 'quiqqer/products:types/category') {
+                    return true;
+                }
+
+                if ($catId === false) {
+                    return false;
+                }
+
+                if (!isset($this->categories[$catId])) {
+                    return false;
+                }
+            }
+
+            return true;
+        };
+
+        foreach ($sites as $CategorySite) {
+            $list   = $CategorySite->getParents();
+            $list[] = $CategorySite;
+            $list   = \array_reverse($list);
+
+            if ($checkSitePath($list)) {
+                $Site = $CategorySite;
+                break;
+            }
+        }
+
+        if (!isset($Site)) {
+            $Site = $sites[0];
+        };
+
 
         if ($Site->getAttribute('quiqqer.products.fake.type') ||
             $Site->getAttribute('type') !== 'quiqqer/products:types/category'
@@ -504,6 +556,8 @@ class Model extends QUI\QDOM
             0              => $this->getUrlName(),
             'paramAsSites' => true
         ]);
+
+        QUI\Cache\Manager::set($cacheName, $url);
 
         return $url;
     }
