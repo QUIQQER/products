@@ -412,27 +412,45 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             return $defaults[$name][$lang];
         }
 
-        $sites = $this->getSites($Project);
+        $cacheName = QUI\ERP\Products\Handler\Cache::productCacheName($this->getId());
+        $cacheName .= '/site';
+        $cacheName .= '/'.$Project->getName();
+        $cacheName .= '/'.$Project->getLang();
 
-        if (isset($sites[0])) {
-            return $sites[0];
+        try {
+            $siteParams = QUI\Cache\Manager::get($cacheName);
+            $Site       = $Project->get($siteParams['id']);
+        } catch (QUI\Exception $Exception) {
+            $sites = $this->getSites($Project);
+
+            if (isset($sites[0])) {
+                $Site = $sites[0];
+            } else {
+                QUI\System\Log::addWarning(
+                    QUI::getLocale()->get('quiqqer/products', 'exception.category.has.no.site', [
+                        'id'    => $this->getId(),
+                        'title' => $this->getTitle()
+                    ])
+                );
+
+                $Site = $Project->firstChild();
+            }
+
+            QUI\Cache\Manager::set($cacheName, [
+                'project' => $Project->getName(),
+                'lang'    => $Project->getLang(),
+                'id'      => $Site->getId()
+            ]);
         }
 
-        QUI\System\Log::addWarning(
-            QUI::getLocale()->get('quiqqer/products', 'exception.category.has.no.site', [
-                'id'    => $this->getId(),
-                'title' => $this->getTitle()
-            ])
-        );
-
-        return $Project->firstChild();
+        return $Site;
     }
 
     /**
      * Return all sites which assigned the category
      *
      * @param QUI\Projects\Project|null $Project
-     * @return array
+     * @return QUI\Projects\Site[]
      *
      * @throws QUI\Exception
      */
