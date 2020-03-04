@@ -24,6 +24,7 @@
         "quiqqer\/currency": "1.*|dev-master|dev-dev",
         "quiqqer\/discount": ">=0.9|dev-master|dev-dev",
         "quiqqer\/pace": "1.*|dev-master|dev-dev",
+        "quiqqer\/product-bricks": "^1|dev-master|dev-dev",
         "quiqqer\/slider": ">=0.9|dev-master|dev-dev",
         "quiqqer\/tags": "1.*|0.*|dev-master|dev-dev",
         "quiqqer\/utils": ">=1.6|dev-master|dev-dev",
