@@ -412,7 +412,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             return $defaults[$name][$lang];
         }
 
-        $cacheName = QUI\ERP\Products\Handler\Cache::productCacheName($this->getId());
+        $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
         $cacheName .= '/site';
         $cacheName .= '/'.$Project->getName();
         $cacheName .= '/'.$Project->getLang();
@@ -1055,7 +1055,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      */
     protected function getSiteCacheName()
     {
-        return 'quiqqer/products/category/'.$this->getId().'/sites';
+        return QUI\ERP\Products\Handler\Cache::getBasicCachePath().'category/'.$this->getId().'/sites';
     }
 
     //endregion

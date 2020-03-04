@@ -246,6 +246,6 @@ class Menu extends QUI\Control
             return 'quiqqer/products/categories/menu';
         }
 
-        return 'quiqqer/products/categories/menu/'.$cache;
+        return QUI\ERP\Products\Handler\Cache::getBasicCachePath().'categories/menu/'.$cache;
     }
 }

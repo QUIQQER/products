@@ -1,10 +1,6 @@
 <?php
 
 /**
- * This file contains package_quiqqer_products_ajax_fields_getPublicFields
- */
-
-/**
  * Returns all public fields
  *
  * @return array
@@ -12,7 +8,7 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_fields_getPublicFields',
     function () {
-        $cacheName = 'quiqqer/products/fields/publicFields';
+        $cacheName = \QUI\ERP\Products\Handler\Cache::getBasicCachePath().'fields/publicFields';
 
         try {
             return QUI\Cache\Manager::get($cacheName);

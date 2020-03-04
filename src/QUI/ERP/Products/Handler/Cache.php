@@ -12,15 +12,20 @@ use QUI;
  */
 class Cache
 {
+    public static function getBasicCachePath()
+    {
+        return 'products/';
+    }
+
     /**
      * Cache name for a product
      *
      * @param $productId
      * @return string
      */
-    public static function productCacheName($productId)
+    public static function getProductCachePath($productId)
     {
-        return 'quiqqer/product/product/'.$productId;
+        return self::getBasicCachePath().'product/'.$productId;
     }
 
     /**
