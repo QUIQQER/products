@@ -50,7 +50,7 @@ class Categories
      */
     public static function getCacheName($categoryId)
     {
-        return 'quiqqer/products/categories/'.(int)$categoryId;
+        return Cache::getBasicCachePath().'categories/'.(int)$categoryId;
     }
 
     /**

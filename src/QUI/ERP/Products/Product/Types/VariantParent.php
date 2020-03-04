@@ -314,7 +314,7 @@ class VariantParent extends AbstractType
      */
     public function getImages($params = [])
     {
-        $cache = 'quiqqer/products/'.$this->getId().'/images';
+        $cache = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/images';
 
         if (QUI::isFrontend()) {
             try {
@@ -717,7 +717,7 @@ class VariantParent extends AbstractType
             $productId = (int)$entry['id'];
 
             QUI\Cache\Manager::set(
-                'quiqqer/products/'.$productId.'/db-data',
+                QUI\ERP\Products\Handler\Cache::getProductCachePath($productId).'/db-data',
                 $entry
             );
         }
@@ -1192,7 +1192,7 @@ class VariantParent extends AbstractType
      */
     protected function parseActiveFieldsAndHashes()
     {
-        $cacheName = 'quiqqer/products/'.$this->getId().'/activeFieldHashes';
+        $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/activeFieldHashes';
 
         try {
             $fieldHashes = QUI\Cache\Manager::get($cacheName);

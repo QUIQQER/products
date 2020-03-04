@@ -23,7 +23,7 @@ class ProductTypes extends Singleton
      */
     public function getProductTypes()
     {
-        $cache = 'quiqqer/products/types';
+        $cache = QUI\ERP\Products\Handler\Cache::getBasicCachePath().'types';
 
         try {
             return QUI\Cache\Manager::get($cache);
