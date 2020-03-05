@@ -2106,6 +2106,13 @@
     </groups>
 
     <groups name="quiqqer/products" datatype="php">
+
+        <!-- Ajax -->
+        <locale name="ajax.general_error">
+            <de><![CDATA[Leider ist ein unerwarteter Fehler aufgetreten. Bitte wiederholen Sie den Vorgang oder kontaktieren Sie einen Administrator.]]></de>
+            <en><![CDATA[An unexpected error occurred. Please repeat the process or contact an administrator.]]></en>
+        </locale>
+
         <locale name="exception.sitesearch.not.found">
             <de><![CDATA[Es wurde keine Such-Seite gefunden. Bitte legen Sie eine Such-Seite an.]]></de>
             <en><![CDATA[No search site found. Please create a search site.]]></en>
