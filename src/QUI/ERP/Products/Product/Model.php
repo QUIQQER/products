@@ -291,7 +291,7 @@ class Model extends QUI\QDOM
         $Locale    = $User->getLocale();
         $fieldList = $this->getFields();
 
-        $cacheName = 'quiqqer/products/'.$this->getId().'/';
+        $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/';
         $cacheName .= \md5(\serialize([
             $Locale->getCurrent(),
             \serialize($fieldList),
@@ -487,7 +487,7 @@ class Model extends QUI\QDOM
             $Project = QUI::getRewrite()->getProject();
         }
 
-        $cacheName = QUI\ERP\Products\Handler\Cache::productCacheName($this->getId());
+        $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
         $cacheName .= '/url';
         $cacheName .= '/'.$Project->getName();
         $cacheName .= '/'.$Project->getLang();
@@ -842,10 +842,11 @@ class Model extends QUI\QDOM
      */
     public function getMinimumPrice($User = null)
     {
-        $cacheName = 'quiqqer/products/'.$this->getId().'/prices/min';
+        $baseCacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
+        $cacheName     = $baseCacheName.'/prices/min';
 
         if ($User && $User instanceof QUI\Interfaces\Users\User) {
-            $cacheName = 'quiqqer/products/'.$this->getId().'/prices/'.$User->getId().'/min';
+            $cacheName = $baseCacheName.'/prices/'.$User->getId().'/min';
         }
 
         try {
@@ -925,7 +926,8 @@ class Model extends QUI\QDOM
      */
     public function getMaximumPrice($User = null)
     {
-        $cacheName = 'quiqqer/products/'.$this->getId().'/prices/max';
+        $baseCacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
+        $cacheName     = $baseCacheName.'/prices/max';
 
         try {
             $data     = QUI\Cache\Manager::get($cacheName);
@@ -1228,7 +1230,10 @@ class Model extends QUI\QDOM
                 'limit' => 1
             ]);
 
-            QUI\Cache\Manager::set('quiqqer/products/'.$this->getId().'/db-data', $result[0]);
+            QUI\Cache\Manager::set(
+                QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/db-data',
+                $result[0]
+            );
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
         }
