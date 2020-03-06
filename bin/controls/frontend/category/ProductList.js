@@ -563,10 +563,21 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$readLocationRunning = true;
 
             return new Promise(function (resolve) {
+                var Close;
                 var Url    = URI(window.location),
                     search = Url.search(true);
 
                 if (!Object.getLength(search)) {
+                    if (productOpened && this.$ProductContainer) {
+                        Close = this.$ProductContainer.getElement('.product-close-button');
+
+                        if (Close) {
+                            this.$readLocationRunning = false;
+                            Close.click();
+                            return Promise.resolve();
+                        }
+                    }
+
                     this.$categories          = [];
                     this.$productId           = false;
                     this.$readLocationRunning = false;
@@ -667,7 +678,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
 
                 if (productOpened && this.$ProductContainer) {
-                    var Close = this.$ProductContainer.getElement('.product-close-button');
+                    Close = this.$ProductContainer.getElement('.product-close-button');
 
                     if (Close) {
                         this.$readLocationRunning = false;
