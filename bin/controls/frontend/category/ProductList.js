@@ -466,7 +466,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     return;
                 }
 
-                var isInView = QUIElementUtils.isInViewport(this.$More);
+                var isInView = QUIElementUtils.isInViewport(this.$More, 350);
 
                 if (isInView) {
                     this.next();
