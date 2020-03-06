@@ -81,9 +81,14 @@
 }
 
 .quiqqer-products-control-product-childrenslider-entry-productButtons a {
+    cursor: pointer;
     display: inline-block;
     float: none;
     margin: 0 5px;
+}
+
+.quiqqer-products-control-product-childrenslider-entry-productButtons label {
+    cursor: pointer;
 }
 
 /* navigation arrows */
