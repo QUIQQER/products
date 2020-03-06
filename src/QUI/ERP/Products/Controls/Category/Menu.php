@@ -243,7 +243,7 @@ class Menu extends QUI\Control
 
             $cache = \md5(\implode('', $params));
         } catch (QUI\Exception $Exception) {
-            return 'quiqqer/products/categories/menu';
+            return QUI\ERP\Products\Handler\Cache::getBasicCachePath().'categories/menu';
         }
 
         return QUI\ERP\Products\Handler\Cache::getBasicCachePath().'categories/menu/'.$cache;

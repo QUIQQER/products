@@ -31,11 +31,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
              Search, Piwik, SearchField, QUIAjax, QUILocale, URI, Session,
              ProductListFilter, ProductListField
 ) {
-
     "use strict";
 
-    var lg            = 'quiqqer/products';
-    var productOpened = false;
+    var DEBUG = false;
+
+    var lg                = 'quiqqer/products';
+    var productOpened     = false;
+    var animationDuration = 10;
 
     // history popstate for mootools
     Element.NativeEvents.popstate = 2;
@@ -312,7 +314,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     moofx(this.$FilterContainer).animate({
                         background: 'transparent'
                     }, {
-                        duration: 200,
+                        duration: animationDuration,
                         callback: function () {
                             this.$FilterContainer.addClass(
                                 'quiqqer-products-productList-filterContainerLoaded'
@@ -542,7 +544,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         $readWindowLocation: function () {
             var self = this;
 
+            if (DEBUG) console.log('$readWindowLocation', 1);
+
             if (this.$readLocationRunning) {
+                if (DEBUG) console.log('$readWindowLocation', '1 -> ');
+
                 return new Promise(function (resolve) {
                     var checkRunning = function () {
                         if (self.$readLocationRunning === false) {
@@ -562,12 +568,19 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$readLocationRunning = true;
 
+            if (DEBUG) console.log('$readWindowLocation', 2);
+
             return new Promise(function (resolve) {
                 var Close;
                 var Url    = URI(window.location),
                     search = Url.search(true);
 
                 if (!Object.getLength(search)) {
+                    if (DEBUG) console.log('$readWindowLocation', 3, {
+                        productOpened: productOpened,
+                        Container    : this.$ProductContainer
+                    });
+
                     if (productOpened && this.$ProductContainer) {
                         Close = this.$ProductContainer.getElement('.product-close-button');
 
@@ -578,6 +591,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         }
                     }
 
+                    if (DEBUG) console.log('$readWindowLocation', 4);
+
                     this.$categories          = [];
                     this.$productId           = false;
                     this.$readLocationRunning = false;
@@ -586,16 +601,24 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     return;
                 }
 
+                if (DEBUG) console.log('$readWindowLocation', 5);
+
                 if ("p" in search && Object.getLength(search) === 1) {
+                    if (DEBUG) console.log('$readWindowLocation', 6);
+
                     var productId = parseInt(search.p);
 
                     if (productOpened) {
+                        if (DEBUG) console.log('$readWindowLocation', 7);
+
                         this.$readLocationRunning = false;
                         resolve();
                         return;
                     }
 
                     if (productId) {
+                        if (DEBUG) console.log('$readWindowLocation', 8);
+
                         this.openProduct(productId).then(function () {
                             self.$readLocationRunning = false;
                             resolve();
@@ -604,6 +627,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         return;
                     }
                 }
+
+                if (DEBUG) console.log('$readWindowLocation', 9);
 
                 if ("search" in search && this.$FreeText) {
                     this.$FreeText.value = search.search;
@@ -614,6 +639,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 // fields
                 if ("f" in search && this.$FilterContainer) {
+                    if (DEBUG) console.log('$readWindowLocation', 10);
+
                     var fieldList = this.$FilterContainer.getElements(
                         '.quiqqer-products-search-field'
                     ).map(function (Field) {
@@ -672,12 +699,16 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
 
                 if (this.$productId) {
+                    if (DEBUG) console.log('$readWindowLocation', 11);
+
                     this.$readLocationRunning = false;
                     resolve();
                     return;
                 }
 
                 if (productOpened && this.$ProductContainer) {
+                    if (DEBUG) console.log('$readWindowLocation', 12);
+
                     Close = this.$ProductContainer.getElement('.product-close-button');
 
                     if (Close) {
@@ -1296,6 +1327,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$FXLoader.animate({
                 opacity: 0
             }, {
+                duration: animationDuration,
                 callback: function () {
                     self.$ContainerLoader.setStyle('display', 'none');
                 }
@@ -1305,7 +1337,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 self.$FXContainer.animate({
                     opacity: 0
                 }, {
-                    duration: 250,
+                    duration: animationDuration,
                     callback: function () {
                         articles.destroy();
                         resolve();
@@ -1327,14 +1359,14 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     height : height,
                     opacity: 1
                 }, {
-                    duration: 250,
+                    duration: animationDuration,
                     callback: resolve
                 });
 
                 this.$FXContainerReal.animate({
                     opacity: 1
                 }, {
-                    duration: 250,
+                    duration: animationDuration,
                     callback: resolve
                 });
 
@@ -1352,7 +1384,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$FXContainer.animate({
                     opacity: 0
                 }, {
-                    duration: 250,
+                    duration: animationDuration,
                     callback: resolve
                 });
             }.bind(this));
@@ -1372,7 +1404,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 self.$FXLoader.animate({
                     opacity: 1
                 }, {
-                    duration: 200,
+                    duration: animationDuration,
                     callback: resolve
                 });
             });
@@ -1381,7 +1413,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 self.$FXContainerReal.animate({
                     opacity: 0
                 }, {
-                    duration: 250,
+                    duration: animationDuration,
                     callback: resolve
                 });
             });
@@ -1400,7 +1432,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             var Row = this.$Container.getElement('[data-row]:last-child');
 
             return new Promise(function (resolve) {
-                new Fx.Scroll(window.document).start(
+                new Fx.Scroll(window.document, {
+                    duration: animationDuration
+                }).start(
                     0,
                     Row.getPosition().y - 100
                 ).chain(resolve);
@@ -1425,7 +1459,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$FXMore.animate({
                     opacity: 0
                 }, {
-                    duration: 200,
+                    duration: animationDuration,
                     callback: resolve
                 });
             }.bind(this));
@@ -1445,7 +1479,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$FXMore.animate({
                     opacity: 1
                 }, {
-                    duration: 200,
+                    duration: animationDuration,
                     callback: function () {
                         this.$More.removeClass('disabled');
                         this.$More.setStyle('cursor', null);
@@ -1554,7 +1588,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     height : 0,
                     opacity: 0
                 }, {
-                    duration: 200,
+                    duration: animationDuration,
                     callback: function () {
                         this.$CategoryMore.setStyle('display', 'none');
                     }.bind(this)
@@ -1564,8 +1598,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             moofx(Categories).animate({
                 height: wantedSizes.y
             }, {
-                duratiobn: 250,
-                callback : function () {
+                duration: animationDuration,
+                callback: function () {
 
                 }
             });
@@ -1651,7 +1685,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     opacity: 1,
                     padding: padding
                 }, {
-                    duration: 250,
+                    duration: animationDuration,
                     callback: function () {
                         resolve();
                     }
@@ -1682,7 +1716,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     opacity: 0,
                     padding: 0
                 }, {
-                    duration: 250,
+                    duration: animationDuration,
                     callback: resolve
                 });
             }.bind(this));
@@ -1855,7 +1889,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     height : height,
                     opacity: 1
                 }, {
-                    duration: 200,
+                    duration: animationDuration,
                     callback: function () {
                         this.$FilterFL.setStyle('overflow', null);
                         this.$FilterFL.setStyle('height', null);
@@ -1882,7 +1916,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     height : 0,
                     opacity: 0
                 }, {
-                    duration: 200,
+                    duration: animationDuration,
                     callback: resolve
                 });
             }.bind(this));
@@ -2019,7 +2053,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             moofx(this.$FilterClearButton).animate({
                 opacity: 0
             }, {
-                duration: 200,
+                duration: animationDuration,
                 callback: function () {
                     this.$FilterClearButton.setStyle('display', 'none');
                 }.bind(this)
@@ -2036,7 +2070,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             moofx(this.$FilterClearButton).animate({
                 opacity: 1
             }, {
-                duration: 200
+                duration: animationDuration
             });
         },
 
@@ -2344,7 +2378,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 moofx(children).animate({
                     opacity: 0
                 }, {
-                    duration: 200,
+                    duration: animationDuration,
                     callback: function () {
                         children.setStyle('display', 'none');
                     }
@@ -2372,6 +2406,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                 self.$productId  = false;
                                 self.$categories = currentCategories;
 
+                                if (DEBUG) console.log('Products.getProductControlClass');
+
                                 var Url = URI(window.location);
                                 Url.removeSearch('p');
                                 window.history.pushState({}, "", Url.toString());
@@ -2388,10 +2424,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }
 
                     require([controlClass], function (Product) {
-                        new Fx.Scroll(window).toTop().chain(function () {
+                        new Fx.Scroll(window, {
+                            duration: animationDuration
+                        }).toTop().chain(function () {
                             self.$setWindowLocation();
 
-                            new Product({
+                            var Instance = new Product({
                                 productId    : productId,
                                 closeable    : true,
                                 galleryLoader: false,
@@ -2399,13 +2437,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                     onLoad: function () {
                                         moofx(self.$Elm).animate({
                                             height: 0
+                                        }, {
+                                            duration: animationDuration
                                         });
 
                                         if (self.$ProductContainer) {
                                             moofx(self.$ProductContainer).animate({
                                                 opacity: 1
                                             }, {
-                                                duration: 200
+                                                duration: animationDuration
                                             });
                                         }
 
@@ -2429,12 +2469,16 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                             var ProductElm = self.$Elm.getElement('[data-pid="' + productId + '"]');
 
                                             if (ProductElm) {
-                                                new Fx.Scroll(window.document).start(0, scrollPosition.y);
+                                                new Fx.Scroll(window.document, {
+                                                    duration: animationDuration
+                                                }).start(0, scrollPosition.y);
                                             }
                                         });
                                     }
                                 }
                             }).inject(self.$ProductContainer);
+
+                            if (DEBUG) console.log('open Product', Instance.getType());
 
                             self.getElm().setStyle('height', null);
                         });
@@ -2450,6 +2494,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (!this.$ProductContainer) {
                 return Promise.resolve();
             }
+
+            if (DEBUG) console.log('->showList()');
 
             var self      = this;
             productOpened = false;
@@ -2489,7 +2535,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     moofx(children).animate({
                         opacity: 1
                     }, {
-                        duration: 200,
+                        duration: animationDuration,
                         callback: function () {
                             children.setStyles({
                                 opacity: null
@@ -2518,7 +2564,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 moofx(self.$ProductContainer).animate({
                     opacity: 0
                 }, {
-                    duration: 200,
+                    duration: animationDuration,
                     callback: function () {
                         self.$ProductContainer.destroy();
                         self.$ProductContainer = null;
