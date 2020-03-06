@@ -33,9 +33,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
         ],
 
         options: {
-            closeable    : false,
             productId    : false,
-            galleryLoader: true
+            galleryLoader: true,
+            closeable    : false
         },
 
         initialize: function (options) {
@@ -285,12 +285,12 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 // only if product is in main category
                 if (typeof window.QUIQQER_PRODUCT_CATEGORY !== 'undefined' &&
                     parseInt(result.category) === parseInt(window.QUIQQER_PRODUCT_CATEGORY)) {
-                    window.history.pushState({}, "", result.url.toString());
+                    //window.history.pushState({}, "", result.url.toString());
                 } else {
                     var Url = URI(window.location);
                     var url = Url.setSearch('variant', result.variantId).toString();
 
-                    window.history.pushState({}, "", url);
+                    //window.history.pushState({}, "", url);
                 }
 
                 self.$startInit = false;
@@ -305,6 +305,19 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     // css
                     new Element('div', {
                         html: result.css
+                    }).inject(self.getElm());
+                }
+
+                if (!self.getElm().getElement('.product-close-button') && self.getAttribute('closeable')) {
+                    new Element('div', {
+                        'class': 'product-close-button',
+                        html   : '<span class="fa fa-close"></span>',
+                        events : {
+                            click: function () {
+                                document.title = QUIQQER.title;
+                                self.fireEvent('close');
+                            }
+                        }
                     }).inject(self.getElm());
                 }
 
