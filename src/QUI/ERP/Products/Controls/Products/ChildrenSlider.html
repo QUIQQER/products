@@ -6,26 +6,27 @@
             >
                 {strip}
                 {foreach $products as $Entry}
-                    {assign var=Product value=$Entry.Product}
-                    {assign var=Price value=$Entry.Price}
-                    {assign var=RetailPrice value=$Entry.RetailPrice}
-                    {assign var=hasImage value=0}
+                {assign var=Product value=$Entry.Product}
+                {assign var=Price value=$Entry.Price}
+                {assign var=RetailPrice value=$Entry.RetailPrice}
+                {assign var=hasImage value=0}
 
-                    {if $Product->getImage()}
-                        {assign var=hasImage value=1}
-                    {/if}
+                {if $Product->getImage()}
+                {assign var=hasImage value=1}
+                {/if}
                 <li class="quiqqer-bricks-children-slider-child">
-                    <article class="quiqqer-bricks-children-slider-child-display quiqqer-products-control-product-childrenslider-entry"
-                        data-pid="{$Product->getId()}"
+                    <article
+                            class="quiqqer-bricks-children-slider-child-display quiqqer-products-control-product-childrenslider-entry"
+                            data-pid="{$Product->getId()}"
                     >
                         <div class="quiqqer-products-control-product-childrenslider-entry-image">
                             <a href="{$Product->getUrl()}"
                                title="{$Product->getTitle()|escape:'html'}"
                                data-pid="{$Product->getId()}"
                             >
-                            {if $hasImage}
+                                {if $hasImage}
                                 {image image=$Product->getImage() height=$this->getAttribute('height')}
-                            {/if}
+                                {/if}
                             </a>
                         </div>
                         <header class="quiqqer-products-control-product-childrenslider-entry-header">
@@ -39,9 +40,13 @@
 
                         <div class="quiqqer-products-control-product-childrenslider-entry-price-wrapper">
                             {if $RetailPrice}
-                            <div class="quiqqer-products-control-product-childrenslider-entry-price-retailPrice">{$RetailPrice->create()}</div>
+                            <div class="quiqqer-products-control-product-childrenslider-entry-price-retailPrice">
+                                {$RetailPrice->create()}
+                            </div>
                             {/if}
-                            <div class="quiqqer-products-control-product-childrenslider-entry-price-regularPrice">{$Product->getPriceDisplay()->create()}</div>
+                            <div class="quiqqer-products-control-product-childrenslider-entry-price-regularPrice">
+                                {$Product->getPriceDisplay()->create()}
+                            </div>
                         </div>
 
                         <div class="quiqqer-products-control-product-childrenslider-entry-productButtons">
