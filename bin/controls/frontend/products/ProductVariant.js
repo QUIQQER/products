@@ -157,11 +157,15 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 '.product-data-fieldlist .quiqqer-product-field select'
             );
 
-            var attributeGroups = this.getElm().getElement(
+            var attributeGroups = new Elements();
+            var AttrGroup       = this.getElm().getElement(
                 '[data-qui="package/pbisschop/template/bin/js/AttributeGroups"]'
-            ).getElements(
-                '.quiqqer-product-field select'
             );
+
+            if (AttrGroup) {
+                attributeGroups = AttrGroup.getElements('.quiqqer-product-field select');
+            }
+
 
             fieldLists.removeEvents('change');
 

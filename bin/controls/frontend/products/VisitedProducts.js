@@ -111,7 +111,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/VisitedProducts'
                         }
                     });
 
-                    this.$Slider.resize();
+                    QUI.parse(this.$List).then(function () {
+                        this.$Slider.resize();
+                    }.bind(this));
                 }.bind(this), {
                     'package'       : 'quiqqer/products',
                     productIds      : JSON.encode(visited),
