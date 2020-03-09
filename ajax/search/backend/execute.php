@@ -22,6 +22,14 @@ QUI::$Ajax->registerFunction(
         $BackEndSearch = SearchHandler::getBackendSearch();
         $searchParams  = \json_decode($searchParams, true);
 
+        if (empty($searchParams['sortOn'])) {
+            $searchParams['sortOn'] = 'id';
+        }
+
+        if (empty($searchParams['sortBy'])) {
+            $searchParams['sortBy'] = 'DESC';
+        }
+
         if (!empty($searchParams['considerVariantChildren'])) {
             $BackEndSearch->considerVariantChildren();
         }
