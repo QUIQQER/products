@@ -968,8 +968,15 @@ class EventHandling
             $hide = 1;
         }
 
+        $frontendAnimation = (int)QUI\ERP\Products\Utils\Package::getConfig()->get(
+            'products',
+            'frontendAnimationDuration'
+        );
+
+
         $header = '<script type="text/javascript">';
         $header .= 'var QUIQQER_PRODUCTS_HIDE_PRICE = '.$hide.';';
+        $header .= 'var QUIQQER_PRODUCTS_FRONTEND_ANIMATION = '.$frontendAnimation.';';
         $header .= '</script>';
 
         $TemplateManager->extendHeader($header);
