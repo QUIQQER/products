@@ -493,7 +493,10 @@ class Model extends QUI\QDOM
         $cacheName .= '/'.$Project->getLang();
 
         try {
-            return QUI\Cache\Manager::get($cacheName);
+            $url = QUI\Cache\Manager::get($cacheName);
+            $url = \parse_url($url, PHP_URL_PATH);
+
+            return $url;
         } catch (QUI\Exception $Exception) {
         }
 
