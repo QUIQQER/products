@@ -37,7 +37,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
     var lg                = 'quiqqer/products';
     var productOpened     = false;
-    var animationDuration = 10;
+    var animationDuration = 300;
+
+    if (typeof window.QUIQQER_PRODUCTS_FRONTEND_ANIMATION !== 'undefined') {
+        animationDuration = window.QUIQQER_PRODUCTS_FRONTEND_ANIMATION;
+    }
 
     // history popstate for mootools
     Element.NativeEvents.popstate = 2;
