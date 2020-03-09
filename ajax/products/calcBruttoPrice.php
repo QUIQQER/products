@@ -33,7 +33,7 @@ QUI::$Ajax->registerFunction(
             return Calc::calcBruttoPrice($price, $formatted, $productId);
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
-            throw new Exception(['quiqqer/products', 'ajax.general_error']);
+            throw new \QUI\ERP\Exception(['quiqqer/products', 'ajax.general_error']);
         }
     },
     ['price', 'formatted', 'productId']
