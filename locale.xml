@@ -132,6 +132,22 @@
             <de><![CDATA[Rabatte nicht anzeigen]]></de>
             <en><![CDATA[Hide discounts]]></en>
         </locale>
+        <locale name="settings.window.products.frontendAnimationDuration">
+            <de><![CDATA[Animationsdauer im Frontend]]></de>
+            <en><![CDATA[Animation duration in the frontend]]></en>
+        </locale>
+        <locale name="settings.window.products.frontendAnimationDuration.description">
+            <de><![CDATA[
+            Bestimme die Dauer der Animationen im Frontend. Die Animationsdauer wird in ms (Milisekunden) angegeben.
+            Die standard Animationsdauert beträgt 300ms.
+            Möchtest du eine schnelle kurze Animationen, empfiehlt sich eine Animsationsdauer unter 300ms.
+            ]]></de>
+            <en><![CDATA[
+            Determine the duration of the animations in the frontend. The animation duration is specified in ms (miliseconds).
+            The default animation duration is 300ms.
+            If you want a fast short animation, we recommend an animation duration of less than 300ms.
+            ]]></en>
+        </locale>
         <locale name="settings.window.products.usePermissions">
             <de><![CDATA[Produkt Rechte aktivieren]]></de>
             <en><![CDATA[Activate product permissions]]></en>

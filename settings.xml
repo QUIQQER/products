@@ -13,6 +13,10 @@
                 <conf name="hideDiscounts">
                     <type><![CDATA[bool]]></type>
                 </conf>
+                <conf name="frontendAnimationDuration">
+                    <type><![CDATA[integer]]></type>
+                    <defaultvalue>300</defaultvalue>
+                </conf>
                 <conf name="mainCategory">
                     <type><![CDATA[integer]]></type>
                 </conf>
@@ -114,6 +118,17 @@
                             <text>
                                 <locale group="quiqqer/products" var="settings.window.products.hideDiscounts"/>
                             </text>
+                        </input>
+
+                        <input conf="products.frontendAnimationDuration" type="text">
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.frontendAnimationDuration"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.frontendAnimationDuration.description"/>
+                            </description>
                         </input>
 
                         <input conf="products.usePermissions" type="checkbox">
