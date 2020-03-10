@@ -715,6 +715,7 @@ abstract class Search extends QUI\QDOM
             case 'tags':
             case 'c_date':
             case 'e_date':
+            case 'description':
                 $order .= ' '.$searchParams['sortOn'];
                 break;
 

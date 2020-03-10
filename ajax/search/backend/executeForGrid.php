@@ -1,9 +1,5 @@
 <?php
 
-/**
- * This file contains package_quiqqer_products_ajax_search_backend_executeForGrid
- */
-
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Utils\Tables;
 
@@ -59,6 +55,14 @@ QUI::$Ajax->registerFunction(
         }
 
         $currencyCode = QUI\ERP\Currency\Handler::getDefaultCurrency()->getCode();
+
+        // sort $result as $productIds
+        \usort($result, function ($rowA, $rowB) use ($productIds) {
+            $keyA = \array_search($rowA['id'], $productIds);
+            $keyB = \array_search($rowB['id'], $productIds);
+
+            return $keyA - $keyB;
+        });
 
         foreach ($result as $row) {
             $product = [
