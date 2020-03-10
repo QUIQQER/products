@@ -243,6 +243,9 @@ define('package/quiqqer/products/bin/controls/products/search/Form', [
                     case 'productNo':
                     case 'title':
                     case 'priority':
+                    case 'description':
+                    case 'c_date':
+                    case 'e_date':
                         sortOn = this.getAttribute('sortOn');
                         break;
 
