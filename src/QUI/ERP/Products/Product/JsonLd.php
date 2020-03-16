@@ -14,7 +14,7 @@ use QUI\ERP\Products\Product\Types\VariantParent;
  * @todo ProductVariant
  * @todo consider stock
  * @todo consider offer price date -> $offers["priceValidUntil"]
- * @todo use product cache
+ * @todo use cache -> consider price permissions
  */
 class JsonLd
 {
