@@ -14,6 +14,7 @@ use QUI\ERP\Products\Product\Types\VariantParent;
  * @todo ProductVariant
  * @todo consider stock
  * @todo consider offer price date -> $offers["priceValidUntil"]
+ * @todo use cache -> consider price permissions
  */
 class JsonLd
 {
@@ -62,6 +63,8 @@ class JsonLd
         ];
 
         $json = \array_merge($json, self::getSKU($Product));
+        $json = \array_merge($json, self::getGTIN($Product));
+        $json = \array_merge($json, self::getBrand($Product));
         $json = \array_merge($json, self::getImages($Product));
         $json = \array_merge($json, self::getOffer($Product, $Locale));
 
@@ -79,6 +82,48 @@ class JsonLd
                 QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO
             )
         ];
+    }
+
+    /**
+     * @param ProductInterface $Product
+     * @return array
+     */
+    protected static function getGTIN(ProductInterface $Product)
+    {
+        return [
+            'gtin' => $Product->getFieldValue(
+                QUI\ERP\Products\Handler\Fields::FIELD_EAN
+            )
+        ];
+    }
+
+    /**
+     * @param ProductInterface $Product
+     * @return array
+     */
+    protected static function getBrand(ProductInterface $Product)
+    {
+        $brandEntries = $Product->getFieldValue(
+            QUI\ERP\Products\Handler\Fields::FIELD_MANUFACTURER
+        );
+
+        if (empty($brandEntries)) {
+            return [];
+        }
+
+        $uid = $brandEntries[0];
+
+        try {
+            $User = QUI::getUsers()->get($uid);
+
+            return [
+                'brand' => $User->getName()
+            ];
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addDebug($Exception->getMessage());
+        }
+
+        return [];
     }
 
     /**
@@ -131,6 +176,10 @@ class JsonLd
      */
     protected static function getOffer(ProductInterface $Product, $Locale = null)
     {
+        if (QUI\ERP\Products\Utils\Package::hidePrice()) {
+            return [];
+        }
+
         $Formatter = new \NumberFormatter('en_EN', \NumberFormatter::CURRENCY);
         $Formatter->setSymbol(\NumberFormatter::CURRENCY_SYMBOL, '');
 

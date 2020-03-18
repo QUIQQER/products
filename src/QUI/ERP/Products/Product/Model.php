@@ -536,12 +536,12 @@ class Model extends QUI\QDOM
             }
         }
 
-        if (!isset($Site)) {
+        if (!isset($Site) && isset($sites[0])) {
             $Site = $sites[0];
-        };
+        }
 
-
-        if ($Site->getAttribute('quiqqer.products.fake.type') ||
+        if (!isset($Site) ||
+            $Site->getAttribute('quiqqer.products.fake.type') ||
             $Site->getAttribute('type') !== 'quiqqer/products:types/category'
             && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
         ) {
