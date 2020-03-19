@@ -86,4 +86,12 @@ class SearchQueryCollector
     {
         return $this->searchParams;
     }
+
+    /**
+     * @param array $searchParams
+     */
+    public function setSearchParams(array $searchParams)
+    {
+        $this->searchParams = $searchParams;
+    }
 }
