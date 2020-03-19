@@ -111,7 +111,7 @@ class FrontendSearch extends Search
             SearchHandler::PERMISSION_FRONTEND_EXECUTE
         );
 
-        $SearchQueryCollector = new SearchQueryCollector($searchParams);
+        $SearchQueryCollector = new SearchQueryCollector($this, $searchParams);
         QUI::getEvents()->fireEvent('quiqqerProductsFrontendSearchExecute', [$SearchQueryCollector]);
 
         // Get search params that may have been modified during quiqqerProductsFrontendSearchStart event
@@ -390,10 +390,6 @@ class FrontendSearch extends Search
 //            }
 //        }
 
-        \QUI\System\Log::writeRecursive($searchParams);
-        \QUI\System\Log::writeRecursive($sql);
-        \QUI\System\Log::writeRecursive($binds);
-
         $Stmt = $PDO->prepare($sql);
 
         // bind search values
@@ -467,9 +463,9 @@ class FrontendSearch extends Search
 
             $searchParams['ignoreFindVariantParentsByChildValues'] = true;
 
-            if ($countOnly) {
-                return self::search($searchParams, $countOnly);
-            }
+//            if ($countOnly) {
+//                return self::search($searchParams, $countOnly);
+//            }
 
             $productIds = array_merge(
                 $productIds,
