@@ -1,0 +1,31 @@
+<ul>
+    {foreach $result as $productId}
+        {assign var=Product value=\QUI\ERP\Products\Handler\Products::getProduct($productId)}
+
+        <li data-url="{$Product->getUrl()}">
+            <div class="quiqqer-products-search-suggest-dropdown-icon">
+                <img src="{$Product->getImage()->getSizeCacheUrl(100, 100)}" />
+            </div>
+
+            <div class="quiqqer-products-search-suggest-dropdown-text">
+                <div class="quiqqer-products-search-suggest-dropdown-title">
+                    {$Product->getTitle($Locale)}
+                </div>
+                <div class="quiqqer-products-search-suggest-dropdown-description">
+                    {$Product->getDescription($Locale)}
+                </div>
+            </div>
+
+            {assign var=articleNo value=$Product->getFieldValueByLocale(\QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO, $Locale)}
+
+            {if !empty($articleNo)}
+                <div class="quiqqer-products-search-suggest-dropdown-description-articlNo">
+                    <span>
+                        {locale group="quiqqer/products" var="productNo"}:
+                    </span>
+                    {$articleNo}
+                </div>
+            {/if}
+        </li>
+    {/foreach}
+</ul>

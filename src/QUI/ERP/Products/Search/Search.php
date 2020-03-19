@@ -546,7 +546,7 @@ abstract class Search extends QUI\QDOM
                         break;
                     }
 
-                    if (!\is_string($value)) {
+                    if (!\is_string($value) && !\is_numeric($value)) {
                         throw new Exception([
                             'quiqqer/products',
                             'exception.search.value.invalid',
