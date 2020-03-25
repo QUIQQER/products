@@ -12,6 +12,7 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Product\Cache\ProductCache;
 use QUI\ERP\Products\Utils\Products as ProductUtils;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
 
@@ -298,9 +299,9 @@ class Model extends QUI\QDOM
             $User->getId()
         ]));
 
-        try {
-            $attributes = QUI\Cache\Manager::get($cacheName);
-        } catch (QUI\Exception $Exception) {
+        if (isset(ProductCache::$uniqueProduct[$cacheName])) {
+            $attributes = ProductCache::$uniqueProduct[$cacheName];
+        } else {
             $attributes                    = $this->getAttributes();
             $attributes['title']           = $this->getTitle($Locale);
             $attributes['description']     = $this->getDescription($Locale);
@@ -335,7 +336,7 @@ class Model extends QUI\QDOM
                 $attributes['fields'] = $fields;
             }
 
-            QUI\Cache\Manager::set($cacheName, $attributes);
+            ProductCache::$uniqueProduct[$cacheName] = $attributes;
         }
 
         QUI::getEvents()->fireEvent('quiqqerProductsToUniqueProduct', [$this, &$attributes]);
