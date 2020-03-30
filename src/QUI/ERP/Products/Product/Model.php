@@ -289,19 +289,24 @@ class Model extends QUI\QDOM
             $User = QUI::getUsers()->getNobody();
         }
 
-        $Locale    = $User->getLocale();
-        $fieldList = $this->getFields();
+        $Locale     = $User->getLocale();
+        $fieldList  = $this->getFields();
+        $attributes = false;
 
-        $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/';
-        $cacheName .= \md5(\serialize([
-            $Locale->getCurrent(),
-            \serialize($fieldList),
-            $User->getId()
-        ]));
+        if (Products::$useRuntimeCacheForUniqueProducts) {
+            $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/';
+            $cacheName .= \md5(\serialize([
+                $Locale->getCurrent(),
+                \serialize($fieldList),
+                $User->getId()
+            ]));
 
-        if (isset(ProductCache::$uniqueProduct[$cacheName])) {
-            $attributes = ProductCache::$uniqueProduct[$cacheName];
-        } else {
+            if (isset(ProductCache::$uniqueProduct[$cacheName])) {
+                $attributes = ProductCache::$uniqueProduct[$cacheName];
+            }
+        }
+
+        if ($attributes === false) {
             $attributes                    = $this->getAttributes();
             $attributes['title']           = $this->getTitle($Locale);
             $attributes['description']     = $this->getDescription($Locale);
@@ -335,7 +340,9 @@ class Model extends QUI\QDOM
             if (!empty($fields)) {
                 $attributes['fields'] = $fields;
             }
+        }
 
+        if (Products::$useRuntimeCacheForUniqueProducts) {
             ProductCache::$uniqueProduct[$cacheName] = $attributes;
         }
 
