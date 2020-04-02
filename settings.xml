@@ -390,9 +390,9 @@
         <window name="quiqqer-cache">
             <categories>
                 <category>
-                    <text>
+                    <title>
                         <locale group="quiqqer/products" var="menu.erp.products.products.title"/>
-                    </text>
+                    </title>
                     <icon>fa fa-shopping-bag</icon>
 
                     <settings title="products" name="products">
