@@ -792,6 +792,11 @@ class EventHandling
             $url = \str_replace(QUI\Rewrite::URL_DEFAULT_SUFFIX, '', $url);
 
             QUI::getRewrite()->registerPath($url.'/*', $Site);
+
+            // Clear category menu cache
+            QUI\Cache\Manager::clear(
+                QUI\ERP\Products\Handler\Cache::getBasicCachePath().'categories/menu'
+            );
         }
 
         // cache clearing
