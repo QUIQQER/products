@@ -158,14 +158,6 @@
                             </description>
                         </input>
 
-                        <input type="hidden"
-                               data-qui="package/quiqqer/products/bin/controls/products/settings/ClearProductCache"
-                        >
-                            <text>
-                                <locale group="quiqqer/products" var="settings.window.products.clearcache"/>
-                            </text>
-                        </input>
-
                         <select conf="products.resetFieldsAction">
                             <option value="0">
                                 <locale group="quiqqer/products"
@@ -393,7 +385,30 @@
                     </settings>
                 </category>
             </categories>
+        </window>
 
+        <window name="quiqqer-cache">
+            <categories>
+                <category>
+                    <title>
+                        <locale group="quiqqer/products" var="menu.erp.products.products.title"/>
+                    </title>
+                    <icon>fa fa-shopping-bag</icon>
+
+                    <settings title="products" name="products">
+                        <title>
+                            <locale group="quiqqer/products" var="menu.erp.products.products.title"/>
+                        </title>
+                        <input type="hidden"
+                               data-qui="package/quiqqer/products/bin/controls/products/settings/ClearProductCache"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.products.clearcache"/>
+                            </text>
+                        </input>
+                    </settings>
+                </category>
+            </categories>
         </window>
 
     </settings>
