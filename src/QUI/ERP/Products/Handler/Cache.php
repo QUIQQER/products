@@ -50,6 +50,10 @@ class Cache
     public static function clearProductFrontendCache($productId)
     {
         QUI\Cache\Manager::clear(
+            self::getProductCachePath($productId)
+        );
+        
+        QUI\Cache\Manager::clear(
             self::frontendProductCacheName($productId)
         );
     }

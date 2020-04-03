@@ -12,6 +12,7 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Product\Cache\ProductCache;
 use QUI\ERP\Products\Utils\Products as ProductUtils;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
 
@@ -288,19 +289,24 @@ class Model extends QUI\QDOM
             $User = QUI::getUsers()->getNobody();
         }
 
-        $Locale    = $User->getLocale();
-        $fieldList = $this->getFields();
+        $Locale     = $User->getLocale();
+        $fieldList  = $this->getFields();
+        $attributes = false;
 
-        $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/';
-        $cacheName .= \md5(\serialize([
-            $Locale->getCurrent(),
-            \serialize($fieldList),
-            $User->getId()
-        ]));
+        if (Products::$useRuntimeCacheForUniqueProducts) {
+            $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/';
+            $cacheName .= \md5(\serialize([
+                $Locale->getCurrent(),
+                \serialize($fieldList),
+                $User->getId()
+            ]));
 
-        try {
-            $attributes = QUI\Cache\Manager::get($cacheName);
-        } catch (QUI\Exception $Exception) {
+            if (isset(ProductCache::$uniqueProduct[$cacheName])) {
+                $attributes = ProductCache::$uniqueProduct[$cacheName];
+            }
+        }
+
+        if ($attributes === false) {
             $attributes                    = $this->getAttributes();
             $attributes['title']           = $this->getTitle($Locale);
             $attributes['description']     = $this->getDescription($Locale);
@@ -334,8 +340,10 @@ class Model extends QUI\QDOM
             if (!empty($fields)) {
                 $attributes['fields'] = $fields;
             }
+        }
 
-            QUI\Cache\Manager::set($cacheName, $attributes);
+        if (Products::$useRuntimeCacheForUniqueProducts) {
+            ProductCache::$uniqueProduct[$cacheName] = $attributes;
         }
 
         QUI::getEvents()->fireEvent('quiqqerProductsToUniqueProduct', [$this, &$attributes]);

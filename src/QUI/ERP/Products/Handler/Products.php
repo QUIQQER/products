@@ -59,6 +59,16 @@ class Products
     public static $fireEventsOnProductSave = true;
 
     /**
+     * This global flag determines if UniqueProduct data is cached in the RAM during runtime
+     *
+     * The intention is to disable expensive caching operations in a context where a lot of Product
+     * objects are processed in a short time (i.e. mass imports).
+     *
+     * @var bool
+     */
+    public static $useRuntimeCacheForUniqueProducts = true;
+
+    /**
      * This enables the caching flag, equal if quiqqer is in frontend or backend
      *
      * @var bool
@@ -1048,6 +1058,30 @@ class Products
     public static function disableGlobalProductSearchCacheUpdate()
     {
         self::$updateProductSearchCache = false;
+    }
+
+    /**
+     * ENABLE: Caching of UniqueProduct data during runtime
+     *
+     * For futher information see documentation of self::$useRuntimeCacheForUniqueProducts
+     *
+     * @return void
+     */
+    public static function enableRuntimeCacheForUniqueProducts()
+    {
+        self::$useRuntimeCacheForUniqueProducts = true;
+    }
+
+    /**
+     * DISABLE: Caching of UniqueProduct data during runtime
+     *
+     * For futher information see documentation of self::$useRuntimeCacheForUniqueProducts
+     *
+     * @return void
+     */
+    public static function disableRuntimeCacheForUniqueProducts()
+    {
+        self::$useRuntimeCacheForUniqueProducts = false;
     }
 
     //endregion
