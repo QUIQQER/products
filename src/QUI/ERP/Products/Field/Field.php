@@ -355,7 +355,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         );
 
         // clear field cache
-        QUI\Cache\Manager::clear('quiqqer/products/fields');
+        QUI\Cache\LongTermCache::clear('quiqqer/products/fields');
 
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsFieldSave', [$this]);
@@ -436,7 +436,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         );
 
         // delete cache
-        QUI\Cache\Manager::clear(
+        QUI\Cache\LongTermCache::clear(
             Fields::getFieldCacheName($this->getId())
         );
 
@@ -509,7 +509,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
 
         // delete cache
-        QUI\Cache\Manager::clear(
+        QUI\Cache\LongTermCache::clear(
             Fields::getFieldCacheName($this->getId())
         );
 

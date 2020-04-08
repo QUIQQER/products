@@ -169,7 +169,7 @@ class Products
         // check if serialize product exists
         //if (QUI::isFrontend()) { // -> mor wollte dies raus haben
         try {
-            $product          = QUI\Cache\Manager::get('quiqqer/products/'.$pid.'/db-data');
+            $product          = QUI\Cache\LongTermCache::get('quiqqer/products/'.$pid.'/db-data');
             self::$list[$pid] = self::getProductByDataResult($pid, $product);
 
             return self::$list[$pid];
@@ -308,9 +308,9 @@ class Products
 
         if (QUI::isFrontend() || self::$createFrontendCache) {
             try {
-                QUI\Cache\Manager::get('quiqqer/products/'.$pid.'/db-data');
+                QUI\Cache\LongTermCache::get('quiqqer/products/'.$pid.'/db-data');
             } catch (QUI\Exception $Exception) {
-                QUI\Cache\Manager::set(
+                QUI\Cache\LongTermCache::set(
                     Cache::getProductCachePath($pid).'/db-data',
                     $result[0]
                 );

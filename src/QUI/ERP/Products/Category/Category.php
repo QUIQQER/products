@@ -286,7 +286,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         $cacheFields = Categories::getCacheName($this->getId()).'/fields';
 
         try {
-            $fields = QUI\Cache\Manager::get($cacheFields);
+            $fields = QUI\Cache\LongTermCache::get($cacheFields);
         } catch (QUI\Cache\Exception $Exception) {
             $fields    = [];
             $fieldList = $this->getFields();
@@ -296,11 +296,11 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                 $fields[] = $Field->getAttributes();
             }
 
-            QUI\Cache\Manager::set($cacheFields, $fields);
+            QUI\Cache\LongTermCache::set($cacheFields, $fields);
         }
 
         try {
-            $attributes = QUI\Cache\Manager::get($cacheName);
+            $attributes = QUI\Cache\LongTermCache::get($cacheName);
         } catch (QUI\Cache\Exception $Exception) {
             $attributes       = parent::getAttributes();
             $attributes['id'] = $this->getId();
@@ -309,7 +309,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             //$attributes['sites']         = $this->getSites();
             $attributes['parent'] = $this->getParentId();
 
-            QUI\Cache\Manager::set($cacheName, $attributes);
+            QUI\Cache\LongTermCache::set($cacheName, $attributes);
         }
 
         $attributes['title']       = $this->getTitle();
@@ -418,7 +418,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         $cacheName .= '/'.$Project->getLang();
 
         try {
-            $siteParams = QUI\Cache\Manager::get($cacheName);
+            $siteParams = QUI\Cache\LongTermCache::get($cacheName);
             $Site       = $Project->get($siteParams['id']);
         } catch (QUI\Exception $Exception) {
             $sites = $this->getSites($Project);
@@ -436,7 +436,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                 $Site = $Project->firstChild();
             }
 
-            QUI\Cache\Manager::set($cacheName, [
+            QUI\Cache\LongTermCache::set($cacheName, [
                 'project' => $Project->getName(),
                 'lang'    => $Project->getLang(),
                 'id'      => $Site->getId()
@@ -523,7 +523,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     {
         try {
             $result = [];
-            $cache  = QUI\Cache\Manager::get($this->getSiteCacheName());
+            $cache  = QUI\Cache\LongTermCache::get($this->getSiteCacheName());
 
             foreach ($cache as $siteUrl) {
                 try {
@@ -589,7 +589,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             $cache[] = $Site->getUrl();
         }
 
-        QUI\Cache\Manager::set($this->getSiteCacheName(), $cache);
+        QUI\Cache\LongTermCache::set($this->getSiteCacheName(), $cache);
 
 
         return $this->sites;
