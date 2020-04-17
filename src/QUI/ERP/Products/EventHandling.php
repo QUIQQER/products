@@ -1091,8 +1091,6 @@ class EventHandling
      */
     public static function onFrontendCacheClear()
     {
-        QUI\Cache\LongTermCache::clear(
-            QUI\ERP\Products\Handler\Cache::frontendCacheName()
-        );
+        QUI\Cache\LongTermCache::clear('quiqqer/product/frontend');
     }
 }
