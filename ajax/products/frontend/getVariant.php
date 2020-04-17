@@ -27,7 +27,7 @@ QUI::$Ajax->registerFunction(
         // caching only if prices are hidden
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             try {
-                return QUI\Cache\Manager::get($cacheName);
+                return QUI\Cache\LongTermCache::get($cacheName);
             } catch (QUI\Exception $Exception) {
             }
         }
@@ -137,7 +137,7 @@ QUI::$Ajax->registerFunction(
         ];
 
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
-            QUI\Cache\Manager::set($cacheName, $result);
+            QUI\Cache\LongTermCache::set($cacheName, $result);
         }
 
         return $result;

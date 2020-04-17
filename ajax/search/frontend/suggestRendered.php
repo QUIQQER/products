@@ -93,52 +93,21 @@ QUI::$Ajax->registerFunction(
             return $html;
         }
 
-        $User   = QUI::getUserBySession();
-        $Locale = $User->getLocale();
-        $html   = '<ul>';
+        $User = QUI::getUserBySession();
 
-        // @todo template daraus bauen
-        foreach ($result as $productId) {
-            try {
-                $Product   = Products::getProduct($productId);
-                $Image     = $Product->getImage();
-                $ArticleNo = $Product->getField(\QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO);
-                $articleNo = $ArticleNo->getValueByLocale($Locale);
-                $url       = $Product->getUrl();
+        try {
+            $Engine = QUI::getTemplateManager()->getEngine();
+            
+            $Engine->assign([
+                'result' => $result,
+                'Locale' => $User->getLocale()
+            ]);
 
-                $html .= '<li data-url="'.$url.'">';
-
-                $html .= '<div class="quiqqer-products-search-suggest-dropdown-icon">';
-                $html .= '<img src="'.$Image->getSizeCacheUrl(100, 100).'" />';
-                $html .= '</div>';
-
-                $html .= '<div class="quiqqer-products-search-suggest-dropdown-text">';
-                $html .= '<div class="quiqqer-products-search-suggest-dropdown-title">';
-                $html .= $Product->getTitle($Locale);
-                $html .= '</div>';
-
-                $html .= '<div class="quiqqer-products-search-suggest-dropdown-description">';
-                $html .= $Product->getDescription($Locale);
-
-                if (!empty($articleNo)) {
-                    $html .= '<div class="quiqqer-products-search-suggest-dropdown-description-articlNo">';
-                    $html .= '<span>';
-                    $html .= $Locale->get('quiqqer/products', 'productNo');
-                    $html .= ':</span>';
-                    $html .= $ArticleNo->getValueByLocale($Locale);
-                    $html .= '</div>';
-                }
-                $html .= '</div>';
-                $html .= '</div>';
-
-                $html .= '</li>';
-            } catch (QUI\ERP\Products\Product\Exception $Exception) {
-            }
+            return $Engine->fetch(OPT_DIR.'quiqqer/products/template/search/frontend/SuggestRendered.html');
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            return '';
         }
-
-        $html .= '</ul>';
-
-        return $html;
     },
     ['project', 'siteId', 'searchParams', 'globalsearch']
 );

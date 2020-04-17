@@ -26,7 +26,7 @@ class ProductTypes extends Singleton
         $cache = QUI\ERP\Products\Handler\Cache::getBasicCachePath().'types';
 
         try {
-            return QUI\Cache\Manager::get($cache);
+            return QUI\Cache\LongTermCache::get($cache);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
         }
@@ -52,7 +52,7 @@ class ProductTypes extends Singleton
             }
         }
 
-        QUI\Cache\Manager::set($cache, $provider);
+        QUI\Cache\LongTermCache::set($cache, $provider);
 
         return $provider;
     }

@@ -111,10 +111,17 @@ class FrontendSearch extends Search
             SearchHandler::PERMISSION_FRONTEND_EXECUTE
         );
 
-        $searchTerm                      = false;
-        $PDO                             = QUI::getDataBase()->getPDO();
-        $binds                           = [];
-        $where                           = [];
+        $SearchQueryCollector = new SearchQueryCollector($this, $searchParams);
+        QUI::getEvents()->fireEvent('quiqqerProductsFrontendSearchExecute', [$SearchQueryCollector]);
+
+        // Get search params that may have been modified during quiqqerProductsFrontendSearchStart event
+        $searchParams = $SearchQueryCollector->getSearchParams();
+
+        $searchTerm = false;
+        $PDO        = QUI::getDataBase()->getPDO();
+        $binds      = [];
+        $where      = [];
+
         $findVariantParentsByChildValues = empty($searchParams['ignoreFindVariantParentsByChildValues'])
                                            && !!(int)QUI::getPackage('quiqqer/products')
                 ->getConfig()
@@ -303,9 +310,6 @@ class FrontendSearch extends Search
         }
 
         // Add WHERE statements via event
-        $SearchQueryCollector = new SearchQueryCollector($searchParams);
-        QUI::getEvents()->fireEvent('quiqqerProductsFrontendSearchExecute', [$SearchQueryCollector]);
-
         $where = array_merge($SearchQueryCollector->getWhereStatements(), $where);
         $binds = array_merge($SearchQueryCollector->getBinds(), $binds);
 
@@ -459,9 +463,9 @@ class FrontendSearch extends Search
 
             $searchParams['ignoreFindVariantParentsByChildValues'] = true;
 
-            if ($countOnly) {
-                return self::search($searchParams, $countOnly);
-            }
+//            if ($countOnly) {
+//                return self::search($searchParams, $countOnly);
+//            }
 
             $productIds = array_merge(
                 $productIds,
