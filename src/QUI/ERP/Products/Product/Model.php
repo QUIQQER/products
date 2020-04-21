@@ -2008,6 +2008,17 @@ class Model extends QUI\QDOM
         } catch (QUI\Exception $Exception) {
         }
 
+        try {
+            $Project     = QUI::getProjectManager()->getStandard();
+            $Media       = $Project->getMedia();
+            $Placeholder = $Media->getPlaceholderImage();
+
+            if ($Placeholder) {
+                return $Placeholder;
+            }
+        } catch (QUI\Exception $Exception) {
+        }
+
         throw new QUI\ERP\Products\Product\Exception([
             'quiqqer/products',
             'exception.product.no.image',
