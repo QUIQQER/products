@@ -352,7 +352,7 @@ class Calc
                 continue;
             }
 
-            if (!isset($vatArray[$vatValue])) {
+            if (!isset($vatArray[$vatValue]) && $Vat) {
                 $vatArray[$vatValue] = [
                     'vat'     => $vatValue,
                     'text'    => ErpCalc::getVatText($Vat->getValue(), $this->getUser(), $Locale),

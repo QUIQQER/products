@@ -294,12 +294,7 @@ class Model extends QUI\QDOM
         $attributes = false;
 
         if (Products::$useRuntimeCacheForUniqueProducts) {
-            $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/';
-            $cacheName .= \md5(\serialize([
-                $Locale->getCurrent(),
-                \serialize($fieldList),
-                $User->getId()
-            ]));
+            $cacheName = self::getUniqueProductCachePath($User);
 
             if (isset(ProductCache::$uniqueProduct[$cacheName])) {
                 $attributes = ProductCache::$uniqueProduct[$cacheName];
@@ -349,6 +344,40 @@ class Model extends QUI\QDOM
         QUI::getEvents()->fireEvent('quiqqerProductsToUniqueProduct', [$this, &$attributes]);
 
         return new UniqueProduct($this->getId(), $attributes);
+    }
+
+    /**
+     * Clear cache for unique version of this product of $User
+     *
+     * @param QUI\Interfaces\Users\User $User
+     * @return void
+     */
+    public function clearUniqueProductCache(QUI\Interfaces\Users\User $User)
+    {
+        $cacheName = self::getUniqueProductCachePath($User);
+
+        if (isset(ProductCache::$uniqueProduct[$cacheName])) {
+            unset(ProductCache::$uniqueProduct[$cacheName]);
+        }
+    }
+
+    /**
+     * Get cache path for the unique version of this product for $User
+     *
+     * @param QUI\Interfaces\Users\User $User
+     * @return string
+     */
+    protected function getUniqueProductCachePath(QUI\Interfaces\Users\User $User)
+    {
+        $Locale    = $User->getLocale();
+        $fieldList = $this->getFields();
+        $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/';
+
+        return $cacheName.\md5(\serialize([
+                $Locale->getCurrent(),
+                \serialize($fieldList),
+                $User->getId()
+            ]));
     }
 
     /**
@@ -1999,6 +2028,17 @@ class Model extends QUI\QDOM
 
         try {
             $Project     = QUI::getRewrite()->getProject();
+            $Media       = $Project->getMedia();
+            $Placeholder = $Media->getPlaceholderImage();
+
+            if ($Placeholder) {
+                return $Placeholder;
+            }
+        } catch (QUI\Exception $Exception) {
+        }
+
+        try {
+            $Project     = QUI::getProjectManager()->getStandard();
             $Media       = $Project->getMedia();
             $Placeholder = $Media->getPlaceholderImage();
 
