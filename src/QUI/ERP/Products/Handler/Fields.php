@@ -536,7 +536,7 @@ class Fields
      */
     public static function getFieldCacheName($fieldId)
     {
-        return 'quiqqer/products/fields/field/'.$fieldId.'/';
+        return Cache::getBasicCachePath().'fields/field/'.$fieldId.'/';
     }
 
     /**
