@@ -79,7 +79,7 @@ class GenerateProductCache extends QUI\System\Console\Tool
             // check cache, if no rebuild is set
             if (!$this->getArgument('rebuild')) {
                 try {
-                    QUI\Cache\LongTermCache::get('quiqqer/products/'.$productId);
+                    QUI\Cache\LongTermCache::get(QUI\ERP\Products\Handler\Cache::getProductCachePath($productId));
                     continue;
                 } catch (QUI\Exception $Exception) {
                 }

@@ -167,9 +167,11 @@ class Products
         }
 
         // check if serialize product exists
+        $cachePath = Cache::getProductCachePath($pid).'/db-data';
+
         //if (QUI::isFrontend()) { // -> mor wollte dies raus haben
         try {
-            $product          = QUI\Cache\LongTermCache::get('quiqqer/products/'.$pid.'/db-data');
+            $product          = QUI\Cache\LongTermCache::get($cachePath);
             self::$list[$pid] = self::getProductByDataResult($pid, $product);
 
             return self::$list[$pid];
@@ -306,18 +308,19 @@ class Products
             );
         }
 
+        $productData = $result[0];
+
         if (QUI::isFrontend() || self::$createFrontendCache) {
+            $cachePath = Cache::getProductCachePath($pid).'/db-data';
+
             try {
-                QUI\Cache\LongTermCache::get('quiqqer/products/'.$pid.'/db-data');
+                QUI\Cache\LongTermCache::get($cachePath);
             } catch (QUI\Exception $Exception) {
-                QUI\Cache\LongTermCache::set(
-                    Cache::getProductCachePath($pid).'/db-data',
-                    $result[0]
-                );
+                QUI\Cache\LongTermCache::set($cachePath, $productData);
             }
         }
 
-        return self::getProductByDataResult($pid, $result[0]);
+        return self::getProductByDataResult($pid, $productData);
     }
 
     /**
