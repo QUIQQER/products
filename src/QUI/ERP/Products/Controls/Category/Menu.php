@@ -47,7 +47,7 @@ class Menu extends QUI\Control
         $cache = $this->getCacheName();
 
         try {
-            return QUI\Cache\Manager::get($cache);
+            return QUI\Cache\LongTermCache::get($cache);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
         }
@@ -71,7 +71,7 @@ class Menu extends QUI\Control
 
         $result = $Engine->fetch(\dirname(__FILE__).'/Menu.html');
 
-        QUI\Cache\Manager::set($cache, $result);
+        QUI\Cache\LongTermCache::set($cache, $result);
 
         return $result;
     }

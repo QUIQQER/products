@@ -11,7 +11,7 @@ QUI::$Ajax->registerFunction(
         $cacheName = \QUI\ERP\Products\Handler\Cache::getBasicCachePath().'fields/publicFields';
 
         try {
-            return QUI\Cache\Manager::get($cacheName);
+            return QUI\Cache\LongTermCache::get($cacheName);
         } catch (QUI\Exception $Exception) {
             // nothing
         }
@@ -27,7 +27,7 @@ QUI::$Ajax->registerFunction(
             return $Fields->getField($field['id'])->getAttributes();
         }, $fields);
 
-        QUI\Cache\Manager::set($cacheName, $result);
+        QUI\Cache\LongTermCache::set($cacheName, $result);
 
         return $result;
     },

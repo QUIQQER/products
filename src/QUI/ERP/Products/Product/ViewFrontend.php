@@ -232,13 +232,13 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         $max = null;
 
         try {
-            $min = QUI\Cache\Manager::get($minCache);
+            $min = QUI\Cache\LongTermCache::get($minCache);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
         }
 
         try {
-            $max = QUI\Cache\Manager::get($maxName);
+            $max = QUI\Cache\LongTermCache::get($maxName);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
         }

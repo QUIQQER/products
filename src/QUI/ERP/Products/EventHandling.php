@@ -794,7 +794,7 @@ class EventHandling
             QUI::getRewrite()->registerPath($url.'/*', $Site);
 
             // Clear category menu cache
-            QUI\Cache\Manager::clear(
+            QUI\Cache\LongTermCache::clear(
                 QUI\ERP\Products\Handler\Cache::getBasicCachePath().'categories/menu'
             );
         }

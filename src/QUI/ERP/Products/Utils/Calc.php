@@ -338,6 +338,10 @@ class Calc
                 $vatValue = $Vat->getValue();
             }
 
+            if ($Vat === null) {
+                $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
+            }
+
             $vatSum = $PriceFactor->getNettoSum() * ($vatValue / 100);
 
             $PriceFactor->setVat($vatValue);
@@ -352,7 +356,7 @@ class Calc
                 continue;
             }
 
-            if (!isset($vatArray[$vatValue])) {
+            if (!isset($vatArray[$vatValue]) && $Vat) {
                 $vatArray[$vatValue] = [
                     'vat'     => $vatValue,
                     'text'    => ErpCalc::getVatText($Vat->getValue(), $this->getUser(), $Locale),
@@ -583,20 +587,24 @@ class Calc
 
 
         // MwSt / VAT
-        $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
+        if ($isEuVatUser) {
+            $Vat = new QUI\ERP\Tax\TaxEntryEmpty();
+        } else {
+            $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
 
-        // Wenn Produkt eigene VAT gesetzt hat und diese zum Benutzer passt
-        $ProductVat = $Product->getField(Fields::FIELD_VAT);
+            // Wenn Produkt eigene VAT gesetzt hat und diese zum Benutzer passt
+            $ProductVat = $Product->getField(Fields::FIELD_VAT);
 
-        try {
-            $TaxType  = new QUI\ERP\Tax\TaxType($ProductVat->getValue());
-            $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
-            $Vat      = $TaxEntry;
-        } catch (QUI\Exception $Exception) {
-            QUI\ERP\Debug::getInstance()->log(
-                'Product Vat ist nicht für den Benutzer gültig',
-                'quiqqer/products'
-            );
+            try {
+                $TaxType  = new QUI\ERP\Tax\TaxType($ProductVat->getValue());
+                $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
+                $Vat      = $TaxEntry;
+            } catch (QUI\Exception $Exception) {
+                QUI\ERP\Debug::getInstance()->log(
+                    'Product Vat ist nicht für den Benutzer gültig',
+                    'quiqqer/products'
+                );
+            }
         }
 
         $vatValue   = $Vat->getValue();

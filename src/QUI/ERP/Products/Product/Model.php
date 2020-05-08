@@ -294,12 +294,7 @@ class Model extends QUI\QDOM
         $attributes = false;
 
         if (Products::$useRuntimeCacheForUniqueProducts) {
-            $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/';
-            $cacheName .= \md5(\serialize([
-                $Locale->getCurrent(),
-                \serialize($fieldList),
-                $User->getId()
-            ]));
+            $cacheName = self::getUniqueProductCachePath($User);
 
             if (isset(ProductCache::$uniqueProduct[$cacheName])) {
                 $attributes = ProductCache::$uniqueProduct[$cacheName];
@@ -349,6 +344,40 @@ class Model extends QUI\QDOM
         QUI::getEvents()->fireEvent('quiqqerProductsToUniqueProduct', [$this, &$attributes]);
 
         return new UniqueProduct($this->getId(), $attributes);
+    }
+
+    /**
+     * Clear cache for unique version of this product of $User
+     *
+     * @param QUI\Interfaces\Users\User $User
+     * @return void
+     */
+    public function clearUniqueProductCache(QUI\Interfaces\Users\User $User)
+    {
+        $cacheName = self::getUniqueProductCachePath($User);
+
+        if (isset(ProductCache::$uniqueProduct[$cacheName])) {
+            unset(ProductCache::$uniqueProduct[$cacheName]);
+        }
+    }
+
+    /**
+     * Get cache path for the unique version of this product for $User
+     *
+     * @param QUI\Interfaces\Users\User $User
+     * @return string
+     */
+    protected function getUniqueProductCachePath(QUI\Interfaces\Users\User $User)
+    {
+        $Locale    = $User->getLocale();
+        $fieldList = $this->getFields();
+        $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/';
+
+        return $cacheName.\md5(\serialize([
+                $Locale->getCurrent(),
+                \serialize($fieldList),
+                $User->getId()
+            ]));
     }
 
     /**
@@ -501,7 +530,7 @@ class Model extends QUI\QDOM
         $cacheName .= '/'.$Project->getLang();
 
         try {
-            $url = QUI\Cache\Manager::get($cacheName);
+            $url = QUI\Cache\LongTermCache::get($cacheName);
             $url = \parse_url($url, PHP_URL_PATH);
 
             return $url;
@@ -568,7 +597,7 @@ class Model extends QUI\QDOM
             'paramAsSites' => true
         ]);
 
-        QUI\Cache\Manager::set($cacheName, $url);
+        QUI\Cache\LongTermCache::set($cacheName, $url);
 
         return $url;
     }
@@ -861,7 +890,7 @@ class Model extends QUI\QDOM
         }
 
         try {
-            $data     = QUI\Cache\Manager::get($cacheName);
+            $data     = QUI\Cache\LongTermCache::get($cacheName);
             $Currency = QUI\ERP\Currency\Handler::getCurrency($data['currency']);
 
             return new QUI\ERP\Money\Price($data['price'], $Currency);
@@ -919,7 +948,7 @@ class Model extends QUI\QDOM
         $Result = new QUI\ERP\Money\Price($currentPrice, $Price->getCurrency());
 
         try {
-            QUI\Cache\Manager::set($cacheName, $Result->toArray());
+            QUI\Cache\LongTermCache::set($cacheName, $Result->toArray());
         } catch (\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
         }
@@ -941,7 +970,7 @@ class Model extends QUI\QDOM
         $cacheName     = $baseCacheName.'/prices/max';
 
         try {
-            $data     = QUI\Cache\Manager::get($cacheName);
+            $data     = QUI\Cache\LongTermCache::get($cacheName);
             $Currency = QUI\ERP\Currency\Handler::getCurrency($data['currency']);
 
             return new QUI\ERP\Money\Price($data['price'], $Currency);
@@ -983,7 +1012,7 @@ class Model extends QUI\QDOM
 
         $Result = new QUI\ERP\Money\Price($currentPrice, $Price->getCurrency());
 
-        QUI\Cache\Manager::set($cacheName, $Result->toArray());
+        QUI\Cache\LongTermCache::set($cacheName, $Result->toArray());
 
         return $Result;
     }
@@ -1215,7 +1244,7 @@ class Model extends QUI\QDOM
             $this->updateCache();
         }
 
-        QUI\Cache\Manager::clear('quiqqer/products/'.$this->getId());
+        QUI\Cache\LongTermCache::clear('quiqqer/products/'.$this->getId());
         QUI\ERP\Products\Handler\Cache::clearProductFrontendCache($this->getId());
 
         if (Products::$fireEventsOnProductSave) {
@@ -1241,7 +1270,7 @@ class Model extends QUI\QDOM
                 'limit' => 1
             ]);
 
-            QUI\Cache\Manager::set(
+            QUI\Cache\LongTermCache::set(
                 QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/db-data',
                 $result[0]
             );
@@ -1999,6 +2028,17 @@ class Model extends QUI\QDOM
 
         try {
             $Project     = QUI::getRewrite()->getProject();
+            $Media       = $Project->getMedia();
+            $Placeholder = $Media->getPlaceholderImage();
+
+            if ($Placeholder) {
+                return $Placeholder;
+            }
+        } catch (QUI\Exception $Exception) {
+        }
+
+        try {
+            $Project     = QUI::getProjectManager()->getStandard();
             $Media       = $Project->getMedia();
             $Placeholder = $Media->getPlaceholderImage();
 

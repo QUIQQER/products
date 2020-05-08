@@ -49,11 +49,11 @@ class Cache
      */
     public static function clearProductFrontendCache($productId)
     {
-        QUI\Cache\Manager::clear(
+        QUI\Cache\LongTermCache::clear(
             self::getProductCachePath($productId)
         );
-        
-        QUI\Cache\Manager::clear(
+
+        QUI\Cache\LongTermCache::clear(
             self::frontendProductCacheName($productId)
         );
     }
