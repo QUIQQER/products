@@ -342,6 +342,10 @@ class Calc
                 $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
             }
 
+            if ($isEuVatUser) {
+                $vatValue = 0;
+            }
+
             $vatSum = $PriceFactor->getNettoSum() * ($vatValue / 100);
 
             $PriceFactor->setVat($vatValue);
