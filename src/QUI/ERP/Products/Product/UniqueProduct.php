@@ -1205,8 +1205,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      *
      * @return array
      */
-    protected
-    function getCustomFieldsData()
+    protected function getCustomFieldsData()
     {
         $fields       = $this->getCustomFields();
         $customFields = [];
@@ -1234,8 +1233,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      *
      * @return array
      */
-    protected
-    function getCustomData()
+    protected function getCustomData()
     {
         $data = $this->getAttribute('customData');
 
