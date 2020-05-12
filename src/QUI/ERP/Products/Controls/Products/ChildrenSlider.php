@@ -71,8 +71,8 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
                 $details['Price']       = new QUI\ERP\Products\Controls\Price([
                     'Price' => $Product->getPrice()
                 ]);
+                
                 $details['RetailPrice'] = $this->getRetailPrice($Product);
-
             }
 
             $products[] = $details;
