@@ -128,6 +128,18 @@
             <de><![CDATA[Preise nicht anzeigen]]></de>
             <en><![CDATA[Hide prices]]></en>
         </locale>
+        <locale name="settings.window.products.hidePrices.description">
+            <de><![CDATA[
+            Beachte, diese Einstellung legt fest ob Preise grundlegend nicht angezeigt werden sollen.
+            Durch das Recht `product.view.prices` kann diese Einstellung für Benutzer umgangen werden und Benutzer können
+            trotzdem die Preise sehen. (Hinweis: Super-User besitzen immer das Recht Preise zu sehen)
+            ]]></de>
+            <en><![CDATA[
+            Note that this setting determines whether prices should not be displayed at all.
+            With the permission 'product.view.prices' this setting can be bypassed for users and users can still see the prices.
+            (Note: Super-Users always have the permission to see prices)
+            ]]></en>
+        </locale>
         <locale name="settings.window.products.hideDiscounts">
             <de><![CDATA[Rabatte nicht anzeigen]]></de>
             <en><![CDATA[Hide discounts]]></en>
@@ -2125,7 +2137,8 @@
 
         <!-- Ajax -->
         <locale name="ajax.general_error">
-            <de><![CDATA[Leider ist ein unerwarteter Fehler aufgetreten. Bitte wiederholen Sie den Vorgang oder kontaktieren Sie einen Administrator.]]></de>
+            <de>
+                <![CDATA[Leider ist ein unerwarteter Fehler aufgetreten. Bitte wiederholen Sie den Vorgang oder kontaktieren Sie einen Administrator.]]></de>
             <en><![CDATA[An unexpected error occurred. Please repeat the process or contact an administrator.]]></en>
         </locale>
 

@@ -112,6 +112,9 @@
                             <text>
                                 <locale group="quiqqer/products" var="settings.window.products.hidePrices"/>
                             </text>
+                            <description>
+                                <locale group="quiqqer/products" var="settings.window.products.hidePrices.description"/>
+                            </description>
                         </input>
 
                         <input conf="products.hideDiscounts" type="checkbox">
