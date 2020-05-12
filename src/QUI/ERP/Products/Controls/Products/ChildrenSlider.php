@@ -30,6 +30,11 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
      */
     public function __construct($attributes = [])
     {
+        // default options
+        $this->setAttributes([
+            'showPrices' => true
+        ]);
+
         parent::__construct($attributes);
 
         $this->addCSSFile(
@@ -56,15 +61,21 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
             $this->setAttribute('height', 300);
         }
 
+        /* @var $Product QUI\ERP\Products\Interfaces\ProductInterface */
         foreach ($this->products as $Product) {
-            /* @var $Product QUI\ERP\Products\Interfaces\ProductInterface */
-            $products[] = [
-                'Product'     => $Product,
-                'Price'       => new QUI\ERP\Products\Controls\Price([
-                    'Price' => $Product->getPrice()
-                ]),
-                'RetailPrice' => $this->getRetailPrice($Product)
+            $details = [
+                'Product' => $Product
             ];
+
+            if ($this->getAttribute('showPrices')) {
+                $details['Price']       = new QUI\ERP\Products\Controls\Price([
+                    'Price' => $Product->getPrice()
+                ]);
+                $details['RetailPrice'] = $this->getRetailPrice($Product);
+
+            }
+
+            $products[] = $details;
         }
 
         $Engine->assign([
