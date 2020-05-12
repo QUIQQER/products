@@ -7,8 +7,6 @@
                 {strip}
                 {foreach $products as $Entry}
                     {assign var=Product value=$Entry.Product}
-                    {assign var=Price value=$Entry.Price}
-                    {assign var=RetailPrice value=$Entry.RetailPrice}
                     {assign var=hasImage value=0}
 
                     {if $Product->getImage()}
@@ -37,12 +35,17 @@
                             </a>
                         </header>
 
+                        {if !empty($Entry.Price)}
+                        {assign var=Price value=$Entry.Price}
+                        {assign var=RetailPrice value=$Entry.RetailPrice}
+
                         <div class="quiqqer-products-control-product-childrenslider-entry-price-wrapper">
                             {if $RetailPrice}
                             <div class="quiqqer-products-control-product-childrenslider-entry-price-retailPrice">{$RetailPrice->create()}</div>
                             {/if}
                             <div class="quiqqer-products-control-product-childrenslider-entry-price-regularPrice">{$Product->getPriceDisplay()->create()}</div>
                         </div>
+                        {/if}
 
                         <div class="quiqqer-products-control-product-childrenslider-entry-productButtons">
                             {template_event name="quiqqer::product-event::slider::buttonAddToCart" Product=$Product}
