@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
+use QUI\ERP\Accounting\ArticleInterface;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Handler\Categories;
@@ -1186,6 +1187,16 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $article['displayPrice'] = (bool)$this->getAttribute('displayPrice');
         }
 
+        $class = $this->getAttribute('class');
+
+        if (\class_exists($class)) {
+            $interfaces = \class_implements($class);
+
+            if (isset($interfaces[ArticleInterface::class])) {
+                return new $class($article);
+            }
+        }
+
         return new QUI\ERP\Accounting\Article($article);
     }
 
@@ -1194,7 +1205,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      *
      * @return array
      */
-    protected function getCustomFieldsData()
+    protected
+    function getCustomFieldsData()
     {
         $fields       = $this->getCustomFields();
         $customFields = [];
@@ -1222,7 +1234,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      *
      * @return array
      */
-    protected function getCustomData()
+    protected
+    function getCustomData()
     {
         $data = $this->getAttribute('customData');
 

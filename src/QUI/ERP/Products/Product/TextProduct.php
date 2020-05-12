@@ -28,6 +28,9 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
             'displayPrice' => false
         ]);
 
+        $attributes['vat']                    = 0;
+        $attributes['calculated']['vatArray'] = [];
+
         $this->setAttributes($attributes);
     }
 
@@ -64,6 +67,8 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
             'quiqqerProductsToUniqueProduct',
             [$this, &$attributes]
         );
+
+        $attributes['calculated']['vatArray'] = [];
 
         return new UniqueProduct($this->getId(), $attributes);
     }

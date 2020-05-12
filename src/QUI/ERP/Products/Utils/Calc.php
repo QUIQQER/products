@@ -342,7 +342,7 @@ class Calc
                 $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
             }
 
-            if ($isEuVatUser) {
+            if ($isEuVatUser || $Product->getAttribute('class') === 'QUI\ERP\Accounting\Invoice\Articles\Text') {
                 $vatValue = 0;
             }
 
@@ -591,7 +591,7 @@ class Calc
 
 
         // MwSt / VAT
-        if ($isEuVatUser) {
+        if ($isEuVatUser || $Product->getAttribute('class') === 'QUI\ERP\Accounting\Invoice\Articles\Text') {
             $Vat = new QUI\ERP\Tax\TaxEntryEmpty();
         } else {
             $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
