@@ -648,7 +648,9 @@ class Products
             'fieldData',
             'active',
             'parent',
-            'permissions'
+            'permissions',
+            'e_date',
+            'c_date',
         ];
 
         if (isset($queryParams['where']) &&
