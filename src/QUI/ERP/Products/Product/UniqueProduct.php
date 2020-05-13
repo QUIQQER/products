@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
+use QUI\ERP\Accounting\ArticleInterface;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Handler\Categories;
@@ -1184,6 +1185,16 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         if ($this->existsAttribute('displayPrice')) {
             $article['displayPrice'] = (bool)$this->getAttribute('displayPrice');
+        }
+
+        $class = $this->getAttribute('class');
+
+        if (\class_exists($class)) {
+            $interfaces = \class_implements($class);
+
+            if (isset($interfaces[ArticleInterface::class])) {
+                return new $class($article);
+            }
         }
 
         return new QUI\ERP\Accounting\Article($article);
