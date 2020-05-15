@@ -13,7 +13,7 @@
                         {assign var=hasImage value=1}
                     {/if}
                 <li class="quiqqer-bricks-children-slider-child">
-                    <article class="quiqqer-bricks-children-slider-child-display quiqqer-products-control-product-childrenslider-entry"
+                    <article class="quiqqer-bricks-children-slider-child-display quiqqer-products-control-product-childrenslider-entry {if empty($Entry.Price)}quiqqer-products-control-product-childrenslider-entry__noPrice{/if}"
                         data-pid="{$Product->getId()}"
                     >
                         <div class="quiqqer-products-control-product-childrenslider-entry-image">

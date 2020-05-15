@@ -21,6 +21,10 @@
     flex-shrink: 0;
 }
 
+.quiqqer-products-control-product-childrenslider-entry__noPrice .quiqqer-products-control-product-childrenslider-entry-image {
+    height: 65%;
+}
+
 .quiqqer-products-control-product-childrenslider-entry-image a {
     display: block;
     height: 100%;
