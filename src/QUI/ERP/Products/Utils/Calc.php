@@ -265,56 +265,13 @@ class Calc
         $nettoSubSum    = $nettoSum;
         $priceFactorSum = 0;
 
+
         /* @var $PriceFactor PriceFactor */
         foreach ($priceFactors as $PriceFactor) {
             $priceFactorValue = $PriceFactor->getValue();
+            $Vat              = null;
 
-            switch ($PriceFactor->getCalculation()) {
-                // einfache Zahl, Währung --- kein Prozent
-                case ErpCalc::CALCULATION_COMPLEMENT:
-                    // quiqqer/order#55
-                    if ($nettoSum + $priceFactorValue <= 0) {
-                        $priceFactorValue = $priceFactorValue - ($nettoSum + $priceFactorValue);
-                    }
-
-                    $nettoSum       = $nettoSum + $priceFactorValue;
-                    $priceFactorSum = $priceFactorSum + $priceFactorValue;
-
-                    $PriceFactor->setNettoSum($priceFactorValue);
-                    break;
-
-                // Prozent Angabe
-                case ErpCalc::CALCULATION_PERCENTAGE:
-                    switch ($PriceFactor->getCalculationBasis()) {
-                        default:
-                        case ErpCalc::CALCULATION_BASIS_NETTO:
-                            $percentage = $priceFactorValue / 100 * $nettoSubSum;
-                            break;
-
-                        case ErpCalc::CALCULATION_BASIS_BRUTTO:
-                        case ErpCalc::CALCULATION_BASIS_CURRENTPRICE:
-                            $percentage = $priceFactorValue / 100 * $nettoSum;
-                            break;
-                    }
-
-                    // quiqqer/order#55
-                    if ($nettoSum + $percentage <= 0) {
-                        $percentage = $percentage - ($nettoSum + $percentage);
-                    }
-
-                    $PriceFactor->setNettoSum($percentage);
-
-                    $nettoSum       = $this->round($nettoSum + $percentage);
-                    $priceFactorSum = $priceFactorSum + $percentage;
-                    break;
-
-                default:
-                    continue 2;
-            }
-
-            // add price factor VAT
-            $Vat = null;
-
+            // find out the vat of the price factor
             if (!($PriceFactor instanceof QUI\ERP\Products\Interfaces\PriceFactorWithVatInterface)) {
                 $vatValue = $PriceFactor->getVat();
 
@@ -342,8 +299,68 @@ class Calc
                 $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
             }
 
-            if ($isEuVatUser || $Product->getAttribute('class') === 'QUI\ERP\Accounting\Invoice\Articles\Text') {
+            if ($isEuVatUser) { //|| $PriceFactor->getAttribute('class') === 'QUI\ERP\Accounting\Invoice\Articles\Text') {
                 $vatValue = 0;
+            }
+
+
+            switch ($PriceFactor->getCalculation()) {
+                // einfache Zahl, Währung --- kein Prozent
+                case ErpCalc::CALCULATION_COMPLEMENT:
+                    // quiqqer/order#55
+                    if ($nettoSum + $priceFactorValue <= 0) {
+                        $priceFactorValue = $priceFactorValue - ($nettoSum + $priceFactorValue);
+                    }
+
+                    $nettoSum       = $nettoSum + $priceFactorValue;
+                    $priceFactorSum = $priceFactorSum + $priceFactorValue;
+
+                    $PriceFactor->setNettoSum($priceFactorValue);
+                    break;
+
+                // Prozent Angabe
+                case ErpCalc::CALCULATION_PERCENTAGE:
+                    switch ($PriceFactor->getCalculationBasis()) {
+                        default:
+                        case ErpCalc::CALCULATION_BASIS_NETTO:
+                            $percentage = $priceFactorValue / 100 * $nettoSubSum;
+                            break;
+
+                        case ErpCalc::CALCULATION_BASIS_BRUTTO:
+                        case ErpCalc::CALCULATION_BASIS_CURRENTPRICE:
+                            $percentage = $priceFactorValue / 100 * $nettoSum;
+                            break;
+
+                        case ErpCalc::CALCULATION_BASIS_VAT_BRUTTO:
+                            if ($isNetto) {
+                                $bruttoSubSum = $subSum * ($vatValue / 100 + 1);
+                                $percentage   = $priceFactorValue / 100 * $bruttoSubSum;
+                            } else {
+                                $percentage = $priceFactorValue / 100 * $subSum;
+                            }
+                            break;
+                    }
+
+                    // quiqqer/order#55
+                    if ($nettoSum + $percentage <= 0) {
+                        $percentage = $percentage - ($nettoSum + $percentage);
+                    }
+
+                    // calc price factor vat
+                    if (!$isNetto &&
+                        $vatValue &&
+                        $PriceFactor->getCalculationBasis() === ErpCalc::CALCULATION_BASIS_VAT_BRUTTO) {
+                        $percentage = $percentage / ($vatValue / 100 + 1);
+                    }
+
+                    $PriceFactor->setNettoSum($percentage);
+
+                    $nettoSum       = $this->round($nettoSum + $percentage);
+                    $priceFactorSum = $priceFactorSum + $percentage;
+                    break;
+
+                default:
+                    continue 2;
             }
 
             $vatSum = $PriceFactor->getNettoSum() * ($vatValue / 100);
