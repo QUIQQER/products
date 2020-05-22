@@ -354,6 +354,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
         switch ($basis) {
             case QUI\ERP\Accounting\Calc::CALCULATION_BASIS_NETTO:
             case QUI\ERP\Accounting\Calc::CALCULATION_BASIS_CURRENTPRICE:
+            case QUI\ERP\Accounting\Calc::CALCULATION_BASIS_VAT_BRUTTO:
                 $this->basis = $basis;
                 break;
         }
