@@ -398,7 +398,7 @@ class Calc
         foreach ($vatArray as $vatEntry) {
             $vatLists[$vatEntry['vat']] = true; // liste für MWST texte
 
-            $bruttoSum = $bruttoSum + $vatEntry['sum'];
+            $bruttoSum = $bruttoSum + round($vatEntry['sum'], 2);
         }
 
         foreach ($vatLists as $vat => $bool) {
