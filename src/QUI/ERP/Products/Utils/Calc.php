@@ -391,14 +391,16 @@ class Calc
         }
 
         // vat text
-        $vatLists  = [];
-        $vatText   = [];
+        $vatLists = [];
+        $vatText  = [];
+
+        $nettoSum  = \round($nettoSum, 2);
         $bruttoSum = $nettoSum;
 
         foreach ($vatArray as $vatEntry) {
             $vatLists[$vatEntry['vat']] = true; // liste für MWST texte
 
-            $bruttoSum = $bruttoSum + round($vatEntry['sum'], 2);
+            $bruttoSum = $bruttoSum + \round($vatEntry['sum'], 2);
         }
 
         foreach ($vatLists as $vat => $bool) {
