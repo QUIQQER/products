@@ -394,8 +394,9 @@ class Calc
         $vatLists = [];
         $vatText  = [];
 
-        $nettoSum  = \round($nettoSum, 2);
-        $bruttoSum = $nettoSum;
+        $nettoSum    = \round($nettoSum, 2);
+        $nettoSubSum = \round($nettoSubSum, 2);
+        $bruttoSum   = $nettoSum;
 
         foreach ($vatArray as $vatEntry) {
             $vatLists[$vatEntry['vat']] = true; // liste für MWST texte
