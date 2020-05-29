@@ -396,6 +396,7 @@ class Calc
 
         $nettoSum    = \round($nettoSum, 2);
         $nettoSubSum = \round($nettoSubSum, 2);
+        $subSum      = \round($subSum, 2);
         $bruttoSum   = $nettoSum;
 
         foreach ($vatArray as $vatEntry) {
