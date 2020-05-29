@@ -672,7 +672,22 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                             Field = findFilterById(fieldId);
 
-                            if (Field) {
+                            if (!Field) {
+                                continue;
+                            }
+
+                            var currentFieldValue = Field.getSearchValue();
+                            var newFieldValue = fieldParams[fieldId];
+
+                            if (typeof currentFieldValue === 'object') {
+                                currentFieldValue = Object.toQueryString(currentFieldValue);
+                            }
+
+                            if (typeof newFieldValue === 'object') {
+                                newFieldValue = Object.toQueryString(newFieldValue);
+                            }
+
+                            if (Field && currentFieldValue !== newFieldValue) {
                                 Field.setSearchValue(fieldParams[fieldId]);
                             }
                         }
@@ -841,7 +856,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if ("origin" in location) {
                 url = location.origin + url;
             }
-
 
             if (window.location.toString() === url) {
                 return;
