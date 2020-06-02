@@ -532,7 +532,8 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             'nettoSumFormatted' => $this->getNettoSumFormatted(),
             'visible'           => $this->isVisible(),
             'vat'               => $this->getVat(),
-            'valueText'         => $this->getValueText()
+            'valueText'         => $this->getValueText(),
+            'value'             => $this->getValue()
         ]);
     }
 }
