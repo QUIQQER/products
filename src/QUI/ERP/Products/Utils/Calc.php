@@ -222,7 +222,11 @@ class Calc
                     [$this, $Product]
                 );
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_ERROR);
+                QUI\System\Log::write(
+                    $Exception->getMessage(),
+                    QUI\System\Log::LEVEL_ERROR,
+                    $Exception->getContext()
+                );
             }
 
             $this->getProductPrice($Product);
@@ -257,7 +261,11 @@ class Calc
                 [$this, $List, $nettoSum]
             );
         } catch (QUI\Exception $Exception) {
-            QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_ERROR);
+            QUI\System\Log::write(
+                $Exception->getMessage(),
+                QUI\System\Log::LEVEL_ERROR,
+                $Exception->getContext()
+            );
         }
 
         // price factors
