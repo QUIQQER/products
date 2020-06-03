@@ -279,7 +279,7 @@ class GlobalFrontendSearch extends Search
             $Stmt->execute();
             $result = $Stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $Exception) {
-            QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
+            QUI\System\Log::addError($Exception->getMessage());
 
             if ($countOnly) {
                 return 0;

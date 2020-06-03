@@ -88,7 +88,7 @@ class Cache extends QUI\QDOM
         try {
             self::getStash()->getItem('quiqqer/products')->clear();
         } catch (\Exception $Exception) {
-            QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
+            QUI\System\Log::addError($Exception->getMessage());
         }
     }
 
