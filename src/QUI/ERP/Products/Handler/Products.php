@@ -389,7 +389,7 @@ class Products
                 'limit'  => 1
             ]);
         } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addError($Exception->getMessage());
+            QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
 
             throw new QUI\Exception(
                 ['quiqqer/products', 'exception.get.product.by.no.error'],

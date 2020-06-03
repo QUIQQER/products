@@ -103,7 +103,8 @@ QUI::$Ajax->registerFunction(
             QUI\System\Log::writeException($Exception);
 
             QUI\System\Log::addError(
-                'AJAX :: package_quiqqer_products_ajax_products_update -> '.$Exception->getMessage()
+                'AJAX :: package_quiqqer_products_ajax_products_update -> '.$Exception->getMessage(),
+                $Exception->getContext()
             );
 
             throw $Exception;

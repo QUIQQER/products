@@ -754,7 +754,8 @@ class EventHandling
             } catch (\Exception $Exception) {
                 QUI\System\Log::addError(
                     'EventHandling :: checkProductCacheTable -> ERROR on cache table column check for field #'
-                    .$fieldId.': '.$Exception->getMessage()
+                    .$fieldId.': '.$Exception->getMessage(),
+                    $Exception->getContext()
                 );
             }
         }
