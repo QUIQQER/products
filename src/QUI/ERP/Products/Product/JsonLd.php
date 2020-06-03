@@ -62,11 +62,15 @@ class JsonLd
             "description" => $Product->getDescription($Locale)
         ];
 
-        $json = \array_merge($json, self::getSKU($Product));
-        $json = \array_merge($json, self::getGTIN($Product));
-        $json = \array_merge($json, self::getBrand($Product));
-        $json = \array_merge($json, self::getImages($Product));
-        $json = \array_merge($json, self::getOffer($Product, $Locale));
+        try {
+            $json = \array_merge($json, self::getSKU($Product));
+            $json = \array_merge($json, self::getGTIN($Product));
+            $json = \array_merge($json, self::getBrand($Product));
+            $json = \array_merge($json, self::getImages($Product));
+            $json = \array_merge($json, self::getOffer($Product, $Locale));
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
 
         return $json;
     }
