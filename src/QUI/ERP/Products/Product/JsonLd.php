@@ -62,15 +62,11 @@ class JsonLd
             "description" => $Product->getDescription($Locale)
         ];
 
-        try {
-            $json = \array_merge($json, self::getSKU($Product));
-            $json = \array_merge($json, self::getGTIN($Product));
-            $json = \array_merge($json, self::getBrand($Product));
-            $json = \array_merge($json, self::getImages($Product));
-            $json = \array_merge($json, self::getOffer($Product, $Locale));
-        } catch (\Exception $Exception) {
-            QUI\System\Log::writeException($Exception);
-        }
+        $json = \array_merge($json, self::getSKU($Product));
+        $json = \array_merge($json, self::getGTIN($Product));
+        $json = \array_merge($json, self::getBrand($Product));
+        $json = \array_merge($json, self::getImages($Product));
+        $json = \array_merge($json, self::getOffer($Product, $Locale));
 
         return $json;
     }
@@ -300,10 +296,14 @@ class JsonLd
             'availability'  => 'InStock' // @todo consider stock
         ];
 
-        $offerEntry = \array_merge(
-            $offerEntry,
-            self::getMaxMin($Product, $Formatter)
-        );
+        $maxMin = self::getMaxMin($Product, $Formatter);
+        QUI\System\Log::writeRecursive($maxMin);
+        if ($maxMin) {
+            $offerEntry = \array_merge(
+                $offerEntry,
+                self::getMaxMin($Product, $Formatter)
+            );
+        }
 
         if (isset($offerEntry['highPrice']) || isset($offerEntry['lowPrice'])) {
             unset($offerEntry['price']);
@@ -321,5 +321,15 @@ class JsonLd
         }
 
         return $offerEntry;
+    }
+
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        // TODO: Implement __call() method.
     }
 }

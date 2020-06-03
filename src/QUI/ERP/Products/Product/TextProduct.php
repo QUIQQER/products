@@ -137,7 +137,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
             try {
                 $fields[] = $this->getField($fieldId);
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addError($Exception->getMessage());
+                QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
             }
         };
 

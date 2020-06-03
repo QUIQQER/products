@@ -190,7 +190,8 @@ abstract class Search extends QUI\QDOM
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError(
                 'Search::getValuesFromField -> Could not retrieve values of'
-                .' field #'.$Field->getId().' -> '.$Exception->getMessage()
+                .' field #'.$Field->getId().' -> '.$Exception->getMessage(),
+                $Exception->getContext()
             );
 
             return [];

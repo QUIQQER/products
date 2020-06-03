@@ -296,7 +296,7 @@ class FrontendSearch extends Search
                 $where     = \array_merge($where, $queryData['where']);
                 $binds     = \array_merge($binds, $queryData['binds']);
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addError($Exception->getMessage());
+                QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
             }
         }
 
@@ -531,7 +531,7 @@ class FrontendSearch extends Search
             try {
                 $Field = Fields::getField($fieldId);
             } catch (QUI\ERP\Products\Field\Exception $Exception) {
-                QUI\System\Log::addError($Exception->getMessage());
+                QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
                 continue;
             }
 
@@ -595,7 +595,7 @@ class FrontendSearch extends Search
         try {
             $eligibleFields = $this->getEligibleSearchFields();
         } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addError($Exception->getMessage());
+            QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
             $eligibleFields = [];
         }
 

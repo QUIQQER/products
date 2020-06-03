@@ -45,7 +45,7 @@ QUI::$Ajax->registerFunction(
                 $Product = $Product->getParent();
             }
         } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addError($Exception->getMessage());
+            QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
 
             return '';
         }
