@@ -296,14 +296,13 @@ class JsonLd
             'availability'  => 'InStock' // @todo consider stock
         ];
 
-        $maxMin = self::getMaxMin($Product, $Formatter);
-        QUI\System\Log::writeRecursive($maxMin);
-        if ($maxMin) {
-            $offerEntry = \array_merge(
-                $offerEntry,
-                self::getMaxMin($Product, $Formatter)
-            );
-        }
+        //$maxMin = self::getMaxMin($Product, $Formatter);
+//        if ($maxMin) {
+//            $offerEntry = \array_merge(
+//                $offerEntry,
+//                self::getMaxMin($Product, $Formatter)
+//            );
+//        }
 
         if (isset($offerEntry['highPrice']) || isset($offerEntry['lowPrice'])) {
             unset($offerEntry['price']);
