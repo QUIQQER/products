@@ -296,10 +296,13 @@ class JsonLd
             'availability'  => 'InStock' // @todo consider stock
         ];
 
-        $offerEntry = \array_merge(
-            $offerEntry,
-            self::getMaxMin($Product, $Formatter)
-        );
+        //$maxMin = self::getMaxMin($Product, $Formatter);
+//        if ($maxMin) {
+//            $offerEntry = \array_merge(
+//                $offerEntry,
+//                self::getMaxMin($Product, $Formatter)
+//            );
+//        }
 
         if (isset($offerEntry['highPrice']) || isset($offerEntry['lowPrice'])) {
             unset($offerEntry['price']);
@@ -317,5 +320,15 @@ class JsonLd
         }
 
         return $offerEntry;
+    }
+
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        // TODO: Implement __call() method.
     }
 }

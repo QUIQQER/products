@@ -190,7 +190,8 @@ abstract class Search extends QUI\QDOM
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError(
                 'Search::getValuesFromField -> Could not retrieve values of'
-                .' field #'.$Field->getId().' -> '.$Exception->getMessage()
+                .' field #'.$Field->getId().' -> '.$Exception->getMessage(),
+                $Exception->getContext()
             );
 
             return [];
@@ -270,25 +271,29 @@ abstract class Search extends QUI\QDOM
                 continue;
             }
 
+            $isPriceField = false;
+
             // wenn feld -> price feld
             // scheiss vorgehensweise, wollen aber kein doppelten code
             if (\get_class($this) == FrontendSearch::class) {
                 $User = QUI::getUserBySession();
 
-                if (!QUI\ERP\Utils\User::isNettoUser($User)
-                    && $Field->getType() == Fields::TYPE_PRICE
-                ) {
-                    $Tax  = QUI\ERP\Tax\Utils::getTaxByUser(QUI::getUserBySession());
-                    $calc = ($Tax->getValue() + 100) / 100;
+                if ($Field->getType() == Fields::TYPE_PRICE) {
+                    $isPriceField = true;
 
-                    // calc netto sum
-                    if (\is_array($value)
-                        && isset($value['from'])
-                        && isset($value['to'])
-                        && $calc
-                    ) {
-                        $value['from'] = $value['from'] / $calc;
-                        $value['to']   = $value['to'] / $calc;
+                    if (!QUI\ERP\Utils\User::isNettoUser($User)) {
+                        $Tax  = QUI\ERP\Tax\Utils::getTaxByUser(QUI::getUserBySession());
+                        $calc = ($Tax->getValue() + 100) / 100;
+
+                        // calc netto sum
+                        if (\is_array($value)
+                            && isset($value['from'])
+                            && isset($value['to'])
+                            && $calc
+                        ) {
+                            $value['from'] = $value['from'] * $calc;
+                            $value['to']   = $value['to'] * $calc;
+                        }
                     }
                 }
             }
@@ -399,6 +404,10 @@ abstract class Search extends QUI\QDOM
                     $where = [];
 
                     if ($from !== false) {
+                        if ($isPriceField) {
+                            $column = 'minPrice';
+                        }
+
                         $where[] = $column.' >= :'.$columnName.'From';
 
                         $binds[$columnName.'From'] = [
@@ -408,6 +417,10 @@ abstract class Search extends QUI\QDOM
                     }
 
                     if ($to !== false) {
+                        if ($isPriceField) {
+                            $column = 'maxPrice';
+                        }
+
                         $where[] = $column.' <= :'.$columnName.'To';
 
                         $binds[$columnName.'To'] = [

@@ -31,7 +31,7 @@ QUI::$Ajax->registerFunction(
             try {
                 $Product = ProductHandler::getNewProductInstance($productId);
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addError($Exception->getMessage());
+                QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
 
                 return [];
             }

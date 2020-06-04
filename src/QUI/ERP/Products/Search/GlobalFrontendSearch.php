@@ -214,7 +214,7 @@ class GlobalFrontendSearch extends Search
                 $where     = \array_merge($where, $queryData['where']);
                 $binds     = \array_merge($binds, $queryData['binds']);
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addError($Exception->getMessage());
+                QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
             }
         }
 

@@ -222,7 +222,11 @@ class Calc
                     [$this, $Product]
                 );
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_ERROR);
+                QUI\System\Log::write(
+                    $Exception->getMessage(),
+                    QUI\System\Log::LEVEL_ERROR,
+                    $Exception->getContext()
+                );
             }
 
             $this->getProductPrice($Product);
@@ -257,7 +261,11 @@ class Calc
                 [$this, $List, $nettoSum]
             );
         } catch (QUI\Exception $Exception) {
-            QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_ERROR);
+            QUI\System\Log::write(
+                $Exception->getMessage(),
+                QUI\System\Log::LEVEL_ERROR,
+                $Exception->getContext()
+            );
         }
 
         // price factors
@@ -391,14 +399,18 @@ class Calc
         }
 
         // vat text
-        $vatLists  = [];
-        $vatText   = [];
-        $bruttoSum = $nettoSum;
+        $vatLists = [];
+        $vatText  = [];
+
+        $nettoSum    = \round($nettoSum, 2);
+        $nettoSubSum = \round($nettoSubSum, 2);
+        $subSum      = \round($subSum, 2);
+        $bruttoSum   = $nettoSum;
 
         foreach ($vatArray as $vatEntry) {
             $vatLists[$vatEntry['vat']] = true; // liste für MWST texte
 
-            $bruttoSum = $bruttoSum + $vatEntry['sum'];
+            $bruttoSum = $bruttoSum + \round($vatEntry['sum'], 2);
         }
 
         foreach ($vatLists as $vat => $bool) {

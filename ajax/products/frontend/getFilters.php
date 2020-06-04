@@ -94,7 +94,7 @@ QUI::$Ajax->registerFunction(
 
             return $Output->parse($result);
         } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addError($Exception->getMessage());
+            QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
         }
 
         return '';
