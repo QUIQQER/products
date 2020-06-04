@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Controls\Category;
 
 use QUI;
 use QUI\ERP\Products\Handler\Categories;
+use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 
 /**
@@ -534,12 +535,52 @@ class ProductList extends QUI\Control
         $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([
+            'this' => $this,
             'JsonLd'    => new QUI\ERP\Products\Product\JsonLd(),
             'Product'   => $Product->getView(),
             'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice()
         ]);
 
         return $Engine->fetch($productTpl);
+    }
+
+    /**
+     * Get formatted old price (retail or offer)
+     *
+     * @param QUI\ERP\Products\Product\ViewFrontend $Product
+     * @return QUI\ERP\Products\Controls\Price|null
+     */
+    public function getProductOldPriceDisplay(QUI\ERP\Products\Product\ViewFrontend $Product)
+    {
+        try {
+            $OldPrice = null;
+            $Price    = $Product->getPrice();
+
+            // Offer price has higher priority than retail price
+            if ($Product->hasOfferPrice()) {
+                $OldPrice = new QUI\ERP\Products\Controls\Price([
+                    'Price'       => new QUI\ERP\Money\Price(
+                        $Product->getOriginalPrice()->getValue(),
+                        QUI\ERP\Currency\Handler::getDefaultCurrency()
+                    ),
+                    'withVatText' => false
+                ]);
+            } elseif ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
+                // retail price
+                $PriceRetail = $Product->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL)->getPrice();
+
+                if ($Price->getPrice() < $PriceRetail->getPrice()) {
+                    $OldPrice = new QUI\ERP\Products\Controls\Price([
+                        'Price'       => $PriceRetail,
+                        'withVatText' => false
+                    ]);
+                }
+            }
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
+        return $OldPrice;
     }
 
     /**
