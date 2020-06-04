@@ -33,6 +33,9 @@ class FrontendSearch extends Search
      */
     protected $ignoreVariantChildren = true;
 
+    protected $freeTextUsed                = false;
+    protected $freeTextSearchTermNoResults = false;
+
     /**
      * All site types eligible for frontend search
      *
@@ -118,6 +121,7 @@ class FrontendSearch extends Search
         $searchParams = $SearchQueryCollector->getSearchParams();
 
         $searchTerm = false;
+        $titleField = "F".Fields::FIELD_TITLE;
         $PDO        = QUI::getDataBase()->getPDO();
         $binds      = [];
         $where      = [];
@@ -127,7 +131,7 @@ class FrontendSearch extends Search
                 ->getConfig()
                 ->get('variants', 'findVariantParentByChildValues');
 
-        $sql = "SELECT `id`, `type`, `parentId`, `productNo`";
+        $sql = "SELECT `id`, `type`, `parentId`, `productNo`, `".$titleField."`";
         $sql .= " FROM ".TablesUtils::getProductCacheTableName();
 
         $where[]       = 'lang = :lang';
@@ -184,11 +188,21 @@ class FrontendSearch extends Search
         // freetext search
         if (isset($searchParams['freetext']) && !empty($searchParams['freetext'])) {
             $whereFreeText = [];
-            $value         = $this->sanitizeString($searchParams['freetext']);
-            $searchTerm    = $value;
+            $searchTerm    = \trim($this->sanitizeString($searchParams['freetext']));
 
             // split search value by space
-            $freetextValues = \explode(' ', $value);
+            $freetextValues = [
+                $searchTerm
+            ];
+
+            if ($this->freeTextSearchTermNoResults) {
+                $freetextValues = \array_merge(
+                    $freetextValues,
+                    \explode(' ', $searchTerm)
+                );
+            }
+
+            $valueCounter = 0;
 
             foreach ($freetextValues as $value) {
                 // always search tags
@@ -209,10 +223,10 @@ class FrontendSearch extends Search
                     }
 
                     $columnName = SearchHandler::getSearchFieldColumnName($Field);
-                    $fieldId    = $Field->getId();
+                    $bindNo     = $Field->getId().'_'.$valueCounter++;
 
-                    $whereFreeText[]            = '`'.$columnName.'` LIKE :freetext'.$fieldId;
-                    $binds['freetext'.$fieldId] = [
+                    $whereFreeText[]           = '`'.$columnName.'` LIKE :freetext'.$bindNo;
+                    $binds['freetext'.$bindNo] = [
                         'value' => '%'.$value.'%',
                         'type'  => \PDO::PARAM_STR
                     ];
@@ -221,6 +235,8 @@ class FrontendSearch extends Search
 
             if (!empty($whereFreeText)) {
                 $where[] = '('.\implode(' OR ', $whereFreeText).')';
+
+                $this->freeTextUsed = true;
             }
         }
 
@@ -414,6 +430,14 @@ class FrontendSearch extends Search
             return [];
         }
 
+        // Repeat search if free text search with full search term has not found anything (and then try splitting the search term)
+        if ($this->freeTextUsed && !$this->freeTextSearchTermNoResults && empty($result)) {
+            $this->freeTextSearchTermNoResults = true;
+
+            // Repeat search and split searchterm in single parts
+            return $this->search($searchParams, $countOnly);
+        }
+
         $productIds      = [];
         $childrenRemoved = 0;
 
@@ -421,7 +445,16 @@ class FrontendSearch extends Search
         if ($searchTerm) {
             $lettersSearch = preg_split("//u", $searchTerm, -1, PREG_SPLIT_NO_EMPTY);
 
-            \usort($result, function ($a, $b) use ($lettersSearch) {
+            \usort($result, function ($a, $b) use ($lettersSearch, $titleField) {
+                $lettersA = preg_split("//u", $a[$titleField], -1, PREG_SPLIT_NO_EMPTY);
+                $lettersB = preg_split("//u", $b[$titleField], -1, PREG_SPLIT_NO_EMPTY);
+                $matchesA = count(\array_intersect($lettersSearch, $lettersA)) + \mb_strlen($a[$titleField]);
+                $matchesB = count(\array_intersect($lettersSearch, $lettersB)) + \mb_strlen($b[$titleField]);
+
+                if ($matchesA !== $matchesB) {
+                    return $matchesA - $matchesB;
+                }
+
                 $lettersA = preg_split("//u", $a['productNo'], -1, PREG_SPLIT_NO_EMPTY);
                 $lettersB = preg_split("//u", $b['productNo'], -1, PREG_SPLIT_NO_EMPTY);
                 $matchesA = count(\array_intersect($lettersSearch, $lettersA)) + \mb_strlen($a['productNo']);
@@ -467,10 +500,24 @@ class FrontendSearch extends Search
 //                return self::search($searchParams, $countOnly);
 //            }
 
-            $productIds = array_merge(
-                $productIds,
-                self::search($searchParams)
-            );
+            $productIds = array_values(array_unique($productIds));
+
+            if (isset($searchParams['limit'])) {
+                if (\count($productIds) < $searchParams['limit']) {
+                    $searchParams['limitOffset'] = \count($productIds);
+                    $searchParams['limit']       -= \count($productIds);
+
+                    $productIds = array_merge(
+                        self::search($searchParams),
+                        $productIds
+                    );
+                }
+            } else {
+                $productIds = array_merge(
+                    self::search($searchParams),
+                    $productIds
+                );
+            }
         }
 
         $productIds = array_values(array_unique($productIds));
