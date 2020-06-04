@@ -32,7 +32,8 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
     {
         // default options
         $this->setAttributes([
-            'showPrices' => true
+            'showPrices'   => true,
+            'buttonAction' => 'addToBasket' // addToBasket / showProduct
         ]);
 
         parent::__construct($attributes);
@@ -68,10 +69,10 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
             ];
 
             if ($this->getAttribute('showPrices')) {
-                $details['Price']       = new QUI\ERP\Products\Controls\Price([
+                $details['Price'] = new QUI\ERP\Products\Controls\Price([
                     'Price' => $Product->getPrice()
                 ]);
-                
+
                 $details['RetailPrice'] = $this->getRetailPrice($Product);
             }
 
