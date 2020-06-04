@@ -677,13 +677,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                             }
 
                             var currentFieldValue = Field.getSearchValue();
-                            var newFieldValue = fieldParams[fieldId];
+                            var newFieldValue     = fieldParams[fieldId];
 
-                            if (typeof currentFieldValue === 'object') {
+                            if (typeof currentFieldValue === 'object' && currentFieldValue) {
                                 currentFieldValue = Object.toQueryString(currentFieldValue);
                             }
 
-                            if (typeof newFieldValue === 'object') {
+                            if (typeof newFieldValue === 'object' && newFieldValue) {
                                 newFieldValue = Object.toQueryString(newFieldValue);
                             }
 
