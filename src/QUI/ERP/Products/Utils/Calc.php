@@ -213,6 +213,9 @@ class Calc
         $nettoSum = 0;
         $vatArray = [];
 
+        $Currency  = $this->getCurrency();
+        $precision = $Currency->getPrecision();
+
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
             // add netto price
@@ -402,15 +405,15 @@ class Calc
         $vatLists = [];
         $vatText  = [];
 
-        $nettoSum    = \round($nettoSum, 2);
-        $nettoSubSum = \round($nettoSubSum, 2);
-        $subSum      = \round($subSum, 2);
+        $nettoSum    = \round($nettoSum, $precision);
+        $nettoSubSum = \round($nettoSubSum, $precision);
+        $subSum      = \round($subSum, $precision);
         $bruttoSum   = $nettoSum;
 
         foreach ($vatArray as $vatEntry) {
             $vatLists[$vatEntry['vat']] = true; // liste für MWST texte
 
-            $bruttoSum = $bruttoSum + \round($vatEntry['sum'], 2);
+            $bruttoSum = $bruttoSum + \round($vatEntry['sum'], $precision);
         }
 
         foreach ($vatLists as $vat => $bool) {
@@ -437,19 +440,19 @@ class Calc
 
             foreach ($priceFactors as $Factor) {
                 /* @var $Factor QUI\ERP\Products\Utils\PriceFactor */
-                $priceFactorBruttoSums = $priceFactorBruttoSums + \round($Factor->getSum(), 2);
+                $priceFactorBruttoSums = $priceFactorBruttoSums + \round($Factor->getSum(), $precision);
             }
 
             $priceFactorBruttoSum = $subSum + $priceFactorBruttoSums;
 
-            if ($priceFactorBruttoSum !== \round($bruttoSum, 2)) {
-                $diff = $priceFactorBruttoSum - \round($bruttoSum, 2);
+            if ($priceFactorBruttoSum !== \round($bruttoSum, $precision)) {
+                $diff = $priceFactorBruttoSum - \round($bruttoSum, $precision);
 
                 // if we have a diff, we change the first vat price factor
                 foreach ($priceFactors as $Factor) {
                     if ($Factor instanceof QUI\ERP\Products\Interfaces\PriceFactorWithVatInterface) {
-                        $Factor->setSum(\round($Factor->getSum() - $diff, 2));
-                        $bruttoSum = \round($bruttoSum, 2);
+                        $Factor->setSum(\round($Factor->getSum() - $diff, $precision));
+                        $bruttoSum = \round($bruttoSum, $precision);
                         break;
                     }
                 }
