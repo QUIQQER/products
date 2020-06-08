@@ -18,6 +18,11 @@ interface PriceFactorInterface
     /**
      * @return string
      */
+    public function getIdentifier();
+
+    /**
+     * @return string
+     */
     public function getTitle();
 
     /**
