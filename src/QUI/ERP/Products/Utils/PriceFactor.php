@@ -22,6 +22,11 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * @var string
      */
+    protected $identifier = '';
+
+    /**
+     * @var string
+     */
     protected $title = '';
 
     /**
@@ -165,6 +170,18 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
         if (isset($params['nettoSum'])) {
             $this->setNettoSum($params['nettoSum']);
         }
+
+        if (isset($params['identifier']) && \is_string($params['identifier'])) {
+            $this->identifier = $params['identifier'];
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
     }
 
     /**
@@ -494,6 +511,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     public function toArray()
     {
         return [
+            'identifier'        => $this->identifier,
             'title'             => $this->getTitle(),
             'description'       => $this->getDescription(),
             'calculation'       => $this->getCalculation(),
@@ -522,6 +540,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     public function toErpPriceFactor()
     {
         return new QUI\ERP\Accounting\PriceFactors\Factor([
+            'identifier'        => $this->identifier,
             'title'             => $this->getTitle(),
             'description'       => $this->getDescription(),
             'sum'               => $this->getSum(),
