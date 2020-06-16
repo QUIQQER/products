@@ -199,11 +199,64 @@ class Calc
             return $List->calc();
         }
 
+        // user order address
+        $Order               = $List->getOrder();
+        $CurrentAddress      = $this->getUser()->getAttribute('CurrentAddress');
+        $recalculateProducts = false;
+
+        if ($Order) {
+            $DeliveryAddress = $Order->getDeliveryAddress();
+
+
+            if ($DeliveryAddress->getId() && $Order->getDeliveryAddress() !== $CurrentAddress) {
+                $recalculateProducts = true;
+            }
+
+
+            if ($DeliveryAddress->getId()) {
+                QUI\ERP\Utils\User::setUserCurrentAddress(
+                    $this->getUser(),
+                    $DeliveryAddress
+                );
+            }
+        }
+
         $products    = $List->getProducts();
         $isNetto     = QUI\ERP\Utils\User::isNettoUser($this->getUser());
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
-        $Area        = QUI\ERP\Utils\User::getUserArea($this->getUser());
         $Locale      = QUI\ERP\Products\Handler\Products::getLocale();
+
+        $Area        = QUI\ERP\Utils\User::getUserArea($this->getUser());
+        $DefaultArea = QUI\ERP\Defaults::getArea();
+
+        // user order address
+        $Order = $List->getOrder();
+
+        if ($Order) {
+            try {
+                $DeliveryAddress = $Order->getDeliveryAddress();
+                $DeliveryArea    = QUI\ERP\Areas\Utils::getAreaByCountry($DeliveryAddress->getCountry());
+
+                if ($DeliveryArea) {
+                    $Area = $DeliveryArea;
+                } else {
+                    $Area = $DefaultArea;
+                }
+            } catch (QUI\Exception $Exception) {
+            }
+
+            // setting
+//            if ($isNetto && $setting) {
+//                $InvoiceArea = QUI\ERP\Areas\Utils::getAreaByCountry($InvoiceAddress->getCountry());
+//
+//                if ($InvoiceArea) {
+//                    $Area = $InvoiceArea;
+//                } else {
+//                    $Area = $DefaultArea;
+//                }
+//            }
+        }
+
 
         if ($this->ignoreVatCalculation) {
             $isNetto = true;
@@ -230,6 +283,10 @@ class Calc
                     QUI\System\Log::LEVEL_ERROR,
                     $Exception->getContext()
                 );
+            }
+
+            if ($recalculateProducts) {
+                $Product->recalculation();
             }
 
             $this->getProductPrice($Product);
@@ -310,10 +367,9 @@ class Calc
                 $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
             }
 
-            if ($isEuVatUser) { //|| $PriceFactor->getAttribute('class') === 'QUI\ERP\Accounting\Invoice\Articles\Text') {
+            if ($isEuVatUser) {  //|| $PriceFactor->getAttribute('class') === 'QUI\ERP\Accounting\Invoice\Articles\Text') {
                 $vatValue = 0;
             }
-
 
             switch ($PriceFactor->getCalculation()) {
                 // einfache Zahl, Währung --- kein Prozent

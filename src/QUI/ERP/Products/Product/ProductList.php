@@ -77,6 +77,11 @@ class ProductList
     protected $Currency = null;
 
     /**
+     * @var null
+     */
+    protected $Order = null;
+
+    /**
      * Currency information
      * @var array
      */
@@ -546,4 +551,24 @@ class ProductList
     {
         return new ProductListBackendView($this, $Locale);
     }
+
+    //region order
+
+    /**
+     * @param QUI\ERP\Order\AbstractOrder $Order
+     */
+    public function setOrder(QUI\ERP\Order\AbstractOrder $Order)
+    {
+        $this->Order = $Order;
+    }
+
+    /**
+     * @return QUI\ERP\Order\AbstractOrder|null
+     */
+    public function getOrder()
+    {
+        return $this->Order;
+    }
+
+    //endregion
 }
