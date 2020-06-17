@@ -91,9 +91,7 @@ class Products
 
             $options = $Field->getOptions();
 
-            if (isset($options['ignoreForPriceCalculation'])
-                && $options['ignoreForPriceCalculation'] == 1
-            ) {
+            if (isset($options['ignoreForPriceCalculation']) && $options['ignoreForPriceCalculation'] == 1) {
                 return false;
             }
 

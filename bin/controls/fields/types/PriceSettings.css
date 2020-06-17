@@ -30,3 +30,8 @@
     padding: 10px;
     width: 200px;
 }
+
+.quiqqer-products-price-settings-groups-values {
+    display: inline-block;
+    width: 100%;
+}

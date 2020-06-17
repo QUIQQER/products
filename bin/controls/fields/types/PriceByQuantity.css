@@ -27,3 +27,8 @@
     text-align: center;
     width: 40px;
 }
+
+.quiqqer-products-priceByQuantity-settings-groups-values {
+    display: inline-block;
+    width: 100%;
+}

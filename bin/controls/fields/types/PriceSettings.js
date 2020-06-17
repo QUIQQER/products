@@ -1,19 +1,17 @@
 /**
  * @module package/quiqqer/products/bin/controls/fields/types/PriceSettings
  * @author www.pcsg.de (Henning Leutz)
- *
- * @todo not finish
- * @todo #locale
- * @todo locale
  */
 define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
 
     'qui/QUI',
     'qui/controls/Control',
     'controls/groups/Select',
+    'Locale',
+
     'css!package/quiqqer/products/bin/controls/fields/types/PriceSettings.css'
 
-], function (QUI, QUIControl, GroupSelect) {
+], function (QUI, QUIControl, GroupSelect, QUILocale) {
     "use strict";
 
     return new Class({
@@ -71,21 +69,24 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
                 Parent.setStyle('padding', 0);
             }
 
+            var localePriceCalcTitle               = QUILocale.get('quiqqer/products', 'fieldConsiderPriceCalculation')
+            var fieldConsiderPriceCalculationGroup = QUILocale.get('quiqqer/products', 'fieldConsiderPriceCalculationGroup')
+
             new Element('div', {
                 'class': 'quiqqer-products-price-settings',
                 html   : '<div class="quiqqer-products-price-settings-groups">' +
-                         '    <label>' +
-                         '        <span class="quiqqer-products-price-settings-groups-text">' +
-                         '            Gruppenzuweisung:' +
-                         '        </span>' +
-                         '        <div class="quiqqer-products-price-settings-groups-values"></div>' +
-                         '    </label>' +
-                         '</div>' +
-                         '<div class="quiqqer-products-price-settings-ignoreForPriceCalculation">' +
-                         '    <label>' +
-                         '        <input type="checkbox" name="ignoreForPriceCalculation"/> Bei der Preisberechnung ignorieren' +
-                         '    </label>' +
-                         '</div>'
+                    '    <label>' +
+                    '        <span class="quiqqer-products-price-settings-groups-text">' +
+                    fieldConsiderPriceCalculationGroup + ':' +
+                    '        </span>' +
+                    '        <div class="quiqqer-products-price-settings-groups-values"></div>' +
+                    '    </label>' +
+                    '</div>' +
+                    '<div class="quiqqer-products-price-settings-ignoreForPriceCalculation">' +
+                    '    <label>' +
+                    '        <input type="checkbox" name="ignoreForPriceCalculation"/> ' + localePriceCalcTitle +
+                    '    </label>' +
+                    '</div>'
             }).inject(this.$Elm);
 
             this.$Groups = new GroupSelect({
@@ -109,7 +110,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceSettings', [
                 }.bind(this));
             }
 
-            this.$Ignore.checked = this.getAttribute('ignoreForPriceCalculation') ? true : false;
+            this.$Ignore.checked = !!this.getAttribute('ignoreForPriceCalculation');
         },
 
         /**

@@ -59,6 +59,7 @@
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
+
             <index>systemField</index>
             <index>standardField</index>
             <index>requiredField</index>
