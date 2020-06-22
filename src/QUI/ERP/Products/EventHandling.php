@@ -133,6 +133,9 @@ class EventHandling
                 'titles'        => [
                     'de' => 'UVP',
                     'en' => 'RRP'
+                ],
+                'options'       => [
+                    'ignoreForPriceCalculation' => 1
                 ]
             ],
             // MwSt ID
