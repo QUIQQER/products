@@ -49,3 +49,7 @@
     display: flex;
     /*width: calc(100% - 200px);*/
 }
+.quiqqer-products-priceByTimePeriod-settings-groups-values {
+    display: inline-block;
+    width: 100%;
+}

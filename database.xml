@@ -20,6 +20,7 @@
             <field type="timestamp NULL default NULL">e_date</field>
             <field type="INT(11) NULL">c_user</field>
             <field type="INT(11) NULL">e_user</field>
+            <field type="INT(11) DEFAULT 0">orderCount</field>
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
@@ -58,6 +59,7 @@
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
+
             <index>systemField</index>
             <index>standardField</index>
             <index>requiredField</index>

@@ -429,6 +429,26 @@
             <de><![CDATA[Legt fest ob dieses Feld in den Produktdetails angezeigt werden soll oder nicht.]]></de>
             <en><![CDATA[Specifies whether this field should be displayed in the product details or not.]]></en>
         </locale>
+        <locale name="fieldConsiderPriceCalculation">
+            <de><![CDATA[Bei Preisermittlung nicht beachten]]></de>
+            <en><![CDATA[Do not take this into account when calculating prices]]></en>
+        </locale>
+        <locale name="fieldConsiderPriceCalculationDesc">
+            <de><![CDATA[
+            Preisfelder werden benutzt um den niedrigsten Preis für ein Produkt zu ermitteln.
+            Ist diese Option angehakt, wird dieser Preis hierbei nicht beachtet.
+            Zum Beispiel soll die UVP des Herstellers nicht in die Preisermittlung einfließen.
+            ]]></de>
+            <en><![CDATA[
+            Price fields are used to determine the lowest price for a product.
+            If this option is checked, this price will be ignored. For example,
+            the manufacturer's EIA should not be included in the price calculation.
+            ]]></en>
+        </locale>
+        <locale name="fieldConsiderPriceCalculationGroup">
+            <de><![CDATA[Gruppenzuweisung]]></de>
+            <en><![CDATA[Group assignment]]></en>
+        </locale>
 
         <locale name="standardField">
             <de><![CDATA[Standardfeld]]></de>

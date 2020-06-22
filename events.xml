@@ -19,4 +19,7 @@
     <event on="onClearSettingsCache" fire="\QUI\ERP\Products\EventHandling::onFrontendCacheClear"/>
     <event on="onClearProjectsCache" fire="\QUI\ERP\Products\EventHandling::onFrontendCacheClear"/>
     <event on="onClearProjectCache" fire="\QUI\ERP\Products\EventHandling::onFrontendCacheClear"/>
+
+    <!-- order events -->
+    <event on="onQuiqqerOrderSuccessful" fire="\QUI\ERP\Products\EventHandling::onQuiqqerOrderSuccessful"/>
 </events>

@@ -133,6 +133,9 @@ class EventHandling
                 'titles'        => [
                     'de' => 'UVP',
                     'en' => 'RRP'
+                ],
+                'options'       => [
+                    'ignoreForPriceCalculation' => 1
                 ]
             ],
             // MwSt ID
@@ -1092,5 +1095,41 @@ class EventHandling
     public static function onFrontendCacheClear()
     {
         QUI\Cache\LongTermCache::clear('quiqqer/product/frontend');
+    }
+
+    /**
+     * @param QUI\ERP\Order\AbstractOrder $Order
+     */
+    public static function onQuiqqerOrderSuccessful(QUI\ERP\Order\AbstractOrder $Order)
+    {
+        $Articles = $Order->getArticles();
+
+        foreach ($Articles as $Article) {
+            /* @var $Article QUI\ERP\Accounting\Article */
+            $productId = $Article->getId();
+            $quantity  = $Article->getQuantity();
+
+            try {
+                $result = QUI::getDataBase()->fetch([
+                    'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                    'where' => [
+                        'id' => $productId
+                    ],
+                    'limit' => 1
+                ]);
+
+                if (isset($result[0])) {
+                    $orderCount = (int)$result[0]['orderCount'];
+                    $orderCount = $orderCount + $quantity;
+
+                    QUI::getDataBase()->update(
+                        QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                        ['orderCount' => $orderCount],
+                        ['id' => $productId]
+                    );
+                }
+            } catch (QUI\Exception $Exception) {
+            }
+        }
     }
 }
