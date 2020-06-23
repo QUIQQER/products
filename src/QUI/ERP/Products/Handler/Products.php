@@ -433,13 +433,13 @@ class Products
         $type = QUI\ERP\Products\Product\Types\Product::class;
 
         if (!empty($productType) && $productType !== $type) {
+            $productType  = \trim($productType, '\\');
             $ProductTypes = QUI\ERP\Products\Utils\ProductTypes::getInstance();
 
             if ($ProductTypes->exists($productType)) {
                 $type = $productType;
             }
         }
-
 
         // categories
         $categoryIds = [];
