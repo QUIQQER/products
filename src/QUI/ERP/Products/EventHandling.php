@@ -1,9 +1,5 @@
 <?php
 
-/**
- * This file contains QUI\ERP\Products\EventHandling
- */
-
 namespace QUI\ERP\Products;
 
 use QUI;
@@ -11,6 +7,7 @@ use QUI\Package\Package;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Handler\Search;
+use QUI\ERP\Products\Utils\Tables;
 
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Response;
@@ -38,6 +35,7 @@ class EventHandling
         }
 
         self::setDefaultSearchSettings();
+        self::patchProductTypes();
 
         try {
             Products::getParentMediaFolder();
@@ -710,6 +708,42 @@ class EventHandling
 
         self::checkProductCacheTable();
 //        Crons::updateProductCache();
+    }
+
+    /**
+     * PATCH
+     *
+     * Updates the `type` column in `products` / `products_cache` so that the class string does not
+     * have a leading backslash.
+     *
+     * @return void
+     */
+    public static function patchProductTypes()
+    {
+        try {
+            $result = QUI::getDataBase()->fetch([
+                'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                'where' => [
+                    'type' => [
+                        'type'  => 'LIKE%',
+                        'value' => '\\\\QUI'
+                    ]
+                ],
+                'limit' => 1
+            ]);
+
+            if (empty($result)) {
+                return;
+            }
+
+            $sql = "UPDATE `".Tables::getProductTableName()."` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
+            QUI::getDataBase()->execSQL($sql);
+
+            $sql = "UPDATE `".Tables::getProductCacheTableName()."` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
+            QUI::getDataBase()->execSQL($sql);
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
     }
 
     /**
