@@ -9,10 +9,9 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
     'qui/controls/buttons/Switch',
     'controls/grid/Grid',
     'Locale',
-    'Ajax',
-    'package/quiqqer/products/bin/Fields'
+    'Ajax'
 
-], function (QUI, QUIControl, QUISwitch, Grid, QUILocale, QUIAjax, Fields) {
+], function (QUI, QUIControl, QUISwitch, Grid, QUILocale, QUIAjax) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -30,6 +29,8 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
         initialize: function (options) {
             this.parent(options);
 
+            this.$Site = null;
+
             this.addEvents({
                 onImport: this.$onImport
             });
@@ -43,6 +44,17 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
             this.$Input.type = 'hidden';
 
             this.$confGroup = this.$Input.name;
+
+            // is it in site?
+            var PanelNode = this.$Input.getParent('.qui-panel');
+
+            if (PanelNode) {
+                var Panel = QUI.Controls.getById(PanelNode.get('data-quiid'));
+
+                if (Panel.getType() === 'controls/projects/project/site/Panel') {
+                    this.$Site = Panel.getSite();
+                }
+            }
 
             // create
             this.$Elm = new Element('div', {
@@ -118,42 +130,73 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
         },
 
         /**
+         * resize the control
+         *
+         * @return {void|Promise}
+         */
+        resize: function () {
+            var Parent = this.getElm().getParent('.field-container-field');
+            var size   = Parent.getSize();
+
+            return this.$Grid.setWidth(size.x);
+        },
+
+        /**
          * @return {Promise}
          */
         refresh: function () {
             var self = this;
 
+            if (this.$Site) {
+                return new Promise(function (resolve, reject) {
+                    QUIAjax.get('package_quiqqer_products_ajax_fields_getSortableFieldsForSite', function (fields) {
+                        self.$parseFieldData(fields);
+                        resolve();
+                    }, {
+                        'package'  : 'quiqqer/products',
+                        onError    : reject,
+                        siteId     : self.$Site.getId(),
+                        projectData: self.$Site.getProject().encode()
+                    });
+                });
+            }
+
             return new Promise(function (resolve, reject) {
                 QUIAjax.get('package_quiqqer_products_ajax_fields_getSortableFields', function (fields) {
-                    for (var i = 0, len = fields.length; i < len; i++) {
-                        fields[i].status = new QUISwitch({
-                            status : fields[i].sorting,
-                            fieldId: fields[i].id,
-                            events : {
-                                onChange: self.$onSwitchChange
-                            }
-                        });
-                    }
-
-
-                    self.$Grid.setData({
-                        data: fields
-                    });
-
+                    self.$parseFieldData(fields);
                     resolve();
                 }, {
                     'package': 'quiqqer/products',
-                    onError  : reject,
-
-                    showSearchableOnly: true
+                    onError  : reject
                 });
             });
         },
 
         /**
          *
+         * @param fields
          */
-        $onSwitchChange: function (CurrentSwitch) {
+        $parseFieldData: function (fields) {
+            for (var i = 0, len = fields.length; i < len; i++) {
+                fields[i].status = new QUISwitch({
+                    status : fields[i].sorting,
+                    fieldId: fields[i].id,
+                    events : {
+                        onChange: this.$onSwitchChange
+                    }
+                });
+            }
+
+
+            this.$Grid.setData({
+                data: fields
+            });
+        },
+
+        /**
+         * event: switch change
+         */
+        $onSwitchChange: function () {
             var controls = QUI.Controls.getControlsInElement(this.$Elm);
             var switches = controls.filter(function (Control) {
                 return Control.getType() === 'qui/controls/buttons/Switch';
