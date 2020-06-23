@@ -11,7 +11,7 @@ QUI::$Ajax->registerFunction(
         $Project = QUI::getProjectManager()->decode($projectData);
         $Site    = $Project->get($siteId);
 
-        return QUI\ERP\Products\Utils\Sortables::getSortableFieldsForSite($Site);
+        return QUI\ERP\Products\Utils\Sortables::getFieldSettingsForSite($Site);
     },
     ['siteId', 'projectData'],
     'Permission::checkAdminUser'

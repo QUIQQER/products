@@ -8,9 +8,35 @@ class Sortables
 {
     /**
      * @param QUI\Projects\Site $Site
-     * @throws QUI\Exception
+     * @return array
      */
     public static function getSortableFieldsForSite(QUI\Projects\Site $Site)
+    {
+        $useOwnSorting = $Site->getAttribute('quiqqer.products.settings.useOwnSorting');
+
+        if ($useOwnSorting) {
+            $fields = $Site->getAttribute('quiqqer.products.settings.availableSorting');
+            $fields = \trim($fields);
+
+            if (!empty($fields)) {
+                $fields = \explode(',', $fields);
+            }
+
+            if (!is_array($fields)) {
+                $fields = [];
+            }
+        } else {
+            return self::getDefaultFields();
+        }
+
+        return $fields;
+    }
+
+    /**
+     * @param QUI\Projects\Site $Site
+     * @throws QUI\Exception
+     */
+    public static function getFieldSettingsForSite(QUI\Projects\Site $Site)
     {
         $useOwnSorting = $Site->getAttribute('quiqqer.products.settings.useOwnSorting');
 

@@ -139,6 +139,23 @@
                             </text>
                         </input>
 
+                        <input conf="quiqqer.products.settings.useOwnSorting"
+                               type="checkbox"
+                               data-qui="package/quiqqer/products/bin/controls/products/settings/OwnFieldsSettings"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.useOwnSorting"/>
+                            </text>
+                        </input>
+
+                        <input conf="quiqqer.products.settings.availableSorting"
+                               data-qui="package/quiqqer/products/bin/controls/products/settings/SortFields"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="quiqqer.products.settings.availableSorting"/>
+                            </text>
+                        </input>
+
                         <select conf="quiqqer.products.settings.defaultSorting">
                             <text>
                                 <locale group="quiqqer/products" var="quiqqer.products.settings.defaultSorting"/>
@@ -169,23 +186,6 @@
                                 <locale group="quiqqer/products" var="sort.productNo.DESC"/>
                             </option>
                         </select>
-
-                        <input conf="quiqqer.products.settings.useOwnSorting"
-                               type="checkbox"
-                               data-qui="package/quiqqer/products/bin/controls/products/settings/OwnFieldsSettings"
-                        >
-                            <text>
-                                <locale group="quiqqer/products" var="quiqqer.products.settings.useOwnSorting"/>
-                            </text>
-                        </input>
-
-                        <input conf="quiqqer.products.settings.availableSorting"
-                               data-qui="package/quiqqer/products/bin/controls/products/settings/SortFields"
-                        >
-                            <text>
-                                <locale group="quiqqer/products" var="quiqqer.products.settings.availableSorting"/>
-                            </text>
-                        </input>
 
 
                         <input conf="quiqqer.products.settings.tags"
