@@ -195,6 +195,10 @@
             <de><![CDATA[Suchbar]]></de>
             <en><![CDATA[Searchable]]></en>
         </locale>
+        <locale name="settings.window.products.grid.sortFields">
+            <de><![CDATA[Sortierbar]]></de>
+            <en><![CDATA[Sortable]]></en>
+        </locale>
         <locale name="settings.window.products.clearcache">
             <de><![CDATA[Produktcache]]></de>
             <en><![CDATA[Product cache]]></en>
@@ -316,6 +320,11 @@
             <en><![CDATA[
             Here you can define which fields are considered during the product search (in the Freetext search).
             ]]></en>
+        </locale>
+
+        <locale name="settings.window.sortFields.description">
+            <de><![CDATA[Standardsortierung]]></de>
+            <en><![CDATA[Default sorting]]></en>
         </locale>
 
         <locale name="fieldtype">

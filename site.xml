@@ -27,6 +27,7 @@
                 <attribute>quiqqer.products.settings.categoryPos</attribute>
                 <attribute>quiqqer.products.settings.categoryAsFilter</attribute>
                 <attribute>quiqqer.products.settings.defaultSorting</attribute>
+                <attribute>quiqqer.products.settings.availableSorting</attribute>
                 <attribute>quiqqer.products.settings.tags</attribute>
             </attributes>
 

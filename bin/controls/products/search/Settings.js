@@ -61,6 +61,12 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
                 }
             }).wraps(this.$Input);
 
+            if (this.$Elm.getParent('.field-container')) {
+                new Element('div', {
+                    'class': 'field-container-field field-container-field-no-padding'
+                }).wraps(this.$Elm);
+            }
+
             // label
             var Row   = this.$Input.getParent('.qui-xml-panel-row-item');
             var Label = document.getElement('[for="' + this.$Input.id + '"]');
@@ -122,6 +128,10 @@ define('package/quiqqer/products/bin/controls/products/search/Settings', [
             });
 
             this.$Grid.refresh();
+        },
+
+        resize: function () {
+
         },
 
         /**
