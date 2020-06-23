@@ -215,7 +215,27 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     ]);
 
     $filterList = $ProductList->getFilter();
+    $fields     = Products\Utils\Sortables::getSortableFieldsForSite($Site);
 
+    foreach ($fields as $fieldId) {
+        try {
+            $Field = Products\Handler\Fields::getField($fieldId);
+            $title = $Field->getTitle();
+
+            $ProductList->addSort(
+                $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortASC'),
+                'F'.$fieldId.' ASC'
+            );
+
+            $ProductList->addSort(
+                $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
+                'F'.$fieldId.' DESC'
+            );
+        } catch (QUI\Exception $Exception) {
+        }
+    }
+
+    /*
     $ProductList->addSort(
         QUI::getLocale()->get('quiqqer/products', 'sort.cdate.ASC'),
         'c_date ASC'
@@ -225,27 +245,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         QUI::getLocale()->get('quiqqer/products', 'sort.cdate.DESC'),
         'c_date DESC'
     );
-
-    foreach ($filterList as $filter) {
-        if (!\is_array($filter)) {
-            /* @var $filter Products\Field\Field */
-            $title = $filter->getTitle();
-            $id    = $filter->getId();
-        } else {
-            $title = $filter['title'];
-            $id    = $filter['id'];
-        }
-
-        $ProductList->addSort(
-            $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortASC'),
-            'F'.$id.' ASC'
-        );
-
-        $ProductList->addSort(
-            $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
-            'F'.$id.' DESC'
-        );
-    }
+    */
 
     if ($Site->getAttribute('quiqqer.products.settings.showFilterLeft')) {
         $ProductList->setAttribute('showFilter', false);

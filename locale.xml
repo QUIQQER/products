@@ -2260,6 +2260,14 @@
             <de><![CDATA[Standard Sortierung]]></de>
             <en><![CDATA[Default sorting]]></en>
         </locale>
+        <locale name="quiqqer.products.settings.useOwnSorting">
+            <de><![CDATA[Eigene Sortierung verwenden]]></de>
+            <en><![CDATA[Use own sorting]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.availableSorting">
+            <de><![CDATA[Sortierungs Einstellungen]]></de>
+            <en><![CDATA[Sorting settings]]></en>
+        </locale>
 
         <locale name="quiqqer.products.field.header.placeholder">
             <de><![CDATA[Rechte für das Feld #[fielId] - [fieldname]]]></de>
