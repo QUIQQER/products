@@ -59,6 +59,10 @@ class Search
         if (!$sortOn && !empty($defaultSorting)) {
             $sorting = \explode(' ', $defaultSorting);
             $sortOn  = $sorting[0];
+
+            if (\strpos($sortOn, 'S') === 0) {
+                $sortOn = \mb_substr($sortOn, 1);
+            }
         }
 
         if (!$sortBy && !empty($defaultSorting)) {

@@ -215,36 +215,44 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     ]);
 
     $filterList = $ProductList->getFilter();
+    $fields     = Products\Utils\Sortables::getSortableFieldsForSite($Site);
 
-    $ProductList->addSort(
-        QUI::getLocale()->get('quiqqer/products', 'sort.cdate.ASC'),
-        'c_date ASC'
-    );
+    foreach ($fields as $fieldId) {
+        if (\strpos($fieldId, 'S') === 0) {
+            $title = QUI::getLocale()->get('quiqqer/products', 'sortable.'.\mb_substr($fieldId, 1));
 
-    $ProductList->addSort(
-        QUI::getLocale()->get('quiqqer/products', 'sort.cdate.DESC'),
-        'c_date DESC'
-    );
+            $ProductList->addSort(
+                $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortASC'),
+                $fieldId.' ASC'
+            );
 
-    foreach ($filterList as $filter) {
-        if (!\is_array($filter)) {
-            /* @var $filter Products\Field\Field */
-            $title = $filter->getTitle();
-            $id    = $filter->getId();
-        } else {
-            $title = $filter['title'];
-            $id    = $filter['id'];
+            $ProductList->addSort(
+                $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
+                $fieldId.' DESC'
+            );
+
+            continue;
         }
 
-        $ProductList->addSort(
-            $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortASC'),
-            'F'.$id.' ASC'
-        );
+        if (\strpos($fieldId, 'F') === 0) {
+            try {
+                $fieldId = str_replace('F', '', $fieldId);
 
-        $ProductList->addSort(
-            $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
-            'F'.$id.' DESC'
-        );
+                $Field = Products\Handler\Fields::getField((int)$fieldId);
+                $title = $Field->getTitle();
+
+                $ProductList->addSort(
+                    $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortASC'),
+                    'F'.$fieldId.' ASC'
+                );
+
+                $ProductList->addSort(
+                    $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
+                    'F'.$fieldId.' DESC'
+                );
+            } catch (QUI\Exception $Exception) {
+            }
+        }
     }
 
     if ($Site->getAttribute('quiqqer.products.settings.showFilterLeft')) {

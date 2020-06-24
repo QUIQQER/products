@@ -195,6 +195,10 @@
             <de><![CDATA[Suchbar]]></de>
             <en><![CDATA[Searchable]]></en>
         </locale>
+        <locale name="settings.window.products.grid.sortFields">
+            <de><![CDATA[Sortierbar]]></de>
+            <en><![CDATA[Sortable]]></en>
+        </locale>
         <locale name="settings.window.products.clearcache">
             <de><![CDATA[Produktcache]]></de>
             <en><![CDATA[Product cache]]></en>
@@ -316,6 +320,11 @@
             <en><![CDATA[
             Here you can define which fields are considered during the product search (in the Freetext search).
             ]]></en>
+        </locale>
+
+        <locale name="settings.window.sortFields.description">
+            <de><![CDATA[Standardsortierung]]></de>
+            <en><![CDATA[Default sorting]]></en>
         </locale>
 
         <locale name="fieldtype">
@@ -1172,6 +1181,16 @@
         <locale name="control.watchlist.buttonOffer.text">
             <de><![CDATA[Angebot anfordern]]></de>
             <en><![CDATA[Request a offer]]></en>
+        </locale>
+
+
+        <locale name="sortDESC">
+            <de><![CDATA[absteigend]]></de>
+            <en><![CDATA[descending]]></en>
+        </locale>
+        <locale name="sortASC">
+            <de><![CDATA[aufsteigend]]></de>
+            <en><![CDATA[ascending]]></en>
         </locale>
     </groups>
 
@@ -2251,6 +2270,14 @@
             <de><![CDATA[Standard Sortierung]]></de>
             <en><![CDATA[Default sorting]]></en>
         </locale>
+        <locale name="quiqqer.products.settings.useOwnSorting">
+            <de><![CDATA[Eigene Sortierung verwenden]]></de>
+            <en><![CDATA[Use own sorting]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.availableSorting">
+            <de><![CDATA[Sortierungs Einstellungen]]></de>
+            <en><![CDATA[Sorting settings]]></en>
+        </locale>
 
         <locale name="quiqqer.products.field.header.placeholder">
             <de><![CDATA[Rechte für das Feld #[fielId] - [fieldname]]]></de>
@@ -2263,6 +2290,18 @@
         <locale name="quiqqer.products.field.edit.placeholder">
             <de><![CDATA[Darf Feld #[fielId] - [fieldname] bearbeiten.]]></de>
             <en><![CDATA[Is allowed to edit the field #[fielId] - [fieldname].]]></en>
+        </locale>
+        <locale name="quiqqer.products.site.category.settings.title">
+            <de><![CDATA[Produkte]]></de>
+            <en><![CDATA[Products]]></en>
+        </locale>
+        <locale name="sortable.c_date">
+            <de><![CDATA[Erstellungsdatum]]></de>
+            <en><![CDATA[Creation date]]></en>
+        </locale>
+        <locale name="sortable.e_date">
+            <de><![CDATA[Editierungsdatum]]></de>
+            <en><![CDATA[Editing date]]></en>
         </locale>
 
         <!-- FrontendSearch -->
@@ -2405,15 +2444,6 @@
         <locale name="type.search.searchPlaceholder">
             <de><![CDATA[Suchbegriff eingeben...]]></de>
             <en><![CDATA[Enter a search term...]]></en>
-        </locale>
-
-        <locale name="sortDESC">
-            <de><![CDATA[absteigend]]></de>
-            <en><![CDATA[descending]]></en>
-        </locale>
-        <locale name="sortASC">
-            <de><![CDATA[aufsteigend]]></de>
-            <en><![CDATA[ascending]]></en>
         </locale>
 
         <locale name="sort.title.DESC">
