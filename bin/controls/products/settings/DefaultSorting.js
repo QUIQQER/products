@@ -57,6 +57,7 @@ define('package/quiqqer/products/bin/controls/products/settings/DefaultSorting',
                 self.getElm().innerHTML = '';
 
                 // @todo zusatzfelder // zB date sorting
+                // @todo eigene category
 
                 for (var i = 0, len = fields.length; i < len; i++) {
                     new Element('option', {

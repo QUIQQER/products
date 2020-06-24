@@ -2291,6 +2291,10 @@
             <de><![CDATA[Darf Feld #[fielId] - [fieldname] bearbeiten.]]></de>
             <en><![CDATA[Is allowed to edit the field #[fielId] - [fieldname].]]></en>
         </locale>
+        <locale name="quiqqer.products.site.category.settings.title">
+            <de><![CDATA[Produkte]]></de>
+            <en><![CDATA[Products]]></en>
+        </locale>
 
         <!-- FrontendSearch -->
         <locale name="exception.frontendsearch.site.type.not.eligible">
