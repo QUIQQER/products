@@ -56,17 +56,14 @@ define('package/quiqqer/products/bin/controls/products/settings/DefaultSorting',
             }).then(function (fields) {
                 self.getElm().innerHTML = '';
 
-                // @todo zusatzfelder // zB date sorting
-                // @todo eigene category
-
                 for (var i = 0, len = fields.length; i < len; i++) {
                     new Element('option', {
-                        value: 'F' + fields[i].id + ' DESC',
+                        value: fields[i].id + ' DESC',
                         html : fields[i].title + ' ' + QUILocale.get(lg, 'sortDESC')
                     }).inject(self.getElm());
 
                     new Element('option', {
-                        value: 'F' + fields[i].id + ' ASC',
+                        value: fields[i].id + ' ASC',
                         html : fields[i].title + ' ' + QUILocale.get(lg, 'sortASC')
                     }).inject(self.getElm());
                 }

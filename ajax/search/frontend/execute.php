@@ -25,6 +25,12 @@ QUI::$Ajax->registerFunction(
         $Search       = SearchHandler::getFrontendSearch($Site);
         $searchParams = \json_decode($searchParams, true);
 
+        if (isset($searchParams['sortOn'])) {
+            if (\strpos($searchParams['sortOn'], 'S') === 0) {
+                $searchParams['sortOn'] = \mb_substr($searchParams['sortOn'], 1);
+            }
+        }
+
         if (isset($searchParams['count'])) {
             return $Search->search($searchParams, true);
         }

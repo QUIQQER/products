@@ -218,34 +218,42 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     $fields     = Products\Utils\Sortables::getSortableFieldsForSite($Site);
 
     foreach ($fields as $fieldId) {
-        try {
-            $Field = Products\Handler\Fields::getField($fieldId);
-            $title = $Field->getTitle();
+        if (\strpos($fieldId, 'S') === 0) {
+            $title = QUI::getLocale()->get('quiqqer/products', 'sortable.'.\mb_substr($fieldId, 1));
 
             $ProductList->addSort(
                 $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortASC'),
-                'F'.$fieldId.' ASC'
+                $fieldId.' ASC'
             );
 
             $ProductList->addSort(
                 $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
-                'F'.$fieldId.' DESC'
+                $fieldId.' DESC'
             );
-        } catch (QUI\Exception $Exception) {
+
+            continue;
+        }
+
+        if (\strpos($fieldId, 'F') === 0) {
+            try {
+                $fieldId = str_replace('F', '', $fieldId);
+
+                $Field = Products\Handler\Fields::getField((int)$fieldId);
+                $title = $Field->getTitle();
+
+                $ProductList->addSort(
+                    $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortASC'),
+                    'F'.$fieldId.' ASC'
+                );
+
+                $ProductList->addSort(
+                    $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
+                    'F'.$fieldId.' DESC'
+                );
+            } catch (QUI\Exception $Exception) {
+            }
         }
     }
-
-    /*
-    $ProductList->addSort(
-        QUI::getLocale()->get('quiqqer/products', 'sort.cdate.ASC'),
-        'c_date ASC'
-    );
-
-    $ProductList->addSort(
-        QUI::getLocale()->get('quiqqer/products', 'sort.cdate.DESC'),
-        'c_date DESC'
-    );
-    */
 
     if ($Site->getAttribute('quiqqer.products.settings.showFilterLeft')) {
         $ProductList->setAttribute('showFilter', false);

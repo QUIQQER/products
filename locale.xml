@@ -2295,6 +2295,14 @@
             <de><![CDATA[Produkte]]></de>
             <en><![CDATA[Products]]></en>
         </locale>
+        <locale name="sortable.c_date">
+            <de><![CDATA[Erstellungsdatum]]></de>
+            <en><![CDATA[Creation date]]></en>
+        </locale>
+        <locale name="sortable.e_date">
+            <de><![CDATA[Editierungsdatum]]></de>
+            <en><![CDATA[Editing date]]></en>
+        </locale>
 
         <!-- FrontendSearch -->
         <locale name="exception.frontendsearch.site.type.not.eligible">

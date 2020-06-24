@@ -100,8 +100,6 @@ class Sortables
         $sortingFields = \explode(',', $sortingFields);
         $sortingFields = \array_flip($sortingFields);
 
-        // system sortables
-
         // field sortables
         $Fields = new QUI\ERP\Products\Handler\Fields();
         $fields = $Fields->getFieldIds([
@@ -121,21 +119,34 @@ class Sortables
             }
 
             return [
-                'id'      => $Field->getId(),
-                'title'   => $Field->getTitle(),
-                'sorting' => isset($sortingFields[$Field->getId()])
+                'idDisplay' => $Field->getId(),
+                'id'        => 'F'.$Field->getId(),
+                'title'     => $Field->getTitle(),
+                'sorting'   => isset($sortingFields['F'.$Field->getId()])
             ];
         }, $fields);
 
         $result = \array_filter($result);
 
         \usort($result, function ($a, $b) {
-            if ($a['id'] == $b['id']) {
+            if ($a['idDisplay'] === $b['idDisplay']) {
                 return 0;
             }
 
-            return ($a['id'] < $b['id']) ? -1 : 1;
+            return $a['idDisplay'] < $b['idDisplay'] ? -1 : 1;
         });
+
+        // add system sortables to the top
+        $special = ['c_date', 'e_date'];
+
+        foreach ($special as $s) {
+            \array_unshift($result, [
+                'id'        => 'S'.$s,
+                'idDisplay' => $s,
+                'title'     => QUI::getLocale()->get('quiqqer/products', 'sortable.'.$s),
+                'sorting'   => isset($sortingFields['S'.$s])
+            ]);
+        }
 
         return $result;
     }
