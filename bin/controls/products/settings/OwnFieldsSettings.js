@@ -1,3 +1,6 @@
+/**
+ * @module package/quiqqer/products/bin/controls/products/settings/OwnFieldsSettings
+ */
 define('package/quiqqer/products/bin/controls/products/settings/OwnFieldsSettings', [
 
     'qui/QUI',

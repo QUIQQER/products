@@ -156,12 +156,15 @@
                             </text>
                         </input>
 
-                        <select conf="quiqqer.products.settings.defaultSorting">
+                        <select conf="quiqqer.products.settings.defaultSorting"
+                                data-qui="package/quiqqer/products/bin/controls/products/settings/DefaultSorting"
+                        >
                             <text>
                                 <locale group="quiqqer/products" var="quiqqer.products.settings.defaultSorting"/>
                             </text>
 
                             <option value=""/>
+                            <!--
                             <option value="priority">
                                 <locale group="quiqqer/products" var="sort.sorting"/>
                             </option>
@@ -185,6 +188,7 @@
                             <option value="productNo DESC">
                                 <locale group="quiqqer/products" var="sort.productNo.DESC"/>
                             </option>
+                            -->
                         </select>
 
 

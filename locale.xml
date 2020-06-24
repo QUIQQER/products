@@ -1182,6 +1182,16 @@
             <de><![CDATA[Angebot anfordern]]></de>
             <en><![CDATA[Request a offer]]></en>
         </locale>
+
+
+        <locale name="sortDESC">
+            <de><![CDATA[absteigend]]></de>
+            <en><![CDATA[descending]]></en>
+        </locale>
+        <locale name="sortASC">
+            <de><![CDATA[aufsteigend]]></de>
+            <en><![CDATA[ascending]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
@@ -2422,15 +2432,6 @@
         <locale name="type.search.searchPlaceholder">
             <de><![CDATA[Suchbegriff eingeben...]]></de>
             <en><![CDATA[Enter a search term...]]></en>
-        </locale>
-
-        <locale name="sortDESC">
-            <de><![CDATA[absteigend]]></de>
-            <en><![CDATA[descending]]></en>
-        </locale>
-        <locale name="sortASC">
-            <de><![CDATA[aufsteigend]]></de>
-            <en><![CDATA[ascending]]></en>
         </locale>
 
         <locale name="sort.title.DESC">

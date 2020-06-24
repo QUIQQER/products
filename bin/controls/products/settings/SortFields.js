@@ -29,7 +29,8 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Site = null;
+            this.$Site          = null;
+            this.$currentFields = null;
 
             this.addEvents({
                 onImport: this.$onImport
@@ -40,6 +41,8 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
          * event: on import
          */
         $onImport: function () {
+            var self = this;
+
             this.$Input      = this.getElm();
             this.$Input.type = 'hidden';
 
@@ -124,7 +127,9 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
                 }.bind(this)
             });
 
-            this.refresh().catch(function (err) {
+            this.refresh().then(function () {
+                self.fireEvent('load', [self]);
+            }).catch(function (err) {
                 console.error(err);
             });
         },
@@ -150,6 +155,7 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
             if (this.$Site) {
                 return new Promise(function (resolve, reject) {
                     QUIAjax.get('package_quiqqer_products_ajax_fields_getSortableFieldsForSite', function (fields) {
+                        self.$currentFields = fields;
                         self.$parseFieldData(fields);
                         resolve();
                     }, {
@@ -163,6 +169,7 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
 
             return new Promise(function (resolve, reject) {
                 QUIAjax.get('package_quiqqer_products_ajax_fields_getSortableFields', function (fields) {
+                    self.$currentFields = fields;
                     self.$parseFieldData(fields);
                     resolve();
                 }, {
@@ -173,7 +180,6 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
         },
 
         /**
-         *
          * @param fields
          */
         $parseFieldData: function (fields) {
@@ -186,7 +192,6 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
                     }
                 });
             }
-
 
             this.$Grid.setData({
                 data: fields
@@ -211,6 +216,31 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
             }
 
             this.$Input.value = values.join(',');
+        },
+
+        /**
+         * Return all active sorting fields
+         *
+         * @return {Promise}
+         */
+        getActiveFields: function () {
+            var self = this;
+
+            return new Promise(function (resolve) {
+                if (self.$currentFields === null) {
+                    self.addEvent('load', function () {
+                        self.getActiveFields().then(resolve);
+                    });
+
+                    return;
+                }
+
+                var filtered = self.$currentFields.filter(function (field) {
+                    return field.sorting;
+                });
+
+                resolve(filtered);
+            });
         }
     });
 });
