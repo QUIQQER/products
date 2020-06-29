@@ -1006,7 +1006,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 ContainerReal     = this.$ContainerReal,
                 articles          = this.$ContainerReal.getElements('article').length + 1;
 
-            sort = sort.replace('Sc_date', 'c_date').replace('Se_date', 'e_date');
+            if (sort) {
+                sort = sort.replace('Sc_date', 'c_date').replace('Se_date', 'e_date');
+            }
 
             return new Promise(function (resolve) {
                 QUIAjax.get('package_quiqqer_products_ajax_controls_categories_productList', function (result) {
