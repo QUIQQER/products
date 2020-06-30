@@ -32,13 +32,20 @@ class SearchQueryCollector
     protected $searchParams = [];
 
     /**
+     * @var Search
+     */
+    protected $Search;
+
+    /**
      * SearchQueryCollector constructor.
      *
+     * @param Search $Search
      * @param array $searchParams (optional) - The search params that are applied to the search the
      * SearchQueryCollector collects statements for
      */
-    public function __construct($searchParams = [])
+    public function __construct(Search $Search, $searchParams = [])
     {
+        $this->Search       = $Search;
         $this->searchParams = $searchParams;
     }
 
@@ -85,5 +92,21 @@ class SearchQueryCollector
     public function getSearchParams()
     {
         return $this->searchParams;
+    }
+
+    /**
+     * @param array $searchParams
+     */
+    public function setSearchParams(array $searchParams)
+    {
+        $this->searchParams = $searchParams;
+    }
+
+    /**
+     * @return Search
+     */
+    public function getSearch()
+    {
+        return $this->Search;
     }
 }

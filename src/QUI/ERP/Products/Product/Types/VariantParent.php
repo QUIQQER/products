@@ -318,7 +318,7 @@ class VariantParent extends AbstractType
 
         if (QUI::isFrontend()) {
             try {
-                $images = QUI\Cache\Manager::get($cache);
+                $images = QUI\Cache\LongTermCache::get($cache);
                 $result = [];
 
                 foreach ($images as $image) {
@@ -377,7 +377,7 @@ class VariantParent extends AbstractType
             $indexCheck[$url] = true;
         }
 
-        QUI\Cache\Manager::set($cache, $imageCache);
+        QUI\Cache\LongTermCache::set($cache, $imageCache);
 
         return $images;
     }
@@ -716,7 +716,7 @@ class VariantParent extends AbstractType
         foreach ($result as $entry) {
             $productId = (int)$entry['id'];
 
-            QUI\Cache\Manager::set(
+            QUI\Cache\LongTermCache::set(
                 QUI\ERP\Products\Handler\Cache::getProductCachePath($productId).'/db-data',
                 $entry
             );
@@ -1195,7 +1195,7 @@ class VariantParent extends AbstractType
         $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/activeFieldHashes';
 
         try {
-            $fieldHashes = QUI\Cache\Manager::get($cacheName);
+            $fieldHashes = QUI\Cache\LongTermCache::get($cacheName);
         } catch (QUI\Exception $Exception) {
             try {
                 $result = QUI::getDataBase()->fetch([
@@ -1209,7 +1209,7 @@ class VariantParent extends AbstractType
 
                 $fieldHashes = $this->parseAvailableFields($result);
 
-                QUI\Cache\Manager::set($cacheName, $fieldHashes);
+                QUI\Cache\LongTermCache::set($cacheName, $fieldHashes);
             } catch (QUI\Exception $Exception) {
                 $result      = [];
                 $fieldHashes = $this->parseAvailableFields($result);

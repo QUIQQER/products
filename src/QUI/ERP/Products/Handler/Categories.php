@@ -30,9 +30,9 @@ class Categories
     public static function clearCache($categoryId = false)
     {
         if ($categoryId === false) {
-            QUI\Cache\Manager::clear('quiqqer/products/categories/');
+            QUI\Cache\LongTermCache::clear('quiqqer/products/categories/');
         } else {
-            QUI\Cache\Manager::clear(self::getCacheName($categoryId));
+            QUI\Cache\LongTermCache::clear(self::getCacheName($categoryId));
         }
 
         try {
@@ -131,7 +131,7 @@ class Categories
         }
 
         try {
-            $categoryData = QUI\Cache\Manager::get(self::getCacheName($id));
+            $categoryData = QUI\Cache\LongTermCache::get(self::getCacheName($id));
         } catch (QUI\Exception $Eception) {
             $data = QUI::getDataBase()->fetch([
                 'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
@@ -150,7 +150,7 @@ class Categories
 
             $categoryData = $data[0];
 
-            QUI\Cache\Manager::set(self::getCacheName($id), $categoryData);
+            QUI\Cache\LongTermCache::set(self::getCacheName($id), $categoryData);
         }
 
 

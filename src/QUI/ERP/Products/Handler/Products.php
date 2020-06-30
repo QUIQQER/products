@@ -59,6 +59,16 @@ class Products
     public static $fireEventsOnProductSave = true;
 
     /**
+     * This global flag determines if UniqueProduct data is cached in the RAM during runtime
+     *
+     * The intention is to disable expensive caching operations in a context where a lot of Product
+     * objects are processed in a short time (i.e. mass imports).
+     *
+     * @var bool
+     */
+    public static $useRuntimeCacheForUniqueProducts = true;
+
+    /**
      * This enables the caching flag, equal if quiqqer is in frontend or backend
      *
      * @var bool
@@ -157,9 +167,11 @@ class Products
         }
 
         // check if serialize product exists
+        $cachePath = Cache::getProductCachePath($pid).'/db-data';
+
         //if (QUI::isFrontend()) { // -> mor wollte dies raus haben
         try {
-            $product          = QUI\Cache\Manager::get('quiqqer/products/'.$pid.'/db-data');
+            $product          = QUI\Cache\LongTermCache::get($cachePath);
             self::$list[$pid] = self::getProductByDataResult($pid, $product);
 
             return self::$list[$pid];
@@ -296,18 +308,19 @@ class Products
             );
         }
 
+        $productData = $result[0];
+
         if (QUI::isFrontend() || self::$createFrontendCache) {
+            $cachePath = Cache::getProductCachePath($pid).'/db-data';
+
             try {
-                QUI\Cache\Manager::get('quiqqer/products/'.$pid.'/db-data');
+                QUI\Cache\LongTermCache::get($cachePath);
             } catch (QUI\Exception $Exception) {
-                QUI\Cache\Manager::set(
-                    Cache::getProductCachePath($pid).'/db-data',
-                    $result[0]
-                );
+                QUI\Cache\LongTermCache::set($cachePath, $productData);
             }
         }
 
-        return self::getProductByDataResult($pid, $result[0]);
+        return self::getProductByDataResult($pid, $productData);
     }
 
     /**
@@ -1048,6 +1061,30 @@ class Products
     public static function disableGlobalProductSearchCacheUpdate()
     {
         self::$updateProductSearchCache = false;
+    }
+
+    /**
+     * ENABLE: Caching of UniqueProduct data during runtime
+     *
+     * For futher information see documentation of self::$useRuntimeCacheForUniqueProducts
+     *
+     * @return void
+     */
+    public static function enableRuntimeCacheForUniqueProducts()
+    {
+        self::$useRuntimeCacheForUniqueProducts = true;
+    }
+
+    /**
+     * DISABLE: Caching of UniqueProduct data during runtime
+     *
+     * For futher information see documentation of self::$useRuntimeCacheForUniqueProducts
+     *
+     * @return void
+     */
+    public static function disableRuntimeCacheForUniqueProducts()
+    {
+        self::$useRuntimeCacheForUniqueProducts = false;
     }
 
     //endregion

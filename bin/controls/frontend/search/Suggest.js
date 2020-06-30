@@ -224,7 +224,7 @@ define('package/quiqqer/products/bin/controls/frontend/search/Suggest', [
 
             this.$Input.addEvents({
                 keyup: this.$keyup,
-                blur : this.$hideResults,
+                //blur : this.$hideResults,
                 focus: function () {
                     if (this.$Input.value !== '') {
                         this.$resetResults();

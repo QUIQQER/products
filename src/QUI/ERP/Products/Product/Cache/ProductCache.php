@@ -13,6 +13,8 @@ use QUI\ERP\Products\Handler\Products;
  */
 class ProductCache
 {
+    public static $uniqueProduct = [];
+
     /**
      * @param $productId
      * @param $createControlCache

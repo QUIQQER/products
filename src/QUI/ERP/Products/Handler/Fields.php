@@ -162,7 +162,7 @@ class Fields
     public static function clearCache()
     {
         foreach (self::$cacheNames as $cache) {
-            QUI\Cache\Manager::clear($cache);
+            QUI\Cache\LongTermCache::clear($cache);
         }
 
         try {
@@ -347,7 +347,7 @@ class Fields
         }
 
         // clear the field cache
-        QUI\Cache\Manager::clear('quiqqer/products/fields');
+        QUI\Cache\LongTermCache::clear('quiqqer/products/fields');
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsFieldCreate', [$Field]);
 
@@ -536,7 +536,7 @@ class Fields
      */
     public static function getFieldCacheName($fieldId)
     {
-        return 'quiqqer/products/fields/field/'.$fieldId.'/';
+        return Cache::getBasicCachePath().'fields/field/'.$fieldId.'/';
     }
 
     /**
@@ -553,7 +553,7 @@ class Fields
         $cacheName = Cache::getBasicCachePath().'fields';
 
         try {
-            self::$fieldTypes = QUI\Cache\Manager::get($cacheName);
+            self::$fieldTypes = QUI\Cache\LongTermCache::get($cacheName);
 
             return self::$fieldTypes;
         } catch (QUI\Exception $Exception) {
@@ -623,7 +623,7 @@ class Fields
             }
         }
 
-        QUI\Cache\Manager::set($cacheName, $result);
+        QUI\Cache\LongTermCache::set($cacheName, $result);
         self::$fieldTypes = $result;
 
         return $result;
@@ -644,7 +644,7 @@ class Fields
         $cacheName = Cache::getBasicCachePath().'fields/'.\md5($type);
 
         try {
-            self::$fieldTypeData[$type] = QUI\Cache\Manager::get($cacheName);
+            self::$fieldTypeData[$type] = QUI\Cache\LongTermCache::get($cacheName);
 
             return self::$fieldTypeData[$type];
         } catch (QUI\Exception $Exception) {
@@ -663,7 +663,7 @@ class Fields
 
         self::$fieldTypeData[$type] = \reset($found);
 
-        QUI\Cache\Manager::set($cacheName, self::$fieldTypeData[$type]);
+        QUI\Cache\LongTermCache::set($cacheName, self::$fieldTypeData[$type]);
 
         return self::$fieldTypeData[$type];
     }
@@ -719,7 +719,7 @@ class Fields
         }
 
         try {
-            $data = QUI\Cache\Manager::get(
+            $data = QUI\Cache\LongTermCache::get(
                 QUI\ERP\Products\Handler\Fields::getFieldCacheName($fieldId)
             );
         } catch (QUI\Exception $Exception) {
@@ -875,7 +875,7 @@ class Fields
         $cacheName = Cache::getBasicCachePath().'query/'.\md5(\serialize($queryParams));
 
         try {
-            return QUI\Cache\Manager::get($cacheName);
+            return QUI\Cache\LongTermCache::get($cacheName);
         } catch (QUI\Exception $Exception) {
         }
 
@@ -950,7 +950,7 @@ class Fields
 
 
         try {
-            QUI\Cache\Manager::set($cacheName, $result);
+            QUI\Cache\LongTermCache::set($cacheName, $result);
         } catch (\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
         }
