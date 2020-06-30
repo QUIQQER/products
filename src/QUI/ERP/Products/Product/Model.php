@@ -1107,37 +1107,49 @@ class Model extends QUI\QDOM
 
     /**
      * Alias for save()
+     *
+     * @param QUI\Interfaces\Users\User $PermissionUser (optional) - The user that executes the operation
+     * @return void
+     *
      * @throws QUI\Exception
      */
-    public function update()
+    public function update($PermissionUser = null)
     {
-        $this->save();
+        $this->save($PermissionUser);
     }
 
     /**
      * save / update the product data
      *
+     * @param QUI\Interfaces\Users\User $PermissionUser (optional) - The user that executes the operation
+     * @return void
+     *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Permissions\Exception
      * @throws QUI\Exception
      */
-    public function save()
+    public function save($PermissionUser = null)
     {
-        $this->productSave($this->getFieldData());
+        $this->productSave($this->getFieldData(), $PermissionUser);
     }
 
     /**
      * Internal saving method
      *
      * @param array $fieldData - field data
+     * @param QUI\Interfaces\Users\User $PermissionUser (optional) - The user that executes the operation
      *
      * @throws QUI\Permissions\Exception
      * @throws QUI\Exception
      * @throws Exception
      */
-    protected function productSave($fieldData)
+    protected function productSave($fieldData, $PermissionUser = null)
     {
-        QUI\Permissions\Permission::checkPermission('product.edit');
+        if (empty($PermissionUser)) {
+            $PermissionUser = QUI::getUserBySession();
+        }
+
+        QUI\Permissions\Permission::checkPermission('product.edit', $PermissionUser);
 
         // cleanup urls
         $urlField = \array_filter($fieldData, function ($field) {
@@ -1235,7 +1247,7 @@ class Model extends QUI\QDOM
                     'category'    => $mainCategory,
                     'fieldData'   => \json_encode($fieldData),
                     'permissions' => \json_encode($this->permissions),
-                    'e_user'      => QUI::getUserBySession()->getId(),
+                    'e_user'      => $PermissionUser->getId(),
                     'e_date'      => $this->getAttribute('e_date')
                 ],
                 ['id' => $this->getId()]
