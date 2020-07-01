@@ -885,7 +885,7 @@ class Model extends QUI\QDOM
         $baseCacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
         $cacheName     = $baseCacheName.'/prices/min';
 
-        if ($User && $User instanceof QUI\Interfaces\Users\User) {
+        if ($User && $User instanceof QUI\Interfaces\Users\User && !QUI::getUsers()->isNobodyUser($User)) {
             $cacheName = $baseCacheName.'/prices/'.$User->getId().'/min';
         }
 
