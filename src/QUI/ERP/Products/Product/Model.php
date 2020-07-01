@@ -1107,37 +1107,49 @@ class Model extends QUI\QDOM
 
     /**
      * Alias for save()
+     *
+     * @param QUI\Interfaces\Users\User $EditUser (optional) - The user that executes the operation
+     * @return void
+     *
      * @throws QUI\Exception
      */
-    public function update()
+    public function update($EditUser = null)
     {
-        $this->save();
+        $this->save($EditUser);
     }
 
     /**
      * save / update the product data
      *
+     * @param QUI\Interfaces\Users\User $EditUser (optional) - The user that executes the operation
+     * @return void
+     *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Permissions\Exception
      * @throws QUI\Exception
      */
-    public function save()
+    public function save($EditUser = null)
     {
-        $this->productSave($this->getFieldData());
+        $this->productSave($this->getFieldData(), $EditUser);
     }
 
     /**
      * Internal saving method
      *
      * @param array $fieldData - field data
+     * @param QUI\Interfaces\Users\User $EditUser (optional) - The user that executes the operation
      *
      * @throws QUI\Permissions\Exception
      * @throws QUI\Exception
      * @throws Exception
      */
-    protected function productSave($fieldData)
+    protected function productSave($fieldData, $EditUser = null)
     {
-        QUI\Permissions\Permission::checkPermission('product.edit');
+        if (empty($EditUser)) {
+            $EditUser = QUI::getUserBySession();
+        }
+
+        QUI\Permissions\Permission::checkPermission('product.edit', $EditUser);
 
         // cleanup urls
         $urlField = \array_filter($fieldData, function ($field) {
@@ -1235,7 +1247,7 @@ class Model extends QUI\QDOM
                     'category'    => $mainCategory,
                     'fieldData'   => \json_encode($fieldData),
                     'permissions' => \json_encode($this->permissions),
-                    'e_user'      => QUI::getUserBySession()->getId(),
+                    'e_user'      => $EditUser->getId(),
                     'e_date'      => $this->getAttribute('e_date')
                 ],
                 ['id' => $this->getId()]
@@ -2106,11 +2118,18 @@ class Model extends QUI\QDOM
     /**
      * Deactivate the product
      *
+     * @param QUI\Interfaces\Users\User $EditUser (optional) - The user that executes the operation
+     * @return void
+     *
      * @throws QUI\Exception
      */
-    public function deactivate()
+    public function deactivate($EditUser = null)
     {
-        QUI\Permissions\Permission::checkPermission('product.activate');
+        if (empty($EditUser)) {
+            $EditUser = QUI::getUserBySession();
+        }
+
+        QUI\Permissions\Permission::checkPermission('product.activate', $EditUser);
 
         $this->active = false;
 
@@ -2135,13 +2154,20 @@ class Model extends QUI\QDOM
     /**
      * Activate the product
      *
+     * @param QUI\Interfaces\Users\User $EditUser (optional) - The user that executes the operation
+     * @return void
+     *
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Permissions\Exception
      * @throws QUI\Exception
      */
-    public function activate()
+    public function activate($EditUser = null)
     {
-        QUI\Permissions\Permission::checkPermission('product.activate');
+        if (empty($EditUser)) {
+            $EditUser = QUI::getUserBySession();
+        }
+
+        QUI\Permissions\Permission::checkPermission('product.activate', $EditUser);
 
         // exist a main category?
         $Category = $this->getCategory();
