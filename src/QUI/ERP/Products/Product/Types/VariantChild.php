@@ -429,13 +429,14 @@ class VariantChild extends AbstractType
 
     /**
      * @param array $fieldData
+     * @param null|QUI\Interfaces\Users\User $EditUser
      *
      * @throws QUI\Database\Exception
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
      * @throws QUI\Permissions\Exception
      */
-    protected function productSave($fieldData)
+    protected function productSave($fieldData, $EditUser = null)
     {
         // check fields with parent fields
         $Parent         = $this->getParent();
@@ -454,7 +455,7 @@ class VariantChild extends AbstractType
         }
 
 
-        parent::productSave($fieldData);
+        parent::productSave($fieldData, $EditUser);
 
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
