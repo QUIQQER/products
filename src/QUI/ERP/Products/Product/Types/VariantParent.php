@@ -106,14 +106,15 @@ class VariantParent extends AbstractType
      * Internal saving method
      *
      * @param array $fieldData - field data
+     * @param null|QUI\Interfaces\Users\User $EditUser
      *
      * @throws QUI\Permissions\Exception
      * @throws QUI\Exception
      * @throws Exception
      */
-    protected function productSave($fieldData)
+    protected function productSave($fieldData, $EditUser = null)
     {
-        QUI\Permissions\Permission::checkPermission('product.edit');
+        QUI\Permissions\Permission::checkPermission('product.edit', $EditUser);
 
         $editableAttribute  = $this->getAttribute('editableVariantFields');
         $inheritedAttribute = $this->getAttribute('inheritedVariantFields');
@@ -164,7 +165,7 @@ class VariantParent extends AbstractType
             );
         }
 
-        parent::productSave($fieldData);
+        parent::productSave($fieldData, $EditUser);
     }
 
     /**
