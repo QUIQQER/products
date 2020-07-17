@@ -193,6 +193,22 @@ class VariantParent extends AbstractType
     }
 
     /**
+     * Gets the current product price.
+     *
+     * This is the price displayed in the frontend to the user. In moste cases,
+     * this is equal to the minimum price.
+     *
+     * @param QUI\Interfaces\Users\User $User (optional)
+     * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Exception
+     */
+    public function getCurrentPrice($User = null)
+    {
+        return $this->getDefaultVariant()->getMinimumPrice($User);
+    }
+
+    /**
      * Return the maximum price
      *
      * @param null $User
