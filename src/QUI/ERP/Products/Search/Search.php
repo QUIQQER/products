@@ -750,7 +750,17 @@ abstract class Search extends QUI\QDOM
                         throw new QUI\Exception();
                     }
 
-                    $order .= ' '.SearchHandler::getSearchFieldColumnName($OrderField);
+                    /**
+                     * Special handling when sorting by price (frontend search only)!
+                     *
+                     * If sorted by price use the currentPrice field to consider special
+                     * prices like offer prices.
+                     */
+                    if ($OrderField->getId() === Fields::FIELD_PRICE && $this instanceof FrontendSearch) {
+                        $order .= ' currentPrice';
+                    } else {
+                        $order .= ' '.SearchHandler::getSearchFieldColumnName($OrderField);
+                    }
                 } catch (\Exception $Exception) {
                     // if field does not exist or throws some other kind of error - it is not searchable
                     $order .= ' F'.Fields::FIELD_PRIORITY;

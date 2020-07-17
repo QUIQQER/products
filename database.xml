@@ -74,6 +74,7 @@
             <field type="VARCHAR(255) NULL">productNo</field>
             <field type="DOUBLE NULL">minPrice</field>
             <field type="DOUBLE NULL">maxPrice</field>
+            <field type="DOUBLE NULL">currentPrice</field>
             <field type="VARCHAR(255) NOT NULL">title</field>
             <field type="TEXT NULL">description</field>
             <field type="VARCHAR(255) NULL">category</field>
