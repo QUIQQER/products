@@ -1077,6 +1077,10 @@ class EventHandling
                 exit;
             }
 
+            QUI\System\Log::addInfo(
+                'There is no product category for the products. Please create a product category in your project.'
+            );
+
             $Site = $Project->firstChild();
             $Site->setAttribute('type', 'quiqqer/products:types/category');
             $Site->setAttribute('quiqqer.products.settings.categoryId', 0);
