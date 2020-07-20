@@ -871,6 +871,22 @@ class Model extends QUI\QDOM
     }
 
     /**
+     * Gets the current product price.
+     *
+     * This is the price displayed in the frontend to the user. In moste cases,
+     * this is equal to the minimum price.
+     *
+     * @param QUI\Interfaces\Users\User $User (optional)
+     * @return QUI\ERP\Money\Price
+     *
+     * @throws QUI\Exception
+     */
+    public function getCurrentPrice($User = null)
+    {
+        return $this->getMinimumPrice($User);
+    }
+
+    /**
      * Return the minimum price
      *
      * @param null $User
@@ -1557,9 +1573,10 @@ class Model extends QUI\QDOM
         $Locale->setCurrent($lang);
 
         // wir nutzen system user als netto user
-        $SystemUser = QUI::getUsers()->getSystemUser();
-        $minPrice   = $this->getMinimumPrice($SystemUser)->value();
-        $maxPrice   = $this->getMaximumPrice($SystemUser)->value();
+        $SystemUser   = QUI::getUsers()->getSystemUser();
+        $minPrice     = $this->getMinimumPrice($SystemUser)->value();
+        $maxPrice     = $this->getMaximumPrice($SystemUser)->value();
+        $currentPrice = $this->getCurrentPrice($SystemUser)->value();
 
         // Dates
         $cDate = $this->getAttribute('c_date');
@@ -1593,21 +1610,22 @@ class Model extends QUI\QDOM
         }
 
         $data = [
-            'type'        => $type,
-            'productNo'   => $this->getFieldValueByLocale(
+            'type'         => $type,
+            'productNo'    => $this->getFieldValueByLocale(
                 Fields::FIELD_PRODUCT_NO,
                 $Locale
             ),
-            'title'       => $title,
-            'description' => $this->getFieldValueByLocale(
+            'title'        => $title,
+            'description'  => $this->getFieldValueByLocale(
                 Fields::FIELD_SHORT_DESC,
                 $Locale
             ),
-            'active'      => $this->isActive() ? 1 : 0,
-            'minPrice'    => $minPrice ? $minPrice : 0,
-            'maxPrice'    => $maxPrice ? $maxPrice : 0,
-            'c_date'      => $cDate,
-            'e_date'      => $eDate
+            'active'       => $this->isActive() ? 1 : 0,
+            'minPrice'     => $minPrice ?: 0,
+            'maxPrice'     => $maxPrice ?: 0,
+            'currentPrice' => $currentPrice ?: 0,
+            'c_date'       => $cDate,
+            'e_date'       => $eDate
         ];
 
         if ($this instanceof QUI\ERP\Products\Product\Types\VariantChild) {

@@ -222,8 +222,10 @@ class FrontendSearch extends Search
                         continue;
                     }
 
+                    // Special handling owhen sorting by price
                     $columnName = SearchHandler::getSearchFieldColumnName($Field);
-                    $bindNo     = $Field->getId().'_'.$valueCounter++;
+
+                    $bindNo = $Field->getId().'_'.$valueCounter++;
 
                     $whereFreeText[]           = '`'.$columnName.'` LIKE :freetext'.$bindNo;
                     $binds['freetext'.$bindNo] = [
