@@ -1047,7 +1047,13 @@ class EventHandling
      */
     public static function onRequest(QUI\Rewrite $Rewrite, $url)
     {
-        if (QUI::getLocale()->getCurrent() != '_p') {
+        if (!isset($_GET['_url'])) {
+            return;
+        }
+
+        $urlParts = \explode('/', $_GET['_url']);
+
+        if ($urlParts[0] != '_p') {
             return;
         }
 
@@ -1056,6 +1062,7 @@ class EventHandling
         if (!\count($params)) {
             return;
         }
+
 
         try {
             $Product = Handler\Products::getProduct($params[0]);
