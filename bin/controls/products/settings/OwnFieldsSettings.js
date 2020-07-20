@@ -53,6 +53,7 @@ define('package/quiqqer/products/bin/controls/products/settings/OwnFieldsSetting
 
                 if (SortingInstance) {
                     SortingInstance.resize();
+                    SortingInstance.refresh();
                 }
             });
         }

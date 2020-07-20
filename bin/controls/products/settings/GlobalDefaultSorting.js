@@ -1,8 +1,8 @@
 /**
- * @module package/quiqqer/products/bin/controls/products/settings/DefaultSorting
+ * @module package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSorting
  * @author www.pcsg.de (Henning Leutz)
  */
-define('package/quiqqer/products/bin/controls/products/settings/DefaultSorting', [
+define('package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSorting', [
 
     'qui/QUI',
     'qui/controls/Control',
@@ -16,7 +16,7 @@ define('package/quiqqer/products/bin/controls/products/settings/DefaultSorting',
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/products/settings/DefaultSorting',
+        Type   : 'package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSorting',
 
         Binds: [
             '$onImport',
@@ -38,10 +38,7 @@ define('package/quiqqer/products/bin/controls/products/settings/DefaultSorting',
             this.reload();
 
             var Table            = this.getElm().getParent('table');
-            var UseSorting       = Table.getElement('[name="quiqqer.products.settings.useOwnSorting"]');
-            var AvailableSorting = Table.getElement('[name="quiqqer.products.settings.availableSorting"]');
-
-            UseSorting.addEvent('change', this.reload);
+            var AvailableSorting = Table.getElement('[name="products.sortFields"]');
 
             if (AvailableSorting.get('data-quiid')) {
                 QUI.Controls
@@ -81,11 +78,7 @@ define('package/quiqqer/products/bin/controls/products/settings/DefaultSorting',
                     }).inject(self.getElm());
                 }
 
-                if (self.$getSite()) {
-                    self.getElm().value = self.$getSite().getAttribute('quiqqer.products.settings.defaultSorting');
-                }
-
-                self.getElm().set('disabled', null);
+                self.getElm().set('disabled', false);
             });
         },
 
@@ -97,7 +90,7 @@ define('package/quiqqer/products/bin/controls/products/settings/DefaultSorting',
 
             return new Promise(function (resolve) {
                 var Table            = self.getElm().getParent('table');
-                var AvailableSorting = Table.getElement('[name="quiqqer.products.settings.availableSorting"]');
+                var AvailableSorting = Table.getElement('[name="products.sortFields"]');
 
                 if (!AvailableSorting.get('data-quiid')) {
                     return new Promise(function (res) {
@@ -110,24 +103,6 @@ define('package/quiqqer/products/bin/controls/products/settings/DefaultSorting',
                 var Instance = QUI.Controls.getById(AvailableSorting.get('data-quiid'));
                 resolve(Instance);
             });
-        },
-
-        /**
-         * @return {null|Object}
-         */
-        $getSite: function () {
-            // is it in site?
-            var PanelNode = this.getElm().getParent('.qui-panel');
-
-            if (PanelNode) {
-                var Panel = QUI.Controls.getById(PanelNode.get('data-quiid'));
-
-                if (Panel.getType() === 'controls/projects/project/site/Panel') {
-                    return Panel.getSite();
-                }
-            }
-
-            return null;
         }
     });
 });

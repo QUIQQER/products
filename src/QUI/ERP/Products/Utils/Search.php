@@ -47,6 +47,11 @@ class Search
         $Site           = QUI::getRewrite()->getSite();
         $defaultSorting = $Site->getAttribute('quiqqer.products.settings.defaultSorting');
 
+        if (empty($defaultSorting)) {
+            $Package        = QUI::getPackage('quiqqer/products');
+            $defaultSorting = $Package->getConfig()->get('products', 'defaultSortField');
+        }
+
         if ($categories) {
             $categories = \explode(',', $categories);
         }

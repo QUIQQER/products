@@ -323,7 +323,11 @@
         </locale>
 
         <locale name="settings.window.sortFields.description">
-            <de><![CDATA[Standardsortierung]]></de>
+            <de><![CDATA[Verfügbare Standardsortierungen]]></de>
+            <en><![CDATA[Default available sortings]]></en>
+        </locale>
+        <locale name="settings.window.defaultSortField.description">
+            <de><![CDATA[Standard Sortierung]]></de>
             <en><![CDATA[Default sorting]]></en>
         </locale>
 

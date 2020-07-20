@@ -113,7 +113,7 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
                     width    : 60
                 }, {
                     dataIndex: 'id',
-                    hidden   : true,
+                    hidden   : true
                 }, {
                     header   : QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
@@ -187,6 +187,10 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
          */
         $parseFieldData: function (fields) {
             for (var i = 0, len = fields.length; i < len; i++) {
+                if (typeof fields[i].sorting === 'undefined') {
+                    continue;
+                }
+
                 fields[i].status = new QUISwitch({
                     status : fields[i].sorting,
                     fieldId: fields[i].id,
@@ -204,7 +208,7 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
         /**
          * event: switch change
          */
-        $onSwitchChange: function () {
+        $onSwitchChange: function (Current) {
             var controls = QUI.Controls.getControlsInElement(this.$Elm);
             var switches = controls.filter(function (Control) {
                 return Control.getType() === 'qui/controls/buttons/Switch';
@@ -218,7 +222,18 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
                 }
             }
 
+            var currentId     = Current.getAttribute('fieldId');
+            var currentStatus = Current.getStatus();
+
+            for (i = 0, len = this.$currentFields.length; i < len; i++) {
+                if (this.$currentFields[i].id === currentId) {
+                    this.$currentFields[i].sorting = currentStatus;
+                    break;
+                }
+            }
+
             this.$Input.value = values.join(',');
+            this.fireEvent('change', [this]);
         },
 
         /**
