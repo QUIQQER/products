@@ -54,6 +54,9 @@
                 <conf name="sortFields">
                     <type><![CDATA[string]]></type>
                 </conf>
+                <conf name="defaultSortField">
+                    <type><![CDATA[string]]></type>
+                </conf>
             </section>
             <section name="search">
                 <conf name="backend">
@@ -397,6 +400,14 @@
                                 <locale group="quiqqer/products" var="settings.window.sortFields.description"/>
                             </text>
                         </input>
+                        <select conf="products.defaultSortField"
+                                data-qui="package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSorting"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.defaultSortField.description"/>
+                            </text>
+                            <option value=""/>
+                        </select>
                     </settings>
                 </category>
             </categories>
