@@ -37,10 +37,23 @@ define('package/quiqqer/products/bin/controls/products/settings/DefaultSorting',
         $onImport: function () {
             this.reload();
 
-            var Table      = this.getElm().getParent('table');
-            var UseSorting = Table.getElement('[name="quiqqer.products.settings.useOwnSorting"]');
+            var Table            = this.getElm().getParent('table');
+            var UseSorting       = Table.getElement('[name="quiqqer.products.settings.useOwnSorting"]');
+            var AvailableSorting = Table.getElement('[name="quiqqer.products.settings.availableSorting"]');
 
             UseSorting.addEvent('change', this.reload);
+
+            if (AvailableSorting.get('data-quiid')) {
+                QUI.Controls
+                   .getById(AvailableSorting.get('data-quiid'))
+                   .addEvent('change', this.reload);
+            } else {
+                AvailableSorting.addEvent('load', function () {
+                    QUI.Controls
+                       .getById(AvailableSorting.get('data-quiid'))
+                       .addEvent('change', this.reload);
+                }.bind(this));
+            }
         },
 
         /**
@@ -48,7 +61,7 @@ define('package/quiqqer/products/bin/controls/products/settings/DefaultSorting',
          */
         reload: function () {
             var self = this;
-
+console.log('reload');
             this.getElm().set('disabled', true);
 
             this.$getAvailableSorting().then(function (Instance) {
