@@ -55,6 +55,7 @@ QUI::$Ajax->registerFunction(
             $Template->setAttribute('Project', $Project);
             $Template->setAttribute('Site', $Site);
 
+            $Site->setAttribute('quiqqer.meta.site.title', false);
             $Site->setAttribute('meta.seotitle', $Product->getTitle($Locale));
             $Site->setAttribute('meta.description', $Product->getDescription($Locale));
 
