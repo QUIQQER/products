@@ -7,7 +7,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/FilterWindow', [
     'qui/QUI',
     'qui/controls/windows/Confirm',
     'package/quiqqer/products/bin/controls/frontend/category/ProductListField',
-    'package/quiqqer/products/bin/controls/search/SearchField',
+    'package/quiqqer/productsearch/bin/controls/search/SearchField',
     'qui/controls/buttons/Select',
     'Ajax',
     'Locale',
@@ -173,7 +173,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/FilterWindow', [
                     Node.getElement('[data-quiid]').get('data-quiid')
                 );
 
-                if (Control.getType() === 'package/quiqqer/products/bin/controls/search/SearchField') {
+                if (Control.getType() === 'package/quiqqer/productsearch/bin/controls/search/SearchField') {
                     return {
                         value  : Control.getSearchValue(),
                         fieldId: parseInt(Control.getFieldId())

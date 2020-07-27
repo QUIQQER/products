@@ -1,10 +1,10 @@
 /**
- * @module package/quiqqer/products/bin/types/Search
+ * @module package/quiqqer/productsearch/bin/types/Search
  * @author www.pcsg.de (Henning Leutz)
  *
  * Search functionality -> JavaScript
  */
-define('package/quiqqer/products/bin/types/Search', [
+define('package/quiqqer/productsearch/bin/types/Search', [
 
     'qui/QUI',
     'qui/controls/Control',
@@ -18,7 +18,7 @@ define('package/quiqqer/products/bin/types/Search', [
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/types/Search',
+        Type   : 'package/quiqqer/productsearch/bin/types/Search',
 
         initialize: function (options) {
             this.parent(options);
