@@ -208,11 +208,11 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
         'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
         'categoryPos'          => $Site->getAttribute('quiqqer.products.settings.categoryPos'),
-        'searchParams'         => Products\Utils\Search::getSearchParameterFromRequest(),
+        'searchParams'         => Products\Search\Utils::getSearchParameterFromRequest(),
         'autoload'             => 1,
         'autoloadAfter'        => $Site->getAttribute('quiqqer.products.settings.autoloadAfter'),
         'productLoadNumber'    => $Site->getAttribute('quiqqer.products.settings.productLoadNumber'),
-        'view'                 => Products\Utils\Search::getViewParameterFromRequest(),
+        'view'                 => Products\Search\Utils::getViewParameterFromRequest(),
     ]);
 
     $filterList = $ProductList->getFilter();

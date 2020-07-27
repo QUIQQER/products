@@ -25,7 +25,7 @@ class Suggest extends QUI\Control
         $this->setAttributes([
             'Site'                => false,
             'Project'             => false,
-            'data-qui'            => 'package/quiqqer/products/bin/controls/frontend/search/Suggest',
+            'data-qui'            => 'package/quiqqer/productsearch/bin/controls/frontend/search/Suggest',
             'hideOnProductSearch' => false,
             'globalsearch'        => false
         ]);
