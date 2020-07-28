@@ -492,7 +492,7 @@ class ProductList extends QUI\Control
             $result = [];
         }
 
-        if ($start + $max >= $count) {
+        if ($start + $max > $count) {
             $more = false;
         }
 
@@ -535,7 +535,7 @@ class ProductList extends QUI\Control
         $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([
-            'this' => $this,
+            'this'      => $this,
             'JsonLd'    => new QUI\ERP\Products\Product\JsonLd(),
             'Product'   => $Product->getView(),
             'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice()
@@ -636,7 +636,7 @@ class ProductList extends QUI\Control
         $searchParams['sheet'] = round($start / $max) + 1;
         $searchParams['limit'] = $max;
 
-//        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
 
         return $searchParams;
     }
@@ -662,7 +662,7 @@ class ProductList extends QUI\Control
             $searchParams['freetext'] = '';
         }
 
-//        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
 
         return $searchParams;
     }
