@@ -21,7 +21,7 @@
         "quiqqer\/erp": "^1.2|dev-master|dev-dev",
         "quiqqer\/areas": "^1|dev-master|dev-dev",
         "quiqqer\/bricks": "^1|dev-master|dev-dev",
-        "quiqqer\/currency": "^1|dev-master|dev-dev",
+        "quiqqer\/currency": "^1.2|dev-master|dev-dev",
         "quiqqer\/discount": "^0.9|dev-master|dev-dev",
         "quiqqer\/pace": "^1|dev-master|dev-dev",
         "quiqqer\/product-bricks": "^1|dev-master|dev-dev",
