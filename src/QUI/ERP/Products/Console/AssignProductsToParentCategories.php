@@ -24,7 +24,8 @@ class AssignProductsToParentCategories extends QUI\System\Console\Tool
             ->addArgument(
                 'productIds',
                 'Comma-separated list of product IDs that should be assigned to categories.',
-                false, true
+                false,
+                true
             );
     }
 
@@ -35,7 +36,7 @@ class AssignProductsToParentCategories extends QUI\System\Console\Tool
     {
         // Fetch productIds
         $productIds = $this->getArgument('productIds');
-        
+
         if (!empty($productIds)) {
             $productIds = \explode(',', $productIds);
 
