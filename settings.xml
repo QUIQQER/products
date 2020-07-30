@@ -54,6 +54,9 @@
                 <conf name="sortFields">
                     <type><![CDATA[string]]></type>
                 </conf>
+                <conf name="defaultSortField">
+                    <type><![CDATA[string]]></type>
+                </conf>
             </section>
             <section name="search">
                 <conf name="backend">
@@ -354,7 +357,7 @@
                             <locale group="quiqqer/products" var="settings.window.fieldsearch.backend.title"/>
                         </title>
                         <input conf="search.backend"
-                               data-qui="package/quiqqer/products/bin/controls/products/search/Settings"
+                               data-qui="package/quiqqer/productsearch/bin/controls/products/search/Settings"
                         >
                             <text>
                                 <locale group="quiqqer/products" var="settings.window.fieldsearch.backend.description"/>
@@ -367,7 +370,7 @@
                             <locale group="quiqqer/products" var="settings.window.fieldsearch.frontend.title"/>
                         </title>
                         <input conf="search.frontend"
-                               data-qui="package/quiqqer/products/bin/controls/products/search/Settings"
+                               data-qui="package/quiqqer/productsearch/bin/controls/products/search/Settings"
                         >
                             <text>
                                 <locale group="quiqqer/products"
@@ -381,7 +384,7 @@
                             <locale group="quiqqer/products" var="settings.window.fieldsearch.freetext.title"/>
                         </title>
                         <input conf="search.freetext"
-                               data-qui="package/quiqqer/products/bin/controls/products/search/Settings"
+                               data-qui="package/quiqqer/productsearch/bin/controls/products/search/Settings"
                         >
                             <text>
                                 <locale group="quiqqer/products"
@@ -397,6 +400,14 @@
                                 <locale group="quiqqer/products" var="settings.window.sortFields.description"/>
                             </text>
                         </input>
+                        <select conf="products.defaultSortField"
+                                data-qui="package/quiqqer/products/bin/controls/products/settings/GlobalDefaultSorting"
+                        >
+                            <text>
+                                <locale group="quiqqer/products" var="settings.window.defaultSortField.description"/>
+                            </text>
+                            <option value=""/>
+                        </select>
                     </settings>
                 </category>
             </categories>

@@ -146,7 +146,7 @@
                             </select>
 
                             <input conf="quiqqer.products.settings.searchFieldIds" type="hidden"
-                                   data-qui="package/quiqqer/products/bin/controls/search/FieldSelect"
+                                   data-qui="package/quiqqer/productsearch/bin/controls/search/FieldSelect"
                                    data-qui-options-showsearchableonly="1"
                             >
                                 <text>
@@ -227,103 +227,6 @@
                 </categories>
             </tab>
 
-        </type>
-
-        <!-- Produkt suche -->
-        <type type="types/search" icon="fa fa-shopping-basket fa-search">
-            <locale group="quiqqer/products" var="admin.types.search"/>
-            <desc>
-                <locale group="quiqqer/products" var="admin.types.search.desc"/>
-            </desc>
-
-            <attributes>
-                <attribute>quiqqer.products.settings.productLoadNumber</attribute>
-                <attribute>quiqqer.products.settings.autoloadAfter</attribute>
-                <attribute>quiqqer.products.settings.searchFieldIds</attribute>
-                <attribute>quiqqer.products.settings.searchFieldIds.edited</attribute>
-                <attribute>quiqqer.products.settings.searchFieldsByUser</attribute>
-                <attribute>quiqqer.products.settings.showFilterLeft</attribute>
-                <attribute>quiqqer.products.settings.defaultSorting</attribute>
-            </attributes>
-
-            <settings>
-                <category name="search-settings">
-                    <settings>
-                        <title>
-                            <locale group="quiqqer/products" var="quiqqer.products.search.settings.title"/>
-                        </title>
-
-                        <input conf="quiqqer.products.settings.productLoadNumber" type="number">
-                            <text>
-                                <locale group="quiqqer/products" var="quiqqer.products.settings.productLoadNumber"/>
-                            </text>
-                        </input>
-
-                        <select conf="quiqqer.products.settings.autoloadAfter">
-                            <text>
-                                <locale group="quiqqer/products" var="quiqqer.products.settings.autoloadAfter"/>
-                            </text>
-
-                            <option value=""></option>
-                            <option value="0">
-                                <locale group="quiqqer/products"
-                                        var="quiqqer.products.settings.autoloadAfter.disabled"/>
-                            </option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                        </select>
-
-                        <input conf="quiqqer.products.settings.showFilterLeft" type="checkbox">
-                            <text>
-                                <locale group="quiqqer/products" var="quiqqer.products.settings.showFilterLeft"/>
-                            </text>
-                        </input>
-
-                        <input conf="quiqqer.products.settings.searchFieldIds" type="hidden"
-                               data-qui="package/quiqqer/products/bin/controls/search/FieldSelect"
-                        >
-                            <text>
-                                <locale group="quiqqer/products" var="quiqqer.products.settings.searchFieldIds"/>
-                            </text>
-                        </input>
-
-                        <select conf="quiqqer.products.settings.defaultSorting">
-                            <text>
-                                <locale group="quiqqer/products" var="quiqqer.products.settings.defaultSorting"/>
-                            </text>
-
-                            <option value=""/>
-                            <option value="priority">
-                                <locale group="quiqqer/products" var="sort.sorting"/>
-                            </option>
-                            <option value="c_date ASC">
-                                <locale group="quiqqer/products" var="sort.cdate.ASC"/>
-                            </option>
-                            <option value="c_date DESC">
-                                <locale group="quiqqer/products" var="sort.cdate.DESC"/>
-                            </option>
-
-                            <option value="title ASC">
-                                <locale group="quiqqer/products" var="sort.title.ASC"/>
-                            </option>
-                            <option value="title DESC">
-                                <locale group="quiqqer/products" var="sort.title.DESC"/>
-                            </option>
-
-                            <option value="productNo ASC">
-                                <locale group="quiqqer/products" var="sort.productNo.ASC"/>
-                            </option>
-                            <option value="productNo DESC">
-                                <locale group="quiqqer/products" var="sort.productNo.DESC"/>
-                            </option>
-                        </select>
-                    </settings>
-                </category>
-            </settings>
         </type>
 
         <!-- Produktliste -->

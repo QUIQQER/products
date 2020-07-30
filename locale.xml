@@ -270,19 +270,6 @@
                 <![CDATA[Attribute list selects that have no available options shall not be displayed in the respective product (frontend)]]></en>
         </locale>
 
-        <locale name="settings.window.fieldsearch.backend.title">
-            <de><![CDATA[Felder für Backend-Filter]]></de>
-            <en><![CDATA[Fields for backend filter]]></en>
-        </locale>
-        <locale name="settings.window.fieldsearch.backend.description">
-            <de><![CDATA[
-            Hier kannst Du einstellen welche Filter in der Backendproduktsuche angezeigt werden sollen.
-            ]]></de>
-            <en><![CDATA[
-            Here you can define which filters to display in the backend product search.
-            ]]></en>
-        </locale>
-
         <locale name="settings.window.products.useAttributeListsForMinMaxPriceCalculation.text">
             <de><![CDATA[Preismodifikation durch Auswahllisten im Such-Cache berücksichtigen]]></de>
             <en><![CDATA[Consider price modification by select lists in search cache]]></en>
@@ -294,36 +281,12 @@
                 <![CDATA[When calculating the lowest and highest price for the product search, changes in the price by select lists (discounts / surcharges) should be taken into account.]]></en>
         </locale>
 
-        <locale name="settings.window.fieldsearch.frontend.title">
-            <de><![CDATA[Voreinstellung für Kategorie Filter]]></de>
-            <en><![CDATA[Default for category filter]]></en>
-        </locale>
-        <locale name="settings.window.fieldsearch.frontend.description">
-            <de><![CDATA[
-            Hier kannst Du die Felder für den Produktfilter definieren welche den Kategorieseiten
-            automatisch zugeordnet werden sollen.
-            ]]></de>
-            <en><![CDATA[
-            Here you can define the fields for the product filter which the category pages
-            to be assigned automatically.
-            ]]></en>
-        </locale>
-
-        <locale name="settings.window.fieldsearch.freetext.title">
-            <de><![CDATA[Feld-Einstellung für die Produkt Freitextsuche]]></de>
-            <en><![CDATA[Field settings for the product freetext search]]></en>
-        </locale>
-        <locale name="settings.window.fieldsearch.freetext.description">
-            <de><![CDATA[
-            Hier kannst Du festlegen welche Felder bei der Produktsuche (in der Freitextsuche) berücksichtigt werden.
-            ]]></de>
-            <en><![CDATA[
-            Here you can define which fields are considered during the product search (in the Freetext search).
-            ]]></en>
-        </locale>
-
         <locale name="settings.window.sortFields.description">
-            <de><![CDATA[Standardsortierung]]></de>
+            <de><![CDATA[Verfügbare Standardsortierungen]]></de>
+            <en><![CDATA[Default available sortings]]></en>
+        </locale>
+        <locale name="settings.window.defaultSortField.description">
+            <de><![CDATA[Standard Sortierung]]></de>
             <en><![CDATA[Default sorting]]></en>
         </locale>
 

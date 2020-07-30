@@ -567,6 +567,7 @@ class Calc
         $isNetto     = QUI\ERP\Utils\User::isNettoUser($this->getUser());
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
         $Area        = QUI\ERP\Utils\User::getUserArea($this->getUser());
+        $Current     = $this->getCurrency();
 
         $nettoPrice   = $Product->getNettoPrice()->value();
         $priceFactors = $Product->getPriceFactors()->sort();
@@ -690,7 +691,10 @@ class Calc
             try {
                 $TaxType  = new QUI\ERP\Tax\TaxType($ProductVat->getValue());
                 $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
-                $Vat      = $TaxEntry;
+
+                if ($TaxEntry->isActive()) {
+                    $Vat = $TaxEntry;
+                }
             } catch (QUI\Exception $Exception) {
                 QUI\ERP\Debug::getInstance()->log(
                     'Product Vat ist nicht für den Benutzer gültig',

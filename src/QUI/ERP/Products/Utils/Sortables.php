@@ -39,30 +39,30 @@ class Sortables
     public static function getFieldSettingsForSite(QUI\Projects\Site $Site)
     {
         $useOwnSorting = $Site->getAttribute('quiqqer.products.settings.useOwnSorting');
+        $result        = self::getFieldSettings();
 
         if (!$useOwnSorting) {
-            return self::getDefaultFields();
-        }
-
-        $fields = $Site->getAttribute('quiqqer.products.settings.availableSorting');
-        $result = self::getFieldSettings();
-
-        if ($fields !== false) {
-            $fields = \trim($fields, ',');
-
-            if (!empty($fields)) {
-                $fields = \explode(',', \trim($fields, ','));
-            }
-
-            if (!empty($fields)) {
-                $fields = \array_flip($fields);
-            }
-
-            if (!is_array($fields)) {
-                $fields = [];
-            }
-        } else {
             $fields = self::getDefaultFields();
+        } else {
+            $fields = $Site->getAttribute('quiqqer.products.settings.availableSorting');
+
+            if ($fields !== false) {
+                $fields = \trim($fields, ',');
+
+                if (!empty($fields)) {
+                    $fields = \explode(',', \trim($fields, ','));
+                }
+
+                if (!empty($fields)) {
+                    $fields = \array_flip($fields);
+                }
+
+                if (!is_array($fields)) {
+                    $fields = [];
+                }
+            } else {
+                $fields = self::getDefaultFields();
+            }
         }
 
         foreach ($result as $key => $value) {

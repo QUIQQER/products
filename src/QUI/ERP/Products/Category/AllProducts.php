@@ -130,7 +130,7 @@ class AllProducts extends Category
      */
     public function getFields()
     {
-        return QUI\ERP\Products\Utils\Search::getDefaultFrontendFields();
+        return QUI\ERP\Products\Search\Utils::getDefaultFrontendFields();
     }
 
     /**

@@ -81,7 +81,7 @@ define('package/quiqqer/products/bin/controls/products/Select', [
             Btn.setAttribute('icon', 'fa fa-spinner fa-spin');
 
             require([
-                'package/quiqqer/products/bin/controls/products/search/Window'
+                'package/quiqqer/productsearch/bin/controls/products/search/Window'
             ], function (Search) {
                 new Search({
                     productTypes: self.getAttribute('productTypes'),
