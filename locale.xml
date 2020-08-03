@@ -38,6 +38,14 @@
             <de><![CDATA[Wählen einzelne Produkte aus und lassen diese in einer Liste anzeigen.]]></de>
             <en><![CDATA[Select individual products and display them in a list.]]></en>
         </locale>
+        <locale name="admin.types.manufacturerList">
+            <de><![CDATA[Hersteller-Liste]]></de>
+            <en><![CDATA[Manufacturer list]]></en>
+        </locale>
+        <locale name="admin.types.manufacturerList.desc">
+            <de><![CDATA[Listet alle Hersteller von Produkten mit der Möglichkeit, die Produkte einzelner Hersteller zu listen.]]></de>
+            <en><![CDATA[Lists all manufacturers of products with the possibility to list the products of individual manufacturers.]]></en>
+        </locale>
         <locale name="quiqqer.products.settings.productIds">
             <de><![CDATA[Produkte]]></de>
             <en><![CDATA[Products]]></en>
@@ -512,6 +520,19 @@
         <locale name="category.control.productlist.selectionTitle">
             <de><![CDATA[Ihre Auswahl:]]></de>
             <en><![CDATA[Your selection:]]></en>
+        </locale>
+
+        <locale name="category.control.manufacturerList.button.more">
+            <de><![CDATA[Mehr laden]]></de>
+            <en><![CDATA[More]]></en>
+        </locale>
+        <locale name="message.manufacturerList.search.empty">
+            <de><![CDATA[Leider wurden keine Hersteller gefunden.]]></de>
+            <en><![CDATA[Unfortunately, no manufacturers were found.]]></en>
+        </locale>
+        <locale name="manufacturerList.result_count">
+            <de><![CDATA[[count] Hersteller gefunden]]></de>
+            <en><![CDATA[[count] manufacturers found]]></en>
         </locale>
 
 
@@ -1155,6 +1176,16 @@
             <de><![CDATA[aufsteigend]]></de>
             <en><![CDATA[ascending]]></en>
         </locale>
+        
+        <locale name="types.manufacturerList.header" html="true">
+            <de><![CDATA[Alle Produkte des Herstellers "[manufacturer]"]]></de>
+            <en><![CDATA[All products of manufacturer "[manufacturer]"]]></en>
+        </locale>
+        <locale name="types.manufacturerList.back_to_list">
+            <de><![CDATA[zurück zur Hersteller-Übersicht]]></de>
+            <en><![CDATA[back to manufacturer overview]]></en>
+        </locale>
+        
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
@@ -2220,6 +2251,10 @@
         <locale name="quiqqer.products.settings.categoryDisplay">
             <de><![CDATA[Kategorienanzeige]]></de>
             <en><![CDATA[Categorydisplay]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.productDisplay">
+            <de><![CDATA[Produkt-Darstellung]]></de>
+            <en><![CDATA[Product display]]></en>
         </locale>
         <locale name="quiqqer.products.settings.categoryDisplay.gallery">
             <de><![CDATA[Galerie]]></de>

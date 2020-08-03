@@ -1,0 +1,22 @@
+{if $Template->getAttribute('content-body') && $Site->getAttribute('content')}
+<section class="content-body quiqqer-content grid-100 mobile-grid-100 grid-parent">
+    {$Site->getAttribute('content')}
+</section>
+{/if}
+
+{if $ManufacturerUser}
+    <h2>
+        {locale group="quiqqer/products" var="types.manufacturerList.header" manufacturer=$manufacturerTitle}
+    </h2>
+    <div class="quiqqer-products-manufacturerList-back">
+        <a href="{$url}">
+            <span class="fa fa-arrow-left"></span>
+            {locale group="quiqqer/products" var="types.manufacturerList.back_to_list"}
+        </a>
+    </div>
+    <div class="quiqqer-products-manufacturerList-products">
+        {$ProductList->create()}
+    </div>
+{else}
+    {$ManufacturerList->create()}
+{/if}

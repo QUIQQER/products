@@ -62,13 +62,13 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         if (\is_array($users)) {
             $value = [];
-    
+
             foreach ($users as $User) {
                 if ($User->isActive()) {
                     $value[] = $User->getName();
                 }
             }
-    
+
             $params['value'] = \implode(', ', $value);
         }
 
@@ -295,11 +295,11 @@ class GroupList extends QUI\ERP\Products\Field\Field
     }
 
     /**
-     * Return all users in from the groups
+     * Return all users IDs from the groups assigned to this fields
      *
-     * @return array
+     * @return int[]
      */
-    public function getUsers()
+    public function getUserIds()
     {
         $groups = $this->getGroups();
         $result = [];
@@ -311,14 +311,28 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
             foreach ($users as $User) {
                 if (\is_array($User)) {
-                    try {
-                        $User = QUI::getUsers()->get($User['id']);
-                    } catch (QUI\Exception $Exception) {
-                        continue;
-                    }
+                    $result[] = (int)$User['id'];
                 }
+            }
+        }
 
-                $result[$User->getId()] = $User;
+        return $result;
+    }
+
+    /**
+     * Return all users in from the groups
+     *
+     * @return QUI\Interfaces\Users\User[]
+     */
+    public function getUsers()
+    {
+        $result = [];
+
+        foreach ($this->getUserIds() as $userId) {
+            try {
+                $result[$userId] = QUI::getUsers()->get($userId);
+            } catch (QUI\Exception $Exception) {
+                continue;
             }
         }
 
@@ -335,7 +349,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
         $Groups   = QUI::getGroups();
         $groupIds = $this->getOption('groupIds');
         $result   = [];
-        
+
         if (!\is_array($groupIds)) {
             return $result;
         }
