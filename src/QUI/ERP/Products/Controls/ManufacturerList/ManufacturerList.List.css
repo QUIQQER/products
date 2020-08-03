@@ -1,0 +1,45 @@
+.quiqqer-products-manufacturerList-entry {
+    border-bottom: 1px solid #f1f1f1;
+    clear: both;
+    float: left;
+    padding: 10px 0;
+    width: 100%;
+}
+
+.quiqqer-products-manufacturerList-entry-text {
+    float: left;
+    padding: 0 10px 0 0;
+    width: calc(100% - 360px);
+}
+
+.quiqqer-products-manufacturerList-entry-artno {
+    float: left;
+    font-size: 12px;
+    line-height:20px;
+    padding: 10px;
+    width: 130px;
+}
+
+.quiqqer-products-manufacturerList-entry-text-description {
+    font-size: 12px;
+}
+
+.quiqqer-products-manufacturerList-entry-price,
+.quiqqer-products-manufacturerList-entry-buttons {
+    float: right;
+    width: 100px;
+}
+
+.quiqqer-products-manufacturerList-entry-buttons {
+    cursor: pointer;
+    float: right;
+    line-height: 20px;
+    text-align: right;
+}
+
+.quiqqer-products-manufacturerList-entry-price {
+    line-height: 20px;
+    padding: 10px;
+    text-align: right;
+    width: 130px;
+}

@@ -1,0 +1,19 @@
+{foreach $manufacturerUsers as $userId}
+<div class="quiqqer-products-manufacturerList-entry grid-33 mobile-grid-100"
+         data-mid="{$userId}"
+>
+    <div class="quiqqer-products-manufacturerList-entry-text">
+        <header>
+            {assign var=title value=\QUI\ERP\Products\Handler\Manufacturers::getManufacturerTitle($userId)}
+
+            <a href="{\QUI\ERP\Products\Handler\Manufacturers::getManufacturerUrl($userId)}" title="{$title|escape:'html'}">
+                {$title}
+            </a>
+        </header>
+    </div>
+
+    <div class="quiqqer-products-manufacturerList-entry-buttons">
+        <span class="fa fa-envelope button__small quiqqer-products-manufacturerList-button-show"></span>
+    </div>
+</div>
+{/foreach}

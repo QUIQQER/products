@@ -260,5 +260,192 @@
             </settings>
         </type>
 
+        <!-- Manufacturer list -->
+        <type type="types/manufacturerList" icon="fa fa-users">
+            <locale group="quiqqer/products" var="admin.types.manufacturerList"/>
+            <desc>
+                <locale group="quiqqer/products" var="admin.types.manufacturerList.desc"/>
+            </desc>
+
+            <attributes>
+                <attribute>quiqqer.products.settings.searchFieldIds</attribute>
+                <attribute>quiqqer.products.settings.searchFieldIds.edited</attribute>
+                <attribute>quiqqer.products.settings.searchFieldsByUser</attribute>
+                <attribute>quiqqer.products.settings.showFilterLeft</attribute>
+                <attribute>quiqqer.products.settings.showFreeTextSearch</attribute>
+                <attribute>quiqqer.products.settings.productLoadNumber</attribute>
+                <attribute>quiqqer.products.settings.categoryStartNumber</attribute>
+                <attribute>quiqqer.products.settings.autoloadAfter</attribute>
+                <attribute>quiqqer.products.settings.defaultSorting</attribute>
+                <attribute>quiqqer.products.settings.tags</attribute>
+                <attribute>quiqqer.products.settings.categoryDisplay</attribute>
+
+                <attribute>quiqqer.products.settings.availableSorting</attribute>
+                <attribute>quiqqer.products.settings.useOwnSorting</attribute>
+            </attributes>
+
+            <tab name="category-products">
+                <text>
+                    <locale group="quiqqer/products" var="quiqqer.products.site.category.settings.title"/>
+                </text>
+                <image>fa fa-shopping-bag</image>
+
+                <categories>
+                    <category>
+
+                        <settings>
+                            <title>
+                                <locale group="quiqqer/products" var="quiqqer.products.category.settings.title"/>
+                            </title>
+
+                            <input conf="quiqqer.products.settings.showFilterLeft" type="checkbox">
+                                <text>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.showFilterLeft"/>
+                                </text>
+                            </input>
+
+                            <input conf="quiqqer.products.settings.categoryAsFilter" type="checkbox">
+                                <text>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.categoryAsFilter"/>
+                                </text>
+                            </input>
+
+                            <input conf="quiqqer.products.settings.showFreeTextSearch" type="checkbox">
+                                <text>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.showFreeTextSearch"/>
+                                </text>
+                            </input>
+
+                            <input conf="quiqqer.products.settings.productLoadNumber" type="number">
+                                <text>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.productLoadNumber"/>
+                                </text>
+                            </input>
+
+                            <select conf="quiqqer.products.settings.autoloadAfter">
+                                <text>
+                                    <locale group="quiqqer/products" var="quiqqer.products.settings.autoloadAfter"/>
+                                </text>
+
+                                <option value=""></option>
+                                <option value="0">
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.autoloadAfter.disabled"/>
+                                </option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                            </select>
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.autoloadAfter.description"/>
+                            </text>
+
+                            <select conf="quiqqer.products.settings.categoryDisplay">
+                                <text>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.productDisplay"/>
+                                </text>
+
+                                <option value="gallery">
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.categoryDisplay.gallery"/>
+                                </option>
+                                <option value="list">
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.categoryDisplay.list"/>
+                                </option>
+                            </select>
+
+                            <input conf="quiqqer.products.settings.searchFieldIds" type="hidden"
+                                   data-qui="package/quiqqer/productsearch/bin/controls/search/FieldSelect"
+                                   data-qui-options-showsearchableonly="1"
+                            >
+                                <text>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.searchFieldIds"/>
+                                </text>
+                            </input>
+
+                            <input conf="quiqqer.products.settings.useOwnSorting"
+                                   type="checkbox"
+                                   data-qui="package/quiqqer/products/bin/controls/products/settings/OwnFieldsSettings"
+                            >
+                                <text>
+                                    <locale group="quiqqer/products" var="quiqqer.products.settings.useOwnSorting"/>
+                                </text>
+                            </input>
+
+                            <input conf="quiqqer.products.settings.availableSorting"
+                                   data-qui="package/quiqqer/products/bin/controls/products/settings/SortFields"
+                            >
+                                <text>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.availableSorting"/>
+                                </text>
+                            </input>
+
+                            <select conf="quiqqer.products.settings.defaultSorting"
+                                    data-qui="package/quiqqer/products/bin/controls/products/settings/DefaultSorting"
+                            >
+                                <text>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.defaultSorting"/>
+                                </text>
+
+                                <option value=""/>
+                                <!--
+                                <option value="priority">
+                                    <locale group="quiqqer/products" var="sort.sorting"/>
+                                </option>
+                                <option value="c_date ASC">
+                                    <locale group="quiqqer/products" var="sort.cdate.ASC"/>
+                                </option>
+                                <option value="c_date DESC">
+                                    <locale group="quiqqer/products" var="sort.cdate.DESC"/>
+                                </option>
+
+                                <option value="title ASC">
+                                    <locale group="quiqqer/products" var="sort.title.ASC"/>
+                                </option>
+                                <option value="title DESC">
+                                    <locale group="quiqqer/products" var="sort.title.DESC"/>
+                                </option>
+
+                                <option value="productNo ASC">
+                                    <locale group="quiqqer/products" var="sort.productNo.ASC"/>
+                                </option>
+                                <option value="productNo DESC">
+                                    <locale group="quiqqer/products" var="sort.productNo.DESC"/>
+                                </option>
+                                -->
+                            </select>
+
+
+                            <input conf="quiqqer.products.settings.tags"
+                                   data-qui="package/quiqqer/products/bin/controls/products/settings/SiteProductTags"
+                                   type="hidden"
+                            >
+                                <text>
+                                    <locale group="quiqqer/products" var="quiqqer.products.settings.tags"/>
+                                </text>
+                                <description>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.tags.description"/>
+                                </description>
+                            </input>
+                        </settings>
+                    </category>
+                </categories>
+            </tab>
+        </type>
+
     </types>
 </site>
