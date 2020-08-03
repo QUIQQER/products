@@ -187,9 +187,7 @@ class ManufacturerList extends QUI\Control
             }
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);
-
             $count = 0;
-
         }
 
         // sort alphabetically
