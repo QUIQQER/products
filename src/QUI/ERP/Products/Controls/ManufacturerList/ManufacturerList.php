@@ -161,29 +161,32 @@ class ManufacturerList extends QUI\Control
         $more                = true;
         $manufacturerUserIds = [];
         $Users               = QUI::getUsers();
+        $count               = 0;
 
         try {
             $userIds = ManufacturersHandler::getManufacturerUserIds();
 
-            $result = QUI::getDataBase()->fetch([
-                'select' => ['id'],
-                'from'   => $Users::table(),
-                'where'  => [
-                    'id' => [
-                        'type'  => 'IN',
-                        'value' => $userIds
-                    ]
-                ],
-                'order'  => 'username ASC',
-                'limit'  => $start.','.$max
-            ]);
+            if (!empty($userIds)) {
+                $result = QUI::getDataBase()->fetch([
+                    'select' => ['id'],
+                    'from'   => $Users::table(),
+                    'where'  => [
+                        'id' => [
+                            'type'  => 'IN',
+                            'value' => $userIds
+                        ]
+                    ],
+                    'order'  => 'username ASC',
+                    'limit'  => $start.','.$max
+                ]);
 
-            foreach ($result as $row) {
-                $manufacturerUserIds[] = $row['id'];
-            }
+                foreach ($result as $row) {
+                    $manufacturerUserIds[] = $row['id'];
+                }
 
-            if ($count === false) {
-                $count = \count($userIds);
+                if ($count === false) {
+                    $count = \count($userIds);
+                }
             }
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);
