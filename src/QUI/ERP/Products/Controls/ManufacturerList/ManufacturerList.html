@@ -1,0 +1,31 @@
+<section class="quiqqer-products-manufacturerList-entries grid-container grid-parent">
+
+    <div class="quiqqer-products-manufacturerList-resultInfo-text">
+        {locale group="quiqqer/products" var="manufacturerList.result_count" count=$count}
+    </div>
+
+    <div class="quiqqer-products-manufacturerList-entries-container">
+        <div class="quiqqer-products-manufacturerList-entries-container-real">
+            {if $count}
+                {$manufacturers}
+            {else}
+            <div class="quiqqer-products-manufacturerList-sort__noProducts">
+                {locale group="quiqqer/products" var="message.manufacturerList.search.empty"}
+            </div>
+            {/if}
+        </div>
+    </div>
+
+    {if $count}
+    <div class="quiqqer-products-manufacturerList-entries-more" {if $more == false}style="opacity: 0"{/if}>
+        <div class="button btn-outline btn-secondary btn disabled">
+            {locale group="quiqqer/products" var="category.control.manufacturerList.button.more"}
+        </div>
+    </div>
+    {/if}
+
+    <noscript>
+        {$Pagination->create()}
+    </noscript>
+
+</section>

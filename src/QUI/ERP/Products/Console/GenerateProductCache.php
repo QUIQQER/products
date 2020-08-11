@@ -36,7 +36,6 @@ class GenerateProductCache extends QUI\System\Console\Tool
     {
         Products::$createFrontendCache = true;
 
-
         // LOCK
         try {
             $Package = QUI::getPackage('quiqqer/products');

@@ -18,7 +18,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
     'package/quiqqer/products/bin/controls/products/Product',
     'package/quiqqer/products/bin/Categories',
     'package/quiqqer/products/bin/Fields',
-    'package/quiqqer/products/bin/controls/products/search/Window',
+    'package/quiqqer/productsearch/bin/controls/products/search/Window',
     'package/quiqqer/products/bin/controls/categories/Sitemap',
     'package/quiqqer/translator/bin/controls/Update',
 

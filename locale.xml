@@ -38,6 +38,14 @@
             <de><![CDATA[Wählen einzelne Produkte aus und lassen diese in einer Liste anzeigen.]]></de>
             <en><![CDATA[Select individual products and display them in a list.]]></en>
         </locale>
+        <locale name="admin.types.manufacturerList">
+            <de><![CDATA[Hersteller-Liste]]></de>
+            <en><![CDATA[Manufacturer list]]></en>
+        </locale>
+        <locale name="admin.types.manufacturerList.desc">
+            <de><![CDATA[Listet alle Hersteller von Produkten mit der Möglichkeit, die Produkte einzelner Hersteller zu listen.]]></de>
+            <en><![CDATA[Lists all manufacturers of products with the possibility to list the products of individual manufacturers.]]></en>
+        </locale>
         <locale name="quiqqer.products.settings.productIds">
             <de><![CDATA[Produkte]]></de>
             <en><![CDATA[Products]]></en>
@@ -270,19 +278,6 @@
                 <![CDATA[Attribute list selects that have no available options shall not be displayed in the respective product (frontend)]]></en>
         </locale>
 
-        <locale name="settings.window.fieldsearch.backend.title">
-            <de><![CDATA[Felder für Backend-Filter]]></de>
-            <en><![CDATA[Fields for backend filter]]></en>
-        </locale>
-        <locale name="settings.window.fieldsearch.backend.description">
-            <de><![CDATA[
-            Hier kannst Du einstellen welche Filter in der Backendproduktsuche angezeigt werden sollen.
-            ]]></de>
-            <en><![CDATA[
-            Here you can define which filters to display in the backend product search.
-            ]]></en>
-        </locale>
-
         <locale name="settings.window.products.useAttributeListsForMinMaxPriceCalculation.text">
             <de><![CDATA[Preismodifikation durch Auswahllisten im Such-Cache berücksichtigen]]></de>
             <en><![CDATA[Consider price modification by select lists in search cache]]></en>
@@ -292,34 +287,6 @@
                 <![CDATA[Bei der Berechnung des niedrigsten und höchsten Preises für die Produkt-Suche sollen Änderungen des Preises durch Auswahllisten (Auf- bzw. Abschläge) berücksichtigt werden.]]></de>
             <en>
                 <![CDATA[When calculating the lowest and highest price for the product search, changes in the price by select lists (discounts / surcharges) should be taken into account.]]></en>
-        </locale>
-
-        <locale name="settings.window.fieldsearch.frontend.title">
-            <de><![CDATA[Voreinstellung für Kategorie Filter]]></de>
-            <en><![CDATA[Default for category filter]]></en>
-        </locale>
-        <locale name="settings.window.fieldsearch.frontend.description">
-            <de><![CDATA[
-            Hier kannst Du die Felder für den Produktfilter definieren welche den Kategorieseiten
-            automatisch zugeordnet werden sollen.
-            ]]></de>
-            <en><![CDATA[
-            Here you can define the fields for the product filter which the category pages
-            to be assigned automatically.
-            ]]></en>
-        </locale>
-
-        <locale name="settings.window.fieldsearch.freetext.title">
-            <de><![CDATA[Feld-Einstellung für die Produkt Freitextsuche]]></de>
-            <en><![CDATA[Field settings for the product freetext search]]></en>
-        </locale>
-        <locale name="settings.window.fieldsearch.freetext.description">
-            <de><![CDATA[
-            Hier kannst Du festlegen welche Felder bei der Produktsuche (in der Freitextsuche) berücksichtigt werden.
-            ]]></de>
-            <en><![CDATA[
-            Here you can define which fields are considered during the product search (in the Freetext search).
-            ]]></en>
         </locale>
 
         <locale name="settings.window.sortFields.description">
@@ -553,6 +520,19 @@
         <locale name="category.control.productlist.selectionTitle">
             <de><![CDATA[Ihre Auswahl:]]></de>
             <en><![CDATA[Your selection:]]></en>
+        </locale>
+
+        <locale name="category.control.manufacturerList.button.more">
+            <de><![CDATA[Mehr laden]]></de>
+            <en><![CDATA[More]]></en>
+        </locale>
+        <locale name="message.manufacturerList.search.empty">
+            <de><![CDATA[Leider wurden keine Hersteller gefunden.]]></de>
+            <en><![CDATA[Unfortunately, no manufacturers were found.]]></en>
+        </locale>
+        <locale name="manufacturerList.result_count">
+            <de><![CDATA[[count] Hersteller gefunden]]></de>
+            <en><![CDATA[[count] manufacturers found]]></en>
         </locale>
 
 
@@ -1196,6 +1176,16 @@
             <de><![CDATA[aufsteigend]]></de>
             <en><![CDATA[ascending]]></en>
         </locale>
+        
+        <locale name="types.manufacturerList.header" html="true">
+            <de><![CDATA[Alle Produkte des Herstellers "[manufacturer]"]]></de>
+            <en><![CDATA[All products of manufacturer "[manufacturer]"]]></en>
+        </locale>
+        <locale name="types.manufacturerList.back_to_list">
+            <de><![CDATA[zurück zur Hersteller-Übersicht]]></de>
+            <en><![CDATA[back to manufacturer overview]]></en>
+        </locale>
+        
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
@@ -2261,6 +2251,10 @@
         <locale name="quiqqer.products.settings.categoryDisplay">
             <de><![CDATA[Kategorienanzeige]]></de>
             <en><![CDATA[Categorydisplay]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.productDisplay">
+            <de><![CDATA[Produkt-Darstellung]]></de>
+            <en><![CDATA[Product display]]></en>
         </locale>
         <locale name="quiqqer.products.settings.categoryDisplay.gallery">
             <de><![CDATA[Galerie]]></de>

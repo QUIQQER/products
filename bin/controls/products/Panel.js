@@ -16,7 +16,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
     'package/quiqqer/products/bin/Products',
     'package/quiqqer/products/bin/controls/products/Create',
     'package/quiqqer/products/bin/controls/products/Product',
-    'package/quiqqer/products/bin/controls/products/search/Search'
+    'package/quiqqer/productsearch/bin/controls/products/search/Search'
 
 ], function (QUI, QUIPanel, QUIButton, QUIButtonMultiple, QUIConfirm, Grid, QUILocale,
              Products, CreateProduct, ProductPanel, Search) {

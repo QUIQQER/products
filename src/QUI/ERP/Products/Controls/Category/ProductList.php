@@ -64,7 +64,7 @@ class ProductList extends QUI\Control
             // gallery, list, detail
             'categoryPos'          => 'top',
             // top, bottom, false = take setting from products
-            'searchParams'         => false,
+            'searchParams'         => false,    // params used in FrontendSearch (see: $this->getSearchParams)
             'hideEmptyProductList' => false,
             'productLoadNumber'    => false,
             // How many products should be loaded?
@@ -407,7 +407,7 @@ class ProductList extends QUI\Control
      */
     public function getStart($count = false)
     {
-        return $this->renderData(0, $this->getMax(), $count);
+        return $this->renderData(1, $this->getMax(), $count);
     }
 
     /**
@@ -471,16 +471,20 @@ class ProductList extends QUI\Control
         }
 
         if (!$start) {
-            $start = 0;
+            $start = 1;
         }
 
         $more   = true;
         $Search = $this->getSearch();
 
         try {
-            $result = $Search->search(
-                $this->getSearchParams($start, $max)
-            );
+            $searchParams = $this->getSearchParams($start, $max);
+            $result       = $Search->search($searchParams);
+
+            // Send searched fields to frontend
+            if (!empty($searchParams['fields'])) {
+                $this->setJavaScriptControlOption('searchfields', \json_encode($searchParams['fields']));
+            }
 
             if ($count === false) {
                 $count = $Search->search($this->getCountParams(), true);
@@ -492,7 +496,7 @@ class ProductList extends QUI\Control
             $result = [];
         }
 
-        if ($start + $max >= $count) {
+        if ($start + $max > $count) {
             $more = false;
         }
 
@@ -535,7 +539,7 @@ class ProductList extends QUI\Control
         $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([
-            'this' => $this,
+            'this'      => $this,
             'JsonLd'    => new QUI\ERP\Products\Product\JsonLd(),
             'Product'   => $Product->getView(),
             'hidePrice' => QUI\ERP\Products\Utils\Package::hidePrice()
@@ -636,7 +640,7 @@ class ProductList extends QUI\Control
         $searchParams['sheet'] = round($start / $max) + 1;
         $searchParams['limit'] = $max;
 
-//        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
 
         return $searchParams;
     }
@@ -662,7 +666,7 @@ class ProductList extends QUI\Control
             $searchParams['freetext'] = '';
         }
 
-//        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
 
         return $searchParams;
     }

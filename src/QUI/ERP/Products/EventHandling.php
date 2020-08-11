@@ -34,6 +34,8 @@ class EventHandling
             return;
         }
 
+        QUI\ERP\Products\Handler\Manufacturers::registerManufacturerUrlPaths();
+
         self::setDefaultSearchSettings();
         self::patchProductTypes();
 

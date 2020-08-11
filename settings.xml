@@ -357,7 +357,7 @@
                             <locale group="quiqqer/products" var="settings.window.fieldsearch.backend.title"/>
                         </title>
                         <input conf="search.backend"
-                               data-qui="package/quiqqer/products/bin/controls/products/search/Settings"
+                               data-qui="package/quiqqer/productsearch/bin/controls/products/search/Settings"
                         >
                             <text>
                                 <locale group="quiqqer/products" var="settings.window.fieldsearch.backend.description"/>
@@ -370,7 +370,7 @@
                             <locale group="quiqqer/products" var="settings.window.fieldsearch.frontend.title"/>
                         </title>
                         <input conf="search.frontend"
-                               data-qui="package/quiqqer/products/bin/controls/products/search/Settings"
+                               data-qui="package/quiqqer/productsearch/bin/controls/products/search/Settings"
                         >
                             <text>
                                 <locale group="quiqqer/products"
@@ -384,7 +384,7 @@
                             <locale group="quiqqer/products" var="settings.window.fieldsearch.freetext.title"/>
                         </title>
                         <input conf="search.freetext"
-                               data-qui="package/quiqqer/products/bin/controls/products/search/Settings"
+                               data-qui="package/quiqqer/productsearch/bin/controls/products/search/Settings"
                         >
                             <text>
                                 <locale group="quiqqer/products"

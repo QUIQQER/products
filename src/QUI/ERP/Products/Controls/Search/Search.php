@@ -31,7 +31,7 @@ class Search extends QUI\Control
         $this->setAttributes([
             'categoryId'     => false,
             'Site'           => false,
-            'data-qui'       => 'package/quiqqer/products/bin/controls/frontend/search/Search',
+            'data-qui'       => 'package/quiqqer/productsearch/bin/controls/frontend/search/Search',
             'data-name'      => false,
             'freeTextSearch' => true,
             'title'          => true

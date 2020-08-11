@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains QUI\ERP\Products\Utils\Search
+ * This file contains QUI\ERP\Products\Search\Utils
  */
 
 namespace QUI\ERP\Products\Utils;

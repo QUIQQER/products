@@ -2,7 +2,6 @@
     "name": "quiqqer\/products",
     "type": "quiqqer-module",
     "description": "The product package provides the basis for product management for QUIQQER",
-    "version": "1.0.0",
     "license": "GPL-3.0+",
     "authors": [
         {
@@ -22,10 +21,11 @@
         "quiqqer\/erp": "^1.2|dev-master|dev-dev",
         "quiqqer\/areas": "^1|dev-master|dev-dev",
         "quiqqer\/bricks": "^1|dev-master|dev-dev",
-        "quiqqer\/currency": "^1|dev-master|dev-dev",
+        "quiqqer\/currency": "^1.2|dev-master|dev-dev",
         "quiqqer\/discount": "^0.9|dev-master|dev-dev",
         "quiqqer\/pace": "^1|dev-master|dev-dev",
         "quiqqer\/product-bricks": "^1|dev-master|dev-dev",
+        "quiqqer\/productsearch": "^1|dev-master|dev-dev",
         "quiqqer\/slider": "^0.9|dev-master|dev-dev",
         "quiqqer\/tags": "^1|dev-master|dev-dev",
         "quiqqer\/utils": "^1.6|dev-master|dev-dev",
