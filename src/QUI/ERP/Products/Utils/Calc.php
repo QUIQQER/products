@@ -243,17 +243,6 @@ class Calc
                 }
             } catch (QUI\Exception $Exception) {
             }
-
-            // setting
-//            if ($isNetto && $setting) {
-//                $InvoiceArea = QUI\ERP\Areas\Utils::getAreaByCountry($InvoiceAddress->getCountry());
-//
-//                if ($InvoiceArea) {
-//                    $Area = $InvoiceArea;
-//                } else {
-//                    $Area = $DefaultArea;
-//                }
-//            }
         }
 
 
@@ -310,6 +299,9 @@ class Calc
 
             $vatArray[$vat]['sum'] = $vatArray[$vat]['sum'] + $productVatArray['sum'];
         }
+
+        $subSum   = \round($subSum, $Currency->getPrecision());
+        $nettoSum = \round($nettoSum, $Currency->getPrecision());
 
         QUI\ERP\Debug::getInstance()->log('Berechnetet Produktliste MwSt', 'quiqqer/product');
         QUI\ERP\Debug::getInstance()->log($vatArray, 'quiqqer/product');
@@ -506,14 +498,22 @@ class Calc
 
             if ($priceFactorBruttoSum !== \round($bruttoSum, $precision)) {
                 $diff = $priceFactorBruttoSum - \round($bruttoSum, $precision);
+                $diff = \round($diff, $precision);
 
                 // if we have a diff, we change the first vat price factor
+                $added = false;
+
                 foreach ($priceFactors as $Factor) {
                     if ($Factor instanceof QUI\ERP\Products\Interfaces\PriceFactorWithVatInterface) {
                         $Factor->setSum(\round($Factor->getSum() - $diff, $precision));
                         $bruttoSum = \round($bruttoSum, $precision);
+                        $added     = true;
                         break;
                     }
+                }
+
+                if ($added === false) {
+                    $bruttoSum = $bruttoSum + $diff;
                 }
             }
         }
