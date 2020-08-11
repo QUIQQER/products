@@ -77,8 +77,12 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
             Fields.getChild(this.$fieldId).then(function (fieldData) {
                 this.$allowedGroups = [];
 
-                if ("groupIds" in fieldData.options) {
+                if ("groupIds" in fieldData.options && fieldData.options.groupIds) {
                     this.$allowedGroups = fieldData.options.groupIds;
+
+                    this.$allowedGroups = this.$allowedGroups.map(function (g) {
+                        return parseInt(g);
+                    });
                 }
 
                 if (!this.$allowedGroups || !this.$allowedGroups.length) {
@@ -168,7 +172,7 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
                     return resolve(User);
                 }
 
-                return User.load();
+                User.load().then(resolve);
             }).then(function (User) {
                 var i, len, groupId;
                 var groups = User.getAttribute('usergroup');
@@ -211,10 +215,6 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
                 searchSettings = false;
 
             if (this.$allowedGroups) {
-                this.$allowedGroups = this.$allowedGroups.map(function (g) {
-                    return parseInt(g);
-                });
-
                 searchSettings = {
                     filter: {
                         filter_group: this.$allowedGroups.join(',')
