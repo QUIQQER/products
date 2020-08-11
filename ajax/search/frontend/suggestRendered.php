@@ -22,6 +22,8 @@ QUI::$Ajax->registerFunction(
             Search::PERMISSION_FRONTEND_EXECUTE
         );
 
+        $limit = 5;
+
         if (!isset($globalsearch)) {
             $globalsearch = false;
         }
@@ -79,8 +81,18 @@ QUI::$Ajax->registerFunction(
 
         $Search       = Search::getFrontendSearch($Site);
         $searchParams = \json_decode($searchParams, true);
+        $active       = 1;
 
-        $searchParams['limit'] = '0,5';
+        if (isset($searchParams['page'])) {
+            $active = (int)$searchParams['page'];
+
+            if ($active < 1) {
+                $active = 1;
+            }
+        }
+
+        $searchParams['limitOffset'] = (($active - 1) * $limit);
+        $searchParams['limit']       = $limit;
 
         if (!isset($searchParams['freetext']) && !isset($searchParams['fields'])) {
             $searchParams['freetext'] = '';
@@ -88,24 +100,30 @@ QUI::$Ajax->registerFunction(
 
         $html   = '';
         $result = $Search->search($searchParams);
+        $count  = $Search->search($searchParams, true);
 
         if (!\count($result)) {
             return $html;
         }
 
+        $pages = \ceil($count / $limit);
+
         $User = QUI::getUserBySession();
 
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
-            
+
             $Engine->assign([
                 'result' => $result,
-                'Locale' => $User->getLocale()
+                'Locale' => $User->getLocale(),
+                'pages'  => $pages,
+                'active' => $active
             ]);
 
             return $Engine->fetch(OPT_DIR.'quiqqer/products/template/search/frontend/SuggestRendered.html');
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
+
             return '';
         }
     },
