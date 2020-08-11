@@ -99,7 +99,7 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupListSettings', [
 
             if (groups) {
                 groups.each(function (groupId) {
-                    this.$Groups.addGroup(groupId);
+                    this.$Groups.addItem(groupId);
                 }.bind(this));
             }
 
