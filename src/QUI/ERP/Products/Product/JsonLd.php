@@ -271,6 +271,8 @@ class JsonLd
 
         if ($MinPrice && $MinPrice->getValue()) {
             $offers['lowPrice'] = $Formatter->format($MinPrice->getValue());
+        } else {
+            $offers['lowPrice'] = $Formatter->format($Product->getPrice()->getValue());
         }
 
         if ($MaxPrice && $MaxPrice->getValue()) {
