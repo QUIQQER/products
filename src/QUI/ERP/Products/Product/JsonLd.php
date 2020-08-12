@@ -141,17 +141,25 @@ class JsonLd
             $Image = $Product->getImage();
 
             if ($Image) {
-                $images[] = $Image->getSizeCacheUrl();
+                $url = $Image->getSizeCacheUrl();
+
+                if (!empty($url)) {
+                    $images[] = $url;
+                }
             }
         } catch (QUI\Exception $Exception) {
             // nothing
         }
 
-        $images = $Product->getImages();
+        $productImages = $Product->getImages();
 
-        foreach ($images as $Image) {
+        foreach ($productImages as $Image) {
             try {
-                $images[] = $Image->getSizeCacheUrl();
+                $url = $Image->getSizeCacheUrl();
+
+                if (!empty($url)) {
+                    $images[] = $url;
+                }
             } catch (QUI\Exception $Exception) {
                 // nothing
             }
@@ -198,6 +206,8 @@ class JsonLd
 
         // variant parent
         if (!($Product instanceof VariantParent)) {
+            $offers['lowPrice'] = $offers['price'];
+
             return [
                 'offers' => $offers
             ];
@@ -220,8 +230,9 @@ class JsonLd
 
         if (isset($prices['highPrice']) || isset($prices['lowPrice'])) {
             unset($offers['price']);
+        } elseif (!isset($prices['lowPrice'])) {
+            $offers['lowPrice'] = $offers['price'];
         }
-
 
         // list variants
         $count    = 0;
@@ -271,8 +282,6 @@ class JsonLd
 
         if ($MinPrice && $MinPrice->getValue()) {
             $offers['lowPrice'] = $Formatter->format($MinPrice->getValue());
-        } else {
-            $offers['lowPrice'] = $Formatter->format($Product->getPrice()->getValue());
         }
 
         if ($MaxPrice && $MaxPrice->getValue()) {
