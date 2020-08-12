@@ -166,6 +166,7 @@ class JsonLd
         }
 
         $images = \array_unique($images);
+        $images = \array_values($images); // because of json array format
 
         if (!\count($images)) {
             return [];
