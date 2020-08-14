@@ -207,7 +207,9 @@ class JsonLd
 
         // variant parent
         if (!($Product instanceof VariantParent)) {
-            $offers['lowPrice'] = $offers['price'];
+            if (!isset($offers['lowPrice']) && isset($offers['price'])) {
+                $offers['lowPrice'] = $offers['price'];
+            }
 
             return [
                 'offers' => $offers
