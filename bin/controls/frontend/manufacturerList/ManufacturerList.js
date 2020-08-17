@@ -983,7 +983,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 view          = this.getAttribute('view'),
                 sort          = this.getAttribute('sort'),
                 ContainerReal = this.$ContainerReal,
-                articles      = this.$ContainerReal.getElements('.quiqqer-products-manufacturerList-entry').length + 1;
+                articles      = this.$ContainerReal.getElements('article').length + 1;
 
             if (sort) {
                 sort = sort.replace('Sc_date', 'c_date').replace('Se_date', 'e_date');
@@ -1019,7 +1019,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                     Prom.then(function () {
                         self.enableSorting();
 
-                        var articles = Ghost.getElements('.quiqqer-products-manufacturerList-entry');
+                        var articles = Ghost.getElements('article');
 
                         articles.inject(ContainerReal);
 
