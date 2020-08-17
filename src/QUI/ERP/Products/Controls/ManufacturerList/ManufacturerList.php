@@ -161,7 +161,6 @@ class ManufacturerList extends QUI\Control
         $more                = true;
         $manufacturerUserIds = [];
         $Users               = QUI::getUsers();
-        $count               = 0;
 
         try {
             $userIds = ManufacturersHandler::getManufacturerUserIds();
@@ -190,6 +189,10 @@ class ManufacturerList extends QUI\Control
             }
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);
+            $count = 0;
+        }
+
+        if ($count === false) {
             $count = 0;
         }
 
