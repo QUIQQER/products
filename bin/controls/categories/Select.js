@@ -305,8 +305,9 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 html  : '<span class="fa fa-spinner fa-spin"></span>',
                 styles: {
                     display: '',
-                    top    : this.$Search.getPosition().y + this.$Search.getSize().y,
                     left   : this.$Search.getPosition().x,
+                    top    : this.$Search.getPosition().y + this.$Search.getSize().y,
+                    width  : this.$Search.getSize().x,
                     zIndex : QUIElementUtils.getComputedZIndex(this.$Input)
                 }
             });
@@ -458,7 +459,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
                     Entry = new Element('div', {
                         html     : '<span class="fa fa-sitemap"></span>' +
-                        '<span>' + nam + ' (' + id + ')</span>',
+                            '<span>' + nam + ' (' + id + ')</span>',
                         'class'  : 'box-sizing qui-products-categories-list-dropdown-entry',
                         'data-id': id,
                         events   : {
