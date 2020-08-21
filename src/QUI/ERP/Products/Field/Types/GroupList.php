@@ -120,7 +120,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
                     $userIds[] = $User->getId();
                 } catch (\Exception $Exception) {
                     QUI\System\Log::writeDebugException($Exception);
+                    $userIds = [];
                 }
+            } else {
+                $userIds = [];
             }
         } elseif (\is_array($value)) {
             $userIds = $value;
@@ -229,7 +232,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
                     $userIds[] = $User->getId();
                 } catch (\Exception $Exception) {
                     QUI\System\Log::writeDebugException($Exception);
+                    $userIds = [];
                 }
+            } else {
+                $userIds = [];
             }
         } elseif (\is_array($value)) {
             $userIds = $value;
