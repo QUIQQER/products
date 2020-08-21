@@ -113,8 +113,14 @@ class GroupList extends QUI\ERP\Products\Field\Field
         } elseif (\is_string($value)) {
             $userIds = \json_decode($value, true);
 
-            if (!\is_array($userIds) && !\is_numeric($userIds)) {
-                $userIds = [];
+            // Check if string was username
+            if (\json_last_error() !== \JSON_ERROR_NONE) {
+                try {
+                    $User      = QUI::getUsers()->getUserByName($value);
+                    $userIds[] = $User->getId();
+                } catch (\Exception $Exception) {
+                    QUI\System\Log::writeDebugException($Exception);
+                }
             }
         } elseif (\is_array($value)) {
             $userIds = $value;
@@ -216,8 +222,14 @@ class GroupList extends QUI\ERP\Products\Field\Field
         } elseif (\is_string($value)) {
             $userIds = \json_decode($value, true);
 
-            if (!\is_array($userIds) && !\is_numeric($userIds)) {
-                $userIds = [];
+            // Check if string was username
+            if (\json_last_error() !== \JSON_ERROR_NONE) {
+                try {
+                    $User      = QUI::getUsers()->getUserByName($value);
+                    $userIds[] = $User->getId();
+                } catch (\Exception $Exception) {
+                    QUI\System\Log::writeDebugException($Exception);
+                }
             }
         } elseif (\is_array($value)) {
             $userIds = $value;
@@ -392,5 +404,59 @@ class GroupList extends QUI\ERP\Products\Field\Field
     public function getDefaultSearchType()
     {
         return Search::SEARCHTYPE_INPUTSELECTSINGLE;
+    }
+
+    /**
+     * Return the value in dependence of a locale (language)
+     *
+     * @param QUI\Locale $Locale (optional)
+     * @return array|string
+     */
+    public function getValueByLocale($Locale = null)
+    {
+        $Users = QUI::getUsers();
+
+        /**
+         * @param QUI\Users\User $User
+         * @return string
+         */
+        $getName = function ($User) {
+            $parts = [];
+
+            if (!empty($User->getAttribute('firstname'))) {
+                $parts[] = $User->getAttribute('firstname');
+            }
+
+            if (!empty($User->getAttribute('lastname'))) {
+                $parts[] = $User->getAttribute('lastname');
+            }
+
+            if (empty($parts)) {
+                return $User->getUsername();
+            }
+
+            return \implode(' ', $parts);
+        };
+
+        if (\count($this->value) === 1) {
+            try {
+                return $getName($Users->get($this->value[0]));
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+                return '';
+            }
+        }
+
+        $values = [];
+
+        foreach ($this->value as $userId) {
+            try {
+                $values[] = $getName($Users->get($userId));
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
+        }
+
+        return $values;
     }
 }
