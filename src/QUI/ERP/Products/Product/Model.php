@@ -1040,7 +1040,7 @@ class Model extends QUI\QDOM
      */
     public function getMaximumQuantity()
     {
-        $quantity = false;
+        $quantity = true;
 
         try {
             QUI::getEvents()->fireEvent('onQuiqqerProductsProductGetMaxQuantity', [$this, &$quantity]);
