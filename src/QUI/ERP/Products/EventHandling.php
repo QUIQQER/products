@@ -625,7 +625,7 @@ class EventHandling
                         'priority'      => $field['priority'],
                         'systemField'   => $field['systemField'],
                         'standardField' => $field['standardField'],
-                        'search_type'   => $field['search_type']
+                        'search_type'   => $result[0]['search_type'] ?: $field['search_type']
                     ],
                     ['id' => $field['id']]
                 );
