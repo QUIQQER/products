@@ -357,6 +357,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         // clear field cache
         QUI\Cache\LongTermCache::clear('quiqqer/products/fields');
 
+        QUI\Cache\LongTermCache::clear(
+            QUI\ERP\Products\Handler\Fields::getFieldCacheName($this->getId())
+        );
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsFieldSave', [$this]);
     }
