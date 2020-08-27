@@ -1856,7 +1856,15 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             var self    = this,
                 onClose = function (PLF) {
-                    PLF.getAttribute('Field').reset();
+                    var Field = PLF.getAttribute('Field');
+
+                    Field.reset();
+
+                    var SearchFields = self.getAttribute('searchfields');
+
+                    if (SearchFields && Field.getFieldId() in SearchFields) {
+                        delete SearchFields[Field.getFieldId()];
+                    }
                 },
                 onReady = function () {
                     new ProductListField({
