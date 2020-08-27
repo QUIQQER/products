@@ -718,10 +718,10 @@ class Fields
             self::$list = [];
         }
 
+        $cacheName = QUI\ERP\Products\Handler\Fields::getFieldCacheName($fieldId);
+
         try {
-            $data = QUI\Cache\LongTermCache::get(
-                QUI\ERP\Products\Handler\Fields::getFieldCacheName($fieldId)
-            );
+            $data = QUI\Cache\LongTermCache::get($cacheName);
         } catch (QUI\Exception $Exception) {
             try {
                 $result = QUI::getDataBase()->fetch([
@@ -753,6 +753,8 @@ class Fields
             }
 
             $data = $result[0];
+
+            QUI\Cache\LongTermCache::set($cacheName, $data);
         }
 
 
