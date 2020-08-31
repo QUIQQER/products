@@ -25,9 +25,9 @@ QUI::$Ajax->registerFunction(
             $fields = [];
         }
 
-//        if (isset($fields['order'])) {
-//            $query['order'] = $fields['order'];
-//        }
+        //if (isset($fields['order'])) {
+        //    $query['order'] = $fields['order'];
+        //}
 
         if (isset($fields['limit'])) {
             $query['limit'] = $fields['limit'];
