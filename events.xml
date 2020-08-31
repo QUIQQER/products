@@ -3,6 +3,7 @@
     <event on="onTemplateGetHeader" fire="\QUI\ERP\Products\EventHandling::onTemplateGetHeader"/>
     <event on="onPermissionsSet" fire="\QUI\ERP\Products\EventHandling::onPermissionsSet"/>
     <event on="onRequest" fire="\QUI\ERP\Products\EventHandling::onRequest"/>
+    <event on="onQuiqqerTranslatorPublish" fire="\QUI\ERP\Products\EventHandling::onQuiqqerTranslatorPublish"/>
 
     <!-- package events -->
     <event on="onPackageSetup" fire="\QUI\ERP\Products\EventHandling::onPackageSetup"/>
