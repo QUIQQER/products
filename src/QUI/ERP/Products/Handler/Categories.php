@@ -45,7 +45,7 @@ class Categories
     /**
      * Returns the cache name of a category
      *
-     * @param integer $categoryId
+     * @param integer|string $categoryId
      * @return string
      */
     public static function getCacheName($categoryId)
@@ -106,7 +106,7 @@ class Categories
     }
 
     /**
-     * @param integer $id
+     * @param integer|string $id
      * @return QUI\ERP\Products\Interfaces\CategoryInterface
      *
      * @throws QUI\Exception
@@ -183,7 +183,7 @@ class Categories
     /**
      * Checks if a category exists
      *
-     * @param integer $categoryId - category id
+     * @param integer|string $categoryId - category id
      * @return bool
      * @throws QUI\Exception
      */
@@ -228,7 +228,7 @@ class Categories
     /**
      * Create a new category
      *
-     * @param integer $parentId - optional, ID of the parent
+     * @param integer|null|string $parentId - optional, ID of the parent
      * @param string $title - optional, translation text for current language
      *
      * @return QUI\ERP\Products\Interfaces\CategoryInterface
@@ -243,6 +243,8 @@ class Categories
         if (\is_null($parentId)) {
             $parentId = 0;
         }
+
+        $parentId = (int)$parentId;
 
         $result = QUI::getDataBase()->fetch([
             'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
@@ -383,7 +385,7 @@ class Categories
     }
 
     /**
-     * @param integer $id
+     * @param integer|string $id
      * @throws QUI\Exception
      */
     public static function deleteCategory($id)

@@ -35,6 +35,8 @@
             <field type="BIGINT(20) DEFAULT 0">parentId</field>
             <field type="TEXT NULL">fields</field>
             <field type="TEXT NULL">sites</field>
+            <field type="TEXT NULL">title_cache</field>
+            <field type="TEXT NULL">description_cache</field>
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>

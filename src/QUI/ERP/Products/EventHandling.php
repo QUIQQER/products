@@ -1179,4 +1179,64 @@ class EventHandling
             }
         }
     }
+
+    /**
+     * Update category title & description locale
+     *
+     * @throws QUI\Database\Exception
+     */
+    public static function onQuiqqerTranslatorPublish()
+    {
+        $categoryTable    = QUI\ERP\Products\Utils\Tables::getCategoryTableName();
+        $translationTable = QUI\Translator::table();
+
+        $catIds = QUI::getDataBase()->fetch([
+            'select' => 'id',
+            'from'   => $categoryTable
+        ]);
+
+        foreach ($catIds as $catId) {
+            try {
+                $title = '';
+                $desc  = '';
+
+                // title
+                $titleResult = QUI::getDataBase()->fetch([
+                    'from'  => $translationTable,
+                    'where' => [
+                        'groups' => 'quiqqer/products',
+                        'var'    => 'products.category.'.$catId['id'].'.title'
+                    ],
+                    'limit' => 1
+                ]);
+
+                if (isset($titleResult[0])) {
+                    $title = \json_encode($titleResult[0]);
+                }
+
+                // desc
+                $descResult = QUI::getDataBase()->fetch([
+                    'from'  => $translationTable,
+                    'where' => [
+                        'groups' => 'quiqqer/products',
+                        'var'    => 'products.category.'.$catId['id'].'.description'
+                    ],
+                    'limit' => 1
+                ]);
+
+                if (isset($descResult[0])) {
+                    $desc = \json_encode($descResult[0]);
+                }
+
+                QUI::getDataBase()->update($categoryTable, [
+                    'title_cache'       => $title,
+                    'description_cache' => $desc
+                ], [
+                    'id' => $catId['id']
+                ]);
+            } catch (\Exception $Exception) {
+                QUI\System\Log::addError($Exception->getMessage());
+            }
+        }
+    }
 }

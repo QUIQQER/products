@@ -25,18 +25,20 @@ QUI::$Ajax->registerFunction(
             $fields = [];
         }
 
-        if (isset($params['order'])) {
-            $query['order'] = $params['order'];
-        }
+//        if (isset($fields['order'])) {
+//            $query['order'] = $fields['order'];
+//        }
 
-        if (isset($params['limit'])) {
-            $query['limit'] = $params['limit'];
+        if (isset($fields['limit'])) {
+            $query['limit'] = $fields['limit'];
         }
 
         $allowedFields = $Categories->getChildAttributes();
         $allowedFields = \array_flip($allowedFields);
 
-        foreach ($fields as $field => $value) {
+        $searchString = '';
+
+        foreach ($params as $field => $value) {
             if (!isset($allowedFields[$field]) && $field != 'id') {
                 continue;
             }
@@ -45,6 +47,20 @@ QUI::$Ajax->registerFunction(
                 'type'  => '%LIKE%',
                 'value' => $value
             ];
+
+            if ($field === 'fields') {
+                $query['where_or']['title_cache'] = [
+                    'type'  => '%LIKE%',
+                    'value' => $value
+                ];
+
+                $query['where_or']['description_cache'] = [
+                    'type'  => '%LIKE%',
+                    'value' => $value
+                ];
+
+                $searchString = $value;
+            }
         }
 
         // search
@@ -61,6 +77,16 @@ QUI::$Ajax->registerFunction(
         \usort($result, function ($a, $b) {
             return $a['title'] > $b['title'];
         });
+
+        // all products at the beginning
+        $AllProducts = new \QUI\ERP\Products\Category\AllProducts();
+
+        if (!empty($searchString) && \stripos($AllProducts->getTitle(), $searchString) !== false) {
+            $allProducts          = $AllProducts->getAttributes();
+            $allProducts['title'] = $AllProducts->getTitle();
+
+            \array_unshift($result, $allProducts);
+        }
 
         return $result;
     },
