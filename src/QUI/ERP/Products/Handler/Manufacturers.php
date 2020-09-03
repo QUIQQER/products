@@ -42,9 +42,10 @@ class Manufacturers
      *
      * @param int $limit (optional) - [default: all]
      * @param int $offset (optional) [default: 0]
+     * @param bool $onlyActive (optional) - [default: get all users (active and inactive)]
      * @return QUI\Interfaces\Users\User[]
      */
-    public static function getManufacturerUsers($limit = null, $offset = 0)
+    public static function getManufacturerUsers($limit = null, $offset = 0, $onlyActive = false)
     {
         $users = [];
 
@@ -53,7 +54,13 @@ class Manufacturers
             $userIds = \array_slice($userIds, $offset, $limit);
 
             foreach ($userIds as $userId) {
-                $users[] = QUI::getUsers()->get($userId);
+                $User = QUI::getUsers()->get($userId);
+
+                if ($onlyActive && !$User->isActive()) {
+                    continue;
+                }
+
+                $users[] = $User;
             }
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
