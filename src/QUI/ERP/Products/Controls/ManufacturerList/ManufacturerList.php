@@ -64,7 +64,7 @@ class ManufacturerList extends QUI\Control
         $manufacturers = '';
         $more          = false;
 
-        $manufacturerUsers = ManufacturersHandler::getManufacturerUsers();
+        $manufacturerUsers = ManufacturersHandler::getManufacturerUsers(null, 0, true);
         $count             = \count($manufacturerUsers);
 
         try {
@@ -163,7 +163,7 @@ class ManufacturerList extends QUI\Control
         $Users               = QUI::getUsers();
 
         try {
-            $userIds = ManufacturersHandler::getManufacturerUserIds();
+            $userIds = ManufacturersHandler::getManufacturerUserIds(true);
 
             if (!empty($userIds)) {
                 $result = QUI::getDataBase()->fetch([
