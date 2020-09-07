@@ -23,14 +23,37 @@ class Manufacturers
     /**
      * Get QUIQQER user IDs of all manufacturers
      *
+     * @param bool $activeOnly (optional) - Only return IDs of active users
      * @return int[]
      */
-    public static function getManufacturerUserIds()
+    public static function getManufacturerUserIds(bool $activeOnly = false)
     {
         try {
             /** @var QUI\ERP\Products\Field\Types\GroupList $ManufacturerField */
             $ManufacturerField = Fields::getField(Fields::FIELD_MANUFACTURER);
-            return $ManufacturerField->getUserIds();
+            $userIds           = $ManufacturerField->getUserIds();
+
+            if (!$activeOnly || empty($userIds)) {
+                return $userIds;
+            }
+
+            $result = QUI::getDataBase()->fetch([
+                'select' => ['id'],
+                'from'   => QUI\Users\Manager::table(),
+                'where'  => [
+                    'id'     => [
+                        'type'  => 'IN',
+                        'value' => $userIds
+                    ],
+                    'active' => 1
+                ]
+            ]);
+            
+            $userIds = \array_column($result, 'id');
+
+            return \array_map(function ($v) {
+                return (int)$v;
+            }, $userIds);
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             return [];
@@ -42,25 +65,19 @@ class Manufacturers
      *
      * @param int $limit (optional) - [default: all]
      * @param int $offset (optional) [default: 0]
-     * @param bool $onlyActive (optional) - [default: get all users (active and inactive)]
+     * @param bool $activeOnly (optional) - [default: get all users (active and inactive)]
      * @return QUI\Interfaces\Users\User[]
      */
-    public static function getManufacturerUsers($limit = null, $offset = 0, $onlyActive = false)
+    public static function getManufacturerUsers($limit = null, $offset = 0, $activeOnly = false)
     {
         $users = [];
 
         try {
-            $userIds = self::getManufacturerUserIds();
+            $userIds = self::getManufacturerUserIds($activeOnly);
             $userIds = \array_slice($userIds, $offset, $limit);
 
             foreach ($userIds as $userId) {
-                $User = QUI::getUsers()->get($userId);
-
-                if ($onlyActive && !$User->isActive()) {
-                    continue;
-                }
-
-                $users[] = $User;
+                $users[] = QUI::getUsers()->get($userId);
             }
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
