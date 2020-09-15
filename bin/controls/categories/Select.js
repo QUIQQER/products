@@ -196,7 +196,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
                             Btn.setAttribute('icon', 'fa fa-search');
                         });
-
                     }
                 }
             }).inject(this.$Elm);
@@ -246,7 +245,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 }
             }
 
-            if (this.getAttribute('max') == 1) {
+            if (parseInt(this.getAttribute('max')) === 1) {
                 this.$Search.setStyle('display', 'none');
 
                 this.$List.setStyles({
@@ -386,7 +385,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
          * @method package/quiqqer/products/bin/controls/categories/Select#search
          */
         search: function () {
-
             var self  = this,
                 value = this.$Search.value;
 
@@ -485,9 +483,9 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
             this.$hideCreateButton();
 
-            var max = this.getAttribute('max');
+            var max = parseInt(this.getAttribute('max'));
 
-            if (max == 1) {
+            if (max === 1) {
                 // max = 1 -> overwrites the old
                 this.$values = [];
 
@@ -500,6 +498,10 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 return this;
             }
 
+            if (this.$values.indexOf(id) !== -1) {
+                return this;
+            }
+
             new SelectItem({
                 categoryId: id,
                 events    : {
@@ -508,7 +510,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             }).inject(this.$List);
 
             this.$values.push(id);
-
+            
             this.fireEvent('addCategory', [this, id]);
             this.$refreshValues();
 
@@ -629,7 +631,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
          * @return {Object} this (package/quiqqer/products/bin/controls/categories/Select)
          */
         focus: function () {
-            if (this.getAttribute('max') == 1) {
+            if (parseInt(this.getAttribute('max')) === 1) {
                 this.$SearchButton.click();
             }
 
@@ -693,7 +695,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         $showCreateButton: function () {
             this.$CreateButton.getElm().setStyle('display', null);
 
-            if (this.getAttribute('max') == 1) {
+            if (parseInt(this.getAttribute('max')) === 1) {
                 this.$List.setStyles({
                     width: 'calc(100% - 100px)'
                 });
@@ -710,7 +712,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         $hideCreateButton: function () {
             this.$CreateButton.getElm().setStyle('display', 'none');
 
-            if (this.getAttribute('max') == 1) {
+            if (parseInt(this.getAttribute('max')) === 1) {
                 this.$List.setStyles({
                     width: 'calc(100% - 50px)'
                 });
