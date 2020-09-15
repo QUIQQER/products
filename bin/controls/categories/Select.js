@@ -510,7 +510,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             }).inject(this.$List);
 
             this.$values.push(id);
-            
+
             this.fireEvent('addCategory', [this, id]);
             this.$refreshValues();
 
@@ -622,6 +622,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             }
 
             this.search();
+            this.close();
         },
 
         /**
