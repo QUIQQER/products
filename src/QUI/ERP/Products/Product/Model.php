@@ -1272,7 +1272,10 @@ class Model extends QUI\QDOM
             $this->updateCache();
         }
 
-        QUI\Cache\LongTermCache::clear('quiqqer/products/'.$this->getId());
+        QUI\Cache\LongTermCache::clear(
+            QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId())
+        );
+
         QUI\ERP\Products\Handler\Cache::clearProductFrontendCache($this->getId());
 
         if (Products::$fireEventsOnProductSave) {

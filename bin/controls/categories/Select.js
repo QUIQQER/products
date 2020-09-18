@@ -8,9 +8,6 @@
  * @event onChange [ this ]
  * @event onRemoveCategory [ this, categoryId ]
  * @event onClear [ this ]
- *
- * @todo locale
- * @todo #locale
  */
 define('package/quiqqer/products/bin/controls/categories/Select', [
 
@@ -53,15 +50,17 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             '$showCreateCategoryDialog',
             '$onCategoryDestroy',
             '$onInputFocus',
-            '$onImport'
+            '$onImport',
+            'resize'
         ],
 
         options: {
-            max     : false, // max entries
-            multiple: true,  // select more than one entry?
-            name    : '',    // string
-            styles  : false, // object
-            label   : false  // text string or a <label> DOMNode Element
+            max      : false, // max entries
+            multiple : true,  // select more than one entry?
+            name     : '',    // string
+            styles   : false, // object
+            label    : false, // text string or a <label> DOMNode Element
+            resizable: true   // resize is allowed
         },
 
         initialize: function (options, Input) {
@@ -196,7 +195,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
                             Btn.setAttribute('icon', 'fa fa-search');
                         });
-
                     }
                 }
             }).inject(this.$Elm);
@@ -208,7 +206,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                     display: 'none',
                     width  : 50
                 },
-                alt   : 'Kategorie erstellen',
+                alt   : QUILocale.get(lg, 'control.select.category.create'),
                 events: {
                     onClick: this.$showCreateCategoryDialog
                 }
@@ -246,7 +244,19 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 }
             }
 
-            if (this.getAttribute('max') == 1) {
+            if (this.getAttribute('resizable')) {
+                this.$Elm.addClass('qui-products-categories--resizable');
+
+                new Element('div', {
+                    'class': 'qui-products-categories-list-resize',
+                    html   : '<span class="fa fa-arrows-v"></span>',
+                    events : {
+                        click: this.resize
+                    }
+                }).inject(this.$Elm);
+            }
+
+            if (parseInt(this.getAttribute('max')) === 1) {
                 this.$Search.setStyle('display', 'none');
 
                 this.$List.setStyles({
@@ -278,6 +288,35 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
             this.$Elm = null;
             this.create();
+        },
+
+        /**
+         * Resize the control
+         */
+        resize: function () {
+            if (this.getAttribute('resizable') === false) {
+                return;
+            }
+
+            var self  = this,
+                items = this.$List.getElements('.quiqqer-category-selectItem');
+
+            var height = items.map(function (elm) {
+                return elm.getSize().y + 1;
+            }).sum();
+
+            if (height < 100) {
+                height = 100;
+            }
+
+            return new Promise(function (resolve) {
+                moofx(self.$List).animate({
+                    height: height
+                }, {
+                    duration: 200,
+                    callback: resolve
+                });
+            });
         },
 
         /**
@@ -386,7 +425,6 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
          * @method package/quiqqer/products/bin/controls/categories/Select#search
          */
         search: function () {
-
             var self  = this,
                 value = this.$Search.value;
 
@@ -485,9 +523,9 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
             this.$hideCreateButton();
 
-            var max = this.getAttribute('max');
+            var max = parseInt(this.getAttribute('max'));
 
-            if (max == 1) {
+            if (max === 1) {
                 // max = 1 -> overwrites the old
                 this.$values = [];
 
@@ -497,6 +535,10 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             }
 
             if (max && this.$values.length > max) {
+                return this;
+            }
+
+            if (this.$values.indexOf(id) !== -1) {
                 return this;
             }
 
@@ -620,6 +662,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             }
 
             this.search();
+            this.close();
         },
 
         /**
@@ -629,7 +672,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
          * @return {Object} this (package/quiqqer/products/bin/controls/categories/Select)
          */
         focus: function () {
-            if (this.getAttribute('max') == 1) {
+            if (parseInt(this.getAttribute('max')) === 1) {
                 this.$SearchButton.click();
             }
 
@@ -669,6 +712,10 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             this.fireEvent('delete', [this, Item]);
             this.$refreshValues();
 
+            (function () {
+                this.resize();
+            }.bind(this)).delay(200);
+
             if (!this.$values.length && this.getAttribute('Site')) {
                 this.$showCreateButton();
             }
@@ -693,7 +740,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         $showCreateButton: function () {
             this.$CreateButton.getElm().setStyle('display', null);
 
-            if (this.getAttribute('max') == 1) {
+            if (parseInt(this.getAttribute('max')) === 1) {
                 this.$List.setStyles({
                     width: 'calc(100% - 100px)'
                 });
@@ -710,7 +757,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         $hideCreateButton: function () {
             this.$CreateButton.getElm().setStyle('display', 'none');
 
-            if (this.getAttribute('max') == 1) {
+            if (parseInt(this.getAttribute('max')) === 1) {
                 this.$List.setStyles({
                     width: 'calc(100% - 50px)'
                 });
@@ -740,7 +787,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 new Window({
                     autoclose: true,
                     multiple : false,
-                    message  : 'Bitte wählen Sie die Übergeordnete Kategorie aus:',
+                    message  : QUILocale.get(lg, 'control.select.window.select.parent'),
                     events   : {
                         onSubmit: function (Win, categorieIds) {
                             self.$CreateButton.setAttribute('icon', 'fa fa-spinner fa-spin');

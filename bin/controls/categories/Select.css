@@ -28,11 +28,27 @@
     z-index: 2;
 }
 
+.qui-products-categories-list-resize {
+    border-top: 1px solid #dedede;
+    background: rgba(147, 128, 108, 0.1);
+    clear: both;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    text-align: center;
+    width: 100%;
+}
+
 .qui-products-categories-list-search {
     clear: both;
     float: left;
     padding-left: 30px;
     width: calc(100% - 50px);
+}
+
+.qui-products-categories-list-search:focus {
+    position: relative;
+    z-index: 10;
 }
 
 .field-container-field > .qui-products-categories-list {
@@ -64,6 +80,11 @@
     position: absolute;
     text-align: center;
     width: 30px;
+    z-index: 11;
+}
+
+.qui-products-categories--resizable .qui-products-categories-list-searchIcon {
+    bottom: 22px;
 }
 
 /** DropDown

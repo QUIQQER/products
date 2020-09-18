@@ -651,6 +651,7 @@ class Products
             'permissions',
             'e_date',
             'c_date',
+            'orderCount',
         ];
 
         if (isset($queryParams['where']) &&
