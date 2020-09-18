@@ -510,12 +510,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }
 
                     this.$readWindowLocation().then(function () {
-                        this.$onFilterChange();
+                        //this.$onFilterChange();
                         this.$load = true;
 
-                        if (this.getAttribute('autoload')) {
-                            this.$setWindowLocation();
-                        }
+                        // if (this.getAttribute('autoload')) {
+                        //     this.$setWindowLocation();
+                        // }
                     }.bind(this));
                 }.bind(this);
 
@@ -535,12 +535,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
 
                 this.$readWindowLocation().then(function () {
-                    this.$onFilterChange();
+                    //this.$onFilterChange();
                     this.$load = true;
 
-                    if (this.getAttribute('autoload')) {
-                        this.$setWindowLocation();
-                    }
+                    // if (this.getAttribute('autoload')) {
+                    //     this.$setWindowLocation();
+                    // }
                 }.bind(this));
             }).delay(500, this);
         },
