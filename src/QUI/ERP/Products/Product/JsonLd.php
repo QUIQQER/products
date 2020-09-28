@@ -233,7 +233,7 @@ class JsonLd
 
         if (isset($prices['highPrice']) || isset($prices['lowPrice'])) {
             unset($offers['price']);
-        } elseif (!isset($prices['lowPrice'])) {
+        } elseif (!isset($prices['lowPrice']) && isset($offers['price'])) {
             $offers['lowPrice'] = $offers['price'];
         }
 
