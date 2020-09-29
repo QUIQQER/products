@@ -208,7 +208,7 @@ class ManufacturerList extends QUI\Control
             );
         });
 
-        if ($start + $max > $count) {
+        if ($start + $max >= $count) {
             $more = false;
         }
 
