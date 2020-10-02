@@ -4,6 +4,9 @@
  * This file contains package_quiqqer_products_ajax_products_update
  */
 
+use \QUI\ERP\Products\Product\Types\VariantParent;
+use \QUI\ERP\Products\Product\Types\VariantChild;
+
 /**
  * Update a product
  *
@@ -41,7 +44,9 @@ QUI::$Ajax->registerFunction(
                     continue;
                 }
 
-                if ($ProductField instanceof QUI\ERP\Products\Field\Types\AttributeGroup) {
+                if ($ProductField instanceof QUI\ERP\Products\Field\Types\AttributeGroup
+                    && ($Product instanceof VariantParent || $Product instanceof VariantChild)
+                ) {
                     continue;
                 }
 

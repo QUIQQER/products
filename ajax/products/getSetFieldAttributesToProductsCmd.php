@@ -12,9 +12,7 @@ QUI::$Ajax->registerFunction(
     function ($fieldId) {
         $cmsDir = QUI::conf('globals', 'cms_dir');
 
-        return 'php '.$cmsDir.'quiqqer.php --username=USERNAME --password=PASSWORD'
-               .' --tool=products:set-field-attributes-to-products'
-               .' --fieldId='.$fieldId;
+        return $cmsDir.'console products:set-field-attributes-to-products --fieldId='.$fieldId;
     },
     ['fieldId'],
     'Permission::checkAdminUser'

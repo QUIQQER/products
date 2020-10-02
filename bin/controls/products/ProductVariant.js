@@ -115,6 +115,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             this.$ActionSeparator = this.getButtons('actionSeparator');
             this.$CopyButton      = this.getButtons('copy');
 
+            this.$Elm.addClass('panel-product-variant');
+
             this.parent().then(function () {
                 return self.$checkProductParent();
             }).then(function () {

@@ -488,13 +488,12 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         if (field.type === 'TextareaMultiLang' ||
                             field.type === 'Textarea' ||
                             field.type === 'Folder' ||
-                            field.type === 'Products' ||
-                            field.type === 'AttributeGroup'
+                            field.type === 'Products'
                         ) {
                             continue;
                         }
 
-                        // wenn es ein feld ist, welcher der kunde ausfüllen muss
+                        // wenn es ein feld ist, welches der kunde ausfüllen muss
                         // nicht anzeigen
                         if (field.custom) {
                             continue;
@@ -759,9 +758,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 var Input = Form.elements['field-' + field.id];
 
                 if (typeof Input !== 'undefined') {
-                    if (typeOf(field.value) !== 'string'
-                        && field.value !== null
-                        && typeOf(field.value) !== 'number'
+                    if (typeOf(field.value) !== 'string' &&
+                        field.value !== null &&
+                        typeOf(field.value) !== 'number'
                     ) {
                         field.value = JSON.encode(field.value);
                     }
@@ -772,7 +771,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         var Control = QUI.Controls.getById(Input.get('data-quiid'));
 
                         if (typeof Control.setData === 'function') {
-                            Control.setData(Input.value);
+                            Control.setData(field.value);
                         }
                     }
                 }
