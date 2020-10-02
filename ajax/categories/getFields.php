@@ -33,9 +33,13 @@ QUI::$Ajax->registerFunction(
 
         // cleanup
         /* @var $Field QUI\ERP\Products\Field\Field */
+        $isset = [];
+
         foreach ($fields as $Field) {
-            if (!isset($results[$Field->getId()])) {
+            if (!isset($isset[$Field->getId()])) {
                 $result[] = $Field->getAttributes();
+
+                $isset[$Field->getId()] = true;
             }
         }
 

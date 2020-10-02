@@ -146,6 +146,7 @@ class Search
 
         if ($defaultIds) {
             $defaultIds = \explode(',', $defaultIds);
+            $defaultIds = \array_unique($defaultIds);
 
             foreach ($defaultIds as $fieldId) {
                 try {
@@ -178,6 +179,7 @@ class Search
 
         if ($defaultIds) {
             $defaultIds = \explode(',', $defaultIds);
+            $defaultIds = \array_unique($defaultIds);
 
             foreach ($defaultIds as $fieldId) {
                 try {
