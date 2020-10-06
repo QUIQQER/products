@@ -205,7 +205,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getBackendView()
     {
-        return new View($this->getFieldDataForView());
+        $Field = new View($this->getFieldDataForView());
+        $Field->setProduct($this->Product);
+
+        return $Field;
     }
 
     /**
@@ -215,7 +218,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getFrontendView()
     {
-        return new View($this->getFieldDataForView());
+        $Field = new View($this->getFieldDataForView());
+        $Field->setProduct($this->Product);
+
+        return $Field;
     }
 
     /**
@@ -258,7 +264,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         switch ($this->getAttribute('viewType')) {
             case 'backend':
                 return $this->getBackendView();
-                break;
 
             default:
                 return $this->getFrontendView();

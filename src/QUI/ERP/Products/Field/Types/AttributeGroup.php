@@ -212,9 +212,13 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      */
     public function getFrontendView()
     {
-        return new AttributeGroupFrontendView(
+        $View = new AttributeGroupFrontendView(
             $this->getFieldDataForView()
         );
+
+        $View->setProduct($this->Product);
+
+        return $View;
     }
 
     /**
