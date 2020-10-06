@@ -149,6 +149,15 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     protected $parentFieldClass = '';
 
     /**
+     * Current instance of a product
+     * optional and only needed at the runtime instance
+     * this is the product from which the field are
+     *
+     * @var null
+     */
+    protected $Product = null;
+
+    /**
      * Model constructor.
      *
      * @param integer $fieldId
@@ -210,10 +219,16 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     public function getView()
     {
         if (\defined('QUIQQER_BACKEND')) {
-            return $this->getBackendView();
+            $View = $this->getBackendView();
+        } else {
+            $View = $this->getFrontendView();
         }
 
-        return $this->getFrontendView();
+        if ($this->Product) {
+            $View->setProduct($this->Product);
+        }
+
+        return $View;
     }
 
     /**
@@ -682,5 +697,13 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     public function showInDetails()
     {
         return $this->showInDetails;
+    }
+
+    /**
+     * @param $Product - Product instance
+     */
+    public function setProduct($Product)
+    {
+        $this->Product = $Product;
     }
 }
