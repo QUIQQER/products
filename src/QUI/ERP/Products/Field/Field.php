@@ -125,6 +125,15 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $titles = [];
 
     /**
+     * Current instance of a product
+     * optional and only needed at the runtime instance
+     * this is the product from which the field are
+     *
+     * @var null
+     */
+    protected $Product = null;
+
+    /**
      * Model constructor.
      *
      * @param integer $fieldId
@@ -196,7 +205,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getBackendView()
     {
-        return new View($this->getFieldDataForView());
+        $Field = new View($this->getFieldDataForView());
+        $Field->setProduct($this->Product);
+
+        return $Field;
     }
 
     /**
@@ -206,7 +218,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getFrontendView()
     {
-        return new View($this->getFieldDataForView());
+        $Field = new View($this->getFieldDataForView());
+        $Field->setProduct($this->Product);
+
+        return $Field;
     }
 
     /**
@@ -249,7 +264,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         switch ($this->getAttribute('viewType')) {
             case 'backend':
                 return $this->getBackendView();
-                break;
 
             default:
                 return $this->getFrontendView();
@@ -1308,5 +1322,13 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         }
 
         return false;
+    }
+
+    /**
+     * @param $Product - Product instance
+     */
+    public function setProduct($Product)
+    {
+        $this->Product = $Product;
     }
 }

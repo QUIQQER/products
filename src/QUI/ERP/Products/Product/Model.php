@@ -170,6 +170,7 @@ class Model extends QUI\QDOM
 
             try {
                 $Field = Fields::getField($field['id']);
+                $Field->setProduct($this);
 
                 $this->fields[$Field->getId()] = $Field;
             } catch (QUI\Exception $Exception) {

@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Handler\Search;
 
 /**
  * Class Attributes
@@ -19,9 +20,9 @@ use QUI;
 class AttributeGroup extends QUI\ERP\Products\Field\Field
 {
     /**
-     * @var bool
+     * @var int
      */
-    protected $searchable = false;
+    protected $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
     /**
      * @var null
@@ -211,9 +212,13 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      */
     public function getFrontendView()
     {
-        return new AttributeGroupFrontendView(
+        $View = new AttributeGroupFrontendView(
             $this->getFieldDataForView()
         );
+
+        $View->setProduct($this->Product);
+
+        return $View;
     }
 
     /**
@@ -343,5 +348,29 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
         }
 
         return (int)$value;
+    }
+
+    /**
+     * Get all available search types
+     *
+     * @return array
+     */
+    public function getSearchTypes()
+    {
+        return [
+            Search::SEARCHTYPE_TEXT,
+            Search::SEARCHTYPE_INPUTSELECTSINGLE,
+            Search::SEARCHTYPE_SELECTMULTI
+        ];
+    }
+
+    /**
+     * Get default search type
+     *
+     * @return string
+     */
+    public function getDefaultSearchType()
+    {
+        return Search::SEARCHTYPE_SELECTMULTI;
     }
 }

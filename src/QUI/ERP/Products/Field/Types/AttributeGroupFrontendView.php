@@ -3,7 +3,6 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
-use QUI\ERP\Accounting\Calc as ErpCalc;
 
 /**
  * Class AttributeGroupFrontendView
@@ -24,6 +23,11 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         }
 
         if ($this->isChangeable() === false) {
+            return $this->notChangeableDisplay();
+        }
+
+        if ($this->Product
+            && $this->Product instanceof QUI\ERP\Products\Product\Types\Product) {
             return $this->notChangeableDisplay();
         }
 
@@ -191,6 +195,6 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
 
         $Engine->assign('valueText', $text);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ProductAttributeListFrontendViewNotChangeable.html');
+        return $Engine->fetch(\dirname(__FILE__).'/AttributeGroupFrontendViewNotChangeable.html');
     }
 }
