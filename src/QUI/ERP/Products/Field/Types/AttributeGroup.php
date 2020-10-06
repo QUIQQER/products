@@ -359,10 +359,8 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     {
         return [
             Search::SEARCHTYPE_TEXT,
-            Search::SEARCHTYPE_SELECTSINGLE,
             Search::SEARCHTYPE_INPUTSELECTSINGLE,
-            Search::SEARCHTYPE_SELECTMULTI,
-            Search::SEARCHTYPE_HASVALUE
+            Search::SEARCHTYPE_SELECTMULTI
         ];
     }
 
@@ -373,6 +371,6 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      */
     public function getDefaultSearchType()
     {
-        return Search::SEARCHTYPE_TEXT;
+        return Search::SEARCHTYPE_SELECTMULTI;
     }
 }
