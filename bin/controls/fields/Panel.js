@@ -177,7 +177,6 @@ define('package/quiqqer/products/bin/controls/fields/Panel', [
                 title : QUILocale.get(lg, 'fields.create.title'),
                 events: {
                     onShow : function (Sheet) {
-
                         Sheet.getContent().setStyle('padding', 20);
 
                         var Field = new CreateField({

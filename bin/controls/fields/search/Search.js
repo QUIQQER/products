@@ -34,7 +34,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
             multiple          : false,
             fieldTypeFilter   : false,
             sortOn            : 'id',
-            sortBy            : 'desc',
+            sortBy            : 'DESC',
             perPage           : 150,
             page              : 1,
             showsearchableonly: false   // show searchable fields only
@@ -77,6 +77,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                 perPage          : this.getAttribute('perPage'),
                 page             : this.getAttribute('page'),
                 sortOn           : this.getAttribute('sortOn'),
+                sortBy           : this.getAttribute('sortBy'),
                 serverSort       : true,
                 buttons          : [
                     new FieldTypeSelect({
@@ -156,7 +157,9 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
          * event: on inject
          */
         $onInject: function () {
-            this.resize();
+            this.resize().then(function () {
+                this.refresh();
+            }.bind(this));
         },
 
         /**
@@ -170,10 +173,8 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
 
                 Promise.all([
                     this.$Grid.setHeight(size.y),
-                    this.$Grid.setWidth(size.x),
-                    this.refresh()
+                    this.$Grid.setWidth(size.x)
                 ]).then(resolve);
-
             }.bind(this));
         },
 
