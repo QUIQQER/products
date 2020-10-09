@@ -33,10 +33,10 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
         options: {
             multiple          : false,
             fieldTypeFilter   : false,
-            sortOn            : false,
-            sortBy            : false,
+            sortOn            : 'id',
+            sortBy            : 'desc',
             perPage           : 150,
-            page              : false,
+            page              : 1,
             showsearchableonly: false   // show searchable fields only
         },
 
