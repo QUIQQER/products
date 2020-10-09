@@ -874,13 +874,6 @@ class Fields
      */
     public static function getFieldIds($queryParams = [])
     {
-        $cacheName = Cache::getBasicCachePath().'query/'.\md5(\serialize($queryParams));
-
-        try {
-            return QUI\Cache\LongTermCache::get($cacheName);
-        } catch (QUI\Exception $Exception) {
-        }
-
         $query = [
             'select' => 'id',
             'from'   => QUI\ERP\Products\Utils\Tables::getFieldTableName()
@@ -948,13 +941,6 @@ class Fields
             QUI\System\Log::writeException($Exception);
 
             return [];
-        }
-
-
-        try {
-            QUI\Cache\LongTermCache::set($cacheName, $result);
-        } catch (\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
         }
 
         return $result;
