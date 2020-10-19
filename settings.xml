@@ -58,17 +58,6 @@
                     <type><![CDATA[string]]></type>
                 </conf>
             </section>
-            <section name="search">
-                <conf name="backend">
-                    <type><![CDATA[string]]></type>
-                </conf>
-                <conf name="frontend">
-                    <type><![CDATA[string]]></type>
-                </conf>
-                <conf name="freetext">
-                    <type><![CDATA[string]]></type>
-                </conf>
-            </section>
             <section name="variants">
                 <conf name="parentHasChildImages">
                     <type><![CDATA[bool]]></type>
@@ -352,45 +341,10 @@
                     </text>
                     <icon>fa fa-search</icon>
 
-                    <settings title="backend" name="backend">
-                        <title>
-                            <locale group="quiqqer/products" var="settings.window.fieldsearch.backend.title"/>
-                        </title>
-                        <input conf="search.backend"
-                               data-qui="package/quiqqer/productsearch/bin/controls/products/search/Settings"
-                        >
-                            <text>
-                                <locale group="quiqqer/products" var="settings.window.fieldsearch.backend.description"/>
-                            </text>
-                        </input>
-                    </settings>
-
-                    <settings title="frontend" name="frontend">
-                        <title>
-                            <locale group="quiqqer/products" var="settings.window.fieldsearch.frontend.title"/>
-                        </title>
-                        <input conf="search.frontend"
-                               data-qui="package/quiqqer/productsearch/bin/controls/products/search/Settings"
-                        >
-                            <text>
-                                <locale group="quiqqer/products"
-                                        var="settings.window.fieldsearch.frontend.description"/>
-                            </text>
-                        </input>
-                    </settings>
-
                     <settings title="freetext" name="freetext">
                         <title>
                             <locale group="quiqqer/products" var="settings.window.fieldsearch.freetext.title"/>
                         </title>
-                        <input conf="search.freetext"
-                               data-qui="package/quiqqer/productsearch/bin/controls/products/search/Settings"
-                        >
-                            <text>
-                                <locale group="quiqqer/products"
-                                        var="settings.window.fieldsearch.freetext.description"/>
-                            </text>
-                        </input>
 
                         <input conf="products.sortFields"
                                type="hidden"

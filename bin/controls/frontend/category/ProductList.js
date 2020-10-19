@@ -28,8 +28,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'package/quiqqer/products/bin/controls/frontend/category/ProductListField'
 
 ], function (QUI, QUIControl, QUISelect, QUIButton, QUILoader, QUIElementUtils,
-             Search, Piwik, SearchField, QUIAjax, QUILocale, URI, Session,
-             ProductListFilter, ProductListField
+    Search, Piwik, SearchField, QUIAjax, QUILocale, URI, Session,
+    ProductListFilter, ProductListField
 ) {
     "use strict";
 
@@ -553,10 +553,14 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         $readWindowLocation: function () {
             var self = this;
 
-            if (DEBUG) console.log('$readWindowLocation', 1);
+            if (DEBUG) {
+                console.log('$readWindowLocation', 1);
+            }
 
             if (this.$readLocationRunning) {
-                if (DEBUG) console.log('$readWindowLocation', '1 -> ');
+                if (DEBUG) {
+                    console.log('$readWindowLocation', '1 -> ');
+                }
 
                 return new Promise(function (resolve) {
                     var checkRunning = function () {
@@ -577,7 +581,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$readLocationRunning = true;
 
-            if (DEBUG) console.log('$readWindowLocation', 2);
+            if (DEBUG) {
+                console.log('$readWindowLocation', 2);
+            }
 
             return new Promise(function (resolve) {
                 var Close;
@@ -585,10 +591,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     search = Url.search(true);
 
                 if (!Object.getLength(search)) {
-                    if (DEBUG) console.log('$readWindowLocation', 3, {
-                        productOpened: productOpened,
-                        Container    : this.$ProductContainer
-                    });
+                    if (DEBUG) {
+                        console.log('$readWindowLocation', 3, {
+                            productOpened: productOpened,
+                            Container    : this.$ProductContainer
+                        });
+                    }
 
                     if (productOpened && this.$ProductContainer) {
                         Close = this.$ProductContainer.getElement('.product-close-button');
@@ -600,7 +608,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         }
                     }
 
-                    if (DEBUG) console.log('$readWindowLocation', 4);
+                    if (DEBUG) {
+                        console.log('$readWindowLocation', 4);
+                    }
 
                     this.$categories          = [];
                     this.$productId           = false;
@@ -610,15 +620,21 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     return;
                 }
 
-                if (DEBUG) console.log('$readWindowLocation', 5);
+                if (DEBUG) {
+                    console.log('$readWindowLocation', 5);
+                }
 
                 if ("p" in search && Object.getLength(search) === 1) {
-                    if (DEBUG) console.log('$readWindowLocation', 6);
+                    if (DEBUG) {
+                        console.log('$readWindowLocation', 6);
+                    }
 
                     var productId = parseInt(search.p);
 
                     if (productOpened) {
-                        if (DEBUG) console.log('$readWindowLocation', 7);
+                        if (DEBUG) {
+                            console.log('$readWindowLocation', 7);
+                        }
 
                         this.$readLocationRunning = false;
                         resolve();
@@ -626,7 +642,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }
 
                     if (productId) {
-                        if (DEBUG) console.log('$readWindowLocation', 8);
+                        if (DEBUG) {
+                            console.log('$readWindowLocation', 8);
+                        }
 
                         this.openProduct(productId).then(function () {
                             self.$readLocationRunning = false;
@@ -637,7 +655,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }
                 }
 
-                if (DEBUG) console.log('$readWindowLocation', 9);
+                if (DEBUG) {
+                    console.log('$readWindowLocation', 9);
+                }
 
                 if ("search" in search && this.$FreeText) {
                     this.$FreeText.value = search.search;
@@ -648,7 +668,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 // fields
                 if ("f" in search && this.$FilterContainer) {
-                    if (DEBUG) console.log('$readWindowLocation', 10);
+                    if (DEBUG) {
+                        console.log('$readWindowLocation', 10);
+                    }
 
                     var fieldList = this.$FilterContainer.getElements(
                         '.quiqqer-products-search-field'
@@ -723,7 +745,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
 
                 if (this.$productId) {
-                    if (DEBUG) console.log('$readWindowLocation', 11);
+                    if (DEBUG) {
+                        console.log('$readWindowLocation', 11);
+                    }
 
                     this.$readLocationRunning = false;
                     resolve();
@@ -731,7 +755,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
 
                 if (productOpened && this.$ProductContainer) {
-                    if (DEBUG) console.log('$readWindowLocation', 12);
+                    if (DEBUG) {
+                        console.log('$readWindowLocation', 12);
+                    }
 
                     Close = this.$ProductContainer.getElement('.product-close-button');
 
@@ -1085,10 +1111,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     next             : next ? 1 : 0,
                     categoryId       : categoryId,
                     productLoadNumber: productLoadNumber,
-                    project          : JSON.encode({
-                        name: self.getAttribute('project'),
-                        lang: self.getAttribute('lang')
-                    }),
+                    project          : JSON.encode(window.QUIQQER_PROJECT),
                     siteId           : self.getAttribute('siteId'),
                     searchParams     : JSON.encode(self.$getSearchParams())
                 });
@@ -2443,7 +2466,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                 self.$productId  = false;
                                 self.$categories = currentCategories;
 
-                                if (DEBUG) console.log('Products.getProductControlClass');
+                                if (DEBUG) {
+                                    console.log('Products.getProductControlClass');
+                                }
 
                                 var Url = URI(window.location);
                                 Url.removeSearch('p');
@@ -2515,7 +2540,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                 }
                             }).inject(self.$ProductContainer);
 
-                            if (DEBUG) console.log('open Product', Instance.getType());
+                            if (DEBUG) {
+                                console.log('open Product', Instance.getType());
+                            }
 
                             self.getElm().setStyle('height', null);
                         });
@@ -2532,7 +2559,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return Promise.resolve();
             }
 
-            if (DEBUG) console.log('->showList()');
+            if (DEBUG) {
+                console.log('->showList()');
+            }
 
             var self      = this;
             productOpened = false;
