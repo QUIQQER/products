@@ -4,20 +4,39 @@
            placeholder="{{placeholderPrice}}"
     />
     <span class="quiqqer-products-field-priceByTimePeriod-currency"></span>
-    <label>
-        <span>{{labelFrom}}</span>
-        <input type="date"
-               class="quiqqer-products-field-priceByTimePeriod-date"
-               name="from"
-        />
-    </label>
-    <label>
-        <span>{{labelTo}}</span>
-        <input type="date"
-               class="quiqqer-products-field-priceByTimePeriod-date"
-               name="to"
-        />
-    </label>
+    <div class="quiqqer-products-field-priceByTimePeriod-time">
+        <label>
+            <span>{{labelFrom}}</span>
+            <input type="date"
+                   class="quiqqer-products-field-priceByTimePeriod-date"
+                   name="from"
+            />
+        </label>
+        <label>
+            <span>{{labelFromTime}}</span>
+            <input type="time"
+                   class="quiqqer-products-field-priceByTimePeriod-date"
+                   name="from_time"
+            />
+        </label>
+    </div>
+
+    <div class="quiqqer-products-field-priceByTimePeriod-time">
+        <label>
+            <span>{{labelTo}}</span>
+            <input type="date"
+                   class="quiqqer-products-field-priceByTimePeriod-date"
+                   name="to"
+            />
+        </label>
+        <label>
+            <span>{{labelToTime}}</span>
+            <input type="time"
+                   class="quiqqer-products-field-priceByTimePeriod-date"
+                   name="to_time"
+            />
+        </label>
+    </div>
 
     <span class="field-container-item quiqqer-products-field-priceByTimePeriod-bruttoinput">
         <span class="fa fa-spinner fa-spin"></span>
