@@ -49,7 +49,29 @@
     display: flex;
     /*width: calc(100% - 200px);*/
 }
+
 .quiqqer-products-priceByTimePeriod-settings-groups-values {
     display: inline-block;
+    width: 100%;
+}
+
+.quiqqer-products-field-priceByTimePeriod-time {
+    padding: 0 10px;
+}
+
+.quiqqer-products-field-priceByTimePeriod-time:first-of-type {
+    border-right: 1px solid #e4dfda;
+    margin-right: 10px;
+}
+
+.quiqqer-products-field-priceByTimePeriod-time label {
+    float: none !important;
+}
+
+.quiqqer-products-field-priceByTimePeriod-time label > span {
+    display: block;
+}
+
+.quiqqer-products-field-priceByTimePeriod-time label > input {
     width: 100%;
 }

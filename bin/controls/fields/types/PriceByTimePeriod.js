@@ -45,7 +45,9 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
             this.$productId   = null;
 
             this.$From      = null;
+            this.$FromTime  = null;
             this.$To        = null;
+            this.$ToTime    = null;
             this.$calcTimer = null;
 
             this.$Formatter = QUILocale.getNumberFormatter({
@@ -80,11 +82,11 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
          */
         $onImport: function () {
             var self = this;
-
             var Elm  = this.getElm(),
                 data = {
-                    price   : false,
-                    quantity: ''
+                    price: false,
+                    from : false,
+                    to   : false
                 };
 
             Elm.type = 'hidden';
@@ -116,6 +118,8 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
                     placeholderPrice  : self.$Formatter.format(1000),
                     labelTo           : QUILocale.get(lg, lgPrefix + 'labelTo'),
                     labelFrom         : QUILocale.get(lg, lgPrefix + 'labelFrom'),
+                    labelToTime       : QUILocale.get(lg, lgPrefix + 'labelToTime'),
+                    labelFromTime     : QUILocale.get(lg, lgPrefix + 'labelFromTime'),
                     titleBruttoCalcBtn: QUILocale.get(lg, 'fields.control.price.brutto')
                 })
             }).inject(this.$Input, 'after');
@@ -143,18 +147,26 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
             }.bind(this));
 
             // Date inputs
-            this.$To       = this.$Elm.getElement('input.quiqqer-products-field-priceByTimePeriod-date[name="to"]');
-            this.$To.value = data.to;
-
+            this.$To = this.$Elm.getElement('input.quiqqer-products-field-priceByTimePeriod-date[name="to"]');
             this.$To.addEvents({
                 change: this.refresh,
                 blur  : this.refresh
             });
 
-            this.$From       = this.$Elm.getElement('input.quiqqer-products-field-priceByTimePeriod-date[name="from"]');
-            this.$From.value = data.from;
+            this.$ToTime = this.$Elm.getElement('input.quiqqer-products-field-priceByTimePeriod-date[name="to_time"]');
+            this.$ToTime.addEvents({
+                change: this.refresh,
+                blur  : this.refresh
+            });
 
+            this.$From = this.$Elm.getElement('input.quiqqer-products-field-priceByTimePeriod-date[name="from"]');
             this.$From.addEvents({
+                change: this.refresh,
+                blur  : this.refresh
+            });
+
+            this.$FromTime = this.$Elm.getElement('input.quiqqer-products-field-priceByTimePeriod-date[name="from_time"]');
+            this.$FromTime.addEvents({
                 change: this.refresh,
                 blur  : this.refresh
             });
@@ -173,6 +185,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
                 }
             }
 
+            this.setValue(data);
             this.refresh();
             this.$calcBruttoPrice();
         },
@@ -181,10 +194,21 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
          * refresh
          */
         refresh: function () {
+            var from = this.$From.value,
+                to   = this.$To.value;
+
+            if (from && this.$FromTime.value) {
+                from += ' ' + this.$FromTime.value;
+            }
+
+            if (to && this.$ToTime.value) {
+                to += ' ' + this.$ToTime.value;
+            }
+
             this.$Input.value = JSON.encode({
                 price: this.$Price.value,
-                from : this.$From.value,
-                to   : this.$To.value
+                from : from,
+                to   : to
             });
 
             this.fireEvent('change', [this]);
@@ -211,38 +235,46 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
                 this.setPriceValue(value);
             }
 
+            if (typeOf(value) === 'string' && value.match('{')) {
+                try {
+                    value = JSON.decode(value);
+                } catch (e) {
+                }
+            }
+
             if (typeOf(value) === 'object') {
                 if ("price" in value) {
                     this.setPriceValue(value.price);
                 }
 
-                if ("from" in value) {
-                    this.$From.value = value.from;
+                if ("from" in value && value.from) {
+                    var from = value.from;
+
+                    if (from.indexOf(' ') !== -1) {
+                        from = from.split(' ');
+
+                        this.$From.value     = from[0];
+                        this.$FromTime.value = from[1];
+                    } else {
+                        this.$From.value = from;
+                    }
                 }
 
-                if ("to" in value) {
-                    this.$To.value = value.to;
+                if ("to" in value && value.to) {
+                    var to = value.to;
+
+                    if (to.indexOf(' ') !== -1) {
+                        to = to.split(' ');
+
+                        this.$To.value     = to[0];
+                        this.$ToTime.value = to[1];
+                    } else {
+                        this.$To.value = to;
+                    }
                 }
             }
 
-            if (typeOf(value) === 'string' && value.match('{')) {
-                try {
-                    value = JSON.decode(value);
-
-                    if ("price" in value) {
-                        this.setPriceValue(value.price);
-                    }
-
-                    if ("from" in value) {
-                        this.$From.value = value.from;
-                    }
-
-                    if ("to" in value) {
-                        this.$To.value = value.to;
-                    }
-                } catch (e) {
-                }
-            } else if (typeOf(value) === 'string') {
+            if (typeOf(value) === 'string') {
                 this.setPriceValue(value);
             }
 

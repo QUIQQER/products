@@ -2138,12 +2138,20 @@
         </locale>
 
         <locale name="controls.fields.types.PriceByTimePeriod.template.labelFrom">
-            <de><![CDATA[gültig von]]></de>
-            <en><![CDATA[valid from]]></en>
+            <de><![CDATA[gültig von (Datum)]]></de>
+            <en><![CDATA[valid from (date)]]></en>
         </locale>
         <locale name="controls.fields.types.PriceByTimePeriod.template.labelTo">
-            <de><![CDATA[gültig bis]]></de>
-            <en><![CDATA[valid to]]></en>
+            <de><![CDATA[gültig bis (Datum)]]></de>
+            <en><![CDATA[valid to (date)]]></en>
+        </locale>
+        <locale name="controls.fields.types.PriceByTimePeriod.template.labelToTime">
+            <de><![CDATA[gültig von (Uhrzeit)]]></de>
+            <en><![CDATA[valid from (time)]]></en>
+        </locale>
+        <locale name="controls.fields.types.PriceByTimePeriod.template.labelFromTime">
+            <de><![CDATA[gültig bis (Uhrzeit)]]></de>
+            <en><![CDATA[valid to (time)]]></en>
         </locale>
 
         <locale name="control.variant.reset.fields">

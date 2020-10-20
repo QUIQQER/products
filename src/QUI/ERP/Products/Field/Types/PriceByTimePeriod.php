@@ -240,8 +240,8 @@ class PriceByTimePeriod extends Price
 
         return [
             'price' => $price,
-            'from'  => $From ? $From->format('Y-m-d') : false,
-            'to'    => $To ? $To->format('Y-m-d') : false
+            'from'  => $From ? $From->format('Y-m-d H:i') : false,
+            'to'    => $To ? $To->format('Y-m-d H:i') : false
         ];
     }
 
@@ -256,7 +256,7 @@ class PriceByTimePeriod extends Price
             $value = $this->value;
         }
 
-        if (!isset($value['price']) || !isset($value['quantity'])) {
+        if (!isset($value['price'])) {
             return true;
         }
 
@@ -265,20 +265,5 @@ class PriceByTimePeriod extends Price
         }
 
         return false;
-    }
-
-    /**
-     * Return value for use in product search cache
-     *
-     * @param QUI\Locale|null $Locale
-     * @return string
-     */
-    public function getSearchCacheValue($Locale = null)
-    {
-        if ($this->isEmpty()) {
-            return null;
-        }
-
-        return $this->value['price'];
     }
 }
