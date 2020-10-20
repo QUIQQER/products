@@ -299,6 +299,11 @@
             <de><![CDATA[Standard Sortierung]]></de>
             <en><![CDATA[Default sorting]]></en>
         </locale>
+        
+        <locale name="settings.window.fieldsearch.freetext.sort.title">
+            <de><![CDATA[Produkt-Sortierung]]></de>
+            <en><![CDATA[Product sorting]]></en>
+        </locale>
 
         <locale name="fieldtype">
             <de><![CDATA[Feld-Typ]]></de>

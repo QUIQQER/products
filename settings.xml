@@ -343,7 +343,7 @@
 
                     <settings title="freetext" name="freetext">
                         <title>
-                            <locale group="quiqqer/products" var="settings.window.fieldsearch.freetext.title"/>
+                            <locale group="quiqqer/products" var="settings.window.fieldsearch.freetext.sort.title"/>
                         </title>
 
                         <input conf="products.sortFields"
