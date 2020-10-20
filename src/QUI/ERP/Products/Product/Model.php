@@ -191,7 +191,7 @@ class Model extends QUI\QDOM
             }
 
             if ($Field instanceof QUI\ERP\Products\Field\Types\Price && !empty($field['value'])) {
-                $field['value'] = \floatval($field['value']);
+                $field['value'] = $Field->cleanup($field['value']);
             }
 
             try {

@@ -303,7 +303,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
                     },
 
                     onSubmit: function (Win, value) {
-                        self.$Price.value = value;
+                        self.setPriceValue(value);
                         self.$calcBruttoPrice();
                     }
                 }
@@ -342,8 +342,9 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod', [
                     });
                 }, {
                     'package': 'quiqqer/products',
-                    price    : this.$Price.value,
-                    formatted: 1
+                    price    : self.$Price.value,
+                    formatted: 1,
+                    productId: self.$productId
                 });
             }).delay(500, this);
         }

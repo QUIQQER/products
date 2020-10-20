@@ -144,12 +144,53 @@ class PriceByTimePeriod extends Price
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @return array
      * @throws \QUI\ERP\Products\Field\Exception
      */
     public function validate($value)
     {
-        return $this->cleanup($value);
+        if (empty($value)) {
+            return;
+        }
+
+        if (\is_string($value)) {
+            $value = \json_decode($value, true);
+
+            if (\json_last_error() !== \JSON_ERROR_NONE) {
+                throw new QUI\ERP\Products\Field\Exception([
+                    'quiqqer/products',
+                    'exception.field.invalid',
+                    [
+                        'fieldId'    => $this->getId(),
+                        'fieldTitle' => $this->getTitle(),
+                        'fieldType'  => $this->getType()
+                    ]
+                ]);
+            }
+        }
+
+        if (!\is_array($value)) {
+            throw new QUI\ERP\Products\Field\Exception([
+                'quiqqer/products',
+                'exception.field.invalid',
+                [
+                    'fieldId'    => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType'  => $this->getType()
+                ]
+            ]);
+        }
+
+        if (!isset($value['price']) || !isset($value['from']) || !isset($value['to'])) {
+            throw new QUI\ERP\Products\Field\Exception([
+                'quiqqer/products',
+                'exception.field.invalid',
+                [
+                    'fieldId'    => $this->getId(),
+                    'fieldTitle' => $this->getTitle(),
+                    'fieldType'  => $this->getType()
+                ]
+            ]);
+        }
     }
 
     /**
@@ -224,5 +265,20 @@ class PriceByTimePeriod extends Price
         }
 
         return false;
+    }
+
+    /**
+     * Return value for use in product search cache
+     *
+     * @param QUI\Locale|null $Locale
+     * @return string
+     */
+    public function getSearchCacheValue($Locale = null)
+    {
+        if ($this->isEmpty()) {
+            return null;
+        }
+
+        return $this->value['price'];
     }
 }
