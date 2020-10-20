@@ -593,10 +593,14 @@ class Model extends QUI\QDOM
             return '/_p/'.$this->getUrlName();
         }
 
-        $url = $Site->getUrlRewritten([
-            0              => $this->getUrlName(),
-            'paramAsSites' => true
-        ]);
+        try {
+            $url = $Site->getUrlRewritten([
+                0              => $this->getUrlName(),
+                'paramAsSites' => true
+            ]);
+        } catch (\Exception $Exception) {
+            return '/_p/'.$this->getUrlName();
+        }
 
         QUI\Cache\LongTermCache::set($cacheName, $url);
 
