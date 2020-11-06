@@ -111,19 +111,20 @@ class GroupList extends QUI\ERP\Products\Field\Field
         if (\is_numeric($value)) {
             $userIds = [(int)$value];
         } elseif (\is_string($value)) {
-            $userIds = \json_decode($value, true);
+            // Check if string is username
+            try {
+                $User      = QUI::getUsers()->getUserByName($value);
+                $userIds[] = $User->getId();
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
 
-            // Check if string was username
-            if (\json_last_error() !== \JSON_ERROR_NONE) {
-                try {
-                    $User      = QUI::getUsers()->getUserByName($value);
-                    $userIds[] = $User->getId();
-                } catch (\Exception $Exception) {
-                    QUI\System\Log::writeDebugException($Exception);
+                // If string is no username -> assume it is JSON with user IDs
+                $userIds = \json_decode($value, true);
+
+                // Check if string was username
+                if (\json_last_error() !== \JSON_ERROR_NONE) {
                     $userIds = [];
                 }
-            } else {
-                $userIds = [];
             }
         } elseif (\is_array($value)) {
             $userIds = $value;
@@ -223,19 +224,20 @@ class GroupList extends QUI\ERP\Products\Field\Field
         if (\is_numeric($value)) {
             $userIds = [(int)$value];
         } elseif (\is_string($value)) {
-            $userIds = \json_decode($value, true);
+            // Check if string is username
+            try {
+                $User      = QUI::getUsers()->getUserByName($value);
+                $userIds[] = $User->getId();
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
 
-            // Check if string was username
-            if (\json_last_error() !== \JSON_ERROR_NONE) {
-                try {
-                    $User      = QUI::getUsers()->getUserByName($value);
-                    $userIds[] = $User->getId();
-                } catch (\Exception $Exception) {
-                    QUI\System\Log::writeDebugException($Exception);
+                // If string is no username -> assume it is JSON with user IDs
+                $userIds = \json_decode($value, true);
+
+                // Check if string was username
+                if (\json_last_error() !== \JSON_ERROR_NONE) {
                     $userIds = [];
                 }
-            } else {
-                $userIds = [];
             }
         } elseif (\is_array($value)) {
             $userIds = $value;
