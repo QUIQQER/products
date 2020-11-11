@@ -48,7 +48,7 @@ class Manufacturers
                     'active' => 1
                 ]
             ]);
-            
+
             $userIds = \array_column($result, 'id');
 
             return \array_map(function ($v) {
@@ -107,18 +107,34 @@ class Manufacturers
     {
         $parts = [];
 
-        $manufacturer = self::getManufacturerData($userId);
-
-        if (!empty($manufacturer['firstname'])) {
-            $parts[] = $manufacturer['firstname'];
+        try {
+            $User = QUI::getUsers()->get($userId);
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            return '';
         }
 
-        if (!empty($manufacturer['lastname'])) {
-            $parts[] = $manufacturer['lastname'];
+        try {
+            $StandardAddress = $User->getStandardAddress();
+            $company         = $StandardAddress->getAttribute('company');
+
+            if (!empty($company)) {
+                return $company;
+            }
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
+        if (!empty($User->getAttribute('firstname'))) {
+            $parts[] = $User->getAttribute('firstname');
+        }
+
+        if (!empty($User->getAttribute('lastname'))) {
+            $parts[] = $User->getAttribute('lastname');
         }
 
         if (empty($parts)) {
-            return $manufacturer['username'];
+            return $User->getUsername();
         }
 
         return \implode(' ', $parts);
