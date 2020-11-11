@@ -764,6 +764,7 @@ class EventHandling
 
         // check field columns
         $fieldColumns = $DB->table()->getColumns('products_cache');
+        $cacheTbl     = QUI::getDBTableName('products_cache');
 
         foreach ($fieldColumns as $column) {
             if (\mb_substr($column, 0, 1) !== 'F') {
@@ -777,7 +778,7 @@ class EventHandling
                 $columnTypeExpected        = \mb_strtolower($Field->getColumnType());
                 $columnTypeExpectedVariant = \preg_replace('#[\W\d]#i', '', $columnTypeExpected);
 
-                $columnInfo       = $DB->table()->getColumn('products_cache', $column);
+                $columnInfo       = $DB->table()->getColumn($cacheTbl, $column);
                 $columnTypeActual = \preg_replace('#[\W\d]#i', '', $columnInfo['Type']);
 
                 if ($columnTypeActual !== $columnTypeExpected
@@ -787,6 +788,21 @@ class EventHandling
                         .' Expected: '.$columnTypeExpected.' or '.$columnTypeExpectedVariant
                         .' | Actual: '.$columnTypeActual.'.'
                         .' Please fix manually!'
+                    );
+                }
+            } catch (QUI\ERP\Products\Field\Exception $Exception) {
+                // If field was not found -> remove from cache table
+                if ($Exception->getCode() === 404) {
+                    $DB->table()->deleteColumn($cacheTbl, $column);
+
+                    QUI\System\Log::addInfo(
+                        'quiqqer/products :: Deleted column "'.$column.'" from table "'.$cacheTbl.'" because'
+                        .' product field #'.$fieldId.' does not exist anymore.'
+                    );
+                } else {
+                    QUI\System\Log::addError(
+                        'EventHandling :: checkProductCacheTable -> ERROR on cache table column check for field #'
+                        .$fieldId.': '.$Exception->getMessage()
                     );
                 }
             } catch (\Exception $Exception) {
