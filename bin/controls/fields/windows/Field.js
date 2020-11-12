@@ -85,6 +85,8 @@ define('package/quiqqer/products/bin/controls/fields/windows/Field', [
             this.$Field.submit().then(function () {
                 self.fireEvent('save', [self]);
                 self.close();
+            }, function() {
+                self.Loader.hide();
             });
         }
     });
