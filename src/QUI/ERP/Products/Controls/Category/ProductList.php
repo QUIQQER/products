@@ -59,8 +59,9 @@ class ProductList extends QUI\Control
             'data-qui'             => 'package/quiqqer/products/bin/controls/frontend/category/ProductList',
             'data-cid'             => false,
             'view'                 => 'gallery',
+            'showCategories'       => true,
             // gallery, list, detail
-            'categoryView'         => 'gallery',
+            'categoryView'         => 'gallery', // gallery, list
             // gallery, list, detail
             'categoryPos'          => 'top',
             // top, bottom, false = take setting from products
@@ -80,13 +81,13 @@ class ProductList extends QUI\Control
             'hidePrice'            => QUI\ERP\Products\Utils\Package::hidePrice(),
         ]);
 
-        $this->addCSSFile(\dirname(__FILE__).'/ProductList.css');
-        $this->addCSSFile(\dirname(__FILE__).'/ProductListGallery.css');
-        $this->addCSSFile(\dirname(__FILE__).'/ProductListDetails.css');
-        $this->addCSSFile(\dirname(__FILE__).'/ProductListList.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/ProductList.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/ProductListGallery.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/ProductListDetails.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/ProductListList.css');
 
-        $this->addCSSFile(\dirname(__FILE__).'/ProductListCategoryGallery.css');
-        $this->addCSSFile(\dirname(__FILE__).'/ProductListCategoryList.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/ProductListCategoryGallery.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/ProductListCategoryList.css');
 
         $this->id = \uniqid();
 
@@ -180,12 +181,12 @@ class ProductList extends QUI\Control
         // category view
         switch ($this->getAttribute('categoryView')) {
             case 'list':
-                $categoryFile = \dirname(__FILE__).'/ProductListCategoryList.html';
+                $categoryFile = \dirname(__FILE__) . '/ProductListCategoryList.html';
                 break;
 
             default:
             case 'gallery':
-                $categoryFile = \dirname(__FILE__).'/ProductListCategoryGallery.html';
+                $categoryFile = \dirname(__FILE__) . '/ProductListCategoryGallery.html';
                 break;
         }
 
@@ -220,7 +221,7 @@ class ProductList extends QUI\Control
             && isset($searchParams['sortBy'])
             && isset($searchParams['sortOn'])
         ) {
-            $sort = $searchParams['sortOn'].' '.$searchParams['sortBy'];
+            $sort = $searchParams['sortOn'] . ' ' . $searchParams['sortBy'];
 
             $this->setAttribute('data-sort', \htmlspecialchars($sort));
         }
@@ -235,24 +236,32 @@ class ProductList extends QUI\Control
 
         $Pagination->loadFromRequest();
 
+        $showCategories   = $this->getAttribute('showCategories');
+        $categoryChildren = [];
+
+        if ($showCategories) {
+            $categoryChildren = $this->getSite()->getNavigation();
+        }
+
         $Engine->assign([
-            'this'       => $this,
-            'Pagination' => $Pagination,
-            'count'      => $count,
-            'products'   => $products,
-            'children'   => $this->getSite()->getNavigation(),
-            'more'       => $more,
-            'filter'     => $this->getFilter(),
-            'hidePrice'  => $this->getAttribute('hidePrice'),
-            'Site'       => $this->getSite(),
-            'sorts'      => $this->sort,
+            'this'           => $this,
+            'Pagination'     => $Pagination,
+            'count'          => $count,
+            'products'       => $products,
+            'showCategories' => $showCategories,
+            'children'       => $categoryChildren,
+            'more'           => $more,
+            'filter'         => $this->getFilter(),
+            'hidePrice'      => $this->getAttribute('hidePrice'),
+            'Site'           => $this->getSite(),
+            'sorts'          => $this->sort,
 
             'categoryFile'        => $categoryFile,
             'placeholder'         => $this->getProject()->getMedia()->getPlaceholder(),
             'categoryStartNumber' => $this->getAttribute('categoryStartNumber')
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ProductList.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/ProductList.html');
     }
 
     /**
@@ -278,7 +287,7 @@ class ProductList extends QUI\Control
             'cid'    => $this->id,
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ProductList.Filter.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/ProductList.Filter.html');
     }
 
     /**
@@ -457,16 +466,16 @@ class ProductList extends QUI\Control
 
         switch ($this->getAttribute('view')) {
             case 'list':
-                $productTpl = \dirname(__FILE__).'/ProductListList.html';
+                $productTpl = \dirname(__FILE__) . '/ProductListList.html';
                 break;
 
             case 'detail':
-                $productTpl = \dirname(__FILE__).'/ProductListDetails.html';
+                $productTpl = \dirname(__FILE__) . '/ProductListDetails.html';
                 break;
 
             default:
             case 'gallery':
-                $productTpl = \dirname(__FILE__).'/ProductListGallery.html';
+                $productTpl = \dirname(__FILE__) . '/ProductListGallery.html';
                 break;
         }
 
@@ -520,7 +529,7 @@ class ProductList extends QUI\Control
         ]);
 
         return [
-            'html'  => $Engine->fetch(\dirname(__FILE__).'/ProductListRow.html'),
+            'html'  => $Engine->fetch(\dirname(__FILE__) . '/ProductListRow.html'),
             'count' => $count,
             'more'  => $more
         ];

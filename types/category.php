@@ -216,6 +216,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         'categoryId'           => $Site->getAttribute('quiqqer.products.settings.categoryId'),
         'hideEmptyProductList' => true,
         'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
+        'showCategories'       => $Site->getAttribute('quiqqer.products.settings.showCategories'),
         'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
         'categoryPos'          => $Site->getAttribute('quiqqer.products.settings.categoryPos'),
         'searchParams'         => Products\Search\Utils::getSearchParameterFromRequest(),

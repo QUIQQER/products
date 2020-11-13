@@ -2275,6 +2275,11 @@
             <de><![CDATA[Unter der Produktliste]]></de>
             <en><![CDATA[Under the product list]]></en>
         </locale>
+
+        <locale name="quiqqer.products.settings.showCategories">
+            <de><![CDATA[Kategorien aktivieren]]></de>
+            <en><![CDATA[Activate categories]]></en>
+        </locale>
         <locale name="quiqqer.products.settings.categoryDisplay">
             <de><![CDATA[Kategorienanzeige]]></de>
             <en><![CDATA[Categorydisplay]]></en>
