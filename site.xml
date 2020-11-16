@@ -23,6 +23,7 @@
                 <attribute>quiqqer.products.settings.productLoadNumber</attribute>
                 <attribute>quiqqer.products.settings.categoryStartNumber</attribute>
                 <attribute>quiqqer.products.settings.autoloadAfter</attribute>
+                <attribute default="1">quiqqer.products.settings.showCategories</attribute>
                 <attribute>quiqqer.products.settings.categoryDisplay</attribute>
                 <attribute>quiqqer.products.settings.categoryPos</attribute>
                 <attribute>quiqqer.products.settings.categoryAsFilter</attribute>
@@ -110,6 +111,13 @@
                                 <text>
                                     <locale group="quiqqer/products"
                                             var="quiqqer.products.settings.categoryStartNumber"/>
+                                </text>
+                            </input>
+
+                            <input conf="quiqqer.products.settings.showCategories" type="checkbox">
+                                <text>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.showCategories"/>
                                 </text>
                             </input>
 

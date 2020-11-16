@@ -22,7 +22,7 @@ if (\strpos(QUI::getRequest()->getPathInfo(), '_p/') !== false) {
     if (\strlen(URL_DIR) == 1) {
         $_REQUEST['_url'] = \ltrim($_REQUEST['_url'], URL_DIR);
     } else {
-        $from             = '/'.\preg_quote(URL_DIR, '/').'/';
+        $from             = '/' . \preg_quote(URL_DIR, '/') . '/';
         $_REQUEST['_url'] = \preg_replace($from, '', $_REQUEST['_url'], 1);
     }
 
@@ -93,7 +93,13 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         $categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
         $Product    = Products\Handler\Products::getProductByUrl($refNo, $categoryId);
     } catch (QUI\Exception $Exception) {
-        Log::addDebug('Products::getProductByUrl :: '.$Exception->getMessage());
+        try {
+            if (\is_numeric($refNo)) {
+                $Product = Products\Handler\Products::getProduct($refNo);
+            }
+        } catch (QUI\Exception $Exception) {
+            Log::addDebug('Products::getProductByUrl :: ' . $Exception->getMessage());
+        }
     }
 
     try {
@@ -112,10 +118,14 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
             $Site->setAttribute('canonical', $Product->getParent()->getUrl($Project));
         }
 
+        // if product url is with lang flag /en/
+        if (\strpos($productUrl, '/', 1) === 3) {
+            $productUrl = \mb_substr($productUrl, 3);
+        }
 
         // forwarding, if the product has a new URL
         // can happen if the product was previously in "all products".
-        if ($productUrl != URL_DIR.$_REQUEST['_url']) {
+        if ($productUrl != URL_DIR . $_REQUEST['_url']) {
             $urlencoded = \urlencode($productUrl);
             $urlencoded = \str_replace('%2F', '/', $urlencoded);
 
@@ -160,7 +170,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
                 );
 
                 $Site->setAttribute(
-                    $language.'-link',
+                    $language . '-link',
                     $Product->getUrlRewrittenWithHost($LanguageProject)
                 );
             } catch (QUI\Exception $Exception) {
@@ -206,6 +216,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         'categoryId'           => $Site->getAttribute('quiqqer.products.settings.categoryId'),
         'hideEmptyProductList' => true,
         'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
+        'showCategories'       => $Site->getAttribute('quiqqer.products.settings.showCategories'),
         'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
         'categoryPos'          => $Site->getAttribute('quiqqer.products.settings.categoryPos'),
         'searchParams'         => Products\Search\Utils::getSearchParameterFromRequest(),
@@ -220,16 +231,16 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
 
     foreach ($fields as $fieldId) {
         if (\strpos($fieldId, 'S') === 0) {
-            $title = QUI::getLocale()->get('quiqqer/products', 'sortable.'.\mb_substr($fieldId, 1));
+            $title = QUI::getLocale()->get('quiqqer/products', 'sortable.' . \mb_substr($fieldId, 1));
 
             $ProductList->addSort(
-                $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortASC'),
-                $fieldId.' ASC'
+                $title . ' ' . QUI::getLocale()->get('quiqqer/products', 'sortASC'),
+                $fieldId . ' ASC'
             );
 
             $ProductList->addSort(
-                $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
-                $fieldId.' DESC'
+                $title . ' ' . QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
+                $fieldId . ' DESC'
             );
 
             continue;
@@ -243,13 +254,13 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
                 $title = $Field->getTitle();
 
                 $ProductList->addSort(
-                    $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortASC'),
-                    'F'.$fieldId.' ASC'
+                    $title . ' ' . QUI::getLocale()->get('quiqqer/products', 'sortASC'),
+                    'F' . $fieldId . ' ASC'
                 );
 
                 $ProductList->addSort(
-                    $title.' '.QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
-                    'F'.$fieldId.' DESC'
+                    $title . ' ' . QUI::getLocale()->get('quiqqer/products', 'sortDESC'),
+                    'F' . $fieldId . ' DESC'
                 );
             } catch (QUI\Exception $Exception) {
             }
