@@ -244,7 +244,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 }
             }
 
-            if (this.getAttribute('resizable')) {
+            if (this.getAttribute('resizable') && parseInt(this.getAttribute('max')) !== 1) {
                 this.$Elm.addClass('qui-products-categories--resizable');
 
                 new Element('div', {
