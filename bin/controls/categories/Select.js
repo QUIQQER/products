@@ -64,6 +64,8 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         },
 
         initialize: function (options, Input) {
+            var self = this;
+
             this.parent(options);
 
             this.$Input    = Input || null;
@@ -79,6 +81,15 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
             this.addEvents({
                 onImport      : this.$onImport,
+                onInject      : function () {
+                    (function () {
+                        if (!self.$Elm.getParent('.data-table')) {
+                            self.$Elm.setStyles({
+                                border: '1px solid rgba(147, 128, 108, 0.25)'
+                            });
+                        }
+                    }).delay(200);
+                },
                 onSetAttribute: function (attr) {
                     if (attr === 'Site' && !this.$values.length) {
                         this.$showCreateButton();
@@ -175,7 +186,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                     width: 50
                 },
                 events: {
-                    onClick: function (Btn, e) {
+                    onClick: function (Btn) {
                         Btn.setAttribute('icon', 'fa fa-spinner fa-spin');
 
                         require([
@@ -203,8 +214,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             this.$CreateButton = new QUIButton({
                 icon  : 'fa fa-sitemap',
                 styles: {
-                    display: 'none',
-                    width  : 50
+                    width: 50
                 },
                 alt   : QUILocale.get(lg, 'control.select.category.create'),
                 events: {
@@ -725,7 +735,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 this.resize();
             }.bind(this)).delay(200);
 
-            if (!this.$values.length && this.getAttribute('Site')) {
+            if (!this.$values.length && parseInt(this.getAttribute('max')) === 1) {
                 this.$showCreateButton();
             }
         },
@@ -766,7 +776,8 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         },
 
         /**
-         *
+         * @param o
+         * @param e
          */
         $showCreateCategoryDialog: function (o, e) {
             if (typeOf(e) === 'domevent') {
@@ -774,6 +785,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             }
 
             if (!this.getAttribute('Site')) {
+                this.$SearchButton.click();
                 return;
             }
 
