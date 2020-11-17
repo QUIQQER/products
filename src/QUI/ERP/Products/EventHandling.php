@@ -37,7 +37,21 @@ class EventHandling
         QUI\ERP\Products\Handler\Manufacturers::registerManufacturerUrlPaths();
 
         self::patchProductTypes();
+        self::setDefaultMediaFolder();
+        self::setDefaultVariantFields();
+        self::setDefaultProductFields();
+        self::checkProductCacheTable();
+//        Crons::updateProductCache();
+    }
 
+    /**
+     * Set the default media folder for all products
+     *
+     * @return void
+     * @throws QUI\Exception
+     */
+    protected static function setDefaultMediaFolder()
+    {
         try {
             Products::getParentMediaFolder();
         } catch (QUI\Exception $Exception) {
@@ -58,29 +72,96 @@ class EventHandling
                 QUI\System\Log::addWarning($Exception->getMessage());
             }
         }
+    }
 
-        //default variant fields
-        $editableFields  = [1, 3, 4, 5, 6, 9, 10, 12, 13, 16, 17, 19];
-        $inheritedFields = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16, 17, 18];
-
+    /**
+     * Set default editable and inhertiable fields for product variants
+     *
+     * @return void
+     */
+    protected static function setDefaultVariantFields()
+    {
         try {
             $Config = QUI::getPackage('quiqqer/products')->getConfig();
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            return;
+        }
 
-            foreach ($editableFields as $editableField) {
-                $Config->set('editableFields', $editableField, 1);
+        // Check current config for fields that may not exist anymore
+        $editableFields = $Config->getSection('editableFields');
+
+        if (!empty($editableFields) && \is_array($editableFields)) {
+            foreach ($editableFields as $fieldId => $active) {
+                try {
+                    Fields::getField($fieldId);
+                } catch (QUI\ERP\Products\Field\Exception $Exception) {
+                    if ($Exception->getCode() === 404) {
+                        QUI\System\Log::addInfo(
+                            'Removed product field #'.$fieldId.' from the [editableFields] section in '
+                            .$Config->getFilename()
+                        );
+
+                        unset($editableFields[$fieldId]);
+                    }
+                } catch (\Exception $Exception) {
+                    QUI\System\Log::writeException($Exception);
+                }
             }
 
-            foreach ($inheritedFields as $inheritedField) {
-                $Config->set('inheritedFields', $inheritedField, 1);
+            $Config->setSection('editableFields', $editableFields);
+        }
+
+        $inheritedFields = $Config->getSection('inheritedFields');
+
+        if (!empty($inheritedFields) && \is_array($inheritedFields)) {
+            foreach ($inheritedFields as $fieldId => $active) {
+                try {
+                    Fields::getField($fieldId);
+                } catch (QUI\ERP\Products\Field\Exception $Exception) {
+                    if ($Exception->getCode() === 404) {
+                        QUI\System\Log::addInfo(
+                            'Removed product field #'.$fieldId.' from the [inheritedFields] section in '
+                            .$Config->getFilename().' because the field no longer exists.'
+                        );
+
+                        unset($inheritedFields[$fieldId]);
+                    }
+                } catch (\Exception $Exception) {
+                    QUI\System\Log::writeException($Exception);
+                }
+            }
+
+            $Config->setSection('inheritedFields', $inheritedFields);
+        }
+
+        // Set default fields
+        $defaultEditableFields  = [1, 3, 4, 5, 6, 9, 10, 12, 13, 16, 17, 19];
+        $defaultInheritedFields = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14, 15, 16, 17, 18];
+
+        try {
+            foreach ($defaultEditableFields as $fieldId) {
+                $Config->set('editableFields', $fieldId, 1);
+            }
+
+            foreach ($defaultInheritedFields as $fieldId) {
+                $Config->set('inheritedFields', $fieldId, 1);
             }
 
             $Config->save();
         } catch (QUI\Exception $Exception) {
-            QUI\System\Log::addWarning($Exception->getMessage());
+            QUI\System\Log::writeException($Exception);
         }
+    }
 
-
-        // default fields
+    /**
+     * Product field setup
+     *
+     * @return void
+     * @throws QUI\Database\Exception
+     */
+    protected static function setDefaultProductFields()
+    {
         $standardFields = [
             // Preis
             [
@@ -694,7 +775,6 @@ class EventHandling
             }
         }
 
-
         // field cache
         $fields = Fields::getFieldIds();
 
@@ -706,9 +786,6 @@ class EventHandling
             } catch (\Exception $Exception) {
             }
         }
-
-        self::checkProductCacheTable();
-//        Crons::updateProductCache();
     }
 
     /**
