@@ -39,7 +39,7 @@ class EventHandling
         self::patchProductTypes();
         self::setDefaultMediaFolder();
         self::setDefaultVariantFields();
-        self::setDefaultProductFields();;
+        self::setDefaultProductFields();
         self::checkProductCacheTable();
 //        Crons::updateProductCache();
     }
