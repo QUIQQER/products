@@ -1581,10 +1581,28 @@ class Model extends QUI\QDOM
         $Locale->setCurrent($lang);
 
         // wir nutzen system user als netto user
-        $SystemUser   = QUI::getUsers()->getSystemUser();
-        $minPrice     = $this->getMinimumPrice($SystemUser)->value();
-        $maxPrice     = $this->getMaximumPrice($SystemUser)->value();
-        $currentPrice = $this->getCurrentPrice($SystemUser)->value();
+        $SystemUser = QUI::getUsers()->getSystemUser();
+
+        try {
+            $minPrice = $this->getMinimumPrice($SystemUser)->value();
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+            $minPrice = false;
+        }
+
+        try {
+            $maxPrice = $this->getMaximumPrice($SystemUser)->value();
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+            $maxPrice = false;
+        }
+
+        try {
+            $currentPrice = $this->getCurrentPrice($SystemUser)->value();
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+            $currentPrice = false;
+        }
 
         // Dates
         $cDate = $this->getAttribute('c_date');
