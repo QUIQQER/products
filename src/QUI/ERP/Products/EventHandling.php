@@ -122,7 +122,7 @@ class EventHandling
                     if ($Exception->getCode() === 404) {
                         QUI\System\Log::addInfo(
                             'Removed product field #'.$fieldId.' from the [inheritedFields] section in '
-                            .$Config->getFilename()
+                            .$Config->getFilename().' because the field no longer exists.'
                         );
 
                         unset($inheritedFields[$fieldId]);
