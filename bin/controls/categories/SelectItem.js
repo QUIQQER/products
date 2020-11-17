@@ -60,8 +60,8 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
             Elm.set({
                 'class': 'quiqqer-category-selectItem smooth',
                 html   : '<span class="quiqqer-category-selectItem-icon fa fa-sitemap"></span>' +
-                '<span class="quiqqer-category-selectItem-text">&nbsp;</span>' +
-                '<span class="quiqqer-category-selectItem-destroy fa fa-remove"></span>'
+                    '<span class="quiqqer-category-selectItem-text">&nbsp;</span>' +
+                    '<span class="quiqqer-category-selectItem-destroy fa fa-remove"></span>'
             });
 
             this.$Icon    = Elm.getElement('.quiqqer-category-selectItem-icon');
@@ -72,7 +72,8 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
                 this.$Destroy.setStyle('display', 'none');
             }
 
-            this.$Destroy.addEvent('click', function () {
+            this.$Destroy.addEvent('click', function (e) {
+                e.stop();
                 self.destroy();
             });
 
