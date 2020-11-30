@@ -182,6 +182,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
             this.$SearchButton = new QUIButton({
                 icon  : 'fa fa-search',
+                name  : 'search',
                 styles: {
                     width: 50
                 },
@@ -212,9 +213,11 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
 
 
             this.$CreateButton = new QUIButton({
+                name  : 'create',
                 icon  : 'fa fa-sitemap',
                 styles: {
-                    width: 50
+                    display: 'none',
+                    width  : 50
                 },
                 alt   : QUILocale.get(lg, 'control.select.category.create'),
                 events: {
@@ -267,6 +270,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             }
 
             if (parseInt(this.getAttribute('max')) === 1) {
+                this.$CreateButton.getElm().setStyle('display', null);
                 this.$Search.setStyle('display', 'none');
                 this.$SearchIcon.setStyle('display', 'none');
                 this.$SearchButton.hide();

@@ -1225,6 +1225,18 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $customFields[$Field->getId()] = $attributes;
         }
 
+        // price factors -> quiqqer/discount#7
+        $priceFactors = $this->getPriceFactors()->toErpPriceFactorList()->toArray();
+
+        foreach ($priceFactors as $factor) {
+            if (!empty($factor['identifier'])) {
+                $factor['custom_calc']['valueText'] = $factor['valueText'];
+                $factor['custom_calc']['value']     = $factor['value'];
+
+                $customFields[$factor['identifier']] = $factor;
+            }
+        }
+
         return $customFields;
     }
 
