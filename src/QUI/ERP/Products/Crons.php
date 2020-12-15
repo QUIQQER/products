@@ -28,6 +28,9 @@ class Crons
      */
     public static function updateProductCache()
     {
+        // global watcher disable
+        QUI\Watcher::$globalWatcherDisable = true;
+
         // clear search cache
         QUI\ERP\Products\Search\Cache::clear();
 
