@@ -1,0 +1,24 @@
+{{#priceFields}}
+
+{{#edit}}
+<div class="quiqqer-products-settings-pricefieldfactors-entry" data-id="{{id}}">
+    <input type="checkbox" name="active"/>
+    <span class="quiqqer-products-settings-pricefieldfactors-entry-field">
+        {{title}}
+    </span>
+    <input type="number" name="multiplier" disabled/>
+    <span>
+        {{labelMultiplier}}
+    </span>
+    <select name="sourceFieldId" disabled>
+        {{#priceFields}}
+        <option value="{{id}}">{{title}}</option>
+        {{/priceFields}}
+    </select>
+</div>
+{{/edit}}
+
+{{/priceFields}}
+<div class="quiqqer-products-settings-pricefieldfactors-buttons">
+
+</div>

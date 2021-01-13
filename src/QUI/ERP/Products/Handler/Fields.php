@@ -105,6 +105,13 @@ class Fields
     protected static $fieldTypeData = [];
 
     /**
+     * Runtime cache for price factor settings
+     *
+     * @var array
+     */
+    protected static $priceFactorSettings = false;
+
+    /**
      * Return the child attributes
      *
      * @return array
@@ -1139,4 +1146,76 @@ class Fields
         Products::enableGlobalFireEventsOnProductSave();
         Products::enableGlobalProductSearchCacheUpdate();
     }
+
+    // region Price factors
+
+    /**
+     * Update all price fields by a factor (if set in global settings)
+     *
+     * @param QUI\ERP\Products\Product\Product $Product
+     * @return void
+     *
+     * @throws QUI\Exception
+     */
+    public static function updateProductPricesByFactors(QUI\ERP\Products\Product\Product $Product): void
+    {
+        $priceFactors  = self::getPriceFactorSettings();
+        $pricesUpdated = false;
+
+        foreach ($priceFactors as $priceFieldId => $settings) {
+            if (!$Product->hasField($priceFieldId) || !$Product->hasField($settings['sourceFieldId'])) {
+                continue;
+            }
+
+            try {
+                $PriceField  = $Product->getField($priceFieldId);
+                $SourceField = $Product->getField($settings['sourceFieldId']);
+                $multiplier  = (float)$settings['multiplier'];
+
+                $price = $SourceField->getValue() * $multiplier;
+                $PriceField->setValue($price);
+
+                $pricesUpdated = true;
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+                continue;
+            }
+        }
+
+        if ($pricesUpdated) {
+            Products::disableGlobalFireEventsOnProductSave();
+            $Product->update(QUI::getUsers()->getSystemUser());
+            Products::enableGlobalFireEventsOnProductSave();
+        }
+    }
+
+    /**
+     * Get current price factor settings
+     *
+     * @return array
+     */
+    public static function getPriceFactorSettings(): array
+    {
+        if (self::$priceFactorSettings !== false) {
+            return self::$priceFactorSettings;
+        }
+
+        try {
+            $Conf     = QUI::getPackage('quiqqer/products')->getConfig();
+            $settings = $Conf->get('products', 'priceFieldFactors');
+
+            if (empty($settings)) {
+                self::$priceFactorSettings = [];
+            } else {
+                self::$priceFactorSettings = \json_decode($settings, true);
+            }
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            return [];
+        }
+
+        return self::$priceFactorSettings;
+    }
+
+    // endregion
 }

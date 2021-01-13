@@ -1,0 +1,31 @@
+.quiqqer-products-settings-pricefieldfactors {
+    width: 100%;
+}
+
+.quiqqer-products-settings-pricefieldfactors-entry {
+    margin-bottom: 10px;
+    padding: 5px 0;
+    width: 100%;
+}
+
+.quiqqer-products-settings-pricefieldfactors-entry:nth-child(2n+1) {
+    background-color: #f7f7f7;
+}
+
+.quiqqer-products-settings-pricefieldfactors-entry-field {
+    display: inline-block;
+    width: 200px;
+}
+
+.quiqqer-products-settings-pricefieldfactors-entry input[name="multiplier"] {
+    width: 75px;
+}
+
+.quiqqer-products-settings-pricefieldfactors-buttons {
+    margin: 20px 0;
+    text-align: right;
+}
+
+.quiqqer-products-settings-pricefieldfactors-buttons button {
+    float: none !important;
+}
