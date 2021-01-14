@@ -33,7 +33,7 @@ QUI::$Ajax->registerFunction(
             $priceFields[] = [
                 'id'    => $Field->getId(),
                 'title' => $Field->getTitle(),
-                'edit'  => $Field->getId() !== Fields::FIELD_PRICE
+                'edit'  => true//$Field->getId() !== Fields::FIELD_PRICE
             ];
         }
 
