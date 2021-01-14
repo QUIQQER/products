@@ -81,6 +81,16 @@ class Model extends QUI\QDOM
     protected $active = false;
 
     /**
+     * Force the application of all price factors on product save.
+     * This includes price fields that are normally not updated on product save.
+     *
+     * This is a special flag for the price field factor feature.
+     *
+     * @var bool
+     */
+    protected $forcePriceFactorUse = false;
+
+    /**
      * Model constructor
      *
      * @param integer $pid - Product-ID
@@ -1374,6 +1384,9 @@ class Model extends QUI\QDOM
      */
     public function validateFields()
     {
+        // Update price fields by factors
+        $this->updateProductPricesByFactors();
+
         $fieldData = [];
         $fields    = $this->getAllProductFields();
 
@@ -1446,6 +1459,9 @@ class Model extends QUI\QDOM
      */
     protected function getFieldData()
     {
+        // Update price fields by factors
+        $this->updateProductPricesByFactors();
+
         $fields    = $this->getAllProductFields();
         $fieldData = [];
 
@@ -2378,4 +2394,51 @@ class Model extends QUI\QDOM
     }
 
     //endregion
+
+    // region Price factors
+
+    /**
+     * Determines if all price fields should be updated if they have a price factor assigned
+     * REGARDLESS of the "update on save" flag for each price field.
+     *
+     * @param bool $value
+     * @return void
+     */
+    public function setForcePriceFieldFactorUse(bool $value): void
+    {
+        $this->forcePriceFactorUse = $value;
+    }
+
+    /**
+     * Update all price fields by a factor (if set in global settings)
+     *
+     * @return void
+     */
+    protected function updateProductPricesByFactors(): void
+    {
+        $priceFactors = Fields::getPriceFactorSettings();
+
+        foreach ($priceFactors as $priceFieldId => $settings) {
+            if (!$this->hasField($priceFieldId) || !$this->hasField($settings['sourceFieldId'])) {
+                continue;
+            }
+
+            if (empty($settings['updateOnSave']) && !$this->forcePriceFactorUse) {
+                continue;
+            }
+
+            try {
+                $PriceField  = $this->getField($priceFieldId);
+                $SourceField = $this->getField($settings['sourceFieldId']);
+                $multiplier  = (float)$settings['multiplier'];
+
+                $price = $SourceField->getValue() * $multiplier;
+                $PriceField->setValue($price);
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
+        }
+    }
+
+    // endregion
 }

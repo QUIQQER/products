@@ -21,12 +21,27 @@ QUI::$Ajax->registerFunction(
             'where' => $where
         ]);
 
-        $updateCount = 0;
+        $updateCount  = 0;
+        $priceFactors = Fields::getPriceFactorSettings();
+        $SystemUser   = QUI::getUsers()->getSystemUser();
 
         foreach ($productIds as $productId) {
             try {
                 $Product = Products::getProduct($productId);
-                Fields::updateProductPricesByFactors($Product);
+
+                foreach ($priceFactors as $priceFieldId => $settings) {
+                    if (!$Product->hasField($priceFieldId) || !$Product->hasField($settings['sourceFieldId'])) {
+                        continue;
+                    }
+
+                    try {
+                        $Product->setForcePriceFieldFactorUse(true);
+                        $Product->update($SystemUser);
+                    } catch (\Exception $Exception) {
+                        QUI\System\Log::writeException($Exception);
+                        continue;
+                    }
+                }
 
                 $updateCount++;
             } catch (\Exception $Exception) {
@@ -45,5 +60,5 @@ QUI::$Ajax->registerFunction(
         );
     },
     ['activeOnly'],
-    'Permission::checkAdminUser'
+    ['Permission::checkAdminUser', 'product.edit']
 );

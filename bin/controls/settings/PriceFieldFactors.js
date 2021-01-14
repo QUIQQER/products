@@ -72,8 +72,9 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
 
             this.$getPriceFields().then(function (priceFields) {
                 self.$Elm.set('html', Mustache.render(template, {
-                    priceFields    : priceFields,
-                    labelMultiplier: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelMultiplier')
+                    priceFields      : priceFields,
+                    labelMultiplier  : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelMultiplier'),
+                    labelUpdateOnSave: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave')
                 }));
 
                 new QUIButton({
@@ -91,12 +92,14 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
 
                     var fieldId = Entry.get('data-id');
 
-                    var ActiveCheckbox    = Entry.getElement('input[name="active"]'),
-                        MultiplierInput   = Entry.getElement('input[name="multiplier"]'),
-                        SourceFieldSelect = Entry.getElement('select[name="sourceFieldId"]');
+                    var ActiveCheckbox       = Entry.getElement('input[name="active"]'),
+                        MultiplierInput      = Entry.getElement('input[name="multiplier"]'),
+                        SourceFieldSelect    = Entry.getElement('select[name="sourceFieldId"]'),
+                        UpdateOnSaveCheckbox = Entry.getElement('input[name="update_on_save"]');
 
                     MultiplierInput.addEvent('change', self.$updateValue);
                     SourceFieldSelect.addEvent('change', self.$updateValue);
+                    UpdateOnSaveCheckbox.addEvent('change', self.$updateValue);
 
                     if (fieldId in Value) {
                         ActiveCheckbox.checked = true;
@@ -106,6 +109,9 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
 
                         SourceFieldSelect.disabled = false;
                         SourceFieldSelect.value    = Value[fieldId].sourceFieldId;
+
+                        UpdateOnSaveCheckbox.disabled = false;
+                        UpdateOnSaveCheckbox.checked  = Value[fieldId].updateOnSave;
                     }
                 });
             });
@@ -117,11 +123,14 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
          * @param {DocumentEvent} event
          */
         $onEntryActivateClick: function (event) {
-            var MultiplierInput   = event.target.getParent().getElement('input[name="multiplier"]'),
-                SourceFieldSelect = event.target.getParent().getElement('select[name="sourceFieldId"]');
+            var Entry                = event.target.getParent(),
+                MultiplierInput      = Entry.getElement('input[name="multiplier"]'),
+                SourceFieldSelect    = Entry.getElement('select[name="sourceFieldId"]'),
+                UpdateOnSaveCheckbox = Entry.getElement('input[name="update_on_save"]');
 
-            MultiplierInput.disabled   = !event.target.checked;
-            SourceFieldSelect.disabled = !event.target.checked;
+            MultiplierInput.disabled      = !event.target.checked;
+            SourceFieldSelect.disabled    = !event.target.checked;
+            UpdateOnSaveCheckbox.disabled = !event.target.checked;
 
             if (event.target.checked) {
                 MultiplierInput.focus();
@@ -193,9 +202,10 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
             var Value   = {};
 
             entries.forEach(function (Entry) {
-                var ActiveCheckbox    = Entry.getElement('input[name="active"]'),
-                    MultiplierInput   = Entry.getElement('input[name="multiplier"]'),
-                    SourceFieldSelect = Entry.getElement('select[name="sourceFieldId"]');
+                var ActiveCheckbox       = Entry.getElement('input[name="active"]'),
+                    MultiplierInput      = Entry.getElement('input[name="multiplier"]'),
+                    SourceFieldSelect    = Entry.getElement('select[name="sourceFieldId"]'),
+                    UpdateOnSaveCheckbox = Entry.getElement('input[name="update_on_save"]');
 
                 if (!ActiveCheckbox.checked) {
                     return;
@@ -203,7 +213,8 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
 
                 Value[Entry.get('data-id')] = {
                     multiplier   : parseFloat(MultiplierInput.value),
-                    sourceFieldId: parseInt(SourceFieldSelect.value)
+                    sourceFieldId: parseInt(SourceFieldSelect.value),
+                    updateOnSave : UpdateOnSaveCheckbox.checked
                 };
             });
 

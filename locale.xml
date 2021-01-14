@@ -2227,6 +2227,10 @@
             <de><![CDATA[x Wert von]]></de>
             <en><![CDATA[x value of]]></en>
         </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave">
+            <de><![CDATA[beim Speichern von Produkten anwenden]]></de>
+            <en><![CDATA[apply on product save]]></en>
+        </locale>
         
     </groups>
 
