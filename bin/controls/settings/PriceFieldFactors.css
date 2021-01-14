@@ -3,9 +3,9 @@
 }
 
 .quiqqer-products-settings-pricefieldfactors-entry {
+    display: inline-block;
     margin-bottom: 10px;
-    padding: 5px 0;
-    width: 100%;
+    padding: 5px 10px;
 }
 
 .quiqqer-products-settings-pricefieldfactors-entry:nth-child(2n+1) {
@@ -14,7 +14,7 @@
 
 .quiqqer-products-settings-pricefieldfactors-entry-field {
     display: inline-block;
-    width: 200px;
+    width: 165px;
 }
 
 .quiqqer-products-settings-pricefieldfactors-entry input[name="multiplier"] {
@@ -28,4 +28,13 @@
 
 .quiqqer-products-settings-pricefieldfactors-buttons button {
     float: none !important;
+}
+
+.quiqqer-products-settings-pricefieldfactors-entry-updateonsave {
+    float: none !important;
+    display: block;
+    /* float: right; */
+    width: initial !important;
+    text-align: right;
+    padding: 5px 0;
 }

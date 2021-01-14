@@ -1150,46 +1150,6 @@ class Fields
     // region Price factors
 
     /**
-     * Update all price fields by a factor (if set in global settings)
-     *
-     * @param QUI\ERP\Products\Product\Product $Product
-     * @return void
-     *
-     * @throws QUI\Exception
-     */
-    public static function updateProductPricesByFactors(QUI\ERP\Products\Product\Product $Product): void
-    {
-        $priceFactors  = self::getPriceFactorSettings();
-        $pricesUpdated = false;
-
-        foreach ($priceFactors as $priceFieldId => $settings) {
-            if (!$Product->hasField($priceFieldId) || !$Product->hasField($settings['sourceFieldId'])) {
-                continue;
-            }
-
-            try {
-                $PriceField  = $Product->getField($priceFieldId);
-                $SourceField = $Product->getField($settings['sourceFieldId']);
-                $multiplier  = (float)$settings['multiplier'];
-
-                $price = $SourceField->getValue() * $multiplier;
-                $PriceField->setValue($price);
-
-                $pricesUpdated = true;
-            } catch (\Exception $Exception) {
-                QUI\System\Log::writeException($Exception);
-                continue;
-            }
-        }
-
-        if ($pricesUpdated) {
-            Products::disableGlobalFireEventsOnProductSave();
-            $Product->update(QUI::getUsers()->getSystemUser());
-            Products::enableGlobalFireEventsOnProductSave();
-        }
-    }
-
-    /**
      * Get current price factor settings
      *
      * @return array
