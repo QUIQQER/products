@@ -308,8 +308,14 @@
             <de><![CDATA[Preisfeld-Faktoren]]></de>
             <en><![CDATA[Price field factors]]></en>
         </locale>
-        <locale name="settings.window.products.priceFieldFactors.description">
-            <de><![CDATA[Hier kann für jedes im System angelegte Preisfeld ein Multiplikator auf Basis eines anderes Preisfelds festgelegt werden.]]></de>
+        <locale name="settings.window.products.priceFieldFactors.description" html="true">
+            <de><![CDATA[Hier kann für jedes im System angelegte Preisfeld ein Multiplikator auf Basis eines anderes Preisfelds festgelegt werden.<br/><br/>
+<b>Beispiel:</b><br/>
+Preis-Feld: <b>UVP</b><br/>
+Multiplikator: <b>1.5</b><br/>
+Auf Basis von Preis-Feld: <b>Preis</b> (Wert: <b>50,00 €</b>)<br/><br/>
+UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
+]]></de>
             <en><![CDATA[Here you can set a multiplier for each price field created in the system based on another price field.]]></en>
         </locale>
         
@@ -2231,7 +2237,13 @@
             <de><![CDATA[beim Speichern von Produkten anwenden]]></de>
             <en><![CDATA[apply on product save]]></en>
         </locale>
-        
+        <locale name="controls.settings.PriceFieldFactors.info_cli">
+            <de><![CDATA[</p>In Ihrem Shop existieren sehr viele Produkte. Die Ausführungszeit Ihres Web-Servers i.V.m. PHP wird wahrscheinlich nicht reichen, um die Preise aller Produkte zu aktualisieren.</p><br/>
+<p>Sie können die Aktualisierung der Produkt-Preise auch per Konsolenbefehl durchführen. Führen Sie bitte einen der folgende Befehle aus, um die Aktualisierung durchzuführen (alle Produkte bzw. nur aktive Produkte):</p>]]></de>
+            <en><![CDATA[</p>There are a lot of products in your store. The execution time of your web server and PHP will probably not be enough to update the prices of all products.</p><br/>.
+<p>You can also update the product prices by console command. Please run one of the following commands to perform the update (all products or active products only):</p>]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/products" datatype="php">
