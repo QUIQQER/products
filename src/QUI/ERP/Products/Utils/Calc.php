@@ -173,7 +173,7 @@ class Calc
      *
      * @return QUI\ERP\Currency\Currency
      */
-    public function getCurrency()
+    public function getCurrency(): ?QUI\ERP\Currency\Currency
     {
         if (\is_null($this->Currency)) {
             $this->Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
@@ -191,7 +191,7 @@ class Calc
      *
      * @throws QUI\Exception
      */
-    public function calcProductList(ProductList $List, $callback = false)
+    public function calcProductList(ProductList $List, $callback = false): ProductList
     {
         // calc data
         if (!\is_callable($callback)) {
@@ -559,7 +559,7 @@ class Calc
         UniqueProduct $Product,
         $callback = false,
         $Price = null
-    ) {
+    ): QUI\ERP\Money\Price {
         // calc data
         if (!\is_callable($callback)) {
             $Product->calc($this);
@@ -582,6 +582,8 @@ class Calc
         if (empty($nettoPrice)) {
             $nettoPrice = 0;
         }
+
+        $nettoPrice = \round($nettoPrice, $Currency->getPrecision());
 
         $factors                    = [];
         $basisNettoPrice            = $nettoPrice;
@@ -779,7 +781,7 @@ class Calc
      * @param string $value
      * @return float|mixed
      */
-    public function round($value)
+    public function round(string $value): float
     {
         return QUI\ERP\Accounting\Calc::getInstance($this->getUser())->round($value);
     }
@@ -787,8 +789,8 @@ class Calc
     /**
      * Calc the price in dependence of the user
      *
-     * @param int|double|float $nettoPrice - netto price
-     * @return int|double|float
+     * @param int|float $nettoPrice - netto price
+     * @return int|float
      *
      * @throws QUI\Exception
      */
@@ -929,7 +931,7 @@ class Calc
      *
      * @throws QUI\Exception
      */
-    public function getVatTextByUser()
+    public function getVatTextByUser(): string
     {
         return ErpCalc::getVatText(
             QUI\ERP\Tax\Utils::getTaxByUser($this->getUser())->getValue(),
