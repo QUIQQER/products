@@ -98,6 +98,7 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                         UpdateOnSaveCheckbox = Entry.getElement('input[name="update_on_save"]');
 
                     MultiplierInput.addEvent('change', self.$updateValue);
+                    MultiplierInput.addEvent('keyup', self.$updateValue);
                     SourceFieldSelect.addEvent('change', self.$updateValue);
                     UpdateOnSaveCheckbox.addEvent('change', self.$updateValue);
 
@@ -162,9 +163,10 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                 ok_button    : false,
                 events       : {
                     onOpen: function (Win) {
-                        Win.addButton(new QUIButton({
+                        var BtnAll = new QUIButton({
                             text     : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.btn.confirm_all'),
                             textimage: 'fa fa-asterisk',
+                            disabled : true,
                             events   : {
                                 onClick: function () {
                                     Win.Loader.show();
@@ -174,11 +176,12 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                                     });
                                 }
                             }
-                        }));
+                        });
 
-                        Win.addButton(new QUIButton({
+                        var BtnActiveOnly = new QUIButton({
                             text     : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.btn.confirm_active'),
                             textimage: 'fa fa-asterisk',
+                            disabled : true,
                             events   : {
                                 onClick: function () {
                                     Win.Loader.show();
@@ -188,7 +191,38 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                                     });
                                 }
                             }
-                        }));
+                        });
+
+                        Win.addButton(BtnAll);
+                        Win.addButton(BtnActiveOnly);
+
+                        Win.Loader.show();
+
+                        self.$checkSystem().then(function (Data) {
+                            Win.Loader.hide();
+
+                            BtnAll.enable();
+                            BtnActiveOnly.enable();
+
+                            if (Data.timeSufficient) {
+                                return;
+                            }
+
+                            var Content = Win.getContent();
+
+                            new Element('p', {
+                                'class': 'message-attention quiqqer-products-settings-pricefieldfactors-warning',
+                                html   : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.info_cli')
+                            }).inject(Content);
+
+                            new Element('div', {
+                                'class': 'quiqqer-products-settings-pricefieldfactors-cli',
+                                html   : Data.commands.all + '<br/>' + Data.commands.active
+                            }).inject(Content);
+
+                            Win.setAttribute('maxHeight', 450);
+                            Win.resize();
+                        });
                     }
                 }
             }).open();
@@ -216,6 +250,8 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                     sourceFieldId: parseInt(SourceFieldSelect.value),
                     updateOnSave : UpdateOnSaveCheckbox.checked
                 };
+
+                console.log(Value);
             });
 
             this.$Input.value = JSON.encode(Value);
@@ -247,6 +283,22 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
         $getPriceFields: function () {
             return new Promise(function (resolve, reject) {
                 QUIAjax.get('package_quiqqer_products_ajax_settings_getPriceFields', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
+         * Check if system is capable of running product updates via web server.
+         *
+         * Returns CLI commands for manual execution.
+         *
+         * @return {Promise}
+         */
+        $checkSystem: function () {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_products_ajax_settings_checkSystem', resolve, {
                     'package': 'quiqqer/products',
                     onError  : reject
                 });

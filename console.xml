@@ -6,4 +6,5 @@
     <tool exec="\QUI\ERP\Products\Console\GenerateImageCache"/>
     <tool exec="\QUI\ERP\Products\Console\SetFieldAttributesToProducts"/>
     <tool exec="\QUI\ERP\Products\Console\AssignProductsToParentCategories"/>
+    <tool exec="\QUI\ERP\Products\Console\UpdatePrices"/>
 </console>

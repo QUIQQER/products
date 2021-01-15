@@ -3,7 +3,6 @@
 }
 
 .quiqqer-products-settings-pricefieldfactors-entry {
-    display: inline-block;
     margin-bottom: 10px;
     padding: 5px 10px;
 }
@@ -37,4 +36,20 @@
     width: initial !important;
     text-align: right;
     padding: 5px 0;
+}
+
+.quiqqer-products-settings-pricefieldfactors-cli {
+    background-color: black;
+    color: #efefef;
+    float: left;
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+}
+
+.quiqqer-products-settings-pricefieldfactors-warning {
+    display: block;
+    float: left;
+    margin-top: 20px;
+    padding: 15px;
 }
