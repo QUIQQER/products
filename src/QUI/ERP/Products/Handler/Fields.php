@@ -105,6 +105,13 @@ class Fields
     protected static $fieldTypeData = [];
 
     /**
+     * Runtime cache for price factor settings
+     *
+     * @var array
+     */
+    protected static $priceFactorSettings = false;
+
+    /**
      * Return the child attributes
      *
      * @return array
@@ -1139,4 +1146,36 @@ class Fields
         Products::enableGlobalFireEventsOnProductSave();
         Products::enableGlobalProductSearchCacheUpdate();
     }
+
+    // region Price factors
+
+    /**
+     * Get current price factor settings
+     *
+     * @return array
+     */
+    public static function getPriceFactorSettings(): array
+    {
+        if (self::$priceFactorSettings !== false) {
+            return self::$priceFactorSettings;
+        }
+
+        try {
+            $Conf     = QUI::getPackage('quiqqer/products')->getConfig();
+            $settings = $Conf->get('products', 'priceFieldFactors');
+
+            if (empty($settings)) {
+                self::$priceFactorSettings = [];
+            } else {
+                self::$priceFactorSettings = \json_decode($settings, true);
+            }
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            return [];
+        }
+
+        return self::$priceFactorSettings;
+    }
+
+    // endregion
 }

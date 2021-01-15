@@ -304,7 +304,21 @@
             <de><![CDATA[Produkt-Sortierung]]></de>
             <en><![CDATA[Product sorting]]></en>
         </locale>
-
+        <locale name="settings.priceFieldFactors.title">
+            <de><![CDATA[Preisfeld-Faktoren]]></de>
+            <en><![CDATA[Price field factors]]></en>
+        </locale>
+        <locale name="settings.window.products.priceFieldFactors.description" html="true">
+            <de><![CDATA[Hier kann für jedes im System angelegte Preisfeld ein Multiplikator auf Basis eines anderes Preisfelds festgelegt werden.<br/><br/>
+<b>Beispiel:</b><br/>
+Preis-Feld: <b>UVP</b><br/>
+Multiplikator: <b>1.5</b><br/>
+Auf Basis von Preis-Feld: <b>Preis</b> (Wert: <b>50,00 €</b>)<br/><br/>
+UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
+]]></de>
+            <en><![CDATA[Here you can set a multiplier for each price field created in the system based on another price field.]]></en>
+        </locale>
+        
         <locale name="fieldtype">
             <de><![CDATA[Feld-Typ]]></de>
             <en><![CDATA[Field type]]></en>
@@ -2191,11 +2205,54 @@
             ]]></en>
         </locale>
 
+        <locale name="controls.settings.PriceFieldFactors.updatePrices.information">
+            <de><![CDATA[Durch diesen Vorgang werden die Preise aller konfigurierten Preisfelder mit dem festgelegten Multiplikator <b>neu berechnet</b>. Alle Produkte, die die entsprechenden Felder enthalten, werden einmalig gespeichert.]]></de>
+            <en><![CDATA[This operation will <b>recalculate</b> the prices of all configured price fields with the specified multiplier. All products containing the corresponding fields will be saved once.]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.updatePrices.title">
+            <de><![CDATA[Produkt-Preise aktualisieren]]></de>
+            <en><![CDATA[Update product prices]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.updatePrices.text">
+            <de><![CDATA[Produkt-Preise aktualisieren]]></de>
+            <en><![CDATA[Update product prices]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.btn.confirm_all">
+            <de><![CDATA[Alle Produkte aktualisieren]]></de>
+            <en><![CDATA[Update all products]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.btn.confirm_active">
+            <de><![CDATA[Nur aktive Produkte aktualisieren]]></de>
+            <en><![CDATA[Update active products only]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.btn.update">
+            <de><![CDATA[Produkt-Preise aktualisieren]]></de>
+            <en><![CDATA[Update product prices]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelMultiplier">
+            <de><![CDATA[x Wert von]]></de>
+            <en><![CDATA[x value of]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave">
+            <de><![CDATA[beim Speichern von Produkten anwenden]]></de>
+            <en><![CDATA[apply on product save]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.info_cli">
+            <de><![CDATA[</p>In Ihrem Shop existieren sehr viele Produkte. Die Ausführungszeit Ihres Web-Servers i.V.m. PHP wird wahrscheinlich nicht reichen, um die Preise aller Produkte zu aktualisieren.</p><br/>
+<p>Sie können die Aktualisierung der Produkt-Preise auch per Konsolenbefehl durchführen. Führen Sie bitte einen der folgende Befehle aus, um die Aktualisierung durchzuführen (alle Produkte bzw. nur aktive Produkte):</p>]]></de>
+            <en><![CDATA[</p>There are a lot of products in your store. The execution time of your web server and PHP will probably not be enough to update the prices of all products.</p><br/>.
+<p>You can also update the product prices by console command. Please run one of the following commands to perform the update (all products or active products only):</p>]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/products" datatype="php">
 
         <!-- Ajax -->
+        <locale name="message.ajax.settings.updatePrices.success">
+            <de><![CDATA[Die Preise von [count] Produkten wurden erfolgreich aktualisiert.]]></de>
+            <en><![CDATA[The prices of [count] products have been successfully updated.]]></en>
+        </locale>
         <locale name="ajax.general_error">
             <de>
                 <![CDATA[Leider ist ein unerwarteter Fehler aufgetreten. Bitte wiederholen Sie den Vorgang oder kontaktieren Sie einen Administrator.]]></de>

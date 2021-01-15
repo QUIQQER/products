@@ -57,6 +57,9 @@
                 <conf name="defaultSortField">
                     <type><![CDATA[string]]></type>
                 </conf>
+                <conf name="priceFieldFactors">
+                    <type><![CDATA[string]]></type>
+                </conf>
             </section>
             <section name="variants">
                 <conf name="parentHasChildImages">
@@ -331,6 +334,23 @@
                             <text>
                                 <locale group="quiqqer/products" var="settings.window.products.editableFields"/>
                             </text>
+                        </input>
+                    </settings>
+
+                    <settings title="priceFieldFactors" name="priceFieldFactors">
+                        <title>
+                            <locale group="quiqqer/products" var="settings.priceFieldFactors.title"/>
+                        </title>
+
+                        <input conf="products.priceFieldFactors"
+                               type="hidden"
+                               data-qui="package/quiqqer/products/bin/controls/settings/PriceFieldFactors"
+                               label="false"
+                        >
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.priceFieldFactors.description"/>
+                            </description>
                         </input>
                     </settings>
                 </category>
