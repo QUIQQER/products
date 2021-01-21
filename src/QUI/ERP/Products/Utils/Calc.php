@@ -872,8 +872,8 @@ class Calc
         $vat = $TaxEntry->getValue();
         $vat = (100 + $vat) / 100;
 
-        $price = $price * $vat;
         $price = \round($price, $Currency->getPrecision());
+        $price = $price * $vat;
 
         if (isset($formatted) && $formatted) {
             return $Currency->format($price);
