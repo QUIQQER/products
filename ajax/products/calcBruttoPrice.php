@@ -29,7 +29,6 @@ QUI::$Ajax->registerFunction(
                 return Calc::calcBruttoPrice($price, $formatted, $productId);
             }
 
-            // @todo +1 -1 cent
             return Calc::calcBruttoPrice($price, $formatted, $productId);
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
