@@ -715,18 +715,34 @@ class Calc
             $vatSum = 0;
         } else {
             $vatSum = $nettoPrice * ($vatValue / 100);
+            $vatSum = \round($vatSum, $Currency->getPrecision());
         }
 
         $bruttoPrice = $this->round($nettoPrice + $vatSum);
 
         // sum
-        $nettoSum  = $this->round($nettoPrice * $Product->getQuantity());
-        $vatSum    = $nettoSum * ($Vat->getValue() / 100);
-        $bruttoSum = $this->round($nettoSum + $vatSum);
+        $nettoSum = $this->round($nettoPrice * $Product->getQuantity());
+        $vatSum   = \round($nettoSum * ($Vat->getValue() / 100), $Currency->getPrecision());
 
-        $price      = $isNetto ? $nettoPrice : $bruttoPrice;
-        $sum        = $isNetto ? $nettoSum : $bruttoSum;
-        $basisPrice = $isNetto ? $basisNettoPrice : \floatval($basisNettoPrice) + (\floatval($basisNettoPrice) * \floatval($Vat->getValue()) / 100);
+        if (!$isNetto && $Product->getQuantity() > 1) {
+            // if the user is brutto
+            // and we have a quantity
+            // we need to calc first the brutto product price of one product
+            // -> because of 1 cent rounding error
+            $bruttoSum = $bruttoPrice * $Product->getQuantity();
+        } else {
+            $bruttoSum = $this->round($nettoSum + $vatSum);
+        }
+
+        $price = $isNetto ? $nettoPrice : $bruttoPrice;
+        $sum   = $isNetto ? $nettoSum : $bruttoSum;
+
+        if ($isNetto) {
+            $basisPrice = $basisNettoPrice;
+        } else {
+            $basisPrice = \floatval($basisNettoPrice) + (\floatval($basisNettoPrice) * \floatval($Vat->getValue()) / 100);
+            $basisPrice = \round($basisPrice, $Currency->getPrecision());
+        }
 
         $vatArray = [
             'vat'  => $Vat->getValue(),
