@@ -838,6 +838,7 @@ class Calc
         $price    = QUI\ERP\Money\Price::validatePrice($price);
         $Area     = QUI\ERP\Defaults::getArea();
         $TaxEntry = null;
+        $Currency = QUI\ERP\Defaults::getCurrency();
 
         if (!empty($productId)) {
             $Product = Products::getProduct((int)$productId);
@@ -861,7 +862,7 @@ class Calc
                 $TaxEntry = $TaxType;
             } else {
                 if (isset($formatted) && $formatted) {
-                    return QUI\ERP\Defaults::getCurrency()->format($price);
+                    return $Currency->format($price);
                 }
 
                 return $price;
@@ -872,9 +873,10 @@ class Calc
         $vat = (100 + $vat) / 100;
 
         $price = $price * $vat;
+        $price = \round($price, $Currency->getPrecision());
 
         if (isset($formatted) && $formatted) {
-            return QUI\ERP\Defaults::getCurrency()->format($price);
+            return $Currency->format($price);
         }
 
         return $price;
