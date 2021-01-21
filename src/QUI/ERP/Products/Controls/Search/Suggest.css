@@ -109,3 +109,9 @@
 .quiqqer-products-search-suggest-dropdown-description-articlNo span {
     padding-right: 5px;
 }
+
+@media screen and (min-width: 768px) {
+    .quiqqer-products-search-suggest-dropdown [name="quiqqer-products-search-sheets"] {
+        display: none;
+    }
+}
