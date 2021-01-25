@@ -147,14 +147,18 @@ define('package/quiqqer/products/bin/controls/frontend/category/FilterWindow', [
         getSelected: function () {
             var result = {};
 
-            // category
-            result.categories = this.$Menu.getElements(
-                'input[type="checkbox"]'
-            ).filter(function (Checkbox) {
-                return Checkbox.checked;
-            }).map(function (Checkbox) {
-                return Checkbox.value;
-            });
+            if (!this.$Menu) {
+                result.categories = [];
+            } else {
+                // category
+                result.categories = this.$Menu.getElements(
+                    'input[type="checkbox"]'
+                ).filter(function (Checkbox) {
+                    return Checkbox.checked;
+                }).map(function (Checkbox) {
+                    return Checkbox.value;
+                });
+            }
 
             // freetext
             var FreeText = this.getContent().getElement('[name="search"]');
