@@ -1165,6 +1165,14 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             'displayPrice' => true
         ];
 
+        // quantity unit
+        $SysField = QUI\ERP\Products\Handler\Fields::getField(Fields::FIELD_UNIT);
+        $Field    = $this->getField(Fields::FIELD_UNIT);
+
+        $value                   = $Field->getView()->getValue();
+        $value['title']          = $SysField->getTitleByValue($Field->getValue());
+        $article['quantityUnit'] = $value;
+
         if ($this->calculated) {
             if (isset($this->vatArray['vat'])) {
                 $article['vat'] = $this->vatArray['vat'];
