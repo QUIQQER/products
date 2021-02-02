@@ -579,7 +579,7 @@ class EventHandling
                                 'de' => 'Stück',
                                 'en' => 'piece'
                             ],
-                            'default'       => false,
+                            'default'       => true,
                             'quantityInput' => true
                         ],
                         'tons'  => [
