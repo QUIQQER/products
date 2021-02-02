@@ -1168,8 +1168,12 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         // quantity unit
         $SysField = QUI\ERP\Products\Handler\Fields::getField(Fields::FIELD_UNIT);
         $Field    = $this->getField(Fields::FIELD_UNIT);
+        $value    = $Field->getView()->getValue();
 
-        $value                   = $Field->getView()->getValue();
+        if (empty($value)) {
+            $value = [];
+        }
+
         $value['title']          = $SysField->getTitleByValue($Field->getValue());
         $article['quantityUnit'] = $value;
 
