@@ -218,20 +218,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        $defaultValue = null;
-        $options      = $this->getOptions();
-        $entries      = $options['entries'];
-
-        foreach ($entries as $id => $entry) {
-            if ($entry['default']) {
-                $defaultValue = [
-                    'id'       => $id,
-                    'quantity' => false
-                ];
-
-                break;
-            }
-        }
+        $defaultValue = $this->getDefaultValue();
 
         if (empty($value)) {
             return $defaultValue;
@@ -259,6 +246,10 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
 
         if ($entries[$value['id']]['quantityInput']) {
             $value['quantity'] = (float)$value['quantity'];
+
+            if (empty($value['quantity'])) {
+                $value['quantity'] = 1;
+            }
         } else {
             $value['quantity'] = false;
         }
@@ -292,5 +283,47 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
         }
 
         return $entries[$value['id']]['title'][$lang];
+    }
+
+    /**
+     * Return the default value
+     *
+     * @return mixed|null
+     */
+    public function getDefaultValue()
+    {
+        $defaultValue = null;
+        $options      = $this->getOptions();
+        $entries      = $options['entries'];
+
+        foreach ($entries as $id => $entry) {
+            if ($entry['default']) {
+                return [
+                    'id'       => $id,
+                    'quantity' => 1
+                ];
+            }
+        }
+
+        if (isset($entries['piece'])) {
+            return [
+                'id'       => 'piece',
+                'quantity' => 1
+            ];
+        }
+
+        if (!empty($entries)) {
+            \reset($entries);
+
+            return [
+                'id'       => \key($entries),
+                'quantity' => 1
+            ];
+        }
+
+        return [
+            'id'       => false,
+            'quantity' => 1
+        ];
     }
 }
