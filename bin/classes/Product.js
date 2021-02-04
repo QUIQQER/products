@@ -405,6 +405,7 @@ define('package/quiqqer/products/bin/classes/Product', [
         refresh: function () {
             return new Promise(function (resolve, reject) {
                 require(['package/quiqqer/products/bin/Products'], function (Products) {
+
                     Products.getChild(this.getId()).then(function (data) {
                         this.$loaded = true;
                         this.$data   = data;
@@ -412,8 +413,8 @@ define('package/quiqqer/products/bin/classes/Product', [
                         resolve(this);
 
                         this.fireEvent('refresh', [this]);
-
                     }.bind(this)).catch(reject);
+
                 }.bind(this));
             }.bind(this));
         },

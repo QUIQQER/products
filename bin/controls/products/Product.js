@@ -2026,9 +2026,13 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     var Active = self.getActiveCategory();
 
                     // refresh category
+                    self.$executeUnloadForm = false;
+
                     Active.setNormal();
                     Active.click();
                     Active.setActive();
+
+                    self.$executeUnloadForm = true;
 
                     resolve();
                 }).catch(function (err) {
