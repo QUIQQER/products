@@ -1656,10 +1656,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 return self.$Grid.setHeight(size.y - 40).then(function () {
                     self.$Grid.refresh();
                 });
-
             }).then(function () {
                 return self.$showCategory(self.$FieldAdministration);
-
             }).then(function () {
                 self.Loader.hide();
                 self.getCategory('data').setActive();
@@ -2023,9 +2021,21 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     data['product-category'],
                     fields
                 ).then(function () {
-                    self.Loader.hide();
-                    return self.loadData().then(resolve);
-                }, function (err) {
+                    return self.loadData();
+                }).then(function () {
+                    var Active = self.getActiveCategory();
+
+                    // refresh category
+                    self.$executeUnloadForm = false;
+
+                    Active.setNormal();
+                    Active.click();
+                    Active.setActive();
+
+                    self.$executeUnloadForm = true;
+
+                    resolve();
+                }).catch(function (err) {
                     self.Loader.hide();
                     reject(err);
                 });

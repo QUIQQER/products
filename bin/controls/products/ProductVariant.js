@@ -1443,9 +1443,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             return new Promise(function (resolve) {
                 var attributes = self.$CurrentVariant.getAttributes();
-
-                console.log(attributes);
-
                 resolve(Content);
             });
         },

@@ -32,12 +32,12 @@ QUI::$Ajax->registerFunction(
             foreach ($attributes['fields'] as $key => $field) {
                 $attributes['fields'][$key]['source'] = $Product->getFieldSource($field['id']);
             }
+
+            return $attributes;
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw $Exception;
         }
-
-        return $attributes;
     },
     ['productId']
 );
