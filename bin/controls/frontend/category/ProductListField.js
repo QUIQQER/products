@@ -82,15 +82,30 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListField
                 return;
             }
 
-            var value = this.getAttribute('Field').getSearchValue();
+            var Field = this.getAttribute('Field');
+            var value = Field.getSearchValue();
+
+            if (Field.getType() === 'package/quiqqer/productsearch/bin/controls/search/SearchField') {
+                var Range = Field.$Type.$Select;
+                var range = Range.getAttribute('range');
+                var max   = range.max;
+                var min   = range.min;
+
+                if (!min && !max) {
+                    value = false;
+                }
+
+                if (min === parseFloat(value.from) && max === parseFloat(value.to)) {
+                    value = false;
+                }
+            }
 
             if (!value) {
                 this.hide();
                 return;
             }
 
-            var Field = this.getAttribute('Field'),
-                text  = '';
+            var text = '';
 
             if (Field.getAttribute('title')) {
                 text = text + Field.getAttribute('title').trim() + ': ';
