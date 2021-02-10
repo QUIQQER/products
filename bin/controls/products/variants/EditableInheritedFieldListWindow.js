@@ -94,8 +94,6 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
             var Reset = this.getContent().getElement('[name="reset-fields-to-global"]');
 
             Reset.addEvent('change', function () {
-                console.log(Reset.checked);
-
                 if (Reset.checked) {
                     self.$List.disable();
                     return;

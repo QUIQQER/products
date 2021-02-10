@@ -250,8 +250,6 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                     sourceFieldId: parseInt(SourceFieldSelect.value),
                     updateOnSave : UpdateOnSaveCheckbox.checked
                 };
-
-                console.log(Value);
             });
 
             this.$Input.value = JSON.encode(Value);
