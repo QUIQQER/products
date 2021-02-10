@@ -72,6 +72,7 @@
                             <input conf="quiqqer.products.settings.categoryId"
                                    data-qui="package/quiqqer/products/bin/controls/categories/Select"
                                    data-qui-options-max="1"
+                                   data-qui-options-create="0"
                             >
                                 <text>
                                     <locale group="quiqqer/products" var="quiqqer.products.settings.categoryId"/>
