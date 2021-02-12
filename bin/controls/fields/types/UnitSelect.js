@@ -4,12 +4,12 @@
  */
 define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
 
-    'qui/QUI',
     'qui/controls/Control',
-    'Locale',
     'package/quiqqer/products/bin/Fields',
 
-], function (QUI, QUIControl, QUILocale, ProductFields) {
+    'css!package/quiqqer/products/bin/controls/fields/types/UnitSelect.css'
+
+], function (QUIControl, ProductFields) {
     "use strict";
 
     return new Class({
@@ -64,8 +64,9 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
 
             // Quantity input
             this.$QuantityInput = new Element('input', {
-                type  : 'number',
-                events: {
+                'class': 'quiqqer-products-fields-unitselect-quantity',
+                type   : 'number',
+                events : {
                     change: this.$setValue
                 }
             }).inject(this.$Select, 'before');
@@ -181,17 +182,17 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelect', [
         /**
          * Enable control
          */
-        enable: function() {
+        enable: function () {
             this.$QuantityInput.disabled = false;
-            this.$Select.disabled = false;
+            this.$Select.disabled        = false;
         },
 
         /**
          * Disable control
          */
-        disable: function() {
+        disable: function () {
             this.$QuantityInput.disabled = true;
-            this.$Select.disabled = true;
+            this.$Select.disabled        = true;
         }
     });
 });

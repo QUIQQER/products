@@ -60,7 +60,8 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
             name     : '',    // string
             styles   : false, // object
             label    : false, // text string or a <label> DOMNode Element
-            resizable: true   // resize is allowed
+            resizable: true, // resize is allowed
+            create   : true
         },
 
         initialize: function (options, Input) {
@@ -187,7 +188,11 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                     width: 50
                 },
                 events: {
-                    onClick: function (Btn) {
+                    onClick: function (Btn, e) {
+                        if (typeOf(e) === 'domevent') {
+                            e.stop();
+                        }
+
                         Btn.setAttribute('icon', 'fa fa-spinner fa-spin');
 
                         require([
@@ -269,11 +274,30 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 }).inject(this.$Elm);
             }
 
-            if (parseInt(this.getAttribute('max')) === 1) {
+            if (parseInt(this.getAttribute('max')) === 1 && this.getAttribute('create')) {
                 this.$CreateButton.getElm().setStyle('display', null);
                 this.$Search.setStyle('display', 'none');
                 this.$SearchIcon.setStyle('display', 'none');
                 this.$SearchButton.hide();
+
+                this.$List.setStyles({
+                    border: 'none',
+                    height: 31,
+                    width : 'calc(100% - 50px)'
+                });
+
+                this.$Elm.setStyles({
+                    borderBottom: '1px solid rgba(147, 128, 108, 0.25)',
+                    borderRight : '1px solid rgba(147, 128, 108, 0.25)'
+                });
+            }
+
+            if (parseInt(this.getAttribute('max')) === 1 && !this.getAttribute('create')) {
+                this.$Search.setStyle('display', 'none');
+                this.$SearchIcon.setStyle('display', 'none');
+
+                this.$SearchButton.getElm().setStyle('borderLeft', '1px solid #dedede');
+                this.$SearchButton.getElm().setStyle('borderRadius', 0);
 
                 this.$List.setStyles({
                     border: 'none',
@@ -326,7 +350,7 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
                 return elm.getSize().y + 1;
             }).sum();
 
-            if (height < 30 && parseInt(this.getAttribute('max')) === 1) {
+            if (parseInt(this.getAttribute('max')) === 1) {
                 height = 30;
             } else if (height < 100) {
                 height = 100;
@@ -761,6 +785,10 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
          * Show the create category button
          */
         $showCreateButton: function () {
+            if (!parseInt(this.getAttribute('create'))) {
+                return;
+            }
+
             this.$CreateButton.getElm().setStyle('display', null);
 
             this.$List.setStyles({
@@ -774,9 +802,11 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         $hideCreateButton: function () {
             this.$CreateButton.getElm().setStyle('display', 'none');
 
-            this.$List.setStyles({
-                width: '100%'
-            });
+            if (parseInt(this.getAttribute('create'))) {
+                this.$List.setStyles({
+                    width: '100%'
+                });
+            }
         },
 
         /**

@@ -1123,6 +1123,12 @@ class VariantParent extends AbstractType
         $fields = $this->getAllProductFields();
 
         foreach ($fields as $Field) {
+            // price fields does not have to be required
+            // quiqqer/products#282
+            if ($Field instanceof QUI\ERP\Products\Field\Types\Price) {
+                $Field->setAttribute('requiredField', false);
+            }
+
             if (!($Field instanceof AttributeGroup)
                 && !($Field instanceof ProductAttributeList)) {
                 continue;
