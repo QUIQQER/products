@@ -70,10 +70,10 @@ QUI::$Ajax->registerFunction(
                 try {
                     $Field = $Product->getField($fieldId);
 
-                    if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST ||
-                        $Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS) {
-                        if ($ignoreDefaultVariant && PackageUtils::getConfig()->getValue('products',
-                                'resetFieldsAction')) {
+                    if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST
+                        || $Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS) {
+                        if ($ignoreDefaultVariant
+                            && PackageUtils::getConfig()->getValue('products', 'resetFieldsAction')) {
                             $Field->clearDefaultValue();
                         }
 
