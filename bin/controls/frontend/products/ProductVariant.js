@@ -41,8 +41,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
         initialize: function (options) {
             this.parent(options);
 
-            this.Loader     = new QUILoader();
-            this.$startInit = false;
+            this.Loader             = new QUILoader();
+            this.$startInit         = false;
+            this.$isOnlyVariantList = false; // if the variant has no attribute lists and only one list of its variants
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -152,6 +153,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 Control.removeEvents('onChange');
             });
 
+            this.$isOnlyVariantList = !!this.getElm().getElement('[name="field-23"]');
+
             // add Variant events
             var fieldLists = this.getElm().getElements(
                 '.product-data-fieldlist .quiqqer-product-field select'
@@ -206,6 +209,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 }
 
                 for (i = 0, len = options.length; i < len; i++) {
+                    if (self.$isOnlyVariantList) {
+
+                        continue;
+                    }
+
                     options[i].disabled = !self.$isFieldValueInFields(
                         fieldId,
                         options[i].value
@@ -350,7 +358,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             if (fieldValue === '') {
                 return true;
             }
-
 
             var current    = this.getCurrentFieldValues();
             var collection = {};

@@ -332,6 +332,8 @@ class Product extends QUI\Control
             );
         }
 
+        $g = $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS);
+
         $Engine->assign([
             'jsonLd'                 => JsonLd::getJsonLd($Product),
             'Product'                => $View,

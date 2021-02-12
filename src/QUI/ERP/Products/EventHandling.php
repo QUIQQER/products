@@ -85,6 +85,7 @@ class EventHandling
             $Config = QUI::getPackage('quiqqer/products')->getConfig();
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
+
             return;
         }
 
@@ -678,6 +679,24 @@ class EventHandling
                 'titles'        => [
                     'de' => 'GTIN / EAN',
                     'en' => 'GTIN / EAN'
+                ]
+            ],
+
+            // variant
+            [
+                'id'            => Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES,
+                'type'          => Fields::TYPE_ATTRIBUTE_GROUPS,
+                'prefix'        => '',
+                'suffix'        => '',
+                'priority'      => 1,
+                'systemField'   => 1,
+                'standardField' => 0,
+                'requiredField' => 0,
+                'publicField'   => 1,
+                'search_type'   => Search::SEARCHTYPE_TEXT,
+                'titles'        => [
+                    'de' => 'Produtvarianten',
+                    'en' => 'Product variants'
                 ]
             ]
         ];

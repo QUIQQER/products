@@ -245,6 +245,38 @@ class Model extends QUI\QDOM
         if (\defined('QUIQQER_BACKEND')) {
             $this->setAttribute('viewType', 'backend');
         }
+
+        if ($this instanceof QUI\ERP\Products\Product\Types\VariantParent ||
+            $this instanceof QUI\ERP\Products\Product\Types\VariantChild
+        ) {
+            $attributeList = $this->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS);
+            $Field         = null;
+
+            if (empty($attributeList)) {
+                $Field = Fields::getField(Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES);
+
+                $this->fields[$Field->getId()] = clone $Field;
+            } elseif (count($attributeList) === 1) {
+                $Field = $attributeList[0];
+
+                if ($Field->getId() === Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES) {
+                    $Field = Fields::getField(Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES);
+
+                    $this->fields[$Field->getId()] = clone $Field;
+                }
+            }
+
+            if (!$Field) {
+                return;
+            }
+
+            $Field = $this->fields[Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES];
+            $Field->setPublicStatus(true);
+        }
+
+        foreach ($this->fields as $Field) {
+            $Field->setProduct($this);
+        }
     }
 
     /**
