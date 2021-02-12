@@ -3,6 +3,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Handler\Fields;
 
 /**
  * Class AttributeGroupFrontendView
@@ -72,6 +73,43 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             'value'         => $value,
             'requiredField' => $requiredField
         ]);
+
+        if ($id === QUI\ERP\Products\Handler\Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES &&
+            $this->Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
+            $variants = $this->Product->getVariants();
+            $entries  = [];
+
+            foreach ($variants as $Variants) {
+                $entries[] = [
+                    'title'    => $Variants->getField(Fields::FIELD_TITLE)->getValue(),
+                    'valueId'  => $Variants->getId(),
+                    'selected' => false,
+                    'hide'     => false,
+                    'disabled' => false
+                ];
+            }
+        } elseif ($id === QUI\ERP\Products\Handler\Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES &&
+                  $this->Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            $currentId = $this->Product->getId();
+            $Variant   = $this->Product->getParent();
+            $variants  = $Variant->getVariants();
+            $entries   = [];
+
+            foreach ($variants as $Variants) {
+                $entries[] = [
+                    'title'    => $Variants->getField(Fields::FIELD_TITLE)->getValue(),
+                    'valueId'  => $Variants->getId(),
+                    'selected' => $currentId === $Variants->getId(),
+                    'hide'     => false,
+                    'disabled' => false
+                ];
+
+                if ($currentId === $Variants->getId()) {
+                    $value = $currentId;
+                }
+            }
+        }
+
 
         // options
         $optionsAvailable = false;

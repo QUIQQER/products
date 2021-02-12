@@ -64,40 +64,46 @@ QUI::$Ajax->registerFunction(
             $fields = $_fields;
         }
 
-        // set variant field values
-        foreach ($fields as $fieldId => $fieldValue) {
-            try {
-                $Field = $Product->getField($fieldId);
+        if (!isset($_fields[Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES])) {
+            // set variant field values
+            foreach ($fields as $fieldId => $fieldValue) {
+                try {
+                    $Field = $Product->getField($fieldId);
 
-                if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST ||
-                    $Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS) {
-                    if ($ignoreDefaultVariant && PackageUtils::getConfig()->getValue('products', 'resetFieldsAction')) {
-                        $Field->clearDefaultValue();
+                    if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST
+                        || $Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS) {
+                        if ($ignoreDefaultVariant
+                            && PackageUtils::getConfig()->getValue('products', 'resetFieldsAction')) {
+                            $Field->clearDefaultValue();
+                        }
+
+                        $Field->setValue($fieldValue);
                     }
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::addDebug($Exception->getMessage());
 
-                    $Field->setValue($fieldValue);
+                    $ExceptionStack->addException($Exception);
                 }
-            } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addDebug($Exception->getMessage());
-
-                $ExceptionStack->addException($Exception);
             }
-        }
 
-        $attributeGroups = $Product->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS);
+            $attributeGroups = $Product->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS);
 
-        if (!$ExceptionStack->isEmpty()) {
-            $list = $ExceptionStack->getExceptionList();
+            if (!$ExceptionStack->isEmpty()) {
+                $list = $ExceptionStack->getExceptionList();
 
-            throw new $list[0];
-        }
+                throw new $list[0];
+            }
 
-        try {
-            /* @var $Product QUI\ERP\Products\Product\Types\VariantParent */
-            $fieldHash = QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($attributeGroups);
-            $Child     = $Product->getVariantByVariantHash($fieldHash);
-        } catch (QUI\Exception $Exception) {
-            $Child = $Product;
+            try {
+                /* @var $Product QUI\ERP\Products\Product\Types\VariantParent */
+                $fieldHash = QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($attributeGroups);
+                $Child     = $Product->getVariantByVariantHash($fieldHash);
+            } catch (QUI\Exception $Exception) {
+                $Child = $Product;
+            }
+        } else {
+            $childId = (int)$_fields[Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES];
+            $Child   = Products::getNewProductInstance($childId);
         }
 
         $categoryId = null;
