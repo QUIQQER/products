@@ -76,7 +76,6 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
 
         if ($id === QUI\ERP\Products\Handler\Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES &&
             $this->Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
-
             $variants = $this->Product->getVariants();
             $entries  = [];
 
