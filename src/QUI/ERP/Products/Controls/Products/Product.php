@@ -69,10 +69,14 @@ class Product extends QUI\Control
                 'data-qui-option-available'  => false
             ]);
 
-            // use default variant, if a default variant exists
-            if (!$this->getAttribute('ignoreDefaultVariant') && $Product->getDefaultVariantId()) {
-                try {
-                    $Product = $Product->getDefaultVariant();
+            try {
+                // if default attribute exists, the variant has no attribute select fields
+                // so we need to use the first variant as product
+                $Product->getField(Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES);
+                $variants = $Product->getVariants();
+
+                if (isset($variants[0])) {
+                    $Product = $variants[0];
 
                     $this->setAttributes([
                         'data-qui-option-show-price' => true,
@@ -81,8 +85,23 @@ class Product extends QUI\Control
 
                     $typeVariantChild  = true;
                     $typeVariantParent = false;
-                } catch (QUI\Exception $Exception) {
-                    QUI\System\Log::addDebug($Exception);
+                }
+            } catch (QUI\ERP\Products\Product\Exception $Exception) {
+                // use default variant, if a default variant exists
+                if (!$this->getAttribute('ignoreDefaultVariant') && $Product->getDefaultVariantId()) {
+                    try {
+                        $Product = $Product->getDefaultVariant();
+
+                        $this->setAttributes([
+                            'data-qui-option-show-price' => true,
+                            'data-qui-option-available'  => true
+                        ]);
+
+                        $typeVariantChild  = true;
+                        $typeVariantParent = false;
+                    } catch (QUI\Exception $Exception) {
+                        QUI\System\Log::addDebug($Exception);
+                    }
                 }
             }
         }
@@ -331,8 +350,6 @@ class Product extends QUI\Control
                 }
             );
         }
-
-        $g = $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS);
 
         $Engine->assign([
             'jsonLd'                 => JsonLd::getJsonLd($Product),

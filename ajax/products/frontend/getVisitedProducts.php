@@ -22,7 +22,7 @@ QUI::$Ajax->registerFunction(
         }
 
         foreach ($productIds as $productId) {
-            if (empty($productId) || !is_numeric($productId)) {
+            if (empty($productId) || !\is_numeric($productId)) {
                 continue;
             }
 
@@ -32,7 +32,18 @@ QUI::$Ajax->registerFunction(
 
             try {
                 $Product = $Products->getProduct($productId);
-                $Control->addProduct($Product->getViewFrontend());
+                $View    = $Product->getViewFrontend();
+
+                // check if prices exists
+                if (!$Product->isActive()) {
+                    continue;
+                }
+
+                // check prices if exists
+                $View->getMaximumPrice();
+                $View->getMinimumPrice();
+
+                $Control->addProduct($View);
             } catch (QUI\Exception $Exception) {
             }
         }
