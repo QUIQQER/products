@@ -267,12 +267,13 @@ define('package/quiqqer/products/bin/classes/Products', [
         /**
          * Create a new product
          *
+         * @params {int|float} category - id of the main category
          * @params {Array} categories - id list of categories
          * @params {Array} [fields] - product fields
          * @params {String} [productType] - product type
          * @returns {Promise}
          */
-        createChild: function (categories, fields, productType) {
+        createChild: function (category, categories, fields, productType) {
             fields      = fields || {};
             productType = productType || '';
 
@@ -286,6 +287,7 @@ define('package/quiqqer/products/bin/classes/Products', [
                 }, {
                     'package'  : 'quiqqer/products',
                     onError    : reject,
+                    category   : category,
                     categories : JSON.encode(categories),
                     fields     : JSON.encode(fields),
                     productType: productType

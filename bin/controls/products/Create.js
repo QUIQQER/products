@@ -327,6 +327,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 return Promise.reject('No categories');
             }
 
+            var category     = Form.getElement('[name="product-category"]').value;
             var productType  = '\\QUI\\ERP\\Products\\Product\\Types\\Product';
             var productTypes = Form.getElements('[name="productType"]').filter(function (Input) {
                 return Input.checked;
@@ -337,6 +338,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
             }
 
             return Products.createChild(
+                category,
                 categories,
                 fields,
                 productType

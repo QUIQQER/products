@@ -103,7 +103,18 @@ QUI::$Ajax->registerFunction(
             }
         } else {
             $childId = (int)$_fields[Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES];
-            $Child   = Products::getNewProductInstance($childId);
+
+            if (!$childId) {
+                $variants = $Product->getVariants();
+
+                if (isset($variants[0])) {
+                    $childId = $variants[0]->getId();
+                } else {
+                    $childId = $Product->getId();
+                }
+            }
+
+            $Child = Products::getNewProductInstance($childId);
         }
 
         $categoryId = null;
