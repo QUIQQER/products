@@ -524,7 +524,7 @@ class Products
                 'categories' => ','.\implode(',', $categoryIds).',',
                 'type'       => $type,
                 'c_user'     => QUI::getUserBySession()->getId(),
-                'c_date'     => date('Y-m-d H:i:s'),
+                'c_date'     => \date('Y-m-d H:i:s'),
                 'parent'     => $parent
             ]
         );
