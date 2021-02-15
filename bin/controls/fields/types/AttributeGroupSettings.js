@@ -370,6 +370,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                 texticon : false,
                 maxHeight: 400,
                 maxWidth : 600,
+                autoclose: false,
                 events   : {
                     onOpen  : function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
@@ -388,11 +389,19 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                                 Form.elements.title.get('data-quiid')
                             );
 
+                        if (Form.elements.valueId.value === '') {
+                            Form.elements.valueId.focus();
+                            Form.reportValidity();
+                            return;
+                        }
+
                         self.add(
                             Title.getData(),
                             Form.elements.valueId.value,
                             Form.elements.selected.checked
                         );
+
+                        Win.close();
                     }
                 }
             }).open();
@@ -420,6 +429,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                 icon     : 'fa fa-edit',
                 maxHeight: 400,
                 maxWidth : 600,
+                autoclose: false,
                 events   : {
                     onOpen  : function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
@@ -442,12 +452,20 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                                 Form.elements.title.get('data-quiid')
                             );
 
+                        if (Form.elements.valueId.value === '') {
+                            Form.elements.valueId.focus();
+                            Form.reportValidity();
+                            return;
+                        }
+
                         self.edit(
                             index,
                             Title.getData(),
                             Form.elements.valueId.value,
                             Form.elements.selected.checked
                         );
+
+                        Win.close();
                     }
                 }
             }).open();
