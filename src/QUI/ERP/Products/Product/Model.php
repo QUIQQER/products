@@ -1214,20 +1214,21 @@ class Model extends QUI\QDOM
         QUI\Permissions\Permission::checkPermission('product.edit', $EditUser);
 
         // cleanup fields
-        $fieldData = array_filter($fieldData, function ($field) {
+        foreach ($fieldData as $key => $field) {
             if ($field['id'] < 1000) {
-                return true;
+                continue;
             }
 
             if ($field['ownField']) {
-                return true;
+                continue;
             }
 
             $Field = Fields::getField($field['id']);
 
             if ($Field->isSystem()) {
-                return true;
+                continue;
             }
+
 
             $categories  = $this->getCategories();
             $catHasField = false;
@@ -1243,11 +1244,9 @@ class Model extends QUI\QDOM
             }
 
             if (!$catHasField) {
-                return false;
+                $field['unassigned'] = true;
             }
-
-            return true;
-        });
+        }
 
         // cleanup urls
         $urlField = \array_filter($fieldData, function ($field) {
