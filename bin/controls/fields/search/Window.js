@@ -80,12 +80,17 @@ define('package/quiqqer/products/bin/controls/fields/search/Window', [
             var Content = Win.getContent();
             Content.set('html', '');
 
+            Win.Loader.show();
+
             this.$Search = new Search({
                 fieldTypeFilter   : this.getAttribute('fieldTypeFilter'),
                 multiple          : this.getAttribute('multiple'),
                 showsearchableonly: this.getAttribute('showsearchableonly'),
                 events            : {
-                    onSubmit: this.submit
+                    onSubmit: this.submit,
+                    onLoad  : function () {
+                        Win.Loader.hide();
+                    }
                 }
             }).inject(Content);
 
