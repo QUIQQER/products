@@ -316,6 +316,15 @@ class VariantParent extends AbstractType
             return parent::getMinimumPrice($User);
         }
 
+        $isNetto = QUI\ERP\Utils\User::isNettoUser($User);
+
+        if (!$isNetto) {
+            $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
+
+            $minprices[0]['minPrice'] = $Calc->getPrice($minprices[0]['minPrice']);
+        }
+
+
         return new QUI\ERP\Money\Price(
             $minprices[0]['minPrice'],
             $this->getCurrency() ?: QUI\ERP\Currency\Handler::getDefaultCurrency()
