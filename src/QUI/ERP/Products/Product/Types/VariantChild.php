@@ -443,7 +443,12 @@ class VariantChild extends AbstractType
         $filteredFields = [];
 
         foreach ($fieldData as $field) {
-            $FieldParent      = $Parent->getField($field['id']);
+            try {
+                $FieldParent = $Parent->getField($field['id']);
+            } catch (QUI\Exception $Exception) {
+                continue;
+            }
+
             $parentFieldValue = $FieldParent->getValue();
 
             // save only different field values

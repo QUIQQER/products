@@ -689,7 +689,7 @@ class EventHandling
                 'prefix'        => '',
                 'suffix'        => '',
                 'priority'      => 1,
-                'systemField'   => 1,
+                'systemField'   => 0,
                 'standardField' => 0,
                 'requiredField' => 0,
                 'publicField'   => 1,
