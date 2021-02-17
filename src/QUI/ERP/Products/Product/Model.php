@@ -266,12 +266,11 @@ class Model extends QUI\QDOM
                 }
             }
 
-            if (!$Field) {
-                return;
+            if (isset($this->fields[Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES])) {
+                $Field = $this->fields[Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES];
+                $Field->setPublicStatus(true);
+                $Field->setOwnFieldStatus(true);
             }
-
-            $Field = $this->fields[Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES];
-            $Field->setPublicStatus(true);
         }
 
         foreach ($this->fields as $Field) {
@@ -665,7 +664,7 @@ class Model extends QUI\QDOM
 
         if ($Site->getAttribute('quiqqer.products.fake.type')
             || $Site->getAttribute('type') !== 'quiqqer/products:types/category'
-               && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
+            && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
         ) {
             QUI\System\Log::addWarning(
                 QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', [
@@ -1213,6 +1212,42 @@ class Model extends QUI\QDOM
         }
 
         QUI\Permissions\Permission::checkPermission('product.edit', $EditUser);
+
+        // cleanup fields
+        $fieldData = array_filter($fieldData, function ($field) {
+            if ($field['id'] < 1000) {
+                return true;
+            }
+
+            if ($field['ownField']) {
+                return true;
+            }
+
+            $Field = Fields::getField($field['id']);
+
+            if ($Field->isSystem()) {
+                return true;
+            }
+
+            $categories  = $this->getCategories();
+            $catHasField = false;
+
+            /* @var $Category Category */
+            foreach ($categories as $Category) {
+                $CatField = $Category->getField($Field->getId());
+
+                if ($CatField) {
+                    $catHasField = true;
+                    break;
+                }
+            }
+
+            if (!$catHasField) {
+                return false;
+            }
+
+            return true;
+        });
 
         // cleanup urls
         $urlField = \array_filter($fieldData, function ($field) {
