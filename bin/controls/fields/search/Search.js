@@ -157,8 +157,9 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
          * event: on inject
          */
         $onInject: function () {
-            this.resize().then(function () {
-                this.refresh();
+            this.resize();
+            this.refresh().then(function () {
+                this.fireEvent('load', [this]);
             }.bind(this));
         },
 
