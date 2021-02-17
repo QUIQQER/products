@@ -260,19 +260,6 @@ class VariantParent extends AbstractType
             return parent::getMaximumPrice($User);
         }
 
-
-        if (!$User) {
-            $User = QUI::getUsers()->getNobody();
-        }
-
-        $isNetto = QUI\ERP\Utils\User::isNettoUser($User);
-
-        if (!$isNetto) {
-            $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
-
-            $maxPrices[0]['maxPrice'] = $Calc->getPrice($maxPrices[0]['maxPrice']);
-        }
-        
         return new QUI\ERP\Money\Price(
             $maxPrices[0]['maxPrice'],
             $this->getCurrency() ?: QUI\ERP\Currency\Handler::getDefaultCurrency()
