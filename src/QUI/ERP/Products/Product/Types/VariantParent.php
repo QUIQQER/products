@@ -316,6 +316,10 @@ class VariantParent extends AbstractType
             return parent::getMinimumPrice($User);
         }
 
+        if (!$User) {
+            $User = QUI::getUsers()->getNobody();
+        }
+
         $isNetto = QUI\ERP\Utils\User::isNettoUser($User);
 
         if (!$isNetto) {
