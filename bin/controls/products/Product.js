@@ -2184,7 +2184,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          */
         openDeleteFieldDialog: function (fieldId) {
             return new Promise(function (resolve, reject) {
-
                 new QUIConfirm({
                     icon       : 'fa fa-trash',
                     texticon   : 'fa fa-trash',
@@ -2194,7 +2193,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         fieldId: fieldId
                     }),
                     maxHeight  : 300,
-                    maxWidth   : 450,
+                    maxWidth   : 600,
                     events     : {
                         onSubmit: function (Win) {
                             Win.Loader.show();
@@ -2208,7 +2207,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         onCancel: reject
                     }
                 }).open();
-
             }.bind(this));
         },
 

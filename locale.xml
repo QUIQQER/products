@@ -1504,17 +1504,21 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
             <en><![CDATA[Delete the fields]]></en>
         </locale>
         <locale name="fields.window.delete.text">
-            <de><![CDATA[Möchtest Du die Produktfelder wirklich löschen?]]></de>
+            <de><![CDATA[Möchtest du die Produktfelder wirklich löschen?]]></de>
             <en><![CDATA[Do you really want to delete the fields?]]></en>
         </locale>
-        <locale name="fields.window.delete.description" html="">
+        <locale name="fields.window.delete.description" html="html">
             <de><![CDATA[
                 Die Felder <b>[fields]</b> werden unwiderruflich gelöscht und alle Beziehungen
-                zu Produkten und Kategorien gehen verloren.
+                zu Produkten und Kategorien gehen verloren.<br />
+                <br />
+                Dies kann bei Varianten Artikel dazu führen das einige Varianten nicht mehr auffindbar sind.
             ]]></de>
             <en><![CDATA[
                 The fields <b>[fields]</b> will be permanently deleted and all relations
-                 with products and categories will be lost.
+                with products and categories will be lost.<br />
+                <br />
+                This can lead to the fact that some variants of articles can no longer be found.
             ]]></en>
         </locale>
 
@@ -1779,11 +1783,15 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
         <locale name="product.fields.remove.window.information" html="true">
             <de><![CDATA[
                 Das Feld #[fieldId] wird aus dem Produkt entfernt. <br />
-                Gegebenenfalls kann dies aber von einer Kategorien vererbt werden.
+                Gegebenenfalls kann dies aber von einer Kategorien vererbt werden.<br />
+                <br />
+                Dies kann bei Varianten Artikel dazu führen das einige Varianten nicht mehr auffindbar sind.
                 ]]></de>
             <en><![CDATA[
                 The field #[fieldId] would be removed from the product. <br />
-                Possibly, this can also be inherited from a category.
+                Possibly, this can also be inherited from a category.<br />
+                <br />
+                This can lead to the fact that some variants of articles can no longer be found.
                 ]]></en>
         </locale>
 
