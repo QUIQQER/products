@@ -789,7 +789,7 @@ class Calc
 
 
         $callback([
-            'basisPriceNotRounded' => $nettoPriceNotRounded,
+            'nettoPriceNotRounded' => $nettoPriceNotRounded,
             'basisPrice'           => $basisPrice,
             'price'                => $price,
             'sum'                  => $sum,
