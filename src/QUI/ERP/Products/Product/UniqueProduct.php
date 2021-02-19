@@ -97,6 +97,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected $basisPrice;
 
     /**
+     * calculated basisprice - netto or brutto - no round
+     *
+     * @var float|int
+     */
+    protected $basisPriceNotRounded;
+
+    /**
      * calculated sum
      * @var float|int
      */
@@ -417,6 +424,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $self->isEuVat    = $data['isEuVat'];
             $self->isNetto    = $data['isNetto'];
             $self->factors    = $data['factors'];
+
+            $self->basisPriceNotRounded = $data['basisPriceNotRounded'];
 
             $self->calculated = true;
         });
@@ -1096,14 +1105,16 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $attributes['image'] = $Image->getUrl(true);
         }
 
-        $attributes['calculated_basisPrice'] = $this->basisPrice;
-        $attributes['calculated_price']      = $this->price;
-        $attributes['calculated_sum']        = $this->sum;
-        $attributes['calculated_nettoSum']   = $this->nettoSum;
-        $attributes['calculated_isEuVat']    = $this->isEuVat;
-        $attributes['calculated_isNetto']    = $this->isNetto;
-        $attributes['calculated_vatArray']   = $this->vatArray;
-        $attributes['calculated_factors']    = $this->factors;
+        $attributes['calculated_price']    = $this->price;
+        $attributes['calculated_sum']      = $this->sum;
+        $attributes['calculated_nettoSum'] = $this->nettoSum;
+        $attributes['calculated_isEuVat']  = $this->isEuVat;
+        $attributes['calculated_isNetto']  = $this->isNetto;
+        $attributes['calculated_vatArray'] = $this->vatArray;
+        $attributes['calculated_factors']  = $this->factors;
+
+        $attributes['calculated_basisPrice']           = $this->basisPrice;
+        $attributes['calculated_basisPriceNotRounded'] = $this->basisPriceNotRounded;
 
         $attributes['user_data'] = $this->userData;
 
@@ -1154,15 +1165,16 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         }
 
         $article = [
-            'id'           => $this->getId(),
-            'articleNo'    => $this->getFieldValue(Fields::FIELD_PRODUCT_NO),
-            'title'        => $this->getTitle($Locale),
-            'description'  => $this->getDescription($Locale),
-            'unitPrice'    => $this->getUnitPrice()->value(),
-            'quantity'     => $this->getQuantity(),
-            'customFields' => $this->getCustomFieldsData(),
-            'customData'   => $this->getCustomData(),
-            'displayPrice' => true
+            'id'                  => $this->getId(),
+            'articleNo'           => $this->getFieldValue(Fields::FIELD_PRODUCT_NO),
+            'title'               => $this->getTitle($Locale),
+            'description'         => $this->getDescription($Locale),
+            'unitPrice'           => $this->getUnitPrice()->value(),
+            'unitPriceNotRounded' => $this->basisPriceNotRounded,
+            'quantity'            => $this->getQuantity(),
+            'customFields'        => $this->getCustomFieldsData(),
+            'customData'          => $this->getCustomData(),
+            'displayPrice'        => true
         ];
 
         // quantity unit
@@ -1186,15 +1198,16 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             }
 
             $article['calculated'] = [
-                'price'           => $this->price,
-                'basisPrice'      => $this->basisPrice,
-                'sum'             => $this->sum,
-                'nettoBasisPrice' => $this->basisPrice,
-                'nettoPrice'      => $this->nettoPrice,
-                'nettoSum'        => $this->nettoSum,
-                'vatArray'        => $this->vatArray,
-                'isEuVat'         => $this->isEuVat,
-                'isNetto'         => $this->isNetto
+                'price'                => $this->price,
+                'basisPrice'           => $this->basisPrice,
+                'basisPriceNotRounded' => $this->basisPriceNotRounded,
+                'sum'                  => $this->sum,
+                'nettoBasisPrice'      => $this->basisPrice,
+                'nettoPrice'           => $this->nettoPrice,
+                'nettoSum'             => $this->nettoSum,
+                'vatArray'             => $this->vatArray,
+                'isEuVat'              => $this->isEuVat,
+                'isNetto'              => $this->isNetto
             ];
         }
 

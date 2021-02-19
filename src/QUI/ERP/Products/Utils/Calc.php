@@ -583,7 +583,8 @@ class Calc
             $nettoPrice = 0;
         }
 
-        $nettoPrice = \round($nettoPrice, $Currency->getPrecision());
+        $nettoPriceNotRounded = $nettoPrice;
+        $nettoPrice           = \round($nettoPrice, $Currency->getPrecision());
 
         $factors                    = [];
         $basisNettoPrice            = $nettoPrice;
@@ -718,11 +719,23 @@ class Calc
             $vatSum = \round($vatSum, $Currency->getPrecision());
         }
 
+        // korrektur rechnung / 1 cent problem
+        $checkVatBrutto = $nettoPriceNotRounded * ($vatValue / 100 + 1);
+        $checkVat       = $checkVatBrutto - $nettoPriceNotRounded;
+        $checkVatBrutto = \round($checkVatBrutto, $Currency->getPrecision());
+        $checkVat       = \round($checkVat, $Currency->getPrecision());
+
         $bruttoPrice = $this->round($nettoPrice + $vatSum);
 
         // sum
         $nettoSum = $this->round($nettoPrice * $Product->getQuantity());
         $vatSum   = \round($nettoSum * ($Vat->getValue() / 100), $Currency->getPrecision());
+
+        // korrektur rechnung / 1 cent problem
+        if ($checkVatBrutto !== $bruttoPrice) {
+            $vatSum      = $checkVat;
+            $bruttoPrice = $checkVatBrutto;
+        }
 
         if (!$isNetto && $Product->getQuantity() > 1) {
             // if the user is brutto
@@ -746,7 +759,7 @@ class Calc
 
         $vatArray = [
             'vat'  => $Vat->getValue(),
-            'sum'  => round($nettoSum * ($Vat->getValue() / 100), $Currency->getPrecision()),
+            'sum'  => $vatSum,
             'text' => ErpCalc::getVatText($Vat->getValue(), $this->getUser())
         ];
 
@@ -761,31 +774,33 @@ class Calc
         );
 
         QUI\ERP\Debug::getInstance()->log([
-            'basisPrice'   => $basisPrice,
-            'price'        => $price,
-            'sum'          => $sum,
-            'nettoSum'     => $nettoSum,
-            'nettoPrice'   => $nettoPrice,
-            'vatArray'     => $vatArray,
-            'isEuVat'      => $isEuVatUser,
-            'isNetto'      => $isNetto,
-            'currencyData' => $this->getCurrency()->toArray(),
-            'factors'      => $factors
+            'basisPriceNotRounded' => $nettoPriceNotRounded,
+            'basisPrice'           => $basisPrice,
+            'price'                => $price,
+            'sum'                  => $sum,
+            'nettoSum'             => $nettoSum,
+            'nettoPrice'           => $nettoPrice,
+            'vatArray'             => $vatArray,
+            'isEuVat'              => $isEuVatUser,
+            'isNetto'              => $isNetto,
+            'currencyData'         => $this->getCurrency()->toArray(),
+            'factors'              => $factors
         ], 'quiqqer/products');
 
 
         $callback([
-            'basisPrice'   => $basisPrice,
-            'price'        => $price,
-            'sum'          => $sum,
-            'nettoSum'     => $nettoSum,
-            'nettoPrice'   => $nettoPrice,
-            'vatArray'     => $vatArray,
-            'vatText'      => !empty($vatArray) ? $vatArray['text'] : '',
-            'isEuVat'      => $isEuVatUser,
-            'isNetto'      => $isNetto,
-            'currencyData' => $this->getCurrency()->toArray(),
-            'factors'      => $factors
+            'basisPriceNotRounded' => $nettoPriceNotRounded,
+            'basisPrice'           => $basisPrice,
+            'price'                => $price,
+            'sum'                  => $sum,
+            'nettoSum'             => $nettoSum,
+            'nettoPrice'           => $nettoPrice,
+            'vatArray'             => $vatArray,
+            'vatText'              => !empty($vatArray) ? $vatArray['text'] : '',
+            'isEuVat'              => $isEuVatUser,
+            'isNetto'              => $isNetto,
+            'currencyData'         => $this->getCurrency()->toArray(),
+            'factors'              => $factors
         ]);
 
         return $Product->getPrice();
@@ -872,8 +887,8 @@ class Calc
         $vat = $TaxEntry->getValue();
         $vat = (100 + $vat) / 100;
 
-        $price = $price * $vat;
         $price = \round($price, $Currency->getPrecision());
+        $price = $price * $vat;
 
         if (isset($formatted) && $formatted) {
             return $Currency->format($price);
