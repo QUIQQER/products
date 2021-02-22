@@ -7,11 +7,12 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
     'qui/QUI',
     'qui/controls/Control',
     'qui/controls/buttons/Switch',
+    'qui/controls/loader/Loader',
     'controls/grid/Grid',
     'Locale',
     'Ajax'
 
-], function (QUI, QUIControl, QUISwitch, Grid, QUILocale, QUIAjax) {
+], function (QUI, QUIControl, QUISwitch, QUILoader, Grid, QUILocale, QUIAjax) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -31,6 +32,7 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
 
             this.$Site          = null;
             this.$currentFields = null;
+            this.$Loader        = new QUILoader();
 
             this.addEvents({
                 onImport: this.$onImport
@@ -66,6 +68,9 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
                     width  : '100%'
                 }
             }).wraps(this.$Input);
+
+            this.$Loader.inject(this.$Elm);
+            this.$Loader.show();
 
             if (this.$Elm.getParent('.field-container')) {
                 new Element('div', {
@@ -132,8 +137,10 @@ define('package/quiqqer/products/bin/controls/products/settings/SortFields', [
 
             this.refresh().then(function () {
                 self.fireEvent('load', [self]);
+                self.$Loader.hide();
             }).catch(function (err) {
                 console.error(err);
+                self.$Loader.hide();
             });
         },
 

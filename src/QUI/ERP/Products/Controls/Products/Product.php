@@ -112,11 +112,15 @@ class Product extends QUI\Control
             $View   = $Product->getView();
             $Unique = $Product->createUniqueProduct($User);
 
-            try {
-                $Price = $Calc->getProductPrice($Unique);
-            } catch (QUI\Exception $Exception) {
-                $Price = null;
-                QUI\System\Log::writeException($Exception);
+            if ($typeVariantParent) {
+                $Price = $Product->getMinimumPrice($User);
+            } else {
+                try {
+                    $Price = $Calc->getProductPrice($Unique);
+                } catch (QUI\Exception $Exception) {
+                    $Price = null;
+                    QUI\System\Log::writeException($Exception);
+                }
             }
         } else {
             $View  = $Product;
