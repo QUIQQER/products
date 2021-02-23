@@ -165,7 +165,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             );
 
             this.$SearchInput = new Element('input', {
-                placeholder: 'Produkte durchsuchen...',
+                placeholder: QUILocale.get(lg, 'controls.products.search'),
                 styles     : {
                     'float': 'right',
                     margin : 10,

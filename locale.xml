@@ -2252,6 +2252,11 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
 <p>You can also update the product prices by console command. Please run one of the following commands to perform the update (all products or active products only):</p>]]></en>
         </locale>
 
+        <locale name="controls.products.search">
+            <de><![CDATA[Produkte durchsuchen...]]></de>
+            <en><![CDATA[Search products...]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/products" datatype="php">
