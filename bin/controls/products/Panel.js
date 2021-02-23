@@ -16,7 +16,9 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
     'package/quiqqer/products/bin/Products',
     'package/quiqqer/products/bin/controls/products/Create',
     'package/quiqqer/products/bin/controls/products/Product',
-    'package/quiqqer/productsearch/bin/controls/products/search/Search'
+    'package/quiqqer/productsearch/bin/controls/products/search/Search',
+
+    'css!package/quiqqer/products/bin/controls/products/Panel.css'
 
 ], function (QUI, QUIPanel, QUIButton, QUIButtonMultiple, QUIConfirm, Grid, QUILocale,
              Products, CreateProduct, ProductPanel, Search) {
@@ -93,6 +95,8 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
         $onCreate: function () {
             var self = this;
 
+            this.getContent().addClass('quiqqer-products-productPanel');
+
             // buttons
             this.$ButtonAdd = new QUIButton({
                 name     : 'add',
@@ -142,6 +146,45 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                     }
                 }
             });
+
+            this.getButtonBar().appendChild(
+                new Element('button', {
+                    type   : 'button',
+                    'class': 'qui-button qui-utils-noselect',
+                    html   : '<span class="fa fa-search"></span>',
+                    styles : {
+                        'float'    : 'right',
+                        marginRight: 5
+                    },
+                    events : {
+                        click: function () {
+                            this.$Search.search();
+                        }.bind(this)
+                    }
+                })
+            );
+
+            this.$SearchInput = new Element('input', {
+                placeholder: 'Produkte durchsuchen...',
+                styles     : {
+                    'float': 'right',
+                    margin : 10,
+                    width  : 200
+                },
+                events     : {
+                    keyup: function (e) {
+                        e.stop();
+
+                        this.getContent().getElements('[name="search"]').set('value', this.$SearchInput.value);
+
+                        if (e.key === 'enter') {
+                            this.$Search.search();
+                        }
+                    }.bind(this)
+                }
+            });
+
+            this.getButtonBar().appendChild(this.$SearchInput);
         },
 
         /**
