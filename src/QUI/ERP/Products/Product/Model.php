@@ -664,7 +664,7 @@ class Model extends QUI\QDOM
 
         if ($Site->getAttribute('quiqqer.products.fake.type')
             || $Site->getAttribute('type') !== 'quiqqer/products:types/category'
-            && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
+               && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
         ) {
             QUI\System\Log::addWarning(
                 QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', [
@@ -1886,8 +1886,9 @@ class Model extends QUI\QDOM
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($this->fields as $Field) {
             if (!$Field->isUnassigned()
-                || $Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS
-                || $Field->getType() === Fields::TYPE_ATTRIBUTE_LIST
+                // quiqqer/products#291
+                // || $Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS
+                // || $Field->getType() === Fields::TYPE_ATTRIBUTE_LIST
             ) {
                 $fields[$Field->getId()] = $Field;
             }
