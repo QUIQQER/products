@@ -24,8 +24,9 @@ define('package/quiqqer/products/bin/controls/products/CreateProductWindow', [
         ],
 
         options: {
-            maxHeight: 600,
-            maxWidth : 800
+            maxHeight         : 600,
+            maxWidth          : 800,
+            backgroundClosable: false
         },
 
         initialize: function (options) {
