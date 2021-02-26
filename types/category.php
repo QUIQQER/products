@@ -200,7 +200,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         ]);
 
         $Redirect = new RedirectResponse($url);
-        $Redirect->setStatusCode(Response::HTTP_NOT_FOUND);
+        $Redirect->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
 
         QUI::getEvents()->fireEvent('errorHeaderShowBefore', [Response::HTTP_NOT_FOUND, $_REQUEST['_url']]);
 
