@@ -635,8 +635,9 @@ class Calc
                 \floatval($priceFactorSum * $Product->getQuantity())
             );
 
-            $nettoPrice       = $nettoPrice + $priceFactorSum;
-            $priceFactorArray = $PriceFactor->toArray();
+            $nettoPrice           = $nettoPrice + $priceFactorSum;
+            $nettoPriceNotRounded = $nettoPriceNotRounded + $priceFactorSum;
+            $priceFactorArray     = $PriceFactor->toArray();
 
             $priceFactorArray['sum'] = $priceFactorSum;
 
