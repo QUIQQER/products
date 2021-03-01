@@ -2057,6 +2057,10 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
             <de><![CDATA[Mengen-Eingabe]]></de>
             <en><![CDATA[Quantity input]]></en>
         </locale>
+        <locale name="fields.control.UnitSelectSettings.grid.defaultQuantity">
+            <de><![CDATA[Std.-Menge]]></de>
+            <en><![CDATA[Def. quant.]]></en>
+        </locale>
         <locale name="fields.control.UnitSelectSettings.add.title">
             <de><![CDATA[Neuer auswählbarer Wert]]></de>
             <en><![CDATA[New selectable value]]></en>
@@ -2076,6 +2080,10 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
         <locale name="fields.control.UnitSelectSettings.add.quantityInputLabel">
             <de><![CDATA[Mengenangabe möglich]]></de>
             <en><![CDATA[Quantity input possible]]></en>
+        </locale>
+        <locale name="fields.control.UnitSelectSettings.add.defaultQuantityLabel">
+            <de><![CDATA[Standard-Menge]]></de>
+            <en><![CDATA[Default quantity]]></en>
         </locale>
         <locale name="fields.control.UnitSelectSettings.edit.title">
             <de><![CDATA[Auswählbaren Wert bearbeiten]]></de>
