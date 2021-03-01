@@ -493,7 +493,7 @@ class EventHandling
                     'en' => 'Product URL'
                 ]
             ],
-            // Unit / Einheit
+            // Unit / Einheit (NOT packaging unit / NICHT Verpackungseinheit!)
             [
                 'id'            => Fields::FIELD_UNIT,
                 'type'          => 'UnitSelect',
@@ -517,7 +517,7 @@ class EventHandling
                                 'en' => 'kg'
                             ],
                             'default'       => false,
-                            'quantityInput' => true
+                            'quantityInput' => false
                         ],
                         'lbs'   => [
                             'title'         => [
@@ -525,7 +525,7 @@ class EventHandling
                                 'en' => 'lbs.'
                             ],
                             'default'       => false,
-                            'quantityInput' => true
+                            'quantityInput' => false
                         ],
                         'g'     => [
                             'title'         => [
@@ -533,7 +533,7 @@ class EventHandling
                                 'en' => 'g'
                             ],
                             'default'       => false,
-                            'quantityInput' => true
+                            'quantityInput' => false
                         ],
                         'l'     => [
                             'title'         => [
@@ -541,7 +541,7 @@ class EventHandling
                                 'en' => 'l'
                             ],
                             'default'       => false,
-                            'quantityInput' => true
+                            'quantityInput' => false
                         ],
                         'm'     => [
                             'title'         => [
@@ -549,7 +549,7 @@ class EventHandling
                                 'en' => 'm'
                             ],
                             'default'       => false,
-                            'quantityInput' => true
+                            'quantityInput' => false
                         ],
                         'mm'    => [
                             'title'         => [
@@ -557,7 +557,7 @@ class EventHandling
                                 'en' => 'mm'
                             ],
                             'default'       => false,
-                            'quantityInput' => true
+                            'quantityInput' => false
                         ],
                         'sqm'   => [
                             'title'         => [
@@ -565,7 +565,7 @@ class EventHandling
                                 'en' => 'm²'
                             ],
                             'default'       => false,
-                            'quantityInput' => true
+                            'quantityInput' => false
                         ],
                         'pair'  => [
                             'title'         => [
@@ -581,7 +581,7 @@ class EventHandling
                                 'en' => 'piece'
                             ],
                             'default'       => true,
-                            'quantityInput' => true
+                            'quantityInput' => false
                         ],
                         'tons'  => [
                             'title'         => [
@@ -589,7 +589,7 @@ class EventHandling
                                 'en' => 't'
                             ],
                             'default'       => false,
-                            'quantityInput' => true
+                            'quantityInput' => false
                         ],
                         'hours' => [
                             'title'         => [
@@ -597,7 +597,7 @@ class EventHandling
                                 'en' => 'hrs.'
                             ],
                             'default'       => false,
-                            'quantityInput' => true
+                            'quantityInput' => false
                         ]
                     ]
                 ]
