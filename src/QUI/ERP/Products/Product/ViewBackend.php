@@ -120,7 +120,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      */
     public function getDescription($Locale = false)
     {
-        return $this->Product->getTitle($Locale);
+        return $this->Product->getDescription($Locale);
     }
 
     /**
