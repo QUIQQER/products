@@ -770,14 +770,21 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             return $Price;
         }
 
-        foreach ($attributesLists as $List) {
-            /* @var $List UniqueField */
-            if ($List->isRequired() && $List->getValue() === '') {
-                $Price->enableMinimalPrice();
-
-                return $Price;
-            }
+        // quiqqer/products#292
+        if ($this->minimumPrice &&
+            $this->maximumPrice &&
+            $this->minimumPrice !== $this->maximumPrice) {
+            $Price->enableMinimalPrice();
         }
+//
+//        foreach ($attributesLists as $List) {
+//            /* @var $List UniqueField */
+//            if ($List->isRequired() && $List->getValue() === '') {
+//                $Price->enableMinimalPrice();
+//
+//                return $Price;
+//            }
+//        }
 
         return $Price;
     }
@@ -1165,16 +1172,16 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         }
 
         $article = [
-            'id'                  => $this->getId(),
-            'articleNo'           => $this->getFieldValue(Fields::FIELD_PRODUCT_NO),
-            'title'               => $this->getTitle($Locale),
-            'description'         => $this->getDescription($Locale),
-            'unitPrice'           => $this->getUnitPrice()->value(),
+            'id'                   => $this->getId(),
+            'articleNo'            => $this->getFieldValue(Fields::FIELD_PRODUCT_NO),
+            'title'                => $this->getTitle($Locale),
+            'description'          => $this->getDescription($Locale),
+            'unitPrice'            => $this->getUnitPrice()->value(),
             'nettoPriceNotRounded' => $this->nettoPriceNotRounded,
-            'quantity'            => $this->getQuantity(),
-            'customFields'        => $this->getCustomFieldsData(),
-            'customData'          => $this->getCustomData(),
-            'displayPrice'        => true
+            'quantity'             => $this->getQuantity(),
+            'customFields'         => $this->getCustomFieldsData(),
+            'customData'           => $this->getCustomData(),
+            'displayPrice'         => true
         ];
 
         // quantity unit
