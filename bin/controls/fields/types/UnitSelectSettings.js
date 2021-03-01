@@ -181,11 +181,16 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                     header   : QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
                     dataType : 'string',
-                    width    : 150
+                    width    : 75
                 }, {
                     header   : QUILocale.get(lg, 'fields.control.UnitSelectSettings.grid.quantityInput'),
                     dataIndex: 'quantityInputCheck',
                     dataType : 'node',
+                    width    : 100
+                }, {
+                    header   : QUILocale.get(lg, 'fields.control.UnitSelectSettings.grid.defaultQuantity'),
+                    dataIndex: 'defaultQuantity',
+                    dataType : 'integer',
                     width    : 100
                 }, {
                     dataIndex: 'pos',
@@ -313,6 +318,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                     quantityInputCheck: new Element('span', {
                         'class': entry.quantityInput ? 'fa fa-check-square-o' : 'fa fa-square-o'
                     }),
+                    defaultQuantity   : entry.defaultQuantity ? entry.defaultQuantity : '',
                     pos               : entry.pos
                 });
             }
@@ -349,10 +355,11 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                 events   : {
                     onOpen  : function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            idLabel           : QUILocale.get(lg, lgPrefix + 'add.idLabel'),
-                            titleLabel        : QUILocale.get(lg, lgPrefix + 'add.titleLabel'),
-                            defaultLabel      : QUILocale.get(lg, lgPrefix + 'add.defaultLabel'),
-                            quantityInputLabel: QUILocale.get(lg, lgPrefix + 'add.quantityInputLabel')
+                            idLabel             : QUILocale.get(lg, lgPrefix + 'add.idLabel'),
+                            titleLabel          : QUILocale.get(lg, lgPrefix + 'add.titleLabel'),
+                            defaultLabel        : QUILocale.get(lg, lgPrefix + 'add.defaultLabel'),
+                            quantityInputLabel  : QUILocale.get(lg, lgPrefix + 'add.quantityInputLabel'),
+                            defaultQuantityLabel: QUILocale.get(lg, lgPrefix + 'add.defaultQuantityLabel')
                         }));
 
                         var Form = Win.getContent().getElement('form');
@@ -370,7 +377,8 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                             Form.elements.id.value,
                             Title.getData(),
                             Form.elements.default.checked,
-                            Form.elements.quantityInput.checked
+                            Form.elements.quantityInput.checked,
+                            Form.elements.defaultQuantity.value.trim()
                         ).then(function () {
                             Win.close();
                         }, function (errorMsg) {
@@ -407,10 +415,11 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                 events   : {
                     onOpen  : function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            idLabel           : QUILocale.get(lg, lgPrefix + 'add.idLabel'),
-                            titleLabel        : QUILocale.get(lg, lgPrefix + 'add.titleLabel'),
-                            defaultLabel      : QUILocale.get(lg, lgPrefix + 'add.defaultLabel'),
-                            quantityInputLabel: QUILocale.get(lg, lgPrefix + 'add.quantityInputLabel')
+                            idLabel             : QUILocale.get(lg, lgPrefix + 'add.idLabel'),
+                            titleLabel          : QUILocale.get(lg, lgPrefix + 'add.titleLabel'),
+                            defaultLabel        : QUILocale.get(lg, lgPrefix + 'add.defaultLabel'),
+                            quantityInputLabel  : QUILocale.get(lg, lgPrefix + 'add.quantityInputLabel'),
+                            defaultQuantityLabel: QUILocale.get(lg, lgPrefix + 'add.defaultQuantityLabel')
                         }));
 
                         var Form = Win.getContent().getElement('form');
@@ -421,6 +430,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                         Form.elements.title.value           = JSON.encode(Data.title);
                         Form.elements.default.checked       = Data.default;
                         Form.elements.quantityInput.checked = Data.quantityInput;
+                        Form.elements.defaultQuantity.value = Data.defaultQuantity ? Data.defaultQuantity : '';
 
                         new InputMultiLang().imports(Form.elements.title);
                     },
@@ -434,7 +444,8 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                             id,
                             Title.getData(),
                             Form.elements.default.checked,
-                            Form.elements.quantityInput.checked
+                            Form.elements.quantityInput.checked,
+                            Form.elements.defaultQuantity.value.trim()
                         );
                     }
                 }
@@ -445,10 +456,10 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
          * open remove dialog
          */
         openRemoveDialog: function () {
-            var self    = this,
-                data    = this.$Grid.getSelectedData()
+            var self = this,
+                data = this.$Grid.getSelectedData();
 
-            var indices = data.map(function(Entry) {
+            var indices = data.map(function (Entry) {
                 return Entry.id;
             });
 
@@ -546,9 +557,10 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
          * @param {Object|String} title
          * @param {Boolean} isDefault
          * @param {Boolean} quantityInput
+         * @param  {Number} defaultQuantity
          * @return {Promise}
          */
-        add: function (id, title, isDefault, quantityInput) {
+        add: function (id, title, isDefault, quantityInput, defaultQuantity) {
             return new Promise(function (resolve, reject) {
                 if (id in this.$Entries) {
                     reject(
@@ -578,10 +590,11 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
                 }
 
                 this.$Entries[id] = {
-                    title        : title,
-                    'default'    : Boolean(isDefault),
-                    quantityInput: Boolean(quantityInput),
-                    pos          : Object.getLength(this.$Entries)
+                    title          : title,
+                    'default'      : Boolean(isDefault),
+                    quantityInput  : Boolean(quantityInput),
+                    defaultQuantity: defaultQuantity,
+                    pos            : Object.getLength(this.$Entries)
                 };
 
                 this.refresh();
@@ -625,9 +638,10 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
          * @param {String} title
          * @param {Boolean} isDefault
          * @param {Boolean} quantityInput
+         * @param {String|Number} defaultQuantity
          * @param {Number} [pos]
          */
-        edit: function (id, title, isDefault, quantityInput, pos) {
+        edit: function (id, title, isDefault, quantityInput, defaultQuantity, pos) {
             // if selected, then all others unselected
             if (isDefault) {
                 for (var dataId in this.$Entries) {
@@ -640,10 +654,11 @@ define('package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings', 
             }
 
             this.$Entries[id] = {
-                title        : title,
-                'default'    : Boolean(isDefault),
-                quantityInput: Boolean(quantityInput),
-                pos          : typeof pos === "undefined" ? this.$Entries[id].pos : pos
+                title          : title,
+                'default'      : Boolean(isDefault),
+                quantityInput  : Boolean(quantityInput),
+                defaultQuantity: defaultQuantity,
+                pos            : typeof pos === "undefined" ? this.$Entries[id].pos : pos
             };
 
             this.refresh();
