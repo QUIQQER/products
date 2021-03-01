@@ -319,13 +319,13 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
 
             return [
                 'id'       => \key($entries),
-                'quantity' => 1
+                'quantity' => 0
             ];
         }
 
         return [
             'id'       => false,
-            'quantity' => 1
+            'quantity' => 0
         ];
     }
 }
