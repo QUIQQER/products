@@ -219,6 +219,8 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
     public function cleanup($value)
     {
         $defaultValue = $this->getDefaultValue();
+        $options      = $this->getOptions();
+        $entries      = $options['entries'];
 
         if (empty($value)) {
             return $defaultValue;
