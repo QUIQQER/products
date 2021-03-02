@@ -635,8 +635,9 @@ class Calc
                 \floatval($priceFactorSum * $Product->getQuantity())
             );
 
-            $nettoPrice       = $nettoPrice + $priceFactorSum;
-            $priceFactorArray = $PriceFactor->toArray();
+            $nettoPrice           = $nettoPrice + $priceFactorSum;
+            $nettoPriceNotRounded = $nettoPriceNotRounded + $priceFactorSum;
+            $priceFactorArray     = $PriceFactor->toArray();
 
             $priceFactorArray['sum'] = $priceFactorSum;
 
@@ -891,8 +892,8 @@ class Calc
         $vat = $TaxEntry->getValue();
         $vat = (100 + $vat) / 100;
 
-        $price = \round($price, $Currency->getPrecision());
         $price = $price * $vat;
+        $price = \round($price, $Currency->getPrecision());
 
         if (isset($formatted) && $formatted) {
             return $Currency->format($price);

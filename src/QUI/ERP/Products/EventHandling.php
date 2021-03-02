@@ -493,7 +493,7 @@ class EventHandling
                     'en' => 'Product URL'
                 ]
             ],
-            // Unit / Einheit
+            // Unit / Einheit (NOT packaging unit / NICHT Verpackungseinheit!)
             [
                 'id'            => Fields::FIELD_UNIT,
                 'type'          => 'UnitSelect',
@@ -512,92 +512,103 @@ class EventHandling
                 'options'       => [
                     'entries' => [
                         'kg'    => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 'kg',
                                 'en' => 'kg'
                             ],
-                            'default'       => false,
-                            'quantityInput' => true
+                            'default'         => false,
+                            'quantityInput'   => false,
+                            'defaultQuantity' => false
                         ],
                         'lbs'   => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 'Pfd.',
                                 'en' => 'lbs.'
                             ],
-                            'default'       => false,
-                            'quantityInput' => true
+                            'default'         => false,
+                            'quantityInput'   => false,
+                            'defaultQuantity' => false
                         ],
                         'g'     => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 'g',
                                 'en' => 'g'
                             ],
-                            'default'       => false,
-                            'quantityInput' => true
+                            'default'         => false,
+                            'quantityInput'   => false,
+                            'defaultQuantity' => false
                         ],
                         'l'     => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 'l',
                                 'en' => 'l'
                             ],
-                            'default'       => false,
-                            'quantityInput' => true
+                            'default'         => false,
+                            'quantityInput'   => false,
+                            'defaultQuantity' => false
                         ],
                         'm'     => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 'm',
                                 'en' => 'm'
                             ],
-                            'default'       => false,
-                            'quantityInput' => true
+                            'default'         => false,
+                            'quantityInput'   => false,
+                            'defaultQuantity' => false
                         ],
                         'mm'    => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 'mm',
                                 'en' => 'mm'
                             ],
-                            'default'       => false,
-                            'quantityInput' => true
+                            'default'         => false,
+                            'quantityInput'   => false,
+                            'defaultQuantity' => false
                         ],
                         'sqm'   => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 'm²',
                                 'en' => 'm²'
                             ],
-                            'default'       => false,
-                            'quantityInput' => true
+                            'default'         => false,
+                            'quantityInput'   => false,
+                            'defaultQuantity' => false
                         ],
                         'pair'  => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 'Paar',
                                 'en' => 'pair'
                             ],
-                            'default'       => false,
-                            'quantityInput' => false
+                            'default'         => false,
+                            'quantityInput'   => false,
+                            'defaultQuantity' => false
                         ],
                         'piece' => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 'Stück',
                                 'en' => 'piece'
                             ],
-                            'default'       => true,
-                            'quantityInput' => true
+                            'default'         => true,
+                            'quantityInput'   => false,
+                            'defaultQuantity' => 1
                         ],
                         'tons'  => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 't',
                                 'en' => 't'
                             ],
-                            'default'       => false,
-                            'quantityInput' => true
+                            'default'         => false,
+                            'quantityInput'   => false,
+                            'defaultQuantity' => false
                         ],
                         'hours' => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 'Std.',
                                 'en' => 'hrs.'
                             ],
-                            'default'       => false,
-                            'quantityInput' => true
+                            'default'         => false,
+                            'quantityInput'   => false,
+                            'defaultQuantity' => false
                         ]
                     ]
                 ]
@@ -621,44 +632,49 @@ class EventHandling
                 'options'       => [
                     'entries' => [
                         'kg'   => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 'kg',
                                 'en' => 'kg'
                             ],
-                            'default'       => false,
-                            'quantityInput' => true
+                            'default'         => false,
+                            'quantityInput'   => true,
+                            'defaultQuantity' => false
                         ],
                         'g'    => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 'g',
                                 'en' => 'g'
                             ],
-                            'default'       => false,
-                            'quantityInput' => true
+                            'default'         => false,
+                            'quantityInput'   => true,
+                            'defaultQuantity' => false
                         ],
                         'tons' => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 't',
                                 'en' => 't'
                             ],
-                            'default'       => false,
-                            'quantityInput' => true
+                            'default'         => false,
+                            'quantityInput'   => true,
+                            'defaultQuantity' => false
                         ],
                         'lbs'  => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 'Pfd.',
                                 'en' => 'lbs.'
                             ],
-                            'default'       => false,
-                            'quantityInput' => true
+                            'default'         => false,
+                            'quantityInput'   => true,
+                            'defaultQuantity' => false
                         ],
                         'oz'   => [
-                            'title'         => [
+                            'title'           => [
                                 'de' => 'oz.',
                                 'en' => 'oz.'
                             ],
-                            'default'       => false,
-                            'quantityInput' => true
+                            'default'         => false,
+                            'quantityInput'   => true,
+                            'defaultQuantity' => false
                         ],
                     ]
                 ]
