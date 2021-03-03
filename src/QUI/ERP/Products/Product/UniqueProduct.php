@@ -104,6 +104,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected $nettoPriceNotRounded;
 
     /**
+     * calculated basisprice - netto or brutto - no round
+     *
+     * @var float|int
+     */
+    protected $nettoSumNotRounded;
+
+    /**
      * calculated sum
      * @var float|int
      */
@@ -426,6 +433,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $self->factors    = $data['factors'];
 
             $self->nettoPriceNotRounded = $data['nettoPriceNotRounded'];
+            $self->nettoSumNotRounded   = $data['nettoSumNotRounded'];
 
             $self->calculated = true;
         });
@@ -1122,6 +1130,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $attributes['calculated_basisPrice']           = $this->basisPrice;
         $attributes['calculated_nettoPriceNotRounded'] = $this->nettoPriceNotRounded;
+        $attributes['calculated_nettoSumNotRounded']   = $this->nettoSumNotRounded;
 
         $attributes['user_data'] = $this->userData;
 
@@ -1178,6 +1187,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             'description'          => $this->getDescription($Locale),
             'unitPrice'            => $this->getUnitPrice()->value(),
             'nettoPriceNotRounded' => $this->nettoPriceNotRounded,
+            'nettoSumNotRounded'   => $this->nettoSumNotRounded,
             'quantity'             => $this->getQuantity(),
             'customFields'         => $this->getCustomFieldsData(),
             'customData'           => $this->getCustomData(),
@@ -1208,6 +1218,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
                 'price'                => $this->price,
                 'basisPrice'           => $this->basisPrice,
                 'nettoPriceNotRounded' => $this->nettoPriceNotRounded,
+                'nettoSumNotRounded'   => $this->nettoSumNotRounded,
                 'sum'                  => $this->sum,
                 'nettoBasisPrice'      => $this->basisPrice,
                 'nettoPrice'           => $this->nettoPrice,

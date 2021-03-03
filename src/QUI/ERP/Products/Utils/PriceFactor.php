@@ -272,6 +272,14 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     }
 
     /**
+     * @return bool
+     */
+    public function hasValueText(): bool
+    {
+        return !empty($this->valueText);
+    }
+
+    /**
      * Is the price factor visible
      *
      * @return boolean
