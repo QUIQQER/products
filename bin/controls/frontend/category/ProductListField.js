@@ -85,7 +85,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListField
             var Field = this.getAttribute('Field');
             var value = Field.getSearchValue();
 
-            if (Field.getType() === 'package/quiqqer/productsearch/bin/controls/search/SearchField') {
+            if (Field.getType() === 'package/quiqqer/productsearch/bin/controls/search/SearchField' &&
+                typeof Field.$Type.$Select !== 'undefined') {
                 var Range = Field.$Type.$Select;
                 var range = Range.getAttribute('range');
                 var max   = range.max;
