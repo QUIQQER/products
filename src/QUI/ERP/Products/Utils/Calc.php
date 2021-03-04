@@ -376,13 +376,14 @@ class Calc
 
                     $PriceFactor->setNettoSum($priceFactorValue);
 
-                    if (!$isNetto) {
-                        $vCalc         = $vat / 100 + 1;
+                    if (!$isNetto && !$PriceFactor->hasValueText()) {
+                        $vCalc         = $Vat->getValue() / 100 + 1;
                         $bruttoDisplay = \round($priceFactorValue * $vCalc, $Currency->getPrecision());
                         $bruttoDisplay = $Currency->format($bruttoDisplay);
 
                         $PriceFactor->setValueText($bruttoDisplay);
                     }
+
                     break;
 
                 // Prozent Angabe
@@ -733,6 +734,26 @@ class Calc
             $vatSum = $nettoPrice * ($vatValue / 100);
             $vatSum = \round($vatSum, $Currency->getPrecision());
         }
+
+
+        // price factor display with empty value text
+        // for brutto user -> brutto display values
+        if (!$isNetto) {
+            foreach ($priceFactors as $PriceFactor) {
+                if ($PriceFactor->hasValueText()) {
+                    continue;
+                }
+
+                $vCalc = $Vat->getValue() / 100 + 1;
+                $netto = $PriceFactor->getValue();
+
+                $bruttoDisplay = \round($netto * $vCalc, $Currency->getPrecision());
+                $bruttoDisplay = $Currency->format($bruttoDisplay);
+
+                $PriceFactor->setValueText($bruttoDisplay);
+            }
+        }
+
 
         if (!$isNetto) {
             // korrektur rechnung / 1 cent problem
