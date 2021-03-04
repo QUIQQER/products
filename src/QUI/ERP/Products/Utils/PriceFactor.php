@@ -72,7 +72,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     protected $calculatedSum = 0;
 
     /**
-     * @var string
+     * @var string|false
      */
     protected $valueText = false;
 
@@ -272,6 +272,14 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     }
 
     /**
+     * @return bool
+     */
+    public function hasValueText(): bool
+    {
+        return !empty($this->valueText);
+    }
+
+    /**
      * Is the price factor visible
      *
      * @return boolean
@@ -322,7 +330,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      * The text for the value presentation
      * If no value text is set, normal value is used
      *
-     * @param string $value
+     * @param string|false $value
      */
     public function setValueText($value)
     {
