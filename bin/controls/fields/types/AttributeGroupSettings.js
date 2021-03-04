@@ -395,13 +395,19 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                             return;
                         }
 
-                        self.add(
+                        var edit = self.add(
                             Title.getData(),
                             Form.elements.valueId.value,
                             Form.elements.selected.checked
                         );
 
-                        Win.close();
+                        if (edit) {
+                            Win.close();
+                        } else {
+                            QUI.getMessageHandler().then(function (MH) {
+                                MH.addError(QUILocale.get(lg, 'fields.control.attributeGroup.create.already.exist'));
+                            });
+                        }
                     }
                 }
             }).open();
@@ -458,14 +464,20 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                             return;
                         }
 
-                        self.edit(
+                        var edit = self.edit(
                             index,
                             Title.getData(),
                             Form.elements.valueId.value,
                             Form.elements.selected.checked
                         );
 
-                        Win.close();
+                        if (edit) {
+                            Win.close();
+                        } else {
+                            QUI.getMessageHandler().then(function (MH) {
+                                MH.addError(QUILocale.get(lg, 'fields.control.attributeGroup.create.already.exist'));
+                            });
+                        }
                     }
                 }
             }).open();
@@ -556,6 +568,13 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          */
         add: function (title, valueId, selected) {
             selected = selected || false;
+            valueId  = valueId.trim();
+
+            for (var i = 0, len = this.$data.length; i < len; i++) {
+                if (this.$data[i].valueId === valueId) {
+                    return false;
+                }
+            }
 
             this.$data.push({
                 title   : title,
@@ -565,6 +584,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
 
             this.refresh();
             this.update();
+
+            return true;
         },
 
         /**
@@ -616,6 +637,14 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          * @param {Boolean} [selected]
          */
         edit: function (index, title, valueId, selected) {
+            valueId = valueId.trim();
+
+            for (var i = 0, len = this.$data.length; i < len; i++) {
+                if (this.$data[i].valueId === valueId) {
+                    return false;
+                }
+            }
+
             this.$data[index] = {
                 title   : title,
                 valueId : valueId,
@@ -624,6 +653,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
 
             this.refresh();
             this.update();
+
+            return true;
         }
     });
 });

@@ -299,7 +299,7 @@
             <de><![CDATA[Standard Sortierung]]></de>
             <en><![CDATA[Default sorting]]></en>
         </locale>
-        
+
         <locale name="settings.window.fieldsearch.freetext.sort.title">
             <de><![CDATA[Produkt-Sortierung]]></de>
             <en><![CDATA[Product sorting]]></en>
@@ -316,9 +316,10 @@ Multiplikator: <b>1.5</b><br/>
 Auf Basis von Preis-Feld: <b>Preis</b> (Wert: <b>50,00 €</b>)<br/><br/>
 UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
 ]]></de>
-            <en><![CDATA[Here you can set a multiplier for each price field created in the system based on another price field.]]></en>
+            <en>
+                <![CDATA[Here you can set a multiplier for each price field created in the system based on another price field.]]></en>
         </locale>
-        
+
         <locale name="fieldtype">
             <de><![CDATA[Feld-Typ]]></de>
             <en><![CDATA[Field type]]></en>
@@ -1642,6 +1643,10 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
             <de><![CDATA[Eintrag der Attributliste hinzufügen]]></de>
             <en><![CDATA[Add entry to the attribute list]]></en>
         </locale>
+        <locale name="fields.control.attributeGroup.create.already.exist">
+            <de><![CDATA[Der Wert existiert bereits. Bitte gebe eine andere ID für den Wert ein.]]></de>
+            <en><![CDATA[The value already exists. Please enter another ID for the value.]]></en>
+        </locale>
         <locale name="fields.control.attributeGroup.remove.window.title">
             <de><![CDATA[Eintrag aus der Attributliste entfernen?]]></de>
             <en><![CDATA[Remove item from the attribute list?]]></en>
@@ -2222,8 +2227,10 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
         </locale>
 
         <locale name="controls.settings.PriceFieldFactors.updatePrices.information">
-            <de><![CDATA[Durch diesen Vorgang werden die Preise aller konfigurierten Preisfelder mit dem festgelegten Multiplikator <b>neu berechnet</b>. Alle Produkte, die die entsprechenden Felder enthalten, werden einmalig gespeichert.]]></de>
-            <en><![CDATA[This operation will <b>recalculate</b> the prices of all configured price fields with the specified multiplier. All products containing the corresponding fields will be saved once.]]></en>
+            <de>
+                <![CDATA[Durch diesen Vorgang werden die Preise aller konfigurierten Preisfelder mit dem festgelegten Multiplikator <b>neu berechnet</b>. Alle Produkte, die die entsprechenden Felder enthalten, werden einmalig gespeichert.]]></de>
+            <en>
+                <![CDATA[This operation will <b>recalculate</b> the prices of all configured price fields with the specified multiplier. All products containing the corresponding fields will be saved once.]]></en>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.updatePrices.title">
             <de><![CDATA[Produkt-Preise aktualisieren]]></de>
