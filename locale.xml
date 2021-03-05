@@ -2466,15 +2466,15 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
             <en><![CDATA[Saved product [id].]]></en>
         </locale>
         <locale name="watcher.message.product.activate">
-            <de><![CDATA[Produkt [field] aktiviert.]]></de>
+            <de><![CDATA[Produkt [id] aktiviert.]]></de>
             <en><![CDATA[Activate product [id].]]></en>
         </locale>
         <locale name="watcher.message.product.deactivate">
-            <de><![CDATA[Produkt [field] deaktiviert.]]></de>
+            <de><![CDATA[Produkt [id] deaktiviert.]]></de>
             <en><![CDATA[Dectivate product [id].]]></en>
         </locale>
         <locale name="watcher.message.product.delete">
-            <de><![CDATA[Produkt [field] "[title]" gelöscht.]]></de>
+            <de><![CDATA[Produkt [productId] "[title]" gelöscht.]]></de>
             <en><![CDATA[Delete product [productId] "[title]".]]></en>
         </locale>
         <locale name="watcher.message.product.create">
