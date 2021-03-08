@@ -250,14 +250,14 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
         }
 
         if ($entries[$value['id']]['quantityInput']) {
-            $value['quantity'] = (float)$value['quantity'];
-
-            if (empty($value['quantity']) && !empty($value['defaultQuantity'])) {
+            if (empty($value['quantity']) && !\is_numeric($value['quantity'])) {
                 if (!empty($value['defaultQuantity'])) {
                     $value['quantity'] = $value['defaultQuantity'];
                 } else {
                     return $defaultValue;
                 }
+            } else {
+                $value['quantity'] = (float)$value['quantity'];
             }
         } else {
             $value['quantity'] = false;
@@ -310,11 +310,20 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
         $entries      = $options['entries'];
 
         foreach ($entries as $id => $entry) {
-            if ($entry['default'] && !empty($entry['defaultQuantity'])) {
-                return [
-                    'id'       => $id,
-                    'quantity' => $entry['defaultQuantity']
-                ];
+            if ($entry['default']) {
+                if (!empty($entry['quantityInput'])) {
+                    if (!empty($entry['defaultQuantity'])) {
+                        return [
+                            'id'       => $id,
+                            'quantity' => $entry['defaultQuantity']
+                        ];
+                    }
+                } else {
+                    return [
+                        'id'       => $id,
+                        'quantity' => null
+                    ];
+                }
             }
         }
 
