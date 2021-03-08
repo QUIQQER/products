@@ -241,8 +241,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
         }
 
         if (!\array_key_exists('id', $value) ||
-            !\array_key_exists('quantity', $value) ||
-            !\array_key_exists('defaultQuantity', $value)) {
+            !\array_key_exists('quantity', $value)) {
             return $defaultValue;
         }
 
@@ -254,9 +253,11 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
             $value['quantity'] = (float)$value['quantity'];
 
             if (empty($value['quantity']) && !empty($value['defaultQuantity'])) {
-                $value['quantity'] = $value['defaultQuantity'];
-            } else {
-                return $defaultValue;
+                if (!empty($value['defaultQuantity'])) {
+                    $value['quantity'] = $value['defaultQuantity'];
+                } else {
+                    return $defaultValue;
+                }
             }
         } else {
             $value['quantity'] = false;
