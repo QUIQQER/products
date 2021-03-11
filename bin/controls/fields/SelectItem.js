@@ -50,15 +50,16 @@ define('package/quiqqer/products/bin/controls/fields/SelectItem', [
             Elm.set({
                 'class': 'quiqqer-fields-selectItem smooth',
                 html   : '<span class="quiqqer-fields-selectItem-icon fa fa-file-text-o"></span>' +
-                '<span class="quiqqer-fields-selectItem-text">&nbsp;</span>' +
-                '<span class="quiqqer-fields-selectItem-destroy fa fa-remove"></span>'
+                    '<span class="quiqqer-fields-selectItem-text">&nbsp;</span>' +
+                    '<span class="quiqqer-fields-selectItem-destroy fa fa-remove"></span>'
             });
 
             this.$Icon    = Elm.getElement('.quiqqer-fields-selectItem-icon');
             this.$Text    = Elm.getElement('.quiqqer-fields-selectItem-text');
             this.$Destroy = Elm.getElement('.quiqqer-fields-selectItem-destroy');
 
-            this.$Destroy.addEvent('click', function () {
+            this.$Destroy.addEvent('click', function (e) {
+                e.stop();
                 self.destroy();
             });
 
@@ -78,9 +79,7 @@ define('package/quiqqer/products/bin/controls/fields/SelectItem', [
             Fields.getChild(
                 this.getAttribute('id')
             ).then(function (data) {
-
                 self.$Text.set('html', data.title);
-
             }).catch(function () {
                 self.$Icon.removeClass('fa-file-text-o');
                 self.$Icon.addClass('fa-bolt');
