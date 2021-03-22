@@ -1007,7 +1007,7 @@ class Model extends QUI\QDOM
             }
         }
 
-        $Result = new QUI\ERP\Money\Price($currentPrice, $Price->getCurrency());
+        $Result = new QUI\ERP\Money\Price($currentPrice, $Price->getCurrency(), $User);
 
         try {
             QUI\Cache\LongTermCache::set($cacheName, $Result->toArray());
@@ -1072,7 +1072,7 @@ class Model extends QUI\QDOM
             }
         }
 
-        $Result = new QUI\ERP\Money\Price($currentPrice, $Price->getCurrency());
+        $Result = new QUI\ERP\Money\Price($currentPrice, $Price->getCurrency(), $User);
 
         QUI\Cache\LongTermCache::set($cacheName, $Result->toArray());
 
