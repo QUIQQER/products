@@ -489,6 +489,11 @@ class Calc
             $vatText  = [];
         }
 
+
+        // extra methode für quiqqer/erp#20 hier einführen,
+        // dann kann dies mehrmals hier ausgeführt werden
+
+
         // delete 0 % vat, 0% vat is allowed to calculate more easily
         if (isset($vatText[0])) {
             unset($vatText[0]);
