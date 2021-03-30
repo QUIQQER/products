@@ -262,7 +262,8 @@ class VariantParent extends AbstractType
 
         return new QUI\ERP\Money\Price(
             $maxPrices[0]['maxPrice'],
-            $this->getCurrency() ?: QUI\ERP\Currency\Handler::getDefaultCurrency()
+            $this->getCurrency() ?: QUI\ERP\Currency\Handler::getDefaultCurrency(),
+            $User
         );
     }
 
@@ -331,7 +332,8 @@ class VariantParent extends AbstractType
 
         return new QUI\ERP\Money\Price(
             $minprices[0]['minPrice'],
-            $this->getCurrency() ?: QUI\ERP\Currency\Handler::getDefaultCurrency()
+            $this->getCurrency() ?: QUI\ERP\Currency\Handler::getDefaultCurrency(),
+            $User
         );
     }
 

@@ -303,7 +303,7 @@ class Calc
 //        $subSum   = \round($subSum, $Currency->getPrecision());
 //        $nettoSum = \round($nettoSum, $Currency->getPrecision());
 
-        QUI\ERP\Debug::getInstance()->log('Berechnetet Produktliste MwSt', 'quiqqer/product');
+        QUI\ERP\Debug::getInstance()->log('Berechnete Produktliste MwSt', 'quiqqer/product');
         QUI\ERP\Debug::getInstance()->log($vatArray, 'quiqqer/product');
 
         try {
@@ -489,6 +489,11 @@ class Calc
             $vatText  = [];
         }
 
+
+        // extra methode für quiqqer/erp#20 hier einführen,
+        // dann kann dies mehrmals hier ausgeführt werden
+
+
         // delete 0 % vat, 0% vat is allowed to calculate more easily
         if (isset($vatText[0])) {
             unset($vatText[0]);
@@ -509,28 +514,6 @@ class Calc
 
             $priceFactorBruttoSum = $subSum + $priceFactorBruttoSums;
             $bruttoSum            = $priceFactorBruttoSum;
-//            $bruttoSumRounded     = \round($bruttoSum, $precision);
-//
-//            if ($priceFactorBruttoSum !== $bruttoSumRounded) {
-//                $diff = $priceFactorBruttoSum - \round($bruttoSum, $precision);
-//                $diff = \round($diff, $precision);
-//
-//                // if we have a diff, we change the first vat price factor
-//                $added = false;
-//
-//                foreach ($priceFactors as $Factor) {
-//                    if ($Factor instanceof QUI\ERP\Products\Interfaces\PriceFactorWithVatInterface) {
-//                        $Factor->setSum(\round($Factor->getSum() - $diff, $precision));
-//                        $bruttoSum = \round($bruttoSum, $precision);
-//                        $added     = true;
-//                        break;
-//                    }
-//                }
-//
-//                if ($added === false) {
-//                    $bruttoSum = $bruttoSum + $diff;
-//                }
-//            }
         }
 
         if ($bruttoSum <= 0 || $nettoSum <= 0) {

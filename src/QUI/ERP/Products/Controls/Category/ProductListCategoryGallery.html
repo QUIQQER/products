@@ -10,7 +10,7 @@
                  data-pid="{$Category->getId()}"
         >
         {strip}
-            <a href="{url site=$Category}" title="{$Category->getAttribute('title')|escape:" html"}">
+            <a href="{url site=$Category}" title="{$Category->getAttribute('title')|escape:'html'}">
             {if $Category->getAttribute('image_site')}
                 {image src=$Category->getAttribute('image_site') title=$Category->getAttribute('title') width=400}
             {else}

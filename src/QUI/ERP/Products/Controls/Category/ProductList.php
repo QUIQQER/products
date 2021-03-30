@@ -649,7 +649,7 @@ class ProductList extends QUI\Control
         $searchParams['sheet'] = round($start / $max) + 1;
         $searchParams['limit'] = $max;
 
-        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+//        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
 
         return $searchParams;
     }
@@ -675,7 +675,7 @@ class ProductList extends QUI\Control
             $searchParams['freetext'] = '';
         }
 
-        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
+//        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
 
         return $searchParams;
     }
