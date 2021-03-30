@@ -514,6 +514,21 @@ class Calc
 
             $priceFactorBruttoSum = $subSum + $priceFactorBruttoSums;
             $bruttoSum            = $priceFactorBruttoSum;
+
+            // counterbalance - gegenrechnung
+            // works only for one vat entry
+            if (\count($vatArray) === 1) {
+                $vat   = \key($vatArray);
+                $netto = $bruttoSum / ($vat / 100 + 1);
+
+                $vatSum = $bruttoSum - $netto;
+                $vatSum = \round($vatSum, $Currency->getPrecision());
+                $diff   = abs($vatArray[$vat]['sum'] - $vatSum);
+
+                if ($diff <= 0.019) {
+                    $vatArray[$vat]['sum'] = $vatSum;
+                }
+            }
         }
 
         if ($bruttoSum <= 0 || $nettoSum <= 0) {
