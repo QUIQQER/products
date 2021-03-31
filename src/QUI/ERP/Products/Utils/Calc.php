@@ -489,6 +489,11 @@ class Calc
             $vatText  = [];
         }
 
+
+        // extra methode für quiqqer/erp#20 hier einführen,
+        // dann kann dies mehrmals hier ausgeführt werden
+
+
         // delete 0 % vat, 0% vat is allowed to calculate more easily
         if (isset($vatText[0])) {
             unset($vatText[0]);
@@ -509,6 +514,21 @@ class Calc
 
             $priceFactorBruttoSum = $subSum + $priceFactorBruttoSums;
             $bruttoSum            = $priceFactorBruttoSum;
+
+            // counterbalance - gegenrechnung
+            // works only for one vat entry
+            if (\count($vatArray) === 1) {
+                $vat   = \key($vatArray);
+                $netto = $bruttoSum / ($vat / 100 + 1);
+
+                $vatSum = $bruttoSum - $netto;
+                $vatSum = \round($vatSum, $Currency->getPrecision());
+                $diff   = abs($vatArray[$vat]['sum'] - $vatSum);
+
+                if ($diff <= 0.019) {
+                    $vatArray[$vat]['sum'] = $vatSum;
+                }
+            }
         }
 
         if ($bruttoSum <= 0 || $nettoSum <= 0) {
