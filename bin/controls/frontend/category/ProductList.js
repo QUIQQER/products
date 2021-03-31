@@ -495,39 +495,45 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (this.getAttribute('searchfields')) {
                 this.setAttribute('searchfields', JSON.decode(this.getAttribute('searchfields')));
             }
+//
+            // pace makes problems
+            // loading is not solid
 
-            if (typeof Pace !== 'undefined') {
-                var loaded   = false;
-                var paceDone = function () {
-                    if (loaded) {
-                        return;
-                    }
-
-                    loaded = true;
-
-                    if ("p" in search) {
-                        this.$productId = false;
-                    }
-
-                    this.$readWindowLocation().then(function () {
-                        //this.$onFilterChange();
-                        this.$load = true;
-
-                        // if (this.getAttribute('autoload')) {
-                        //     this.$setWindowLocation();
-                        // }
-                    }.bind(this));
-                }.bind(this);
-
-                // pace is already loaded
-                if (document.body.hasClass('pace-done')) {
-                    paceDone();
-                } else {
-                    window.Pace.on('done', paceDone);
-                    paceDone.delay(1000); // fallback, if pace dont load correct
-                }
-                return;
-            }
+//            if (typeof Pace !== 'undefined') {
+//                var loaded   = false;
+//                var paceDone = function () {
+//                    if (loaded) {
+//                        return;
+//                    }
+//
+//                    loaded = true;
+//
+//                    if ("p" in search) {
+//                        this.$productId = false;
+//                    }
+//
+//                    this.$readWindowLocation().then(function () {
+//                        //this.$onFilterChange();
+//                        this.$load = true;
+//
+//                        // if (this.getAttribute('autoload')) {
+//                        //     this.$setWindowLocation();
+//                        // }
+//                    }.bind(this));
+//                }.bind(this);
+//
+//                // pace is already loaded
+//                if (document.body.hasClass('pace-done')) {
+//                    paceDone();
+//                } else {
+//                    window.Pace.on('done', paceDone);
+//
+//                    // fallback, if pace dont load correct
+//                    // 5 seconds because of duplicate loading
+//                    paceDone.delay(5000);
+//                }
+//                return;
+//            }
 
             (function () {
                 if ("p" in search) {
