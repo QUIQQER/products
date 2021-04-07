@@ -2261,7 +2261,7 @@ class Model extends QUI\QDOM
         $this->active = false;
 
         QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.activate', [
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.deactivate', [
                 'id' => $this->getId()
             ])
         );
