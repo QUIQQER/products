@@ -267,7 +267,10 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
             this.$Elm = null;
             this.create();
 
-            if (this.$Input.value !== '') {
+            if (this.$Input.value !== '' &&
+                this.$Input.value !== 0 &&
+                this.$Input.value !== "0"
+            ) {
                 var fields = this.$Input.value.split(',');
 
                 for (var i = 0, len = fields.length; i < len; i++) {

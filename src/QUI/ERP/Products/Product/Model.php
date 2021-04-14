@@ -955,7 +955,7 @@ class Model extends QUI\QDOM
             $data     = QUI\Cache\LongTermCache::get($cacheName);
             $Currency = QUI\ERP\Currency\Handler::getCurrency($data['currency']);
 
-            return new QUI\ERP\Money\Price($data['price'], $Currency);
+            return new QUI\ERP\Money\Price($data['price'], $Currency, $User);
         } catch (QUI\Exception $Exception) {
         }
 
@@ -1035,7 +1035,7 @@ class Model extends QUI\QDOM
             $data     = QUI\Cache\LongTermCache::get($cacheName);
             $Currency = QUI\ERP\Currency\Handler::getCurrency($data['currency']);
 
-            return new QUI\ERP\Money\Price($data['price'], $Currency);
+            return new QUI\ERP\Money\Price($data['price'], $Currency, $User);
         } catch (QUI\Exception $Exception) {
         }
 
@@ -2261,7 +2261,7 @@ class Model extends QUI\QDOM
         $this->active = false;
 
         QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.activate', [
+            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.deactivate', [
                 'id' => $this->getId()
             ])
         );
