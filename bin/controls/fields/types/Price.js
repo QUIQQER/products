@@ -57,7 +57,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
                 self.$Elm.placeholder = Formatter.format(1000);
             });
 
-            this.$Button = new Element('span', {
+            this.$Button = new Element('button', {
                 'class': 'field-container-item',
                 html   : '<span class="fa fa-calculator"></span>',
                 title  : QUILocale.get('quiqqer/products', 'fields.control.price.brutto'),
@@ -99,6 +99,24 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
             });
 
             this.$calcBruttoPrice();
+        },
+
+        /**
+         * disable this control
+         */
+        disable: function () {
+            this.$Elm.disabled    = true;
+            this.$Button.disabled = true;
+            this.$Button.setStyle('cursor', 'not-allowed');
+        },
+
+        /**
+         * enable this control
+         */
+        enable: function () {
+            this.$Elm.disabled    = false;
+            this.$Button.disabled = false;
+            this.$Button.setStyle('cursor', 'pointer');
         },
 
         /**
@@ -155,8 +173,10 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
         /**
          * Opens the brutto / gross input
          */
-        openBruttoInput: function () {
+        openBruttoInput: function (e) {
             var self = this;
+
+            e.stop();
 
             new PriceBruttoWindow({
                 productId: this.$productId,

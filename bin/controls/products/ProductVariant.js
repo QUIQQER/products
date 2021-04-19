@@ -317,7 +317,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 if (self.$loaded) {
                     self.Loader.hide();
                 }
-            }).catch(function () {
+            }).catch(function (err) {
+                console.error(err);
+
                 self.Loader.hide();
             });
         },
@@ -1187,6 +1189,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          */
         openVariantTab: function (Tab) {
             this.Loader.show();
+
+            if (!Tab) {
+                return;
+            }
 
             var name = Tab.getAttribute('name');
             var done = function () {
