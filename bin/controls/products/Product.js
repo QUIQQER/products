@@ -1921,7 +1921,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 Sheet.show();
                 this.Loader.hide();
-
             }.bind(this));
         },
 
@@ -2172,7 +2171,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         onCancel: reject
                     }
                 }).open();
-
             }.bind(this));
         },
 
