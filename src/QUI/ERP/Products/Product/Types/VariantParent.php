@@ -1070,6 +1070,10 @@ class VariantParent extends AbstractType
         $parentProductNo = $this->getFieldValue(FieldHandler::FIELD_PRODUCT_NO);
         $newNumber       = \count($this->getVariants()) + 1;
 
+        if (empty($parentProductNo)) {
+            $parentProductNo = $this->getId();
+        }
+
         $Variant->getField(FieldHandler::FIELD_PRODUCT_NO)->setValue(
             $parentProductNo.'-'.$newNumber
         );
