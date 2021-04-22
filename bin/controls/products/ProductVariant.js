@@ -120,54 +120,26 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             this.parent().then(function () {
                 return self.$checkProductParent();
             }).then(function () {
-                self.addCategory({
-                    name  : 'variants',
-                    text  : QUILocale.get(lg, 'panel.variants.category.title'),
-                    icon  : 'fa fa-info',
-                    events: {
-                        onClick: function () {
-                            self.Loader.show();
-                            self.openVariants().then(function () {
-                                if (self.$loaded) {
-                                    self.Loader.hide();
-                                }
-                            });
-                        }
-                    }
-                });
-
-                self.getCategoryBar().moveChildToPos(
-                    self.getCategory('variants'),
-                    2
-                );
-
-                var categories = self.getCategoryBar().getChildren();
-
-                var resetMinimize = function (Category) {
-                    if (Category.getAttribute('name') === 'variants') {
-                        return;
-                    }
-
-                    self.maximizeCategory();
-
-                    self.$SaveButton.show();
-                    self.$StatusButton.show();
-                    self.$CopyButton.show();
-                    self.$ActionSeparator.show();
-                    self.$CopyButton.show();
-                    self.$CloseButton.show();
-
-                    self.$BackToVariantList.hide();
-                    self.$VariantFields.hide();
-                    self.$CurrentVariant = null;
-
-                    self.getElm().removeClass('quiqqer-products-panel-show-variant');
-                    self.refresh();
-                };
-
-                for (var i = 0, len = categories.length; i < len; i++) {
-                    categories[i].addEvent('onClick', resetMinimize);
-                }
+                // self.addCategory({
+                //     name  : 'variants',
+                //     text  : QUILocale.get(lg, 'panel.variants.category.title'),
+                //     icon  : 'fa fa-info',
+                //     events: {
+                //         onClick: function () {
+                //             self.Loader.show();
+                //             self.openVariants().then(function () {
+                //                 if (self.$loaded) {
+                //                     self.Loader.hide();
+                //                 }
+                //             });
+                //         }
+                //     }
+                // });
+                //
+                // self.getCategoryBar().moveChildToPos(
+                //     self.getCategory('variants'),
+                //     2
+                // );
 
                 self.addButton({
                     name  : 'variantFields',
@@ -224,7 +196,76 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 return this.parent();
             }
 
-            this.$refreshStatusButton();
+            this.$refreshStatusButton().catch(function (err) {
+                console.error(err);
+            });
+        },
+
+        /**
+         * Create panel categories
+         *
+         * @param {Object} fields
+         * @param {Object} fieldtypes - list of the fieldtypes data
+         */
+        $createCategories: function (fields, fieldtypes) {
+            var self = this;
+
+            this.parent(fields, fieldtypes);
+
+            this.addCategory({
+                name  : 'variants',
+                text  : QUILocale.get(lg, 'panel.variants.category.title'),
+                icon  : 'fa fa-info',
+                events: {
+                    onClick: function () {
+                        self.Loader.show();
+                        self.openVariants().then(function () {
+                            if (self.$loaded) {
+                                self.Loader.hide();
+                            }
+                        });
+                    }
+                }
+            });
+
+            this.getCategoryBar().moveChildToPos(
+                this.getCategory('variants'),
+                2
+            );
+
+            var categories = this.getCategoryBar().getChildren();
+
+            var resetMinimize = function (Category) {
+                if (Category.getAttribute('name') === 'variants') {
+                    return;
+                }
+
+                self.maximizeCategory();
+
+                self.$SaveButton.show();
+                self.$StatusButton.show();
+                self.$CopyButton.show();
+                self.$ActionSeparator.show();
+                self.$CopyButton.show();
+                self.$CloseButton.show();
+
+                if (self.$BackToVariantList) {
+                    self.$BackToVariantList.hide();
+                }
+
+                if (self.$VariantFields) {
+                    self.$VariantFields.hide();
+                }
+
+                self.$CurrentVariant = null;
+
+                self.getElm().removeClass('quiqqer-products-panel-show-variant');
+                self.refresh();
+            };
+
+            for (var i = 0, len = categories.length; i < len; i++) {
+                categories[i].addEvent('onClick', resetMinimize);
+            }
         },
 
         /**
@@ -317,7 +358,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 if (self.$loaded) {
                     self.Loader.hide();
                 }
-            }).catch(function () {
+            }).catch(function (err) {
+                console.error(err);
+
                 self.Loader.hide();
             });
         },
@@ -1187,6 +1230,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          */
         openVariantTab: function (Tab) {
             this.Loader.show();
+
+            if (!Tab) {
+                return;
+            }
 
             var name = Tab.getAttribute('name');
             var done = function () {

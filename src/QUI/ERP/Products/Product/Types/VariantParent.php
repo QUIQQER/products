@@ -423,6 +423,24 @@ class VariantParent extends AbstractType
      */
     public function addField(Field $Field)
     {
+        $fieldId = $Field->getId();
+
+        $Field->setUnassignedStatus(false);
+
+        $editableAttribute  = QUI\ERP\Products\Utils\Products::getEditableFieldIdsForProduct($this);
+        $inheritedAttribute = QUI\ERP\Products\Utils\Products::getInheritedFieldIdsForProduct($this);
+
+        if (!in_array($fieldId, $editableAttribute)) {
+            $editableAttribute[] = $fieldId;
+        }
+
+        if (!in_array($fieldId, $inheritedAttribute)) {
+            $inheritedAttribute[] = $fieldId;
+        }
+
+        $this->setAttribute('editableVariantFields', $editableAttribute);
+        $this->setAttribute('inheritedVariantFields', $inheritedAttribute);
+
         parent::addField($Field);
 
         $children = $this->getVariants();
@@ -1033,6 +1051,7 @@ class VariantParent extends AbstractType
                 $Variant->addField($Field);
 
                 try {
+                    $Variant->getField($field)->setUnassignedStatus(false);
                     $Variant->getField($field)->setValue($value);
                 } catch (QUI\Exception $Exception) {
                     QUI\System\Log::addDebug($Exception->getMessage());
@@ -1043,12 +1062,17 @@ class VariantParent extends AbstractType
 
             if ($Field->getType() === FieldHandler::TYPE_ATTRIBUTE_LIST) {
                 $Variant->addField($Field);
+                $Variant->getField($field)->setUnassignedStatus(false);
             }
         }
 
         // set article no
         $parentProductNo = $this->getFieldValue(FieldHandler::FIELD_PRODUCT_NO);
         $newNumber       = \count($this->getVariants()) + 1;
+
+        if (empty($parentProductNo)) {
+            $parentProductNo = $this->getId();
+        }
 
         $Variant->getField(FieldHandler::FIELD_PRODUCT_NO)->setValue(
             $parentProductNo.'-'.$newNumber

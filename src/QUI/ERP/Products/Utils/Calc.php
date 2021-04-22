@@ -745,10 +745,12 @@ class Calc
                 $vCalc = $Vat->getValue() / 100 + 1;
                 $netto = $PriceFactor->getValue();
 
-                $bruttoDisplay = \round($netto * $vCalc, $Currency->getPrecision());
-                $bruttoDisplay = $Currency->format($bruttoDisplay);
+                if ($PriceFactor->getCalculation() !== QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE) {
+                    $bruttoDisplay = \round($netto * $vCalc, $Currency->getPrecision());
+                    $bruttoDisplay = $Currency->format($bruttoDisplay);
 
-                $PriceFactor->setValueText($bruttoDisplay);
+                    $PriceFactor->setValueText($bruttoDisplay);
+                }
             }
         }
 

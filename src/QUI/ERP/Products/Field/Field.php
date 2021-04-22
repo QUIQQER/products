@@ -44,6 +44,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     protected $require = false;
 
     /**
+     * unassigned = feld ist dem produkt nicht zugewiesen aber die daten soll das produkt trotzdem behalten
+     * unassigned ist also ein nicht zugewiesenes feld welches das produkt als daten trotzdem hat
+     *
      * @var bool
      */
     protected $unassigned = false;

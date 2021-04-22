@@ -74,24 +74,38 @@ class VariantChild extends AbstractType
         $fields = $Parent->getFields();
 
         foreach ($fields as $Field) {
-            if (!isset($inheritedFields[$Field->getId()])) {
+            $fieldId = $Field->getId();
+
+            if (!isset($inheritedFields[$fieldId])) {
                 continue;
             }
 
+
             try {
-                if (!$this->getField($Field->getId())->isEmpty()) {
+                $Field = $this->getField($fieldId);
+                $Field->setUnassignedStatus(false);
+
+                if ($Field->isOwnField()) {
+                    $Field->setOwnFieldStatus(true);
+                }
+
+                if (!$Field->isEmpty()) {
                     continue;
                 }
             } catch (QUI\Exception $Exception) {
                 $this->addField($Field);
+
+                $Field = $this->getField($fieldId);
+                $Field->setUnassignedStatus(false);
+
+                if ($Field->isOwnField()) {
+                    $Field->setOwnFieldStatus(true);
+                }
+
                 continue;
             }
 
-            if (!$this->getField($Field->getId())->isEmpty()) {
-                continue;
-            }
-
-            $this->getField($Field->getId())->setValue($Field->getValue());
+            $Field->setValue($Field->getValue());
         }
     }
 
