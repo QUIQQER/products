@@ -1269,62 +1269,101 @@ class EventHandling
     }
 
     /**
+     * @param $group
+     * @param $var
+     * @param $packageName
+     * @param $data
+     */
+    public function onQuiqqerTranslatorEdit(
+        $group,
+        $var,
+        $packageName,
+        $data
+    ) {
+        if ($group !== 'quiqqer/products') {
+            return;
+        }
+
+        if (\strpos($var, 'products.category.') === false) {
+            return;
+        }
+
+        $catId = \str_replace('products.category.', '', $var);
+        $catId = \str_replace('.title', '', $catId);
+        $catId = \str_replace('.description', '', $catId);
+
+        if (!\is_numeric($catId)) {
+            return;
+        }
+
+        try {
+            $catId            = (int)$catId;
+            $categoryTable    = QUI\ERP\Products\Utils\Tables::getCategoryTableName();
+            $translationTable = QUI\Translator::table();
+
+            $title = '';
+            $desc  = '';
+
+            // title
+            $titleResult = QUI::getDataBase()->fetch([
+                'from'  => $translationTable,
+                'where' => [
+                    'groups' => 'quiqqer/products',
+                    'var'    => 'products.category.'.$catId.'.title'
+                ],
+                'limit' => 1
+            ]);
+
+            if (isset($titleResult[0])) {
+                $title = \json_encode($titleResult[0]);
+            }
+
+            // desc
+            $descResult = QUI::getDataBase()->fetch([
+                'from'  => $translationTable,
+                'where' => [
+                    'groups' => 'quiqqer/products',
+                    'var'    => 'products.category.'.$catId.'.description'
+                ],
+                'limit' => 1
+            ]);
+
+            if (isset($descResult[0])) {
+                $desc = \json_encode($descResult[0]);
+            }
+
+            QUI::getDataBase()->update($categoryTable, [
+                'title_cache'       => $title,
+                'description_cache' => $desc
+            ], [
+                'id' => $catId
+            ]);
+        } catch (\QUI\Exception $Exception) {
+            QUI::getMessagesHandler()->addError($Exception->getMessage());
+        }
+    }
+
+    /**
+     * event: on quiqqer translator edit by id
+     *
+     * @param $id
+     * @param $data
+     */
+    public function onQuiqqerTranslatorEditById($id, $data)
+    {
+        $group   = $data['groups'];
+        $var     = $data['var'];
+        $package = $data['package'];
+
+        self::onQuiqqerTranslatorEdit($group, $var, $package, $data);
+    }
+
+    /**
      * Update category title & description locale
      *
-     * @throws QUI\Database\Exception
+     * @deprecated replaced by onQuiqqerTranslatorEditById & onQuiqqerTranslatorEdit
      */
     public static function onQuiqqerTranslatorPublish()
     {
-        $categoryTable    = QUI\ERP\Products\Utils\Tables::getCategoryTableName();
-        $translationTable = QUI\Translator::table();
-
-        $catIds = QUI::getDataBase()->fetch([
-            'select' => 'id',
-            'from'   => $categoryTable
-        ]);
-
-        foreach ($catIds as $catId) {
-            try {
-                $title = '';
-                $desc  = '';
-
-                // title
-                $titleResult = QUI::getDataBase()->fetch([
-                    'from'  => $translationTable,
-                    'where' => [
-                        'groups' => 'quiqqer/products',
-                        'var'    => 'products.category.'.$catId['id'].'.title'
-                    ],
-                    'limit' => 1
-                ]);
-
-                if (isset($titleResult[0])) {
-                    $title = \json_encode($titleResult[0]);
-                }
-
-                // desc
-                $descResult = QUI::getDataBase()->fetch([
-                    'from'  => $translationTable,
-                    'where' => [
-                        'groups' => 'quiqqer/products',
-                        'var'    => 'products.category.'.$catId['id'].'.description'
-                    ],
-                    'limit' => 1
-                ]);
-
-                if (isset($descResult[0])) {
-                    $desc = \json_encode($descResult[0]);
-                }
-
-                QUI::getDataBase()->update($categoryTable, [
-                    'title_cache'       => $title,
-                    'description_cache' => $desc
-                ], [
-                    'id' => $catId['id']
-                ]);
-            } catch (\Exception $Exception) {
-                QUI\System\Log::addError($Exception->getMessage());
-            }
-        }
     }
 }
