@@ -63,14 +63,12 @@
 
 .product-update .field-container-item {
     width: 140px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .product-update .field-container-item:first-child {
     font-size: 12px;
-    line-height: 30px;
+    /*line-height: 30px;*/
+    min-height: 30px;
 }
 
 .product-data-id {
