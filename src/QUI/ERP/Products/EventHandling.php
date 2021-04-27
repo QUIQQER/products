@@ -1274,7 +1274,7 @@ class EventHandling
      * @param $packageName
      * @param $data
      */
-    public function onQuiqqerTranslatorEdit(
+    public static function onQuiqqerTranslatorEdit(
         $group,
         $var,
         $packageName,
@@ -1349,7 +1349,7 @@ class EventHandling
      * @param $id
      * @param $data
      */
-    public function onQuiqqerTranslatorEditById($id, $data)
+    public static function onQuiqqerTranslatorEditById($id, $data)
     {
         $group   = $data['groups'];
         $var     = $data['var'];
