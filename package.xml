@@ -32,6 +32,5 @@
             <productType src="\QUI\ERP\Products\Product\Types\VariantChild"/>
             <productType src="\QUI\ERP\Products\Product\Types\VariantParent"/>
         </provider>
-
     </package>
 </quiqqer>
