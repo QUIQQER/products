@@ -294,7 +294,19 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
      */
     public function validate($value)
     {
-        if (empty($value)) {
+        if (empty($value) && $value != '0') {
+            if ($this->isRequired()) {
+                throw new QUI\ERP\Products\Field\ExceptionRequired([
+                    'quiqqer/products',
+                    'exception.field.is.invalid',
+                    [
+                        'fieldId'    => $this->getId(),
+                        'fieldtitle' => $this->getTitle(),
+                        'fieldType'  => $this->getType()
+                    ]
+                ]);
+            }
+
             return;
         }
 

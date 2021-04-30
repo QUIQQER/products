@@ -22,6 +22,7 @@
                 </conf>
                 <conf name="usePermissions">
                     <type><![CDATA[integer]]></type>
+                    <defaultvalue>0</defaultvalue>
                 </conf>
                 <conf name="categoryShowFilterLeft">
                     <type><![CDATA[bool]]></type>
