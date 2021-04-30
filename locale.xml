@@ -401,8 +401,14 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
             <en><![CDATA[Required field]]></en>
         </locale>
         <locale name="requiredFieldDesc">
-            <de><![CDATA[Dieses Feld muss beim Anlegen eines Produktes ausgefüllt werden.]]></de>
-            <en><![CDATA[This field must be filled out to create a new product.]]></en>
+            <de><![CDATA[
+            Ist dieses Feld ein Standardfeld muss dieses beim Anlegen eines Produktes ausgefüllt werden.
+            Ist dieses Feld ein Custom-Feld muss dieses Feld im Frontend (Shop) ausgefüllt werden. (Siehe Dokumentation)
+            ]]></de>
+            <en><![CDATA[
+            If this field is a standard field, it must be filled in when creating a product.
+            If this field is a custom field, it must be filled in in the frontend (shop). (See documentation)
+            ]]></en>
         </locale>
         <locale name="publicField">
             <de><![CDATA[Öffentliches Feld]]></de>

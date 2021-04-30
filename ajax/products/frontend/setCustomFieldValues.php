@@ -25,6 +25,8 @@ QUI::$Ajax->registerFunction(
                 $Field->setValue($value);
 
                 $result[$Field->getId()] = $Field->getValue();
+            } catch (QUI\ERP\Products\Field\ExceptionRequired $Exception) {
+                throw $Exception;
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeDebugException($Exception);
             }

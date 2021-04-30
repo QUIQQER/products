@@ -206,6 +206,8 @@ class Model extends QUI\QDOM
 
             try {
                 $Field->setValue($field['value']);
+//            } catch (QUI\ERP\Products\Field\ExceptionRequired $Exception) {
+//                throw $Exception;
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);
             }
