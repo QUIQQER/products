@@ -381,12 +381,15 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                             })
                         );
 
+                        QUI.Controls.getById(required[i].get('data-quiid')).open();
+
+
                         return Promise.reject('Please fill out all fields correctly');
                     }
                 }
             }
 
-            
+
             var category     = Form.getElement('[name="product-category"]').value;
             var productType  = '\\QUI\\ERP\\Products\\Product\\Types\\Product';
             var productTypes = Form.getElements('[name="productType"]').filter(function (Input) {
