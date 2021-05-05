@@ -54,6 +54,9 @@ class VariantChild extends AbstractType
         $inheritedFields = QUI\ERP\Products\Utils\Products::getInheritedFieldIdsForProduct($this);
         $inheritedFields = \array_flip($inheritedFields);
 
+        $editableFields = QUI\ERP\Products\Utils\Products::getEditableFieldIdsForProduct($this);
+        $editableFields = \array_flip($editableFields);
+
         $Parent = $this->getParent();
 
         if (empty($Parent)) {
@@ -87,6 +90,17 @@ class VariantChild extends AbstractType
 
                 if ($Field->isOwnField()) {
                     $Field->setOwnFieldStatus(true);
+                }
+
+                // not editable, than use parent value
+                if (!isset($editableFields[$fieldId]) && $Field->isEmpty()) {
+                    try {
+                        $Field->setValue(
+                            $Parent->getField($fieldId)->getValue()
+                        );
+                    } catch (QUI\Exception $Exception) {
+                        QUI\System\Log::addDebug($Exception->getMessage());
+                    }
                 }
 
                 if (!$Field->isEmpty()) {
