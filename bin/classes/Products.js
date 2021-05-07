@@ -312,7 +312,7 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
-         * Delete multible products
+         * Delete multiple products
          *
          * @param {Array} productIds - array of Product-IDs
          * @returns {Promise}
@@ -345,6 +345,38 @@ define('package/quiqqer/products/bin/classes/Products', [
                     categories: JSON.encode(categories),
                     categoryId: categoryId,
                     fields    : JSON.encode(fields)
+                });
+            });
+        },
+
+        /**
+         * Activate multiple products
+         *
+         * @param {Array} productIds - array of Product-IDs
+         * @returns {Promise}
+         */
+        activateChildren: function (productIds) {
+            return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_products_activate', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    productId: JSON.encode(productIds)
+                });
+            });
+        },
+
+        /**
+         * Deactivate multiple products
+         *
+         * @param {Array} productIds - array of Product-IDs
+         * @returns {Promise}
+         */
+        deactivateChildren: function (productIds) {
+            return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_products_deactivate', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject,
+                    productId: JSON.encode(productIds)
                 });
             });
         },

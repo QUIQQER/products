@@ -11,6 +11,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
     'qui/controls/buttons/Button',
     'qui/controls/buttons/ButtonMultiple',
     'qui/controls/windows/Confirm',
+    'qui/controls/contextmenu/Separator',
     'controls/grid/Grid',
     'Locale',
     'package/quiqqer/products/bin/Products',
@@ -20,7 +21,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
     'css!package/quiqqer/products/bin/controls/products/Panel.css'
 
-], function (QUI, QUIPanel, QUIButton, QUIButtonMultiple, QUIConfirm, Grid, QUILocale,
+], function (QUI, QUIPanel, QUIButton, QUIButtonMultiple, QUIConfirm, QUIMenuSeparator, Grid, QUILocale,
              Products, CreateProduct, ProductPanel, Search) {
     "use strict";
 
@@ -71,11 +72,34 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
         refresh: function () {
             this.parent();
 
-            var Delete = this.getButtons('delete'),
-                Edit   = this.getButtons('edit');
+            var Action   = this.getButtons('actions'),
+                children = Action.getChildren();
 
-            Delete.enable();
-            Edit.enable();
+            var Delete = children.filter(function (Btn) {
+                return Btn.getAttribute('name') === 'delete';
+            })[0];
+
+            var Edit = children.filter(function (Btn) {
+                return Btn.getAttribute('name') === 'edit';
+            })[0];
+
+            var Copy = children.filter(function (Btn) {
+                return Btn.getAttribute('name') === 'copy';
+            })[0];
+
+            var Activate = children.filter(function (Btn) {
+                return Btn.getAttribute('name') === 'activate';
+            })[0];
+
+            var Deactivate = children.filter(function (Btn) {
+                return Btn.getAttribute('name') === 'deactivate';
+            })[0];
+
+            Delete.disable();
+            Copy.disable();
+            Edit.disable();
+            Activate.disable();
+            Deactivate.disable();
 
             return this.$Search.search();
         },
@@ -100,7 +124,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             // buttons
             this.$ButtonAdd = new QUIButton({
                 name     : 'add',
-                text     : QUILocale.get('quiqqer/system', 'add'),
+                text     : QUILocale.get('quiqqer/quiqqer', 'add'),
                 textimage: 'fa fa-plus',
                 events   : {
                     onClick: this.createChild
@@ -109,12 +133,22 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             this.addButton(this.$ButtonAdd);
 
-            this.addButton({
-                name     : 'edit',
-                text     : QUILocale.get('quiqqer/system', 'edit'),
-                textimage: 'fa fa-edit',
-                disabled : true,
-                events   : {
+            // aktionen
+            var Actions = new QUIButton({
+                name      : 'actions',
+                text      : QUILocale.get(lg, 'btn.actions'),
+                menuCorner: 'topRight',
+                styles    : {
+                    'float': 'right'
+                }
+            });
+
+            Actions.appendChild({
+                name    : 'edit',
+                text    : QUILocale.get('quiqqer/quiqqer', 'edit'),
+                icon    : 'fa fa-edit',
+                disabled: true,
+                events  : {
                     onClick: function () {
                         self.updateChild(
                             self.$Search.getSelected()[0]
@@ -123,12 +157,12 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 }
             });
 
-            this.addButton({
-                name     : 'copy',
-                text     : QUILocale.get('quiqqer/system', 'copy'),
-                textimage: 'fa fa-copy',
-                disabled : true,
-                events   : {
+            Actions.appendChild({
+                name    : 'copy',
+                text    : QUILocale.get('quiqqer/quiqqer', 'copy'),
+                icon    : 'fa fa-copy',
+                disabled: true,
+                events  : {
                     onClick: function () {
                         self.copyChild(
                             self.$Search.getSelected()[0]
@@ -137,16 +171,44 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 }
             });
 
-            this.addButton({
-                type: 'separator'
+            Actions.appendChild(
+                new QUIMenuSeparator()
+            );
+
+            Actions.appendChild({
+                name    : 'activate',
+                text    : QUILocale.get('quiqqer/quiqqer', 'activate'),
+                icon    : 'fa fa-check',
+                disabled: true,
+                events  : {
+                    onClick: function () {
+                        self.activateChildren();
+                    }
+                }
             });
 
-            this.addButton({
-                name     : 'delete',
-                text     : QUILocale.get('quiqqer/system', 'delete'),
-                textimage: 'fa fa-trash',
-                disabled : true,
-                events   : {
+            Actions.appendChild({
+                name    : 'deactivate',
+                text    : QUILocale.get('quiqqer/quiqqer', 'deactivate'),
+                icon    : 'fa fa-remove',
+                disabled: true,
+                events  : {
+                    onClick: function () {
+                        self.deactivateChildren();
+                    }
+                }
+            });
+
+            Actions.appendChild(
+                new QUIMenuSeparator()
+            );
+
+            Actions.appendChild({
+                name    : 'delete',
+                text    : QUILocale.get('quiqqer/quiqqer', 'delete'),
+                icon    : 'fa fa-trash',
+                disabled: true,
+                events  : {
                     onClick: function (Btn) {
                         Btn.setAttribute('textimage', 'fa fa-spinner fa-spin');
 
@@ -156,10 +218,14 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                             }
 
                             console.error(Exception);
+                        }).then(function () {
+                            Btn.setAttribute('textimage', 'fa fa-trashcan');
                         });
                     }
                 }
             });
+
+            this.getButtonBar().appendChild(Actions);
 
             this.getButtonBar().appendChild(
                 new Element('button', {
@@ -189,7 +255,9 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                     keyup: function (e) {
                         e.stop();
 
-                        this.getContent().getElements('[name="search"]').set('value', this.$SearchInput.value);
+                        this.getContent()
+                            .getElements('[name="search"]')
+                            .set('value', this.$SearchInput.value);
 
                         if (e.key === 'enter') {
                             this.$Search.search();
@@ -211,13 +279,42 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 injectShow: false,
                 events    : {
                     onClick: function () {
-                        var Delete = self.getButtons('delete'),
-                            Edit   = self.getButtons('edit'),
-                            Copy   = self.getButtons('copy');
+                        var Action   = self.getButtons('actions'),
+                            children = Action.getChildren();
 
-                        Copy.enable();
+                        var selected = self.$Search.getSelected();
+
+                        var Edit = children.filter(function (Btn) {
+                            return Btn.getAttribute('name') === 'edit';
+                        })[0];
+
+                        var Copy = children.filter(function (Btn) {
+                            return Btn.getAttribute('name') === 'copy';
+                        })[0];
+
+                        var Delete = children.filter(function (Btn) {
+                            return Btn.getAttribute('name') === 'delete';
+                        })[0];
+
+                        var Activate = children.filter(function (Btn) {
+                            return Btn.getAttribute('name') === 'activate';
+                        })[0];
+
+                        var Deactivate = children.filter(function (Btn) {
+                            return Btn.getAttribute('name') === 'deactivate';
+                        })[0];
+
                         Delete.enable();
-                        Edit.enable();
+                        Activate.enable();
+                        Deactivate.enable();
+
+                        if (selected.length === 1) {
+                            Copy.enable();
+                            Edit.enable();
+                        } else {
+                            Copy.disable();
+                            Edit.disable();
+                        }
                     },
 
                     onDblClick: function () {
@@ -225,13 +322,34 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                     },
 
                     onSearchBegin: function () {
-                        var Delete = self.getButtons('delete'),
-                            Edit   = self.getButtons('edit'),
-                            Copy   = self.getButtons('copy');
+                        var Action   = self.getButtons('actions'),
+                            children = Action.getChildren();
 
-                        Delete.disable();
-                        Edit.disable();
+                        var Delete = children.filter(function (Btn) {
+                            return Btn.getAttribute('name') === 'delete';
+                        })[0];
+
+                        var Edit = children.filter(function (Btn) {
+                            return Btn.getAttribute('name') === 'edit';
+                        })[0];
+
+                        var Copy = children.filter(function (Btn) {
+                            return Btn.getAttribute('name') === 'copy';
+                        })[0];
+
+                        var Activate = children.filter(function (Btn) {
+                            return Btn.getAttribute('name') === 'activate';
+                        })[0];
+
+                        var Deactivate = children.filter(function (Btn) {
+                            return Btn.getAttribute('name') === 'deactivate';
+                        })[0];
+
                         Copy.disable();
+                        Edit.disable();
+                        Delete.disable();
+                        Activate.disable();
+                        Deactivate.disable();
 
                         self.Loader.show();
                     },
@@ -261,10 +379,8 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
         /**
          * Opens the create child dialog
-         *
-         * @param {String} [productType] - Product Type
          */
-        createChild: function (productType) {
+        createChild: function () {
             var self = this;
 
             this.Loader.show();
@@ -299,6 +415,40 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
         },
 
         /**
+         * Activate all marked products
+         */
+        activateChildren: function () {
+            this.Loader.show();
+
+            Products.activateChildren(
+                this.$Search.getSelected()
+            ).then(function () {
+                this.Loader.hide();
+                this.refresh();
+            }.bind(this)).catch(function () {
+                this.Loader.hide();
+                this.refresh();
+            }.bind(this));
+        },
+
+        /**
+         * Deactivate all marked products
+         */
+        deactivateChildren: function () {
+            this.Loader.show();
+
+            Products.deactivateChildren(
+                this.$Search.getSelected()
+            ).then(function () {
+                this.Loader.hide();
+                this.refresh();
+            }.bind(this)).catch(function () {
+                this.Loader.hide();
+                this.refresh();
+            }.bind(this));
+        },
+
+        /**
          * Opens the product panel
          *
          * @param {Number} productId
@@ -311,6 +461,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             Products.copy(productId).then(function (newProductId) {
                 Products.openProduct(newProductId).then(function () {
                     self.Loader.hide();
+                    self.refresh();
                 });
             });
         },
