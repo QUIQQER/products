@@ -566,11 +566,14 @@ class Products
     public static function copyProduct($productId)
     {
         $Product = self::getProduct($productId);
+        $fields  = $Product->getFields();
 
-        $New = self::createProduct(
-            $Product->getCategories(),
-            $Product->getFields()
-        );
+        // filter url quiqqer/products#301
+        $fields = array_filter($fields, function ($Field) {
+            return $Field->getId() !== Fields::FIELD_URL;
+        });
+
+        $New = self::createProduct($Product->getCategories(), $fields);
 
         $New->setPermissions($Product->getPermissions());
         $New->setMainCategory($Product->getCategory());

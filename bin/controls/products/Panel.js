@@ -124,6 +124,20 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             });
 
             this.addButton({
+                name     : 'copy',
+                text     : QUILocale.get('quiqqer/system', 'copy'),
+                textimage: 'fa fa-copy',
+                disabled : true,
+                events   : {
+                    onClick: function () {
+                        self.copyChild(
+                            self.$Search.getSelected()[0]
+                        );
+                    }
+                }
+            });
+
+            this.addButton({
                 type: 'separator'
             });
 
@@ -198,8 +212,10 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 events    : {
                     onClick: function () {
                         var Delete = self.getButtons('delete'),
-                            Edit   = self.getButtons('edit');
+                            Edit   = self.getButtons('edit'),
+                            Copy   = self.getButtons('copy');
 
+                        Copy.enable();
                         Delete.enable();
                         Edit.enable();
                     },
@@ -210,10 +226,12 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
                     onSearchBegin: function () {
                         var Delete = self.getButtons('delete'),
-                            Edit   = self.getButtons('edit');
+                            Edit   = self.getButtons('edit'),
+                            Copy   = self.getButtons('copy');
 
                         Delete.disable();
                         Edit.disable();
+                        Copy.disable();
 
                         self.Loader.show();
                     },
@@ -278,6 +296,23 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             Products.openProduct(productId).then(function () {
                 this.Loader.hide();
             }.bind(this));
+        },
+
+        /**
+         * Opens the product panel
+         *
+         * @param {Number} productId
+         */
+        copyChild: function (productId) {
+            this.Loader.show();
+
+            var self = this;
+
+            Products.copy(productId).then(function (newProductId) {
+                Products.openProduct(newProductId).then(function () {
+                    self.Loader.hide();
+                });
+            });
         },
 
         /**
@@ -348,9 +383,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                     }).open();
 
                     resolve();
-
                 }, reject);
-
             });
         }
     });
