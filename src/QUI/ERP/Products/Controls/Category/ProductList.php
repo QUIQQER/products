@@ -81,13 +81,13 @@ class ProductList extends QUI\Control
             'hidePrice'            => QUI\ERP\Products\Utils\Package::hidePrice(),
         ]);
 
-        $this->addCSSFile(\dirname(__FILE__) . '/ProductList.css');
-        $this->addCSSFile(\dirname(__FILE__) . '/ProductListGallery.css');
-        $this->addCSSFile(\dirname(__FILE__) . '/ProductListDetails.css');
-        $this->addCSSFile(\dirname(__FILE__) . '/ProductListList.css');
+        $this->addCSSFile(\dirname(__FILE__).'/ProductList.css');
+        $this->addCSSFile(\dirname(__FILE__).'/ProductListGallery.css');
+        $this->addCSSFile(\dirname(__FILE__).'/ProductListDetails.css');
+        $this->addCSSFile(\dirname(__FILE__).'/ProductListList.css');
 
-        $this->addCSSFile(\dirname(__FILE__) . '/ProductListCategoryGallery.css');
-        $this->addCSSFile(\dirname(__FILE__) . '/ProductListCategoryList.css');
+        $this->addCSSFile(\dirname(__FILE__).'/ProductListCategoryGallery.css');
+        $this->addCSSFile(\dirname(__FILE__).'/ProductListCategoryList.css');
 
         $this->id = \uniqid();
 
@@ -100,7 +100,7 @@ class ProductList extends QUI\Control
      * @throws QUI\Exception
      * @see \QUI\Control::create()
      */
-    public function getBody()
+    public function getBody(): string
     {
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
@@ -181,12 +181,12 @@ class ProductList extends QUI\Control
         // category view
         switch ($this->getAttribute('categoryView')) {
             case 'list':
-                $categoryFile = \dirname(__FILE__) . '/ProductListCategoryList.html';
+                $categoryFile = \dirname(__FILE__).'/ProductListCategoryList.html';
                 break;
 
             default:
             case 'gallery':
-                $categoryFile = \dirname(__FILE__) . '/ProductListCategoryGallery.html';
+                $categoryFile = \dirname(__FILE__).'/ProductListCategoryGallery.html';
                 break;
         }
 
@@ -221,7 +221,7 @@ class ProductList extends QUI\Control
             && isset($searchParams['sortBy'])
             && isset($searchParams['sortOn'])
         ) {
-            $sort = $searchParams['sortOn'] . ' ' . $searchParams['sortBy'];
+            $sort = $searchParams['sortOn'].' '.$searchParams['sortBy'];
 
             $this->setAttribute('data-sort', \htmlspecialchars($sort));
         }
@@ -261,7 +261,7 @@ class ProductList extends QUI\Control
             'categoryStartNumber' => $this->getAttribute('categoryStartNumber')
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ProductList.html');
+        return $Engine->fetch(\dirname(__FILE__).'/ProductList.html');
     }
 
     /**
@@ -271,7 +271,7 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    public function createFilter()
+    public function createFilter(): string
     {
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
@@ -287,7 +287,7 @@ class ProductList extends QUI\Control
             'cid'    => $this->id,
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ProductList.Filter.html');
+        return $Engine->fetch(\dirname(__FILE__).'/ProductList.Filter.html');
     }
 
     /**
@@ -297,7 +297,7 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    public function getFilter()
+    public function getFilter(): ?array
     {
         if (!\is_null($this->filter)) {
             return $this->filter;
@@ -351,12 +351,10 @@ class ProductList extends QUI\Control
             $priorityB = 0;
 
             if (!\is_array($EntryA) && \get_class($EntryA) === QUI\Tags\Groups\Group::class) {
-                /* @var QUI\Tags\Groups\Group $EntryA */
                 $priorityA = $EntryA->getPriority();
             }
 
             if (!\is_array($EntryB) && \get_class($EntryB) === QUI\Tags\Groups\Group::class) {
-                /* @var QUI\Tags\Groups\Group $EntryB */
                 $priorityB = $EntryB->getPriority();
             }
 
@@ -398,7 +396,7 @@ class ProductList extends QUI\Control
      * @param string $title
      * @param string $value
      */
-    public function addSort($title, $value)
+    public function addSort(string $title, string $value)
     {
         $this->sort[] = [
             'title' => $title,
@@ -414,7 +412,7 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    public function getStart($count = false)
+    public function getStart($count = false): array
     {
         return $this->renderData(1, $this->getMax(), $count);
     }
@@ -428,7 +426,7 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    public function getNext($start = false, $count = false)
+    public function getNext($start = false, $count = false): array
     {
         return $this->renderData($start, $this->getMax(), $count);
     }
@@ -460,22 +458,22 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    protected function renderData($start, $max, $count = false)
+    protected function renderData($start, $max, $count = false): array
     {
         $Engine = QUI::getTemplateManager()->getEngine();
 
         switch ($this->getAttribute('view')) {
             case 'list':
-                $productTpl = \dirname(__FILE__) . '/ProductListList.html';
+                $productTpl = \dirname(__FILE__).'/ProductListList.html';
                 break;
 
             case 'detail':
-                $productTpl = \dirname(__FILE__) . '/ProductListDetails.html';
+                $productTpl = \dirname(__FILE__).'/ProductListDetails.html';
                 break;
 
             default:
             case 'gallery':
-                $productTpl = \dirname(__FILE__) . '/ProductListGallery.html';
+                $productTpl = \dirname(__FILE__).'/ProductListGallery.html';
                 break;
         }
 
@@ -529,7 +527,7 @@ class ProductList extends QUI\Control
         ]);
 
         return [
-            'html'  => $Engine->fetch(\dirname(__FILE__) . '/ProductListRow.html'),
+            'html'  => $Engine->fetch(\dirname(__FILE__).'/ProductListRow.html'),
             'count' => $count,
             'more'  => $more
         ];
@@ -543,7 +541,7 @@ class ProductList extends QUI\Control
      * @return string
      * @throws QUI\Exception
      */
-    public function renderProduct(QUI\ERP\Products\Product\Product $Product, $productTpl)
+    public function renderProduct(QUI\ERP\Products\Product\Product $Product, string $productTpl): string
     {
         $Engine = QUI::getTemplateManager()->getEngine();
 
@@ -563,8 +561,9 @@ class ProductList extends QUI\Control
      * @param QUI\ERP\Products\Product\ViewFrontend $Product
      * @return QUI\ERP\Products\Controls\Price|null
      */
-    public function getProductOldPriceDisplay(QUI\ERP\Products\Product\ViewFrontend $Product)
-    {
+    public function getProductOldPriceDisplay(
+        QUI\ERP\Products\Product\ViewFrontend $Product
+    ): ?QUI\ERP\Products\Controls\Price {
         try {
             $OldPrice = null;
             $Price    = $Product->getPrice();
@@ -604,7 +603,7 @@ class ProductList extends QUI\Control
      * @return string
      * @throws QUI\Exception
      */
-    public function renderCategories(array $categories, $categoryTpl)
+    public function renderCategories(array $categories, string $categoryTpl): string
     {
         $Engine = QUI::getTemplateManager()->getEngine();
 
@@ -626,7 +625,7 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    protected function getSearchParams($start = 0, $max = false)
+    protected function getSearchParams(int $start = 0, $max = false)
     {
         $searchParams = $this->getAttribute('searchParams');
 
@@ -685,7 +684,7 @@ class ProductList extends QUI\Control
      *
      * @return int
      */
-    protected function getMax()
+    protected function getMax(): int
     {
         // settings
         if ($this->getAttribute('productLoadNumber')) {

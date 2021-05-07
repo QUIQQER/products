@@ -75,6 +75,10 @@ define('package/quiqqer/products/bin/controls/products/Create', [
 
             var ProductCategory = Elm.getElement('[name="product-category"]');
 
+            Elm.getElement('form').addEvent('submit', function (e) {
+                e.stop();
+            });
+
             this.$Categories = new CategoriesSelect({
                 events: {
                     onDelete: function (Select, Item) {
@@ -229,7 +233,8 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                         html          : Mustache.render(templateField, {
                             fieldTitle: QUILocale.get(lg, 'products.field.' + field.id + '.title'),
                             fieldName : 'field-' + field.id,
-                            control   : field.jsControl
+                            control   : field.jsControl,
+                            required  : field.isRequired ? 1 : 0
                         }),
                         'data-fieldid': field.id
                     }).inject(StandardFields);
@@ -248,7 +253,8 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                         html          : Mustache.render(templateField, {
                             fieldTitle: QUILocale.get(lg, 'products.field.' + field.id + '.title'),
                             fieldName : 'field-' + field.id,
-                            control   : field.jsControl
+                            control   : field.jsControl,
+                            required  : field.isRequired ? 1 : 0
                         }),
                         'data-fieldid': field.id
                     }).inject(Data);
@@ -326,6 +332,63 @@ define('package/quiqqer/products/bin/controls/products/Create', [
 
                 return Promise.reject('No categories');
             }
+
+            // check require
+            var l, name, value, Label;
+            var required = Form.getElements('[data-required="1"]');
+
+            var triggerMessage = function (Field, message) {
+                QUI.getMessageHandler().then(function (MH) {
+                    MH.addAttention(message, Field);
+                });
+            };
+
+            for (var i = 0, len = required.length; i < len; i++) {
+                name  = required[i].get('name');
+                value = required[i].value;
+
+                if (required[i].get('data-qui').indexOf('MultiLang') === -1) {
+                    if (value === '') {
+                        Label = required[i].getParent('label');
+
+                        triggerMessage(
+                            required[i],
+                            QUILocale.get(lg, 'exception.field.is.invalid', {
+                                fieldtitle: Label.getElement('.field-container-item').get('text').trim()
+                            })
+                        );
+                        return Promise.reject('Please fill out all fields correctly');
+                    }
+
+                    continue;
+                }
+
+                // if json field
+                try {
+                    value = JSON.decode(value);
+                } catch (e) {
+                    continue;
+                }
+
+                for (l in value) {
+                    if (value.hasOwnProperty(l) && value[l] === '') {
+                        Label = required[i].getParent('label');
+
+                        triggerMessage(
+                            Label.getElement('.quiqqer-inputmultilang-entry input'),
+                            QUILocale.get(lg, 'exception.field.is.invalid', {
+                                fieldtitle: Label.getElement('.field-container-item').get('text').trim()
+                            })
+                        );
+
+                        QUI.Controls.getById(required[i].get('data-quiid')).open();
+
+
+                        return Promise.reject('Please fill out all fields correctly');
+                    }
+                }
+            }
+
 
             var category     = Form.getElement('[name="product-category"]').value;
             var productType  = '\\QUI\\ERP\\Products\\Product\\Types\\Product';

@@ -416,6 +416,7 @@ class Products
      * @param array $fields - optional, list of fields (Field, Field, Field)
      * @param string $productType - optional, product type
      * @param integer|null $parent - optional, parent product
+     * @param bool $validation - optional, should a validation executed? (default=true)
      *
      * @return QUI\ERP\Products\Product\Product|VariantChild|VariantParent
      *
@@ -425,7 +426,8 @@ class Products
         $categories = [],
         $fields = [],
         $productType = '',
-        $parent = null
+        $parent = null,
+        $validation = true
     ) {
         QUI\Permissions\Permission::checkPermission('product.create');
 
@@ -496,7 +498,7 @@ class Products
             $value = $Field->getValue();
 
             if ($Field->isRequired()) {
-                if ($value === '') {
+                if ($value === '' && $validation) {
                     throw new QUI\Exception([
                         'quiqqer/products',
                         'exception.field.is.invalid',
@@ -507,7 +509,13 @@ class Products
                     ]);
                 }
 
-                $Field->validate($Field->getValue());
+                try {
+                    $Field->validate($Field->getValue());
+                } catch (QUI\Exception $Exception) {
+                    if ($validation) {
+                        throw $Exception;
+                    }
+                }
             }
 
             $fieldData[] = $Field->toProductArray();
@@ -566,10 +574,25 @@ class Products
     public static function copyProduct($productId)
     {
         $Product = self::getProduct($productId);
+        $fields  = $Product->getFields();
+
+        // filter url quiqqer/products#301
+        $fields = array_filter($fields, function ($Field) {
+            return $Field->getId() !== Fields::FIELD_URL;
+        });
+
+        $parent = null;
+
+        if ($Product instanceof VariantChild) {
+            $parent = $Product->getParent()->getId();
+        }
 
         $New = self::createProduct(
             $Product->getCategories(),
-            $Product->getFields()
+            $fields,
+            $Product->getType(),
+            $parent,
+            false
         );
 
         $New->setPermissions($Product->getPermissions());

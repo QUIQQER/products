@@ -45,6 +45,8 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             'openAddProductDialog',
             'openRemoveProductDialog',
             'save',
+            'addField',
+            'addFields',
             '$onCreate',
             '$onInject'
         ],
@@ -179,10 +181,11 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                                 'package/quiqqer/products/bin/controls/fields/search/Window'
                             ], function (Win) {
                                 new Win({
-                                    title : QUILocale.get(lg, 'category.update.window.addField.title'),
-                                    events: {
+                                    title   : QUILocale.get(lg, 'category.update.window.addField.title'),
+                                    multiple: true,
+                                    events  : {
                                         onSubmit: function (Win, value) {
-                                            self.addField(value[0]);
+                                            self.addFields(value);
                                         }
                                     }
                                 }).open();
@@ -825,9 +828,51 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
 
                     self.save().then(function () {
                         resolve();
-                        self.openRecursiveDialog();
+
+                        self.openRecursiveDialog().catch(function (err) {
+                            console.error(err);
+                        });
                     }, reject);
                 });
+            });
+        },
+
+        /**
+         * Add a field list to the category
+         *
+         * @param {Number} fieldIds - Field-IDs
+         * @return {Promise}
+         */
+        addFields: function (fieldIds) {
+            var self = this;
+
+            return new Promise(function (resolve, reject) {
+                var promises = [];
+
+                for (var i = 0, len = fieldIds.length; i < len; i++) {
+                    promises.push(
+                        Fields.getChild(fieldIds[i])
+                    );
+                }
+
+                Promise.all(promises).then(function () {
+                    for (var i = 0, len = fieldIds.length; i < len; i++) {
+                        self.$grids.Fields.addRow({
+                            id          : fieldIds[i],
+                            title       : QUILocale.get(lg, 'products.field.' + fieldIds[i] + '.title'),
+                            publicStatus: new QUISwitch(),
+                            searchStatus: new QUISwitch()
+                        });
+                    }
+
+                    self.save().then(function () {
+                        resolve();
+
+                        self.openRecursiveDialog().catch(function (err) {
+                            console.error(err);
+                        });
+                    }, reject);
+                }).catch(reject);
             });
         },
 
