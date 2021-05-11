@@ -2286,6 +2286,15 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
 
     <groups name="quiqqer/products" datatype="php">
 
+        <locale name="product_type.DigitalProduct.title">
+            <de><![CDATA[Digitales Produkt]]></de>
+            <en><![CDATA[Digital product]]></en>
+        </locale>
+        <locale name="product_type.DigitalProduct.description">
+            <de><![CDATA[Nicht-physisches Produkt, welches keinen Versand benötigt, sondern per Download oder Zugang zur Verfügung gestellt wird (z.B. digitale Eintrittskarte).]]></de>
+            <en><![CDATA[Non-physical product that does not require shipping but is made available via download or access (e.g. digital ticket).]]></en>
+        </locale>
+
         <!-- Ajax -->
         <locale name="message.ajax.settings.updatePrices.success">
             <de><![CDATA[Die Preise von [count] Produkten wurden erfolgreich aktualisiert.]]></de>

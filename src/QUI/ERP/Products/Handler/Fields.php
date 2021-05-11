@@ -41,7 +41,8 @@ class Fields
     const FIELD_URL = 19; // Product URL
     const FIELD_UNIT = 20;
     const FIELD_EAN = 21;
-    const FIELD_WEIGHT = 22;
+    const FIELD_WEIGHT         = 22;
+    const FIELD_DOWNLOAD_FILES = 24;
 
     const FIELD_VARIANT_DEFAULT_ATTRIBUTES = 23;
 
