@@ -332,6 +332,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 QUI.parse(self.getElm()).then(function () {
                     self.$init();
                     self.$initTabEvents();
+                    self.fireEvent('onQuiqqerProductVariantRefresh', [self]);
                     self.Loader.hide();
                 });
             }, {
