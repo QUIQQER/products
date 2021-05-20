@@ -205,12 +205,13 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          * Create panel categories
          *
          * @param {Object} fields
-         * @param {Object} fieldtypes - list of the fieldtypes data
+         * @param {Array} fieldCategories
+         * @param {Object} fieldTypes - list of the field types data
          */
-        $createCategories: function (fields, fieldtypes) {
+        $createCategories: function (fields, fieldCategories, fieldTypes) {
             var self = this;
 
-            this.parent(fields, fieldtypes);
+            this.parent(fields, fieldCategories, fieldTypes);
 
             this.addCategory({
                 name  : 'variants',

@@ -9,6 +9,7 @@ namespace QUI\ERP\Products\Utils;
 use QUI;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Interfaces\FieldInterface;
+use QUI\Utils\DOM;
 
 /**
  * Class Fields
@@ -49,7 +50,7 @@ class Fields
      * @param $fieldHash
      * @return array
      */
-    public static function parseFieldHashToArray($fieldHash)
+    public static function parseFieldHashToArray($fieldHash): array
     {
         $result    = [];
         $fieldHash = \trim($fieldHash, ';');
@@ -80,7 +81,7 @@ class Fields
      * @param string $hash
      * @return array
      */
-    public static function getSearchHashesFromFieldHash($hash)
+    public static function getSearchHashesFromFieldHash(string $hash): array
     {
         $hashes           = self::parseFieldHashToArray($hash);
         $foundEmptyValues = false;
@@ -144,7 +145,7 @@ class Fields
      * @param $field
      * @return string
      */
-    protected static function generateFieldHashFromArray($field)
+    protected static function generateFieldHashFromArray($field): string
     {
         $result = [];
 
@@ -161,7 +162,7 @@ class Fields
      * @param mixed $object
      * @return boolean
      */
-    public static function isField($object)
+    public static function isField($object): bool
     {
         if (!\is_object($object)) {
             return false;
@@ -192,7 +193,7 @@ class Fields
      * @param string $sort - sorting field
      * @return FieldInterface[]
      */
-    public static function sortFields($fields, $sort = 'priority')
+    public static function sortFields(array $fields, string $sort = 'priority'): array
     {
         if (empty($fields)) {
             return $fields;
@@ -226,7 +227,7 @@ class Fields
          * @param string $field
          * @return mixed
          */
-        $getFieldSortValue = function ($Field, $field) {
+        $getFieldSortValue = function (QUI\ERP\Products\Field\Field $Field, string $field) {
             if ($field === 'id') {
                 return (int)$Field->getId();
             }
@@ -314,7 +315,7 @@ class Fields
      * @param mixed $Field
      * @return bool
      */
-    public static function canUsedAsDetailField($Field)
+    public static function canUsedAsDetailField($Field): bool
     {
         /* @var $Field QUI\ERP\Products\Field\Field */
         if (!self::isField($Field)) {
@@ -347,7 +348,7 @@ class Fields
      * @param mixed $Field
      * @return bool
      */
-    public static function showFieldInProductDetails($Field)
+    public static function showFieldInProductDetails($Field): bool
     {
         /* @var $Field QUI\ERP\Products\Field\Field */
         if (!self::canUsedAsDetailField($Field)) {
@@ -385,7 +386,7 @@ class Fields
      * @param string $unit - kg, g, t, tons, lbs, lb
      * @return float
      */
-    public static function weightToKilogram($value, $unit)
+    public static function weightToKilogram($value, string $unit)
     {
         $value = \floatval($value);
 
@@ -419,7 +420,7 @@ class Fields
      * @param $weight
      * @return bool
      */
-    public static function isWeight($weight)
+    public static function isWeight($weight): bool
     {
         switch ($weight) {
             case 'g':
@@ -443,7 +444,7 @@ class Fields
      *
      * @return bool
      */
-    public static function compare($no1, $no2, $type)
+    public static function compare($no1, $no2, $type): bool
     {
         if ($type === '=') {
             return $no1 == $no2;
@@ -476,7 +477,7 @@ class Fields
      * @param $term
      * @return string
      */
-    public static function termToHuman($term)
+    public static function termToHuman($term): string
     {
         if ($term === '=') {
             return '=';
@@ -499,5 +500,140 @@ class Fields
         }
 
         return '';
+    }
+
+    /**
+     * @return array
+     *
+     * @todo cachinge
+     */
+    public static function getPanelFieldCategories(): array
+    {
+        $plugins    = QUI::getPackageManager()->getInstalled();
+        $categories = [];
+
+        foreach ($plugins as $plugin) {
+            $xml = OPT_DIR.$plugin['name'].'/products.xml';
+
+            if (!\file_exists($xml)) {
+                continue;
+            }
+
+            $Dom  = QUI\Utils\Text\XML::getDomFromXml($xml);
+            $Path = new \DOMXPath($Dom);
+
+            $categoryList = $Path->query("//quiqqer/products/fieldCategories/fieldCategory");
+
+            foreach ($categoryList as $Category) {
+                $name = $Category->getAttribute('name');
+                $name = \trim($name);
+
+                $Title = $Category->getElementsByTagName('title');
+                $title = '';
+
+                if ($Title && $Title->item(0)) {
+                    $title = DOM::getTextFromNode($Title->item(0), false);
+                }
+
+                $Icon = $Category->getElementsByTagName('icon');
+                $icon = '';
+
+                if ($Icon && $Icon->item(0)) {
+                    $icon = trim($Icon->item(0)->nodeValue);
+                }
+
+                // fields
+                $fields   = $Category->getElementsByTagName('fields');
+                $fieldIds = [];
+
+                if ($fields->length) {
+                    $f = $fields->item(0)->getElementsByTagName('field');
+
+                    foreach ($f as $Field) {
+                        $fieldIds[] = trim($Field->nodeValue);
+                    }
+                }
+
+                $categories[] = [
+                    'name'   => $name,
+                    'text'   => $title,
+                    'icon'   => $icon,
+                    'fields' => $fieldIds
+                ];
+            }
+        }
+
+        return $categories;
+    }
+
+    /**
+     * Return the fields of the Field Category
+     * Field Category = Grouped Fields
+     *
+     * @param String $category - name of the category
+     * @return array
+     */
+    public static function getPanelFieldCategoryFields(string $category): array
+    {
+        $category = str_replace('fieldCategory-', '', $category);
+
+        $fields        = [];
+        $allCategories = self::getPanelFieldCategories();
+        $fieldIds      = [];
+
+        // check field ids
+        foreach ($allCategories as $catData) {
+            if ($catData['name'] !== $category) {
+                continue;
+            }
+
+            foreach ($catData['fields'] as $fieldId) {
+                if (isset($fieldIds[$fieldId])) {
+                    continue;
+                }
+
+                try {
+                    $Field    = QUI\ERP\Products\Handler\Fields::getField($fieldId);
+                    $fields[] = $Field->getAttributes();
+
+                    $fieldIds[$fieldId] = true;
+                } catch (QUI\Exception $Exception) {
+                }
+            }
+        }
+
+        // check field types
+        $plugins = QUI::getPackageManager()->getInstalled();
+
+        foreach ($plugins as $plugin) {
+            $xml = OPT_DIR.$plugin['name'].'/products.xml';
+
+            if (!\file_exists($xml)) {
+                continue;
+            }
+
+            $Dom  = QUI\Utils\Text\XML::getDomFromXml($xml);
+            $Path = new \DOMXPath($Dom);
+
+            $fieldList = $Path->query("//quiqqer/products/fields/field[@fieldCategory='{$category}']");
+
+            foreach ($fieldList as $NodeField) {
+                $fieldType = $NodeField->getAttribute('name');
+                $list      = QUI\ERP\Products\Handler\Fields::getFieldsByType($fieldType);
+
+                foreach ($list as $Field) {
+                    $fieldId = $Field->getId();
+
+                    if (isset($fieldIds[$fieldId])) {
+                        continue;
+                    }
+
+                    $fields[]           = $Field->getAttributes();
+                    $fieldIds[$fieldId] = true;
+                }
+            }
+        }
+
+        return $fields;
     }
 }
