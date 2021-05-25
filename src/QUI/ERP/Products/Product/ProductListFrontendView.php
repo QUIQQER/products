@@ -120,6 +120,12 @@ class ProductListFrontendView
                 }
             }
 
+            $imageSrc = '';
+
+            if ($Product->getImage()) {
+                $imageSrc = $Product->getImage()->getUrl();
+            }
+
             // format
             $product['price']           = $hidePrice ? '' : $this->formatPrice($attributes['calculated_price']);
             $product['sum']             = $hidePrice ? '' : $this->formatPrice($attributes['calculated_sum']);
@@ -132,6 +138,7 @@ class ProductListFrontendView
             $product['title']        = $attributes['title'];
             $product['description']  = $attributes['description'];
             $product['image']        = $attributes['image'];
+            $product['imageSrc']     = $imageSrc;
             $product['quantity']     = $attributes['quantity'];
             $product['displayPrice'] = true;
             $product['attributes']   = [];

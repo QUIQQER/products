@@ -538,12 +538,12 @@ class Fields
     }
 
     /**
-     * Return the cachename of a field
+     * Return the cache name of a field
      *
      * @param $fieldId
      * @return string
      */
-    public static function getFieldCacheName($fieldId)
+    public static function getFieldCacheName($fieldId): string
     {
         return Cache::getBasicCachePath().'fields/field/'.$fieldId.'/';
     }
@@ -553,7 +553,7 @@ class Fields
      *
      * @return array
      */
-    public static function getFieldTypes()
+    public static function getFieldTypes(): array
     {
         if (self::$fieldTypes !== null) {
             return self::$fieldTypes;
@@ -644,7 +644,7 @@ class Fields
      * @param string $type - field type
      * @return array
      */
-    public static function getFieldTypeData($type)
+    public static function getFieldTypeData(string $type): array
     {
         if (isset(self::$fieldTypeData[$type])) {
             return self::$fieldTypeData[$type];
