@@ -753,11 +753,11 @@ class EventHandling
                     QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                     [
                         'type'          => $field['type'],
-                        'prefix'        => $field['prefix'],
-                        'suffix'        => $field['suffix'],
-                        'priority'      => $field['priority'],
+                        'prefix'        => $result[0]['prefix'] ?: $field['prefix'],
+                        'suffix'        => $result[0]['suffix'] ?: $field['suffix'],
+                        'priority'      => $result[0]['priority'] ?: $field['priority'],
                         'systemField'   => $field['systemField'],
-                        'standardField' => $field['standardField'],
+                        'standardField' => $result[0]['standardField'] ?: $field['standardField'],
                         'search_type'   => $result[0]['search_type'] ?: $field['search_type']
                     ],
                     ['id' => $field['id']]

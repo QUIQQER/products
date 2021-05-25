@@ -70,7 +70,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             'openFieldAdministration',
             '$onCreateMediaFolderClick',
             '$render',
-            '$checkUrl'
+            '$checkUrl',
+            '$fieldCategoryClick'
         ],
 
         options: {
@@ -398,13 +399,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     Categories.getFields(categories),
                     Fields.getSystemFields(),
                     Fields.getStandardFields(),
-                    Fields.getFieldTypes()
+                    Fields.getFieldTypes(),
+                    self.$getFieldCategories()
                 ]).then(function (result) {
                     var fieldList        = [],
                         fieldTypes       = {},
                         categoriesFields = result[0],
                         systemFields     = result[1],
-                        standardFields   = result[2];
+                        standardFields   = result[2],
+                        fieldCategories  = result[4];
 
                     var types = result[3];
 
@@ -445,7 +448,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     diffFields   = FieldUtils.sortFields(diffFields);
                     systemFields = FieldUtils.sortFields(systemFields);
 
-                    self.$createCategories(fieldList, fieldTypes);
+                    self.$createCategories(fieldList, fieldCategories, fieldTypes);
 
                     self.$dataFields   = [];
                     self.$systemFields = [];
@@ -549,9 +552,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * Create panel categories
          *
          * @param {Object} fields
-         * @param {Object} fieldtypes - list of the fieldtypes data
+         * @param {Array} fieldCategories
+         * @param {Object} fieldTypes - list of the field types data
          */
-        $createCategories: function (fields, fieldtypes) {
+        $createCategories: function (fields, fieldCategories, fieldTypes) {
             var self = this;
 
             var fieldClick = function (Btn) {
@@ -575,11 +579,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     return true;
                 }
 
-                if (typeof fieldtypes[type] === 'undefined') {
+                if (typeof fieldTypes[type] === 'undefined') {
                     return true;
                 }
 
-                return !!fieldtypes[type].category;
+                return !!fieldTypes[type].category;
             };
 
             this.getCategoryBar().clear();
@@ -627,7 +631,28 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }
             });
 
-            var i, len, icon, type;
+            var i, len, icon, type, text;
+
+            // API categories
+            for (i = 0, len = fieldCategories.length; i < len; i++) {
+                text = '';
+
+                if (fieldCategories[i].text.length) {
+                    text = QUILocale.get(
+                        fieldCategories[i].text[0],
+                        fieldCategories[i].text[1]
+                    );
+                }
+
+                this.addCategory({
+                    name  : 'fieldCategory-' + fieldCategories[i].name,
+                    text  : text,
+                    icon  : fieldCategories[i].icon,
+                    events: {
+                        onClick: this.$fieldCategoryClick
+                    }
+                });
+            }
 
             for (i = 0, len = fields.length; i < len; i++) {
                 type = fields[i].type;
@@ -1082,6 +1107,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                     inputs.removeEvents('blur');
                     inputs.addEvent('blur', self.$checkUrl);
+                }
+            }).catch(function (err) {
+                if (typeof err.getMessage === 'undefined') {
+                    console.error(err.getMessage());
                 }
             });
         },
@@ -2468,6 +2497,69 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     category : categoryId
                 });
             });
+        },
+
+        //region field categories
+
+        /**
+         *
+         * @return {Promise}
+         */
+        $getFieldCategories: function () {
+            return new Promise(function (resolve) {
+                QUIAjax.get('package_quiqqer_products_ajax_products_getFieldCategories', resolve, {
+                    'package': 'quiqqer/products'
+                });
+            });
+        },
+
+        /**
+         * opens a category field list
+         *
+         * @param Category
+         */
+        $fieldCategoryClick: function (Category) {
+            var self = this;
+
+            return self.$hideCategories().then(function () {
+                self.$FieldContainer.set('html', '');
+
+                return new Promise(function (resolve) {
+                    QUIAjax.get('package_quiqqer_products_ajax_products_getFieldCategory', function (fields) {
+                        console.log(fields);
+
+                        var Form = new Element('form', {
+                            html: '' +
+                                '<table class="data-table data-table-flexbox product-data">' +
+                                '   <thead>' +
+                                '       <tr>' +
+                                '           <th>' +
+                                '                ' + Category.getAttribute('text') +
+                                '            </th>' +
+                                '        </tr>' +
+                                '   </thead>' +
+                                '   <tbody></tbody>' +
+                                '</table>'
+                        }).inject(self.$FieldContainer);
+
+                        var Body = Form.getElement('tbody');
+
+                        for (var i = 0, len = fields.length; i < len; i++) {
+                            self.$renderDataField(fields[i]).inject(Body);
+                        }
+
+                        QUI.parse(Body).then(resolve);
+                    }, {
+                        'package' : 'quiqqer/products',
+                        'category': Category.getAttribute('name')
+                    });
+                });
+
+            }).then(function () {
+                return self.$showCategory(self.$FieldContainer);
+            });
         }
+
+        //endregion
     });
 });
