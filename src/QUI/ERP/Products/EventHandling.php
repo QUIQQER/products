@@ -714,25 +714,7 @@ class EventHandling
                     'de' => 'Produtvarianten',
                     'en' => 'Product variants'
                 ]
-            ],
-
-            // Product folder for digital files that are accessible after purchasing a product
-            [
-                'id'            => Fields::FIELD_DOWNLOAD_FILES,
-                'type'          => 'Folder',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 20,
-                'systemField'   => 1,
-                'standardField' => 0,
-                'requiredField' => 0,
-                'publicField'   => 0,
-                'search_type'   => '',
-                'titles'        => [
-                    'de' => 'Download-Dateien',
-                    'en' => 'Download files'
-                ]
-            ],
+            ]
         ];
 
         foreach ($standardFields as $field) {
