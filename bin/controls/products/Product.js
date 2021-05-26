@@ -934,7 +934,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             var self = this;
 
             return self.$hideCategories().then(function () {
-                self.$renderData(self.$Data, self.$Product);
+                return self.$renderData(self.$Data, self.$Product);
             }).then(function () {
                 return self.$showCategory(self.$Data);
             });
@@ -2142,7 +2142,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             if (!Button.getStatus()) {
                 Prom = this.$Product.deactivate();
             } else {
-                Prom = self.$Product.activate()
+                Prom = self.$Product.activate();
             }
 
             Prom.then(function () {
@@ -2526,8 +2526,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 return new Promise(function (resolve) {
                     QUIAjax.get('package_quiqqer_products_ajax_products_getFieldCategory', function (fields) {
-                        console.log(fields);
-
                         var Form = new Element('form', {
                             html: '' +
                                 '<table class="data-table data-table-flexbox product-data">' +
@@ -2554,8 +2552,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         'category': Category.getAttribute('name')
                     });
                 });
-
             }).then(function () {
+                self.$fillDataToContainer(self.$FieldContainer, self.$Product);
+                self.Loader.hide();
+                
                 return self.$showCategory(self.$FieldContainer);
             });
         }
