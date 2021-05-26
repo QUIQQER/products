@@ -1229,6 +1229,12 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
+
+        <locale name="controls.FolderSettings.autoActivateItems">
+            <de><![CDATA[Hochgeladene Dateien automatisch aktivieren]]></de>
+            <en><![CDATA[Auto-activate uploaded files]]></en>
+        </locale>
+
         <locale name="products.panel.title">
             <de><![CDATA[Produkte]]></de>
             <en><![CDATA[Products]]></en>

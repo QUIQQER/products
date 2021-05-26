@@ -416,9 +416,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
 
                     var complete = [].append(categoriesFields)
-                                     .append(systemFields)
-                                     .append(standardFields)
-                                     .append(fields);
+                        .append(systemFields)
+                        .append(standardFields)
+                        .append(fields);
 
                     // cleanup complete list
                     var completeIds = {};
@@ -719,7 +719,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 this.addCategory({
                     name   : 'images',
                     text   : fields[i].workingtitle || fields[i].title,
-                    icon   : 'fa fa-picture-o',
+                    icon   : 'fa fa-folder-open',
                     fieldId: fields[i].id,
                     field  : fields[i],
                     events : {
@@ -1456,7 +1456,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 new FolderViewer({
                     folderUrl   : Field.value,
                     filetype    : ['image', 'file'],
-                    autoactivate: true
+                    autoactivate: !!parseInt(Field.options.autoActivateItems)
                 }).inject(self.$FieldContainer);
 
                 return self.$showCategory(self.$FieldContainer);
@@ -2555,7 +2555,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }).then(function () {
                 self.$fillDataToContainer(self.$FieldContainer, self.$Product);
                 self.Loader.hide();
-                
+
                 return self.$showCategory(self.$FieldContainer);
             });
         }

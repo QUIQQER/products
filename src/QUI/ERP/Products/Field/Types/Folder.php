@@ -29,6 +29,20 @@ class Folder extends QUI\ERP\Products\Field\Field
     protected $searchable = false;
 
     /**
+     * GroupList constructor.
+     * @param int $fieldId
+     * @param array $params
+     */
+    public function __construct($fieldId, array $params)
+    {
+        $this->setOptions([
+            'autoActivateItems' => true
+        ]);
+
+        parent::__construct($fieldId, $params);
+    }
+
+    /**
      * @return View
      */
     public function getBackendView()
@@ -50,6 +64,14 @@ class Folder extends QUI\ERP\Products\Field\Field
     public function getJavaScriptControl()
     {
         return 'package/quiqqer/products/bin/controls/fields/types/Folder';
+    }
+
+    /**
+     * @return string
+     */
+    public function getJavaScriptSettings()
+    {
+        return 'package/quiqqer/products/bin/controls/fields/types/FolderSettings';
     }
 
     /**
