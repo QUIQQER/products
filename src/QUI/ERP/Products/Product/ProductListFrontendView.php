@@ -122,8 +122,12 @@ class ProductListFrontendView
 
             $imageSrc = '';
 
-            if ($Product->getImage()) {
-                $imageSrc = $Product->getImage()->getUrl();
+            try {
+                if ($Product->getImage()) {
+                    $imageSrc = $Product->getImage()->getUrl();
+                }
+            } catch (\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
             }
 
             // format
