@@ -31,6 +31,7 @@
             <productType src="\QUI\ERP\Products\Product\Types\Product"/>
             <productType src="\QUI\ERP\Products\Product\Types\VariantChild"/>
             <productType src="\QUI\ERP\Products\Product\Types\VariantParent"/>
+            <productType src="\QUI\ERP\Products\Product\Types\DigitalProduct"/>
         </provider>
     </package>
 </quiqqer>

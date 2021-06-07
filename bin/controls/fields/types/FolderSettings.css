@@ -1,0 +1,9 @@
+.quiqqer-products-folder-settings {
+    height: 100%;
+    width: 100%;
+}
+
+.quiqqer-products-folder-settings label {
+    padding: 5px;
+    width: 100% !important;
+}
