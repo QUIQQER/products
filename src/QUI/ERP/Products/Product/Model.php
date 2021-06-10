@@ -357,7 +357,7 @@ class Model extends QUI\QDOM
 
             foreach ($fieldList as $Field) {
                 /* @var $Field QUI\ERP\Products\Field\CustomField */
-                if ($Field->isCustomField()) {
+                if ($Field instanceof QUI\ERP\Products\Field\CustomField) {
                     $calcData['custom_calc'] = $Field->getCalculationData($Locale);
 
                     $fields[] = \array_merge(

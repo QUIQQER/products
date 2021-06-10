@@ -1151,6 +1151,25 @@ class EventHandling
         $header .= '</script>';
 
         $TemplateManager->extendHeader($header);
+
+        // Add UserInput control that checks if a custom user input can be added to products when
+        // they are added to the basket. This only has to be loaded if at least 1 field of type "UserInput"
+        // exists.
+        $userInputFields = Fields::getFieldsByType(Fields::TYPE_USER_INPUT);
+
+        if (empty($userInputFields)) {
+            return;
+        }
+
+        $TemplateManager->extendFooter(
+            "
+    <script>
+        require(['package/quiqqer/products/bin/controls/frontend/fields/UserInputWatcher'], function(UserInputWatcher) {
+            new UserInputWatcher();        
+        });
+    </script>
+"
+        );
     }
 
     /**

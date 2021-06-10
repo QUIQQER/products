@@ -74,6 +74,7 @@ class Fields
     const TYPE_ATTRIBUTES = 'AttributeGroup';
     const TYPE_ATTRIBUTE_GROUPS = 'AttributeGroup';
     const TYPE_ATTRIBUTE_LIST = 'ProductAttributeList';
+    const TYPE_USER_INPUT = 'UserInput';
 
     /**
      * product array changed types

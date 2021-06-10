@@ -193,6 +193,22 @@ class ProductListFrontendView
                 ];
             }
 
+            foreach ($fields as $Field) {
+                if (!$Field->isPublic()) {
+                    continue;
+                }
+
+                if (!$Field->isCustomField()) {
+                    continue;
+                }
+
+                $product['attributes'][] = [
+                    'title'     => $Field->getTitle(),
+                    'value'     => $Field->getValue(),
+                    'valueText' => ''
+                ];
+            }
+
             $productList[] = $product;
         }
 
