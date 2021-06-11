@@ -247,7 +247,7 @@ class ProductListFrontendView
      * @param int|float $price
      * @return string
      */
-    protected function formatPrice($price)
+    protected function formatPrice($price): string
     {
         return $this->Currency->format($price);
     }
@@ -287,7 +287,7 @@ class ProductListFrontendView
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $data = $this->data;
 
@@ -306,7 +306,7 @@ class ProductListFrontendView
      *
      * @return string
      */
-    public function toJSON()
+    public function toJSON(): string
     {
         return \json_encode($this->toArray());
     }
@@ -316,7 +316,7 @@ class ProductListFrontendView
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return $this->ProductList->count();
     }
@@ -326,7 +326,7 @@ class ProductListFrontendView
      *
      * @return string
      */
-    public function getSum()
+    public function getSum(): string
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return '';
@@ -340,7 +340,7 @@ class ProductListFrontendView
      *
      * @return string
      */
-    public function getSubSum()
+    public function getSubSum(): string
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return '';
@@ -354,7 +354,7 @@ class ProductListFrontendView
      *
      * @return string
      */
-    public function getNettoSum()
+    public function getNettoSum(): string
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return '';
@@ -368,7 +368,7 @@ class ProductListFrontendView
      *
      * @return string
      */
-    public function getNettoSubSum()
+    public function getNettoSubSum(): string
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return '';
@@ -382,7 +382,7 @@ class ProductListFrontendView
      *
      * @return array
      */
-    public function getProducts()
+    public function getProducts(): array
     {
         return $this->data['products'];
     }
@@ -395,7 +395,7 @@ class ProductListFrontendView
      *
      * @throws QUI\Exception
      */
-    public function toHTML($css = true)
+    public function toHTML(bool $css = true): string
     {
         $Engine = QUI::getTemplateManager()->getEngine();
         $style  = '';
