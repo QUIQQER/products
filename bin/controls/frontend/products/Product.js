@@ -372,6 +372,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 }
 
                 self.$Price.setPriceDisplay(result.price_display);
+            }).catch(function(err) {
+                console.error(err);
             });
         },
 
