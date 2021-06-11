@@ -273,7 +273,18 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         if ($userInput &&
             !(\defined('QUIQQER_FRONTEND') && QUI\ERP\Products\Utils\Package::hidePrice())
         ) {
-            $valueText .= ' - '.$userInput;
+            // locale values
+            if (is_array($valueText)) {
+                $current = QUI::getLocale()->getCurrent();
+
+                if (isset($valueText[$current])) { // check if lang values
+                    foreach ($valueText as $lang => $val) {
+                        $valueText[$lang] .= ' - '.$userInput;
+                    }
+                }
+            } else {
+                $valueText .= ' - '.$userInput;
+            }
         }
 
         return [
