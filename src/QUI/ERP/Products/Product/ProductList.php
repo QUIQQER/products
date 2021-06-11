@@ -40,6 +40,11 @@ class ProductList
     /**
      * @var int|float|double
      */
+    protected $grandSubSum;
+
+    /**
+     * @var int|float|double
+     */
     protected $nettoSum;
 
     /**
@@ -131,6 +136,7 @@ class ProductList
             $calc = $params['calculations'];
 
             $this->sum          = $calc['sum'];
+            $this->grandSubSum  = $calc['grandSubSum'];
             $this->subSum       = $calc['subSum'];
             $this->nettoSum     = $calc['nettoSum'];
             $this->nettoSubSum  = $calc['nettoSubSum'];
@@ -201,6 +207,7 @@ class ProductList
         $Calc->calcProductList($this, function ($data) use ($self) {
             $self->sum          = $data['sum'];
             $self->subSum       = $data['subSum'];
+            $self->grandSubSum  = $data['grandSubSum'];
             $self->nettoSum     = $data['nettoSum'];
             $self->nettoSubSum  = $data['nettoSubSum'];
             $self->vatArray     = $data['vatArray'];
@@ -380,6 +387,7 @@ class ProductList
         $calculations = [
             'sum'          => $this->sum,
             'subSum'       => $this->subSum,
+            'grandSubSum'  => $this->grandSubSum,
             'nettoSum'     => $this->nettoSum,
             'nettoSubSum'  => $this->nettoSubSum,
             'vatArray'     => $this->vatArray,
@@ -401,6 +409,7 @@ class ProductList
             'products'     => $products,
             'sum'          => $this->sum,
             'subSum'       => $this->subSum,
+            'grandSubSum'  => $this->grandSubSum,
             'nettoSum'     => $this->nettoSum,
             'nettoSubSum'  => $this->nettoSubSum,
             'vatArray'     => $this->vatArray,
