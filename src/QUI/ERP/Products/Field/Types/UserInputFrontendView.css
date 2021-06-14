@@ -15,8 +15,9 @@
 .quiqqer-products-field-userinput-overlay-text {
     align-items: center;
     cursor: pointer;
-    display: flex;
+    display: inline-block;
     font-style: italic;
+    line-height: 42px;
     height: 100%;
     padding-left: 10px;
     position: absolute;

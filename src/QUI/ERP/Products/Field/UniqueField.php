@@ -529,7 +529,17 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
 
             default:
                 if ($this->isCustomField()) {
-                    $valueText = $this->getValue();
+                    $Field = QUI\ERP\Products\Handler\Fields::getField($this->getId());
+
+                    if ($Field instanceof CustomInputFieldInterface) {
+                        $valueText = $Field->getUserInput();
+                    } else {
+                        $value = $this->getValue();
+
+                        if (!empty($value)) {
+                            $valueText = $value;
+                        }
+                    }
                 }
         }
 

@@ -112,12 +112,24 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
      */
     public function cleanup($value)
     {
+        if (empty($value)) {
+            return null;
+        }
+
         if (!\is_string($value) && !\is_numeric($value)) {
             return null;
         }
 
+        if (\is_string($value)) {
+            $valueJsonDecoded = \json_decode($value, true);
+
+            if (\json_last_error() === \JSON_ERROR_NONE) {
+                $value = $valueJsonDecoded;
+            }
+        }
+
         // Remove everything that could be dangerous.
-        $value = \preg_replace("/[^\p{L}\p{N}\p{M} ]/ui", '', $value);
+        $value = \preg_replace("/[^\p{L}\p{N}\p{M}\n ]/ui", '', $value);
         $value = \strip_tags($value);
 
         return $value;
