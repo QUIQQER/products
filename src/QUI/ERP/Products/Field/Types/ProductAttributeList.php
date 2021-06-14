@@ -26,8 +26,7 @@ use QUI\ERP\Accounting\Calc as ErpCalc;
  *
  * @package QUI\ERP\Products\Field\Types
  */
-class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
-    implements QUI\ERP\Products\Field\CustomInputFieldInterface
+class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField implements QUI\ERP\Products\Field\CustomInputFieldInterface
 {
     /**
      * @var bool
