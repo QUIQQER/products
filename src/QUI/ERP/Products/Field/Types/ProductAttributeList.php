@@ -26,7 +26,8 @@ use QUI\ERP\Accounting\Calc as ErpCalc;
  *
  * @package QUI\ERP\Products\Field\Types
  */
-class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
+class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
+    implements QUI\ERP\Products\Field\CustomInputFieldInterface
 {
     /**
      * @var bool
@@ -306,7 +307,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     public function validate($value)
     {
         if (empty($value) && $value != '0') {
-            if ($this->isRequired()) {
+            if (QUI::isFrontend() && $this->isRequired()) {
                 throw new QUI\ERP\Products\Field\ExceptionRequired([
                     'quiqqer/products',
                     'exception.field.is.invalid',
