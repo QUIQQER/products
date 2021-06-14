@@ -202,10 +202,12 @@ class ProductListFrontendView
                     continue;
                 }
 
+                $fieldAttributes = $Field->getAttributes();
+
                 $product['attributes'][] = [
                     'title'     => $Field->getTitle(),
-                    'value'     => $Field->getValue(),
-                    'valueText' => ''
+                    'value'     => $fieldAttributes['value'],
+                    'valueText' => $fieldAttributes['valueText']
                 ];
             }
 

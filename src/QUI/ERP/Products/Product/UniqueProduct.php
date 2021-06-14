@@ -230,10 +230,6 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         /* @var $Field QUI\ERP\Products\Field\UniqueField */
         foreach ($fields as $Field) {
-//            if (!$Field->isCustomField()) {
-//                continue;
-//            }
-
             if (!($Field instanceof QUI\ERP\Products\Field\CustomCalcField)) {
                 continue;
             }

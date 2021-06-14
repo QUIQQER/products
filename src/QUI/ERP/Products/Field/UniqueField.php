@@ -159,6 +159,13 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     protected $Product = null;
 
     /**
+     * User input from custom input fields
+     *
+     * @var string
+     */
+    protected $userInput = '';
+
+    /**
      * Model constructor.
      *
      * @param integer $fieldId
@@ -186,7 +193,8 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'ownField',
             'showInDetails',
             'searchvalue',
-            'changeable'
+            'changeable',
+            'userInput'
         ];
 
         if (!isset($params['isPublic'])) {
@@ -455,22 +463,25 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
     public function getAttributes()
     {
-        $options   = $this->getOptions();
-        $value     = $this->getValue();
-        $json      = null;
-        $userinput = '';
+        $options = $this->getOptions();
+        $value   = $this->getValue();
 
-        if (\is_string($value)) {
-            $json = \json_decode($value, true);
-
-            if (\is_array($json) && isset($json[0])) {
-                $value = $json[0];
-
-                if (isset($json[1])) {
-                    $userinput = $json[1];
-                }
-            }
-        }
+        /*
+         * Auskommentiert, weil das ein sehr umständlicher Weg war, um dan die Benutzereingabe
+         * Von ProductAttributeList-Feldern zu kommen; dafür gibt es jetzt eine einfachere API.
+         */
+//        $json      = null;
+//        if (\is_string($value)) {
+//            $json = \json_decode($value, true);
+//
+//            if (\is_array($json) && isset($json[0])) {
+//                $value = $json[0];
+//
+//                if (isset($json[1])) {
+//                    $userinput = $json[1];
+//                }
+//            }
+//        }
 
         $parentClass = $this->getParentClass();
 
@@ -500,7 +511,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'unassigned'       => $this->isUnassigned(),
             'value'            => $value,
             'valueText'        => $this->getValueText(),
-            'userinput'        => $userinput,
+            'userInput'        => $this->userInput,
             'showInDetails'    => $this->showInDetails()
         ];
     }
@@ -529,10 +540,8 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
 
             default:
                 if ($this->isCustomField()) {
-                    $Field = QUI\ERP\Products\Handler\Fields::getField($this->getId());
-
-                    if ($Field instanceof CustomInputFieldInterface) {
-                        $valueText = $Field->getUserInput();
+                    if (!empty($this->userInput)) {
+                        $valueText = $this->userInput;
                     } else {
                         $value = $this->getValue();
 
