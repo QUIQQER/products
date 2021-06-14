@@ -29,7 +29,6 @@ define('package/quiqqer/products/bin/controls/frontend/fields/UserInput', [
 
         Binds: [
             '$onImport',
-            '$init',
             '$openEditWindow'
         ],
 
@@ -47,8 +46,7 @@ define('package/quiqqer/products/bin/controls/frontend/fields/UserInput', [
             this.$editWindowOpen = false;
 
             this.addEvents({
-                onImport: this.$onImport,
-                onInject: this.$onInject
+                onImport: this.$onImport
             });
         },
 
@@ -68,12 +66,6 @@ define('package/quiqqer/products/bin/controls/frontend/fields/UserInput', [
                 this.$Input.blur();
                 this.$openEditWindow();
             });
-
-            console.log("onImport!", this.getAttributes());
-        },
-
-        $onInject: function () {
-            console.log("onInject!", this.getAttributes());
         },
 
         /**
