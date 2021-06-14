@@ -234,7 +234,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 //                continue;
 //            }
 
-            if (!($Field instanceof QUI\ERP\Products\Field\CustomField)) {
+            if (!($Field instanceof QUI\ERP\Products\Field\CustomCalcField)) {
                 continue;
             }
 

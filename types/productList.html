@@ -11,8 +11,9 @@
         <div class="quiqqer-product-card">
             <div class="quiqqer-product-card-inner">
                 <div class="quiqqer-product-card-image">
-                    <a href="{$Product->getUrl()}" data-pid="{$Product->getId()}" title="{$Product->getTitle()|escape:'html'}">
-                    {image image=$Product->getImage() width=400 title=$Product->getTitle()|escape:'html'
+                    <a href="{$Product->getUrl()}" data-pid="{$Product->getId()}"
+                       title="{$Product->getTitle()|escape:'html'}">
+                        {image image=$Product->getImage() width=400 title=$Product->getTitle()|escape:'html'
                         alt=$Product->getTitle()|escape:'html'}
                     </a>
                 </div>
@@ -35,6 +36,15 @@
                     {$Product->getPriceDisplay()->create()}
 
                     <div class="quiqqer-product-card-content-buttons">
+                        {if $Product->hasRequiredUserInputFields()}
+                        <a href="{$Product->getUrl()}"
+                           class="btn btn-primary btn-outline"
+                        >
+                            <label>
+                                {locale group="quiqqer/product-bricks" var="button.product.viewProduct"}
+                            </label>
+                        </a>
+                        {else}
                         <a href="{$Product->getUrl()}"
                            class="btn btn-primary btn-outline add-to-basket"
                            data-product-id="{$Product->getId()}"
@@ -45,6 +55,7 @@
                                 {locale group="quiqqer/product-bricks" var="button.product.addToCart"}
                             </label>
                         </a>
+                        {/if}
                     </div>
                 </div>
             </div>

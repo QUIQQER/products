@@ -51,7 +51,7 @@
                             {template_event name="quiqqer::product-event::slider::buttonAddToCart" Product=$Product}
                             <!--<a href="" class="btn btn-link add-to-card">Add to wish list</a>-->
 
-                            {if $this->getAttribute('buttonAction') == 'addToBasket'}
+                            {if $this->getAttribute('buttonAction') == 'addToBasket' && !$Product->hasRequiredUserInputFields()}
                             <a href="{$Product->getUrl()}"
                                class="btn btn-primary add-to-basket"
                                data-product-id="{$Product->getId()}"
@@ -62,7 +62,7 @@
                                     {locale group="quiqqer/product-bricks" var="button.product.addToCart"}
                                 </label>
                             </a>
-                            {elseif $this->getAttribute('buttonAction') == 'showProduct'}
+                            {else}
                             <a href="{$Product->getUrl()}" class="btn btn-primary add-to-basket">
                                 <label>
                                     {locale group="quiqqer/product-bricks" var="button.product.viewProduct"}

@@ -37,6 +37,7 @@ class UserInputFrontendView extends QUI\ERP\Products\Field\View
         }
 
         $Engine->assign([
+            'css'        => \file_get_contents(\dirname(__FILE__).'/UserInputFrontendView.css'),
             'this'       => $this,
             'id'         => $id,
             'title'      => $this->getTitle(),

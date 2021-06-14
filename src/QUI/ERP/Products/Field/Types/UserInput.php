@@ -10,7 +10,7 @@ use QUI\ERP\Products\Handler\Search;
  *
  * This field type provides an input / textarea for individual user input by a frontend user.
  */
-class UserInput extends QUI\ERP\Products\Field\Field
+class UserInput extends QUI\ERP\Products\Field\CustomInputField
 {
     /**
      * @var bool
@@ -124,12 +124,18 @@ class UserInput extends QUI\ERP\Products\Field\Field
     }
 
     /**
-     * Is the field a custom field?
+     * Return the user input text
      *
-     * @return boolean
+     * @return string
      */
-    public function isCustomField()
+    public function getUserInput(): string
     {
-        return true;
+        $userInput = $this->getValue();
+
+        if (empty($userInput)) {
+            return '';
+        }
+
+        return $userInput;
     }
 }

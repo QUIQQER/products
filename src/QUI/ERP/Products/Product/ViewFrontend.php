@@ -490,6 +490,23 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         return $this->Product->getCalculatedPrice($FieldId);
     }
 
+    /**
+     * Check if this product has fields that require user input.
+     *
+     * @return bool
+     */
+    public function hasRequiredUserInputFields(): bool
+    {
+        foreach ($this->Product->getFields() as $Field) {
+            if ($Field instanceof QUI\ERP\Products\Field\CustomInputFieldInterface &&
+                $Field->isRequired()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     //region calculation
 
     /**

@@ -24,14 +24,18 @@ QUI::$Ajax->registerFunction(
             $fieldId = [$fieldId];
         }
 
-        if (\is_array($fieldId)) {
-            foreach ($fieldId as $fid) {
-                $Field = $Fields->getField($fid);
-                $Product->addOwnField($Field);
+        try {
+            if (\is_array($fieldId)) {
+                foreach ($fieldId as $fid) {
+                    $Field = $Fields->getField($fid);
+                    $Product->addOwnField($Field);
+                }
             }
-        }
 
-        $Product->save();
+            $Product->save();
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
     },
     ['productId', 'fieldId'],
     'Permission::checkAdminUser'

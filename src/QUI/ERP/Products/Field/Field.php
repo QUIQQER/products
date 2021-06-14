@@ -672,7 +672,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function isCustomField()
     {
-        return $this instanceof QUI\ERP\Products\Field\CustomField;
+        return false;
     }
 
     /**
@@ -1145,6 +1145,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['id']        = $this->getId();
         $attributes['value']     = $this->getValue();
         $attributes['__class__'] = \get_class($this);
+
+        if ($this instanceof CustomInputFieldInterface) {
+            $attributes['userInput'] = $this->getUserInput();
+        }
 
         return $attributes;
     }

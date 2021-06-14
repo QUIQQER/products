@@ -1,6 +1,26 @@
+<style>
+    {$css}
+</style>
+
 <div class="quiqqer-product-field">
     <div class="quiqqer-product-field-title">{$title}</div>
     <div class="quiqqer-product-field-value">
-        {locale group="quiqqer/products" var="UserInputFrontendView.info" maxCharacters=$options['maxCharacters']}
+        <div class="quiqqer-products-field-userinput-overlay"
+             data-qui="package/quiqqer/products/bin/controls/frontend/fields/UserInput"
+             data-qui-options-max_length="{$options['maxCharacters']}"
+             data-qui-options-input_type="{$options['inputType']}"
+             data-qui-options-field_title="{$title}"
+             data-field-id="{$id}"
+        >
+            <span class="quiqqer-products-field-userinput-overlay-text">
+                <span class="fa fa-edit"></span>
+                {locale group="quiqqer/products" var="UserInputFrontendView.input_placeholder"}
+            </span>
+            <input class="quiqqer-products-field-userinput"
+                   type="text"
+                   name="userInput"
+                   {if $isRequired}required{/if}
+            />
+        </div>
     </div>
 </div>

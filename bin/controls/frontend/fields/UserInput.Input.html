@@ -1,11 +1,3 @@
-<div class="quiqqer-products-userinput-info">
-    <h1>
-        {{productTitle}}
-    </h1>
-    <div class="quiqqer-products-userinput-info-text">
-        {{{infoText}}}
-    </div>
-</div>
 <div class="quiqqer-products-userinput-input">
     {{#isInput}}
     <label>
@@ -16,7 +8,7 @@
     {{^isInput}}
     <label>
         <span>{{labelInput}}</span>
-        <textarea maxlength="{{maxLength}}" name="userInput"></textarea>
+        <textarea maxlength="{{maxLength}}" name="userInput" rows="13"></textarea>
     </label>
     {{/isInput}}
 </div>

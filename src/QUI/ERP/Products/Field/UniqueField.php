@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Field;
 
 use QUI;
+use QUI\ERP\Products\Field\CustomInputFieldInterface;
 
 /**
  * Class UniqueField
@@ -471,6 +472,15 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             }
         }
 
+        $parentClass = $this->getParentClass();
+
+        if (empty($parentClass)) {
+            $Field      = QUI\ERP\Products\Handler\Fields::getField($this->getId());
+            $interfaces = \class_implements(\get_class($Field));
+        } else {
+            $interfaces = \class_implements($this->getParentClass());
+        }
+
         return [
             'id'         => $this->getId(),
             'title'      => $this->getTitle(),
@@ -481,16 +491,17 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'isSystem'   => $this->isSystem(),
             'isPublic'   => $this->isPublic(),
 
-            'prefix'        => $this->prefix,
-            'suffix'        => $this->suffix,
-            'priority'      => $this->priority,
-            'custom'        => $this->isCustomField(),
-            'custom_calc'   => $this->custom_calc,
-            'unassigned'    => $this->isUnassigned(),
-            'value'         => $value,
-            'valueText'     => $this->getValueText(),
-            'userinput'     => $userinput,
-            'showInDetails' => $this->showInDetails()
+            'prefix'           => $this->prefix,
+            'suffix'           => $this->suffix,
+            'priority'         => $this->priority,
+            'custom'           => $this->isCustomField(),
+            'isUserInputField' => \in_array(CustomInputFieldInterface::class, $interfaces),
+            'custom_calc'      => $this->custom_calc,
+            'unassigned'       => $this->isUnassigned(),
+            'value'            => $value,
+            'valueText'        => $this->getValueText(),
+            'userinput'        => $userinput,
+            'showInDetails'    => $this->showInDetails()
         ];
     }
 
@@ -515,6 +526,11 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             case QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS:
                 $valueText = $this->getValueTextAttributeGroup();
                 break;
+
+            default:
+                if ($this->isCustomField()) {
+                    $valueText = $this->getValue();
+                }
         }
 
         return $valueText;

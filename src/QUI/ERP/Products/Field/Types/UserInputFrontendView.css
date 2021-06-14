@@ -1,0 +1,27 @@
+.quiqqer-products-field-userinput-overlay {
+    position: relative;
+}
+
+.quiqqer-products-field-userinput {
+    color: transparent;
+}
+
+.quiqqer-products-field-userinput-overlay > input {
+    margin: 0;
+    line-height: 40px;
+    width: 100%;
+}
+
+.quiqqer-products-field-userinput-overlay-text {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    font-style: italic;
+    height: 100%;
+    padding-left: 10px;
+    position: absolute;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
