@@ -11,9 +11,10 @@ use QUI\ERP\Products\Handler\Products;
 
 /**
  * Class CustomField
- * @package QUI\ERP\Products\Field
+ *
+ * Represents a product field that implements its own product price calculation.
  */
-abstract class CustomField extends QUI\ERP\Products\Field\Field
+abstract class CustomCalcField extends QUI\ERP\Products\Field\Field implements CustomCalcFieldInterface
 {
     /**
      * Return the array for the calculation
@@ -44,5 +45,15 @@ abstract class CustomField extends QUI\ERP\Products\Field\Field
         }
 
         return $attributes;
+    }
+
+    /**
+     * Is the field a custom field?
+     *
+     * @return boolean
+     */
+    public function isCustomField()
+    {
+        return true;
     }
 }
