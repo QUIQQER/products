@@ -210,13 +210,21 @@ class ProductListFrontendView
         }
 
         /* @var $Factor QUI\ERP\Products\Utils\PriceFactor */
+        $product['grandTotalFactors'] = [];
+
         foreach ($this->ProductList->getPriceFactors()->sort() as $Factor) {
             if (!$Factor->isVisible()) {
                 continue;
             }
 
+            $key = 'attributes';
+
+            if ($Factor->getCalculationBasis() === QUI\ERP\Accounting\Calc::CALCULATION_GRAND_TOTAL) {
+                $key = 'grandTotalFactors';
+            }
+
             if ($hidePrice) {
-                $product['attributes'][] = [
+                $product[$key][] = [
                     'title'     => $Factor->getTitle(),
                     'value'     => '',
                     'valueText' => $Factor->getValueText(),
@@ -224,7 +232,7 @@ class ProductListFrontendView
                 continue;
             }
 
-            $result['attributes'][] = [
+            $result[$key][] = [
                 'title'     => $Factor->getTitle(),
                 'value'     => $Factor->getSumFormatted(),
                 'valueText' => $Factor->getValueText()
@@ -236,6 +244,7 @@ class ProductListFrontendView
         $result['subSum']      = $hidePrice ? '' : $this->formatPrice($list['subSum']);
         $result['nettoSum']    = $hidePrice ? '' : $this->formatPrice($list['nettoSum']);
         $result['nettoSubSum'] = $hidePrice ? '' : $this->formatPrice($list['nettoSubSum']);
+        $result['grandSubSum'] = $hidePrice ? '' : $this->formatPrice($list['grandSubSum']);
 
         $this->data = $result;
     }

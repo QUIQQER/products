@@ -327,6 +327,15 @@ class Calc
 
         /* @var $PriceFactor PriceFactor */
         foreach ($priceFactors as $PriceFactor) {
+            if ($PriceFactor->getCalculationBasis() === ErpCalc::CALCULATION_GRAND_TOTAL) {
+                $PriceFactor->setNettoSum($PriceFactor->getValue());
+                $PriceFactor->setSum($PriceFactor->getValue());
+                $PriceFactor->setValue($PriceFactor->getValue());
+                $PriceFactor->setValueText(0);
+                $PriceFactor->setVat(0);
+                continue;
+            }
+
             $priceFactorValue = $PriceFactor->getValue();
             $Vat              = null;
 
@@ -407,6 +416,9 @@ class Calc
                                 $percentage = $priceFactorValue / 100 * $subSum;
                             }
                             break;
+
+                        case ErpCalc::CALCULATION_GRAND_TOTAL:
+                            continue 3;
                     }
 
                     // quiqqer/order#55
@@ -509,7 +521,9 @@ class Calc
 
             foreach ($priceFactors as $Factor) {
                 /* @var $Factor QUI\ERP\Products\Utils\PriceFactor */
-                $priceFactorBruttoSums = $priceFactorBruttoSums + $Factor->getSum();
+                if ($Factor->getCalculationBasis() !== ErpCalc::CALCULATION_GRAND_TOTAL) {
+                    $priceFactorBruttoSums = $priceFactorBruttoSums + $Factor->getSum();
+                }
             }
 
             $priceFactorBruttoSum = $subSum + $priceFactorBruttoSums;
@@ -540,8 +554,24 @@ class Calc
             }
         }
 
+        // look if CALCULATION_GRAND_TOTAL
+        $grandSubSum = $bruttoSum;
+
+        foreach ($priceFactors as $Factor) {
+            if ($Factor->getCalculationBasis() === ErpCalc::CALCULATION_GRAND_TOTAL) {
+                $value     = $Factor->getValue();
+                $bruttoSum = $bruttoSum + $value;
+
+                if ($bruttoSum < 0) {
+                    $bruttoSum = 0;
+                }
+            }
+        }
+
+
         $callback([
             'sum'          => $bruttoSum,
+            'grandSubSum'  => $grandSubSum,
             'subSum'       => $subSum,
             'nettoSum'     => $nettoSum,
             'nettoSubSum'  => $nettoSubSum,
