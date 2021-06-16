@@ -543,6 +543,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$readWindowLocation().then(function () {
                     //this.$onFilterChange();
                     this.$load = true;
+                    this.$renderFilterFields();
 
                     // if (this.getAttribute('autoload')) {
                     //     this.$setWindowLocation();
@@ -1887,6 +1888,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return;
             }
 
+            DEBUG ? console.log('$renderFilterFields') : '';
+            DEBUG ? console.log(this.$selectFields) : '';
+
             var self    = this,
                 onClose = function (PLF) {
                     var Field = PLF.getAttribute('Field');
@@ -1930,6 +1934,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 this.$selectFields[i].addEvent('ready', onReady.bind(this.$selectFields[i]));
             }
+
+            DEBUG ? console.log(this.$FilterFieldList) : '';
 
             this.refreshClearFilterButtonStatus();
         },

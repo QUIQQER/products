@@ -87,10 +87,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListField
 
             if (Field.getType() === 'package/quiqqer/productsearch/bin/controls/search/SearchField' &&
                 typeof Field.$Type.$Select !== 'undefined') {
-                var Range = Field.$Type.$Select;
-                var range = Range.getAttribute('range');
-                var max   = range.max;
-                var min   = range.min;
+                var max   = Field.$Type.$Select.getAttribute('max');
+                var min   = Field.$Type.$Select.getAttribute('min');
 
                 if (!min && !max) {
                     value = false;
