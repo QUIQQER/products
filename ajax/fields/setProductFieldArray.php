@@ -21,13 +21,7 @@ QUI::$Ajax->registerFunction(
          *
          * thus it must not be set here.
          */
-//        $Field        = Fields::getField($fieldId);
-//        $productArray = $Field->toProductArray();
-
-        Fields::setFieldAttributesToProducts((int)$fieldId, [
-//            'unassigned' => $productArray['unassigned'],
-//            'ownField'   => $productArray['ownField']
-        ]);
+        Fields::setFieldAttributesToProducts((int)$fieldId);
     },
     ['fieldId'],
     'Permission::checkAdminUser'
