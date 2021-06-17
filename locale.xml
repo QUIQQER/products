@@ -342,6 +342,7 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
 <li><b>#YEAR</b> - Aktuelles Jahr (vierstellige Zahl)</li>
 <li><b>#MONTH</b> - Aktueller Monat (zweistellige Zahl)</li>
 <li><b>#DAY</b> - Aktuelles Tag (zweistellige Zahl)</li>
+<li><b>#CAT_ID</b> - ID der Hauptkategorie des Produkts (ausgenommen die "Alle Produkte"-Kategorie)</li>
 </ul>
 ]]></de>
             <en><![CDATA[
@@ -350,6 +351,7 @@ This prefix will be prepended to all automatically generated article numbers. Op
 <li><b>#YEAR</b> - Current year (four-digit number)</li>
 <li><b>#MONTH</b> - Current month (two-digit number)</li>
 <li><b>#DAY</b> - Current day (two-digit number)</li>
+<li><b>#CAT_ID</b> - ID of the products main category (except for the "All Products" category)</li>
 </ul>
 For a newly created product the article number should be generated automatically
 ]]></en>
@@ -364,6 +366,7 @@ For a newly created product the article number should be generated automatically
 <li><b>#YEAR</b> - Aktuelles Jahr (vierstellige Zahl)</li>
 <li><b>#MONTH</b> - Aktueller Monat (zweistellige Zahl)</li>
 <li><b>#DAY</b> - Aktuelles Tag (zweistellige Zahl)</li>
+<li><b>#CAT_ID</b> - ID der Hauptkategorie des Produkts (ausgenommen die "Alle Produkte"-Kategorie)</li>
 </ul>
 ]]></de>
             <en><![CDATA[
@@ -372,6 +375,7 @@ This suffix is appended to all automatically generated article numbers. Optional
 <li><b>#YEAR</b> - Current year (four-digit number)</li>
 <li><b>#MONTH</b> - Current month (two-digit number)</li>
 <li><b>#DAY</b> - Current day (two-digit number)</li>
+<li><b>#CAT_ID</b> - ID of the products main category (except for the "All Products" category)</li>
 </ul>
 For a newly created product the article number should be generated automatically
 ]]></en>
