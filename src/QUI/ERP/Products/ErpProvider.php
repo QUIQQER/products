@@ -56,4 +56,14 @@ class ErpProvider extends AbstractErpProvider
             ])
         );
     }
+
+    /**
+     * @return array
+     */
+    public static function getNumberRanges()
+    {
+        return [
+            new NumberRange()
+        ];
+    }
 }
