@@ -484,6 +484,8 @@ class Products
         // fields
         $fieldData = [];
 
+        $isAutoGenerateArticleNo = self::isAutoGenerateArticleNo();
+
         /* @var $Field Field|integer */
         foreach ($fields as $Field) {
             if (!\is_object($Field)) {
@@ -496,6 +498,14 @@ class Products
             }
 
             $value = $Field->getValue();
+
+            if (
+                $isAutoGenerateArticleNo &&
+                $Field->getId() === Fields::FIELD_PRODUCT_NO &&
+                empty($value)
+            ) {
+                $Field->setValue(self::generateArticleNo());
+            }
 
             if ($Field->isRequired()) {
                 if ($value === '' && $validation) {
@@ -1114,4 +1124,63 @@ class Products
     }
 
     //endregion
+
+    // region Auto-generated article nos.
+
+    public static function generateArticleNo()
+    {
+        $NumberRange = new QUI\ERP\Products\NumberRange();
+        $nextId      = $NumberRange->getRange();
+
+        try {
+            $Conf = QUI::getPackage('quiqqer/products')->getConfig();
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            return $nextId;
+        }
+
+        $articleNoConf = $Conf->getSection('autoArticleNos');
+
+        if (!empty($articleNoConf['prefix'])) {
+            $nextId = $articleNoConf['prefix'].$nextId;
+        }
+
+        if (!empty($articleNoConf['suffix'])) {
+            $nextId .= $articleNoConf['suffix'];
+        }
+
+        // replace placeholders
+        return \str_replace(
+            [
+                '#YEAR',
+                '#MONTH',
+                '#DAY'
+            ],
+            [
+                \date('Y'),
+                \date('m'),
+                \date('d')
+            ],
+            $nextId
+        );
+    }
+
+    /**
+     * Are product article no. automatically generated?
+     *
+     * @return bool
+     */
+    public static function isAutoGenerateArticleNo(): bool
+    {
+        try {
+            $Conf = QUI::getPackage('quiqqer/products')->getConfig();
+            return !empty($Conf->get('autoArticleNos', 'generate'));
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
+
+        return false;
+    }
+
+    // endregion
 }

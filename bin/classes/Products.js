@@ -411,6 +411,34 @@ define('package/quiqqer/products/bin/classes/Products', [
         },
 
         /**
+         * Get next auto-generated product no.
+         *
+         * @return {Promise}
+         */
+        getNextArticleNo: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_getNextArticleNo', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
+         * Check if product article nos. are auto-generated.
+         *
+         * @return {Promise}
+         */
+        isAutoGenerateNextArticleNo: function () {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_settings_isAutoGenerateNextArticleNo', resolve, {
+                    'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
          * Get data for a product SelectItem
          *
          * @param {Number} productId
