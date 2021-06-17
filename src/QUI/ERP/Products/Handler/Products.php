@@ -499,11 +499,9 @@ class Products
 
             $value = $Field->getValue();
 
-            if (
-                $isAutoGenerateArticleNo &&
+            if ($isAutoGenerateArticleNo &&
                 $Field->getId() === Fields::FIELD_PRODUCT_NO &&
-                empty($value)
-            ) {
+                empty($value)) {
                 $Field->setValue(self::generateArticleNo());
             }
 
@@ -1127,7 +1125,12 @@ class Products
 
     // region Auto-generated article nos.
 
-    public static function generateArticleNo()
+    /**
+     * Auto-generate a new article no.
+     *
+     * @return string
+     */
+    public static function generateArticleNo(): string
     {
         $NumberRange = new QUI\ERP\Products\NumberRange();
         $nextId      = $NumberRange->getRange();
