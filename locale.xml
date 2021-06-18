@@ -320,6 +320,67 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
                 <![CDATA[Here you can set a multiplier for each price field created in the system based on another price field.]]></en>
         </locale>
 
+        <locale name="menu.erp.products.autoArticleNos.title">
+            <de><![CDATA[Automatisch generierte Aritkel-Nummern]]></de>
+            <en><![CDATA[Auto-generated article nos.]]></en>
+        </locale>
+        <locale name="settings.window.autoArticleNos.generate">
+            <de><![CDATA[Artikel-Nummern automatisch generieren]]></de>
+            <en><![CDATA[Auto-generate article nos.]]></en>
+        </locale>
+        <locale name="settings.window.autoArticleNos.generate.description">
+            <de><![CDATA[Für ein neu erstelltes Produkt soll die Artikel-Nummer automatisch generiert werden]]></de>
+            <en><![CDATA[For a newly created product the article number should be generated automatically]]></en>
+        </locale>
+        <locale name="settings.window.autoArticleNos.prefix">
+            <de><![CDATA[Präfix für automatisch generierte Artikel-Nummern]]></de>
+            <en><![CDATA[Prefix for auto-generated article nos.]]></en>
+        </locale>
+        <locale name="settings.window.autoArticleNos.prefix.description">
+            <de><![CDATA[Dieses Präfix wird allen automatisch generierten Artikel-Nummern vorangestellt. Optional können folgende Platzhalter verwendet werden:<br/>
+<ul>
+<li><b>#YEAR</b> - Aktuelles Jahr (vierstellige Zahl)</li>
+<li><b>#MONTH</b> - Aktueller Monat (zweistellige Zahl)</li>
+<li><b>#DAY</b> - Aktuelles Tag (zweistellige Zahl)</li>
+<li><b>#CAT_ID</b> - ID der Hauptkategorie des Produkts (ausgenommen die "Alle Produkte"-Kategorie)</li>
+</ul>
+]]></de>
+            <en><![CDATA[
+This prefix will be prepended to all automatically generated article numbers. Optionally, the following placeholders can be used:<br/>
+<ul>
+<li><b>#YEAR</b> - Current year (four-digit number)</li>
+<li><b>#MONTH</b> - Current month (two-digit number)</li>
+<li><b>#DAY</b> - Current day (two-digit number)</li>
+<li><b>#CAT_ID</b> - ID of the products main category (except for the "All Products" category)</li>
+</ul>
+For a newly created product the article number should be generated automatically
+]]></en>
+        </locale>
+        <locale name="settings.window.autoArticleNos.suffix">
+            <de><![CDATA[Suffix für automatisch generierte Artikel-Nummern]]></de>
+            <en><![CDATA[Suffix for auto-generated article nos.]]></en>
+        </locale>
+        <locale name="settings.window.autoArticleNos.suffix.description">
+            <de><![CDATA[Dieses Suffix wird an alle automatisch generierten Artikel-Nummern angehangen. Optional können folgende Platzhalter verwendet werden:<br/>
+<ul>
+<li><b>#YEAR</b> - Aktuelles Jahr (vierstellige Zahl)</li>
+<li><b>#MONTH</b> - Aktueller Monat (zweistellige Zahl)</li>
+<li><b>#DAY</b> - Aktuelles Tag (zweistellige Zahl)</li>
+<li><b>#CAT_ID</b> - ID der Hauptkategorie des Produkts (ausgenommen die "Alle Produkte"-Kategorie)</li>
+</ul>
+]]></de>
+            <en><![CDATA[
+This suffix is appended to all automatically generated article numbers. Optionally, the following placeholders can be used:<br/>
+<ul>
+<li><b>#YEAR</b> - Current year (four-digit number)</li>
+<li><b>#MONTH</b> - Current month (two-digit number)</li>
+<li><b>#DAY</b> - Current day (two-digit number)</li>
+<li><b>#CAT_ID</b> - ID of the products main category (except for the "All Products" category)</li>
+</ul>
+For a newly created product the article number should be generated automatically
+]]></en>
+        </locale>
+
         <locale name="fieldtype">
             <de><![CDATA[Feld-Typ]]></de>
             <en><![CDATA[Field type]]></en>
@@ -1230,6 +1291,10 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
 
     <groups name="quiqqer/products" datatype="js">
 
+        <locale name="controls.products.Create.auto_generated_artciel_no_desc">
+            <de><![CDATA[Wenn dieses Feld leergelassen wird, wird automatisch eine neue Artikel-Nr. für dieses Produkt erzeugt. Die Artikel-Nr. ist jederzeit änderbar.]]></de>
+            <en><![CDATA[If this field is left empty, a new article no. will be created automatically for this product. The article no. can be changed at any time.]]></en>
+        </locale>
         <locale name="controls.FolderSettings.autoActivateItems">
             <de><![CDATA[Hochgeladene Dateien automatisch aktivieren]]></de>
             <en><![CDATA[Auto-activate uploaded files]]></en>
@@ -2291,6 +2356,11 @@ UVP nach Anwendung des Multiplikators: <b>75,00 €</b>
     </groups>
 
     <groups name="quiqqer/products" datatype="php">
+
+        <locale name="NumberRange.title">
+            <de><![CDATA[Produkte (Artikel-Nummern)]]></de>
+            <en><![CDATA[Products (article nos.)]]></en>
+        </locale>
 
         <locale name="product_type.DigitalProduct.title">
             <de><![CDATA[Digitales Produkt]]></de>

@@ -529,6 +529,7 @@ class Products
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             [
                 'fieldData'  => \json_encode($fieldData),
+                'category'   => $categoryIds[0],
                 'categories' => ','.\implode(',', $categoryIds).',',
                 'type'       => $type,
                 'c_user'     => QUI::getUserBySession()->getId(),
@@ -550,13 +551,23 @@ class Products
             ]
         );
 
-
         $Product = self::getProduct($newId);
 
         if (!($Product instanceof VariantChild)) {
 //            $Product->getField(QUI\ERP\Products\Handler\Fields::FIELD_FOLDER)->setValue('');
             $Product->createMediaFolder(); // the product is also saved in this method
         }
+
+        // Auto-generate article no.
+        $isAutoGenerateArticleNo = self::isAutoGenerateArticleNo();
+        $ArticleNoField          = $Product->getField(Fields::FIELD_PRODUCT_NO);
+
+        if ($isAutoGenerateArticleNo &&
+            empty($ArticleNoField->getValue())) {
+            $ArticleNoField->setValue(self::generateArticleNo($Product));
+        }
+
+        $Product->save();
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreate', [$Product]);
 
@@ -1114,4 +1125,78 @@ class Products
     }
 
     //endregion
+
+    // region Auto-generated article nos.
+
+    /**
+     * Auto-generate a new article no.
+     *
+     * @param QUI\ERP\Products\Product\Product $Product
+     * @return string
+     */
+    public static function generateArticleNo(QUI\ERP\Products\Product\Product $Product): string
+    {
+        $NumberRange = new QUI\ERP\Products\NumberRange();
+        $nextId      = $NumberRange->getRange();
+
+        try {
+            $Conf = QUI::getPackage('quiqqer/products')->getConfig();
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            return $nextId;
+        }
+
+        $articleNoConf = $Conf->getSection('autoArticleNos');
+
+        if (!empty($articleNoConf['prefix'])) {
+            $nextId = $articleNoConf['prefix'].$nextId;
+        }
+
+        if (!empty($articleNoConf['suffix'])) {
+            $nextId .= $articleNoConf['suffix'];
+        }
+
+        // Category
+        $mainCategoryId = $Product->getCategory()->getId();
+
+        if (empty($mainCategoryId)) {
+            $mainCategoryId = '';
+        }
+
+        // replace placeholders
+        return \str_replace(
+            [
+                '#YEAR',
+                '#MONTH',
+                '#DAY',
+                '#CAT_ID'
+            ],
+            [
+                \date('Y'),
+                \date('m'),
+                \date('d'),
+                $mainCategoryId
+            ],
+            $nextId
+        );
+    }
+
+    /**
+     * Are product article no. automatically generated?
+     *
+     * @return bool
+     */
+    public static function isAutoGenerateArticleNo(): bool
+    {
+        try {
+            $Conf = QUI::getPackage('quiqqer/products')->getConfig();
+            return !empty($Conf->get('autoArticleNos', 'generate'));
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
+
+        return false;
+    }
+
+    // endregion
 }

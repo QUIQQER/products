@@ -543,6 +543,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$readWindowLocation().then(function () {
                     //this.$onFilterChange();
                     this.$load = true;
+                    this.$renderFilterFields();
 
                     // if (this.getAttribute('autoload')) {
                     //     this.$setWindowLocation();
@@ -893,6 +894,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if ("origin" in location) {
                 url = location.origin + url;
             }
+
+            this.$renderFilterFields();
 
             if (window.location.toString() === url) {
                 return;
@@ -1837,7 +1840,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         searchdata: searchdata,
                         title     : Title.get('text').trim(),
                         events    : {
-                            onChange: this.$setWindowLocation
+                            onChange: (Instance) => {
+                                this.$setWindowLocation(Instance);
+                            }
                         }
                     }).inject(Filter);
 
@@ -1883,6 +1888,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 return;
             }
 
+            DEBUG ? console.log('$renderFilterFields') : '';
+            DEBUG ? console.log(this.$selectFields) : '';
+
             var self    = this,
                 onClose = function (PLF) {
                     var Field = PLF.getAttribute('Field');
@@ -1896,6 +1904,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }
                 },
                 onReady = function () {
+                    if (!self.$load) {
+                        return;
+                    }
+
                     new ProductListField({
                         Field : this,
                         events: {
@@ -1922,6 +1934,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                 this.$selectFields[i].addEvent('ready', onReady.bind(this.$selectFields[i]));
             }
+
+            DEBUG ? console.log(this.$FilterFieldList) : '';
 
             this.refreshClearFilterButtonStatus();
         },
@@ -2017,8 +2031,25 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$selectFilter[i].getChildren().each(uncheck);
             }
 
+            this.$load = false;
+
+            if ("history" in window) {
+                window.history.pushState({}, "", QUIQQER_SITE.url);
+                window.fireEvent('popstate');
+            } else {
+                window.location = QUIQQER_SITE.url;
+            }
+
             this.refreshClearFilterButtonStatus();
-            this.$setWindowLocation();
+            this.$FilterFieldList.set('html', '');
+
+            this.hideClearFilterButton().then(() => {
+                return this.$renderSearch();
+            }).then(() => {
+                return this.$refreshSearchCount();
+            }).then(() => {
+                this.$load = true;
+            });
         },
 
         /**
@@ -2114,15 +2145,20 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
         /**
          * Hide the clearing filter button
+         *
+         * @return {Promise}
          */
         hideClearFilterButton: function () {
-            moofx(this.$FilterClearButton).animate({
-                opacity: 0
-            }, {
-                duration: animationDuration,
-                callback: function () {
-                    this.$FilterClearButton.setStyle('display', 'none');
-                }.bind(this)
+            return new Promise((resolve) => {
+                moofx(this.$FilterClearButton).animate({
+                    opacity: 0
+                }, {
+                    duration: animationDuration,
+                    callback: () => {
+                        this.$FilterClearButton.setStyle('display', 'none');
+                        resolve();
+                    }
+                });
             });
         },
 
@@ -2130,13 +2166,17 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * Displays / Show the clearing filter button
          */
         showClearFilterButton: function () {
-            this.$FilterClearButton.setStyle('display', null);
-            this.$refreshSearchCount();
+            return new Promise((resolve) => {
+                this.$FilterClearButton.setStyle('display', null);
 
-            moofx(this.$FilterClearButton).animate({
-                opacity: 1
-            }, {
-                duration: animationDuration
+                this.$refreshSearchCount().then(() => {
+                    moofx(this.$FilterClearButton).animate({
+                        opacity: 1
+                    }, {
+                        duration: animationDuration,
+                        callback: resolve
+                    });
+                });
             });
         },
 
