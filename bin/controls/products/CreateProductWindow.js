@@ -11,7 +11,7 @@ define('package/quiqqer/products/bin/controls/products/CreateProductWindow', [
 ], function (QUI, QUIConfirm, QUILocale) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
@@ -26,7 +26,8 @@ define('package/quiqqer/products/bin/controls/products/CreateProductWindow', [
         options: {
             maxHeight         : 600,
             maxWidth          : 800,
-            backgroundClosable: false
+            backgroundClosable: false,
+            categories        : false
         },
 
         initialize: function (options) {
@@ -58,22 +59,21 @@ define('package/quiqqer/products/bin/controls/products/CreateProductWindow', [
          * event: on open
          */
         $onOpen: function () {
-            var self = this;
-
             this.Loader.show();
             this.getContent().set('html', '');
 
             require([
                 'package/quiqqer/products/bin/controls/products/Create'
-            ], function (CreateProduct) {
-                self.$Create = new CreateProduct({
-                    events: {
-                        onLoaded: function () {
-                            self.Loader.hide();
+            ], (CreateProduct) => {
+                this.$Create = new CreateProduct({
+                    categories: this.getAttribute('categories'),
+                    events    : {
+                        onLoaded: () => {
+                            this.Loader.hide();
                         }
                     }
                 }).inject(this.getContent());
-            }.bind(this));
+            });
         },
 
         /**
@@ -82,13 +82,13 @@ define('package/quiqqer/products/bin/controls/products/CreateProductWindow', [
         $onSubmit: function () {
             this.Loader.show();
 
-            this.$Create.submit().then(function (product) {
+            this.$Create.submit().then((product) => {
                 this.close();
                 this.fireEvent('productCreated', [this, product]);
-            }.bind(this)).catch(function (err) {
+            }).catch((err) => {
                 console.error(err);
                 this.Loader.hide();
-            }.bind(this));
+            });
         }
     });
 });

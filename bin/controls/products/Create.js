@@ -25,9 +25,10 @@ define('package/quiqqer/products/bin/controls/products/Create', [
              template, templateField) {
     "use strict";
 
-    var lg       = 'quiqqer/products',
-        Products = new Handler(),
-        Fields   = new FieldHandler();
+    let lg = 'quiqqer/products';
+
+    const Products = new Handler(),
+          Fields   = new FieldHandler();
 
     return new Class({
 
@@ -39,7 +40,8 @@ define('package/quiqqer/products/bin/controls/products/Create', [
         ],
 
         options: {
-            productType: ''
+            productType: '',
+            categories : false
         },
 
         initialize: function (options) {
@@ -58,8 +60,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
          * @return {HTMLDivElement}
          */
         create: function () {
-            var self = this,
-                Elm  = this.parent();
+            const Elm = this.parent();
 
             Elm.set({
                 'class': 'product-create',
@@ -73,7 +74,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 })
             });
 
-            var ProductCategory = Elm.getElement('[name="product-category"]');
+            const ProductCategory = Elm.getElement('[name="product-category"]');
 
             Elm.getElement('form').addEvent('submit', function (e) {
                 e.stop();
@@ -82,8 +83,8 @@ define('package/quiqqer/products/bin/controls/products/Create', [
             this.$Categories = new CategoriesSelect({
                 events: {
                     onDelete: function (Select, Item) {
-                        var categoryId = Item.getAttribute('categoryId');
-                        var Option     = ProductCategory.getElement(
+                        let categoryId = Item.getAttribute('categoryId');
+                        const Option   = ProductCategory.getElement(
                             '[value="' + categoryId + '"]'
                         );
 
@@ -91,9 +92,9 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                             Option.destroy();
                         }
                     },
-                    onChange: function () {
-                        var ids = self.$Categories.getValue();
-                        var Row = ProductCategory.getParent('tr');
+                    onChange: () => {
+                        let ids   = this.$Categories.getValue();
+                        const Row = ProductCategory.getParent('tr');
 
                         if (ids === '') {
                             ids = [];
@@ -123,7 +124,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                             return;
                         }
 
-                        var i, len, id;
+                        let i, len, id;
 
                         for (i = 0, len = ids.length; i < len; i++) {
                             id = ids[i];
@@ -168,6 +169,10 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 Elm.getElement('.product-categories')
             );
 
+            if (typeOf(this.getAttribute('categories')) === 'array') {
+                this.$Categories;
+            }
+
             return Elm;
         },
 
@@ -175,24 +180,22 @@ define('package/quiqqer/products/bin/controls/products/Create', [
          * event : on inject
          */
         $onInject: function () {
-            var self = this,
-                Elm  = this.getElm();
-
-            var StandardFields = Elm.getElement('.product-standardfield tbody');
-            var Data           = Elm.getElement('.product-data tbody');
+            const Elm            = this.getElm();
+            const StandardFields = Elm.getElement('.product-standardfield tbody');
+            const Data           = Elm.getElement('.product-data tbody');
 
             Promise.all([
                 Fields.getSystemFields(),
                 Fields.getStandardFields(),
                 Products.getTypes()
-            ]).then(function (result) {
-                var i, len, field, entry, Label;
-                var systemFields   = result[0],
+            ]).then((result) => {
+                let i, len, field, entry, Label;
+                let systemFields   = result[0],
                     standardFields = result[1],
                     types          = result[2];
 
-                var diffFields = standardFields.filter(function (value) {
-                    for (var i = 0, len = systemFields.length; i < len; i++) {
+                let diffFields = standardFields.filter(function (value) {
+                    for (let i = 0, len = systemFields.length; i < len; i++) {
                         if (value.id === systemFields[i].id) {
                             return false;
                         }
@@ -200,7 +203,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                     return true;
                 });
 
-                var useField = function (Field) {
+                const useField = function (Field) {
                     if (Field.id === 10 ||  // Folder existiert noch nicht, wird erst angelegt
                         Field.id === 9) {   // Image kann beim create nicht gesetzt werden, noch kein Media Ordner vorhanden
                         return false;
@@ -261,10 +264,10 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                 }
 
                 // types
-                var ProductTypes = Elm.getElement('.product-types');
+                const ProductTypes = Elm.getElement('.product-types');
 
-                var productTypeChange = function (event) {
-                    var Target = event.target;
+                const productTypeChange = function (event) {
+                    let Target = event.target;
 
                     Elm.getElement('form').getElements('[name="productType"]').each(function (Node) {
                         if (Node !== Target) {
@@ -296,8 +299,21 @@ define('package/quiqqer/products/bin/controls/products/Create', [
                     Label.getElement('input').addEvent('change', productTypeChange);
                 }
 
-                QUI.parse(self.getElm()).then(function () {
-                    self.fireEvent('loaded');
+                QUI.parse(this.getElm()).then(() => {
+                    if (!this.getAttribute('categories')) {
+                        this.fireEvent('loaded');
+                        return;
+                    }
+
+                    const categories = this.getAttribute('categories');
+
+                    if (categories.length) {
+                        categories.forEach((categoryId) => {
+                            this.$Categories.addCategory(categoryId);
+                        });
+                    }
+
+                    this.fireEvent('loaded');
                 });
             });
         },
@@ -308,17 +324,15 @@ define('package/quiqqer/products/bin/controls/products/Create', [
          * @returns {Promise}
          */
         submit: function () {
-            var self = this,
-                Elm  = this.getElm();
+            const Elm = this.getElm();
 
-
-            var cValue     = self.$Categories.getValue().trim();
-            var categories = cValue.split(',');
-            var Form       = Elm.getElement('form');
-            var data       = QUIFormUtils.getFormData(Form);
+            let cValue     = this.$Categories.getValue().trim();
+            let categories = cValue.split(',');
+            let Form       = Elm.getElement('form');
+            let data       = QUIFormUtils.getFormData(Form);
 
             // fields
-            var fields = Object.filter(data, function (value, key) {
+            let fields = Object.filter(data, function (value, key) {
                 return (key.indexOf('field-') >= 0);
             });
 
@@ -334,16 +348,16 @@ define('package/quiqqer/products/bin/controls/products/Create', [
             }
 
             // check require
-            var l, name, value, Label;
-            var required = Form.getElements('[data-required="1"]');
+            let l, name, value, Label;
+            let required = Form.getElements('[data-required="1"]');
 
-            var triggerMessage = function (Field, message) {
+            const triggerMessage = function (Field, message) {
                 QUI.getMessageHandler().then(function (MH) {
                     MH.addAttention(message, Field);
                 });
             };
 
-            for (var i = 0, len = required.length; i < len; i++) {
+            for (let i = 0, len = required.length; i < len; i++) {
                 name  = required[i].get('name');
                 value = required[i].value;
 
@@ -390,9 +404,9 @@ define('package/quiqqer/products/bin/controls/products/Create', [
             }
 
 
-            var category     = Form.getElement('[name="product-category"]').value;
-            var productType  = '\\QUI\\ERP\\Products\\Product\\Types\\Product';
-            var productTypes = Form.getElements('[name="productType"]').filter(function (Input) {
+            let category     = Form.getElement('[name="product-category"]').value;
+            let productType  = '\\QUI\\ERP\\Products\\Product\\Types\\Product';
+            let productTypes = Form.getElements('[name="productType"]').filter(function (Input) {
                 return Input.checked;
             });
 
