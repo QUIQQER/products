@@ -25,7 +25,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
              Products, CreateProduct, ProductPanel, Search) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
@@ -72,26 +72,26 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
         refresh: function () {
             this.parent();
 
-            var Action   = this.getButtons('actions'),
-                children = Action.getChildren();
+            const Action   = this.getButtons('actions'),
+                  children = Action.getChildren();
 
-            var Delete = children.filter(function (Btn) {
+            const Delete = children.filter(function (Btn) {
                 return Btn.getAttribute('name') === 'delete';
             })[0];
 
-            var Edit = children.filter(function (Btn) {
+            const Edit = children.filter(function (Btn) {
                 return Btn.getAttribute('name') === 'edit';
             })[0];
 
-            var Copy = children.filter(function (Btn) {
+            const Copy = children.filter(function (Btn) {
                 return Btn.getAttribute('name') === 'copy';
             })[0];
 
-            var Activate = children.filter(function (Btn) {
+            const Activate = children.filter(function (Btn) {
                 return Btn.getAttribute('name') === 'activate';
             })[0];
 
-            var Deactivate = children.filter(function (Btn) {
+            const Deactivate = children.filter(function (Btn) {
                 return Btn.getAttribute('name') === 'deactivate';
             })[0];
 
@@ -117,8 +117,6 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * event : on create
          */
         $onCreate: function () {
-            var self = this;
-
             this.getContent().addClass('quiqqer-products-productPanel');
 
             // buttons
@@ -134,7 +132,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             this.addButton(this.$ButtonAdd);
 
             // aktionen
-            var Actions = new QUIButton({
+            const Actions = new QUIButton({
                 name      : 'actions',
                 text      : QUILocale.get(lg, 'btn.actions'),
                 menuCorner: 'topRight',
@@ -149,9 +147,9 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 icon    : 'fa fa-edit',
                 disabled: true,
                 events  : {
-                    onClick: function () {
-                        self.updateChild(
-                            self.$Search.getSelected()[0]
+                    onClick: () => {
+                        this.updateChild(
+                            this.$Search.getSelected()[0]
                         );
                     }
                 }
@@ -163,9 +161,9 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 icon    : 'fa fa-copy',
                 disabled: true,
                 events  : {
-                    onClick: function () {
-                        self.copyChild(
-                            self.$Search.getSelected()[0]
+                    onClick: () => {
+                        this.copyChild(
+                            this.$Search.getSelected()[0]
                         );
                     }
                 }
@@ -181,8 +179,8 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 icon    : 'fa fa-check',
                 disabled: true,
                 events  : {
-                    onClick: function () {
-                        self.activateChildren();
+                    onClick: () => {
+                        this.activateChildren();
                     }
                 }
             });
@@ -193,8 +191,8 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 icon    : 'fa fa-remove',
                 disabled: true,
                 events  : {
-                    onClick: function () {
-                        self.deactivateChildren();
+                    onClick: () => {
+                        this.deactivateChildren();
                     }
                 }
             });
@@ -209,16 +207,16 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                 icon    : 'fa fa-trash',
                 disabled: true,
                 events  : {
-                    onClick: function (Btn) {
+                    onClick: (Btn) => {
                         Btn.setAttribute('textimage', 'fa fa-spinner fa-spin');
 
-                        self.deleteChild(self.$Search.getSelected()).catch(function (Exception) {
+                        this.deleteChild(this.$Search.getSelected()).catch(function (Exception) {
                             if (Exception.getType() === 'qui/controls/messages/Error') {
                                 return;
                             }
 
                             console.error(Exception);
-                        }).then(function () {
+                        }).then(() => {
                             Btn.setAttribute('textimage', 'fa fa-trashcan');
                         });
                     }
@@ -237,9 +235,9 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                         marginRight: 5
                     },
                     events : {
-                        click: function () {
+                        click: () => {
                             this.$Search.search();
-                        }.bind(this)
+                        }
                     }
                 })
             );
@@ -252,7 +250,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                     width  : 200
                 },
                 events     : {
-                    keyup: function (e) {
+                    keyup: (e) => {
                         e.stop();
 
                         this.getContent()
@@ -262,7 +260,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                         if (e.key === 'enter') {
                             this.$Search.search();
                         }
-                    }.bind(this)
+                    }
                 }
             });
 
@@ -273,34 +271,32 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * event : on inject
          */
         $onInject: function () {
-            var self = this;
-
             this.$Search = new Search({
                 injectShow: false,
                 events    : {
-                    onClick: function () {
-                        var Action   = self.getButtons('actions'),
-                            children = Action.getChildren();
+                    onClick: () => {
+                        const Action   = this.getButtons('actions'),
+                              children = Action.getChildren();
 
-                        var selected = self.$Search.getSelected();
+                        const selected = this.$Search.getSelected();
 
-                        var Edit = children.filter(function (Btn) {
+                        const Edit = children.filter(function (Btn) {
                             return Btn.getAttribute('name') === 'edit';
                         })[0];
 
-                        var Copy = children.filter(function (Btn) {
+                        const Copy = children.filter(function (Btn) {
                             return Btn.getAttribute('name') === 'copy';
                         })[0];
 
-                        var Delete = children.filter(function (Btn) {
+                        const Delete = children.filter(function (Btn) {
                             return Btn.getAttribute('name') === 'delete';
                         })[0];
 
-                        var Activate = children.filter(function (Btn) {
+                        const Activate = children.filter(function (Btn) {
                             return Btn.getAttribute('name') === 'activate';
                         })[0];
 
-                        var Deactivate = children.filter(function (Btn) {
+                        const Deactivate = children.filter(function (Btn) {
                             return Btn.getAttribute('name') === 'deactivate';
                         })[0];
 
@@ -317,31 +313,31 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                         }
                     },
 
-                    onDblClick: function () {
-                        self.updateChild(self.$Search.getSelected()[0]);
+                    onDblClick: () => {
+                        this.updateChild(this.$Search.getSelected()[0]);
                     },
 
-                    onSearchBegin: function () {
-                        var Action   = self.getButtons('actions'),
-                            children = Action.getChildren();
+                    onSearchBegin: () => {
+                        const Action   = this.getButtons('actions'),
+                              children = Action.getChildren();
 
-                        var Delete = children.filter(function (Btn) {
+                        const Delete = children.filter(function (Btn) {
                             return Btn.getAttribute('name') === 'delete';
                         })[0];
 
-                        var Edit = children.filter(function (Btn) {
+                        const Edit = children.filter(function (Btn) {
                             return Btn.getAttribute('name') === 'edit';
                         })[0];
 
-                        var Copy = children.filter(function (Btn) {
+                        const Copy = children.filter(function (Btn) {
                             return Btn.getAttribute('name') === 'copy';
                         })[0];
 
-                        var Activate = children.filter(function (Btn) {
+                        const Activate = children.filter(function (Btn) {
                             return Btn.getAttribute('name') === 'activate';
                         })[0];
 
-                        var Deactivate = children.filter(function (Btn) {
+                        const Deactivate = children.filter(function (Btn) {
                             return Btn.getAttribute('name') === 'deactivate';
                         })[0];
 
@@ -351,11 +347,11 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                         Activate.disable();
                         Deactivate.disable();
 
-                        self.Loader.show();
+                        this.Loader.show();
                     },
 
-                    onSearch: function () {
-                        self.Loader.hide();
+                    onSearch: () => {
+                        this.Loader.hide();
                     }
                 }
             }).inject(this.getContent());
@@ -381,24 +377,27 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * Opens the create child dialog
          */
         createChild: function () {
-            var self = this;
-
             this.Loader.show();
 
             require([
                 'package/quiqqer/products/bin/controls/products/CreateProductWindow'
-            ], function (CreateProductWindow) {
+            ], (CreateProductWindow) => {
+                const categories = this.$Search.$Form.$Sitemap.getSelected().map(function (Item) {
+                    return Item.getAttribute('value');
+                });
+
                 new CreateProductWindow({
-                    events: {
-                        onProductCreated: function (Win, product) {
-                            self.refresh();
-                            self.updateChild(product.id);
+                    categories: categories,
+                    events    : {
+                        onProductCreated: (Win, product) => {
+                            this.refresh();
+                            this.updateChild(product.id);
                         }
                     }
                 }).open();
 
                 this.Loader.hide();
-            }.bind(this));
+            });
         },
 
         /**
@@ -409,9 +408,9 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
         updateChild: function (productId) {
             this.Loader.show();
 
-            Products.openProduct(productId).then(function () {
+            Products.openProduct(productId).then(() => {
                 this.Loader.hide();
-            }.bind(this));
+            });
         },
 
         /**
@@ -422,13 +421,13 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             Products.activateChildren(
                 this.$Search.getSelected()
-            ).then(function () {
+            ).then(() => {
                 this.Loader.hide();
                 this.refresh();
-            }.bind(this)).catch(function () {
+            }).catch(() => {
                 this.Loader.hide();
                 this.refresh();
-            }.bind(this));
+            });
         },
 
         /**
@@ -439,13 +438,13 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             Products.deactivateChildren(
                 this.$Search.getSelected()
-            ).then(function () {
+            ).then(() => {
                 this.Loader.hide();
                 this.refresh();
-            }.bind(this)).catch(function () {
+            }).catch(() => {
                 this.Loader.hide();
                 this.refresh();
-            }.bind(this));
+            });
         },
 
         /**
@@ -456,12 +455,10 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
         copyChild: function (productId) {
             this.Loader.show();
 
-            var self = this;
-
-            Products.copy(productId).then(function (newProductId) {
-                Products.openProduct(newProductId).then(function () {
-                    self.Loader.hide();
-                    self.refresh();
+            Products.copy(productId).then((newProductId) => {
+                Products.openProduct(newProductId).then(() => {
+                    this.Loader.hide();
+                    this.refresh();
                 });
             });
         },
@@ -473,9 +470,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          * @return {Promise}
          */
         deleteChild: function (productIds) {
-            var self = this;
-
-            return new Promise(function (resolve, reject) {
+            return new Promise((resolve, reject) => {
                 if (typeOf(productIds) === 'number') {
                     productIds = [productIds];
                 }
@@ -488,14 +483,14 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                     return reject();
                 }
 
-                Products.getChildren(productIds).then(function (data) {
+                Products.getChildren(productIds).then((data) => {
                     if (!data.length) {
                         return reject();
                     }
 
-                    var products = '<ul>';
+                    let products = '<ul>';
 
-                    for (var i = 0, len = data.length; i < len; i++) {
+                    for (let i = 0, len = data.length; i < len; i++) {
                         products = products + '<li>' + data[i].id + ': ' +
                             data[i].title + '</li>';
                     }
@@ -516,14 +511,14 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
                         icon       : 'fa fa-trashcan',
                         texticon   : 'fa fa-trashcan',
                         events     : {
-                            onSubmit: function (Win) {
+                            onSubmit: (Win) => {
                                 Win.Loader.show();
 
-                                Products.deleteChildren(productIds).then(function () {
+                                Products.deleteChildren(productIds).then(() => {
                                     Win.close();
-                                    self.refresh();
+                                    this.refresh();
 
-                                    QUI.getMessageHandler().then(function (MH) {
+                                    QUI.getMessageHandler().then((MH) => {
                                         MH.addSuccess(
                                             QUILocale.get(lg, 'message.success.products.delete')
                                         );
