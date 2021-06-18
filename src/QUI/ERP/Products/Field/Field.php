@@ -146,7 +146,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     {
         $this->id = (int)$fieldId;
 
-        if (\defined('QUIQQER_BACKEND')) {
+        if (QUI::isBackend()) {
             $this->setAttribute('viewType', 'backend');
         }
 
@@ -786,9 +786,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             case 'showInDetails':
                 $this->showInDetails = $val ? true : false;
 
-                return $this;
-
-            default:
                 return $this;
         }
 

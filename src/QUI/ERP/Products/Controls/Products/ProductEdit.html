@@ -15,7 +15,7 @@
 </header>
 
 <form class="quiqqer-products-productEdit-data">
-    {foreach $productAttributeList as $Field}
+    {foreach $customFields as $Field}
     {$Field->getView()->create()}
     {/foreach}
 </form>

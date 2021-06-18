@@ -60,6 +60,22 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
     }
 
     /**
+     * Return the view for the backend
+     *
+     * @return \QUI\ERP\Products\Field\View
+     */
+    public function getBackendView()
+    {
+        $View = new UserInputBackendView(
+            $this->getFieldDataForView()
+        );
+
+        $View->setProduct($this->Product);
+
+        return $View;
+    }
+
+    /**
      * @return string
      */
     public function getJavaScriptControl()

@@ -1,0 +1,22 @@
+<style>
+    {$css}
+</style>
+
+<div class="quiqqer-product-field">
+    <div class="quiqqer-product-field-title">{$title}</div>
+    <div class="quiqqer-product-field-value">
+        {if $options['inputType'] === 'input'}
+            <input class="quiqqer-products-field-userinput"
+                   type="text"
+                   name="{$name}"
+                   {if $isRequired}required{/if}
+            />
+        {else}
+            <textarea class="quiqqer-products-field-userinput"
+                   type="text"
+                   name="{$name}"
+                   {if $isRequired}required{/if}
+            ></textarea>
+        {/if}
+    </div>
+</div>

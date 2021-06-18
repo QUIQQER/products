@@ -54,9 +54,19 @@ class ProductEdit extends QUI\Control
             $Price = $Product->getPrice();
         }
 
+        $customFields = [];
+
+        foreach ($Product->getFields() as $Field) {
+            if (\method_exists($Field, 'isCustomField') && $Field->isCustomField()) {
+                $customFields[] = $Field;
+            }
+        }
+
         $Engine->assign([
             'Product' => $View,
             'Price'   => $Price,
+
+            'customFields' => $customFields,
 
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST)
         ]);
