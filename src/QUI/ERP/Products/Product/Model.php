@@ -1033,6 +1033,10 @@ class Model extends QUI\QDOM
         $baseCacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
         $cacheName     = $baseCacheName.'/prices/max';
 
+        if ($User && $User instanceof QUI\Interfaces\Users\User && !QUI::getUsers()->isNobodyUser($User)) {
+            $cacheName = $baseCacheName.'/prices/'.$User->getId().'/max';
+        }
+
         try {
             $data     = QUI\Cache\LongTermCache::get($cacheName);
             $Currency = QUI\ERP\Currency\Handler::getCurrency($data['currency']);
