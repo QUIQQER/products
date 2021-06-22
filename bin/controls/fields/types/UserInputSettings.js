@@ -58,10 +58,11 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInputSettings', [
             this.$Elm = new Element('div', {
                 'class': 'quiqqer-products-userinput-settings',
                 html   : Mustache.render(template, {
-                    labelInputType              : QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelInputType'),
-                    labelInputTypeOptionInput   : QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelInputTypeOptionInput'),
-                    labelInputTypeOptionTextarea: QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelInputTypeOptionTextarea'),
-                    labelMaxCharacters          : QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelMaxCharacters')
+                    labelInputType                 : QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelInputType'),
+                    labelInputTypeOptionInput      : QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelInputTypeOptionInput'),
+                    labelInputTypeOptionInputInline: QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelInputTypeOptionInputInline'),
+                    labelInputTypeOptionTextarea   : QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelInputTypeOptionTextarea'),
+                    labelMaxCharacters             : QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelMaxCharacters')
                 }),
                 styles : {
                     'float': 'left',

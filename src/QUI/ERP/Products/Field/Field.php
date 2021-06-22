@@ -253,6 +253,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the name of the JavaScript Control for the field
      *
+     * This is the JavaScript control used in the product panel for setting the field value!
+     *
      * @return string
      */
     abstract public function getJavaScriptControl();

@@ -16,6 +16,8 @@
 
 <form class="quiqqer-products-productEdit-data">
     {foreach $customFields as $Field}
-    {$Field->getView()->create()}
+    <div class="quiqqer-products-productEdit-data-field" data-field-id="{$Field->getId()}">
+        {$Field->getView()->create()}
+    </div>
     {/foreach}
 </form>

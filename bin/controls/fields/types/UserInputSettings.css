@@ -1,0 +1,8 @@
+.quiqqer-products-userinput-settings label {
+    margin: 5px 0;
+    width: 100% !important;
+}
+
+.quiqqer-products-userinput-settings label > span {
+    display: block;
+}

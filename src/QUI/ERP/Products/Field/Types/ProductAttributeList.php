@@ -186,6 +186,19 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField implem
     }
 
     /**
+     * Return the view for the backend
+     *
+     * @return \QUI\ERP\Products\Field\View
+     */
+    public function getBackendView()
+    {
+        return new ProductAttributeListBackendView($this->getFieldDataForView());
+        $Field->setProduct($this->Product);
+
+        return $Field;
+    }
+
+    /**
      * @return string
      */
     public function getJavaScriptControl()

@@ -1292,8 +1292,12 @@ For a newly created product the article number should be generated automatically
         </locale>
 
         <locale name="UserInputFrontendView.input_placeholder">
-            <de><![CDATA[Ihren persönlichen Text festlegen...]]></de>
-            <en><![CDATA[Speciy your personal text...]]></en>
+            <de><![CDATA[Ihr persönlicher Text...]]></de>
+            <en><![CDATA[Your personal text...]]></en>
+        </locale>
+        <locale name="UserInputFrontendView.input_limit">
+            <de><![CDATA[(max. [limit] Zeichen)]]></de>
+            <en><![CDATA[(max. [limit] characters)]]></en>
         </locale>
 
     </groups>
@@ -1325,12 +1329,16 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[Input type]]></en>
         </locale>
         <locale name="controls.UserInputSettings.tpl.labelInputTypeOptionInput">
+            <de><![CDATA[Einzeilig (Eingabe im Popup)]]></de>
+            <en><![CDATA[Single line (input in popup)]]></en>
+        </locale>
+        <locale name="controls.UserInputSettings.tpl.labelInputTypeOptionInputInline">
             <de><![CDATA[Einzeilig]]></de>
             <en><![CDATA[Single line]]></en>
         </locale>
         <locale name="controls.UserInputSettings.tpl.labelInputTypeOptionTextarea">
-            <de><![CDATA[Mehrzeilig]]></de>
-            <en><![CDATA[Multiline]]></en>
+            <de><![CDATA[Mehrzeilig (Eingabe im Popup)]]></de>
+            <en><![CDATA[Multiline (input in popup)]]></en>
         </locale>
         <locale name="controls.UserInputSettings.tpl.labelInputType">
             <de><![CDATA[Eingabe-Typ]]></de>

@@ -36,7 +36,7 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
     public function __construct($fieldId, array $params)
     {
         $this->setOptions([
-            'inputType'     => 'input',
+            'inputType'     => 'input', // "input", "input_inline", "textarea"
             'maxCharacters' => 100
         ]);
 
@@ -147,6 +147,7 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
         // Remove everything that could be dangerous.
         $value = \preg_replace("/[^\p{L}\p{N}\p{M}\n ]/ui", '', $value);
         $value = \strip_tags($value);
+        $value = \mb_substr($value, 0, (int)$this->getOption('maxCharacters'));
 
         return $value;
     }

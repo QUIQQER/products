@@ -58,14 +58,20 @@ define('package/quiqqer/products/bin/controls/frontend/fields/UserInput', [
             this.$Input   = Elm.getElement('input');
             this.$Overlay = Elm.getElement('.quiqqer-products-field-userinput-overlay-text');
 
-            this.$Overlay.addEvent('click', () => {
-                this.$Input.focus();
-            });
+            if (this.getAttribute('input_type') === 'input_inline') {
+                this.$Input.removeClass('quiqqer-products-field-userinput__overlay');
+            } else {
+                this.$Overlay.removeClass('__hidden');
 
-            this.$Input.addEvent('focus', () => {
-                this.$Input.blur();
-                this.$openEditWindow();
-            });
+                this.$Overlay.addEvent('click', () => {
+                    this.$Input.focus();
+                });
+
+                this.$Input.addEvent('focus', () => {
+                    this.$Input.blur();
+                    this.$openEditWindow();
+                });
+            }
         },
 
         /**

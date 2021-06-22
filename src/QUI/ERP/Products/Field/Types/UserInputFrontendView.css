@@ -2,7 +2,7 @@
     position: relative;
 }
 
-.quiqqer-products-field-userinput {
+.quiqqer-products-field-userinput__overlay {
     color: transparent;
 }
 
@@ -25,4 +25,12 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.__hidden {
+    display: none !important;
+}
+
+.quiqqer-product-field-title-limit {
+    font-style: italic;
 }
