@@ -6,6 +6,19 @@
     color: transparent;
 }
 
+.quiqqer-products-field-userinput__overlay::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: transparent;
+    opacity: 1; /* Firefox */
+}
+
+.quiqqer-products-field-userinput__overlay:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: transparent;
+}
+
+.quiqqer-products-field-userinput__overlay::-ms-input-placeholder { /* Microsoft Edge */
+    color: transparent;
+}
+
 .quiqqer-products-field-userinput-overlay > input {
     margin: 0;
     line-height: 40px;
