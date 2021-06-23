@@ -26,7 +26,7 @@ use QUI\ERP\Accounting\Calc as ErpCalc;
  *
  * @package QUI\ERP\Products\Field\Types
  */
-class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField implements QUI\ERP\Products\Field\CustomInputFieldInterface
+class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
 {
     /**
      * @var bool
@@ -283,9 +283,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField implem
             $valueText = '';
         }
 
-        if ($userInput &&
-            !(\defined('QUIQQER_FRONTEND') && QUI\ERP\Products\Utils\Package::hidePrice())
-        ) {
+        if ($userInput) {
             // locale values
             if (is_array($valueText)) {
                 $current = QUI::getLocale()->getCurrent();
@@ -301,11 +299,12 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField implem
         }
 
         return [
-            'priority'    => (int)$options['priority'],
-            'basis'       => $options['calculation_basis'],
-            'value'       => $sum,
-            'calculation' => $calcType,
-            'valueText'   => $valueText
+            'priority'         => (int)$options['priority'],
+            'basis'            => $options['calculation_basis'],
+            'value'            => $sum,
+            'calculation'      => $calcType,
+            'valueText'        => $valueText,
+            'displayDiscounts' => $options['display_discounts']
         ];
     }
 

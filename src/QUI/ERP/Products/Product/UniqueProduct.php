@@ -230,7 +230,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         /* @var $Field QUI\ERP\Products\Field\UniqueField */
         foreach ($fields as $Field) {
-            if (!($Field instanceof QUI\ERP\Products\Field\CustomCalcField)) {
+            if (!\is_a($Field->getParentClass(), QUI\ERP\Products\Field\CustomCalcFieldInterface::class, true)) {
                 continue;
             }
 
@@ -243,6 +243,32 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
             $Factor = new PriceFactor($factorAttributes);
             $Factor->setTitle($Field->getTitle());
+
+            // Add price addition to valueText
+            $fieldOptions = $Field->getOptions();
+
+            if (!empty($fieldOptions['display_discounts']) &&
+                (!QUI::isFrontend() || !QUI\ERP\Products\Utils\Package::hidePrice()) &&
+                $Factor->getValue() > 0) {
+
+                if ((float)$Factor->getValue() >= 0) {
+                    $priceAddition = '+';
+                } else {
+                    $priceAddition = '-';
+                }
+
+                switch ($Factor->getCalculation()) {
+                    case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
+                        $priceAddition .= $Factor->getValue().'%';
+                        break;
+
+                    default:
+                        $priceAddition .= $this->getCurrency()->format($Factor->getValue());
+                        break;
+                }
+
+                $Factor->setValueText($Factor->getValueText().' ('.$priceAddition.')');
+            }
 
             $this->PriceFactors->add($Factor);
         }

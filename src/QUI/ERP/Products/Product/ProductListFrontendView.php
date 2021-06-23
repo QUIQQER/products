@@ -193,12 +193,13 @@ class ProductListFrontendView
                 ];
             }
 
+            /** @var QUI\ERP\Products\Field\UniqueField $Field */
             foreach ($fields as $Field) {
                 if (!$Field->isPublic()) {
                     continue;
                 }
 
-                if (!$Field->isCustomField()) {
+                if (!\is_a($Field->getParentClass(), QUI\ERP\Products\Field\CustomInputFieldInterface::class, true)) {
                     continue;
                 }
 
