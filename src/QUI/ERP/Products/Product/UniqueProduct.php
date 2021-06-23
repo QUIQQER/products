@@ -250,7 +250,6 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             if (!empty($fieldOptions['display_discounts']) &&
                 (!QUI::isFrontend() || !QUI\ERP\Products\Utils\Package::hidePrice()) &&
                 $Factor->getValue() > 0) {
-
                 if ((float)$Factor->getValue() >= 0) {
                     $priceAddition = '+';
                 } else {
