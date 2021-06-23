@@ -364,6 +364,7 @@ class Product extends QUI\Control
             'details'                => FieldUtils::sortFields($details),
             'detailFields'           => FieldUtils::sortFields($detailFields),
             'productAttributeList'   => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
+            'userInputFields'        => $View->getFieldsByType(Fields::TYPE_USER_INPUT),
             'productAttributeGroups' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS),
             'Price'                  => $Price,
             'PriceDisplay'           => $PriceDisplay,

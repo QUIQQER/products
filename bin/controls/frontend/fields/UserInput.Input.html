@@ -1,0 +1,14 @@
+<div class="quiqqer-products-userinput-input">
+    {{#isInput}}
+    <label>
+        <span>{{labelInput}}</span>
+        <input type="text" name="userInput" maxlength="{{maxLength}}"/>
+    </label>
+    {{/isInput}}
+    {{^isInput}}
+    <label>
+        <span>{{labelInput}}</span>
+        <textarea maxlength="{{maxLength}}" name="userInput" rows="13"></textarea>
+    </label>
+    {{/isInput}}
+</div>

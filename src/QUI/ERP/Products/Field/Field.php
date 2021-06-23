@@ -146,7 +146,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     {
         $this->id = (int)$fieldId;
 
-        if (\defined('QUIQQER_BACKEND')) {
+        if (QUI::isBackend()) {
             $this->setAttribute('viewType', 'backend');
         }
 
@@ -252,6 +252,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
     /**
      * Return the name of the JavaScript Control for the field
+     *
+     * This is the JavaScript control used in the product panel for setting the field value!
      *
      * @return string
      */
@@ -672,7 +674,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function isCustomField()
     {
-        return $this instanceof QUI\ERP\Products\Field\CustomField;
+        return false;
     }
 
     /**
@@ -786,9 +788,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             case 'showInDetails':
                 $this->showInDetails = $val ? true : false;
 
-                return $this;
-
-            default:
                 return $this;
         }
 
@@ -1145,6 +1144,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $attributes['id']        = $this->getId();
         $attributes['value']     = $this->getValue();
         $attributes['__class__'] = \get_class($this);
+
+        if ($this instanceof CustomInputFieldInterface) {
+            $attributes['userInput'] = $this->getUserInput();
+        }
 
         return $attributes;
     }

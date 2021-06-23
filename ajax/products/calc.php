@@ -34,7 +34,7 @@ QUI::$Ajax->registerFunction(
 
                 $Field = $Product->getField($fieldId);
 
-                if (!$Field->isCustomField()) {
+                if (!($Field instanceof \QUI\ERP\Products\Field\CustomCalcFieldInterface)) {
                     continue;
                 }
 

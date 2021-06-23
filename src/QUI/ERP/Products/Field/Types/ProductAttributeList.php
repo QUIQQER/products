@@ -26,7 +26,7 @@ use QUI\ERP\Accounting\Calc as ErpCalc;
  *
  * @package QUI\ERP\Products\Field\Types
  */
-class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
+class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
 {
     /**
      * @var bool
@@ -186,6 +186,19 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     }
 
     /**
+     * Return the view for the backend
+     *
+     * @return \QUI\ERP\Products\Field\View
+     */
+    public function getBackendView()
+    {
+        return new ProductAttributeListBackendView($this->getFieldDataForView());
+        $Field->setProduct($this->Product);
+
+        return $Field;
+    }
+
+    /**
      * @return string
      */
     public function getJavaScriptControl()
@@ -270,9 +283,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
             $valueText = '';
         }
 
-        if ($userInput /*&&
-            !(\defined('QUIQQER_FRONTEND') && QUI\ERP\Products\Utils\Package::hidePrice())*/
-        ) {
+        if ($userInput) {
             // locale values
             if (is_array($valueText)) {
                 $current = QUI::getLocale()->getCurrent();
@@ -288,11 +299,12 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
         }
 
         return [
-            'priority'    => (int)$options['priority'],
-            'basis'       => $options['calculation_basis'],
-            'value'       => $sum,
-            'calculation' => $calcType,
-            'valueText'   => $valueText
+            'priority'         => (int)$options['priority'],
+            'basis'            => $options['calculation_basis'],
+            'value'            => $sum,
+            'calculation'      => $calcType,
+            'valueText'        => $valueText,
+            'displayDiscounts' => $options['display_discounts']
         ];
     }
 
@@ -306,7 +318,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomField
     public function validate($value)
     {
         if (empty($value) && $value != '0') {
-            if ($this->isRequired()) {
+            if (QUI::isFrontend() && $this->isRequired()) {
                 throw new QUI\ERP\Products\Field\ExceptionRequired([
                     'quiqqer/products',
                     'exception.field.is.invalid',

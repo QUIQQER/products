@@ -1,0 +1,36 @@
+.quiqqer-products-field-userinput-overlay {
+    position: relative;
+}
+
+.quiqqer-products-field-userinput__overlay {
+    color: transparent;
+}
+
+.quiqqer-products-field-userinput-overlay > input {
+    margin: 0;
+    line-height: 40px;
+    width: 100%;
+}
+
+.quiqqer-products-field-userinput-overlay-text {
+    align-items: center;
+    cursor: pointer;
+    display: inline-block;
+    font-style: italic;
+    line-height: 42px;
+    height: 100%;
+    padding-left: 10px;
+    position: absolute;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.__hidden {
+    display: none !important;
+}
+
+.quiqqer-product-field-title-limit {
+    font-style: italic;
+}

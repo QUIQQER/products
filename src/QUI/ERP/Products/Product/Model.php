@@ -356,8 +356,8 @@ class Model extends QUI\QDOM
             $fields = [];
 
             foreach ($fieldList as $Field) {
-                /* @var $Field QUI\ERP\Products\Field\CustomField */
-                if ($Field->isCustomField()) {
+                /* @var $Field QUI\ERP\Products\Field\CustomCalcField */
+                if ($Field instanceof QUI\ERP\Products\Field\CustomCalcField) {
                     $calcData['custom_calc'] = $Field->getCalculationData($Locale);
 
                     $fields[] = \array_merge(
@@ -978,7 +978,7 @@ class Model extends QUI\QDOM
             // alle felder müssen erst einmal gesetzt werden
             /* @var $Field QUI\ERP\Products\Field\Field */
             foreach ($fields as $Field) {
-                if (!$Field->isCustomField()) {
+                if (!($Field instanceof QUI\ERP\Products\Field\CustomCalcField)) {
                     continue;
                 }
 
@@ -991,7 +991,7 @@ class Model extends QUI\QDOM
 
             /* @var $Field QUI\ERP\Products\Field\Field */
             foreach ($fields as $Field) {
-                if (!$Field->isCustomField()) {
+                if (!($Field instanceof QUI\ERP\Products\Field\CustomCalcField)) {
                     continue;
                 }
 
@@ -1060,7 +1060,7 @@ class Model extends QUI\QDOM
 
             /* @var $Field QUI\ERP\Products\Field\Field */
             foreach ($fields as $Field) {
-                if (!$Field->isCustomField()) {
+                if (!($Field instanceof QUI\ERP\Products\Field\CustomCalcField)) {
                     continue;
                 }
 

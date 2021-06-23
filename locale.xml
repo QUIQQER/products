@@ -731,6 +731,10 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Eingabefeld mit Checkbox]]></de>
             <en><![CDATA[Input with checkbox]]></en>
         </locale>
+        <locale name="fieldtype.UserInput">
+            <de><![CDATA[Benutzereingabe (Text)]]></de>
+            <en><![CDATA[User input (text)]]></en>
+        </locale>
 
         <locale name="fieldtype.ProductAttributeList.calcBasis.netto">
             <de><![CDATA[Netto]]></de>
@@ -1287,9 +1291,63 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[back to manufacturer overview]]></en>
         </locale>
 
+        <locale name="UserInputFrontendView.input_placeholder">
+            <de><![CDATA[Ihr persönlicher Text...]]></de>
+            <en><![CDATA[Your personal text...]]></en>
+        </locale>
+        <locale name="UserInputFrontendView.input_limit">
+            <de><![CDATA[(max. [limit] Zeichen)]]></de>
+            <en><![CDATA[(max. [limit] characters)]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
+        <locale name="controls.UserInput.getText.title">
+            <de><![CDATA[Eingabe für Feld "[fieldTitle]"]]></de>
+            <en><![CDATA[Input for field "[fieldTitle]"]]></en>
+        </locale>
+        <locale name="controls.UserInput.getText.tpl.infoText">
+            <de><![CDATA[Für diesen Artikel können Sie einen individuellen Text festlegen.]]></de>
+            <en><![CDATA[You can set an individual text for this article.]]></en>
+        </locale>
+        <locale name="controls.UserInput.getText.tpl.labelInput">
+            <de><![CDATA[Ihr Text für "[fieldTitle]" (maximal [maxCharacters] Zeichen):]]></de>
+            <en><![CDATA[Your text fpr "[fieldTitle]" (maximum number of [maxCharacters] characters):]]></en>
+        </locale>
+        <locale name="controls.UserInput.getText.btn.submit">
+            <de><![CDATA[Bestätigen]]></de>
+            <en><![CDATA[Confirm]]></en>
+        </locale>
+        <locale name="controls.UserInput.getText.btn.cancel">
+            <de><![CDATA[Ohne Eingabe fortfahren]]></de>
+            <en><![CDATA[Continue wihout input]]></en>
+        </locale>
+        
+        <locale name="controls.UserInputSettings.tpl.labelInputType">
+            <de><![CDATA[Eingabe-Typ]]></de>
+            <en><![CDATA[Input type]]></en>
+        </locale>
+        <locale name="controls.UserInputSettings.tpl.labelInputTypeOptionInput">
+            <de><![CDATA[Einzeilig (Eingabe im Popup)]]></de>
+            <en><![CDATA[Single line (input in popup)]]></en>
+        </locale>
+        <locale name="controls.UserInputSettings.tpl.labelInputTypeOptionInputInline">
+            <de><![CDATA[Einzeilig]]></de>
+            <en><![CDATA[Single line]]></en>
+        </locale>
+        <locale name="controls.UserInputSettings.tpl.labelInputTypeOptionTextarea">
+            <de><![CDATA[Mehrzeilig (Eingabe im Popup)]]></de>
+            <en><![CDATA[Multiline (input in popup)]]></en>
+        </locale>
+        <locale name="controls.UserInputSettings.tpl.labelInputType">
+            <de><![CDATA[Eingabe-Typ]]></de>
+            <en><![CDATA[Input type]]></en>
+        </locale>
+        <locale name="controls.UserInputSettings.tpl.labelMaxCharacters">
+            <de><![CDATA[Max. Anzahl an Zeichen]]></de>
+            <en><![CDATA[Max. number of characters]]></en>
+        </locale>
 
         <locale name="controls.products.Create.auto_generated_artciel_no_desc">
             <de><![CDATA[Wenn dieses Feld leergelassen wird, wird automatisch eine neue Artikel-Nr. für dieses Produkt erzeugt. Die Artikel-Nr. ist jederzeit änderbar.]]></de>
@@ -2357,6 +2415,16 @@ For a newly created product the article number should be generated automatically
 
     <groups name="quiqqer/products" datatype="php">
 
+        <locale name="button.product.goToProduct">
+            <de><![CDATA[Zum Produkt]]></de>
+            <en><![CDATA[To product]]></en>
+        </locale>
+
+        <locale name="UserInputFrontendView.info">
+            <de><![CDATA[Sie haben die Möglichkeit, hierfür einen individuelln Text (maximal [maxCharacters] Zeichen) festzulegen, wenn Sie dieses Produkt in den Warenkorb legen.]]></de>
+            <en><![CDATA[You have the option to specify an individual text (maximum of [maxCharacters] characters) for this when you add this product to the shopping cart.]]></en>
+        </locale>
+        
         <locale name="NumberRange.title">
             <de><![CDATA[Produkte (Artikel-Nummern)]]></de>
             <en><![CDATA[Products (article nos.)]]></en>

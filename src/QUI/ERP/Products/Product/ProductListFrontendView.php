@@ -193,6 +193,25 @@ class ProductListFrontendView
                 ];
             }
 
+            /** @var QUI\ERP\Products\Field\UniqueField $Field */
+            foreach ($fields as $Field) {
+                if (!$Field->isPublic()) {
+                    continue;
+                }
+
+                if (!\is_a($Field->getParentClass(), QUI\ERP\Products\Field\CustomInputFieldInterface::class, true)) {
+                    continue;
+                }
+
+                $fieldAttributes = $Field->getAttributes();
+
+                $product['attributes'][] = [
+                    'title'     => $Field->getTitle(),
+                    'value'     => $fieldAttributes['value'],
+                    'valueText' => $fieldAttributes['valueText']
+                ];
+            }
+
             $productList[] = $product;
         }
 

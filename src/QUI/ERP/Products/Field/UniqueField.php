@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Field;
 
 use QUI;
+use QUI\ERP\Products\Field\CustomInputFieldInterface;
 
 /**
  * Class UniqueField
@@ -158,6 +159,13 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     protected $Product = null;
 
     /**
+     * User input from custom input fields
+     *
+     * @var string
+     */
+    protected $userInput = '';
+
+    /**
      * Model constructor.
      *
      * @param integer $fieldId
@@ -185,7 +193,8 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'ownField',
             'showInDetails',
             'searchvalue',
-            'changeable'
+            'changeable',
+            'userInput'
         ];
 
         if (!isset($params['isPublic'])) {
@@ -454,21 +463,33 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
     public function getAttributes()
     {
-        $options   = $this->getOptions();
-        $value     = $this->getValue();
-        $json      = null;
-        $userinput = '';
+        $options = $this->getOptions();
+        $value   = $this->getValue();
 
-        if (\is_string($value)) {
-            $json = \json_decode($value, true);
+        /*
+         * Auskommentiert, weil das ein sehr umständlicher Weg war, um dan die Benutzereingabe
+         * Von ProductAttributeList-Feldern zu kommen; dafür gibt es jetzt eine einfachere API.
+         */
+//        $json      = null;
+//        if (\is_string($value)) {
+//            $json = \json_decode($value, true);
+//
+//            if (\is_array($json) && isset($json[0])) {
+//                $value = $json[0];
+//
+//                if (isset($json[1])) {
+//                    $userinput = $json[1];
+//                }
+//            }
+//        }
 
-            if (\is_array($json) && isset($json[0])) {
-                $value = $json[0];
+        $parentClass = $this->getParentClass();
 
-                if (isset($json[1])) {
-                    $userinput = $json[1];
-                }
-            }
+        if (empty($parentClass)) {
+            $Field      = QUI\ERP\Products\Handler\Fields::getField($this->getId());
+            $interfaces = \class_implements(\get_class($Field));
+        } else {
+            $interfaces = \class_implements($this->getParentClass());
         }
 
         return [
@@ -481,16 +502,17 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'isSystem'   => $this->isSystem(),
             'isPublic'   => $this->isPublic(),
 
-            'prefix'        => $this->prefix,
-            'suffix'        => $this->suffix,
-            'priority'      => $this->priority,
-            'custom'        => $this->isCustomField(),
-            'custom_calc'   => $this->custom_calc,
-            'unassigned'    => $this->isUnassigned(),
-            'value'         => $value,
-            'valueText'     => $this->getValueText(),
-            'userinput'     => $userinput,
-            'showInDetails' => $this->showInDetails()
+            'prefix'           => $this->prefix,
+            'suffix'           => $this->suffix,
+            'priority'         => $this->priority,
+            'custom'           => $this->isCustomField(),
+            'isUserInputField' => \in_array(CustomInputFieldInterface::class, $interfaces),
+            'custom_calc'      => $this->custom_calc,
+            'unassigned'       => $this->isUnassigned(),
+            'value'            => $value,
+            'valueText'        => $this->getValueText(),
+            'userInput'        => $this->userInput,
+            'showInDetails'    => $this->showInDetails()
         ];
     }
 
@@ -515,6 +537,19 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             case QUI\ERP\Products\Handler\Fields::TYPE_ATTRIBUTE_GROUPS:
                 $valueText = $this->getValueTextAttributeGroup();
                 break;
+
+            default:
+                if ($this->isCustomField()) {
+                    if (!empty($this->userInput)) {
+                        $valueText = $this->userInput;
+                    } else {
+                        $value = $this->getValue();
+
+                        if (!empty($value)) {
+                            $valueText = $value;
+                        }
+                    }
+                }
         }
 
         return $valueText;
