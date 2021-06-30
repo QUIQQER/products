@@ -2518,9 +2518,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @return {Promise}
          */
         $getFieldCategories: function () {
-            return new Promise(function (resolve) {
+            return new Promise((resolve) => {
                 QUIAjax.get('package_quiqqer_products_ajax_products_getFieldCategories', resolve, {
-                    'package': 'quiqqer/products'
+                    'package': 'quiqqer/products',
+                    productId: this.getAttribute('productId')
                 });
             });
         },
