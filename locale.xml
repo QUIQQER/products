@@ -1533,6 +1533,14 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Feldeinstellungen]]></de>
             <en><![CDATA[Field settings]]></en>
         </locale>
+        <locale name="control.field.create.tpl.fieldDescription">
+            <de><![CDATA[Beschreibung]]></de>
+            <en><![CDATA[Description]]></en>
+        </locale>
+        <locale name="control.field.create.tpl.fieldDescriptionDesc">
+            <de><![CDATA[Interne Beschreibung / Hilfetext für dieses Feld. Nur für Administratoren sichtbar.]]></de>
+            <en><![CDATA[Internal description / help text for this field. Only visible for administrators.]]></en>
+        </locale>
 
         <locale name="categories.create.title">
             <de><![CDATA[Neue Kategorie anlegen]]></de>

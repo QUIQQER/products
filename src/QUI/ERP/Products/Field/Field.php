@@ -973,6 +973,28 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * Return the description
+     *
+     * @param QUI\Locale|null $Locale - optional
+     * @return string
+     */
+    public function getDescription(?QUI\Locale $Locale): string
+    {
+        $var   = 'products.field.'.$this->getId().'.description';
+        $group = 'quiqqer/products';
+
+        if (!$Locale) {
+            $Locale = QUI::getLocale();
+        }
+
+        if ($Locale->exists($group, $var)) {
+            return $Locale->get($group, $var);
+        }
+
+        return '';
+    }
+
+    /**
      * Return the help description, if the field own a help
      *
      * @param null $Locale

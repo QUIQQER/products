@@ -10,6 +10,7 @@ use QUI;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Interfaces\FieldInterface;
 use QUI\Utils\DOM;
+use QUI\ERP\Products\Product\Model as ProductModel;
 
 /**
  * Class Fields
@@ -503,11 +504,13 @@ class Fields
     }
 
     /**
+     *
+     * @param ProductModel|null $Product (optional) - Get panel field categories for this specific product only
      * @return array
      *
      * @todo cachinge
      */
-    public static function getPanelFieldCategories(): array
+    public static function getPanelFieldCategories(?ProductModel $Product = null): array
     {
         $plugins    = QUI::getPackageManager()->getInstalled();
         $categories = [];
@@ -550,8 +553,18 @@ class Fields
                     $f = $fields->item(0)->getElementsByTagName('field');
 
                     foreach ($f as $Field) {
-                        $fieldIds[] = trim($Field->nodeValue);
+                        $fieldId = (int)trim($Field->nodeValue);
+
+                        if ($Product && !$Product->hasField($fieldId)) {
+                            continue;
+                        }
+
+                        $fieldIds[] = $fieldId;
                     }
+                }
+
+                if (empty($fieldIds)) {
+                    continue;
                 }
 
                 $categories[] = [
