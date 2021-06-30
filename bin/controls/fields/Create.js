@@ -42,6 +42,7 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
 
             this.$Translation  = null;
             this.$WorkingTitle = null;
+            this.$Description  = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -81,7 +82,9 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                     fieldPublicDesc            : QUILocale.get(lg, 'publicFieldDesc'),
                     fieldDefaultValue          : QUILocale.get(lg, 'fieldDefaultValue'),
                     fieldShowInDetails         : QUILocale.get(lg, 'showInDetails'),
-                    fieldfieldShowInDetailsDesc: QUILocale.get(lg, 'showInDetailsDesc')
+                    fieldfieldShowInDetailsDesc: QUILocale.get(lg, 'showInDetailsDesc'),
+                    fieldDescription           : QUILocale.get(lg, 'control.field.create.tpl.fieldDescription'),
+                    fieldDescriptionDesc       : QUILocale.get(lg, 'control.field.create.tpl.fieldDescriptionDesc')
                 })
             });
 
@@ -110,6 +113,12 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                 datatype : 'php,js',
                 'package': 'quiqqer/products'
             }).inject(Elm.getElement('.field-workingtitle'));
+
+            this.$Description = new Translation({
+                group    : 'quiqqer/products',
+                datatype : 'php,js',
+                'package': 'quiqqer/products'
+            }).inject(Elm.getElement('.field-description'));
 
             this.$Prefix = new InputMultiLang().imports(
                 Elm.getElement('[name="prefix"]')
@@ -192,14 +201,18 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                         'products.field.' + data.id + '.workingtitle'
                     );
 
-                    return self.$Translation.save();
+                    self.$Description.setAttribute(
+                        'var',
+                        'products.field.' + data.id + '.description'
+                    );
 
-                }).then(function () {
-                    return self.$WorkingTitle.save();
-
+                    return Promise.all([
+                        self.$Translation.save(),
+                        self.$WorkingTitle.save(),
+                        self.$Description.save()
+                    ]);
                 }).then(function () {
                     return QUI.getMessageHandler();
-
                 }).then(function (MH) {
                     MH.setAttribute('showMessages', true);
 

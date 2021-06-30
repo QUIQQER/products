@@ -1129,11 +1129,13 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 title = QUILocale.get(lg, 'products.field.' + field.id + '.workingtitle');
             }
 
-            if (field.help && field.help !== '') {
+            if (QUILocale.exists(lg, 'products.field.' + field.id + '.description')) {
+                help = QUILocale.get(lg, 'products.field.' + field.id + '.description');
+            } else if (field.help && field.help !== '') {
                 help = field.help;
             }
 
-            return new Element('tr', {
+            var FieldElm = new Element('tr', {
                 'class'       : 'field',
                 html          : Mustache.render(templateField, {
                     fieldTitle: title,
@@ -1143,6 +1145,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }),
                 'data-fieldid': field.id
             });
+
+            var HelpIcon = FieldElm.getElement('.field-container-item-help');
+
+            if (HelpIcon) {
+                HelpIcon.addEvent('click', (event) => {
+                    event.stop();
+                });
+            }
+
+            return FieldElm;
         },
 
         /**

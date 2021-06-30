@@ -49,6 +49,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
             this.$Translation  = null;
             this.$WorkingTitle = null;
+            this.$Description  = null;
 
             this.$Suffix = null;
             this.$Prefix = null;
@@ -90,7 +91,9 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     fieldDefaultValue            : QUILocale.get(lg, 'fieldDefaultValue'),
                     fieldShowInDetails           : QUILocale.get(lg, 'showInDetails'),
                     fieldfieldShowInDetailsDesc  : QUILocale.get(lg, 'showInDetailsDesc'),
-                    fieldConsiderPriceCalculation: QUILocale.get(lg, 'fieldConsiderPriceCalculation')
+                    fieldConsiderPriceCalculation: QUILocale.get(lg, 'fieldConsiderPriceCalculation'),
+                    fieldDescription             : QUILocale.get(lg, 'control.field.create.tpl.fieldDescription'),
+                    fieldDescriptionDesc         : QUILocale.get(lg, 'control.field.create.tpl.fieldDescriptionDesc')
                 })
             });
 
@@ -116,6 +119,13 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 'var'    : 'products.field.' + id + '.workingtitle',
                 'package': 'quiqqer/products'
             }).inject(Elm.getElement('.field-workingtitle'));
+
+            this.$Description = new Translation({
+                'group'          : 'quiqqer/products',
+                'var'            : 'products.field.' + id + '.description',
+                'package'        : 'quiqqer/products',
+                createIfNotExists: true
+            }).inject(Elm.getElement('.field-description'));
 
             Promise.all([
                 Fields.getChild(id),
@@ -329,12 +339,12 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                         // product array changed,
                         return self.saveFieldToAllProducts();
                     }
-
-                    return Promise.resolve();
                 }).then(function () {
-                    return self.$Translation.save();
-                }).then(function () {
-                    return self.$WorkingTitle.save();
+                    return Promise.all([
+                        self.$Translation.save(),
+                        self.$WorkingTitle.save(),
+                        self.$Description.save()
+                    ]);
                 }).then(function () {
                     return QUI.getMessageHandler();
                 }).then(function (MH) {
