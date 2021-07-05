@@ -219,16 +219,28 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         // options
         $currentLC = \strtolower($current).'_'.\strtoupper($current);
 
-        $option = $entries[$value];
-        $title  = $option['title'];
-        $text   = '';
+        if (!isset($entries[0])) {
+            $text = '---';
+        } else {
+            $option = $entries[0];
 
-        if (\is_string($title)) {
-            $text = $title;
-        } elseif (isset($title[$current])) {
-            $text = $title[$current];
-        } elseif (isset($title[$currentLC])) {
-            $text = $title[$currentLC];
+            foreach ($entries as $entry) {
+                if ($entry['valueId'] === $value) {
+                    $option = $entry;
+                    break;
+                }
+            }
+
+            $title = $option['title'];
+            $text  = '';
+
+            if (\is_string($title)) {
+                $text = $title;
+            } elseif (isset($title[$current])) {
+                $text = $title[$current];
+            } elseif (isset($title[$currentLC])) {
+                $text = $title[$currentLC];
+            }
         }
 
         $Engine->assign('valueText', $text);
