@@ -584,9 +584,10 @@ class Fields
      * Field Category = Grouped Fields
      *
      * @param String $category - name of the category
+     * @param ProductModel|null $Product (optional) - Get category fields for this specific product only
      * @return array
      */
-    public static function getPanelFieldCategoryFields(string $category): array
+    public static function getPanelFieldCategoryFields(string $category, ?ProductModel $Product = null): array
     {
         $category = str_replace('fieldCategory-', '', $category);
 
@@ -602,6 +603,10 @@ class Fields
 
             foreach ($catData['fields'] as $fieldId) {
                 if (isset($fieldIds[$fieldId])) {
+                    continue;
+                }
+
+                if ($Product && !$Product->hasField($fieldId)) {
                     continue;
                 }
 
@@ -636,6 +641,10 @@ class Fields
 
                 foreach ($list as $Field) {
                     $fieldId = $Field->getId();
+
+                    if ($Product && !$Product->hasField($fieldId)) {
+                        continue;
+                    }
 
                     if (isset($fieldIds[$fieldId])) {
                         continue;
