@@ -2491,7 +2491,7 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Zusätzliche Produkt Kategorien]]></de>
             <en><![CDATA[Additional product categories]]></en>
         </locale>
-        <locale name="quiqqer.products.settings.extraProductCategories">
+        <locale name="quiqqer.products.settings.extraProductCategories.description">
             <de><![CDATA[Gebe hier an welche Produktkategporien die gelisteten Produkte besitzen müssen.]]></de>
             <en><![CDATA[Specify here which product categories the listed products must have.]]></en>
         </locale>
