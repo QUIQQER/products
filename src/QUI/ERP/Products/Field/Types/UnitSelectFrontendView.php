@@ -27,10 +27,12 @@ class UnitSelectFrontendView extends QUI\ERP\Products\Field\View
 
         /** @var UnitSelect $Field */
         $Field = QUI\ERP\Products\Handler\Fields::getField($this->getId());
+        $value = $Field->getValue();
 
         $Engine->assign([
-            'title' => $this->getTitle(),
-            'value' => $Field->getTitleByValue($this->getValue())
+            'title'     => $this->getTitle(),
+            'unitValue' => $value['quantity'],
+            'unitTitle' => $Field->getTitleByValue($value)
         ]);
 
         return $Engine->fetch(\dirname(__FILE__).'/UnitSelectFrontendView.html');
