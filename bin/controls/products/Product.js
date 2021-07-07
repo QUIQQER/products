@@ -2562,7 +2562,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         QUI.parse(Body).then(resolve);
                     }, {
                         'package' : 'quiqqer/products',
-                        'category': Category.getAttribute('name')
+                        'category': Category.getAttribute('name'),
+                        productId : self.getAttribute('productId')
                     });
                 });
             }).then(function () {
