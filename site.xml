@@ -15,6 +15,7 @@
 
             <attributes>
                 <attribute>quiqqer.products.settings.categoryId</attribute>
+                <attribute>quiqqer.products.settings.extraProductCategories</attribute>
                 <attribute>quiqqer.products.settings.searchFieldIds</attribute>
                 <attribute>quiqqer.products.settings.searchFieldIds.edited</attribute>
                 <attribute>quiqqer.products.settings.searchFieldsByUser</attribute>
@@ -77,6 +78,20 @@
                                 <text>
                                     <locale group="quiqqer/products" var="quiqqer.products.settings.categoryId"/>
                                 </text>
+                            </input>
+
+                            <input conf="quiqqer.products.settings.extraProductCategories"
+                                   data-qui="package/quiqqer/products/bin/controls/categories/Select"
+                                   data-qui-options-create="0"
+                            >
+                                <text>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.extraProductCategories"/>
+                                </text>
+                                <description>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.extraProductCategories.description"/>
+                                </description>
                             </input>
 
                             <input conf="quiqqer.products.settings.productLoadNumber" type="number">
