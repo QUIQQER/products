@@ -27,7 +27,7 @@ class UnitSelectFrontendView extends QUI\ERP\Products\Field\View
 
         /** @var UnitSelect $Field */
         $Field = QUI\ERP\Products\Handler\Fields::getField($this->getId());
-        $value = $Field->getValue();
+        $value = $this->getValue();
 
         $Engine->assign([
             'title'     => $this->getTitle(),
