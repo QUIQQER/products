@@ -16,7 +16,7 @@ use QUI\ERP\Products\Handler\Search;
  */
 class InputMultiLang extends QUI\ERP\Products\Field\Field
 {
-    protected $columnType = 'TEXT';
+    protected $columnType     = 'TEXT';
     protected $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
     /**
@@ -28,11 +28,11 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
     }
 
     /**
-     * @return View
+     * @return MultilangFrontendView
      */
     public function getFrontendView()
     {
-        return new View($this->getFieldDataForView());
+        return new MultilangFrontendView($this->getFieldDataForView());
     }
 
     /**
@@ -70,7 +70,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
                 }
             }
 
-            $current = \mb_strtolower($current) . '_' . \mb_strtoupper($current);
+            $current = \mb_strtolower($current).'_'.\mb_strtoupper($current);
 
             if (isset($value[$current])) {
                 return $value[$current];
