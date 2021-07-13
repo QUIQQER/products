@@ -1342,8 +1342,6 @@ class Model extends QUI\QDOM
                 ]
             );
 
-            \QUI\System\Log::writeRecursive($fieldData);
-
             QUI::getDataBase()->update(
                 QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 [
