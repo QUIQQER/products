@@ -880,15 +880,22 @@ class VariantParent extends AbstractType
         // generate permutation array
         $list            = [];
         $attributeGroups = [];
+        $fieldsParsed    = [];
 
         foreach ($fields as $entry) {
             if (empty($entry['fieldId'])) {
                 continue;
             }
 
+            $fieldId = (int)$entry['fieldId'];
+
+            if (isset($fieldsParsed[$fieldId])) {
+                continue;
+            }
+
             // only group lists can be permutated
             try {
-                $Field = FieldHandler::getField($entry['fieldId']);
+                $Field = FieldHandler::getField($fieldId);
 
                 if ($Field->getType() !== FieldHandler::TYPE_ATTRIBUTES) {
                     $attributeGroups[] = [
@@ -905,9 +912,8 @@ class VariantParent extends AbstractType
                 continue;
             }
 
-            $group   = [];
-            $fieldId = $entry['fieldId'];
-            $values  = $entry['values'];
+            $group  = [];
+            $values = $entry['values'];
 
             foreach ($values as $value) {
                 $group[] = ['fieldId' => $fieldId, 'value' => $value];
@@ -916,6 +922,8 @@ class VariantParent extends AbstractType
             if (!empty($group)) {
                 $list[] = $group;
             }
+
+            $fieldsParsed[$fieldId] = true;
         }
 
         $permutations = $this->permutations($list);
@@ -1041,10 +1049,14 @@ class VariantParent extends AbstractType
         // set fields
         foreach ($fields as $field => $value) {
             try {
-                $Field = FieldHandler::getField($field);
+                $Field           = FieldHandler::getField($field);
+                $FieldFromParent = $this->getField($field);
             } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
                 continue;
             }
+
+            $Field->setOwnFieldStatus($FieldFromParent->isOwnField());
 
             // add only attribute groups
             if ($Field->getType() === FieldHandler::TYPE_ATTRIBUTE_GROUPS) {
