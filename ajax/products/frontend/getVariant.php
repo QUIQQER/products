@@ -64,6 +64,8 @@ QUI::$Ajax->registerFunction(
             $fields = $_fields;
         }
 
+        $isVariantParent = false;
+
         if (!isset($_fields[Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES])) {
             // set variant field values
             foreach ($fields as $fieldId => $fieldValue) {
@@ -99,7 +101,8 @@ QUI::$Ajax->registerFunction(
                 $fieldHash = QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($attributeGroups);
                 $Child     = $Product->getVariantByVariantHash($fieldHash);
             } catch (QUI\Exception $Exception) {
-                $Child = $Product;
+                $Child           = $Product;
+                $isVariantParent = true;
             }
         } else {
             $childId = (int)$_fields[Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES];
@@ -110,7 +113,8 @@ QUI::$Ajax->registerFunction(
                 if (isset($variants[0])) {
                     $childId = $variants[0]->getId();
                 } else {
-                    $childId = $Product->getId();
+                    $childId         = $Product->getId();
+                    $isVariantParent = true;
                 }
             }
 
@@ -150,7 +154,8 @@ QUI::$Ajax->registerFunction(
             'title'           => $Child->getTitle(),
             'category'        => $categoryId,
             'fieldHashes'     => ProductUtils::getJsFieldHashArray($Product),
-            'availableHashes' => \array_flip($Product->availableActiveFieldHashes())
+            'availableHashes' => \array_flip($Product->availableActiveFieldHashes()),
+            'isVariantParent' => $isVariantParent
         ];
 
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
