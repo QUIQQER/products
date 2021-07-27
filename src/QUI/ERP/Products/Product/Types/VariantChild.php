@@ -251,9 +251,17 @@ class VariantChild extends AbstractType
             $Media       = $Project->getMedia();
             $Placeholder = $Media->getPlaceholderImage();
 
-            if ($Placeholder && $Image && $Placeholder->getId() !== $Image->getId()) {
+            if ($Placeholder) {
+                if ($Image && $Placeholder->getId() !== $Image->getId()) {
+                    return $Image;
+                }
+            } elseif ($Image) {
                 return $Image;
             }
+
+//            if ($Placeholder && $Image && $Placeholder->getId() !== $Image->getId()) {
+//                return $Image;
+//            }
         } catch (QUI\Exception $Exception) {
         }
 
