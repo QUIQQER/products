@@ -1388,10 +1388,12 @@ class Model extends QUI\QDOM
                 'limit' => 1
             ]);
 
-            QUI\Cache\LongTermCache::set(
-                QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/db-data',
-                $result[0]
-            );
+            if (!empty($result)) {
+                QUI\Cache\LongTermCache::set(
+                    QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/db-data',
+                    $result[0]
+                );
+            }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
         }
