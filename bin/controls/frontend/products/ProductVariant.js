@@ -45,6 +45,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             this.$startInit         = false;
             this.$isOnlyVariantList = false; // if the variant has no attribute lists and only one list of its variants
 
+            this.$currentVariantId = false;
+            this.$isVariantParent  = true;
+
             this.addEvents({
                 onInject: this.$onInject,
                 onImport: this.$onImport,
@@ -285,6 +288,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 var Ghost = new Element('div', {
                     html: result.control
                 });
+
+                self.$currentVariantId = result.variantId;
+                self.$isVariantParent  = !!result.isVariantParent;
 
                 document.title        = result.title;
                 self.$fieldHashes     = result.fieldHashes;
@@ -554,6 +560,24 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             }
 
             return result;
+        },
+
+        /**
+         * Get ID of the current product
+         *
+         * @return {Number|Boolean} - May be false if no product is explicitly selected / set
+         */
+        getProductId: function () {
+            return this.$currentVariantId;
+        },
+
+        /**
+         * Indicates if this product can be bought in its current configuration.
+         *
+         * @return {boolean}
+         */
+        isBuyable: function () {
+            return !this.$isVariantParent;
         }
     });
 });

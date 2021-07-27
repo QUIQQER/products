@@ -28,7 +28,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
             'resize',
             '$onInject',
             '$onImport',
-            '$tabClick'
+            '$tabClick',
+            'getProductId',
+            'isBuyable'
         ],
 
         options: {
@@ -372,7 +374,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 }
 
                 self.$Price.setPriceDisplay(result.price_display);
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error(err);
             });
         },
@@ -632,6 +634,24 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
                 this.$hideTabToRight(ActiveSheet),
                 this.$showFromLeft(TargetSheet)
             ]);
+        },
+
+        /**
+         * Get ID of the current product
+         *
+         * @return {Number|Boolean} - May be false if no product is explicitly selected / set
+         */
+        getProductId: function () {
+            return this.getAttribute('productId');
+        },
+
+        /**
+         * Indicates if this product can be bought in its current configuration.
+         *
+         * @return {boolean}
+         */
+        isBuyable: function () {
+            return true;
         }
     });
 });
