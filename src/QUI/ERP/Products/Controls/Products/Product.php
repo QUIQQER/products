@@ -58,9 +58,8 @@ class Product extends QUI\Control
         $fields  = [];
         $Calc    = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
-        $typeDefaultProduct = ($Product->getType() === QUI\ERP\Products\Product\Product::class);
-        $typeVariantParent  = ($Product->getType() === QUI\ERP\Products\Product\Types\VariantParent::class);
-        $typeVariantChild   = ($Product->getType() === QUI\ERP\Products\Product\Types\VariantChild::class);
+        $typeVariantParent = \is_a($Product->getType(), QUI\ERP\Products\Product\Types\VariantParent::class, true);
+        $typeVariantChild  = \is_a($Product->getType(), QUI\ERP\Products\Product\Types\VariantChild::class, true);
 
         if ($typeVariantParent) {
             /* @var $Product QUI\ERP\Products\Product\Types\VariantParent */
@@ -158,7 +157,20 @@ class Product extends QUI\Control
             $images = $Product->getImages();
 
             try {
-                $mainImageId = $Product->getImage()->getId();
+                $MainImage    = $Product->getImage();
+                $mainImageId  = $MainImage->getId();
+                $hasMainImage = false;
+
+                foreach ($images as $Image) {
+                    if ($Image->getId() === $MainImage->getId()) {
+                        $hasMainImage = true;
+                        break;
+                    }
+                }
+
+                if (!$hasMainImage) {
+                    $images[] = $MainImage;
+                }
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeDebugException($Exception);
                 $mainImageId = false;
