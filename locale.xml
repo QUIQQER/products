@@ -2431,12 +2431,12 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[Product is not available for customers]]></en>
         </locale>
         <locale name="product.panel.status.activate">
-            <de><![CDATA[Produkt für Kunden aktivieren]]></de>
-            <en><![CDATA[Activate product for customers]]></en>
+            <de><![CDATA[Produkt ist für Kunden aktiviert]]></de>
+            <en><![CDATA[Product is activated for customers]]></en>
         </locale>
         <locale name="product.panel.status.deactivate">
-            <de><![CDATA[Produkt für Kunden deaktivieren]]></de>
-            <en><![CDATA[Deactivate product for customers]]></en>
+            <de><![CDATA[Produkt ist für Kunden deaktiviert]]></de>
+            <en><![CDATA[Product is deactivated for customers]]></en>
         </locale>
     </groups>
 
