@@ -2421,6 +2421,23 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Aktionen]]></de>
             <en><![CDATA[Actions]]></en>
         </locale>
+
+        <locale name="product.search.result.status.active">
+            <de><![CDATA[Produkt ist für Kunden verfügbar]]></de>
+            <en><![CDATA[Product is available for customers]]></en>
+        </locale>
+        <locale name="product.search.result.status.deactive">
+            <de><![CDATA[Produkt ist für Kunden nicht verfügbar]]></de>
+            <en><![CDATA[Product is not available for customers]]></en>
+        </locale>
+        <locale name="product.panel.status.activate">
+            <de><![CDATA[Produkt für Kunden aktivieren]]></de>
+            <en><![CDATA[Activate product for customers]]></en>
+        </locale>
+        <locale name="product.panel.status.deactivate">
+            <de><![CDATA[Produkt für Kunden deaktivieren]]></de>
+            <en><![CDATA[Deactivate product for customers]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="php">

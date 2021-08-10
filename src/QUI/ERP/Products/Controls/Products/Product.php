@@ -74,8 +74,12 @@ class Product extends QUI\Control
                 $Product->getField(Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES);
                 $variants = $Product->getVariants();
 
-                if (isset($variants[0])) {
-                    $Product = $variants[0];
+                foreach ($variants as $V) {
+                    if (!$V->isActive()) {
+                        continue;
+                    }
+
+                    $Product = $V;
 
                     $this->setAttributes([
                         'data-qui-option-show-price' => true,
@@ -84,6 +88,7 @@ class Product extends QUI\Control
 
                     $typeVariantChild  = true;
                     $typeVariantParent = false;
+                    break;
                 }
             } catch (QUI\ERP\Products\Product\Exception $Exception) {
                 // use default variant, if a default variant exists

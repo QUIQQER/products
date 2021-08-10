@@ -416,9 +416,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
 
                     var complete = [].append(categoriesFields)
-                        .append(systemFields)
-                        .append(standardFields)
-                        .append(fields);
+                                     .append(systemFields)
+                                     .append(standardFields)
+                                     .append(fields);
 
                     // cleanup complete list
                     var completeIds = {};
@@ -536,14 +536,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 // product is active
                 if (status) {
                     Button.setSilentOn();
-                    Button.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'isActivate'));
+                    Button.setAttribute('text', QUILocale.get('quiqqer/products', 'product.panel.status.activate'));
                     Button.enable();
                     return;
                 }
 
                 // product is deactivate
                 Button.setSilentOff();
-                Button.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'isDeactivate'));
+                Button.setAttribute('text', QUILocale.get('quiqqer/products', 'product.panel.status.deactivate'));
                 Button.enable();
             }.bind(this));
         },
@@ -817,6 +817,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 if (Control) {
                     Control.setAttribute('productFolder', self.$productFolder);
+
+                    if (Input.value !== '') {
+                        Control.refresh();
+                    }
                 }
             });
 

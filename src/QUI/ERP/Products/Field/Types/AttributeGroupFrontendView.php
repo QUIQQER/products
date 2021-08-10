@@ -80,13 +80,15 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             $entries  = [];
 
             foreach ($variants as $Variants) {
-                $entries[] = [
-                    'title'    => $Variants->getField(Fields::FIELD_TITLE)->getValue(),
-                    'valueId'  => $Variants->getId(),
-                    'selected' => false,
-                    'hide'     => false,
-                    'disabled' => false
-                ];
+                if ($Variants->isActive()) {
+                    $entries[] = [
+                        'title'    => $Variants->getField(Fields::FIELD_TITLE)->getValue(),
+                        'valueId'  => $Variants->getId(),
+                        'selected' => false,
+                        'hide'     => false,
+                        'disabled' => false
+                    ];
+                }
             }
         } elseif ($id === QUI\ERP\Products\Handler\Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES &&
                   $this->Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
@@ -96,16 +98,18 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             $entries   = [];
 
             foreach ($variants as $Variants) {
-                $entries[] = [
-                    'title'    => $Variants->getField(Fields::FIELD_TITLE)->getValue(),
-                    'valueId'  => $Variants->getId(),
-                    'selected' => $currentId === $Variants->getId(),
-                    'hide'     => false,
-                    'disabled' => false
-                ];
+                if ($Variants->isActive()) {
+                    $entries[] = [
+                        'title'    => $Variants->getField(Fields::FIELD_TITLE)->getValue(),
+                        'valueId'  => $Variants->getId(),
+                        'selected' => $currentId === $Variants->getId(),
+                        'hide'     => false,
+                        'disabled' => false
+                    ];
 
-                if ($currentId === $Variants->getId()) {
-                    $value = $currentId;
+                    if ($currentId === $Variants->getId()) {
+                        $value = $currentId;
+                    }
                 }
             }
         }
