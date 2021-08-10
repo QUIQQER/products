@@ -536,14 +536,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 // product is active
                 if (status) {
                     Button.setSilentOn();
-                    Button.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'isActivate'));
+                    Button.setAttribute('text', QUILocale.get('quiqqer/products', 'product.panel.status.activate'));
                     Button.enable();
                     return;
                 }
 
                 // product is deactivate
                 Button.setSilentOff();
-                Button.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'isDeactivate'));
+                Button.setAttribute('text', QUILocale.get('quiqqer/products', 'product.panel.status.deactivate'));
                 Button.enable();
             }.bind(this));
         },
