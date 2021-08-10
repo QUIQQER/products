@@ -253,16 +253,18 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 }
             });
 
-            new Element('div', {
-                class : 'product-data-fieldlist-reset',
-                html  : QUILocale.get('quiqqer/products', 'control.variant.reset.fields'),
-                events: {
-                    click: function () {
-                        fieldLists.set('value', '');
-                        self.$refreshVariant();
+            if (this.getElm().getElement('.product-data-fieldlist')) {
+                new Element('div', {
+                    class : 'product-data-fieldlist-reset',
+                    html  : QUILocale.get('quiqqer/products', 'control.variant.reset.fields'),
+                    events: {
+                        click: function () {
+                            fieldLists.set('value', '');
+                            self.$refreshVariant();
+                        }
                     }
-                }
-            }).inject(this.getElm().getElement('.product-data-fieldlist'));
+                }).inject(this.getElm().getElement('.product-data-fieldlist'));
+            }
         },
 
         /**
