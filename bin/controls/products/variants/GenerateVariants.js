@@ -21,7 +21,7 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
 ], function (QUI, QUIControl, Grid, QUIAjax, QUILocale, Mustache, template, templateFieldSelect) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
@@ -80,17 +80,17 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
          * @return {Promise}
          */
         next: function () {
-            var self = this;
+            const self = this;
 
-            var FieldSelect = self.getElm().getElement('.quiqqer-products-variant-generate-fieldSelect'),
-                checkboxes  = FieldSelect.getElements('input:checked');
+            const FieldSelect = self.getElm().getElement('.quiqqer-products-variant-generate-fieldSelect'),
+                  checkboxes  = FieldSelect.getElements('input:checked');
 
             if (!checkboxes.length) {
                 return Promise.resolve();
             }
 
             return new Promise(function (resolve) {
-                var children = self.getElm().getChildren();
+                const children = self.getElm().getChildren();
 
                 moofx(children).animate({
                     left   : -50,
@@ -118,9 +118,9 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
         reset: function () {
             this.$isOnEnd = false;
 
-            var self        = this;
-            var children    = this.getElm().getChildren();
-            var FieldSelect = this.getElm().getElement('.quiqqer-products-variant-generate-fieldSelect');
+            const self        = this;
+            const children    = this.getElm().getChildren();
+            const FieldSelect = this.getElm().getElement('.quiqqer-products-variant-generate-fieldSelect');
 
             return new Promise(function (resolve) {
                 moofx(children).animate({
@@ -155,12 +155,12 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
          * @return {Promise}
          */
         generate: function () {
-            var self   = this,
-                tables = this.getElm().getElements('table');
+            const self   = this,
+                  tables = this.getElm().getElements('table');
 
-            var fields = tables.map(function (Table) {
-                var inputs = Table.getElements('input[type="checkbox"]:checked');
-                var values = inputs.map(function (Input) {
+            const fields = tables.map(function (Table) {
+                const inputs = Table.getElements('input[type="checkbox"]:checked');
+                const values = inputs.map(function (Input) {
                     return Input.value;
                 });
 
@@ -201,19 +201,19 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
          * @return {Promise}
          */
         renderFieldSelect: function () {
-            var self = this;
+            const self = this;
 
-            var Container = new Element('div', {
+            const Container = new Element('div', {
                 'class': 'quiqqer-products-variant-generate-fieldSelect'
             }).inject(this.$Elm);
 
             return new Promise(function (resolve) {
                 QUIAjax.get('package_quiqqer_products_ajax_products_variant_getAvailableVariantFields', function (fields) {
-                    var attributeGroupList = fields.filter(function (field) {
+                    let attributeGroupList = fields.filter(function (field) {
                         return field.type === "AttributeGroup";
                     });
 
-                    var productAttributeList = fields.filter(function (field) {
+                    let productAttributeList = fields.filter(function (field) {
                         return field.type === "ProductAttributeList";
                     });
 
@@ -246,19 +246,19 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
          * @return {Promise}
          */
         renderFieldValueSelect: function () {
-            var self = this;
+            const self = this;
 
             this.$isOnEnd = true;
 
             return new Promise(function (resolve) {
-                var FieldSelect = self.getElm().getElement('.quiqqer-products-variant-generate-fieldSelect');
-                var checkboxes  = FieldSelect.getElements('input:checked');
+                const FieldSelect = self.getElm().getElement('.quiqqer-products-variant-generate-fieldSelect');
+                const checkboxes  = FieldSelect.getElements('input:checked');
 
-                var fields = checkboxes.map(function (Input) {
+                const fields = checkboxes.map(function (Input) {
                     return parseInt(Input.value);
                 });
 
-                var Container = new Element('div', {
+                const Container = new Element('div', {
                     'class': 'quiqqer-products-variant-generate-generation',
                     styles : {
                         left   : -50,
@@ -320,7 +320,7 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
                 return;
             }
 
-            var size = this.$Elm.getSize();
+            const size = this.$Elm.getSize();
 
             return Promise.all([
                 this.$Grid.setHeight(size.y),
@@ -332,14 +332,14 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
          * refresh the calc display
          */
         refreshCalc: function () {
-            var count  = 0,
+            let count  = 0,
                 tables = this.getElm().getElements('.quiqqer-products-variant-generate-generation table');
 
-            var counts = tables.map(function (Table) {
+            let counts = tables.map(function (Table) {
                 return Table.getElements('input[type="checkbox"]:checked').length;
             });
 
-            for (var i = 0, len = counts.length; i < len; i++) {
+            for (let i = 0, len = counts.length; i < len; i++) {
                 if (counts[i] === 0) {
                     continue;
                 }
@@ -360,9 +360,9 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
          * Toggle the product attribute list selection
          */
         $togglePAL: function () {
-            var Section   = this.getElm().getElement('.product-attribute-list');
-            var Button    = Section.getElement('button');
-            var Container = Section.getElement('.product-attribute-list-container');
+            const Section   = this.getElm().getElement('.product-attribute-list');
+            const Button    = Section.getElement('button');
+            const Container = Section.getElement('.product-attribute-list-container');
 
             // open
             if (Container.getStyle('display') === 'none') {
