@@ -21,6 +21,14 @@ QUI::$Ajax->registerFunction(
             ['searchParams' => $searchParams]
         );
 
+        if (empty($result) || empty($result['result'])) {
+            return [
+                'data'  => [],
+                'total' => 0,
+                'page'  => 1
+            ];
+        }
+
         $page       = 1;
         $productIds = $result['result'];
         $products   = [];
