@@ -410,8 +410,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             this.Loader.show();
 
-            var self = this,
-                Body = self.getBody();
+            const self = this,
+                  Body = self.getBody();
 
             this.$VariantFields.show();
             this.$BackToVariantList.hide();
@@ -427,8 +427,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 this.$hideCategories(),
                 this.refreshProductEditableFields(),
                 this.$Product.getVariantFields()
-            ]).then(function (result) {
-                var VariantSheet = Body.getElement('.variants-sheet');
+            ]).then((result) => {
+                let VariantSheet = Body.getElement('.variants-sheet');
 
                 if (!VariantSheet) {
                     VariantSheet = new Element('div', {
@@ -439,15 +439,15 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 VariantSheet.set('html', '');
 
                 // grid render
-                var LC = new Element(
+                const LC = new Element(
                     'div.variant-list-variantListContainer'
                 ).inject(VariantSheet);
 
-                var Container = new Element('div').inject(LC);
+                const Container = new Element('div').inject(LC);
 
 
                 // grid options
-                var columns = [{
+                let columns = [{
                     header   : QUILocale.get(lg, 'products.product.panel.grid.defaultStatus'),
                     dataIndex: 'defaultVariant',
                     dataType : 'node',
@@ -483,9 +483,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     className: 'grid-align-right'
                 }];
 
-                var variantFields = result[2];
+                let variantFields = result[2];
 
-                for (var i = 0, len = variantFields.length; i < len; i++) {
+                for (let i = 0, len = variantFields.length; i < len; i++) {
                     columns.push({
                         header   : variantFields[i].title,
                         dataIndex: 'field-' + variantFields[i].id,
@@ -514,21 +514,29 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     sortable : false
                 }]);
 
-                self.$Grid = new Grid(Container, {
+                this.$Grid = new Grid(Container, {
                     pagination       : true,
                     multipleSelection: true,
                     width            : VariantSheet.getSize().x - 40,
                     height           : VariantSheet.getSize().y - 40,
-                    perPage          : self.getAttribute('perPage'),
-                    page             : self.getAttribute('page'),
-                    sortOn           : self.getAttribute('sortOn'),
+                    perPage          : this.getAttribute('perPage'),
+                    page             : this.getAttribute('page'),
+                    sortOn           : this.getAttribute('sortOn'),
                     serverSort       : true,
                     buttons          : [{
                         textimage: 'fa fa-plus',
                         text     : QUILocale.get(lg, 'panel.variants.button.create'),
                         events   : {
-                            click: self.addVariant
+                            click: this.addVariant
                         }
+                    }, {
+                        name      : 'actions',
+                        text      : QUILocale.get(lg, 'btn.actions'),
+                        menuCorner: 'topRight',
+                        styles    : {
+                            'float': 'right'
+                        },
+                        events    : {}
                     }, {
                         textimage: 'fa fa-magic',
                         text     : QUILocale.get(lg, 'panel.variants.button.generate'),
@@ -536,35 +544,90 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                             'float': 'right'
                         },
                         events   : {
-                            click: self.openVariantGenerating
+                            click: this.openVariantGenerating
                         }
                     }],
                     columnModel      : columns
                 });
 
-                self.$Grid.addEvents({
-                    onDblClick: function () {
-                        self.selectVariant(
-                            self.$Grid.getSelectedData()[0].id
-                        );
-                    },
+                this.$createExtraMenu();
 
-                    onRefresh: function () {
-                        self.refreshVariantGrid();
-                    },
+                this.$Grid.addEvents({
+                    onClick: () => {
+                        const ExtraMenu = this.$Grid.getButton('actions'),
+                              selected  = this.$Grid.getSelectedData();
 
-                    onContextMenu: function (event) {
-                        if (!self.$Grid.getSelectedIndices().length) {
+                        if (!ExtraMenu) {
                             return;
                         }
 
-                        self.$Menu.clearChildren();
+                        // set default
+                        const SetDefault = ExtraMenu.getChildren().filter(function (Instance) {
+                            return Instance.getAttribute('name') === 'extra-menu-setDefault';
+                        })[0];
+
+                        if (selected.length === 1) {
+                            SetDefault.enable();
+                        } else {
+                            SetDefault.disable();
+                        }
+
+                        // activate & deactivate
+                        const Activate = ExtraMenu.getChildren().filter(function (Instance) {
+                            return Instance.getAttribute('name') === 'extra-menu-activate';
+                        })[0];
+
+                        const Deactivate = ExtraMenu.getChildren().filter(function (Instance) {
+                            return Instance.getAttribute('name') === 'extra-menu-deactivate';
+                        })[0];
+
+                        const Delete = ExtraMenu.getChildren().filter(function (Instance) {
+                            return Instance.getAttribute('name') === 'extra-menu-delete';
+                        })[0];
+
+                        if (selected.length) {
+                            Activate.enable();
+                            Deactivate.enable();
+                            Delete.enable();
+                        } else {
+                            Activate.disable();
+                            Deactivate.disable();
+                            Delete.disable();
+                        }
+                    },
+
+                    onDblClick: () => {
+                        this.selectVariant(
+                            this.$Grid.getSelectedData()[0].id
+                        ).catch(function (err) {
+                            console.error(err);
+                        });
+                    },
+
+                    onRefresh: () => {
+                        this.$Grid.getButton('actions').getChildren().forEach(function (Item) {
+                            if (typeof Item.disable !== 'undefined') {
+                                Item.disable();
+                            }
+                        });
+
+                        this.refreshVariantGrid().catch(function (err) {
+                            console.error(err);
+                        });
+                    },
+
+                    onContextMenu: (event) => {
+                        if (!this.$Grid.getSelectedIndices().length) {
+                            return;
+                        }
+
+                        this.$Menu.clearChildren();
 
                         // default status toggle
-                        var text = QUILocale.get(lg, 'panel.variants.set.default.variant'),
+                        let text = QUILocale.get(lg, 'panel.variants.set.default.variant'),
                             icon = 'fa fa-check-circle-o';
 
-                        var rowData        = self.$Grid.getDataByRow(event.row),
+                        let rowData        = this.$Grid.getDataByRow(event.row),
                             DefaultVariant = rowData.defaultVariant;
 
                         if (DefaultVariant.hasClass('fa')) {
@@ -572,84 +635,147 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                             icon = 'fa fa-circle-o';
                         }
 
-                        self.$Menu.setTitle('#' + rowData.id + ' - ' + rowData.productNo);
+                        this.$Menu.setTitle('#' + rowData.id + ' - ' + rowData.productNo);
 
-                        self.$Menu.appendChild(
+                        this.$Menu.appendChild(
                             new QUIContextMenuItem({
                                 text     : text,
                                 icon     : icon,
                                 cellEvent: event,
                                 events   : {
-                                    onClick: self.$toggleDefaultVariant
+                                    onClick: this.$toggleDefaultVariant
                                 }
                             })
                         );
 
-                        self.$Menu.appendChild(
+                        this.$Menu.appendChild(
                             new QUIContextMenuSeparator()
                         );
 
-                        self.$Menu.appendChild(
+                        this.$Menu.appendChild(
                             new QUIContextMenuItem({
                                 text  : QUILocale.get(lg, 'panel.variants.activate.variants'),
                                 icon  : 'fa fa-check',
                                 events: {
-                                    onClick: self.$activateVariants
+                                    onClick: this.$activateVariants
                                 }
                             })
                         );
 
-                        self.$Menu.appendChild(
+                        this.$Menu.appendChild(
                             new QUIContextMenuItem({
                                 text  : QUILocale.get(lg, 'panel.variants.deactivate.variants'),
                                 icon  : 'fa fa-close',
                                 events: {
-                                    onClick: self.$deactivateVariants
+                                    onClick: this.$deactivateVariants
                                 }
                             })
                         );
 
-                        self.$Menu.appendChild(
+                        this.$Menu.appendChild(
                             new QUIContextMenuSeparator()
                         );
 
-                        self.$Menu.appendChild(
+                        this.$Menu.appendChild(
                             new QUIContextMenuItem({
                                 text  : QUILocale.get(lg, 'panel.variants.delete.variants'),
                                 icon  : 'fa fa-trash',
                                 events: {
-                                    onClick: self.deleteVariantsDialog
+                                    onClick: this.deleteVariantsDialog
                                 }
                             })
                         );
 
-                        self.$Menu.inject(document.body);
-                        self.$Menu.setPosition(
+                        this.$Menu.inject(document.body);
+                        this.$Menu.setPosition(
                             event.event.page.x,
                             event.event.page.y
                         );
-                        self.$Menu.show();
-                        self.$Menu.focus();
+                        this.$Menu.show();
+                        this.$Menu.focus();
                     }
                 });
 
-                return self.refreshVariantGrid();
-            }).then(function () {
-                var Body         = self.getBody();
-                var VariantSheet = Body.getElement('.variants-sheet');
+                return this.refreshVariantGrid();
+            }).then(() => {
+                const Body         = this.getBody();
+                const VariantSheet = Body.getElement('.variants-sheet');
 
-                return self.$showCategory(VariantSheet);
-            }).then(function () {
-                self.getCategory('variants').setActive();
+                return this.$showCategory(VariantSheet);
+            }).then(() => {
+                this.getCategory('variants').setActive();
 
-                if (self.$loaded) {
-                    self.Loader.hide();
+                if (this.$loaded) {
+                    this.Loader.hide();
                 }
 
-                return self.$Grid.setHeight(
+                return this.$Grid.setHeight(
                     Body.getElement('.variants-sheet').getSize().y - 40
                 );
             });
+        },
+
+        /**
+         * Create the extra menu
+         */
+        $createExtraMenu: function () {
+            const ExtraMenu = this.$Grid.getButton('actions');
+
+            ExtraMenu.appendChild(
+                new QUIContextMenuItem({
+                    disabled: true,
+                    name    : 'extra-menu-setDefault',
+                    text    : QUILocale.get(lg, 'panel.variants.set.default.variant'),
+                    icon    : 'fa fa-check-circle-o',
+                    events  : {
+                        onClick: this.$toggleDefaultVariant
+                    }
+                })
+            );
+
+            ExtraMenu.appendChild(
+                new QUIContextMenuSeparator()
+            );
+
+            ExtraMenu.appendChild(
+                new QUIContextMenuItem({
+                    disabled: true,
+                    name    : 'extra-menu-activate',
+                    text    : QUILocale.get(lg, 'panel.variants.activate.variants'),
+                    icon    : 'fa fa-check',
+                    events  : {
+                        onClick: this.$activateVariants
+                    }
+                })
+            );
+
+            ExtraMenu.appendChild(
+                new QUIContextMenuItem({
+                    disabled: true,
+                    name    : 'extra-menu-deactivate',
+                    text    : QUILocale.get(lg, 'panel.variants.deactivate.variants'),
+                    icon    : 'fa fa-close',
+                    events  : {
+                        onClick: this.$deactivateVariants
+                    }
+                })
+            );
+
+            ExtraMenu.appendChild(
+                new QUIContextMenuSeparator()
+            );
+
+            ExtraMenu.appendChild(
+                new QUIContextMenuItem({
+                    disabled: true,
+                    name    : 'extra-menu-delete',
+                    text    : QUILocale.get(lg, 'panel.variants.delete.variants'),
+                    icon    : 'fa fa-trash',
+                    events  : {
+                        onClick: this.deleteVariantsDialog
+                    }
+                })
+            );
         },
 
         /**
@@ -1132,19 +1258,18 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         $deleteVariants: function () {
             this.Loader.show();
 
-            var self     = this;
-            var selected = this.$Grid.getSelectedData().map(function (entry) {
+            const selected = this.$Grid.getSelectedData().map(function (entry) {
                 return entry.id;
             });
 
-            QUIAjax.post('package_quiqqer_products_ajax_products_variant_generate_delete', function () {
-                self.refreshVariantGrid();
+            QUIAjax.post('package_quiqqer_products_ajax_products_variant_generate_delete', () => {
+                this.refreshVariantGrid();
             }, {
                 'package' : 'quiqqer/products',
                 variantIds: JSON.encode(selected),
-                onError   : function () {
-                    self.refreshVariantGrid();
-                    self.Loader.hide();
+                onError   : () => {
+                    this.refreshVariantGrid();
+                    this.Loader.hide();
                 }
             });
         },
@@ -1155,12 +1280,26 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          * @param ContextItem
          */
         $toggleDefaultVariant: function (ContextItem) {
-            var self      = this,
-                cellEvent = ContextItem.getAttribute('cellEvent'),
-                row       = cellEvent.row,
+            const self      = this,
+                  cellEvent = ContextItem.getAttribute('cellEvent');
 
-                variantId = this.$Grid.getDataByRow(row).id,
+            let row, variantId, Status;
+
+            if (cellEvent) {
+                row       = cellEvent.row;
+                variantId = this.$Grid.getDataByRow(row).id;
                 Status    = this.$Grid.getDataByRow(row).defaultVariant;
+            } else {
+                let data = this.$Grid.getSelectedData();
+
+                if (!data.length) {
+                    return;
+                }
+
+                data      = data[0];
+                variantId = data.id;
+                Status    = data.defaultVariant;
+            }
 
             this.Loader.show();
 
