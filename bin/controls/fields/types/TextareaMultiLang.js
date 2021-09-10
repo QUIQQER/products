@@ -158,10 +158,10 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
         /**
          * Return current value
          *
-         * @returns {Object}
+         * @returns {String}
          */
         getValue: function () {
-            return this.getAttribute('value');
+            return JSON.encode(this.getAttribute('value'));
         },
 
         /**
@@ -181,7 +181,7 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
 
             this.setAttribute('value', value);
 
-            return JSON.encode(this.getValue());
+            return JSON.encode(value);
         }
     });
 });
