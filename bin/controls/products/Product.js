@@ -54,6 +54,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         Binds: [
             'refresh',
             'update',
+            'save',
             'copy',
             '$onActivationStatusChange',
             'openInformation',
@@ -1984,17 +1985,28 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @returns {Promise}
          */
         update: function () {
-            var self     = this,
-                Elm      = self.getElm(),
-                selfData = this.$data;
+            var self = this,
+                Elm  = self.getElm();
 
             this.Loader.show();
-            this.$saveControl(this.$Product);
 
-            return new Promise(function (resolve, reject) {
-                var fields = {};
-                var Form   = Elm.getElement('form');
-                var data   = QUIFormUtils.getFormData(Form);
+            return this.$saveControl(this.$Product).then(function () {
+                return self.$Product.getFields().then(function (fields) {
+                    var result = {};
+                    var i, len, field;
+
+                    for (i = 0, len = fields.length; i < len; i++) {
+                        field = fields[i];
+
+                        result['field-' + field.id] = field.value;
+                    }
+
+                    return result;
+                });
+            }).then(function (fields) {
+                var Form     = Elm.getElement('form');
+                var data     = QUIFormUtils.getFormData(Form);
+                var selfData = self.$data;
 
                 Object.each(selfData, function (entry) {
                     fields['field-' + entry.id] = entry.value;
@@ -2059,30 +2071,28 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     return item !== '';
                 });
 
-                Products.updateChild(
+                return Products.updateChild(
                     self.getAttribute('productId'),
                     categories,
                     data['product-category'],
                     fields
-                ).then(function () {
-                    return self.loadData();
-                }).then(function () {
-                    var Active = self.getActiveCategory();
+                );
+            }).then(function () {
+                return self.loadData();
+            }).then(function () {
+                var Active = self.getActiveCategory();
 
-                    // refresh category
-                    self.$executeUnloadForm = false;
+                // refresh category
+                self.$executeUnloadForm = false;
 
-                    Active.setNormal();
-                    Active.click();
-                    Active.setActive();
+                Active.setNormal();
+                Active.click();
+                Active.setActive();
 
-                    self.$executeUnloadForm = true;
-
-                    resolve();
-                }).catch(function (err) {
-                    self.Loader.hide();
-                    reject(err);
-                });
+                self.$executeUnloadForm = true;
+            }).catch(function (err) {
+                console.error(err);
+                self.Loader.hide();
             });
         },
 
@@ -2333,10 +2343,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 return Promise.resolve();
             }
 
-            var setFieldValue = function (Field) {
-                Field.value = this;
-            };
-
             var categorySavePromise = this.$saveControl(Product);
 
             var Form = Category.getElement('form');
@@ -2367,9 +2373,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 fieldId = Felm.name.replace('field-', '');
                 fieldId = parseInt(fieldId);
 
-                promises.push(
-                    Product.getField(fieldId).then(setFieldValue.bind(Felm.value))
-                );
+                Product.setFieldValue(fieldId, Felm.value);
             }
 
             if (categorySavePromise) {
@@ -2403,11 +2407,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             var QUIControl = QUI.Controls.getById(Control.get('data-quiid'));
 
             if (QUIControl && typeof QUIControl.save === 'function') {
-                var fieldId = QUIControl.getAttribute('field-id');
+                var fieldId    = QUIControl.getAttribute('field-id'),
+                    fieldValue = QUIControl.save();
 
-                return Product.getField(fieldId).then((Field) => {
-                    Field.value = QUIControl.save();
-                });
+                Product.setFieldValue(fieldId, fieldValue);
+                this.$data[fieldId] = fieldValue;
             }
 
             return Promise.resolve();

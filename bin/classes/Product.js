@@ -492,6 +492,16 @@ define('package/quiqqer/products/bin/classes/Product', [
             });
         },
 
+        setFieldValue: function (fieldId, value) {
+            fieldId = parseInt(fieldId);
+
+            for (var i = 0, len = this.$data.length; i < len; i++) {
+                if (parseInt(this.$data[i].id) === fieldId) {
+                    this.$data[i].value = value;
+                }
+            }
+        },
+
         /**
          * Return the editable fields of this product
          * Makes only sense if the product is a parent product
@@ -516,7 +526,6 @@ define('package/quiqqer/products/bin/classes/Product', [
             var self = this;
 
             return new Promise(function (resolve, reject) {
-
                 if (self.$loaded) {
                     var categories = self.$data.categories.split(',').filter(function (entry) {
                         return entry !== '';
