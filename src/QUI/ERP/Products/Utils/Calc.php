@@ -592,6 +592,7 @@ class Calc
      * @param UniqueProduct $Product
      * @param callable|boolean $callback - optional, callback function for the calculated data array
      * @param null|QUI\ERP\Products\Field\Types\Price $Price - optional, price object to calc with
+     * @param bool $ignorePriceFactors - ignore price factors, default = false
      *
      * @return QUI\ERP\Money\Price
      *
@@ -601,7 +602,8 @@ class Calc
     public function getProductPrice(
         UniqueProduct $Product,
         $callback = false,
-        $Price = null
+        $Price = null,
+        bool $ignorePriceFactors = false
     ): QUI\ERP\Money\Price {
         // calc data
         if (!\is_callable($callback)) {
@@ -634,57 +636,59 @@ class Calc
         $calculationBasisBruttoList = [];
 
         /* @var PriceFactor $PriceFactor */
-        foreach ($priceFactors as $PriceFactor) {
-            if ($PriceFactor->getCalculationBasis() == ErpCalc::CALCULATION_BASIS_BRUTTO) {
-                $calculationBasisBruttoList[] = $PriceFactor;
-                continue;
+        if ($ignorePriceFactors === false) {
+            foreach ($priceFactors as $PriceFactor) {
+                if ($PriceFactor->getCalculationBasis() == ErpCalc::CALCULATION_BASIS_BRUTTO) {
+                    $calculationBasisBruttoList[] = $PriceFactor;
+                    continue;
+                }
+
+                switch ($PriceFactor->getCalculation()) {
+                    // einfache Zahl, Währung --- kein Prozent
+                    default:
+                    case ErpCalc::CALCULATION_COMPLEMENT:
+                        $priceFactorSum = $PriceFactor->getValue();
+                        break;
+
+                    case ErpCalc::CALCULATION_COMPLETE:
+                        $nettoPrice     = $PriceFactor->getValue();
+                        $priceFactorSum = 0;
+                        $factors[]      = $PriceFactor->toArray();
+                        break;
+
+                    // Prozent Angabe
+                    case ErpCalc::CALCULATION_PERCENTAGE:
+                        $value = $PriceFactor->getValue();
+
+                        switch ($PriceFactor->getCalculationBasis()) {
+                            default:
+                            case ErpCalc::CALCULATION_BASIS_NETTO:
+                                $priceFactorSum = $value / 100 * $basisNettoPrice;
+                                break;
+
+                            case ErpCalc::CALCULATION_BASIS_CURRENTPRICE:
+                                $priceFactorSum = $value / 100 * $nettoPrice;
+                                break;
+                        }
+                }
+
+                // quiqqer/order#55
+                if ($nettoPrice + $priceFactorSum < 0) {
+                    $priceFactorSum = $priceFactorSum - ($nettoPrice + $priceFactorSum);
+                }
+
+                $PriceFactor->setNettoSum(
+                    \floatval($priceFactorSum * $Product->getQuantity())
+                );
+
+                $nettoPrice           = $nettoPrice + $priceFactorSum;
+                $nettoPriceNotRounded = $nettoPriceNotRounded + $priceFactorSum;
+                $priceFactorArray     = $PriceFactor->toArray();
+
+                $priceFactorArray['sum'] = $priceFactorSum;
+
+                $factors[] = $priceFactorArray;
             }
-
-            switch ($PriceFactor->getCalculation()) {
-                // einfache Zahl, Währung --- kein Prozent
-                default:
-                case ErpCalc::CALCULATION_COMPLEMENT:
-                    $priceFactorSum = $PriceFactor->getValue();
-                    break;
-
-                case ErpCalc::CALCULATION_COMPLETE:
-                    $nettoPrice     = $PriceFactor->getValue();
-                    $priceFactorSum = 0;
-                    $factors[]      = $PriceFactor->toArray();
-                    break;
-
-                // Prozent Angabe
-                case ErpCalc::CALCULATION_PERCENTAGE:
-                    $value = $PriceFactor->getValue();
-
-                    switch ($PriceFactor->getCalculationBasis()) {
-                        default:
-                        case ErpCalc::CALCULATION_BASIS_NETTO:
-                            $priceFactorSum = $value / 100 * $basisNettoPrice;
-                            break;
-
-                        case ErpCalc::CALCULATION_BASIS_CURRENTPRICE:
-                            $priceFactorSum = $value / 100 * $nettoPrice;
-                            break;
-                    }
-            }
-
-            // quiqqer/order#55
-            if ($nettoPrice + $priceFactorSum < 0) {
-                $priceFactorSum = $priceFactorSum - ($nettoPrice + $priceFactorSum);
-            }
-
-            $PriceFactor->setNettoSum(
-                \floatval($priceFactorSum * $Product->getQuantity())
-            );
-
-            $nettoPrice           = $nettoPrice + $priceFactorSum;
-            $nettoPriceNotRounded = $nettoPriceNotRounded + $priceFactorSum;
-            $priceFactorArray     = $PriceFactor->toArray();
-
-            $priceFactorArray['sum'] = $priceFactorSum;
-
-            $factors[] = $priceFactorArray;
         }
 
         // Calc::CALCULATION_BASIS_BRUTTO
