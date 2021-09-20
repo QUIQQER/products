@@ -123,7 +123,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         }
 
         // if product url is with lang flag /en/
-        if (\strpos($productUrl, '/', 1) === 3) {
+        if (\strpos($productUrl, '/', 1) === 3 && strpos($productUrl, '/_p/') === false) {
             $productUrl = \mb_substr($productUrl, 3);
         }
 
