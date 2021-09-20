@@ -1180,7 +1180,9 @@ class EventHandling
             return;
         }
 
-        $urlParts = \explode('/', $_GET['_url']);
+        $getUrl   = $_GET['_url'];
+        $getUrl   = \trim($getUrl, '/');
+        $urlParts = \explode('/', $getUrl);
 
         if ($urlParts[0] != '_p') {
             return;
@@ -1194,10 +1196,11 @@ class EventHandling
 
 
         try {
-            $Product = Handler\Products::getProduct($params[0]);
-            $Project = $Rewrite->getProject();
+            $Product    = Handler\Products::getProduct($params[0]);
+            $Project    = $Rewrite->getProject();
+            $productUrl = $Product->getUrl();
 
-            if ('/_p/'.$url !== \urldecode($Product->getUrl())) {
+            if (strpos($productUrl, '/_p/') === false) {
                 $Redirect = new RedirectResponse($Product->getUrl());
                 $Redirect->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
 
