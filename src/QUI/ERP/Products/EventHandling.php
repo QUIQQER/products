@@ -1180,7 +1180,9 @@ class EventHandling
             return;
         }
 
-        $urlParts = \explode('/', $_GET['_url']);
+        $getUrl   = $_GET['_url'];
+        $getUrl   = \trim($getUrl, '/');
+        $urlParts = \explode('/', $getUrl);
 
         if ($urlParts[0] != '_p') {
             return;
