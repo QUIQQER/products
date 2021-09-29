@@ -495,9 +495,9 @@ define('package/quiqqer/products/bin/classes/Product', [
         setFieldValue: function (fieldId, value) {
             fieldId = parseInt(fieldId);
 
-            for (var i = 0, len = this.$data.length; i < len; i++) {
-                if (parseInt(this.$data[i].id) === fieldId) {
-                    this.$data[i].value = value;
+            for (var i = 0, len = this.$data.fields.length; i < len; i++) {
+                if (parseInt(this.$data.fields[i].id) === fieldId) {
+                    this.$data.fields[i].value = value;
                 }
             }
         },
