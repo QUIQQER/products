@@ -1204,9 +1204,8 @@ class EventHandling
             return;
         }
 
-
         try {
-            $Product    = Handler\Products::getProduct($params[0]);
+            $Product    = Handler\Products::getProduct($params[1]);
             $Project    = $Rewrite->getProject();
             $productUrl = $Product->getUrl();
 

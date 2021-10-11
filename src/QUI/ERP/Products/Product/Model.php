@@ -417,11 +417,16 @@ class Model extends QUI\QDOM
         $fieldList = $this->getFields();
         $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/';
 
-        return $cacheName.\md5(\serialize([
-                $Locale->getCurrent(),
-                \serialize($fieldList),
-                $User->getId()
-            ]));
+        $uniqueCacheParts = [
+            $Locale->getCurrent(),
+            $User->getId()
+        ];
+
+        foreach ($fieldList as $Field) {
+            $uniqueCacheParts[] = \json_encode($Field->toProductArray());
+        }
+
+        return $cacheName.\md5(\implode('_', $uniqueCacheParts));
     }
 
     /**
@@ -2512,6 +2517,38 @@ class Model extends QUI\QDOM
                 $multiplier  = (float)$settings['multiplier'];
 
                 $price = $SourceField->getValue() * $multiplier;
+
+                // Rounding
+                if (!empty($settings['rounding']['type']) && $settings['rounding']['type'] !== 'none') {
+                    $vatPercent = 0;
+
+                    if (!empty($settings['rounding']['vat'])) {
+                        $vatPercent = (float)$settings['rounding']['vat'];
+                    }
+
+                    $vat         = (100 + $vatPercent) / 100;
+                    $targetPrice = $price * $vat;
+
+                    switch ($settings['rounding']['type']) {
+                        case 'decimal_tenths':
+                            $targetPrice = \ceil($targetPrice * 10) / 10;
+                            break;
+
+                        case 'decimal_hundredths':
+                            $targetPrice = \ceil($targetPrice * 100) / 100;
+                            break;
+
+                        case 'decimal_custom':
+                            $customDecimals = (int)$settings['rounding']['custom'];
+
+                            $targetPrice = (int)$targetPrice.'.'.$customDecimals;
+                            $targetPrice = (float)$targetPrice;
+                            break;
+                    }
+
+                    $price = $targetPrice / $vat;
+                }
+
                 $PriceField->setValue($price);
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
