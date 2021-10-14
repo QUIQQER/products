@@ -2543,11 +2543,19 @@ class Model extends QUI\QDOM
                             break;
 
                         case 'down':
-                            $targetPriceInt = \floor($targetPriceInt / 10, 0, \PHP_ROUND_HALF_DOWN) * 10;
+                            $targetPriceInt = \floor($targetPriceInt / 10) * 10;
                             break;
 
                         case 'down_9':
-                            $targetPriceInt = (\floor($targetPriceInt / 10, 0, \PHP_ROUND_HALF_DOWN) * 10) - 1;
+                            $targetPriceInt = (\floor($targetPriceInt / 10) * 10) - 1;
+                            break;
+
+                        case 'commercial':
+                            $targetPriceInt = \round($targetPriceInt / 10) * 10;
+                            break;
+
+                        case 'commercial_9':
+                            $targetPriceInt = (\round($targetPriceInt / 10) * 10) - 1;
                             break;
                     }
 
