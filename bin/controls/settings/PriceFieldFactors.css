@@ -53,3 +53,16 @@
     margin-top: 20px;
     padding: 15px;
 }
+
+.quiqqer-products-settings-pricefieldfactors-entry-rounding {
+    /*display: none;*/
+}
+
+.quiqqer-products-settings-pricefieldfactors-entry-rounding table {
+    float: none !important;
+}
+
+.quiqqer-products-settings-pricefieldfactors-entry-rounding table label {
+    text-align: left !important;
+    width: 100% !important;
+}

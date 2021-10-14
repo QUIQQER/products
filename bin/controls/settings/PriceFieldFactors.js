@@ -10,6 +10,9 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
     'qui/controls/windows/Confirm',
     'qui/controls/loader/Loader',
     'qui/controls/buttons/Button',
+    'qui/utils/Elements',
+
+    'package/quiqqer/tax/bin/controls/taxList/AvailableTaxListWindow',
 
     'Locale',
     'Mustache',
@@ -18,7 +21,8 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
     'text!package/quiqqer/products/bin/controls/settings/PriceFieldFactors.html',
     'css!package/quiqqer/products/bin/controls/settings/PriceFieldFactors.css'
 
-], function (QUIControl, QUIConfirm, QUILoader, QUIButton, QUILocale, Mustache, QUIAjax, template) {
+], function (QUIControl, QUIConfirm, QUILoader, QUIButton, QUIElements, TaxListWindow, QUILocale, Mustache, QUIAjax,
+             template) {
     "use strict";
 
     var lg = 'quiqqer/products';
@@ -33,7 +37,10 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
             '$getPriceFields',
             '$onEntryActivateClick',
             '$updateValue',
-            '$onUpdatePricesClick'
+            '$onUpdatePricesClick',
+            '$onClickRoundingVatSelect',
+            '$onChangeRoundingType',
+            '$getVatEntries'
         ],
 
         initialize: function (options) {
@@ -70,11 +77,32 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                 Value = JSON.decode(this.$Input.value);
             }
 
-            this.$getPriceFields().then(function (priceFields) {
+            Promise.all([
+                this.$getPriceFields(),
+                this.$getVatEntries()
+            ]).then(function (result) {
+                const priceFields = result[0];
+                const vatEntries  = result[1];
+
                 self.$Elm.set('html', Mustache.render(template, {
-                    priceFields      : priceFields,
+                    priceFields: priceFields,
+                    vatEntries : vatEntries,
+
                     labelMultiplier  : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelMultiplier'),
-                    labelUpdateOnSave: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave')
+                    labelUpdateOnSave: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave'),
+
+                    labelRoundingVat          : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingVat'),
+                    labelRoundingVatOptionNone: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingVatOptionNone'),
+
+                    headerRounding                     : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.headerRounding'),
+                    labelRoundingType                  : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingType'),
+                    labelRoundingTypeOptionNone        : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionNone'),
+                    labelRoundingTypeOptionUp          : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionUp'),
+                    labelRoundingTypeOptionUp9         : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionUp9'),
+                    labelRoundingTypeOptionDown        : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDown'),
+                    labelRoundingTypeOptionDown9       : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDown9'),
+                    labelRoundingTypeDecimalCustomValue: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeDecimalCustomValue'),
+                    descRoundingVat                    : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.descRoundingVat')
                 }));
 
                 new QUIButton({
@@ -90,32 +118,85 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                 entries.forEach(function (Entry) {
                     Entry.getElement('input[name="active"]').addEvent('change', self.$onEntryActivateClick);
 
-                    var fieldId = Entry.get('data-id');
-
-                    var ActiveCheckbox       = Entry.getElement('input[name="active"]'),
-                        MultiplierInput      = Entry.getElement('input[name="multiplier"]'),
-                        SourceFieldSelect    = Entry.getElement('select[name="sourceFieldId"]'),
-                        UpdateOnSaveCheckbox = Entry.getElement('input[name="update_on_save"]');
+                    const fieldId                  = Entry.get('data-id');
+                    const ActiveCheckbox           = Entry.getElement('input[name="active"]');
+                    const MultiplierInput          = Entry.getElement('input[name="multiplier"]');
+                    const SourceFieldSelect        = Entry.getElement('select[name="sourceFieldId"]');
+                    const UpdateOnSaveCheckbox     = Entry.getElement('input[name="update_on_save"]');
+                    const RoundingVatSelect        = Entry.getElement('select[name="rounding_vat"]');
+                    const RoundingTypeSelect       = Entry.getElement('select[name="rounding_type"]');
+                    const RoundingCustomValueInput = Entry.getElement('input[name="decimal_custom_value"]');
 
                     MultiplierInput.addEvent('change', self.$updateValue);
                     MultiplierInput.addEvent('keyup', self.$updateValue);
                     SourceFieldSelect.addEvent('change', self.$updateValue);
                     UpdateOnSaveCheckbox.addEvent('change', self.$updateValue);
 
+                    RoundingTypeSelect.addEvent('change', self.$updateValue);
+                    RoundingVatSelect.addEvent('change', self.$updateValue);
+                    RoundingCustomValueInput.addEvent('change', self.$updateValue);
+                    //RoundingVatSelect.addEventListener('click', self.$onClickRoundingVatSelect);
+
                     if (fieldId in Value) {
+                        const FieldSettings = Value[fieldId];
+
                         ActiveCheckbox.checked = true;
 
                         MultiplierInput.disabled = false;
-                        MultiplierInput.value    = Value[fieldId].multiplier;
+                        MultiplierInput.value    = FieldSettings.multiplier;
 
                         SourceFieldSelect.disabled = false;
-                        SourceFieldSelect.value    = Value[fieldId].sourceFieldId;
+                        SourceFieldSelect.value    = FieldSettings.sourceFieldId;
 
                         UpdateOnSaveCheckbox.disabled = false;
-                        UpdateOnSaveCheckbox.checked  = Value[fieldId].updateOnSave;
+                        UpdateOnSaveCheckbox.checked  = FieldSettings.updateOnSave;
+
+                        RoundingTypeSelect.value       = FieldSettings.rounding.type;
+                        RoundingVatSelect.value        = FieldSettings.rounding.vat;
+                        RoundingCustomValueInput.value = FieldSettings.rounding.custom;
                     }
                 });
             });
+        },
+
+        /**
+         * Click on "select rounding vat"
+         *
+         * @param {DocumentEvent} event
+         */
+        $onClickRoundingVatSelect: function (event) {
+            const RoundingVatSelect = event.target;
+
+            new TaxListWindow({
+                events: {
+                    onSubmit: (TaxListControl, value) => {
+                        RoundingVatSelect.getElements('option').destroy();
+
+                        new Element('option', {
+                            value: value,
+                            html : value + '%'
+                        }).inject(RoundingVatSelect);
+
+                        RoundingVatSelect.value = value;
+
+                        this.$updateValue();
+                    },
+                    onCancel: () => {
+                        RoundingVatSelect.getElements('option').destroy();
+
+                        new Element('option', {
+                            value: 'none',
+                            html : QUILocale.get(
+                                lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingVatOptionNone'
+                            )
+                        }).inject(RoundingVatSelect);
+
+                        RoundingVatSelect.value = 'none';
+
+                        this.$updateValue();
+                    }
+                }
+            }).open();
         },
 
         /**
@@ -236,10 +317,13 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
             var Value   = {};
 
             entries.forEach(function (Entry) {
-                var ActiveCheckbox       = Entry.getElement('input[name="active"]'),
-                    MultiplierInput      = Entry.getElement('input[name="multiplier"]'),
-                    SourceFieldSelect    = Entry.getElement('select[name="sourceFieldId"]'),
-                    UpdateOnSaveCheckbox = Entry.getElement('input[name="update_on_save"]');
+                const ActiveCheckbox               = Entry.getElement('input[name="active"]');
+                const MultiplierInput              = Entry.getElement('input[name="multiplier"]');
+                const SourceFieldSelect            = Entry.getElement('select[name="sourceFieldId"]');
+                const UpdateOnSaveCheckbox         = Entry.getElement('input[name="update_on_save"]');
+                const RoundingVatSelect            = Entry.getElement('select[name="rounding_vat"]');
+                const RoundingTypeSelect           = Entry.getElement('select[name="rounding_type"]');
+                const RoundingTypeCustomValueInput = Entry.getElement('input[name="decimal_custom_value"]');
 
                 if (!ActiveCheckbox.checked) {
                     return;
@@ -248,7 +332,12 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                 Value[Entry.get('data-id')] = {
                     multiplier   : parseFloat(MultiplierInput.value),
                     sourceFieldId: parseInt(SourceFieldSelect.value),
-                    updateOnSave : UpdateOnSaveCheckbox.checked
+                    updateOnSave : UpdateOnSaveCheckbox.checked,
+                    rounding     : {
+                        vat   : RoundingVatSelect.value,
+                        type  : RoundingTypeSelect.value,
+                        custom: RoundingTypeCustomValueInput.value.trim()
+                    }
                 };
             });
 
@@ -298,6 +387,20 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
             return new Promise(function (resolve, reject) {
                 QUIAjax.get('package_quiqqer_products_ajax_settings_checkSystem', resolve, {
                     'package': 'quiqqer/products',
+                    onError  : reject
+                });
+            });
+        },
+
+        /**
+         * Get vat entries for rounding vat base.
+         *
+         * @return {Promise}
+         */
+        $getVatEntries: function () {
+            return new Promise(function (resolve, reject) {
+                QUIAjax.get('package_quiqqer_tax_ajax_getAvailableTax', resolve, {
+                    'package': 'quiqqer/tax',
                     onError  : reject
                 });
             });

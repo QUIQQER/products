@@ -19,7 +19,56 @@
         <input type="checkbox" name="update_on_save" checked disabled/>
         {{labelUpdateOnSave}}
     </label>
-
+    <div class="quiqqer-products-settings-pricefieldfactors-entry-rounding">
+        <span>{{headerRounding}}</span>
+        <table class="data-table data-table-flexbox">
+            <tbody>
+                <tr>
+                    <td>
+                    <label class="field-container quiqqer-products-settings-pricefieldfactors-entry-updateonsave">
+                        <span class="field-container-item">
+                            {{labelRoundingType}}
+                        </span>
+                        <select name="rounding_type" class="field-container-field">
+                            <option value="none">{{labelRoundingTypeOptionNone}}</option>
+                            <option value="up">{{labelRoundingTypeOptionUp}}</option>
+                            <option value="up_9">{{labelRoundingTypeOptionUp9}}</option>
+                            <option value="down">{{labelRoundingTypeOptionDown}}</option>
+                            <option value="down_9">{{labelRoundingTypeOptionDown9}}</option>
+                        </select>
+                    </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="field-container quiqqer-products-settings-pricefieldfactors-entry-updateonsave">
+                            <span class="field-container-item">
+                                {{labelRoundingVat}}
+                            </span>
+                            <select name="rounding_vat" class="field-container-field">
+                                {{#vatEntries}}
+                                    <option value="{{vat}}">{{vat}}%</option>
+                                {{/vatEntries}}
+                            </select>
+                        </label>
+                        <div class="field-container-item-desc">
+                            {{{descRoundingVat}}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="field-container quiqqer-products-settings-pricefieldfactors-entry-updateonsave">
+                            <span class="field-container-item">
+                                {{labelRoundingTypeDecimalCustomValue}}
+                            </span>
+                            <input type="number" name="decimal_custom_value" class="field-container-field"/>
+                        </label>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 {{/edit}}
 

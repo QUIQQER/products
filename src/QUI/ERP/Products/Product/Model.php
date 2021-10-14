@@ -2519,34 +2519,45 @@ class Model extends QUI\QDOM
                 $price = $SourceField->getValue() * $multiplier;
 
                 // Rounding
-                if (!empty($settings['rounding']['type']) && $settings['rounding']['type'] !== 'none') {
+                if (!empty($settings['rounding']['type'])) {
                     $vatPercent = 0;
 
                     if (!empty($settings['rounding']['vat'])) {
                         $vatPercent = (float)$settings['rounding']['vat'];
                     }
 
-                    $vat         = (100 + $vatPercent) / 100;
-                    $targetPrice = $price * $vat;
+                    $vat              = (100 + $vatPercent) / 100;
+                    $targetPrice      = $price * $vat;
+                    $targetPriceParts = \explode('.', $targetPrice);
+
+                    $targetPriceInt      = (int)$targetPriceParts[0];
+                    $targetPriceDecimals = (int)$targetPriceParts[1];
 
                     switch ($settings['rounding']['type']) {
-                        case 'decimal_tenths':
-                            $targetPrice = \ceil($targetPrice * 10) / 10;
+                        case 'up':
+                            $targetPriceInt = \ceil($targetPriceInt / 10) * 10;
                             break;
 
-                        case 'decimal_hundredths':
-                            $targetPrice = \ceil($targetPrice * 100) / 100;
+                        case 'up_9':
+                            $targetPriceInt = (\ceil($targetPriceInt / 10) * 10) - 1;
                             break;
 
-                        case 'decimal_custom':
-                            $customDecimals = (int)$settings['rounding']['custom'];
+                        case 'down':
+                            $targetPriceInt = \floor($targetPriceInt / 10, 0, \PHP_ROUND_HALF_DOWN) * 10;
+                            break;
 
-                            $targetPrice = (int)$targetPrice.'.'.$customDecimals;
-                            $targetPrice = (float)$targetPrice;
+                        case 'down_9':
+                            $targetPriceInt = (\floor($targetPriceInt / 10, 0, \PHP_ROUND_HALF_DOWN) * 10) - 1;
                             break;
                     }
 
-                    $price = $targetPrice / $vat;
+                    if (!empty($settings['rounding']['custom'])) {
+                        $targetPrice = $targetPriceInt.'.'.$settings['rounding']['custom'];
+                    } else {
+                        $targetPrice = $targetPriceInt.'.'.$targetPriceDecimals;
+                    }
+
+                    $price = (float)$targetPrice / $vat;
                 }
 
                 $PriceField->setValue($price);
