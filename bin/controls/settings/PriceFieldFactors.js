@@ -97,6 +97,8 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                     headerRounding                     : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.headerRounding'),
                     labelRoundingType                  : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingType'),
                     labelRoundingTypeOptionNone        : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionNone'),
+                    labelRoundingTypeCommercial        : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercial'),
+                    labelRoundingTypeCommercial9       : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercial9'),
                     labelRoundingTypeOptionUp          : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionUp'),
                     labelRoundingTypeOptionUp9         : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionUp9'),
                     labelRoundingTypeOptionDown        : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDown'),

@@ -2467,6 +2467,14 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[abrunden (nächste 9er-Stelle) -> z.B: "22,XX" => "19,XX"]]></de>
             <en><![CDATA[round down (next 9 digit) -> e.g.: "22.XX" => "19.XX"]]></en>
         </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercial">
+            <de><![CDATA[kaufmännisch runden -> z.B: "22,XX" => "20,XX"; "25,XX" => "30,XX"]]></de>
+            <en><![CDATA[commercial rounding -> e.g.: "22,XX" => "20,XX"; "25,XX" => "30,XX"]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercial9">
+            <de><![CDATA[kaufmännisch runden (nächste 9er-Stelle) -> z.B: "22,XX" => "19,XX"; "25,XX" => "29,XX"]]></de>
+            <en><![CDATA[commercial rounding (next 9 digit) -> e.g.: "22,XX" => "19,XX"; "25,XX" => "29,XX"]]></en>
+        </locale>
 
         <locale name="controls.products.search">
             <de><![CDATA[Produkte durchsuchen...]]></de>

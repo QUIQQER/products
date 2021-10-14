@@ -13,6 +13,8 @@
 
 .quiqqer-products-settings-pricefieldfactors-entry-field {
     display: inline-block;
+    font-size: 12pt;
+    font-weight: bold;
     width: 165px;
 }
 
@@ -56,6 +58,8 @@
 
 .quiqqer-products-settings-pricefieldfactors-entry-rounding {
     /*display: none;*/
+    border-top: 1px dotted #dedede;
+    padding-top: 10px;
 }
 
 .quiqqer-products-settings-pricefieldfactors-entry-rounding table {
@@ -63,6 +67,7 @@
 }
 
 .quiqqer-products-settings-pricefieldfactors-entry-rounding table label {
+    display: flex;
     text-align: left !important;
     width: 100% !important;
 }
