@@ -412,7 +412,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             return $defaults[$name][$lang];
         }
 
-        $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
+        $cacheName = 'products/category/'.$this->getId();
+//        $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
         $cacheName .= '/site';
         $cacheName .= '/'.$Project->getName();
         $cacheName .= '/'.$Project->getLang();
