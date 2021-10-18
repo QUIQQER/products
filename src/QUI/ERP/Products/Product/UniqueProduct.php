@@ -1114,7 +1114,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $attributes['image']           = '';
         $attributes['maximumQuantity'] = $this->getMaximumQuantity();
 
+        $oldCalc = $this->calculated;
+
         $Price = $this->getOriginalPrice();
+
+        $this->calculated = $oldCalc;
 
         $attributes['hasOfferPrice'] = $this->hasOfferPrice();
 
