@@ -417,11 +417,16 @@ class Model extends QUI\QDOM
         $fieldList = $this->getFields();
         $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/';
 
-        return $cacheName.\md5(\serialize([
-                $Locale->getCurrent(),
-                \serialize($fieldList),
-                $User->getId()
-            ]));
+        $uniqueCacheParts = [
+            $Locale->getCurrent(),
+            $User->getId()
+        ];
+
+        foreach ($fieldList as $Field) {
+            $uniqueCacheParts[] = \json_encode($Field->toProductArray());
+        }
+
+        return $cacheName.\md5(\implode('_', $uniqueCacheParts));
     }
 
     /**
@@ -1218,6 +1223,10 @@ class Model extends QUI\QDOM
         }
 
         QUI\Permissions\Permission::checkPermission('product.edit', $EditUser);
+
+        if (Products::$fireEventsOnProductSave) {
+            QUI::getEvents()->fireEvent('onQuiqqerProductsProductSaveBefore', [$fieldData, $this]);
+        }
 
         // cleanup fields
         foreach ($fieldData as $key => $field) {
@@ -2508,6 +2517,57 @@ class Model extends QUI\QDOM
                 $multiplier  = (float)$settings['multiplier'];
 
                 $price = $SourceField->getValue() * $multiplier;
+
+                // Rounding
+                if (!empty($settings['rounding']['type'])) {
+                    $vatPercent = 0;
+
+                    if (!empty($settings['rounding']['vat'])) {
+                        $vatPercent = (float)$settings['rounding']['vat'];
+                    }
+
+                    $vat              = (100 + $vatPercent) / 100;
+                    $targetPrice      = $price * $vat;
+                    $targetPriceParts = \explode('.', $targetPrice);
+
+                    $targetPriceInt      = (int)$targetPriceParts[0];
+                    $targetPriceDecimals = (int)$targetPriceParts[1];
+
+                    switch ($settings['rounding']['type']) {
+                        case 'up':
+                            $targetPriceInt = \ceil($targetPriceInt / 10) * 10;
+                            break;
+
+                        case 'up_9':
+                            $targetPriceInt = (\ceil($targetPriceInt / 10) * 10) - 1;
+                            break;
+
+                        case 'down':
+                            $targetPriceInt = \floor($targetPriceInt / 10) * 10;
+                            break;
+
+                        case 'down_9':
+                            $targetPriceInt = (\floor($targetPriceInt / 10) * 10) - 1;
+                            break;
+
+                        case 'commercial':
+                            $targetPriceInt = \round($targetPriceInt / 10) * 10;
+                            break;
+
+                        case 'commercial_9':
+                            $targetPriceInt = (\round($targetPriceInt / 10) * 10) - 1;
+                            break;
+                    }
+
+                    if (!empty($settings['rounding']['custom'])) {
+                        $targetPrice = $targetPriceInt.'.'.$settings['rounding']['custom'];
+                    } else {
+                        $targetPrice = $targetPriceInt.'.'.$targetPriceDecimals;
+                    }
+
+                    $price = (float)$targetPrice / $vat;
+                }
+
                 $PriceField->setValue($price);
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);

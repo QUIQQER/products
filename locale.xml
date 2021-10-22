@@ -2411,6 +2411,70 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[</p>There are a lot of products in your store. The execution time of your web server and PHP will probably not be enough to update the prices of all products.</p><br/>.
 <p>You can also update the product prices by console command. Please run one of the following commands to perform the update (all products or active products only):</p>]]></en>
         </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingVat">
+            <de><![CDATA[Basis-MwSt.]]></de>
+            <en><![CDATA[Base VAT]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingVatOptionNone">
+            <de><![CDATA[keine]]></de>
+            <en><![CDATA[none]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingType">
+            <de><![CDATA[Rundungs-Typ]]></de>
+            <en><![CDATA[Rounding type]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionNone">
+            <de><![CDATA[nicht runden]]></de>
+            <en><![CDATA[do not round]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDecimalTenths">
+            <de><![CDATA[nächsthöhere Zehner-Nachkommastelle]]></de>
+            <en><![CDATA[next highest decimal tenth]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDecimalHundreths">
+            <de><![CDATA[nächsthöhere Hunderter-Nachkommastelle]]></de>
+            <en><![CDATA[next highest decimal hundredth]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDecimalCustom">
+            <de><![CDATA[individuell]]></de>
+            <en><![CDATA[custom]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeDecimalCustomValue">
+            <de><![CDATA[Nachkommastellen (individuell)]]></de>
+            <en><![CDATA[Decimal points (custom)]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.headerRounding">
+            <de><![CDATA[Einstellungen für automatisches Runden]]></de>
+            <en><![CDATA[Settings for automatic rounding]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.descRoundingVat" html="true">
+            <de><![CDATA[MwSt., die auf den Netto-Preis eines Produktes aufgeschlagen wird, um den zu rundenden Brutto-Preis zu ermitteln. Der Netto-Preis wird in Folge so festgelegt, dass bei Aufschlag der MwSt. der <b>gerundete</b> Brutto-Preis herauskommt.]]></de>
+            <en><![CDATA[VAT added to the net price of a product to determine the gross price to be rounded. The net price is subsequently changed so that when the VAT is added, the <b>rounded</b> gross price comes out.]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionUp">
+            <de><![CDATA[aufrunden (vollständig) -> z.B: "22,XX" => "30,XX"]]></de>
+            <en><![CDATA[round up (complete) -> e.g.: "22.XX" => "30.XX"]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionUp9">
+            <de><![CDATA[aufrunden (nächste 9er-Stelle) -> z.B: "22,XX" => "29,XX"]]></de>
+            <en><![CDATA[round up (next 9 digit) -> e.g.: "22.XX" => "29.XX"]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDown">
+            <de><![CDATA[abrunden (vollständig) -> z.B: "22,XX" => "20,XX"]]></de>
+            <en><![CDATA[round down (complete) -> e.g.: "22.XX" => "20.XX"]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDown9">
+            <de><![CDATA[abrunden (nächste 9er-Stelle) -> z.B: "22,XX" => "19,XX"]]></de>
+            <en><![CDATA[round down (next 9 digit) -> e.g.: "22.XX" => "19.XX"]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercial">
+            <de><![CDATA[kaufmännisch runden -> z.B: "22,XX" => "20,XX"; "25,XX" => "30,XX"]]></de>
+            <en><![CDATA[commercial rounding -> e.g.: "22,XX" => "20,XX"; "25,XX" => "30,XX"]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercial9">
+            <de><![CDATA[kaufmännisch runden (nächste 9er-Stelle) -> z.B: "22,XX" => "19,XX"; "25,XX" => "29,XX"]]></de>
+            <en><![CDATA[commercial rounding (next 9 digit) -> e.g.: "22,XX" => "19,XX"; "25,XX" => "29,XX"]]></en>
+        </locale>
 
         <locale name="controls.products.search">
             <de><![CDATA[Produkte durchsuchen...]]></de>

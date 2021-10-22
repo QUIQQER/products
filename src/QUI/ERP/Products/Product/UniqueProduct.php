@@ -1114,7 +1114,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $attributes['image']           = '';
         $attributes['maximumQuantity'] = $this->getMaximumQuantity();
 
+        $oldCalc = $this->calculated;
+
         $Price = $this->getOriginalPrice();
+
+        $this->calculated = $oldCalc;
 
         $attributes['hasOfferPrice'] = $this->hasOfferPrice();
 
@@ -1211,6 +1215,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $Locale = QUI\ERP\Products\Handler\Products::getLocale();
         }
 
+        $initialCalcStatus = $this->calculated;
+
         $article = [
             'id'                   => $this->getId(),
             'articleNo'            => $this->getFieldValue(Fields::FIELD_PRODUCT_NO),
@@ -1224,6 +1230,10 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             'customData'           => $this->getCustomData(),
             'displayPrice'         => true
         ];
+
+        if (!$initialCalcStatus) {
+            $this->resetCalculation();
+        }
 
         // quantity unit
         $SysField = QUI\ERP\Products\Handler\Fields::getField(Fields::FIELD_UNIT);

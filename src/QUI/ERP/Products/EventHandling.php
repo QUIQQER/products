@@ -3,6 +3,7 @@
 namespace QUI\ERP\Products;
 
 use QUI;
+use QUI\ERP\Products\Handler\Cache;
 use QUI\Package\Package;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
@@ -1089,6 +1090,15 @@ class EventHandling
      */
     public static function onPackageInstall($Package)
     {
+        // Clear some cache paths if any new package is installed
+        $clearCachePaths = [
+            Cache::getBasicCachePath().'fields/'
+        ];
+
+        foreach ($clearCachePaths as $cachePath) {
+            QUI\Cache\Manager::clear($cachePath);
+        }
+
         if ($Package->getName() != 'quiqqer/products') {
             return;
         }
@@ -1194,9 +1204,8 @@ class EventHandling
             return;
         }
 
-
         try {
-            $Product    = Handler\Products::getProduct($params[0]);
+            $Product    = Handler\Products::getProduct($params[1]);
             $Project    = $Rewrite->getProject();
             $productUrl = $Product->getUrl();
 
