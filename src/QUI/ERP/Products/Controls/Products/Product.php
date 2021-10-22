@@ -401,6 +401,11 @@ class Product extends QUI\Control
             [$View, &$Buttons, $this]
         );
 
+        QUI::getEvents()->fireEvent(
+            'quiqqerProductsProductViewButtonsAfter',
+            [$View, &$Buttons, $this]
+        );
+
         $Engine->assign('Buttons', $Buttons);
 
         $Engine->assign(
