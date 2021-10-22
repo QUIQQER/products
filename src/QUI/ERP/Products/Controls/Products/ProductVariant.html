@@ -53,6 +53,8 @@
         </div>
     </div>
 
+    {template_event name="quiqqer::products::product::buttons::after" Product=$Product}
+
     {assign var=ContentField value=$Product->getField(6)}
 
     <div class="product-data-more">
