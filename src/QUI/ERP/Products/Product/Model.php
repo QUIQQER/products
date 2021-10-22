@@ -2530,8 +2530,13 @@ class Model extends QUI\QDOM
                     $targetPrice      = $price * $vat;
                     $targetPriceParts = \explode('.', $targetPrice);
 
-                    $targetPriceInt      = (int)$targetPriceParts[0];
-                    $targetPriceDecimals = (int)$targetPriceParts[1];
+                    $targetPriceInt = (int)$targetPriceParts[0];
+
+                    if (!empty($targetPriceParts[1])) {
+                        $targetPriceDecimals = (int)$targetPriceParts[1];
+                    } else {
+                        $targetPriceDecimals = 0;
+                    }
 
                     switch ($settings['rounding']['type']) {
                         case 'up':
