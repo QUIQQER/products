@@ -211,11 +211,34 @@ class VariantChild extends AbstractType
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_SHORT_DESC, $Locale);
 
+        $result = strip_tags($result);
+        $result = trim($result);
+        
         if (!empty($result)) {
             return $result;
         }
 
         return $this->getParent()->getDescription($Locale);
+    }
+
+    /**
+     * Return the product content
+     *
+     * @param QUI\Locale|null $Locale - optional
+     * @return string
+     */
+    public function getContent($Locale = null)
+    {
+        $result = $this->getLanguageFieldValue(Fields::FIELD_CONTENT, $Locale);
+
+        $result = strip_tags($result);
+        $result = trim($result);
+
+        if (!empty($result)) {
+            return $result;
+        }
+
+        return $this->getParent()->getContent($Locale);
     }
 
     /**
