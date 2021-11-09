@@ -605,6 +605,34 @@ define('package/quiqqer/products/bin/controls/categories/Select', [
         },
 
         /**
+         * @param {String} value
+         */
+        importValue: function(value) {
+            if (typeOf(value) !== 'string') {
+                return;
+            }
+
+            const values = value.split(',');
+
+            this.$List.set('html', '');
+            this.$values = [];
+
+            for (let i = 0, len = values.length; i < len; i++) {
+                new SelectItem({
+                    categoryId: values[i],
+                    events    : {
+                        onDestroy: this.$onCategoryDestroy
+                    }
+                }).inject(this.$List);
+
+                this.$values.push(values[i]);
+            }
+
+            this.fireEvent('addCategories', [this, this.$values]);
+            this.$refreshValues();
+        },
+
+        /**
          * keyup - users dropdown selection one step up
          *
          * @method package/quiqqer/products/bin/controls/categories/Select#up
