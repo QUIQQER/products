@@ -20,18 +20,22 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListFilte
 
         Binds: [
             '$onInject',
+            '$onFieldChange',
+            '$onDestroy',
             'destroy'
         ],
 
         options: {
-            tag: false
+            tag: false,
+            Field: null
         },
 
         initialize: function (options) {
             this.parent(options);
 
             this.addEvents({
-                onInject: this.$onInject
+                onInject: this.$onInject,
+                onDestroy: this.$onDestroy
             });
         },
 
@@ -46,9 +50,19 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListFilte
                 html      : '<div class="quiqqer-products-productList-filter-text"></div>' +
                 '<div class="quiqqer-products-productList-filter-destroy">' +
                 '    <span class="fa fa-close"></span>' +
-                '</div>',
-                'data-tag': this.getAttribute('tag')
+                '</div>'
             });
+
+            if (this.getAttribute('Field')) {
+                const Field = this.getAttribute('Field');
+
+                this.$Elm.set('data-field', Field.getAttribute('fieldid'));
+                this.$Elm.set('data-field-value', this.getAttribute('tag'));
+
+                Field.addEvent('change', this.$onFieldChange);
+            } else {
+                this.$Elm.set('data-tag', this.getAttribute('tag'));
+            }
 
             this.$Text   = this.$Elm.getElement('.quiqqer-products-productList-filter-text');
             this.$Cancel = this.$Elm.getElement('.quiqqer-products-productList-filter-destroy');
@@ -58,29 +72,78 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListFilte
             return this.$Elm;
         },
 
+        $onFieldChange: function() {
+            if (!this.getAttribute('Field')) {
+                this.$onDestroy();
+                return;
+            }
+
+            if (!this.$Elm) {
+                this.$onDestroy();
+                return;
+            }
+
+            const Field      = this.getAttribute('Field');
+            const fieldValue = this.getAttribute('tag');
+            const values     = Field.getSearchValue();
+
+            if (!values || values.indexOf(fieldValue) === -1) {
+                this.hide();
+
+                (() => {
+                    this.destroy();
+                }).delay(200);
+            }
+        },
+
+        $onDestroy: function() {
+            if (this.getAttribute('Field')) {
+                this.getAttribute('Field').removeEvent('change', this.$onFieldChange);
+            }
+        },
+
         /**
          * event : on refresh
          */
         $onInject: function () {
-            this.refresh();
+            this.refresh().catch(console.error);
         },
 
         /**
          * Refresh the tag display
          */
         refresh: function () {
-            return new Promise(function () {
+            return new Promise((resolve) => {
                 this.$Text.set('html', '<span class="fa fa-spinner fa-spin"></span>');
 
-                QUIAjax.get('package_quiqqer_tags_ajax_tag_get', function (result) {
+                if (this.getAttribute('Field')) {
+                    const SearchField = this.getAttribute('Field');
+                    const Label = SearchField.getElm().getParent('label');
+
+                    let title = '';
+                    let fieldValue = this.getAttribute('tag');
+
+                    if (Label && Label.getElement('.quiqqer-products-productList-filter-entry-title')) {
+                        title = Label.getElement('.quiqqer-products-productList-filter-entry-title').get('html').trim();
+                        title = title +': ';
+                    }
+
+                    this.$Text.set('text', title + fieldValue);
+                    resolve();
+
+                    return;
+                }
+
+                QUIAjax.get('package_quiqqer_tags_ajax_tag_get', (result) => {
                     this.$Text.set('text', result.title || result.tag);
-                }.bind(this), {
+                    resolve();
+                }, {
                     'package'  : 'quiqqer/tags',
                     projectName: window.QUIQQER_PROJECT.name,
                     projectLang: window.QUIQQER_PROJECT.lang,
                     tag        : this.getAttribute('tag')
                 });
-            }.bind(this));
+            });
         }
     });
 });
