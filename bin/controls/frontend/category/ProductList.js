@@ -181,6 +181,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.setAttribute('autoload', false);
             }
 
+            // Search fields
+            if (this.getAttribute('searchfields')) {
+                this.setAttribute('searchfields', JSON.decode(this.getAttribute('searchfields')));
+            }
+
             this.$productLoadNumber = parseInt(Elm.get('data-productLoadNumber'));
             this.$autoloadAfter     = parseInt(Elm.get('data-autoloadAfter'));
 
@@ -491,49 +496,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }.bind(this));
             }.bind(this));
 
-            // Search fields
-            if (this.getAttribute('searchfields')) {
-                this.setAttribute('searchfields', JSON.decode(this.getAttribute('searchfields')));
-            }
-//
-            // pace makes problems
-            // loading is not solid
-
-//            if (typeof Pace !== 'undefined') {
-//                let loaded   = false;
-//                let paceDone = function () {
-//                    if (loaded) {
-//                        return;
-//                    }
-//
-//                    loaded = true;
-//
-//                    if ("p" in search) {
-//                        this.$productId = false;
-//                    }
-//
-//                    this.$readWindowLocation().then(function () {
-//                        //this.$onFilterChange();
-//                        this.$load = true;
-//
-//                        // if (this.getAttribute('autoload')) {
-//                        //     this.$setWindowLocation();
-//                        // }
-//                    }.bind(this));
-//                }.bind(this);
-//
-//                // pace is already loaded
-//                if (document.body.hasClass('pace-done')) {
-//                    paceDone();
-//                } else {
-//                    window.Pace.on('done', paceDone);
-//
-//                    // fallback, if pace dont load correct
-//                    // 5 seconds because of duplicate loading
-//                    paceDone.delay(5000);
-//                }
-//                return;
-//            }
 
             (function () {
                 if ("p" in search) {
@@ -541,13 +503,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
 
                 this.$readWindowLocation().then(function () {
-                    //this.$onFilterChange();
                     this.$load = true;
                     this.$renderFilterFields();
-
-                    // if (this.getAttribute('autoload')) {
-                    //     this.$setWindowLocation();
-                    // }
                 }.bind(this));
             }).delay(500, this);
         },
@@ -1884,6 +1841,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 Select.destroy();
                 Control.inject(Filter);
 
+                if (this.$tags.length) {
+                    Control.setValues(Array.clone(this.$tags), true);
+                }
+
                 this.$selectFilter.push(Control);
             }
         },
@@ -1945,7 +1906,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 this.$selectFields[i].addEvent('ready', onReady.bind(this.$selectFields[i]));
             }
 
-            DEBUG ? console.log(this.$FilterFieldList) : '';
+            if (DEBUG) {
+                console.log(this.$FilterFieldList)
+            }
 
             this.refreshClearFilterButtonStatus();
         },
@@ -2066,10 +2029,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * Add a filter to the list
          *
          * @param {String} filter
-         * @param {Object} Field - Assigned field
+         * @param {Object} [Field] - Assigned field
          */
         addFilter: function (filter, Field) {
-            if (typeof Field === 'undefined') {
+            if (typeof Field === 'undefined' || typeOf(Field) !== 'object') {
                 Field = null;
             }
 
@@ -2116,7 +2079,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * remove a filter
          *
          * @param {String} filter
-         * @param {Object} Field
+         * @param {Object} [Field]
          */
         removeFilter: function (filter, Field) {
             if (!this.$selectFilter) {
@@ -2175,6 +2138,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (fieldHTML !== '') {
                 let filters = this.$FilterFieldList.getElements('.quiqqer-products-productList-filter');
 
+                filters.append(
+                    this.$FilterList.getElements('.quiqqer-products-productList-filter')
+                );
+
                 filters = filters.filter(function (Field) {
                     return Field.getStyle('display') !== 'none';
                 });
@@ -2198,35 +2165,17 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         hideClearFilterButton: function () {
-            return new Promise((resolve) => {
-                moofx(this.$FilterClearButton).animate({
-                    opacity: 0
-                }, {
-                    duration: animationDuration,
-                    callback: () => {
-                        this.$FilterClearButton.setStyle('display', 'none');
-                        resolve();
-                    }
-                });
-            });
+            this.$FilterClearButton.setStyle('display', 'none');
+            return Promise.resolve();
         },
 
         /**
          * Displays / Show the clearing filter button
          */
         showClearFilterButton: function () {
-            return new Promise((resolve) => {
-                this.$FilterClearButton.setStyle('display', null);
-
-                this.$refreshSearchCount().then(() => {
-                    moofx(this.$FilterClearButton).animate({
-                        opacity: 1
-                    }, {
-                        duration: animationDuration,
-                        callback: resolve
-                    });
-                });
-            });
+            this.$FilterClearButton.setStyle('opacity', null);
+            this.$FilterClearButton.setStyle('display', null);
+            return this.$refreshSearchCount();
         },
 
         /**
