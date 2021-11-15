@@ -37,6 +37,7 @@
             <field type="TEXT NULL">sites</field>
             <field type="TEXT NULL">title_cache</field>
             <field type="TEXT NULL">description_cache</field>
+            <field type="LONGTEXT NULL">custom_data</field>
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>

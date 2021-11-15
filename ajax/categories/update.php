@@ -37,6 +37,21 @@ QUI::$Ajax->registerFunction(
             }
         }
 
+        if (!empty($params['custom_data']) && \is_array($params['custom_data'])) {
+            foreach ($params['custom_data'] as $k => $v) {
+                switch ($k) {
+                    // Only allow certain custom data keys
+                    case 'priceFieldFactors':
+                        break;
+
+                    default:
+                        continue 2;
+                }
+
+                $Category->setCustomDataEntry($k, $v);
+            }
+        }
+
         $Category->setAttributes($params);
         $Category->save();
 

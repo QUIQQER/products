@@ -1471,6 +1471,10 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Produkt aus Kategorie entfernen]]></de>
             <en><![CDATA[Remove product from category]]></en>
         </locale>
+        <locale name="category.panel.button.priceFieldFactors">
+            <de><![CDATA[Preisfeld-Faktoren]]></de>
+            <en><![CDATA[Price field factors]]></en>
+        </locale>
 
         <locale name="category.panel.window.recursiveFields.title">
             <de><![CDATA[Feld Einstellungen auf alle Produkte übernehmen]]></de>
@@ -1593,6 +1597,10 @@ For a newly created product the article number should be generated automatically
         <locale name="control.category.update.title.parent">
             <de><![CDATA[Eltern Kategorie]]></de>
             <en><![CDATA[Parent category]]></en>
+        </locale>
+        <locale name="control.category.update.textCategoriesCount">
+            <de><![CDATA[Hier können Preiseld-Faktoren festgelegt werden, die explizit für diese Kategorie gelten. Sie finden bei allen Produkten Anwendung, die diese Kategorie als Hauptkategorie haben und haben Vorrang vor den globalen Preifeld-Faktoren Einstellungen.]]></de>
+            <en><![CDATA[Here you can set price field factors that explicitly apply to this category. They apply to all products that have this category as their main category and take precedence over the global price field factors settings.]]></en>
         </locale>
 
         <locale name="category.update.field.grid.button.add">

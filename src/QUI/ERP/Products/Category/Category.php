@@ -63,6 +63,11 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     protected $caches = [];
 
     /**
+     * @var array
+     */
+    protected $customData = [];
+
+    /**
      * Model constructor.
      *
      * @param integer $categoryId
@@ -84,6 +89,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         if (\defined('QUIQQER_BACKEND')) {
             $this->setAttribute('viewType', 'backend');
+        }
+
+        if (!empty($data['custom_data'])) {
+            $this->customData = \json_decode($data['custom_data'], true);
         }
     }
 
@@ -315,6 +324,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         $attributes['title']       = $this->getTitle();
         $attributes['description'] = $this->getDescription();
         $attributes['fields']      = $fields;
+        $attributes['custom_data'] = $this->getCustomData();
 
         return $attributes;
     }
@@ -942,8 +952,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             [
-                'fields'   => \json_encode($fields),
-                'parentId' => $this->getParentId()
+                'fields'      => \json_encode($fields),
+                'parentId'    => $this->getParentId(),
+                'custom_data' => \json_encode($this->getCustomData())
             ],
             ['id' => $this->getId()]
         );
@@ -1060,4 +1071,42 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     }
 
     //endregion
+
+    // region Custom data
+
+    /**
+     * @param string $key
+     * @param string|numeric|array $value - Must be serializable
+     */
+    public function setCustomDataEntry(string $key, $value)
+    {
+        if (!\is_string($value) && !\is_numeric($value) && !\is_array($value)) {
+            return;
+        }
+
+        $this->customData[$key] = $value;
+    }
+
+    /**
+     * @param string $key
+     * @return mixed|null - Custom entry value or NULL if it does not exist
+     */
+    public function getCustomDataEntry(string $key)
+    {
+        if (\array_key_exists($key, $this->customData)) {
+            return $this->customData[$key];
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCustomData(): array
+    {
+        return $this->customData;
+    }
+
+    // endregion
 }

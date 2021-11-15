@@ -43,6 +43,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             'openProducts',
             'openFields',
             'openAddProductDialog',
+            'openPriceFieldFactors',
             'openRemoveProductDialog',
             'save',
             'addField',
@@ -67,10 +68,11 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             this.$injected     = false;
             this.$informations = {};
 
-            this.$ContainerData     = null;
-            this.$ContainerSites    = null;
-            this.$ContainerProducts = null;
-            this.$ContainerFields   = null;
+            this.$ContainerData              = null;
+            this.$ContainerSites             = null;
+            this.$ContainerProducts          = null;
+            this.$ContainerFields            = null;
+            this.$ContainerPriceFieldFactors = null;
 
             this.$data = {};
 
@@ -139,27 +141,38 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                 }
             });
 
+            this.addCategory({
+                name  : 'priceFieldFactors',
+                image : 'fa fa-money',
+                text  : QUILocale.get(lg, 'category.panel.button.priceFieldFactors'),
+                events: {
+                    onClick: this.openPriceFieldFactors
+                }
+            });
+
             // html
             Content.set({
                 html: Mustache.render(template, {
-                    textData           : QUILocale.get('quiqqer/system', 'data'),
-                    textId             : QUILocale.get('quiqqer/system', 'id'),
-                    textTitle          : QUILocale.get('quiqqer/system', 'title'),
-                    textDescription    : QUILocale.get('quiqqer/system', 'description'),
-                    textParent         : QUILocale.get(lg, 'control.category.update.title.parent'),
-                    textFields         : QUILocale.get(lg, 'control.category.update.title.fields'),
-                    textSites          : QUILocale.get(lg, 'control.category.update.title.sites'),
-                    textInformation    : QUILocale.get(lg, 'control.category.update.title.information'),
-                    textProductCount   : QUILocale.get(lg, 'control.category.update.title.countProducts'),
-                    textFieldCount     : QUILocale.get(lg, 'control.category.update.title.countFields'),
-                    textCategoriesCount: QUILocale.get(lg, 'control.category.update.title.countCategories')
+                    textData             : QUILocale.get('quiqqer/system', 'data'),
+                    textId               : QUILocale.get('quiqqer/system', 'id'),
+                    textTitle            : QUILocale.get('quiqqer/system', 'title'),
+                    textDescription      : QUILocale.get('quiqqer/system', 'description'),
+                    textParent           : QUILocale.get(lg, 'control.category.update.title.parent'),
+                    textFields           : QUILocale.get(lg, 'control.category.update.title.fields'),
+                    textSites            : QUILocale.get(lg, 'control.category.update.title.sites'),
+                    textInformation      : QUILocale.get(lg, 'control.category.update.title.information'),
+                    textProductCount     : QUILocale.get(lg, 'control.category.update.title.countProducts'),
+                    textFieldCount       : QUILocale.get(lg, 'control.category.update.title.countFields'),
+                    textCategoriesCount  : QUILocale.get(lg, 'control.category.update.title.countCategories'),
+                    infoPriceFieldFactors: QUILocale.get(lg, 'control.category.update.textCategoriesCount'),
                 })
             });
 
-            this.$ContainerData     = Content.getElement('.category-data');
-            this.$ContainerSites    = Content.getElement('.category-sites');
-            this.$ContainerProducts = Content.getElement('.category-products');
-            this.$ContainerFields   = Content.getElement('.category-fields');
+            this.$ContainerData              = Content.getElement('.category-data');
+            this.$ContainerSites             = Content.getElement('.category-sites');
+            this.$ContainerProducts          = Content.getElement('.category-products');
+            this.$ContainerFields            = Content.getElement('.category-fields');
+            this.$ContainerPriceFieldFactors = Content.getElement('.category-pricefieldfactors');
 
             var Id = Content.getElement('.field-id');
 
@@ -467,8 +480,15 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     }
                 });
 
+                if ('priceFieldFactors' in self.$data.custom_data) {
+                    self.$ContainerPriceFieldFactors.getElement('input[name="priceFieldFactors"]').value = JSON.encode(
+                        self.$data.custom_data.priceFieldFactors
+                    );
+                }
 
+                return QUI.parse(this.$ContainerPriceFieldFactors);
             }.bind(this)).then(this.openData).then(function () {
+                // Grid controls
                 var controls = QUI.Controls.getControlsInElement(
                     self.$grids.Fields.container
                 );
@@ -610,14 +630,14 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             this.getCategory('products').setActive();
 
             return this.$hideContainer()
-                       .then(this.resize)
-                       .then(function () {
-                           self.$grids.Products.refresh();
-                           return self.$showContainer(self.$ContainerProducts);
-                       })
-                       .then(function () {
-                           self.$grids.Products.resize();
-                       });
+                .then(this.resize)
+                .then(function () {
+                    self.$grids.Products.refresh();
+                    return self.$showContainer(self.$ContainerProducts);
+                })
+                .then(function () {
+                    self.$grids.Products.resize();
+                });
         },
 
         /**
@@ -629,16 +649,37 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
             this.getCategory('fields').setActive();
 
             return this.$hideContainer()
-                       .then(this.resize)
+                .then(this.resize)
 
-                       .then(function () {
-                           this.$grids.Fields.refresh();
-                           return this.$showContainer(this.$ContainerFields);
-                       }.bind(this))
+                .then(function () {
+                    this.$grids.Fields.refresh();
+                    return this.$showContainer(this.$ContainerFields);
+                }.bind(this))
 
-                       .then(function () {
-                           this.$grids.Fields.resize();
-                       }.bind(this));
+                .then(function () {
+                    this.$grids.Fields.resize();
+                }.bind(this));
+        },
+
+        /**
+         * Show the category price field factors
+         *
+         * @return {Promise}
+         */
+        openPriceFieldFactors: function () {
+            this.getCategory('priceFieldFactors').setActive();
+
+            return this.$hideContainer()
+                .then(this.resize)
+
+                .then(function () {
+                    this.$grids.Fields.refresh();
+                    return this.$showContainer(this.$ContainerPriceFieldFactors);
+                }.bind(this))
+
+                .then(function () {
+                    this.$grids.Fields.resize();
+                }.bind(this));
         },
 
         /**
@@ -745,7 +786,8 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     this.$ContainerData,
                     this.$ContainerSites,
                     this.$ContainerProducts,
-                    this.$ContainerFields
+                    this.$ContainerFields,
+                    this.$ContainerPriceFieldFactors
                 ]).animate({
                     opacity: 0,
                     top    : -50
@@ -756,6 +798,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                         this.$ContainerSites.setStyle('display', 'none');
                         this.$ContainerProducts.setStyle('display', 'none');
                         this.$ContainerFields.setStyle('display', 'none');
+                        this.$ContainerPriceFieldFactors.setStyle('display', 'none');
 
                         resolve();
                     }.bind(this)
@@ -792,9 +835,13 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     self.$TitlesTranslation.save(),
                     self.$CategoriesTranslation.save()
                 ]).then(function () {
-
                     Categories.updateChild(categoryId, {
-                        fields: fields
+                        fields     : fields,
+                        custom_data: {
+                            priceFieldFactors: JSON.decode(self.$ContainerPriceFieldFactors.getElement(
+                                'input[name="priceFieldFactors"]'
+                            ).value)
+                        }
                     }).then(function () {
                         return self.refresh();
                     }).then(function () {

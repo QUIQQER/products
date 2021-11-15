@@ -2500,7 +2500,17 @@ class Model extends QUI\QDOM
      */
     protected function updateProductPricesByFactors(): void
     {
-        $priceFactors = Fields::getPriceFactorSettings();
+        // Check if main category of product has own price factor settings
+        $Category     = $this->getCategory();
+        $priceFactors = false;
+
+        if ($Category instanceof Category) {
+            $priceFactors = $Category->getCustomDataEntry('priceFieldFactors');
+        }
+
+        if (!$priceFactors) {
+            $priceFactors = Fields::getPriceFactorSettings();
+        }
 
         foreach ($priceFactors as $priceFieldId => $settings) {
             if (!$this->hasField($priceFieldId) || !$this->hasField($settings['sourceFieldId'])) {
@@ -2533,7 +2543,7 @@ class Model extends QUI\QDOM
                     $targetPriceInt = (int)$targetPriceParts[0];
 
                     if (!empty($targetPriceParts[1])) {
-                        $targetPriceDecimals = (int)$targetPriceParts[1];
+                        $targetPriceDecimals = $targetPriceParts[1];
                     } else {
                         $targetPriceDecimals = 0;
                     }
