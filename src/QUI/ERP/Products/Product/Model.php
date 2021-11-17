@@ -2526,6 +2526,10 @@ class Model extends QUI\QDOM
                 $SourceField = $this->getField($settings['sourceFieldId']);
                 $multiplier  = (float)$settings['multiplier'];
 
+                if (empty($SourceField->getValue())) {
+                    continue;
+                }
+
                 $price = $SourceField->getValue() * $multiplier;
 
                 // Rounding
