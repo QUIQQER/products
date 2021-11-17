@@ -6,11 +6,12 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
 
     'qui/QUI',
     'qui/controls/windows/Confirm',
+    'package/quiqqer/products/bin/Products',
     'package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldList',
     'Ajax',
     'Locale'
 
-], function (QUI, QUIConfirm, EditableFieldList, QUIAjax, QUILocale) {
+], function (QUI, QUIConfirm, Products, EditableFieldList, QUIAjax, QUILocale) {
     "use strict";
 
     return new Class({
@@ -51,8 +52,6 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
          * events: on open
          */
         $onOpen: function () {
-            var self = this;
-
             this.Loader.show();
             this.getContent().set('html', '');
             this.getContent().setStyles({
@@ -76,7 +75,7 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
                 }
             }).inject(this.getContent());
 
-            var ListContainer = new Element('div', {
+            const ListContainer = new Element('div', {
                 styles: {
                     'flex-grow': 1
                 }
@@ -85,55 +84,65 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
             this.$List = new EditableFieldList({
                 productId: this.getAttribute('productId'),
                 events   : {
-                    onLoad: function () {
-                        self.Loader.hide();
+                    onLoad: () => {
+                        this.Loader.hide();
                     }
                 }
             }).inject(ListContainer);
 
-            var Reset = this.getContent().getElement('[name="reset-fields-to-global"]');
+            const Reset = this.getContent().getElement('[name="reset-fields-to-global"]');
 
-            Reset.addEvent('change', function () {
+            Reset.addEvent('change', () => {
                 if (Reset.checked) {
-                    self.$List.disable();
+                    this.$List.disable();
                     return;
                 }
 
-                self.$List.enable();
+                this.$List.enable();
             });
 
-            this.$List.resize();
+            const Product = Products.get(this.getAttribute('productId'));
+
+            Product.load().then((Product) => {
+                let attributes = Product.getAttributes();
+
+                if (attributes.inheritedVariantFields === false &&
+                    attributes.editableVariantFields === false) {
+
+                    Reset.checked = true;
+                    this.$List.disable();
+                }
+
+                this.$List.resize();
+            });
         },
 
         /**
          * event: on submit
          */
         $onSubmit: function () {
-            var self  = this,
-                Reset = this.getContent().getElement('[name="reset-fields-to-global"]');
+            const Reset = this.getContent().getElement('[name="reset-fields-to-global"]');
 
             this.Loader.show();
 
             if (Reset.checked) {
-                require(['package/quiqqer/products/bin/Products'], function (Products) {
-                    var Product = Products.get(self.getAttribute('productId'));
+                const Product = Products.get(this.getAttribute('productId'));
 
-                    Product.resetInheritedFields().then(function () {
-                        self.close();
-                        self.fireEvent('save', [self]);
-                    }).catch(function () {
-                        self.Loader.hide();
-                    });
+                Product.resetInheritedFields().then(() => {
+                    this.close();
+                    this.fireEvent('save', [this]);
+                }).catch(() => {
+                    this.Loader.hide();
                 });
 
                 return;
             }
 
-            this.$List.save().then(function () {
-                self.close();
-                self.fireEvent('save', [self]);
-            }).catch(function () {
-                self.Loader.hide();
+            this.$List.save().then(() => {
+                this.close();
+                this.fireEvent('save', [this]);
+            }).catch(() => {
+                this.Loader.hide();
             });
         }
     });

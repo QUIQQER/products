@@ -134,6 +134,8 @@ class VariantParent extends AbstractType
             }
 
             $data['editableVariantFields'] = \json_encode($editable);
+        } else {
+            $data['editableVariantFields'] = '';
         }
 
         if (\is_array($inheritedAttribute)) {
@@ -149,6 +151,8 @@ class VariantParent extends AbstractType
             }
 
             $data['inheritedVariantFields'] = \json_encode($inherited);
+        } else {
+            $data['inheritedVariantFields'] = '';
         }
 
         if ($this->getDefaultVariantId()) {

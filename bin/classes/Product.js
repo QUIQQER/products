@@ -50,6 +50,21 @@ define('package/quiqqer/products/bin/classes/Product', [
         },
 
         /**
+         * load the attributes if the product is not loaded
+         *
+         * @returns {Promise<unknown>|*}
+         */
+        load: function() {
+            if (this.$loaded) {
+                return Promise.resolve(this);
+            }
+
+            return this.refresh().then(() => {
+                return this;
+            });
+        },
+
+        /**
          * Add a field to the product
          *
          * @param {Number|Array}  fieldId
@@ -403,20 +418,18 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @returns {Promise}
          */
         refresh: function () {
-            return new Promise(function (resolve, reject) {
-                require(['package/quiqqer/products/bin/Products'], function (Products) {
-
-                    Products.getChild(this.getId()).then(function (data) {
+            return new Promise((resolve, reject) => {
+                require(['package/quiqqer/products/bin/Products'], (Products) => {
+                    Products.getChild(this.getId()).then((data) => {
                         this.$loaded = true;
                         this.$data   = data;
 
                         resolve(this);
 
                         this.fireEvent('refresh', [this]);
-                    }.bind(this)).catch(reject);
-
-                }.bind(this));
-            }.bind(this));
+                    }).catch(reject);
+                });
+            });
         },
 
         /**
@@ -633,12 +646,14 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @return {Promise}
          */
         resetInheritedFields: function () {
-            return new Promise(function (resolve) {
-                Ajax.post('package_quiqqer_products_ajax_products_variant_resetEditableInheritedFields', resolve, {
+            return new Promise((resolve) => {
+                Ajax.post('package_quiqqer_products_ajax_products_variant_resetEditableInheritedFields', () => {
+                    this.refresh().then(resolve);
+                }, {
                     'package': 'quiqqer/products',
                     productId: this.getId()
                 });
-            }.bind(this));
+            });
         },
 
         /**

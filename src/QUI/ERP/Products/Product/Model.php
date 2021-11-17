@@ -225,7 +225,6 @@ class Model extends QUI\QDOM
         foreach ($systemFields as $Field) {
             if (!isset($this->fields[$Field->getId()])) {
                 $this->fields[$Field->getId()] = $Field;
-                continue;
             }
         }
 
@@ -235,6 +234,8 @@ class Model extends QUI\QDOM
                 'editableVariantFields',
                 \json_decode($product['editableVariantFields'], true)
             );
+        } else {
+            $this->setAttribute('editableVariantFields', false);
         }
 
         if (!empty($product['inheritedVariantFields']) && \is_string($product['inheritedVariantFields'])) {
@@ -242,6 +243,8 @@ class Model extends QUI\QDOM
                 'inheritedVariantFields',
                 \json_decode($product['inheritedVariantFields'], true)
             );
+        } else {
+            $this->setAttribute('inheritedVariantFields', false);
         }
 
         if (\defined('QUIQQER_BACKEND')) {

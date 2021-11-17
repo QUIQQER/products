@@ -151,7 +151,11 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
             }
 
             return new Promise(function (resolve) {
-                QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveEditableInheritedFields', resolve, {
+                QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveEditableInheritedFields', function() {
+                    require(['package/quiqqer/products/bin/Products'], function(Products) {
+                        Products.get(self.getAttribute('productId')).refresh().then(resolve);
+                    });
+                }, {
                     'package': 'quiqqer/products',
                     productId: self.getAttribute('productId'),
                     editable : JSON.encode(self.getEditableFields()),
