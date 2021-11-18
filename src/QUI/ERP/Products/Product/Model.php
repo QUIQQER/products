@@ -2504,14 +2504,40 @@ class Model extends QUI\QDOM
     protected function updateProductPricesByFactors(): void
     {
         // Check if main category of product has own price factor settings
-        $Category     = $this->getCategory();
+        $MainCategory = $this->getCategory();
+
         $priceFactors = false;
 
-        if ($Category instanceof Category) {
-            $priceFactors = $Category->getCustomDataEntry('priceFieldFactors');
+        if ($MainCategory instanceof Category) {
+            $priceFactors = $MainCategory->getCustomDataEntry('priceFieldFactors');
         }
 
-        if (!$priceFactors) {
+        // Check if any other category of this product has own price factor settings
+        if (empty($priceFactors)) {
+            $categories = $this->getCategories();
+
+            // sort by id ASC
+            \usort($categories, function ($CatA, $CatB) {
+                /**
+                 * @var Category $CatA
+                 * @var Category $CatB
+                 */
+                return $CatA->getId() - $CatB->getId();
+            });
+
+            foreach ($categories as $Category) {
+                if ($Category instanceof Category) {
+                    $priceFactors = $Category->getCustomDataEntry('priceFieldFactors');
+
+                    if (!empty($priceFactors)) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        // If no category has price factor settings -> use global settings
+        if (empty($priceFactors)) {
             $priceFactors = Fields::getPriceFactorSettings();
         }
 
