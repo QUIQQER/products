@@ -58,7 +58,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/VisitedProducts'
 
                 if (!visited.length) {
                     new Element('div', {
-                        'class': 'quiqqer-products-control-visitedProducts-empty',
+                        'class': 'quiqqer-products-control-visitedProducts-empty text-muted',
                         html   : QUILocale.get(lg, 'brick.control.VisitedProducts.empty')
                     }).replaces(this.$List);
                     return;
@@ -81,7 +81,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/VisitedProducts'
 
                     if (!Result.length) {
                         new Element('div', {
-                            'class': 'quiqqer-products-control-visitedProducts-empty',
+                            'class': 'quiqqer-products-control-visitedProducts-empty text-muted',
                             html   : QUILocale.get(lg, 'brick.control.VisitedProducts.empty')
                         }).replaces(this.$List);
                         return;
