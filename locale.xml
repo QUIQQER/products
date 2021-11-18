@@ -1599,8 +1599,8 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[Parent category]]></en>
         </locale>
         <locale name="control.category.update.textCategoriesCount">
-            <de><![CDATA[Hier können Preiseld-Faktoren festgelegt werden, die explizit für diese Kategorie gelten. Sie finden bei allen Produkten Anwendung, die diese Kategorie als Hauptkategorie haben und haben Vorrang vor den globalen Preisfeld-Faktoren Einstellungen.]]></de>
-            <en><![CDATA[Here you can set price field factors that explicitly apply to this category. They apply to all products that have this category as their main category and take precedence over the global price field factors settings.]]></en>
+            <de><![CDATA[Hier können Preiseld-Faktoren festgelegt werden, die explizit für diese Kategorie gelten. Sie finden bei allen Produkten Anwendung, die diese Kategorie als Hauptkategorie haben. Ist diese Kategorie zwar einem Produkt zugeordnet, aber nicht als Hauptkategorie gesetzt, finden die Preisfeld-Faktoren nur dann Anwendung wenn dies die Kategorie mit der niedrigsten ID ist, die dem Produkt zugewiesen ist. Kategorie-spezifische Preisfeld-Faktoren haben Vorrang vor den globalen Preisfeld-Faktoren Einstellungen.]]></de>
+            <en><![CDATA[Here you can set price field factors that explicitly apply to this category. They are applied to all products that have this category as their main category. If this category is assigned to a product but not set as the main category, the price field factors will only apply if this is the category with the lowest ID assigned to the product. Category-specific price field factors take precedence over global price field factors settings.]]></en>
         </locale>
 
         <locale name="category.update.field.grid.button.add">
