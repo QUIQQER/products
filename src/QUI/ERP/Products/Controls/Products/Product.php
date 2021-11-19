@@ -131,7 +131,7 @@ class Product extends QUI\Control
             $Price = $Product->getPrice($User);
         }
 
-        if ($typeVariantParent) {
+        if ($typeVariantParent && $Product->getMinimumPrice()->getValue() !== $Product->getMaximumPrice()->getValue()) {
             $Price->enableMinimalPrice();
         }
 

@@ -217,13 +217,6 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
             );
         }
 
-        if ($this->Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
-            $Price->enableMinimalPrice();
-
-            return $Price;
-        }
-
-
         // use search cache
         $minCache = 'quiqqer/products/'.$this->getId().'/prices/min';
         $maxName  = 'quiqqer/products/'.$this->getId().'/prices/max';
