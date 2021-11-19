@@ -789,7 +789,6 @@ class Products
         QUI\ERP\Products\Search\Cache::clear();
         Categories::clearCache();
 
-
         $ids = self::getProductIds();
 
         foreach ($ids as $id) {
@@ -841,6 +840,17 @@ class Products
                 QUI\System\Log::write($Exception->getMessage());
             }
         }
+
+        // Delete all product IDs from the products_cache that do not exist anymore
+        QUI::getDataBase()->delete(
+            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            [
+                'id' => [
+                    'type'  => 'NOT IN',
+                    'value' => $ids
+                ]
+            ]
+        );
 
         // cache cleanup
         QUI\ERP\Products\Search\Cache::clear();
