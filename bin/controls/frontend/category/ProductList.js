@@ -1066,6 +1066,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         articles.addEvent('click', function (event) {
                             event.stop();
 
+                            if (result.count === 0) {
+                                return;
+                            }
+
                             self.openProduct(parseInt(this.get('data-pid')));
                         });
 
