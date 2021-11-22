@@ -1303,6 +1303,10 @@ For a newly created product the article number should be generated automatically
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
+        <locale name="controls.productList.filter.select.placeholder">
+            <de><![CDATA[Bitte auswählen]]></de>
+            <en><![CDATA[Please select]]></en>
+        </locale>
         <locale name="controls.UserInput.getText.title">
             <de><![CDATA[Eingabe für Feld "[fieldTitle]"]]></de>
             <en><![CDATA[Input for field "[fieldTitle]"]]></en>

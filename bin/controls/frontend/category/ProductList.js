@@ -1823,7 +1823,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 options = Select.getElements('option');
 
                 Control = new QUISelect({
-                    placeholderText      : Title.get('html').trim(),
+                    placeholderText      : QUILocale.get('quiqqer/products', 'controls.productList.filter.select.placeholder'),
                     placeholderSelectable: false,
                     multiple             : true,
                     checkable            : true,
