@@ -327,39 +327,16 @@ class Products
                     continue;
                 }
 
+
                 if ($currentVariantHash === $hash) {
                     $availableEntries[$fieldId][$fieldValue] = true;
-                }
-            }
-
-            foreach ($searchHashes as $searchHash) {
-                if (!\fnmatch($searchHash, $hash)) {
                     continue;
                 }
 
-                $emptyCount = 0;
-
-                foreach ($hashArray as $fieldId => $fieldValue) {
-                    try {
-                        $productFieldValue = $Product->getFieldValue($fieldId);
-                    } catch (QUI\Exception $Exception) {
-                        continue;
-                    }
-
-                    // must be contained in this hash for it to be allowed
-                    // this is only important if the fieldvalue of the product is empty
-                    // -> because, if the value is empty, all others have to be checked
-                    if (empty($productFieldValue) && strpos($hash, ';'.$fieldId.':'.$fieldValue.';') === false) {
-                        $emptyCount++;
-                        continue;
-                    }
-
-                    $availableEntries[$fieldId][$fieldValue] = true;
-                }
-
-                if (count($hashArray) === $emptyCount) {
-                    foreach ($hashArray as $fieldId => $fieldValue) {
+                foreach ($searchHashes as $searchHash) {
+                    if (\fnmatch($searchHash, $hash)) {
                         $availableEntries[$fieldId][$fieldValue] = true;
+                        break;
                     }
                 }
             }
@@ -408,6 +385,7 @@ class Products
 
                 if ($hashedValueId && isset($availableEntries[$fieldId][$hashedValueId])) {
                     $Field->enableEntry($key);
+                    continue;
                 }
             }
         }

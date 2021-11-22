@@ -47,6 +47,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
             this.$currentVariantId = false;
             this.$isVariantParent  = true;
+            this.$fieldHashes      = null;
+            this.$availableHashes  = null;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -79,7 +81,23 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 this.$availableHashes = window.availableHashes;
             }
 
-            return this.parent().then(this.$init);
+            return this.parent().then(() => {
+                if (this.$availableHashes && this.$fieldHashes) {
+                    return;
+                }
+
+                return new Promise((resolve) => {
+                    QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getProduct', (result) => {
+                        this.$fieldHashes     = result.fieldHashes;
+                        this.$availableHashes = result.availableHashes;
+
+                        resolve();
+                    }, {
+                        'package' : 'quiqqer/products',
+                        productId : this.getAttribute('productId')
+                    });
+                });
+            }).then(this.$init);
         },
 
         /**
@@ -163,31 +181,20 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 '.product-data-fieldlist .quiqqer-product-field select'
             );
 
-            var attributeGroups = new Elements();
-            var AttrGroup       = this.getElm().getElement(
-                '[data-qui="package/pbisschop/template/bin/js/AttributeGroups"]'
-            );
-
-            if (AttrGroup) {
-                attributeGroups = AttrGroup.getElements('.quiqqer-product-field select');
-            }
-
-
             fieldLists.removeEvents('change');
-
             fieldLists.addEvent('change', function () {
-                if (this.getParent('[data-qui="package/pbisschop/template/bin/js/AttributeGroups"]')) {
-                    var currentHash = self.getCurrentHash();
+                var currentHash = self.getCurrentHash();
 
-                    if (typeof self.$availableHashes[currentHash] === 'undefined') {
-                        self.hidePrice();
-                        self.disableButtons();
-                        return;
-                    }
+                if (typeof self.$availableHashes[currentHash] === 'undefined') {
+                    self.hidePrice();
+                    self.disableButtons();
+                    return;
                 }
 
                 self.$refreshVariant();
             });
+
+            var attributeGroups = this.getElm().getElements('[data-field-type="AttributeGroup"] select');
 
             attributeGroups.addEvent('focus', function () {
                 if (attributeGroups.length === 1) {
@@ -213,7 +220,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                 for (i = 0, len = options.length; i < len; i++) {
                     if (self.$isOnlyVariantList) {
-
                         continue;
                     }
 
@@ -295,8 +301,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 self.$isVariantParent  = !!result.isVariantParent;
 
                 document.title        = result.title;
-                self.$fieldHashes     = result.fieldHashes;
-                self.$availableHashes = result.availableHashes;
+                //self.$fieldHashes     = result.fieldHashes;
+                //self.$availableHashes = result.availableHashes;
 
                 // only if product is in main category
                 if (typeof window.QUIQQER_PRODUCT_CATEGORY !== 'undefined' &&
@@ -522,9 +528,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * @return {Object}
          */
         getCurrentFieldValues: function () {
-            var attributeGroups = this.getElm().getElement(
-                '[data-qui="package/pbisschop/template/bin/js/AttributeGroups"]'
-            ).getElements('.quiqqer-product-field select');
+            var attributeGroups = this.getElm().getElements('[data-field-type="AttributeGroup"] select');
 
             var i, len, fieldName, fieldValue;
             var fields = {};
