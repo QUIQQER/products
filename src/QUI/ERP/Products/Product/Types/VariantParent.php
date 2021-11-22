@@ -209,6 +209,10 @@ class VariantParent extends AbstractType
      */
     public function getCurrentPrice($User = null)
     {
+        if ($this->getDefaultVariantId() === false) {
+            return parent::getCurrentPrice($User);
+        }
+
         return $this->getDefaultVariant()->getMinimumPrice($User);
     }
 
@@ -222,8 +226,6 @@ class VariantParent extends AbstractType
      */
     public function getMaximumPrice($User = null)
     {
-        $MaxPrice = null;
-
         // kinder ids
         $children = QUI::getDataBase()->fetch([
             'select' => ['id', 'parent'],
