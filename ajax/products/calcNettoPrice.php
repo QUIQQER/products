@@ -28,7 +28,7 @@ QUI::$Ajax->registerFunction(
             true,
             $productId
         );
-        \QUI\System\Log::writeRecursive($price, \QUI\System\Log::LEVEL_ERROR);
+
         if ($baseFormatted === $bruttoPriceFormatted) {
             return Calc::calcNettoPrice($price, $formatted, $productId);
         }

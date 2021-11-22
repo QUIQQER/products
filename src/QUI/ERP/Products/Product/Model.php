@@ -970,10 +970,15 @@ class Model extends QUI\QDOM
         }
 
         // search all custom fields, and set the minimum
-        $Clone        = Products::getNewProductInstance($this->getId());
-        $Calc         = QUI\ERP\Products\Utils\Calc::getInstance($User); // @todo netto user nutzen
-        $Price        = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice();
-        $currentPrice = $Price->value();
+        $Clone         = Products::getNewProductInstance($this->getId());
+        $Calc          = QUI\ERP\Products\Utils\Calc::getInstance($User);
+        $UniqueProduct = $Clone->createUniqueProduct($User);
+        $UniqueProduct->calc($Calc);
+
+        $uniqueProductAttributes = $UniqueProduct->getAttributes();
+
+        $Price        = $UniqueProduct->getPrice();
+        $currentPrice = $uniqueProductAttributes['price_netto'];
 
         if (QUI::getPackage('quiqqer/products')
             ->getConfig()
@@ -1053,10 +1058,15 @@ class Model extends QUI\QDOM
         } catch (QUI\Exception $Exception) {
         }
 
-        $Clone        = Products::getNewProductInstance($this->getId());
-        $Calc         = QUI\ERP\Products\Utils\Calc::getInstance($User);
-        $Price        = $Clone->createUniqueProduct($User)->calc($Calc)->getPrice();
-        $currentPrice = $Price->value();
+        $Clone         = Products::getNewProductInstance($this->getId());
+        $Calc          = QUI\ERP\Products\Utils\Calc::getInstance($User);
+        $UniqueProduct = $Clone->createUniqueProduct($User);
+        $UniqueProduct->calc($Calc);
+
+        $uniqueProductAttributes = $UniqueProduct->getAttributes();
+
+        $Price        = $UniqueProduct->getPrice();
+        $currentPrice = $uniqueProductAttributes['price_netto'];
 
         if (QUI::getPackage('quiqqer/products')
             ->getConfig()
