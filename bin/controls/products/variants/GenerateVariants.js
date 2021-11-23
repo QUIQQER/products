@@ -159,7 +159,12 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
                   tables = this.getElm().getElements('table');
 
             const fields = tables.map(function (Table) {
-                const inputs = Table.getElements('input[type="checkbox"]:checked');
+                let inputs = Table.getElements('input[type="checkbox"]:checked');
+
+                inputs = inputs.filter(function(checkbox) {
+                    return !checkbox.getParent('th');
+                });
+
                 const values = inputs.map(function (Input) {
                     return Input.value;
                 });
@@ -336,7 +341,13 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
                 tables = this.getElm().getElements('.quiqqer-products-variant-generate-generation table');
 
             let counts = tables.map(function (Table) {
-                return Table.getElements('input[type="checkbox"]:checked').length;
+                let elms = Table.getElements('input[type="checkbox"]:checked');
+
+                elms = elms.filter(function(checkbox) {
+                    return !checkbox.getParent('th');
+                });
+
+                return elms.length;
             });
 
             for (let i = 0, len = counts.length; i < len; i++) {
