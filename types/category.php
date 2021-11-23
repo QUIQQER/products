@@ -279,6 +279,16 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         $ProductList->setAttribute('forceMobileFilter', true);
     }
 
+    if (!$ProductList->count()) {
+        // keine produkte -> weiterleitung zu main
+        $Redirect = new RedirectResponse($Site->getUrlRewritten());
+        $Redirect->setStatusCode(Response::HTTP_SEE_OTHER);
+
+        echo $Redirect->getContent();
+        $Redirect->send();
+        exit;
+    }
+
     $Engine->assign([
         'categoryId'   => $Site->getAttribute('quiqqer.products.settings.categoryId'),
         'ProductList'  => $ProductList,
