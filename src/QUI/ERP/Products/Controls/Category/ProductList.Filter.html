@@ -1,3 +1,9 @@
+<script>
+    {if isset($tagsFromProducts)}
+    window.QUIQQER_PRODUCTS_TAGS_FROM_PRODUCTS = {$tagsFromProducts};
+    {/if}
+</script>
+
 <div class="quiqqer-products-productList-filterContainerLoading quiqqer-products-productList-filter-container quiqqer-products-productList-filter-container-{$cid}">
     {foreach $filter as $Filter}
         {if !is_array($Filter) && get_class($Filter) === 'QUI\Tags\Groups\Group'}

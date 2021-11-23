@@ -281,6 +281,13 @@ class ProductList extends QUI\Control
             return '';
         }
 
+        if (class_exists('QUI\ERP\Tags\Manager')) {
+            $Engine->assign(
+                'tagsFromProducts',
+                json_encode(QUI\ERP\Tags\Manager::getTagsFromProductCategorySite($this->getSite()))
+            );
+        }
+
         $Engine->assign([
             'this'   => $this,
             'filter' => $this->getFilter(),
