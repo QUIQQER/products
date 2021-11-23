@@ -293,6 +293,6 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         'categoryId'   => $Site->getAttribute('quiqqer.products.settings.categoryId'),
         'ProductList'  => $ProductList,
         'CategoryMenu' => $CategoryMenu,
-        'filter'       => $filterList,
+        'filter'       => $filterList
     ]);
 }
