@@ -41,7 +41,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
         initialize: function (options) {
             this.parent(options);
 
-            this.Loader             = new QUILoader();
+            this.Loader             = new QUILoader({'cssclass': 'quiqqer-products-productVariant-loader'});
             this.$startInit         = false;
             this.$isOnlyVariantList = false; // if the variant has no attribute lists and only one list of its variants
 
@@ -165,7 +165,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             var self = this;
 
             this.$startInit = true;
-            this.Loader.inject(this.getElm());
+            this.Loader.inject(document.body);
 
             // remove events from AttributeList field controls (added by parent.$onImport)
             var fields = this.getFieldControls();
