@@ -1782,6 +1782,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 for (i = 0, len = uncheckedFilter.length; i < len; i++) {
                     this.removeFilter(uncheckedFilter[i]);
                 }
+
+                if (this.$ProductContainer) {
+                    this.showList();
+                }
             }.bind(this);
 
             for (i = 0, len = filter.length; i < len; i++) {
@@ -1810,6 +1814,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         title     : Title.get('text').trim(),
                         events    : {
                             onChange: (Instance) => {
+                                if (this.$ProductContainer) {
+                                    this.showList();
+                                }
+
                                 this.$setWindowLocation(Instance);
                             }
                         }
@@ -1835,10 +1843,24 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }
                 });
 
+                let v;
+                let tagsFromProducts = false;
+
+                if (typeof window.QUIQQER_PRODUCTS_TAGS_FROM_PRODUCTS !== 'undefined') {
+                    tagsFromProducts = window.QUIQQER_PRODUCTS_TAGS_FROM_PRODUCTS;
+                    tagsFromProducts = Object.values(tagsFromProducts);
+                }
+
                 for (c = 0, clen = options.length; c < clen; c++) {
+                    v = options[c].get('value').trim();
+
+                    if (tagsFromProducts && tagsFromProducts.indexOf(v) === -1) {
+                        continue;
+                    }
+
                     Control.appendChild(
                         options[c].get('html').trim(),
-                        options[c].get('value').trim()
+                        v
                     );
                 }
 
@@ -1911,7 +1933,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             if (DEBUG) {
-                console.log(this.$FilterFieldList)
+                console.log(this.$FilterFieldList);
             }
 
             this.refreshClearFilterButtonStatus();

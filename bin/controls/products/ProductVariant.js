@@ -1011,7 +1011,17 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                                 return;
                             }
 
-                            self.$changeVariant(value);
+                            self.$loaded = false;
+
+                            self.update().then(function() {
+                                return self.$changeVariant(value);
+                            }).then(function() {
+                                self.$loaded = true;
+                                self.Loader.hide();
+                            }).catch(function(err) {
+                                console.error(err);
+                                self.Loader.hide();
+                            });
                         }
                     }
                 }).inject(VariantList);
