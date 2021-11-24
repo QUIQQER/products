@@ -1835,10 +1835,24 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     }
                 });
 
+                let v;
+                let tagsFromProducts = false;
+
+                if (typeof window.QUIQQER_PRODUCTS_TAGS_FROM_PRODUCTS !== 'undefined') {
+                    tagsFromProducts = window.QUIQQER_PRODUCTS_TAGS_FROM_PRODUCTS;
+                    tagsFromProducts = Object.values(tagsFromProducts);
+                }
+
                 for (c = 0, clen = options.length; c < clen; c++) {
+                    v = options[c].get('value').trim();
+
+                    if (tagsFromProducts && tagsFromProducts.indexOf(v) === -1) {
+                        continue;
+                    }
+
                     Control.appendChild(
                         options[c].get('html').trim(),
-                        options[c].get('value').trim()
+                        v
                     );
                 }
 
@@ -1911,7 +1925,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             if (DEBUG) {
-                console.log(this.$FilterFieldList)
+                console.log(this.$FilterFieldList);
             }
 
             this.refreshClearFilterButtonStatus();
