@@ -304,6 +304,17 @@ class Product extends QUI\Control
                 continue;
             }
 
+            // Special handling for some field types
+            switch ($Field->getType()) {
+                case Fields::TYPE_FOLDER:
+                    $showIfEmpty = $Field->getOption('showFrontendTabIfEmpty');
+
+                    if (!$showIfEmpty && $Field->isEmpty()) {
+                        continue 2;
+                    }
+                    break;
+            }
+
             $detailFields[] = $Field;
         }
 

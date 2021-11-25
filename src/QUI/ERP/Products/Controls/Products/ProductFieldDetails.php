@@ -53,7 +53,7 @@ class ProductFieldDetails extends QUI\Control
                 $template = \dirname(__FILE__).'/ProductFieldDetails.Content.html';
                 $Engine->assign('content', $Field->getValue());
                 break;
-                
+
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA_MULTI_LANG:
                 $template = \dirname(__FILE__).'/ProductFieldDetails.Content.html';
                 $lang     = QUI::getLocale()->getCurrent();
@@ -91,10 +91,15 @@ class ProductFieldDetails extends QUI\Control
                 $Folder   = $Field->getMediaFolder();
                 $files    = [];
 
-                $showFiles  = $this->getAttribute('files');
-                $showImages = $this->getAttribute('images');
+                $showFiles   = $this->getAttribute('files');
+                $showImages  = $this->getAttribute('images');
+                $showIfEmpty = $Field->getOption('showFrontendTabIfEmpty');
 
                 if (!$Folder) {
+                    return '';
+                }
+
+                if (!$showIfEmpty && $Field->isEmpty()) {
                     return '';
                 }
 

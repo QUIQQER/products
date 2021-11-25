@@ -1371,6 +1371,10 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Optionaler zentraler Media-Ordner. Ein hier ausgewählter Ordner wird bevorzugt verwendet, wenn Dateien und Bilder über dieses Produktfeld geladen werden. Media-Ordner von einzelnen Produkten, denen dieses Feld zugeordnet ist, werden in diesem Fall ignoriert.]]></de>
             <en><![CDATA[Optional central media folder. A folder selected here is used preferentially when files and images are loaded via this product field. Media folders from individual products to which this field is assigned are ignored in this case.]]></en>
         </locale>
+        <locale name="controls.FolderSettings.showFrontendTabIfEmpty">
+            <de><![CDATA[Zeige Feld im Frontend, auch wenn keine (aktivierten) Dateien im Ordner liegen]]></de>
+            <en><![CDATA[Show field in frontend even if no (active) files are in the folder]]></en>
+        </locale>
 
         <locale name="products.panel.title">
             <de><![CDATA[Produkte]]></de>

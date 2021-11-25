@@ -37,9 +37,10 @@ define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$CheckboxAutoActivate = null;
-            this.$MediaFolderSelect    = null;
-            this.Loader                = new QUILoader();
+            this.$CheckboxAutoActivate           = null;
+            this.$CheckboxShowFrontendTabIfEmpty = null;
+            this.$MediaFolderSelect              = null;
+            this.Loader                          = new QUILoader();
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -80,6 +81,10 @@ define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
                     '           <span>' + QUILocale.get(lg, 'controls.FolderSettings.autoActivateItems') + '</span>' +
                     '    </label>' +
                     '<label>' +
+                    '        <input type="checkbox" name="showFrontendTabIfEmpty"/>' +
+                    '           <span>' + QUILocale.get(lg, 'controls.FolderSettings.showFrontendTabIfEmpty') + '</span>' +
+                    '    </label>' +
+                    '<label>' +
                     '           <span>' + QUILocale.get(lg, 'controls.FolderSettings.mediaFolder') + '</span>' +
                     '        <input type="hidden"' +
                     ' name="mediaFolder"' +
@@ -100,6 +105,11 @@ define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
             this.$CheckboxAutoActivate.addEvent('change', this.update);
 
             this.$CheckboxAutoActivate.checked = !!this.getAttribute('autoActivateItems');
+
+            this.$CheckboxShowFrontendTabIfEmpty = this.$Elm.getElement('[name="showFrontendTabIfEmpty"]');
+            this.$CheckboxShowFrontendTabIfEmpty.addEvent('change', this.update);
+
+            this.$CheckboxShowFrontendTabIfEmpty.checked = !!this.getAttribute('showFrontendTabIfEmpty');
 
             Content.getParent('.field-container').setStyles({
                 height: 200
@@ -140,6 +150,10 @@ define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
                 if ("mediaFolder" in data) {
                     this.setAttribute('mediaFolder', data.mediaFolder);
                 }
+
+                if ("showFrontendTabIfEmpty" in data) {
+                    this.setAttribute('showFrontendTabIfEmpty', data.showFrontendTabIfEmpty);
+                }
             } catch (e) {
                 console.error(this.$Input.value);
                 console.error(e);
@@ -158,8 +172,9 @@ define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
          */
         update: function () {
             this.$Input.value = JSON.encode({
-                autoActivateItems: this.$CheckboxAutoActivate.checked ? 1 : 0,
-                mediaFolder      : this.$MediaFolderSelect.getValue()
+                autoActivateItems     : this.$CheckboxAutoActivate.checked ? 1 : 0,
+                mediaFolder           : this.$MediaFolderSelect.getValue(),
+                showFrontendTabIfEmpty: this.$CheckboxShowFrontendTabIfEmpty.checked ? 1 : 0
             });
         }
     });
