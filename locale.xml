@@ -1363,6 +1363,14 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Hochgeladene Dateien automatisch aktivieren]]></de>
             <en><![CDATA[Auto-activate uploaded files]]></en>
         </locale>
+        <locale name="controls.FolderSettings.mediaFolder">
+            <de><![CDATA[Verknüpfter zentraler Media-Ordner]]></de>
+            <en><![CDATA[Linked central media folder]]></en>
+        </locale>
+        <locale name="controls.FolderSettings.mediaFolder.desc">
+            <de><![CDATA[Optionaler zentraler Media-Ordner. Ein hier ausgewählter Ordner wird bevorzugt verwendet, wenn Dateien und Bilder über dieses Produktfeld geladen werden. Media-Ordner von einzelnen Produkten, denen dieses Feld zugeordnet ist, werden in diesem Fall ignoriert.]]></de>
+            <en><![CDATA[Optional central media folder. A folder selected here is used preferentially when files and images are loaded via this product field. Media folders from individual products to which this field is assigned are ignored in this case.]]></en>
+        </locale>
 
         <locale name="products.panel.title">
             <de><![CDATA[Produkte]]></de>
