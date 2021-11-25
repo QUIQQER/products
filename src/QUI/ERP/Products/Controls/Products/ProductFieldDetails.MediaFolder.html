@@ -1,4 +1,4 @@
-<table class="product-data-files-table">
+<table class="product-data-files-table" data-qui="package/quiqqer/products/bin/controls/frontend/fields/Folder">
     {foreach $files as $File}
     <tr>
         <td class="product-data-files-table-preview">
@@ -9,10 +9,10 @@
             {/if}
         </td>
         <td class="product-data-files-table-title">
-            {$File->getAttribute('title')}
+            {$File->getTitle()}
         </td>
         <td class="product-data-files-table-download">
-            <a href="{$File->getUrl(true)}" target="_blank">
+            <a href="{$File->getUrl(true)}" target="_blank" data-id="{$File->getId()}">
                 <span class="fa fa-download"></span>
             </a>
         </td>

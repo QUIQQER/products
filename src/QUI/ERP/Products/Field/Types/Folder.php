@@ -36,7 +36,8 @@ class Folder extends QUI\ERP\Products\Field\Field
     public function __construct($fieldId, array $params)
     {
         $this->setOptions([
-            'autoActivateItems' => true
+            'autoActivateItems' => true,
+            'mediaFolder'       => false
         ]);
 
         parent::__construct($fieldId, $params);
@@ -125,6 +126,20 @@ class Folder extends QUI\ERP\Products\Field\Field
         }
 
         return $MediaItem->getUrl();
+    }
+
+    /**
+     * Return the current value
+     *
+     * @return string|array
+     */
+    public function getValue()
+    {
+        if (!empty($this->getOption('mediaFolder'))) {
+            return $this->getOption('mediaFolder');
+        }
+
+        return parent::getValue();
     }
 
     /**
