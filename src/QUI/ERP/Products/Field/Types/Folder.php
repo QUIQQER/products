@@ -36,8 +36,9 @@ class Folder extends QUI\ERP\Products\Field\Field
     public function __construct($fieldId, array $params)
     {
         $this->setOptions([
-            'autoActivateItems' => true,
-            'mediaFolder'       => false
+            'autoActivateItems'      => true,
+            'mediaFolder'            => false,
+            'showFrontendTabIfEmpty' => false
         ]);
 
         parent::__construct($fieldId, $params);
@@ -161,5 +162,21 @@ class Folder extends QUI\ERP\Products\Field\Field
         }
 
         return false;
+    }
+
+    /**
+     * Check if folder is empty
+     *
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        $MediaFolder = $this->getMediaFolder();
+
+        if (!$MediaFolder) {
+            return true;
+        }
+
+        return ($MediaFolder->getFiles(['count' => true]) + $MediaFolder->getImages(['count' => true])) < 1;
     }
 }
