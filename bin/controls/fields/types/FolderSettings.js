@@ -112,7 +112,7 @@ define('package/quiqqer/products/bin/controls/fields/types/FolderSettings', [
             this.$CheckboxShowFrontendTabIfEmpty.checked = !!this.getAttribute('showFrontendTabIfEmpty');
 
             Content.getParent('.field-container').setStyles({
-                height: 200
+                height: 250
             });
 
             this.Loader.show();
