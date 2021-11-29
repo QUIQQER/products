@@ -1,15 +1,23 @@
+{template_event name="quiqqer::products::price::begin"}
+
 {if $pricePrefix}
 <span class="qui-products-price-display-prefix">
     {$pricePrefix}
 </span>
 {/if}
 
+{template_event name="quiqqer::products::price::beforPrice"}
+
 <span class="qui-products-price-display-value">
     {$Price->getDisplayPrice()}
 </span>
+
+{template_event name="quiqqer::products::price::afterPrice"}
 
 {if $vatText}
 <span class="qui-products-price-display-vat">
     {$vatText}
 </span>
 {/if}
+
+{template_event name="quiqqer::products::price::end" Price=$this}

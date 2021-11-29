@@ -148,14 +148,14 @@
 }
 
 .product-data-price .qui-products-price-display-value {
-    display: inline-block;
+    display: block;
     font-size: 3rem;
     line-height: normal;
 }
 
 .product-data-price .qui-products-price-display-vat {
     clear: both;
-    display: block;
+    display: inline;
     line-height: 20px;
     font-size: 12px;
 }
