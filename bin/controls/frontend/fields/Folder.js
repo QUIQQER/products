@@ -41,11 +41,17 @@ define('package/quiqqer/products/bin/controls/frontend/fields/Folder', [
 
                 let ClickedElm = event.target;
 
+                console.log(ClickedElm.nodeName);
+
                 if (ClickedElm.nodeName !== 'A') {
                     ClickedElm = ClickedElm.getParent('a');
                 }
 
-                this.$download(ClickedElm.get('data-id'));
+                this.$download(
+                    ClickedElm.get('data-fileId'),
+                    ClickedElm.get('data-pid'),
+                    ClickedElm.get('data-fieldId')
+                );
             });
         },
 
@@ -53,17 +59,20 @@ define('package/quiqqer/products/bin/controls/frontend/fields/Folder', [
          * Download media item
          *
          * @param {Number} fileId
+         * @param {Number} productId
+         * @param {Number} fieldId
          */
-        $download: function (fileId) {
-            const url = QUIAjax.$url + '?' + QUIAjax.parseParams('ajax_media_file_download', {
-                project: QUIQQER_PROJECT.name,
-                fileid : fileId
-            });
+        $download: function (fileId, productId, fieldId) {
+            let url = URL_OPT_DIR + 'quiqqer/products/bin/download.php?';
+
+            url += 'fileId=' + fileId;
+            url += '&pid=' + productId;
+            url += '&fieldId=' + fieldId;
 
             const id = 'download-customer-file-' + String.uniqueID();
 
             new Element('iframe', {
-                src   : window.location.origin + url,
+                src   : url,
                 id    : id,
                 styles: {
                     position: 'absolute',

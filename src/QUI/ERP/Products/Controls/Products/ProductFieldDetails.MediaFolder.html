@@ -1,25 +1,30 @@
 <table class="product-data-files-table" data-qui="package/quiqqer/products/bin/controls/frontend/fields/Folder">
     {foreach $files as $File}
-    <tr>
-        <td class="product-data-files-table-preview">
-            {if $Utils->isImage($File)}
-            {image image=$File maxWidth=100 maxHeight=100 data-zoom="1"}
-            {else}
-            <span class="fa {$Utils->getFontAwesomeIconByItem($File)}"></span>
-            {/if}
-        </td>
-        <td class="product-data-files-table-title">
-            {$File->getTitle()}
-        </td>
-        <td class="product-data-files-table-download">
-            <a href="{$File->getUrl(true)}" target="_blank" data-id="{$File->getId()}">
-                <span class="fa fa-download"></span>
-            </a>
-        </td>
-    </tr>
-    {foreachelse}
-    <tr>
-        <td>{locale group="quiqqer/products" var="message.control.product.fields.no.data"}</td>
-    </tr>
+        <tr>
+            <td class="product-data-files-table-preview">
+                {if $Utils->isImage($File)}
+                    {image image=$File maxWidth=100 maxHeight=100 data-zoom="1"}
+                {else}
+                    <span class="fa {$Utils->getFontAwesomeIconByItem($File)}"></span>
+                {/if}
+            </td>
+            <td class="product-data-files-table-title">
+                {$File->getTitle()}
+            </td>
+            <td class="product-data-files-table-download">
+                <a href="{$File->getUrl(true)}"
+                   target="_blank"
+                   data-fileId="{$File->getId()}"
+                   data-fieldId="{$Field->getId()}"
+                   data-pid="{$Product->getId()}"
+                >
+                    <span class="fa fa-download"></span>
+                </a>
+            </td>
+        </tr>
+        {foreachelse}
+        <tr>
+            <td>{locale group="quiqqer/products" var="message.control.product.fields.no.data"}</td>
+        </tr>
     {/foreach}
 </table>

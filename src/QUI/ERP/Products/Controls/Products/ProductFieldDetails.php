@@ -113,7 +113,7 @@ class ProductFieldDetails extends QUI\Control
 
                 $files = \array_filter($files, function ($File) {
                     /* @var $File QUI\Projects\Media\Item $File */
-                    return $File->isActive();
+                    return $File->isActive() && $File->hasPermission('quiqqer.projects.media.view');
                 });
 
                 $Engine->assign([
