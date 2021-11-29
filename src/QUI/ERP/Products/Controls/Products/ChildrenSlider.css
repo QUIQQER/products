@@ -126,19 +126,17 @@
     padding: 0 10px;
 }
 
-.quiqqer-products-control-product-childrenslider-entry-price-regularPrice {
+.quiqqer-products-control-product-childrenslider-entry-price-wrapper .qui-products-price-display {
+    line-height: 1.5rem;
+}
+
+.quiqqer-products-control-product-childrenslider-entry-price-regularPrice .qui-products-price-display-value {
     font-weight: bold;
     margin-top: auto;
 }
 
 .quiqqer-products-control-product-childrenslider-entry-price-wrapper {
     margin-bottom: 1rem;
-}
-
-.qui-products-price-display-vat {
-    display: block;
-    font-weight: normal;
-    line-height: 1rem;
 }
 
 .quiqqer-products-control-product-childrenslider-entry-price-retailPrice {
