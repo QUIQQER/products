@@ -36,6 +36,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
     var lg = 'quiqqer/products';
 
+    let VARIANT_FIELDS = null;
+
     return new Class({
 
         Extends: ProductPanel,
@@ -483,7 +485,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     className: 'grid-align-right'
                 }];
 
-                let variantFields = result[2];
+                VARIANT_FIELDS = result[2];
+                let variantFields  = result[2];
 
                 for (let i = 0, len = variantFields.length; i < len; i++) {
                     columns.push({
@@ -820,6 +823,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 var variants      = result[0].data;
                 var variantFields = result[1];
+                VARIANT_FIELDS    = result[1];
 
                 var i, n, len, nLen, entry, variant, needle, field, fieldId;
                 var data = [];
@@ -1027,17 +1031,35 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 }).inject(VariantList);
 
                 var i, len, name, title, fieldId, variant, Category;
-                var vId, vTitle, vProductNo;
+                var vId, vTitle, vFields, vProductNo;
 
                 var productNumberFilter = function (field) {
                     return field.id === Fields.FIELD_PRODUCT_NO;
                 };
+
+                const VARIANT_FIELDS_ID = VARIANT_FIELDS.map(function(F) {
+                    return F.id;
+                });
+
+                const cleanupVariantFields = function(f) {
+                    if (VARIANT_FIELDS_ID.indexOf(f.id) === -1) {
+                        return false;
+                    }
+
+                    return f.value;
+                };
+
+                const onlyUnique = function(value, index, self) {
+                    return self.indexOf(value) === index;
+                };
+
 
                 for (i = 0, len = variants.length; i < len; i++) {
                     variant = variants[i];
 
                     vId        = variant.id;
                     vTitle     = variant.title;
+                    vFields    = variant.fields;
                     vProductNo = variant.fields.filter(productNumberFilter);
 
                     title = QUILocale.get(lg, 'panel.variants.switchTo') + ' <b>';
@@ -1046,6 +1068,12 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                     if (vProductNo && vProductNo.length && vProductNo[0].value) {
                         title = title + ' - ' + vProductNo[0].value;
+                    }
+
+                    vFields = vFields.map(cleanupVariantFields).filter(n => n).filter(onlyUnique);
+
+                    if (vFields.length) {
+                        title = title + ' : '+  vFields.join(', ');
                     }
 
                     VariantSelect.appendChild(title, variant.id);
