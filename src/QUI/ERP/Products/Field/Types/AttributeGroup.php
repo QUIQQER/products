@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Search;
 
 /**
@@ -213,6 +214,25 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     public function getFrontendView()
     {
         $View = new AttributeGroupFrontendView(
+            $this->getFieldDataForView()
+        );
+
+        $View->setProduct($this->Product);
+
+        return $View;
+    }
+
+    /**
+     * @return View
+     */
+    public function getValueView(): View
+    {
+        if ($this->getAttribute('viewType') === 'backend') {
+            return $this->getBackendView();
+        }
+
+
+        $View = new AttributeGroupFrontendValueView(
             $this->getFieldDataForView()
         );
 

@@ -276,6 +276,22 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
+     * is over writable
+     * -> if a control needs another view for eq. details tabs
+     * -> every field has the possibility to display only the value (and not the select dropdowns)
+     *
+     * @return View
+     */
+    public function getValueView(): View
+    {
+        if ($this->getAttribute('viewType') === 'backend') {
+            return $this->getBackendView();
+        }
+
+        return $this->getFrontendView();
+    }
+
+    /**
      * Return Field-ID
      *
      * @return int
