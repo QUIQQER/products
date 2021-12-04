@@ -51,23 +51,39 @@
                             {template_event name="quiqqer::product-event::slider::buttonAddToCart" Product=$Product}
                             <!--<a href="" class="btn btn-link add-to-card">Add to wish list</a>-->
 
-                            {if $this->getAttribute('buttonAction') == 'addToBasket' && !$Product->hasRequiredUserInputFields()}
-                            <a href="{$Product->getUrl()}"
-                               class="btn btn-primary add-to-basket"
-                               data-product-id="{$Product->getId()}"
-                               data-product-animatable="1"
-                               data-qui="package/quiqqer/product-bricks/bin/controls/basket/AddToBasket"
-                            >
-                                <label>
-                                    {locale group="quiqqer/product-bricks" var="button.product.addToCart"}
-                                </label>
-                            </a>
+                            {if QUI\ERP\Products\Utils\Products::isVariant($Product)}
+                                <a href="{$Product->getUrl()}"
+                                   title="{$Product->getTitle()|escape:'html'}"
+                                   class="btn btn-primary"
+                                >
+                                    {locale group="quiqqer/order" var="control.basket.buttonVariantAdd.text"}
+                                </a>
                             {else}
-                            <a href="{$Product->getUrl()}" class="btn btn-primary add-to-basket">
-                                <label>
-                                    {locale group="quiqqer/product-bricks" var="button.product.viewProduct"}
-                                </label>
-                            </a>
+                                {if $this->getAttribute('buttonAction') == 'addToBasket' && !$Product->hasRequiredUserInputFields()}
+                                    {assign var=disabled value=0}
+                                    {if $Product->getMaximumQuantity() < 1}
+                                        {assign var=disabled value=1}
+                                    {/if}
+
+                                    <a href="{$Product->getUrl()}"
+                                       class="btn btn-primary add-to-basket"
+                                       data-product-id="{$Product->getId()}"
+                                       data-product-animatable="1"
+                                       data-qui="package/quiqqer/product-bricks/bin/controls/basket/AddToBasket"
+                                       {if $disabled}disabled="disabled"{/if}
+                                       data-qui-options-disabled="{$disabled}"
+                                    >
+                                        <label>
+                                            {locale group="quiqqer/product-bricks" var="button.product.addToCart"}
+                                        </label>
+                                    </a>
+                                {else}
+                                <a href="{$Product->getUrl()}" class="btn btn-primary add-to-basket">
+                                    <label>
+                                        {locale group="quiqqer/product-bricks" var="button.product.viewProduct"}
+                                    </label>
+                                </a>
+                                {/if}
                             {/if}
                         </div>
 
