@@ -64,7 +64,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/FilterWindow', [
             this.parent(options);
 
             this.$Container = null;
-            this.$Menu      = null;
+            this.$Menu = null;
 
             this.addEvents({
                 onOpen: this.$onOpen
@@ -88,12 +88,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/FilterWindow', [
             this.Loader.show();
 
             QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getFilters', function (result) {
-
                 Content.set('html', result);
                 Content.addClass('quiqqer-products-productList-filterMobile-content');
 
                 self.$Container = Content.getElement('.quiqqer-products-productList-filter-container');
-                self.$Menu      = Content.getElement('.quiqqer-products-category-menu');
+                self.$Menu = Content.getElement('.quiqqer-products-category-menu');
 
                 if (!self.$Container) {
                     self.$Container = new Element('div');
@@ -132,7 +131,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/FilterWindow', [
          * event : on close
          */
         submit: function () {
-            this.fireEvent('submit', [this, this.getSelected()]);
+            this.fireEvent('submit', [
+                this,
+                this.getSelected()
+            ]);
 
             if (this.getAttribute('autoclose')) {
                 this.close();
@@ -163,7 +165,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/FilterWindow', [
             // freetext
             var FreeText = this.getContent().getElement('[name="search"]');
 
-            if (FreeText.value !== '') {
+            if (FreeText && FreeText.value !== '') {
                 result.freetext = FreeText.value;
             }
 
@@ -275,21 +277,21 @@ define('package/quiqqer/products/bin/controls/frontend/category/FilterWindow', [
             );
 
             var fields = this.getAttribute('fields');
-            var tags   = this.getAttribute('tags');
+            var tags = this.getAttribute('tags');
 
             for (i = 0, len = filter.length; i < len; i++) {
                 Filter = filter[i];
                 Select = Filter.getElement('select');
-                Title  = Filter.getElement(
+                Title = Filter.getElement(
                     '.quiqqer-products-productList-filter-entry-title'
                 );
 
                 // field
                 if (!Select) {
                     // search fields
-                    Select     = Filter.getElement('input');
+                    Select = Filter.getElement('input');
                     searchdata = null;
-                    fieldId    = Select.get('data-fieldid');
+                    fieldId = Select.get('data-fieldid');
 
                     try {
                         searchdata = JSON.decode(Select.get('data-searchdata'));
@@ -322,6 +324,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/FilterWindow', [
                     checkable            : true,
                     styles               : {
                         width: '100%'
+                    },
+                    events               : {
+                        click: function () {
+                            console.log(12);
+                        }
                     }
                 });
 
