@@ -38,6 +38,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
     let productOpened = false;
     let animationDuration = 300;
+    let refreshSearchCountTimeOut = null;
 
     if (typeof window.QUIQQER_PRODUCTS_FRONTEND_ANIMATION !== 'undefined') {
         animationDuration = window.QUIQQER_PRODUCTS_FRONTEND_ANIMATION;
@@ -2256,15 +2257,26 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
          * @return {Promise}
          */
         $refreshSearchCount: function () {
-            let self   = this,
-                search = this.$getSearchParams();
+            return new Promise((resolve) => {
+                let self   = this,
+                    search = this.$getSearchParams();
 
-            search.count = true;
+                search.count = true;
 
-            return this.search(search).then(function (result) {
-                self.$FilterResultInfo.set('html', QUILocale.get(lg, 'product.list.result.count', {
-                    count: result
-                }));
+                if (refreshSearchCountTimeOut) {
+                    resolve();
+                    return;
+                }
+
+                refreshSearchCountTimeOut = (() => {
+                    this.search(search).then(function (result) {
+                        self.$FilterResultInfo.set('html', QUILocale.get(lg, 'product.list.result.count', {
+                            count: result
+                        }));
+
+                        refreshSearchCountTimeOut = null;
+                    }).then(resolve);
+                }).delay(100);
             });
         },
 
