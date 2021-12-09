@@ -18,7 +18,6 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
     'qui/controls/loader/Loader',
     'qui/utils/Elements',
     'package/quiqqer/productsearch/bin/Search',
-    'package/quiqqer/products/bin/Stats',
     'package/quiqqer/productsearch/bin/controls/search/SearchField',
     'Ajax',
     'Locale',
@@ -28,14 +27,14 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
     //'package/quiqqer/products/bin/controls/frontend/manufacturerList/ManufacturerListField'
 
 ], function (QUI, QUIControl, QUISelect, QUIButton, QUILoader, QUIElementUtils,
-             Search, Piwik, SearchField, QUIAjax, QUILocale, URI, Session
+             Search, SearchField, QUIAjax, QUILocale, URI, Session
 ) {
     "use strict";
 
     var DEBUG = false;
 
-    var lg                = 'quiqqer/products';
-    var productOpened     = false;
+    var lg = 'quiqqer/products';
+    var productOpened = false;
     var animationDuration = 300;
 
     if (typeof window.QUIQQER_PRODUCTS_FRONTEND_ANIMATION !== 'undefined') {
@@ -89,49 +88,49 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
         initialize: function (options) {
             this.parent(options);
 
-            this.$load                = false;
+            this.$load = false;
             this.$readLocationRunning = false;
 
             this.$ButtonDetails = null;
             this.$ButtonGallery = null;
-            this.$ButtonList    = null;
-            this.$BarSort       = null;
-            this.$BarDisplays   = null;
-            this.$More          = null;
-            this.$Sort          = null;
+            this.$ButtonList = null;
+            this.$BarSort = null;
+            this.$BarDisplays = null;
+            this.$More = null;
+            this.$Sort = null;
 
-            this.$FXContainer     = null;
+            this.$FXContainer = null;
             this.$FXContainerReal = null;
-            this.$FXLoader        = null;
-            this.$FXMore          = null;
+            this.$FXLoader = null;
+            this.$FXMore = null;
 
-            this.$Container        = null;
-            this.$ContainerLoader  = null;
+            this.$Container = null;
+            this.$ContainerLoader = null;
             this.$ProductContainer = null;
 
-            this.$CategoryMore      = null;
-            this.$FilterSort        = null;
-            this.$FilterDisplay     = null;
-            this.$FilterMobile      = null;
-            this.$FilterResultInfo  = null;
+            this.$CategoryMore = null;
+            this.$FilterSort = null;
+            this.$FilterDisplay = null;
+            this.$FilterMobile = null;
+            this.$FilterResultInfo = null;
             this.$FilterClearButton = null;
-            this.$FilterList        = null;
-            this.$FilterFieldList   = null;
+            this.$FilterList = null;
+            this.$FilterFieldList = null;
 
-            this.$FreeText          = null;
+            this.$FreeText = null;
             this.$FreeTextContainer = null;
 
-            this.$fields       = {};
+            this.$fields = {};
             this.$selectFilter = [];
             this.$selectFields = [];
-            this.$categories   = [];
-            this.$tags         = [];
-            this.$productId    = false;
+            this.$categories = [];
+            this.$tags = [];
+            this.$productId = false;
 
-            this.$sortingEnabled      = true;
+            this.$sortingEnabled = true;
             this.$moreButtonIsVisible = false;
-            this.$moreButtonClicked   = 0;
-            this.$loadingMore         = false;
+            this.$moreButtonClicked = 0;
+            this.$loadingMore = false;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -179,7 +178,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             }
 
             this.$productLoadNumber = parseInt(Elm.get('data-productLoadNumber'));
-            this.$autoloadAfter     = parseInt(Elm.get('data-autoloadAfter'));
+            this.$autoloadAfter = parseInt(Elm.get('data-autoloadAfter'));
 
             if (this.$autoloadAfter < 0) {
                 this.$autoloadAfter = 0;
@@ -206,21 +205,21 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
 
             this.$ButtonDetails = Elm.getElements('.quiqqer-products-manufacturerList-sort-display-details');
             this.$ButtonGallery = Elm.getElements('.quiqqer-products-manufacturerList-sort-display-gallery');
-            this.$ButtonList    = Elm.getElements('.quiqqer-products-manufacturerList-sort-display-list');
-            this.$Container     = Elm.getElement('.quiqqer-products-manufacturerList-entries-container');
+            this.$ButtonList = Elm.getElements('.quiqqer-products-manufacturerList-sort-display-list');
+            this.$Container = Elm.getElement('.quiqqer-products-manufacturerList-entries-container');
             this.$ContainerReal = Elm.getElement('.quiqqer-products-manufacturerList-entries-container-real');
 
-            this.$FilterFL          = Elm.getElement('.quiqqer-products-manufacturerList-fl');
-            this.$FilterSort        = Elm.getElement('.quiqqer-products-manufacturerList-sort');
-            this.$FilterDisplay     = Elm.getElement('.quiqqer-products-manufacturerList-filterList');
-            this.$FilterMobile      = Elm.getElement('.quiqqer-products-manufacturerList-sort-filter-mobile');
-            this.$FilterList        = Elm.getElement('.quiqqer-products-manufacturerList-filterList-list');
-            this.$FilterFieldList   = Elm.getElement('.quiqqer-products-manufacturerList-filterList-fields');
-            this.$FilterResultInfo  = Elm.getElement('.quiqqer-products-manufacturerList-resultInfo-text');
+            this.$FilterFL = Elm.getElement('.quiqqer-products-manufacturerList-fl');
+            this.$FilterSort = Elm.getElement('.quiqqer-products-manufacturerList-sort');
+            this.$FilterDisplay = Elm.getElement('.quiqqer-products-manufacturerList-filterList');
+            this.$FilterMobile = Elm.getElement('.quiqqer-products-manufacturerList-sort-filter-mobile');
+            this.$FilterList = Elm.getElement('.quiqqer-products-manufacturerList-filterList-list');
+            this.$FilterFieldList = Elm.getElement('.quiqqer-products-manufacturerList-filterList-fields');
+            this.$FilterResultInfo = Elm.getElement('.quiqqer-products-manufacturerList-resultInfo-text');
             this.$FilterClearButton = Elm.getElement('.quiqqer-products-manufacturerList-resultInfo-clearbtn');
 
             this.$FreeTextContainer = document.getElement('.quiqqer-products-category-freetextSearch');
-            this.$FilterContainer   = document.getElement('.quiqqer-products-manufacturerList-filter-container-' + cid);
+            this.$FilterContainer = document.getElement('.quiqqer-products-manufacturerList-filter-container-' + cid);
 
             if (Elm.get('data-tags') && Elm.get('data-tags') !== '') {
                 this.$tags = Elm.get('data-tags').split(',');
@@ -236,9 +235,9 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 }
             }).inject(this.$Container);
 
-            this.$FXContainer     = moofx(this.$Container);
+            this.$FXContainer = moofx(this.$Container);
             this.$FXContainerReal = moofx(this.$ContainerReal);
-            this.$FXLoader        = moofx(this.$ContainerLoader);
+            this.$FXLoader = moofx(this.$ContainerLoader);
 
             if (this.$FilterMobile) {
                 this.$FilterMobile.addEvent('click', this.openFilterMenu);
@@ -268,9 +267,9 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 }).inject(this.$FilterContainer);
             }
 
-            this.$BarFilter    = Elm.getElement('.quiqqer-products-manufacturerList-sort-filter');
-            this.$BarSort      = Elm.getElement('.quiqqer-products-manufacturerList-sort-sorting');
-            this.$BarDisplays  = Elm.getElement('.quiqqer-products-manufacturerList-sort-display');
+            this.$BarFilter = Elm.getElement('.quiqqer-products-manufacturerList-sort-filter');
+            this.$BarSort = Elm.getElement('.quiqqer-products-manufacturerList-sort-sorting');
+            this.$BarDisplays = Elm.getElement('.quiqqer-products-manufacturerList-sort-display');
             this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryGallery-category-more');
 
             if (!this.$CategoryMore) {
@@ -320,7 +319,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             // freetext
             if (this.$FreeTextContainer) {
                 this.$FreeText = this.$FreeTextContainer.getElement('[type="search"]');
-                var Button     = this.$FreeTextContainer.getElement('[type="submit"]');
+                var Button = this.$FreeTextContainer.getElement('[type="submit"]');
 
                 if (Button) {
                     Button.setStyle('display', 'none');
@@ -473,7 +472,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
 
 
             if (typeof Pace !== 'undefined') {
-                var loaded   = false;
+                var loaded = false;
                 var paceDone = function () {
                     if (loaded) {
                         return;
@@ -578,8 +577,8 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
 
                     if (DEBUG) console.log('$readWindowLocation', 4);
 
-                    this.$categories          = [];
-                    this.$productId           = false;
+                    this.$categories = [];
+                    this.$productId = false;
                     this.$readLocationRunning = false;
 
                     resolve();
@@ -620,7 +619,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 }
 
                 this.$categories = [];
-                this.$productId  = false;
+                this.$productId = false;
 
                 // fields
                 if ("f" in search && this.$FilterContainer) {
@@ -658,7 +657,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                             }
 
                             var currentFieldValue = Field.getSearchValue();
-                            var newFieldValue     = fieldParams[fieldId];
+                            var newFieldValue = fieldParams[fieldId];
 
                             if (typeof currentFieldValue === 'object' && currentFieldValue) {
                                 currentFieldValue = Object.toQueryString(currentFieldValue);
@@ -788,7 +787,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             }
 
             if (searchParams.tags.length) {
-                var tags    = [];
+                var tags = [];
                 var locTags = searchParams.tags;
 
                 for (var i = 0, len = locTags.length; i < len; i++) {
@@ -824,7 +823,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             }
 
             if (searchParams.productId) {
-                history   = {};
+                history = {};
                 history.p = parseInt(searchParams.productId);
             }
 
@@ -1647,7 +1646,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
             for (i = 0, len = filter.length; i < len; i++) {
                 Filter = filter[i];
                 Select = Filter.getElement('select');
-                Title  = Filter.getElement(
+                Title = Filter.getElement(
                     '.quiqqer-products-manufacturerList-filter-entry-title'
                 );
 
@@ -1655,7 +1654,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
                 if (!Select) {
                     // search fields
                     // Title.destroy();
-                    Select     = Filter.getElement('input');
+                    Select = Filter.getElement('input');
                     searchdata = null;
 
                     try {
@@ -1909,7 +1908,7 @@ define('package/quiqqer/products/bin/controls/frontend/manufacturerList/Manufact
 
             var empty = false;
 
-            var fieldHTML  = this.$FilterFieldList.innerHTML.trim();
+            var fieldHTML = this.$FilterFieldList.innerHTML.trim();
             var filterHTML = this.$FilterList.innerHTML.trim();
 
             if (fieldHTML === '' && filterHTML === '') {

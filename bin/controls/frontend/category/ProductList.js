@@ -18,7 +18,6 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'qui/controls/loader/Loader',
     'qui/utils/Elements',
     'package/quiqqer/productsearch/bin/Search',
-    'package/quiqqer/products/bin/Stats',
     'package/quiqqer/productsearch/bin/controls/search/SearchField',
     'Ajax',
     'Locale',
@@ -28,7 +27,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     'package/quiqqer/products/bin/controls/frontend/category/ProductListField'
 
 ], function (QUI, QUIControl, QUISelect, QUIButton, QUILoader, QUIElementUtils,
-             Search, Piwik, SearchField, QUIAjax, QUILocale, URI, Session,
+             Search, SearchField, QUIAjax, QUILocale, URI, Session,
              ProductListFilter, ProductListField
 ) {
     "use strict";
