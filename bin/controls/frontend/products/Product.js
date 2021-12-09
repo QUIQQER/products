@@ -175,29 +175,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
                 Products.addToVisited(this.getAttribute('productId'));
 
-                // stats
-                Piwik.getTracker().then(function (PiwikTracker) {
-                    require(['Ajax'], function (QUIAjax) {
-                        QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getTrackingDataForProduct', function (data) {
-                            PiwikTracker.setEcommerceView(
-                                data.productNo,
-                                data.title,
-                                data.category,
-                                data.price
-                            );
-
-                            PiwikTracker.trackPageView();
-                        }, {
-                            'package': 'quiqqer/products',
-                            productId: productId
-                        });
-                    });
-                }).catch(function (error) {
-                    if (error !== 404) {
-                        console.error(error);
-                    }
-                });
-
                 // render
                 this.$Next = Elm.getElement('.product-data-more-next');
                 this.$Prev = Elm.getElement('.product-data-more-prev');
