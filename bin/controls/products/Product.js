@@ -1114,8 +1114,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     inputs.addEvent('blur', self.$checkUrl);
                 }
             }).catch(function (err) {
-                if (typeof err.getMessage === 'undefined') {
+                if (typeof err.getMessage !== 'undefined') {
                     console.error(err.getMessage());
+                } else {
+                    console.error(err);
                 }
             });
         },
