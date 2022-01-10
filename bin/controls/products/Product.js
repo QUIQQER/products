@@ -1241,6 +1241,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     return 0;
                 });
 
+                for (let [k, Field] of Object.entries(fields)) {
+                    if (Field.value && typeof Field.value !== 'string') {
+                        Field.value = JSON.encode(Field.value);
+                    }
+
+                    fields[k] = Field;
+                }
+
                 Container.set({
                     html: Mustache.render(templateProductPrices, {
                         title : QUILocale.get(lg, 'products.product.panel.category.prices'),
