@@ -103,6 +103,11 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     protected $calculation = QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT;
 
     /**
+     * @var QUI\ERP\Currency\Currency|null
+     */
+    protected ?QUI\ERP\Currency\Currency $Currency = null;
+
+    /**
      * PriceFactor constructor.
      *
      * @param array $params - array(
@@ -174,12 +179,20 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
         if (isset($params['identifier']) && \is_string($params['identifier'])) {
             $this->identifier = $params['identifier'];
         }
+
+        if (isset($params['currency'])) {
+            $this->setCurrency($params['currency']);
+        } else {
+            $this->Currency = QUI\ERP\Defaults::getCurrency();
+        }
     }
+
+    //region getter
 
     /**
      * @return string
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }
@@ -187,7 +200,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -195,7 +208,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -203,7 +216,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * @return int
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return $this->priority;
     }
@@ -211,7 +224,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * @return int
      */
-    public function getCalculation()
+    public function getCalculation(): int
     {
         return (int)$this->calculation;
     }
@@ -219,9 +232,17 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * @return int
      */
-    public function getCalculationBasis()
+    public function getCalculationBasis(): int
     {
         return $this->basis;
+    }
+
+    /**
+     * @return QUI\ERP\Currency\Currency
+     */
+    public function getCurrency(): QUI\ERP\Currency\Currency
+    {
+        return $this->Currency;
     }
 
     /**
@@ -242,7 +263,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      *
      * @return string
      */
-    public function getValueText()
+    public function getValueText(): string
     {
         // empty value = no value is set
         if ($this->valueText === '') {
@@ -261,13 +282,13 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             default:
             case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
                 if ($this->value > 0) {
-                    return '+'.$this->getSumFormatted();
+                    return '+' . $this->getSumFormatted();
                 }
 
-                return Currencies::getDefaultCurrency()->format($this->value);
+                return $this->Currency->format($this->value);
 
             case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
-                return $this->value.'%';
+                return $this->value . '%';
         }
     }
 
@@ -282,19 +303,106 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * Is the price factor visible
      *
-     * @return boolean
+     * @return bool
      */
-    public function isVisible()
+    public function isVisible(): bool
     {
         return $this->visible;
     }
+
+    /**
+     * @return bool|int|float|double
+     */
+    public function getNettoSum()
+    {
+        return $this->nettoSum;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNettoSumFormatted(): string
+    {
+        $sum = $this->getNettoSum();
+
+        if ($sum == 0) {
+            return '';
+        }
+
+        switch ($this->calculation) {
+            default:
+            case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
+                if ($sum > 0) {
+                    return '+' . $this->Currency->format($sum);
+                }
+
+                return $this->Currency->format($sum);
+
+            case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
+                if ($this->getNettoSum()) {
+                    return $this->Currency->format($sum);
+                }
+
+                return $this->value . '%';
+        }
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getSum()
+    {
+        return $this->sum;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSumFormatted(): string
+    {
+        $sum = $this->getSum();
+
+        if ($sum == 0) {
+            return '';
+        }
+
+        switch ($this->calculation) {
+            default:
+            case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
+                if ($sum > 0) {
+                    return $this->Currency->format($sum);
+                }
+
+                return $this->Currency->format($sum);
+
+            case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
+                if ($this->getSum()) {
+                    return $this->Currency->format($sum);
+                }
+
+                return $this->value . '%';
+        }
+    }
+
+    /**
+     * Return the specific vat  (eq: 19%)
+     *
+     * @return bool
+     */
+    public function getVat(): bool
+    {
+        return $this->vat;
+    }
+
+    //endregion
+
 
     /**
      * Set the title
      *
      * @param string $title
      */
-    public function setTitle($title)
+    public function setTitle(string $title)
     {
         if (\is_string($title)) {
             $this->title = $title;
@@ -306,7 +414,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      *
      * @param string $description
      */
-    public function setDescription($description)
+    public function setDescription(string $description)
     {
         if (\is_string($description)) {
             $this->description = $description;
@@ -317,7 +425,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      * The value for the calculation
      * 10 -> 10%, 10€, 10$
      *
-     * @param integer|float|double $value - value to calc
+     * @param integer|float $value - value to calc
      */
     public function setValue($value)
     {
@@ -330,9 +438,9 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      * The text for the value presentation
      * If no value text is set, normal value is used
      *
-     * @param string|false $value
+     * @param string $value
      */
-    public function setValueText($value)
+    public function setValueText(string $value)
     {
         $this->valueText = $value;
     }
@@ -342,7 +450,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      *
      * @param int $priority
      */
-    public function setPriority($priority)
+    public function setPriority(int $priority)
     {
         if (\is_int($priority)) {
             $this->priority = $priority;
@@ -354,7 +462,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      *
      * @param int $calculation - Calc::CALCULATION_COMPLEMENT, Calc::CALCULATION_PERCENTAGE
      */
-    public function setCalculation($calculation)
+    public function setCalculation(int $calculation)
     {
         $calculation = (int)$calculation;
 
@@ -374,7 +482,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      *
      * @param int $basis -  Calc::CALCULATION_BASIS_NETTO, Calc::CALCULATION_BASIS_CURRENTPRICE
      */
-    public function setCalculationBasis($basis)
+    public function setCalculationBasis(int $basis)
     {
         switch ($basis) {
             case QUI\ERP\Accounting\Calc::CALCULATION_BASIS_NETTO:
@@ -397,13 +505,32 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     }
 
     /**
-     * Return the specific vat  (eq: 19%)
+     * Set the currency for the price factor
      *
-     * @return bool
+     * @param string $currencyCode
+     * @return void
      */
-    public function getVat()
+    public function setCurrency(string $currencyCode)
     {
-        return $this->vat;
+        $OldCurrency = $this->Currency;
+
+        try {
+            $this->Currency = QUI\ERP\Currency\Handler::getCurrency($currencyCode);
+        } catch (QUI\Exception $Exception) {
+            $this->Currency = QUI\ERP\Defaults::getCurrency();
+        }
+
+        // convert to the other currency
+        if (!$OldCurrency) {
+            return;
+        }
+
+        try {
+            $this->bruttoSum = $OldCurrency->convert($this->bruttoSum, $this->Currency);
+            $this->nettoSum = $OldCurrency->convert($this->nettoSum, $this->Currency);
+            $this->sum = $OldCurrency->convert($this->sum, $this->Currency);
+        } catch (QUI\Exception $Exception) {
+        }
     }
 
     /**
@@ -423,45 +550,6 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     }
 
     /**
-     * @return float|int
-     */
-    public function getSum()
-    {
-        return $this->sum;
-    }
-
-    /**
-     * @return float|int|string
-     */
-    public function getSumFormatted()
-    {
-        $sum = $this->getSum();
-
-        if ($sum == 0) {
-            return '';
-        }
-
-        switch ($this->calculation) {
-            default:
-            case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
-                if ($sum > 0) {
-                    return Currencies::getDefaultCurrency()->format($sum);
-                }
-
-                return Currencies::getDefaultCurrency()->format($sum);
-
-            case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
-                if ($this->getSum()) {
-                    $sum = Currencies::getDefaultCurrency()->format($sum);
-
-                    return $sum;
-                }
-
-                return $this->value.'%';
-        }
-    }
-
-    /**
      * Set the netto sum
      *
      * @param int|double|float $sum - sum
@@ -474,50 +562,11 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     }
 
     /**
-     * @return bool|int|float|double
-     */
-    public function getNettoSum()
-    {
-        return $this->nettoSum;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNettoSumFormatted()
-    {
-        $sum = $this->getNettoSum();
-
-        if ($sum == 0) {
-            return '';
-        }
-
-        switch ($this->calculation) {
-            default:
-            case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
-                if ($sum > 0) {
-                    return '+'.Currencies::getDefaultCurrency()->format($sum);
-                }
-
-                return Currencies::getDefaultCurrency()->format($sum);
-
-            case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
-                if ($this->getNettoSum()) {
-                    $sum = Currencies::getDefaultCurrency()->format($sum);
-
-                    return $sum;
-                }
-
-                return $this->value.'%';
-        }
-    }
-
-    /**
      * Returns the price factor as an array
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'identifier'        => $this->identifier,
@@ -534,7 +583,8 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             'priority'          => $this->getPriority(),
             'visible'           => $this->isVisible(),
             'class'             => \get_class($this),
-            'vat'               => $this->getVat()
+            'vat'               => $this->getVat(),
+            'currency'          => $this->getCurrency()->getCode()
         ];
     }
 
@@ -546,7 +596,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      *
      * @throws QUI\ERP\Exception
      */
-    public function toErpPriceFactor()
+    public function toErpPriceFactor(): QUI\ERP\Accounting\PriceFactors\Factor
     {
         return new QUI\ERP\Accounting\PriceFactors\Factor([
             'identifier'        => $this->identifier,
