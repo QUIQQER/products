@@ -151,6 +151,10 @@ class Folder extends QUI\ERP\Products\Field\Field
     public function getMediaFolder()
     {
         try {
+            if (!$this->getValue()) {
+                return false;
+            }
+
             $MediaItem = MediaUtils::getMediaItemByUrl($this->getValue());
 
             if (MediaUtils::isFolder($MediaItem)) {
