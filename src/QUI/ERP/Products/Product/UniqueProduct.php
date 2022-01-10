@@ -859,7 +859,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function getCalculatedPrice($FieldId, bool $ignorePriceFactors = false)
     {
-        $Calc         = QUI\ERP\Products\Utils\Calc::getInstance();
+        $Calc         = QUI\ERP\Products\Utils\Calc::getInstance($this->getUser());
         $calculations = [];
 
         $Field = $this->getField($FieldId);

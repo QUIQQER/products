@@ -57,6 +57,55 @@ class ProductTypes extends Singleton
         return $provider;
     }
 
+
+    /**
+     * Get all product types (class names) that are variant parents.
+     *
+     * @return string[]
+     */
+    public function getVariantParentProductTypes(): array
+    {
+        $cache = QUI\ERP\Products\Handler\Cache::getBasicCachePath().'types/variant_parents';
+
+        try {
+            return QUI\Cache\LongTermCache::get($cache);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
+        $variantParentTypes = \array_filter($this->getProductTypes(), function ($productType) {
+            return \is_a($productType, QUI\ERP\Products\Product\Types\VariantParent::class, true);
+        });
+
+        QUI\Cache\LongTermCache::set($cache, $variantParentTypes);
+
+        return $variantParentTypes;
+    }
+
+    /**
+     * Get all product types (class names) that are variant children.
+     *
+     * @return string[]
+     */
+    public function getVariantChildProductTypes(): array
+    {
+        $cache = QUI\ERP\Products\Handler\Cache::getBasicCachePath().'types/variant_child';
+
+        try {
+            return QUI\Cache\LongTermCache::get($cache);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
+        $variantChildTypes = \array_filter($this->getProductTypes(), function ($productType) {
+            return \is_a($productType, QUI\ERP\Products\Product\Types\VariantChild::class, true);
+        });
+
+        QUI\Cache\LongTermCache::set($cache, $variantChildTypes);
+
+        return $variantChildTypes;
+    }
+
     /**
      * Exists the wanted product type?
      *
