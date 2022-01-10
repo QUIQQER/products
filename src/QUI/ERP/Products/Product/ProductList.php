@@ -8,6 +8,10 @@ namespace QUI\ERP\Products\Product;
 
 use QUI;
 
+use function count;
+use function is_array;
+use function json_encode;
+
 /**
  * Class ProductList
  *
@@ -20,10 +24,10 @@ class ProductList
      *
      * @var bool
      */
-    protected $calculated = false;
+    protected bool $calculated = false;
 
     /**
-     * @var int|float|double
+     * @var int|float
      */
     protected $sum;
 
@@ -33,22 +37,22 @@ class ProductList
     protected $User = null;
 
     /**
-     * @var int|float|double
+     * @var int|float
      */
     protected $subSum;
 
     /**
-     * @var int|float|double
+     * @var int|float
      */
     protected $grandSubSum;
 
     /**
-     * @var int|float|double
+     * @var int|float
      */
     protected $nettoSum;
 
     /**
-     * @var int|float|double
+     * @var int|float
      */
     protected $nettoSubSum;
 
@@ -79,12 +83,12 @@ class ProductList
     /**
      * @var null|QUI\ERP\Currency\Currency
      */
-    protected $Currency = null;
+    protected ?QUI\ERP\Currency\Currency $Currency = null;
 
     /**
-     * @var null
+     * @var null|QUI\ERP\Order\AbstractOrder
      */
-    protected $Order = null;
+    protected ?QUI\ERP\Order\AbstractOrder $Order = null;
 
     /**
      * Currency information
@@ -100,14 +104,14 @@ class ProductList
     /**
      * @var UniqueProduct[]
      */
-    protected $products = [];
+    protected array $products = [];
 
     /**
      * Doublicate entries allowed?
      * Default = false
      * @var bool
      */
-    public $duplicate = true;
+    public bool $duplicate = true;
 
     /**
      * PriceFactor List
@@ -126,7 +130,7 @@ class ProductList
      * @param array $params - optional, list settings
      * @param QUI\Interfaces\Users\User|boolean $User - optional, User for calculation
      */
-    public function __construct($params = [], $User = false)
+    public function __construct(array $params = [], $User = false)
     {
         if (isset($params['duplicate'])) {
             $this->duplicate = (boolean)$params['duplicate'];
@@ -135,15 +139,15 @@ class ProductList
         if (isset($params['calculations'])) {
             $calc = $params['calculations'];
 
-            $this->sum          = $calc['sum'];
-            $this->grandSubSum  = $calc['grandSubSum'];
-            $this->subSum       = $calc['subSum'];
-            $this->nettoSum     = $calc['nettoSum'];
-            $this->nettoSubSum  = $calc['nettoSubSum'];
-            $this->vatArray     = $calc['vatArray'];
-            $this->vatText      = $calc['vatText'];
-            $this->isEuVat      = $calc['isEuVat'];
-            $this->isNetto      = $calc['isNetto'];
+            $this->sum = $calc['sum'];
+            $this->grandSubSum = $calc['grandSubSum'];
+            $this->subSum = $calc['subSum'];
+            $this->nettoSum = $calc['nettoSum'];
+            $this->nettoSubSum = $calc['nettoSubSum'];
+            $this->vatArray = $calc['vatArray'];
+            $this->vatText = $calc['vatText'];
+            $this->isEuVat = $calc['isEuVat'];
+            $this->isNetto = $calc['isNetto'];
             $this->currencyData = $calc['currencyData'];
 
             $this->calculated = true;
@@ -154,8 +158,12 @@ class ProductList
         }
 
         $this->PriceFactors = new QUI\ERP\Products\Utils\PriceFactors();
-        $this->User         = $User;
-        $this->hidePrice    = QUI\ERP\Products\Utils\Package::hidePrice();
+        $this->User = $User;
+        $this->hidePrice = QUI\ERP\Products\Utils\Package::hidePrice();
+
+        if ($this->Currency) {
+            $this->PriceFactors->setCurrency($this->Currency);
+        }
     }
 
     /**
@@ -174,7 +182,7 @@ class ProductList
     /**
      * Return the list user
      *
-     * @return QUI\Interfaces\Users\User|QUI\Users\User
+     * @return QUI\Interfaces\Users\User
      */
     public function getUser()
     {
@@ -189,7 +197,7 @@ class ProductList
      *
      * @throws QUI\Exception
      */
-    public function calc($Calc = null)
+    public function calc(QUI\ERP\Products\Utils\Calc $Calc = null): ProductList
     {
         if ($this->calculated) {
             return $this;
@@ -205,15 +213,15 @@ class ProductList
         $Calc->setCurrency($this->getCurrency());
 
         $Calc->calcProductList($this, function ($data) use ($self) {
-            $self->sum          = $data['sum'];
-            $self->subSum       = $data['subSum'];
-            $self->grandSubSum  = $data['grandSubSum'];
-            $self->nettoSum     = $data['nettoSum'];
-            $self->nettoSubSum  = $data['nettoSubSum'];
-            $self->vatArray     = $data['vatArray'];
-            $self->vatText      = $data['vatText'];
-            $self->isEuVat      = $data['isEuVat'];
-            $self->isNetto      = $data['isNetto'];
+            $self->sum = $data['sum'];
+            $self->subSum = $data['subSum'];
+            $self->grandSubSum = $data['grandSubSum'];
+            $self->nettoSum = $data['nettoSum'];
+            $self->nettoSubSum = $data['nettoSubSum'];
+            $self->vatArray = $data['vatArray'];
+            $self->vatText = $data['vatText'];
+            $self->isEuVat = $data['isEuVat'];
+            $self->isNetto = $data['isNetto'];
             $self->currencyData = $data['currencyData'];
 
             $self->calculated = true;
@@ -230,7 +238,7 @@ class ProductList
      *
      * @throws QUI\Exception
      */
-    public function recalculation($Calc = null)
+    public function recalculation($Calc = null): ProductList
     {
         $this->calculated = false;
 
@@ -248,7 +256,7 @@ class ProductList
      * @return ProductList
      * @throws QUI\Exception
      */
-    public function recalculate($Calc = null)
+    public function recalculate($Calc = null): ProductList
     {
         return $this->recalculation($Calc);
     }
@@ -258,9 +266,9 @@ class ProductList
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
-        return \count($this->getProducts());
+        return count($this->getProducts());
     }
 
     /**
@@ -269,7 +277,7 @@ class ProductList
      *
      * @return int
      */
-    public function getQuantity()
+    public function getQuantity(): int
     {
         $quantity = 0;
         $products = $this->getProducts();
@@ -287,7 +295,7 @@ class ProductList
      *
      * @return QUI\ERP\Products\Interfaces\ProductInterface[]
      */
-    public function getProducts()
+    public function getProducts(): array
     {
         return $this->products;
     }
@@ -342,9 +350,9 @@ class ProductList
      */
     public function clear()
     {
-        $this->calculated   = false;
+        $this->calculated = false;
         $this->PriceFactors = new QUI\ERP\Products\Utils\PriceFactors();
-        $this->products     = [];
+        $this->products = [];
     }
 
     /**
@@ -355,7 +363,7 @@ class ProductList
      *
      * @throws QUI\Exception
      */
-    public function toArray($Locale = null)
+    public function toArray(QUI\Locale $Locale = null): array
     {
         if ($Locale === null) {
             $Locale = $this->User->getLocale();
@@ -366,10 +374,9 @@ class ProductList
         $this->calc();
         $products = [];
 
-        /* @var $Product UniqueProduct */
         foreach ($this->products as $Product) {
             $attributes = $Product->getAttributes();
-            $fields     = $Product->getFields();
+            $fields = $Product->getFields();
 
             $attributes['fields'] = [];
 
@@ -402,10 +409,10 @@ class ProductList
         );
 
         $calculations['display_subSum'] = $Currency->format($calculations['subSum']);
-        $calculations['display_sum']    = $Currency->format($calculations['sum']);
+        $calculations['display_sum'] = $Currency->format($calculations['sum']);
         $calculations['display_vatSum'] = $Currency->format($calculations['vatSum']);
 
-        $result = [
+        return [
             'products'     => $products,
             'sum'          => $this->sum,
             'subSum'       => $this->subSum,
@@ -419,8 +426,6 @@ class ProductList
             'currencyData' => $this->currencyData,
             'calculations' => $calculations
         ];
-
-        return $result;
     }
 
     /**
@@ -430,9 +435,9 @@ class ProductList
      *
      * @throws QUI\Exception
      */
-    public function toJSON()
+    public function toJSON(): string
     {
-        return \json_encode($this->toArray());
+        return json_encode($this->toArray());
     }
 
     //region Price methods
@@ -472,7 +477,7 @@ class ProductList
      * @return ProductListFrontendView|ProductListBackendView
      * @throws QUI\Exception
      */
-    public function getView($Locale = null)
+    public function getView(QUI\Locale $Locale = null)
     {
         if (!$this->calculated) {
             $this->calc();
@@ -491,7 +496,7 @@ class ProductList
      *
      * @param QUI\ERP\Currency\Currency|null $Currency
      */
-    public function setCurrency($Currency = null)
+    public function setCurrency(QUI\ERP\Currency\Currency $Currency = null)
     {
         if (!($Currency instanceof QUI\ERP\Currency\Currency)) {
             $Currency = QUI\ERP\Defaults::getCurrency();
@@ -507,6 +512,8 @@ class ProductList
             $Product->convert($Currency);
         }
 
+        $this->PriceFactors->setCurrency($this->Currency);
+
         try {
             $this->recalculate();
         } catch (QUI\Exception $Exception) {
@@ -519,13 +526,13 @@ class ProductList
      *
      * @return QUI\ERP\Currency\Currency
      */
-    public function getCurrency()
+    public function getCurrency(): ?QUI\ERP\Currency\Currency
     {
         if ($this->Currency !== null) {
             return $this->Currency;
         }
 
-        if (\is_array($this->currencyData) && !empty($this->currencyData['currency_code'])) {
+        if (is_array($this->currencyData) && !empty($this->currencyData['currency_code'])) {
             try {
                 $this->Currency = QUI\ERP\Currency\Handler::getCurrency(
                     $this->currencyData['currency_code']
@@ -546,7 +553,7 @@ class ProductList
      * @return ProductListFrontendView
      * @throws QUI\Exception
      */
-    public function getFrontendView($Locale = null)
+    public function getFrontendView(QUI\Locale $Locale = null): ProductListFrontendView
     {
         return new ProductListFrontendView($this, $Locale);
     }
@@ -556,7 +563,7 @@ class ProductList
      * @return ProductListBackendView
      * @throws QUI\Exception
      */
-    public function getBackendView($Locale = null)
+    public function getBackendView(QUI\Locale $Locale = null): ProductListBackendView
     {
         return new ProductListBackendView($this, $Locale);
     }
@@ -574,7 +581,7 @@ class ProductList
     /**
      * @return QUI\ERP\Order\AbstractOrder|null
      */
-    public function getOrder()
+    public function getOrder(): ?QUI\ERP\Order\AbstractOrder
     {
         return $this->Order;
     }

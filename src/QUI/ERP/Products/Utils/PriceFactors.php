@@ -45,11 +45,14 @@ class PriceFactors
      */
     protected $listEnd = [];
 
+    protected QUI\ERP\Currency\Currency $Currency;
+
     /**
      * PriceFactors constructor.
      */
     public function __construct()
     {
+        $this->Currency = QUI\ERP\Defaults::getCurrency();
     }
 
     /**
@@ -98,6 +101,15 @@ class PriceFactors
     }
 
     /**
+     * @param QUI\ERP\Currency\Currency $Currency
+     * @return void
+     */
+    public function setCurrency(QUI\ERP\Currency\Currency $Currency)
+    {
+        $this->Currency = $Currency;
+    }
+
+    /**
      * Return all price factors prioritized
      * and with its position (begin, middle, end)
      *
@@ -128,8 +140,8 @@ class PriceFactors
     public function clear()
     {
         $this->listBeginning = [];
-        $this->list          = [];
-        $this->listEnd       = [];
+        $this->list = [];
+        $this->listEnd = [];
     }
 
     /**
@@ -198,8 +210,8 @@ class PriceFactors
         }
 
         $beginning = [];
-        $middle    = [];
-        $end       = [];
+        $middle = [];
+        $end = [];
 
         if (isset($list['beginning'])) {
             $beginning = $list['beginning'];
@@ -245,10 +257,11 @@ class PriceFactors
      */
     public function toErpPriceFactorList()
     {
-        $list   = [];
+        $list = [];
         $sorted = $this->sort();
 
         foreach ($sorted as $PriceFactor) {
+            $PriceFactor->setCurrency($this->Currency->getCode());
             $list[] = $PriceFactor->toErpPriceFactor()->toArray();
         }
 

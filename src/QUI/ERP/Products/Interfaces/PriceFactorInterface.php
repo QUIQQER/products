@@ -18,69 +18,69 @@ interface PriceFactorInterface
     /**
      * @return string
      */
-    public function getIdentifier();
+    public function getIdentifier(): string;
 
     /**
      * @return string
      */
-    public function getTitle();
+    public function getTitle(): string;
 
     /**
      * @return string
      */
-    public function getDescription();
+    public function getDescription(): string;
 
     /**
      * @return int
      */
-    public function getPriority();
+    public function getPriority(): int;
 
     /**
      * @return int
      */
-    public function getCalculation();
+    public function getCalculation(): int;
 
     /**
      * @return int
      */
-    public function getCalculationBasis();
+    public function getCalculationBasis(): int;
 
     /**
-     * @return integer|float|double
+     * @return integer|float
      */
     public function getValue();
 
     /**
      * @return string
      */
-    public function getValueText();
+    public function getValueText(): string;
 
     /**
      * Is the price factor visible
      *
      * @return boolean
      */
-    public function isVisible();
+    public function isVisible(): bool;
 
     /**
      * Set the title
      *
      * @param string $title
      */
-    public function setTitle($title);
+    public function setTitle(string $title);
 
     /**
      * Set the title
      *
      * @param string $description
      */
-    public function setDescription($description);
+    public function setDescription(string $description);
 
     /**
      * The the value for the calculation
      * 10 -> 10%, 10€, 10$
      *
-     * @param integer|float|double $value - value to calc
+     * @param integer|float $value - value to calc
      */
     public function setValue($value);
 
@@ -90,21 +90,21 @@ interface PriceFactorInterface
      *
      * @param string $value
      */
-    public function setValueText($value);
+    public function setValueText(string $value);
 
     /**
      * Set the priority of the calculation
      *
      * @param int $priority
      */
-    public function setPriority($priority);
+    public function setPriority(int $priority);
 
     /**
      * Set the calculation type / method
      *
      * @param int $calculation - Calc::CALCULATION_COMPLEMENT, Calc::CALCULATION_PERCENTAGE
      */
-    public function setCalculation($calculation);
+    public function setCalculation(int $calculation);
 
     /**
      * Set the calculation basis
@@ -113,7 +113,7 @@ interface PriceFactorInterface
      *
      * @param int $basis -  Calc::CALCULATION_BASIS_NETTO, Calc::CALCULATION_BASIS_CURRENTPRICE
      */
-    public function setCalculationBasis($basis);
+    public function setCalculationBasis(int $basis);
 
     /**
      * Set the netto sum
@@ -130,7 +130,7 @@ interface PriceFactorInterface
     /**
      * @return string
      */
-    public function getNettoSumFormatted();
+    public function getNettoSumFormatted(): string;
 
     /**
      * Set the calculated sum
@@ -145,19 +145,29 @@ interface PriceFactorInterface
     public function getSum();
 
     /**
+     * @param string $currencyCode
+     */
+    public function setCurrency(string $currencyCode);
+
+    /**
+     * @return QUI\ERP\Currency\Currency
+     */
+    public function getCurrency(): QUI\ERP\Currency\Currency;
+
+    /**
      * @return string
      */
-    public function getSumFormatted();
+    public function getSumFormatted(): string;
 
     /**
      * Returns the price factor as an array
      *
      * @return array
      */
-    public function toArray();
+    public function toArray(): array;
 
     /**
      * @return QUI\ERP\Accounting\PriceFactors\Factor
      */
-    public function toErpPriceFactor();
+    public function toErpPriceFactor(): QUI\ERP\Accounting\PriceFactors\Factor;
 }
