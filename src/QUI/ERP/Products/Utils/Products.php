@@ -119,21 +119,17 @@ class Products
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
             $type = 'QUI\\ERP\\Products\\Field\\Types\\'.$Field->getType();
 
-            if (\is_callable([$type, 'onGetPriceFieldForProduct'])) {
+            if (\method_exists($type, 'onGetPriceFieldForProduct')) {
                 try {
                     $ParentField = FieldHandler::getField($Field->getId());
                     $value       = $ParentField->onGetPriceFieldForProduct($Product, $User);
-
-                    if ($value && $value < $priceValue) {
-                        $priceValue = $value;
-                    }
                 } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::writeException($Exception);
+                    continue;
                 }
-
-                continue;
+            } else {
+                $value = $Field->getValue();
             }
-
-            $value = $Field->getValue();
 
             if ($value === false || $value === '' || $value === null) {
                 continue;

@@ -20,7 +20,7 @@ class PriceByTimePeriod extends Price
     /**
      * Return the price value
      *
-     * @param QUI\ERP\Products\Product\UniqueProduct $Product
+     * @param QUI\ERP\Products\Interfaces\ProductInterface $Product
      * @param null $User
      * @return integer|double|float|bool
      * @throws QUI\Exception
@@ -37,22 +37,23 @@ class PriceByTimePeriod extends Price
     /**
      * Return the price value
      *
-     * @param QUI\ERP\Products\Product\UniqueProduct $Product - optional
+     * @param QUI\ERP\Products\Interfaces\ProductInterface $Product - optional
      * @return integer|double|float|bool
      * @throws QUI\Exception
      */
-    public function getValueDependendByProduct($Product)
+    public function getValueDependendByProduct(QUI\ERP\Products\Interfaces\ProductInterface $Product)
     {
         if (!QUI\ERP\Products\Utils\Products::isProduct($Product)) {
             return false;
         }
 
-        if (!($Product instanceof QUI\ERP\Products\Product\UniqueProduct)) {
-            return false;
+        if ($Product instanceof QUI\ERP\Products\Product\UniqueProduct) {
+            $RealProduct = QUI\ERP\Products\Handler\Products::getNewProductInstance($Product->getId());
+        } else {
+            $RealProduct = $Product;
         }
 
-        $RealProduct = QUI\ERP\Products\Handler\Products::getNewProductInstance($Product->getId());
-        $value       = $RealProduct->getFieldValue($this->getId());
+        $value = $RealProduct->getFieldValue($this->getId());
 
         if (empty($value)) {
             return false;
