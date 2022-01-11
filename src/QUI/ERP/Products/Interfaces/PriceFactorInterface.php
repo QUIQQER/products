@@ -118,12 +118,12 @@ interface PriceFactorInterface
     /**
      * Set the netto sum
      *
-     * @param int|double|float $sum - sum
+     * @param int|float $sum - sum
      */
     public function setNettoSum($sum);
 
     /**
-     * @return bool|int|float|double
+     * @return bool|int|float
      */
     public function getNettoSum();
 
@@ -135,12 +135,12 @@ interface PriceFactorInterface
     /**
      * Set the calculated sum
      *
-     * @param int|double|float $sum - sum
+     * @param int|float $sum - sum
      */
     public function setSum($sum);
 
     /**
-     * @return bool|int|float|double
+     * @return bool|int|float
      */
     public function getSum();
 
