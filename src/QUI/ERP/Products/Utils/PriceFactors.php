@@ -8,6 +8,10 @@ namespace QUI\ERP\Products\Utils;
 
 use QUI;
 
+use function array_merge;
+use function json_encode;
+use function usort;
+
 /**
  * Class PriceFactors
  *
@@ -27,7 +31,7 @@ class PriceFactors
      *
      * @var QUI\ERP\Products\Interfaces\PriceFactorInterface[]
      */
-    protected $list = [];
+    protected array $list = [];
 
     /**
      * internal list of price factors
@@ -35,7 +39,7 @@ class PriceFactors
      *
      * @var array
      */
-    protected $listBeginning = [];
+    protected array $listBeginning = [];
 
     /**
      * internal list of price factors
@@ -43,8 +47,13 @@ class PriceFactors
      *
      * @var array
      */
-    protected $listEnd = [];
+    protected array $listEnd = [];
 
+    /**
+     * own internal currency
+     *
+     * @var QUI\ERP\Currency\Currency
+     */
     protected QUI\ERP\Currency\Currency $Currency;
 
     /**
@@ -60,7 +69,7 @@ class PriceFactors
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         $count = 0;
         $count = $count + \count($this->listBeginning);
@@ -115,7 +124,7 @@ class PriceFactors
      *
      * @return QUI\ERP\Products\Interfaces\PriceFactorInterface[]
      */
-    public function sort()
+    public function sort(): array
     {
         $sort = function ($a, $b) {
             /* @var PriceFactor $a */
@@ -127,11 +136,11 @@ class PriceFactors
             return $a->getPriority() > $b->getPriority();
         };
 
-        \usort($this->listBeginning, $sort);
-        \usort($this->list, $sort);
-        \usort($this->listEnd, $sort);
+        usort($this->listBeginning, $sort);
+        usort($this->list, $sort);
+        usort($this->listEnd, $sort);
 
-        return \array_merge($this->listBeginning, $this->list, $this->listEnd);
+        return array_merge($this->listBeginning, $this->list, $this->listEnd);
     }
 
     /**
@@ -147,7 +156,7 @@ class PriceFactors
     /**
      * @return QUI\ERP\Products\Interfaces\PriceFactorInterface[]
      */
-    public function getFactors()
+    public function getFactors(): array
     {
         return $this->sort();
     }
@@ -158,7 +167,7 @@ class PriceFactors
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $result = [
             'beginning' => [],
@@ -186,9 +195,9 @@ class PriceFactors
      *
      * @return string
      */
-    public function toJSON()
+    public function toJSON(): string
     {
-        return \json_encode($this->toArray());
+        return json_encode($this->toArray());
     }
 
     /**
@@ -196,12 +205,8 @@ class PriceFactors
      *
      * @param array $list
      */
-    public function importList($list)
+    public function importList(array $list)
     {
-        if (!\is_array($list)) {
-            return;
-        }
-
         if (!isset($list['beginning'])
             && !isset($list['middle'])
             && !isset($list['end'])
@@ -255,7 +260,7 @@ class PriceFactors
      *
      * @throws QUI\ERP\Exception
      */
-    public function toErpPriceFactorList()
+    public function toErpPriceFactorList(): QUI\ERP\Accounting\PriceFactors\FactorList
     {
         $list = [];
         $sorted = $this->sort();

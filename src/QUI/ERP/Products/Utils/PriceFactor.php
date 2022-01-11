@@ -7,7 +7,10 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
-use QUI\ERP\Currency\Handler as Currencies;
+
+use function get_class;
+use function is_numeric;
+use function is_string;
 
 /**
  * Class PriceFactors
@@ -172,7 +175,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             $this->setNettoSum($params['nettoSum']);
         }
 
-        if (isset($params['identifier']) && \is_string($params['identifier'])) {
+        if (isset($params['identifier']) && is_string($params['identifier'])) {
             $this->identifier = $params['identifier'];
         }
 
@@ -246,7 +249,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      * it can be 10% => 10
      * it can be 10€ => 10
      *
-     * @return integer|float|double
+     * @return integer|float
      */
     public function getValue()
     {
@@ -421,7 +424,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function setValue($value)
     {
-        if (\is_numeric($value)) {
+        if (is_numeric($value)) {
             $this->value = $value;
         }
     }
@@ -532,7 +535,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function setSum($sum)
     {
-        if (\is_numeric($sum)) {
+        if (is_numeric($sum)) {
             $this->sum = $sum;
         }
     }
@@ -544,7 +547,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function setNettoSum($sum)
     {
-        if (\is_numeric($sum)) {
+        if (is_numeric($sum)) {
             $this->nettoSum = $sum;
         }
     }
@@ -570,7 +573,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
             'valueText'         => $this->getValueText(),
             'priority'          => $this->getPriority(),
             'visible'           => $this->isVisible(),
-            'class'             => \get_class($this),
+            'class'             => get_class($this),
             'vat'               => $this->getVat(),
             'currency'          => $this->getCurrency()->getCode()
         ];
