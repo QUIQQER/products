@@ -22,52 +22,52 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * @var string
      */
-    protected $identifier = '';
+    protected string $identifier = '';
 
     /**
      * @var string
      */
-    protected $title = '';
+    protected string $title = '';
 
     /**
      * @var string
      */
-    protected $description = '';
+    protected string $description = '';
 
     /**
      * @var int
      */
-    protected $priority = 0;
+    protected int $priority = 0;
 
     /**
      * Value for the calculation
      *
-     * @var integer|float|double
+     * @var integer|float
      */
     protected $value = 0;
 
     /**
-     * @var int|float|double
+     * @var int|float
      */
     protected $sum = 0;
 
     /**
-     * @var integer|double|float
+     * @var integer|float
      */
     protected $nettoSum = 0;
 
     /**
-     * @var integer|double|float
+     * @var integer|float
      */
     protected $bruttoSum = 0;
 
     /**
-     * @var bool
+     * @var bool|float|int
      */
     protected $vat = false;
 
     /**
-     * @var integer|double|float
+     * @var integer|float
      */
     protected $calculatedSum = 0;
 
@@ -81,12 +81,12 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      *
      * @var bool
      */
-    protected $visible = true;
+    protected bool $visible = true;
 
     /**
      * @var string
      */
-    protected $type = PriceFactors::DEFAULT_TYPE;
+    protected string $type = PriceFactors::DEFAULT_TYPE;
 
     /**
      * Basis calculation
@@ -94,13 +94,13 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      *
      * @var int
      */
-    protected $basis = QUI\ERP\Accounting\Calc::CALCULATION_BASIS_NETTO;
+    protected int $basis = QUI\ERP\Accounting\Calc::CALCULATION_BASIS_NETTO;
 
     /**
      * Percent or complement?
      * @var int
      */
-    protected $calculation = QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT;
+    protected int $calculation = QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT;
 
     /**
      * @var QUI\ERP\Currency\Currency|null
@@ -122,7 +122,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      *      'vat' => 19 // automatic
      * )
      */
-    public function __construct($params = [])
+    public function __construct(array $params = [])
     {
         if (isset($params['title'])) {
             $this->setTitle($params['title']);
@@ -137,15 +137,15 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
         }
 
         if (isset($params['calculation'])) {
-            $this->setCalculation($params['calculation']);
+            $this->setCalculation((int)$params['calculation']);
         }
 
         if (isset($params['basis'])) {
-            $this->setCalculationBasis($params['basis']);
+            $this->setCalculationBasis((int)$params['basis']);
         }
 
         if (isset($params['calculation_basis'])) {
-            $this->setCalculationBasis($params['calculation_basis']);
+            $this->setCalculationBasis((int)$params['calculation_basis']);
         }
 
         if (isset($params['value'])) {
@@ -161,11 +161,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
         }
 
         if (isset($params['visible'])) {
-            if (\is_bool($params['visible'])) {
-                $this->visible = (bool)$params['visible'];
-            } else {
-                $this->visible = $params['visible'] ? true : false;
-            }
+            $this->visible = (bool)$params['visible'];
         }
 
         if (isset($params['sum'])) {
@@ -226,7 +222,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function getCalculation(): int
     {
-        return (int)$this->calculation;
+        return $this->calculation;
     }
 
     /**
@@ -311,7 +307,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     }
 
     /**
-     * @return bool|int|float|double
+     * @return int|float
      */
     public function getNettoSum()
     {
@@ -404,9 +400,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function setTitle(string $title)
     {
-        if (\is_string($title)) {
-            $this->title = $title;
-        }
+        $this->title = $title;
     }
 
     /**
@@ -416,9 +410,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function setDescription(string $description)
     {
-        if (\is_string($description)) {
-            $this->description = $description;
-        }
+        $this->description = $description;
     }
 
     /**
@@ -452,9 +444,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function setPriority(int $priority)
     {
-        if (\is_int($priority)) {
-            $this->priority = $priority;
-        }
+        $this->priority = $priority;
     }
 
     /**
@@ -464,8 +454,6 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      */
     public function setCalculation(int $calculation)
     {
-        $calculation = (int)$calculation;
-
         switch ($calculation) {
             case QUI\ERP\Accounting\Calc::CALCULATION_COMPLEMENT:
             case QUI\ERP\Accounting\Calc::CALCULATION_PERCENTAGE:
@@ -497,11 +485,11 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * Sets the vat % value (eq: 19%)
      *
-     * @param integer $vat - 7 = 7%, 19 = 19%
+     * @param integer|float $vat - 7 = 7%, 19 = 19%
      */
     public function setVat($vat)
     {
-        $this->vat = (int)$vat;
+        $this->vat = $vat;
     }
 
     /**
@@ -540,7 +528,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * Set the sum for the display
      *
-     * @param int|double|float $sum - sum
+     * @param int|float $sum - sum
      */
     public function setSum($sum)
     {
@@ -552,7 +540,7 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * Set the netto sum
      *
-     * @param int|double|float $sum - sum
+     * @param int|float $sum - sum
      */
     public function setNettoSum($sum)
     {
