@@ -47,6 +47,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
             this.$Input        = null;
             this.$Grid         = null;
             this.$GenerateTags = null;
+            this.$EntriesType  = null;
 
             this.$data = [];
 
@@ -200,12 +201,18 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
             this.$PriceCalc = new Element('div', {
                 'class': 'quiqqer-products-attributeList-settings',
                 html   : Mustache.render(template, {
-                    title       : QUILocale.get(lg, 'product.fields.attribute.group.attributeList.title'),
-                    generateTags: QUILocale.get(lg, 'product.fields.attributeList.generateTags')
+                    title                  : QUILocale.get(lg, 'product.fields.attribute.group.attributeList.title'),
+                    generateTags           : QUILocale.get(lg, 'product.fields.attributeList.generateTags'),
+                    labelType              : QUILocale.get(lg, 'product.fields.attributeList.labelType'),
+                    labelTypeOptionDefault : QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionDefault'),
+                    labelTypeOptionSize    : QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionSize'),
+                    labelTypeOptionColor   : QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionColor'),
+                    labelTypeOptionMaterial: QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionMaterial')
                 })
             }).inject(this.$Elm, 'top');
 
             this.$GenerateTags = this.$PriceCalc.getElement('[name="generate_tags"]');
+            this.$EntriesType  = this.$PriceCalc.getElement('[name="entries_type"]');
 
             this.refresh();
         },
@@ -257,7 +264,12 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                 this.$GenerateTags.checked = false;
             }
 
+            if ("entries_type" in data) {
+                this.$EntriesType.value = data.entries_type;
+            }
+
             this.$GenerateTags.addEvent('change', this.update);
+            this.$EntriesType.addEvent('change', this.update);
         },
 
         /**
@@ -555,7 +567,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
         update: function () {
             this.$Input.value = JSON.encode({
                 entries      : this.$data,
-                generate_tags: this.$GenerateTags.checked
+                generate_tags: this.$GenerateTags.checked,
+                entries_type : this.$EntriesType.value
             });
         },
 
