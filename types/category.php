@@ -287,7 +287,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     );
 
     if ($hasFilter) {
-        $Site->setAttribute('canonical', $Site->getUrlRewritten());
+        $Engine->getCanonical()->considerGetParameterOn();
     }
 
     if ($hasFilter && !$ProductList->count()) {
