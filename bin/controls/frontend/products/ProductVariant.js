@@ -41,14 +41,14 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
         initialize: function (options) {
             this.parent(options);
 
-            this.Loader             = new QUILoader({'cssclass': 'quiqqer-products-productVariant-loader'});
-            this.$startInit         = false;
+            this.Loader = new QUILoader({'cssclass': 'quiqqer-products-productVariant-loader'});
+            this.$startInit = false;
             this.$isOnlyVariantList = false; // if the variant has no attribute lists and only one list of its variants
 
             this.$currentVariantId = false;
-            this.$isVariantParent  = true;
-            this.$fieldHashes      = null;
-            this.$availableHashes  = null;
+            this.$isVariantParent = true;
+            this.$fieldHashes = null;
+            this.$availableHashes = null;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -88,13 +88,13 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                 return new Promise((resolve) => {
                     QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getProduct', (result) => {
-                        this.$fieldHashes     = result.fieldHashes;
+                        this.$fieldHashes = result.fieldHashes;
                         this.$availableHashes = result.availableHashes;
 
                         resolve();
                     }, {
-                        'package' : 'quiqqer/products',
-                        productId : this.getAttribute('productId')
+                        'package': 'quiqqer/products',
+                        productId: this.getAttribute('productId')
                     });
                 });
             }).then(this.$init);
@@ -108,12 +108,12 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 return;
             }
 
-            var self       = this,
-                url        = QUIQQER_SITE.url,
-                URL        = URI(window.location),
-                path       = window.location.pathname,
+            const self = this,
+                  url  = QUIQQER_SITE.url,
+                  URL  = URI(window.location),
+                  path = window.location.pathname;
 
-                variantId  = '',
+            let variantId  = '',
                 variantUrl = path.substring(
                     path.lastIndexOf(url) + url.length
                 );
@@ -129,11 +129,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     self.Loader.hide();
                 }
 
-                var Field;
-                var Elm    = self.getElm();
-                var fields = result.fields;
+                let Field;
+                const Elm = self.getElm();
+                const fields = result.fields;
 
-                for (var fieldId in fields) {
+                for (let fieldId in fields) {
                     if (!fields.hasOwnProperty(fieldId)) {
                         continue;
                     }
@@ -162,13 +162,13 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 return;
             }
 
-            var self = this;
+            const self = this;
 
             this.$startInit = true;
             this.Loader.inject(document.body);
 
             // remove events from AttributeList field controls (added by parent.$onImport)
-            var fields = this.getFieldControls();
+            const fields = this.getFieldControls();
 
             fields.each(function (Control) {
                 Control.removeEvents('onChange');
@@ -177,13 +177,13 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             this.$isOnlyVariantList = !!this.getElm().getElement('[name="field-23"]');
 
             // add Variant events
-            var fieldLists = this.getElm().getElements(
+            const fieldLists = this.getElm().getElements(
                 '.product-data-fieldlist .quiqqer-product-field select'
             );
 
             fieldLists.removeEvents('change');
             fieldLists.addEvent('change', function () {
-                var currentHash = self.getCurrentHash();
+                const currentHash = self.getCurrentHash();
 
                 if (typeof self.$availableHashes[currentHash] === 'undefined') {
                     self.hidePrice();
@@ -194,21 +194,21 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 self.$refreshVariant();
             });
 
-            var attributeGroups = this.getElm().getElements('[data-field-type="AttributeGroup"] select');
+            const attributeGroups = this.getElm().getElements('[data-field-type="AttributeGroup"] select');
 
             attributeGroups.addEvent('focus', function () {
                 if (attributeGroups.length === 1) {
                     return;
                 }
 
-                var i, len, select;
+                let i, len, select;
 
-                var values  = {};
-                var fieldId = this.name.replace('field-', '');
-                var options = this.options;
+                const values = {};
+                const fieldId = this.name.replace('field-', '');
+                const options = this.options;
 
-                var enabled     = [];
-                var EmptyOption = enabled.filter(function (option) {
+                const enabled = [];
+                const EmptyOption = enabled.filter(function (option) {
                     return option.value === '';
                 })[0];
 
@@ -247,7 +247,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 }
 
                 if (EmptyOption && enabled.length === 2) {
-                    var option = enabled.filter(function (option) {
+                    const option = enabled.filter(function (option) {
                         return option.value !== '';
                     })[0];
 
@@ -279,13 +279,13 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
         $refreshVariant: function () {
             this.Loader.show();
 
-            var self       = this;
-            var fieldLists = this.getElm().getElements(
+            const self = this;
+            let fieldLists = this.getElm().getElements(
                 '.product-data-fieldlist .quiqqer-product-field select'
             );
 
             fieldLists = fieldLists.map(function (Elm) {
-                var r = {};
+                let r = {};
 
                 r[Elm.get('data-field')] = Elm.value;
 
@@ -293,14 +293,14 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             });
 
             QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getVariant', function (result) {
-                var Ghost = new Element('div', {
+                const Ghost = new Element('div', {
                     html: result.control
                 });
 
                 self.$currentVariantId = result.variantId;
-                self.$isVariantParent  = !!result.isVariantParent;
+                self.$isVariantParent = !!result.isVariantParent;
 
-                document.title        = result.title;
+                document.title = result.title;
                 //self.$fieldHashes     = result.fieldHashes;
                 //self.$availableHashes = result.availableHashes;
 
@@ -309,15 +309,14 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     parseInt(result.category) === parseInt(window.QUIQQER_PRODUCT_CATEGORY)) {
                     //window.history.pushState({}, "", result.url.toString());
                 } else {
-                    var Url = URI(window.location);
+                    const Url = URI(window.location);
                     var url = Url.setSearch('variant', result.variantId).toString();
-
                     //window.history.pushState({}, "", url);
                 }
 
                 self.$startInit = false;
 
-                var Control = Ghost.getElement(
+                const Control = Ghost.getElement(
                     '[data-qui="package/quiqqer/products/bin/controls/frontend/products/ProductVariant"]'
                 );
 
@@ -365,8 +364,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * @return {boolean}
          */
         $isFieldValueInFields: function (fieldId, fieldValue) {
-            var i, len, avHashes;
-            var hashes = this.$fieldHashes;
+            let i, len, avHashes;
+            const hashes = this.$fieldHashes;
 
             fieldId = parseInt(fieldId);
 
@@ -374,11 +373,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 return true;
             }
 
-            var current    = this.getCurrentFieldValues();
-            var collection = {};
+            const current = this.getCurrentFieldValues();
+            const collection = {};
 
-            var fitHashToCurrentSettings = function (h) {
-                for (var c in current) {
+            const fitHashToCurrentSettings = function (h) {
+                for (let c in current) {
                     if (!current.hasOwnProperty(c)) {
                         continue;
                     }
@@ -403,7 +402,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 return true;
             };
 
-            for (var id in hashes) {
+            for (let id in hashes) {
                 if (!hashes.hasOwnProperty(id)) {
                     continue;
                 }
@@ -456,9 +455,13 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * Hide the price display
          */
         hidePrice: function () {
-            var PriceContainer = this.getElm().getElement('.product-data-price');
+            const PriceContainer = this.getElm().getElement('.product-data-price');
 
             if (!PriceContainer) {
+                return;
+            }
+
+            if (PriceContainer.get('data-qui-options-price') !== '') {
                 return;
             }
 
@@ -474,7 +477,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * Hide the price display
          */
         showPrice: function () {
-            var PriceContainer = this.getElm().getElement('.product-data-price');
+            const PriceContainer = this.getElm().getElement('.product-data-price');
 
             if (!PriceContainer) {
                 return;
@@ -493,12 +496,12 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * disable buttons
          */
         disableButtons: function () {
-            var Container = document.getElement('.product-data-actionButtons');
+            const Container = document.getElement('.product-data-actionButtons');
 
             Container.getElements('button').set('disabled', true);
 
             Container.getElements('[data-quiid]').forEach(function (Node) {
-                var Control = QUI.Controls.getById(Node.get('data-quiid'));
+                const Control = QUI.Controls.getById(Node.get('data-quiid'));
 
                 if (typeof Control.disable !== 'undefined') {
                     Control.disable();
@@ -512,10 +515,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * @return {string}
          */
         getCurrentHash: function () {
-            var fields = this.getCurrentFieldValues();
-            var hash   = [];
+            const fields = this.getCurrentFieldValues();
+            const hash = [];
 
-            for (var i in fields) {
+            for (let i in fields) {
                 if (fields.hasOwnProperty(i)) {
                     hash.push(i + ':' + fields[i]);
                 }
@@ -528,13 +531,13 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * @return {Object}
          */
         getCurrentFieldValues: function () {
-            var attributeGroups = this.getElm().getElements('[data-field-type="AttributeGroup"] select');
+            const attributeGroups = this.getElm().getElements('[data-field-type="AttributeGroup"] select');
 
-            var i, len, fieldName, fieldValue;
-            var fields = {};
+            let i, len, fieldName, fieldValue;
+            const fields = {};
 
             for (i = 0, len = attributeGroups.length; i < len; i++) {
-                fieldName  = attributeGroups[i].name.replace('field-', '');
+                fieldName = attributeGroups[i].name.replace('field-', '');
                 fieldValue = this.stringToHex(attributeGroups[i].value);
 
                 fields[fieldName] = fieldValue;
@@ -557,8 +560,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 return str;
             }
 
-            var i, len, char;
-            var result = '';
+            let i, len, char;
+            let result = '';
 
             for (i = 0, len = str.length; i < len; i++) {
                 char = str.charCodeAt(i);

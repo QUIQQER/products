@@ -17,21 +17,21 @@ use \QUI\ERP\Products\Product\Types\VariantChild;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_update',
     function ($productId, $categories, $categoryId, $fields) {
-        $Products   = new QUI\ERP\Products\Handler\Products();
-        $Fields     = new QUI\ERP\Products\Handler\Fields();
+        $Products = new QUI\ERP\Products\Handler\Products();
+        $Fields = new QUI\ERP\Products\Handler\Fields();
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $Product    = $Products->getProduct($productId);
+        $Product = $Products->getProduct($productId);
 
         $categories = \json_decode($categories, true);
-        $fields     = \json_decode($fields, true);
+        $fields = \json_decode($fields, true);
 
         // fields
         foreach ($fields as $fieldId => $field) {
             try {
                 $fieldId = (int)\str_replace('field-', '', $fieldId);
-                $Field   = $Fields->getField($fieldId);
+                $Field = $Fields->getField($fieldId);
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addNotice('Field not found #'.$fieldId);
+                QUI\System\Log::addNotice('Field not found #' . $fieldId);
                 continue;
             }
 
@@ -104,13 +104,13 @@ QUI::$Ajax->registerFunction(
 
         try {
             $Product->userSave();
-        } catch (\QUI\Exception $Exception) {
+        } catch (QUI\Exception $Exception) {
             QUI::getMessagesHandler()->addAttention($Exception->getMessage());
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
             QUI\System\Log::addError(
-                'AJAX :: package_quiqqer_products_ajax_products_update -> '.$Exception->getMessage()
+                'AJAX :: package_quiqqer_products_ajax_products_update -> ' . $Exception->getMessage()
             );
 
             throw $Exception;
