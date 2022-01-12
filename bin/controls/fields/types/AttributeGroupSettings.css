@@ -84,3 +84,8 @@
 .quiqqer-products-attributeList-settings-title {
 
 }
+.quiqqer-products-AttributeGroupSettings-img-preview {
+    max-height: 25px;
+    max-width: 25px;
+}
+

@@ -1785,6 +1785,10 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Bestimme die ID des Wertes. Somit ist eine einfacherer Zuweisung möglich.]]></de>
             <en><![CDATA[Determine the ID of the value. This allows a simpler assignment.]]></en>
         </locale>
+        <locale name="fields.control.productAttributeListSettings.grid.image">
+            <de><![CDATA[Bild]]></de>
+            <en><![CDATA[Image]]></en>
+        </locale>
 
         <locale name="fields.control.productAttributeList.remove.window.title">
             <de><![CDATA[Eintrag aus der Auswahlliste entfernen?]]></de>
@@ -1852,6 +1856,10 @@ For a newly created product the article number should be generated automatically
         <locale name="fields.control.attributeGroup.create.selected">
             <de><![CDATA[Standard (Default)]]></de>
             <en><![CDATA[Default]]></en>
+        </locale>
+        <locale name="fields.control.attributeGroup.create.labelImage">
+            <de><![CDATA[Bild]]></de>
+            <en><![CDATA[Image]]></en>
         </locale>
         <locale name="fields.control.price.brutto">
             <de><![CDATA[Bruttoeingabe eines Preises]]></de>
@@ -1940,6 +1948,26 @@ For a newly created product the article number should be generated automatically
         <locale name="product.fields.attributeList.generateTags">
             <de><![CDATA[Tags generieren]]></de>
             <en><![CDATA[Generate tags]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.labelType">
+            <de><![CDATA[Typ]]></de>
+            <en><![CDATA[Type]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.labelTypeOptionDefault">
+            <de><![CDATA[Standard]]></de>
+            <en><![CDATA[Default]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.labelTypeOptionSize">
+            <de><![CDATA[Größe]]></de>
+            <en><![CDATA[Size]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.labelTypeOptionColor">
+            <de><![CDATA[Farbe]]></de>
+            <en><![CDATA[Color]]></en>
+        </locale>
+        <locale name="product.fields.attributeList.labelTypeOptionMaterial">
+            <de><![CDATA[Material]]></de>
+            <en><![CDATA[Material]]></en>
         </locale>
 
         <locale name="product.fields.remove.field">

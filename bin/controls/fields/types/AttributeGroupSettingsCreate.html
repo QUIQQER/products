@@ -3,7 +3,10 @@
         <span class="field-container-item" title="{{title}}">
             {{title}}
         </span>
-        <input type="hidden" name="title"/>
+        <input type="hidden"
+               name="title"
+               data-qui="controls/lang/InputMultiLang"
+        />
     </label>
 
     <label class="field-container field-attributeList-selected">
@@ -19,6 +22,20 @@
         </span>
         <span class="field-container-field">
             <input type="checkbox" name="selected"/>
+        </span>
+    </label>
+
+    <label class="field-container field-attributeList-selected">
+        <span class="field-container-item" title="{{labelImage}}">
+            {{labelImage}}
+        </span>
+        <span class="field-container-field">
+            <input type="hidden"
+                   name="image"
+                   data-qui="controls/projects/project/media/Input"
+                   data-qui-options-multiple="0"
+                   data-qui-options-max="1"
+            />
         </span>
     </label>
 </form>

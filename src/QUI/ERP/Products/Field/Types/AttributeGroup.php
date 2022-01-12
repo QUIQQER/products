@@ -20,6 +20,11 @@ use QUI\ERP\Products\Handler\Search;
  */
 class AttributeGroup extends QUI\ERP\Products\Field\Field
 {
+    const ENTRIES_TYPE_DEFAULT  = 1;
+    const ENTRIES_TYPE_SIZE     = 2;
+    const ENTRIES_TYPE_COLOR    = 3;
+    const ENTRIES_TYPE_MATERIAL = 4;
+
     /**
      * @var int
      */
@@ -46,7 +51,8 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
         $this->setOptions([
             'entries'       => [],
             'priority'      => 0,
-            'generate_tags' => false
+            'generate_tags' => false,
+            'entries_type'  => self::ENTRIES_TYPE_DEFAULT
         ]);
 
         parent::__construct($fieldId, $params);
@@ -110,6 +116,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             'valueId',
             'selected', // optional
             'disabled', // optional
+            'image'     // optional
         ];
 
         foreach ($available as $k) {
