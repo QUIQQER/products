@@ -1,6 +1,9 @@
 /**
- * @module package/quiqqer/products/bin/controls/fields/types/ProductAttributeList
+ * Settings for "AttributeGroup" field type.
+ *
+ * @module package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettings
  * @author www.pcsg.de (Henning Leutz)
+ * @author www.pcsg.de (Patrick Müller)
  */
 define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettings', [
 
@@ -9,18 +12,16 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
     'qui/controls/windows/Confirm',
     'Locale',
     'controls/grid/Grid',
-    'controls/lang/InputMultiLang',
-    'package/quiqqer/products/bin/utils/Calc',
     'Mustache',
 
     'text!package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettings.html',
     'text!package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettingsCreate.html',
     'css!package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettings.css'
 
-], function (QUI, QUIControl, QUIConfirm, QUILocale, Grid, InputMultiLang, Calc, Mustache, template, templateCreate) {
+], function (QUI, QUIControl, QUIConfirm, QUILocale, Grid, Mustache, template, templateCreate) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
@@ -180,7 +181,12 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                     title    : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.valueId.description'),
                     dataIndex: 'valueId',
                     dataType : 'string',
-                    width    : 200
+                    width    : 75
+                }, {
+                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.image'),
+                    dataIndex: 'imagePreview',
+                    dataType : 'node',
+                    width    : 75
                 }]
             });
 
@@ -353,11 +359,21 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                     Selected = IsNotSelected.clone();
                 }
 
+                // Image
+                let imagePreview = '';
+
+                if ('image' in entry && entry.image) {
+                    imagePreview = new Element('img', {
+                        'class': 'quiqqer-products-AttributeGroupSettings-img-preview',
+                        src    : entry.image
+                    });
+                }
 
                 data.push({
-                    selected: Selected,
-                    title   : langTitle,
-                    valueId : entry.valueId
+                    selected    : Selected,
+                    title       : langTitle,
+                    valueId     : entry.valueId,
+                    imagePreview: imagePreview
                 });
             }
 
@@ -388,12 +404,15 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                         Win.getContent().set('html', Mustache.render(templateCreate, {
                             title        : QUILocale.get('quiqqer/system', 'title'),
                             valueId      : QUILocale.get(lg, 'fields.control.attributeGroup.create.valueId'),
-                            selectedTitle: QUILocale.get(lg, 'fields.control.attributeGroup.create.selected')
+                            selectedTitle: QUILocale.get(lg, 'fields.control.attributeGroup.create.selected'),
+                            labelImage   : QUILocale.get(lg, 'fields.control.attributeGroup.create.labelImage')
                         }));
 
-                        var Form = Win.getContent().getElement('form');
+                        Win.Loader.show();
 
-                        new InputMultiLang().imports(Form.elements.title);
+                        QUI.parse(Win.getContent()).then(() => {
+                            Win.Loader.hide();
+                        });
                     },
                     onSubmit: function (Win) {
                         var Form  = Win.getContent().getElement('form'),
@@ -410,7 +429,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                         var edit = self.add(
                             Title.getData(),
                             Form.elements.valueId.value,
-                            Form.elements.selected.checked
+                            Form.elements.selected.checked,
+                            Form.elements.image.value ? Form.elements.image.value : false
                         );
 
                         if (edit) {
@@ -453,7 +473,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                         Win.getContent().set('html', Mustache.render(templateCreate, {
                             title        : QUILocale.get('quiqqer/system', 'title'),
                             valueId      : QUILocale.get(lg, 'fields.control.attributeGroup.create.valueId'),
-                            selectedTitle: QUILocale.get(lg, 'fields.control.attributeGroup.create.selected')
+                            selectedTitle: QUILocale.get(lg, 'fields.control.attributeGroup.create.selected'),
+                            labelImage   : QUILocale.get(lg, 'fields.control.attributeGroup.create.labelImage')
                         }));
 
                         var Form = Win.getContent().getElement('form');
@@ -462,7 +483,15 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                         Form.elements.valueId.value    = data.valueId;
                         Form.elements.selected.checked = data.selected;
 
-                        new InputMultiLang().imports(Form.elements.title);
+                        if ('image' in data && data.image) {
+                            Form.elements.image.value = data.image;
+                        }
+
+                        Win.Loader.show();
+
+                        QUI.parse(Win.getContent()).then(() => {
+                            Win.Loader.hide();
+                        });
                     },
                     onSubmit: function (Win) {
                         var Form  = Win.getContent().getElement('form'),
@@ -480,7 +509,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                             index,
                             Title.getData(),
                             Form.elements.valueId.value,
-                            Form.elements.selected.checked
+                            Form.elements.selected.checked,
+                            Form.elements.image.value ? Form.elements.image.value : false
                         );
 
                         if (edit) {
@@ -578,9 +608,11 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          * @param {Object|String} title
          * @param {String} valueId
          * @param {Boolean}  [selected]
+         * @param {String} [image]
          */
-        add: function (title, valueId, selected) {
+        add: function (title, valueId, selected, image) {
             selected = selected || false;
+            image    = image || false;
             valueId  = valueId.trim();
 
             for (var i = 0, len = this.$data.length; i < len; i++) {
@@ -592,7 +624,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
             this.$data.push({
                 title   : title,
                 valueId : valueId,
-                selected: selected
+                selected: selected,
+                image   : image
             });
 
             this.refresh();
@@ -648,20 +681,29 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          * @param {Object|String} title
          * @param {String} valueId
          * @param {Boolean} [selected]
+         * @param {String} [image]
          */
-        edit: function (index, title, valueId, selected) {
+        edit: function (index, title, valueId, selected, image) {
             valueId = valueId.trim();
+
+            let entryFound = false;
 
             for (var i = 0, len = this.$data.length; i < len; i++) {
                 if (this.$data[i].valueId === valueId) {
-                    return false;
+                    entryFound = true;
+                    break;
                 }
+            }
+
+            if (!entryFound) {
+                return false;
             }
 
             this.$data[index] = {
                 title   : title,
                 valueId : valueId,
-                selected: selected || false
+                selected: selected || false,
+                image   : image || false
             };
 
             this.refresh();

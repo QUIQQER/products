@@ -116,6 +116,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             'valueId',
             'selected', // optional
             'disabled', // optional
+            'image'     // optional
         ];
 
         foreach ($available as $k) {

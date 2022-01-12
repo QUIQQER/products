@@ -1785,6 +1785,10 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Bestimme die ID des Wertes. Somit ist eine einfacherer Zuweisung möglich.]]></de>
             <en><![CDATA[Determine the ID of the value. This allows a simpler assignment.]]></en>
         </locale>
+        <locale name="fields.control.productAttributeListSettings.grid.image">
+            <de><![CDATA[Bild]]></de>
+            <en><![CDATA[Image]]></en>
+        </locale>
 
         <locale name="fields.control.productAttributeList.remove.window.title">
             <de><![CDATA[Eintrag aus der Auswahlliste entfernen?]]></de>
@@ -1852,6 +1856,10 @@ For a newly created product the article number should be generated automatically
         <locale name="fields.control.attributeGroup.create.selected">
             <de><![CDATA[Standard (Default)]]></de>
             <en><![CDATA[Default]]></en>
+        </locale>
+        <locale name="fields.control.attributeGroup.create.labelImage">
+            <de><![CDATA[Bild]]></de>
+            <en><![CDATA[Image]]></en>
         </locale>
         <locale name="fields.control.price.brutto">
             <de><![CDATA[Bruttoeingabe eines Preises]]></de>
