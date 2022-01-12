@@ -286,6 +286,10 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         || QUI::getRequest()->get('sortOn')
     );
 
+    if ($hasFilter) {
+        $Site->setAttribute('canonical', $Site->getUrlRewritten());
+    }
+
     if ($hasFilter && !$ProductList->count()) {
         // keine produkte -> weiterleitung zu main
         $Redirect = new RedirectResponse($Site->getUrlRewritten());
