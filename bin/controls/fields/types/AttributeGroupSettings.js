@@ -684,7 +684,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          * @param {String} [image]
          */
         edit: function (index, title, valueId, selected, image) {
-            valueId = valueId.trim();
+            valueId = parseInt(valueId.trim());
 
             let entryFound = false;
 
