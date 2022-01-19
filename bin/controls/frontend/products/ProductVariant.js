@@ -94,7 +94,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                         resolve();
                     }, {
                         'package': 'quiqqer/products',
-                        productId: this.getAttribute('productId')
+                        productId: this.getAttribute('productId'),
+                        siteId   : QUIQQER_SITE.id
                     });
                 });
             }).then(this.$init);
