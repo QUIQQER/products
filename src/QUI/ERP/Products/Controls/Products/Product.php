@@ -431,6 +431,23 @@ class Product extends QUI\Control
 
 
         // variant product
+
+        // Assign special image data
+        $this->setJavaScriptControl('package/quiqqer/products/bin/controls/frontend/products/ProductVariant');
+
+        if (!empty($images)) {
+            $imageAttributeGroupsData = [];
+
+            /** @var QUI\Projects\Media\Image $Image */
+            foreach ($images as $Image) {
+                $imageAttributeGroupsData[$Image->getPath()] = $Image->getAttribute(
+                    Fields::MEDIA_ATTR_IMAGE_ATTRIBUTE_GROUP_DATA
+                );
+            }
+
+            $this->setAttribute('data-qui-options-image_attribute_data', \json_encode($imageAttributeGroupsData));
+        }
+
         $this->setAttributes([
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant'
         ]);

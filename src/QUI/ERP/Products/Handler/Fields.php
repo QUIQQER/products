@@ -83,6 +83,11 @@ class Fields
     const PRODUCT_ARRAY_UNCHANGED = 'pau'; // product array hasn't changed
 
     /**
+     * Special media item attributes
+     */
+    const MEDIA_ATTR_IMAGE_ATTRIBUTE_GROUP_DATA = 'quiqqer.products.media.attributeGroupData';
+
+    /**
      * List of cache names
      *
      * @var array

@@ -45,10 +45,11 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
         initialize: function (options) {
             this.parent(options);
 
-            this.$Input        = null;
-            this.$Grid         = null;
-            this.$GenerateTags = null;
-            this.$EntriesType  = null;
+            this.$Input            = null;
+            this.$Grid             = null;
+            this.$GenerateTags     = null;
+            this.$EntriesType      = null;
+            this.$IsImageAttribute = null;
 
             this.$data = [];
 
@@ -213,12 +214,14 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                     labelTypeOptionDefault : QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionDefault'),
                     labelTypeOptionSize    : QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionSize'),
                     labelTypeOptionColor   : QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionColor'),
-                    labelTypeOptionMaterial: QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionMaterial')
+                    labelTypeOptionMaterial: QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionMaterial'),
+                    labelIsImageAttribute  : QUILocale.get(lg, 'product.fields.attributeList.labelIsImageAttribute')
                 })
             }).inject(this.$Elm, 'top');
 
-            this.$GenerateTags = this.$PriceCalc.getElement('[name="generate_tags"]');
-            this.$EntriesType  = this.$PriceCalc.getElement('[name="entries_type"]');
+            this.$GenerateTags     = this.$PriceCalc.getElement('[name="generate_tags"]');
+            this.$EntriesType      = this.$PriceCalc.getElement('[name="entries_type"]');
+            this.$IsImageAttribute = this.$PriceCalc.getElement('[name="is_image_attribute"]');
 
             this.refresh();
         },
@@ -274,8 +277,15 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                 this.$EntriesType.value = data.entries_type;
             }
 
+            if ("is_image_attribute" in data) {
+                this.$IsImageAttribute.checked = data.is_image_attribute;
+            } else {
+                this.$IsImageAttribute.checked = false;
+            }
+
             this.$GenerateTags.addEvent('change', this.update);
             this.$EntriesType.addEvent('change', this.update);
+            this.$IsImageAttribute.addEvent('change', this.update);
         },
 
         /**
@@ -596,9 +606,10 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          */
         update: function () {
             this.$Input.value = JSON.encode({
-                entries      : this.$data,
-                generate_tags: this.$GenerateTags.checked,
-                entries_type : this.$EntriesType.value
+                entries           : this.$data,
+                generate_tags     : this.$GenerateTags.checked,
+                entries_type      : this.$EntriesType.value,
+                is_image_attribute: this.$IsImageAttribute.checked
             });
         },
 
