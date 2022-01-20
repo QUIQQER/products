@@ -440,9 +440,13 @@ class Product extends QUI\Control
 
             /** @var QUI\Projects\Media\Image $Image */
             foreach ($images as $Image) {
-                $imageAttributeGroupsData[$Image->getPath()] = $Image->getAttribute(
+                $imageAttributeGroupData = $Image->getAttribute(
                     Fields::MEDIA_ATTR_IMAGE_ATTRIBUTE_GROUP_DATA
                 );
+
+                if (!empty($imageAttributeGroupData)) {
+                    $imageAttributeGroupsData[$Image->getPath()] = $imageAttributeGroupData;
+                }
             }
 
             $this->setAttribute('data-qui-options-image_attribute_data', \json_encode($imageAttributeGroupsData));
