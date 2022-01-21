@@ -195,11 +195,24 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             fieldLists.addEvent('change', function (event) {
                 const currentHash = self.getCurrentHash();
 
-                // Load parent
-                if (event.target.value === '') {
-                    self.$refreshVariant();
+                // Load parent (if a variant is currently selected and an attribute field is deselected)
+
+                // This behaviour is temporarily disabled due to UX complications - ask peat
+
+                /*if (event.target.value === '') {
+                    let refresh = true;
+
+                    fieldLists.forEach((Select) => {
+                        if (Select !== event.target && Select.value === '') {
+                            refresh = false;
+                        }
+                    });
+
+                    if (refresh) {
+                        self.$refreshVariant();
+                    }
                     return;
-                }
+                }*/
 
                 if (typeof self.$availableHashes[currentHash] === 'undefined') {
                     self.hidePrice();
@@ -659,33 +672,46 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 return;
             }
 
-            let matchingImageFilename = false;
+            const imgRegExpParseFilename = new RegExp('([^\\/]*)\\.\\w+$', 'igm');
+            const matchedImages          = [];
 
             for (const [imagePath, ImageData] of Object.entries(this.$ImgAttributeGroupsData)) {
-                let match = true;
+                let matchedFields = 0;
 
                 for (const [fieldId, fieldValue] of Object.entries(AttributeGroupTargetData)) {
                     if (!(fieldId in ImageData)) {
-                        match = false;
-                        break;
+                        continue;
                     }
 
                     if (ImageData[fieldId] !== fieldValue) {
-                        match = false;
-                        break;
+                        continue;
                     }
+
+                    matchedFields++;
                 }
 
-                if (match) {
-                    matchingImageFilename = imagePath.split('/').pop();
-                    break;
+                if (matchedFields > 0) {
+                    const filenameMatches = [...imagePath.split('/').pop().matchAll(imgRegExpParseFilename)];
+
+                    if (filenameMatches.length && typeof filenameMatches[0][1] !== 'undefined') {
+                        matchedImages.push({
+                            imageFilename: filenameMatches[0][1],
+                            matchedFields: matchedFields
+                        });
+                    }
                 }
             }
 
             // Select first image that fits in gallery
-            if (matchingImageFilename !== false) {
-                this.$SliderControl.selectImageByFilename(matchingImageFilename);
+            if (!matchedImages.length) {
+                return;
             }
+
+            const sortedImages = matchedImages.sort((matchA, matchB) => {
+                return matchB.matchedFields - matchA.matchedFields;
+            });
+
+            this.$SliderControl.selectImageByFilename(sortedImages[0].imageFilename);
         },
 
         /**
@@ -697,12 +723,15 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
         $onSliderImageClick: function (SliderControl, ImageData) {
             const Elm = this.getElm();
 
-            const imgRegExp = new RegExp('__\\d+x\\d+', 'ig');
-            const imageUrl  = ImageData.src.replace(imgRegExp, '');
+            const imgRegExpRemoveSize = new RegExp('__\\d+x\\d+', 'ig');
+            const imgRegExpRemoveExt  = new RegExp('\\.\\w+$', 'id');
+            const imageUrl            = ImageData.src.replace(imgRegExpRemoveSize, '');
 
             let AttributeGroupData = false;
 
-            for (const [imagePath, ImageData] of Object.entries(this.$ImgAttributeGroupsData)) {
+            for (let [imagePath, ImageData] of Object.entries(this.$ImgAttributeGroupsData)) {
+                imagePath = imagePath.replace(imgRegExpRemoveExt, '');
+
                 if (imageUrl.indexOf(imagePath) !== -1) {
                     AttributeGroupData = ImageData;
                     break;
@@ -714,17 +743,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             }
 
             for (const [fieldId, fieldValue] of Object.entries(AttributeGroupData)) {
-                if (!this.$isFieldValueInFields(fieldId, fieldValue)) {
-                    continue;
-                }
-
                 const FieldSelect = Elm.getElement('select[data-field="' + fieldId + '"]');
 
-                if (!FieldSelect) {
-                    continue;
+                if (FieldSelect) {
+                    FieldSelect.value = fieldValue;
                 }
-
-                FieldSelect.value = fieldValue;
             }
         }
     });
