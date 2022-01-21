@@ -661,12 +661,19 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
             const AttributeGroupSelects    = this.getElm().getElements('div[data-field-type="AttributeGroup"] select');
             const AttributeGroupTargetData = {};
+            let allSelectsWithValues       = true;
 
             AttributeGroupSelects.forEach((Select) => {
                 if (Select.value) {
                     AttributeGroupTargetData[parseInt(Select.get('data-field'))] = parseInt(Select.value);
+                } else {
+                    allSelectsWithValues = false;
                 }
             });
+
+            if (allSelectsWithValues) {
+                return;
+            }
 
             if (!Object.values(AttributeGroupTargetData).length) {
                 return;
