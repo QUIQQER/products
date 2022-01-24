@@ -429,13 +429,13 @@ class Product extends QUI\Control
             return $Engine->fetch(\dirname(__FILE__).'/Product.html');
         }
 
-
         // variant product
 
         // Assign special image data
-        $this->setJavaScriptControl('package/quiqqer/products/bin/controls/frontend/products/ProductVariant');
+        $Conf                   = QUI\ERP\Products\Utils\Package::getConfig();
+        $linkVariantsWithImages = !empty($Conf->getValue('variants', 'linkVariantChildrenWithImages'));
 
-        if (!empty($images)) {
+        if (!empty($images) && $linkVariantsWithImages) {
             $imageAttributeGroupsData = [];
 
             /** @var QUI\Projects\Media\Image $Image */
@@ -453,7 +453,9 @@ class Product extends QUI\Control
         }
 
         $this->setAttributes([
-            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant'
+            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
+
+            'data-qui-options-link_images_and_attributes' => $linkVariantsWithImages ? 1 : 0
         ]);
 
         return $Engine->fetch(\dirname(__FILE__).'/ProductVariant.html');

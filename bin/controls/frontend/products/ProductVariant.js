@@ -38,10 +38,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
         ],
 
         options: {
-            productId           : false,
-            galleryLoader       : true,
-            closeable           : false,
-            image_attribute_data: false, // Special attribute group fields data from product images (set by PHP control)
+            productId                 : false,
+            galleryLoader             : true,
+            closeable                 : false,
+            image_attribute_data      : false, // Special attribute group fields data from product images (set by PHP control)
+            link_images_and_attributes: false
         },
 
         initialize: function (options) {
@@ -51,12 +52,13 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             this.$startInit         = false;
             this.$isOnlyVariantList = false; // if the variant has no attribute lists and only one list of its variants
 
-            this.$currentVariantId       = false;
-            this.$isVariantParent        = true;
-            this.$fieldHashes            = null;
-            this.$availableHashes        = null;
-            this.$imgAttributeGroupsData = {};
-            this.$SliderControl          = null;
+            this.$currentVariantId               = false;
+            this.$isVariantParent                = true;
+            this.$fieldHashes                    = null;
+            this.$availableHashes                = null;
+            this.$ImgAttributeGroupsData         = {};
+            this.$SliderControl                  = null;
+            this.$nonImageAttributeGroupFieldIds = [];
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -192,16 +194,14 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             );
 
             fieldLists.removeEvents('change');
-            fieldLists.addEvent('change', function (event) {
+            fieldLists.addEvent('change', (event) => {
                 const currentHash = self.getCurrentHash();
 
                 // Load parent (if a variant is currently selected and an attribute field is deselected)
-
-                // This behaviour is temporarily disabled due to UX complications - ask peat
-
-                /*if (event.target.value === '') {
+                if (event.target.value === '') {
                     let refresh = true;
 
+                    // Check if a specific variant is selected
                     fieldLists.forEach((Select) => {
                         if (Select !== event.target && Select.value === '') {
                             refresh = false;
@@ -209,10 +209,19 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     });
 
                     if (refresh) {
+                        // Reset all attribute list select fields that are not associated with a variant child image.
+                        fieldLists.forEach((AttributeGroupSelect) => {
+                            const fieldId = parseInt(AttributeGroupSelect.get('data-field'));
+
+                            if (this.$nonImageAttributeGroupFieldIds.contains(fieldId)) {
+                                AttributeGroupSelect.value = '';
+                            }
+                        });
+
                         self.$refreshVariant();
                     }
                     return;
-                }*/
+                }
 
                 if (typeof self.$availableHashes[currentHash] === 'undefined') {
                     self.hidePrice();
@@ -301,18 +310,40 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 }).inject(Elm.getElement('.product-data-fieldlist'));
             }
 
-            const SliderControlElm = Elm.getElement('[data-qui="package/quiqqer/gallery/bin/controls/Slider"]');
+            if (this.getAttribute('link_images_and_attributes')) {
+                const SliderControlElm = Elm.getElement('[data-qui="package/quiqqer/gallery/bin/controls/Slider"]');
 
-            if (SliderControlElm) {
-                QUIControlUtils.getControlByElement(SliderControlElm).then((SliderControl) => {
-                    this.$SliderControl = SliderControl;
-                    SliderControl.addEvent('onLoaded', this.$onAttributeGroupSelectChange);
-                    SliderControl.addEvent('imageClick', this.$onSliderImageClick);
-                });
-            }
+                if (SliderControlElm) {
+                    QUIControlUtils.getControlByElement(SliderControlElm).then((SliderControl) => {
+                        this.$SliderControl = SliderControl;
+                        SliderControl.addEvent('onLoaded', this.$onAttributeGroupSelectChange);
+                        SliderControl.addEvent('imageClick', this.$onSliderImageClick);
+                    });
+                }
 
-            if (this.getAttribute('image_attribute_data')) {
-                this.$ImgAttributeGroupsData = JSON.decode(this.getAttribute('image_attribute_data'));
+                if (this.getAttribute('image_attribute_data')) {
+                    this.$ImgAttributeGroupsData = JSON.decode(this.getAttribute('image_attribute_data'));
+
+                    // Determine all fields that are not associated with images
+                    const availableFieldIds = [];
+                    const imageFieldIds     = [];
+
+                    fieldLists.forEach((AttributeGroupSelect) => {
+                        availableFieldIds.push(parseInt(AttributeGroupSelect.get('data-field')));
+                    });
+
+                    for (const Fields of Object.values(this.$ImgAttributeGroupsData)) {
+                        for (const fieldId of Object.keys(Fields)) {
+                            imageFieldIds.push(parseInt(fieldId));
+                        }
+                    }
+
+                    availableFieldIds.forEach((availableFieldId) => {
+                        if (!imageFieldIds.contains(availableFieldId)) {
+                            this.$nonImageAttributeGroupFieldIds.push(availableFieldId);
+                        }
+                    });
+                }
             }
 
             this.$registerAttributeGroupSelectEvents();
@@ -642,6 +673,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * @return {void}
          */
         $registerAttributeGroupSelectEvents: function () {
+            if (!this.getAttribute('link_images_and_attributes')) {
+                return;
+            }
+
             const AttributeGroupSelects = this.getElm().getElements('div[data-field-type="AttributeGroup"] select');
 
             AttributeGroupSelects.forEach((Select) => {

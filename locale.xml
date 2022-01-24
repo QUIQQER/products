@@ -2948,6 +2948,14 @@ For a newly created product the article number should be generated automatically
             This setting determines the behavior in the frontend of a product when the selection is reset.
             ]]></en>
         </locale>
+        <locale name="settings.window.products.linkVariantChildrenWithImages">
+            <de><![CDATA[Kindartikel-Attributlisten mit Bildern verknüpfen]]></de>
+            <en><![CDATA[Link child article attribute lists with images]]></en>
+        </locale>
+        <locale name="settings.window.products.linkVariantChildrenWithImages.description">
+            <de><![CDATA[Bei Klick auf das Bild eines Kindartikels sollen die entsprechenden Attributlisten auf die passenden Werte gesetzt werden; bei Auswahl von Attributlisten-Werten soll das passende Produktbild ausgewählt werden.]]></de>
+            <en><![CDATA[When clicking on the image of a child article, the corresponding attribute lists should be set to the appropriate values; when selecting attribute list values, the matching product image should be selected.]]></en>
+        </locale>
     </groups>
 
 </locales>
