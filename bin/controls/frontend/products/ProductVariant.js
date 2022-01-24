@@ -341,10 +341,13 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     QUIControlUtils.getControlByElement(SliderControlElm).then((SliderControl) => {
                         this.$SliderControl = SliderControl;
 
-                        SliderControl.addEvent('onLoaded', () => {
-                            this.$onAttributeGroupSelectChange();
+                        if (SliderControl.isLoaded()) {
                             SliderControl.addEvent('onImageShow', this.$onSliderImageShow);
-                        });
+                        } else {
+                            SliderControl.addEvent('onLoaded', () => {
+                                SliderControl.addEvent('onImageShow', this.$onSliderImageShow);
+                            });
+                        }
                     });
                 }
             }
