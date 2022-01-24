@@ -32,7 +32,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             '$onImport',
             '$init',
             '$onPopstateChange',
-            '$onSliderImageClick',
+            '$onSliderImageShow',
             '$registerAttributeGroupSelectEvents',
             '$onAttributeGroupSelectChange'
         ],
@@ -313,14 +313,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             if (this.getAttribute('link_images_and_attributes')) {
                 const SliderControlElm = Elm.getElement('[data-qui="package/quiqqer/gallery/bin/controls/Slider"]');
 
-                if (SliderControlElm) {
-                    QUIControlUtils.getControlByElement(SliderControlElm).then((SliderControl) => {
-                        this.$SliderControl = SliderControl;
-                        SliderControl.addEvent('onLoaded', this.$onAttributeGroupSelectChange);
-                        SliderControl.addEvent('imageClick', this.$onSliderImageClick);
-                    });
-                }
-
                 if (this.getAttribute('image_attribute_data')) {
                     this.$ImgAttributeGroupsData = JSON.decode(this.getAttribute('image_attribute_data'));
 
@@ -342,6 +334,17 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                         if (!imageFieldIds.contains(availableFieldId)) {
                             this.$nonImageAttributeGroupFieldIds.push(availableFieldId);
                         }
+                    });
+                }
+
+                if (SliderControlElm) {
+                    QUIControlUtils.getControlByElement(SliderControlElm).then((SliderControl) => {
+                        this.$SliderControl = SliderControl;
+
+                        SliderControl.addEvent('onLoaded', () => {
+                            this.$onAttributeGroupSelectChange();
+                            SliderControl.addEvent('onImageShow', this.$onSliderImageShow);
+                        });
                     });
                 }
             }
@@ -762,7 +765,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * @param {Object} SliderControl - package/quiqqer/gallery/bin/controls/Slider
          * @param {Object} ImageData
          */
-        $onSliderImageClick: function (SliderControl, ImageData) {
+        $onSliderImageShow: function (SliderControl, ImageData) {
             const Elm = this.getElm();
 
             const imgRegExpRemoveSize = new RegExp('__\\d+x\\d+', 'ig');
