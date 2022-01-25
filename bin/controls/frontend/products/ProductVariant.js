@@ -34,7 +34,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             '$onPopstateChange',
             '$onSliderImageShow',
             '$registerAttributeGroupSelectEvents',
-            '$onAttributeGroupSelectChange'
+            '$onAttributeGroupSelectChange',
+            '$initImageLinking'
         ],
 
         options: {
@@ -42,7 +43,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             galleryLoader             : true,
             closeable                 : false,
             image_attribute_data      : false, // Special attribute group fields data from product images (set by PHP control)
-            link_images_and_attributes: false
+            link_images_and_attributes: false,
+            loadControlSettingsAsync  : false   // Load settings for this control asynchronously on init
         },
 
         initialize: function (options) {
@@ -310,7 +312,39 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 }).inject(Elm.getElement('.product-data-fieldlist'));
             }
 
-            if (this.getAttribute('link_images_and_attributes')) {
+            this.Loader.show();
+
+            if (this.getAttribute('loadControlSettingsAsync')) {
+                this.$getControlSettings().then((Settings) => {
+                    this.setAttributes(Settings);
+                }).then(() => {
+                    return this.$initImageLinking();
+                }).then(() => {
+                    this.Loader.hide();
+                });
+            } else {
+                this.$initImageLinking().then(() => {
+                    this.Loader.hide();
+                });
+            }
+        },
+
+        /**
+         * Init everything for image linking (=click on image, set AttributeGroup field values and vice versa)
+         *
+         * @return {Promise}
+         */
+        $initImageLinking: function () {
+            const Elm        = this.getElm();
+            const fieldLists = Elm.getElements(
+                '.product-data-fieldlist .quiqqer-product-field select'
+            );
+
+            if (!this.getAttribute('link_images_and_attributes')) {
+                return Promise.resolve();
+            }
+
+            return new Promise((resolve) => {
                 const SliderControlElm = Elm.getElement('[data-qui="package/quiqqer/gallery/bin/controls/Slider"]');
 
                 if (this.getAttribute('image_attribute_data')) {
@@ -343,16 +377,18 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                         if (SliderControl.isLoaded()) {
                             SliderControl.addEvent('onImageShow', this.$onSliderImageShow);
+                            resolve();
                         } else {
                             SliderControl.addEvent('onLoaded', () => {
                                 SliderControl.addEvent('onImageShow', this.$onSliderImageShow);
+                                resolve();
                             });
                         }
                     });
                 }
-            }
 
-            this.$registerAttributeGroupSelectEvents();
+                this.$registerAttributeGroupSelectEvents();
+            });
         },
 
         /**
@@ -797,6 +833,21 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     FieldSelect.value = fieldValue;
                 }
             }
+        },
+
+        /**
+         * Get control settings async.
+         *
+         * @return {Promise}
+         */
+        $getControlSettings: function () {
+            return new Promise((resolve, reject) => {
+                QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getVariantControlSettings', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getAttribute('productId'),
+                    onError  : reject
+                });
+            });
         }
     });
 });
