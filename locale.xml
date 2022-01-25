@@ -2568,6 +2568,11 @@ For a newly created product the article number should be generated automatically
 
     <groups name="quiqqer/products" datatype="php">
 
+        <locale name="exception.duplicate_article_no">
+            <de><![CDATA[Die Artikel-Nr. "[articleNo]" ist bereits vergeben (bei Produkt #[otherProductId]). Bitte wähle eine eindeutige Artikel-Nr. für das Produkt.]]></de>
+            <en><![CDATA[The artciel no. "[articleNo]" is already taken (by product #[otherProductId]). Please choose a unique article no. for this product.]]></en>
+        </locale>
+
         <locale name="button.product.goToProduct">
             <de><![CDATA[Zum Produkt]]></de>
             <en><![CDATA[To product]]></en>
