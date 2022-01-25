@@ -106,6 +106,7 @@ QUI::$Ajax->registerFunction(
             $Product->userSave();
         } catch (QUI\Exception $Exception) {
             QUI::getMessagesHandler()->addAttention($Exception->getMessage());
+            return;
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
