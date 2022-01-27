@@ -128,7 +128,10 @@ class JsonLd
             }
 
             return [
-                'brand' => $brand
+                'brand' => [
+                    '@type' => 'Brand',
+                    'name'  => $brand
+                ]
             ];
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
