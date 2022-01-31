@@ -2018,6 +2018,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 });
             }
 
+            this.$tags = [];
             this.$FilterList.set('html', '');
 
             let i, len;
@@ -2094,6 +2095,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                             Instance.getAttribute('tag'),
                             Instance.getAttribute('Field')
                         );
+
+                        this.$onFilterChange();
                     }
                 }
             }).inject(this.$FilterList);
@@ -2110,6 +2113,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         removeFilter: function (filter, Field) {
             if (!this.$selectFilter) {
                 return;
+            }
+
+            if (this.$tags && this.$tags.indexOf(filter) !== -1) {
+                this.$tags.splice(this.$tags.indexOf(filter), 1);
             }
 
             if (typeof (Field) !== 'undefined' && Field) {
