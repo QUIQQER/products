@@ -159,45 +159,8 @@ class Product extends QUI\Control
 
         if ($typeVariantParent || $typeVariantChild) {
             $Gallery->setAttribute('folderId', false);
-            $images = $Product->getImages();
 
-            try {
-                $MainImage    = $Product->getImage();
-                $mainImageId  = $MainImage->getId();
-                $hasMainImage = false;
-
-                foreach ($images as $Image) {
-                    if ($Image->getId() === $MainImage->getId()) {
-                        $hasMainImage = true;
-                        break;
-                    }
-                }
-
-                if (!$hasMainImage) {
-                    $images[] = $MainImage;
-                }
-            } catch (\Exception $Exception) {
-                QUI\System\Log::writeDebugException($Exception);
-                $mainImageId = false;
-            }
-
-            \usort($images, function ($ImageA, $ImageB) use ($mainImageId) {
-                /**
-                 * @var QUI\Projects\Media\Image $ImageA
-                 * @var QUI\Projects\Media\Image $ImageB
-                 */
-                if ($ImageA->getId() === $mainImageId) {
-                    return -1;
-                }
-
-                if ($ImageB->getId() === $mainImageId) {
-                    return 1;
-                }
-
-                return 0;
-            });
-
-            foreach ($images as $Image) {
+            foreach ($this->getVariantImages($Product) as $Image) {
                 $Gallery->addImage($Image);
             }
         }
@@ -429,13 +392,100 @@ class Product extends QUI\Control
             return $Engine->fetch(\dirname(__FILE__).'/Product.html');
         }
 
-
         // variant product
-        $this->setAttributes([
-            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant'
-        ]);
+        $this->setAttribute('data-qui', 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant');
+
+        foreach ($this->getVariantControlSettings() as $k => $v) {
+            $this->setAttribute('data-qui-options-'.$k, $v);
+        }
 
         return $Engine->fetch(\dirname(__FILE__).'/ProductVariant.html');
+    }
+
+    /**
+     * Get settings for the product variant frontend control.
+     *
+     * package/quiqqer/products/bin/controls/frontend/products/ProductVariant
+     *
+     * @return array
+     */
+    public function getVariantControlSettings(): array
+    {
+        $controlSettings = [];
+
+        $Conf                   = QUI\ERP\Products\Utils\Package::getConfig();
+        $linkVariantsWithImages = !empty($Conf->getValue('variants', 'linkVariantChildrenWithImages'));
+        $images                 = $this->getVariantImages($this->getAttribute('Product'));
+
+        if (!empty($images) && $linkVariantsWithImages) {
+            $imageAttributeGroupsData = [];
+
+            /** @var QUI\Projects\Media\Image $Image */
+            foreach ($images as $Image) {
+                $imageAttributeGroupData = $Image->getAttribute(
+                    Fields::MEDIA_ATTR_IMAGE_ATTRIBUTE_GROUP_DATA
+                );
+
+                if (!empty($imageAttributeGroupData)) {
+                    $imageAttributeGroupsData[$Image->getPath()] = $imageAttributeGroupData;
+                }
+            }
+
+            $controlSettings['image_attribute_data'] = \json_encode($imageAttributeGroupsData);
+        }
+
+        $controlSettings['link_images_and_attributes'] = $linkVariantsWithImages ? 1 : 0;
+
+        return $controlSettings;
+    }
+
+    /**
+     * Get product images (for variant parents and children).
+     *
+     * @param QUI\ERP\Products\Product\Product $Product
+     * @return QUI\Projects\Media\Image[]
+     */
+    protected function getVariantImages(QUI\ERP\Products\Product\Product $Product): array
+    {
+        $images = $Product->getImages();
+
+        try {
+            $MainImage    = $Product->getImage();
+            $mainImageId  = $MainImage->getId();
+            $hasMainImage = false;
+
+            foreach ($images as $Image) {
+                if ($Image->getId() === $MainImage->getId()) {
+                    $hasMainImage = true;
+                    break;
+                }
+            }
+
+            if (!$hasMainImage) {
+                $images[] = $MainImage;
+            }
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+            $mainImageId = false;
+        }
+
+        \usort($images, function ($ImageA, $ImageB) use ($mainImageId) {
+            /**
+             * @var QUI\Projects\Media\Image $ImageA
+             * @var QUI\Projects\Media\Image $ImageB
+             */
+            if ($ImageA->getId() === $mainImageId) {
+                return -1;
+            }
+
+            if ($ImageB->getId() === $mainImageId) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        return $images;
     }
 
     /**

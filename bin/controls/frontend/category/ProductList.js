@@ -33,10 +33,10 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
     "use strict";
 
     const DEBUG = false;
-    const lg = 'quiqqer/products';
+    const lg    = 'quiqqer/products';
 
-    let productOpened = false;
-    let animationDuration = 300;
+    let productOpened             = false;
+    let animationDuration         = 300;
     let refreshSearchCountTimeOut = null;
 
     if (typeof window.QUIQQER_PRODUCTS_FRONTEND_ANIMATION !== 'undefined') {
@@ -92,49 +92,49 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$load = false;
+            this.$load                = false;
             this.$readLocationRunning = false;
 
             this.$ButtonDetails = null;
             this.$ButtonGallery = null;
-            this.$ButtonList = null;
-            this.$BarSort = null;
-            this.$BarDisplays = null;
-            this.$More = null;
-            this.$Sort = null;
+            this.$ButtonList    = null;
+            this.$BarSort       = null;
+            this.$BarDisplays   = null;
+            this.$More          = null;
+            this.$Sort          = null;
 
-            this.$FXContainer = null;
+            this.$FXContainer     = null;
             this.$FXContainerReal = null;
-            this.$FXLoader = null;
-            this.$FXMore = null;
+            this.$FXLoader        = null;
+            this.$FXMore          = null;
 
-            this.$Container = null;
-            this.$ContainerLoader = null;
+            this.$Container        = null;
+            this.$ContainerLoader  = null;
             this.$ProductContainer = null;
 
-            this.$CategoryMore = null;
-            this.$FilterSort = null;
-            this.$FilterDisplay = null;
-            this.$FilterMobile = null;
-            this.$FilterResultInfo = null;
+            this.$CategoryMore      = null;
+            this.$FilterSort        = null;
+            this.$FilterDisplay     = null;
+            this.$FilterMobile      = null;
+            this.$FilterResultInfo  = null;
             this.$FilterClearButton = null;
-            this.$FilterList = null;
-            this.$FilterFieldList = null;
+            this.$FilterList        = null;
+            this.$FilterFieldList   = null;
 
-            this.$FreeText = null;
+            this.$FreeText          = null;
             this.$FreeTextContainer = null;
 
-            this.$fields = {};
+            this.$fields       = {};
             this.$selectFilter = [];
             this.$selectFields = [];
-            this.$categories = [];
-            this.$tags = [];
-            this.$productId = false;
+            this.$categories   = [];
+            this.$tags         = [];
+            this.$productId    = false;
 
-            this.$sortingEnabled = true;
+            this.$sortingEnabled      = true;
             this.$moreButtonIsVisible = false;
-            this.$moreButtonClicked = 0;
-            this.$loadingMore = false;
+            this.$moreButtonClicked   = 0;
+            this.$loadingMore         = false;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -187,7 +187,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             this.$productLoadNumber = parseInt(Elm.get('data-productLoadNumber'));
-            this.$autoloadAfter = parseInt(Elm.get('data-autoloadAfter'));
+            this.$autoloadAfter     = parseInt(Elm.get('data-autoloadAfter'));
 
             if (this.$autoloadAfter < 0) {
                 this.$autoloadAfter = 0;
@@ -214,21 +214,21 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             this.$ButtonDetails = Elm.getElements('.quiqqer-products-productList-sort-display-details');
             this.$ButtonGallery = Elm.getElements('.quiqqer-products-productList-sort-display-gallery');
-            this.$ButtonList = Elm.getElements('.quiqqer-products-productList-sort-display-list');
-            this.$Container = Elm.getElement('.quiqqer-products-productList-products-container');
+            this.$ButtonList    = Elm.getElements('.quiqqer-products-productList-sort-display-list');
+            this.$Container     = Elm.getElement('.quiqqer-products-productList-products-container');
             this.$ContainerReal = Elm.getElement('.quiqqer-products-productList-products-container-real');
 
-            this.$FilterFL = Elm.getElement('.quiqqer-products-productList-fl');
-            this.$FilterSort = Elm.getElement('.quiqqer-products-productList-sort');
-            this.$FilterDisplay = Elm.getElement('.quiqqer-products-productList-filterList');
-            this.$FilterMobile = Elm.getElement('.quiqqer-products-productList-sort-filter-mobile');
-            this.$FilterList = Elm.getElement('.quiqqer-products-productList-filterList-list');
-            this.$FilterFieldList = Elm.getElement('.quiqqer-products-productList-filterList-fields');
-            this.$FilterResultInfo = Elm.getElement('.quiqqer-products-productList-resultInfo-text');
+            this.$FilterFL          = Elm.getElement('.quiqqer-products-productList-fl');
+            this.$FilterSort        = Elm.getElement('.quiqqer-products-productList-sort');
+            this.$FilterDisplay     = Elm.getElement('.quiqqer-products-productList-filterList');
+            this.$FilterMobile      = Elm.getElement('.quiqqer-products-productList-sort-filter-mobile');
+            this.$FilterList        = Elm.getElement('.quiqqer-products-productList-filterList-list');
+            this.$FilterFieldList   = Elm.getElement('.quiqqer-products-productList-filterList-fields');
+            this.$FilterResultInfo  = Elm.getElement('.quiqqer-products-productList-resultInfo-text');
             this.$FilterClearButton = Elm.getElement('.quiqqer-products-productList-resultInfo-clearbtn');
 
             this.$FreeTextContainer = document.getElement('.quiqqer-products-category-freetextSearch');
-            this.$FilterContainer = document.getElement('.quiqqer-products-productList-filter-container-' + cid);
+            this.$FilterContainer   = document.getElement('.quiqqer-products-productList-filter-container-' + cid);
 
             if (Elm.get('data-categories') && Elm.get('data-categories') !== '') {
                 Elm.get('data-categories').split(',').each(function (categoryId) {
@@ -250,9 +250,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
             }).inject(this.$Container);
 
-            this.$FXContainer = moofx(this.$Container);
+            this.$FXContainer     = moofx(this.$Container);
             this.$FXContainerReal = moofx(this.$ContainerReal);
-            this.$FXLoader = moofx(this.$ContainerLoader);
+            this.$FXLoader        = moofx(this.$ContainerLoader);
 
             if (this.$FilterMobile) {
                 this.$FilterMobile.addEvent('click', this.openFilterMenu);
@@ -292,9 +292,9 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }).inject(this.$FilterContainer);
             }
 
-            this.$BarFilter = Elm.getElement('.quiqqer-products-productList-sort-filter');
-            this.$BarSort = Elm.getElement('.quiqqer-products-productList-sort-sorting');
-            this.$BarDisplays = Elm.getElement('.quiqqer-products-productList-sort-display');
+            this.$BarFilter    = Elm.getElement('.quiqqer-products-productList-sort-filter');
+            this.$BarSort      = Elm.getElement('.quiqqer-products-productList-sort-sorting');
+            this.$BarDisplays  = Elm.getElement('.quiqqer-products-productList-sort-display');
             this.$CategoryMore = Elm.getElement('.quiqqer-products-categoryGallery-category-more');
 
             if (!this.$CategoryMore) {
@@ -344,7 +344,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             // freetext
             if (this.$FreeTextContainer) {
                 this.$FreeText = this.$FreeTextContainer.getElement('[type="search"]');
-                let Button = this.$FreeTextContainer.getElement('[type="submit"]');
+                let Button     = this.$FreeTextContainer.getElement('[type="submit"]');
 
                 if (Button) {
                     Button.setStyle('display', 'none');
@@ -576,8 +576,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                         console.log('$readWindowLocation', 4);
                     }
 
-                    this.$categories = [];
-                    this.$productId = false;
+                    this.$categories          = [];
+                    this.$productId           = false;
                     this.$readLocationRunning = false;
 
                     resolve();
@@ -628,7 +628,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 }
 
                 this.$categories = [];
-                this.$productId = false;
+                this.$productId  = false;
 
                 // fields
                 if ("f" in search && this.$FilterContainer) {
@@ -668,7 +668,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                             }
 
                             let currentFieldValue = Field.getSearchValue();
-                            let newFieldValue = fieldParams[fieldId];
+                            let newFieldValue     = fieldParams[fieldId];
 
                             if (typeof currentFieldValue === 'object' && currentFieldValue) {
                                 currentFieldValue = Object.toQueryString(currentFieldValue);
@@ -810,7 +810,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             if (searchParams.tags.length) {
-                let tags = [];
+                let tags    = [];
                 let locTags = searchParams.tags;
 
                 for (let i = 0, len = locTags.length; i < len; i++) {
@@ -846,7 +846,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             }
 
             if (searchParams.productId) {
-                history = {};
+                history   = {};
                 history.p = parseInt(searchParams.productId);
             }
 
@@ -1791,7 +1791,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             for (i = 0, len = filter.length; i < len; i++) {
                 Filter = filter[i];
                 Select = Filter.getElement('select');
-                Title = Filter.getElement(
+                Title  = Filter.getElement(
                     '.quiqqer-products-productList-filter-entry-title'
                 );
 
@@ -1799,7 +1799,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 if (!Select) {
                     // search fields
                     // Title.destroy();
-                    Select = Filter.getElement('input');
+                    Select     = Filter.getElement('input');
                     searchdata = null;
 
                     try {
@@ -2161,7 +2161,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             let empty = false;
 
-            let fieldHTML = this.$FilterFieldList.innerHTML.trim();
+            let fieldHTML  = this.$FilterFieldList.innerHTML.trim();
             let filterHTML = this.$FilterList.innerHTML.trim();
 
             if (fieldHTML === '' && filterHTML === '') {
@@ -2409,7 +2409,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
                                 for (i = 0, len = filter.fields.length; i < len; i++) {
                                     fieldId = filter.fields[i].fieldId;
-                                    value = filter.fields[i].value;
+                                    value   = filter.fields[i].value;
 
                                     fields[fieldId] = value;
                                 }
@@ -2420,7 +2420,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                             }
 
                             if (filter.tags && filter.tags.length) {
-                                let tags = [];
+                                let tags    = [];
                                 let locTags = filter.tags;
 
                                 for (i = 0, len = locTags.length; i < len; i++) {
@@ -2511,7 +2511,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
 
             let currentCategories = this.$categories;
 
-            this.$productId = productId;
+            this.$productId  = productId;
             this.$categories = [];
 
             let Loader         = new QUILoader(),
@@ -2546,7 +2546,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     return new Promise(function (resolve) {
                         require(['package/quiqqer/products/bin/Products'], function (Products) {
                             Products.getProductControlClass(productId).then(resolve).catch(function () {
-                                self.$productId = false;
+                                self.$productId  = false;
                                 self.$categories = currentCategories;
 
                                 if (DEBUG) {
@@ -2575,10 +2575,11 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                             self.$setWindowLocation();
 
                             let Instance = new Product({
-                                productId    : productId,
-                                closeable    : true,
-                                galleryLoader: false,
-                                events       : {
+                                productId               : productId,
+                                closeable               : true,
+                                galleryLoader           : false,
+                                loadControlSettingsAsync: true,
+                                events                  : {
                                     onLoad: function () {
                                         moofx(self.$Elm).animate({
                                             height: 0
@@ -2601,7 +2602,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                                     },
 
                                     onClose: function () {
-                                        self.$productId = false;
+                                        self.$productId  = false;
                                         self.$categories = currentCategories;
 
                                         let Url = URI(window.location);
@@ -2649,7 +2650,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 console.log('->showList()');
             }
 
-            let self = this;
+            let self      = this;
             productOpened = false;
 
             if (typeof setLocation === 'undefined') {

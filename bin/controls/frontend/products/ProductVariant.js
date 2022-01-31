@@ -9,12 +9,14 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
     'qui/QUI',
     'qui/controls/loader/Loader',
+    'utils/Controls',
+
     'Ajax',
     'Locale',
     'URI',
     'package/quiqqer/products/bin/controls/frontend/products/Product'
 
-], function (QUI, QUILoader, QUIAjax, QUILocale, URI, Product) {
+], function (QUI, QUILoader, QUIControlUtils, QUIAjax, QUILocale, URI, Product) {
     "use strict";
 
     // history popstate for mootools
@@ -29,26 +31,36 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             '$onInject',
             '$onImport',
             '$init',
-            '$onPopstateChange'
+            '$onPopstateChange',
+            '$onSliderImageShow',
+            '$registerAttributeGroupSelectEvents',
+            '$onAttributeGroupSelectChange',
+            '$initImageLinking'
         ],
 
         options: {
-            productId    : false,
-            galleryLoader: true,
-            closeable    : false
+            productId                 : false,
+            galleryLoader             : true,
+            closeable                 : false,
+            image_attribute_data      : false, // Special attribute group fields data from product images (set by PHP control)
+            link_images_and_attributes: false,
+            loadControlSettingsAsync  : false   // Load settings for this control asynchronously on init
         },
 
         initialize: function (options) {
             this.parent(options);
 
-            this.Loader = new QUILoader({'cssclass': 'quiqqer-products-productVariant-loader'});
-            this.$startInit = false;
+            this.Loader             = new QUILoader({'cssclass': 'quiqqer-products-productVariant-loader'});
+            this.$startInit         = false;
             this.$isOnlyVariantList = false; // if the variant has no attribute lists and only one list of its variants
 
-            this.$currentVariantId = false;
-            this.$isVariantParent = true;
-            this.$fieldHashes = null;
-            this.$availableHashes = null;
+            this.$currentVariantId               = false;
+            this.$isVariantParent                = true;
+            this.$fieldHashes                    = null;
+            this.$availableHashes                = null;
+            this.$ImgAttributeGroupsData         = {};
+            this.$SliderControl                  = null;
+            this.$nonImageAttributeGroupFieldIds = [];
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -88,13 +100,14 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                 return new Promise((resolve) => {
                     QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getProduct', (result) => {
-                        this.$fieldHashes = result.fieldHashes;
+                        this.$fieldHashes     = result.fieldHashes;
                         this.$availableHashes = result.availableHashes;
 
                         resolve();
                     }, {
                         'package': 'quiqqer/products',
-                        productId: this.getAttribute('productId')
+                        productId: this.getAttribute('productId'),
+                        siteId   : QUIQQER_SITE.id
                     });
                 });
             }).then(this.$init);
@@ -130,7 +143,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 }
 
                 let Field;
-                const Elm = self.getElm();
+                const Elm    = self.getElm();
                 const fields = result.fields;
 
                 for (let fieldId in fields) {
@@ -163,6 +176,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             }
 
             const self = this;
+            const Elm  = this.getElm();
 
             this.$startInit = true;
             this.Loader.inject(document.body);
@@ -174,16 +188,42 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 Control.removeEvents('onChange');
             });
 
-            this.$isOnlyVariantList = !!this.getElm().getElement('[name="field-23"]');
+            this.$isOnlyVariantList = !!Elm.getElement('[name="field-23"]');
 
             // add Variant events
-            const fieldLists = this.getElm().getElements(
+            const fieldLists = Elm.getElements(
                 '.product-data-fieldlist .quiqqer-product-field select'
             );
 
             fieldLists.removeEvents('change');
-            fieldLists.addEvent('change', function () {
+            fieldLists.addEvent('change', (event) => {
                 const currentHash = self.getCurrentHash();
+
+                // Load parent (if a variant is currently selected and an attribute field is deselected)
+                if (event.target.value === '') {
+                    let refresh = true;
+
+                    // Check if a specific variant is selected
+                    fieldLists.forEach((Select) => {
+                        if (Select !== event.target && Select.value === '') {
+                            refresh = false;
+                        }
+                    });
+
+                    if (refresh) {
+                        // Reset all attribute list select fields that are not associated with a variant child image.
+                        fieldLists.forEach((AttributeGroupSelect) => {
+                            const fieldId = parseInt(AttributeGroupSelect.get('data-field'));
+
+                            if (this.$nonImageAttributeGroupFieldIds.contains(fieldId)) {
+                                AttributeGroupSelect.value = '';
+                            }
+                        });
+
+                        self.$refreshVariant();
+                    }
+                    return;
+                }
 
                 if (typeof self.$availableHashes[currentHash] === 'undefined') {
                     self.hidePrice();
@@ -194,7 +234,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 self.$refreshVariant();
             });
 
-            const attributeGroups = this.getElm().getElements('[data-field-type="AttributeGroup"] select');
+            const attributeGroups = Elm.getElements('[data-field-type="AttributeGroup"] select');
 
             attributeGroups.addEvent('focus', function () {
                 if (attributeGroups.length === 1) {
@@ -203,11 +243,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                 let i, len, select;
 
-                const values = {};
+                const values  = {};
                 const fieldId = this.name.replace('field-', '');
                 const options = this.options;
 
-                const enabled = [];
+                const enabled     = [];
                 const EmptyOption = enabled.filter(function (option) {
                     return option.value === '';
                 })[0];
@@ -259,7 +299,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 }
             });
 
-            if (this.getElm().getElement('.product-data-fieldlist')) {
+            if (Elm.getElement('.product-data-fieldlist')) {
                 new Element('div', {
                     class : 'product-data-fieldlist-reset',
                     html  : QUILocale.get('quiqqer/products', 'control.variant.reset.fields'),
@@ -269,8 +309,86 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                             self.$refreshVariant();
                         }
                     }
-                }).inject(this.getElm().getElement('.product-data-fieldlist'));
+                }).inject(Elm.getElement('.product-data-fieldlist'));
             }
+
+            this.Loader.show();
+
+            if (this.getAttribute('loadControlSettingsAsync')) {
+                this.$getControlSettings().then((Settings) => {
+                    this.setAttributes(Settings);
+                }).then(() => {
+                    return this.$initImageLinking();
+                }).then(() => {
+                    this.Loader.hide();
+                });
+            } else {
+                this.$initImageLinking().then(() => {
+                    this.Loader.hide();
+                });
+            }
+        },
+
+        /**
+         * Init everything for image linking (=click on image, set AttributeGroup field values and vice versa)
+         *
+         * @return {Promise}
+         */
+        $initImageLinking: function () {
+            const Elm        = this.getElm();
+            const fieldLists = Elm.getElements(
+                '.product-data-fieldlist .quiqqer-product-field select'
+            );
+
+            if (!this.getAttribute('link_images_and_attributes')) {
+                return Promise.resolve();
+            }
+
+            return new Promise((resolve) => {
+                const SliderControlElm = Elm.getElement('[data-qui="package/quiqqer/gallery/bin/controls/Slider"]');
+
+                if (this.getAttribute('image_attribute_data')) {
+                    this.$ImgAttributeGroupsData = JSON.decode(this.getAttribute('image_attribute_data'));
+
+                    // Determine all fields that are not associated with images
+                    const availableFieldIds = [];
+                    const imageFieldIds     = [];
+
+                    fieldLists.forEach((AttributeGroupSelect) => {
+                        availableFieldIds.push(parseInt(AttributeGroupSelect.get('data-field')));
+                    });
+
+                    for (const Fields of Object.values(this.$ImgAttributeGroupsData)) {
+                        for (const fieldId of Object.keys(Fields)) {
+                            imageFieldIds.push(parseInt(fieldId));
+                        }
+                    }
+
+                    availableFieldIds.forEach((availableFieldId) => {
+                        if (!imageFieldIds.contains(availableFieldId)) {
+                            this.$nonImageAttributeGroupFieldIds.push(availableFieldId);
+                        }
+                    });
+                }
+
+                if (SliderControlElm) {
+                    QUIControlUtils.getControlByElement(SliderControlElm).then((SliderControl) => {
+                        this.$SliderControl = SliderControl;
+
+                        if (SliderControl.isLoaded()) {
+                            SliderControl.addEvent('onImageShow', this.$onSliderImageShow);
+                            resolve();
+                        } else {
+                            SliderControl.addEvent('onLoaded', () => {
+                                SliderControl.addEvent('onImageShow', this.$onSliderImageShow);
+                                resolve();
+                            });
+                        }
+                    });
+                }
+
+                this.$registerAttributeGroupSelectEvents();
+            });
         },
 
         /**
@@ -279,7 +397,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
         $refreshVariant: function () {
             this.Loader.show();
 
-            const self = this;
+            const self     = this;
             let fieldLists = this.getElm().getElements(
                 '.product-data-fieldlist .quiqqer-product-field select'
             );
@@ -298,7 +416,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 });
 
                 self.$currentVariantId = result.variantId;
-                self.$isVariantParent = !!result.isVariantParent;
+                self.$isVariantParent  = !!result.isVariantParent;
 
                 document.title = result.title;
                 //self.$fieldHashes     = result.fieldHashes;
@@ -310,7 +428,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     //window.history.pushState({}, "", result.url.toString());
                 } else {
                     const Url = URI(window.location);
-                    var url = Url.setSearch('variant', result.variantId).toString();
+                    var url   = Url.setSearch('variant', result.variantId).toString();
                     //window.history.pushState({}, "", url);
                 }
 
@@ -373,7 +491,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 return true;
             }
 
-            const current = this.getCurrentFieldValues();
+            const current    = this.getCurrentFieldValues();
             const collection = {};
 
             const fitHashToCurrentSettings = function (h) {
@@ -516,7 +634,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          */
         getCurrentHash: function () {
             const fields = this.getCurrentFieldValues();
-            const hash = [];
+            const hash   = [];
 
             for (let i in fields) {
                 if (fields.hasOwnProperty(i)) {
@@ -537,7 +655,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             const fields = {};
 
             for (i = 0, len = attributeGroups.length; i < len; i++) {
-                fieldName = attributeGroups[i].name.replace('field-', '');
+                fieldName  = attributeGroups[i].name.replace('field-', '');
                 fieldValue = this.stringToHex(attributeGroups[i].value);
 
                 fields[fieldName] = fieldValue;
@@ -587,6 +705,149 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          */
         isBuyable: function () {
             return !this.$isVariantParent;
+        },
+
+        /**
+         * Register change events for attribute group selects.
+         *
+         * If a select changes, the corresponding image has to be loaded (if applicable).
+         *
+         * @return {void}
+         */
+        $registerAttributeGroupSelectEvents: function () {
+            if (!this.getAttribute('link_images_and_attributes')) {
+                return;
+            }
+
+            const AttributeGroupSelects = this.getElm().getElements('div[data-field-type="AttributeGroup"] select');
+
+            AttributeGroupSelects.forEach((Select) => {
+                Select.addEventListener('change', this.$onAttributeGroupSelectChange);
+            });
+        },
+
+        /**
+         * event: change on AttributeGroup selects
+         *
+         * @return {void}
+         */
+        $onAttributeGroupSelectChange: function () {
+            if (!this.$SliderControl || !('selectImageByFilename' in this.$SliderControl)) {
+                return;
+            }
+
+            const AttributeGroupSelects    = this.getElm().getElements('div[data-field-type="AttributeGroup"] select');
+            const AttributeGroupTargetData = {};
+            let allSelectsWithValues       = true;
+
+            AttributeGroupSelects.forEach((Select) => {
+                if (Select.value) {
+                    AttributeGroupTargetData[parseInt(Select.get('data-field'))] = parseInt(Select.value);
+                } else {
+                    allSelectsWithValues = false;
+                }
+            });
+
+            if (allSelectsWithValues) {
+                return;
+            }
+
+            if (!Object.values(AttributeGroupTargetData).length) {
+                return;
+            }
+
+            const imgRegExpParseFilename = new RegExp('([^\\/]*)\\.\\w+$', 'igm');
+            const matchedImages          = [];
+
+            for (const [imagePath, ImageData] of Object.entries(this.$ImgAttributeGroupsData)) {
+                let matchedFields = 0;
+
+                for (const [fieldId, fieldValue] of Object.entries(AttributeGroupTargetData)) {
+                    if (!(fieldId in ImageData)) {
+                        continue;
+                    }
+
+                    if (ImageData[fieldId] !== fieldValue) {
+                        continue;
+                    }
+
+                    matchedFields++;
+                }
+
+                if (matchedFields > 0) {
+                    const filenameMatches = [...imagePath.split('/').pop().matchAll(imgRegExpParseFilename)];
+
+                    if (filenameMatches.length && typeof filenameMatches[0][1] !== 'undefined') {
+                        matchedImages.push({
+                            imageFilename: filenameMatches[0][1],
+                            matchedFields: matchedFields
+                        });
+                    }
+                }
+            }
+
+            // Select first image that fits in gallery
+            if (!matchedImages.length) {
+                return;
+            }
+
+            const sortedImages = matchedImages.sort((matchA, matchB) => {
+                return matchB.matchedFields - matchA.matchedFields;
+            });
+
+            this.$SliderControl.selectImageByFilename(sortedImages[0].imageFilename);
+        },
+
+        /**
+         * event: onImageClick from
+         *
+         * @param {Object} SliderControl - package/quiqqer/gallery/bin/controls/Slider
+         * @param {Object} ImageData
+         */
+        $onSliderImageShow: function (SliderControl, ImageData) {
+            const Elm = this.getElm();
+
+            const imgRegExpRemoveSize = new RegExp('__\\d+x\\d+', 'ig');
+            const imgRegExpRemoveExt  = new RegExp('\\.\\w+$', 'id');
+            const imageUrl            = ImageData.src.replace(imgRegExpRemoveSize, '');
+
+            let AttributeGroupData = false;
+
+            for (let [imagePath, ImageData] of Object.entries(this.$ImgAttributeGroupsData)) {
+                imagePath = imagePath.replace(imgRegExpRemoveExt, '');
+
+                if (imageUrl.indexOf(imagePath) !== -1) {
+                    AttributeGroupData = ImageData;
+                    break;
+                }
+            }
+
+            if (!AttributeGroupData) {
+                return;
+            }
+
+            for (const [fieldId, fieldValue] of Object.entries(AttributeGroupData)) {
+                const FieldSelect = Elm.getElement('select[data-field="' + fieldId + '"]');
+
+                if (FieldSelect) {
+                    FieldSelect.value = fieldValue;
+                }
+            }
+        },
+
+        /**
+         * Get control settings async.
+         *
+         * @return {Promise}
+         */
+        $getControlSettings: function () {
+            return new Promise((resolve, reject) => {
+                QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getVariantControlSettings', resolve, {
+                    'package': 'quiqqer/products',
+                    productId: this.getAttribute('productId'),
+                    onError  : reject
+                });
+            });
         }
     });
 });

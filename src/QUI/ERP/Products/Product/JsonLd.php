@@ -114,10 +114,24 @@ class JsonLd
         $uid = $brandEntries[0];
 
         try {
-            $User = QUI::getUsers()->get($uid);
+            $User    = QUI::getUsers()->get($uid);
+            $Address = $User->getStandardAddress();
+
+            $brand = $Address->getAttribute('company');
+
+            if (empty($brand)) {
+                $brand = $Address->getName();
+            }
+
+            if (empty($brand)) {
+                $brand = $User->getName();
+            }
 
             return [
-                'brand' => $User->getName()
+                'brand' => [
+                    '@type' => 'Brand',
+                    'name'  => $brand
+                ]
             ];
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());

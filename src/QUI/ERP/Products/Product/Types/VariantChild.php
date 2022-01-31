@@ -213,7 +213,7 @@ class VariantChild extends AbstractType
 
         $contentCheck = strip_tags($result);
         $contentCheck = trim($contentCheck);
-        
+
         if (!empty($contentCheck)) {
             return $result;
         }
@@ -520,6 +520,38 @@ class VariantChild extends AbstractType
 
 
         parent::productSave($fieldData, $EditUser);
+
+        /*
+         * Set AttributeGroup field data to images.
+         *
+         * This is done so that a click on a variant image in the frontend
+         * loads the corresponding specific variant child.
+         */
+        if ($this->OwnMediaFolderField instanceof QUI\ERP\Products\Field\Types\Folder) {
+            $attributeGroupFieldData = [];
+
+            /** @var QUI\ERP\Products\Field\Types\AttributeGroup $AttributeGroupField */
+            foreach ($this->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS) as $AttributeGroupField) {
+                $fieldId    = $AttributeGroupField->getId();
+                $fieldValue = $this->getFieldValue($fieldId);
+
+                if (!empty($fieldValue) && !empty($AttributeGroupField->getOption('is_image_attribute'))) {
+                    $attributeGroupFieldData[$fieldId] = $fieldValue;
+                }
+            }
+
+            if (!empty($attributeGroupFieldData)) {
+                $QuiMediaFolder = $this->OwnMediaFolderField->getMediaFolder();
+
+                if ($QuiMediaFolder) {
+                    /** @var QUI\Projects\Media\Image $Image */
+                    foreach ($QuiMediaFolder->getImages() as $Image) {
+                        $Image->setAttribute(Fields::MEDIA_ATTR_IMAGE_ATTRIBUTE_GROUP_DATA, $attributeGroupFieldData);
+                        $Image->save($EditUser);
+                    }
+                }
+            }
+        }
 
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),

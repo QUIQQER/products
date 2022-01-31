@@ -49,10 +49,11 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     public function __construct($fieldId, array $params)
     {
         $this->setOptions([
-            'entries'       => [],
-            'priority'      => 0,
-            'generate_tags' => false,
-            'entries_type'  => self::ENTRIES_TYPE_DEFAULT
+            'entries'            => [],
+            'priority'           => 0,
+            'generate_tags'      => false,
+            'entries_type'       => self::ENTRIES_TYPE_DEFAULT,
+            'is_image_attribute' => false
         ]);
 
         parent::__construct($fieldId, $params);
