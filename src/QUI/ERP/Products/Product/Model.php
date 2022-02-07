@@ -1324,6 +1324,7 @@ class Model extends QUI\QDOM
                         'type'  => 'NOT',
                         'value' => $this->getId()
                     ],
+                    'active'    => 1,
                     'productNo' => $articleNo
                 ]
             ]);

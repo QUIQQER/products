@@ -518,8 +518,8 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
 
         try {
             $this->bruttoSum = $OldCurrency->convert($this->bruttoSum, $this->Currency);
-            $this->nettoSum = $OldCurrency->convert($this->nettoSum, $this->Currency);
-            $this->sum = $OldCurrency->convert($this->sum, $this->Currency);
+            $this->nettoSum  = $OldCurrency->convert($this->nettoSum, $this->Currency);
+            $this->sum       = $OldCurrency->convert($this->sum, $this->Currency);
         } catch (QUI\Exception $Exception) {
         }
     }
