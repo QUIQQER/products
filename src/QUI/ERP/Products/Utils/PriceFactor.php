@@ -386,9 +386,9 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * Return the specific vat  (eq: 19%)
      *
-     * @return bool
+     * @return bool|float|int
      */
-    public function getVat(): bool
+    public function getVat()
     {
         return $this->vat;
     }
