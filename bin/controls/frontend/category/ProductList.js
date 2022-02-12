@@ -359,16 +359,22 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                     this.$FreeText.value = search.search;
                 }
 
-                new QUIButton({
-                    icon  : 'fa fa-search',
-                    events: {
-                        onClick: executeSearch
-                    },
-                    styles: {
-                        padding: 5,
-                        width  : 50
-                    }
-                }).inject(this.$FreeTextContainer);
+                var FreeTextSearchBtn = this.$FreeTextContainer.getElement('button');
+
+                if (FreeTextSearchBtn) {
+                    FreeTextSearchBtn.addEvent('click', executeSearch);
+                } else {
+                    new QUIButton({
+                        icon  : 'fa fa-search',
+                        events: {
+                            onClick: executeSearch
+                        },
+                        styles: {
+                            padding: 5,
+                            width  : 50
+                        }
+                    }).inject(this.$FreeTextContainer);
+                }
 
                 this.$FreeText.addEvent('change', executeSearch);
             }
