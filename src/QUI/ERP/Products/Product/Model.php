@@ -1316,35 +1316,7 @@ class Model extends QUI\QDOM
                 break;
             }
 
-            $result = QUI::getDataBase()->fetch([
-                'select' => ['id'],
-                'from'   => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-                'where'  => [
-                    'id'        => [
-                        'type'  => 'NOT',
-                        'value' => $this->getId()
-                    ],
-                    'active'    => 1,
-                    'productNo' => $articleNo
-                ]
-            ]);
-
-            $duplicateArticleNoProductIds = \array_unique(\array_column($result, 'id'));
-
-            foreach ($duplicateArticleNoProductIds as $productId) {
-                if (Products::existsProduct($productId)) {
-                    throw new QUI\ERP\Products\Product\Exception(
-                        [
-                            'quiqqer/products',
-                            'exception.duplicate_article_no',
-                            [
-                                'articleNo'      => $articleNo,
-                                'otherProductId' => $productId
-                            ]
-                        ]
-                    );
-                }
-            }
+            $this->checkDuplicateArticleNo($articleNo);
         }
 
         // if variant child
@@ -2397,6 +2369,13 @@ class Model extends QUI\QDOM
             ])
         );
 
+        // duplicate article no. check
+        $articleNo = $this->getFieldValue(Fields::FIELD_PRODUCT_NO);
+
+        if (!empty($articleNo)) {
+            $this->checkDuplicateArticleNo($articleNo);
+        }
+
         // all fields correct?
         $this->validateFields();
 
@@ -2680,6 +2659,51 @@ class Model extends QUI\QDOM
                 $PriceField->setValue($price);
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
+            }
+        }
+    }
+
+    // endregion
+
+    // region Validation
+
+    /**
+     * Check if there is another active product with an identical article no.
+     *
+     * @param string $articleNo - The article no. to check against
+     * @return void
+     *
+     * @throws QUI\Exception - Thrown if a duplicate article no. exists
+     */
+    protected function checkDuplicateArticleNo(string $articleNo)
+    {
+        $subQuery = "SELECT `id` FROM ".QUI\ERP\Products\Utils\Tables::getProductTableName();
+        $subQuery .= " WHERE `active` = 1 AND `parent` IS NULL";
+
+        $sql = "SELECT `id` FROM ".QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
+        $sql .= " WHERE `id` != ".$this->getId()." AND `active` = 1";
+        $sql .= " AND (`parentId` IS NULL or `parentId` IN(".$subQuery."))";
+        $sql .= " AND `productNo` = '".$articleNo."'";
+
+        $result                       = QUI::getDataBase()->fetchSQL($sql);
+        $duplicateArticleNoProductIds = \array_unique(\array_column($result, 'id'));
+
+        foreach ($duplicateArticleNoProductIds as $productId) {
+            if (Products::existsProduct($productId)) {
+                throw new QUI\ERP\Products\Product\Exception(
+                    [
+                        'quiqqer/products',
+                        'exception.duplicate_article_no',
+                        [
+                            'articleNo'      => $articleNo,
+                            'otherProductId' => $productId
+                        ]
+                    ],
+                    400,
+                    [
+                        'updateProduct' => $this->getId()
+                    ]
+                );
             }
         }
     }
