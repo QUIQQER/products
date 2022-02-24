@@ -612,6 +612,19 @@ class Calc
             return $Product->getPrice();
         }
 
+        try {
+            QUI::getEvents()->fireEvent(
+                'onQuiqqerProductsCalcProduct',
+                [$this, $Product]
+            );
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::write(
+                $Exception->getMessage(),
+                QUI\System\Log::LEVEL_ERROR,
+                $Exception->getContext()
+            );
+        }
+
         $isNetto     = QUI\ERP\Utils\User::isNettoUser($this->getUser());
         $isEuVatUser = QUI\ERP\Tax\Utils::isUserEuVatUser($this->getUser());
         $Area        = QUI\ERP\Utils\User::getUserArea($this->getUser());
