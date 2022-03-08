@@ -1305,18 +1305,20 @@ class Model extends QUI\QDOM
         $this->getField(Fields::FIELD_URL)->setValue($urls);
 
         // Check if article no. is unique
-        foreach ($fieldData as $field) {
-            if ($field['id'] !== Fields::FIELD_PRODUCT_NO) {
-                continue;
+        if ($this->isActive()) {
+            foreach ($fieldData as $field) {
+                if ($field['id'] !== Fields::FIELD_PRODUCT_NO) {
+                    continue;
+                }
+
+                $articleNo = $field['value'];
+
+                if (empty($articleNo)) {
+                    break;
+                }
+
+                $this->checkDuplicateArticleNo($articleNo);
             }
-
-            $articleNo = $field['value'];
-
-            if (empty($articleNo)) {
-                break;
-            }
-
-            $this->checkDuplicateArticleNo($articleNo);
         }
 
         // if variant child
