@@ -26,12 +26,11 @@
     </div>
 
     <div class="quiqqer-productList-product-list-buttons">
-        <span class="fa fa-envelope button__small quiqqer-products-product-button-purchase"></span>
-
         {if QUI\ERP\Products\Utils\Products::isVariant($Product) === false}
-        <span class="fa fa-plus button__small quiqqer-products-product-button-add"></span>
+            <span class="fa fa-envelope button__small quiqqer-products-product-button-purchase"></span>
+            <span class="fa fa-plus button__small quiqqer-products-product-button-add"></span>
         {else}
-        <span class="fa fa-arrow-circle-o-right button__small quiqqer-products-product-button-open"></span>
+            <span class="fa fa-arrow-circle-o-right button__small quiqqer-products-product-button-open"></span>
         {/if}
     </div>
 
