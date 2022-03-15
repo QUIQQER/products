@@ -853,8 +853,8 @@ class EventHandling
             $sql = "UPDATE `" . Tables::getProductTableName() . "` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
             QUI::getDataBase()->execSQL($sql);
 
-            $sql = "UPDATE `" . Tables::getProductCacheTableName(
-                ) . "` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
+            $sql = "UPDATE `" . Tables::getProductCacheTableName() .
+                "` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
             QUI::getDataBase()->execSQL($sql);
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
