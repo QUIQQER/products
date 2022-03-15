@@ -100,8 +100,8 @@ class EventHandling
                 } catch (QUI\ERP\Products\Field\Exception $Exception) {
                     if ($Exception->getCode() === 404) {
                         QUI\System\Log::addInfo(
-                            'Removed product field #'.$fieldId.' from the [editableFields] section in '
-                            .$Config->getFilename()
+                            'Removed product field #' . $fieldId . ' from the [editableFields] section in '
+                            . $Config->getFilename()
                         );
 
                         unset($editableFields[$fieldId]);
@@ -123,8 +123,8 @@ class EventHandling
                 } catch (QUI\ERP\Products\Field\Exception $Exception) {
                     if ($Exception->getCode() === 404) {
                         QUI\System\Log::addInfo(
-                            'Removed product field #'.$fieldId.' from the [inheritedFields] section in '
-                            .$Config->getFilename().' because the field no longer exists.'
+                            'Removed product field #' . $fieldId . ' from the [inheritedFields] section in '
+                            . $Config->getFilename() . ' because the field no longer exists.'
                         );
 
                         unset($inheritedFields[$fieldId]);
@@ -850,10 +850,11 @@ class EventHandling
                 return;
             }
 
-            $sql = "UPDATE `".Tables::getProductTableName()."` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
+            $sql = "UPDATE `" . Tables::getProductTableName() . "` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
             QUI::getDataBase()->execSQL($sql);
 
-            $sql = "UPDATE `".Tables::getProductCacheTableName()."` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
+            $sql = "UPDATE `" . Tables::getProductCacheTableName(
+                ) . "` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
             QUI::getDataBase()->execSQL($sql);
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
@@ -897,10 +898,10 @@ class EventHandling
                 if ($columnTypeActual !== $columnTypeExpected
                     && $columnTypeActual !== $columnTypeExpectedVariant) {
                     QUI\System\Log::addCritical(
-                        'Column "'.$column.'" in table "products_cache" has wrong type!'
-                        .' Expected: '.$columnTypeExpected.' or '.$columnTypeExpectedVariant
-                        .' | Actual: '.$columnTypeActual.'.'
-                        .' Please fix manually!'
+                        'Column "' . $column . '" in table "products_cache" has wrong type!'
+                        . ' Expected: ' . $columnTypeExpected . ' or ' . $columnTypeExpectedVariant
+                        . ' | Actual: ' . $columnTypeActual . '.'
+                        . ' Please fix manually!'
                     );
                 }
             } catch (QUI\ERP\Products\Field\Exception $Exception) {
@@ -909,19 +910,19 @@ class EventHandling
                     $DB->table()->deleteColumn($cacheTbl, $column);
 
                     QUI\System\Log::addInfo(
-                        'quiqqer/products :: Deleted column "'.$column.'" from table "'.$cacheTbl.'" because'
-                        .' product field #'.$fieldId.' does not exist anymore.'
+                        'quiqqer/products :: Deleted column "' . $column . '" from table "' . $cacheTbl . '" because'
+                        . ' product field #' . $fieldId . ' does not exist anymore.'
                     );
                 } else {
                     QUI\System\Log::addError(
                         'EventHandling :: checkProductCacheTable -> ERROR on cache table column check for field #'
-                        .$fieldId.': '.$Exception->getMessage()
+                        . $fieldId . ': ' . $Exception->getMessage()
                     );
                 }
             } catch (\Exception $Exception) {
                 QUI\System\Log::addError(
                     'EventHandling :: checkProductCacheTable -> ERROR on cache table column check for field #'
-                    .$fieldId.': '.$Exception->getMessage()
+                    . $fieldId . ': ' . $Exception->getMessage()
                 );
             }
         }
@@ -958,16 +959,16 @@ class EventHandling
             $url = $Site->getLocation();
             $url = \str_replace(QUI\Rewrite::URL_DEFAULT_SUFFIX, '', $url);
 
-            QUI::getRewrite()->registerPath($url.'/*', $Site);
+            QUI::getRewrite()->registerPath($url . '/*', $Site);
 
             // Clear category menu cache
             QUI\Cache\LongTermCache::clear(
-                QUI\ERP\Products\Handler\Cache::getBasicCachePath().'categories/menu'
+                QUI\ERP\Products\Handler\Cache::getBasicCachePath() . 'categories/menu'
             );
         }
 
         // cache clearing
-        $cname = 'products/search/frontend/fieldvalues/'.$Site->getId().'/'.$Project->getLang();
+        $cname = 'products/search/frontend/fieldvalues/' . $Site->getId() . '/' . $Project->getLang();
 
         QUI\ERP\Products\Search\Cache::clear($cname);
         QUI\ERP\Products\Search\Cache::clear('products/search/userfieldids/');
@@ -976,8 +977,8 @@ class EventHandling
 
         // field cache clearing
         $searchFieldCache = 'products/search/frontend/searchfielddata/';
-        $searchFieldCache .= $Site->getId().'/';
-        $searchFieldCache .= $Project->getLang().'/';
+        $searchFieldCache .= $Site->getId() . '/';
+        $searchFieldCache .= $Project->getLang() . '/';
 
         QUI\ERP\Products\Search\Cache::clear($searchFieldCache);
 
@@ -1092,7 +1093,7 @@ class EventHandling
     {
         // Clear some cache paths if any new package is installed
         $clearCachePaths = [
-            Cache::getBasicCachePath().'fields/'
+            Cache::getBasicCachePath() . 'fields/'
         ];
 
         foreach ($clearCachePaths as $cachePath) {
@@ -1156,8 +1157,8 @@ class EventHandling
 
 
         $header = '<script type="text/javascript">';
-        $header .= 'var QUIQQER_PRODUCTS_HIDE_PRICE = '.$hide.';';
-        $header .= 'var QUIQQER_PRODUCTS_FRONTEND_ANIMATION = '.$frontendAnimation.';';
+        $header .= 'var QUIQQER_PRODUCTS_HIDE_PRICE = ' . $hide . ';';
+        $header .= 'var QUIQQER_PRODUCTS_FRONTEND_ANIMATION = ' . $frontendAnimation . ';';
         $header .= '</script>';
 
         $TemplateManager->extendHeader($header);
@@ -1201,6 +1202,10 @@ class EventHandling
         $params = $Rewrite->getUrlParamsList();
 
         if (!\count($params)) {
+            return;
+        }
+
+        if (!isset($params[1])) {
             return;
         }
 
@@ -1321,7 +1326,7 @@ class EventHandling
                 'from'  => $translationTable,
                 'where' => [
                     'groups' => 'quiqqer/products',
-                    'var'    => 'products.category.'.$catId.'.title'
+                    'var'    => 'products.category.' . $catId . '.title'
                 ],
                 'limit' => 1
             ]);
@@ -1335,7 +1340,7 @@ class EventHandling
                 'from'  => $translationTable,
                 'where' => [
                     'groups' => 'quiqqer/products',
-                    'var'    => 'products.category.'.$catId.'.description'
+                    'var'    => 'products.category.' . $catId . '.description'
                 ],
                 'limit' => 1
             ]);
