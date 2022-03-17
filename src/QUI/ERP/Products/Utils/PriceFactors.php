@@ -130,10 +130,10 @@ class PriceFactors
             /* @var PriceFactor $a */
             /* @var PriceFactor $b */
             if ($a->getPriority() == $b->getPriority()) {
-                return $a->getTitle() > $b->getTitle();
+                return \strnatcmp($a->getTitle(), $b->getTitle());
             }
 
-            return $a->getPriority() > $b->getPriority();
+            return $a->getPriority() > $b->getPriority() ? -1 : 1;
         };
 
         usort($this->listBeginning, $sort);
@@ -149,8 +149,8 @@ class PriceFactors
     public function clear()
     {
         $this->listBeginning = [];
-        $this->list = [];
-        $this->listEnd = [];
+        $this->list          = [];
+        $this->listEnd       = [];
     }
 
     /**
@@ -215,8 +215,8 @@ class PriceFactors
         }
 
         $beginning = [];
-        $middle = [];
-        $end = [];
+        $middle    = [];
+        $end       = [];
 
         if (isset($list['beginning'])) {
             $beginning = $list['beginning'];
@@ -262,7 +262,7 @@ class PriceFactors
      */
     public function toErpPriceFactorList(): QUI\ERP\Accounting\PriceFactors\FactorList
     {
-        $list = [];
+        $list   = [];
         $sorted = $this->sort();
 
         foreach ($sorted as $PriceFactor) {
