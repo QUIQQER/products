@@ -133,7 +133,7 @@ class PriceFactors
                 return \strnatcmp($a->getTitle(), $b->getTitle());
             }
 
-            return $a->getPriority() > $b->getPriority() ? -1 : 1;
+            return $a->getPriority() > $b->getPriority() ? 1 : -1;
         };
 
         usort($this->listBeginning, $sort);
