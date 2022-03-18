@@ -36,6 +36,10 @@ QUI::$Ajax->registerFunction(
         $Grid         = new QUI\Utils\Grid();
         $queryOptions = $Grid->parseDBParams($options);
 
+        if ($options === null) {
+            $queryOptions = [];
+        }
+
         // variants w search cache
         $children = QUI::getDataBase()->fetch([
             'select' => ['id', 'parent'],
@@ -178,13 +182,13 @@ QUI::$Ajax->registerFunction(
                     'fields'         => $fields,
                     'defaultVariant' => $defaultVariantId === (int)$entry['id'] ? 1 : 0,
 
-                    'description'         => $entry['F'.Fields::FIELD_SHORT_DESC],
+                    'description'         => $entry['F' . Fields::FIELD_SHORT_DESC],
                     'title'               => $entry['title'],
                     'e_date'              => $entry['e_date'],
                     'c_date'              => $entry['c_date'],
-                    'priority'            => $entry['F'.Fields::FIELD_PRIORITY],
-                    'url'                 => $entry['F'.Fields::FIELD_URL],
-                    'price_netto_display' => $Currency->format($entry['F'.Fields::FIELD_PRICE])
+                    'priority'            => $entry['F' . Fields::FIELD_PRIORITY],
+                    'url'                 => $entry['F' . Fields::FIELD_URL],
+                    'price_netto_display' => $Currency->format($entry['F' . Fields::FIELD_PRICE])
                 ];
 
                 return $attributes;
