@@ -34,9 +34,9 @@ define('package/quiqqer/products/bin/classes/Product', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$uid      = String.uniqueID();
-            this.$data     = null;
-            this.$loaded   = false;
+            this.$uid = String.uniqueID();
+            this.$data = null;
+            this.$loaded = false;
             this.$quantity = 1;
         },
 
@@ -54,7 +54,7 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @returns {Promise<unknown>|*}
          */
-        load: function() {
+        load: function () {
             if (this.$loaded) {
                 return Promise.resolve(this);
             }
@@ -354,7 +354,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                 this.$data = {};
             }
 
-            this.$data.id       = this.getId();
+            this.$data.id = this.getId();
             this.$data.quantity = this.getQuantity();
 
             return this.$data;
@@ -422,7 +422,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                 require(['package/quiqqer/products/bin/Products'], (Products) => {
                     Products.getChild(this.getId()).then((data) => {
                         this.$loaded = true;
-                        this.$data   = data;
+                        this.$data = data;
 
                         resolve(this);
 
@@ -614,6 +614,7 @@ define('package/quiqqer/products/bin/classes/Product', [
          * Return all variants of this product
          * - variant children
          *
+         * @param [options]
          * @return {Promise}
          */
         getVariants: function (options) {

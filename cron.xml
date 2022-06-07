@@ -8,6 +8,11 @@
         <description>
             <locale group="quiqqer/products" var="cron.updateProductCache.description"/>
         </description>
+
+        <autocreate>
+            <interval>0 0 * * 0</interval>
+            <active>1</active>
+        </autocreate>
     </cron>
 
     <cron exec="\QUI\ERP\Products\Crons::generateCacheImagesOfProducts">
@@ -17,6 +22,11 @@
         <description>
             <locale group="quiqqer/products" var="cron.generateCacheImagesOfProducts.description"/>
         </description>
+
+        <autocreate>
+            <interval>0 1 * * 0</interval>
+            <active>1</active>
+        </autocreate>
     </cron>
 
 </crons>

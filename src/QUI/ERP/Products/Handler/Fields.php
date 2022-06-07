@@ -22,64 +22,64 @@ class Fields
     /**
      * Fields
      */
-    const FIELD_PRICE            = 1;
-    const FIELD_VAT              = 2;
-    const FIELD_PRODUCT_NO       = 3;
-    const FIELD_TITLE            = 4;
-    const FIELD_SHORT_DESC       = 5;
-    const FIELD_CONTENT          = 6;
-    const FIELD_SUPPLIER         = 7;
-    const FIELD_MANUFACTURER     = 8;
-    const FIELD_IMAGE            = 9; // Main product image
-    const FIELD_FOLDER           = 10; // Main media folder
-    const FIELD_KEYWORDS         = 13;
-    const FIELD_EQUIPMENT        = 14;
+    const FIELD_PRICE = 1;
+    const FIELD_VAT = 2;
+    const FIELD_PRODUCT_NO = 3;
+    const FIELD_TITLE = 4;
+    const FIELD_SHORT_DESC = 5;
+    const FIELD_CONTENT = 6;
+    const FIELD_SUPPLIER = 7;
+    const FIELD_MANUFACTURER = 8;
+    const FIELD_IMAGE = 9; // Main product image
+    const FIELD_FOLDER = 10; // Main media folder
+    const FIELD_KEYWORDS = 13;
+    const FIELD_EQUIPMENT = 14;
     const FIELD_SIMILAR_PRODUCTS = 15;
-    const FIELD_PRICE_OFFER      = 16; // angebotspreis
-    const FIELD_PRICE_RETAIL     = 17; // UVP - RRP
-    const FIELD_PRIORITY         = 18; // Product Priority
-    const FIELD_URL              = 19; // Product URL
-    const FIELD_UNIT             = 20;
-    const FIELD_EAN              = 21;
-    const FIELD_WEIGHT           = 22;
-    const FIELD_DOWNLOAD_FILES   = 24;
+    const FIELD_PRICE_OFFER = 16; // angebotspreis
+    const FIELD_PRICE_RETAIL = 17; // UVP - RRP
+    const FIELD_PRIORITY = 18; // Product Priority
+    const FIELD_URL = 19; // Product URL
+    const FIELD_UNIT = 20;
+    const FIELD_EAN = 21;
+    const FIELD_WEIGHT = 22;
+    const FIELD_DOWNLOAD_FILES = 24;
 
     const FIELD_VARIANT_DEFAULT_ATTRIBUTES = 23;
 
     /**
      * Types
      */
-    const TYPE_BOOL                = 'BoolType';
-    const TYPE_DATE                = 'Date';
-    const TYPE_FLOAT               = 'FloatType';
-    const TYPE_FOLDER              = 'Folder';
-    const TYPE_GROUP_LIST          = 'GroupList';
-    const TYPE_IMAGE               = 'Image';
-    const TYPE_INPUT               = 'Input';
-    const TYPE_INPUT_MULTI_LANG    = 'InputMultiLang';
-    const TYPE_INT                 = 'IntType';
-    const TYPE_PRICE               = 'Price';
-    const TYPE_PRICE_BY_QUANTITY   = 'PriceByQuantity';
+    const TYPE_BOOL = 'BoolType';
+    const TYPE_DATE = 'Date';
+    const TYPE_FLOAT = 'FloatType';
+    const TYPE_FOLDER = 'Folder';
+    const TYPE_GROUP_LIST = 'GroupList';
+    const TYPE_IMAGE = 'Image';
+    const TYPE_INPUT = 'Input';
+    const TYPE_INPUT_MULTI_LANG = 'InputMultiLang';
+    const TYPE_INT = 'IntType';
+    const TYPE_PRICE = 'Price';
+    const TYPE_PRICE_BY_QUANTITY = 'PriceByQuantity';
     const TYPE_PRICE_BY_TIMEPERIOD = 'PriceByTimePeriod';
-    const TYPE_TEXTAREA            = 'Textarea';
+    const TYPE_TEXTAREA = 'Textarea';
     const TYPE_TEXTAREA_MULTI_LANG = 'TextareaMultiLang';
-    const TYPE_URL                 = 'Url';
-    const TYPE_VAT                 = 'Vat';
-    const TYPE_TAX                 = 'Tax';
-    const TYPE_PRODCUCTS           = 'Products';
-    const TYPE_UNITSELECT          = 'UnitSelect';
-    const TYPE_TIMEPERIOD          = 'TimePeriod';
-    const TYPE_CHECKBOX_INPUT      = 'CheckboxInput';
+    const TYPE_URL = 'Url';
+    const TYPE_VAT = 'Vat';
+    const TYPE_TAX = 'Tax';
+    const TYPE_PRODCUCTS = 'Products';
+    const TYPE_UNITSELECT = 'UnitSelect';
+    const TYPE_TIMEPERIOD = 'TimePeriod';
+    const TYPE_CHECKBOX_INPUT = 'CheckboxInput';
 
-    const TYPE_ATTRIBUTES       = 'AttributeGroup';
+    const TYPE_ATTRIBUTES = 'AttributeGroup';
     const TYPE_ATTRIBUTE_GROUPS = 'AttributeGroup';
-    const TYPE_ATTRIBUTE_LIST   = 'ProductAttributeList';
-    const TYPE_USER_INPUT       = 'UserInput';
+    const TYPE_ATTRIBUTE_LIST = 'ProductAttributeList';
+    const TYPE_USER_INPUT = 'UserInput';
 
     /**
      * product array changed types
      */
-    const PRODUCT_ARRAY_CHANGED   = 'pac'; // product array has changed
+    const PRODUCT_ARRAY_CHANGED = 'pac'; // product array has changed
     const PRODUCT_ARRAY_UNCHANGED = 'pau'; // product array hasn't changed
 
     /**
@@ -436,21 +436,21 @@ class Fields
         // title
         self::insertTranslations(
             $localeGroup,
-            'products.field.'.$fieldId.'.title',
+            'products.field.' . $fieldId . '.title',
             $attributes['titles']
         );
 
         // working title
         self::insertTranslations(
             $localeGroup,
-            'products.field.'.$fieldId.'.workingtitle',
+            'products.field.' . $fieldId . '.workingtitle',
             $attributes['workingtitles']
         );
 
         // description
         self::insertTranslations(
             $localeGroup,
-            'products.field.'.$fieldId.'.description',
+            'products.field.' . $fieldId . '.description',
             $attributes['description']
         );
 
@@ -562,7 +562,7 @@ class Fields
      */
     public static function getFieldCacheName($fieldId): string
     {
-        return Cache::getBasicCachePath().'fields/field/'.$fieldId.'/';
+        return Cache::getBasicCachePath() . 'fields/field/' . $fieldId . '/';
     }
 
     /**
@@ -576,7 +576,7 @@ class Fields
             return self::$fieldTypes;
         }
 
-        $cacheName = Cache::getBasicCachePath().'fields';
+        $cacheName = Cache::getBasicCachePath() . 'fields';
 
         try {
             self::$fieldTypes = QUI\Cache\LongTermCache::get($cacheName);
@@ -586,7 +586,7 @@ class Fields
         }
 
         // exists the type?
-        $dir    = \dirname(\dirname(__FILE__)).'/Field/Types/';
+        $dir    = \dirname(\dirname(__FILE__)) . '/Field/Types/';
         $files  = QUI\Utils\System\File::readDir($dir);
         $result = [];
 
@@ -599,9 +599,9 @@ class Fields
 
             $result[] = [
                 'plugin'   => 'quiqqer/products',
-                'src'      => 'QUI\ERP\Products\Field\Types\\'.$file['filename'],
+                'src'      => 'QUI\ERP\Products\Field\Types\\' . $file['filename'],
                 'category' => 0,
-                'locale'   => ['quiqqer/products', 'fieldtype.'.$file['filename']],
+                'locale'   => ['quiqqer/products', 'fieldtype.' . $file['filename']],
                 'name'     => $file['filename']
             ];
         }
@@ -609,7 +609,7 @@ class Fields
         $plugins = QUI::getPackageManager()->getInstalled();
 
         foreach ($plugins as $plugin) {
-            $xml = OPT_DIR.$plugin['name'].'/products.xml';
+            $xml = OPT_DIR . $plugin['name'] . '/products.xml';
 
             if (!\file_exists($xml)) {
                 continue;
@@ -667,7 +667,7 @@ class Fields
             return self::$fieldTypeData[$type];
         }
 
-        $cacheName = Cache::getBasicCachePath().'fields/'.\md5($type);
+        $cacheName = Cache::getBasicCachePath() . 'fields/' . \md5($type);
 
         try {
             self::$fieldTypeData[$type] = QUI\Cache\LongTermCache::get($cacheName);
@@ -709,7 +709,7 @@ class Fields
         $fieldId,
         $fieldParams = []
     ) {
-        $class = 'QUI\ERP\Products\Field\Types\\'.$type;
+        $class = 'QUI\ERP\Products\Field\Types\\' . $type;
 
         if (\class_exists($class)) {
             return new $class($fieldId, $fieldParams);
@@ -828,6 +828,10 @@ class Fields
                     'class' => $class
                 ]
             );
+        }
+
+        if ($data['defaultValue'] === null) {
+            $data['defaultValue'] = '';
         }
 
         $fieldData = [
