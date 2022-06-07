@@ -567,9 +567,9 @@ class Products
             $ArticleNoField->setValue(self::generateArticleNo($Product));
         }
 
-        $Product->save();
-
         QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreate', [$Product]);
+
+        $Product->save();
 
         return $Product;
     }
