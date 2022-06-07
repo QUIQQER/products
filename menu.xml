@@ -3,6 +3,7 @@
     <item parent="/extras/"
           name="erp"
           icon="fa fa-sun-o"
+          permission="quiqqer.packages.quiqqerproducts.canUse"
     >
         <locale group="quiqqer/products" var="menu.erp.title"/>
     </item>
@@ -10,6 +11,7 @@
           name="products"
           require="package/quiqqer/products/bin/controls/products/Panel"
           icon="fa fa-shopping-bag"
+          permission="quiqqer.packages.quiqqerproducts.canUse"
     >
         <locale group="quiqqer/products" var="menu.erp.products.products.title"/>
     </item>
@@ -17,6 +19,7 @@
           name="categories"
           require="package/quiqqer/products/bin/controls/categories/Panel"
           icon="fa fa-sitemap"
+          permission="quiqqer.packages.quiqqerproducts.canUse"
     >
         <locale group="quiqqer/products" var="menu.erp.products.categories.title"/>
     </item>
@@ -24,6 +27,7 @@
           name="fields"
           require="package/quiqqer/products/bin/controls/fields/Panel"
           icon="fa fa-file-text-o"
+          permission="quiqqer.packages.quiqqerproducts.canUse"
     >
         <locale group="quiqqer/products" var="menu.erp.products.fields.title"/>
     </item>
@@ -32,6 +36,7 @@
           name="products"
           require="package/quiqqer/products/bin/controls/products/Panel"
           icon="fa fa-shopping-bag"
+          permission="quiqqer.packages.quiqqerproducts.canUse"
     >
         <locale group="quiqqer/products" var="menu.erp.products.products.title"/>
     </item>
