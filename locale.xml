@@ -632,7 +632,7 @@ For a newly created product the article number should be generated automatically
         </locale>
         <locale name="fieldtype.ProductAttributeList">
             <de><![CDATA[Auswahlliste]]></de>
-            <en><![CDATA[Select]]></en>
+            <en><![CDATA[Select list]]></en>
         </locale>
         <locale name="fieldtype.FloatType">
             <de><![CDATA[Kommazahl]]></de>
@@ -2569,8 +2569,10 @@ For a newly created product the article number should be generated automatically
     <groups name="quiqqer/products" datatype="php">
 
         <locale name="exception.duplicate_article_no">
-            <de><![CDATA[Die Artikel-Nr. "[articleNo]" ist bereits vergeben (bei Produkt #[otherProductId]). Bitte wähle eine eindeutige Artikel-Nr. für das Produkt.]]></de>
-            <en><![CDATA[The artciel no. "[articleNo]" is already taken (by product #[otherProductId]). Please choose a unique article no. for this product.]]></en>
+            <de>
+                <![CDATA[Die Artikel-Nr. "[articleNo]" ist bereits vergeben (bei Produkt #[otherProductId]). Bitte wähle eine eindeutige Artikel-Nr. für das Produkt.]]></de>
+            <en>
+                <![CDATA[The artciel no. "[articleNo]" is already taken (by product #[otherProductId]). Please choose a unique article no. for this product.]]></en>
         </locale>
 
         <locale name="button.product.goToProduct">
@@ -2958,8 +2960,10 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[Link child article attribute lists with images]]></en>
         </locale>
         <locale name="settings.window.products.linkVariantChildrenWithImages.description">
-            <de><![CDATA[Bei Klick auf das Bild eines Kindartikels sollen die entsprechenden Attributlisten auf die passenden Werte gesetzt werden; bei Auswahl von Attributlisten-Werten soll das passende Produktbild ausgewählt werden.]]></de>
-            <en><![CDATA[When clicking on the image of a child article, the corresponding attribute lists should be set to the appropriate values; when selecting attribute list values, the matching product image should be selected.]]></en>
+            <de>
+                <![CDATA[Bei Klick auf das Bild eines Kindartikels sollen die entsprechenden Attributlisten auf die passenden Werte gesetzt werden; bei Auswahl von Attributlisten-Werten soll das passende Produktbild ausgewählt werden.]]></de>
+            <en>
+                <![CDATA[When clicking on the image of a child article, the corresponding attribute lists should be set to the appropriate values; when selecting attribute list values, the matching product image should be selected.]]></en>
         </locale>
     </groups>
 
