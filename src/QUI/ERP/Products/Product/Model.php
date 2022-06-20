@@ -17,6 +17,30 @@ use QUI\ERP\Products\Product\Cache\ProductCache;
 use QUI\ERP\Products\Utils\Products as ProductUtils;
 use QUI\Projects\Media\Utils as MediaUtils;
 
+use function array_filter;
+use function array_flip;
+use function array_key_first;
+use function array_keys;
+use function array_merge;
+use function array_reverse;
+use function array_unique;
+use function array_values;
+use function ceil;
+use function count;
+use function date;
+use function defined;
+use function explode;
+use function floor;
+use function implode;
+use function is_array;
+use function is_string;
+use function json_decode;
+use function json_encode;
+use function md5;
+use function round;
+use function trim;
+use function urlencode;
+
 /**
  * Class Controller
  * Product Model
@@ -116,7 +140,7 @@ class Model extends QUI\QDOM
         $this->active = (int)$product['active'] ? true : false;
 
         if (!empty($product['permissions']) && $product['permissions'] !== '[]') {
-            $this->permissions = \json_decode($product['permissions'], true);
+            $this->permissions = json_decode($product['permissions'], true);
         }
 
         // view permissions prüfung wird im Frontend view gemacht (ViewFrontend)
@@ -127,9 +151,9 @@ class Model extends QUI\QDOM
         $this->setAttributes($product);
 
         // categories
-        $categories = \explode(',', \trim($product['categories'], ','));
+        $categories = explode(',', trim($product['categories'], ','));
 
-        if (\is_array($categories)) {
+        if (is_array($categories)) {
             foreach ($categories as $categoryId) {
                 try {
                     $Category = QUI\ERP\Products\Handler\Categories::getCategory($categoryId);
@@ -166,9 +190,9 @@ class Model extends QUI\QDOM
 
 
         // fields
-        $fields = \json_decode($product['fieldData'], true);
+        $fields = json_decode($product['fieldData'], true);
 
-        if (!\is_array($fields)) {
+        if (!is_array($fields)) {
             $fields = [];
         }
 
@@ -228,25 +252,25 @@ class Model extends QUI\QDOM
         }
 
         // editable Variant Fields
-        if (!empty($product['editableVariantFields']) && \is_string($product['editableVariantFields'])) {
+        if (!empty($product['editableVariantFields']) && is_string($product['editableVariantFields'])) {
             $this->setAttribute(
                 'editableVariantFields',
-                \json_decode($product['editableVariantFields'], true)
+                json_decode($product['editableVariantFields'], true)
             );
         } else {
             $this->setAttribute('editableVariantFields', false);
         }
 
-        if (!empty($product['inheritedVariantFields']) && \is_string($product['inheritedVariantFields'])) {
+        if (!empty($product['inheritedVariantFields']) && is_string($product['inheritedVariantFields'])) {
             $this->setAttribute(
                 'inheritedVariantFields',
-                \json_decode($product['inheritedVariantFields'], true)
+                json_decode($product['inheritedVariantFields'], true)
             );
         } else {
             $this->setAttribute('inheritedVariantFields', false);
         }
 
-        if (\defined('QUIQQER_BACKEND')) {
+        if (defined('QUIQQER_BACKEND')) {
             $this->setAttribute('viewType', 'backend');
         }
 
@@ -362,7 +386,7 @@ class Model extends QUI\QDOM
                 if ($Field instanceof QUI\ERP\Products\Field\CustomCalcField) {
                     $calcData['custom_calc'] = $Field->getCalculationData($Locale);
 
-                    $fields[] = \array_merge(
+                    $fields[] = array_merge(
                         $Field->toProductArray(),
                         $Field->getAttributes(),
                         $calcData
@@ -372,7 +396,7 @@ class Model extends QUI\QDOM
                 }
 
                 /* @var $Field QUI\ERP\Products\Field\Field */
-                $fields[] = \array_merge(
+                $fields[] = array_merge(
                     $Field->toProductArray(),
                     $Field->getAttributes()
                 );
@@ -425,10 +449,10 @@ class Model extends QUI\QDOM
         ];
 
         foreach ($fieldList as $Field) {
-            $uniqueCacheParts[] = \json_encode($Field->toProductArray());
+            $uniqueCacheParts[] = json_encode($Field->toProductArray());
         }
 
-        return $cacheName . \md5(\implode('_', $uniqueCacheParts));
+        return $cacheName . md5(implode('_', $uniqueCacheParts));
     }
 
     /**
@@ -616,7 +640,7 @@ class Model extends QUI\QDOM
         foreach ($sites as $CategorySite) {
             $list   = $CategorySite->getParents();
             $list[] = $CategorySite;
-            $list   = \array_reverse($list);
+            $list   = array_reverse($list);
 
             if ($checkSitePath($list)) {
                 $Site = $CategorySite;
@@ -726,7 +750,7 @@ class Model extends QUI\QDOM
             $parts[] = $this->getId();
         }
 
-        return \urlencode(\implode(QUI\Rewrite::URL_PARAM_SEPARATOR, $parts));
+        return urlencode(implode(QUI\Rewrite::URL_PARAM_SEPARATOR, $parts));
     }
 
     /**
@@ -818,12 +842,8 @@ class Model extends QUI\QDOM
                 return false;
             }
 
-            if (\is_string($data)) {
+            if (is_string($data)) {
                 return $data;
-            }
-
-            if (empty($data)) {
-                return false;
             }
 
             if (isset($data[$current]) && !empty($data[$current])) {
@@ -832,8 +852,8 @@ class Model extends QUI\QDOM
 
             // search none empty
             foreach ($data as $lang => $value) {
-                if (!empty($data[$lang])) {
-                    return $data[$lang];
+                if (!empty($value)) {
+                    return $value;
                 }
             }
 
@@ -996,7 +1016,7 @@ class Model extends QUI\QDOM
 
                 $options = $Field->getOptions();
 
-                if (\count($options['entries'])) {
+                if (count($options['entries'])) {
                     $Clone->getField($Field->getId())->setValue(0);
                 }
             }
@@ -1160,7 +1180,7 @@ class Model extends QUI\QDOM
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($fieldList as $Field) {
-            $field = \array_merge(
+            $field = array_merge(
                 $Field->toProductArray(),
                 $Field->getAttributes()
             );
@@ -1184,7 +1204,7 @@ class Model extends QUI\QDOM
         }
 
         if (!empty($categories)) {
-            $attributes['categories'] = \implode(',', $categories);
+            $attributes['categories'] = implode(',', $categories);
         }
 
         return $attributes;
@@ -1276,12 +1296,12 @@ class Model extends QUI\QDOM
         }
 
         // cleanup urls
-        $urlField = \array_filter($fieldData, function ($field) {
+        $urlField = array_filter($fieldData, function ($field) {
             return $field['id'] === Fields::FIELD_URL;
         });
 
-        $urlKey   = \array_key_first($urlField);
-        $urlField = \array_values($urlField);
+        $urlKey   = array_key_first($urlField);
+        $urlField = array_values($urlField);
         $urls     = [];
 
         if (isset($urlField[0])) {
@@ -1324,9 +1344,9 @@ class Model extends QUI\QDOM
         // only save non inherited fields
         if ($this instanceof QUI\ERP\Products\Product\Types\VariantChild) {
             $inheritedFields = ProductUtils::getInheritedFieldIdsForProduct($this);
-            $inheritedFields = \array_flip($inheritedFields);
+            $inheritedFields = array_flip($inheritedFields);
 
-            $fieldData = \array_filter($fieldData, function ($field) use ($inheritedFields) {
+            $fieldData = array_filter($fieldData, function ($field) use ($inheritedFields) {
                 $Field = Fields::getField($field['id']);
 
                 if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST) {
@@ -1344,7 +1364,7 @@ class Model extends QUI\QDOM
         // check url
         $this->checkProductUrl($fieldData);
 
-        $categoryIds = \array_keys($this->categories);
+        $categoryIds = array_keys($this->categories);
 
         /* @var $Field FieldInterface */
 
@@ -1356,7 +1376,7 @@ class Model extends QUI\QDOM
             $mainCategory = $Category->getId();
         }
 
-        $this->setAttribute('e_date', \date('Y-m-d H:i:s'));
+        $this->setAttribute('e_date', date('Y-m-d H:i:s'));
 
         $parentId = (int)$this->getAttribute('parent');
 
@@ -1372,10 +1392,10 @@ class Model extends QUI\QDOM
                 ]),
                 '',
                 [
-                    'categories'  => ',' . \implode(',', $categoryIds) . ',',
+                    'categories'  => ',' . implode(',', $categoryIds) . ',',
                     'category'    => $mainCategory,
-                    'fieldData'   => \json_encode($fieldData),
-                    'permissions' => \json_encode($this->permissions),
+                    'fieldData'   => json_encode($fieldData),
+                    'permissions' => json_encode($this->permissions),
                     'priority'    => $this->getPriority()
                 ]
             );
@@ -1384,10 +1404,10 @@ class Model extends QUI\QDOM
                 QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 [
                     'parent'      => $parentId,
-                    'categories'  => ',' . \implode(',', $categoryIds) . ',',
+                    'categories'  => ',' . implode(',', $categoryIds) . ',',
                     'category'    => $mainCategory,
-                    'fieldData'   => \json_encode($fieldData),
-                    'permissions' => \json_encode($this->permissions),
+                    'fieldData'   => json_encode($fieldData),
+                    'permissions' => json_encode($this->permissions),
                     'e_user'      => $EditUser->getId(),
                     'e_date'      => $this->getAttribute('e_date')
                 ],
@@ -1446,11 +1466,11 @@ class Model extends QUI\QDOM
     protected function checkProductUrl($fieldData)
     {
         // check url
-        $urlField = \array_filter($fieldData, function ($field) {
+        $urlField = array_filter($fieldData, function ($field) {
             return $field['id'] === Fields::FIELD_URL;
         });
 
-        $urlField = \array_values($urlField);
+        $urlField = array_values($urlField);
         $urls     = [];
 
         if (isset($urlField[0])) {
@@ -1589,7 +1609,7 @@ class Model extends QUI\QDOM
         foreach ($fields as $Field) {
             $this->setUnassignedStatusToField($Field);
 
-            $field = \array_merge(
+            $field = array_merge(
                 $Field->toProductArray(),
                 $Field->getAttributes()
             );
@@ -1744,13 +1764,13 @@ class Model extends QUI\QDOM
         $cDate = $this->getAttribute('c_date');
 
         if (empty($cDate) || $cDate === '0000-00-00 00:00:00') {
-            $cDate = \date('Y-m-d H:i:s');
+            $cDate = date('Y-m-d H:i:s');
         }
 
         $eDate = $this->getAttribute('e_date');
 
         if (empty($eDate) || $eDate === '0000-00-00 00:00:00') {
-            $eDate = \date('Y-m-d H:i:s');
+            $eDate = date('Y-m-d H:i:s');
         }
 
         // type
@@ -1815,7 +1835,7 @@ class Model extends QUI\QDOM
                 $catIds[] = $Category->getId();
             }
 
-            $data['category'] = ',' . \implode(',', $catIds) . ',';
+            $data['category'] = ',' . implode(',', $catIds) . ',';
         } else {
             $data['category'] = null;
         }
@@ -1839,8 +1859,8 @@ class Model extends QUI\QDOM
         }
 
         foreach ($data as $k => $v) {
-            if (\is_array($v)) {
-                $data[$k] = \json_encode($v);
+            if (is_array($v)) {
+                $data[$k] = json_encode($v);
             }
         }
 
@@ -1959,11 +1979,11 @@ class Model extends QUI\QDOM
      */
     public function getFieldsByType($type)
     {
-        if (!\is_array($type)) {
+        if (!is_array($type)) {
             $type = [$type];
         }
 
-        $type = \array_flip($type);
+        $type = array_flip($type);
 
         $result = [];
         $fields = $this->getFields();
@@ -1988,7 +2008,7 @@ class Model extends QUI\QDOM
      */
     public function getField($fieldId)
     {
-        if (\is_string($fieldId) && \defined('QUI\ERP\Products\Handler\Fields::' . $fieldId)) {
+        if (is_string($fieldId) && defined('QUI\ERP\Products\Handler\Fields::' . $fieldId)) {
             $fieldId = \constant('QUI\ERP\Products\Handler\Fields::' . $fieldId);
         }
 
@@ -2124,7 +2144,7 @@ class Model extends QUI\QDOM
         if (\is_null($this->Category)) {
             $categories = $this->getCategories();
 
-            if (\count($categories)) {
+            if (count($categories)) {
                 \reset($categories);
                 $this->Category = \current($categories);
             }
@@ -2612,7 +2632,7 @@ class Model extends QUI\QDOM
 
                     $vat              = (100 + $vatPercent) / 100;
                     $targetPrice      = $price * $vat;
-                    $targetPriceParts = \explode('.', $targetPrice);
+                    $targetPriceParts = explode('.', $targetPrice);
 
                     $targetPriceInt = (int)$targetPriceParts[0];
 
@@ -2624,27 +2644,27 @@ class Model extends QUI\QDOM
 
                     switch ($settings['rounding']['type']) {
                         case 'up':
-                            $targetPriceInt = \ceil($targetPriceInt / 10) * 10;
+                            $targetPriceInt = ceil($targetPriceInt / 10) * 10;
                             break;
 
                         case 'up_9':
-                            $targetPriceInt = (\ceil($targetPriceInt / 10) * 10) - 1;
+                            $targetPriceInt = (ceil($targetPriceInt / 10) * 10) - 1;
                             break;
 
                         case 'down':
-                            $targetPriceInt = \floor($targetPriceInt / 10) * 10;
+                            $targetPriceInt = floor($targetPriceInt / 10) * 10;
                             break;
 
                         case 'down_9':
-                            $targetPriceInt = (\floor($targetPriceInt / 10) * 10) - 1;
+                            $targetPriceInt = (floor($targetPriceInt / 10) * 10) - 1;
                             break;
 
                         case 'commercial':
-                            $targetPriceInt = \round($targetPriceInt / 10) * 10;
+                            $targetPriceInt = round($targetPriceInt / 10) * 10;
                             break;
 
                         case 'commercial_9':
-                            $targetPriceInt = (\round($targetPriceInt / 10) * 10) - 1;
+                            $targetPriceInt = (round($targetPriceInt / 10) * 10) - 1;
                             break;
                     }
 
@@ -2687,7 +2707,7 @@ class Model extends QUI\QDOM
         $sql .= " AND `productNo` = '" . $articleNo . "'";
 
         $result                       = QUI::getDataBase()->fetchSQL($sql);
-        $duplicateArticleNoProductIds = \array_unique(\array_column($result, 'id'));
+        $duplicateArticleNoProductIds = array_unique(\array_column($result, 'id'));
 
         foreach ($duplicateArticleNoProductIds as $productId) {
             if (Products::existsProduct($productId)) {

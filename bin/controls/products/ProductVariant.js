@@ -295,6 +295,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                     self.$CurrentVariant = self.$Product;
 
+                    self.setAttribute('productId', parentId);
+
                     self.$Product = new Product({
                         id: parentId
                     });
@@ -350,6 +352,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                     fields['field-' + entry.id] = entry.value;
                 }
+
+                console.log(self.$CurrentVariant.getId());
+                console.log(fields);
 
                 return Products.updateChild(
                     self.$CurrentVariant.getId(),
@@ -1145,7 +1150,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     // only if field is editable
                     if (fieldId && typeof self.$editableFields[fieldId] === 'undefined' ||
                         (fieldId && typeof self.$editableFields[fieldId] !== 'undefined' &&
-                            !self.$editableFields[fieldId])) {
+                         !self.$editableFields[fieldId])) {
                         continue;
                     }
 
@@ -1480,16 +1485,16 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                     const Form = new Element('form', {
                         html: '' +
-                            '<table class="data-table data-table-flexbox product-data">' +
-                            '   <thead>' +
-                            '       <tr>' +
-                            '           <th>' +
-                            '                ' + Tab.getAttribute('text') +
-                            '            </th>' +
-                            '        </tr>' +
-                            '   </thead>' +
-                            '   <tbody></tbody>' +
-                            '</table>'
+                              '<table class="data-table data-table-flexbox product-data">' +
+                              '   <thead>' +
+                              '       <tr>' +
+                              '           <th>' +
+                              '                ' + Tab.getAttribute('text') +
+                              '            </th>' +
+                              '        </tr>' +
+                              '   </thead>' +
+                              '   <tbody></tbody>' +
+                              '</table>'
                     }).inject(Container);
 
                     const Tbody = Form.getElement('tbody');

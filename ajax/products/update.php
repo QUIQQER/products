@@ -4,8 +4,8 @@
  * This file contains package_quiqqer_products_ajax_products_update
  */
 
-use \QUI\ERP\Products\Product\Types\VariantParent;
-use \QUI\ERP\Products\Product\Types\VariantChild;
+use QUI\ERP\Products\Product\Types\VariantChild;
+use QUI\ERP\Products\Product\Types\VariantParent;
 
 /**
  * Update a product
@@ -17,19 +17,19 @@ use \QUI\ERP\Products\Product\Types\VariantChild;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_update',
     function ($productId, $categories, $categoryId, $fields) {
-        $Products = new QUI\ERP\Products\Handler\Products();
-        $Fields = new QUI\ERP\Products\Handler\Fields();
+        $Products   = new QUI\ERP\Products\Handler\Products();
+        $Fields     = new QUI\ERP\Products\Handler\Fields();
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $Product = $Products->getProduct($productId);
+        $Product    = $Products->getProduct($productId);
 
-        $categories = \json_decode($categories, true);
-        $fields = \json_decode($fields, true);
+        $categories = json_decode($categories, true);
+        $fields     = json_decode($fields, true);
 
         // fields
         foreach ($fields as $fieldId => $field) {
             try {
-                $fieldId = (int)\str_replace('field-', '', $fieldId);
-                $Field = $Fields->getField($fieldId);
+                $fieldId = (int)str_replace('field-', '', $fieldId);
+                $Field   = $Fields->getField($fieldId);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addNotice('Field not found #' . $fieldId);
                 continue;
