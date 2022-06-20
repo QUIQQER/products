@@ -235,8 +235,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         var LockContainer = new Element('div', {
                             'class': 'product-update-locked',
                             'html' : '<span class="fa fa-edit"></span>' +
-                                '<span>' + message + '</span>' +
-                                '<span></span>'
+                                     '<span>' + message + '</span>' +
+                                     '<span></span>'
                         }).inject(this.getElm());
 
                         new QUIButton({
@@ -367,13 +367,13 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 Content.set({
                     html: '<div class="product-update-information sheet"></div>' +
-                        '<div class="product-update-data sheet"></div>' +
-                        '<div class="product-update-field sheet"></div>' +
-                        '<div class="product-update-media sheet"></div>' +
-                        '<div class="product-update-files sheet"></div>' +
-                        '<div class="product-update-prices sheet"></div>' +
-                        '<div class="product-update-fieldadministration sheet"></div>' +
-                        '<div class="product-update-attributelist sheet"></div>'
+                          '<div class="product-update-data sheet"></div>' +
+                          '<div class="product-update-field sheet"></div>' +
+                          '<div class="product-update-media sheet"></div>' +
+                          '<div class="product-update-files sheet"></div>' +
+                          '<div class="product-update-prices sheet"></div>' +
+                          '<div class="product-update-fieldadministration sheet"></div>' +
+                          '<div class="product-update-attributelist sheet"></div>'
                 });
 
                 self.$Data = Content.getElement('.product-update-data');
@@ -417,9 +417,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
 
                     var complete = [].append(categoriesFields)
-                        .append(systemFields)
-                        .append(standardFields)
-                        .append(fields);
+                                     .append(systemFields)
+                                     .append(standardFields)
+                                     .append(fields);
 
                     // cleanup complete list
                     var completeIds = {};
@@ -1290,7 +1290,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }
 
             return this.$hideCategories().then(() => {
-                return this.$renderFolderViewer(self.$Files, self.$Product, ['file']);
+                return this.$renderFolderViewer(this.$Files, this.$Product, ['file']);
             }).then((Viewer) => {
                 Viewer.refresh();
 
@@ -1308,7 +1308,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          */
         $renderFolderViewer: function (Container, Product, types, fileId) {
             var self = this;
-
+            
             Container.set('html', '');
 
             if (typeof fileId === 'undefined') {
@@ -2604,16 +2604,16 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     QUIAjax.get('package_quiqqer_products_ajax_products_getFieldCategory', function (fields) {
                         var Form = new Element('form', {
                             html: '' +
-                                '<table class="data-table data-table-flexbox product-data">' +
-                                '   <thead>' +
-                                '       <tr>' +
-                                '           <th>' +
-                                '                ' + Category.getAttribute('text') +
-                                '            </th>' +
-                                '        </tr>' +
-                                '   </thead>' +
-                                '   <tbody></tbody>' +
-                                '</table>'
+                                  '<table class="data-table data-table-flexbox product-data">' +
+                                  '   <thead>' +
+                                  '       <tr>' +
+                                  '           <th>' +
+                                  '                ' + Category.getAttribute('text') +
+                                  '            </th>' +
+                                  '        </tr>' +
+                                  '   </thead>' +
+                                  '   <tbody></tbody>' +
+                                  '</table>'
                         }).inject(self.$FieldContainer);
 
                         var Body = Form.getElement('tbody');
