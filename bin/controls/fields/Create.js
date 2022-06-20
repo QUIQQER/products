@@ -40,9 +40,9 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Translation  = null;
+            this.$Translation = null;
             this.$WorkingTitle = null;
-            this.$Description  = null;
+            this.$Description = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -61,8 +61,8 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                 'class': 'field-create',
                 html   : Mustache.render(template, {
                     contentText                : '<div class="field-create-header">' +
-                        QUILocale.get(lg, 'control.field.create.content') +
-                        '</div>',
+                                                 QUILocale.get(lg, 'control.field.create.content') +
+                                                 '</div>',
                     tableHeader                : QUILocale.get(lg, 'control.field.create.header'),
                     fieldTitle                 : QUILocale.get('quiqqer/system', 'title'),
                     fieldWorkingTitle          : QUILocale.get(lg, 'workingTitle'),
@@ -167,7 +167,6 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                 Elm  = self.getElm();
 
             return new Promise(function (resolve, reject) {
-
                 if (!self.$Translation) {
                     return reject('Translation not found');
                 }
@@ -176,7 +175,6 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
 
                 QUI.getMessageHandler().then(function (MH) {
                     MH.setAttribute('showMessages', false);
-
                 }).then(function () {
                     return Fields.createChild({
                         type         : Form.elements.type.value,
@@ -187,9 +185,9 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                         standardField: Form.elements.standardField.checked ? 1 : 0,
                         systemField  : 0,
                         publicField  : Form.elements.publicField.checked ? 1 : 0,
-                        requiredField: Form.elements.requiredField.checked ? 1 : 0
+                        requiredField: Form.elements.requiredField.checked ? 1 : 0,
+                        showInDetails: Form.elements.showInDetails.checked ? 1 : 0
                     });
-
                 }).then(function (data) {
                     self.$Translation.setAttribute(
                         'var',

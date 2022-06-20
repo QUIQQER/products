@@ -138,6 +138,7 @@ class Fields
             'systemField',
             'requiredField',
             'publicField',
+            'showInDetails',
             'options',
 //            'workingtitles',
 //            'titles'
