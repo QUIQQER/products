@@ -1,40 +1,39 @@
 <?php
 
-use \QUI\ERP\Products;
-use \QUI\ERP\Products\Controls\Category\ProductList;
-
-use \QUI\System\Log;
-use \Symfony\Component\HttpFoundation\RedirectResponse;
-use \Symfony\Component\HttpFoundation\Response;
+use QUI\ERP\Products;
+use QUI\ERP\Products\Controls\Category\ProductList;
+use QUI\System\Log;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 if (!isset($_REQUEST['_url'])) {
     $_REQUEST['_url'] = '';
 }
 
-$_REQUEST['_url'] = \ltrim($_REQUEST['_url'], '/'); // nginx fix
-$_REQUEST['_url'] = \urldecode($_REQUEST['_url']);
+$_REQUEST['_url'] = ltrim($_REQUEST['_url'], '/'); // nginx fix
+$_REQUEST['_url'] = urldecode($_REQUEST['_url']);
 
 $siteUrl = $Site->getLocation();
-$url = $_REQUEST['_url'];
-$url = \pathinfo($url);
+$url     = $_REQUEST['_url'];
+$url     = pathinfo($url);
 
 // fallback url for a product, with NO category
 // this should never happen and is a configuration error
-if (\strpos(QUI::getRequest()->getPathInfo(), '_p/') !== false) {
+if (strpos(QUI::getRequest()->getPathInfo(), '_p/') !== false) {
     $_REQUEST['_url'] = QUI::getRequest()->getPathInfo();
 
-    if (\strlen(URL_DIR) == 1) {
-        $_REQUEST['_url'] = \ltrim($_REQUEST['_url'], URL_DIR);
+    if (strlen(URL_DIR) == 1) {
+        $_REQUEST['_url'] = ltrim($_REQUEST['_url'], URL_DIR);
     } else {
-        $from = '/' . \preg_quote(URL_DIR, '/') . '/';
-        $_REQUEST['_url'] = \preg_replace($from, '', $_REQUEST['_url'], 1);
+        $from             = '/' . preg_quote(URL_DIR, '/') . '/';
+        $_REQUEST['_url'] = preg_replace($from, '', $_REQUEST['_url'], 1);
     }
 
     $siteUrl = '';
 
-    $_REQUEST['_url'] = \urldecode($_REQUEST['_url']); // nginx fix
-    $url = $_REQUEST['_url'];
-    $url = \pathinfo($url);
+    $_REQUEST['_url'] = urldecode($_REQUEST['_url']); // nginx fix
+    $url              = $_REQUEST['_url'];
+    $url              = pathinfo($url);
 }
 
 // category menu
@@ -71,14 +70,14 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     /**
      * PRODUCT
      */
-    $baseName = \str_replace(
+    $baseName = str_replace(
         QUI\Rewrite::getDefaultSuffix(),
         '',
         $url['basename']
     );
 
-    $parts = \explode(QUI\Rewrite::URL_PARAM_SEPARATOR, $baseName);
-    $refNo = \array_pop($parts);
+    $parts = explode(QUI\Rewrite::URL_PARAM_SEPARATOR, $baseName);
+    $refNo = array_pop($parts);
 
     if (!empty($_GET['p'])) {
         $refNo = (int)$_GET['p'];
@@ -89,16 +88,16 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     }
 
     $Product = null;
-    $Output = new QUI\Output();
-    $Locale = QUI::getLocale();
+    $Output  = new QUI\Output();
+    $Locale  = QUI::getLocale();
 
     // get by url field
     try {
         $categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
-        $Product = Products\Handler\Products::getProductByUrl($refNo, $categoryId);
+        $Product    = Products\Handler\Products::getProductByUrl($refNo, $categoryId);
     } catch (QUI\Exception $Exception) {
         try {
-            if (\is_numeric($refNo)) {
+            if (is_numeric($refNo)) {
                 $Product = Products\Handler\Products::getProduct($refNo);
             }
         } catch (QUI\Exception $Exception) {
@@ -109,13 +108,13 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     try {
         // get url by id
         if ($Product === null) {
-            $refNo = (int)$refNo;
+            $refNo   = (int)$refNo;
             $Product = Products\Handler\Products::getProduct($refNo);
         }
 
         // render product
         $Product->getView();
-        $productUrl = \urldecode($Product->getUrl($Project));
+        $productUrl = urldecode($Product->getUrl($Project));
 
         // set canonical always to the parent
         if ($Product instanceof Products\Product\Types\VariantChild) {
@@ -123,15 +122,15 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         }
 
         // if product url is with lang flag /en/
-        if (\strpos($productUrl, '/', 1) === 3 && strpos($productUrl, '/_p/') === false) {
-            $productUrl = \mb_substr($productUrl, 3);
+        if (strpos($productUrl, '/', 1) === 3 && strpos($productUrl, '/_p/') === false) {
+            $productUrl = mb_substr($productUrl, 3);
         }
 
         // forwarding, if the product has a new URL
         // can happen if the product was previously in "all products".
         if ($productUrl != URL_DIR . $_REQUEST['_url']) {
-            $urlencoded = \urlencode($productUrl);
-            $urlencoded = \str_replace('%2F', '/', $urlencoded);
+            $urlencoded = urlencode($productUrl);
+            $urlencoded = str_replace('%2F', '/', $urlencoded);
 
             $Redirect = new RedirectResponse($urlencoded);
             $Redirect->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
@@ -182,7 +181,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
             }
         }
 
-        \define('QUIQQER_ERP_IS_PRODUCT', true);
+        define('QUIQQER_ERP_IS_PRODUCT', true);
     } catch (QUI\Permissions\Exception $Exception) {
         Log::writeDebugException($Exception);
 
@@ -231,11 +230,11 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     ]);
 
     $filterList = $ProductList->getFilter();
-    $fields = Products\Utils\Sortables::getSortableFieldsForSite($Site);
+    $fields     = Products\Utils\Sortables::getSortableFieldsForSite($Site);
 
     foreach ($fields as $fieldId) {
-        if (\strpos($fieldId, 'S') === 0) {
-            $title = QUI::getLocale()->get('quiqqer/products', 'sortable.' . \mb_substr($fieldId, 1));
+        if (strpos($fieldId, 'S') === 0) {
+            $title = QUI::getLocale()->get('quiqqer/products', 'sortable.' . mb_substr($fieldId, 1));
 
             $ProductList->addSort(
                 $title . ' ' . QUI::getLocale()->get('quiqqer/products', 'sortASC'),
@@ -250,7 +249,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
             continue;
         }
 
-        if (\strpos($fieldId, 'F') === 0) {
+        if (strpos($fieldId, 'F') === 0) {
             try {
                 $fieldId = str_replace('F', '', $fieldId);
 
@@ -275,7 +274,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         $ProductList->setAttribute('showFilter', false);
     }
 
-    if ($CategoryMenu->countChildren() || \count($filterList)) {
+    if ($CategoryMenu->countChildren() || count($filterList)) {
         $ProductList->setAttribute('forceMobileFilter', true);
     }
 

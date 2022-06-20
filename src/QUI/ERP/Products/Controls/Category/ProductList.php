@@ -11,6 +11,17 @@ use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 
+use function dirname;
+use function explode;
+use function get_class;
+use function htmlspecialchars;
+use function implode;
+use function is_array;
+use function is_string;
+use function json_encode;
+use function uniqid;
+use function usort;
+
 /**
  * Class Button
  *
@@ -81,15 +92,15 @@ class ProductList extends QUI\Control
             'hidePrice'            => QUI\ERP\Products\Utils\Package::hidePrice(),
         ]);
 
-        $this->addCSSFile(\dirname(__FILE__).'/ProductList.css');
-        $this->addCSSFile(\dirname(__FILE__).'/ProductListGallery.css');
-        $this->addCSSFile(\dirname(__FILE__).'/ProductListDetails.css');
-        $this->addCSSFile(\dirname(__FILE__).'/ProductListList.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductList.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductListGallery.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductListDetails.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductListList.css');
 
-        $this->addCSSFile(\dirname(__FILE__).'/ProductListCategoryGallery.css');
-        $this->addCSSFile(\dirname(__FILE__).'/ProductListCategoryList.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductListCategoryGallery.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductListCategoryList.css');
 
-        $this->id = \uniqid();
+        $this->id = uniqid();
 
         parent::__construct($attributes);
     }
@@ -181,12 +192,12 @@ class ProductList extends QUI\Control
         // category view
         switch ($this->getAttribute('categoryView')) {
             case 'list':
-                $categoryFile = \dirname(__FILE__).'/ProductListCategoryList.html';
+                $categoryFile = dirname(__FILE__) . '/ProductListCategoryList.html';
                 break;
 
             default:
             case 'gallery':
-                $categoryFile = \dirname(__FILE__).'/ProductListCategoryGallery.html';
+                $categoryFile = dirname(__FILE__) . '/ProductListCategoryGallery.html';
                 break;
         }
 
@@ -203,27 +214,27 @@ class ProductList extends QUI\Control
                 $this->setAttribute('data-qui-options-view', 'gallery');
         }
 
-        if (\is_array($searchParams) && isset($searchParams['categories'])) {
+        if (is_array($searchParams) && isset($searchParams['categories'])) {
             $this->setAttribute(
                 'data-categories',
-                \htmlspecialchars(\implode(',', $searchParams['categories']))
+                htmlspecialchars(implode(',', $searchParams['categories']))
             );
         }
 
-        if (\is_array($searchParams) && isset($searchParams['tags'])) {
+        if (is_array($searchParams) && isset($searchParams['tags'])) {
             $this->setAttribute(
                 'data-tags',
-                \htmlspecialchars(\implode(',', $searchParams['tags']))
+                htmlspecialchars(implode(',', $searchParams['tags']))
             );
         }
 
-        if (\is_array($searchParams)
+        if (is_array($searchParams)
             && isset($searchParams['sortBy'])
             && isset($searchParams['sortOn'])
         ) {
-            $sort = $searchParams['sortOn'].' '.$searchParams['sortBy'];
+            $sort = $searchParams['sortOn'] . ' ' . $searchParams['sortBy'];
 
-            $this->setAttribute('data-sort', \htmlspecialchars($sort));
+            $this->setAttribute('data-sort', htmlspecialchars($sort));
         }
 
         $Pagination = new QUI\Controls\Navigating\Pagination([
@@ -261,7 +272,7 @@ class ProductList extends QUI\Control
             'categoryStartNumber' => $this->getAttribute('categoryStartNumber')
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ProductList.html');
+        return $Engine->fetch(dirname(__FILE__) . '/ProductList.html');
     }
 
     /**
@@ -294,7 +305,7 @@ class ProductList extends QUI\Control
             'cid'    => $this->id,
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ProductList.Filter.html');
+        return $Engine->fetch(dirname(__FILE__) . '/ProductList.Filter.html');
     }
 
     /**
@@ -313,11 +324,11 @@ class ProductList extends QUI\Control
         $filter    = [];
         $tagGroups = $this->getSite()->getAttribute('quiqqer.tags.tagGroups');
 
-        if (!empty($tagGroups) && \is_string($tagGroups)) {
-            $tagGroups = \explode(',', $tagGroups);
+        if (!empty($tagGroups) && is_string($tagGroups)) {
+            $tagGroups = explode(',', $tagGroups);
         }
 
-        if (\is_array($tagGroups)) {
+        if (is_array($tagGroups)) {
             foreach ($tagGroups as $tagGroup) {
                 try {
                     $filter[] = QUI\Tags\Groups\Handler::get($this->getProject(), $tagGroup);
@@ -339,8 +350,8 @@ class ProductList extends QUI\Control
 
                     if (!isset($field['searchData'])) {
                         $field['searchData'] = '';
-                    } elseif (!\is_string($field['searchData'])) {
-                        $field['searchData'] = \json_encode($field['searchData']);
+                    } elseif (!is_string($field['searchData'])) {
+                        $field['searchData'] = json_encode($field['searchData']);
                     }
 
                     $filter[] = $field;
@@ -353,23 +364,23 @@ class ProductList extends QUI\Control
         }
 
         // sort
-        \usort($filter, function ($EntryA, $EntryB) {
+        usort($filter, function ($EntryA, $EntryB) {
             $priorityA = 0;
             $priorityB = 0;
 
-            if (!\is_array($EntryA) && \get_class($EntryA) === QUI\Tags\Groups\Group::class) {
+            if (!is_array($EntryA) && get_class($EntryA) === QUI\Tags\Groups\Group::class) {
                 $priorityA = $EntryA->getPriority();
             }
 
-            if (!\is_array($EntryB) && \get_class($EntryB) === QUI\Tags\Groups\Group::class) {
+            if (!is_array($EntryB) && get_class($EntryB) === QUI\Tags\Groups\Group::class) {
                 $priorityB = $EntryB->getPriority();
             }
 
-            if (\is_array($EntryA) && isset($EntryA['priority'])) {
+            if (is_array($EntryA) && isset($EntryA['priority'])) {
                 $priorityA = $EntryA['priority'];
             }
 
-            if (\is_array($EntryB) && isset($EntryB['priority'])) {
+            if (is_array($EntryB) && isset($EntryB['priority'])) {
                 $priorityB = $EntryB['priority'];
             }
 
@@ -471,16 +482,16 @@ class ProductList extends QUI\Control
 
         switch ($this->getAttribute('view')) {
             case 'list':
-                $productTpl = \dirname(__FILE__).'/ProductListList.html';
+                $productTpl = dirname(__FILE__) . '/ProductListList.html';
                 break;
 
             case 'detail':
-                $productTpl = \dirname(__FILE__).'/ProductListDetails.html';
+                $productTpl = dirname(__FILE__) . '/ProductListDetails.html';
                 break;
 
             default:
             case 'gallery':
-                $productTpl = \dirname(__FILE__).'/ProductListGallery.html';
+                $productTpl = dirname(__FILE__) . '/ProductListGallery.html';
                 break;
         }
 
@@ -497,7 +508,7 @@ class ProductList extends QUI\Control
 
             // Send searched fields to frontend
             if (!empty($searchParams['fields'])) {
-                $this->setJavaScriptControlOption('searchfields', \json_encode($searchParams['fields']));
+                $this->setJavaScriptControlOption('searchfields', json_encode($searchParams['fields']));
             }
 
             if ($count === false) {
@@ -534,7 +545,7 @@ class ProductList extends QUI\Control
         ]);
 
         return [
-            'html'  => $Engine->fetch(\dirname(__FILE__).'/ProductListRow.html'),
+            'html'  => $Engine->fetch(dirname(__FILE__) . '/ProductListRow.html'),
             'count' => $count,
             'more'  => $more
         ];
@@ -669,7 +680,7 @@ class ProductList extends QUI\Control
     {
         $searchParams = $this->getAttribute('searchParams');
 
-        if (!\is_array($searchParams)) {
+        if (!is_array($searchParams)) {
             $searchParams = [];
         }
 
