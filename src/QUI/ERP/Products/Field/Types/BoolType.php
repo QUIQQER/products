@@ -10,6 +10,10 @@ use QUI;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Search;
 
+use function is_bool;
+use function is_int;
+use function is_numeric;
+
 /**
  * Class Price
  * @package QUI\ERP\Products\Field
@@ -57,15 +61,15 @@ class BoolType extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        if (\is_bool($value)) {
+        if (is_bool($value)) {
             return;
         }
 
-        if (\is_int($value)) {
+        if (is_int($value)) {
             return;
         }
 
-        if (\is_numeric($value)) {
+        if (is_numeric($value)) {
             return;
         }
 
@@ -104,7 +108,7 @@ class BoolType extends QUI\ERP\Products\Field\Field
             return 1;
         }
 
-        if (\is_numeric($value)) {
+        if (is_numeric($value)) {
             return (int)$value ? 1 : 0;
         }
 
@@ -135,7 +139,8 @@ class BoolType extends QUI\ERP\Products\Field\Field
     public function getSearchTypes()
     {
         return [
-            Search::SEARCHTYPE_BOOL
+            Search::SEARCHTYPE_BOOL,
+            Search::SEARCHTYPE_CHECKBOX
         ];
     }
 

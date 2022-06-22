@@ -7,8 +7,8 @@
 namespace QUI\ERP\Products\Handler;
 
 use QUI;
-use QUI\ERP\Products\Search\FrontendSearch;
 use QUI\ERP\Products\Search\BackendSearch;
+use QUI\ERP\Products\Search\FrontendSearch;
 
 /**
  * Class Fields
@@ -26,6 +26,7 @@ class Search
     const SEARCHTYPE_INPUTSELECTSINGLE = 'inputSelectSingle';
     const SEARCHTYPE_SELECTMULTI = 'selectMulti';
     const SEARCHTYPE_BOOL = 'bool';
+    const SEARCHTYPE_CHECKBOX = 'checkbox';
     const SEARCHTYPE_HASVALUE = 'hasValue';
     const SEARCHTYPE_DATE = 'date';
     const SEARCHTYPE_DATERANGE = 'dateRange';
@@ -98,6 +99,6 @@ class Search
      */
     public static function getSearchFieldColumnName(QUI\ERP\Products\Interfaces\FieldInterface $Field)
     {
-        return 'F'.$Field->getId();
+        return 'F' . $Field->getId();
     }
 }

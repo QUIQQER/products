@@ -996,6 +996,10 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Suche]]></de>
             <en><![CDATA[Search]]></en>
         </locale>
+        <locale name="searchtype.checkbox.title">
+            <de><![CDATA[Auswahlbox (Checkbox)]]></de>
+            <en><![CDATA[Checkbox]]></en>
+        </locale>
         <locale name="searchtypes.empty">
             <de><![CDATA[Keine Suchfelder gefunden]]></de>
             <en><![CDATA[No search fields found]]></en>
