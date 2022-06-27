@@ -149,7 +149,7 @@
     width: 100%;
 }
 
-.quiqqer-products-productList-filter-entry input,
+.quiqqer-products-productList-filter-entry input:not([type="checkbox"], [type="radio"]),
 .quiqqer-products-productList-filter-entry-select {
     clear: both;
     float: left;
@@ -159,6 +159,11 @@
 .quiqqer-products-productList-filter-entry input {
     line-height: 30px;
     padding: 0 10px;
+}
+
+/* search type checkbox */
+.quiqqer-products-searchtype-checkbox {
+    display: flex;
 }
 
 .quiqqer-products-productList-fl {
