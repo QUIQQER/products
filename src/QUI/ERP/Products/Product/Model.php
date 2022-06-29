@@ -1529,6 +1529,10 @@ class Model extends QUI\QDOM
 
             $this->setUnassignedStatusToField($Field);
 
+            if ($Field->isUnassigned()) {
+                continue;
+            }
+
             if (!$Field->isRequired() || $Field->isCustomField()) {
                 $Field->validate($value);
 
