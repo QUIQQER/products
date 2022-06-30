@@ -352,10 +352,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                     fields['field-' + entry.id] = entry.value;
                 }
-
-                console.log(self.$CurrentVariant.getId());
-                console.log(fields);
-
+                
                 return Products.updateChild(
                     self.$CurrentVariant.getId(),
                     categories,
