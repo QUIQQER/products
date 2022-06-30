@@ -20,9 +20,9 @@ use QUI\ERP\Products\Handler\Search;
  */
 class AttributeGroup extends QUI\ERP\Products\Field\Field
 {
-    const ENTRIES_TYPE_DEFAULT  = 1;
-    const ENTRIES_TYPE_SIZE     = 2;
-    const ENTRIES_TYPE_COLOR    = 3;
+    const ENTRIES_TYPE_DEFAULT = 1;
+    const ENTRIES_TYPE_SIZE = 2;
+    const ENTRIES_TYPE_COLOR = 3;
     const ENTRIES_TYPE_MATERIAL = 4;
 
     /**
@@ -388,7 +388,8 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
         return [
             Search::SEARCHTYPE_TEXT,
             Search::SEARCHTYPE_INPUTSELECTSINGLE,
-            Search::SEARCHTYPE_SELECTMULTI
+            Search::SEARCHTYPE_SELECTMULTI,
+            Search::SEARCHTYPE_CHECKBOX_LIST
         ];
     }
 
