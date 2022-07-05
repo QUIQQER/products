@@ -710,16 +710,19 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
         edit: function (index, title, valueId, selected, image) {
             valueId = valueId.trim();
 
-            let entryFound = false;
+            let entryFound = 0;
 
             for (let i = 0, len = this.$data.length; i < len; i++) {
                 if (this.$data[i].valueId == valueId) { // == because 1 and "1" has to be checked
-                    entryFound = true;
-                    break;
+                    entryFound++;
                 }
             }
 
-            if (!entryFound) {
+            if (entryFound > 1) {
+                return false;
+            }
+            
+            if (entryFound === 1 && this.$data[index].valueId != valueId) {
                 return false;
             }
 
