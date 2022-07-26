@@ -27,6 +27,7 @@ class Search
     const SEARCHTYPE_SELECTMULTI = 'selectMulti';
     const SEARCHTYPE_BOOL = 'bool';
     const SEARCHTYPE_CHECKBOX = 'checkbox';
+    const SEARCHTYPE_CHECKBOX_LIST = 'checkboxList';
     const SEARCHTYPE_HASVALUE = 'hasValue';
     const SEARCHTYPE_DATE = 'date';
     const SEARCHTYPE_DATERANGE = 'dateRange';

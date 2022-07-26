@@ -45,10 +45,10 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
         initialize: function (options) {
             this.parent(options);
 
-            this.$Input            = null;
-            this.$Grid             = null;
-            this.$GenerateTags     = null;
-            this.$EntriesType      = null;
+            this.$Input = null;
+            this.$Grid = null;
+            this.$GenerateTags = null;
+            this.$EntriesType = null;
             this.$IsImageAttribute = null;
 
             this.$data = [];
@@ -114,81 +114,94 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
 
             this.$Grid = new Grid(Container, {
                 perPage    : 150,
-                buttons    : [{
-                    name    : 'up',
-                    icon    : 'fa fa-angle-up',
-                    disabled: true,
-                    events  : {
-                        onClick: function () {
-                            this.$moveup();
-                        }.bind(this)
-                    }
-                }, {
-                    name    : 'down',
-                    icon    : 'fa fa-angle-down',
-                    disabled: true,
-                    events  : {
-                        onClick: function () {
-                            this.$movedown();
-                        }.bind(this)
-                    }
-                }, {
-                    type: 'separator'
-                }, {
-                    name     : 'add',
-                    textimage: 'fa fa-plus',
-                    text     : QUILocale.get('quiqqer/system', 'add'),
-                    events   : {
-                        onClick: this.openAddDialog
-                    }
-                }, {
-                    name     : 'edit',
-                    textimage: 'fa fa-edit',
-                    text     : QUILocale.get('quiqqer/system', 'edit'),
-                    disabled : true,
-                    events   : {
-                        onClick: function () {
-                            var selected = self.$Grid.getSelectedIndices();
+                buttons    : [
+                    {
+                        name    : 'up',
+                        icon    : 'fa fa-angle-up',
+                        disabled: true,
+                        events  : {
+                            onClick: function () {
+                                this.$moveup();
+                            }.bind(this)
+                        }
+                    },
+                    {
+                        name    : 'down',
+                        icon    : 'fa fa-angle-down',
+                        disabled: true,
+                        events  : {
+                            onClick: function () {
+                                this.$movedown();
+                            }.bind(this)
+                        }
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        name     : 'add',
+                        textimage: 'fa fa-plus',
+                        text     : QUILocale.get('quiqqer/system', 'add'),
+                        events   : {
+                            onClick: this.openAddDialog
+                        }
+                    },
+                    {
+                        name     : 'edit',
+                        textimage: 'fa fa-edit',
+                        text     : QUILocale.get('quiqqer/system', 'edit'),
+                        disabled : true,
+                        events   : {
+                            onClick: function () {
+                                var selected = self.$Grid.getSelectedIndices();
 
-                            if (selected.length) {
-                                self.openEditDialog(selected[0]);
+                                if (selected.length) {
+                                    self.openEditDialog(selected[0]);
+                                }
                             }
                         }
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        name     : 'delete',
+                        textimage: 'fa fa-trash',
+                        text     : QUILocale.get('quiqqer/system', 'delete'),
+                        disabled : true,
+                        events   : {
+                            onClick: this.openRemoveDialog
+                        }
                     }
-                }, {
-                    type: 'separator'
-                }, {
-                    name     : 'delete',
-                    textimage: 'fa fa-trash',
-                    text     : QUILocale.get('quiqqer/system', 'delete'),
-                    disabled : true,
-                    events   : {
-                        onClick: this.openRemoveDialog
+                ],
+                columnModel: [
+                    {
+                        header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
+                        title    : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
+                        dataIndex: 'selected',
+                        dataType : 'node',
+                        width    : 30
+                    },
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'title'),
+                        dataIndex: 'title',
+                        dataType : 'string',
+                        width    : 200
+                    },
+                    {
+                        header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.valueId'),
+                        title    : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.valueId.description'),
+                        dataIndex: 'valueId',
+                        dataType : 'string',
+                        width    : 75
+                    },
+                    {
+                        header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.image'),
+                        dataIndex: 'imagePreview',
+                        dataType : 'node',
+                        width    : 75
                     }
-                }],
-                columnModel: [{
-                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
-                    title    : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
-                    dataIndex: 'selected',
-                    dataType : 'node',
-                    width    : 30
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'title'),
-                    dataIndex: 'title',
-                    dataType : 'string',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.valueId'),
-                    title    : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.valueId.description'),
-                    dataIndex: 'valueId',
-                    dataType : 'string',
-                    width    : 75
-                }, {
-                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.image'),
-                    dataIndex: 'imagePreview',
-                    dataType : 'node',
-                    width    : 75
-                }]
+                ]
             });
 
             this.$Grid.setHeight(size.y);
@@ -219,8 +232,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                 })
             }).inject(this.$Elm, 'top');
 
-            this.$GenerateTags     = this.$PriceCalc.getElement('[name="generate_tags"]');
-            this.$EntriesType      = this.$PriceCalc.getElement('[name="entries_type"]');
+            this.$GenerateTags = this.$PriceCalc.getElement('[name="generate_tags"]');
+            this.$EntriesType = this.$PriceCalc.getElement('[name="entries_type"]');
             this.$IsImageAttribute = this.$PriceCalc.getElement('[name="is_image_attribute"]');
 
             this.refresh();
@@ -234,7 +247,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          */
         $onImport: function (self, Node) {
             this.$Input = Node;
-            this.$Elm   = this.create();
+            this.$Elm = this.create();
 
             var data   = {},
                 result = [];
@@ -489,8 +502,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
 
                         var Form = Win.getContent().getElement('form');
 
-                        Form.elements.title.value      = JSON.encode(data.title);
-                        Form.elements.valueId.value    = data.valueId;
+                        Form.elements.title.value = JSON.encode(data.title);
+                        Form.elements.valueId.value = data.valueId;
                         Form.elements.selected.checked = data.selected;
 
                         if ('image' in data && data.image) {
@@ -623,8 +636,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          */
         add: function (title, valueId, selected, image) {
             selected = selected || false;
-            image    = image || false;
-            valueId  = valueId.trim();
+            image = image || false;
+            valueId = valueId.trim();
 
             for (var i = 0, len = this.$data.length; i < len; i++) {
                 if (this.$data[i].valueId === valueId) {
@@ -695,18 +708,21 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          * @param {String} [image]
          */
         edit: function (index, title, valueId, selected, image) {
-            valueId = parseInt(valueId.trim());
+            valueId = valueId.trim();
 
-            let entryFound = false;
+            let entryFound = 0;
 
-            for (var i = 0, len = this.$data.length; i < len; i++) {
-                if (this.$data[i].valueId === valueId) {
-                    entryFound = true;
-                    break;
+            for (let i = 0, len = this.$data.length; i < len; i++) {
+                if (this.$data[i].valueId == valueId) { // == because 1 and "1" has to be checked
+                    entryFound++;
                 }
             }
 
-            if (!entryFound) {
+            if (entryFound > 1) {
+                return false;
+            }
+            
+            if (entryFound === 1 && this.$data[index].valueId != valueId) {
                 return false;
             }
 
