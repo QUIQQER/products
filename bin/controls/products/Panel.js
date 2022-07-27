@@ -52,7 +52,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             this.parent(options);
 
-            this.$Search    = null;
+            this.$Search = null;
             this.$ButtonAdd = null;
 
             this.addEvents({
@@ -118,6 +118,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
          */
         $onCreate: function () {
             this.getContent().addClass('quiqqer-products-productPanel');
+            this.getContent().setStyle('padding', 10);
 
             // buttons
             this.$ButtonAdd = new QUIButton({
@@ -492,7 +493,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
                     for (let i = 0, len = data.length; i < len; i++) {
                         products = products + '<li>' + data[i].id + ': ' +
-                            data[i].title + '</li>';
+                                   data[i].title + '</li>';
                     }
 
                     products = products + '</ul>';

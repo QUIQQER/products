@@ -1009,8 +1009,8 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[No search fields found]]></en>
         </locale>
         <locale name="searchtypes.considerVariantChild">
-            <de><![CDATA[Kind Produkte von Varianten in der Suche beachten.]]></de>
-            <en><![CDATA[Consider child products of variants in the search.]]></en>
+            <de><![CDATA[Auch Varianten anzeigen]]></de>
+            <en><![CDATA[Also show variants]]></en>
         </locale>
         <locale name="searchtypes.empty.frontend">
             <de><![CDATA[Keine Suchfelder gefunden]]></de>
