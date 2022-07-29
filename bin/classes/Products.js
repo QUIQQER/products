@@ -31,6 +31,10 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @return {Object} package/quiqqer/products/bin/classes/Product
          */
         get: function (productId) {
+            return new Product({
+                id: productId
+            });
+            /*
             if (!(productId in this.$products)) {
                 this.$products[productId] = new Product({
                     id: productId
@@ -38,6 +42,7 @@ define('package/quiqqer/products/bin/classes/Products', [
             }
 
             return this.$products[productId];
+            */
         },
 
         /**
@@ -274,7 +279,7 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @returns {Promise}
          */
         createChild: function (category, categories, fields, productType) {
-            fields      = fields || {};
+            fields = fields || {};
             productType = productType || '';
 
             return new Promise(function (resolve, reject) {
