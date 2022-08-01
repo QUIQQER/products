@@ -1,0 +1,23 @@
+.product-variant-mass-processing {
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+}
+
+.product-variant-mass-processing-text {
+    background: #EFEFEF;
+    padding: 20px;
+}
+
+.product-variant-mass-processing .qui-select-no-icons .text {
+    text-align: left;
+}
+
+.product-variant-mass-processing-content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.product-variant-mass-processing-content .data-table {
+    width: 100%;
+}

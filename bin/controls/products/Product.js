@@ -29,6 +29,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
     'package/quiqqer/products/bin/controls/fields/search/Window',
     'package/quiqqer/products/bin/controls/categories/Select',
     'package/quiqqer/products/bin/controls/fields/FieldTypeSelect',
+    'package/quiqqer/products/bin/utils/Products',
 
     'text!package/quiqqer/products/bin/controls/products/ProductInformation.html',
     'text!package/quiqqer/products/bin/controls/products/ProductData.html',
@@ -39,7 +40,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 ], function (QUI, QUIPanel, QUIButton, QUISwitch, QUIButtonSwitch, QUIConfirm, QUIFormUtils,
              QUIAjax, QUILocale, Users, Grid, FolderViewer, Mustache, Packages, Locker,
              Products, Product, Categories, Fields, FieldUtils, FieldWindow,
-             CategorySelect, FieldTypeSelect, informationTemplate, templateProductData,
+             CategorySelect, FieldTypeSelect, ProductUtils, informationTemplate, templateProductData,
              templateProductPrices, templateField) {
     "use strict";
 
@@ -1129,39 +1130,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @return {Element}
          */
         $renderDataField: function (field) {
-            var help  = false,
-                title = QUILocale.get(lg, 'products.field.' + field.id + '.title');
-
-            if (QUILocale.exists(lg, 'products.field.' + field.id + '.workingtitle')) {
-                title = QUILocale.get(lg, 'products.field.' + field.id + '.workingtitle');
-            }
-
-            if (QUILocale.exists(lg, 'products.field.' + field.id + '.description')) {
-                help = QUILocale.get(lg, 'products.field.' + field.id + '.description');
-            } else if (field.help && field.help !== '') {
-                help = field.help;
-            }
-
-            var FieldElm = new Element('tr', {
-                'class'       : 'field',
-                html          : Mustache.render(templateField, {
-                    fieldTitle: title,
-                    fieldHelp : help,
-                    fieldName : 'field-' + field.id,
-                    control   : field.jsControl
-                }),
-                'data-fieldid': field.id
-            });
-
-            var HelpIcon = FieldElm.getElement('.field-container-item-help');
-
-            if (HelpIcon) {
-                HelpIcon.addEvent('click', (event) => {
-                    event.stop();
-                });
-            }
-
-            return FieldElm;
+            return ProductUtils.renderDataField(field);
         },
 
         /**
@@ -1308,7 +1277,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          */
         $renderFolderViewer: function (Container, Product, types, fileId) {
             var self = this;
-            
+
             Container.set('html', '');
 
             if (typeof fileId === 'undefined') {

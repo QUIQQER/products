@@ -2223,6 +2223,24 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Alle markierten Varianten löschen]]></de>
             <en><![CDATA[Delete all selected variants]]></en>
         </locale>
+        <locale name="panel.variants.massProcessing">
+            <de><![CDATA[Massenverarbeitung]]></de>
+            <en><![CDATA[Mass processing]]></en>
+        </locale>
+        <locale name="window.products.variant.mass.processing.title">
+            <de><![CDATA[Varianten Massenverarbeitung]]></de>
+            <en><![CDATA[Variant mass processing]]></en>
+        </locale>
+        <locale name="window.products.variant.mass.processing.content">
+            <de><![CDATA[
+                Du bearbeitest [productCount] Varianten.
+                Bitte wähle ein Feld aus welches du für jede Variante setzen möchtest.
+            ]]></de>
+            <en><![CDATA[
+                You edit [productCount] variants.
+                Please select a field which you want to set for each variant.
+            ]]></en>
+        </locale>
         <locale name="panel.variants.button.create">
             <de><![CDATA[Neue Variante]]></de>
             <en><![CDATA[Create variant]]></en>

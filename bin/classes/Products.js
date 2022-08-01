@@ -45,6 +45,20 @@ define('package/quiqqer/products/bin/classes/Products', [
             */
         },
 
+        getProducts: function (productIds) {
+            let products = [];
+            
+            for (let i = 0, len = productIds.length; i < len; i++) {
+                products.push(
+                    new Product({
+                        id: productIds[i]
+                    })
+                );
+            }
+
+            return products;
+        },
+
         /**
          * Return the product frontend control class of the product
          *

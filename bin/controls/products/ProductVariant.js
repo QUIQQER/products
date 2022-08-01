@@ -49,6 +49,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             'openVariantAttributeSettings',
             'openVariantGenerating',
             'addVariant',
+            'massProcessing',
             '$onActivationStatusChange',
             'deleteVariantsDialog',
             '$activateVariants',
@@ -352,7 +353,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                     fields['field-' + entry.id] = entry.value;
                 }
-                
+
                 return Products.updateChild(
                     self.$CurrentVariant.getId(),
                     categories,
@@ -793,6 +794,21 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     icon    : 'fa fa-trash',
                     events  : {
                         onClick: this.deleteVariantsDialog
+                    }
+                })
+            );
+
+            ExtraMenu.appendChild(
+                new QUIContextMenuSeparator()
+            );
+
+            ExtraMenu.appendChild(
+                new QUIContextMenuItem({
+                    name  : 'extra-menu-massProcessing',
+                    text  : QUILocale.get(lg, 'panel.variants.massProcessing'),
+                    icon  : 'fa fa-edit',
+                    events: {
+                        onClick: this.massProcessing
                     }
                 })
             );
@@ -1377,6 +1393,51 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
         //endregion
 
+        //region variant mass processing
+
+        /**
+         * opens the mass processing window
+         */
+        massProcessing: function () {
+            if (!this.$Grid) {
+                return;
+            }
+
+            require([
+                'package/quiqqer/products/bin/controls/products/variants/MassProcessingWindow'
+            ], (MassProcessingWindow) => {
+                let selected = this.$Grid.getSelectedData();
+
+                new Promise((resolve) => {
+                    if (!selected.length) {
+                        // fetch all variant ids
+                        this.$Product.getVariants().then(function (variants) {
+                            let productIds = variants.data.map(function (entry) {
+                                return parseInt(entry.id);
+                            });
+
+                            resolve(productIds);
+                        });
+
+                        return;
+                    }
+
+                    // use selected ids
+                    let productIds = selected.map(function (entry) {
+                        return parseInt(entry.id);
+                    });
+
+                    resolve(productIds);
+                }).then(function (productIds) {
+                    new MassProcessingWindow({
+                        productIds: productIds
+                    }).open();
+                });
+            });
+        },
+
+        //endregion
+
         //region variant generating
 
         /**
@@ -1722,8 +1783,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          * @return {Promise}
          */
         $setDataToCategory: function (Content) {
-            const self = this;
-
             return new Promise(function (resolve) {
                 //let attributes = self.$CurrentVariant.getAttributes();
                 resolve(Content);
