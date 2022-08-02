@@ -41,10 +41,11 @@ QUI::$Ajax->registerFunction(
             'title'       => 'title',
             'description' => 'description',
             'type'        => 'type',
-            'price_netto' => 'F'.Fields::FIELD_PRICE,
+            'price_netto' => 'F' . Fields::FIELD_PRICE,
+            'price_offer' => 'F' . Fields::FIELD_PRICE_OFFER,
             'c_date'      => 'c_date',
             'e_date'      => 'e_date',
-            'priority'    => 'F'.Fields::FIELD_PRIORITY
+            'priority'    => 'F' . Fields::FIELD_PRIORITY
         ];
 
         if (!empty($productIds)) {
@@ -83,6 +84,15 @@ QUI::$Ajax->registerFunction(
                 switch ($key) {
                     case 'price_netto':
                         $value = (float)$value;
+                        break;
+
+                    case 'price_offer':
+                        if (empty($value)) {
+                            $value = '';
+                        } else {
+                            $value = (float)$value;
+                        }
+
                         break;
                 }
 

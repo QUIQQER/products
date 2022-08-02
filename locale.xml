@@ -1403,6 +1403,10 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Nettopreis]]></de>
             <en><![CDATA[Netto price]]></en>
         </locale>
+        <locale name="products.product.panel.grid.offerprice">
+            <de><![CDATA[Angebotspreis]]></de>
+            <en><![CDATA[Offer price]]></en>
+        </locale>
         <locale name="products.product.panel.grid.currency">
             <de><![CDATA[Währung]]></de>
             <en><![CDATA[Currency]]></en>
