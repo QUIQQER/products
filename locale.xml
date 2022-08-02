@@ -2595,10 +2595,12 @@ For a newly created product the article number should be generated automatically
     <groups name="quiqqer/products" datatype="php">
 
         <locale name="exception.duplicate_article_no">
-            <de>
-                <![CDATA[Die Artikel-Nr. "[articleNo]" ist bereits vergeben (bei Produkt #[otherProductId]). Bitte wähle eine eindeutige Artikel-Nr. für das Produkt.]]></de>
-            <en>
-                <![CDATA[The artciel no. "[articleNo]" is already taken (by product #[otherProductId]). Please choose a unique article no. for this product.]]></en>
+            <de><![CDATA[
+            Die Artikel-Nr. "[articleNo]" ist bereits vergeben (bei Produkt #[otherProductId]). Bitte wähle eine eindeutige Artikel-Nr. für das Produkt.
+            ]]></de>
+            <en><![CDATA[
+            The article no. "[articleNo]" is already taken (by product #[otherProductId]). Please choose a unique article no. for this product.
+            ]]></en>
         </locale>
 
         <locale name="button.product.goToProduct">
@@ -2607,10 +2609,12 @@ For a newly created product the article number should be generated automatically
         </locale>
 
         <locale name="UserInputFrontendView.info">
-            <de>
-                <![CDATA[Sie haben die Möglichkeit, hierfür einen individuelln Text (maximal [maxCharacters] Zeichen) festzulegen, wenn Sie dieses Produkt in den Warenkorb legen.]]></de>
-            <en>
-                <![CDATA[You have the option to specify an individual text (maximum of [maxCharacters] characters) for this when you add this product to the shopping cart.]]></en>
+            <de><![CDATA[
+            Sie haben die Möglichkeit, hierfür einen individuelln Text (maximal [maxCharacters] Zeichen) festzulegen, wenn Sie dieses Produkt in den Warenkorb legen.
+            ]]></de>
+            <en><![CDATA[
+            You have the option to specify an individual text (maximum of [maxCharacters] characters) for this when you add this product to the shopping cart.
+            ]]></en>
         </locale>
 
         <locale name="NumberRange.title">
@@ -2991,6 +2995,12 @@ For a newly created product the article number should be generated automatically
             <en>
                 <![CDATA[When clicking on the image of a child article, the corresponding attribute lists should be set to the appropriate values; when selecting attribute list values, the matching product image should be selected.]]></en>
         </locale>
+
+        <locale name="exception.mass.processing.successful.saved">
+            <de><![CDATA[Die Varianten wurden erfolgreich gespeichert.]]></de>
+            <en><![CDATA[The variants have been saved successfully.]]></en>
+        </locale>
+
     </groups>
 
 </locales>

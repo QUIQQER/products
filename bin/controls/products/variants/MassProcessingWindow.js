@@ -41,6 +41,7 @@ define('package/quiqqer/products/bin/controls/products/variants/MassProcessingWi
             this.parent(options);
 
             this.$fields = {};
+            this.$SelectField = null;
 
             this.setAttributes({
                 icon : 'fa fa-edit',
@@ -86,7 +87,7 @@ define('package/quiqqer/products/bin/controls/products/variants/MassProcessingWi
                 this.$fields = fields;
 
                 // field select
-                const Select = new QUISelect({
+                this.$SelectField = new QUISelect({
                     showIcons : false,
                     searchable: true,
                     styles    : {
@@ -115,7 +116,7 @@ define('package/quiqqer/products/bin/controls/products/variants/MassProcessingWi
                         continue;
                     }
 
-                    Select.appendChild(
+                    this.$SelectField.appendChild(
                         fields[i].title,
                         fields[i].id
                     );
@@ -126,9 +127,46 @@ define('package/quiqqer/products/bin/controls/products/variants/MassProcessingWi
         },
 
         $onSubmit: function () {
+            if (!this.$SelectField) {
+                return;
+            }
+
             this.Loader.show();
 
+            const fieldId = this.$SelectField.getValue();
+            const productIds = this.getAttribute('productIds');
 
+            let value;
+            let FieldNode = this.getContent().getElement('[name="field-' + fieldId + '"]');
+
+            if (!FieldNode) {
+                FieldNode = this.getContent().getElement(
+                    '.product-variant-mass-processing-content'
+                ).getChildren('[data-quiid]');
+            }
+
+            const Field = QUI.Controls.getById(FieldNode.get('data-quiid'));
+
+            if (!Field) {
+                this.Loader.hide();
+                return;
+            }
+
+            if (typeof Field.save === 'function') {
+                value = Field.save();
+            } else {
+                value = Field.getValue();
+            }
+
+            QUIAjax.post('package_quiqqer_products_ajax_products_variant_massProcessing', () => {
+                this.Loader.hide();
+                this.fireEvent('saved', [this]);
+            }, {
+                'package' : 'quiqqer/products',
+                productIds: JSON.encode(productIds),
+                fieldId   : fieldId,
+                value     : JSON.encode(value)
+            });
         },
 
         /**

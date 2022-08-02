@@ -627,6 +627,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                     onRefresh: () => {
                         this.$Grid.getButton('actions').getChildren().forEach(function (Item) {
+                            if (Item.getAttribute('name') === 'extra-menu-massProcessing') {
+                                return;
+                            }
+
                             if (typeof Item.disable !== 'undefined') {
                                 Item.disable();
                             }
@@ -804,10 +808,11 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             ExtraMenu.appendChild(
                 new QUIContextMenuItem({
-                    name  : 'extra-menu-massProcessing',
-                    text  : QUILocale.get(lg, 'panel.variants.massProcessing'),
-                    icon  : 'fa fa-edit',
-                    events: {
+                    disabled: false,
+                    name    : 'extra-menu-massProcessing',
+                    text    : QUILocale.get(lg, 'panel.variants.massProcessing'),
+                    icon    : 'fa fa-edit',
+                    events  : {
                         onClick: this.massProcessing
                     }
                 })
@@ -1428,9 +1433,14 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     });
 
                     resolve(productIds);
-                }).then(function (productIds) {
+                }).then((productIds) => {
                     new MassProcessingWindow({
-                        productIds: productIds
+                        productIds: productIds,
+                        events    : {
+                            onSaved: () => {
+                                this.$Grid.refresh();
+                            }
+                        }
                     }).open();
                 });
             });

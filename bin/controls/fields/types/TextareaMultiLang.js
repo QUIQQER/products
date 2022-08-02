@@ -9,13 +9,10 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
     'qui/controls/Control',
     'qui/controls/buttons/Select',
     'Editors',
-    'Locale',
-    'package/quiqqer/translator/bin/classes/Translator'
-
-], function (QUIQQER, QUI, QUIControl, QUISelect, Editors, QUILocale, TranslatorCls) {
+    'Locale'
+    
+], function (QUIQQER, QUI, QUIControl, QUISelect, Editors, QUILocale) {
     "use strict";
-
-    var Translator = new TranslatorCls();
 
     return new Class({
 
@@ -41,7 +38,7 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
                 onInject : this.$onInject,
                 onDestroy: function () {
                     if (this.$Editor) {
-                        this.$Editor.destroy()
+                        this.$Editor.destroy();
                     }
                 }.bind(this)
             });
@@ -51,9 +48,9 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
          * event : on import
          */
         $onInject: function () {
-            var self    = this,
-                Elm     = this.getElm(),
-                current = QUILocale.getCurrent();
+            const self    = this,
+                  Elm     = this.getElm(),
+                  current = QUILocale.getCurrent();
 
             Elm.setStyles({
                 'float': 'left',
@@ -63,11 +60,11 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
 
             Elm.set({
                 html: '<div class="language-select"></div>' +
-                    '<div class="editor"></div>'
+                      '<div class="editor"></div>'
             });
 
-            var EditorContainer = Elm.getElement('.editor');
-            var LangContainer   = Elm.getElement('.language-select');
+            const EditorContainer = Elm.getElement('.editor');
+            const LangContainer = Elm.getElement('.language-select');
 
             EditorContainer.setStyles({
                 height: 'calc(100% - 50px)'
@@ -87,7 +84,7 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
             }).inject(LangContainer);
 
             QUIQQER.getAvailableLanguages().then(function (languages) {
-                for (var i = 0, len = languages.length; i < len; i++) {
+                for (let i = 0, len = languages.length; i < len; i++) {
                     this.$Select.appendChild(
                         QUILocale.get('quiqqer/quiqqer', 'language.' + languages[i]),
                         languages[i],
@@ -107,7 +104,7 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
                 Editors.getEditor().then(function (Editor) {
                     this.$Editor = Editor;
 
-                    var value = this.getAttribute('value');
+                    let value = this.getAttribute('value');
 
                     if (typeOf(value) === 'string') {
                         try {
@@ -138,8 +135,8 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
                 return;
             }
 
-            var value   = this.getAttribute('value');
-            var current = this.getAttribute('current');
+            let value = this.getAttribute('value');
+            let current = this.getAttribute('current');
 
             if (!value) {
                 value = {};
@@ -170,8 +167,8 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
          * @return {String}
          */
         save: function () {
-            var value   = this.getAttribute('value');
-            var current = this.getAttribute('current');
+            let value = this.getAttribute('value');
+            let current = this.getAttribute('current');
 
             if (typeOf(value) !== 'object') {
                 value = {};
