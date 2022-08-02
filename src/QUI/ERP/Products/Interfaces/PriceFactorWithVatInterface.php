@@ -7,7 +7,7 @@
 namespace QUI\ERP\Products\Interfaces;
 
 /**
- * Interface PriceFactorWithVat
+ * Interface PriceFactorWithVatInterface
  * @package QUI\ERP\Products\Interfaces
  */
 interface PriceFactorWithVatInterface extends PriceFactorInterface
