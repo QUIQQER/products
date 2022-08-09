@@ -7,7 +7,9 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
-use \Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response;
+
+use function array_merge;
 
 /**
  * Product frontend View
@@ -128,11 +130,26 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
         // fields
         $fields    = [];
-        $fieldList = $this->getFields();
+        $fieldList = $this->getFields(); // only public fields
 
         /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
         foreach ($fieldList as $Field) {
             if (!$Field->isPublic()) {
+                continue;
+            }
+
+            $fields[] = array_merge(
+                $Field->toProductArray(),
+                $Field->getAttributes()
+            );
+        }
+
+        // fields -> BasketConditions
+        $conditions = $this->Product->getFieldsByType('BasketConditions');
+
+        foreach ($conditions as $Field) {
+            if ($Field->isPublic()) {
+                // are already added
                 continue;
             }
 
@@ -218,8 +235,8 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         }
 
         // use search cache
-        $minCache = 'quiqqer/products/'.$this->getId().'/prices/min';
-        $maxName  = 'quiqqer/products/'.$this->getId().'/prices/max';
+        $minCache = 'quiqqer/products/' . $this->getId() . '/prices/min';
+        $maxName  = 'quiqqer/products/' . $this->getId() . '/prices/max';
 
         $min = null;
         $max = null;
