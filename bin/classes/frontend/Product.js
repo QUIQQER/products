@@ -25,10 +25,10 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$data     = null;
-            this.$loaded   = false;
+            this.$data = null;
+            this.$loaded = false;
             this.$quantity = 1;
-            this.$fields   = {};
+            this.$fields = {};
         },
 
         /**
@@ -155,9 +155,9 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                 this.$data = {};
             }
 
-            this.$data.id       = this.getId();
+            this.$data.id = this.getId();
             this.$data.quantity = this.getQuantity();
-            this.$data.fields   = this.$fields;
+            this.$data.fields = this.$fields;
 
             return this.$data;
         },
@@ -185,7 +185,7 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          * @returns {Promise}
          */
         refresh: function () {
-            return new Promise(function (resolve, reject) {
+            return new Promise((resolve, reject) => {
                 if (typeof this.$data === 'undefined' || !this.$data) {
                     this.$data = {};
                 }
@@ -194,16 +194,14 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                     this.$data.fields = {};
                 }
 
-                require([
-                    'package/quiqqer/products/bin/Products'
-                ], function (Products) {
+                require(['package/quiqqer/products/bin/Products'], (Products) => {
                     Products.getChild(
                         this.getAttribute('id'),
                         this.$data.fields
-                    ).then(function (data) {
+                    ).then((data) => {
                         this.$loaded = true;
-                        this.$data   = data;
-
+                        this.$data = data;
+                        
                         this.$data.fields.each(function (Field) {
                             if (typeof this.$fields[Field.id] !== 'undefined') {
                                 Field.value = this.$fields[Field.id];
@@ -213,9 +211,9 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                         resolve(this);
 
                         this.fireEvent('refresh', [this]);
-                    }.bind(this)).catch(reject);
-                }.bind(this));
-            }.bind(this));
+                    }).catch(reject);
+                });
+            });
         },
 
         /**
