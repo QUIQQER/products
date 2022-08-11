@@ -11,10 +11,11 @@ use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Field\Field;
 use QUI\ERP\Products\Product\Types\VariantChild;
 use QUI\ERP\Products\Product\Types\VariantParent;
-
-use QUI\Projects\Media\Utils as FolderUtils;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
 use QUI\Projects\Media\Utils;
+use QUI\Projects\Media\Utils as FolderUtils;
+
+use function is_numeric;
 
 /**
  * Class Products
@@ -145,7 +146,7 @@ class Products
      */
     public static function getProduct($pid)
     {
-        if (!\is_numeric($pid)) {
+        if (!is_numeric($pid)) {
             throw new QUI\ERP\Products\Product\Exception(
                 [
                     'quiqqer/products',
@@ -167,7 +168,7 @@ class Products
         }
 
         // check if serialize product exists
-        $cachePath = Cache::getProductCachePath($pid).'/db-data';
+        $cachePath = Cache::getProductCachePath($pid) . '/db-data';
 
         //if (QUI::isFrontend()) { // -> mor wollte dies raus haben
         try {
@@ -206,7 +207,7 @@ class Products
      */
     public static function getProductByUrl($url, $category)
     {
-        $field = 'F'.QUI\ERP\Products\Handler\Fields::FIELD_URL;
+        $field = 'F' . QUI\ERP\Products\Handler\Fields::FIELD_URL;
 
         try {
             $result = QUI::getDataBase()->fetch([
@@ -216,7 +217,7 @@ class Products
                     $field     => $url,
                     'category' => [
                         'type'  => '%LIKE%',
-                        'value' => ','.$category.','
+                        'value' => ',' . $category . ','
                     ]
                 ],
                 'limit'  => 1
@@ -253,7 +254,7 @@ class Products
      */
     public static function getNewProductInstance($pid)
     {
-        if (!\is_numeric($pid)) {
+        if (!is_numeric($pid)) {
             throw new QUI\ERP\Products\Product\Exception(
                 [
                     'quiqqer/products',
@@ -311,7 +312,7 @@ class Products
         $productData = $result[0];
 
         if (QUI::isFrontend() || self::$createFrontendCache) {
-            $cachePath = Cache::getProductCachePath($pid).'/db-data';
+            $cachePath = Cache::getProductCachePath($pid) . '/db-data';
 
             try {
                 QUI\Cache\LongTermCache::get($cachePath);
@@ -530,7 +531,7 @@ class Products
             [
                 'fieldData'  => \json_encode($fieldData),
                 'category'   => $categoryIds[0],
-                'categories' => ','.\implode(',', $categoryIds).',',
+                'categories' => ',' . \implode(',', $categoryIds) . ',',
                 'type'       => $type,
                 'c_user'     => QUI::getUserBySession()->getId(),
                 'c_date'     => \date('Y-m-d H:i:s'),
@@ -547,7 +548,7 @@ class Products
             '',
             [
                 'fieldData'  => $fieldData,
-                'categories' => ','.\implode(',', $categoryIds).','
+                'categories' => ',' . \implode(',', $categoryIds) . ','
             ]
         );
 
@@ -1159,7 +1160,7 @@ class Products
         $articleNoConf = $Conf->getSection('autoArticleNos');
 
         if (!empty($articleNoConf['prefix'])) {
-            $nextId = $articleNoConf['prefix'].$nextId;
+            $nextId = $articleNoConf['prefix'] . $nextId;
         }
 
         if (!empty($articleNoConf['suffix'])) {

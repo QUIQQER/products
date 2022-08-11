@@ -16,8 +16,10 @@ use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Utils\PriceFactor;
 use QUI\Projects\Media\Utils as MediaUtils;
 
+use function floatval;
 use function get_class;
 use function is_a;
+use function is_numeric;
 use function md5;
 use function serialize;
 
@@ -1067,11 +1069,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function setQuantity($quantity)
     {
-        if (!\is_numeric($quantity)) {
+        if (!is_numeric($quantity)) {
             return;
         }
 
-        $quantity = \floatval($quantity);
+        $quantity = floatval($quantity);
         $max      = $this->getMaximumQuantity();
 
         if ($quantity < 0) {
@@ -1082,7 +1084,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $quantity = $this->getMaximumQuantity();
         }
 
-        $this->quantity = \floatval($quantity);
+        $this->quantity = floatval($quantity);
 
         try {
             $this->recalculation();

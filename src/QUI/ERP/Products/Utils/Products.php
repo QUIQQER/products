@@ -9,8 +9,8 @@ namespace QUI\ERP\Products\Utils;
 use QUI;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
-use QUI\ERP\Products\Utils\Fields as FieldUtils;
 use QUI\ERP\Products\Product\Exception;
+use QUI\ERP\Products\Utils\Fields as FieldUtils;
 
 /**
  * Class Products Helper
@@ -117,7 +117,7 @@ class Products
         // use the lowest price?
         foreach ($priceFields as $Field) {
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
-            $type = 'QUI\\ERP\\Products\\Field\\Types\\'.$Field->getType();
+            $type = 'QUI\\ERP\\Products\\Field\\Types\\' . $Field->getType();
 
             if (\method_exists($type, 'onGetPriceFieldForProduct')) {
                 try {
@@ -273,7 +273,7 @@ class Products
                 $fieldValue = \implode(\unpack("H*", $fieldValue));
             }
 
-            $hash[] = $fieldId.':'.$fieldValue;
+            $hash[] = $fieldId . ':' . $fieldValue;
         }
 
         // sort fields
@@ -285,7 +285,7 @@ class Products
         });
 
         // generate hash
-        $generate = ';'.\implode(';', $hash).';';
+        $generate = ';' . \implode(';', $hash) . ';';
 
         return $generate;
     }
@@ -451,7 +451,7 @@ class Products
             return;
         }
 
-        $urlCacheField = 'F'.FieldHandler::FIELD_URL;
+        $urlCacheField = 'F' . FieldHandler::FIELD_URL;
         $table         = QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
 
         $where = [];
@@ -466,9 +466,9 @@ class Products
             self::checkUrlLength($url, $lang, $categoryId);
 
 
-            $binds[':lang'.$i]     = $lang;
-            $binds[':url'.$i]      = $url;
-            $binds[':category'.$i] = '%,'.$categoryId.',%';
+            $binds[':lang' . $i]     = $lang;
+            $binds[':url' . $i]      = $url;
+            $binds[':category' . $i] = '%,' . $categoryId . ',%';
 
             $where[] = "(F19 LIKE :url{$i} AND lang LIKE :lang{$i} AND category LIKE :category{$i})";
             $i++;
@@ -540,12 +540,28 @@ class Products
 
             $categoryUrl = $Category->getUrl($Project);
 
-            if (!empty($categoryUrl) && \strlen($categoryUrl.'/'.$url) > 2000) {
+            if (!empty($categoryUrl) && \strlen($categoryUrl . '/' . $url) > 2000) {
                 throw new Exception([
                     'quiqqer/products',
                     'exception.url.is.too.long'
                 ]);
             }
         }
+    }
+
+    /**
+     * @param $Product
+     * @return int
+     */
+    public static function getBasketCondition($Product): int
+    {
+        // fields -> BasketConditions
+        $conditions = $Product->getFieldsByType('BasketConditions');
+
+        if (!count($conditions)) {
+            return QUI\ERP\Products\Field\Types\BasketConditions::TYPE_1;
+        }
+
+        return $conditions[0]->getValue();
     }
 }
