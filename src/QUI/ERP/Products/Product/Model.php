@@ -441,7 +441,7 @@ class Model extends QUI\QDOM
     {
         $Locale    = $User->getLocale();
         $fieldList = $this->getFields();
-        $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()) . '/';
+        $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/';
 
         $uniqueCacheParts = [
             $Locale->getCurrent(),
@@ -452,7 +452,7 @@ class Model extends QUI\QDOM
             $uniqueCacheParts[] = json_encode($Field->toProductArray());
         }
 
-        return $cacheName . md5(implode('_', $uniqueCacheParts));
+        return $cacheName.md5(implode('_', $uniqueCacheParts));
     }
 
     /**
@@ -601,8 +601,8 @@ class Model extends QUI\QDOM
 
         $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
         $cacheName .= '/url';
-        $cacheName .= '/' . $Project->getName();
-        $cacheName .= '/' . $Project->getLang();
+        $cacheName .= '/'.$Project->getName();
+        $cacheName .= '/'.$Project->getLang();
 
         try {
             $url = QUI\Cache\LongTermCache::get($cacheName);
@@ -664,7 +664,7 @@ class Model extends QUI\QDOM
                 ])
             );
 
-            return '/_p/' . $this->getUrlName();
+            return '/_p/'.$this->getUrlName();
         }
 
         try {
@@ -673,7 +673,7 @@ class Model extends QUI\QDOM
                 'paramAsSites' => true
             ]);
         } catch (\Exception $Exception) {
-            return '/_p/' . $this->getUrlName();
+            return '/_p/'.$this->getUrlName();
         }
 
         QUI\Cache\LongTermCache::set($cacheName, $url);
@@ -697,7 +697,7 @@ class Model extends QUI\QDOM
 
         if ($Site->getAttribute('quiqqer.products.fake.type')
             || $Site->getAttribute('type') !== 'quiqqer/products:types/category'
-            && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
+               && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
         ) {
             QUI\System\Log::addInfo(
                 QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', [
@@ -710,7 +710,7 @@ class Model extends QUI\QDOM
                 ]
             );
 
-            return $Project->getVHost(true, true) . '/_p/' . $this->getUrlName();
+            return $Project->getVHost(true, true).'/_p/'.$this->getUrlName();
         }
 
         $url = $Site->getUrlRewrittenWithHost([
@@ -974,10 +974,10 @@ class Model extends QUI\QDOM
     public function getMinimumPrice($User = null)
     {
         $baseCacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
-        $cacheName     = $baseCacheName . '/prices/min';
+        $cacheName     = $baseCacheName.'/prices/min';
 
         if ($User && $User instanceof QUI\Interfaces\Users\User && !QUI::getUsers()->isNobodyUser($User)) {
-            $cacheName = $baseCacheName . '/prices/' . $User->getId() . '/min';
+            $cacheName = $baseCacheName.'/prices/'.$User->getId().'/min';
         }
 
         try {
@@ -1063,10 +1063,10 @@ class Model extends QUI\QDOM
     public function getMaximumPrice($User = null)
     {
         $baseCacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
-        $cacheName     = $baseCacheName . '/prices/max';
+        $cacheName     = $baseCacheName.'/prices/max';
 
         if ($User && $User instanceof QUI\Interfaces\Users\User && !QUI::getUsers()->isNobodyUser($User)) {
-            $cacheName = $baseCacheName . '/prices/' . $User->getId() . '/max';
+            $cacheName = $baseCacheName.'/prices/'.$User->getId().'/max';
         }
 
         try {
@@ -1392,7 +1392,7 @@ class Model extends QUI\QDOM
                 ]),
                 '',
                 [
-                    'categories'  => ',' . implode(',', $categoryIds) . ',',
+                    'categories'  => ','.implode(',', $categoryIds).',',
                     'category'    => $mainCategory,
                     'fieldData'   => json_encode($fieldData),
                     'permissions' => json_encode($this->permissions),
@@ -1404,7 +1404,7 @@ class Model extends QUI\QDOM
                 QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 [
                     'parent'      => $parentId,
-                    'categories'  => ',' . implode(',', $categoryIds) . ',',
+                    'categories'  => ','.implode(',', $categoryIds).',',
                     'category'    => $mainCategory,
                     'fieldData'   => json_encode($fieldData),
                     'permissions' => json_encode($this->permissions),
@@ -1448,7 +1448,7 @@ class Model extends QUI\QDOM
 
             if (!empty($result)) {
                 QUI\Cache\LongTermCache::set(
-                    QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()) . '/db-data',
+                    QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()).'/db-data',
                     $result[0]
                 );
             }
@@ -1823,7 +1823,7 @@ class Model extends QUI\QDOM
         $viewPermissions = null;
 
         if (isset($permissions['permission.viewable']) && !empty($permissions['permission.viewable'])) {
-            $viewPermissions = ',' . $permissions['permission.viewable'] . ',';
+            $viewPermissions = ','.$permissions['permission.viewable'].',';
         }
 
         $data['viewUsersGroups'] = $viewPermissions;
@@ -1839,7 +1839,7 @@ class Model extends QUI\QDOM
                 $catIds[] = $Category->getId();
             }
 
-            $data['category'] = ',' . implode(',', $catIds) . ',';
+            $data['category'] = ','.implode(',', $catIds).',';
         } else {
             $data['category'] = null;
         }
@@ -2012,8 +2012,8 @@ class Model extends QUI\QDOM
      */
     public function getField($fieldId)
     {
-        if (is_string($fieldId) && defined('QUI\ERP\Products\Handler\Fields::' . $fieldId)) {
-            $fieldId = \constant('QUI\ERP\Products\Handler\Fields::' . $fieldId);
+        if (is_string($fieldId) && defined('QUI\ERP\Products\Handler\Fields::'.$fieldId)) {
+            $fieldId = \constant('QUI\ERP\Products\Handler\Fields::'.$fieldId);
         }
 
         if (isset($this->fields[$fieldId])) {
@@ -2098,7 +2098,7 @@ class Model extends QUI\QDOM
             'where' => [
                 'fields' => [
                     'type'  => '%LIKE%',
-                    'value' => '"id":' . $Field->getId() . ','
+                    'value' => '"id":'.$Field->getId().','
                 ]
             ]
         ]);
@@ -2646,6 +2646,8 @@ class Model extends QUI\QDOM
                         $targetPriceDecimals = 0;
                     }
 
+                    $buildPriceByConcat = true;
+
                     switch ($settings['rounding']['type']) {
                         case 'up':
                             $targetPriceInt = ceil($targetPriceInt / 10) * 10;
@@ -2670,12 +2672,24 @@ class Model extends QUI\QDOM
                         case 'commercial_9':
                             $targetPriceInt = (round($targetPriceInt / 10) * 10) - 1;
                             break;
+
+                        case 'commercial_decimals':
+                            $targetPrice        = \round($targetPrice);
+                            $buildPriceByConcat = false;
+                            break;
+
+                        case 'commercial_decimals_single':
+                            $targetPrice        = \round($targetPrice, 1);
+                            $buildPriceByConcat = false;
+                            break;
                     }
 
-                    if (!empty($settings['rounding']['custom'])) {
-                        $targetPrice = $targetPriceInt . '.' . $settings['rounding']['custom'];
-                    } else {
-                        $targetPrice = $targetPriceInt . '.' . $targetPriceDecimals;
+                    if ($buildPriceByConcat) {
+                        if (!empty($settings['rounding']['custom'])) {
+                            $targetPrice = $targetPriceInt.'.'.$settings['rounding']['custom'];
+                        } else {
+                            $targetPrice = $targetPriceInt.'.'.$targetPriceDecimals;
+                        }
                     }
 
                     $price = (float)$targetPrice / $vat;
@@ -2702,13 +2716,13 @@ class Model extends QUI\QDOM
      */
     protected function checkDuplicateArticleNo(string $articleNo)
     {
-        $subQuery = "SELECT `id` FROM " . QUI\ERP\Products\Utils\Tables::getProductTableName();
+        $subQuery = "SELECT `id` FROM ".QUI\ERP\Products\Utils\Tables::getProductTableName();
         $subQuery .= " WHERE `active` = 1 AND `parent` IS NULL";
 
-        $sql = "SELECT `id` FROM " . QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
-        $sql .= " WHERE `id` != " . $this->getId() . " AND `active` = 1";
-        $sql .= " AND (`parentId` IS NULL or `parentId` IN(" . $subQuery . "))";
-        $sql .= " AND `productNo` = '" . $articleNo . "'";
+        $sql = "SELECT `id` FROM ".QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
+        $sql .= " WHERE `id` != ".$this->getId()." AND `active` = 1";
+        $sql .= " AND (`parentId` IS NULL or `parentId` IN(".$subQuery."))";
+        $sql .= " AND `productNo` = '".$articleNo."'";
 
         $result                       = QUI::getDataBase()->fetchSQL($sql);
         $duplicateArticleNoProductIds = array_unique(\array_column($result, 'id'));

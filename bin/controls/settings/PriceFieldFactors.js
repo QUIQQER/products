@@ -94,17 +94,19 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                     labelRoundingVat          : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingVat'),
                     labelRoundingVatOptionNone: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingVatOptionNone'),
 
-                    headerRounding                     : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.headerRounding'),
-                    labelRoundingType                  : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingType'),
-                    labelRoundingTypeOptionNone        : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionNone'),
-                    labelRoundingTypeCommercial        : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercial'),
-                    labelRoundingTypeCommercial9       : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercial9'),
-                    labelRoundingTypeOptionUp          : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionUp'),
-                    labelRoundingTypeOptionUp9         : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionUp9'),
-                    labelRoundingTypeOptionDown        : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDown'),
-                    labelRoundingTypeOptionDown9       : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDown9'),
-                    labelRoundingTypeDecimalCustomValue: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeDecimalCustomValue'),
-                    descRoundingVat                    : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.descRoundingVat')
+                    headerRounding                           : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.headerRounding'),
+                    labelRoundingType                        : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingType'),
+                    labelRoundingTypeOptionNone              : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionNone'),
+                    labelRoundingTypeCommercial              : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercial'),
+                    labelRoundingTypeCommercial9             : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercial9'),
+                    labelRoundingTypeOptionUp                : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionUp'),
+                    labelRoundingTypeOptionUp9               : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionUp9'),
+                    labelRoundingTypeOptionDown              : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDown'),
+                    labelRoundingTypeOptionDown9             : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeOptionDown9'),
+                    labelRoundingTypeDecimalCustomValue      : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeDecimalCustomValue'),
+                    labelRoundingTypeCommercialDecimals      : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercialDecimals'),
+                    labelRoundingTypeCommercialDecimalsSingle: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercialDecimalsSingle'),
+                    descRoundingVat                          : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.descRoundingVat')
                 }));
 
                 new QUIButton({
