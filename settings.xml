@@ -99,6 +99,10 @@
                     <type><![CDATA[bool]]></type>
                     <defaultvalue>1</defaultvalue>
                 </conf>
+                <conf name="extendShortDesc">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>1</defaultvalue>
+                </conf>
             </section>
             <section name="editableFields"/>
         </config>
@@ -386,6 +390,17 @@
                             <description>
                                 <locale group="quiqqer/products"
                                         var="settings.window.products.linkVariantChildrenWithImages.description"/>
+                            </description>
+                        </input>
+
+                        <input conf="variants.extendShortDesc" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.extendShortDesc"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.extendShortDesc.description"/>
                             </description>
                         </input>
 

@@ -11,6 +11,7 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Utils\VariantGenerating;
 use QUI\Projects\Media\Utils as MediaUtils;
+use QUI\ERP\Products\Field\Types\AttributeGroup;
 
 /**
  * Class VariantChild
@@ -76,6 +77,9 @@ class VariantChild extends AbstractType
 
         $fields = $Parent->getFields();
 
+        $L                        = QUI::getLocale();
+        $attributeListFieldValues = [];
+
         foreach ($fields as $Field) {
             $fieldId = $Field->getId();
 
@@ -104,6 +108,14 @@ class VariantChild extends AbstractType
                 }
 
                 if (!$Field->isEmpty()) {
+                    if (Products::isExtendVariantChildShortDesc() &&
+                        $Field instanceof AttributeGroup) {
+                        $attributeListFieldValues[] = [
+                            'title'      => $Field->getTitle(),
+                            'valueTitle' => $Field->getValueTitle()
+                        ];
+                    }
+
                     continue;
                 }
             } catch (QUI\Exception $Exception) {
@@ -120,6 +132,27 @@ class VariantChild extends AbstractType
             }
 
             $Field->setValue($Field->getValue());
+        }
+
+        if (!empty($attributeListFieldValues)) {
+            $shortDesc      = $this->getFieldValueByLocale(Fields::FIELD_SHORT_DESC);
+            $shortDescLines = [];
+
+            foreach ($attributeListFieldValues as $field) {
+                $shortDescLines[] = $field['title'].': '.$field['valueTitle'];
+            }
+
+            $shortDescAddition = \implode('; ', $shortDescLines);
+
+            if (empty($shortDesc)) {
+                $shortDesc = $shortDescAddition;
+            } else {
+                $shortDesc .= '; '.$shortDescAddition;
+            }
+
+            /** @var QUI\ERP\Products\Field\Types\InputMultiLang $ShortDescField */
+            $ShortDescField = $this->getField(Fields::FIELD_SHORT_DESC);
+            $ShortDescField->setValueByLocale($shortDesc);
         }
     }
 

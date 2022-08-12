@@ -103,6 +103,13 @@ class Products
     private static $Locale = null;
 
     /**
+     * Runtime cache for "extend variant child short description" flag
+     *
+     * @var bool|null
+     */
+    private static ?bool $extendVariantChildShortDesc = null;
+
+    /**
      * Return the main media folder
      *
      * @return QUI\Projects\Media\Folder
@@ -168,7 +175,7 @@ class Products
         }
 
         // check if serialize product exists
-        $cachePath = Cache::getProductCachePath($pid) . '/db-data';
+        $cachePath = Cache::getProductCachePath($pid).'/db-data';
 
         //if (QUI::isFrontend()) { // -> mor wollte dies raus haben
         try {
@@ -207,7 +214,7 @@ class Products
      */
     public static function getProductByUrl($url, $category)
     {
-        $field = 'F' . QUI\ERP\Products\Handler\Fields::FIELD_URL;
+        $field = 'F'.QUI\ERP\Products\Handler\Fields::FIELD_URL;
 
         try {
             $result = QUI::getDataBase()->fetch([
@@ -217,7 +224,7 @@ class Products
                     $field     => $url,
                     'category' => [
                         'type'  => '%LIKE%',
-                        'value' => ',' . $category . ','
+                        'value' => ','.$category.','
                     ]
                 ],
                 'limit'  => 1
@@ -312,7 +319,7 @@ class Products
         $productData = $result[0];
 
         if (QUI::isFrontend() || self::$createFrontendCache) {
-            $cachePath = Cache::getProductCachePath($pid) . '/db-data';
+            $cachePath = Cache::getProductCachePath($pid).'/db-data';
 
             try {
                 QUI\Cache\LongTermCache::get($cachePath);
@@ -531,7 +538,7 @@ class Products
             [
                 'fieldData'  => \json_encode($fieldData),
                 'category'   => $categoryIds[0],
-                'categories' => ',' . \implode(',', $categoryIds) . ',',
+                'categories' => ','.\implode(',', $categoryIds).',',
                 'type'       => $type,
                 'c_user'     => QUI::getUserBySession()->getId(),
                 'c_date'     => \date('Y-m-d H:i:s'),
@@ -548,7 +555,7 @@ class Products
             '',
             [
                 'fieldData'  => $fieldData,
-                'categories' => ',' . \implode(',', $categoryIds) . ','
+                'categories' => ','.\implode(',', $categoryIds).','
             ]
         );
 
@@ -1160,7 +1167,7 @@ class Products
         $articleNoConf = $Conf->getSection('autoArticleNos');
 
         if (!empty($articleNoConf['prefix'])) {
-            $nextId = $articleNoConf['prefix'] . $nextId;
+            $nextId = $articleNoConf['prefix'].$nextId;
         }
 
         if (!empty($articleNoConf['suffix'])) {
@@ -1210,4 +1217,29 @@ class Products
     }
 
     // endregion
+
+    /**
+     * Shall short descriptions of variant children be automatically extended by
+     * attribute list field titles/values?
+     *
+     * @return bool
+     */
+    public static function isExtendVariantChildShortDesc(): bool
+    {
+        if (!\is_null(self::$extendVariantChildShortDesc)) {
+            return self::$extendVariantChildShortDesc;
+        }
+
+        try {
+            $Conf = QUI::getPackage('quiqqer/products')->getConfig();
+
+            self::$extendVariantChildShortDesc = !empty($Conf->get('variants', 'extendShortDesc'));
+
+            return self::$extendVariantChildShortDesc;
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
+
+        return false;
+    }
 }

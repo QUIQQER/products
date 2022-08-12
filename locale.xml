@@ -290,6 +290,15 @@
             <en>
                 <![CDATA[When calculating the lowest and highest price for the product search, changes in the price by select lists (discounts / surcharges) should be taken into account.]]></en>
         </locale>
+        
+        <locale name="settings.window.products.extendShortDesc">
+            <de><![CDATA[Kurzbeschreibung erweitern]]></de>
+            <en><![CDATA[Extend short description]]></en>
+        </locale>
+        <locale name="settings.window.products.extendShortDesc.description">
+            <de><![CDATA[Die Kurzbeschreibung von Varianten wird erweitert um eine Auflistung der Attributlisten-Werte, die diese Variante definieren.]]></de>
+            <en><![CDATA[The short description of variants is extended by a list of attribute list values that define this variant.]]></en>
+        </locale>
 
         <locale name="settings.window.sortFields.description">
             <de><![CDATA[Verfügbare Standardsortierungen]]></de>

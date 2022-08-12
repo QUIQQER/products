@@ -110,6 +110,31 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
     }
 
     /**
+     * @param string $langValue
+     * @param QUI\Locale|null $Locale
+     *
+     * @return void
+     * @throws QUI\Exception
+     */
+    public function setValueByLocale(string $langValue, ?QUI\Locale $Locale = null): void
+    {
+        if (!$Locale) {
+            $Locale = QUI::getLocale();
+        }
+
+        $lang  = $Locale->getCurrent();
+        $value = $this->getValue();
+
+        if (\is_string($value)) {
+            $value = \json_decode($value, true);
+        }
+
+        $value[$lang] = $langValue;
+
+        $this->setValue($value);
+    }
+
+    /**
      * Check the value
      * is the value valid for the field type?
      *
