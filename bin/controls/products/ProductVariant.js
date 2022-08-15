@@ -923,7 +923,15 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         if (!field.length) {
                             entry[needle] = '-';
                         } else {
-                            entry[needle] = field[0].value;
+                            const value = field[0].value;
+
+                            if (typeof field[1] !== 'undefined') {
+                                const valueTitle = field[1].value;
+
+                                entry[needle] = '(' + value + ') ' + valueTitle;
+                            } else {
+                                entry[needle] = value;
+                            }
                         }
                     }
 
