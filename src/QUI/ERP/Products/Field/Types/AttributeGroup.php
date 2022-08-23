@@ -205,14 +205,16 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             $Locale = QUI::getLocale();
         }
 
-        $lang  = $Locale->getCurrent();
-        $entry = $this->getValue();
+        $lang          = $Locale->getCurrent();
+        $targetValueId = $this->getValue();
 
-        if (empty($this->options['entries'][$entry]['title'][$lang])) {
-            return '';
+        foreach ($this->options['entries'] as $entry) {
+            if ($entry['valueId'] == $targetValueId && !empty($entry['title'][$lang])) {
+                return $entry['title'][$lang];
+            }
         }
 
-        return $this->options['entries'][$entry]['title'][$lang];
+        return '';
     }
 
     /**
