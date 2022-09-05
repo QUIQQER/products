@@ -6,9 +6,13 @@
 
 namespace QUI\ERP\Products\Field\Types;
 
+use DateTime;
 use QUI;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Search;
+
+use function is_numeric;
+use function strtotime;
 
 /**
  * Class Price
@@ -32,12 +36,12 @@ class Date extends QUI\ERP\Products\Field\Field
 
         $dateTime = true;
 
-        if (\is_numeric($value)) {
-            $value = \strtotime($value);
+        if (is_numeric($value)) {
+            $value = strtotime($value);
         }
 
         try {
-            new \DateTime($value);
+            new DateTime($value);
         } catch (\Exception $Exception) {
             $dateTime = false;
         }
@@ -54,7 +58,7 @@ class Date extends QUI\ERP\Products\Field\Field
             ]);
         }
 
-        $errors = \DateTime::getLastErrors();
+        $errors = DateTime::getLastErrors();
 
         if (!empty($errors['warning_count'])) {
             throw new QUI\ERP\Products\Field\Exception([
@@ -75,14 +79,14 @@ class Date extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        if (\is_numeric($value)) {
-            $value = \strtotime($value);
+        if (is_numeric($value)) {
+            $value = strtotime($value);
         }
 
         try {
-            $Date = new \DateTime($value);
+            $Date = new DateTime($value);
         } catch (\Exception $Exception) {
-            $Date = new \DateTime();
+            $Date = new DateTime();
         }
 
         return $Date->getTimestamp();

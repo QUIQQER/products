@@ -2,16 +2,29 @@
 
 namespace QUI\ERP\Products;
 
+use Exception;
 use QUI;
 use QUI\ERP\Products\Handler\Cache;
-use QUI\Package\Package;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Handler\Search;
 use QUI\ERP\Products\Utils\Tables;
+use QUI\Package\Package;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
-use \Symfony\Component\HttpFoundation\RedirectResponse;
-use \Symfony\Component\HttpFoundation\Response;
+use function count;
+use function explode;
+use function is_array;
+use function is_numeric;
+use function is_string;
+use function json_decode;
+use function json_encode;
+use function mb_strtolower;
+use function mb_substr;
+use function preg_replace;
+use function str_replace;
+use function trim;
 
 /**
  * Class EventHandling
@@ -84,7 +97,7 @@ class EventHandling
     {
         try {
             $Config = QUI::getPackage('quiqqer/products')->getConfig();
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
             return;
@@ -93,7 +106,7 @@ class EventHandling
         // Check current config for fields that may not exist anymore
         $editableFields = $Config->getSection('editableFields');
 
-        if (!empty($editableFields) && \is_array($editableFields)) {
+        if (!empty($editableFields) && is_array($editableFields)) {
             foreach ($editableFields as $fieldId => $active) {
                 try {
                     Fields::getField($fieldId);
@@ -106,7 +119,7 @@ class EventHandling
 
                         unset($editableFields[$fieldId]);
                     }
-                } catch (\Exception $Exception) {
+                } catch (Exception $Exception) {
                     QUI\System\Log::writeException($Exception);
                 }
             }
@@ -116,7 +129,7 @@ class EventHandling
 
         $inheritedFields = $Config->getSection('inheritedFields');
 
-        if (!empty($inheritedFields) && \is_array($inheritedFields)) {
+        if (!empty($inheritedFields) && is_array($inheritedFields)) {
             foreach ($inheritedFields as $fieldId => $active) {
                 try {
                     Fields::getField($fieldId);
@@ -129,7 +142,7 @@ class EventHandling
 
                         unset($inheritedFields[$fieldId]);
                     }
-                } catch (\Exception $Exception) {
+                } catch (Exception $Exception) {
                     QUI\System\Log::writeException($Exception);
                 }
             }
@@ -774,7 +787,7 @@ class EventHandling
             // create system fields
             try {
                 Fields::createField($field);
-            } catch (\Exception $Exception) {
+            } catch (Exception $Exception) {
                 QUI\System\Log::addAlert($Exception->getMessage());
             }
         }
@@ -819,7 +832,7 @@ class EventHandling
 
             try {
                 Fields::createFieldCacheColumn($fieldId);
-            } catch (\Exception $Exception) {
+            } catch (Exception $Exception) {
             }
         }
     }
@@ -856,7 +869,7 @@ class EventHandling
             $sql = "UPDATE `" . Tables::getProductCacheTableName() .
                 "` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
             QUI::getDataBase()->execSQL($sql);
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
     }
@@ -881,19 +894,19 @@ class EventHandling
         $cacheTbl     = QUI::getDBTableName('products_cache');
 
         foreach ($fieldColumns as $column) {
-            if (\mb_substr($column, 0, 1) !== 'F') {
+            if (mb_substr($column, 0, 1) !== 'F') {
                 continue;
             }
 
-            $fieldId = (int)\mb_substr($column, 1);
+            $fieldId = (int)mb_substr($column, 1);
 
             try {
                 $Field                     = Fields::getField($fieldId);
-                $columnTypeExpected        = \mb_strtolower($Field->getColumnType());
-                $columnTypeExpectedVariant = \preg_replace('#[\W\d]#i', '', $columnTypeExpected);
+                $columnTypeExpected        = mb_strtolower($Field->getColumnType());
+                $columnTypeExpectedVariant = preg_replace('#[\W\d]#i', '', $columnTypeExpected);
 
                 $columnInfo       = $DB->table()->getColumn($cacheTbl, $column);
-                $columnTypeActual = \preg_replace('#[\W\d]#i', '', $columnInfo['Type']);
+                $columnTypeActual = preg_replace('#[\W\d]#i', '', $columnInfo['Type']);
 
                 if ($columnTypeActual !== $columnTypeExpected
                     && $columnTypeActual !== $columnTypeExpectedVariant) {
@@ -919,7 +932,7 @@ class EventHandling
                         . $fieldId . ': ' . $Exception->getMessage()
                     );
                 }
-            } catch (\Exception $Exception) {
+            } catch (Exception $Exception) {
                 QUI\System\Log::addError(
                     'EventHandling :: checkProductCacheTable -> ERROR on cache table column check for field #'
                     . $fieldId . ': ' . $Exception->getMessage()
@@ -957,7 +970,7 @@ class EventHandling
             $Site->getAttribute('type') == 'quiqqer/products:types/category'
         ) {
             $url = $Site->getLocation();
-            $url = \str_replace(QUI\Rewrite::URL_DEFAULT_SUFFIX, '', $url);
+            $url = str_replace(QUI\Rewrite::URL_DEFAULT_SUFFIX, '', $url);
 
             QUI::getRewrite()->registerPath($url . '/*', $Site);
 
@@ -1051,12 +1064,12 @@ class EventHandling
             $searchFieldIds = [];
         }
 
-        if (\is_string($searchFieldIds)) {
-            $searchFieldIds = \json_decode($searchFieldIds, true);
+        if (is_string($searchFieldIds)) {
+            $searchFieldIds = json_decode($searchFieldIds, true);
         }
 
         foreach ($searchFieldIds as $key => $entry) {
-            if (\is_numeric($key)) {
+            if (is_numeric($key)) {
                 $fieldsIds[] = $key;
             }
         }
@@ -1068,7 +1081,7 @@ class EventHandling
             $defaultIds = $Package->getConfig()->get('search', 'frontend');
 
             if ($defaultIds) {
-                $defaultIds = \explode(',', $defaultIds);
+                $defaultIds = explode(',', $defaultIds);
 
                 foreach ($defaultIds as $defaultId) {
                     $fieldsIds[$defaultId] = 1;
@@ -1076,7 +1089,7 @@ class EventHandling
 
                 $Site->setAttribute(
                     'quiqqer.products.settings.searchFieldIds',
-                    \json_encode($fieldsIds)
+                    json_encode($fieldsIds)
                 );
             }
         }
@@ -1192,8 +1205,8 @@ class EventHandling
         }
 
         $getUrl   = $_GET['_url'];
-        $getUrl   = \trim($getUrl, '/');
-        $urlParts = \explode('/', $getUrl);
+        $getUrl   = trim($getUrl, '/');
+        $urlParts = explode('/', $getUrl);
 
         if ($urlParts[0] != '_p') {
             return;
@@ -1201,7 +1214,7 @@ class EventHandling
 
         $params = $Rewrite->getUrlParamsList();
 
-        if (!\count($params)) {
+        if (!count($params)) {
             return;
         }
 
@@ -1305,11 +1318,11 @@ class EventHandling
             return;
         }
 
-        $catId = \str_replace('products.category.', '', $var);
-        $catId = \str_replace('.title', '', $catId);
-        $catId = \str_replace('.description', '', $catId);
+        $catId = str_replace('products.category.', '', $var);
+        $catId = str_replace('.title', '', $catId);
+        $catId = str_replace('.description', '', $catId);
 
-        if (!\is_numeric($catId)) {
+        if (!is_numeric($catId)) {
             return;
         }
 
@@ -1332,7 +1345,7 @@ class EventHandling
             ]);
 
             if (isset($titleResult[0])) {
-                $title = \json_encode($titleResult[0]);
+                $title = json_encode($titleResult[0]);
             }
 
             // desc
@@ -1346,7 +1359,7 @@ class EventHandling
             ]);
 
             if (isset($descResult[0])) {
-                $desc = \json_encode($descResult[0]);
+                $desc = json_encode($descResult[0]);
             }
 
             QUI::getDataBase()->update($categoryTable, [
@@ -1355,7 +1368,7 @@ class EventHandling
             ], [
                 'id' => $catId
             ]);
-        } catch (\QUI\Exception $Exception) {
+        } catch (QUI\Exception $Exception) {
             QUI::getMessagesHandler()->addError($Exception->getMessage());
         }
     }

@@ -10,6 +10,15 @@ use QUI;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Search;
 
+use function count;
+use function implode;
+use function in_array;
+use function is_array;
+use function is_numeric;
+use function is_string;
+use function json_decode;
+use function json_last_error;
+
 /**
  * Class GroupList
  *
@@ -60,7 +69,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
         $params = $this->getFieldDataForView();
         $users  = $this->getUsers();
 
-        if (\is_array($users)) {
+        if (is_array($users)) {
             $value = [];
 
             foreach ($users as $User) {
@@ -69,7 +78,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 }
             }
 
-            $params['value'] = \implode(', ', $value);
+            $params['value'] = implode(', ', $value);
         }
 
         return new View($params);
@@ -108,9 +117,9 @@ class GroupList extends QUI\ERP\Products\Field\Field
         $multipleUsers = $this->getOption('multipleUsers');
         $userIds       = [];
 
-        if (\is_numeric($value)) {
+        if (is_numeric($value)) {
             $userIds = [(int)$value];
-        } elseif (\is_string($value)) {
+        } elseif (is_string($value)) {
             // Check if string is username
             try {
                 $User      = QUI::getUsers()->getUserByName($value);
@@ -119,14 +128,14 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 QUI\System\Log::writeDebugException($Exception);
 
                 // If string is no username -> assume it is JSON with user IDs
-                $userIds = \json_decode($value, true);
+                $userIds = json_decode($value, true);
 
                 // Check if string was username
-                if (\json_last_error() !== \JSON_ERROR_NONE) {
+                if (json_last_error() !== \JSON_ERROR_NONE) {
                     $userIds = [];
                 }
             }
-        } elseif (\is_array($value)) {
+        } elseif (is_array($value)) {
             $userIds = $value;
         }
 
@@ -134,7 +143,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        if (\count($userIds) > 1 && !$multipleUsers) {
+        if (count($userIds) > 1 && !$multipleUsers) {
             throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.grouplist.user.limit.reached',
@@ -162,7 +171,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
             }
 
             foreach ($userGroups as $userGroup) {
-                if (!\in_array($userGroup, $groupIds)) {
+                if (!in_array($userGroup, $groupIds)) {
                     return true;
                 }
             }
@@ -173,7 +182,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         try {
             foreach ($userIds as $userId) {
-                if (!\is_numeric($userId)) {
+                if (!is_numeric($userId)) {
                     throw new QUI\ERP\Products\Field\Exception([
                         'quiqqer/products',
                         'exception.field.grouplist.invalid.userId'
@@ -221,9 +230,9 @@ class GroupList extends QUI\ERP\Products\Field\Field
         $userIds       = [];
         $result        = [];
 
-        if (\is_numeric($value)) {
+        if (is_numeric($value)) {
             $userIds = [(int)$value];
-        } elseif (\is_string($value)) {
+        } elseif (is_string($value)) {
             // Check if string is username
             try {
                 $User      = QUI::getUsers()->getUserByName($value);
@@ -232,18 +241,18 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 QUI\System\Log::writeDebugException($Exception);
 
                 // If string is no username -> assume it is JSON with user IDs
-                $userIds = \json_decode($value, true);
+                $userIds = json_decode($value, true);
 
                 // Check if string was username
-                if (\json_last_error() !== \JSON_ERROR_NONE) {
+                if (json_last_error() !== \JSON_ERROR_NONE) {
                     $userIds = [];
                 }
             }
-        } elseif (\is_array($value)) {
+        } elseif (is_array($value)) {
             $userIds = $value;
         }
 
-        if (\count($userIds) > 1 && !$multipleUsers) {
+        if (count($userIds) > 1 && !$multipleUsers) {
             return [];
         }
 
@@ -257,7 +266,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
             }
 
             foreach ($userGroups as $userGroup) {
-                if (!\in_array($userGroup, $groupIds)) {
+                if (!in_array($userGroup, $groupIds)) {
                     return true;
                 }
             }
@@ -268,7 +277,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         try {
             foreach ($userIds as $userId) {
-                if (!\is_numeric($userId)) {
+                if (!is_numeric($userId)) {
                     continue;
                 }
 
@@ -307,11 +316,11 @@ class GroupList extends QUI\ERP\Products\Field\Field
             $searchValues[] = QUI::getUsers()->get($userId)->getName();
         }
 
-        if (\count($searchValues) === 1) {
+        if (count($searchValues) === 1) {
             return $searchValues[0];
         }
 
-        return ','.\implode(',', $searchValues).',';
+        return ',' . implode(',', $searchValues) . ',';
     }
 
     /**
@@ -330,7 +339,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
             $users = $Group->getUsers();
 
             foreach ($users as $User) {
-                if (\is_array($User)) {
+                if (is_array($User)) {
                     $result[] = (int)$User['id'];
                 }
             }
@@ -370,7 +379,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
         $groupIds = $this->getOption('groupIds');
         $result   = [];
 
-        if (!\is_array($groupIds)) {
+        if (!is_array($groupIds)) {
             return $result;
         }
 
@@ -443,10 +452,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 return $User->getUsername();
             }
 
-            return \implode(' ', $parts);
+            return implode(' ', $parts);
         };
 
-        if (\count($this->value) === 1) {
+        if (count($this->value) === 1) {
             try {
                 return $getName($Users->get($this->value[0]));
             } catch (\Exception $Exception) {

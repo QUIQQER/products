@@ -10,6 +10,11 @@ use QUI;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Search;
 
+use function is_array;
+use function is_numeric;
+use function is_string;
+use function json_decode;
+
 /**
  * Class Attributes
  * - Attribute Liste
@@ -20,9 +25,9 @@ use QUI\ERP\Products\Handler\Search;
  */
 class AttributeGroup extends QUI\ERP\Products\Field\Field
 {
-    const ENTRIES_TYPE_DEFAULT  = 1;
-    const ENTRIES_TYPE_SIZE     = 2;
-    const ENTRIES_TYPE_COLOR    = 3;
+    const ENTRIES_TYPE_DEFAULT = 1;
+    const ENTRIES_TYPE_SIZE = 2;
+    const ENTRIES_TYPE_COLOR = 3;
     const ENTRIES_TYPE_MATERIAL = 4;
 
     /**
@@ -80,7 +85,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
         parent::setOption($option, $value);
 
         if ($option == 'entries') {
-            if (\is_array($value)) {
+            if (is_array($value)) {
                 foreach ($value as $key => $val) {
                     if (isset($val['selected']) && $val['selected']) {
                         $this->value        = $val['valueId'];
@@ -333,11 +338,11 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     {
         $check = [];
 
-        if (\is_string($value)) {
-            $check = \json_decode($value, true);
+        if (is_string($value)) {
+            $check = json_decode($value, true);
 
             // if no json, check if value exist
-            if ($check === null && !\is_numeric($value)) {
+            if ($check === null && !is_numeric($value)) {
                 $options = $this->getOptions();
                 $entries = $options['entries'];
 
@@ -348,7 +353,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
                 }
             }
 
-            if (\is_numeric($value)) {
+            if (is_numeric($value)) {
 //                $value   = (int)$value;
                 $options = $this->getOptions();
                 $entries = $options['entries'];
@@ -370,19 +375,19 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
                 return null;
             }
 
-            if (!\is_numeric($check[0])) {
+            if (!is_numeric($check[0])) {
                 return null;
             }
 
             return $value;
         }
 
-        if (\is_array($value)) {
+        if (is_array($value)) {
             if (!isset($check[0]) || !isset($check[1])) {
                 return null;
             }
 
-            if (!\is_numeric($check[0])) {
+            if (!is_numeric($check[0])) {
                 return null;
             }
 
@@ -394,7 +399,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             return null;
         }
 
-        if (!\is_numeric($value)) {
+        if (!is_numeric($value)) {
             return null;
         }
 

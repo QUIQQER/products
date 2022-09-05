@@ -1,7 +1,7 @@
 <?php
 
-use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Handler\Products;
 
 /**
  * Returns product data needed for a Product SelectItem
@@ -16,6 +16,7 @@ QUI::$Ajax->registerFunction(
 
         return [
             'id'        => $Product->getId(),
+            'gtin'      => $Product->getFieldValue(Fields::FIELD_EAN),
             'articleNo' => $Product->getFieldValue(Fields::FIELD_PRODUCT_NO),
             'title'     => $Product->getTitle()
         ];

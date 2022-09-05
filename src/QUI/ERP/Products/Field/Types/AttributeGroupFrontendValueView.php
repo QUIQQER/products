@@ -3,7 +3,9 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
-use QUI\ERP\Products\Handler\Fields;
+
+use function is_numeric;
+use function is_string;
 
 /**
  * Class AttributeGroupFrontendView
@@ -28,14 +30,14 @@ class AttributeGroupFrontendValueView extends QUI\ERP\Products\Field\View
         $id      = $this->getId();
         $value   = $this->getValue();
         $options = $this->getOptions();
-        $name    = 'field-'.$id;
+        $name    = 'field-' . $id;
         $entries = [];
 
         if (isset($options['entries'])) {
             $entries = $options['entries'];
         }
 
-        if (!\is_string($value) && !\is_numeric($value)) {
+        if (!is_string($value) && !is_numeric($value)) {
             $value = '';
         }
 
@@ -61,14 +63,14 @@ class AttributeGroupFrontendValueView extends QUI\ERP\Products\Field\View
         }
 
         $Engine->assign([
-            'this'          => $this,
-            'id'            => $id,
-            'title'         => $this->getTitle(),
-            'name'          => $name,
-            'value'         => $value
+            'this'  => $this,
+            'id'    => $id,
+            'title' => $this->getTitle(),
+            'name'  => $name,
+            'value' => $value
         ]);
 
 
-        return $Engine->fetch(\dirname(__FILE__).'/AttributeGroupFrontendValueView.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/AttributeGroupFrontendValueView.html');
     }
 }

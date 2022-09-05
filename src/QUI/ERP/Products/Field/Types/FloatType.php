@@ -10,6 +10,16 @@ use QUI;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Search;
 
+use function floatval;
+use function is_float;
+use function is_numeric;
+use function mb_strpos;
+use function mb_substr;
+use function preg_replace;
+use function round;
+use function str_replace;
+use function trim;
+
 /**
  * Class FloatType
  * @package QUI\ERP\Products\Field
@@ -70,7 +80,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        if (!\is_numeric($value)) {
+        if (!is_numeric($value)) {
             throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
@@ -95,32 +105,32 @@ class FloatType extends QUI\ERP\Products\Field\Field
         $decimalSeparator   = '.';
         $thousandsSeparator = ',';
 
-        if (\is_float($value)) {
-            return \round($value, 4);
+        if (is_float($value)) {
+            return round($value, 4);
         }
 
         $value = (string)$value;
-        $value = \preg_replace('#[^\d,.]#i', '', $value);
+        $value = preg_replace('#[^\d,.]#i', '', $value);
 
-        if (\trim($value) === '') {
+        if (trim($value) === '') {
             return null;
         }
 
-        $decimal   = \mb_strpos($value, $decimalSeparator);
-        $thousands = \mb_strpos($value, $thousandsSeparator);
+        $decimal   = mb_strpos($value, $decimalSeparator);
+        $thousands = mb_strpos($value, $thousandsSeparator);
 
         if ($thousands === false && $decimal === false) {
-            return \round(\floatval($value), 4);
+            return round(floatval($value), 4);
         }
 
         if ($thousands !== false && $decimal === false) {
-            if (\mb_substr($value, -4, 1) === $decimalSeparator) {
-                $value = \str_replace($thousandsSeparator, '', $value);
+            if (mb_substr($value, -4, 1) === $decimalSeparator) {
+                $value = str_replace($thousandsSeparator, '', $value);
             }
         }
 
         if ($thousands === false && $decimal !== false) {
-            $value = \str_replace(
+            $value = str_replace(
                 $decimalSeparator,
                 '.',
                 $value
@@ -128,11 +138,11 @@ class FloatType extends QUI\ERP\Products\Field\Field
         }
 
         if ($thousands !== false && $decimal !== false) {
-            $value = \str_replace($decimalSeparator, '', $value);
-            $value = \str_replace($thousandsSeparator, '.', $value);
+            $value = str_replace($decimalSeparator, '', $value);
+            $value = str_replace($thousandsSeparator, '.', $value);
         }
 
-        return \round(\floatval($value), 4);
+        return round(floatval($value), 4);
     }
 
     /**
@@ -140,7 +150,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
      */
     public function isEmpty()
     {
-        return !\is_float($this->value);
+        return !is_float($this->value);
     }
 
     /**

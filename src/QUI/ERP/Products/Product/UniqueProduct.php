@@ -1223,10 +1223,17 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         }
 
         $initialCalcStatus = $this->calculated;
+        $gtin              = '';
+
+        try {
+            $gtin = $this->getFieldValue(QUI\ERP\Products\Handler\Fields::FIELD_EAN);
+        } catch (QUI\Exception $Exception) {
+        }
 
         $article = [
             'id'                   => $this->getId(),
             'articleNo'            => $this->getFieldValue(Fields::FIELD_PRODUCT_NO),
+            'gtin'                 => $gtin,
             'title'                => $this->getTitle($Locale),
             'description'          => $this->getDescription($Locale),
             'unitPrice'            => $this->getUnitPrice()->value(),
