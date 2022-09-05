@@ -4,6 +4,9 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 
+use function is_string;
+use function json_last_error;
+
 /**
  * Class CheckboxInput
  *
@@ -39,10 +42,10 @@ class CheckboxInput extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        if (\is_string($value)) {
+        if (is_string($value)) {
             $value = \json_decode($value, true);
 
-            if (\json_last_error() !== JSON_ERROR_NONE) {
+            if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
@@ -80,10 +83,10 @@ class CheckboxInput extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        if (\is_string($value)) {
+        if (is_string($value)) {
             $value = \json_decode($value, true);
 
-            if (\json_last_error() !== JSON_ERROR_NONE) {
+            if (json_last_error() !== JSON_ERROR_NONE) {
                 return $this->getDefaultValue();
             }
         }

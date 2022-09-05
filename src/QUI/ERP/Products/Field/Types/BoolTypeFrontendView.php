@@ -8,6 +8,8 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 
+use function htmlspecialchars;
+
 /**
  * Class BoolType
  * Frontend View for the BoolType Field
@@ -27,8 +29,8 @@ class BoolTypeFrontendView extends QUI\ERP\Products\Field\View
             return '';
         }
 
-        $title = \htmlspecialchars($this->getTitle());
-        $title = \htmlspecialchars($title);
+        $title = htmlspecialchars($this->getTitle());
+        $title = htmlspecialchars($title);
 
         if ($this->getValue()) {
             $html = '<span class="fa fa-check"></span>';

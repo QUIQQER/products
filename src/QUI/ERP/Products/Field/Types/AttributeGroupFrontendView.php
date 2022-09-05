@@ -5,6 +5,13 @@ namespace QUI\ERP\Products\Field\Types;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 
+use function dirname;
+use function htmlspecialchars;
+use function is_numeric;
+use function is_string;
+use function strtolower;
+use function strtoupper;
+
 /**
  * Class AttributeGroupFrontendView
  *
@@ -27,8 +34,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             return $this->notChangeableDisplay();
         }
 
-        if ($this->Product
-            && $this->Product instanceof QUI\ERP\Products\Product\Types\Product) {
+        if ($this->Product instanceof QUI\ERP\Products\Product\Types\Product) {
             return $this->notChangeableDisplay();
         }
 
@@ -38,7 +44,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         $value   = $this->getValue();
         $options = $this->getOptions();
 
-        $name    = 'field-'.$id;
+        $name    = 'field-' . $id;
         $entries = [];
 
         if (isset($options['entries'])) {
@@ -51,11 +57,11 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             $requiredField = ' required="required"';
         }
 
-        if (!\is_string($value) && !\is_numeric($value)) {
+        if (!is_string($value) && !is_numeric($value)) {
             $value = '';
         }
 
-        $value = \htmlspecialchars($value);
+        $value = htmlspecialchars($value);
 
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
@@ -91,7 +97,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
                 }
             }
         } elseif ($id === QUI\ERP\Products\Handler\Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES &&
-                  $this->Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            $this->Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
             $currentId = $this->Product->getId();
             $Variant   = $this->Product->getParent();
             $variants  = $Variant->getVariants();
@@ -118,7 +124,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         // options
         $optionsAvailable = false;
         $options          = [];
-        $currentLC        = \strtolower($current).'_'.\strtoupper($current);
+        $currentLC        = strtolower($current) . '_' . strtoupper($current);
 
         foreach ($entries as $key => $option) {
             $title = $option['title'];
@@ -134,7 +140,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
 
             if ($value === null && isset($option['selected']) && $option['selected']
                 || $value === $option['valueId']
-                || \is_numeric($value) && (int)$value === $option['valueId']) {
+                || is_numeric($value) && (int)$value === $option['valueId']) {
                 $selected = 'selected="selected" ';
             }
 
@@ -145,7 +151,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
                 $optionsAvailable = true;
             }
 
-            if (\is_string($title)) {
+            if (is_string($title)) {
                 $text = $title;
             } elseif (isset($title[$current])) {
                 $text = $title[$current];
@@ -160,8 +166,8 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             $options[] = [
                 'selected' => $selected,
                 'disabled' => $disabled,
-                'value'    => \htmlspecialchars($option['valueId']),
-                'text'     => \htmlspecialchars($text),
+                'value'    => htmlspecialchars($option['valueId']),
+                'text'     => htmlspecialchars($text),
                 'data'     => $userInput
             ];
         }
@@ -176,7 +182,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
 
         $Engine->assign('options', $options);
 
-        return $Engine->fetch(\dirname(__FILE__).'/AttributeGroupFrontendView.html');
+        return $Engine->fetch(dirname(__FILE__) . '/AttributeGroupFrontendView.html');
     }
 
     /**
@@ -190,18 +196,18 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         $value   = $this->getValue();
         $options = $this->getOptions();
 
-        $name    = 'field-'.$id;
+        $name    = 'field-' . $id;
         $entries = [];
 
         if (isset($options['entries'])) {
             $entries = $options['entries'];
         }
 
-        if (!\is_string($value) && !\is_numeric($value)) {
+        if (!is_string($value) && !is_numeric($value)) {
             $value = '';
         }
 
-        $value = \htmlspecialchars($value);
+        $value = htmlspecialchars($value);
 
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
@@ -221,7 +227,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         ]);
 
         // options
-        $currentLC = \strtolower($current).'_'.\strtoupper($current);
+        $currentLC = strtolower($current) . '_' . strtoupper($current);
 
         if (!isset($entries[0])) {
             $text = '---';
@@ -238,7 +244,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             $title = $option['title'];
             $text  = '';
 
-            if (\is_string($title)) {
+            if (is_string($title)) {
                 $text = $title;
             } elseif (isset($title[$current])) {
                 $text = $title[$current];
@@ -249,6 +255,6 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
 
         $Engine->assign('valueText', $text);
 
-        return $Engine->fetch(\dirname(__FILE__).'/AttributeGroupFrontendViewNotChangeable.html');
+        return $Engine->fetch(dirname(__FILE__) . '/AttributeGroupFrontendViewNotChangeable.html');
     }
 }
