@@ -86,6 +86,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
 
             Currency.convertWithSign(
                 this.getAttribute('price'),
+                this.getElm().get('data-qui-options-currency'),
                 this.getAttribute('currency')
             ).then(function (result) {
                     this.$Price.set('html', result);
