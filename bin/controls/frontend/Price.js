@@ -15,7 +15,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
 
     "use strict";
 
-    var hidePrice = false;
+    let hidePrice = false;
 
     if (typeof window.QUIQQER_PRODUCTS_HIDE_PRICE !== 'undefined' &&
         window.QUIQQER_PRODUCTS_HIDE_PRICE) {
@@ -41,8 +41,8 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Price  = null;
-            this.$Vat    = null;
+            this.$Price = null;
+            this.$Vat = null;
             this.$Prefix = null;
 
             this.addEvents({
@@ -71,6 +71,8 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          * Refresh the display
          */
         refresh: function () {
+            console.log('price refresh', this.getAttribute('currency'));
+
             if (hidePrice) {
                 return;
             }
@@ -102,7 +104,10 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
                 return;
             }
 
-            Currency.addEvent('onChange', this.refresh);
+            Currency.addEvent('onChange', (Instance, currency) => {
+                this.setAttribute('currency', currency);
+                this.refresh();
+            });
 
             if (Elm.get('data-qui-options-currency')) {
                 this.setAttribute('currency', Elm.get('data-qui-options-currency'));
@@ -116,7 +121,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
 
             this.$Price.addClass('quiqqer-price');
 
-            this.$Vat    = Elm.getElement('.qui-products-price-display-vat');
+            this.$Vat = Elm.getElement('.qui-products-price-display-vat');
             this.$Prefix = Elm.getElement('.qui-products-price-display-prefix');
 
             this.setPrice(Elm.get('data-qui-options-price'));
