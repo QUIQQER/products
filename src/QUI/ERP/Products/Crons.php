@@ -87,6 +87,7 @@ class Crons
                 $Product = Products::getNewProductInstance($id);
 
                 if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+                    $current++;
                     continue;
                 }
 
