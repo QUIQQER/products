@@ -71,8 +71,6 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          * Refresh the display
          */
         refresh: function () {
-            console.log('price refresh', this.getAttribute('currency'));
-
             if (hidePrice) {
                 return;
             }
