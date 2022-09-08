@@ -59,6 +59,7 @@
             <field type="TINYINT(1) NOT NULL DEFAULT 0">showInDetails</field>
             <field type="TEXT NULL">options</field>
             <field type="TEXT NULL">defaultValue</field>
+            <field type="timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP">e_date</field>
 
             <primary>id</primary>
             <auto_increment>id</auto_increment>
