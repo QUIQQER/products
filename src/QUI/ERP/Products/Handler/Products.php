@@ -793,18 +793,23 @@ class Products
      */
     public static function cleanup()
     {
+        if (\class_exists('\\QUI\\Watcher')) {
+            QUI\Watcher::$globalWatcherDisable = true;
+        }
+
         // cache cleanup
         QUI\ERP\Products\Search\Cache::clear();
         Categories::clearCache();
 
-        $ids = self::getProductIds();
+        $ids        = self::getProductIds();
+        $SystemUser = QUI::getUsers()->getSystemUser();
 
         foreach ($ids as $id) {
             try {
                 $Product = self::getProduct($id);
-                $Product->save();
+                $Product->save($SystemUser);
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::write($Exception->getMessage(), QUI\System\Log::LEVEL_WARNING);
+                QUI\System\Log::writeException($Exception);
             }
         }
 
@@ -814,9 +819,9 @@ class Products
         /* @var $Category Category */
         foreach ($categories as $Category) {
             try {
-                $Category->save(new QUI\Users\SystemUser());
+                $Category->save($SystemUser);
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_ERROR);
+                QUI\System\Log::writeException($Exception);
             }
         }
 
@@ -843,9 +848,9 @@ class Products
                     $Folder->delete();
                 }
 
-                QUI\System\Log::write($Exception->getMessage());
+                QUI\System\Log::writeException($Exception);
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::write($Exception->getMessage());
+                QUI\System\Log::writeException($Exception);
             }
         }
 
