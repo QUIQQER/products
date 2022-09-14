@@ -31,6 +31,8 @@ class VariantChild extends AbstractType
      */
     protected $OwnMediaFolderField = null;
 
+    protected ?array $originalShortDesc = null;
+
     /**
      * VariantChild constructor.
      *
@@ -135,7 +137,9 @@ class VariantChild extends AbstractType
         }
 
         if (!empty($attributeListFieldValues)) {
-            $shortDesc      = $this->getFieldValueByLocale(Fields::FIELD_SHORT_DESC);
+            $shortDesc               = $this->getFieldValueByLocale(Fields::FIELD_SHORT_DESC);
+            $this->originalShortDesc = $this->getFieldValue(Fields::FIELD_SHORT_DESC);
+
             $shortDescLines = [];
 
             foreach ($attributeListFieldValues as $field) {
@@ -534,11 +538,17 @@ class VariantChild extends AbstractType
         $Parent         = $this->getParent();
         $filteredFields = [];
 
-        foreach ($fieldData as $field) {
+        foreach ($fieldData as $k => $field) {
             try {
                 $FieldParent = $Parent->getField($field['id']);
             } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
                 continue;
+            }
+
+            if (!\is_null($this->originalShortDesc) && $field['id'] === Fields::FIELD_SHORT_DESC) {
+                $field['value']         = $this->originalShortDesc;
+                $fieldData[$k]['value'] = $this->originalShortDesc;
             }
 
             $parentFieldValue = $FieldParent->getValue();
