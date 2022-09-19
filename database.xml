@@ -94,6 +94,7 @@
             <index>category</index>
             <index>active</index>
             <index>parentId</index>
+            <index>productNo</index>
         </table>
     </global>
 
