@@ -17,6 +17,7 @@ use function get_class;
 use function htmlspecialchars;
 use function implode;
 use function is_array;
+use function is_null;
 use function is_string;
 use function json_encode;
 use function uniqid;
@@ -88,8 +89,11 @@ class ProductList extends QUI\Control
             'forceMobileFilter'    => false,
             'autoload'             => false,
             'autoloadAfter'        => 3,
+
+            'categoryProductSearchType' => 'OR',
+
             //  After how many clicks are further products loaded automatically? (false = disable / number )
-            'hidePrice'            => QUI\ERP\Products\Utils\Package::hidePrice(),
+            'hidePrice'                 => QUI\ERP\Products\Utils\Package::hidePrice(),
         ]);
 
         $this->addCSSFile(dirname(__FILE__) . '/ProductList.css');
@@ -317,7 +321,7 @@ class ProductList extends QUI\Control
      */
     public function getFilter(): ?array
     {
-        if (!\is_null($this->filter)) {
+        if (!is_null($this->filter)) {
             return $this->filter;
         }
 
@@ -662,9 +666,11 @@ class ProductList extends QUI\Control
         if (!$max) {
             $max = $this->getMax();
         }
-
+        
         $searchParams['sheet'] = round($start / $max) + 1;
         $searchParams['limit'] = $max;
+
+        $searchParams['categoryProductSearchType'] = $this->getAttribute('categoryProductSearchType');
 
 //        $searchParams['ignoreFindVariantParentsByChildValues'] = true;
 

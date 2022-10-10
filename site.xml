@@ -23,6 +23,7 @@
                 <attribute>quiqqer.products.settings.showFreeTextSearch</attribute>
                 <attribute>quiqqer.products.settings.productLoadNumber</attribute>
                 <attribute>quiqqer.products.settings.categoryStartNumber</attribute>
+                <attribute>quiqqer.products.settings.categoryProductSearchType</attribute>
                 <attribute>quiqqer.products.settings.autoloadAfter</attribute>
                 <attribute default="1">quiqqer.products.settings.showCategories</attribute>
                 <attribute>quiqqer.products.settings.categoryDisplay</attribute>
@@ -93,6 +94,26 @@
                                             var="quiqqer.products.settings.extraProductCategories.description"/>
                                 </description>
                             </input>
+
+                            <select conf="quiqqer.products.settings.categoryProductSearchType">
+                                <text>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.categoryProductSearchType"/>
+                                </text>
+                                <description>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.categoryProductSearchType.description"/>
+                                </description>
+
+                                <option value="must_have_only_one_category">
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.categoryProductSearchType.must.have.one"/>
+                                </option>
+                                <option value="must_have_all_categories">
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.categoryProductSearchType.must.have.all"/>
+                                </option>
+                            </select>
 
                             <input conf="quiqqer.products.settings.productLoadNumber" type="number">
                                 <text>

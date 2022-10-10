@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Product\Types;
 
 use QUI;
+use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 use QUI\ERP\Products\Product\Exception;
@@ -16,6 +17,7 @@ use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Field\Types\AttributeGroup;
 use QUI\ERP\Products\Field\Types\ProductAttributeList;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
+use function implode;
 
 /**
  * Class Variant
@@ -170,6 +172,74 @@ class VariantParent extends AbstractType
         }
 
         parent::productSave($fieldData, $EditUser);
+
+        // Update category values for children
+        $categories   = $this->getCategories();
+        $MainCategory = $this->getCategory();
+
+        $mainCategoryValue = $MainCategory?->getId();
+        $categoriesValue   = null;
+
+        if (!empty($categories)) {
+            $catIds = [];
+
+            /** @var Category $Category */
+            foreach ($categories as $Category) {
+                $catIds[] = $Category->getId();
+            }
+
+            $categoriesValue = ','.implode(',', $catIds).',';
+        }
+
+        QUI::getDataBase()->update(
+            QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            [
+                'category'   => $mainCategoryValue,
+                'categories' => $categoriesValue
+            ],
+            [
+                'parent' => $this->getId()
+            ]
+        );
+    }
+
+    /**
+     * Write cache entry for variant parent.
+     *
+     * @param $lang
+     * @return void
+     * @throws QUI\Exception
+     */
+    protected function writeCacheEntry($lang)
+    {
+        parent::writeCacheEntry($lang);
+
+        // Set category IDs in
+        $categories    = $this->getCategories();
+        $categoryValue = null;
+
+        if (!empty($categories)) {
+            $catIds = [];
+
+            /** @var Category $Category */
+            foreach ($categories as $Category) {
+                $catIds[] = $Category->getId();
+            }
+
+            $categoryValue = ','.implode(',', $catIds).',';
+        }
+
+        // Update cache table
+        QUI::getDataBase()->update(
+            QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+            [
+                'category' => $categoryValue
+            ],
+            [
+                'parentId' => $this->getId(),
+                'lang'     => $lang
+            ]
+        );
     }
 
     /**
@@ -279,7 +349,7 @@ class VariantParent extends AbstractType
         }
 
         return new QUI\ERP\Money\Price(
-            $maxPrices[0]['maxPrice'],
+            (float)$maxPrices[0]['maxPrice'],
             $this->getCurrency() ?: QUI\ERP\Currency\Handler::getDefaultCurrency(),
             $User
         );
@@ -293,8 +363,6 @@ class VariantParent extends AbstractType
      */
     public function getMinimumPrice($User = null)
     {
-        $MinPrice = null;
-
         // kinder ids
         $children = QUI::getDataBase()->fetch([
             'select' => ['id', 'parent'],
@@ -348,7 +416,7 @@ class VariantParent extends AbstractType
         }
 
         return new QUI\ERP\Money\Price(
-            $minprices[0]['minPrice'],
+            (float)$minprices[0]['minPrice'],
             $this->getCurrency() ?: QUI\ERP\Currency\Handler::getDefaultCurrency(),
             $User
         );
