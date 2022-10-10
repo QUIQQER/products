@@ -217,16 +217,16 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
      */
 
     switch ($Site->getAttribute('quiqqer.products.settings.categoryProductSearchType')) {
-        case'must_have_all_categories':
+        case 'must_have_all_categories':
             $categoryProductSearchType = 'AND';
             break;
 
         default:
-        case'must_have_only_one_category':
+        case 'must_have_only_one_category':
             $categoryProductSearchType = 'OR';
             break;
     }
-    
+
     $ProductList = new ProductList([
         'categoryId'                => $Site->getAttribute('quiqqer.products.settings.categoryId'),
         'hideEmptyProductList'      => true,
