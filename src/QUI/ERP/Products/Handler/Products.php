@@ -804,6 +804,10 @@ class Products
         $ids        = self::getProductIds();
         $SystemUser = QUI::getUsers()->getSystemUser();
 
+        if (\in_array(614056, $ids)) {
+            \QUI\System\Log::writeRecursive("yes");
+        }
+
         foreach ($ids as $id) {
             try {
                 $Product = self::getProduct($id);
