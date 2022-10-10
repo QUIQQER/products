@@ -215,11 +215,8 @@ class VariantParent extends AbstractType
         parent::writeCacheEntry($lang);
 
         // Set category IDs in
-        $categories   = $this->getCategories();
-        $MainCategory = $this->getCategory();
-
-        $mainCategoryValue = $MainCategory?->getId();
-        $categoryValue     = null;
+        $categories    = $this->getCategories();
+        $categoryValue = null;
 
         if (!empty($categories)) {
             $catIds = [];
@@ -352,7 +349,7 @@ class VariantParent extends AbstractType
         }
 
         return new QUI\ERP\Money\Price(
-            $maxPrices[0]['maxPrice'],
+            (float)$maxPrices[0]['maxPrice'],
             $this->getCurrency() ?: QUI\ERP\Currency\Handler::getDefaultCurrency(),
             $User
         );
@@ -366,8 +363,6 @@ class VariantParent extends AbstractType
      */
     public function getMinimumPrice($User = null)
     {
-        $MinPrice = null;
-
         // kinder ids
         $children = QUI::getDataBase()->fetch([
             'select' => ['id', 'parent'],
@@ -421,7 +416,7 @@ class VariantParent extends AbstractType
         }
 
         return new QUI\ERP\Money\Price(
-            $minprices[0]['minPrice'],
+            (float)$minprices[0]['minPrice'],
             $this->getCurrency() ?: QUI\ERP\Currency\Handler::getDefaultCurrency(),
             $User
         );
