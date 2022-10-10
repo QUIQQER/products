@@ -31,6 +31,8 @@ class VariantChild extends AbstractType
      */
     protected $OwnMediaFolderField = null;
 
+    protected ?array $shortDescAddition = null;
+
     /**
      * VariantChild constructor.
      *
@@ -135,14 +137,17 @@ class VariantChild extends AbstractType
         }
 
         if (!empty($attributeListFieldValues)) {
-            $shortDesc      = $this->getFieldValueByLocale(Fields::FIELD_SHORT_DESC);
+            $shortDesc = $this->getFieldValueByLocale(Fields::FIELD_SHORT_DESC);
+            $lang      = QUI::getLocale()->getCurrent();
+
             $shortDescLines = [];
 
             foreach ($attributeListFieldValues as $field) {
                 $shortDescLines[] = $field['title'].': '.$field['valueTitle'];
             }
 
-            $shortDescAddition = \implode('; ', $shortDescLines);
+            $shortDescAddition              = \implode('; ', $shortDescLines);
+            $this->shortDescAddition[$lang] = $shortDescAddition;
 
             if (empty($shortDesc)) {
                 $shortDesc = $shortDescAddition;
@@ -534,11 +539,25 @@ class VariantChild extends AbstractType
         $Parent         = $this->getParent();
         $filteredFields = [];
 
-        foreach ($fieldData as $field) {
+        foreach ($fieldData as $k => $field) {
             try {
                 $FieldParent = $Parent->getField($field['id']);
             } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeDebugException($Exception);
                 continue;
+            }
+
+            if (!\is_null($this->shortDescAddition) && $field['id'] === Fields::FIELD_SHORT_DESC) {
+                $fieldValue = $field['value'];
+
+                foreach ($this->shortDescAddition as $lang => $addition) {
+                    if (isset($fieldValue[$lang])) {
+                        $fieldValue[$lang] = \str_replace('; '.$addition, '', $fieldValue[$lang]);
+                    }
+                }
+
+                $field['value']         = $fieldValue;
+                $fieldData[$k]['value'] = $fieldValue;
             }
 
             $parentFieldValue = $FieldParent->getValue();

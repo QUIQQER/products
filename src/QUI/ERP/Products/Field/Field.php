@@ -1238,7 +1238,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             'ownField'      => $this->isOwnField(),
             'isPublic'      => $this->isPublic(),
             'isRequired'    => $this->isRequired(),
-            'showInDetails' => $this->showInDetails()
+            'showInDetails' => $this->showInDetails(),
+            'type'          => $this->getType(),
+            'search_type'   => $this->getSearchType()
         ];
     }
 
