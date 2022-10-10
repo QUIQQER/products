@@ -806,7 +806,7 @@ class Products
 
         foreach ($ids as $id) {
             try {
-                $Product = self::getProduct($id);
+                $Product = self::getNewProductInstance($id);
                 $Product->save($SystemUser);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
