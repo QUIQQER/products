@@ -215,18 +215,31 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     /**
      * CATEGORY
      */
+
+    switch ($Site->getAttribute('quiqqer.products.settings.categoryProductSearchType')) {
+        case'must_have_all_categories':
+            $categoryProductSearchType = 'AND';
+            break;
+
+        default:
+        case'must_have_only_one_category':
+            $categoryProductSearchType = 'OR';
+            break;
+    }
+    
     $ProductList = new ProductList([
-        'categoryId'           => $Site->getAttribute('quiqqer.products.settings.categoryId'),
-        'hideEmptyProductList' => true,
-        'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
-        'showCategories'       => $Site->getAttribute('quiqqer.products.settings.showCategories'),
-        'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
-        'categoryPos'          => $Site->getAttribute('quiqqer.products.settings.categoryPos'),
-        'searchParams'         => Products\Search\Utils::getSearchParameterFromRequest(),
-        'autoload'             => 1,
-        'autoloadAfter'        => $Site->getAttribute('quiqqer.products.settings.autoloadAfter'),
-        'productLoadNumber'    => $Site->getAttribute('quiqqer.products.settings.productLoadNumber'),
-        'view'                 => Products\Search\Utils::getViewParameterFromRequest(),
+        'categoryId'                => $Site->getAttribute('quiqqer.products.settings.categoryId'),
+        'hideEmptyProductList'      => true,
+        'categoryStartNumber'       => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
+        'showCategories'            => $Site->getAttribute('quiqqer.products.settings.showCategories'),
+        'categoryView'              => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
+        'categoryPos'               => $Site->getAttribute('quiqqer.products.settings.categoryPos'),
+        'categoryProductSearchType' => $categoryProductSearchType,
+        'searchParams'              => Products\Search\Utils::getSearchParameterFromRequest(),
+        'autoload'                  => 1,
+        'autoloadAfter'             => $Site->getAttribute('quiqqer.products.settings.autoloadAfter'),
+        'productLoadNumber'         => $Site->getAttribute('quiqqer.products.settings.productLoadNumber'),
+        'view'                      => Products\Search\Utils::getViewParameterFromRequest(),
     ]);
 
     $filterList = $ProductList->getFilter();

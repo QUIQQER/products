@@ -290,14 +290,16 @@
             <en>
                 <![CDATA[When calculating the lowest and highest price for the product search, changes in the price by select lists (discounts / surcharges) should be taken into account.]]></en>
         </locale>
-        
+
         <locale name="settings.window.products.extendShortDesc">
             <de><![CDATA[Kurzbeschreibung erweitern]]></de>
             <en><![CDATA[Extend short description]]></en>
         </locale>
         <locale name="settings.window.products.extendShortDesc.description">
-            <de><![CDATA[Die Kurzbeschreibung von Varianten wird erweitert um eine Auflistung der Attributlisten-Werte, die diese Variante definieren.]]></de>
-            <en><![CDATA[The short description of variants is extended by a list of attribute list values that define this variant.]]></en>
+            <de>
+                <![CDATA[Die Kurzbeschreibung von Varianten wird erweitert um eine Auflistung der Attributlisten-Werte, die diese Variante definieren.]]></de>
+            <en>
+                <![CDATA[The short description of variants is extended by a list of attribute list values that define this variant.]]></en>
         </locale>
 
         <locale name="settings.window.sortFields.description">
@@ -1340,7 +1342,14 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[(max. [limit] Zeichen)]]></de>
             <en><![CDATA[(max. [limit] characters)]]></en>
         </locale>
-
+        <locale name="quiqqer.products.settings.categoryProductSearchType.must.have.one">
+            <de><![CDATA[Produkte aus Kategorien zusätzlich anzeigen (default)]]></de>
+            <en><![CDATA[Show products from categories additionally (default)]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryProductSearchType.must.have.all">
+            <de><![CDATA[Produkte nur anzeigen wenn alle Kategorien zugewiesen sind.]]></de>
+            <en><![CDATA[Show products only if all categories are assigned.]]></en>
+        </locale>
     </groups>
 
     <groups name="quiqqer/products" datatype="js">
@@ -2605,7 +2614,8 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[]]></en>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercialDecimalsSingle">
-            <de><![CDATA[kaufmännisch runden (Einer-Dezimalstellen) -> z.B.: "22,34" => "22,30"; "22,65" => "22,70"]]></de>
+            <de>
+                <![CDATA[kaufmännisch runden (Einer-Dezimalstellen) -> z.B.: "22,34" => "22,30"; "22,65" => "22,70"]]></de>
             <en><![CDATA[]]></en>
         </locale>
 
@@ -2802,6 +2812,21 @@ For a newly created product the article number should be generated automatically
         <locale name="quiqqer.products.settings.availableSorting">
             <de><![CDATA[Sortierungs Einstellungen]]></de>
             <en><![CDATA[Sorting settings]]></en>
+        </locale>
+
+        <locale name="quiqqer.products.settings.categoryProductSearchType">
+            <de><![CDATA[Kategoriebeachtung]]></de>
+            <en><![CDATA[Category Consideration]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.categoryProductSearchType.description">
+            <de><![CDATA[
+            Je nach Auswahl im Dropdown werden Produkte aus Kategorien zusätzlich angezeigt (OR) oder
+            nur angezeigt wenn die Kategorien in allen Produkten vorhanden sind (AND).
+            ]]></de>
+            <en><![CDATA[
+            Depending on the selection in the dropdown, products from categories are additionally displayed (OR) or
+            only displayed if the categories are present in all products (AND).
+            ]]></en>
         </locale>
 
         <locale name="quiqqer.products.field.header.placeholder">
