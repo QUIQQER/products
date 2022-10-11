@@ -5,6 +5,8 @@ namespace QUI\ERP\Products\Product\Cache;
 use QUI;
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Product\UniqueProduct;
+use function is_null;
 
 /**
  * Class ProductCache
@@ -13,7 +15,43 @@ use QUI\ERP\Products\Handler\Products;
  */
 class ProductCache
 {
-    public static $uniqueProduct = [];
+    protected static array $uniqueProductData = [];
+
+    /**
+     * @param array $uniqueProductData
+     * @param string $cacheName
+     * @return void
+     */
+    public static function writeUniqueProductData(array $uniqueProductData, string $cacheName): void
+    {
+        if (QUI\Utils\System::memUsageToHigh()) {
+            self::clearUniqueProductDataCache();
+        }
+
+        self::$uniqueProductData[$cacheName] = $uniqueProductData;
+    }
+
+    /**
+     * @param string $cacheName
+     * @return array|null
+     */
+    public static function getUniqueProductData(string $cacheName): ?array
+    {
+        return !empty(self::$uniqueProductData[$cacheName]) ? self::$uniqueProductData[$cacheName] : null;
+    }
+
+    /**
+     * @param string|null $cacheName (optional) - Only delete data with specific cache name
+     * @return void
+     */
+    public static function clearUniqueProductDataCache(?string $cacheName = null): void
+    {
+        if (is_null($cacheName)) {
+            self::$uniqueProductData = [];
+        } else {
+            self::$uniqueProductData[$cacheName] = null;
+        }
+    }
 
     /**
      * @param $productId
