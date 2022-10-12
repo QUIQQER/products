@@ -361,17 +361,14 @@ class Model extends QUI\QDOM
 
         $Locale     = $User->getLocale();
         $fieldList  = $this->getFields();
-        $attributes = false;
+        $attributes = null;
 
         if (Products::$useRuntimeCacheForUniqueProducts) {
-            $cacheName = self::getUniqueProductCachePath($User);
-
-            if (isset(ProductCache::$uniqueProduct[$cacheName])) {
-                $attributes = ProductCache::$uniqueProduct[$cacheName];
-            }
+            $cacheName  = self::getUniqueProductCachePath($User);
+            $attributes = ProductCache::getUniqueProductData($cacheName);
         }
 
-        if ($attributes === false) {
+        if (!$attributes) {
             $attributes                    = $this->getAttributes();
             $attributes['title']           = $this->getTitle($Locale);
             $attributes['description']     = $this->getDescription($Locale);
@@ -408,7 +405,7 @@ class Model extends QUI\QDOM
         }
 
         if (Products::$useRuntimeCacheForUniqueProducts) {
-            ProductCache::$uniqueProduct[$cacheName] = $attributes;
+            ProductCache::writeUniqueProductData($attributes, $cacheName);
         }
 
         QUI::getEvents()->fireEvent('quiqqerProductsToUniqueProduct', [$this, &$attributes]);
@@ -422,13 +419,9 @@ class Model extends QUI\QDOM
      * @param QUI\Interfaces\Users\User $User
      * @return void
      */
-    public function clearUniqueProductCache(QUI\Interfaces\Users\User $User)
+    public function clearUniqueProductCache(QUI\Interfaces\Users\User $User): void
     {
-        $cacheName = self::getUniqueProductCachePath($User);
-
-        if (isset(ProductCache::$uniqueProduct[$cacheName])) {
-            unset(ProductCache::$uniqueProduct[$cacheName]);
-        }
+        ProductCache::clearUniqueProductDataCache(self::getUniqueProductCachePath($User));
     }
 
     /**
@@ -1737,7 +1730,8 @@ class Model extends QUI\QDOM
      */
     protected function writeCacheEntry($lang)
     {
-        $Locale = new QUI\Locale();
+//        $Locale = new QUI\Locale();
+        $Locale = Products::getLocale();
         $Locale->setCurrent($lang);
 
         // wir nutzen system user als netto user
@@ -2714,7 +2708,7 @@ class Model extends QUI\QDOM
      *
      * @throws QUI\Exception - Thrown if a duplicate article no. exists
      */
-    protected function checkDuplicateArticleNo(string $articleNo)
+    protected function checkDuplicateArticleNo(string $articleNo): void
     {
         $subQuery = "SELECT `id` FROM ".QUI\ERP\Products\Utils\Tables::getProductTableName();
         $subQuery .= " WHERE `active` = 1 AND `parent` IS NULL";
