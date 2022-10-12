@@ -455,7 +455,7 @@ class Products
         $categoryIds = [];
 
         if (empty($categories)) {
-            $categoryIds[] = Categories::getMainCategory();
+            $categoryIds[] = Categories::getMainCategory()->getId();
         }
 
         foreach ($categories as $Category) {
