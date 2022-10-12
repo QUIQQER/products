@@ -559,7 +559,7 @@ class Products
             ]
         );
 
-        $Product = self::getProduct($newId);
+        $Product = self::getNewProductInstance($newId);
 
         if (!($Product instanceof VariantChild)) {
 //            $Product->getField(QUI\ERP\Products\Handler\Fields::FIELD_FOLDER)->setValue('');
