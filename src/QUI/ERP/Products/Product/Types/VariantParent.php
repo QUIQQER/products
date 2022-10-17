@@ -177,7 +177,7 @@ class VariantParent extends AbstractType
         $categories   = $this->getCategories();
         $MainCategory = $this->getCategory();
 
-        $mainCategoryValue = $MainCategory?->getId();
+        $mainCategoryValue = $MainCategory ? $MainCategory->getId() : null;
         $categoriesValue   = null;
 
         if (!empty($categories)) {
