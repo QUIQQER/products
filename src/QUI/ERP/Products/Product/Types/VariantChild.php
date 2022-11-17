@@ -7,11 +7,14 @@
 namespace QUI\ERP\Products\Product\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\Types\AttributeGroup;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Utils\VariantGenerating;
 use QUI\Projects\Media\Utils as MediaUtils;
-use QUI\ERP\Products\Field\Types\AttributeGroup;
+
+use function array_flip;
+use function implode;
 
 /**
  * Class VariantChild
@@ -55,10 +58,10 @@ class VariantChild extends AbstractType
 
         // inheritance
         $inheritedFields = QUI\ERP\Products\Utils\Products::getInheritedFieldIdsForProduct($this);
-        $inheritedFields = \array_flip($inheritedFields);
+        $inheritedFields = array_flip($inheritedFields);
 
         $editableFields = QUI\ERP\Products\Utils\Products::getEditableFieldIdsForProduct($this);
-        $editableFields = \array_flip($editableFields);
+        $editableFields = array_flip($editableFields);
 
         $Parent = $this->getParent();
 
@@ -79,7 +82,6 @@ class VariantChild extends AbstractType
 
         $fields = $Parent->getFields();
 
-        $L                        = QUI::getLocale();
         $attributeListFieldValues = [];
 
         foreach ($fields as $Field) {
@@ -143,16 +145,16 @@ class VariantChild extends AbstractType
             $shortDescLines = [];
 
             foreach ($attributeListFieldValues as $field) {
-                $shortDescLines[] = $field['title'].': '.$field['valueTitle'];
+                $shortDescLines[] = $field['title'] . ': ' . $field['valueTitle'];
             }
 
-            $shortDescAddition              = \implode('; ', $shortDescLines);
+            $shortDescAddition              = implode('; ', $shortDescLines);
             $this->shortDescAddition[$lang] = $shortDescAddition;
 
             if (empty($shortDesc)) {
                 $shortDesc = $shortDescAddition;
             } else {
-                $shortDesc .= '; '.$shortDescAddition;
+                $shortDesc .= '; ' . $shortDescAddition;
             }
 
             /** @var QUI\ERP\Products\Field\Types\InputMultiLang $ShortDescField */
@@ -552,7 +554,7 @@ class VariantChild extends AbstractType
 
                 foreach ($this->shortDescAddition as $lang => $addition) {
                     if (isset($fieldValue[$lang])) {
-                        $fieldValue[$lang] = \str_replace('; '.$addition, '', $fieldValue[$lang]);
+                        $fieldValue[$lang] = \str_replace('; ' . $addition, '', $fieldValue[$lang]);
                     }
                 }
 

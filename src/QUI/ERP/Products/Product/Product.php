@@ -7,9 +7,9 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
-use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Categories;
+use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 
 /**
  * Class Product
@@ -33,6 +33,14 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
     {
         if (!isset($this->fields[$Field->getId()])) {
             $this->fields[$Field->getId()] = clone $Field;
+
+            if ($Field instanceof QUI\ERP\Products\Field\Types\AttributeGroup) {
+                $vDefaultId = QUI\ERP\Products\Handler\Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES;
+
+                if (isset($this->fields[$vDefaultId])) {
+                    unset($this->fields[$vDefaultId]);
+                }
+            }
 
             return;
         }
