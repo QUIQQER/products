@@ -84,13 +84,12 @@ class VariantChild extends AbstractType
 
         $attributeListFieldValues = [];
 
-        foreach ($fields as $Field) {
-            $fieldId = $Field->getId();
+        foreach ($fields as $ParentField) {
+            $fieldId = $ParentField->getId();
 
             if (!isset($inheritedFields[$fieldId])) {
                 continue;
             }
-
 
             try {
                 $Field = $this->getField($fieldId);
@@ -100,17 +99,18 @@ class VariantChild extends AbstractType
                     $Field->setOwnFieldStatus(true);
                 }
 
-                // not editable, than use parent value
-                if (!isset($editableFields[$fieldId]) && $Field->isEmpty()) {
+                // If inherited field is not editable by children -> use parent value
+                if (!isset($editableFields[$fieldId])) {
                     try {
-                        $Field->setValue(
-                            $Parent->getField($fieldId)->getValue()
-                        );
+                        $Field->setValue($ParentField->getValue());
                     } catch (QUI\Exception $Exception) {
                         QUI\System\Log::addDebug($Exception->getMessage());
                     }
+
+                    continue;
                 }
 
+                // If inherited field is editable and has own value -> leave it as is
                 if (!$Field->isEmpty()) {
                     if (Products::isExtendVariantChildShortDesc() &&
                         $Field instanceof AttributeGroup) {
@@ -135,7 +135,8 @@ class VariantChild extends AbstractType
                 continue;
             }
 
-            $Field->setValue($Field->getValue());
+            // If inherited field is editable but has no own value -> use parent value
+            $Field->setValue($ParentField->getValue());
         }
 
         if (!empty($attributeListFieldValues)) {
@@ -145,7 +146,7 @@ class VariantChild extends AbstractType
             $shortDescLines = [];
 
             foreach ($attributeListFieldValues as $field) {
-                $shortDescLines[] = $field['title'] . ': ' . $field['valueTitle'];
+                $shortDescLines[] = $field['title'].': '.$field['valueTitle'];
             }
 
             $shortDescAddition              = implode('; ', $shortDescLines);
@@ -154,7 +155,7 @@ class VariantChild extends AbstractType
             if (empty($shortDesc)) {
                 $shortDesc = $shortDescAddition;
             } else {
-                $shortDesc .= '; ' . $shortDescAddition;
+                $shortDesc .= '; '.$shortDescAddition;
             }
 
             /** @var QUI\ERP\Products\Field\Types\InputMultiLang $ShortDescField */
@@ -554,7 +555,7 @@ class VariantChild extends AbstractType
 
                 foreach ($this->shortDescAddition as $lang => $addition) {
                     if (isset($fieldValue[$lang])) {
-                        $fieldValue[$lang] = \str_replace('; ' . $addition, '', $fieldValue[$lang]);
+                        $fieldValue[$lang] = \str_replace('; '.$addition, '', $fieldValue[$lang]);
                     }
                 }
 

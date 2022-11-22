@@ -11,6 +11,7 @@ use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Fields as FieldUtils;
+use function array_filter;
 
 /**
  * Class Products Helper
@@ -180,11 +181,16 @@ class Products
         $fields = $Config->getSection('editableFields');
 
         if ($fields) {
-            $result = \array_keys($fields);
+            $fieldIds = [];
 
-            return $result;
+            foreach ($fields as $fieldId => $isEditable) {
+                if (!empty($isEditable)) {
+                    $fieldIds[] = $fieldId;
+                }
+            }
+
+            return $fieldIds;
         }
-
 
         $fields = FieldHandler::getFields();
         $result = \array_map(function ($Field) {
@@ -231,9 +237,15 @@ class Products
         $fields = $Config->getSection('inheritedFields');
 
         if ($fields) {
-            $result = \array_keys($fields);
+            $fieldIds = [];
 
-            return $result;
+            foreach ($fields as $fieldId => $isEditable) {
+                if (!empty($isEditable)) {
+                    $fieldIds[] = $fieldId;
+                }
+            }
+
+            return $fieldIds;
         }
 
 
