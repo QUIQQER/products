@@ -123,7 +123,7 @@ class VariantChild extends AbstractType
                     continue;
                 }
             } catch (QUI\Exception $Exception) {
-                $this->addField($Field);
+                $this->addField($ParentField);
 
                 $Field = $this->getField($fieldId);
                 $Field->setUnassignedStatus(false);
