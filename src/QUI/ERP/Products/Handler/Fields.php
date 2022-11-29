@@ -332,8 +332,10 @@ class Fields
         // add language var, if not exists
         self::setFieldTranslations($newId, $attributes);
 
-        $Field = self::getField($newId);
+        // clear the field cache
+        QUI\Cache\LongTermCache::clear(Cache::getBasicCachePath().'fields');
 
+        $Field = self::getField($newId);
 
         // create view permission
         QUI::getPermissionManager()->addPermission([
@@ -362,9 +364,6 @@ class Fields
             $Field->setAttribute('search_type', $Field->getDefaultSearchType());
             $Field->save();
         }
-
-        // clear the field cache
-        QUI\Cache\LongTermCache::clear('quiqqer/products/fields');
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsFieldCreate', [$Field]);
 
