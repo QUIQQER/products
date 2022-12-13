@@ -328,7 +328,11 @@ class Products
             }
         }
 
-        return self::getProductByDataResult($pid, $productData);
+        $Product = self::getProductByDataResult($pid, $productData);
+
+        self::$list[$pid] = $Product;
+
+        return $Product;
     }
 
     /**
