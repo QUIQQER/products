@@ -197,9 +197,16 @@ class Products
     /**
      * This clean the instance cache for the product manager
      * use this with caution
+     *
+     * @param int|null $productId (optional) - Only clear instance cache for specific product id
      */
-    public static function cleanProductInstanceMemCache()
+    public static function cleanProductInstanceMemCache(?int $productId = null): void
     {
+        if ($productId) {
+            unset(self::$list[$productId]);
+            return;
+        }
+
         self::$list = [];
     }
 

@@ -1416,6 +1416,8 @@ class Model extends QUI\QDOM
 
         QUI\ERP\Products\Handler\Cache::clearProductFrontendCache($this->getId());
 
+        Products::cleanProductInstanceMemCache($this->getId());
+
         if (Products::$fireEventsOnProductSave) {
             QUI::getEvents()->fireEvent('onQuiqqerProductsProductSave', [$this]);
         }
