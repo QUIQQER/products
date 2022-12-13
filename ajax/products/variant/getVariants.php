@@ -151,47 +151,77 @@ QUI::$Ajax->registerFunction(
 
         $variants = [];
 
+        $defaultFields = [
+            Fields::FIELD_PRICE,
+            Fields::FIELD_PRODUCT_NO,
+            Fields::FIELD_PRIORITY
+        ];
+
         if (!empty($searchResult)) {
-            $variants = \array_map(function ($entry) use ($defaultVariantId, $Currency, $childFieldData) {
-                $variantId = (int)$entry['id'];
-                $fields    = [];
+            $variants = \array_map(function ($entry) use (
+                $defaultVariantId,
+                $Currency,
+                $childFieldData,
+                $defaultFields
+            ) {
+                $variantId   = (int)$entry['id'];
+                $fields      = [];
+                $addedFields = [];
 
                 foreach ($entry as $k => $v) {
                     if (\strpos($k, 'F') !== 0) {
                         continue;
                     }
 
-                    $fields[] = [
-                        'id'    => (int)\mb_substr($k, 1),
-                        'value' => $v
-                    ];
+                    $fieldId = (int)\mb_substr($k, 1);
+
+                    if (isset($addedFields[$fieldId])) {
+                        continue;
+                    }
+
+                    if (isset($childFieldData[$variantId][$fieldId]) || in_array($fieldId, $defaultFields)) {
+                        $fields[] = [
+                            'id'    => $fieldId,
+                            'value' => $v,
+                            'title' => !empty($childFieldData[$variantId][$fieldId]) ?
+                                $childFieldData[$variantId][$fieldId] :
+                                null
+                        ];
+
+                        $addedFields[$fieldId] = true;
+                    }
                 }
 
                 // add values of AttributeGroup fields
                 foreach ($childFieldData[$variantId] as $fieldId => $title) {
+                    if (isset($addedFields[$fieldId])) {
+                        continue;
+                    }
+
                     $fields[] = [
                         'id'    => $fieldId,
-                        'value' => $title
+                        'value' => $title,
+                        'title' => $title
                     ];
+
+                    $addedFields[$fieldId] = true;
                 }
 
-                $attributes = [
+                return [
                     'id'             => $variantId,
                     'active'         => (int)$entry['active'],
                     'productNo'      => $entry['productNo'],
                     'fields'         => $fields,
                     'defaultVariant' => $defaultVariantId === (int)$entry['id'] ? 1 : 0,
 
-                    'description'         => $entry['F' . Fields::FIELD_SHORT_DESC],
+                    'description'         => $entry['F'.Fields::FIELD_SHORT_DESC],
                     'title'               => $entry['title'],
                     'e_date'              => $entry['e_date'],
                     'c_date'              => $entry['c_date'],
-                    'priority'            => $entry['F' . Fields::FIELD_PRIORITY],
-                    'url'                 => $entry['F' . Fields::FIELD_URL],
-                    'price_netto_display' => $Currency->format($entry['F' . Fields::FIELD_PRICE])
+                    'priority'            => $entry['F'.Fields::FIELD_PRIORITY],
+                    'url'                 => $entry['F'.Fields::FIELD_URL],
+                    'price_netto_display' => $Currency->format($entry['F'.Fields::FIELD_PRICE])
                 ];
-
-                return $attributes;
             }, $searchResult);
         }
 

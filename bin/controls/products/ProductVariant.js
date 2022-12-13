@@ -80,7 +80,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             this.parent(options);
 
             this.$loaded = false;
-            this.$Grid = null;
+            this.$Grid   = null;
 
             this.$Menu = new QUIContextMenu({
                 events: {
@@ -94,16 +94,16 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             this.$editableFields = {};
             this.$CurrentVariant = null;
-            this.$VariantTabBar = null;
+            this.$VariantTabBar  = null;
 
             // panel extra buttons
-            this.$VariantFields = null;
+            this.$VariantFields     = null;
             this.$BackToVariantList = null;
 
             // panel buttons
-            this.$SaveButton = null;
-            this.$CopyButton = null;
-            this.$StatusButton = null;
+            this.$SaveButton      = null;
+            this.$CopyButton      = null;
+            this.$StatusButton    = null;
             this.$ActionSeparator = null;
         },
 
@@ -113,10 +113,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         $onInject: function () {
             const self = this;
 
-            this.$SaveButton = this.getButtons('update');
-            this.$StatusButton = this.getButtons('status');
+            this.$SaveButton      = this.getButtons('update');
+            this.$StatusButton    = this.getButtons('status');
             this.$ActionSeparator = this.getButtons('actionSeparator');
-            this.$CopyButton = this.getButtons('copy');
+            this.$CopyButton      = this.getButtons('copy');
 
             this.$Elm.addClass('panel-product-variant');
 
@@ -322,7 +322,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             // variant handling
             this.Loader.show();
 
-            const self = this;
+            const self        = this;
             const VariantBody = this.getBody().getElement('.variant-body');
 
             return this.$unloadCategory(VariantBody, self.$CurrentVariant).then(function () {
@@ -334,9 +334,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 ]);
             }).then(function (result) {
                 const categories = result[0];
-                const category = result[1];
+                const category   = result[1];
                 const fieldsList = result[2];
-                const editable = result[3];
+                const editable   = result[3];
 
                 const editableFields = editable.editable;
 
@@ -495,7 +495,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     }
                 ];
 
-                VARIANT_FIELDS = result[2];
+                VARIANT_FIELDS    = result[2];
                 let variantFields = result[2];
 
                 for (let i = 0, len = variantFields.length; i < len; i++) {
@@ -723,7 +723,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 return this.refreshVariantGrid();
             }).then(() => {
-                const Body = this.getBody();
+                const Body         = this.getBody();
                 const VariantSheet = Body.getElement('.variants-sheet');
 
                 return this.$showCategory(VariantSheet);
@@ -865,9 +865,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     'priority'   : 18
                 };
 
-                let variants = result[0].data;
+                let variants      = result[0].data;
                 let variantFields = result[1];
-                VARIANT_FIELDS = result[1];
+                VARIANT_FIELDS    = result[1];
 
                 let i, n, len, nLen, entry, variant, needle, field, fieldId;
                 let data = [];
@@ -883,7 +883,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 // build grid data
                 for (i = 0, len = variants.length; i < len; i++) {
-                    entry = {};
+                    entry   = {};
                     variant = variants[i];
 
                     // status
@@ -918,17 +918,16 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         }
 
                         fieldId = fields[needle];
-                        field = variant.fields.filter(filterField.bind(fieldId));
+                        field   = variant.fields.filter(filterField.bind(fieldId));
 
                         if (!field.length) {
                             entry[needle] = '-';
                         } else {
-                            const value = field[0].value;
+                            const fieldData = field[0];
+                            const value     = fieldData.value;
 
-                            if (typeof field[1] !== 'undefined') {
-                                const valueTitle = field[1].value;
-
-                                entry[needle] = '(' + value + ') ' + valueTitle;
+                            if ('title' in fieldData && fieldData.title) {
+                                entry[needle] = '(' + value + ') ' + fieldData.title;
                             } else {
                                 entry[needle] = value;
                             }
@@ -1051,8 +1050,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 let variants = result.data;
 
                 const VariantSheet = Body.getElement('.variants-sheet');
-                const VariantList = Body.getElement('.variant-list');
-                const VariantTabs = Body.getElement('.variants-tabs');
+                const VariantList  = Body.getElement('.variant-list');
+                const VariantTabs  = Body.getElement('.variants-tabs');
 
 
                 const VariantSelect = new QUISelect({
@@ -1109,9 +1108,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 for (i = 0, len = variants.length; i < len; i++) {
                     variant = variants[i];
 
-                    vId = variant.id;
-                    vTitle = variant.title;
-                    vFields = variant.fields;
+                    vId        = variant.id;
+                    vTitle     = variant.title;
+                    vFields    = variant.fields;
                     vProductNo = variant.fields.filter(productNumberFilter);
 
                     title = QUILocale.get(lg, 'panel.variants.switchTo') + ' <b>';
@@ -1154,8 +1153,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 for (i = 0, len = categories.length; i < len; i++) {
                     Category = categories[i];
-                    name = Category.getAttribute('name');
-                    fieldId = Category.getAttribute('fieldId');
+                    name     = Category.getAttribute('name');
+                    fieldId  = Category.getAttribute('fieldId');
 
                     if (name === 'variants') {
                         continue;
@@ -1176,7 +1175,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     // only if field is editable
                     if (fieldId && typeof self.$editableFields[fieldId] === 'undefined' ||
                         (fieldId && typeof self.$editableFields[fieldId] !== 'undefined' &&
-                         !self.$editableFields[fieldId])) {
+                            !self.$editableFields[fieldId])) {
                         continue;
                     }
 
@@ -1268,7 +1267,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         $deactivateVariants: function () {
             this.Loader.show();
 
-            const self = this;
+            const self     = this;
             const selected = this.$Grid.getSelectedData().map(function (entry) {
                 return entry.id;
             });
@@ -1292,7 +1291,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         $activateVariants: function () {
             this.Loader.show();
 
-            const self = this;
+            const self     = this;
             const selected = this.$Grid.getSelectedData().map(function (entry) {
                 return entry.id;
             });
@@ -1314,7 +1313,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          * Opens the delete dilaog
          */
         deleteVariantsDialog: function () {
-            const self = this;
+            const self     = this;
             const selected = this.$Grid.getSelectedData().map(function (entry) {
                 return '<li>' + entry.id + '</li>';
             });
@@ -1377,9 +1376,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             let row, variantId, Status;
 
             if (cellEvent) {
-                row = cellEvent.row;
+                row       = cellEvent.row;
                 variantId = this.$Grid.getDataByRow(row).id;
-                Status = this.$Grid.getDataByRow(row).defaultVariant;
+                Status    = this.$Grid.getDataByRow(row).defaultVariant;
             } else {
                 let data = this.$Grid.getSelectedData();
 
@@ -1387,9 +1386,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     return;
                 }
 
-                data = data[0];
+                data      = data[0];
                 variantId = data.id;
-                Status = data.defaultVariant;
+                Status    = data.defaultVariant;
             }
 
             this.Loader.show();
@@ -1561,16 +1560,16 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                     const Form = new Element('form', {
                         html: '' +
-                              '<table class="data-table data-table-flexbox product-data">' +
-                              '   <thead>' +
-                              '       <tr>' +
-                              '           <th>' +
-                              '                ' + Tab.getAttribute('text') +
-                              '            </th>' +
-                              '        </tr>' +
-                              '   </thead>' +
-                              '   <tbody></tbody>' +
-                              '</table>'
+                            '<table class="data-table data-table-flexbox product-data">' +
+                            '   <thead>' +
+                            '       <tr>' +
+                            '           <th>' +
+                            '                ' + Tab.getAttribute('text') +
+                            '            </th>' +
+                            '        </tr>' +
+                            '   </thead>' +
+                            '   <tbody></tbody>' +
+                            '</table>'
                     }).inject(Container);
 
                     const Tbody = Form.getElement('tbody');
@@ -1609,14 +1608,14 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
                 // hide categories
                 const VariantBody = self.getBody().getElement('.variant-body');
-                const Categories = VariantBody.getElement('[name="categories"]');
-                const Row = Categories.getParent('tr');
+                const Categories  = VariantBody.getElement('[name="categories"]');
+                const Row         = Categories.getParent('tr');
 
                 Row.setStyle('display', 'none');
                 VariantBody.getElements('[name="edit-fields"]').setStyle('display', 'none');
 
                 // category
-                el = VariantBody.getElement('[name="product-category"]');
+                el          = VariantBody.getElement('[name="product-category"]');
                 el.disabled = true;
                 el.getParent('tr').addClass('variant-field-disabled');
 
@@ -1725,7 +1724,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 ]);
             }).then(function (result) {
                 const hasOwnMediaFolder = result[0];
-                const Content = result[1];
+                const Content           = result[1];
 
                 Content.set('html', '');
 
@@ -1733,7 +1732,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     return self.$renderFolderViewer(Content, self.$CurrentVariant, types, fileId);
                 }
 
-                const VariantBody = self.getBody().getElement('.variant-body');
+                const VariantBody        = self.getBody().getElement('.variant-body');
                 const OwnFolderContainer = new Element('div', {
                     'class': 'variants-tabs-image-own-folder'
                 }).inject(VariantBody, 'top');
