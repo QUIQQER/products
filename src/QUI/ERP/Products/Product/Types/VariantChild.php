@@ -15,6 +15,7 @@ use QUI\Projects\Media\Utils as MediaUtils;
 
 use function array_flip;
 use function implode;
+use function in_array;
 
 /**
  * Class VariantChild
@@ -539,18 +540,20 @@ class VariantChild extends AbstractType
     protected function productSave($fieldData, $EditUser = null)
     {
         // check fields with parent fields
-        $Parent         = $this->getParent();
-        $filteredFields = [];
+        $Parent            = $this->getParent();
+        $inheritedFieldIds = QUI\ERP\Products\Utils\Products::getInheritedFieldIdsForProduct($this);
 
         foreach ($fieldData as $k => $field) {
+            $fieldId = (int)$field['id'];
+
             try {
-                $FieldParent = $Parent->getField($field['id']);
+                $FieldParent = $Parent->getField($fieldId);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeDebugException($Exception);
                 continue;
             }
 
-            if (!\is_null($this->shortDescAddition) && $field['id'] === Fields::FIELD_SHORT_DESC) {
+            if (!\is_null($this->shortDescAddition) && $fieldId === Fields::FIELD_SHORT_DESC) {
                 $fieldValue = $field['value'];
 
                 foreach ($this->shortDescAddition as $lang => $addition) {
@@ -565,11 +568,11 @@ class VariantChild extends AbstractType
 
             $parentFieldValue = $FieldParent->getValue();
 
-            // save only different field values
-            if ($field['value'] !== $parentFieldValue) {
-                $filteredFields[] = $field;
-            } else {
-                $field['value'] = null;
+            /*
+             * Only save field values that are different from the parent (if the field is inherited!)
+             */
+            if ($field['value'] === $parentFieldValue && in_array($fieldId, $inheritedFieldIds)) {
+                $fieldData[$k]['value'] = null;
             }
         }
 
