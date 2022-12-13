@@ -95,7 +95,7 @@ class VariantChild extends AbstractType
                 $Field = $this->getField($fieldId);
                 $Field->setUnassignedStatus(false);
 
-                if ($Field->isOwnField()) {
+                if ($ParentField->isOwnField()) {
                     $Field->setOwnFieldStatus(true);
                 }
 
