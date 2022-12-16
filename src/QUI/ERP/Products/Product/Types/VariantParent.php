@@ -80,6 +80,7 @@ class VariantParent extends AbstractType
         foreach ($this->fields as $Field) {
             if ($Field instanceof AttributeGroup) {
                 $Field->clearValue();
+                $Field->setDefaultValue(null);
             }
         }
     }
