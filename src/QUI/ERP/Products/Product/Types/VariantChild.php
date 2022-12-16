@@ -571,7 +571,9 @@ class VariantChild extends AbstractType
             /*
              * Only save field values that are different from the parent (if the field is inherited!)
              */
-            if ($field['value'] === $parentFieldValue && in_array($fieldId, $inheritedFieldIds)) {
+            if ($fieldData[$k]['type'] !== Fields::TYPE_ATTRIBUTE_GROUPS &&
+                $field['value'] === $parentFieldValue &&
+                in_array($fieldId, $inheritedFieldIds)) {
                 $fieldData[$k]['value'] = null;
             }
         }

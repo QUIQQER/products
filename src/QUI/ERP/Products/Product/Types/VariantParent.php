@@ -64,6 +64,26 @@ class VariantParent extends AbstractType
      */
     protected $childFieldHashes = null;
 
+    /**
+     * Model constructor
+     *
+     * @param integer $pid - Product-ID
+     * @param array $product - Product Data
+     *
+     * @throws QUI\ERP\Products\Product\Exception
+     * @throws QUI\Exception
+     */
+    public function __construct($pid, $product = [])
+    {
+        parent::__construct($pid, $product);
+
+        foreach ($this->fields as $Field) {
+            if ($Field instanceof AttributeGroup) {
+                $Field->clearValue();
+            }
+        }
+    }
+
     //region abstract type methods
 
     /**
