@@ -23,11 +23,13 @@ class Suggest extends QUI\Control
     public function __construct($attributes = [])
     {
         $this->setAttributes([
-            'Site'                => false,
-            'Project'             => false,
-            'data-qui'            => 'package/quiqqer/productsearch/bin/controls/frontend/search/Suggest',
-            'hideOnProductSearch' => false,
-            'globalsearch'        => false
+            'Site'                 => false,
+            'Project'              => false,
+            'data-qui'             => 'package/quiqqer/productsearch/bin/controls/frontend/search/Suggest',
+            'hideOnProductSearch'  => false,
+            'globalsearch'         => false,
+            'limit'                => false,
+            'showLinkToSearchSite' => false
         ]);
 
         $this->addCSSFile(\dirname(__FILE__).'/Suggest.css');
@@ -54,9 +56,9 @@ class Suggest extends QUI\Control
     /**
      * (non-PHPdoc)
      *
+     * @throws QUI\Exception
      * @see \QUI\Control::create()
      *
-     * @throws QUI\Exception
      */
     public function getBody()
     {
@@ -70,6 +72,8 @@ class Suggest extends QUI\Control
 
         $Site   = $this->getSite();
         $Search = $this->getSite();
+        $Config = QUI::getPackage('quiqqer/productsearch')->getConfig();
+
 
         if ($Site->getAttribute('quiqqer.products.settings.showFreeText')) {
             return '';
@@ -79,6 +83,22 @@ class Suggest extends QUI\Control
             $this->setAttribute('data-qui-options-globalsearch', 1);
             $Search = $this->getSearch();
         }
+
+        $limit = $this->getAttribute('limit');
+
+        if (!$limit) {
+            $limit = $Config->get('frontendSuggestSearch', 'limit');
+        }
+
+        $showLinkToSearchSite = $this->getAttribute('showLinkToSearchSite');
+
+        if (!$showLinkToSearchSite) {
+            $showLinkToSearchSite = $Config->get('frontendSuggestSearch', 'showLinkToSearchSite');
+        }
+
+        $this->setJavaScriptControlOption('searchurl', $Search->getUrlRewritten());
+        $this->setJavaScriptControlOption('limit', $limit);
+        $this->setJavaScriptControlOption('showlinktosearchsite', $showLinkToSearchSite);
 
         $Engine->assign([
             'this'   => $this,

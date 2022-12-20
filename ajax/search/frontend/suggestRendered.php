@@ -17,12 +17,14 @@ use QUI\ERP\Products\Handler\Products;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_search_frontend_suggestRendered',
-    function ($project, $siteId, $searchParams, $globalsearch) {
+    function ($project, $siteId, $searchParams, $globalsearch, $limit, $showLinkToSearchSite, $searchUrl) {
         QUI\Permissions\Permission::checkPermission(
             Search::PERMISSION_FRONTEND_EXECUTE
         );
 
-        $limit = 5;
+        if (!$limit) {
+            $limit = 6;
+        }
 
         if (!isset($globalsearch)) {
             $globalsearch = false;
@@ -114,10 +116,12 @@ QUI::$Ajax->registerFunction(
             $Engine = QUI::getTemplateManager()->getEngine();
 
             $Engine->assign([
-                'result' => $result,
-                'Locale' => $User->getLocale(),
-                'pages'  => $pages,
-                'active' => $active
+                'result'                => $result,
+                'Locale'                => $User->getLocale(),
+                'pages'                 => $pages,
+                'active'                => $active,
+                'showLinkToSearchSite' => (bool)$showLinkToSearchSite,
+                'searchUrl'             => $searchUrl ?: ''
             ]);
 
             return $Engine->fetch(OPT_DIR.'quiqqer/products/template/search/frontend/SuggestRendered.html');
@@ -127,5 +131,5 @@ QUI::$Ajax->registerFunction(
             return '';
         }
     },
-    ['project', 'siteId', 'searchParams', 'globalsearch']
+    ['project', 'siteId', 'searchParams', 'globalsearch', 'limit', 'showLinkToSearchSite', 'searchUrl']
 );

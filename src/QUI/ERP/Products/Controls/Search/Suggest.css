@@ -115,3 +115,24 @@
         display: none;
     }
 }
+
+/* Show all results button */
+.quiqqer-products-mobileSuggest-results-list-showAllResults {
+    float: left;
+    width: 100%;
+}
+
+.quiqqer-products-mobileSuggest-results-list-showAllResults > a {
+    text-align: center;
+    padding: 0.5em 0.5em;
+    width: 100%;
+    display: block;
+}
+
+.quiqqer-products-mobileSuggest-results-list-showAllResults > a:not(:hover, :active, :focus) {
+    color: inherit;
+}
+
+.quiqqer-products-mobileSuggest-results-list-showAllResults > a > .fa {
+    margin-right: 0.5em;
+}
