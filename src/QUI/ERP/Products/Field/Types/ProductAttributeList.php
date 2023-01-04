@@ -9,6 +9,19 @@ namespace QUI\ERP\Products\Field\Types;
 use QUI;
 use QUI\ERP\Accounting\Calc as ErpCalc;
 
+use function get_class;
+use function htmlspecialchars;
+use function is_array;
+use function is_int;
+use function is_null;
+use function is_numeric;
+use function is_string;
+use function json_decode;
+use function json_encode;
+use function mb_strtolower;
+use function mb_strtoupper;
+use function strpos;
+
 /**
  * Class ProductAttributeList
  *
@@ -41,7 +54,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
     /**
      * @var array
      */
-    protected $disabled = [];
+    protected array $disabled = [];
 
     /**
      * ProductAttributeList constructor.
@@ -83,7 +96,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
         parent::setOption($option, $value);
 
         if ($option == 'entries') {
-            if (\is_array($value)) {
+            if (is_array($value)) {
                 foreach ($value as $key => $val) {
                     if (isset($val['selected']) && $val['selected']) {
                         $this->value        = $key;
@@ -108,7 +121,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      *       'userinput => ''' // optional
      * ));
      */
-    public function addEntry($entry = [])
+    public function addEntry(array $entry = [])
     {
         if (empty($entry)) {
             return;
@@ -148,7 +161,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      */
     public function getValue()
     {
-        if (!\is_null($this->value)) {
+        if (!is_null($this->value)) {
             return $this->value;
         }
 
@@ -162,8 +175,8 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      */
     public function getUserInput()
     {
-        if (!\is_null($this->value)) {
-            $value = \json_decode($this->value, true);
+        if (!is_null($this->value)) {
+            $value = json_decode($this->value, true);
 
             if (isset($value[1])) {
                 return $value[1];
@@ -193,9 +206,6 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
     public function getBackendView()
     {
         return new ProductAttributeListBackendView($this->getFieldDataForView());
-        $Field->setProduct($this->Product);
-
-        return $Field;
     }
 
     /**
@@ -243,12 +253,12 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
         $userInput = '';
         $calcType  = ErpCalc::CALCULATION_COMPLEMENT;
 
-        if (\strpos($value, '[') !== false && \strpos($value, ']') !== false) {
-            $data = \json_decode($value, true);
+        if ($value && strpos($value, '[') !== false && strpos($value, ']') !== false) {
+            $data = json_decode($value, true);
 
-            if (\is_array($data)) {
+            if (is_array($data)) {
                 if (isset($data[1])) {
-                    $userInput = \htmlspecialchars($data[1]);
+                    $userInput = htmlspecialchars($data[1]);
                 }
 
                 $value = $data[0];
@@ -261,9 +271,9 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
             $type      = $entries[$value]['type'];
             $valueText = $entries[$value]['title'];
 
-            if ($Locale && \get_class($Locale) == QUI\Locale::class) {
+            if (get_class($Locale) == QUI\Locale::class) {
                 $current     = $Locale->getCurrent();
-                $currentCode = \mb_strtolower($current).'_'.\mb_strtoupper($current);
+                $currentCode = mb_strtolower($current) . '_' . mb_strtoupper($current);
 
                 if (isset($valueText[$current])) {
                     $valueText = $valueText[$current];
@@ -272,10 +282,8 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
                 }
             }
 
-            switch ($type) {
-                case ErpCalc::CALCULATION_PERCENTAGE:
-                    $calcType = ErpCalc::CALCULATION_PERCENTAGE;
-                    break;
+            if ($type == ErpCalc::CALCULATION_PERCENTAGE) {
+                $calcType = ErpCalc::CALCULATION_PERCENTAGE;
             }
         }
 
@@ -290,11 +298,11 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
 
                 if (isset($valueText[$current])) { // check if lang values
                     foreach ($valueText as $lang => $val) {
-                        $valueText[$lang] .= ' - '.$userInput;
+                        $valueText[$lang] .= ' - ' . $userInput;
                     }
                 }
             } else {
-                $valueText .= ' - '.$userInput;
+                $valueText .= ' - ' . $userInput;
             }
         }
 
@@ -343,12 +351,12 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
             ]
         ];
 
-        if (!\is_numeric($value)) {
-            if (\is_array($value)) {
-                $value = \json_encode($value);
+        if (!is_numeric($value)) {
+            if (is_array($value)) {
+                $value = json_encode($value);
             }
 
-            $value = \json_decode($value, true);
+            $value = json_decode($value, true);
 
             if (!isset($value[0]) || !isset($value[1])) {
                 throw new QUI\ERP\Products\Field\Exception($invalidException);
@@ -358,7 +366,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
             $value = $value[0];
         }
 
-        if (!\is_numeric($value)) {
+        if (!is_numeric($value)) {
             throw new QUI\ERP\Products\Field\Exception($invalidException);
         }
 
@@ -390,8 +398,8 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
 
         $check = [];
 
-        if (\is_string($value) && !\is_numeric($value)) {
-            $check = \json_decode($value, true);
+        if (is_string($value) && !is_numeric($value)) {
+            $check = json_decode($value, true);
 
             // if no json, check if value exist
             if ($check === null) {
@@ -408,19 +416,19 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
                 return null;
             }
 
-            if (!\is_numeric($check[0])) {
+            if (!is_numeric($check[0])) {
                 return null;
             }
 
             return $value;
         }
 
-        if (\is_array($value)) {
+        if (is_array($value)) {
             if (!isset($check[0]) || !isset($check[1])) {
                 return null;
             }
 
-            if (!\is_numeric($check[0])) {
+            if (!is_numeric($check[0])) {
                 return null;
             }
 
@@ -428,11 +436,11 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
         }
 
 
-        if (empty($value) && !\is_int($value) && $value != 0) {
+        if (empty($value) && !is_int($value) && $value != 0) {
             return null;
         }
 
-        if (!\is_numeric($value)) {
+        if (!is_numeric($value)) {
             return null;
         }
 
