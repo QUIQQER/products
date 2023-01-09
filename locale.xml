@@ -2089,7 +2089,7 @@ For a newly created product the article number should be generated automatically
 
         <locale name="field.vat.type.default">
             <de><![CDATA[Standard verwenden]]></de>
-            <en><![CDATA[Use default]]]></en>
+            <en><![CDATA[Use default]]></en>
         </locale>
 
         <locale name="variants.EditableFieldList.window.title">
