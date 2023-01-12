@@ -553,7 +553,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         // must be cached or set it at the site save event
         $projects = QUI::getProjectManager()->getProjectList();
-        $result   = [];
+        $sites    = [];
         $id       = $this->getId();
 
         foreach ($projects as $Project) {
@@ -577,8 +577,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             $idList = array_column($result, 'id');
 
             foreach ($result as $row) {
-                $siteId   = $row['id'];
-                $result[] = $Project->get($siteId);
+                $siteId  = $row['id'];
+                $sites[] = $Project->get($siteId);
             }
 
             if (!isset($this->data['sites']) || \is_string($this->data['sites'])) {
@@ -588,7 +588,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             $this->data['sites'][$projectName][$projectLang] = $idList;
         }
 
-        $this->sites = $result;
+        $this->sites = $sites;
 
         // caching
         $cache = [];
