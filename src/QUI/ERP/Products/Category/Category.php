@@ -560,20 +560,13 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             $projectName = $Project->getName();
             $projectLang = $Project->getLang();
 
-
             // Fetch sites directly via db for performance reasons
-            $result = QUI::getDataBase()->fetch([
-                'select' => ['id'],
-                'from'   => $Project->table(),
-                'where'  => [
-                    'extra'  => [
-                        'type'  => '%LIKE%',
-                        'value' => '"quiqqer.products.settings.categoryId":"'.$id.'"'
-                    ],
-                    'active' => 1
-                ]
-            ]);
+            $sql = "SELECT `id` FROM `".$Project->table()."`";
+            $sql .= " WHERE `active` = 1";
+            $sql .= " AND (`extra` LIKE '%\"quiqqer.products.settings.categoryId\":\"'.$id.'\"%'";
+            $sql .= " OR `extra` LIKE '%\"quiqqer.products.settings.categoryId\":'.$id.'%')";
 
+            $result = QUI::getDataBase()->fetchSQL($sql);
             $idList = array_column($result, 'id');
 
             foreach ($result as $row) {
