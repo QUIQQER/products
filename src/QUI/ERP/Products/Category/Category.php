@@ -10,6 +10,7 @@ use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Handler\Categories;
+use function array_column;
 
 /**
  * Class Category
@@ -550,38 +551,34 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             QUI\System\Log::writeDebugException($Exception);
         }
 
-
         // must be cached or set it at the site save event
         $projects = QUI::getProjectManager()->getProjectList();
-        $result   = [];
+        $sites    = [];
         $id       = $this->getId();
 
         foreach ($projects as $Project) {
             $projectName = $Project->getName();
             $projectLang = $Project->getLang();
 
-            /* @var $Project QUI\Projects\Project */
-            $sites = $Project->getSites([
-                'where' => [
-                    'type' => 'quiqqer/products:types/category'
+
+            // Fetch sites directly via db for performance reasons
+            $result = QUI::getDataBase()->fetch([
+                'select' => ['id'],
+                'from'   => $Project->table(),
+                'where'  => [
+                    'extra'  => [
+                        'type'  => '%LIKE%',
+                        'value' => '"quiqqer.products.settings.categoryId":"'.$id.'"'
+                    ],
+                    'active' => 1
                 ]
             ]);
 
-            $idList = [];
-            $debug  = [];
+            $idList = array_column($result, 'id');
 
-            foreach ($sites as $Site) {
-                /* @var $Site QUI\Projects\Site */
-                $siteCatId = $Site->getAttribute('quiqqer.products.settings.categoryId');
-
-                if ($siteCatId != ''
-                    && $siteCatId !== false
-                    && ($siteCatId == $id || $siteCatId == 0)
-                ) {
-                    $result[] = $Site;
-                    $idList[] = $Site->getId();
-                    $debug[]  = $siteCatId;
-                }
+            foreach ($result as $row) {
+                $siteId  = $row['id'];
+                $sites[] = $Project->get($siteId);
             }
 
             if (!isset($this->data['sites']) || \is_string($this->data['sites'])) {
@@ -591,7 +588,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             $this->data['sites'][$projectName][$projectLang] = $idList;
         }
 
-        $this->sites = $result;
+        $this->sites = $sites;
 
         // caching
         $cache = [];
