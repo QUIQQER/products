@@ -563,8 +563,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             // Fetch sites directly via db for performance reasons
             $sql = "SELECT `id` FROM `".$Project->table()."`";
             $sql .= " WHERE `active` = 1";
-            $sql .= " AND (`extra` LIKE '%\"quiqqer.products.settings.categoryId\":\"'.$id.'\"%'";
-            $sql .= " OR `extra` LIKE '%\"quiqqer.products.settings.categoryId\":'.$id.'%')";
+            $sql .= " AND (`extra` LIKE '%\"quiqqer.products.settings.categoryId\":\"".$id."\"%'";
+            $sql .= " OR `extra` LIKE '%\"quiqqer.products.settings.categoryId\":".$id."%')";
 
             $result = QUI::getDataBase()->fetchSQL($sql);
             $idList = array_column($result, 'id');
