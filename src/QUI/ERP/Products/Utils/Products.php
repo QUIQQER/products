@@ -11,7 +11,8 @@ use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Fields as FieldUtils;
-use function array_filter;
+
+use function get_class;
 
 /**
  * Class Products Helper
@@ -32,11 +33,11 @@ class Products
      */
     public static function isProduct($mixed)
     {
-        if (\get_class($mixed) == QUI\ERP\Products\Product\Model::class) {
+        if (get_class($mixed) == QUI\ERP\Products\Product\Model::class) {
             return true;
         }
 
-        if (\get_class($mixed) == QUI\ERP\Products\Product\Product::class) {
+        if (get_class($mixed) == QUI\ERP\Products\Product\Product::class) {
             return true;
         }
 
@@ -574,6 +575,12 @@ class Products
             return QUI\ERP\Products\Field\Types\BasketConditions::TYPE_1;
         }
 
-        return $conditions[0]->getValue();
+        $return = $conditions[0]->getValue();
+
+        if ($return) {
+            return $return;
+        }
+
+        return QUI\ERP\Products\Field\Types\BasketConditions::TYPE_1;
     }
 }
