@@ -61,7 +61,8 @@ define('package/quiqqer/products/bin/controls/fields/types/BasketConditions', [
                 'type_2',
                 'type_3',
                 'type_4',
-                'type_5'
+                'type_5',
+                'type_6'
             ];
 
             for (let i = 0, len = statuses.length; i < len; i++) {
