@@ -770,7 +770,7 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Kann mit anderen Produkten diesen Typs einmalig in den Warenkorb]]></de>
             <en><![CDATA[Can be added to cart once with other products of this type]]></en>
         </locale>
-        <locale name="controls.basket.conditions.option.type_5">
+        <locale name="controls.basket.conditions.option.type_6">
             <de><![CDATA[Kann nur alleine und mehrmalig in den Warenkorb]]></de>
             <en><![CDATA[Can only be alone and several times in the shopping cart]]></en>
         </locale>
