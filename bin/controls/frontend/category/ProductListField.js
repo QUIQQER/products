@@ -30,22 +30,30 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListField
          * @returns {HTMLDivElement}
          */
         create: function () {
+            let fieldValue = '';
+            const Field = this.getAttribute('Field');
+
+            if (Field && Field.getSearchValue()) {
+                fieldValue = Field.getSearchValue().join(',');
+            }
+
             this.$Elm = new Element('div', {
-                'class'   : 'quiqqer-products-productList-filter',
-                html      : '<div class="quiqqer-products-productList-filter-text"></div>' +
-                    '<div class="quiqqer-products-productList-filter-destroy">' +
-                    '    <span class="fa fa-close"></span>' +
-                    '</div>',
-                'data-tag': this.getAttribute('tag')
+                'class'           : 'quiqqer-products-productList-filter',
+                html              : '<div class="quiqqer-products-productList-filter-text"></div>' +
+                                    '<div class="quiqqer-products-productList-filter-destroy">' +
+                                    '    <span class="fa fa-close"></span>' +
+                                    '</div>',
+                'data-field'      : Field.getAttribute('fieldid'),
+                'data-field-value': fieldValue
             });
 
-            this.$Text   = this.$Elm.getElement('.quiqqer-products-productList-filter-text');
+            this.$Text = this.$Elm.getElement('.quiqqer-products-productList-filter-text');
             this.$Cancel = this.$Elm.getElement('.quiqqer-products-productList-filter-destroy');
 
-            this.$Cancel.addEvent('click', function () {
+            this.$Cancel.addEvent('click', () => {
                 this.hide();
                 this.fireEvent('close', [this]);
-            }.bind(this));
+            });
 
             return this.$Elm;
         },
@@ -82,13 +90,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListField
                 return;
             }
 
-            var Field = this.getAttribute('Field');
-            var value = Field.getSearchValue();
+            const Field = this.getAttribute('Field');
+            let value = Field.getSearchValue();
 
             if (Field.getType() === 'package/quiqqer/productsearch/bin/controls/search/SearchField' &&
                 typeof Field.$Type.$Select !== 'undefined') {
-                var max   = Field.$Type.$Select.getAttribute('max');
-                var min   = Field.$Type.$Select.getAttribute('min');
+                const max = Field.$Type.$Select.getAttribute('max');
+                const min = Field.$Type.$Select.getAttribute('min');
 
                 if (!min && !max) {
                     value = false;
@@ -104,7 +112,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListField
                 return;
             }
 
-            var text = '';
+            let text = '';
 
             if (Field.getAttribute('title')) {
                 text = text + Field.getAttribute('title').trim() + ': ';
