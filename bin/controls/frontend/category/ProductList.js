@@ -1927,7 +1927,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 value = this.$selectFields[i].getSearchValue();
 
                 if (this.$selectFields[i].isReady() && value) {
-                    if (this.$FilterFieldList.getElement('[data-field-value="' + value.join(',') + '"]')) {
+                    if (typeof value.length !== 'undefined') {
+                        value = value.join(',');
+                    } else if (typeof value === 'object') {
+                        value = Object.toQueryString(value);
+                    }
+
+                    if (this.$FilterFieldList.getElement('[data-field-value="' + value + '"]')) {
                         continue;
                     }
 
