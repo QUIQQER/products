@@ -20,15 +20,15 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
     'Locale',
     'package/quiqqer/products/bin/classes/Categories',
     'package/quiqqer/products/bin/controls/categories/Sitemap',
-    'package/quiqqer/translator/bin/controls/Create',
+    'package/quiqqer/translator/bin/controls/Update',
 
     'css!package/quiqqer/products/bin/controls/categories/Create.css'
 
 ], function (QUI, QUIControl, QUIButton, QUILocale,
-             Handler, CategorySitemap, TranslationCreate) {
+             Handler, CategorySitemap, TranslationUpdate) {
     "use strict";
 
-    var Categories = new Handler();
+    const Categories = new Handler();
 
     return new Class({
 
@@ -49,9 +49,9 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Buttons      = null;
+            this.$Buttons = null;
             this.$ParentSelect = null;
-            this.$Text         = null;
+            this.$Text = null;
 
             this.$id = false;
 
@@ -71,15 +71,15 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
             Elm.set({
                 'class': 'category-create',
                 html   : '<div class="category-create-container">' +
-                '<div class="category-create-sheet category-create-parentSelect"></div>' +
-                '<div class="category-create-sheet category-create-text"></div>' +
-                '</div>' +
-                '<div class="category-create-buttons"></div>'
+                         '<div class="category-create-sheet category-create-parentSelect"></div>' +
+                         '<div class="category-create-sheet category-create-text"></div>' +
+                         '</div>' +
+                         '<div class="category-create-buttons"></div>'
             });
 
             this.$ParentSelect = Elm.getElement('.category-create-parentSelect');
-            this.$Text         = Elm.getElement('.category-create-text');
-            this.$Buttons      = Elm.getElement('.category-create-buttons');
+            this.$Text = Elm.getElement('.category-create-text');
+            this.$Buttons = Elm.getElement('.category-create-buttons');
 
             this.$Text.setStyles({
                 display: 'none',
@@ -93,16 +93,26 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
                 top    : -10
             });
 
-            this.$TitleTranslate = new TranslationCreate({
+            this.$TitleTranslate = new TranslationUpdate({
                 'group'  : 'quiqqer/products',
                 'package': 'quiqqer/products',
-                editable : true
+                editable : true,
+                events   : {
+                    onLoad: function (Instance) {
+                        Instance.getElm().getElements('[type="text"]').set('value', ' ');
+                    }
+                }
             });
 
-            this.$DescTranslate = new TranslationCreate({
+            this.$DescTranslate = new TranslationUpdate({
                 'group'  : 'quiqqer/products',
                 'package': 'quiqqer/products',
-                editable : true
+                editable : true,
+                events   : {
+                    onLoad: function (Instance) {
+                        Instance.getElm().getElements('[type="text"]').set('value', ' ');
+                    }
+                }
             });
 
             return Elm;
@@ -151,9 +161,9 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
 
                 self.$ParentSelect.set({
                     html  : '<div class="category-create-parentSelect-description">' +
-                    'Wählen Sie bitte die Kategorie aus unter welche ' +
-                    'die neue Kategorie neu angelegt werden soll' +
-                    '</div>', // #locale
+                            'Wählen Sie bitte die Kategorie aus unter welche ' +
+                            'die neue Kategorie neu angelegt werden soll' +
+                            '</div>', // #locale
                     styles: {
                         display: null
                     }
@@ -197,7 +207,6 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
          * @return {Promise}
          */
         showTextEdit: function () {
-
             var self = this;
 
             this.$Buttons.set('html', '');
@@ -233,8 +242,8 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
 
                 self.$Text.set({
                     html  : '<div class="category-create-text-description">' +
-                    'Geben Sie bitte einen Titel und Kurzbeschreibung für die Kategorie an' +
-                    '</div>',
+                            'Geben Sie bitte einen Titel und Kurzbeschreibung für die Kategorie an' +
+                            '</div>',
                     styles: {
                         display: null
                     }
@@ -244,13 +253,13 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
                 var Text = new Element('label', {
                     'class': 'field-container category-create-text-title',
                     html   : '<span class="field-container-item">Kategorien-Titel</span>' +
-                    '<div class="field-container-field"></div>'
+                             '<div class="field-container-field"></div>'
                 }).inject(self.$Text);
 
                 var Desc = new Element('div', {
                     'class': 'field-container category-create-text-title',
                     html   : '<span class="field-container-item">Kategorien-Beschreibung</span>' +
-                    '<div class="field-container-field"></div>'
+                             '<div class="field-container-field"></div>'
                 }).inject(self.$Text);
 
 
@@ -338,7 +347,10 @@ define('package/quiqqer/products/bin/controls/categories/Create', [
                             QUILocale.get('quiqqer/products', 'message.category.successfully.created')
                         );
 
-                        self.fireEvent('success', [self, childData]);
+                        self.fireEvent('success', [
+                            self,
+                            childData
+                        ]);
                         resolve(childData);
                     });
 

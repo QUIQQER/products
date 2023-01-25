@@ -8,6 +8,10 @@ namespace QUI\ERP\Products\Handler;
 
 use QUI;
 
+use function get_class;
+use function is_null;
+use function is_object;
+
 /**
  * Class Categories
  *
@@ -19,7 +23,7 @@ class Categories
      * List of internal categories
      * @var array
      */
-    private static $list = [];
+    private static array $list = [];
 
     /**
      * Clears the category cache
@@ -48,9 +52,9 @@ class Categories
      * @param integer|string $categoryId
      * @return string
      */
-    public static function getCacheName($categoryId)
+    public static function getCacheName($categoryId): string
     {
-        return Cache::getBasicCachePath().'categories/'.(int)$categoryId;
+        return Cache::getBasicCachePath() . 'categories/' . (int)$categoryId;
     }
 
     /**
@@ -59,7 +63,7 @@ class Categories
      * @param array $queryParams - query params (where, where_or)
      * @return integer
      */
-    public function countCategories($queryParams = [])
+    public function countCategories(array $queryParams = []): int
     {
         $query = [
             'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
@@ -96,7 +100,7 @@ class Categories
     /**
      * @return array
      */
-    public static function getChildAttributes()
+    public static function getChildAttributes(): array
     {
         return [
             'id',
@@ -132,7 +136,7 @@ class Categories
 
         try {
             $categoryData = QUI\Cache\LongTermCache::get(self::getCacheName($id));
-        } catch (QUI\Exception $Eception) {
+        } catch (QUI\Exception $Exception) {
             $data = QUI::getDataBase()->fetch([
                 'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 'where' => [
@@ -187,7 +191,7 @@ class Categories
      * @return bool
      * @throws QUI\Exception
      */
-    public static function existsCategory($categoryId)
+    public static function existsCategory($categoryId): bool
     {
         try {
             self::getCategory($categoryId);
@@ -208,17 +212,17 @@ class Categories
      * @param mixed $Category
      * @return boolean
      */
-    public static function isCategory($Category)
+    public static function isCategory($Category): bool
     {
-        if (!\is_object($Category)) {
+        if (!is_object($Category)) {
             return false;
         }
 
-        if (\get_class($Category) === QUI\ERP\Products\Category\Category::class) {
+        if (get_class($Category) === QUI\ERP\Products\Category\Category::class) {
             return true;
         }
 
-        if (\get_class($Category) === QUI\ERP\Products\Category\AllProducts::class) {
+        if (get_class($Category) === QUI\ERP\Products\Category\AllProducts::class) {
             return true;
         }
 
@@ -236,11 +240,11 @@ class Categories
      * @throws \QUI\Exception
      * @throws \QUI\Permissions\Exception
      */
-    public static function createCategory($parentId = null, $title = '')
+    public static function createCategory($parentId = null, string $title = '')
     {
         QUI\Permissions\Permission::checkPermission('category.create');
 
-        if (\is_null($parentId)) {
+        if (is_null($parentId)) {
             $parentId = 0;
         }
 
@@ -292,7 +296,31 @@ class Categories
 
             QUI\Translator::addUserVar(
                 'quiqqer/products',
-                'products.category.'.$newId.'.title',
+                'products.category.' . $newId . '.title',
+                $languageData
+            );
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addInfo($Exception->getMessage());
+
+            QUI::getMessagesHandler()->addAttention(
+                $Exception->getMessage()
+            );
+        }
+
+        try {
+            $languageData = [
+                'datatype' => 'js,php',
+                'package'  => 'quiqqer/products'
+            ];
+
+            foreach (QUI::availableLanguages() as $lang) {
+                $languageData[$lang]           = ' ';
+                $languageData[$lang . '_edit'] = ' ';
+            }
+
+            QUI\Translator::addUserVar(
+                'quiqqer/products',
+                'products.category.' . $newId . '.description',
                 $languageData
             );
         } catch (QUI\Exception $Exception) {
@@ -322,7 +350,7 @@ class Categories
      *                              $queryParams['order']
      * @return array
      */
-    public static function getCategories($queryParams = [])
+    public static function getCategories(array $queryParams = []): array
     {
         $ids    = self::getCategoryIds($queryParams);
         $result = [];
@@ -343,7 +371,7 @@ class Categories
      * @param array $queryParams
      * @return array
      */
-    public static function getCategoryIds($queryParams = [])
+    public static function getCategoryIds(array $queryParams = []): array
     {
         $query = [
             'select' => 'id',

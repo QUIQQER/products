@@ -23,7 +23,7 @@ QUI::$Ajax->registerFunction(
         $Categories = new QUI\ERP\Products\Handler\Categories();
         $Fields     = new QUI\ERP\Products\Handler\Fields();
         $Category   = $Categories->getCategory($categoryId);
-        $params     = \json_decode($params, true);
+        $params     = json_decode($params, true);
 
         if (isset($params['fields'])) {
             $Category->clearFields();
