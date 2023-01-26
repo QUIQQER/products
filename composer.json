@@ -1,6 +1,7 @@
 {
   "name": "quiqqer\/products",
   "type": "quiqqer-module",
+  "version": "1.7.0",
   "description": "The product package provides the basis for product management for QUIQQER",
   "license": "GPL-3.0+",
   "authors": [
