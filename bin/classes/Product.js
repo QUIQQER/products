@@ -423,7 +423,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                     Products.getChild(this.getId()).then((data) => {
                         this.$loaded = true;
                         this.$data = data;
-
+                        console.warn(data);
                         resolve(this);
 
                         this.fireEvent('refresh', [this]);

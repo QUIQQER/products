@@ -44,6 +44,17 @@ QUI::$Ajax->registerFunction(
                     continue;
                 }
 
+                // pcsg-projects/demo-shop/-/issues/9#note_152341
+                if ($Product instanceof VariantParent
+                    && $ProductField instanceof QUI\ERP\Products\Field\Types\AttributeGroup) {
+                    $editable = $Product->getAttribute('editableVariantFields');
+
+                    if (is_array($editable) && in_array($ProductField->getId(), $editable)) {
+                        $ProductField->setValue($field);
+                        continue;
+                    }
+                }
+
                 if ($ProductField instanceof QUI\ERP\Products\Field\Types\AttributeGroup
                     && ($Product instanceof VariantParent || $Product instanceof VariantChild)
                 ) {

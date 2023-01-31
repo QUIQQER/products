@@ -123,27 +123,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             this.parent().then(function () {
                 return self.$checkProductParent();
             }).then(function () {
-                // self.addCategory({
-                //     name  : 'variants',
-                //     text  : QUILocale.get(lg, 'panel.variants.category.title'),
-                //     icon  : 'fa fa-info',
-                //     events: {
-                //         onClick: function () {
-                //             self.Loader.show();
-                //             self.openVariants().then(function () {
-                //                 if (self.$loaded) {
-                //                     self.Loader.hide();
-                //                 }
-                //             });
-                //         }
-                //     }
-                // });
-                //
-                // self.getCategoryBar().moveChildToPos(
-                //     self.getCategory('variants'),
-                //     2
-                // );
-
                 self.addButton({
                     name  : 'variantFields',
                     title : QUILocale.get(lg, 'panel.variants.editable.button.title'),
@@ -320,7 +299,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             if (!this.$CurrentVariant) {
                 return this.parent();
             }
-            
+
             // variant handling
             this.Loader.show();
 
@@ -1601,7 +1580,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          */
         $openVariantData: function () {
             const self = this;
-
+            
             return this.$hideTabContent().then(function (Content) {
                 return self.$renderData(Content, self.$CurrentVariant);
             }).then(function () {
@@ -1677,6 +1656,13 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 if (typeof el.getParent !== 'function') {
                     el = new Elements(el);
                 }
+
+                // package/quiqqer/products/bin/controls/fields/types/AttributeGroup are always disabled
+                // pcsg-projects/demo-shop/-/issues/9#note_152341
+                if (el.hasClass('quiqqer-products-field-attributeGroup-select')) {
+                    continue;
+                }
+
 
                 el.set('disabled', false);
                 el.getParent('tr').removeClass('variant-field-disabled');

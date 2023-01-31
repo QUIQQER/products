@@ -558,23 +558,23 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param {Object} fieldTypes - list of the field types data
          */
         $createCategories: function (fields, fieldCategories, fieldTypes) {
-            var self = this;
+            const self = this;
 
-            var fieldClick = function (Btn) {
+            const fieldClick = function (Btn) {
                 self.Loader.show();
                 self.openField(Btn.getAttribute('fieldId')).then(function () {
                     self.Loader.hide();
                 });
             };
 
-            var imageFolderClick = function (Btn) {
+            const imageFolderClick = function (Btn) {
                 self.Loader.show();
                 self.openMediaFolderField(Btn.getAttribute('fieldId')).then(function () {
                     self.Loader.hide();
                 });
             };
 
-            var showCategory = function (type) {
+            const showCategory = function (type) {
                 if (type === 'TextareaMultiLang' ||
                     type === 'Textarea' ||
                     type === 'Products') {
@@ -937,7 +937,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 return Promise.resolve();
             }
 
-            var self = this;
+            const self = this;
 
             return self.$hideCategories().then(function () {
                 return self.$renderData(self.$Data, self.$Product);
@@ -952,8 +952,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param Product
          */
         $renderData: function (Container, Product) {
-            var self = this;
-            var data = {};
+            const self = this;
+            const data = {};
 
             // get product data
             return Promise.all([
@@ -961,7 +961,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 Product.getCategories(),
                 Product.getCategory()
             ]).then(function (result) {
-                var fields     = result[0],
+                let fields     = result[0],
                     categories = result[1],
                     category   = result[2];
 
@@ -986,24 +986,24 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     productPriority  : QUILocale.get(lg, 'productPriority')
                 }));
 
-                var MainCategoryRow = Container.getElement('.product-mainCategory');
-                var MainCategory = Container.getElement('[name="product-category"]');
+                const MainCategoryRow = Container.getElement('.product-mainCategory');
+                const MainCategory = Container.getElement('[name="product-category"]');
 
 
                 // categories
-                var Select = new CategorySelect({
+                const Select = new CategorySelect({
                     name  : 'categories',
                     events: {
                         onDelete: function (Select, Item) {
-                            var categoryId = Item.getAttribute('categoryId');
-                            var Option = MainCategory.getElement('[value="' + categoryId + '"]');
+                            const categoryId = Item.getAttribute('categoryId');
+                            const Option = MainCategory.getElement('[value="' + categoryId + '"]');
 
                             if (Option) {
                                 Option.destroy();
                             }
                         },
                         onChange: function () {
-                            var ids = Select.getValue();
+                            let ids = Select.getValue();
 
                             if (ids === '') {
                                 ids = [];
@@ -1015,6 +1015,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 if (MainCategory.getElement('[value="' + id + '"]')) {
                                     return;
                                 }
+
                                 new Element('option', {
                                     value: id,
                                     html : QUILocale.get(lg, 'products.category.' + id + '.title')
@@ -1053,15 +1054,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 MainCategory.value = category;
 
                 // render data fields
-                var i, len;
-                var DataContainer = Container.getElement('.product-data tbody');
+                let i, len;
+                const DataContainer = Container.getElement('.product-data tbody');
 
                 for (i = 0, len = self.$dataFields.length; i < len; i++) {
                     self.$renderDataField(self.$dataFields[i]).inject(DataContainer);
                 }
 
                 // render system fields
-                var SystemContainer = Container.getElement('.product-standardfield tbody');
+                const SystemContainer = Container.getElement('.product-standardfield tbody');
 
                 for (i = 0, len = self.$systemFields.length; i < len; i++) {
                     self.$renderDataField(self.$systemFields[i]).inject(SystemContainer);
@@ -1070,6 +1071,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 return QUI.parse(Container);
             }).then(function () {
                 self.$fillDataToContainer(Container, Product);
+
+                // pcsg-projects/demo-shop/-/issues/9#note_152341
+                if (Product.$data.type === 'QUI\\ERP\\Products\\Product\\Types\\VariantParent') {
+                    const SystemContainer = Container.getElement('.product-standardfield tbody');
+                    console.log(Product);
+                    Product.$data.editableVariantFields.forEach(function (fieldId) {
+                        SystemContainer.getElements('[name="field-' + fieldId + '"]').set('disabled', false);
+                    });
+                }
 
                 // change fields button
                 if (!Container.getElement('[name="edit-fields"]')) {
@@ -2564,7 +2574,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @param Category
          */
         $fieldCategoryClick: function (Category) {
-            var self = this;
+            const self = this;
 
             return self.$hideCategories().then(function () {
                 self.$FieldContainer.set('html', '');
@@ -2585,9 +2595,9 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                   '</table>'
                         }).inject(self.$FieldContainer);
 
-                        var Body = Form.getElement('tbody');
+                        const Body = Form.getElement('tbody');
 
-                        for (var i = 0, len = fields.length; i < len; i++) {
+                        for (let i = 0, len = fields.length; i < len; i++) {
                             self.$renderDataField(fields[i]).inject(Body);
                         }
 

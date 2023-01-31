@@ -21,7 +21,7 @@ define('package/quiqqer/products/bin/utils/Products', [
         renderDataField: function (field) {
             let help  = false,
                 title = QUILocale.get(lg, 'products.field.' + field.id + '.title');
-
+            
             if (QUILocale.exists(lg, 'products.field.' + field.id + '.workingtitle')) {
                 title = QUILocale.get(lg, 'products.field.' + field.id + '.workingtitle');
             }
