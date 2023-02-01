@@ -337,6 +337,11 @@ class JsonLd
             $offerEntry = array_merge($offerEntry, $maxMin);
         }
 
+        if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            return $offerEntry;
+        }
+
+
         if (isset($offerEntry['highPrice']) || isset($offerEntry['lowPrice'])) {
             unset($offerEntry['price']);
 
@@ -351,6 +356,7 @@ class JsonLd
             unset($offerEntry['lowPrice']);
             unset($offerEntry['highPrice']);
         }
+
 
         return $offerEntry;
     }
