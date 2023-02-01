@@ -338,6 +338,14 @@ class JsonLd
         }
 
         if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            if (isset($offerEntry['highPrice'])) {
+                unset($offerEntry['highPrice']);
+            }
+
+            if (isset($offerEntry['lowPrice'])) {
+                unset($offerEntry['lowPrice']);
+            }
+
             return $offerEntry;
         }
 
