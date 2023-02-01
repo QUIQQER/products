@@ -324,9 +324,21 @@ class JsonLd
         ProductInterface $Product,
         NumberFormatter $Formatter
     ): array {
+        $User  = QUI::getUsers()->getUserBySession();
+        $Calc  = QUI\ERP\Products\Utils\Calc::getInstance($User);
+        $price = $Product->getPrice()->getValue();
+
+        if (!QUI\ERP\Utils\User::isNettoUser($User)) {
+            try {
+                $price = $Calc->getPrice($price);
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
+
         $offerEntry = [
             "@type"         => "Offer",
-            "price"         => $Formatter->format($Product->getPrice()->getValue()),
+            "price"         => $Formatter->format($price),
             "priceCurrency" => $Product->getPrice()->getCurrency()->getCode(),
             'availability'  => 'InStock' // @todo consider stock
         ];
