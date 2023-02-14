@@ -112,6 +112,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             this.$data = {};
             this.$injected = false;
+            this.$loaded = false;
 
             this.$executeUnloadForm = true;
 
@@ -196,14 +197,18 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             this.Loader.show();
         },
 
+        $loaderHide: function () {
+            if (this.$loaded) {
+                this.Loader.hide();
+            }
+        },
+
         /**
          * event : on inject
          *
          * @return {Promise}
          */
         $onInject: function () {
-            let CategoryClick = null;
-
             return this.$render().then(() => {
                 let UserLoad = Promise.resolve();
 
@@ -213,15 +218,19 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 return UserLoad;
             }).then(() => {
-                const wantedCategory = User.getAttribute('quiqqer.erp.productPanel.open.category');
+                const wantedCategory = User.getAttribute(
+                    'quiqqer.erp.productPanel.open.category'
+                );
 
-                CategoryClick = this.getCategory('information');
+                let Category = this.getCategory('information');
 
                 if (wantedCategory && this.getCategory(wantedCategory)) {
-                    CategoryClick = this.getCategory(wantedCategory);
+                    Category = this.getCategory(wantedCategory);
                 }
 
-                this.setAttribute('CategoryClick', CategoryClick);
+                if (typeOf(Category) === 'qui/controls/buttons/Button') {
+                    Category.click();
+                }
 
                 return Locker.isLocked('product_' + this.$Product.getId());
             }).then((isLocked) => {
@@ -270,13 +279,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     }
                 }).inject(LockContainer);
             }).then(() => {
-                if (this.getAttribute('noCategoryInitClick')) {
-                    return;
-                }
-
-                if (typeOf(CategoryClick) === 'qui/controls/buttons/Button') {
-                    CategoryClick.click();
-                }
+                this.$loaded = true;
+                this.$loaderHide();
             });
         },
 
@@ -564,15 +568,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
             const fieldClick = function (Btn) {
                 self.Loader.show();
-                self.openField(Btn.getAttribute('fieldId')).then(function () {
-                    self.Loader.hide();
+                self.openField(Btn.getAttribute('fieldId')).then(() => {
+                    this.$loaderHide();
                 });
             };
 
             const imageFolderClick = function (Btn) {
                 self.Loader.show();
-                self.openMediaFolderField(Btn.getAttribute('fieldId')).then(function () {
-                    self.Loader.hide();
+                self.openMediaFolderField(Btn.getAttribute('fieldId')).then(() => {
+                    this.$loaderHide();
                 });
             };
 
@@ -601,7 +605,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     onClick: function () {
                         self.Loader.show();
                         self.openInformation().then(function () {
-                            self.Loader.hide();
+                            self.$loaderHide();
                         });
                     }
                 }
@@ -615,7 +619,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     onClick: function () {
                         self.Loader.show();
                         self.openData().then(function () {
-                            self.Loader.hide();
+                            self.$loaderHide();
                         });
                     }
                 }
@@ -629,7 +633,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     onClick: function () {
                         self.Loader.show();
                         self.openPrices().then(function () {
-                            self.Loader.hide();
+                            self.$loaderHide();
                         });
                     }
                 }
@@ -691,7 +695,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     onClick: function () {
                         self.Loader.show();
                         self.openImages().then(function () {
-                            self.Loader.hide();
+                            self.$loaderHide();
                         });
                     }
                 }
@@ -705,7 +709,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     onClick: function () {
                         self.Loader.show();
                         self.openFiles().then(function () {
-                            self.Loader.hide();
+                            self.$loaderHide();
                         });
                     }
                 }
@@ -740,7 +744,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     onClick: function () {
                         self.Loader.show();
                         self.openAttributeList().then(function () {
-                            self.Loader.hide();
+                            self.$loaderHide();
                         });
                     }
                 }
@@ -1695,7 +1699,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                 fieldId: selected.id,
                                 events : {
                                     onOpen: function () {
-                                        self.Loader.hide();
+                                        self.$loaderHide();
                                     }
                                 }
                             }).open();
@@ -1713,7 +1717,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             }).then(function () {
                 return self.$showCategory(self.$FieldAdministration);
             }).then(function () {
-                self.Loader.hide();
+                self.$loaderHide();
                 self.getCategory('data').setActive();
 
                 return self.$Grid.resize();
@@ -1946,7 +1950,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }).then(function () {
                     self.$Grid.resize();
                     self.getCategory('attributelist').setActive();
-                    self.Loader.hide();
+                    self.$loaderHide();
                 });
             });
         },
@@ -1980,7 +1984,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                                     self.Loader.show();
                                     Permissions.save().then(function () {
                                         Sheet.hide();
-                                        self.Loader.hide();
+                                        self.$loaderHide();
                                     });
                                 }
                             }
@@ -1989,7 +1993,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 });
 
                 Sheet.show();
-                this.Loader.hide();
+                this.$loaderHide();
             }.bind(this));
         },
 
@@ -2117,7 +2121,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 self.$executeUnloadForm = true;
             }).catch(function (err) {
                 console.error(err);
-                self.Loader.hide();
+                self.$loaderHide();
             });
         },
 
@@ -2476,20 +2480,18 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @return {Promise}
          */
         $createMediaFolder: function (fieldId, Product) {
-            const self = this;
-
-            this.Loader.hide();
+            this.Loader.show();
 
             return Product.createMediaFolder(fieldId).then(function () {
                 return Product.getFields();
-            }).then(function (productFields) {
+            }).then((productFields) => {
                 const wantedId = fieldId || Fields.FIELD_FOLDER;
 
                 const folder = productFields.filter(function (field) {
                     return parseInt(field.id) === parseInt(wantedId);
                 });
 
-                self.Loader.hide();
+                this.$loaderHide();
 
                 if (folder.length) {
                     return folder[0].value;
@@ -2614,11 +2616,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         productId : self.getAttribute('productId')
                     });
                 });
-            }).then(function () {
-                self.$fillDataToContainer(self.$FieldContainer, self.$Product);
-                self.Loader.hide();
+            }).then(() => {
+                this.$fillDataToContainer(this.$FieldContainer, this.$Product);
+                this.$loaderHide();
 
-                return self.$showCategory(self.$FieldContainer);
+                return this.$showCategory(this.$FieldContainer);
             });
         }
 

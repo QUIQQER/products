@@ -117,11 +117,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             this.$CopyButton = this.getButtons('copy');
 
             this.$Elm.addClass('panel-product-variant');
-
             this.Loader.show();
-            this.setAttribute('noCategoryInitClick', true);
 
             this.parent().then(() => {
+                this.$loaded = false;
                 this.Loader.show();
                 return this.$checkProductParent();
             }).then(() => {
@@ -164,15 +163,12 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     });
                 }
             }).then(() => {
-                if (this.getAttribute('CategoryClick')) {
-                    this.getAttribute('CategoryClick').click();
-                }
-
                 this.$loaded = true;
-                this.Loader.hide();
+                this.$loaderHide();
             }).catch((err) => {
                 console.error(err);
-                this.Loader.hide();
+                this.$loaded = true;
+                this.$loaderHide();
             });
         },
 
@@ -214,7 +210,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                         self.Loader.show();
                         self.openVariants().then(function () {
                             if (self.$loaded) {
-                                self.Loader.hide();
+                                self.$loaderHide();
                             }
                         });
                     }
@@ -351,11 +347,11 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 );
             }).then(function () {
                 if (self.$loaded) {
-                    self.Loader.hide();
+                    self.$loaderHide();
                 }
             }).catch(function (err) {
                 console.error(err);
-                self.Loader.hide();
+                self.$loaderHide();
             });
         },
 
@@ -719,7 +715,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 this.getCategory('variants').setActive();
 
                 if (this.$loaded) {
-                    this.Loader.hide();
+                    this.$loaderHide();
                 }
 
                 return this.$Grid.setHeight(
@@ -931,9 +927,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     page : result[0].page
                 });
 
-                if (self.$loaded) {
-                    self.Loader.hide();
-                }
+                self.$loaderHide();
             });
         },
 
@@ -987,7 +981,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                                 self.refreshProductEditableFields().then(function () {
                                     return self.selectVariant(variantId);
                                 }).then(function () {
-                                    self.Loader.hide();
+                                    self.$loaderHide();
                                 });
                             }
                         }
@@ -1060,10 +1054,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                                 return self.$changeVariant(value);
                             }).then(function () {
                                 self.$loaded = true;
-                                self.Loader.hide();
+                                self.$loaderHide();
                             }).catch(function (err) {
                                 console.error(err);
-                                self.Loader.hide();
+                                self.$loaderHide();
                             });
                         }
                     }
@@ -1262,13 +1256,13 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             QUIAjax.post('package_quiqqer_products_ajax_products_variant_generate_deactivate', function () {
                 self.refreshVariantGrid();
-                self.Loader.hide();
+                self.$loaderHide();
             }, {
                 'package' : 'quiqqer/products',
                 variantIds: JSON.encode(selected),
                 onError   : function () {
                     self.refreshVariantGrid();
-                    self.Loader.hide();
+                    self.$loaderHide();
                 }
             });
         },
@@ -1286,13 +1280,13 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             QUIAjax.post('package_quiqqer_products_ajax_products_variant_generate_activate', function () {
                 self.refreshVariantGrid();
-                self.Loader.hide();
+                self.$loaderHide();
             }, {
                 'package' : 'quiqqer/products',
                 variantIds: JSON.encode(selected),
                 onError   : function () {
                     self.refreshVariantGrid();
-                    self.Loader.hide();
+                    self.$loaderHide();
                 }
             });
         },
@@ -1347,7 +1341,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 variantIds: JSON.encode(selected),
                 onError   : () => {
                     this.refreshVariantGrid();
-                    this.Loader.hide();
+                    this.$loaderHide();
                 }
             });
         },
@@ -1504,11 +1498,11 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             }
 
             const name = Tab.getAttribute('name');
-            const done = function () {
+            const done = () => {
                 if (this.$loaded) {
-                    this.Loader.hide();
+                    this.$loaderHide();
                 }
-            }.bind(this);
+            };
 
             if (name === 'data') {
                 return this.$openVariantData().then(done);
@@ -1755,7 +1749,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
         $changeOwnFolderStatus: function () {
             const self = this;
 
-            self.Loader.hide();
+            self.$loaderHide();
 
             require(['qui/controls/windows/Confirm'], function (QUIConfirm) {
                 new QUIConfirm({
