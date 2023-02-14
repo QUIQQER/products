@@ -111,8 +111,6 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          * event: on inject
          */
         $onInject: function () {
-            const self = this;
-
             this.$SaveButton = this.getButtons('update');
             this.$StatusButton = this.getButtons('status');
             this.$ActionSeparator = this.getButtons('actionSeparator');
@@ -120,51 +118,55 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
 
             this.$Elm.addClass('panel-product-variant');
 
-            this.parent().then(function () {
-                return self.$checkProductParent();
-            }).then(function () {
-                self.addButton({
+            this.Loader.show();
+            this.parent().then(() => {
+                this.Loader.show();
+                return this.$checkProductParent();
+            }).then(() => {
+                this.Loader.show();
+                this.addButton({
                     name  : 'variantFields',
                     title : QUILocale.get(lg, 'panel.variants.editable.button.title'),
                     icon  : 'fa fa-exchange',
                     events: {
-                        click: self.openVariantAttributeSettings
+                        click: this.openVariantAttributeSettings
                     },
                     styles: {
                         'float': 'right'
                     }
                 });
 
-                self.$VariantFields = self.getButtons('variantFields');
-                self.$VariantFields.hide();
+                this.$VariantFields = this.getButtons('variantFields');
+                this.$VariantFields.hide();
 
-                self.$BackToVariantList = new QUIButton({
+                this.$BackToVariantList = new QUIButton({
                     name  : 'BackToVariantFields',
                     title : QUILocale.get(lg, 'panel.variants.backToList.button.title'),
                     icon  : 'fa fa-list',
                     events: {
-                        click: function () {
-                            self.getCategory('variants').setNormal();
-                            self.openVariants();
+                        click: () => {
+                            this.getCategory('variants').setNormal();
+                            this.openVariants();
                         }
                     },
                     styles: {
                         'float': 'right'
                     }
-                }).inject(self.getHeader());
+                }).inject(this.getHeader());
 
-                self.$BackToVariantList.hide();
+                this.$BackToVariantList.hide();
 
-                if (self.$CurrentVariant) {
-                    return self.openVariants().then(function () {
-                        return self.selectVariant(self.$CurrentVariant.getId());
+                if (this.$CurrentVariant) {
+                    return this.openVariants().then(() => {
+                        return this.selectVariant(this.$CurrentVariant.getId());
                     });
                 }
-            }).then(function () {
-                self.$loaded = true;
-                self.Loader.hide();
-            }).catch(function () {
-                self.Loader.hide();
+            }).then(() => {
+                this.$loaded = true;
+                this.Loader.hide();
+            }).catch((err) => {
+                console.error(err);
+                this.Loader.hide();
             });
         },
 
@@ -1580,7 +1582,7 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
          */
         $openVariantData: function () {
             const self = this;
-            
+
             return this.$hideTabContent().then(function (Content) {
                 return self.$renderData(Content, self.$CurrentVariant);
             }).then(function () {
