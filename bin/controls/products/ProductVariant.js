@@ -119,6 +119,8 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             this.$Elm.addClass('panel-product-variant');
 
             this.Loader.show();
+            this.setAttribute('noCategoryInitClick', true);
+
             this.parent().then(() => {
                 this.Loader.show();
                 return this.$checkProductParent();
@@ -162,6 +164,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     });
                 }
             }).then(() => {
+                if (this.getAttribute('CategoryClick')) {
+                    this.getAttribute('CategoryClick').click();
+                }
+
                 this.$loaded = true;
                 this.Loader.hide();
             }).catch((err) => {

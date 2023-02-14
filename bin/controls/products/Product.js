@@ -202,6 +202,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @return {Promise}
          */
         $onInject: function () {
+            let CategoryClick = null;
+
             return this.$render().then(() => {
                 let UserLoad = Promise.resolve();
 
@@ -211,19 +213,15 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 return UserLoad;
             }).then(() => {
-                const wantedCategory = User.getAttribute(
-                    'quiqqer.erp.productPanel.open.category'
-                );
+                const wantedCategory = User.getAttribute('quiqqer.erp.productPanel.open.category');
 
-                let Category = this.getCategory('information');
+                CategoryClick = this.getCategory('information');
 
                 if (wantedCategory && this.getCategory(wantedCategory)) {
-                    Category = this.getCategory(wantedCategory);
+                    CategoryClick = this.getCategory(wantedCategory);
                 }
 
-                if (typeOf(Category) === 'qui/controls/buttons/Button') {
-                    Category.click();
-                }
+                this.setAttribute('CategoryClick', CategoryClick);
 
                 return Locker.isLocked('product_' + this.$Product.getId());
             }).then((isLocked) => {
@@ -271,6 +269,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         }.bind(this)
                     }
                 }).inject(LockContainer);
+            }).then(() => {
+                if (this.getAttribute('noCategoryInitClick')) {
+                    return;
+                }
+
+                if (typeOf(CategoryClick) === 'qui/controls/buttons/Button') {
+                    CategoryClick.click();
+                }
             });
         },
 
@@ -525,7 +531,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         refresh: function () {
             this.parent();
 
-            return this.$Product.isActive().then(function (status) {
+            return this.$Product.isActive().then((status) => {
                 const Button = this.getButtons('status');
                 const Save = this.getButtons('update');
 
@@ -543,7 +549,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 Button.setSilentOff();
                 Button.setAttribute('text', QUILocale.get('quiqqer/products', 'product.panel.status.deactivate'));
                 Button.enable();
-            }.bind(this));
+            });
         },
 
         /**
