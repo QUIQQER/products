@@ -60,7 +60,11 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
                 Elm  = this.parent();
 
             var showContextMenu = QUIFunctionUtils.debounce(function () {
-                self.fireEvent('childContextMenu', [self, this.Item, this.event]);
+                self.fireEvent('childContextMenu', [
+                    self,
+                    this.Item,
+                    this.event
+                ]);
             }, 200, true);
 
             this.$Sitemap = new QUISitemap({
@@ -219,7 +223,11 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
          * @param Item
          */
         $onItemClick: function (Item) {
-            this.fireEvent('click', [this, Item.getAttribute('value'), Item]);
+            this.fireEvent('click', [
+                this,
+                Item.getAttribute('value'),
+                Item
+            ]);
         },
 
         /**
@@ -229,6 +237,15 @@ define('package/quiqqer/products/bin/controls/categories/Sitemap', [
          */
         getSelected: function () {
             return this.$Sitemap.getSelectedChildren();
+        },
+
+        /**
+         * Return the selected item(s)
+         *
+         * @returns {array}
+         */
+        getMap: function () {
+            return this.$Sitemap;
         },
 
         /**
