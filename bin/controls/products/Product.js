@@ -147,6 +147,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * event : on create
          */
         $onCreate: function () {
+            this.Loader.setAttribute('opacity', 1);
+            this.Loader.setAttribute('styles', {
+                background: '#fff'
+            });
+
+            this.Loader.show();
+
+
             this.addButton({
                 name     : 'update',
                 textimage: 'fa fa-save',
@@ -187,14 +195,6 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     'float': 'right'
                 }
             });
-
-
-            this.Loader.setAttribute('opacity', 1);
-            this.Loader.setAttribute('styles', {
-                background: '#fff'
-            });
-
-            this.Loader.show();
         },
 
         $loaderHide: function () {
@@ -209,6 +209,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
          * @return {Promise}
          */
         $onInject: function () {
+            this.Loader.show();
+
             return this.$render().then(() => {
                 let UserLoad = Promise.resolve();
 
@@ -280,7 +282,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 }).inject(LockContainer);
             }).then(() => {
                 this.$loaded = true;
-                this.$loaderHide();
+
+                if (this.getAttribute('noImportLoaderHide') === false) {
+                    this.$loaderHide();
+                }
             });
         },
 

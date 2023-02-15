@@ -117,11 +117,12 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
             this.$CopyButton = this.getButtons('copy');
 
             this.$Elm.addClass('panel-product-variant');
+
             this.Loader.show();
+            this.setAttribute('noImportLoaderHide', true);
 
             this.parent().then(() => {
                 this.$loaded = false;
-                this.Loader.show();
                 return this.$checkProductParent();
             }).then(() => {
                 this.Loader.show();
