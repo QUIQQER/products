@@ -733,6 +733,8 @@ class Products
             $query['debug'] = $queryParams['debug'];
         }
 
+        $query['select'] = 'id';
+
         $result = [];
 
         try {
