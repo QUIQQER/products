@@ -448,7 +448,27 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     public function getImage()
     {
         try {
-            return $this->Product->getImage();
+            $Image = $this->Product->getImage();
+
+            if ($Image->isActive()) {
+                return $this->Product->getImage();
+            }
+        } catch (QUI\Exception $Exception) {
+        }
+
+        try {
+            $Folder = $this->Product->getMediaFolder();
+
+            if ($Folder) {
+                $images = $Folder->getImages([
+                    'limit' => 1,
+                    'order' => 'priority ASC'
+                ]);
+
+                if (isset($images[0]) && $images[0]->isActive()) {
+                    return $images[0];
+                }
+            }
         } catch (QUI\Exception $Exception) {
         }
 

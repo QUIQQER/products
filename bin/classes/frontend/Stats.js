@@ -14,15 +14,27 @@ define('package/quiqqer/products/bin/classes/frontend/Stats', function () {
          * @returns {Promise}
          */
         getTracker: function () {
-            if (typeof window.QUIQQER_PIWIK === 'undefined') {
+            if (typeof window.QUIQQER_MATOMO === 'undefined' && typeof window.QUIQQER_PIWIK === 'undefined') {
                 return Promise.reject(404);
             }
 
-            return new Promise(function (resolve, reject) {
-                require(['piwikTracker'], function (piwikTracker) {
-                    piwikTracker.then(resolve);
-                }, reject);
-            });
+            if (typeof window.QUIQQER_PIWIK !== 'undefined') {
+                return new Promise(function (resolve, reject) {
+                    require(['piwikTracker'], function (piwikTracker) {
+                        piwikTracker.then(resolve);
+                    }, reject);
+                });
+            }
+
+            if (typeof window.QUIQQER_MATOMO !== 'undefined') {
+                return new Promise(function (resolve, reject) {
+                    require(['matomoTracker'], function (matomoTracker) {
+                        matomoTracker.then(resolve);
+                    }, reject);
+                });
+            }
+
+            return Promise.reject(404);
         }
     });
 });

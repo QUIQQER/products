@@ -36,6 +36,10 @@ class BasketConditions extends QUI\ERP\Products\Field\Field
     {
         $value = (int)$value;
 
+        if (empty($value)) {
+            return;
+        }
+
         switch ($value) {
             case self::TYPE_1:
             case self::TYPE_2:

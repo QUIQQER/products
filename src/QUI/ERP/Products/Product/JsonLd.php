@@ -2,9 +2,16 @@
 
 namespace QUI\ERP\Products\Product;
 
+use NumberFormatter;
 use QUI;
 use QUI\ERP\Products\Interfaces\ProductInterface;
 use QUI\ERP\Products\Product\Types\VariantParent;
+
+use function array_merge;
+use function array_unique;
+use function array_values;
+use function count;
+use function json_encode;
 
 /**
  * Class JsonLd
@@ -29,11 +36,11 @@ class JsonLd
     public static function getJsonLd(
         ProductInterface $Product,
         $Locale = null
-    ) {
+    ): string {
         $json = self::parse($Product, $Locale);
 
         $html = '<script type="application/ld+json">';
-        $html .= \json_encode($json);
+        $html .= json_encode($json);
         $html .= '</script>';
 
         return $html;
@@ -49,8 +56,8 @@ class JsonLd
      */
     public static function parse(
         ProductInterface $Product,
-        $Locale = null
-    ) {
+        ?QUI\Locale $Locale = null
+    ): array {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
         }
@@ -62,11 +69,11 @@ class JsonLd
             "description" => $Product->getDescription($Locale)
         ];
 
-        $json = \array_merge($json, self::getSKU($Product));
-        $json = \array_merge($json, self::getGTIN($Product));
-        $json = \array_merge($json, self::getBrand($Product));
-        $json = \array_merge($json, self::getImages($Product));
-        $json = \array_merge($json, self::getOffer($Product, $Locale));
+        $json = array_merge($json, self::getSKU($Product));
+        $json = array_merge($json, self::getGTIN($Product));
+        $json = array_merge($json, self::getBrand($Product));
+        $json = array_merge($json, self::getImages($Product));
+        $json = array_merge($json, self::getOffer($Product, $Locale));
 
         return $json;
     }
@@ -75,7 +82,7 @@ class JsonLd
      * @param ProductInterface $Product
      * @return array
      */
-    protected static function getSKU(ProductInterface $Product)
+    protected static function getSKU(ProductInterface $Product): array
     {
         return [
             'sku' => $Product->getFieldValue(
@@ -88,7 +95,7 @@ class JsonLd
      * @param ProductInterface $Product
      * @return array
      */
-    protected static function getGTIN(ProductInterface $Product)
+    protected static function getGTIN(ProductInterface $Product): array
     {
         return [
             'gtin' => $Product->getFieldValue(
@@ -101,7 +108,7 @@ class JsonLd
      * @param ProductInterface $Product
      * @return array
      */
-    protected static function getBrand(ProductInterface $Product)
+    protected static function getBrand(ProductInterface $Product): array
     {
         $brandEntries = $Product->getFieldValue(
             QUI\ERP\Products\Handler\Fields::FIELD_MANUFACTURER
@@ -146,7 +153,7 @@ class JsonLd
      * @param ProductInterface $Product
      * @return array|QUI\Projects\Media\Image[]
      */
-    protected static function getImages(ProductInterface $Product)
+    protected static function getImages(ProductInterface $Product): array
     {
         // images
         $images = [];
@@ -179,10 +186,10 @@ class JsonLd
             }
         }
 
-        $images = \array_unique($images);
-        $images = \array_values($images); // because of json array format
+        $images = array_unique($images);
+        $images = array_values($images); // because of json array format
 
-        if (!\count($images)) {
+        if (!count($images)) {
             return [];
         }
 
@@ -193,18 +200,18 @@ class JsonLd
 
     /**
      * @param ProductInterface $Product
-     * @param QUI\Locale $Locale
+     * @param QUI\Locale|null $Locale
      *
      * @return array
      */
-    protected static function getOffer(ProductInterface $Product, $Locale = null)
+    protected static function getOffer(ProductInterface $Product, ?QUI\Locale $Locale = null): array
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return [];
         }
 
-        $Formatter = new \NumberFormatter('en_EN', \NumberFormatter::CURRENCY);
-        $Formatter->setSymbol(\NumberFormatter::CURRENCY_SYMBOL, '');
+        $Formatter = new NumberFormatter('en_EN', NumberFormatter::CURRENCY);
+        $Formatter->setSymbol(NumberFormatter::CURRENCY_SYMBOL, '');
 
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -240,14 +247,14 @@ class JsonLd
             "availability"  => "InStock"
         ];
 
-        $offers = \array_merge(
+        $offers = array_merge(
             $offers,
             self::getMaxMin($Product, $Formatter)
         );
 
         if (isset($prices['highPrice']) || isset($prices['lowPrice'])) {
             unset($offers['price']);
-        } elseif (!isset($prices['lowPrice']) && isset($offers['price'])) {
+        } elseif (isset($offers['price'])) {
             $offers['lowPrice'] = $offers['price'];
         }
 
@@ -268,7 +275,7 @@ class JsonLd
                 "offers"      => self::getOfferEntry($Variant, $Formatter)
             ];
 
-            $model = \array_merge($model, self::getImages($Variant));
+            $model = array_merge($model, self::getImages($Variant));
 
             $models[] = $model;
             $count++;
@@ -290,8 +297,8 @@ class JsonLd
      */
     protected static function getMaxMin(
         ProductInterface $Product,
-        \NumberFormatter $Formatter
-    ) {
+        NumberFormatter $Formatter
+    ): array {
         $MaxPrice = $Product->getMaximumPrice();
         $MinPrice = $Product->getMinimumPrice();
 
@@ -315,11 +322,23 @@ class JsonLd
      */
     protected static function getOfferEntry(
         ProductInterface $Product,
-        \NumberFormatter $Formatter
-    ) {
+        NumberFormatter $Formatter
+    ): array {
+        $User  = QUI::getUsers()->getUserBySession();
+        $Calc  = QUI\ERP\Products\Utils\Calc::getInstance($User);
+        $price = $Product->getPrice()->getValue();
+
+        if (!QUI\ERP\Utils\User::isNettoUser($User)) {
+            try {
+                $price = $Calc->getPrice($price);
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
+
         $offerEntry = [
             "@type"         => "Offer",
-            "price"         => $Formatter->format($Product->getPrice()->getValue()),
+            "price"         => $Formatter->format($price),
             "priceCurrency" => $Product->getPrice()->getCurrency()->getCode(),
             'availability'  => 'InStock' // @todo consider stock
         ];
@@ -327,8 +346,23 @@ class JsonLd
         $maxMin = self::getMaxMin($Product, $Formatter);
 
         if (!empty($maxMin)) {
-            $offerEntry = \array_merge($offerEntry, $maxMin);
+            $offerEntry = array_merge($offerEntry, $maxMin);
         }
+
+        if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+            if (isset($offerEntry['highPrice'])) {
+                unset($offerEntry['highPrice']);
+            }
+
+            $offerEntry['lowPrice'] = $Formatter->format($price);
+
+            //if (isset($offerEntry['lowPrice'])) {
+            //    unset($offerEntry['lowPrice']);
+            //}
+
+            return $offerEntry;
+        }
+
 
         if (isset($offerEntry['highPrice']) || isset($offerEntry['lowPrice'])) {
             unset($offerEntry['price']);
@@ -344,6 +378,7 @@ class JsonLd
             unset($offerEntry['lowPrice']);
             unset($offerEntry['highPrice']);
         }
+
 
         return $offerEntry;
     }

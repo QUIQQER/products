@@ -2104,10 +2104,18 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[
             Lege fest welche Felder von den Varianten editiert werden können.
             Alle Felder welche nicht von den Varianten editiert werden können, werden von dem Eltern-Produkt übernommen.
+
+            Ausgenommen hiervon sind Felder vom Typ Attribut Liste. Weil diese für die Variantengenerierung genutzt werden.
+            Hier verhält es sich folgendermaßen: Wenn ein Feld vom Typ Attribut Liste editierbar ist,
+            kann dieses Feld in dem Eltern-Produkt editiert werden. In einer Variante kann eine Attribut Liste nicht editiert werden.
             ]]></de>
             <en><![CDATA[
             Specify which fields can be editable by the variants.
             All fields that cannot be editable by the variants will be taken from the parent product.
+
+            Exceptions to this are fields of type Attribute List. Because these are used for variant generation.
+            Here it behaves as follows: If a field of type Attribute List is editable,
+            this field can be edited in the parent product. In a variant, an attribute list cannot be edited.
             ]]></en>
         </locale>
         <locale name="variants.EditableFieldList.window.reset.to.global">

@@ -224,7 +224,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                     }
                 }
 
-                var title   = '',
+                let title   = '',
                     current = Locale.getCurrent();
 
                 if (current in field) {
@@ -253,7 +253,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                     }
                 }
 
-                var title   = '',
+                let title   = '',
                     current = Locale.getCurrent();
 
                 if (current in field) {
@@ -282,7 +282,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                     }
                 }
 
-                var title   = '',
+                let title   = '',
                     current = Locale.getCurrent();
 
                 if (current in field) {
@@ -310,7 +310,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                             return reject('Product has no media folder.');
                         }
 
-                        var params = StringUtils.getUrlParams(folder);
+                        const params = StringUtils.getUrlParams(folder);
 
                         if (!("id" in params) || !("project" in params)) {
                             return reject('Product media folder is no QUIQQER media url.');
@@ -508,7 +508,7 @@ define('package/quiqqer/products/bin/classes/Product', [
         setFieldValue: function (fieldId, value) {
             fieldId = parseInt(fieldId);
 
-            for (var i = 0, len = this.$data.fields.length; i < len; i++) {
+            for (let i = 0, len = this.$data.fields.length; i < len; i++) {
                 if (parseInt(this.$data.fields[i].id) === fieldId) {
                     this.$data.fields[i].value = value;
                 }
@@ -536,14 +536,13 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @returns {Promise}
          */
         getCategories: function () {
-            var self = this;
+            const self = this;
 
             return new Promise(function (resolve, reject) {
                 if (self.$loaded) {
-                    var categories = self.$data.categories.split(',').filter(function (entry) {
+                    const categories = self.$data.categories.split(',').filter(function (entry) {
                         return entry !== '';
                     });
-
 
                     categories.each(function (value, index) {
                         categories[index] = parseInt(value);

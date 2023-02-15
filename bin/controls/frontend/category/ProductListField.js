@@ -34,7 +34,13 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListField
             const Field = this.getAttribute('Field');
 
             if (Field && Field.getSearchValue()) {
-                fieldValue = Field.getSearchValue().join(',');
+                fieldValue = Field.getSearchValue();
+
+                if (typeof fieldValue.length !== 'undefined') {
+                    fieldValue = fieldValue.join(',');
+                } else if (typeof fieldValue === 'object') {
+                    fieldValue = Object.toQueryString(fieldValue);
+                }
             }
 
             this.$Elm = new Element('div', {
