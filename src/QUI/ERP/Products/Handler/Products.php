@@ -733,6 +733,12 @@ class Products
             $query['debug'] = $queryParams['debug'];
         }
 
+        /*
+         * This is done because we only need the ID, otherwise all data may be queried from the table
+         * which kills the RAM.
+         */
+        $query['select'] = 'id';
+
         $result = [];
 
         try {
