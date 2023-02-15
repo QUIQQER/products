@@ -354,9 +354,11 @@ class JsonLd
                 unset($offerEntry['highPrice']);
             }
 
-            if (isset($offerEntry['lowPrice'])) {
-                unset($offerEntry['lowPrice']);
-            }
+            $offerEntry['lowPrice'] = $Formatter->format($price);
+
+            //if (isset($offerEntry['lowPrice'])) {
+            //    unset($offerEntry['lowPrice']);
+            //}
 
             return $offerEntry;
         }
