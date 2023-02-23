@@ -725,7 +725,7 @@ class EventHandling
                 'publicField'   => 1,
                 'search_type'   => Search::SEARCHTYPE_TEXT,
                 'titles'        => [
-                    'de' => 'Produtvarianten',
+                    'de' => 'Produktvarianten',
                     'en' => 'Product variants'
                 ]
             ]
