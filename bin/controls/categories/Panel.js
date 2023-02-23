@@ -28,8 +28,8 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
              Grid, QUILocale, CategoryPanel, Handler, CategoryMap, CreateCategory) {
     "use strict";
 
-    var lg         = 'quiqqer/products',
-        Categories = new Handler();
+    const lg         = 'quiqqer/products',
+          Categories = new Handler();
 
     return new Class({
 
@@ -55,15 +55,15 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
             this.parent(options);
 
-            this.$Grid    = null;
+            this.$Grid = null;
             this.$Sitemap = null;
 
-            this.$GridContainer      = null;
-            this.$SitemapContainer   = null;
+            this.$GridContainer = null;
+            this.$SitemapContainer = null;
             this.$SitemapContextMenu = null;
 
             this.$SitemapFX = null;
-            this.$GridFX    = null;
+            this.$GridFX = null;
 
             this.addEvents({
                 onCreate: this.$onCreate,
@@ -78,12 +78,13 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          * @return {Promise}
          */
         refresh: function () {
-            var self = this;
+            const self = this;
+            const selectedItems = this.$Sitemap.getSelected();
 
             this.parent();
             this.Loader.show();
 
-            var sortOn = this.$Grid.options.sortOn;
+            let sortOn = this.$Grid.options.sortOn;
 
             switch (sortOn) {
                 case 'id':
@@ -93,17 +94,28 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     sortOn = null;
             }
 
-            return Categories.getList({
+            const params = {
                 perPage: this.$Grid.options.perPage,
                 page   : this.$Grid.options.page,
                 sortOn : sortOn,
                 sortBy : this.$Grid.options.sortBy
-            }).then(function (gridData) {
+            };
 
+            if (selectedItems.length) {
+                const categoryId = parseInt(selectedItems[0].getAttribute('value'));
+
+                if (categoryId) {
+                    params.where = {
+                        parentId: categoryId
+                    };
+                }
+            }
+
+            return Categories.getList(params).then(function (gridData) {
                 self.$Grid.setData(gridData);
 
-                var Delete = self.getButtons('delete'),
-                    Edit   = self.getButtons('edit');
+                const Delete = self.getButtons('delete'),
+                      Edit   = self.getButtons('edit');
 
                 Delete.disable();
                 Edit.disable();
@@ -126,8 +138,8 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          * event : on create
          */
         $onCreate: function () {
-            var self    = this,
-                Content = this.getContent();
+            const self    = this,
+                  Content = this.getContent();
 
             Content.setStyles({
                 padding: 0
@@ -201,7 +213,11 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
             this.$Sitemap = new CategoryMap({
                 events: {
-                    onClick           : this.refresh,
+                    onClick: () => {
+                        this.$Grid.options.page = 1;
+                        this.refresh();
+                    },
+
                     onChildContextMenu: function (CatMap, Item, event) {
                         if (Item.getAttribute('value') === '') {
                             return;
@@ -227,7 +243,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
             this.$GridFX = moofx(this.$GridContainer);
 
-            var GridContainer = new Element('div', {
+            const GridContainer = new Element('div', {
                 'class': 'products-categories-panel-grid'
             }).inject(this.$GridContainer);
 
@@ -235,27 +251,32 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                 pagination : true,
                 perPage    : 150,
                 serverSort : true,
-                columnModel: [{
-                    header   : QUILocale.get('quiqqer/system', 'id'),
-                    dataIndex: 'id',
-                    dataType : 'number',
-                    width    : 60
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'title'),
-                    dataIndex: 'title',
-                    dataType : 'text',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'description'),
-                    dataIndex: 'description',
-                    dataType : 'text',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'path'),
-                    dataIndex: 'path',
-                    dataType : 'text',
-                    width    : 300
-                }]
+                columnModel: [
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        dataIndex: 'id',
+                        dataType : 'number',
+                        width    : 60
+                    },
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'title'),
+                        dataIndex: 'title',
+                        dataType : 'text',
+                        width    : 200
+                    },
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'description'),
+                        dataIndex: 'description',
+                        dataType : 'text',
+                        width    : 200
+                    },
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'path'),
+                        dataIndex: 'path',
+                        dataType : 'text',
+                        width    : 300
+                    }
+                ]
             });
 
             this.$Grid.addEvents({
@@ -265,9 +286,9 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     );
                 },
                 onClick   : function () {
-                    var selected = self.$Grid.getSelectedData()[0],
-                        Delete   = self.getButtons('delete'),
-                        Edit     = self.getButtons('edit');
+                    const selected = self.$Grid.getSelectedData()[0],
+                          Delete   = self.getButtons('delete'),
+                          Edit     = self.getButtons('edit');
 
                     Delete.enable();
                     Edit.enable();
@@ -289,8 +310,8 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
             this.$SitemapContextMenu = new QUIContextMenu({
                 events: {
                     onShow: function () {
-                        var Menu     = self.$SitemapContextMenu,
-                            Category = Menu.getAttribute('Category');
+                        const Menu     = self.$SitemapContextMenu,
+                              Category = Menu.getAttribute('Category');
 
                         Menu.setTitle(Category.getAttribute('text'));
                         Menu.refresh();
@@ -309,8 +330,8 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     icon  : 'fa fa-plus',
                     events: {
                         onClick: function () {
-                            var Menu     = self.$SitemapContextMenu,
-                                Category = Menu.getAttribute('Category');
+                            const Menu     = self.$SitemapContextMenu,
+                                  Category = Menu.getAttribute('Category');
 
                             self.createChild(
                                 Category.getAttribute('value')
@@ -325,8 +346,8 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     icon  : 'fa fa-edit',
                     events: {
                         onClick: function () {
-                            var Menu     = self.$SitemapContextMenu,
-                                Category = Menu.getAttribute('Category');
+                            const Menu     = self.$SitemapContextMenu,
+                                  Category = Menu.getAttribute('Category');
 
                             self.updateChild(
                                 Category.getAttribute('value')
@@ -341,8 +362,8 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                     icon  : 'fa fa-trash',
                     events: {
                         onClick: function () {
-                            var Menu     = self.$SitemapContextMenu,
-                                Category = Menu.getAttribute('Category');
+                            const Menu     = self.$SitemapContextMenu,
+                                  Category = Menu.getAttribute('Category');
 
                             self.deleteChild(
                                 Category.getAttribute('value')
@@ -366,9 +387,9 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          * event : on resize
          */
         $onResize: function () {
-            var size   = this.$GridContainer.getSize(),
-                Button = this.getButtons('sitemap'),
-                active = Button.isActive();
+            const size   = this.$GridContainer.getSize(),
+                  Button = this.getButtons('sitemap'),
+                  active = Button.isActive();
 
             if (active) {
                 this.$Grid.setWidth(size.x - 340);
@@ -384,13 +405,11 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          * toggle the sitemap display
          */
         toggleSitemap: function () {
-            return new Promise(function () {
-
-                var Button = this.getButtons('sitemap'),
-                    status = Button.isActive();
+            return new Promise(() => {
+                const Button = this.getButtons('sitemap'),
+                      status = Button.isActive();
 
                 if (status === false) {
-
                     this.openSitemap().then(function () {
                         Button.setActive();
                     });
@@ -401,8 +420,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                 this.closeSitemap().then(function () {
                     Button.setNormal();
                 });
-
-            }.bind(this));
+            });
         },
 
         /**
@@ -411,11 +429,10 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          * @returns {Promise}
          */
         openSitemap: function () {
-            var self = this;
+            const self = this;
 
             return new Promise(function (resolve) {
-
-                var size = self.$GridContainer.getSize();
+                const size = self.$GridContainer.getSize();
 
                 self.$GridFX.animate({
                     paddingLeft: 320
@@ -446,11 +463,10 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          * @returns {Promise}
          */
         closeSitemap: function () {
-            var self = this;
+            const self = this;
 
             return new Promise(function (resolve) {
-
-                var size = self.$GridContainer.getSize();
+                const size = self.$GridContainer.getSize();
 
                 self.$SitemapFX.animate({
                     opacity: 0,
@@ -479,11 +495,11 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          * @param {Number|String} [parentId] - Parent-ID
          */
         createChild: function (parentId) {
-            var self   = this,
-                Active = null;
+            const self = this;
+            let Active = null;
 
             if (self.$Sitemap) {
-                var selected = self.$Sitemap.getSelected();
+                const selected = self.$Sitemap.getSelected();
 
                 if (selected.length) {
                     Active = selected[0];
@@ -502,7 +518,6 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
 
 
             this.closeSitemap().then(function () {
-
                 self.createSheet({
                     title  : QUILocale.get(lg, 'categories.create.title'),
                     buttons: false,
@@ -554,7 +569,7 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
          * @param {Number} categoryId
          */
         deleteChild: function (categoryId) {
-            var self = this;
+            const self = this;
 
             new QUIConfirm({
                 title      : QUILocale.get(lg, 'categories.window.delete.title'),
@@ -576,13 +591,16 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                         Categories.deleteChild(categoryId).then(function () {
                             Win.close();
 
-                            self.$Sitemap.getSelected().each(function (Entry) {
-                                if (Entry && Entry.getAttribute('value') !== '') {
+                            self.$Sitemap.getMap().getChildren().each(function (Entry) {
+                                if (Entry.getAttribute('value') === categoryId) {
                                     Entry.destroy();
                                 }
                             });
 
-                            self.$Sitemap.firstChild().click();
+                            if (self.$Sitemap.firstChild()) {
+                                self.$Sitemap.firstChild().click();
+                            }
+
                             self.refresh();
                         });
                     }

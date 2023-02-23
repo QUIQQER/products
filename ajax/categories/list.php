@@ -13,10 +13,14 @@ QUI::$Ajax->registerFunction(
     function ($params) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
         $Grid       = new QUI\Utils\Grid();
+        $params     = json_decode($params, true);
+        $query      = $Grid->parseDBParams($params);
 
-        $categoryIds = $Categories::getCategoryIds(
-            $Grid->parseDBParams(\json_decode($params, true))
-        );
+        if (!empty($params['where'])) {
+            $query['where'] = $params['where'];
+        }
+
+        $categoryIds = $Categories::getCategoryIds($query);
 
         $Locale = QUI::getLocale();
         $result = [];
@@ -32,7 +36,15 @@ QUI::$Ajax->registerFunction(
             ];
         }
 
-        return $Grid->parseResult($result, $Categories->countCategories());
+        if (!empty($query['where'])) {
+            $count = $Categories->countCategories([
+                'where' => $query['where']
+            ]);
+        } else {
+            $count = $Categories->countCategories();
+        }
+
+        return $Grid->parseResult($result, $count);
     },
     ['params'],
     'Permission::checkAdminUser'
