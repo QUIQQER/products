@@ -1353,7 +1353,7 @@ class Model extends QUI\QDOM
                     return true;
                 }
 
-                return isset($inheritedFields[$field['id']]);
+                return !isset($inheritedFields[$field['id']]);
             });
         }
 
