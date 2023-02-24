@@ -163,7 +163,9 @@ class EventHandling
             Fields::FIELD_KEYWORDS,
             Fields::FIELD_PRICE_OFFER,
             Fields::FIELD_PRICE_RETAIL,
-            Fields::FIELD_URL
+            Fields::FIELD_URL,
+            Fields::FIELD_UNIT,
+            Fields::FIELD_EAN
         ];
 
         if (QUI::getPackageManager()->isInstalled('quiqqer/stock-management')) {
@@ -185,7 +187,9 @@ class EventHandling
             Fields::FIELD_SIMILAR_PRODUCTS,
             Fields::FIELD_PRICE_OFFER,
             Fields::FIELD_PRICE_RETAIL,
-            Fields::FIELD_PRIORITY
+            Fields::FIELD_PRIORITY,
+            Fields::FIELD_UNIT,
+            Fields::FIELD_EAN
         ];
 
         try {
