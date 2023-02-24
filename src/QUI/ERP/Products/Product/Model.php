@@ -1342,8 +1342,12 @@ class Model extends QUI\QDOM
             $inheritedFields = ProductUtils::getInheritedFieldIdsForProduct($this);
             $inheritedFields = array_flip($inheritedFields);
 
-            $fieldData = array_filter($fieldData, function ($field) use ($inheritedFields) {
-                $Field = Fields::getField($field['id']);
+            $editableFields = ProductUtils::getEditableFieldIdsForProduct($this);
+            $editableFields = array_flip($editableFields);
+
+            $fieldData = array_filter($fieldData, function ($field) use ($inheritedFields, $editableFields) {
+                $fieldId = $field['id'];
+                $Field   = Fields::getField($fieldId);
 
                 if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST) {
                     return true;
@@ -1353,7 +1357,7 @@ class Model extends QUI\QDOM
                     return true;
                 }
 
-                return !isset($inheritedFields[$field['id']]);
+                return !isset($inheritedFields[$fieldId]) || isset($editableFields[$fieldId]);
             });
         }
 
