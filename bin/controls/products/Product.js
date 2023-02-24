@@ -574,14 +574,14 @@ define('package/quiqqer/products/bin/controls/products/Product', [
             const fieldClick = function (Btn) {
                 self.Loader.show();
                 self.openField(Btn.getAttribute('fieldId')).then(() => {
-                    this.$loaderHide();
+                    self.$loaderHide();
                 });
             };
 
             const imageFolderClick = function (Btn) {
                 self.Loader.show();
                 self.openMediaFolderField(Btn.getAttribute('fieldId')).then(() => {
-                    this.$loaderHide();
+                    self.$loaderHide();
                 });
             };
 
