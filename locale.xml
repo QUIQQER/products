@@ -1608,8 +1608,8 @@ For a newly created product the article number should be generated automatically
         </locale>
 
         <locale name="control.field.create.content" html="true">
-            <de><![CDATA[Fülle bitte alle Felder korrekt aus um ein neues Produktfeld anzulegen.]]></de>
-            <en><![CDATA[Please fill in all fields correctly to create a new product field.]]></en>
+            <de><![CDATA[Über ein neues Produktfeld kannst du Produkten Eigenschaften hinzufügen. Diese können beim Bearbeiten eines Produkts festgelegt werden. Wähle den passenden Feld-Typ aus, um die Art der Eigenschaft zu bestimmen.]]></de>
+            <en><![CDATA[You can add properties to products using a new product field. These can be set when editing a product. Select the appropriate field type to determine the type of property.]]></en>
         </locale>
         <locale name="control.field.create.header">
             <de><![CDATA[Feldeinstellungen]]></de>
@@ -2100,14 +2100,16 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Editierbare Produktfelder]]></de>
             <en><![CDATA[Editable product fields]]></en>
         </locale>
-        <locale name="variants.EditableFieldList.window.description">
+        <locale name="variants.EditableFieldList.window.description" html="true">
             <de><![CDATA[
-            Lege fest welche Felder von den Varianten editiert werden können.
-            Alle Felder welche nicht von den Varianten editiert werden können, werden von dem Eltern-Produkt übernommen.
-
-            Ausgenommen hiervon sind Felder vom Typ Attribut Liste. Weil diese für die Variantengenerierung genutzt werden.
-            Hier verhält es sich folgendermaßen: Wenn ein Feld vom Typ Attribut Liste editierbar ist,
-            kann dieses Feld in dem Eltern-Produkt editiert werden. In einer Variante kann eine Attribut Liste nicht editiert werden.
+            <b>Lege fest, welche Felder von Varianten editiert werden können.</b><br/>
+            Alle Felder, die nicht in Varianten editiert werden können, werden vom Eltern-Produkt übernommen.
+            <br/><br/>
+            <span style="font-size: 80%;">
+                Ausgenommen hiervon sind Felder vom Typ Attributliste, da diese für die Variantengenerierung genutzt werden.
+                Wenn ein Feld vom Typ Attribuliste editierbar ist, kann dieses Feld im Eltern-Produkt verändert werden.
+                In einer Variante kann eine Attributliste nicht verändert werden.
+            </span>
             ]]></de>
             <en><![CDATA[
             Specify which fields can be editable by the variants.
@@ -2165,7 +2167,7 @@ For a newly created product the article number should be generated automatically
         <locale name="variants.generating.selectFields.description">
             <de><![CDATA[
             Bitte wähle die Felder aus die du zur Varianten Generierung nutzen möchtest.
-            Nicht zugewiesene Attributelisten werden der Variante automatisch zugewiesen.
+            Nicht zugewiesene Attributlisten werden der Variante automatisch zugewiesen.
             ]]></de>
             <en><![CDATA[
             Please select the fields you would like to use for the variant generation.
@@ -2183,7 +2185,7 @@ For a newly created product the article number should be generated automatically
             ]]></en>
         </locale>
         <locale name="variants.generating.attributeGroupList">
-            <de><![CDATA[Attributelisten]]></de>
+            <de><![CDATA[Attributlisten]]></de>
             <en><![CDATA[Attribute lists]]></en>
         </locale>
         <locale name="variants.generating.productAttributeButton">
@@ -2203,7 +2205,7 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[Generate only new variants.]]></en>
         </locale>
         <locale name="variants.generating.type.deleteCurrent">
-            <de><![CDATA[Bestehende Varianten löschen und alle varianten neu generieren.]]></de>
+            <de><![CDATA[Bestehende Varianten löschen und alle Varianten neu generieren.]]></de>
             <en><![CDATA[Delete existing variants and regenerate all variants.]]></en>
         </locale>
 
