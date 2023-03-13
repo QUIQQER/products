@@ -8,6 +8,8 @@ namespace QUI\ERP\Products\Handler;
 
 use QUI;
 
+use function array_keys;
+
 /**
  * Class Fields
  *
@@ -220,7 +222,7 @@ class Fields
      *
      * @throws \Exception
      */
-    public static function createField($attributes = [])
+    public static function createField(array $attributes = [])
     {
         QUI\Permissions\Permission::checkPermission('field.create');
 
@@ -333,7 +335,7 @@ class Fields
         self::setFieldTranslations($newId, $attributes);
 
         // clear the field cache
-        QUI\Cache\LongTermCache::clear(Cache::getBasicCachePath().'fields');
+        QUI\Cache\LongTermCache::clear(Cache::getBasicCachePath() . 'fields');
 
         $Field = self::getField($newId);
 
@@ -364,6 +366,34 @@ class Fields
             $Field->setAttribute('search_type', $Field->getDefaultSearchType());
             $Field->save();
         }
+
+        // vererbbar und editiert
+        try {
+            $Config    = QUI::getPackage('quiqqer/products')->getConfig();
+            $editable  = $Config->getSection('editableFields');
+            $inherited = $Config->getSection('inheritedFields');
+
+            if (!isset($attributes['fieldEditable'])) {
+                $attributes['fieldEditable'] = 1;
+            }
+
+            if ($attributes['fieldEditable']) {
+                $editable[$Field->getId()] = 1;
+                Products::setGlobalEditableVariantFields(array_keys($editable));
+            }
+
+
+            if (!isset($attributes['fieldInherited'])) {
+                $attributes['fieldInherited'] = 1;
+            }
+
+            if ($attributes['fieldInherited']) {
+                $inherited[$Field->getId()] = 1;
+                Products::setGlobalInheritedVariantFields(array_keys($inherited));
+            }
+        } catch (QUI\Exception $Exception) {
+        }
+
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsFieldCreate', [$Field]);
 

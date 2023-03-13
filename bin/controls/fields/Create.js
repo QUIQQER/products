@@ -81,6 +81,10 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                     fieldPublic                : QUILocale.get(lg, 'publicField'),
                     fieldPublicDesc            : QUILocale.get(lg, 'publicFieldDesc'),
                     fieldDefaultValue          : QUILocale.get(lg, 'fieldDefaultValue'),
+                    fieldEditable              : QUILocale.get(lg, 'fieldEditable'),
+                    fieldEditableDesc          : QUILocale.get(lg, 'fieldEditableDesc'),
+                    fieldInherited             : QUILocale.get(lg, 'fieldInherited'),
+                    fieldInheritedDesc         : QUILocale.get(lg, 'fieldInheritedDesc'),
                     fieldShowInDetails         : QUILocale.get(lg, 'showInDetails'),
                     fieldfieldShowInDetailsDesc: QUILocale.get(lg, 'showInDetailsDesc'),
                     fieldDescription           : QUILocale.get(lg, 'control.field.create.tpl.fieldDescription'),
@@ -177,16 +181,18 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                     MH.setAttribute('showMessages', false);
                 }).then(function () {
                     return Fields.createChild({
-                        type         : Form.elements.type.value,
-                        search_type  : '',
-                        prefix       : Form.elements.prefix.value,
-                        suffix       : Form.elements.suffix.value,
-                        priority     : Form.elements.priority.value,
-                        standardField: Form.elements.standardField.checked ? 1 : 0,
-                        systemField  : 0,
-                        publicField  : Form.elements.publicField.checked ? 1 : 0,
-                        requiredField: Form.elements.requiredField.checked ? 1 : 0,
-                        showInDetails: Form.elements.showInDetails.checked ? 1 : 0
+                        type          : Form.elements.type.value,
+                        search_type   : '',
+                        prefix        : Form.elements.prefix.value,
+                        suffix        : Form.elements.suffix.value,
+                        priority      : Form.elements.priority.value,
+                        standardField : Form.elements.standardField.checked ? 1 : 0,
+                        systemField   : 0,
+                        publicField   : Form.elements.publicField.checked ? 1 : 0,
+                        requiredField : Form.elements.requiredField.checked ? 1 : 0,
+                        showInDetails : Form.elements.showInDetails.checked ? 1 : 0,
+                        fieldEditable : Form.elements.fieldEditable.checked ? 1 : 0,
+                        fieldInherited: Form.elements.fieldInherited.checked ? 1 : 0
                     });
                 }).then(function (data) {
                     self.$Translation.setAttribute(
