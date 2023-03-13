@@ -168,10 +168,6 @@ class EventHandling
             Fields::FIELD_EAN
         ];
 
-        if (QUI::getPackageManager()->isInstalled('quiqqer/stock-management')) {
-            $defaultEditableFields[] = QUI\ERP\StockManagement\StockManager::PRODUCT_FIELD_STOCK;
-        }
-
         $defaultInheritedFields = [
             Fields::FIELD_PRICE,
             Fields::FIELD_VAT,
