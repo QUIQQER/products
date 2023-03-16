@@ -418,24 +418,20 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[Default value]]></en>
         </locale>
         <locale name="fieldEditable">
-            <de><![CDATA[Editiertbar]]></de>
-            <en><![CDATA[Editable]]></en>
+            <de><![CDATA[In Varianten editierbar]]></de>
+            <en><![CDATA[Editable in variants]]></en>
         </locale>
         <locale name="fieldEditableDesc">
-            <de><![CDATA[
-            Bestimme ob dieses Feld bei einem Varianten Produkt, in den Varianten Kindern, editierbar sind.
-            ]]></de>
-            <en><![CDATA[]]></en>
+            <de><![CDATA[Varianten-Produkte können für dieses Feld jeweils einen eigenen Wert festlegen.]]></de>
+            <en><![CDATA[Variant products can each define their own value for this field.]]></en>
         </locale>
         <locale name="fieldInherited">
-            <de><![CDATA[Vererbbar]]></de>
-            <en><![CDATA[Inheritable]]></en>
+            <de><![CDATA[In Varianten von Eltern-Produkt übernommen]]></de>
+            <en><![CDATA[Inherited in variants from parent product]]></en>
         </locale>
         <locale name="fieldInheritedDesc">
-            <de><![CDATA[
-            Bestimme ob dieses Feld, bei einem Variant Produkt, von einem Elternartikel in eine Variante vererbt wird.
-            ]]></de>
-            <en><![CDATA[]]></en>
+            <de><![CDATA[Varianten-Produkte übernehmen für dieses Feld den Wert des Eltern-Produkts, sofern kein eigener Wert festgelegt ist.]]></de>
+            <en><![CDATA[Variant products take the value from the parent product for this field unless an own value is set.]]></en>
         </locale>
         <locale name="priority">
             <de><![CDATA[Sortierung]]></de>
