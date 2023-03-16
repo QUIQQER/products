@@ -18,6 +18,7 @@ use QUI\ERP\Products\Utils\Tables;
 
 use function array_map;
 use function array_merge;
+use function array_search;
 use function array_unique;
 use function count;
 use function explode;
@@ -25,6 +26,7 @@ use function implode;
 use function in_array;
 use function is_array;
 use function json_decode;
+use function json_encode;
 use function trim;
 
 /**
@@ -171,7 +173,7 @@ class VariantParent extends AbstractType
                 }
             }
 
-            $data['editableVariantFields'] = \json_encode($editable);
+            $data['editableVariantFields'] = json_encode($editable);
         } else {
             $data['editableVariantFields'] = '';
         }
@@ -188,7 +190,7 @@ class VariantParent extends AbstractType
                 }
             }
 
-            $data['inheritedVariantFields'] = \json_encode($inherited);
+            $data['inheritedVariantFields'] = json_encode($inherited);
         } else {
             $data['inheritedVariantFields'] = '';
         }
@@ -1162,6 +1164,8 @@ class VariantParent extends AbstractType
      * @throws Exception
      * @throws QUI\Exception
      * @throws QUI\Permissions\Exception
+     *
+     * @todo quiqqer/products#360
      */
     public function generateVariant($fields)
     {
@@ -1172,9 +1176,51 @@ class VariantParent extends AbstractType
             try {
                 $Field           = FieldHandler::getField($field);
                 $FieldFromParent = $this->getField($field);
+
+                if ($Field->isUnassigned()) {
+                    $Field->setUnassignedStatus(false);
+                    $Field->setOwnFieldStatus(true);
+
+                    $evf = $this->getAttribute('editableVariantFields');
+                    $ivf = $this->getAttribute('inheritedVariantFields');
+
+                    if (($key = array_search($Field->getId(), $evf)) !== false) {
+                        unset($evf[$key]);
+                        $this->setAttribute('editableVariantFields', $evf);
+                    }
+
+                    if (($key = array_search($Field->getId(), $ivf)) !== false) {
+                        unset($ivf[$key]);
+                        $this->setAttribute('inheritedVariantFields', $ivf);
+                    }
+
+                    $this->save(QUI::getUsers()->getSystemUser());
+                }
             } catch (QUI\Exception $Exception) {
-                if ($Exception->getCode() === 1002 && isset($Field)) { // field is not available, add it
+                // field is not available, add it
+                // and only for AttributeGroup Fields
+                if ($Exception->getCode() === 1002
+                    && isset($Field)
+                    && isset($FieldFromParent)
+                    && !($FieldFromParent instanceof AttributeGroup)) {
+                    $Field->setOwnFieldStatus(true);
                     $this->addField($Field);
+
+                    $evf = $this->getAttribute('editableVariantFields');
+                    $ivf = $this->getAttribute('inheritedVariantFields');
+
+                    if (($key = array_search($Field->getId(), $evf)) !== false) {
+                        unset($evf[$key]);
+                        $this->setAttribute('editableVariantFields', $evf);
+                    }
+
+                    if (($key = array_search($Field->getId(), $ivf)) !== false) {
+                        unset($ivf[$key]);
+                        $this->setAttribute('inheritedVariantFields', $ivf);
+                    }
+
+
+                    $this->save(QUI::getUsers()->getSystemUser());
                     $FieldFromParent = $this->getField($field);
                 } else {
                     QUI\System\Log::writeDebugException($Exception);

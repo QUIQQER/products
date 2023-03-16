@@ -911,6 +911,11 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                             const fieldData = field[0];
                             const value = fieldData.value;
 
+                            if (!value || value === '') {
+                                entry[needle] = '-';
+                                continue;
+                            }
+
                             if ('title' in fieldData && fieldData.title) {
                                 entry[needle] = '(' + value + ') ' + fieldData.title;
                             } else {
@@ -1474,8 +1479,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                     productId: self.getAttribute('productId'),
                     events   : {
                         onVariantCreation: function () {
-                            self.$Grid.options.page = 1;
-                            self.refreshVariantGrid();
+                            self.Loader.show();
+
+                            self.getCategory('variants').setNormal();
+                            self.getCategory('variants').click(); // grid has to load the new fields, if new fields are set
                         }
                     }
                 }).open();

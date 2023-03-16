@@ -19,9 +19,9 @@ QUI::$Ajax->registerFunction(
     function ($productId, $options = '') {
         // defaults
         $fields  = false;
-        $options = \json_decode($options, true);
+        $options = json_decode($options, true);
 
-        if (!\is_array($options)) {
+        if (!is_array($options)) {
             $options = [];
         }
 
@@ -32,14 +32,14 @@ QUI::$Ajax->registerFunction(
 
         // editable product fields
         $editable = Products::getGlobalEditableVariantFields();
-        $editable = \array_map(function ($Field) {
+        $editable = array_map(function ($Field) {
             /* @var $Field \QUI\ERP\Products\Field\Field */
             return $Field->getId();
         }, $editable);
 
         // inherited product fields
         $inherited = Products::getGlobalInheritedVariantFields();
-        $inherited = \array_map(function ($Field) {
+        $inherited = array_map(function ($Field) {
             /* @var $Field \QUI\ERP\Products\Field\Field */
             return $Field->getId();
         }, $inherited);
@@ -82,18 +82,18 @@ QUI::$Ajax->registerFunction(
             $fields = QUI\ERP\Products\Utils\Fields::sortFields($fields, $options['sortOn']);
 
             if (!empty($options['sortBy']) && $options['sortBy'] === 'DESC') {
-                $fields = \array_reverse($fields);
+                $fields = array_reverse($fields);
             }
         }
 
         // data
-        $fields = \array_map(function ($Field) {
+        $fields = array_map(function ($Field) {
             /* @var $Field \QUI\ERP\Products\Field\Field */
             return $Field->getAttributes();
         }, $fields);
 
         // pagination
-        $count   = \count($fields);
+        $count   = count($fields);
         $page    = 1;
         $perPage = 20;
 
@@ -105,7 +105,7 @@ QUI::$Ajax->registerFunction(
             $page = (int)$options['page'];
         }
 
-        $fields = \array_slice(
+        $fields = array_slice(
             $fields,
             $page * $perPage - $perPage,
             $perPage

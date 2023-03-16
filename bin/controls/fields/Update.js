@@ -47,9 +47,9 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Translation  = null;
+            this.$Translation = null;
             this.$WorkingTitle = null;
-            this.$Description  = null;
+            this.$Description = null;
 
             this.$Suffix = null;
             this.$Prefix = null;
@@ -93,9 +93,15 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     fieldfieldShowInDetailsDesc  : QUILocale.get(lg, 'showInDetailsDesc'),
                     fieldConsiderPriceCalculation: QUILocale.get(lg, 'fieldConsiderPriceCalculation'),
                     fieldDescription             : QUILocale.get(lg, 'control.field.create.tpl.fieldDescription'),
-                    fieldDescriptionDesc         : QUILocale.get(lg, 'control.field.create.tpl.fieldDescriptionDesc')
+                    fieldDescriptionDesc         : QUILocale.get(lg, 'control.field.create.tpl.fieldDescriptionDesc'),
+                    fieldEditable                : QUILocale.get(lg, 'fieldEditable'),
+                    fieldEditableDesc            : QUILocale.get(lg, 'fieldEditableDesc'),
+                    fieldInherited               : QUILocale.get(lg, 'fieldInherited'),
+                    fieldInheritedDesc           : QUILocale.get(lg, 'fieldInheritedDesc'),
                 })
             });
+
+            Elm.getElement('.editable-inherited-table').setStyle('display', 'none');
 
             return Elm;
         },
@@ -104,9 +110,9 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
          * event : on inject
          */
         $onInject: function () {
-            var self = this,
-                Elm  = self.getElm(),
-                id   = this.getAttribute('fieldId');
+            const self = this,
+                  Elm  = self.getElm(),
+                  id   = this.getAttribute('fieldId');
 
             this.$Translation = new Translation({
                 'group'  : 'quiqqer/products',
@@ -222,26 +228,26 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
 
                 // options
-                var options = fieldData.options;
+                let options = fieldData.options;
 
                 if (typeOf(options) !== 'string') {
                     options = JSON.encode(options);
                 }
 
                 // set data to the form
-                FieldTypes.value    = fieldData.type;
-                FieldOptions.value  = options;
+                FieldTypes.value = fieldData.type;
+                FieldOptions.value = options;
                 FieldPriority.value = fieldData.priority;
-                FieldPrefix.value   = fieldData.prefix;
-                FieldSuffix.value   = fieldData.suffix;
+                FieldPrefix.value = fieldData.prefix;
+                FieldSuffix.value = fieldData.suffix;
 
-                FieldRequired.checked      = fieldData.isRequired;
-                FieldSystem.checked        = fieldData.isSystem;
-                FieldStandard.checked      = fieldData.isStandard;
-                FieldPublic.checked        = fieldData.isPublic;
+                FieldRequired.checked = fieldData.isRequired;
+                FieldSystem.checked = fieldData.isSystem;
+                FieldStandard.checked = fieldData.isStandard;
+                FieldPublic.checked = fieldData.isPublic;
                 FieldShowInDetails.checked = fieldData.showInDetails;
 
-                var loadSettings = function () {
+                const loadSettings = function () {
                     self.$loadSettings(this);
                 }.bind(FieldTypes);
 
@@ -263,7 +269,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 return FieldUtils.canUsedAsDetailField(id);
             }).then(function (canUsedAsDetail) {
                 if (!canUsedAsDetail) {
-                    Elm.getElement('[name="showInDetails"]').checked  = false;
+                    Elm.getElement('[name="showInDetails"]').checked = false;
                     Elm.getElement('[name="showInDetails"]').disabled = true;
                     return;
                 }
@@ -273,13 +279,13 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 );
             }).then(function (canUsedAsDetail) {
                 if (!canUsedAsDetail) {
-                    Elm.getElement('[name="showInDetails"]').checked  = false;
+                    Elm.getElement('[name="showInDetails"]').checked = false;
                     Elm.getElement('[name="showInDetails"]').disabled = true;
                 }
             }).then(function () {
                 // title description are always public
                 if (id === 4 || id === 5) {
-                    Elm.getElement('[name="publicField"]').checked  = true;
+                    Elm.getElement('[name="publicField"]').checked = true;
                     Elm.getElement('[name="publicField"]').disabled = true;
                 }
 
@@ -322,17 +328,19 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     }
 
                     return Fields.updateChild(fieldId, {
-                        type         : Form.elements.type.value,
-                        search_type  : search_type,
-                        prefix       : Form.elements.prefix.value,
-                        suffix       : Form.elements.suffix.value,
-                        priority     : Form.elements.priority.value,
-                        standardField: Form.elements.standardField.checked ? 1 : 0,
-                        requiredField: Form.elements.requiredField.checked ? 1 : 0,
-                        publicField  : Form.elements.publicField.checked ? 1 : 0,
-                        showInDetails: Form.elements.showInDetails.checked ? 1 : 0,
-                        options      : Form.elements.options.value,
-                        defaultValue : defaultValue
+                        type          : Form.elements.type.value,
+                        search_type   : search_type,
+                        prefix        : Form.elements.prefix.value,
+                        suffix        : Form.elements.suffix.value,
+                        priority      : Form.elements.priority.value,
+                        standardField : Form.elements.standardField.checked ? 1 : 0,
+                        requiredField : Form.elements.requiredField.checked ? 1 : 0,
+                        publicField   : Form.elements.publicField.checked ? 1 : 0,
+                        showInDetails : Form.elements.showInDetails.checked ? 1 : 0,
+                        options       : Form.elements.options.value,
+                        defaultValue  : defaultValue,
+                        fieldEditable : Form.elements.fieldEditable.checked ? 1 : 0,
+                        fieldInherited: Form.elements.fieldInherited.checked ? 1 : 0
                     });
                 }).then(function (PRODUCT_ARRAY_STATUS) {
                     if (PRODUCT_ARRAY_STATUS == Fields.PRODUCT_ARRAY_CHANGED) {
@@ -475,7 +483,11 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
             //FieldTypes.disabled = true;
 
             if (settings === '') {
-                moofx([Container, Cell, Label]).animate({
+                moofx([
+                    Container,
+                    Cell,
+                    Label
+                ]).animate({
                     height : 0,
                     opacity: 0,
                     margin : 0,
@@ -524,7 +536,11 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 padding : null
             });
 
-            moofx([Label, Cell, Container]).animate({
+            moofx([
+                Label,
+                Cell,
+                Container
+            ]).animate({
                 height : 40,
                 opacity: 1
             }, {
@@ -559,8 +575,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                             computed = Container.getComputedSize();
 
                         height = height +
-                            computed['padding-top'] +
-                            computed['padding-bottom'];
+                                 computed['padding-top'] +
+                                 computed['padding-bottom'];
 
                         moofx(Label).animate({
                             height: height
