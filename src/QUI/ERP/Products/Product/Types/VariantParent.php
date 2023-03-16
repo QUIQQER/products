@@ -1173,8 +1173,13 @@ class VariantParent extends AbstractType
                 $Field           = FieldHandler::getField($field);
                 $FieldFromParent = $this->getField($field);
             } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeDebugException($Exception);
-                continue;
+                if ($Exception->getCode() === 1002 && isset($Field)) { // field is not available, add it
+                    $this->addField($Field);
+                    $FieldFromParent = $this->getField($field);
+                } else {
+                    QUI\System\Log::writeDebugException($Exception);
+                    continue;
+                }
             }
 
             $Field->setOwnFieldStatus($FieldFromParent->isOwnField());
@@ -1234,17 +1239,21 @@ class VariantParent extends AbstractType
 
         // second add fields to the url
         foreach ($attributes as $Field) {
-            foreach ($urlValue as $lang => $value) {
+            foreach ($urlValue as $lang => $v) {
                 $LocaleClone->setCurrent($lang);
 
                 $title = $Field->getTitle($LocaleClone);
                 $value = $Field->getValueByLocale($LocaleClone);
 
+                if (empty($value)) {
+                    continue;
+                }
+
                 $newValues[$lang][] = QUI\Projects\Site\Utils::clearUrl($title . '-' . $value);
             }
         }
 
-        foreach ($urlValue as $lang => $value) {
+        foreach ($urlValue as $lang => $v) {
             $LocaleClone->setCurrent($lang);
             $productTitle = $this->getTitle($LocaleClone);
             $productTitle = QUI\Projects\Site\Utils::clearUrl($productTitle);

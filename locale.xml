@@ -2210,6 +2210,10 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Attributlisten]]></de>
             <en><![CDATA[Attribute lists]]></en>
         </locale>
+        <locale name="variants.generating.additionalAttributeGroupList">
+            <de><![CDATA[Nicht zugewiesene Attributlisten]]></de>
+            <en><![CDATA[Unassigned attribute lists]]></en>
+        </locale>
         <locale name="variants.generating.productAttributeButton">
             <de><![CDATA[Auswahllisten nutzen]]></de>
             <en><![CDATA[Use select lists]]></en>

@@ -34,6 +34,33 @@
     </tbody>
 </table>
 
+<table class="data-table data-table-flexbox additional-group-list">
+    <thead>
+    <tr>
+        <th>
+            <span>{{titleAdditionalAttributeGroupList}}</span>
+            <span class="fa fa-plus" style="float: right; cursor: pointer"></span>
+        </th>
+    </tr>
+    </thead>
+    <tbody style="display: none">
+    {{#additionalGroupList}}
+    <tr>
+        <td>
+            <label class="field-container">
+                <span class="field-container-field">
+                     <input type="checkbox" value="{{id}}"/> {{title}} {{#workingtitle}}({{workingtitle}}){{/workingtitle}}
+                </span>
+                <span class="field-container-item">
+                    #{{id}}
+                </span>
+            </label>
+        </td>
+    </tr>
+    {{/additionalGroupList}}
+    </tbody>
+</table>
+
 <section class="product-attribute-list">
     <header>
         <button class="qui-button">
