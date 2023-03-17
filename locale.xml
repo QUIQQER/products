@@ -430,8 +430,10 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[Inherited in variants from parent product]]></en>
         </locale>
         <locale name="fieldInheritedDesc">
-            <de><![CDATA[Varianten-Produkte übernehmen für dieses Feld den Wert des Eltern-Produkts, sofern kein eigener Wert festgelegt ist.]]></de>
-            <en><![CDATA[Variant products take the value from the parent product for this field unless an own value is set.]]></en>
+            <de>
+                <![CDATA[Varianten-Produkte übernehmen für dieses Feld den Wert des Eltern-Produkts, sofern kein eigener Wert festgelegt ist.]]></de>
+            <en>
+                <![CDATA[Variant products take the value from the parent product for this field unless an own value is set.]]></en>
         </locale>
         <locale name="priority">
             <de><![CDATA[Sortierung]]></de>
@@ -2181,6 +2183,18 @@ For a newly created product the article number should be generated automatically
         <locale name="variants.generating.window.generating">
             <de><![CDATA[Varianten werden generiert ...]]></de>
             <en><![CDATA[Variants are generated ...]]></en>
+        </locale>
+        <locale name="variants.generating.window.priceCalculation">
+            <de><![CDATA[Preis berechnen]]></de>
+            <en><![CDATA[Calculate price]]></en>
+        </locale>
+        <locale name="variants.generating.window.priceCalculation.desc">
+            <de><![CDATA[
+            Besitzt die Auswahlliste Preis Auf- / Abschläge, werden diese auf den Preis, der neuen Variante, mit einberechnet.
+            ]]></de>
+            <en><![CDATA[
+            If the selection list has price markups / markdowns, these are included in the price of the new variant.
+            ]]></en>
         </locale>
         <locale name="variants.generating.selectFields.description">
             <de><![CDATA[

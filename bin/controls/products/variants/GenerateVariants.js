@@ -226,11 +226,7 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
                             return false;
                         }
 
-                        if (productFieldIds.indexOf(field.id) === -1) {
-                            return false;
-                        }
-
-                        return true;
+                        return productFieldIds.indexOf(field.id) !== -1;
                     });
 
                     let additionalGroupList = fields.filter(function (field) {
@@ -238,11 +234,7 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
                             return false;
                         }
 
-                        if (productFieldIds.indexOf(field.id) !== -1) {
-                            return false;
-                        }
-
-                        return true;
+                        return productFieldIds.indexOf(field.id) === -1;
                     });
 
                     let productAttributeList = fields.filter(function (field) {
@@ -336,18 +328,30 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
             return new Promise(function (resolve) {
                 const FieldSelect = self.getElm().getElement('.quiqqer-products-variant-generate-fieldSelect');
                 const checkboxes = FieldSelect.getElements('input:checked');
+                let Container;
 
                 const fields = checkboxes.map(function (Input) {
                     return parseInt(Input.value);
                 });
 
-                const Container = new Element('div', {
-                    'class': 'quiqqer-products-variant-generate-generation',
-                    styles : {
+                if (self.getElm().getElement('.quiqqer-products-variant-generate-generation')) {
+                    Container = self.getElm().getElement('.quiqqer-products-variant-generate-generation');
+                    Container.setStyles({
+                        display: null,
                         left   : -50,
                         opacity: 0
-                    }
-                }).inject(self.getElm());
+                    });
+                } else {
+                    Container = new Element('div', {
+                        'class': 'quiqqer-products-variant-generate-generation',
+                        styles : {
+                            left   : -50,
+                            opacity: 0
+                        }
+                    }).inject(self.getElm());
+                }
+
+                Container.set('html', '');
 
                 self.$CalcDisplay = new Element('div', {
                     'class': 'quiqqer-products-variant-generate-calcDisplay',

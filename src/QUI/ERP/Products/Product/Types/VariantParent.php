@@ -28,6 +28,7 @@ use function is_array;
 use function is_numeric;
 use function json_decode;
 use function json_encode;
+use function mb_strtolower;
 use function trim;
 
 /**
@@ -396,7 +397,7 @@ class VariantParent extends AbstractType
 
     /**
      * @param null $User
-     * @return QUI\ERP\Money\Price|void
+     * @return QUI\ERP\Money\Price
      *
      * @throws QUI\Exception
      */
@@ -820,7 +821,7 @@ class VariantParent extends AbstractType
      *
      * @todo cache
      */
-    public function getVariants($params = [])
+    public function getVariants(array $params = [])
     {
         if ($this->children !== null) {
             if (isset($params['count'])) {
@@ -844,7 +845,7 @@ class VariantParent extends AbstractType
             }
 
             if (isset($params['order'])) {
-                switch (\mb_strtolower($params['order'])) {
+                switch (mb_strtolower($params['order'])) {
                     case 'active':
                     case 'active asc':
                     case 'active desc':
@@ -924,7 +925,7 @@ class VariantParent extends AbstractType
      *
      * @throws QUI\ERP\Products\Product\Exception
      */
-    public function getVariantByVariantHash($hash)
+    public function getVariantByVariantHash(string $hash): AbstractType
     {
         try {
             $result = QUI::getDataBase()->fetch([
@@ -1107,7 +1108,7 @@ class VariantParent extends AbstractType
      * @param array $lists
      * @return array
      */
-    protected function permutations(array $lists)
+    protected function permutations(array $lists): array
     {
         $permutations = [];
         $iter         = 0;
@@ -1182,8 +1183,6 @@ class VariantParent extends AbstractType
      * @throws Exception
      * @throws QUI\Exception
      * @throws QUI\Permissions\Exception
-     *
-     * @todo quiqqer/products#360
      */
     public function generateVariant(array $fields): VariantChild
     {
@@ -1385,7 +1384,6 @@ class VariantParent extends AbstractType
             $urlValue[$lang] = $productTitle . '-' . $productSuffix;
         }
 
-        $this->calcVariantPrice($Variant, $fields);
         $URL->setValue($urlValue);
 
         if ($onlyAttributeGroups) {
@@ -1399,18 +1397,6 @@ class VariantParent extends AbstractType
     }
 
     /**
-     * Calculates the price of an variant children
-     * - looks if attribute lists change the price
-     *
-     * @param VariantChild $Variant
-     * @param $fields
-     */
-    protected function calcVariantPrice(VariantChild $Variant, $fields)
-    {
-        // @todo Implement when there are surcharges and discounts for group lists
-    }
-
-    /**
      * Validate the fields and return the field data
      * - workaround for validation
      * -> parent variant can have non valid attribute fields and non valid attribute groups.
@@ -1421,7 +1407,7 @@ class VariantParent extends AbstractType
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
      */
-    public function validateFields()
+    public function validateFields(): array
     {
         $fields = $this->getAllProductFields();
 
@@ -1458,7 +1444,7 @@ class VariantParent extends AbstractType
      *
      * @return array
      */
-    public function availableChildFields()
+    public function availableChildFields(): ?array
     {
         if ($this->childFields !== null) {
             return $this->childFields;
@@ -1486,7 +1472,7 @@ class VariantParent extends AbstractType
      *
      * @return array
      */
-    public function availableActiveChildFields()
+    public function availableActiveChildFields(): ?array
     {
         if ($this->childFieldsActive !== null) {
             return $this->childFieldsActive;
@@ -1502,7 +1488,7 @@ class VariantParent extends AbstractType
      *
      * @return array
      */
-    public function availableActiveFieldHashes()
+    public function availableActiveFieldHashes(): ?array
     {
         if ($this->childFieldHashes !== null) {
             return $this->childFieldHashes;
@@ -1550,7 +1536,7 @@ class VariantParent extends AbstractType
      * @param array $result - all variant children field hashes
      * @return array
      */
-    protected function parseAvailableFields($result)
+    protected function parseAvailableFields(array $result): array
     {
         $fields = [];
         $hashes = [];
@@ -1599,7 +1585,7 @@ class VariantParent extends AbstractType
      *
      * @return bool
      */
-    public function isFieldAvailable($fieldId, $fieldValue)
+    public function isFieldAvailable($fieldId, $fieldValue): bool
     {
         $available = $this->availableChildFields();
 
@@ -1624,7 +1610,7 @@ class VariantParent extends AbstractType
      * @param integer $variantId - ID of the product / variant
      * @return bool
      */
-    public function hasVariantId($variantId)
+    public function hasVariantId(int $variantId): bool
     {
         $variantId = (int)$variantId;
         $variants  = $this->getVariants();
@@ -1647,7 +1633,7 @@ class VariantParent extends AbstractType
      *
      * @param integer $variantId - ID of the product / variant
      */
-    public function setDefaultVariant($variantId)
+    public function setDefaultVariant(int $variantId)
     {
         if ($this->hasVariantId($variantId) === false) {
             return;
