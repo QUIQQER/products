@@ -88,18 +88,18 @@ define('package/quiqqer/products/bin/utils/Fields', {
                 'text!package/quiqqer/products/bin/utils/Fields.GenerateVariants.html',
                 'css!package/quiqqer/products/bin/utils/Fields.GenerateVariants.css'
             ], function (Mustache, QUILocale, template) {
-                var i, len, field, values;
-                var lg = 'quiqqer/products';
+                let i, len, field, values;
+                const lg = 'quiqqer/products';
 
-                var Container = new Element('div', {
-                        'class': 'quiqqer-products-variant-generate-tableBody'
-                    }),
-                    current   = QUILocale.getCurrent();
+                const Container = new Element('div', {
+                          'class': 'quiqqer-products-variant-generate-tableBody'
+                      }),
+                      current   = QUILocale.getCurrent();
 
-                var fieldList            = [],
-                    productAttributeList = [];
+                const fieldList            = [],
+                      productAttributeList = [];
 
-                var filterValues = function (entry, key) {
+                const filterValues = function (entry, key) {
                     if ("valueId" in entry) {
                         key = entry.valueId;
                     }
@@ -111,10 +111,21 @@ define('package/quiqqer/products/bin/utils/Fields', {
                     };
                 };
 
+                let onlyAttributeGroups = true;
+
                 for (i = 0, len = fields.length; i < len; i++) {
                     field = fields[i];
 
-                    if (field.type === "ProductAttributeList") {
+                    if (field.type !== "ProductAttributeList") {
+                        onlyAttributeGroups = false;
+                    }
+                }
+
+
+                for (i = 0, len = fields.length; i < len; i++) {
+                    field = fields[i];
+
+                    if (onlyAttributeGroups === false && field.type === "ProductAttributeList") {
                         productAttributeList.push({
                             fieldId: field.id,
                             title  : field.title
@@ -139,9 +150,9 @@ define('package/quiqqer/products/bin/utils/Fields', {
                 }));
 
                 Container.getElements('[name="all"]').addEvent('change', function (event) {
-                    var Checkbox = event.target;
-                    var Table    = Checkbox.getParent('table');
-                    var Tbody    = Table.getElement('tbody');
+                    const Checkbox = event.target;
+                    const Table = Checkbox.getParent('table');
+                    const Tbody = Table.getElement('tbody');
 
                     Tbody.getElements('input').set('checked', Checkbox.checked);
                 });

@@ -73,9 +73,9 @@ class Fields
     const TYPE_TIMEPERIOD = 'TimePeriod';
     const TYPE_CHECKBOX_INPUT = 'CheckboxInput';
 
-    const TYPE_ATTRIBUTES = 'AttributeGroup';
-    const TYPE_ATTRIBUTE_GROUPS = 'AttributeGroup';
-    const TYPE_ATTRIBUTE_LIST = 'ProductAttributeList';
+    const TYPE_ATTRIBUTES = 'AttributeGroup';            // Attributlisten
+    const TYPE_ATTRIBUTE_GROUPS = 'AttributeGroup';      // Attributlisten
+    const TYPE_ATTRIBUTE_LIST = 'ProductAttributeList';  // Auswahllisten
     const TYPE_USER_INPUT = 'UserInput';
 
     /**

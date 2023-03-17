@@ -232,6 +232,10 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      */
     public function getCalculationData($Locale = null)
     {
+        if ($Locale === null) {
+            $Locale = QUI::getLocale();
+        }
+
         $options = $this->getOptions();
 
         if (!isset($options['priority'])) {

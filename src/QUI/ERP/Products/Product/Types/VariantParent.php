@@ -25,6 +25,7 @@ use function explode;
 use function implode;
 use function in_array;
 use function is_array;
+use function is_numeric;
 use function json_decode;
 use function json_encode;
 use function trim;
@@ -978,7 +979,7 @@ class VariantParent extends AbstractType
      *
      * @throws QUI\Exception
      */
-    public function generateVariants($fields = [], $generationType = self::GENERATION_TYPE_RESET)
+    public function generateVariants(array $fields = [], int $generationType = self::GENERATION_TYPE_RESET)
     {
         if (empty($fields)) {
             return;
@@ -1005,6 +1006,21 @@ class VariantParent extends AbstractType
         $attributeGroups = [];
         $fieldsParsed    = [];
 
+        $onlyAttributeGroups = true;
+
+        foreach ($fields as $entry) {
+            try {
+                $Field = FieldHandler::getField($entry['fieldId']);
+
+                if ($Field->getType() !== FieldHandler::TYPE_ATTRIBUTE_LIST) {
+                    $onlyAttributeGroups = false;
+                }
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::addDebug($Exception->getMessage());
+                continue;
+            }
+        }
+
         foreach ($fields as $entry) {
             if (empty($entry['fieldId'])) {
                 continue;
@@ -1016,23 +1032,25 @@ class VariantParent extends AbstractType
                 continue;
             }
 
-            // only group lists can be permutated
-            try {
-                $Field = FieldHandler::getField($fieldId);
+            // https://dev.quiqqer.com/quiqqer/products/-/issues/360#note_156320
+            if ($onlyAttributeGroups === false) {
+                try {
+                    $Field = FieldHandler::getField($fieldId);
 
-                if ($Field->getType() !== FieldHandler::TYPE_ATTRIBUTES) {
-                    $attributeGroups[] = [
-                        'fieldId' => $Field->getId()
-                    ];
+                    if ($Field->getType() !== FieldHandler::TYPE_ATTRIBUTES) {
+                        $attributeGroups[] = [
+                            'fieldId' => $Field->getId()
+                        ];
+                        continue;
+                    }
+
+                    if ($Field->getType() !== FieldHandler::TYPE_ATTRIBUTES) {
+                        continue;
+                    }
+                } catch (QUI\Exception $Exception) {
+                    QUI\System\Log::addDebug($Exception->getMessage());
                     continue;
                 }
-
-                if ($Field->getType() !== FieldHandler::TYPE_ATTRIBUTES) {
-                    continue;
-                }
-            } catch (QUI\Exception $Exception) {
-                QUI\System\Log::addDebug($Exception->getMessage());
-                continue;
             }
 
             $group  = [];
@@ -1167,15 +1185,35 @@ class VariantParent extends AbstractType
      *
      * @todo quiqqer/products#360
      */
-    public function generateVariant($fields)
+    public function generateVariant(array $fields): VariantChild
     {
-        $Variant = $this->createVariant();
+        $Variant   = $this->createVariant();
+        $fieldList = [];
+
+        // TYPE_ATTRIBUTE_LIST === Attributlisten
+        // TYPE_ATTRIBUTE_GROUPS === Auswahllisten
+
+        $onlyAttributeGroups = true;
+        $attributeLists      = [];
+
+        foreach ($fields as $field => $v) {
+            try {
+                $Field = FieldHandler::getField($field);
+
+                if ($Field->getType() !== FieldHandler::TYPE_ATTRIBUTE_LIST) {
+                    $onlyAttributeGroups = false;
+                }
+
+                $fieldList[$field] = $Field;
+            } catch (QUI\Exception $Exception) {
+            }
+        }
+
 
         // set fields
-        foreach ($fields as $field => $value) {
+        foreach ($fieldList as $k => $Field) {
             try {
-                $Field           = FieldHandler::getField($field);
-                $FieldFromParent = $this->getField($field);
+                $FieldFromParent = $this->getField($Field->getId());
 
                 if ($Field->isUnassigned()) {
                     $Field->setUnassignedStatus(false);
@@ -1200,7 +1238,6 @@ class VariantParent extends AbstractType
                 // field is not available, add it
                 // and only for AttributeGroup Fields
                 if ($Exception->getCode() === 1002
-                    && isset($Field)
                     && isset($FieldFromParent)
                     && !($FieldFromParent instanceof AttributeGroup)) {
                     $Field->setOwnFieldStatus(true);
@@ -1221,7 +1258,7 @@ class VariantParent extends AbstractType
 
 
                     $this->save(QUI::getUsers()->getSystemUser());
-                    $FieldFromParent = $this->getField($field);
+                    $FieldFromParent = $this->getField($Field->getId());
                 } else {
                     QUI\System\Log::writeDebugException($Exception);
                     continue;
@@ -1230,24 +1267,53 @@ class VariantParent extends AbstractType
 
             $Field->setOwnFieldStatus($FieldFromParent->isOwnField());
 
-            // add only attribute groups
-            if ($Field->getType() === FieldHandler::TYPE_ATTRIBUTE_GROUPS) {
-                $Variant->addField($Field);
+            // Wenn Attributelisten ausgewählt sind
+            // Und Auswahllisten ausgewählt sind
+            // -> Dann wird die selektierte Auswahllisten den Varianten einfach hinzufügt
+            // -> und nicht zum generieren (permutieren) verwendet
+            if ($onlyAttributeGroups === false) {
+                // add only attribute groups
+                if ($Field->getType() === FieldHandler::TYPE_ATTRIBUTE_GROUPS) {
+                    $Variant->addField($Field);
 
-                try {
-                    $Variant->getField($field)->setUnassignedStatus(false);
-                    $Variant->getField($field)->setValue($value);
-                } catch (QUI\Exception $Exception) {
-                    QUI\System\Log::addDebug($Exception->getMessage());
+                    try {
+                        $Variant->getField($Field->getId())->setUnassignedStatus(false);
+                        $Variant->getField($Field->getId())->setValue($fields[$k]);
+                    } catch (QUI\Exception $Exception) {
+                        QUI\System\Log::addDebug($Exception->getMessage());
+                    }
+
+                    continue;
+                }
+
+                if ($Field->getType() === FieldHandler::TYPE_ATTRIBUTE_LIST) {
+                    $Variant->addField($Field);
+                    $Variant->getField($Field->getId())->setUnassignedStatus(false);
                 }
 
                 continue;
             }
 
-            if ($Field->getType() === FieldHandler::TYPE_ATTRIBUTE_LIST) {
-                $Variant->addField($Field);
-                $Variant->getField($field)->setUnassignedStatus(false);
-            }
+            // Wenn keine Attributlisten ausgewählt sind
+            // Wenn nur Auswahllisten ausgewählt sind
+            /*
+                -> dann werden die Einträge in der Ausswahlliste zum generieren (permutieren) verwendet
+                -> Auswahhliste wird nicht den Varianten hinzugefügt
+                -> Auswahllisten Einträge wird in die URL und den Namen der Variante gesetzt
+                -> Preis wird berechnet (Ausgangspreis ist der Preis vom Parent)
+                -> Preis ist optional (haken implementieren)
+            */
+
+            $Price = $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRICE);
+            $value = $fields[$k];
+
+            $Field->setValue($value);
+            $calc       = $Field->getCalculationData();
+            $fieldPrice = QUI\ERP\Money\Price::validatePrice($calc['value']);
+
+            $Price->setValue($Price->getValue() + $fieldPrice);
+
+            $attributeLists[] = $Field;
         }
 
         // set article no
@@ -1274,9 +1340,14 @@ class VariantParent extends AbstractType
         $URL         = $Variant->getField(FieldHandler::FIELD_URL);
         $urlValue    = $URL->getValue();
 
-        $attributes = $Variant->getFieldsByType([
-            FieldHandler::TYPE_ATTRIBUTE_GROUPS
-        ]);
+        if ($onlyAttributeGroups === false) {
+            $attributes = $Variant->getFieldsByType([
+                FieldHandler::TYPE_ATTRIBUTE_GROUPS
+            ]);
+        } else {
+            $attributes = $attributeLists;
+        }
+
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         $newValues = [];
@@ -1291,7 +1362,7 @@ class VariantParent extends AbstractType
                 $title = $Field->getTitle($LocaleClone);
                 $value = $Field->getValueByLocale($LocaleClone);
 
-                if (empty($value)) {
+                if (empty($value) && !is_numeric($value)) {
                     continue;
                 }
 
@@ -1315,8 +1386,13 @@ class VariantParent extends AbstractType
         }
 
         $this->calcVariantPrice($Variant, $fields);
-
         $URL->setValue($urlValue);
+
+        if ($onlyAttributeGroups) {
+            $Title = $Variant->getField(FieldHandler::FIELD_TITLE);
+            $Title->setValue($urlValue);
+        }
+
         $Variant->save();
 
         return $Variant;

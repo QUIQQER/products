@@ -10,6 +10,15 @@ use QUI;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Search;
 
+use function floor;
+use function is_array;
+use function is_float;
+use function is_numeric;
+use function is_string;
+use function mb_strlen;
+use function round;
+use function trim;
+
 /**
  * Class Price
  * @package QUI\ERP\Products\Field
@@ -96,7 +105,7 @@ class Price extends QUI\ERP\Products\Field\Field
 
         $value = $this->cleanup($value);
 
-        if (!\is_numeric($value)) {
+        if (!is_numeric($value)) {
             throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
@@ -119,16 +128,16 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        if (\is_array($value)) {
+        if (is_array($value)) {
             return null;
         }
 
-        if (\is_string($value) && \trim($value) === '') {
+        if (is_string($value) && trim($value) === '') {
             return null;
         }
 
-        if (\is_float($value)) {
-            return \round($value, QUI\ERP\Defaults::getPrecision());
+        if (is_float($value)) {
+            return round($value, QUI\ERP\Defaults::getPrecision());
         }
 
         return QUI\ERP\Money\Price::validatePrice($value);
@@ -139,7 +148,7 @@ class Price extends QUI\ERP\Products\Field\Field
      */
     public function isEmpty()
     {
-        return !\is_float($this->value);
+        return !is_float($this->value);
     }
 
     /**
@@ -186,11 +195,11 @@ class Price extends QUI\ERP\Products\Field\Field
             // round down to lowest 10 (e.g.: 144 = 140; 2554 = 2550)
             $floorPrecision = 1;
 
-            if ((string)\mb_strlen((int)$min) > 1) {
+            if ((string)mb_strlen((int)$min) > 1) {
                 $floorPrecision = 10;
             }
 
-            $start = \floor($min / $floorPrecision) * $floorPrecision;
+            $start = floor($min / $floorPrecision) * $floorPrecision;
             $start = (int)$start;
         }
 
@@ -198,7 +207,7 @@ class Price extends QUI\ERP\Products\Field\Field
         $range[] = $value;
 
         while ($value < $max) {
-            if (\round($value, 1) < 1) {
+            if (round($value, 1) < 1) {
                 $add = 0.1;
             } else {
                 $add = 1;
@@ -209,7 +218,7 @@ class Price extends QUI\ERP\Products\Field\Field
                     $add *= 10;
                 }
 
-                $value = \floor($value / $add) * $add;
+                $value = floor($value / $add) * $add;
             }
 
             $value   += $add;
