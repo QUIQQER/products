@@ -15,6 +15,13 @@
     <tr>
         <th>{{titleAttributeGroupList}}</th>
     </tr>
+    <tr class="quiqqer-products-variant-generate-filter">
+        <th>
+            <label>
+                <input type="search" name="filter" placeholder="Filter..." disabled/>
+            </label>
+        </th>
+    </tr>
     </thead>
     <tbody>
     {{#attributeGroupList}}
@@ -43,6 +50,13 @@
             line-height: 40px; position: absolute; top: 0; right: 0; width: 40px; text-align: center;"></span>
         </th>
     </tr>
+    <tr class="quiqqer-products-variant-generate-filter" style="display: none">
+        <th>
+            <label>
+                <input type="search" name="filter" placeholder="Filter..." disabled/>
+            </label>
+        </th>
+    </tr>
     </thead>
     <tbody style="display: none">
     {{#additionalGroupList}}
@@ -64,7 +78,7 @@
 
 <section class="product-attribute-list">
     <header>
-        <button class="qui-button">
+        <button class="qui-button" style="width: 100%">
             <span class="fa fa-plus"></span>
             <span>{{textProductAttributeButton}}</span>
         </button>
@@ -78,6 +92,13 @@
             <thead>
             <tr>
                 <th>{{titleProductAttributeList}}</th>
+            </tr>
+            <tr class="quiqqer-products-variant-generate-filter">
+                <th>
+                    <label>
+                        <input type="search" name="filter" placeholder="Filter..." disabled/>
+                    </label>
+                </th>
             </tr>
             </thead>
             <tbody>

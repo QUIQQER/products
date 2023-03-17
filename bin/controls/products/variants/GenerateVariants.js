@@ -271,6 +271,7 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
                         e.stop();
 
                         const Table = e.target.getParent('table');
+                        const Filter = Table.getElement('.quiqqer-products-variant-generate-filter');
                         const Tbody = Table.getElement('tbody');
                         const Button = Table.getElement('.fa');
 
@@ -279,13 +280,40 @@ define('package/quiqqer/products/bin/controls/products/variants/GenerateVariants
                             Button.addClass('fa-minus');
 
                             Tbody.setStyle('display', null);
+                            Filter.setStyle('display', null);
                         } else {
                             Button.addClass('fa-plus');
                             Button.removeClass('fa-minus');
 
                             Tbody.setStyle('display', 'none');
+                            Filter.setStyle('display', 'none');
                         }
                     });
+
+                    // filter
+                    const filter = function (e) {
+                        const Input = e.target;
+                        const Table = Input.getParent('table');
+                        const rows = Table.getElements('tbody tr');
+                        const value = Input.value;
+
+                        let i, len, Row, Cell;
+
+                        for (i = 0, len = rows.length; i < len; i++) {
+                            Row = rows[i];
+                            Cell = Row.getElement('.field-container-field');
+
+                            if (Row.innerHTML.toLowerCase().indexOf(value) === -1) {
+                                Row.setStyle('display', 'none');
+                            } else {
+                                Row.setStyle('display', null);
+                            }
+                        }
+                    };
+
+                    Container.getElements('[name="filter"]').addEvent('keyup', filter);
+                    Container.getElements('[name="filter"]').addEvent('input', filter);
+                    Container.getElements('[name="filter"]').set('disabled', false);
 
                     resolve();
                 }, {

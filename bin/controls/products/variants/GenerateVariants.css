@@ -58,3 +58,14 @@
 .product-attribute-list header button {
     margin-bottom: 10px;
 }
+
+.quiqqer-products-variant-generate-filter th {
+    background: #efeeee;
+    padding: 5px 8px;
+}
+
+.quiqqer-products-variant-generate-filter input {
+    line-height: 12px;
+    padding: 2px 5px;
+    font-size: 12px;
+}
