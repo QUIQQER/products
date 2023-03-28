@@ -1740,7 +1740,9 @@ class Model extends QUI\QDOM
     protected function writeCacheEntry($lang)
     {
 //        $Locale = new QUI\Locale();
-        $Locale = Products::getLocale();
+        $Locale  = Products::getLocale();
+        $current = $Locale->getCurrent();
+
         $Locale->setCurrent($lang);
 
         // wir nutzen system user als netto user
@@ -1879,6 +1881,9 @@ class Model extends QUI\QDOM
                 'lang' => $lang
             ]
         ]);
+
+        // set current lang back
+        $Locale->setCurrent($current);
 
         if (empty($result)) {
             $data['id']   = $this->id;
