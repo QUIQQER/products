@@ -17,7 +17,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
     "use strict";
 
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
@@ -64,7 +64,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                 }
             });
 
-            var GridContainer = new Element('div', {
+            const GridContainer = new Element('div', {
                 styles: {
                     height: '100%',
                     width : '100%'
@@ -89,57 +89,74 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                         }
                     })
                 ],
-                columnModel      : [{
-                    header   : QUILocale.get('quiqqer/system', 'id'),
-                    dataIndex: 'id',
-                    dataType : 'number',
-                    width    : 60
-                }, {
-                    header   : QUILocale.get('quiqqer/system', 'title'),
-                    dataIndex: 'title',
-                    dataType : 'text',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get(lg, 'workingTitle'),
-                    dataIndex: 'workingtitle',
-                    dataType : 'text',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get(lg, 'fieldtype'),
-                    dataIndex: 'fieldtype',
-                    dataType : 'text',
-                    width    : 200
-                }, {
-                    header   : QUILocale.get(lg, 'priority'),
-                    dataIndex: 'priority',
-                    dataType : 'text',
-                    width    : 100
-                }, {
-                    header   : QUILocale.get(lg, 'prefix'),
-                    dataIndex: 'prefix',
-                    dataType : 'text',
-                    width    : 100
-                }, {
-                    header   : QUILocale.get(lg, 'suffix'),
-                    dataIndex: 'suffix',
-                    dataType : 'text',
-                    width    : 100
-                }, {
-                    header   : QUILocale.get(lg, 'publicField'),
-                    dataIndex: 'isPublic',
-                    dataType : 'node',
-                    width    : 60
-                }, {
-                    header   : QUILocale.get(lg, 'standardField'),
-                    dataIndex: 'isStandard',
-                    dataType : 'node',
-                    width    : 60
-                }, {
-                    header   : QUILocale.get(lg, 'requiredField'),
-                    dataIndex: 'isRequired',
-                    dataType : 'node',
-                    width    : 60
-                }]
+                columnModel      : [
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'id'),
+                        dataIndex: 'id',
+                        dataType : 'number',
+                        width    : 60
+                    },
+                    {
+                        header   : QUILocale.get('quiqqer/system', 'title'),
+                        dataIndex: 'title',
+                        dataType : 'text',
+                        width    : 200
+                    },
+                    {
+                        header   : QUILocale.get(lg, 'workingTitle'),
+                        dataIndex: 'workingtitle',
+                        dataType : 'text',
+                        width    : 200
+                    },
+                    {
+                        header   : QUILocale.get(lg, 'fieldtype'),
+                        dataIndex: 'fieldtype',
+                        dataType : 'text',
+                        width    : 200
+                    },
+                    {
+                        header   : QUILocale.get(lg, 'priority'),
+                        dataIndex: 'priority',
+                        dataType : 'text',
+                        width    : 100
+                    },
+                    {
+                        header   : QUILocale.get(lg, 'prefix'),
+                        dataIndex: 'prefix',
+                        dataType : 'text',
+                        width    : 100
+                    },
+                    {
+                        header   : QUILocale.get(lg, 'suffix'),
+                        dataIndex: 'suffix',
+                        dataType : 'text',
+                        width    : 100
+                    },
+                    {
+                        header   : QUILocale.get(lg, 'publicField'),
+                        dataIndex: 'isPublic',
+                        dataType : 'node',
+                        width    : 60
+                    },
+                    {
+                        header   : QUILocale.get(lg, 'standardField'),
+                        dataIndex: 'isStandard',
+                        dataType : 'node',
+                        width    : 60
+                    },
+                    {
+                        header   : QUILocale.get(lg, 'requiredField'),
+                        dataIndex: 'isRequired',
+                        dataType : 'node',
+                        width    : 60
+                    },
+                    {
+                        header   : QUILocale.get(lg, 'showInDetails'),
+                        dataIndex: 'showInDetails',
+                        dataType : 'node',
+                        width    : 60
+                    }
+                ]
             });
 
             this.$Grid.addEvents({
@@ -170,7 +187,7 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
          */
         resize: function () {
             return new Promise(function (resolve) {
-                var size = this.getElm().getSize();
+                const size = this.getElm().getSize();
 
                 Promise.all([
                     this.$Grid.setHeight(size.y),
@@ -183,13 +200,16 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
          * submit the selected elements
          */
         submit: function () {
-            var ids = this.getSelected();
+            const ids = this.getSelected();
 
             if (!ids.length) {
                 return;
             }
 
-            this.fireEvent('submit', [this, ids]);
+            this.fireEvent('submit', [
+                this,
+                ids
+            ]);
         },
 
         /**
@@ -209,8 +229,8 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
          * @return {Promise}
          */
         refresh: function () {
-            var self    = this,
-                options = this.$Grid.options;
+            const self    = this,
+                  options = this.$Grid.options;
 
             this.fireEvent('refreshBegin', [this]);
 
@@ -222,8 +242,8 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                 type              : this.getAttribute('fieldTypeFilter'),
                 showSearchableOnly: this.getAttribute('showsearchableonly')
             }).then(function (result) {
-                var i, len;
-                var gridData = result;
+                let i, len;
+                let gridData = result;
 
                 for (i = 0, len = gridData.data.length; i < len; i++) {
                     gridData.data[i].typeText = QUILocale.get(
@@ -238,15 +258,21 @@ define('package/quiqqer/products/bin/controls/fields/search/Search', [
                     gridData = {data: gridData};
                 }
 
-                var ElmOk = new Element('span', {
+                const ElmOk = new Element('span', {
                     'class': 'fa fa-check'
                 });
 
-                var ElmFalse = new Element('span', {
+                const ElmFalse = new Element('span', {
                     'class': 'fa fa-remove'
                 });
 
                 gridData.data.each(function (value, key) {
+                    if (value.showInDetails) {
+                        gridData.data[key].showInDetails = ElmOk.clone();
+                    } else {
+                        gridData.data[key].showInDetails = ElmFalse.clone();
+                    }
+
                     if (value.isStandard) {
                         gridData.data[key].isStandard = ElmOk.clone();
                     } else {
