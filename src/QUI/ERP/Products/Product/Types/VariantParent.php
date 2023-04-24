@@ -1189,18 +1189,35 @@ class VariantParent extends AbstractType
         $Variant   = $this->createVariant();
         $fieldList = [];
 
-        // TYPE_ATTRIBUTE_LIST === Attributlisten
-        // TYPE_ATTRIBUTE_GROUPS === Auswahllisten
+        // TYPE_ATTRIBUTE_LIST === Auswahllisten
+        // TYPE_ATTRIBUTE_GROUPS === Attributlisten
 
-        $onlyAttributeGroups = true;
-        $attributeLists      = [];
+        $onlyAttributeGroups = true; // NUR Attributlisten
+        $onlyAttributeLists  = true; // NUR Auswahllisten
+
+        $attributeLists  = [];
+        $attributeGroups = [];
 
         foreach ($fields as $field => $v) {
             try {
                 $Field = FieldHandler::getField($field);
+                $Field->setValue($v);
+
+                if ($Field->getType() !== FieldHandler::TYPE_ATTRIBUTE_GROUPS) {
+                    $onlyAttributeGroups = false;
+                }
+
+                if ($Field->getType() === FieldHandler::TYPE_ATTRIBUTE_GROUPS) {
+                    $attributeGroups[] = $Field;
+                }
+
 
                 if ($Field->getType() !== FieldHandler::TYPE_ATTRIBUTE_LIST) {
-                    $onlyAttributeGroups = false;
+                    $onlyAttributeLists = false;
+                }
+
+                if ($Field->getType() === FieldHandler::TYPE_ATTRIBUTE_LIST) {
+                    $attributeLists[] = $Field;
                 }
 
                 $fieldList[$field] = $Field;
@@ -1270,7 +1287,7 @@ class VariantParent extends AbstractType
             // Und Auswahllisten ausgewählt sind
             // -> Dann wird die selektierte Auswahllisten den Varianten einfach hinzufügt
             // -> und nicht zum generieren (permutieren) verwendet
-            if ($onlyAttributeGroups === false) {
+            if ($onlyAttributeGroups === false && $onlyAttributeLists === false) {
                 // add only attribute groups
                 if ($Field->getType() === FieldHandler::TYPE_ATTRIBUTE_GROUPS) {
                     $Variant->addField($Field);
@@ -1302,17 +1319,16 @@ class VariantParent extends AbstractType
                 -> Preis wird berechnet (Ausgangspreis ist der Preis vom Parent)
                 -> Preis ist optional (haken implementieren)
             */
+            if ($onlyAttributeLists) {
+                $Price = $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRICE);
+                $value = $fields[$k];
 
-            $Price = $Variant->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRICE);
-            $value = $fields[$k];
+                $Field->setValue($value);
+                $calc       = $Field->getCalculationData();
+                $fieldPrice = QUI\ERP\Money\Price::validatePrice($calc['value']);
 
-            $Field->setValue($value);
-            $calc       = $Field->getCalculationData();
-            $fieldPrice = QUI\ERP\Money\Price::validatePrice($calc['value']);
-
-            $Price->setValue($Price->getValue() + $fieldPrice);
-
-            $attributeLists[] = $Field;
+                $Price->setValue($Price->getValue() + $fieldPrice);
+            }
         }
 
         // set article no
@@ -1339,14 +1355,13 @@ class VariantParent extends AbstractType
         $URL         = $Variant->getField(FieldHandler::FIELD_URL);
         $urlValue    = $URL->getValue();
 
-        if ($onlyAttributeGroups === false) {
-            $attributes = $Variant->getFieldsByType([
-                FieldHandler::TYPE_ATTRIBUTE_GROUPS
-            ]);
-        } else {
+        if ($onlyAttributeGroups) {
+            $attributes = $attributeGroups;
+        } elseif ($onlyAttributeLists) {
             $attributes = $attributeLists;
+        } else {
+            $attributes = $fieldList;
         }
-
 
         /* @var $Field QUI\ERP\Products\Field\Field */
         $newValues = [];
