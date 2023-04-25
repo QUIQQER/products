@@ -1253,7 +1253,7 @@ class Model extends QUI\QDOM
         QUI\Permissions\Permission::checkPermission('product.edit', $EditUser);
 
         if (Products::$fireEventsOnProductSave) {
-            QUI::getEvents()->fireEvent('onQuiqqerProductsProductSaveBefore', [$fieldData, $this]);
+            QUI::getEvents()->fireEvent('onQuiqqerProductsProductSaveBefore', [&$fieldData, $this]);
         }
 
         // cleanup fields
