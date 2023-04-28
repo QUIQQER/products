@@ -3,8 +3,8 @@
 namespace QUI\ERP\Products\Console;
 
 use QUI;
-use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Handler\Products;
 
 /**
  * Console tool for updating product prices with multipliers
@@ -63,9 +63,22 @@ class UpdatePrices extends QUI\System\Console\Tool
         $priceFactors = Fields::getPriceFactorSettings();
         $SystemUser   = QUI::getUsers()->getSystemUser();
 
+        $priceFactorsCategories = [];
+        $categories             = QUI\ERP\Products\Handler\Categories::getCategories();
+
+        foreach ($categories as $Category) {
+            $priceFieldFactors = $Category->getCustomDataEntry('priceFieldFactors');
+
+            if (empty($priceFieldFactors)) {
+                continue;
+            }
+
+            $priceFactorsCategories[$Category->getId()] = $priceFieldFactors;
+        }
+
         foreach ($productIds as $productId) {
             try {
-                $this->writeLn("Updating product #".$productId."...");
+                $this->writeLn("Updating product #" . $productId . "...");
                 $Product       = Products::getProduct($productId);
                 $updateProduct = false;
 
@@ -76,6 +89,16 @@ class UpdatePrices extends QUI\System\Console\Tool
 
                     $updateProduct = true;
                     break;
+                }
+
+                if (!$updateProduct) {
+                    $productCategories = $Product->getCategories();
+
+                    foreach ($priceFactorsCategories as $categoryId => $pf) {
+                        if (isset($productCategories[$categoryId])) {
+                            $updateProduct = true;
+                        }
+                    }
                 }
 
                 if ($updateProduct) {
@@ -89,7 +112,7 @@ class UpdatePrices extends QUI\System\Console\Tool
                 }
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
-                $this->writeLn(" -> ERROR: ".$Exception->getMessage());
+                $this->writeLn(" -> ERROR: " . $Exception->getMessage());
             }
         }
 
