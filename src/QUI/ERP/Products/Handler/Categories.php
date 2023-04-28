@@ -348,7 +348,7 @@ class Categories
      *                              $queryParams['where_or'],
      *                              $queryParams['limit']
      *                              $queryParams['order']
-     * @return array
+     * @return QUI\ERP\Products\Interfaces\CategoryInterface[]
      */
     public static function getCategories(array $queryParams = []): array
     {
