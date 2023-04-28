@@ -469,7 +469,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     for (i = 0, len = systemFields.length; i < len; i++) {
                         field = systemFields[i];
 
-                        // dont show media folder field
+                        // don't show media folder field
                         if (field.id === Fields.FIELD_FOLDER) {
                             // @todo beachten
                             // new Element('input', {
@@ -2035,7 +2035,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                     return result;
                 });
-            }).then(function (fields) {
+            }).then((fields) => {
                 let field;
                 let Form = Elm.getElement('form');
                 let data = QUIFormUtils.getFormData(Form);
@@ -2077,6 +2077,11 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     for (field in formfields) {
                         if (formfields.hasOwnProperty(field)) {
                             fields[field] = formfields[field];
+
+                            this.$Product.setFieldValue(
+                                field.replace('field-', ''),
+                                formfields[field]
+                            );
                         }
                     }
                 }
@@ -2366,7 +2371,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
         /**
          *
          * @param {Element} Category
-         * @param Product
+         * @param Product - we need this variable and not this.$Product because of the Variant Panel
          */
         $unloadCategory: function (Category, Product) {
             if (Category === null || !Category) {
