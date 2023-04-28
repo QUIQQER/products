@@ -1194,6 +1194,9 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                 self.$StatusButton.show();
                 self.$StatusButton.enable();
                 self.$StatusButton.resize();
+
+                self.$loaded = true; // if variant is open, loaded is always true
+                self.$loaderHide();
             });
         },
 
