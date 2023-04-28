@@ -4,9 +4,9 @@
  * This file contains package_quiqqer_products_ajax_products_frontend_getVariant
  */
 
-use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Types\VariantChild;
 use QUI\ERP\Products\Utils\Package as PackageUtils;
 use QUI\ERP\Products\Utils\Products as ProductUtils;
@@ -51,14 +51,14 @@ QUI::$Ajax->registerFunction(
         }
 
         $ExceptionStack = new QUI\ExceptionStack();
-        $fields         = \json_decode($fields, true);
+        $fields         = json_decode($fields, true);
 
         // json js <-> php
-        if (\count($fields) && \is_array($fields[0])) {
+        if (count($fields) && is_array($fields[0])) {
             $_fields = [];
 
             foreach ($fields as $field) {
-                $_fields[\key($field)] = \current($field);
+                $_fields[key($field)] = current($field);
             }
 
             $fields = $_fields;
@@ -146,15 +146,23 @@ QUI::$Ajax->registerFunction(
             'ignoreDefaultVariant' => $ignoreDefaultVariant
         ]);
 
+        $url = '';
+
+        try {
+            $url = $Child->getUrlRewrittenWithHost();
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
+
         $result = [
             'variantId'       => $Child->getId(),
             'control'         => QUI\Output::getInstance()->parse($Control->create()),
             'css'             => QUI\Control\Manager::getCSS(),
-            'url'             => $Child->getUrlRewrittenWithHost(),
+            'url'             => $url,
             'title'           => $Child->getTitle(),
             'category'        => $categoryId,
             'fieldHashes'     => ProductUtils::getJsFieldHashArray($Product),
-            'availableHashes' => \array_flip($Product->availableActiveFieldHashes()),
+            'availableHashes' => array_flip($Product->availableActiveFieldHashes()),
             'isVariantParent' => $isVariantParent
         ];
 

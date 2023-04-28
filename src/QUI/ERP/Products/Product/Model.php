@@ -691,7 +691,8 @@ class Model extends QUI\QDOM
         $Category = $this->getCategory();
         $Site     = $Category->getSite($Project);
 
-        if ($Site->getAttribute('quiqqer.products.fake.type')
+        if (!$Site->getAttribute('active') ||
+            $Site->getAttribute('quiqqer.products.fake.type')
             || $Site->getAttribute('type') !== 'quiqqer/products:types/category'
             && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
         ) {
@@ -709,12 +710,25 @@ class Model extends QUI\QDOM
             return $Project->getVHost(true, true) . '/_p/' . $this->getUrlName();
         }
 
-        $url = $Site->getUrlRewrittenWithHost([
-            0              => $this->getUrlName(),
-            'paramAsSites' => true
-        ]);
-
-        return $url;
+        try {
+            return $Site->getUrlRewrittenWithHost([
+                0              => $this->getUrlName(),
+                'paramAsSites' => true
+            ]);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::addInfo(
+                QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', [
+                    'productId' => $this->getId(),
+                    'title'     => $this->getTitle()
+                ]),
+                [
+                    'wantedLanguage' => $Project->getLang(),
+                    'wantedProject'  => $Project->getName()
+                ]
+            );
+            
+            return $Project->getVHost(true, true) . '/_p/' . $this->getUrlName();
+        }
     }
 
     /**
