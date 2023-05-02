@@ -7,13 +7,13 @@
 use QUI\ERP\Products\Handler\Search as SearchHandler;
 
 /**
- * Get all fields that are available for search for a specific Site
+ * Set product search fields, which fields are shown at the product search
  *
  * @param array $searchFields
  * @return array - searchfields after set
  */
 QUI::$Ajax->registerFunction(
-    'package_quiqqer_products_ajax_search_backend_setSearchFields',
+    'package_quiqqer_products_ajax_search_backend_setProductSearchFields',
     function ($searchFields) {
         QUI\Permissions\Permission::checkPermission(
             SearchHandler::PERMISSION_BACKEND_CONFIGURE
@@ -24,7 +24,7 @@ QUI::$Ajax->registerFunction(
             json_decode($searchFields, true)
         );
 
-        return $BackEndSearch->setSearchFields($searchFields);
+        return $BackEndSearch->setProductSearchFields($searchFields);
     },
     ['searchFields'],
     'Permission::checkAdminUser'
