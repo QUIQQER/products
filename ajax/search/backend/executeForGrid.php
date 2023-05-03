@@ -1,6 +1,7 @@
 <?php
 
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Handler\Search as SearchHandler;
 use QUI\ERP\Products\Utils\Tables;
 
 /**
@@ -33,6 +34,9 @@ QUI::$Ajax->registerFunction(
         $productIds = $result['result'];
         $products   = [];
 
+        $BackEndSearch         = SearchHandler::getBackendSearch();
+        $productSearchFieldIds = $BackEndSearch->getProductSearchFields();
+
         // collect product data
         $fields = [
             'active'      => 'active',
@@ -47,6 +51,24 @@ QUI::$Ajax->registerFunction(
             'e_date'      => 'e_date',
             'priority'    => 'F' . Fields::FIELD_PRIORITY
         ];
+
+
+        foreach ($productSearchFieldIds as $fieldId => $val) {
+            if (!$val) {
+                continue;
+            }
+
+            switch ($fieldId) {
+                case 1: // price
+                case 3: // product no / article no
+                case 4: // title
+                case 5: // short
+                case 18: // sort
+                    break 2;
+            }
+
+            $fields['F' . $fieldId] = 'F' . $fieldId;
+        }
 
         if (!empty($productIds)) {
             $result = QUI::getDataBase()->fetch([
@@ -66,9 +88,9 @@ QUI::$Ajax->registerFunction(
         $currencyCode = QUI\ERP\Currency\Handler::getDefaultCurrency()->getCode();
 
         // sort $result as $productIds
-        \usort($result, function ($rowA, $rowB) use ($productIds) {
-            $keyA = \array_search($rowA['id'], $productIds);
-            $keyB = \array_search($rowB['id'], $productIds);
+        usort($result, function ($rowA, $rowB) use ($productIds) {
+            $keyA = array_search($rowA['id'], $productIds);
+            $keyB = array_search($rowB['id'], $productIds);
 
             return $keyA - $keyB;
         });
@@ -79,6 +101,10 @@ QUI::$Ajax->registerFunction(
             ];
 
             foreach ($fields as $key => $column) {
+                if (!isset($row[$column])) {
+                    continue;
+                }
+
                 $value = $row[$column];
 
                 switch ($key) {
@@ -104,7 +130,7 @@ QUI::$Ajax->registerFunction(
         }
 
         // count
-        $searchParams          = \json_decode($searchParams, true);
+        $searchParams          = json_decode($searchParams, true);
         $searchParams['count'] = 1;
 
         if (isset($searchParams['sheet'])) {
