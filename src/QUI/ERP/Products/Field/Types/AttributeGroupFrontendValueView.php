@@ -4,6 +4,7 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 
+use function dirname;
 use function is_numeric;
 use function is_string;
 
@@ -71,6 +72,6 @@ class AttributeGroupFrontendValueView extends QUI\ERP\Products\Field\View
         ]);
 
 
-        return $Engine->fetch(\dirname(__FILE__) . '/AttributeGroupFrontendValueView.html');
+        return $Engine->fetch(dirname(__FILE__) . '/AttributeGroupFrontendValueView.html');
     }
 }
