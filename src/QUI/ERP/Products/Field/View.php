@@ -8,6 +8,10 @@ namespace QUI\ERP\Products\Field;
 
 use QUI;
 
+use function htmlspecialchars;
+use function is_numeric;
+use function is_string;
+
 /**
  * Class View
  *
@@ -44,16 +48,16 @@ class View extends UniqueField
 
         $value = $this->getValue();
 
-        if (!\is_numeric($value) && !\is_string($value)) {
+        if (!is_numeric($value) && !is_string($value)) {
             $value = '';
         }
 
-        $value = \htmlspecialchars($value);
-        $title = \htmlspecialchars($this->getTitle());
+        $value = htmlspecialchars($value);
+        $title = htmlspecialchars($this->getTitle());
 
         return '<div class="quiqqer-product-field">
-            <div class="quiqqer-product-field-title">'.$title.'</div>
-            <div class="quiqqer-product-field-value">'.$value.'</div>
+            <div class="quiqqer-product-field-title">' . $title . '</div>
+            <div class="quiqqer-product-field-value">' . $value . '</div>
         </div>';
     }
 
