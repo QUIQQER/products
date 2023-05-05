@@ -22,9 +22,9 @@ QUI::$Ajax->registerFunction(
         $baseFormatted = QUI\ERP\Defaults::getCurrency()->format($price);
 
         $nettoPrice           = Calc::calcNettoPrice($price, false, $productId);
-        $nettoPriceFormatted  = Calc::calcNettoPrice($price, true, $productId);
+        $nettoPriceFormatted = Calc::calcNettoPrice($price, true, $productId);
         $bruttoPriceFormatted = Calc::calcBruttoPrice(
-            \floatval($nettoPriceFormatted),
+            floatval($nettoPriceFormatted),
             true,
             $productId
         );

@@ -16,7 +16,7 @@ define('package/quiqqer/products/bin/controls/fields/windows/PriceBrutto', [
 ], function (QUI, QUIConfirm, QUILocale, QUIAjax, Mustache, template) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
@@ -59,8 +59,8 @@ define('package/quiqqer/products/bin/controls/fields/windows/PriceBrutto', [
          * @return {Element}
          */
         $onOpen: function () {
-            var self    = this,
-                Content = this.getContent();
+            const self    = this,
+                  Content = this.getContent();
 
             Content.set('html', Mustache.render(template, {
                 title      : QUILocale.get(lg, 'control.window.price.brutto.label'),
@@ -82,12 +82,16 @@ define('package/quiqqer/products/bin/controls/fields/windows/PriceBrutto', [
          * submit the window
          */
         submit: function () {
-            var self = this;
+            const self = this;
 
             this.Loader.show();
 
             QUIAjax.get('package_quiqqer_products_ajax_products_calcNettoPrice', function (price) {
-                self.fireEvent('submit', [self, price]);
+                self.fireEvent('submit', [
+                    self,
+                    price
+                ]);
+
                 self.close();
             }, {
                 'package': 'quiqqer/products',
