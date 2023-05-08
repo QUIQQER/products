@@ -139,15 +139,15 @@ class ProductList
         if (isset($params['calculations'])) {
             $calc = $params['calculations'];
 
-            $this->sum = $calc['sum'];
-            $this->grandSubSum = $calc['grandSubSum'];
-            $this->subSum = $calc['subSum'];
-            $this->nettoSum = $calc['nettoSum'];
-            $this->nettoSubSum = $calc['nettoSubSum'];
-            $this->vatArray = $calc['vatArray'];
-            $this->vatText = $calc['vatText'];
-            $this->isEuVat = $calc['isEuVat'];
-            $this->isNetto = $calc['isNetto'];
+            $this->sum          = $calc['sum'];
+            $this->grandSubSum  = $calc['grandSubSum'];
+            $this->subSum       = $calc['subSum'];
+            $this->nettoSum     = $calc['nettoSum'];
+            $this->nettoSubSum  = $calc['nettoSubSum'];
+            $this->vatArray     = $calc['vatArray'];
+            $this->vatText      = $calc['vatText'];
+            $this->isEuVat      = $calc['isEuVat'];
+            $this->isNetto      = $calc['isNetto'];
             $this->currencyData = $calc['currencyData'];
 
             $this->calculated = true;
@@ -158,8 +158,8 @@ class ProductList
         }
 
         $this->PriceFactors = new QUI\ERP\Products\Utils\PriceFactors();
-        $this->User = $User;
-        $this->hidePrice = QUI\ERP\Products\Utils\Package::hidePrice();
+        $this->User         = $User;
+        $this->hidePrice    = QUI\ERP\Products\Utils\Package::hidePrice();
 
         if ($this->Currency) {
             $this->PriceFactors->setCurrency($this->Currency);
@@ -213,15 +213,15 @@ class ProductList
         $Calc->setCurrency($this->getCurrency());
 
         $Calc->calcProductList($this, function ($data) use ($self) {
-            $self->sum = $data['sum'];
-            $self->subSum = $data['subSum'];
-            $self->grandSubSum = $data['grandSubSum'];
-            $self->nettoSum = $data['nettoSum'];
-            $self->nettoSubSum = $data['nettoSubSum'];
-            $self->vatArray = $data['vatArray'];
-            $self->vatText = $data['vatText'];
-            $self->isEuVat = $data['isEuVat'];
-            $self->isNetto = $data['isNetto'];
+            $self->sum          = $data['sum'];
+            $self->subSum       = $data['subSum'];
+            $self->grandSubSum  = $data['grandSubSum'];
+            $self->nettoSum     = $data['nettoSum'];
+            $self->nettoSubSum  = $data['nettoSubSum'];
+            $self->vatArray     = $data['vatArray'];
+            $self->vatText      = $data['vatText'];
+            $self->isEuVat      = $data['isEuVat'];
+            $self->isNetto      = $data['isNetto'];
             $self->currencyData = $data['currencyData'];
 
             $self->calculated = true;
@@ -345,14 +345,31 @@ class ProductList
         $this->products[$Product->getId()] = $Product;
     }
 
+    public function removePos(int $pos)
+    {
+        if ($this->duplicate && isset($this->products[$pos])) {
+            unset($this->products[$pos]);
+            return;
+        }
+
+        $key = 0;
+
+        foreach ($this->products as $productId => $Product) {
+            if ($key === $pos) {
+                unset($this->products[$productId]);
+                break;
+            }
+        }
+    }
+
     /**
      * Clears the list
      */
     public function clear()
     {
-        $this->calculated = false;
+        $this->calculated   = false;
         $this->PriceFactors = new QUI\ERP\Products\Utils\PriceFactors();
-        $this->products = [];
+        $this->products     = [];
     }
 
     /**
@@ -376,7 +393,7 @@ class ProductList
 
         foreach ($this->products as $Product) {
             $attributes = $Product->getAttributes();
-            $fields = $Product->getFields();
+            $fields     = $Product->getFields();
 
             $attributes['fields'] = [];
 
@@ -409,7 +426,7 @@ class ProductList
         );
 
         $calculations['display_subSum'] = $Currency->format($calculations['subSum']);
-        $calculations['display_sum'] = $Currency->format($calculations['sum']);
+        $calculations['display_sum']    = $Currency->format($calculations['sum']);
         $calculations['display_vatSum'] = $Currency->format($calculations['vatSum']);
 
         return [
