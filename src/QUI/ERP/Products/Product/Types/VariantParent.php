@@ -1328,6 +1328,11 @@ class VariantParent extends AbstractType
                 $fieldPrice = QUI\ERP\Money\Price::validatePrice($calc['value']);
 
                 $Price->setValue($Price->getValue() + $fieldPrice);
+                continue;
+            }
+
+            if ($Variant->hasField($Field->getId())) {
+                $Variant->getField($Field->getId())->setValue($fields[$k]);
             }
         }
 

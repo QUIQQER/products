@@ -50,16 +50,16 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
         initialize: function (options) {
             this.parent(options);
 
-            this.Loader             = new QUILoader({'cssclass': 'quiqqer-products-productVariant-loader'});
-            this.$startInit         = false;
+            this.Loader = new QUILoader({'cssclass': 'quiqqer-products-productVariant-loader'});
+            this.$startInit = false;
             this.$isOnlyVariantList = false; // if the variant has no attribute lists and only one list of its variants
 
-            this.$currentVariantId               = false;
-            this.$isVariantParent                = true;
-            this.$fieldHashes                    = null;
-            this.$availableHashes                = null;
-            this.$ImgAttributeGroupsData         = {};
-            this.$SliderControl                  = null;
+            this.$currentVariantId = false;
+            this.$isVariantParent = true;
+            this.$fieldHashes = null;
+            this.$availableHashes = null;
+            this.$ImgAttributeGroupsData = {};
+            this.$SliderControl = null;
             this.$nonImageAttributeGroupFieldIds = [];
 
             this.addEvents({
@@ -100,7 +100,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                 return new Promise((resolve) => {
                     QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getProduct', (result) => {
-                        this.$fieldHashes     = result.fieldHashes;
+                        this.$fieldHashes = result.fieldHashes;
                         this.$availableHashes = result.availableHashes;
 
                         resolve();
@@ -143,7 +143,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 }
 
                 let Field;
-                const Elm    = self.getElm();
+                const Elm = self.getElm();
                 const fields = result.fields;
 
                 for (let fieldId in fields) {
@@ -176,7 +176,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             }
 
             const self = this;
-            const Elm  = this.getElm();
+            const Elm = this.getElm();
 
             this.$startInit = true;
             this.Loader.inject(document.body);
@@ -225,6 +225,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     return;
                 }
 
+                if (this.$isOnlyVariantList) {
+                    self.$refreshVariant();
+                    return;
+                }
+
                 if (typeof self.$availableHashes[currentHash] === 'undefined') {
                     self.hidePrice();
                     self.disableButtons();
@@ -243,11 +248,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                 let i, len, select;
 
-                const values  = {};
+                const values = {};
                 const fieldId = this.name.replace('field-', '');
                 const options = this.options;
 
-                const enabled     = [];
+                const enabled = [];
                 const EmptyOption = enabled.filter(function (option) {
                     return option.value === '';
                 })[0];
@@ -335,7 +340,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          * @return {Promise}
          */
         $initImageLinking: function () {
-            const Elm        = this.getElm();
+            const Elm = this.getElm();
             const fieldLists = Elm.getElements(
                 '.product-data-fieldlist .quiqqer-product-field select'
             );
@@ -352,7 +357,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                     // Determine all fields that are not associated with images
                     const availableFieldIds = [];
-                    const imageFieldIds     = [];
+                    const imageFieldIds = [];
 
                     fieldLists.forEach((AttributeGroupSelect) => {
                         availableFieldIds.push(parseInt(AttributeGroupSelect.get('data-field')));
@@ -397,7 +402,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
         $refreshVariant: function () {
             this.Loader.show();
 
-            const self     = this;
+            const self = this;
             let fieldLists = this.getElm().getElements(
                 '.product-data-fieldlist .quiqqer-product-field select'
             );
@@ -416,7 +421,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 });
 
                 self.$currentVariantId = result.variantId;
-                self.$isVariantParent  = !!result.isVariantParent;
+                self.$isVariantParent = !!result.isVariantParent;
 
                 document.title = result.title;
                 //self.$fieldHashes     = result.fieldHashes;
@@ -428,7 +433,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     //window.history.pushState({}, "", result.url.toString());
                 } else {
                     const Url = URI(window.location);
-                    var url   = Url.setSearch('variant', result.variantId).toString();
+                    var url = Url.setSearch('variant', result.variantId).toString();
                     //window.history.pushState({}, "", url);
                 }
 
@@ -491,7 +496,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 return true;
             }
 
-            const current    = this.getCurrentFieldValues();
+            const current = this.getCurrentFieldValues();
             const collection = {};
 
             const fitHashToCurrentSettings = function (h) {
@@ -634,7 +639,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
          */
         getCurrentHash: function () {
             const fields = this.getCurrentFieldValues();
-            const hash   = [];
+            const hash = [];
 
             for (let i in fields) {
                 if (fields.hasOwnProperty(i)) {
@@ -655,7 +660,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             const fields = {};
 
             for (i = 0, len = attributeGroups.length; i < len; i++) {
-                fieldName  = attributeGroups[i].name.replace('field-', '');
+                fieldName = attributeGroups[i].name.replace('field-', '');
                 fieldValue = this.stringToHex(attributeGroups[i].value);
 
                 fields[fieldName] = fieldValue;
@@ -736,9 +741,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 return;
             }
 
-            const AttributeGroupSelects    = this.getElm().getElements('div[data-field-type="AttributeGroup"] select');
+            const AttributeGroupSelects = this.getElm().getElements('div[data-field-type="AttributeGroup"] select');
             const AttributeGroupTargetData = {};
-            let allSelectsWithValues       = true;
+            let allSelectsWithValues = true;
 
             AttributeGroupSelects.forEach((Select) => {
                 if (Select.value) {
@@ -757,7 +762,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             }
 
             const imgRegExpParseFilename = new RegExp('([^\\/]*)\\.\\w+$', 'igm');
-            const matchedImages          = [];
+            const matchedImages = [];
 
             for (const [imagePath, ImageData] of Object.entries(this.$ImgAttributeGroupsData)) {
                 let matchedFields = 0;
@@ -808,8 +813,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             const Elm = this.getElm();
 
             const imgRegExpRemoveSize = new RegExp('__\\d+x\\d+', 'ig');
-            const imgRegExpRemoveExt  = new RegExp('\\.\\w+$', 'id');
-            const imageUrl            = ImageData.src.replace(imgRegExpRemoveSize, '');
+            const imgRegExpRemoveExt = new RegExp('\\.\\w+$', 'id');
+            const imageUrl = ImageData.src.replace(imgRegExpRemoveSize, '');
 
             let AttributeGroupData = false;
 
