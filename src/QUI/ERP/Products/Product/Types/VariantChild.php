@@ -147,7 +147,7 @@ class VariantChild extends AbstractType
             $shortDescLines = [];
 
             foreach ($attributeListFieldValues as $field) {
-                $shortDescLines[] = $field['title'].': '.$field['valueTitle'];
+                $shortDescLines[] = $field['title'] . ': ' . $field['valueTitle'];
             }
 
             $shortDescAddition              = implode('; ', $shortDescLines);
@@ -156,7 +156,7 @@ class VariantChild extends AbstractType
             if (empty($shortDesc)) {
                 $shortDesc = $shortDescAddition;
             } else {
-                $shortDesc .= '; '.$shortDescAddition;
+                $shortDesc .= '; ' . $shortDescAddition;
             }
 
             /** @var QUI\ERP\Products\Field\Types\InputMultiLang $ShortDescField */
@@ -343,11 +343,12 @@ class VariantChild extends AbstractType
     {
         try {
             if ($this->OwnMediaFolderField) {
-                $Folder = $this->OwnMediaFolderField;
+                $folderUrl = $this->OwnMediaFolderField->getValue();
             } else {
                 $folderUrl = $this->getFieldValue(Fields::FIELD_FOLDER);
-                $Folder    = MediaUtils::getMediaItemByUrl($folderUrl);
             }
+
+            $Folder = MediaUtils::getMediaItemByUrl($folderUrl);
 
             if (MediaUtils::isFolder($Folder)) {
                 /* @var $Folder QUI\Projects\Media\Folder */
@@ -558,7 +559,7 @@ class VariantChild extends AbstractType
 
                 foreach ($this->shortDescAddition as $lang => $addition) {
                     if (isset($fieldValue[$lang])) {
-                        $fieldValue[$lang] = \str_replace('; '.$addition, '', $fieldValue[$lang]);
+                        $fieldValue[$lang] = \str_replace('; ' . $addition, '', $fieldValue[$lang]);
                     }
                 }
 
