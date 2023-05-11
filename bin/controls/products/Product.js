@@ -989,6 +989,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                     data[Field.id] = Field;
                 });
 
+                console.log(fields);
+
                 Container.set('html', Mustache.render(templateProductData, {
                     productCategories: QUILocale.get(lg, 'productCategories'),
                     productCategory  : QUILocale.get(lg, 'productCategory'),

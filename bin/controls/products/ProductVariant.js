@@ -1054,6 +1054,10 @@ define('package/quiqqer/products/bin/controls/products/ProductVariant', [
                                 return;
                             }
 
+                            if (self.$CurrentVariant.getId() === parseInt(value)) {
+                                return;
+                            }
+
                             self.$loaded = false;
 
                             self.update().then(function () {
