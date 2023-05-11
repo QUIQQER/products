@@ -12,7 +12,10 @@ use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Fields as FieldUtils;
 
+use function array_map;
 use function get_class;
+use function is_string;
+use function json_decode;
 
 /**
  * Class Products Helper
@@ -162,8 +165,8 @@ class Products
             if ($Product->getAttribute('editableVariantFields')) {
                 $editable = $Product->getAttribute('editableVariantFields');
 
-                if (\is_string($editable)) {
-                    $editable = \json_decode($editable, true);
+                if (is_string($editable)) {
+                    $editable = json_decode($editable, true);
                 }
 
                 return $editable;
@@ -194,7 +197,7 @@ class Products
         }
 
         $fields = FieldHandler::getFields();
-        $result = \array_map(function ($Field) {
+        $result = array_map(function ($Field) {
             /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             return $Field->getId();
         }, $fields);
@@ -218,8 +221,8 @@ class Products
             if ($Product->getAttribute('inheritedVariantFields')) {
                 $inherited = $Product->getAttribute('inheritedVariantFields');
 
-                if (\is_string($inherited)) {
-                    $inherited = \json_decode($inherited, true);
+                if (is_string($inherited)) {
+                    $inherited = json_decode($inherited, true);
                 }
 
                 return $inherited;
@@ -251,7 +254,7 @@ class Products
 
 
         $fields = FieldHandler::getFields();
-        $result = \array_map(function ($Field) {
+        $result = array_map(function ($Field) {
             /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             return $Field->getId();
         }, $fields);
@@ -275,7 +278,7 @@ class Products
             if ($fieldValue instanceof QUI\ERP\Products\Interfaces\FieldInterface) {
                 $fieldId    = $fieldValue->getId();
                 $fieldValue = $fieldValue->getValue();
-            } elseif (\is_string($Field) || \is_numeric($Field)) {
+            } elseif (is_string($Field) || \is_numeric($Field)) {
                 $fieldId = $Field;
             } else {
                 continue;
