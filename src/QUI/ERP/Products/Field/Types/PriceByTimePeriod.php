@@ -2,8 +2,18 @@
 
 namespace QUI\ERP\Products\Field\Types;
 
+use NumberFormatter;
 use QUI;
 use QUI\ERP\Products\Field\View;
+
+use function date_create;
+use function is_array;
+use function is_float;
+use function is_string;
+use function json_decode;
+use function json_last_error;
+
+use const JSON_ERROR_NONE;
 
 /**
  * Class PriceByTimePeriod
@@ -59,11 +69,11 @@ class PriceByTimePeriod extends Price
             return false;
         }
 
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
+        if (is_string($value)) {
+            $value = json_decode($value, true);
         }
 
-        if (!\is_array($value)) {
+        if (!is_array($value)) {
             return false;
         }
 
@@ -71,14 +81,14 @@ class PriceByTimePeriod extends Price
         $To   = false;
 
         if (!empty($value['from'])) {
-            $From = \date_create($value['from']);
+            $From = date_create($value['from']);
         }
 
         if (!empty($value['to'])) {
-            $To = \date_create($value['to']);
+            $To = date_create($value['to']);
         }
 
-        $Now = \date_create();
+        $Now = date_create();
         $Now->setTime(0, 0, 0);
 
         if ($From !== false && $From > $Now) {
@@ -127,7 +137,7 @@ class PriceByTimePeriod extends Price
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriod';
     }
@@ -135,7 +145,7 @@ class PriceByTimePeriod extends Price
     /**
      * @return string
      */
-    public function getJavaScriptSettings()
+    public function getJavaScriptSettings(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/PriceByTimePeriodSettings';
     }
@@ -153,10 +163,10 @@ class PriceByTimePeriod extends Price
             return;
         }
 
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
+        if (is_string($value)) {
+            $value = json_decode($value, true);
 
-            if (\json_last_error() !== \JSON_ERROR_NONE) {
+            if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
@@ -169,7 +179,7 @@ class PriceByTimePeriod extends Price
             }
         }
 
-        if (!\is_array($value)) {
+        if (!is_array($value)) {
             throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
@@ -202,10 +212,10 @@ class PriceByTimePeriod extends Price
      * @param string|array $value
      * @return array
      */
-    public function cleanup($value)
+    public function cleanup($value): array
     {
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
+        if (is_string($value)) {
+            $value = json_decode($value, true);
         }
 
         $defaultReturn = [
@@ -223,19 +233,19 @@ class PriceByTimePeriod extends Price
         $To    = false;
 
         if (!empty($value['from'])) {
-            $From = \date_create($value['from']);
+            $From = date_create($value['from']);
         }
 
         if (!empty($value['to'])) {
-            $To = \date_create($value['to']);
+            $To = date_create($value['to']);
         }
 
-        if (!\is_float($price)) {
+        if (!is_float($price)) {
             $localeCode = QUI::getLocale()->getLocalesByLang(
                 QUI::getLocale()->getCurrent()
             );
 
-            $Formatter = new \NumberFormatter($localeCode[0], \NumberFormatter::DECIMAL);
+            $Formatter = new NumberFormatter($localeCode[0], NumberFormatter::DECIMAL);
             $price     = $Formatter->parse($price);
         }
 
@@ -249,10 +259,10 @@ class PriceByTimePeriod extends Price
     /**
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
-        if (\is_string($this->value)) {
-            $value = \json_decode($this->value, true);
+        if (is_string($this->value)) {
+            $value = json_decode($this->value, true);
         } else {
             $value = $this->value;
         }

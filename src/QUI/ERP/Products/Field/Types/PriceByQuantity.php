@@ -6,8 +6,14 @@
 
 namespace QUI\ERP\Products\Field\Types;
 
+use NumberFormatter;
 use QUI;
 use QUI\ERP\Products\Field\View;
+
+use function is_float;
+use function is_string;
+use function json_decode;
+use function round;
 
 /**
  * Class PriceByQuantity
@@ -64,8 +70,8 @@ class PriceByQuantity extends Price
             return false;
         }
 
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
+        if (is_string($value)) {
+            $value = json_decode($value, true);
         }
 
         if (!\is_array($value)) {
@@ -89,13 +95,15 @@ class PriceByQuantity extends Price
 
     /**
      * @return View
+     * @throws \QUI\Exception
      */
     public function getFrontendView()
     {
+        $Calc  = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
         $value = $this->cleanup($this->getValue());
 
         $Price = new QUI\ERP\Money\Price(
-            $value['price'],
+            $Calc->getPrice($value['price']),
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
 
@@ -117,7 +125,7 @@ class PriceByQuantity extends Price
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/PriceByQuantity';
     }
@@ -125,7 +133,7 @@ class PriceByQuantity extends Price
     /**
      * @return string
      */
-    public function getJavaScriptSettings()
+    public function getJavaScriptSettings(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/PriceByQuantitySettings';
     }
@@ -138,7 +146,7 @@ class PriceByQuantity extends Price
      * @return array
      * @throws \QUI\ERP\Products\Field\Exception
      */
-    public function validate($value)
+    public function validate($value): array
     {
         return $this->cleanup($value);
     }
@@ -151,10 +159,10 @@ class PriceByQuantity extends Price
      * @param string|array $value
      * @return array
      */
-    public function cleanup($value)
+    public function cleanup($value): array
     {
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
+        if (is_string($value)) {
+            $value = json_decode($value, true);
         }
 
         $defaultReturn = [
@@ -169,7 +177,7 @@ class PriceByQuantity extends Price
         $price    = $value['price'];
         $quantity = $value['quantity'];
 
-        if (\is_float($price)) {
+        if (is_float($price)) {
             return [
                 'price'    => $price,
                 'quantity' => (int)$quantity
@@ -180,11 +188,11 @@ class PriceByQuantity extends Price
             QUI::getLocale()->getCurrent()
         );
 
-        $Formatter = new \NumberFormatter($localeCode[0], \NumberFormatter::DECIMAL);
+        $Formatter = new NumberFormatter($localeCode[0], NumberFormatter::DECIMAL);
         $price     = $Formatter->parse($price);
 
         return [
-            'price'    => \round(floatval($price), QUI\ERP\Defaults::getPrecision()),
+            'price'    => round(floatval($price), QUI\ERP\Defaults::getPrecision()),
             'quantity' => (int)$quantity,
         ];
     }
@@ -192,10 +200,10 @@ class PriceByQuantity extends Price
     /**
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
-        if (\is_string($this->value)) {
-            $value = \json_decode($this->value, true);
+        if (is_string($this->value)) {
+            $value = json_decode($this->value, true);
         } else {
             $value = $this->value;
         }

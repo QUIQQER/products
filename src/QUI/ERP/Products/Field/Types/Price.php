@@ -38,9 +38,9 @@ class Price extends QUI\ERP\Products\Field\Field
     /**
      * Official currency code (i.e. EUR)
      *
-     * @var string
+     * @var string|null
      */
-    protected $currencyCode = null;
+    protected ?string $currencyCode = null;
 
     /**
      * @return View
@@ -52,11 +52,18 @@ class Price extends QUI\ERP\Products\Field\Field
 
     /**
      * @return View
+     * @throws \QUI\Exception
      */
     public function getFrontendView()
     {
+        $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
+
+        $value = $this->getValue();
+        $value = $this->cleanup($value);
+        $value = $Calc->getPrice($value);
+
         $Price = new QUI\ERP\Money\Price(
-            $this->cleanup($this->getValue()),
+            $value,
             QUI\ERP\Currency\Handler::getDefaultCurrency()
         );
 
@@ -73,7 +80,7 @@ class Price extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/Price';
     }
@@ -81,7 +88,7 @@ class Price extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptSettings()
+    public function getJavaScriptSettings(): string
     {
         if ($this->getId() == QUI\ERP\Products\Handler\Fields::FIELD_PRICE) {
             return '';
@@ -146,7 +153,7 @@ class Price extends QUI\ERP\Products\Field\Field
     /**
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return !is_float($this->value);
     }
@@ -156,7 +163,7 @@ class Price extends QUI\ERP\Products\Field\Field
      *
      * @return array
      */
-    public function getSearchTypes()
+    public function getSearchTypes(): array
     {
         return [
             Search::SEARCHTYPE_TEXT,
@@ -171,7 +178,7 @@ class Price extends QUI\ERP\Products\Field\Field
      *
      * @return string
      */
-    public function getDefaultSearchType()
+    public function getDefaultSearchType(): string
     {
         return Search::SEARCHTYPE_SELECTRANGE;
     }
@@ -183,7 +190,7 @@ class Price extends QUI\ERP\Products\Field\Field
      * @param integer|float $max
      * @return array - contains values from min to max with calculated steps inbetween
      */
-    public function calculateValueRange($min, $max)
+    public function calculateValueRange($min, $max): array
     {
         // add tax to max value
         $maxTaxValue = (100 + QUI\ERP\Tax\Utils::getMaxTax()) / 100;

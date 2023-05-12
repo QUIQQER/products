@@ -9,6 +9,13 @@ namespace QUI\ERP\Products\Field\Types;
 use QUI;
 use QUI\ERP\Accounting\Calc as ErpCalc;
 
+use function dirname;
+use function htmlspecialchars;
+use function is_numeric;
+use function is_string;
+use function strtolower;
+use function strtoupper;
+
 /**
  * Class ProductAttributeList - Backend VIEW (eq -> invoice)
  *
@@ -32,8 +39,9 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
      * Render the view, return the html
      *
      * @return string
+     * @throws \QUI\Exception
      */
-    public function create()
+    public function create(): string
     {
         if (!$this->hasViewPermission()) {
             return '';
@@ -45,18 +53,18 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
         $value   = $this->getValue();
         $options = $this->getOptions();
 
-        $name    = 'field-'.$id;
+        $name    = 'field-' . $id;
         $entries = [];
 
         if (isset($options['entries'])) {
             $entries = $options['entries'];
         }
 
-        if (!\is_string($value) && !\is_numeric($value)) {
+        if (!is_string($value) && !is_numeric($value)) {
             $value = '';
         }
 
-        $value = \htmlspecialchars($value);
+        $value = htmlspecialchars($value);
 
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
@@ -76,7 +84,7 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
         ]);
 
         // options
-        $currentLC = \strtolower($current).'_'.\strtoupper($current);
+        $currentLC = strtolower($current) . '_' . strtoupper($current);
 
         $text = '';
 
@@ -85,7 +93,7 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
             $title  = $option['title'];
 
 
-            if (\is_string($title)) {
+            if (is_string($title)) {
                 $text = $title;
             } elseif (isset($title[$current])) {
                 $text = $title[$current];
@@ -107,7 +115,7 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
         }
 
         $Currency  = QUI\ERP\Currency\Handler::getDefaultCurrency();
-        $currentLC = \strtolower($current).'_'.\strtoupper($current);
+        $currentLC = strtolower($current) . '_' . strtoupper($current);
         $Calc      = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
         $options   = [];
 
@@ -130,7 +138,7 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
                 $selected = '';
             }
 
-            if (\is_string($title)) {
+            if (is_string($title)) {
                 $text = $title;
             } elseif (isset($title[$current])) {
                 $text = $title[$current];
@@ -150,7 +158,7 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
                 switch ($option['type']) {
                     case 'percent': // fallback fix
                     case ErpCalc::CALCULATION_PERCENTAGE:
-                        $discount = $option['sum'].'%';
+                        $discount = $option['sum'] . '%';
                         break;
 
                     case ErpCalc::CALCULATION_COMPLEMENT:
@@ -161,20 +169,20 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
                         break;
                 }
 
-                $text .= ' (+'.$discount.')';
+                $text .= ' (+' . $discount . ')';
             }
 
             $options[] = [
                 'selected' => $selected,
                 'disabled' => $disabled,
-                'value'    => \htmlspecialchars($key),
-                'text'     => \htmlspecialchars($text),
+                'value'    => htmlspecialchars($key),
+                'text'     => htmlspecialchars($text),
                 'data'     => $userInput
             ];
         }
 
         $Engine->assign('options', $options);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ProductAttributeListBackendView.html');
+        return $Engine->fetch(dirname(__FILE__) . '/ProductAttributeListBackendView.html');
     }
 }
