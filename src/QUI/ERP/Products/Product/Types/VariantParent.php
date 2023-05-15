@@ -1373,39 +1373,76 @@ class VariantParent extends AbstractType
         $newValues = [];
 
         // first add titles to the url
+        $getOptionFromField = function ($value, $Field, $language) {
+            $options = $Field->getOption('entries');
+
+            if (empty($options)) {
+                return '';
+            }
+
+            foreach ($options as $entry) {
+                if (!isset($entry['title']) && !isset($entry['valueId'])) {
+                    continue;
+                }
+
+                if ($entry['valueId'] !== $value) {
+                    continue;
+                }
+
+                if (!isset($entry['title'][$language])) {
+                    continue;
+                }
+
+                return $entry['title'][$language];
+            }
+
+            return '';
+        };
 
         // second add fields to the url
         foreach ($attributes as $Field) {
             foreach ($urlValue as $lang => $v) {
                 $LocaleClone->setCurrent($lang);
 
-                $title = $Field->getTitle($LocaleClone);
-                $value = $Field->getValueByLocale($LocaleClone);
+                $title  = $Field->getTitle($LocaleClone);
+                $value  = $Field->getValueByLocale($LocaleClone);
+                $option = $getOptionFromField($value, $Field, $lang);
+
+                if (!empty($option)) {
+                    $value = $option;
+                }
 
                 if (empty($value) && !is_numeric($value)) {
                     continue;
                 }
 
-                $newValues[$lang][] = QUI\Projects\Site\Utils::clearUrl($title . '-' . $value);
+                $newValues[$lang][] = $title . ' ' . $value;
             }
         }
 
         foreach ($urlValue as $lang => $v) {
             $LocaleClone->setCurrent($lang);
             $productTitle = $this->getTitle($LocaleClone);
-            $productTitle = QUI\Projects\Site\Utils::clearUrl($productTitle);
+            $productTitle = trim($productTitle);
 
             $productSuffix = '';
 
             if (!empty($newValues[$lang])) {
-                $productSuffix = implode('-', $newValues[$lang]);
-                $productSuffix = trim($productSuffix, '-');
+                $productSuffix = implode(' ', $newValues[$lang]);
+                $productSuffix = trim($productSuffix);
             }
 
-            $urlValue[$lang] = $productTitle . '-' . $productSuffix;
+            $urlValue[$lang] = $productTitle . ' ' . $productSuffix;
         }
 
-        $URL->setValue($urlValue);
+        // url entries clearing, because or url usage
+        $urlValues = $urlValue;
+
+        foreach ($urlValues as $lang => $value) {
+            $urlValues[$lang] = QUI\Projects\Site\Utils::clearUrl($value);
+        }
+
+        $URL->setValue($urlValues);
 
         if ($onlyAttributeGroups) {
             $Title = $Variant->getField(FieldHandler::FIELD_TITLE);

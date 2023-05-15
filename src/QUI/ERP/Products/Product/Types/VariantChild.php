@@ -14,8 +14,12 @@ use QUI\ERP\Products\Utils\VariantGenerating;
 use QUI\Projects\Media\Utils as MediaUtils;
 
 use function array_flip;
+use function count;
 use function implode;
 use function in_array;
+use function is_null;
+use function str_replace;
+use function strpos;
 
 /**
  * Class VariantChild
@@ -26,9 +30,9 @@ use function in_array;
 class VariantChild extends AbstractType
 {
     /**
-     * @var VariantParent
+     * @var VariantParent|null
      */
-    protected $Parent = null;
+    protected ?VariantParent $Parent = null;
 
     /**
      * @var null|QUI\ERP\Products\Field\Field
@@ -113,8 +117,7 @@ class VariantChild extends AbstractType
 
                 // If inherited field is editable and has own value -> leave it as is
                 if (!$Field->isEmpty()) {
-                    if (Products::isExtendVariantChildShortDesc() &&
-                        $Field instanceof AttributeGroup) {
+                    if (Products::isExtendVariantChildShortDesc() && $Field instanceof AttributeGroup) {
                         $attributeListFieldValues[] = [
                             'title'      => $Field->getTitle(),
                             'valueTitle' => $Field->getValueTitle()
@@ -147,7 +150,11 @@ class VariantChild extends AbstractType
             $shortDescLines = [];
 
             foreach ($attributeListFieldValues as $field) {
-                $shortDescLines[] = $field['title'].': '.$field['valueTitle'];
+                $extend = $field['title'] . ': ' . $field['valueTitle'];
+
+                if (strpos($shortDesc, $extend) === false) {
+                    $shortDescLines[] = $extend;
+                }
             }
 
             $shortDescAddition              = implode('; ', $shortDescLines);
@@ -156,7 +163,7 @@ class VariantChild extends AbstractType
             if (empty($shortDesc)) {
                 $shortDesc = $shortDescAddition;
             } else {
-                $shortDesc .= '; '.$shortDescAddition;
+                $shortDesc .= '; ' . $shortDescAddition;
             }
 
             /** @var QUI\ERP\Products\Field\Types\InputMultiLang $ShortDescField */
@@ -169,7 +176,7 @@ class VariantChild extends AbstractType
 
     /**
      * @param null $Locale
-     * @return mixed
+     * @return array|string
      */
     public static function getTypeTitle($Locale = null)
     {
@@ -182,7 +189,7 @@ class VariantChild extends AbstractType
 
     /**
      * @param null $Locale
-     * @return mixed
+     * @return array|string
      */
     public static function getTypeDescription($Locale = null)
     {
@@ -194,7 +201,7 @@ class VariantChild extends AbstractType
     }
 
     /**
-     * @return bool|mixed
+     * @return bool
      */
     public static function isTypeSelectable()
     {
@@ -343,11 +350,12 @@ class VariantChild extends AbstractType
     {
         try {
             if ($this->OwnMediaFolderField) {
-                $Folder = $this->OwnMediaFolderField;
+                $folderUrl = $this->OwnMediaFolderField->getValue();
             } else {
                 $folderUrl = $this->getFieldValue(Fields::FIELD_FOLDER);
-                $Folder    = MediaUtils::getMediaItemByUrl($folderUrl);
             }
+
+            $Folder = MediaUtils::getMediaItemByUrl($folderUrl);
 
             if (MediaUtils::isFolder($Folder)) {
                 /* @var $Folder QUI\Projects\Media\Folder */
@@ -375,7 +383,7 @@ class VariantChild extends AbstractType
     }
 
     /**
-     * @return QUI\Projects\Media\Folder|void
+     * @return QUI\Projects\Media\Folder
      * @return QUI\Projects\Media\Folder
      *
      * @throws QUI\Exception
@@ -453,7 +461,7 @@ class VariantChild extends AbstractType
         try {
             $images = $this->getMediaFolder()->getImages($params);
 
-            if (\count($images)) {
+            if (count($images)) {
                 return $images;
             }
         } catch (QUI\Exception $Exception) {
@@ -553,12 +561,12 @@ class VariantChild extends AbstractType
                 continue;
             }
 
-            if (!\is_null($this->shortDescAddition) && $fieldId === Fields::FIELD_SHORT_DESC) {
+            if (!is_null($this->shortDescAddition) && $fieldId === Fields::FIELD_SHORT_DESC) {
                 $fieldValue = $field['value'];
 
                 foreach ($this->shortDescAddition as $lang => $addition) {
                     if (isset($fieldValue[$lang])) {
-                        $fieldValue[$lang] = \str_replace('; '.$addition, '', $fieldValue[$lang]);
+                        $fieldValue[$lang] = str_replace('; ' . $addition, '', $fieldValue[$lang]);
                     }
                 }
 
