@@ -1228,6 +1228,8 @@ class VariantParent extends AbstractType
 
         // set fields
         foreach ($fieldList as $k => $Field) {
+            $FieldFromParent = null;
+
             try {
                 $FieldFromParent = $this->getField($Field->getId());
 
@@ -1253,9 +1255,7 @@ class VariantParent extends AbstractType
             } catch (QUI\Exception $Exception) {
                 // field is not available, add it
                 // and only for AttributeGroup Fields
-                if ($Exception->getCode() === 1002
-                    && isset($FieldFromParent)
-                    && !($FieldFromParent instanceof AttributeGroup)) {
+                if ($Exception->getCode() === 1002 && $Field instanceof AttributeGroup) {
                     $Field->setOwnFieldStatus(true);
                     $this->addField($Field);
 
@@ -1328,6 +1328,12 @@ class VariantParent extends AbstractType
                 $fieldPrice = QUI\ERP\Money\Price::validatePrice($calc['value']);
 
                 $Price->setValue($Price->getValue() + $fieldPrice);
+                continue;
+            }
+
+            if ($Field->getType() === FieldHandler::TYPE_ATTRIBUTE_GROUPS) {
+                $Variant->addField($Field);
+                $Variant->getField($Field->getId())->setValue($fields[$k]);
             }
         }
 

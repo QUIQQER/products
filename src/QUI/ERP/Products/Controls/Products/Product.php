@@ -7,7 +7,6 @@
 namespace QUI\ERP\Products\Controls\Products;
 
 use DusanKasan\Knapsack\Collection;
-
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Product\JsonLd;
@@ -37,7 +36,7 @@ class Product extends QUI\Control
         ]);
 
         $this->addCSSClass('quiqqer-products-product');
-        $this->addCSSFile(\dirname(__FILE__).'/Product.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/Product.css');
 
         parent::__construct($attributes);
     }
@@ -332,7 +331,7 @@ class Product extends QUI\Control
 
             QUI::getEvents()->addEvent(
                 'onQuiqqer::products::product::end',
-                function (\Quiqqer\Engine\Collector $Collector) use ($Product) {
+                function (\quiqqer\smarty4\src\QUI\Smarty\Collector $Collector) use ($Product) {
                     $fieldHashes = ProductUtils::getJsFieldHashArray($Product);
                     $fieldHashes = \json_encode($fieldHashes);
 
@@ -340,8 +339,8 @@ class Product extends QUI\Control
                     $availableHashes = \array_flip($availableHashes);
                     $availableHashes = \json_encode($availableHashes);
 
-                    $Collector->append('<script>var fieldHashes = '.$fieldHashes.'</script>');
-                    $Collector->append('<script>var availableHashes = '.$availableHashes.'</script>');
+                    $Collector->append('<script>var fieldHashes = ' . $fieldHashes . '</script>');
+                    $Collector->append('<script>var availableHashes = ' . $availableHashes . '</script>');
                 }
             );
         }
@@ -384,22 +383,22 @@ class Product extends QUI\Control
 
         $Engine->assign(
             'buttonsHtml',
-            $Engine->fetch(\dirname(__FILE__).'/Product.Buttons.html')
+            $Engine->fetch(\dirname(__FILE__) . '/Product.Buttons.html')
         );
 
         // normal product
         if (!$typeVariantParent && !$typeVariantChild) {
-            return $Engine->fetch(\dirname(__FILE__).'/Product.html');
+            return $Engine->fetch(\dirname(__FILE__) . '/Product.html');
         }
 
         // variant product
         $this->setAttribute('data-qui', 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant');
 
         foreach ($this->getVariantControlSettings() as $k => $v) {
-            $this->setAttribute('data-qui-options-'.$k, $v);
+            $this->setAttribute('data-qui-options-' . $k, $v);
         }
 
-        return $Engine->fetch(\dirname(__FILE__).'/ProductVariant.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/ProductVariant.html');
     }
 
     /**
