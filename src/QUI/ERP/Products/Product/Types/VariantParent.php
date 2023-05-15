@@ -823,7 +823,7 @@ class VariantParent extends AbstractType
      */
     public function getVariants(array $params = [])
     {
-        if ($this->children !== null) {
+        if (!empty($this->children)) {
             if (isset($params['count'])) {
                 return count($this->children);
             }
@@ -1186,6 +1186,11 @@ class VariantParent extends AbstractType
      */
     public function generateVariant(array $fields): VariantChild
     {
+        if (empty($this->children)) {
+            // load children, because of the new article number
+            $this->getVariants();
+        }
+
         $Variant   = $this->createVariant();
         $fieldList = [];
 
@@ -1339,7 +1344,7 @@ class VariantParent extends AbstractType
 
         // set article no
         $parentProductNo = $this->getFieldValue(FieldHandler::FIELD_PRODUCT_NO);
-        $newNumber       = count($this->getVariants()) + 1;
+        $newNumber       = $this->getVariants(['count' => true]);
 
         if (empty($parentProductNo)) {
             $parentProductNo = $this->getId();
