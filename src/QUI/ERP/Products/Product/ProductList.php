@@ -9,8 +9,14 @@ namespace QUI\ERP\Products\Product;
 use QUI;
 
 use function count;
+use function explode;
+use function implode;
 use function is_array;
+use function is_numeric;
+use function is_string;
 use function json_encode;
+use function md5;
+use function usort;
 
 /**
  * Class ProductList
@@ -342,7 +348,37 @@ class ProductList
             return;
         }
 
-        $this->products[$Product->getId()] = $Product;
+        $fields = $Product->getFields();
+        $hash   = [];
+
+        foreach ($fields as $Field) {
+            $fieldId    = $Field->getId();
+            $fieldValue = $Field->getValue();
+
+            if (is_array($fieldValue)) {
+                $fieldValue = md5(json_encode($fieldValue));
+            }
+
+            if (!is_string($fieldValue) && !is_numeric($fieldValue)) {
+                continue;
+            }
+
+            $hash[] = $fieldId . ':' . $fieldValue;
+        }
+
+        // sort fields
+        usort($hash, function ($a, $b) {
+            $aId = (int)explode(':', $a)[0];
+            $bId = (int)explode(':', $b)[0];
+
+            return $aId - $bId;
+        });
+
+        // generate hash
+        $hash = ';' . implode(';', $hash) . ';';
+        $hash = md5($hash);
+
+        $this->products[$hash] = $Product;
     }
 
     public function removePos(int $pos)

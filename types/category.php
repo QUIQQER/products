@@ -93,7 +93,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
 
     // get by url field
     try {
-        $categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
+        $categoryId = (int)$Site->getAttribute('quiqqer.products.settings.categoryId');
         $Product    = Products\Handler\Products::getProductByUrl($refNo, $categoryId);
     } catch (QUI\Exception $Exception) {
         try {
