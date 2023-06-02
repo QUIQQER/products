@@ -169,6 +169,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
             $description = strip_tags($description);
             $description = trim($description);
             $description = str_replace("\n", '', $description);
+            $description = str_replace("&nbsp;", ' ', $description);
             $description = mb_substr($description, 0, 150);
         }
 
