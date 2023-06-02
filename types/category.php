@@ -157,9 +157,26 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         $Site->setAttribute('meta.description', $Product->getDescription($Locale));
         $Site->setAttribute('quiqqer.meta.site.title', false);
 
-        $Site->setAttribute('quiqqer.socialshare.description', $Product->getDescription($Locale));
         $Site->setAttribute('quiqqer.socialshare.image', $Product->getImage()->getUrl(true));
         $Site->setAttribute('quiqqer.socialshare.type', 'product');
+        $Site->setAttribute(
+            'quiqqer.socialshare.url',
+            $Product->getUrlRewrittenWithHost() . $Product->getUrl($Project)
+        );
+
+        // description
+        $description = $Product->getDescription($Locale);
+
+        if (empty($description)) {
+            $description = $Product->getContent($Locale);
+            $description = strip_tags($description);
+            $description = trim($description);
+            $description = str_replace("\n", '', $description);
+            $description = mb_substr($description, 0, 150);
+        }
+
+
+        $Site->setAttribute('quiqqer.socialshare.description', $description);
 
         $Keywords = $Product->getField(Products\Handler\Fields::FIELD_KEYWORDS);
         $keywords = $Keywords->getValueByLocale($Locale);
