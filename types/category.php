@@ -173,9 +173,13 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
             $description = mb_substr($description, 0, 150);
         }
 
+        if (!$Site->getAttribute('meta.description')) {
+            $Site->setAttribute('meta.description', $description);
+        }
 
         $Site->setAttribute('quiqqer.socialshare.description', $description);
 
+        
         $Keywords = $Product->getField(Products\Handler\Fields::FIELD_KEYWORDS);
         $keywords = $Keywords->getValueByLocale($Locale);
 
