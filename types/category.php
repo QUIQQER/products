@@ -159,7 +159,8 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
 
         $Site->setAttribute('quiqqer.socialshare.description', $Product->getDescription($Locale));
         $Site->setAttribute('quiqqer.socialshare.image', $Product->getImage()->getUrl(true));
-        
+        $Site->setAttribute('quiqqer.socialshare.type', 'Product');
+
         $Keywords = $Product->getField(Products\Handler\Fields::FIELD_KEYWORDS);
         $keywords = $Keywords->getValueByLocale($Locale);
 
