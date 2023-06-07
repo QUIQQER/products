@@ -103,7 +103,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
                 return;
             }
 
-            Currency.addEvent('onChange', (Instance, currency) => {
+            QUI.addEvent('onQuiqqerCurrencyChange', (Instance, currency) => {
                 this.setAttribute('currency', currency);
                 this.refresh();
             });
