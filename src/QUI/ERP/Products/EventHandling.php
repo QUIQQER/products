@@ -10,10 +10,11 @@ use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Handler\Search;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\Package\Package;
+use QUI\Projects\Site;
+use QUI\Projects\Site\Edit;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-use function class_exists;
 use function count;
 use function explode;
 use function is_array;
@@ -72,7 +73,7 @@ class EventHandling
         } catch (QUI\Exception $Exception) {
             // no produkt folder, we create one
             $Project = QUI::getProjectManager()->getStandard();
-            $Media   = $Project->getMedia();
+            $Media = $Project->getMedia();
 
             $Folder = $Media->firstChild();
 
@@ -114,8 +115,8 @@ class EventHandling
                 } catch (QUI\ERP\Products\Field\Exception $Exception) {
                     if ($Exception->getCode() === 404) {
                         QUI\System\Log::addInfo(
-                            'Removed product field #'.$fieldId.' from the [editableFields] section in '
-                            .$Config->getFilename()
+                            'Removed product field #' . $fieldId . ' from the [editableFields] section in '
+                            . $Config->getFilename()
                         );
 
                         unset($editableFields[$fieldId]);
@@ -137,8 +138,8 @@ class EventHandling
                 } catch (QUI\ERP\Products\Field\Exception $Exception) {
                     if ($Exception->getCode() === 404) {
                         QUI\System\Log::addInfo(
-                            'Removed product field #'.$fieldId.' from the [inheritedFields] section in '
-                            .$Config->getFilename().' because the field no longer exists.'
+                            'Removed product field #' . $fieldId . ' from the [inheritedFields] section in '
+                            . $Config->getFilename() . ' because the field no longer exists.'
                         );
 
                         unset($inheritedFields[$fieldId]);
@@ -214,244 +215,244 @@ class EventHandling
         $standardFields = [
             // Preis
             [
-                'id'            => Fields::FIELD_PRICE,
-                'type'          => 'Price',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 5,
-                'systemField'   => 1,
+                'id' => Fields::FIELD_PRICE,
+                'type' => 'Price',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 5,
+                'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 1,
-                'publicField'   => 1,
-                'search_type'   => Search::SEARCHTYPE_INPUTSELECTRANGE,
-                'titles'        => [
+                'publicField' => 1,
+                'search_type' => Search::SEARCHTYPE_INPUTSELECTRANGE,
+                'titles' => [
                     'de' => 'Preis',
                     'en' => 'Price'
                 ]
             ],
             // Angebotspreis
             [
-                'id'            => Fields::FIELD_PRICE_OFFER,
-                'type'          => 'Price',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 6,
-                'systemField'   => 0,
+                'id' => Fields::FIELD_PRICE_OFFER,
+                'type' => 'Price',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 6,
+                'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 1,
-                'search_type'   => Search::SEARCHTYPE_INPUTSELECTRANGE,
-                'titles'        => [
+                'publicField' => 1,
+                'search_type' => Search::SEARCHTYPE_INPUTSELECTRANGE,
+                'titles' => [
                     'de' => 'Angebotspreis',
                     'en' => 'Price offer'
                 ]
             ],
             // UVP - Unverbindliche Preisempfehlung
             [
-                'id'            => Fields::FIELD_PRICE_RETAIL,
-                'type'          => 'Price',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 6,
-                'systemField'   => 0,
+                'id' => Fields::FIELD_PRICE_RETAIL,
+                'type' => 'Price',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 6,
+                'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 1,
+                'publicField' => 1,
                 'showInDetails' => 1,
-                'search_type'   => Search::SEARCHTYPE_INPUTSELECTRANGE,
-                'titles'        => [
+                'search_type' => Search::SEARCHTYPE_INPUTSELECTRANGE,
+                'titles' => [
                     'de' => 'UVP',
                     'en' => 'RRP'
                 ],
-                'options'       => [
+                'options' => [
                     'ignoreForPriceCalculation' => 1
                 ]
             ],
             // MwSt ID
             [
-                'id'            => Fields::FIELD_VAT,
-                'type'          => 'Vat',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 6,
-                'systemField'   => 1,
+                'id' => Fields::FIELD_VAT,
+                'type' => 'Vat',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 6,
+                'systemField' => 1,
                 'standardField' => 1,
-                'publicField'   => 0,
+                'publicField' => 0,
                 'requiredField' => 0,
-                'search_type'   => '',
-                'titles'        => [
+                'search_type' => '',
+                'titles' => [
                     'de' => 'MwSt.',
                     'en' => 'Vat'
                 ]
             ],
             // Artikel Nummer
             [
-                'id'            => Fields::FIELD_PRODUCT_NO,
-                'type'          => 'Input',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 4,
-                'systemField'   => 1,
+                'id' => Fields::FIELD_PRODUCT_NO,
+                'type' => 'Input',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 4,
+                'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 1,
+                'publicField' => 1,
                 'showInDetails' => 1,
-                'search_type'   => Search::SEARCHTYPE_TEXT,
-                'titles'        => [
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'titles' => [
                     'de' => 'Art. Nr.',
                     'en' => 'Artikel No.'
                 ]
             ],
             // Title
             [
-                'id'            => Fields::FIELD_TITLE,
-                'type'          => 'InputMultiLang',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 1,
-                'systemField'   => 1,
+                'id' => Fields::FIELD_TITLE,
+                'type' => 'InputMultiLang',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 1,
+                'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 1,
-                'publicField'   => 1,
-                'search_type'   => Search::SEARCHTYPE_TEXT,
-                'options'       => [
+                'publicField' => 1,
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'options' => [
                     'maxLength' => 255,
                     'minLength' => 3
                 ],
-                'titles'        => [
+                'titles' => [
                     'de' => 'Titel',
                     'en' => 'Title'
                 ]
             ],
             // Short Desc
             [
-                'id'            => Fields::FIELD_SHORT_DESC,
-                'type'          => 'InputMultiLang',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 2,
-                'systemField'   => 1,
+                'id' => Fields::FIELD_SHORT_DESC,
+                'type' => 'InputMultiLang',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 2,
+                'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 1,
-                'search_type'   => Search::SEARCHTYPE_TEXT,
-                'options'       => [
+                'publicField' => 1,
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'options' => [
                     'maxLength' => 255,
                     'minLength' => 3
                 ],
-                'titles'        => [
+                'titles' => [
                     'de' => 'Kurzbeschreibung',
                     'en' => 'Short description'
                 ]
             ],
             // Content
             [
-                'id'            => Fields::FIELD_CONTENT,
-                'type'          => 'TextareaMultiLang',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 3,
-                'systemField'   => 1,
+                'id' => Fields::FIELD_CONTENT,
+                'type' => 'TextareaMultiLang',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 3,
+                'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 1,
-                'search_type'   => Search::SEARCHTYPE_TEXT,
-                'options'       => [
+                'publicField' => 1,
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'options' => [
                     'html' => 1
                 ],
-                'titles'        => [
+                'titles' => [
                     'de' => 'Beschreibung',
                     'en' => 'Description'
                 ]
             ],
             // Lieferant
             [
-                'id'            => Fields::FIELD_SUPPLIER,
-                'type'          => 'GroupList',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 9,
-                'systemField'   => 0,
+                'id' => Fields::FIELD_SUPPLIER,
+                'type' => 'GroupList',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 9,
+                'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 1,
-                'search_type'   => Search::SEARCHTYPE_INPUTSELECTSINGLE,
-                'options'       => [
+                'publicField' => 1,
+                'search_type' => Search::SEARCHTYPE_INPUTSELECTSINGLE,
+                'options' => [
                     'multipleUsers' => false
                 ],
-                'titles'        => [
+                'titles' => [
                     'de' => 'Lieferant',
                     'en' => 'Supplier'
                 ]
             ],
             // Hersteller
             [
-                'id'            => Fields::FIELD_MANUFACTURER,
-                'type'          => 'GroupList',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 10,
-                'systemField'   => 0,
+                'id' => Fields::FIELD_MANUFACTURER,
+                'type' => 'GroupList',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 10,
+                'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 1,
+                'publicField' => 1,
                 'showInDetails' => 1,
-                'search_type'   => Search::SEARCHTYPE_INPUTSELECTSINGLE,
-                'options'       => [
+                'search_type' => Search::SEARCHTYPE_INPUTSELECTSINGLE,
+                'options' => [
                     'multipleUsers' => false
                 ],
-                'titles'        => [
+                'titles' => [
                     'de' => 'Hersteller',
                     'en' => 'Manufacturer'
                 ]
             ],
             // Produkt Bild
             [
-                'id'            => Fields::FIELD_IMAGE,
-                'type'          => 'Image',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 7,
-                'systemField'   => 1,
+                'id' => Fields::FIELD_IMAGE,
+                'type' => 'Image',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 7,
+                'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 1,
-                'search_type'   => '',
-                'titles'        => [
+                'publicField' => 1,
+                'search_type' => '',
+                'titles' => [
                     'de' => 'Produktbild',
                     'en' => 'Image'
                 ]
             ],
             // Produkt Mediaordner
             [
-                'id'            => Fields::FIELD_FOLDER,
-                'type'          => 'Folder',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 8,
-                'systemField'   => 1,
+                'id' => Fields::FIELD_FOLDER,
+                'type' => 'Folder',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 8,
+                'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 1,
-                'search_type'   => '',
-                'titles'        => [
+                'publicField' => 1,
+                'search_type' => '',
+                'titles' => [
                     'de' => 'Media-Ordner',
                     'en' => 'Media folder'
                 ]
             ],
             // Produkt Priorität
             [
-                'id'            => Fields::FIELD_PRIORITY,
-                'type'          => 'IntType',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 8,
-                'systemField'   => 1,
+                'id' => Fields::FIELD_PRIORITY,
+                'type' => 'IntType',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 8,
+                'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 0,
-                'search_type'   => '',
-                'titles'        => [
+                'publicField' => 0,
+                'search_type' => '',
+                'titles' => [
                     'de' => 'Sortierung',
                     'en' => 'Sorting'
                 ]
@@ -475,187 +476,187 @@ class EventHandling
 //            ],
             // Produkt suchbegriffe
             [
-                'id'            => Fields::FIELD_KEYWORDS,
-                'type'          => 'InputMultiLang',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 10,
-                'systemField'   => 0,
+                'id' => Fields::FIELD_KEYWORDS,
+                'type' => 'InputMultiLang',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 10,
+                'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 0,
-                'search_type'   => Search::SEARCHTYPE_TEXT,
-                'titles'        => [
+                'publicField' => 0,
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'titles' => [
                     'de' => 'Suchbegriffe',
                     'en' => 'Search keywords'
                 ]
             ],
             // Produkt Zubehör
             [
-                'id'            => Fields::FIELD_EQUIPMENT,
-                'type'          => 'Products',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 11,
-                'systemField'   => 0,
+                'id' => Fields::FIELD_EQUIPMENT,
+                'type' => 'Products',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 11,
+                'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 1,
-                'search_type'   => '',
-                'titles'        => [
+                'publicField' => 1,
+                'search_type' => '',
+                'titles' => [
                     'de' => 'Zubehör',
                     'en' => 'Equipment'
                 ]
             ],
             // Produkt Ähnliche Produkte
             [
-                'id'            => Fields::FIELD_SIMILAR_PRODUCTS,
-                'type'          => 'Products',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 12,
-                'systemField'   => 0,
+                'id' => Fields::FIELD_SIMILAR_PRODUCTS,
+                'type' => 'Products',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 12,
+                'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 1,
-                'search_type'   => '',
-                'titles'        => [
+                'publicField' => 1,
+                'search_type' => '',
+                'titles' => [
                     'de' => 'Ähnliche Produkte',
                     'en' => 'Similar Products'
                 ]
             ],
             // Produkt URL
             [
-                'id'            => Fields::FIELD_URL,
-                'type'          => 'InputMultiLang',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 1,
-                'systemField'   => 1,
+                'id' => Fields::FIELD_URL,
+                'type' => 'InputMultiLang',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 1,
+                'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 0,
-                'search_type'   => Search::SEARCHTYPE_TEXT,
-                'titles'        => [
+                'publicField' => 0,
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'titles' => [
                     'de' => 'Produkt URL',
                     'en' => 'Product URL'
                 ]
             ],
             // Unit / Einheit (NOT packaging unit / NICHT Verpackungseinheit!)
             [
-                'id'            => Fields::FIELD_UNIT,
-                'type'          => 'UnitSelect',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 1,
-                'systemField'   => 0,
+                'id' => Fields::FIELD_UNIT,
+                'type' => 'UnitSelect',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 1,
+                'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 0,
-                'search_type'   => '',
-                'titles'        => [
+                'publicField' => 0,
+                'search_type' => '',
+                'titles' => [
                     'de' => 'Einheit',
                     'en' => 'Unit'
                 ],
-                'options'       => [
+                'options' => [
                     'entries' => [
-                        'kg'    => [
-                            'title'           => [
+                        'kg' => [
+                            'title' => [
                                 'de' => 'kg',
                                 'en' => 'kg'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => false,
+                            'default' => false,
+                            'quantityInput' => false,
                             'defaultQuantity' => false
                         ],
-                        'lbs'   => [
-                            'title'           => [
+                        'lbs' => [
+                            'title' => [
                                 'de' => 'Pfd.',
                                 'en' => 'lbs.'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => false,
+                            'default' => false,
+                            'quantityInput' => false,
                             'defaultQuantity' => false
                         ],
-                        'g'     => [
-                            'title'           => [
+                        'g' => [
+                            'title' => [
                                 'de' => 'g',
                                 'en' => 'g'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => false,
+                            'default' => false,
+                            'quantityInput' => false,
                             'defaultQuantity' => false
                         ],
-                        'l'     => [
-                            'title'           => [
+                        'l' => [
+                            'title' => [
                                 'de' => 'l',
                                 'en' => 'l'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => false,
+                            'default' => false,
+                            'quantityInput' => false,
                             'defaultQuantity' => false
                         ],
-                        'm'     => [
-                            'title'           => [
+                        'm' => [
+                            'title' => [
                                 'de' => 'm',
                                 'en' => 'm'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => false,
+                            'default' => false,
+                            'quantityInput' => false,
                             'defaultQuantity' => false
                         ],
-                        'mm'    => [
-                            'title'           => [
+                        'mm' => [
+                            'title' => [
                                 'de' => 'mm',
                                 'en' => 'mm'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => false,
+                            'default' => false,
+                            'quantityInput' => false,
                             'defaultQuantity' => false
                         ],
-                        'sqm'   => [
-                            'title'           => [
+                        'sqm' => [
+                            'title' => [
                                 'de' => 'm²',
                                 'en' => 'm²'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => false,
+                            'default' => false,
+                            'quantityInput' => false,
                             'defaultQuantity' => false
                         ],
-                        'pair'  => [
-                            'title'           => [
+                        'pair' => [
+                            'title' => [
                                 'de' => 'Paar',
                                 'en' => 'pair'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => false,
+                            'default' => false,
+                            'quantityInput' => false,
                             'defaultQuantity' => false
                         ],
                         'piece' => [
-                            'title'           => [
+                            'title' => [
                                 'de' => 'Stück',
                                 'en' => 'piece'
                             ],
-                            'default'         => true,
-                            'quantityInput'   => false,
+                            'default' => true,
+                            'quantityInput' => false,
                             'defaultQuantity' => 1
                         ],
-                        'tons'  => [
-                            'title'           => [
+                        'tons' => [
+                            'title' => [
                                 'de' => 't',
                                 'en' => 't'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => false,
+                            'default' => false,
+                            'quantityInput' => false,
                             'defaultQuantity' => false
                         ],
                         'hours' => [
-                            'title'           => [
+                            'title' => [
                                 'de' => 'Std.',
                                 'en' => 'hrs.'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => false,
+                            'default' => false,
+                            'quantityInput' => false,
                             'defaultQuantity' => false
                         ]
                     ]
@@ -663,65 +664,65 @@ class EventHandling
             ],
             // Weight / Gewicht
             [
-                'id'            => Fields::FIELD_WEIGHT,
-                'type'          => 'UnitSelect',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 1,
-                'systemField'   => 0,
+                'id' => Fields::FIELD_WEIGHT,
+                'type' => 'UnitSelect',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 1,
+                'systemField' => 0,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 0,
-                'search_type'   => '',
-                'titles'        => [
+                'publicField' => 0,
+                'search_type' => '',
+                'titles' => [
                     'de' => 'Gewicht',
                     'en' => 'Weight'
                 ],
-                'options'       => [
+                'options' => [
                     'entries' => [
-                        'kg'   => [
-                            'title'           => [
+                        'kg' => [
+                            'title' => [
                                 'de' => 'kg',
                                 'en' => 'kg'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => true,
+                            'default' => false,
+                            'quantityInput' => true,
                             'defaultQuantity' => false
                         ],
-                        'g'    => [
-                            'title'           => [
+                        'g' => [
+                            'title' => [
                                 'de' => 'g',
                                 'en' => 'g'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => true,
+                            'default' => false,
+                            'quantityInput' => true,
                             'defaultQuantity' => false
                         ],
                         'tons' => [
-                            'title'           => [
+                            'title' => [
                                 'de' => 't',
                                 'en' => 't'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => true,
+                            'default' => false,
+                            'quantityInput' => true,
                             'defaultQuantity' => false
                         ],
-                        'lbs'  => [
-                            'title'           => [
+                        'lbs' => [
+                            'title' => [
                                 'de' => 'Pfd.',
                                 'en' => 'lbs.'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => true,
+                            'default' => false,
+                            'quantityInput' => true,
                             'defaultQuantity' => false
                         ],
-                        'oz'   => [
-                            'title'           => [
+                        'oz' => [
+                            'title' => [
                                 'de' => 'oz.',
                                 'en' => 'oz.'
                             ],
-                            'default'         => false,
-                            'quantityInput'   => true,
+                            'default' => false,
+                            'quantityInput' => true,
                             'defaultQuantity' => false
                         ],
                     ]
@@ -729,18 +730,18 @@ class EventHandling
             ],
             // EAN
             [
-                'id'            => Fields::FIELD_EAN,
-                'type'          => 'Input',
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 10,
-                'systemField'   => 1,
+                'id' => Fields::FIELD_EAN,
+                'type' => 'Input',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 10,
+                'systemField' => 1,
                 'standardField' => 1,
                 'requiredField' => 0,
-                'publicField'   => 1,
+                'publicField' => 1,
                 'showInDetails' => 0,
-                'search_type'   => Search::SEARCHTYPE_TEXT,
-                'titles'        => [
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'titles' => [
                     'de' => 'GTIN / EAN',
                     'en' => 'GTIN / EAN'
                 ]
@@ -748,17 +749,17 @@ class EventHandling
 
             // variant
             [
-                'id'            => Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES,
-                'type'          => Fields::TYPE_ATTRIBUTE_GROUPS,
-                'prefix'        => '',
-                'suffix'        => '',
-                'priority'      => 1,
-                'systemField'   => 0,
+                'id' => Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES,
+                'type' => Fields::TYPE_ATTRIBUTE_GROUPS,
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 1,
+                'systemField' => 0,
                 'standardField' => 0,
                 'requiredField' => 0,
-                'publicField'   => 1,
-                'search_type'   => Search::SEARCHTYPE_TEXT,
-                'titles'        => [
+                'publicField' => 1,
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'titles' => [
                     'de' => 'Produktvarianten',
                     'en' => 'Product variants'
                 ]
@@ -767,7 +768,7 @@ class EventHandling
 
         foreach ($standardFields as $field) {
             $result = QUI::getDataBase()->fetch([
-                'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+                'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                 'where' => [
                     'id' => $field['id']
                 ]
@@ -782,13 +783,13 @@ class EventHandling
                 QUI::getDataBase()->update(
                     QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                     [
-                        'type'          => $field['type'],
-                        'prefix'        => $result[0]['prefix'] ?: $field['prefix'],
-                        'suffix'        => $result[0]['suffix'] ?: $field['suffix'],
-                        'priority'      => $result[0]['priority'] ?: $field['priority'],
-                        'systemField'   => $field['systemField'],
+                        'type' => $field['type'],
+                        'prefix' => $result[0]['prefix'] ?: $field['prefix'],
+                        'suffix' => $result[0]['suffix'] ?: $field['suffix'],
+                        'priority' => $result[0]['priority'] ?: $field['priority'],
+                        'systemField' => $field['systemField'],
                         'standardField' => $result[0]['standardField'] ?: $field['standardField'],
-                        'search_type'   => $result[0]['search_type'] ?: $field['search_type']
+                        'search_type' => $result[0]['search_type'] ?: $field['search_type']
                     ],
                     ['id' => $field['id']]
                 );
@@ -797,22 +798,22 @@ class EventHandling
 
                 // create / update view permission
                 QUI::getPermissionManager()->addPermission([
-                    'name'  => "permission.products.fields.field{$field['id']}.view",
+                    'name' => "permission.products.fields.field{$field['id']}.view",
                     'title' => "quiqqer/products permission.products.fields.field{$field['id']}.view.title",
-                    'desc'  => "",
-                    'type'  => 'bool',
-                    'area'  => 'groups',
-                    'src'   => 'user'
+                    'desc' => "",
+                    'type' => 'bool',
+                    'area' => 'groups',
+                    'src' => 'user'
                 ]);
 
                 // create / update edit permission
                 QUI::getPermissionManager()->addPermission([
-                    'name'  => "permission.products.fields.field{$field['id']}.edit",
+                    'name' => "permission.products.fields.field{$field['id']}.edit",
                     'title' => "quiqqer/products permission.products.fields.field{$field['id']}.edit.title",
-                    'desc'  => "",
-                    'type'  => 'bool',
-                    'area'  => 'groups',
-                    'src'   => 'user'
+                    'desc' => "",
+                    'type' => 'bool',
+                    'area' => 'groups',
+                    'src' => 'user'
                 ]);
 
                 continue;
@@ -883,10 +884,10 @@ class EventHandling
     {
         try {
             $result = QUI::getDataBase()->fetch([
-                'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
                     'type' => [
-                        'type'  => 'LIKE%',
+                        'type' => 'LIKE%',
                         'value' => '\\\\QUI'
                     ]
                 ],
@@ -897,11 +898,11 @@ class EventHandling
                 return;
             }
 
-            $sql = "UPDATE `".Tables::getProductTableName()."` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
+            $sql = "UPDATE `" . Tables::getProductTableName() . "` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
             QUI::getDataBase()->execSQL($sql);
 
-            $sql = "UPDATE `".Tables::getProductCacheTableName().
-                   "` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
+            $sql = "UPDATE `" . Tables::getProductCacheTableName() .
+                "` SET `type` = REPLACE(`type`, '\\\\QUI', 'QUI');";
             QUI::getDataBase()->execSQL($sql);
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
@@ -915,7 +916,7 @@ class EventHandling
      */
     public static function checkProductCacheTable()
     {
-        $DB             = QUI::getDataBase();
+        $DB = QUI::getDataBase();
         $categoryColumn = $DB->table()->getColumn('products_cache', 'category');
 
         if ($categoryColumn['Type'] !== 'varchar(255)') {
@@ -925,7 +926,7 @@ class EventHandling
 
         // check field columns
         $fieldColumns = $DB->table()->getColumns('products_cache');
-        $cacheTbl     = QUI::getDBTableName('products_cache');
+        $cacheTbl = QUI::getDBTableName('products_cache');
 
         foreach ($fieldColumns as $column) {
             if (mb_substr($column, 0, 1) !== 'F') {
@@ -935,20 +936,22 @@ class EventHandling
             $fieldId = (int)mb_substr($column, 1);
 
             try {
-                $Field                     = Fields::getField($fieldId);
-                $columnTypeExpected        = mb_strtolower($Field->getColumnType());
+                $Field = Fields::getField($fieldId);
+                $columnTypeExpected = mb_strtolower($Field->getColumnType());
                 $columnTypeExpectedVariant = preg_replace('#[\W\d]#i', '', $columnTypeExpected);
 
-                $columnInfo       = $DB->table()->getColumn($cacheTbl, $column);
+                $columnInfo = $DB->table()->getColumn($cacheTbl, $column);
                 $columnTypeActual = preg_replace('#[\W\d]#i', '', $columnInfo['Type']);
 
-                if ($columnTypeActual !== $columnTypeExpected
-                    && $columnTypeActual !== $columnTypeExpectedVariant) {
+                if (
+                    $columnTypeActual !== $columnTypeExpected
+                    && $columnTypeActual !== $columnTypeExpectedVariant
+                ) {
                     QUI\System\Log::addCritical(
-                        'Column "'.$column.'" in table "products_cache" has wrong type!'
-                        .' Expected: '.$columnTypeExpected.' or '.$columnTypeExpectedVariant
-                        .' | Actual: '.$columnTypeActual.'.'
-                        .' Please fix manually!'
+                        'Column "' . $column . '" in table "products_cache" has wrong type!'
+                        . ' Expected: ' . $columnTypeExpected . ' or ' . $columnTypeExpectedVariant
+                        . ' | Actual: ' . $columnTypeActual . '.'
+                        . ' Please fix manually!'
                     );
                 }
             } catch (QUI\ERP\Products\Field\Exception $Exception) {
@@ -957,19 +960,19 @@ class EventHandling
                     $DB->table()->deleteColumn($cacheTbl, $column);
 
                     QUI\System\Log::addInfo(
-                        'quiqqer/products :: Deleted column "'.$column.'" from table "'.$cacheTbl.'" because'
-                        .' product field #'.$fieldId.' does not exist anymore.'
+                        'quiqqer/products :: Deleted column "' . $column . '" from table "' . $cacheTbl . '" because'
+                        . ' product field #' . $fieldId . ' does not exist anymore.'
                     );
                 } else {
                     QUI\System\Log::addError(
                         'EventHandling :: checkProductCacheTable -> ERROR on cache table column check for field #'
-                        .$fieldId.': '.$Exception->getMessage()
+                        . $fieldId . ': ' . $Exception->getMessage()
                     );
                 }
             } catch (Exception $Exception) {
                 QUI\System\Log::addError(
                     'EventHandling :: checkProductCacheTable -> ERROR on cache table column check for field #'
-                    .$fieldId.': '.$Exception->getMessage()
+                    . $fieldId . ': ' . $Exception->getMessage()
                 );
             }
         }
@@ -978,11 +981,12 @@ class EventHandling
     /**
      * Event on site load
      *
-     * @param \QUI\Projects\Site $Site
+     * @param Site|Edit $Site
      */
     public static function onSiteLoad($Site)
     {
-        if ($Site->getAttribute('type') == 'quiqqer/products:types/category' ||
+        if (
+            $Site->getAttribute('type') == 'quiqqer/products:types/category' ||
             $Site->getAttribute('type') == 'quiqqer/products:types/search'
         ) {
             $Site->setAttribute('nocache', 1);
@@ -992,30 +996,31 @@ class EventHandling
     /**
      * Event on product category site save
      *
-     * @param \QUI\Projects\Site\Edit $Site
+     * @param Edit $Site
      * @throws QUI\Exception
      */
-    public static function onSiteSave($Site)
+    public static function onSiteSave(Edit $Site)
     {
         $Project = $Site->getProject();
 
         // register path
-        if ($Site->getAttribute('active') &&
+        if (
+            $Site->getAttribute('active') &&
             $Site->getAttribute('type') == 'quiqqer/products:types/category'
         ) {
             $url = $Site->getLocation();
             $url = str_replace(QUI\Rewrite::URL_DEFAULT_SUFFIX, '', $url);
 
-            QUI::getRewrite()->registerPath($url.'/*', $Site);
+            QUI::getRewrite()->registerPath($url . '/*', $Site);
 
             // Clear category menu cache
             QUI\Cache\LongTermCache::clear(
-                QUI\ERP\Products\Handler\Cache::getBasicCachePath().'categories/menu'
+                QUI\ERP\Products\Handler\Cache::getBasicCachePath() . 'categories/menu'
             );
         }
 
         // cache clearing
-        $cname = 'products/search/frontend/fieldvalues/'.$Site->getId().'/'.$Project->getLang();
+        $cname = 'products/search/frontend/fieldvalues/' . $Site->getId() . '/' . $Project->getLang();
 
         QUI\ERP\Products\Search\Cache::clear($cname);
         QUI\ERP\Products\Search\Cache::clear('products/search/userfieldids/');
@@ -1024,8 +1029,8 @@ class EventHandling
 
         // field cache clearing
         $searchFieldCache = 'products/search/frontend/searchfielddata/';
-        $searchFieldCache .= $Site->getId().'/';
-        $searchFieldCache .= $Project->getLang().'/';
+        $searchFieldCache .= $Site->getId() . '/';
+        $searchFieldCache .= $Project->getLang() . '/';
 
         QUI\ERP\Products\Search\Cache::clear($searchFieldCache);
 
@@ -1047,11 +1052,11 @@ class EventHandling
      * Event on child create
      *
      * @param integer $newId
-     * @param \QUI\Projects\Site\Edit $Parent
+     * @param Edit|Site $Parent
      *
      * @throws QUI\Exception
      */
-    public static function onSiteCreateChild($newId, $Parent)
+    public static function onSiteCreateChild(int $newId, $Parent)
     {
         $type = $Parent->getAttribute('type');
 
@@ -1060,15 +1065,15 @@ class EventHandling
         }
 
         $Project = $Parent->getProject();
-        $Site    = new QUI\Projects\Site\Edit($Project, $newId);
+        $Site = new Edit($Project, $newId);
 
         $Site->setAttribute('type', 'quiqqer/products:types/category');
         $Site->save();
 
 
         $Package = QUI::getPackage('quiqqer/products');
-        $Site    = new QUI\Projects\Site\Edit($Project, $newId);
-        $Config  = $Package->getConfig();
+        $Site = new Edit($Project, $newId);
+        $Config = $Package->getConfig();
 
         if ($Config->getValue('products', 'categoryShowFilterLeft')) {
             $Site->setAttribute('quiqqer.products.settings.showFilterLeft', 1);
@@ -1084,7 +1089,7 @@ class EventHandling
     /**
      * Event on product category site save
      *
-     * @param \QUI\Projects\Site\Edit $Site
+     * @param Edit|Site $Site
      *
      * @throws QUI\Exception
      */
@@ -1092,7 +1097,7 @@ class EventHandling
     {
         // default fields ids
         $searchFieldIds = $Site->getAttribute('quiqqer.products.settings.searchFieldIds');
-        $fieldsIds      = [];
+        $fieldsIds = [];
 
         if (empty($searchFieldIds)) {
             $searchFieldIds = [];
@@ -1108,10 +1113,11 @@ class EventHandling
             }
         }
 
-        if (empty($fieldsIds)
+        if (
+            empty($fieldsIds)
             && $Site->getAttribute('quiqqer.products.settings.searchFieldIds.edited') === false
         ) {
-            $Package    = QUI::getPackage('quiqqer/products');
+            $Package = QUI::getPackage('quiqqer/products');
             $defaultIds = $Package->getConfig()->get('search', 'frontend');
 
             if ($defaultIds) {
@@ -1136,11 +1142,11 @@ class EventHandling
      *
      * @throws QUI\Exception
      */
-    public static function onPackageInstall($Package)
+    public static function onPackageInstall(Package $Package)
     {
         // Clear some cache paths if any new package is installed
         $clearCachePaths = [
-            Cache::getBasicCachePath().'fields/'
+            Cache::getBasicCachePath() . 'fields/'
         ];
 
         foreach ($clearCachePaths as $cachePath) {
@@ -1175,7 +1181,7 @@ class EventHandling
      * @param Package $Package
      * @param array $params
      */
-    public static function onPackageConfigSave($Package, $params)
+    public static function onPackageConfigSave(Package $Package, array $params)
     {
         if ($Package->getName() != 'quiqqer/products') {
             return;
@@ -1204,8 +1210,8 @@ class EventHandling
 
 
         $header = '<script type="text/javascript">';
-        $header .= 'var QUIQQER_PRODUCTS_HIDE_PRICE = '.$hide.';';
-        $header .= 'var QUIQQER_PRODUCTS_FRONTEND_ANIMATION = '.$frontendAnimation.';';
+        $header .= 'var QUIQQER_PRODUCTS_HIDE_PRICE = ' . $hide . ';';
+        $header .= 'var QUIQQER_PRODUCTS_FRONTEND_ANIMATION = ' . $frontendAnimation . ';';
         $header .= '</script>';
 
         $TemplateManager->extendHeader($header);
@@ -1214,12 +1220,11 @@ class EventHandling
     /**
      * event: on set permission to object
      *
-     * @param QUI\Users\User|QUI\Groups\Group|
-     *                           QUI\Projects\Project|QUI\Projects\Site|QUI\Projects\Site\Edit $Obj
+     * @param QUI\Users\User|QUI\Groups\Group|QUI\Projects\Project|QUI\Projects\Site|QUI\Projects\Site\Edit $Obj
      * @param array $permissions
      *
      */
-    public static function onPermissionsSet($Obj, $permissions)
+    public static function onPermissionsSet($Obj, array $permissions)
     {
         if ($Obj instanceof QUI\Groups\Group) {
             QUI\ERP\Products\Search\Cache::clear('products/search/userfieldids/');
@@ -1238,8 +1243,8 @@ class EventHandling
             return;
         }
 
-        $getUrl   = $_GET['_url'];
-        $getUrl   = trim($getUrl, '/');
+        $getUrl = $_GET['_url'];
+        $getUrl = trim($getUrl, '/');
         $urlParts = explode('/', $getUrl);
 
         if ($urlParts[0] != '_p') {
@@ -1257,8 +1262,8 @@ class EventHandling
         }
 
         try {
-            $Product    = Handler\Products::getProduct($params[1]);
-            $Project    = $Rewrite->getProject();
+            $Product = Handler\Products::getProduct($params[1]);
+            $Project = $Rewrite->getProject();
             $productUrl = $Product->getUrl();
 
             if (strpos($productUrl, '/_p/') === false) {
@@ -1306,11 +1311,11 @@ class EventHandling
         foreach ($Articles as $Article) {
             /* @var $Article QUI\ERP\Accounting\Article */
             $productId = $Article->getId();
-            $quantity  = $Article->getQuantity();
+            $quantity = $Article->getQuantity();
 
             try {
                 $result = QUI::getDataBase()->fetch([
-                    'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                    'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                     'where' => [
                         'id' => $productId
                     ],
@@ -1361,19 +1366,19 @@ class EventHandling
         }
 
         try {
-            $catId            = (int)$catId;
-            $categoryTable    = QUI\ERP\Products\Utils\Tables::getCategoryTableName();
+            $catId = (int)$catId;
+            $categoryTable = QUI\ERP\Products\Utils\Tables::getCategoryTableName();
             $translationTable = QUI\Translator::table();
 
             $title = '';
-            $desc  = '';
+            $desc = '';
 
             // title
             $titleResult = QUI::getDataBase()->fetch([
-                'from'  => $translationTable,
+                'from' => $translationTable,
                 'where' => [
                     'groups' => 'quiqqer/products',
-                    'var'    => 'products.category.'.$catId.'.title'
+                    'var' => 'products.category.' . $catId . '.title'
                 ],
                 'limit' => 1
             ]);
@@ -1384,10 +1389,10 @@ class EventHandling
 
             // desc
             $descResult = QUI::getDataBase()->fetch([
-                'from'  => $translationTable,
+                'from' => $translationTable,
                 'where' => [
                     'groups' => 'quiqqer/products',
-                    'var'    => 'products.category.'.$catId.'.description'
+                    'var' => 'products.category.' . $catId . '.description'
                 ],
                 'limit' => 1
             ]);
@@ -1397,7 +1402,7 @@ class EventHandling
             }
 
             QUI::getDataBase()->update($categoryTable, [
-                'title_cache'       => $title,
+                'title_cache' => $title,
                 'description_cache' => $desc
             ], [
                 'id' => $catId
@@ -1415,8 +1420,8 @@ class EventHandling
      */
     public static function onQuiqqerTranslatorEditById($id, $data)
     {
-        $group   = $data['groups'];
-        $var     = $data['var'];
+        $group = $data['groups'];
+        $var = $data['var'];
         $package = $data['package'];
 
         self::onQuiqqerTranslatorEdit($group, $var, $package, $data);
