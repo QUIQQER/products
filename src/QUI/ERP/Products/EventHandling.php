@@ -1126,13 +1126,13 @@ class EventHandling
     }
 
     /**
-     * event: onPackageInstall
+     * event: onPackageInstallAfter
      *
      * @param Package $Package
      *
      * @throws QUI\Exception
      */
-    public static function onPackageInstall(Package $Package)
+    public static function onPackageInstallAfter(Package $Package)
     {
         // Clear some cache paths if any new package is installed
         $clearCachePaths = [
