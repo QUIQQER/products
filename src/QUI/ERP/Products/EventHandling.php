@@ -982,10 +982,9 @@ class EventHandling
      */
     public static function onSiteLoad($Site)
     {
-        if (
-            $Site->getAttribute('type') == 'quiqqer/products:types/category'
-            || $Site->getAttribute('type') == 'quiqqer/products:types/search'
-        ) {
+        $type = $Site->getAttribute('type');
+
+        if ($type == 'quiqqer/products:types/category' || $type == 'quiqqer/products:types/search') {
             $Site->setAttribute('nocache', 1);
         }
     }
@@ -1001,10 +1000,7 @@ class EventHandling
         $Project = $Site->getProject();
 
         // register path
-        if (
-            $Site->getAttribute('active') &&
-            $Site->getAttribute('type') == 'quiqqer/products:types/category'
-        ) {
+        if ($Site->getAttribute('active') && $Site->getAttribute('type') == 'quiqqer/products:types/category') {
             $url = $Site->getLocation();
             $url = str_replace(QUI\Rewrite::URL_DEFAULT_SUFFIX, '', $url);
 
