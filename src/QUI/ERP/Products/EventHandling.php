@@ -943,10 +943,7 @@ class EventHandling
                 $columnInfo = $DB->table()->getColumn($cacheTbl, $column);
                 $columnTypeActual = preg_replace('#[\W\d]#i', '', $columnInfo['Type']);
 
-                if (
-                    $columnTypeActual !== $columnTypeExpected
-                    && $columnTypeActual !== $columnTypeExpectedVariant
-                ) {
+                if ($columnTypeActual !== $columnTypeExpected && $columnTypeActual !== $columnTypeExpectedVariant) {
                     QUI\System\Log::addCritical(
                         'Column "' . $column . '" in table "products_cache" has wrong type!'
                         . ' Expected: ' . $columnTypeExpected . ' or ' . $columnTypeExpectedVariant
@@ -986,8 +983,8 @@ class EventHandling
     public static function onSiteLoad($Site)
     {
         if (
-            $Site->getAttribute('type') == 'quiqqer/products:types/category' ||
-            $Site->getAttribute('type') == 'quiqqer/products:types/search'
+            $Site->getAttribute('type') == 'quiqqer/products:types/category'
+            || $Site->getAttribute('type') == 'quiqqer/products:types/search'
         ) {
             $Site->setAttribute('nocache', 1);
         }
@@ -1113,10 +1110,7 @@ class EventHandling
             }
         }
 
-        if (
-            empty($fieldsIds)
-            && $Site->getAttribute('quiqqer.products.settings.searchFieldIds.edited') === false
-        ) {
+        if (empty($fieldsIds) && $Site->getAttribute('quiqqer.products.settings.searchFieldIds.edited') === false) {
             $Package = QUI::getPackage('quiqqer/products');
             $defaultIds = $Package->getConfig()->get('search', 'frontend');
 
