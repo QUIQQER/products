@@ -8,7 +8,7 @@
 
     <!-- package events -->
     <event on="onPackageSetup" fire="\QUI\ERP\Products\EventHandling::onPackageSetup"/>
-    <event on="onPackageInstall" fire="\QUI\ERP\Products\EventHandling::onPackageInstall" priority="-100"/>
+    <event on="onPackageInstallAfter" fire="\QUI\ERP\Products\EventHandling::onPackageInstallAfter" priority="-100"/>
     <event on="onPackageConfigSave" fire="\QUI\ERP\Products\EventHandling::onPackageConfigSave"/>
 
     <!-- site events -->
