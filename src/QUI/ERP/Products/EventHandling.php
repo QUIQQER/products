@@ -1142,27 +1142,6 @@ class EventHandling
         foreach ($clearCachePaths as $cachePath) {
             QUI\Cache\Manager::clear($cachePath);
         }
-
-        if ($Package->getName() != 'quiqqer/products') {
-            return;
-        }
-
-        $CronManager = new QUI\Cron\Manager();
-
-        // which crons to set up
-        $crons = [
-            QUI::getLocale()->get($Package->getName(), 'cron.updateProductCache.title'),
-            QUI::getLocale()->get($Package->getName(), 'cron.generateProductAttributeListTags.title')
-        ];
-
-        foreach ($crons as $cron) {
-            if ($CronManager->isCronSetUp($cron)) {
-                continue;
-            }
-
-            // add cron: run once every day at 0 am
-            $CronManager->add($cron, '0', '0', '*', '*', '*');
-        }
     }
 
     /**
