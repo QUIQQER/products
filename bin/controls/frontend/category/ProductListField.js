@@ -13,7 +13,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListField
     return new Class({
 
         Extends: ProductListFilter,
-        Type   : 'package/quiqqer/products/bin/controls/frontend/category/ProductListField',
+        Type: 'package/quiqqer/products/bin/controls/frontend/category/ProductListField',
 
         Binds: [
             '$onInject',
@@ -36,7 +36,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListField
             if (Field && Field.getSearchValue()) {
                 fieldValue = Field.getSearchValue();
 
-                if (typeof fieldValue.length !== 'undefined') {
+                if (typeof fieldValue !== 'string' && typeof fieldValue.length !== 'undefined') {
                     fieldValue = fieldValue.join(',');
                 } else if (typeof fieldValue === 'object') {
                     fieldValue = Object.toQueryString(fieldValue);
@@ -44,12 +44,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductListField
             }
 
             this.$Elm = new Element('div', {
-                'class'           : 'quiqqer-products-productList-filter',
-                html              : '<div class="quiqqer-products-productList-filter-text"></div>' +
-                                    '<div class="quiqqer-products-productList-filter-destroy">' +
-                                    '    <span class="fa fa-close"></span>' +
-                                    '</div>',
-                'data-field'      : Field.getAttribute('fieldid'),
+                'class': 'quiqqer-products-productList-filter',
+                html: '<div class="quiqqer-products-productList-filter-text"></div>' +
+                    '<div class="quiqqer-products-productList-filter-destroy">' +
+                    '    <span class="fa fa-close"></span>' +
+                    '</div>',
+                'data-field': Field.getAttribute('fieldid'),
                 'data-field-value': fieldValue
             });
 
