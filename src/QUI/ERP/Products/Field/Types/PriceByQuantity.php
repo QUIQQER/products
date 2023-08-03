@@ -78,6 +78,10 @@ class PriceByQuantity extends Price
             return false;
         }
 
+        if (empty($value['price'])) {
+            return false;
+        }
+
         if ((int)$value['quantity'] > $Product->getQuantity()) {
             return false;
         }
@@ -176,6 +180,10 @@ class PriceByQuantity extends Price
 
         $price    = $value['price'];
         $quantity = $value['quantity'];
+
+        if (empty($quantity) || empty($price)) {
+            return $defaultReturn;
+        }
 
         if (is_float($price)) {
             return [
