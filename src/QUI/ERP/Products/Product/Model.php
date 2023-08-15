@@ -694,8 +694,8 @@ class Model extends QUI\QDOM
         $Site = $Category->getSite($Project);
 
         if (
-            !$Site->getAttribute('active') ||
-            $Site->getAttribute('quiqqer.products.fake.type')
+            !$Site->getAttribute('active')
+            || $Site->getAttribute('quiqqer.products.fake.type')
             || $Site->getAttribute('type') !== 'quiqqer/products:types/category'
             && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
         ) {
