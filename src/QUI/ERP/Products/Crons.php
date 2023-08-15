@@ -73,8 +73,8 @@ class Crons
      */
     public static function generateCacheImagesOfProducts()
     {
-        $ids     = Products::getProductIds();
-        $count   = count($ids);
+        $ids = Products::getProductIds();
+        $count = count($ids);
         $current = 0;
 
         /** @var QUI\ERP\Products\Product\Model $Product */
@@ -100,9 +100,9 @@ class Crons
                 $Image->createSizeCache(100, 200); // product gallery. preview
             } catch (\Exception $Exception) {
                 Log::addNotice($Exception->getMessage(), [
-                    'stack'     => $Exception->getTraceAsString(),
+                    'stack' => $Exception->getTraceAsString(),
                     'productId' => $id,
-                    'cron'      => 'generateCacheImagesOfProducts'
+                    'cron' => 'generateCacheImagesOfProducts'
                 ]);
             }
 
