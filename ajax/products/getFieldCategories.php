@@ -7,6 +7,7 @@
  *
  * @return array
  */
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_getFieldCategories',
     function ($productId) {

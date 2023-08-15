@@ -29,15 +29,15 @@ class Search extends QUI\Control
     public function __construct($attributes = [])
     {
         $this->setAttributes([
-            'categoryId'     => false,
-            'Site'           => false,
-            'data-qui'       => 'package/quiqqer/productsearch/bin/controls/frontend/search/Search',
-            'data-name'      => false,
+            'categoryId' => false,
+            'Site' => false,
+            'data-qui' => 'package/quiqqer/productsearch/bin/controls/frontend/search/Search',
+            'data-name' => false,
             'freeTextSearch' => true,
-            'title'          => true
+            'title' => true
         ]);
 
-        $this->addCSSFile(\dirname(__FILE__).'/Search.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/Search.css');
         $this->addCSSClass('quiqqer-products-search');
 
         parent::__construct($attributes);
@@ -52,8 +52,8 @@ class Search extends QUI\Control
      */
     public function getBody()
     {
-        $Engine  = QUI::getTemplateManager()->getEngine();
-        $Site    = $this->getSite();
+        $Engine = QUI::getTemplateManager()->getEngine();
+        $Site = $this->getSite();
         $Project = $Site->getProject();
 
         $this->setAttribute('data-project', $Project->getName());
@@ -62,10 +62,10 @@ class Search extends QUI\Control
 
         $Engine->assign([
             'fields' => $this->getSearchFieldData(),
-            'this'   => $this
+            'this' => $this
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/Search.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/Search.html');
     }
 
     /**

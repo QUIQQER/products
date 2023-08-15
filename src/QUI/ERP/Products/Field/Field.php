@@ -168,7 +168,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         }
 
         // field types
-        if (isset($params['public'])
+        if (
+            isset($params['public'])
             && (is_bool($params['public']) || \is_int($params['public']))
         ) {
             $this->public = $params['public'] ? true : false;
@@ -180,25 +181,29 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         }
 
 
-        if (isset($params['system'])
+        if (
+            isset($params['system'])
             && (is_bool($params['system']) || \is_int($params['system']))
         ) {
             $this->system = $params['system'] ? true : false;
         }
 
-        if (isset($params['required'])
+        if (
+            isset($params['required'])
             && (is_bool($params['required']) || \is_int($params['required']))
         ) {
             $this->require = $params['required'] ? true : false;
         }
 
-        if (isset($params['standard'])
+        if (
+            isset($params['standard'])
             && (is_bool($params['standard']) || \is_int($params['standard']))
         ) {
             $this->standard = $params['standard'] ? true : false;
         }
 
-        if (isset($params['showInDetails'])
+        if (
+            isset($params['showInDetails'])
             && (is_bool($params['showInDetails']) || \is_int($params['showInDetails']))
         ) {
             $this->showInDetails = $params['showInDetails'] ? true : false;
@@ -251,7 +256,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     protected function getFieldDataForView()
     {
-        $attributes          = $this->getAttributes();
+        $attributes = $this->getAttributes();
         $attributes['value'] = $this->getValue();
 
         return $attributes;
@@ -328,7 +333,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     public function getPrice()
     {
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
-        $Price    = new QUI\ERP\Money\Price(0, $Currency);
+        $Price = new QUI\ERP\Money\Price(0, $Currency);
 
         return $Price;
     }
@@ -350,7 +355,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         );
 
         $allowedAttributes = Fields::getChildAttributes();
-        $defaultValue      = '';
+        $defaultValue = '';
 
         if (!is_null($this->defaultValue)) {
             $defaultValue = json_encode($this->defaultValue);
@@ -358,15 +363,16 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         $data = [
             'standardField' => $this->isStandard() ? 1 : 0,
-            'systemField'   => $this->isSystem() ? 1 : 0,
+            'systemField' => $this->isSystem() ? 1 : 0,
             'requiredField' => $this->isRequired() ? 1 : 0,
-            'publicField'   => $this->isPublic() ? 1 : 0,
+            'publicField' => $this->isPublic() ? 1 : 0,
             'showInDetails' => $this->showInDetails() ? 1 : 0,
-            'defaultValue'  => $defaultValue
+            'defaultValue' => $defaultValue
         ];
 
         foreach ($allowedAttributes as $attribute) {
-            if ($attribute == 'standardField'
+            if (
+                $attribute == 'standardField'
                 || $attribute == 'systemField'
                 || $attribute == 'requiredField'
                 || $attribute == 'publicField'
@@ -385,7 +391,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         // options json check
         $data['options'] = '';
-        $options         = $this->getOptions();
+        $options = $this->getOptions();
 
         if (!empty($options)) {
             $data['options'] = json_encode($options);
@@ -432,7 +438,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 'quiqqer/products',
                 'exceptions.system.fields.cant.be.deleted',
                 [
-                    'id'    => $this->getId(),
+                    'id' => $this->getId(),
                     'title' => $this->getTitle()
                 ]
             ]);
@@ -442,7 +448,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         QUI\Watcher::addString(
             QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.delete', [
-                'id'    => $this->getId(),
+                'id' => $this->getId(),
                 'title' => $this->getTitle()
             ])
         );
@@ -915,8 +921,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         }
 
         $current = $Locale->getCurrent();
-        $suffix  = $this->getAttribute('suffix');
-        $suffix  = json_decode($suffix, true);
+        $suffix = $this->getAttribute('suffix');
+        $suffix = json_decode($suffix, true);
 
         if (!is_array($suffix)) {
             return $this->getAttribute('suffix');
@@ -942,8 +948,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         }
 
         $current = $Locale->getCurrent();
-        $prefix  = $this->getAttribute('prefix');
-        $prefix  = json_decode($prefix, true);
+        $prefix = $this->getAttribute('prefix');
+        $prefix = json_decode($prefix, true);
 
         if (!is_array($prefix)) {
             return $this->getAttribute('prefix');
@@ -991,7 +997,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getWorkingTitle($Locale = null)
     {
-        $var   = 'products.field.' . $this->getId() . '.workingtitle';
+        $var = 'products.field.' . $this->getId() . '.workingtitle';
         $group = 'quiqqer/products';
 
         if (!$Locale) {
@@ -1013,7 +1019,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getDescription(?QUI\Locale $Locale): string
     {
-        $var   = 'products.field.' . $this->getId() . '.description';
+        $var = 'products.field.' . $this->getId() . '.description';
         $group = 'quiqqer/products';
 
         if (!$Locale) {
@@ -1039,7 +1045,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $Locale = QUI::getLocale();
         }
 
-        $type     = $this->getType();
+        $type = $this->getType();
         $typeData = Fields::getFieldTypeData($type);
 
         if (empty($typeData['help'])) {
@@ -1051,7 +1057,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         }
 
         $group = $typeData['help'][0];
-        $var   = $typeData['help'][1];
+        $var = $typeData['help'][1];
 
         if ($Locale->exists($group, $var)) {
             return $Locale->get($group, $var);
@@ -1159,27 +1165,27 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getAttributes()
     {
-        $attributes                 = parent::getAttributes();
-        $attributes['id']           = $this->getId();
-        $attributes['title']        = $this->getTitle();
+        $attributes = parent::getAttributes();
+        $attributes['id'] = $this->getId();
+        $attributes['title'] = $this->getTitle();
         $attributes['workingtitle'] = $this->getWorkingTitle();
-        $attributes['type']         = $this->getType();
-        $attributes['options']      = $this->getOptions();
-        $attributes['jsControl']    = $this->getJavaScriptControl();
-        $attributes['searchvalue']  = $this->getSearchCacheValue();
+        $attributes['type'] = $this->getType();
+        $attributes['options'] = $this->getOptions();
+        $attributes['jsControl'] = $this->getJavaScriptControl();
+        $attributes['searchvalue'] = $this->getSearchCacheValue();
         $attributes['defaultValue'] = $this->getDefaultValue();
-        $attributes['help']         = $this->getHelp();
+        $attributes['help'] = $this->getHelp();
 
-        $attributes['custom']        = $this->isCustomField();
-        $attributes['unassigned']    = $this->isUnassigned();
-        $attributes['isRequired']    = $this->isRequired();
-        $attributes['isStandard']    = $this->isStandard();
-        $attributes['isSystem']      = $this->isSystem();
-        $attributes['isPublic']      = $this->isPublic();
-        $attributes['searchable']    = $this->isSearchable();
-        $attributes['ownField']      = $this->isOwnField();
+        $attributes['custom'] = $this->isCustomField();
+        $attributes['unassigned'] = $this->isUnassigned();
+        $attributes['isRequired'] = $this->isRequired();
+        $attributes['isStandard'] = $this->isStandard();
+        $attributes['isSystem'] = $this->isSystem();
+        $attributes['isPublic'] = $this->isPublic();
+        $attributes['searchable'] = $this->isSearchable();
+        $attributes['ownField'] = $this->isOwnField();
         $attributes['showInDetails'] = $this->showInDetails();
-        $attributes['jsSettings']    = '';
+        $attributes['jsSettings'] = '';
 
         if (method_exists($this, 'getJavaScriptSettings')) {
             $attributes['jsSettings'] = $this->getJavaScriptSettings();
@@ -1195,9 +1201,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      */
     public function getAttributesForUniqueField()
     {
-        $attributes              = $this->getAttributes();
-        $attributes['id']        = $this->getId();
-        $attributes['value']     = $this->getValue();
+        $attributes = $this->getAttributes();
+        $attributes['id'] = $this->getId();
+        $attributes['value'] = $this->getValue();
         $attributes['__class__'] = get_class($this);
 
         if ($this instanceof CustomInputFieldInterface) {
@@ -1217,7 +1223,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         return Products::getProducts([
             'where' => [
                 'fieldData' => [
-                    'type'  => '%LIKE%',
+                    'type' => '%LIKE%',
                     'value' => '"id":' . $this->id . ','
                 ]
             ]
@@ -1234,7 +1240,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         return Products::getProductIds([
             'where' => [
                 'fieldData' => [
-                    'type'  => '%LIKE%',
+                    'type' => '%LIKE%',
                     'value' => '"id":' . $this->id . ','
                 ]
             ]
@@ -1249,15 +1255,15 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     public function toProductArray()
     {
         return [
-            'id'            => $this->getId(),
-            'value'         => $this->getValue(),
-            'unassigned'    => $this->isUnassigned(),
-            'ownField'      => $this->isOwnField(),
-            'isPublic'      => $this->isPublic(),
-            'isRequired'    => $this->isRequired(),
+            'id' => $this->getId(),
+            'value' => $this->getValue(),
+            'unassigned' => $this->isUnassigned(),
+            'ownField' => $this->isOwnField(),
+            'isPublic' => $this->isPublic(),
+            'isRequired' => $this->isRequired(),
             'showInDetails' => $this->showInDetails(),
-            'type'          => $this->getType(),
-            'search_type'   => $this->getSearchType()
+            'type' => $this->getType(),
+            'search_type' => $this->getSearchType()
         ];
     }
 
@@ -1337,7 +1343,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $start = (int)$start;
         }
 
-        $value   = $start;
+        $value = $start;
         $range[] = $value;
 
         while ($value < $max) {
@@ -1345,17 +1351,17 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 $add = 0.1;
             } else {
                 $add = 1;
-                $i   = 10;
+                $i = 10;
 
                 while ($value >= $i) {
-                    $i   *= 10;
+                    $i *= 10;
                     $add *= 10;
                 }
 
                 $value = floor($value / $add) * $add;
             }
 
-            $value   += $add;
+            $value += $add;
             $range[] = $value;
         }
 

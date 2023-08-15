@@ -23,14 +23,14 @@ class Menu extends QUI\Control
     public function __construct($attributes = [])
     {
         $this->setAttributes([
-            'Site'              => false,
-            'data-qui'          => 'package/quiqqer/products/bin/controls/frontend/category/Menu',
+            'Site' => false,
+            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/category/Menu',
             'disableCheckboxes' => false,
-            'breadcrumb'        => false
+            'breadcrumb' => false
         ]);
 
         $this->addCSSClass('quiqqer-products-category-menu');
-        $this->addCSSFile(\dirname(__FILE__).'/Menu.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/Menu.css');
 
         parent::__construct($attributes);
     }
@@ -63,13 +63,13 @@ class Menu extends QUI\Control
         $children = $this->getChildren($this->getSite());
 
         $Engine->assign([
-            'children'         => $children,
-            'this'             => $this,
-            'childrenTemplate' => \dirname(__FILE__).'/Menu.Children.html',
-            'Rewrite'          => QUI::getRewrite()
+            'children' => $children,
+            'this' => $this,
+            'childrenTemplate' => \dirname(__FILE__) . '/Menu.Children.html',
+            'Rewrite' => QUI::getRewrite()
         ]);
 
-        $result = $Engine->fetch(\dirname(__FILE__).'/Menu.html');
+        $result = $Engine->fetch(\dirname(__FILE__) . '/Menu.html');
 
         QUI\Cache\LongTermCache::set($cache, $result);
 
@@ -93,7 +93,8 @@ class Menu extends QUI\Control
 
         $CurrentSide = QUI::getRewrite()->getSite();
 
-        if ($this->getSite()->getAttribute('quiqqer.products.settings.categoryAsFilter')
+        if (
+            $this->getSite()->getAttribute('quiqqer.products.settings.categoryAsFilter')
             && $CurrentSide->getId() === 1
         ) {
             return true;
@@ -107,13 +108,15 @@ class Menu extends QUI\Control
             return false;
         }
 
-        if ($this->getSite()->getAttribute('quiqqer.products.settings.categoryAsFilter')
+        if (
+            $this->getSite()->getAttribute('quiqqer.products.settings.categoryAsFilter')
             && QUI::getRewrite()->isIdInPath($Site->getParentId())
         ) {
             return true;
         }
 
-        if ($CurrentSide->getAttribute('quiqqer.products.settings.categoryAsFilter')
+        if (
+            $CurrentSide->getAttribute('quiqqer.products.settings.categoryAsFilter')
             && QUI::getRewrite()->isIdInPath($Site->getParentId())
         ) {
             return true;
@@ -227,25 +230,25 @@ class Menu extends QUI\Control
     protected function getCacheName()
     {
         try {
-            $Site    = $this->getSite();
+            $Site = $this->getSite();
             $Project = $Site->getProject();
 
             $params = [
-                'project'           => $Project->getName(),
-                'lang'              => $Project->getLang(),
-                'id'                => $Site->getId(),
-                'idRewrite'         => QUI::getRewrite()->getSite()->getId(),
-                'data-qui'          => 'package/quiqqer/products/bin/controls/frontend/category/Menu',
+                'project' => $Project->getName(),
+                'lang' => $Project->getLang(),
+                'id' => $Site->getId(),
+                'idRewrite' => QUI::getRewrite()->getSite()->getId(),
+                'data-qui' => 'package/quiqqer/products/bin/controls/frontend/category/Menu',
                 'disableCheckboxes' => $this->getAttribute('disableCheckboxes'),
-                'breadcrumb'        => $this->getAttribute('breadcrumb'),
-                'showTitle'         => $this->getAttribute('showTitle')
+                'breadcrumb' => $this->getAttribute('breadcrumb'),
+                'showTitle' => $this->getAttribute('showTitle')
             ];
 
             $cache = \md5(\implode('', $params));
         } catch (QUI\Exception $Exception) {
-            return QUI\ERP\Products\Handler\Cache::getBasicCachePath().'categories/menu';
+            return QUI\ERP\Products\Handler\Cache::getBasicCachePath() . 'categories/menu';
         }
 
-        return QUI\ERP\Products\Handler\Cache::getBasicCachePath().'categories/menu/'.$cache;
+        return QUI\ERP\Products\Handler\Cache::getBasicCachePath() . 'categories/menu/' . $cache;
     }
 }
