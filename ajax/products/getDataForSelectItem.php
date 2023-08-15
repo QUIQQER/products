@@ -1,14 +1,15 @@
 <?php
 
-use QUI\ERP\Products\Handler\Fields;
-use QUI\ERP\Products\Handler\Products;
-
 /**
  * Returns product data needed for a Product SelectItem
  *
  * @param string $productId - Product-ID
  * @return array
  */
+
+use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Handler\Products;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_getDataForSelectItem',
     function ($productId) {

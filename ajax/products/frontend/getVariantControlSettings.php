@@ -1,8 +1,5 @@
 <?php
 
-use QUI\ERP\Products\Controls\Products\Product as ProductControl;
-use QUI\ERP\Products\Handler\Products;
-
 /**
  * Get settings for the product variant frontend control.
  *
@@ -11,6 +8,10 @@ use QUI\ERP\Products\Handler\Products;
  * @param string $productId - ID of a product
  * @return string
  */
+
+use QUI\ERP\Products\Controls\Products\Product as ProductControl;
+use QUI\ERP\Products\Handler\Products;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getVariantControlSettings',
     function ($productId) {

@@ -16,6 +16,7 @@ use QUI\ERP\Products\Utils\Products as ProductUtils;
  *
  * @param string $productId - ID of a product
  */
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getVariant',
     function ($productId, $fields, $ignoreDefaultVariant) {
