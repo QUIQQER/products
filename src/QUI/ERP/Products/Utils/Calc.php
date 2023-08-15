@@ -850,7 +850,7 @@ class Calc
         } else {
             $basisPrice = floatval($basisNettoPrice)
                 + (floatval($basisNettoPrice) * floatval($Vat->getValue()) / 100);
-            
+
             $basisPrice = round($basisPrice, $Currency->getPrecision());
         }
 
