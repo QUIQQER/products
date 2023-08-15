@@ -16,7 +16,7 @@ use QUI\ERP\Products\Handler\Products;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_addProducts',
     function ($categoryId, $productIds) {
-        $Category   = Categories::getCategory($categoryId);
+        $Category = Categories::getCategory($categoryId);
         $productIds = \json_decode($productIds, true);
 
         $ExceptionStack = new QUI\ExceptionStack();

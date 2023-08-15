@@ -4,8 +4,8 @@
  * This file contains package_quiqqer_products_ajax_products_frontend_getProduct
  */
 
-use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
+use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Utils\Products as ProductUtils;
 
 /**
@@ -29,11 +29,11 @@ QUI::$Ajax->registerFunction(
             }
         }
 
-        $Project  = QUI\Projects\Manager::decode($project);
-        $Site     = null;
+        $Project = QUI\Projects\Manager::decode($project);
+        $Site = null;
         $Template = null;
-        $Locale   = QUI::getLocale();
-        $title    = '';
+        $Locale = QUI::getLocale();
+        $title = '';
 
         try {
             $Product = Products::getNewProductInstance($productId);
@@ -75,10 +75,10 @@ QUI::$Ajax->registerFunction(
         }
 
         $result = [
-            'css'             => QUI\Control\Manager::getCSS(),
-            'html'            => QUI\Output::getInstance()->parse($control),
-            'title'           => $title,
-            'fieldHashes'     => ProductUtils::getJsFieldHashArray($Product),
+            'css' => QUI\Control\Manager::getCSS(),
+            'html' => QUI\Output::getInstance()->parse($control),
+            'title' => $title,
+            'fieldHashes' => ProductUtils::getJsFieldHashArray($Product),
             'availableHashes' => \array_flip($availableHashes)
         ];
 

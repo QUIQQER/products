@@ -14,8 +14,8 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getVisitedProducts',
     function ($productIds, $currentProductId) {
         $productIds = \json_decode($productIds, true);
-        $Products   = new QUI\ERP\Products\Handler\Products();
-        $Control    = new QUI\ERP\Products\Controls\Products\VisitedProducts();
+        $Products = new QUI\ERP\Products\Handler\Products();
+        $Control = new QUI\ERP\Products\Controls\Products\VisitedProducts();
 
         if (!isset($currentProductId)) {
             $currentProductId = 0;
@@ -32,7 +32,7 @@ QUI::$Ajax->registerFunction(
 
             try {
                 $Product = $Products->getProduct($productId);
-                $View    = $Product->getViewFrontend();
+                $View = $Product->getViewFrontend();
 
                 // check if prices exists
                 if (!$Product->isActive()) {

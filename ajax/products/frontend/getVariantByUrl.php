@@ -5,8 +5,8 @@
  */
 
 use QUI\ERP\Products;
-use QUI\ERP\Products\Handler\Products as ProductHandler;
 use QUI\ERP\Products\Handler\Fields as FieldsHandler;
+use QUI\ERP\Products\Handler\Products as ProductHandler;
 
 /**
  * Return the variant information via its variant child url
@@ -55,7 +55,7 @@ QUI::$Ajax->registerFunction(
         }
 
         $attributeGroups = $Variant->getFieldsByType(FieldsHandler::TYPE_ATTRIBUTE_GROUPS);
-        $attributeLists  = $Variant->getFieldsByType(FieldsHandler::TYPE_ATTRIBUTE_LIST);
+        $attributeLists = $Variant->getFieldsByType(FieldsHandler::TYPE_ATTRIBUTE_LIST);
 
         $fields = [];
 
@@ -70,7 +70,7 @@ QUI::$Ajax->registerFunction(
 
         return [
             'productId' => $Variant->getId(),
-            'fields'    => $fields
+            'fields' => $fields
         ];
     },
     ['productId', 'variantUrl', 'variantId']

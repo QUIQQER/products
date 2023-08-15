@@ -16,7 +16,7 @@ QUI::$Ajax->registerFunction(
     function ($productId) {
         try {
             $Products = new QUI\ERP\Products\Handler\Products();
-            $Product  = $Products->getProduct($productId);
+            $Product = $Products->getProduct($productId);
 
             if (QUI::isFrontend()) {
                 return $Product->getView()->getAttributes();
@@ -24,10 +24,10 @@ QUI::$Ajax->registerFunction(
 
             $attributes = $Product->getAttributes();
 
-            $attributes['typeTitle']        = $Product->getTypeTitle();
-            $attributes['typeDescription']  = $Product->getTypeDescription();
+            $attributes['typeTitle'] = $Product->getTypeTitle();
+            $attributes['typeDescription'] = $Product->getTypeDescription();
             $attributes['typeIsSelectable'] = $Product->isTypeSelectable();
-            $attributes['typePanel']        = $Product->getTypeBackendPanel();
+            $attributes['typePanel'] = $Product->getTypeBackendPanel();
 
             foreach ($attributes['fields'] as $key => $field) {
                 $attributes['fields'][$key]['source'] = $Product->getFieldSource($field['id']);

@@ -17,8 +17,8 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_variant_massProcessing',
     function ($productIds, $fieldId, $value) {
         $productIds = json_decode($productIds, true);
-        $fieldId    = (int)$fieldId;
-        $value      = json_decode($value, true);
+        $fieldId = (int)$fieldId;
+        $value = json_decode($value, true);
 
         $Exceptions = new ExceptionStack();
 

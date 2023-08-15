@@ -21,9 +21,9 @@ QUI::$Ajax->registerFunction(
         $updateProductFields = (bool)$updateProductFields;
 
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $Fields     = new QUI\ERP\Products\Handler\Fields();
-        $Category   = $Categories->getCategory($categoryId);
-        $params     = json_decode($params, true);
+        $Fields = new QUI\ERP\Products\Handler\Fields();
+        $Category = $Categories->getCategory($categoryId);
+        $params = json_decode($params, true);
 
         if (isset($params['fields'])) {
             $Category->clearFields();

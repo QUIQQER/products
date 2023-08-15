@@ -18,7 +18,7 @@ QUI::$Ajax->registerFunction(
         $result = [];
         $params = \json_decode($params, true);
 
-        $Grid  = new QUI\Utils\Grid();
+        $Grid = new QUI\Utils\Grid();
         $query = $Grid->parseDBParams($params);
 
         if (isset($params['type']) && !empty($params['type'])) {
@@ -27,7 +27,7 @@ QUI::$Ajax->registerFunction(
 
         if (!empty($params['showSearchableOnly'])) {
             $query['where']['search_type'] = [
-                'type'  => 'NOT',
+                'type' => 'NOT',
                 'value' => ''
             ];
         }

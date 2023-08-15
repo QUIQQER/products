@@ -14,7 +14,7 @@ use QUI\ERP\Products\Handler\Products;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_variant_saveEditableInheritedERPFields',
     function ($editable, $inherited) {
-        $editable  = json_decode($editable, true);
+        $editable = json_decode($editable, true);
         $inherited = json_decode($inherited, true);
 
         Products::setGlobalEditableVariantFields($editable);

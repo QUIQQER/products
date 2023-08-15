@@ -17,7 +17,7 @@ QUI::$Ajax->registerFunction(
         $Fields = new QUI\ERP\Products\Handler\Fields();
         $result = [];
 
-        $query  = [];
+        $query = [];
         $params = \json_decode($params, true);
         $fields = \json_decode($fields, true);
 
@@ -42,7 +42,7 @@ QUI::$Ajax->registerFunction(
             }
 
             $query['where_or'][$field] = [
-                'type'  => '%LIKE%',
+                'type' => '%LIKE%',
                 'value' => $value
             ];
         }
@@ -52,7 +52,7 @@ QUI::$Ajax->registerFunction(
 
         /* @var $Field \QUI\ERP\Products\Field\Field */
         foreach ($data as $Field) {
-            $entry          = $Field->getAttributes();
+            $entry = $Field->getAttributes();
             $entry['title'] = $Field->getTitle();
 
             $result[] = $entry;

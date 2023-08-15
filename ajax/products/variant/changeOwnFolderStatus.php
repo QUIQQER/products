@@ -4,7 +4,6 @@
  * This file contains package_quiqqer_products_ajax_products_variant_changeOwnFolderStatus
  */
 
-use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 
 /**

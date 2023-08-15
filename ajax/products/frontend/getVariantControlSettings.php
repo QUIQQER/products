@@ -1,7 +1,7 @@
 <?php
 
-use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
+use QUI\ERP\Products\Handler\Products;
 
 /**
  * Get settings for the product variant frontend control.

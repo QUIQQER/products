@@ -15,10 +15,10 @@ QUI::$Ajax->registerFunction(
         $Product = Products::getProduct($productId);
 
         return [
-            'id'        => $Product->getId(),
-            'gtin'      => $Product->getFieldValue(Fields::FIELD_EAN),
+            'id' => $Product->getId(),
+            'gtin' => $Product->getFieldValue(Fields::FIELD_EAN),
             'articleNo' => $Product->getFieldValue(Fields::FIELD_PRODUCT_NO),
-            'title'     => $Product->getTitle()
+            'title' => $Product->getTitle()
         ];
     },
     ['productId'],

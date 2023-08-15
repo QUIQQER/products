@@ -17,19 +17,19 @@ use QUI\ERP\Products\Product\Types\VariantParent;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_update',
     function ($productId, $categories, $categoryId, $fields) {
-        $Products   = new QUI\ERP\Products\Handler\Products();
-        $Fields     = new QUI\ERP\Products\Handler\Fields();
+        $Products = new QUI\ERP\Products\Handler\Products();
+        $Fields = new QUI\ERP\Products\Handler\Fields();
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $Product    = $Products->getProduct($productId);
+        $Product = $Products->getProduct($productId);
 
         $categories = json_decode($categories, true);
-        $fields     = json_decode($fields, true);
+        $fields = json_decode($fields, true);
 
         // fields
         foreach ($fields as $fieldId => $field) {
             try {
                 $fieldId = (int)str_replace('field-', '', $fieldId);
-                $Field   = $Fields->getField($fieldId);
+                $Field = $Fields->getField($fieldId);
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addNotice('Field not found #' . $fieldId);
                 continue;
@@ -45,8 +45,10 @@ QUI::$Ajax->registerFunction(
                 }
 
                 // pcsg-projects/demo-shop/-/issues/9#note_152341
-                if ($Product instanceof VariantParent
-                    && $ProductField instanceof QUI\ERP\Products\Field\Types\AttributeGroup) {
+                if (
+                    $Product instanceof VariantParent
+                    && $ProductField instanceof QUI\ERP\Products\Field\Types\AttributeGroup
+                ) {
                     $editable = $Product->getAttribute('editableVariantFields');
 
                     if (is_array($editable) && in_array($ProductField->getId(), $editable)) {
@@ -55,7 +57,8 @@ QUI::$Ajax->registerFunction(
                     }
                 }
 
-                if ($ProductField instanceof QUI\ERP\Products\Field\Types\AttributeGroup
+                if (
+                    $ProductField instanceof QUI\ERP\Products\Field\Types\AttributeGroup
                     && ($Product instanceof VariantParent || $Product instanceof VariantChild)
                 ) {
                     continue;
@@ -70,9 +73,9 @@ QUI::$Ajax->registerFunction(
                 QUI\System\Log::addNotice(
                     $Exception->getMessage(),
                     [
-                        'id'    => $Field->getId(),
+                        'id' => $Field->getId(),
                         'title' => $Field->getTitle(),
-                        'data'  => $field
+                        'data' => $field
                     ]
                 );
 
@@ -81,9 +84,9 @@ QUI::$Ajax->registerFunction(
                 QUI\System\Log::addNotice(
                     $Exception->getMessage(),
                     [
-                        'id'    => $Field->getId(),
+                        'id' => $Field->getId(),
                         'title' => $Field->getTitle(),
-                        'data'  => $field
+                        'data' => $field
                     ]
                 );
 

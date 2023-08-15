@@ -13,7 +13,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_deleteChildren',
     function ($categoryIds) {
         $categoryIds = \json_decode($categoryIds, true);
-        $Categories  = new QUI\ERP\Products\Handler\Categories();
+        $Categories = new QUI\ERP\Products\Handler\Categories();
 
         foreach ($categoryIds as $categoryId) {
             try {

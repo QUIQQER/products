@@ -5,8 +5,8 @@
  */
 
 use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Products\Product\Types\VariantParent;
 use QUI\ERP\Products\Product\Types\VariantChild;
+use QUI\ERP\Products\Product\Types\VariantParent;
 
 /**
  * Return the product control class
@@ -19,8 +19,10 @@ QUI::$Ajax->registerFunction(
     function ($productId) {
         $Product = Products::getProduct($productId);
 
-        if ($Product instanceof VariantParent ||
-            $Product instanceof VariantChild) {
+        if (
+            $Product instanceof VariantParent ||
+            $Product instanceof VariantChild
+        ) {
             return 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant';
         }
 

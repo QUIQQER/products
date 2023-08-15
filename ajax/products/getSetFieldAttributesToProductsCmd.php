@@ -1,7 +1,5 @@
 <?php
 
-use QUI\ERP\Products\Handler\Products;
-
 /**
  * Get console command to set field attributes to all products
  *
@@ -12,7 +10,7 @@ QUI::$Ajax->registerFunction(
     function ($fieldId) {
         $cmsDir = QUI::conf('globals', 'cms_dir');
 
-        return $cmsDir.'console products:set-field-attributes-to-products --fieldId='.$fieldId;
+        return $cmsDir . 'console products:set-field-attributes-to-products --fieldId=' . $fieldId;
     },
     ['fieldId'],
     'Permission::checkAdminUser'

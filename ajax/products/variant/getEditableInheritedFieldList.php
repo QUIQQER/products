@@ -18,7 +18,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_variant_getEditableInheritedFieldList',
     function ($productId, $options = '') {
         // defaults
-        $fields  = false;
+        $fields = false;
         $options = json_decode($options, true);
 
         if (!is_array($options)) {
@@ -93,8 +93,8 @@ QUI::$Ajax->registerFunction(
         }, $fields);
 
         // pagination
-        $count   = count($fields);
-        $page    = 1;
+        $count = count($fields);
+        $page = 1;
         $perPage = 20;
 
         if (isset($options['perPage'])) {
@@ -113,10 +113,10 @@ QUI::$Ajax->registerFunction(
 
         return [
             'inherited' => $inherited,
-            'editable'  => $editable,
-            'fields'    => $fields,
-            'total'     => $count,
-            'page'      => $page
+            'editable' => $editable,
+            'fields' => $fields,
+            'total' => $count,
+            'page' => $page
         ];
     },
     ['productId', 'options'],

@@ -13,8 +13,8 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_setPermissions',
     function ($productId, $permissions) {
-        $Products    = new QUI\ERP\Products\Handler\Products();
-        $Product     = $Products->getProduct($productId);
+        $Products = new QUI\ERP\Products\Handler\Products();
+        $Product = $Products->getProduct($productId);
         $permissions = \json_decode($permissions, true);
 
         $Product->clearPermissions();

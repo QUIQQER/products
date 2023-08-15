@@ -15,8 +15,8 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_create',
     function ($parentId, $params) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $params     = json_decode($params, true);
-        $title      = '';
+        $params = json_decode($params, true);
+        $title = '';
 
         if (isset($params['title'])) {
             $title = $params['title'];

@@ -12,9 +12,9 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_list',
     function ($params) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $Grid       = new QUI\Utils\Grid();
-        $params     = json_decode($params, true);
-        $query      = $Grid->parseDBParams($params);
+        $Grid = new QUI\Utils\Grid();
+        $params = json_decode($params, true);
+        $query = $Grid->parseDBParams($params);
 
         if (!empty($params['where'])) {
             $query['where'] = $params['where'];
@@ -29,10 +29,10 @@ QUI::$Ajax->registerFunction(
             $Category = Categories::getCategory($categoryId);
 
             $result[] = [
-                'id'          => $Category->getId(),
-                'title'       => $Category->getTitle($Locale),
+                'id' => $Category->getId(),
+                'title' => $Category->getTitle($Locale),
                 'description' => $Category->getDescription($Locale),
-                'path'        => $Category->getPath($Locale)
+                'path' => $Category->getPath($Locale)
             ];
         }
 

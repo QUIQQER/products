@@ -17,9 +17,9 @@ use QUI\ERP\Products\Handler\Products;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_create',
     function ($category, $categories, $fields, $productType) {
-        $fields     = \json_decode($fields, true);
+        $fields = \json_decode($fields, true);
         $categories = \json_decode($categories, true);
-        $fieldList  = [];
+        $fieldList = [];
 
         foreach ($fields as $fieldId => $fieldData) {
             try {

@@ -14,7 +14,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_setParent',
     function ($categoryId, $parentId) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $Category   = $Categories->getCategory($categoryId);
+        $Category = $Categories->getCategory($categoryId);
 
         $Category->setParentId((int)$parentId);
         $Category->save();

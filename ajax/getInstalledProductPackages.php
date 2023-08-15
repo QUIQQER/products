@@ -6,11 +6,12 @@
  *
  * @return array
  */
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_getInstalledProductPackages',
     function () {
         $packages = [
-            'quiqqer/productstags'         => false,
+            'quiqqer/productstags' => false,
             'quiqqer/productsimportexport' => false
         ];
 

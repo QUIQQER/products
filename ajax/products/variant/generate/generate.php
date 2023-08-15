@@ -16,7 +16,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_variant_generate_generate',
     function ($productId, $fields, $generationType) {
         $Product = Products::getProduct($productId);
-        $fields  = json_decode($fields, true);
+        $fields = json_decode($fields, true);
 
         if (!($Product instanceof VariantParent)) {
             return;

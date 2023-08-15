@@ -13,12 +13,12 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_getInformation',
     function ($categoryId) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $Category   = $Categories->getCategory($categoryId);
+        $Category = $Categories->getCategory($categoryId);
 
         return [
-            'products'   => $Category->countProducts(),
+            'products' => $Category->countProducts(),
             'categories' => $Category->countChildren(),
-            'fields'     => count($Category->getFields())
+            'fields' => count($Category->getFields())
         ];
     },
     ['categoryId'],

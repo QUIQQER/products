@@ -16,10 +16,10 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_controls_search_suggestTemplate',
     function ($project, $siteId) {
         $Project = QUI::getProjectManager()->decode($project);
-        $Site    = $Project->get($siteId);
+        $Site = $Project->get($siteId);
 
         $Control = new \QUI\ERP\Products\Controls\Search\Suggest([
-            'Site'    => $Site,
+            'Site' => $Site,
             'Project' => $Project
         ]);
 

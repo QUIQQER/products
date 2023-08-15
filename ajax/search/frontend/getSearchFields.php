@@ -20,8 +20,8 @@ QUI::$Ajax->registerFunction(
             $options = Orthos::clearArray(\json_decode($options, true));
         }
 
-        $Project        = QUI::getProjectManager()->decode($project);
-        $Site           = $Project->get($siteId);
+        $Project = QUI::getProjectManager()->decode($project);
+        $Site = $Project->get($siteId);
         $FrontEndSearch = SearchHandler::getFrontendSearch($Site);
 
         return $FrontEndSearch->getSearchFields($options);

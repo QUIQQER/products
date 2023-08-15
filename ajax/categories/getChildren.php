@@ -19,9 +19,9 @@ QUI::$Ajax->registerFunction(
         }
 
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $Category   = $Categories->getCategory((int)$parentId);
-        $children   = $Category->getChildren();
-        $result     = [];
+        $Category = $Categories->getCategory((int)$parentId);
+        $children = $Category->getChildren();
+        $result = [];
 
         /* @var $Category QUI\ERP\Products\Category\Category */
         foreach ($children as $Category) {
