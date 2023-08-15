@@ -19,6 +19,7 @@ use QUI\ERP\Tax\Utils as TaxUtils;
 use QUI\Interfaces\Users\User as UserInterface;
 
 use function count;
+use function floatval;
 use function key;
 use function round;
 
@@ -694,7 +695,7 @@ class Calc
                 }
 
                 $PriceFactor->setNettoSum(
-                    \floatval($priceFactorSum * $Product->getQuantity())
+                    floatval($priceFactorSum * $Product->getQuantity())
                 );
 
                 $nettoPrice = $nettoPrice + $priceFactorSum;
@@ -774,7 +775,7 @@ class Calc
         }
 
         $vatValue = $Vat->getValue();
-        $nettoPrice = \floatval($nettoPrice);
+        $nettoPrice = floatval($nettoPrice);
 
         if (empty($vatValue) || empty($nettoPrice)) {
             $vatSum = 0;
@@ -847,9 +848,9 @@ class Calc
         if ($isNetto) {
             $basisPrice = $basisNettoPrice;
         } else {
-            $basisPrice = \floatval($basisNettoPrice) + (\floatval($basisNettoPrice) * \floatval(
-                        $Vat->getValue()
-                    ) / 100);
+            $basisPrice = floatval($basisNettoPrice)
+                + (floatval($basisNettoPrice) * floatval($Vat->getValue()) / 100);
+            
             $basisPrice = round($basisPrice, $Currency->getPrecision());
         }
 

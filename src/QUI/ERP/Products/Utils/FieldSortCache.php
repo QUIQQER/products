@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * This file contains QUI\ERP\Products\Utils\Fields
  */

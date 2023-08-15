@@ -21,7 +21,7 @@ class Package
     /**
      * @var null
      */
-    static protected $hidePrice = null;
+    protected static $hidePrice = null;
 
     /**
      * Return config
