@@ -1,12 +1,13 @@
 <?php
 
-use QUI\ERP\Products\Handler\Fields;
-
 /**
  * Get price fields for price multiplier config
  *
  * @return array - price field data
  */
+
+use QUI\ERP\Products\Handler\Fields;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_settings_getPriceFields',
     function () {
