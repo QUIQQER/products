@@ -98,7 +98,7 @@ QUI::$Ajax->registerFunction(
             if (!$ExceptionStack->isEmpty()) {
                 $list = $ExceptionStack->getExceptionList();
 
-                throw new $list[0];
+                throw new $list[0]();
             }
 
             try {

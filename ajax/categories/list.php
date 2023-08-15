@@ -1,13 +1,14 @@
 <?php
 
-use QUI\ERP\Products\Handler\Categories;
-
 /**
  * Returns category list for a grid
  *
  * @param string $params - JSON query params
  * @return array
  */
+
+use QUI\ERP\Products\Handler\Categories;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_list',
     function ($params) {
