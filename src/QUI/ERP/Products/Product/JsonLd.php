@@ -63,9 +63,9 @@ class JsonLd
         }
 
         $json = [
-            "@context"    => "https://schema.org/",
-            "@type"       => "Product",
-            "name"        => $Product->getTitle($Locale),
+            "@context" => "https://schema.org/",
+            "@type" => "Product",
+            "name" => $Product->getTitle($Locale),
             "description" => $Product->getDescription($Locale)
         ];
 
@@ -121,7 +121,7 @@ class JsonLd
         $uid = $brandEntries[0];
 
         try {
-            $User    = QUI::getUsers()->get($uid);
+            $User = QUI::getUsers()->get($uid);
             $Address = $User->getStandardAddress();
 
             $brand = $Address->getAttribute('company');
@@ -137,7 +137,7 @@ class JsonLd
             return [
                 'brand' => [
                     '@type' => 'Brand',
-                    'name'  => $brand
+                    'name' => $brand
                 ]
             ];
         } catch (QUI\Exception $Exception) {
@@ -218,7 +218,7 @@ class JsonLd
         }
 
         // offers
-        $Price  = $Product->getPrice();
+        $Price = $Product->getPrice();
         $offers = self::getOfferEntry($Product, $Formatter);
 
         // offer price
@@ -242,9 +242,9 @@ class JsonLd
          * VARIANT PARENT
          */
         $offers = [
-            "@type"         => "AggregateOffer",
+            "@type" => "AggregateOffer",
             "priceCurrency" => $Price->getCurrency()->getCode(),
-            "availability"  => "InStock"
+            "availability" => "InStock"
         ];
 
         $offers = array_merge(
@@ -259,8 +259,8 @@ class JsonLd
         }
 
         // list variants
-        $count    = 0;
-        $models   = [];
+        $count = 0;
+        $models = [];
         $variants = $Product->getVariants();
 
         foreach ($variants as $Variant) {
@@ -269,10 +269,10 @@ class JsonLd
             }
 
             $model = [
-                "@type"       => "ProductModel",
-                "name"        => $Variant->getTitle($Locale),
+                "@type" => "ProductModel",
+                "name" => $Variant->getTitle($Locale),
                 "description" => $Variant->getDescription($Locale),
-                "offers"      => self::getOfferEntry($Variant, $Formatter)
+                "offers" => self::getOfferEntry($Variant, $Formatter)
             ];
 
             $model = array_merge($model, self::getImages($Variant));
@@ -285,7 +285,7 @@ class JsonLd
 
         return [
             'offers' => $offers,
-            'model'  => $models
+            'model' => $models
         ];
     }
 
@@ -324,8 +324,8 @@ class JsonLd
         ProductInterface $Product,
         NumberFormatter $Formatter
     ): array {
-        $User  = QUI::getUsers()->getUserBySession();
-        $Calc  = QUI\ERP\Products\Utils\Calc::getInstance($User);
+        $User = QUI::getUsers()->getUserBySession();
+        $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
         $price = $Product->getPrice()->getValue();
 
         if (!QUI\ERP\Utils\User::isNettoUser($User)) {
@@ -337,10 +337,10 @@ class JsonLd
 
 
         $offerEntry = [
-            "@type"         => "Offer",
-            "price"         => $Formatter->format($price),
+            "@type" => "Offer",
+            "price" => $Formatter->format($price),
             "priceCurrency" => $Product->getPrice()->getCurrency()->getCode(),
-            'availability'  => 'InStock' // @todo consider stock
+            'availability' => 'InStock' // @todo consider stock
         ];
 
         $maxMin = self::getMaxMin($Product, $Formatter);
@@ -370,9 +370,11 @@ class JsonLd
             $offerEntry['@type'] = 'AggregateOffer';
         }
 
-        if (isset($offerEntry['highPrice'])
+        if (
+            isset($offerEntry['highPrice'])
             && isset($offerEntry['lowPrice'])
-            && $offerEntry['highPrice'] === $offerEntry['lowPrice']) {
+            && $offerEntry['highPrice'] === $offerEntry['lowPrice']
+        ) {
             $offerEntry['price'] = $offerEntry['highPrice'];
 
             unset($offerEntry['lowPrice']);

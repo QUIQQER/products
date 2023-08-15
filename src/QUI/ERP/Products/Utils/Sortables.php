@@ -39,7 +39,7 @@ class Sortables
     public static function getFieldSettingsForSite(QUI\Projects\Site $Site)
     {
         $useOwnSorting = $Site->getAttribute('quiqqer.products.settings.useOwnSorting');
-        $result        = self::getFieldSettings();
+        $result = self::getFieldSettings();
 
         if (!$useOwnSorting) {
             $fields = self::getDefaultFields();
@@ -80,7 +80,7 @@ class Sortables
      */
     public static function getDefaultFields()
     {
-        $Package       = QUI::getPackage('quiqqer/products')->getConfig();
+        $Package = QUI::getPackage('quiqqer/products')->getConfig();
         $sortingFields = $Package->getValue('products', 'sortFields');
         $sortingFields = \explode(',', $sortingFields);
 
@@ -95,7 +95,7 @@ class Sortables
     public static function getFieldSettings()
     {
         // config
-        $Package       = QUI::getPackage('quiqqer/products')->getConfig();
+        $Package = QUI::getPackage('quiqqer/products')->getConfig();
         $sortingFields = $Package->getValue('products', 'sortFields');
         $sortingFields = \explode(',', $sortingFields);
         $sortingFields = \array_flip($sortingFields);
@@ -105,7 +105,7 @@ class Sortables
         $fields = $Fields->getFieldIds([
             'where' => [
                 'search_type' => [
-                    'type'  => 'NOT',
+                    'type' => 'NOT',
                     'value' => null
                 ]
             ]
@@ -120,9 +120,9 @@ class Sortables
 
             return [
                 'idDisplay' => $Field->getId(),
-                'id'        => 'F'.$Field->getId(),
-                'title'     => $Field->getTitle(),
-                'sorting'   => isset($sortingFields['F'.$Field->getId()])
+                'id' => 'F' . $Field->getId(),
+                'title' => $Field->getTitle(),
+                'sorting' => isset($sortingFields['F' . $Field->getId()])
             ];
         }, $fields);
 
@@ -141,10 +141,10 @@ class Sortables
 
         foreach ($special as $s) {
             \array_unshift($result, [
-                'id'        => 'S'.$s,
+                'id' => 'S' . $s,
                 'idDisplay' => $s,
-                'title'     => QUI::getLocale()->get('quiqqer/products', 'sortable.'.$s),
-                'sorting'   => isset($sortingFields['S'.$s])
+                'title' => QUI::getLocale()->get('quiqqer/products', 'sortable.' . $s),
+                'sorting' => isset($sortingFields['S' . $s])
             ]);
         }
 

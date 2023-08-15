@@ -44,20 +44,20 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         }
 
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
-        $current  = QUI::getLocale()->getCurrent();
+        $current = QUI::getLocale()->getCurrent();
 
-        $id      = $this->getId();
-        $value   = $this->getValue();
+        $id = $this->getId();
+        $value = $this->getValue();
         $options = $this->getOptions();
 
-        $name    = 'field-'.$id;
+        $name = 'field-' . $id;
         $entries = [];
 
         if (isset($options['entries'])) {
             $entries = $options['entries'];
         }
 
-        $requiredField    = '';
+        $requiredField = '';
         $displayDiscounts = false;
 
         if (isset($options['display_discounts'])) {
@@ -97,11 +97,11 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         }
 
         $Engine->assign([
-            'this'          => $this,
-            'id'            => $id,
-            'title'         => $this->getTitle(),
-            'name'          => $name,
-            'value'         => $value,
+            'this' => $this,
+            'id' => $id,
+            'title' => $this->getTitle(),
+            'name' => $name,
+            'value' => $value,
             'requiredField' => $requiredField
         ]);
 
@@ -130,18 +130,19 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 //            ];
 //        }
 
-        $currentLC = \strtolower($current).'_'.\strtoupper($current);
-        $Calc      = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
+        $currentLC = \strtolower($current) . '_' . \strtoupper($current);
+        $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
         foreach ($entries as $key => $option) {
             $title = $option['title'];
 
-            $text      = '';
-            $selected  = '';
-            $disabled  = '';
+            $text = '';
+            $selected = '';
+            $disabled = '';
             $userInput = '';
 
-            if (isset($option['selected']) && $option['selected']
+            if (
+                isset($option['selected']) && $option['selected']
                 || (int)$value === $key && $value !== ''
             ) {
                 $selected = 'selected="selected" ';
@@ -172,7 +173,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                 switch ($option['type']) {
                     case 'percent': // fallback fix
                     case ErpCalc::CALCULATION_PERCENTAGE:
-                        $discount = $option['sum'].'%';
+                        $discount = $option['sum'] . '%';
                         break;
 
                     case ErpCalc::CALCULATION_COMPLEMENT:
@@ -183,22 +184,22 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                         break;
                 }
 
-                $text .= ' (+'.$discount.')';
+                $text .= ' (+' . $discount . ')';
             }
 
             $options[] = [
-                'selected'  => $selected,
-                'disabled'  => $disabled,
-                'value'     => \htmlspecialchars($key),
-                'text'      => \htmlspecialchars($text),
-                'data'      => $userInput
+                'selected' => $selected,
+                'disabled' => $disabled,
+                'value' => \htmlspecialchars($key),
+                'text' => \htmlspecialchars($text),
+                'data' => $userInput
             ];
         }
 
 
         $Engine->assign('options', $options);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ProductAttributeListFrontendView.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/ProductAttributeListFrontendView.html');
     }
 
     /**
@@ -208,11 +209,11 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
     {
         $current = QUI::getLocale()->getCurrent();
 
-        $id      = $this->getId();
-        $value   = $this->getValue();
+        $id = $this->getId();
+        $value = $this->getValue();
         $options = $this->getOptions();
 
-        $name    = 'field-'.$id;
+        $name = 'field-' . $id;
         $entries = [];
 
         if (isset($options['entries'])) {
@@ -235,19 +236,19 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
 
         $Engine->assign([
-            'this'  => $this,
-            'id'    => $id,
+            'this' => $this,
+            'id' => $id,
             'title' => $this->getTitle(),
-            'name'  => $name,
+            'name' => $name,
             'value' => $value
         ]);
 
         // options
-        $currentLC = \strtolower($current).'_'.\strtoupper($current);
+        $currentLC = \strtolower($current) . '_' . \strtoupper($current);
 
         $option = $entries[$value];
-        $title  = $option['title'];
-        $text   = '';
+        $title = $option['title'];
+        $text = '';
 
         if (\is_string($title)) {
             $text = $title;
@@ -259,6 +260,6 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
         $Engine->assign('valueText', $text);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ProductAttributeListFrontendViewNotChangeable.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/ProductAttributeListFrontendViewNotChangeable.html');
     }
 }

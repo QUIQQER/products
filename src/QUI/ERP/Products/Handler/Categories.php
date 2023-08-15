@@ -66,10 +66,10 @@ class Categories
     public function countCategories(array $queryParams = []): int
     {
         $query = [
-            'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+            'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             'count' => [
                 'select' => 'id',
-                'as'     => 'count'
+                'as' => 'count'
             ]
         ];
 
@@ -138,7 +138,7 @@ class Categories
             $categoryData = QUI\Cache\LongTermCache::get(self::getCacheName($id));
         } catch (QUI\Exception $Exception) {
             $data = QUI::getDataBase()->fetch([
-                'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+                'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 'where' => [
                     'id' => $id
                 ]
@@ -174,7 +174,7 @@ class Categories
      */
     public static function getMainCategory()
     {
-        $Config       = QUI::getPackage('quiqqer/products')->getConfig();
+        $Config = QUI::getPackage('quiqqer/products')->getConfig();
         $mainCategory = $Config->get('products', 'mainCategory');
 
         if (!$mainCategory) {
@@ -251,7 +251,7 @@ class Categories
         $parentId = (int)$parentId;
 
         $result = QUI::getDataBase()->fetch([
-            'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+            'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             'limit' => 1
         ]);
 
@@ -266,7 +266,7 @@ class Categories
                 QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 [
                     'parentId' => $parentId,
-                    'id'       => 1
+                    'id' => 1
                 ]
             );
         } else {
@@ -287,7 +287,7 @@ class Categories
 
             $languageData = [
                 'datatype' => 'js,php',
-                'package'  => 'quiqqer/products'
+                'package' => 'quiqqer/products'
             ];
 
             if (!empty($title)) {
@@ -310,11 +310,11 @@ class Categories
         try {
             $languageData = [
                 'datatype' => 'js,php',
-                'package'  => 'quiqqer/products'
+                'package' => 'quiqqer/products'
             ];
 
             foreach (QUI::availableLanguages() as $lang) {
-                $languageData[$lang]           = ' ';
+                $languageData[$lang] = ' ';
                 $languageData[$lang . '_edit'] = ' ';
             }
 
@@ -352,7 +352,7 @@ class Categories
      */
     public static function getCategories(array $queryParams = []): array
     {
-        $ids    = self::getCategoryIds($queryParams);
+        $ids = self::getCategoryIds($queryParams);
         $result = [];
 
         foreach ($ids as $id) {
@@ -375,7 +375,7 @@ class Categories
     {
         $query = [
             'select' => 'id',
-            'from'   => QUI\ERP\Products\Utils\Tables::getCategoryTableName()
+            'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName()
         ];
 
         if (isset($queryParams['where'])) {

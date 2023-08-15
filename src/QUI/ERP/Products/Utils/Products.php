@@ -72,7 +72,7 @@ class Products
 
         $PriceField = $Product->getField(FieldHandler::FIELD_PRICE);
         $priceValue = $PriceField->getValue();
-        $Currency   = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
 
         // exists more price fields?
         // is user in group filter
@@ -127,7 +127,7 @@ class Products
             if (\method_exists($type, 'onGetPriceFieldForProduct')) {
                 try {
                     $ParentField = FieldHandler::getField($Field->getId());
-                    $value       = $ParentField->onGetPriceFieldForProduct($Product, $User);
+                    $value = $ParentField->onGetPriceFieldForProduct($Product, $User);
                 } catch (QUI\Exception $Exception) {
                     QUI\System\Log::writeException($Exception);
                     continue;
@@ -276,7 +276,7 @@ class Products
         // get hash values
         foreach ($fields as $Field => $fieldValue) {
             if ($fieldValue instanceof QUI\ERP\Products\Interfaces\FieldInterface) {
-                $fieldId    = $fieldValue->getId();
+                $fieldId = $fieldValue->getId();
                 $fieldValue = $fieldValue->getValue();
             } elseif (is_string($Field) || \is_numeric($Field)) {
                 $fieldId = $Field;
@@ -311,21 +311,23 @@ class Products
      */
     public static function setAvailableFieldOptions(QUI\ERP\Products\Product\Product $Product)
     {
-        if (!($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) &&
-            !($Product instanceof QUI\ERP\Products\Product\Types\VariantChild)) {
+        if (
+            !($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) &&
+            !($Product instanceof QUI\ERP\Products\Product\Types\VariantChild)
+        ) {
             return;
         }
 
         // attribute groups
         $groupList = $Product->getFieldsByType(FieldHandler::TYPE_ATTRIBUTE_GROUPS);
 
-        $available        = $Product->availableActiveChildFields();
-        $availableHashes  = $Product->availableActiveFieldHashes();
+        $available = $Product->availableActiveChildFields();
+        $availableHashes = $Product->availableActiveFieldHashes();
         $availableEntries = [];
 
         // parse allowed field values (=options)
         $currentVariantHash = Products::generateVariantHashFromFields($groupList);
-        $searchHashes       = FieldUtils::getSearchHashesFromFieldHash($currentVariantHash);
+        $searchHashes = FieldUtils::getSearchHashesFromFieldHash($currentVariantHash);
 
         foreach ($availableHashes as $hash) {
             $hashArray = FieldUtils::parseFieldHashToArray($hash);
@@ -373,7 +375,7 @@ class Products
             $allowed = \array_flip($allowed);
 
             foreach ($entries as $key => $value) {
-                $valueId       = $value['valueId'];
+                $valueId = $value['valueId'];
                 $hashedValueId = false;
 
                 if (!\is_numeric($valueId)) {
@@ -409,13 +411,15 @@ class Products
      */
     public static function getJsFieldHashArray(QUI\ERP\Products\Product\Product $Product)
     {
-        if (!($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) &&
-            !($Product instanceof QUI\ERP\Products\Product\Types\VariantChild)) {
+        if (
+            !($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) &&
+            !($Product instanceof QUI\ERP\Products\Product\Types\VariantChild)
+        ) {
             return [];
         }
 
         $availableHashes = $Product->availableActiveFieldHashes();
-        $result          = [];
+        $result = [];
 
         foreach ($availableHashes as $hash) {
             $hashArray = FieldUtils::parseFieldHashToArray($hash);
@@ -446,8 +450,10 @@ class Products
             $Product = $Product->getProduct();
         }
 
-        if ($Product instanceof QUI\ERP\Products\Product\Types\VariantParent
-            || $Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+        if (
+            $Product instanceof QUI\ERP\Products\Product\Types\VariantParent
+            || $Product instanceof QUI\ERP\Products\Product\Types\VariantChild
+        ) {
             return true;
         }
 
@@ -468,11 +474,11 @@ class Products
         }
 
         $urlCacheField = 'F' . FieldHandler::FIELD_URL;
-        $table         = QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
+        $table = QUI\ERP\Products\Utils\Tables::getProductCacheTableName();
 
         $where = [];
         $binds = [];
-        $i     = 0;
+        $i = 0;
 
         foreach ($urlFieldValue as $lang => $url) {
             if (empty($url)) {
@@ -482,8 +488,8 @@ class Products
             self::checkUrlLength($url, $lang, $categoryId);
 
 
-            $binds[':lang' . $i]     = $lang;
-            $binds[':url' . $i]      = $url;
+            $binds[':lang' . $i] = $lang;
+            $binds[':url' . $i] = $url;
             $binds[':category' . $i] = '%,' . $categoryId . ',%';
 
             $where[] = "(F19 LIKE :url{$i} AND lang LIKE :lang{$i} AND category LIKE :category{$i})";
@@ -502,7 +508,7 @@ class Products
             WHERE {$where}
         ";
 
-        $PDO       = QUI::getDataBase()->getPDO();
+        $PDO = QUI::getDataBase()->getPDO();
         $Statement = $PDO->prepare($query);
 
         foreach ($binds as $bind => $value) {

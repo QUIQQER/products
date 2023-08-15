@@ -7,8 +7,8 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
-use QUI\Projects\Media\Utils as MediaUtils;
 use QUI\ERP\Products\Field\View;
+use QUI\Projects\Media\Utils as MediaUtils;
 
 /**
  * Class Folder
@@ -36,8 +36,8 @@ class Folder extends QUI\ERP\Products\Field\Field
     public function __construct($fieldId, array $params)
     {
         $this->setOptions([
-            'autoActivateItems'      => true,
-            'mediaFolder'            => false,
+            'autoActivateItems' => true,
+            'mediaFolder' => false,
             'showFrontendTabIfEmpty' => false
         ]);
 
@@ -100,9 +100,9 @@ class Folder extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType'  => $this->getType()
+                    'fieldType' => $this->getType()
                 ]
             ]);
         }
@@ -130,17 +130,19 @@ class Folder extends QUI\ERP\Products\Field\Field
     }
 
     /**
-     * Return the current value
+     * Check if folder is empty
      *
-     * @return string|array
+     * @return bool
      */
-    public function getValue()
+    public function isEmpty()
     {
-        if (!empty($this->getOption('mediaFolder'))) {
-            return $this->getOption('mediaFolder');
+        $MediaFolder = $this->getMediaFolder();
+
+        if (!$MediaFolder) {
+            return true;
         }
 
-        return parent::getValue();
+        return ($MediaFolder->getFiles(['count' => true]) + $MediaFolder->getImages(['count' => true])) < 1;
     }
 
     /**
@@ -169,18 +171,16 @@ class Folder extends QUI\ERP\Products\Field\Field
     }
 
     /**
-     * Check if folder is empty
+     * Return the current value
      *
-     * @return bool
+     * @return string|array
      */
-    public function isEmpty()
+    public function getValue()
     {
-        $MediaFolder = $this->getMediaFolder();
-
-        if (!$MediaFolder) {
-            return true;
+        if (!empty($this->getOption('mediaFolder'))) {
+            return $this->getOption('mediaFolder');
         }
 
-        return ($MediaFolder->getFiles(['count' => true]) + $MediaFolder->getImages(['count' => true])) < 1;
+        return parent::getValue();
     }
 }

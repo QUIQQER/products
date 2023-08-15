@@ -30,11 +30,11 @@ class FieldSortCache
     public static function getFieldCache($fields, $sort)
     {
         /* @param QUI\ERP\Products\Field\Field $Field */
-        $fieldCache  = [];
+        $fieldCache = [];
         $fieldIdTemp = [];
 
         foreach ($fields as $Field) {
-            $fieldCache[]                 = $Field->getId(); // collect ids
+            $fieldCache[] = $Field->getId(); // collect ids
             $fieldIdTemp[$Field->getId()] = $Field;          // collect fields by ids
         }
 
@@ -43,7 +43,7 @@ class FieldSortCache
 
         if (!empty(self::$fieldsCache[$sort][$fieldCache])) {
             $fieldIds = self::$fieldsCache[$sort][$fieldCache];
-            $sorted   = [];
+            $sorted = [];
 
             foreach ($fieldIds as $fieldId) {
                 $sorted[] = $fieldIdTemp[$fieldId];

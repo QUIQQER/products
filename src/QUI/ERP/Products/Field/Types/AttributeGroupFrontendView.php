@@ -40,11 +40,11 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
 
         $current = QUI::getLocale()->getCurrent();
 
-        $id      = $this->getId();
-        $value   = $this->getValue();
+        $id = $this->getId();
+        $value = $this->getValue();
         $options = $this->getOptions();
 
-        $name    = 'field-' . $id;
+        $name = 'field-' . $id;
         $entries = [];
 
         if (isset($options['entries'])) {
@@ -72,44 +72,48 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         }
 
         $Engine->assign([
-            'this'          => $this,
-            'id'            => $id,
-            'title'         => $this->getTitle(),
-            'name'          => $name,
-            'value'         => $value,
+            'this' => $this,
+            'id' => $id,
+            'title' => $this->getTitle(),
+            'name' => $name,
+            'value' => $value,
             'requiredField' => $requiredField
         ]);
 
-        if ($id === QUI\ERP\Products\Handler\Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES &&
-            $this->Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
+        if (
+            $id === QUI\ERP\Products\Handler\Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES &&
+            $this->Product instanceof QUI\ERP\Products\Product\Types\VariantParent
+        ) {
             $variants = $this->Product->getVariants();
-            $entries  = [];
+            $entries = [];
 
             foreach ($variants as $Variants) {
                 if ($Variants->isActive()) {
                     $entries[] = [
-                        'title'    => $Variants->getField(Fields::FIELD_TITLE)->getValue(),
-                        'valueId'  => $Variants->getId(),
+                        'title' => $Variants->getField(Fields::FIELD_TITLE)->getValue(),
+                        'valueId' => $Variants->getId(),
                         'selected' => false,
-                        'hide'     => false,
+                        'hide' => false,
                         'disabled' => false
                     ];
                 }
             }
-        } elseif ($id === QUI\ERP\Products\Handler\Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES &&
-            $this->Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+        } elseif (
+            $id === QUI\ERP\Products\Handler\Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES &&
+            $this->Product instanceof QUI\ERP\Products\Product\Types\VariantChild
+        ) {
             $currentId = $this->Product->getId();
-            $Variant   = $this->Product->getParent();
-            $variants  = $Variant->getVariants();
-            $entries   = [];
+            $Variant = $this->Product->getParent();
+            $variants = $Variant->getVariants();
+            $entries = [];
 
             foreach ($variants as $Variants) {
                 if ($Variants->isActive()) {
                     $entries[] = [
-                        'title'    => $Variants->getField(Fields::FIELD_TITLE)->getValue(),
-                        'valueId'  => $Variants->getId(),
+                        'title' => $Variants->getField(Fields::FIELD_TITLE)->getValue(),
+                        'valueId' => $Variants->getId(),
                         'selected' => $currentId === $Variants->getId(),
-                        'hide'     => false,
+                        'hide' => false,
                         'disabled' => false
                     ];
 
@@ -123,8 +127,8 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
 
         // options
         $optionsAvailable = false;
-        $options          = [];
-        $currentLC        = strtolower($current) . '_' . strtoupper($current);
+        $options = [];
+        $currentLC = strtolower($current) . '_' . strtoupper($current);
 
         foreach ($entries as $key => $option) {
             $title = $option['title'];
@@ -133,14 +137,16 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
                 continue;
             }
 
-            $text      = '';
-            $selected  = '';
-            $disabled  = '';
+            $text = '';
+            $selected = '';
+            $disabled = '';
             $userInput = '';
 
-            if ($value === null && isset($option['selected']) && $option['selected']
+            if (
+                $value === null && isset($option['selected']) && $option['selected']
                 || $value === $option['valueId']
-                || is_numeric($value) && (int)$value === $option['valueId']) {
+                || is_numeric($value) && (int)$value === $option['valueId']
+            ) {
                 $selected = 'selected="selected" ';
             }
 
@@ -166,9 +172,9 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             $options[] = [
                 'selected' => $selected,
                 'disabled' => $disabled,
-                'value'    => htmlspecialchars($option['valueId']),
-                'text'     => htmlspecialchars($text),
-                'data'     => $userInput
+                'value' => htmlspecialchars($option['valueId']),
+                'text' => htmlspecialchars($text),
+                'data' => $userInput
             ];
         }
 
@@ -192,11 +198,11 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
     {
         $current = QUI::getLocale()->getCurrent();
 
-        $id      = $this->getId();
-        $value   = $this->getValue();
+        $id = $this->getId();
+        $value = $this->getValue();
         $options = $this->getOptions();
 
-        $name    = 'field-' . $id;
+        $name = 'field-' . $id;
         $entries = [];
 
         if (isset($options['entries'])) {
@@ -219,10 +225,10 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
 
 
         $Engine->assign([
-            'this'  => $this,
-            'id'    => $id,
+            'this' => $this,
+            'id' => $id,
             'title' => $this->getTitle(),
-            'name'  => $name,
+            'name' => $name,
             'value' => $value
         ]);
 
@@ -242,7 +248,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
             }
 
             $title = $option['title'];
-            $text  = '';
+            $text = '';
 
             if (is_string($title)) {
                 $text = $title;

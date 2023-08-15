@@ -68,13 +68,38 @@ class Price extends QUI\ERP\Products\Field\Field
         );
 
         return new View([
-            'id'       => $this->getId(),
-            'value'    => $Price->getDisplayPrice(),
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
+            'id' => $this->getId(),
+            'value' => $Price->getDisplayPrice(),
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ]);
+    }
+
+    /**
+     * Cleanup the value, so the value is valid
+     *
+     * Precision: 8 (important for currencies like BitCoin)
+     *
+     * @param mixed $value
+     * @return mixed
+     */
+    public function cleanup($value)
+    {
+        if (is_array($value)) {
+            return null;
+        }
+
+        if (is_string($value) && trim($value) === '') {
+            return null;
+        }
+
+        if (is_float($value)) {
+            return round($value, QUI\ERP\Defaults::getPrecision());
+        }
+
+        return QUI\ERP\Money\Price::validatePrice($value);
     }
 
     /**
@@ -117,37 +142,12 @@ class Price extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType'  => $this->getType()
+                    'fieldType' => $this->getType()
                 ]
             ]);
         }
-    }
-
-    /**
-     * Cleanup the value, so the value is valid
-     *
-     * Precision: 8 (important for currencies like BitCoin)
-     *
-     * @param mixed $value
-     * @return mixed
-     */
-    public function cleanup($value)
-    {
-        if (is_array($value)) {
-            return null;
-        }
-
-        if (is_string($value) && trim($value) === '') {
-            return null;
-        }
-
-        if (is_float($value)) {
-            return round($value, QUI\ERP\Defaults::getPrecision());
-        }
-
-        return QUI\ERP\Money\Price::validatePrice($value);
     }
 
     /**
@@ -194,7 +194,7 @@ class Price extends QUI\ERP\Products\Field\Field
     {
         // add tax to max value
         $maxTaxValue = (100 + QUI\ERP\Tax\Utils::getMaxTax()) / 100;
-        $max         *= $maxTaxValue;
+        $max *= $maxTaxValue;
 
         if ($min < 10) {
             $start = 0;
@@ -210,7 +210,7 @@ class Price extends QUI\ERP\Products\Field\Field
             $start = (int)$start;
         }
 
-        $value   = $start;
+        $value = $start;
         $range[] = $value;
 
         while ($value < $max) {
@@ -218,17 +218,17 @@ class Price extends QUI\ERP\Products\Field\Field
                 $add = 0.1;
             } else {
                 $add = 1;
-                $i   = 10;
+                $i = 10;
 
                 while ($value >= $i) {
-                    $i   *= 10;
+                    $i *= 10;
                     $add *= 10;
                 }
 
                 $value = floor($value / $add) * $add;
             }
 
-            $value   += $add;
+            $value += $add;
             $range[] = $value;
         }
 

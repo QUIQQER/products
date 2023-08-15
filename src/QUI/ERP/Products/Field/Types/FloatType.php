@@ -52,7 +52,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
     public function getFrontendView()
     {
         $attributes = $this->getFieldDataForView();
-        $value      = $this->getValue();
+        $value = $this->getValue();
 
         $attributes['value'] = QUI::getLocale()->formatNumber($value);
 
@@ -85,9 +85,9 @@ class FloatType extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType'  => $this->getType()
+                    'fieldType' => $this->getType()
                 ]
             ]);
         }
@@ -102,7 +102,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
     public function cleanup($value)
     {
         // @TODO diese beiden Werte aus Settings nehmen (s. Price)
-        $decimalSeparator   = '.';
+        $decimalSeparator = '.';
         $thousandsSeparator = ',';
 
         if (is_float($value)) {
@@ -116,7 +116,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
             return null;
         }
 
-        $decimal   = mb_strpos($value, $decimalSeparator);
+        $decimal = mb_strpos($value, $decimalSeparator);
         $thousands = mb_strpos($value, $thousandsSeparator);
 
         if ($thousands === false && $decimal === false) {

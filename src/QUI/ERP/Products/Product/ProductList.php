@@ -139,7 +139,7 @@ class ProductList
     public function __construct(array $params = [], $User = false)
     {
         if (isset($params['duplicate'])) {
-            $this->duplicate = (boolean)$params['duplicate'];
+            $this->duplicate = (bool)$params['duplicate'];
         }
 
         if (isset($params['calculations'])) {

@@ -26,7 +26,7 @@ class MultilangFrontendView extends QUI\ERP\Products\Field\View
         $Engine = QUI::getTemplateManager()->getEngine();
 
         /** @var UnitSelect $Field */
-        $value   = $this->getValue();
+        $value = $this->getValue();
         $current = QUI::getLocale()->getCurrent();
 
         if (isset($value[$current])) {
@@ -40,6 +40,6 @@ class MultilangFrontendView extends QUI\ERP\Products\Field\View
             'value' => $value
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/MultilangFrontendView.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/MultilangFrontendView.html');
     }
 }

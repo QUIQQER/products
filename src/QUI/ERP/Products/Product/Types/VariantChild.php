@@ -76,7 +76,7 @@ class VariantChild extends AbstractType
                     'quiqqer/products',
                     'exception.Product.Types.VariantChild.parent_not_found',
                     [
-                        'childId'  => $pid,
+                        'childId' => $pid,
                         'parentId' => $this->getAttribute('parent')
                     ]
                 )
@@ -119,7 +119,7 @@ class VariantChild extends AbstractType
                 if (!$Field->isEmpty()) {
                     if (Products::isExtendVariantChildShortDesc() && $Field instanceof AttributeGroup) {
                         $attributeListFieldValues[] = [
-                            'title'      => $Field->getTitle(),
+                            'title' => $Field->getTitle(),
                             'valueTitle' => $Field->getValueTitle()
                         ];
                     }
@@ -145,7 +145,7 @@ class VariantChild extends AbstractType
 
         if (!empty($attributeListFieldValues)) {
             $shortDesc = $this->getFieldValueByLocale(Fields::FIELD_SHORT_DESC);
-            $lang      = QUI::getLocale()->getCurrent();
+            $lang = QUI::getLocale()->getCurrent();
 
             $shortDescLines = [];
 
@@ -157,7 +157,7 @@ class VariantChild extends AbstractType
                 }
             }
 
-            $shortDescAddition              = implode('; ', $shortDescLines);
+            $shortDescAddition = implode('; ', $shortDescLines);
             $this->shortDescAddition[$lang] = $shortDescAddition;
 
             if (empty($shortDesc)) {
@@ -319,8 +319,8 @@ class VariantChild extends AbstractType
         }
 
         try {
-            $Project     = QUI::getRewrite()->getProject();
-            $Media       = $Project->getMedia();
+            $Project = QUI::getRewrite()->getProject();
+            $Media = $Project->getMedia();
             $Placeholder = $Media->getPlaceholderImage();
 
             if ($Placeholder) {
@@ -396,7 +396,7 @@ class VariantChild extends AbstractType
         }
 
         $fieldId = $this->OwnMediaFolderField->getId();
-        $Field   = $this->getField($fieldId);
+        $Field = $this->getField($fieldId);
 
         if ($Field->getType() != Fields::TYPE_FOLDER) {
             throw new QUI\ERP\Products\Product\Exception([
@@ -408,7 +408,7 @@ class VariantChild extends AbstractType
         // exist a media folder in the field?
         try {
             $folderUrl = $this->getFieldValue($fieldId);
-            $Folder    = MediaUtils::getMediaItemByUrl($folderUrl);
+            $Folder = MediaUtils::getMediaItemByUrl($folderUrl);
 
             if (MediaUtils::isFolder($Folder)) {
                 /* @var $Folder QUI\Projects\Media\Folder */
@@ -548,7 +548,7 @@ class VariantChild extends AbstractType
     protected function productSave($fieldData, $EditUser = null)
     {
         // check fields with parent fields
-        $Parent            = $this->getParent();
+        $Parent = $this->getParent();
         $inheritedFieldIds = QUI\ERP\Products\Utils\Products::getInheritedFieldIdsForProduct($this);
 
         foreach ($fieldData as $k => $field) {
@@ -570,7 +570,7 @@ class VariantChild extends AbstractType
                     }
                 }
 
-                $field['value']         = $fieldValue;
+                $field['value'] = $fieldValue;
                 $fieldData[$k]['value'] = $fieldValue;
             }
 
@@ -579,9 +579,11 @@ class VariantChild extends AbstractType
             /*
              * Only save field values that are different from the parent (if the field is inherited!)
              */
-            if ($fieldData[$k]['type'] !== Fields::TYPE_ATTRIBUTE_GROUPS &&
+            if (
+                $fieldData[$k]['type'] !== Fields::TYPE_ATTRIBUTE_GROUPS &&
                 $field['value'] === $parentFieldValue &&
-                in_array($fieldId, $inheritedFieldIds)) {
+                in_array($fieldId, $inheritedFieldIds)
+            ) {
                 $fieldData[$k]['value'] = null;
             }
         }
@@ -600,7 +602,7 @@ class VariantChild extends AbstractType
 
             /** @var QUI\ERP\Products\Field\Types\AttributeGroup $AttributeGroupField */
             foreach ($this->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS) as $AttributeGroupField) {
-                $fieldId    = $AttributeGroupField->getId();
+                $fieldId = $AttributeGroupField->getId();
                 $fieldValue = $this->getFieldValue($fieldId);
 
                 if (!empty($fieldValue) && !empty($AttributeGroupField->getOption('is_image_attribute'))) {

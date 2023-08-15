@@ -64,7 +64,7 @@ class PriceByQuantity extends Price
         }
 
         $RealProduct = QUI\ERP\Products\Handler\Products::getNewProductInstance($Product->getId());
-        $value       = $RealProduct->getFieldValue($this->getId());
+        $value = $RealProduct->getFieldValue($this->getId());
 
         if (empty($value)) {
             return false;
@@ -103,7 +103,7 @@ class PriceByQuantity extends Price
      */
     public function getFrontendView()
     {
-        $Calc  = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
+        $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
         $value = $this->cleanup($this->getValue());
 
         $Price = new QUI\ERP\Money\Price(
@@ -112,18 +112,68 @@ class PriceByQuantity extends Price
         );
 
         $valueText = QUI::getLocale()->get('quiqqer/products', 'fieldtype.PriceByQuantity.frontend.text', [
-            'price'    => $Price->getDisplayPrice(),
+            'price' => $Price->getDisplayPrice(),
             'quantity' => (int)$value['quantity']
         ]);
 
         return new View([
-            'id'       => $this->getId(),
-            'value'    => $valueText,
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
+            'id' => $this->getId(),
+            'value' => $valueText,
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ]);
+    }
+
+    /**
+     * Cleanup the value, so the value is valid
+     *
+     * Precision: 8 (important for currencies like BitCoin)
+     *
+     * @param string|array $value
+     * @return array
+     */
+    public function cleanup($value): array
+    {
+        if (is_string($value)) {
+            $value = json_decode($value, true);
+        }
+
+        $defaultReturn = [
+            'price' => '',
+            'quantity' => '',
+        ];
+
+        if (!isset($value['price']) || !isset($value['quantity'])) {
+            return $defaultReturn;
+        }
+
+        $price = $value['price'];
+        $quantity = $value['quantity'];
+
+        if (empty($quantity) || empty($price)) {
+            return $defaultReturn;
+        }
+
+        if (is_float($price)) {
+            return [
+                'price' => $price,
+                'quantity' => (int)$quantity
+            ];
+        }
+
+        $localeCode = QUI::getLocale()->getLocalesByLang(
+            QUI::getLocale()->getCurrent()
+        );
+
+        $Formatter = new NumberFormatter($localeCode[0], NumberFormatter::DECIMAL);
+        $price = $Formatter->parse($price);
+
+        return [
+            'price' => round(floatval($price), QUI\ERP\Defaults::getPrecision()),
+            'quantity' => (int)$quantity,
+        ];
     }
 
     /**
@@ -153,56 +203,6 @@ class PriceByQuantity extends Price
     public function validate($value): array
     {
         return $this->cleanup($value);
-    }
-
-    /**
-     * Cleanup the value, so the value is valid
-     *
-     * Precision: 8 (important for currencies like BitCoin)
-     *
-     * @param string|array $value
-     * @return array
-     */
-    public function cleanup($value): array
-    {
-        if (is_string($value)) {
-            $value = json_decode($value, true);
-        }
-
-        $defaultReturn = [
-            'price'    => '',
-            'quantity' => '',
-        ];
-
-        if (!isset($value['price']) || !isset($value['quantity'])) {
-            return $defaultReturn;
-        }
-
-        $price    = $value['price'];
-        $quantity = $value['quantity'];
-
-        if (empty($quantity) || empty($price)) {
-            return $defaultReturn;
-        }
-
-        if (is_float($price)) {
-            return [
-                'price'    => $price,
-                'quantity' => (int)$quantity
-            ];
-        }
-
-        $localeCode = QUI::getLocale()->getLocalesByLang(
-            QUI::getLocale()->getCurrent()
-        );
-
-        $Formatter = new NumberFormatter($localeCode[0], NumberFormatter::DECIMAL);
-        $price     = $Formatter->parse($price);
-
-        return [
-            'price'    => round(floatval($price), QUI\ERP\Defaults::getPrecision()),
-            'quantity' => (int)$quantity,
-        ];
     }
 
     /**

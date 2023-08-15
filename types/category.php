@@ -14,8 +14,8 @@ $_REQUEST['_url'] = ltrim($_REQUEST['_url'], '/'); // nginx fix
 $_REQUEST['_url'] = urldecode($_REQUEST['_url']);
 
 $siteUrl = $Site->getLocation();
-$url     = $_REQUEST['_url'];
-$url     = pathinfo($url);
+$url = $_REQUEST['_url'];
+$url = pathinfo($url);
 
 // fallback url for a product, with NO category
 // this should never happen and is a configuration error
@@ -25,15 +25,15 @@ if (strpos(QUI::getRequest()->getPathInfo(), '_p/') !== false) {
     if (strlen(URL_DIR) == 1) {
         $_REQUEST['_url'] = ltrim($_REQUEST['_url'], URL_DIR);
     } else {
-        $from             = '/' . preg_quote(URL_DIR, '/') . '/';
+        $from = '/' . preg_quote(URL_DIR, '/') . '/';
         $_REQUEST['_url'] = preg_replace($from, '', $_REQUEST['_url'], 1);
     }
 
     $siteUrl = '';
 
     $_REQUEST['_url'] = urldecode($_REQUEST['_url']); // nginx fix
-    $url              = $_REQUEST['_url'];
-    $url              = pathinfo($url);
+    $url = $_REQUEST['_url'];
+    $url = pathinfo($url);
 }
 
 // category menu
@@ -41,7 +41,8 @@ $searchParentCategorySite = function () use ($Site) {
     $Parent = true;
 
     while ($Parent) {
-        if ($Site->getParent()
+        if (
+            $Site->getParent()
             && $Site->getParent()->getAttribute('type') != 'quiqqer/products:types/category'
         ) {
             return $Site;
@@ -62,7 +63,7 @@ $CategoryMenu = new QUI\ERP\Products\Controls\Category\Menu([
 ]);
 
 $Engine->assign([
-    'showFilter'   => $Site->getAttribute('quiqqer.products.settings.showFilterLeft'),
+    'showFilter' => $Site->getAttribute('quiqqer.products.settings.showFilterLeft'),
     'CategoryMenu' => $CategoryMenu,
 ]);
 
@@ -88,13 +89,13 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     }
 
     $Product = null;
-    $Output  = new QUI\Output();
-    $Locale  = QUI::getLocale();
+    $Output = new QUI\Output();
+    $Locale = QUI::getLocale();
 
     // get by url field
     try {
         $categoryId = (int)$Site->getAttribute('quiqqer.products.settings.categoryId');
-        $Product    = Products\Handler\Products::getProductByUrl($refNo, $categoryId);
+        $Product = Products\Handler\Products::getProductByUrl($refNo, $categoryId);
     } catch (QUI\Exception $Exception) {
         try {
             if (is_numeric($refNo)) {
@@ -108,7 +109,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     try {
         // get url by id
         if ($Product === null) {
-            $refNo   = (int)$refNo;
+            $refNo = (int)$refNo;
             $Product = Products\Handler\Products::getProduct($refNo);
         }
 
@@ -144,7 +145,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         $CategoryMenu->setAttribute('breadcrumb', true);
 
         $Engine->assign([
-            'Product'    => new Products\Controls\Products\Product([
+            'Product' => new Products\Controls\Products\Product([
                 'Product' => $Product
             ]),
             'categoryId' => $Product->getCategory()->getId()
@@ -179,7 +180,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
 
         $Site->setAttribute('quiqqer.socialshare.description', $description);
 
-        
+
         $Keywords = $Product->getField(Products\Handler\Fields::FIELD_KEYWORDS);
         $keywords = $Keywords->getValueByLocale($Locale);
 
@@ -251,22 +252,22 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     }
 
     $ProductList = new ProductList([
-        'categoryId'                => $Site->getAttribute('quiqqer.products.settings.categoryId'),
-        'hideEmptyProductList'      => true,
-        'categoryStartNumber'       => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
-        'showCategories'            => $Site->getAttribute('quiqqer.products.settings.showCategories'),
-        'categoryView'              => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
-        'categoryPos'               => $Site->getAttribute('quiqqer.products.settings.categoryPos'),
+        'categoryId' => $Site->getAttribute('quiqqer.products.settings.categoryId'),
+        'hideEmptyProductList' => true,
+        'categoryStartNumber' => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
+        'showCategories' => $Site->getAttribute('quiqqer.products.settings.showCategories'),
+        'categoryView' => $Site->getAttribute('quiqqer.products.settings.categoryDisplay'),
+        'categoryPos' => $Site->getAttribute('quiqqer.products.settings.categoryPos'),
         'categoryProductSearchType' => $categoryProductSearchType,
-        'searchParams'              => Products\Search\Utils::getSearchParameterFromRequest(),
-        'autoload'                  => 1,
-        'autoloadAfter'             => $Site->getAttribute('quiqqer.products.settings.autoloadAfter'),
-        'productLoadNumber'         => $Site->getAttribute('quiqqer.products.settings.productLoadNumber'),
-        'view'                      => Products\Search\Utils::getViewParameterFromRequest(),
+        'searchParams' => Products\Search\Utils::getSearchParameterFromRequest(),
+        'autoload' => 1,
+        'autoloadAfter' => $Site->getAttribute('quiqqer.products.settings.autoloadAfter'),
+        'productLoadNumber' => $Site->getAttribute('quiqqer.products.settings.productLoadNumber'),
+        'view' => Products\Search\Utils::getViewParameterFromRequest(),
     ]);
 
     $filterList = $ProductList->getFilter();
-    $fields     = Products\Utils\Sortables::getSortableFieldsForSite($Site);
+    $fields = Products\Utils\Sortables::getSortableFieldsForSite($Site);
 
     foreach ($fields as $fieldId) {
         if (strpos($fieldId, 'S') === 0) {
@@ -336,9 +337,9 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     }
 
     $Engine->assign([
-        'categoryId'   => $Site->getAttribute('quiqqer.products.settings.categoryId'),
-        'ProductList'  => $ProductList,
+        'categoryId' => $Site->getAttribute('quiqqer.products.settings.categoryId'),
+        'ProductList' => $ProductList,
         'CategoryMenu' => $CategoryMenu,
-        'filter'       => $filterList
+        'filter' => $filterList
     ]);
 }

@@ -7,8 +7,8 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
-use QUI\Interfaces\Users\User as UserInterface;
 use QUI\ERP\Utils\User as Utils;
+use QUI\Interfaces\Users\User as UserInterface;
 
 /**
  * Class User

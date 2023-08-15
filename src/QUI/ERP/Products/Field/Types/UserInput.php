@@ -3,7 +3,6 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
-use QUI\ERP\Products\Handler\Search;
 
 /**
  * Class UserInput
@@ -36,7 +35,7 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
     public function __construct($fieldId, array $params)
     {
         $this->setOptions([
-            'inputType'     => 'input', // "input", "input_inline", "textarea"
+            'inputType' => 'input', // "input", "input_inline", "textarea"
             'maxCharacters' => 100
         ]);
 
@@ -113,9 +112,9 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
             'quiqqer/products',
             'exception.field.invalid',
             [
-                'fieldId'    => $this->getId(),
+                'fieldId' => $this->getId(),
                 'fieldTitle' => $this->getTitle(),
-                'fieldType'  => $this->getType()
+                'fieldType' => $this->getType()
             ]
         ]);
     }

@@ -18,7 +18,7 @@ class CheckboxInput extends QUI\ERP\Products\Field\Field
 
     protected $defaultValue = [
         'checked' => false,
-        'value'   => ''
+        'value' => ''
     ];
 
     /**
@@ -50,9 +50,9 @@ class CheckboxInput extends QUI\ERP\Products\Field\Field
                     'quiqqer/products',
                     'exception.field.invalid',
                     [
-                        'fieldId'    => $this->getId(),
+                        'fieldId' => $this->getId(),
                         'fieldTitle' => $this->getTitle(),
-                        'fieldType'  => $this->getType()
+                        'fieldType' => $this->getType()
                     ]
                 ]);
             }
@@ -67,9 +67,9 @@ class CheckboxInput extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType'  => $this->getType()
+                    'fieldType' => $this->getType()
                 ]
             ]);
         }

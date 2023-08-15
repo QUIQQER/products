@@ -3,8 +3,8 @@
 namespace QUI\ERP\Products\Handler;
 
 use QUI;
-use QUI\Utils\StringHelper;
 use QUI\Projects\Media\Utils as QUIMediaUtils;
+use QUI\Utils\StringHelper;
 
 /**
  * Class Manufacturers
@@ -31,7 +31,7 @@ class Manufacturers
         try {
             /** @var QUI\ERP\Products\Field\Types\GroupList $ManufacturerField */
             $ManufacturerField = Fields::getField(Fields::FIELD_MANUFACTURER);
-            $userIds           = $ManufacturerField->getUserIds();
+            $userIds = $ManufacturerField->getUserIds();
 
             if (!$activeOnly || empty($userIds)) {
                 return $userIds;
@@ -39,10 +39,10 @@ class Manufacturers
 
             $result = QUI::getDataBase()->fetch([
                 'select' => ['id'],
-                'from'   => QUI\Users\Manager::table(),
-                'where'  => [
-                    'id'     => [
-                        'type'  => 'IN',
+                'from' => QUI\Users\Manager::table(),
+                'where' => [
+                    'id' => [
+                        'type' => 'IN',
                         'value' => $userIds
                     ],
                     'active' => 1
@@ -116,7 +116,7 @@ class Manufacturers
 
         try {
             $StandardAddress = $User->getStandardAddress();
-            $company         = $StandardAddress->getAttribute('company');
+            $company = $StandardAddress->getAttribute('company');
 
             if (!empty($company)) {
                 return $company;
@@ -189,7 +189,7 @@ class Manufacturers
         $manufacturerListSites = $Project->getSites([
             'where' => [
                 'active' => 1,
-                'type'   => self::SITE_TYPE_MANUFACTURER_LIST
+                'type' => self::SITE_TYPE_MANUFACTURER_LIST
             ]
         ]);
 
@@ -202,7 +202,7 @@ class Manufacturers
 
         try {
             $manufacturer = self::getManufacturerData($userId);
-            return $Site->getUrlRewrittenWithHost().'/'.$manufacturer['username'];
+            return $Site->getUrlRewrittenWithHost() . '/' . $manufacturer['username'];
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             return false;
@@ -223,8 +223,8 @@ class Manufacturers
 
         $result = QUI::getDataBase()->fetch([
             'select' => ['username', 'firstname', 'lastname', 'avatar'],
-            'from'   => QUI::getUsers()::table(),
-            'where'  => [
+            'from' => QUI::getUsers()::table(),
+            'where' => [
                 'id' => $userId
             ]
         ]);
@@ -256,11 +256,11 @@ class Manufacturers
         foreach ($projects as $project) {
             foreach ($langs as $lang) {
                 try {
-                    $Project               = $Projects->getProject($project, $lang);
+                    $Project = $Projects->getProject($project, $lang);
                     $manufacturerListSites = $Project->getSites([
                         'where' => [
                             'active' => 1,
-                            'type'   => self::SITE_TYPE_MANUFACTURER_LIST
+                            'type' => self::SITE_TYPE_MANUFACTURER_LIST
                         ]
                     ]);
 
@@ -269,7 +269,7 @@ class Manufacturers
                         $url = $Site->getLocation();
                         $url = StringHelper::strReplaceFromEnd(QUI\Rewrite::URL_DEFAULT_SUFFIX, '', $url);
 
-                        QUI::getRewrite()->registerPath($url.'/*', $Site);
+                        QUI::getRewrite()->registerPath($url . '/*', $Site);
                     }
                 } catch (\Exception $Exception) {
                     // project does probably not exist in given language

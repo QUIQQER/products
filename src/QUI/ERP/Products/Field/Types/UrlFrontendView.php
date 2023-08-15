@@ -30,11 +30,11 @@ class UrlFrontendView extends QUI\ERP\Products\Field\View
         $title = $this->getTitle();
         $title = \htmlspecialchars($title);
 
-        $link  = '';
+        $link = '';
         $value = $this->getValue();
 
         if (!empty($value)) {
-            $link = '<a href="'.$value.'" target="_blank">'.$value.'</a>';
+            $link = '<a href="' . $value . '" target="_blank">' . $value . '</a>';
         }
 
         return "<div class=\"quiqqer-product-field\">

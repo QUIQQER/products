@@ -41,8 +41,8 @@ class VariantGenerating extends Singleton
     public function getAvailableFieldsForGeneration()
     {
         $attributeList = Fields::getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST);
-        $attributes    = Fields::getFieldsByType(Fields::TYPE_ATTRIBUTES);
-        $fields        = \array_merge($attributes, $attributeList);
+        $attributes = Fields::getFieldsByType(Fields::TYPE_ATTRIBUTES);
+        $fields = \array_merge($attributes, $attributeList);
 
         return QUI\ERP\Products\Utils\Fields::sortFields($fields, 'id');
     }
@@ -56,7 +56,7 @@ class VariantGenerating extends Singleton
         $result = [];
 
         $children = $Product->getVariants();
-        $exists   = \array_map(function ($Variant) {
+        $exists = \array_map(function ($Variant) {
             return $Variant->getAttribute('variantHash');
         }, $children);
 

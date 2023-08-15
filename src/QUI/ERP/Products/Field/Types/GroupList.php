@@ -46,7 +46,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
     public function __construct($fieldId, array $params)
     {
         $this->setOptions([
-            'groupIds'      => false,
+            'groupIds' => false,
             'multipleUsers' => true
         ]);
 
@@ -67,7 +67,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
     public function getFrontendView()
     {
         $params = $this->getFieldDataForView();
-        $users  = $this->getUsers();
+        $users = $this->getUsers();
 
         if (is_array($users)) {
             $value = [];
@@ -82,6 +82,80 @@ class GroupList extends QUI\ERP\Products\Field\Field
         }
 
         return new View($params);
+    }
+
+    /**
+     * Return all users in from the groups
+     *
+     * @return QUI\Interfaces\Users\User[]
+     */
+    public function getUsers()
+    {
+        $result = [];
+
+        foreach ($this->getUserIds() as $userId) {
+            try {
+                $result[$userId] = QUI::getUsers()->get($userId);
+            } catch (QUI\Exception $Exception) {
+                continue;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return all users IDs from the groups assigned to this fields
+     *
+     * @return int[]
+     */
+    public function getUserIds()
+    {
+        $groups = $this->getGroups();
+        $result = [];
+
+        /* @var $Group QUI\Groups\Group */
+        /* @var $User QUI\Users\User */
+        foreach ($groups as $Group) {
+            $users = $Group->getUsers();
+
+            foreach ($users as $User) {
+                if (is_array($User)) {
+                    $result[] = (int)$User['id'];
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return the groups in the group list
+     *
+     * @return array
+     */
+    public function getGroups()
+    {
+        $Groups = QUI::getGroups();
+        $groupIds = $this->getOption('groupIds');
+        $result = [];
+
+        if (!is_array($groupIds)) {
+            return $result;
+        }
+
+        foreach ($groupIds as $groupId) {
+            try {
+                $result[] = $Groups->get($groupId);
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException(
+                    $Exception,
+                    QUI\System\Log::LEVEL_NOTICE
+                );
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -113,16 +187,16 @@ class GroupList extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        $groupIds      = $this->getOption('groupIds');
+        $groupIds = $this->getOption('groupIds');
         $multipleUsers = $this->getOption('multipleUsers');
-        $userIds       = [];
+        $userIds = [];
 
         if (is_numeric($value)) {
             $userIds = [(int)$value];
         } elseif (is_string($value)) {
             // Check if string is username
             try {
-                $User      = QUI::getUsers()->getUserByName($value);
+                $User = QUI::getUsers()->getUserByName($value);
                 $userIds[] = $User->getId();
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeDebugException($Exception);
@@ -148,7 +222,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.grouplist.user.limit.reached',
                 [
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle()
                 ]
             ]);
@@ -189,7 +263,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                     ]);
                 }
 
-                $User       = QUI::getUsers()->get($userId);
+                $User = QUI::getUsers()->get($userId);
                 $userGroups = $User->getGroups(false);
 
                 if (!$isUserInGroups($userGroups)) {
@@ -197,9 +271,9 @@ class GroupList extends QUI\ERP\Products\Field\Field
                         'quiqqer/products',
                         'exception.field.grouplist.user.not.in.group',
                         [
-                            'userId'   => $User->getId(),
+                            'userId' => $User->getId(),
                             'username' => $User->getUsername(),
-                            'groups'   => implode(',', $groupIds)
+                            'groups' => implode(',', $groupIds)
                         ]
                     ]);
                 }
@@ -209,9 +283,9 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.unexptected.error',
                 [
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'errorMsg'   => $Exception->getMessage()
+                    'errorMsg' => $Exception->getMessage()
                 ]
             ]);
         }
@@ -225,17 +299,17 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function cleanup($value)
     {
-        $groupIds      = $this->getOption('groupIds');
+        $groupIds = $this->getOption('groupIds');
         $multipleUsers = $this->getOption('multipleUsers');
-        $userIds       = [];
-        $result        = [];
+        $userIds = [];
+        $result = [];
 
         if (is_numeric($value)) {
             $userIds = [(int)$value];
         } elseif (is_string($value)) {
             // Check if string is username
             try {
-                $User      = QUI::getUsers()->getUserByName($value);
+                $User = QUI::getUsers()->getUserByName($value);
                 $userIds[] = $User->getId();
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeDebugException($Exception);
@@ -281,7 +355,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                     continue;
                 }
 
-                $User       = QUI::getUsers()->get($userId);
+                $User = QUI::getUsers()->get($userId);
                 $userGroups = $User->getGroups(false);
 
                 if ($isUserInGroups($userGroups)) {
@@ -309,7 +383,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
             return null;
         }
 
-        $userIds      = $this->getValue();
+        $userIds = $this->getValue();
         $searchValues = [];
 
         foreach ($userIds as $userId) {
@@ -321,80 +395,6 @@ class GroupList extends QUI\ERP\Products\Field\Field
         }
 
         return ',' . implode(',', $searchValues) . ',';
-    }
-
-    /**
-     * Return all users IDs from the groups assigned to this fields
-     *
-     * @return int[]
-     */
-    public function getUserIds()
-    {
-        $groups = $this->getGroups();
-        $result = [];
-
-        /* @var $Group QUI\Groups\Group */
-        /* @var $User QUI\Users\User */
-        foreach ($groups as $Group) {
-            $users = $Group->getUsers();
-
-            foreach ($users as $User) {
-                if (is_array($User)) {
-                    $result[] = (int)$User['id'];
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Return all users in from the groups
-     *
-     * @return QUI\Interfaces\Users\User[]
-     */
-    public function getUsers()
-    {
-        $result = [];
-
-        foreach ($this->getUserIds() as $userId) {
-            try {
-                $result[$userId] = QUI::getUsers()->get($userId);
-            } catch (QUI\Exception $Exception) {
-                continue;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Return the groups in the group list
-     *
-     * @return array
-     */
-    public function getGroups()
-    {
-        $Groups   = QUI::getGroups();
-        $groupIds = $this->getOption('groupIds');
-        $result   = [];
-
-        if (!is_array($groupIds)) {
-            return $result;
-        }
-
-        foreach ($groupIds as $groupId) {
-            try {
-                $result[] = $Groups->get($groupId);
-            } catch (QUI\Exception $Exception) {
-                QUI\System\Log::writeException(
-                    $Exception,
-                    QUI\System\Log::LEVEL_NOTICE
-                );
-            }
-        }
-
-        return $result;
     }
 
     /**

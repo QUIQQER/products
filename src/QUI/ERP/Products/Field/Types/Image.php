@@ -7,8 +7,8 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
-use QUI\Projects\Media\Utils as MediaUtils;
 use QUI\ERP\Products\Field\View;
+use QUI\Projects\Media\Utils as MediaUtils;
 
 /**
  * Class Input
@@ -67,9 +67,9 @@ class Image extends QUI\ERP\Products\Field\Field
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType'  => $this->getType()
+                    'fieldType' => $this->getType()
                 ]
             ]);
         }
