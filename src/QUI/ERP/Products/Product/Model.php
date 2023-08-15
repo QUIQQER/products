@@ -650,9 +650,9 @@ class Model extends QUI\QDOM
         }
 
         if (
-            !isset($Site) ||
-            $Site->getAttribute('quiqqer.products.fake.type') ||
-            $Site->getAttribute('type') !== 'quiqqer/products:types/category'
+            !isset($Site)
+            || $Site->getAttribute('quiqqer.products.fake.type')
+            || $Site->getAttribute('type') !== 'quiqqer/products:types/category'
             && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
         ) {
             QUI\System\Log::addWarning(
