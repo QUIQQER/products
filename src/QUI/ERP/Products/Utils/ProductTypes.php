@@ -23,7 +23,7 @@ class ProductTypes extends Singleton
      */
     public function getProductTypes()
     {
-        $cache = QUI\ERP\Products\Handler\Cache::getBasicCachePath().'types';
+        $cache = QUI\ERP\Products\Handler\Cache::getBasicCachePath() . 'types';
 
         try {
             return QUI\Cache\LongTermCache::get($cache);
@@ -65,7 +65,7 @@ class ProductTypes extends Singleton
      */
     public function getVariantParentProductTypes(): array
     {
-        $cache = QUI\ERP\Products\Handler\Cache::getBasicCachePath().'types/variant_parents';
+        $cache = QUI\ERP\Products\Handler\Cache::getBasicCachePath() . 'types/variant_parents';
 
         try {
             return QUI\Cache\LongTermCache::get($cache);
@@ -89,7 +89,7 @@ class ProductTypes extends Singleton
      */
     public function getVariantChildProductTypes(): array
     {
-        $cache = QUI\ERP\Products\Handler\Cache::getBasicCachePath().'types/variant_child';
+        $cache = QUI\ERP\Products\Handler\Cache::getBasicCachePath() . 'types/variant_child';
 
         try {
             return QUI\Cache\LongTermCache::get($cache);
@@ -115,7 +115,7 @@ class ProductTypes extends Singleton
     public function exists($productType)
     {
         $productTypes = $this->getProductTypes();
-        $productType  = trim($productType, '\\');
+        $productType = trim($productType, '\\');
 
         foreach ($productTypes as $type) {
             $type = trim($type, '\\');

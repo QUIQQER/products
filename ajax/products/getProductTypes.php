@@ -14,19 +14,19 @@ QUI::$Ajax->registerFunction(
     function () {
         $ProductTypes = QUI\ERP\Products\Utils\ProductTypes::getInstance();
 
-        $types  = $ProductTypes->getProductTypes();
+        $types = $ProductTypes->getProductTypes();
         $result = [];
 
         foreach ($types as $type) {
-            $title        = call_user_func([$type, 'getTypeTitle']);
-            $description  = call_user_func([$type, 'getTypeDescription']);
-            $panel        = call_user_func([$type, 'getTypeBackendPanel']);
+            $title = call_user_func([$type, 'getTypeTitle']);
+            $description = call_user_func([$type, 'getTypeDescription']);
+            $panel = call_user_func([$type, 'getTypeBackendPanel']);
             $isSelectable = call_user_func([$type, 'isTypeSelectable']);
 
             $result[] = [
-                'type'             => $type,
-                'typeTitle'        => $title,
-                'typeDescription'  => $description,
+                'type' => $type,
+                'typeTitle' => $title,
+                'typeDescription' => $description,
                 'typeBackendPanel' => $panel,
                 'isTypeSelectable' => $isSelectable
             ];

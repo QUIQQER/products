@@ -3,7 +3,6 @@
 namespace QUI\ERP\Products\Controls\ManufacturerList;
 
 use QUI;
-use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Handler\Manufacturers as ManufacturersHandler;
 
 /**
@@ -21,12 +20,12 @@ class ManufacturerList extends QUI\Control
     public function __construct($attributes = [])
     {
         $this->setAttributes([
-            'class'      => 'quiqqer-product-list',
+            'class' => 'quiqqer-product-list',
             'categoryId' => false,
-            'data-qui'   => 'package/quiqqer/products/bin/controls/frontend/manufacturerList/ManufacturerList',
+            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/manufacturerList/ManufacturerList',
         ]);
 
-        $this->addCSSFile(\dirname(__FILE__).'/ManufacturerList.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/ManufacturerList.css');
 
         parent::__construct($attributes);
     }
@@ -62,10 +61,10 @@ class ManufacturerList extends QUI\Control
         $this->setAttribute('data-autoloadAfter', $this->getAttribute('autoloadAfter'));
 
         $manufacturers = '';
-        $more          = false;
+        $more = false;
 
         $manufacturerUsers = ManufacturersHandler::getManufacturerUsers(null, 0, true);
-        $count             = \count($manufacturerUsers);
+        $count = \count($manufacturerUsers);
 
         try {
             if (isset($_REQUEST['sheet'])) {
@@ -76,7 +75,7 @@ class ManufacturerList extends QUI\Control
             }
 
             $manufacturers = $start['html'];
-            $more          = $start['more'];
+            $more = $start['more'];
         } catch (QUI\Permissions\Exception $Exception) {
             QUI\System\Log::addNotice(
                 $Exception->getMessage(),
@@ -90,27 +89,27 @@ class ManufacturerList extends QUI\Control
         }
 
         $Pagination = new QUI\Controls\Navigating\Pagination([
-            'count'     => $count,
-            'Site'      => $this->getSite(),
+            'count' => $count,
+            'Site' => $this->getSite(),
             'showLimit' => false,
-            'limit'     => $this->getMax(),
-            'useAjax'   => false,
+            'limit' => $this->getMax(),
+            'useAjax' => false,
         ]);
 
         $Pagination->loadFromRequest();
 
         $Engine->assign([
-            'this'          => $this,
-            'Pagination'    => $Pagination,
-            'count'         => $count,
+            'this' => $this,
+            'Pagination' => $Pagination,
+            'count' => $count,
             'manufacturers' => $manufacturers,
-            'children'      => $this->getSite()->getNavigation(),
-            'more'          => $more,
-            'Site'          => $this->getSite(),
-            'placeholder'   => $this->getProject()->getMedia()->getPlaceholder()
+            'children' => $this->getSite()->getNavigation(),
+            'more' => $more,
+            'Site' => $this->getSite(),
+            'placeholder' => $this->getProject()->getMedia()->getPlaceholder()
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ManufacturerList.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/ManufacturerList.html');
     }
 
     /**
@@ -158,9 +157,9 @@ class ManufacturerList extends QUI\Control
             $start = 0;
         }
 
-        $more                = true;
+        $more = true;
         $manufacturerUserIds = [];
-        $Users               = QUI::getUsers();
+        $Users = QUI::getUsers();
 
         try {
             $userIds = ManufacturersHandler::getManufacturerUserIds(true);
@@ -168,15 +167,15 @@ class ManufacturerList extends QUI\Control
             if (!empty($userIds)) {
                 $result = QUI::getDataBase()->fetch([
                     'select' => ['id'],
-                    'from'   => $Users::table(),
-                    'where'  => [
+                    'from' => $Users::table(),
+                    'where' => [
                         'id' => [
-                            'type'  => 'IN',
+                            'type' => 'IN',
                             'value' => $userIds
                         ]
                     ],
-                    'order'  => 'username ASC',
-                    'limit'  => $start.','.$max
+                    'order' => 'username ASC',
+                    'limit' => $start . ',' . $max
                 ]);
 
                 foreach ($result as $row) {
@@ -213,18 +212,18 @@ class ManufacturerList extends QUI\Control
         }
 
         $Engine->assign([
-            'this'              => $this,
+            'this' => $this,
             'manufacturerUsers' => $manufacturerUserIds,
-            'count'             => $count,
-            'more'              => $more
+            'count' => $count,
+            'more' => $more
         ]);
 
-        $this->addCSSFile(\dirname(__FILE__).'/ManufacturerList.Gallery.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/ManufacturerList.Gallery.css');
 
         return [
-            'html'  => $Engine->fetch(\dirname(__FILE__).'/ManufacturerList.Gallery.html'),
+            'html' => $Engine->fetch(\dirname(__FILE__) . '/ManufacturerList.Gallery.html'),
             'count' => $count,
-            'more'  => $more
+            'more' => $more
         ];
     }
 

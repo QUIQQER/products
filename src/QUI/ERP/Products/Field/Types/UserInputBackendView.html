@@ -1,25 +1,27 @@
 <style>
-    {$css}
+    {
+        $ css
+    }
 </style>
 
 <div class="quiqqer-product-field quiqqer-products-field-userinput">
     <div class="quiqqer-product-field-title">{$title}</div>
     <div class="quiqqer-product-field-value">
         {if $options['inputType'] === 'textarea'}
-            <textarea class="quiqqer-products-field-userinput"
-                      type="text"
-                      name="{$name}"
-                      rows="10"
-                      maxlength="{$options['maxCharacters']}"
-                      {if $isRequired}required{/if}
-            ></textarea>
+        <textarea $isRequired}required{
+                  class="quiqqer-products-field-userinput"
+                  maxlength="{$options['maxCharacters']}"
+                  name="{$name}"
+                  rows="10"
+                  type="text" {if/if}
+        ></textarea>
         {else}
-            <input class="quiqqer-products-field-userinput"
-                   type="text"
-                   name="{$name}"
-                   maxlength="{$options['maxCharacters']}"
-                   {if $isRequired}required{/if}
-            />
+        <input $isRequired}required{
+               class="quiqqer-products-field-userinput"
+               maxlength="{$options['maxCharacters']}"
+               name="{$name}"
+               type="text" {if/if}
+        />
         {/if}
     </div>
 </div>

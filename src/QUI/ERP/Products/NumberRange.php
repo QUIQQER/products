@@ -48,11 +48,11 @@ class NumberRange implements NumberRangeInterface
             return;
         }
 
-        $PDO       = QUI::getDataBase()->getPDO();
+        $PDO = QUI::getDataBase()->getPDO();
         $tableName = QUI\ERP\Products\Utils\Tables::getProductTableName();
 
         $Statement = $PDO->prepare(
-            "ALTER TABLE {$tableName} AUTO_INCREMENT = ".(int)$range
+            "ALTER TABLE {$tableName} AUTO_INCREMENT = " . (int)$range
         );
 
         $Statement->execute();

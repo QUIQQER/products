@@ -22,7 +22,8 @@ QUI::$Ajax->registerFunction(
         // check basket conditions
         $condition = QUI\ERP\Products\Utils\Products::getBasketCondition($Product);
 
-        if ($condition === BasketConditions::TYPE_2 ||
+        if (
+            $condition === BasketConditions::TYPE_2 ||
             $condition === BasketConditions::TYPE_3 ||
             $condition === BasketConditions::TYPE_5
         ) {

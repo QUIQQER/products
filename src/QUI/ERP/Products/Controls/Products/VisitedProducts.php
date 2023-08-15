@@ -32,7 +32,7 @@ class VisitedProducts extends QUI\Control
         );
 
         $this->addCSSClass('quiqqer-products-control-visitedProducts');
-        $this->addCSSFile(\dirname(__FILE__).'/VisitedProducts.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/VisitedProducts.css');
 
         $this->Slider = new ChildrenSlider();
         $this->Slider->setAttribute('height', 350);

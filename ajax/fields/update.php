@@ -18,10 +18,10 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_fields_update',
     function ($fieldId, $params) {
         $Fields = new Fields();
-        $Field  = $Fields->getField($fieldId);
+        $Field = $Fields->getField($fieldId);
         $params = json_decode($params, true);
 
-        $oldValues  = $Field->toProductArray();
+        $oldValues = $Field->toProductArray();
         $oldOptions = $Field->getOptions();
 
         if (isset($params['options'])) {

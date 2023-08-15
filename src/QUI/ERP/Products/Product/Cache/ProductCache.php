@@ -5,7 +5,7 @@ namespace QUI\ERP\Products\Product\Cache;
 use QUI;
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
 use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Products\Product\UniqueProduct;
+
 use function is_null;
 
 /**
@@ -60,7 +60,7 @@ class ProductCache
     public static function create($productId, $createControlCache = false)
     {
         try {
-            $Product  = Products::getNewProductInstance($productId);
+            $Product = Products::getNewProductInstance($productId);
             $variants = [];
 
             if (!$Product->isActive()) {

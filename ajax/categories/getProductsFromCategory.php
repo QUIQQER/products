@@ -4,9 +4,8 @@
  * This file contains package_quiqqer_products_ajax_categories_getProductsFromCategory
  */
 
-use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Products\Utils\Tables;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Utils\Tables;
 
 /**
  * Update all product fields with the category id fields
@@ -18,8 +17,8 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_getProductsFromCategory',
     function ($categoryId, $params) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $Category   = $Categories->getCategory($categoryId);
-        $Grid       = new QUI\Utils\Grid();
+        $Category = $Categories->getCategory($categoryId);
+        $Grid = new QUI\Utils\Grid();
 
         $products = [];
 
@@ -34,12 +33,12 @@ QUI::$Ajax->registerFunction(
                     'id',
                     'title',
                     'description',
-                    'F'.Fields::FIELD_PRICE
+                    'F' . Fields::FIELD_PRICE
                 ],
-                'from'   => Tables::getProductCacheTableName(),
-                'where'  => [
-                    'id'   => [
-                        'type'  => 'IN',
+                'from' => Tables::getProductCacheTableName(),
+                'where' => [
+                    'id' => [
+                        'type' => 'IN',
                         'value' => $productIds
                     ],
                     'lang' => QUI::getLocale()->getCurrent()
@@ -48,10 +47,10 @@ QUI::$Ajax->registerFunction(
 
             foreach ($result as $row) {
                 $products[] = [
-                    'id'          => $row['id'],
-                    'title'       => $row['title'],
+                    'id' => $row['id'],
+                    'title' => $row['title'],
                     'description' => $row['description'],
-                    'price'       => $row['F'.Fields::FIELD_PRICE]
+                    'price' => $row['F' . Fields::FIELD_PRICE]
                 ];
             }
         }

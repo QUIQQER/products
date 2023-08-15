@@ -17,8 +17,8 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_search_frontend_getSearchFieldData',
     function ($siteId, $project) {
-        $Project        = QUI::getProjectManager()->decode($project);
-        $Site           = $Project->get($siteId);
+        $Project = QUI::getProjectManager()->decode($project);
+        $Site = $Project->get($siteId);
         $FrontEndSearch = SearchHandler::getFrontendSearch($Site);
 
         return $FrontEndSearch->getSearchFieldData();

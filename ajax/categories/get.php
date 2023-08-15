@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_get',
     function ($categoryId) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $Category   = $Categories->getCategory($categoryId);
+        $Category = $Categories->getCategory($categoryId);
 
         return $Category->getAttributes();
     },

@@ -28,7 +28,7 @@ class ProductEdit extends QUI\Control
         ]);
 
         $this->addCSSClass('quiqqer-products-productEdit');
-        $this->addCSSFile(\dirname(__FILE__).'/ProductEdit.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/ProductEdit.css');
 
         parent::__construct($attributes);
     }
@@ -42,15 +42,15 @@ class ProductEdit extends QUI\Control
     public function getBody()
     {
         /* @var $Product QUI\ERP\Products\Product\Product */
-        $Engine  = QUI::getTemplateManager()->getEngine();
+        $Engine = QUI::getTemplateManager()->getEngine();
         $Product = $this->getAttribute('Product');
-        $Calc    = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
+        $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
-            $View  = $Product->getView();
+            $View = $Product->getView();
             $Price = $Calc->getProductPrice($Product->createUniqueProduct($Calc));
         } else {
-            $View  = $Product;
+            $View = $Product;
             $Price = $Product->getPrice();
         }
 
@@ -64,13 +64,13 @@ class ProductEdit extends QUI\Control
 
         $Engine->assign([
             'Product' => $View,
-            'Price'   => $Price,
+            'Price' => $Price,
 
             'customFields' => $customFields,
 
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST)
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ProductEdit.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/ProductEdit.html');
     }
 }

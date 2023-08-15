@@ -22,7 +22,7 @@ QUI::$Ajax->registerFunction(
         }
 
         $ExceptionStack = new \QUI\ExceptionStack();
-        $productIds     = json_decode($productId, true);
+        $productIds = json_decode($productId, true);
 
         if (!$productIds) {
             return;

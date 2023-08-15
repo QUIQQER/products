@@ -127,7 +127,7 @@ class Products
      */
     public static function getParentMediaFolder(): QUI\Projects\Media\Folder
     {
-        $Config    = QUI::getPackage('quiqqer/products')->getConfig();
+        $Config = QUI::getPackage('quiqqer/products')->getConfig();
         $folderUrl = $Config->get('products', 'folder');
 
         if (empty($folderUrl)) {
@@ -189,7 +189,7 @@ class Products
 
         //if (QUI::isFrontend()) { // -> mor wollte dies raus haben
         try {
-            $product          = QUI\Cache\LongTermCache::get($cachePath);
+            $product = QUI\Cache\LongTermCache::get($cachePath);
             self::$list[$pid] = self::getProductByDataResult($pid, $product);
 
             return self::$list[$pid];
@@ -198,7 +198,7 @@ class Products
         }
         //        }
 
-        $Product          = self::getNewProductInstance($pid);
+        $Product = self::getNewProductInstance($pid);
         self::$list[$pid] = $Product;
 
         return $Product;
@@ -236,15 +236,15 @@ class Products
         try {
             $result = QUI::getDataBase()->fetch([
                 'select' => [$field, 'category', 'id'],
-                'from'   => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-                'where'  => [
-                    $field     => $url,
+                'from' => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+                'where' => [
+                    $field => $url,
                     'category' => [
-                        'type'  => '%LIKE%',
+                        'type' => '%LIKE%',
                         'value' => ',' . $category . ','
                     ]
                 ],
-                'limit'  => 1
+                'limit' => 1
             ]);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addDebug($Exception->getMessage());
@@ -258,7 +258,7 @@ class Products
                 ],
                 404,
                 [
-                    'url'      => $url,
+                    'url' => $url,
                     'category' => $category
                 ]
             );
@@ -292,7 +292,7 @@ class Products
 
         try {
             $result = QUI::getDataBase()->fetch([
-                'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
                     'id' => $pid
                 ],
@@ -384,7 +384,7 @@ class Products
 
         try {
             $result = QUI::getDataBase()->fetch([
-                'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+                'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
                 'where' => [
                     'id' => $pid
                 ],
@@ -411,11 +411,11 @@ class Products
                 'select' => [
                     'id'
                 ],
-                'from'   => TablesUtils::getProductCacheTableName(),
-                'where'  => [
+                'from' => TablesUtils::getProductCacheTableName(),
+                'where' => [
                     'productNo' => $productNo
                 ],
-                'limit'  => 1
+                'limit' => 1
             ]);
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
@@ -464,7 +464,7 @@ class Products
         $type = QUI\ERP\Products\Product\Types\Product::class;
 
         if (!empty($productType) && $productType !== $type) {
-            $productType  = trim($productType, '\\');
+            $productType = trim($productType, '\\');
             $ProductTypes = QUI\ERP\Products\Utils\ProductTypes::getInstance();
 
             if ($ProductTypes->exists($productType)) {
@@ -482,7 +482,7 @@ class Products
         foreach ($categories as $Category) {
             if (!is_object($Category)) {
                 try {
-                    $Category      = Categories::getCategory($Category);
+                    $Category = Categories::getCategory($Category);
                     $categoryIds[] = $Category->getId();
                 } catch (QUI\Exception $Exception) {
                     QUI\System\Log::addWarning($Exception->getMessage());
@@ -532,7 +532,7 @@ class Products
                         'quiqqer/products',
                         'exception.field.is.invalid',
                         [
-                            'fieldId'    => $Field->getId(),
+                            'fieldId' => $Field->getId(),
                             'fieldtitle' => $Field->getTitle()
                         ]
                     ]);
@@ -553,13 +553,13 @@ class Products
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
             [
-                'fieldData'  => json_encode($fieldData),
-                'category'   => $categoryIds[0],
+                'fieldData' => json_encode($fieldData),
+                'category' => $categoryIds[0],
                 'categories' => ',' . implode(',', $categoryIds) . ',',
-                'type'       => $type,
-                'c_user'     => QUI::getUserBySession()->getId(),
-                'c_date'     => date('Y-m-d H:i:s'),
-                'parent'     => $parent
+                'type' => $type,
+                'c_user' => QUI::getUserBySession()->getId(),
+                'c_date' => date('Y-m-d H:i:s'),
+                'parent' => $parent
             ]
         );
 
@@ -571,7 +571,7 @@ class Products
             ]),
             '',
             [
-                'fieldData'  => $fieldData,
+                'fieldData' => $fieldData,
                 'categories' => ',' . implode(',', $categoryIds) . ','
             ]
         );
@@ -585,10 +585,12 @@ class Products
 
         // Auto-generate article no.
         $isAutoGenerateArticleNo = self::isAutoGenerateArticleNo();
-        $ArticleNoField          = $Product->getField(Fields::FIELD_PRODUCT_NO);
+        $ArticleNoField = $Product->getField(Fields::FIELD_PRODUCT_NO);
 
-        if ($isAutoGenerateArticleNo &&
-            empty($ArticleNoField->getValue())) {
+        if (
+            $isAutoGenerateArticleNo &&
+            empty($ArticleNoField->getValue())
+        ) {
             $ArticleNoField->setValue(self::generateArticleNo($Product));
         }
 
@@ -610,7 +612,7 @@ class Products
     public static function copyProduct(int $productId)
     {
         $Product = self::getProduct($productId);
-        $fields  = $Product->getFields();
+        $fields = $Product->getFields();
 
         // filter url quiqqer/products#301
         $fields = array_filter($fields, function ($Field) {
@@ -671,7 +673,7 @@ class Products
     public static function getProducts(array $queryParams = []): array
     {
         $result = [];
-        $data   = self::getProductIds($queryParams);
+        $data = self::getProductIds($queryParams);
 
         foreach ($data as $id) {
             try {
@@ -713,13 +715,15 @@ class Products
             'orderCount',
         ];
 
-        if (isset($queryParams['where']) &&
+        if (
+            isset($queryParams['where']) &&
             QUI\Database\DB::isWhereValid($queryParams['where'], $allowedFields)
         ) {
             $query['where'] = $queryParams['where'];
         }
 
-        if (isset($queryParams['where_or']) &&
+        if (
+            isset($queryParams['where_or']) &&
             QUI\Database\DB::isWhereValid($queryParams['where_or'], $allowedFields)
         ) {
             $query['where_or'] = $queryParams['where_or'];
@@ -729,7 +733,8 @@ class Products
             $query['limit'] = $queryParams['limit'];
         }
 
-        if (isset($queryParams['order']) &&
+        if (
+            isset($queryParams['order']) &&
             QUI\Database\DB::isOrderValid($queryParams['order'], $allowedFields)
         ) {
             $query['order'] = $queryParams['order'];
@@ -781,10 +786,10 @@ class Products
     public static function countProducts(array $queryParams = []): int
     {
         $query = [
-            'from'  => QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            'from' => QUI\ERP\Products\Utils\Tables::getProductTableName(),
             'count' => [
                 'select' => 'id',
-                'as'     => 'count'
+                'as' => 'count'
             ]
         ];
 
@@ -824,7 +829,7 @@ class Products
         QUI\ERP\Products\Search\Cache::clear();
         Categories::clearCache();
 
-        $ids        = self::getProductIds();
+        $ids = self::getProductIds();
         $SystemUser = QUI::getUsers()->getSystemUser();
 
         foreach ($ids as $id) {
@@ -855,7 +860,7 @@ class Products
             $MainFolder = QUI::getProjectManager()->getStandard()->getMedia();
         }
 
-        $Media    = $MainFolder->getMedia();
+        $Media = $MainFolder->getMedia();
         $childIds = $MainFolder->getChildrenIds();
 
         foreach ($childIds as $folderId) {
@@ -882,7 +887,7 @@ class Products
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
             [
                 'id' => [
-                    'type'  => 'NOT IN',
+                    'type' => 'NOT IN',
                     'value' => $ids
                 ]
             ]
@@ -913,14 +918,14 @@ class Products
 
         try {
             $Package = QUI::getPackage('quiqqer/products');
-            $Config  = $Package->getConfig();
+            $Config = $Package->getConfig();
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
 
             return false;
         }
 
-        $usePermission        = (int)$Config->get('products', 'usePermissions');
+        $usePermission = (int)$Config->get('products', 'usePermissions');
         self::$usePermissions = (bool)$usePermission;
 
         return self::$usePermissions;
@@ -1183,7 +1188,7 @@ class Products
     public static function generateArticleNo(QUI\ERP\Products\Product\Product $Product): string
     {
         $NumberRange = new QUI\ERP\Products\NumberRange();
-        $nextId      = $NumberRange->getRange();
+        $nextId = $NumberRange->getRange();
 
         try {
             $Conf = QUI::getPackage('quiqqer/products')->getConfig();

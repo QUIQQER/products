@@ -7,9 +7,10 @@
 namespace QUI\ERP\Products\Category;
 
 use QUI;
+use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Products\Handler\Categories;
+
 use function array_column;
 
 /**
@@ -77,8 +78,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     public function __construct($categoryId, $data)
     {
         $this->parentId = 0;
-        $this->id       = (int)$categoryId;
-        $this->data     = $data;
+        $this->id = (int)$categoryId;
+        $this->data = $data;
 
         $this->caches = [
             'site-binds'
@@ -108,13 +109,13 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         if (!$Locale) {
             return QUI::getLocale()->get(
                 'quiqqer/products',
-                'products.category.'.$this->getId().'.title'
+                'products.category.' . $this->getId() . '.title'
             );
         }
 
         return $Locale->get(
             'quiqqer/products',
-            'products.category.'.$this->getId().'.title'
+            'products.category.' . $this->getId() . '.title'
         );
     }
 
@@ -129,13 +130,13 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         if (!$Locale) {
             return QUI::getLocale()->get(
                 'quiqqer/products',
-                'products.category.'.$this->getId().'.description'
+                'products.category.' . $this->getId() . '.description'
             );
         }
 
         return $Locale->get(
             'quiqqer/products',
-            'products.category.'.$this->getId().'.description'
+            'products.category.' . $this->getId() . '.description'
         );
     }
 
@@ -187,12 +188,12 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         $parents = $this->getParents();
         $parents = \array_reverse($parents);
-        $path    = '/';
+        $path = '/';
 
         \array_shift($parents);
 
         foreach ($parents as $Parent) {
-            $path .= $Parent->getTitle($Locale).'/';
+            $path .= $Parent->getTitle($Locale) . '/';
         }
 
         return $path;
@@ -292,13 +293,13 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      */
     public function getAttributes()
     {
-        $cacheName   = Categories::getCacheName($this->getId()).'/attributes';
-        $cacheFields = Categories::getCacheName($this->getId()).'/fields';
+        $cacheName = Categories::getCacheName($this->getId()) . '/attributes';
+        $cacheFields = Categories::getCacheName($this->getId()) . '/fields';
 
         try {
             $fields = QUI\Cache\LongTermCache::get($cacheFields);
         } catch (QUI\Cache\Exception $Exception) {
-            $fields    = [];
+            $fields = [];
             $fieldList = $this->getFields();
 
             /* @var $Field QUI\ERP\Products\Field\Field */
@@ -312,7 +313,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         try {
             $attributes = QUI\Cache\LongTermCache::get($cacheName);
         } catch (QUI\Cache\Exception $Exception) {
-            $attributes       = parent::getAttributes();
+            $attributes = parent::getAttributes();
             $attributes['id'] = $this->getId();
 
             //$attributes['countChildren'] = $this->countChildren();
@@ -322,9 +323,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             QUI\Cache\LongTermCache::set($cacheName, $attributes);
         }
 
-        $attributes['title']       = $this->getTitle();
+        $attributes['title'] = $this->getTitle();
         $attributes['description'] = $this->getDescription();
-        $attributes['fields']      = $fields;
+        $attributes['fields'] = $fields;
         $attributes['custom_data'] = $this->getCustomData();
 
         return $attributes;
@@ -381,10 +382,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     {
         try {
             $data = QUI::getDataBase()->fetch([
-                'from'  => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
+                'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 'count' => [
                     'select' => 'id',
-                    'as'     => 'id'
+                    'as' => 'id'
                 ],
                 'where' => [
                     'parentId' => $this->getId()
@@ -416,22 +417,22 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         }
 
         $defaults = $this->defaultSites;
-        $name     = $Project->getName();
-        $lang     = $Project->getLang();
+        $name = $Project->getName();
+        $lang = $Project->getLang();
 
         if (isset($defaults[$name]) && isset($defaults[$name][$lang])) {
             return $defaults[$name][$lang];
         }
 
-        $cacheName = 'products/category/'.$this->getId();
+        $cacheName = 'products/category/' . $this->getId();
 //        $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
         $cacheName .= '/site';
-        $cacheName .= '/'.$Project->getName();
-        $cacheName .= '/'.$Project->getLang();
+        $cacheName .= '/' . $Project->getName();
+        $cacheName .= '/' . $Project->getLang();
 
         try {
             $siteParams = QUI\Cache\LongTermCache::get($cacheName);
-            $Site       = $Project->get($siteParams['id']);
+            $Site = $Project->get($siteParams['id']);
         } catch (QUI\Exception $Exception) {
             $sites = $this->getSites($Project);
 
@@ -440,7 +441,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             } else {
                 QUI\System\Log::addWarning(
                     QUI::getLocale()->get('quiqqer/products', 'exception.category.has.no.site', [
-                        'id'    => $this->getId(),
+                        'id' => $this->getId(),
                         'title' => $this->getTitle()
                     ])
                 );
@@ -450,8 +451,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
             QUI\Cache\LongTermCache::set($cacheName, [
                 'project' => $Project->getName(),
-                'lang'    => $Project->getLang(),
-                'id'      => $Site->getId()
+                'lang' => $Project->getLang(),
+                'id' => $Site->getId()
             ]);
         }
 
@@ -484,8 +485,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             return $this->sites;
         }
 
-        $sites  = [];
-        $id     = $this->getId();
+        $sites = [];
+        $id = $this->getId();
         $result = $this->sites;
 
         $projectName = $Project->getName();
@@ -501,7 +502,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                 continue;
             }
 
-            if ($Site->getAttribute('quiqqer.products.settings.categoryId') == $id ||
+            if (
+                $Site->getAttribute('quiqqer.products.settings.categoryId') == $id ||
                 $Site->getAttribute('quiqqer.products.settings.categoryId') == 0
             ) {
                 $sites[] = $Site;
@@ -535,7 +537,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     {
         try {
             $result = [];
-            $cache  = QUI\Cache\LongTermCache::get($this->getSiteCacheName());
+            $cache = QUI\Cache\LongTermCache::get($this->getSiteCacheName());
 
             foreach ($cache as $siteUrl) {
                 try {
@@ -553,24 +555,24 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         // must be cached or set it at the site save event
         $projects = QUI::getProjectManager()->getProjectList();
-        $sites    = [];
-        $id       = $this->getId();
+        $sites = [];
+        $id = $this->getId();
 
         foreach ($projects as $Project) {
             $projectName = $Project->getName();
             $projectLang = $Project->getLang();
 
             // Fetch sites directly via db for performance reasons
-            $sql = "SELECT `id` FROM `".$Project->table()."`";
+            $sql = "SELECT `id` FROM `" . $Project->table() . "`";
             $sql .= " WHERE `active` = 1";
-            $sql .= " AND (`extra` LIKE '%\"quiqqer.products.settings.categoryId\":\"".$id."\"%'";
-            $sql .= " OR `extra` LIKE '%\"quiqqer.products.settings.categoryId\":".$id."%')";
+            $sql .= " AND (`extra` LIKE '%\"quiqqer.products.settings.categoryId\":\"" . $id . "\"%'";
+            $sql .= " OR `extra` LIKE '%\"quiqqer.products.settings.categoryId\":" . $id . "%')";
 
             $result = QUI::getDataBase()->fetchSQL($sql);
             $idList = array_column($result, 'id');
 
             foreach ($result as $row) {
-                $siteId  = $row['id'];
+                $siteId = $row['id'];
                 $sites[] = $Project->get($siteId);
             }
 
@@ -618,8 +620,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         $where = [
             'categories' => [
-                'type'  => '%LIKE%',
-                'value' => ','.$this->getId().','
+                'type' => '%LIKE%',
+                'value' => ',' . $this->getId() . ','
             ]
         ];
 
@@ -660,8 +662,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         $where = [
             'categories' => [
-                'type'  => '%LIKE%',
-                'value' => ','.$this->getId().','
+                'type' => '%LIKE%',
+                'value' => ',' . $this->getId() . ','
             ]
         ];
 
@@ -704,8 +706,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         $where = [
             'categories' => [
-                'type'  => '%LIKE%',
-                'value' => ','.$this->getId().','
+                'type' => '%LIKE%',
+                'value' => ',' . $this->getId() . ','
             ]
         ];
 
@@ -734,8 +736,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      */
     public function setFieldsToAllProducts()
     {
-        $productIds     = $this->getProductIds();
-        $fields         = $this->getFields();
+        $productIds = $this->getProductIds();
+        $fields = $this->getFields();
         $ExceptionStack = new QUI\ExceptionStack();
 
         foreach ($productIds as $productId) {
@@ -785,10 +787,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         }
 
 
-        $fields     = [];
+        $fields = [];
         $fieldCheck = [];
 
-        $data           = $this->data;
+        $data = $this->data;
         $standardFields = Fields::getStandardFields();
 
 //        $isFieldInArray = function ($Field, $array = []) {
@@ -837,7 +839,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             $fieldId = $Field->getId();
 
             if (!isset($fieldCheck[$fieldId])) {
-                $fields[]             = $Field;
+                $fields[] = $Field;
                 $fieldCheck[$fieldId] = true;
             }
         }
@@ -924,7 +926,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                 continue;
             }
 
-            $attributes['id']           = $Field->getId();
+            $attributes['id'] = $Field->getId();
             $attributes['publicStatus'] = $Field->getAttribute('publicStatus') ? 1 : 0;
             $attributes['searchStatus'] = $Field->getAttribute('searchStatus') ? 1 : 0;
 
@@ -942,8 +944,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             [
-                'fields'      => \json_encode($fields),
-                'parentId'    => $this->getParentId(),
+                'fields' => \json_encode($fields),
+                'parentId' => $this->getParentId(),
                 'custom_data' => \json_encode($this->getCustomData())
             ],
             ['id' => $this->getId()]
@@ -976,7 +978,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         QUI\Watcher::addString(
             QUI::getLocale()->get('quiqqer/products', 'watcher.message.category.delete', [
-                'id'    => $this->getId(),
+                'id' => $this->getId(),
                 'title' => $this->getTitle()
             ])
         );
@@ -1016,12 +1018,12 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
             QUI\Translator::delete(
                 'quiqqer/products',
-                'products.category.'.$id.'.title'
+                'products.category.' . $id . '.title'
             );
 
             QUI\Translator::delete(
                 'quiqqer/products',
-                'products.category.'.$id.'.description'
+                'products.category.' . $id . '.description'
             );
 
             Categories::clearCache($id);
@@ -1038,7 +1040,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     public function getSearchFields()
     {
         $searchFields = [];
-        $fields       = $this->getFields();
+        $fields = $this->getFields();
 
         foreach ($fields as $Field) {
             /* @var $Field QUI\ERP\Products\Field\Field */
@@ -1057,7 +1059,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      */
     protected function getSiteCacheName()
     {
-        return QUI\ERP\Products\Handler\Cache::getBasicCachePath().'category/'.$this->getId().'/sites';
+        return QUI\ERP\Products\Handler\Cache::getBasicCachePath() . 'category/' . $this->getId() . '/sites';
     }
 
     //endregion

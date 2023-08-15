@@ -9,8 +9,8 @@ namespace QUI\ERP\Products\Utils;
 use QUI;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Interfaces\FieldInterface;
-use QUI\Utils\DOM;
 use QUI\ERP\Products\Product\Model as ProductModel;
+use QUI\Utils\DOM;
 
 /**
  * Class Fields
@@ -53,7 +53,7 @@ class Fields
      */
     public static function parseFieldHashToArray($fieldHash): array
     {
-        $result    = [];
+        $result = [];
         $fieldHash = \trim($fieldHash, ';');
 
         if (empty($fieldHash)) {
@@ -67,7 +67,7 @@ class Fields
         }
 
         foreach ($fieldHash as $key => $entry) {
-            $entry    = \explode(':', $entry);
+            $entry = \explode(':', $entry);
             $entry[0] = (int)$entry[0];
 
             $result[$entry[0]] = $entry[1];
@@ -84,7 +84,7 @@ class Fields
      */
     public static function getSearchHashesFromFieldHash(string $hash): array
     {
-        $hashes           = self::parseFieldHashToArray($hash);
+        $hashes = self::parseFieldHashToArray($hash);
         $foundEmptyValues = false;
 
         $hashes = \array_map(function ($entry) use (&$foundEmptyValues) {
@@ -113,7 +113,7 @@ class Fields
             }
 
             try {
-                $Field   = FieldHandler::getField($fieldId);
+                $Field = FieldHandler::getField($fieldId);
                 $options = $Field->getOptions();
 
                 if (!isset($options['entries'])) {
@@ -122,13 +122,13 @@ class Fields
 
                 foreach ($options['entries'] as $option) {
                     $clone[$fieldId] = $option['valueId'];
-                    $generatedHash   = self::generateFieldHashFromArray($clone);
+                    $generatedHash = self::generateFieldHashFromArray($clone);
 
                     $searchHashes[$generatedHash] = true;
 
                     if (!\is_numeric($option['valueId'])) {
                         $clone[$fieldId] = \implode(\unpack("H*", $option['valueId']));
-                        $generatedHash   = self::generateFieldHashFromArray($clone);
+                        $generatedHash = self::generateFieldHashFromArray($clone);
 
                         $searchHashes[$generatedHash] = true;
                     }
@@ -151,10 +151,10 @@ class Fields
         $result = [];
 
         foreach ($field as $k => $ce) {
-            $result[] = $k.':'.$ce;
+            $result[] = $k . ':' . $ce;
         }
 
-        return ';'.\implode(';', $result).';';
+        return ';' . \implode(';', $result) . ';';
     }
 
     /**
@@ -323,7 +323,8 @@ class Fields
             return false;
         }
 
-        if ($Field->getId() == FieldHandler::FIELD_TITLE
+        if (
+            $Field->getId() == FieldHandler::FIELD_TITLE
             || $Field->getId() == FieldHandler::FIELD_CONTENT
             || $Field->getId() == FieldHandler::FIELD_SHORT_DESC
             || $Field->getId() == FieldHandler::FIELD_PRICE
@@ -332,7 +333,8 @@ class Fields
             return false;
         }
 
-        if ($Field->getType() == FieldHandler::TYPE_ATTRIBUTE_LIST
+        if (
+            $Field->getType() == FieldHandler::TYPE_ATTRIBUTE_LIST
             || $Field->getType() == FieldHandler::TYPE_FOLDER
             || $Field->getType() == FieldHandler::TYPE_TEXTAREA
             || $Field->getType() == FieldHandler::TYPE_TEXTAREA_MULTI_LANG
@@ -512,17 +514,17 @@ class Fields
      */
     public static function getPanelFieldCategories(?ProductModel $Product = null): array
     {
-        $plugins    = QUI::getPackageManager()->getInstalled();
+        $plugins = QUI::getPackageManager()->getInstalled();
         $categories = [];
 
         foreach ($plugins as $plugin) {
-            $xml = OPT_DIR.$plugin['name'].'/products.xml';
+            $xml = OPT_DIR . $plugin['name'] . '/products.xml';
 
             if (!\file_exists($xml)) {
                 continue;
             }
 
-            $Dom  = QUI\Utils\Text\XML::getDomFromXml($xml);
+            $Dom = QUI\Utils\Text\XML::getDomFromXml($xml);
             $Path = new \DOMXPath($Dom);
 
             $categoryList = $Path->query("//quiqqer/products/fieldCategories/fieldCategory");
@@ -546,7 +548,7 @@ class Fields
                 }
 
                 // fields
-                $fields   = $Category->getElementsByTagName('fields');
+                $fields = $Category->getElementsByTagName('fields');
                 $fieldIds = [];
 
                 if ($fields->length) {
@@ -568,9 +570,9 @@ class Fields
                 }
 
                 $categories[] = [
-                    'name'   => $name,
-                    'text'   => $title,
-                    'icon'   => $icon,
+                    'name' => $name,
+                    'text' => $title,
+                    'icon' => $icon,
                     'fields' => $fieldIds
                 ];
             }
@@ -591,9 +593,9 @@ class Fields
     {
         $category = str_replace('fieldCategory-', '', $category);
 
-        $fields        = [];
+        $fields = [];
         $allCategories = self::getPanelFieldCategories();
-        $fieldIds      = [];
+        $fieldIds = [];
 
         // check field ids
         foreach ($allCategories as $catData) {
@@ -611,7 +613,7 @@ class Fields
                 }
 
                 try {
-                    $Field    = QUI\ERP\Products\Handler\Fields::getField($fieldId);
+                    $Field = QUI\ERP\Products\Handler\Fields::getField($fieldId);
                     $fields[] = $Field->getAttributes();
 
                     $fieldIds[$fieldId] = true;
@@ -624,20 +626,20 @@ class Fields
         $plugins = QUI::getPackageManager()->getInstalled();
 
         foreach ($plugins as $plugin) {
-            $xml = OPT_DIR.$plugin['name'].'/products.xml';
+            $xml = OPT_DIR . $plugin['name'] . '/products.xml';
 
             if (!\file_exists($xml)) {
                 continue;
             }
 
-            $Dom  = QUI\Utils\Text\XML::getDomFromXml($xml);
+            $Dom = QUI\Utils\Text\XML::getDomFromXml($xml);
             $Path = new \DOMXPath($Dom);
 
             $fieldList = $Path->query("//quiqqer/products/fields/field[@fieldCategory='{$category}']");
 
             foreach ($fieldList as $NodeField) {
                 $fieldType = $NodeField->getAttribute('name');
-                $list      = QUI\ERP\Products\Handler\Fields::getFieldsByType($fieldType);
+                $list = QUI\ERP\Products\Handler\Fields::getFieldsByType($fieldType);
 
                 foreach ($list as $Field) {
                     $fieldId = $Field->getId();
@@ -650,7 +652,7 @@ class Fields
                         continue;
                     }
 
-                    $fields[]           = $Field->getAttributes();
+                    $fields[] = $Field->getAttributes();
                     $fieldIds[$fieldId] = true;
                 }
             }

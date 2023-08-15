@@ -18,10 +18,10 @@ use QUI\ERP\Products\Utils\Calc;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_calcNettoPrice',
     function ($price, $formatted, $productId) {
-        $price         = QUI\ERP\Money\Price::validatePrice($price, QUI::getUserBySession()->getLocale());
+        $price = QUI\ERP\Money\Price::validatePrice($price, QUI::getUserBySession()->getLocale());
         $baseFormatted = QUI\ERP\Defaults::getCurrency()->format($price);
 
-        $nettoPrice           = Calc::calcNettoPrice($price, false, $productId);
+        $nettoPrice = Calc::calcNettoPrice($price, false, $productId);
         $nettoPriceFormatted = Calc::calcNettoPrice($price, true, $productId);
         $bruttoPriceFormatted = Calc::calcBruttoPrice(
             floatval($nettoPriceFormatted),

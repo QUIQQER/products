@@ -26,7 +26,7 @@ class PDF
     {
         $Engine = self::getEngine($Project);
 
-        return $Engine->fetch(OPT_DIR.'quiqqer/products/template/pdf/header.html');
+        return $Engine->fetch(OPT_DIR . 'quiqqer/products/template/pdf/header.html');
     }
 
     /**
@@ -43,7 +43,7 @@ class PDF
             'Locale' => QUI::getLocale()
         ]);
 
-        return $Engine->fetch(OPT_DIR.'quiqqer/products/template/pdf/footer.html');
+        return $Engine->fetch(OPT_DIR . 'quiqqer/products/template/pdf/footer.html');
     }
 
     /**
@@ -64,8 +64,8 @@ class PDF
 
         $Engine->assign([
             'Project' => $Project,
-            'Logo'    => $Logo,
-            'logo'    => $Logo->getFullPath()
+            'Logo' => $Logo,
+            'logo' => $Logo->getFullPath()
         ]);
 
         return $Engine;

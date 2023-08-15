@@ -35,7 +35,7 @@ class DesktopSearch implements ProviderInterface
         return [
             'searchdata' => \json_encode([
                 'require' => 'package/quiqqer/products/bin/controls/products/Product',
-                'params'  => [
+                'params' => [
                     'productId' => (int)$id
                 ]
             ])
@@ -51,7 +51,8 @@ class DesktopSearch implements ProviderInterface
      */
     public function search($search, $params = [])
     {
-        if (isset($params['filterGroups'])
+        if (
+            isset($params['filterGroups'])
             && !\in_array(self::TYPE, $params['filterGroups'])
         ) {
             return [];
@@ -63,7 +64,7 @@ class DesktopSearch implements ProviderInterface
         try {
             $products = $Search->search([
                 'freetext' => $search,
-                'limit'    => 10
+                'limit' => 10
             ]);
         } catch (QUI\Permissions\Exception $Exception) {
             return [];
@@ -79,12 +80,12 @@ class DesktopSearch implements ProviderInterface
                 $Product = QUI\ERP\Products\Handler\Products::getProduct($productId);
 
                 $result[] = [
-                    'id'          => (int)$productId,
-                    'title'       => $Product->getTitle(),
+                    'id' => (int)$productId,
+                    'title' => $Product->getTitle(),
                     'description' => $Product->getDescription(),
-                    'icon'        => 'fa fa-shopping-bag',
-                    'group'       => self::TYPE,
-                    'groupLabel'  => $groupLabel
+                    'icon' => 'fa fa-shopping-bag',
+                    'group' => self::TYPE,
+                    'groupLabel' => $groupLabel
                 ];
             } catch (QUI\ERP\Products\Product\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);

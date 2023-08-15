@@ -28,10 +28,10 @@ class AttributeGroupFrontendValueView extends QUI\ERP\Products\Field\View
 
         $current = QUI::getLocale()->getCurrent();
 
-        $id      = $this->getId();
-        $value   = $this->getValue();
+        $id = $this->getId();
+        $value = $this->getValue();
         $options = $this->getOptions();
-        $name    = 'field-' . $id;
+        $name = 'field-' . $id;
         $entries = [];
 
         if (isset($options['entries'])) {
@@ -64,10 +64,10 @@ class AttributeGroupFrontendValueView extends QUI\ERP\Products\Field\View
         }
 
         $Engine->assign([
-            'this'  => $this,
-            'id'    => $id,
+            'this' => $this,
+            'id' => $id,
             'title' => $this->getTitle(),
-            'name'  => $name,
+            'name' => $name,
             'value' => $value
         ]);
 

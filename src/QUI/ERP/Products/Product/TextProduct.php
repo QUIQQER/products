@@ -28,7 +28,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
             'displayPrice' => false
         ]);
 
-        $attributes['vat']                    = 0;
+        $attributes['vat'] = 0;
         $attributes['calculated']['vatArray'] = [];
 
         $this->setAttributes($attributes);
@@ -48,11 +48,11 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
             $User = QUI::getUsers()->getNobody();
         }
 
-        $attributes                    = $this->getAttributes();
-        $attributes['title']           = $this->getTitle();
-        $attributes['description']     = $this->getDescription();
-        $attributes['uid']             = $User->getId();
-        $attributes['displayPrice']    = false;
+        $attributes = $this->getAttributes();
+        $attributes['title'] = $this->getTitle();
+        $attributes['description'] = $this->getDescription();
+        $attributes['uid'] = $User->getId();
+        $attributes['displayPrice'] = false;
         $attributes['maximumQuantity'] = $this->getMaximumQuantity();
 
         $attributes['fields'] = \array_map(function ($Field) {
@@ -167,7 +167,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
 
             case Fields::FIELD_VAT:
                 return new QUI\ERP\Products\Field\Types\Vat($fieldId, [
-                    'value'        => $this->getAttribute('vat'),
+                    'value' => $this->getAttribute('vat'),
                     'defaultValue' => $this->getAttribute('vat')
                 ]);
 
@@ -208,7 +208,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
             'quiqqer/products',
             'exception.field.id_in_product_not_found',
             [
-                'fieldId'   => $fieldId,
+                'fieldId' => $fieldId,
                 'productId' => $this->getId()
             ]
         ], 1002);

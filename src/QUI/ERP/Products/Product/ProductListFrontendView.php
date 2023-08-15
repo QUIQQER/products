@@ -52,9 +52,9 @@ class ProductListFrontendView
     public function __construct(ProductList $ProductList, $Locale = null)
     {
         $this->ProductList = $ProductList;
-        $this->Currency    = $ProductList->getCurrency();
-        $this->hidePrice   = $ProductList->isPriceHidden();
-        $this->Locale      = $Locale;
+        $this->Currency = $ProductList->getCurrency();
+        $this->hidePrice = $ProductList->isPriceHidden();
+        $this->Locale = $Locale;
 
         $this->parse();
     }
@@ -73,29 +73,29 @@ class ProductListFrontendView
             $Locale = $this->ProductList->getUser()->getLocale();
         }
 
-        $list     = $this->ProductList->toArray($Locale);
+        $list = $this->ProductList->toArray($Locale);
         $products = $this->ProductList->getProducts();
 
         // currency stuff
         $this->Currency->setLocale($Locale);
 
         $productList = [];
-        $hidePrice   = $this->hidePrice;
+        $hidePrice = $this->hidePrice;
 
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
-            $attributes   = $Product->getAttributes();
-            $fields       = $Product->getFields();
+            $attributes = $Product->getAttributes();
+            $fields = $Product->getFields();
             $PriceFactors = $Product->getPriceFactors();
 
             $product = [
-                'productNo'       => '',
-                'fields'          => [],
+                'productNo' => '',
+                'fields' => [],
                 'attributeFields' => [],
-                'groupFields'     => [],
-                'vatArray'        => [],
-                'hasOfferPrice'   => $Product->hasOfferPrice(),
-                'originalPrice'   => $this->formatPrice($Product->getOriginalPrice()->getValue())
+                'groupFields' => [],
+                'vatArray' => [],
+                'hasOfferPrice' => $Product->hasOfferPrice(),
+                'originalPrice' => $this->formatPrice($Product->getOriginalPrice()->getValue())
             ];
 
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
@@ -131,21 +131,21 @@ class ProductListFrontendView
             }
 
             // format
-            $product['price']           = $hidePrice ? '' : $this->formatPrice($attributes['calculated_price']);
-            $product['sum']             = $hidePrice ? '' : $this->formatPrice($attributes['calculated_sum']);
-            $product['nettoSum']        = $hidePrice ? '' : $this->formatPrice($attributes['calculated_nettoSum']);
-            $product['basisPrice']      = $hidePrice ? '' : $this->formatPrice($attributes['calculated_basisPrice']);
+            $product['price'] = $hidePrice ? '' : $this->formatPrice($attributes['calculated_price']);
+            $product['sum'] = $hidePrice ? '' : $this->formatPrice($attributes['calculated_sum']);
+            $product['nettoSum'] = $hidePrice ? '' : $this->formatPrice($attributes['calculated_nettoSum']);
+            $product['basisPrice'] = $hidePrice ? '' : $this->formatPrice($attributes['calculated_basisPrice']);
             $product['maximumQuantity'] = $Product->getMaximumQuantity();
 
-            $product['id']           = $attributes['id'];
-            $product['category']     = $attributes['category'];
-            $product['title']        = $attributes['title'];
-            $product['description']  = $attributes['description'];
-            $product['image']        = $attributes['image'];
-            $product['imageSrc']     = $imageSrc;
-            $product['quantity']     = $attributes['quantity'];
+            $product['id'] = $attributes['id'];
+            $product['category'] = $attributes['category'];
+            $product['title'] = $attributes['title'];
+            $product['description'] = $attributes['description'];
+            $product['image'] = $attributes['image'];
+            $product['imageSrc'] = $imageSrc;
+            $product['quantity'] = $attributes['quantity'];
             $product['displayPrice'] = true;
-            $product['attributes']   = [];
+            $product['attributes'] = [];
 
             if (isset($attributes['displayPrice'])) {
                 $product['displayPrice'] = $attributes['displayPrice'];
@@ -179,16 +179,16 @@ class ProductListFrontendView
 
                 if ($hidePrice) {
                     $product['attributes'][] = [
-                        'title'     => $Factor->getTitle(),
-                        'value'     => '',
+                        'title' => $Factor->getTitle(),
+                        'value' => '',
                         'valueText' => $Factor->getValueText(),
                     ];
                     continue;
                 }
 
                 $product['attributes'][] = [
-                    'title'     => $Factor->getTitle(),
-                    'value'     => $Factor->getSumFormatted(),
+                    'title' => $Factor->getTitle(),
+                    'value' => $Factor->getSumFormatted(),
                     'valueText' => $Factor->getValueText()
                 ];
             }
@@ -206,8 +206,8 @@ class ProductListFrontendView
                 $fieldAttributes = $Field->getAttributes();
 
                 $product['attributes'][] = [
-                    'title'     => $Field->getTitle(),
-                    'value'     => $fieldAttributes['value'],
+                    'title' => $Field->getTitle(),
+                    'value' => $fieldAttributes['value'],
                     'valueText' => $fieldAttributes['valueText']
                 ];
             }
@@ -218,12 +218,12 @@ class ProductListFrontendView
         // result
         $result = [
             'attributes' => [],
-            'vat'        => [],
+            'vat' => [],
         ];
 
         foreach ($list['vatArray'] as $key => $entry) {
             $result['vat'][] = [
-                'text'  => $list['vatText'][$key],
+                'text' => $list['vatText'][$key],
                 'value' => $hidePrice ? '' : $this->formatPrice($entry['sum']),
             ];
         }
@@ -244,24 +244,24 @@ class ProductListFrontendView
 
             if ($hidePrice) {
                 $product[$key][] = [
-                    'title'     => $Factor->getTitle(),
-                    'value'     => '',
+                    'title' => $Factor->getTitle(),
+                    'value' => '',
                     'valueText' => $Factor->getValueText(),
                 ];
                 continue;
             }
 
             $result[$key][] = [
-                'title'     => $Factor->getTitle(),
-                'value'     => $Factor->getSumFormatted(),
+                'title' => $Factor->getTitle(),
+                'value' => $Factor->getSumFormatted(),
                 'valueText' => $Factor->getValueText()
             ];
         }
 
-        $result['products']    = $productList;
-        $result['sum']         = $hidePrice ? '' : $this->formatPrice($list['sum']);
-        $result['subSum']      = $hidePrice ? '' : $this->formatPrice($list['subSum']);
-        $result['nettoSum']    = $hidePrice ? '' : $this->formatPrice($list['nettoSum']);
+        $result['products'] = $productList;
+        $result['sum'] = $hidePrice ? '' : $this->formatPrice($list['sum']);
+        $result['subSum'] = $hidePrice ? '' : $this->formatPrice($list['subSum']);
+        $result['nettoSum'] = $hidePrice ? '' : $this->formatPrice($list['nettoSum']);
         $result['nettoSubSum'] = $hidePrice ? '' : $this->formatPrice($list['nettoSubSum']);
         $result['grandSubSum'] = $hidePrice ? '' : $this->formatPrice($list['grandSubSum']);
 
@@ -426,21 +426,21 @@ class ProductListFrontendView
     public function toHTML(bool $css = true): string
     {
         $Engine = QUI::getTemplateManager()->getEngine();
-        $style  = '';
+        $style = '';
 
         if ($css) {
             $style = '<style>';
-            $style .= \file_get_contents(\dirname(__FILE__).'/ProductListView.css');
+            $style .= \file_get_contents(\dirname(__FILE__) . '/ProductListView.css');
             $style .= '</style>';
         }
 
         $Engine->assign([
-            'this'      => $this,
-            'data'      => $this->data,
-            'style'     => $style,
+            'this' => $this,
+            'data' => $this->data,
+            'style' => $style,
             'hidePrice' => $this->isPriceHidden(),
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ProductListView.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/ProductListView.html');
     }
 }

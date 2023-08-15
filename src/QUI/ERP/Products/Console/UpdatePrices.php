@@ -59,12 +59,12 @@ class UpdatePrices extends QUI\System\Console\Tool
             'where' => $where
         ]);
 
-        $updateCount  = 0;
+        $updateCount = 0;
         $priceFactors = Fields::getPriceFactorSettings();
-        $SystemUser   = QUI::getUsers()->getSystemUser();
+        $SystemUser = QUI::getUsers()->getSystemUser();
 
         $priceFactorsCategories = [];
-        $categories             = QUI\ERP\Products\Handler\Categories::getCategories();
+        $categories = QUI\ERP\Products\Handler\Categories::getCategories();
 
         foreach ($categories as $Category) {
             $priceFieldFactors = $Category->getCustomDataEntry('priceFieldFactors');
@@ -79,7 +79,7 @@ class UpdatePrices extends QUI\System\Console\Tool
         foreach ($productIds as $productId) {
             try {
                 $this->writeLn("Updating product #" . $productId . "...");
-                $Product       = Products::getProduct($productId);
+                $Product = Products::getProduct($productId);
                 $updateProduct = false;
 
                 foreach ($priceFactors as $priceFieldId => $settings) {

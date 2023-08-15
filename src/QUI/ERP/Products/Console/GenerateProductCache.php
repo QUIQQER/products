@@ -65,14 +65,14 @@ class GenerateProductCache extends QUI\System\Console\Tool
 
         // execute
         $controlCache = $this->getArgument('withControlCache');
-        $productIds   = Products::getProductIds([
+        $productIds = Products::getProductIds([
             'where' => [
                 'parent' => null
             ]
         ]);
 
         $count = \count($productIds);
-        $i     = 0;
+        $i = 0;
 
         foreach ($productIds as $productId) {
             // check cache, if no rebuild is set
@@ -88,9 +88,9 @@ class GenerateProductCache extends QUI\System\Console\Tool
             Products::cleanProductInstanceMemCache();
 
 
-            $out  = \str_pad($i, \mb_strlen($count), '0', \STR_PAD_LEFT);
+            $out = \str_pad($i, \mb_strlen($count), '0', \STR_PAD_LEFT);
             $time = \date('H:i:s');
-            $this->writeLn('- '.$time.' :: '.$out.' of '.$count);
+            $this->writeLn('- ' . $time . ' :: ' . $out . ' of ' . $count);
 
             $i++;
         }

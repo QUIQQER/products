@@ -15,10 +15,10 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_createProjectSite',
     function ($project, $siteId, $title, $createCategory, $parentCategory) {
         $Project = QUI::getProjectManager()->decode($project);
-        $Site    = $Project->get($siteId);
+        $Site = $Project->get($siteId);
 
         $newChildId = $Site->createChild([
-            'name'  => QUI\Projects\Site\Utils::clearUrl($title, $Project),
+            'name' => QUI\Projects\Site\Utils::clearUrl($title, $Project),
             'title' => $title
         ]);
 

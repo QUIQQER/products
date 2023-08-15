@@ -22,10 +22,10 @@ class ProductFieldDetails extends QUI\Control
     public function __construct($attributes = [])
     {
         $this->setAttributes([
-            'Field'   => false,
+            'Field' => false,
             'Product' => false,
-            'files'   => true, // show in a TYPE_FOLDER all files
-            'images'  => true  // show in a TYPE_FOLDER all images
+            'files' => true, // show in a TYPE_FOLDER all files
+            'images' => true  // show in a TYPE_FOLDER all images
         ]);
 
         parent::__construct($attributes);
@@ -50,20 +50,20 @@ class ProductFieldDetails extends QUI\Control
         /* @var $Field QUI\ERP\Products\Field\Field */
         switch ($Field->getType()) {
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA:
-                $template = \dirname(__FILE__).'/ProductFieldDetails.Content.html';
+                $template = \dirname(__FILE__) . '/ProductFieldDetails.Content.html';
                 $Engine->assign('content', $Field->getValue());
                 break;
 
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA_MULTI_LANG:
-                $template = \dirname(__FILE__).'/ProductFieldDetails.Content.html';
-                $lang     = QUI::getLocale()->getCurrent();
-                $value    = $Field->getValue();
+                $template = \dirname(__FILE__) . '/ProductFieldDetails.Content.html';
+                $lang = QUI::getLocale()->getCurrent();
+                $value = $Field->getValue();
 
                 $Engine->assign('content', empty($value[$lang]) ? '' : $value[$lang]);
                 break;
 
             case QUI\ERP\Products\Handler\Fields::TYPE_PRODCUCTS:
-                $template   = \dirname(__FILE__).'/ProductFieldDetails.Products.html';
+                $template = \dirname(__FILE__) . '/ProductFieldDetails.Products.html';
                 $productIds = $Field->getValue();
 
                 if (empty($productIds)) {
@@ -87,12 +87,12 @@ class ProductFieldDetails extends QUI\Control
 
             case QUI\ERP\Products\Handler\Fields::TYPE_FOLDER:
                 /* @var $Field QUI\ERP\Products\Field\Types\Folder */
-                $template = \dirname(__FILE__).'/ProductFieldDetails.MediaFolder.html';
-                $Folder   = $Field->getMediaFolder();
-                $files    = [];
+                $template = \dirname(__FILE__) . '/ProductFieldDetails.MediaFolder.html';
+                $Folder = $Field->getMediaFolder();
+                $files = [];
 
-                $showFiles   = $this->getAttribute('files');
-                $showImages  = $this->getAttribute('images');
+                $showFiles = $this->getAttribute('files');
+                $showImages = $this->getAttribute('images');
                 $showIfEmpty = $Field->getOption('showFrontendTabIfEmpty');
 
                 if (!$Folder) {
@@ -117,9 +117,9 @@ class ProductFieldDetails extends QUI\Control
                 });
 
                 $Engine->assign([
-                    'Utils'  => new QUI\Projects\Media\Utils(),
+                    'Utils' => new QUI\Projects\Media\Utils(),
                     'Folder' => $Folder,
-                    'files'  => $files
+                    'files' => $files
                 ]);
 
                 break;
@@ -129,8 +129,8 @@ class ProductFieldDetails extends QUI\Control
         }
 
         $Engine->assign([
-            'this'    => $this,
-            'Field'   => $Field,
+            'this' => $this,
+            'Field' => $Field,
             'Product' => $this->getAttribute('Product')
         ]);
 
