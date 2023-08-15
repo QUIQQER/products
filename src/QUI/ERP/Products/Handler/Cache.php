@@ -25,7 +25,7 @@ class Cache
      */
     public static function getProductCachePath($productId)
     {
-        return self::getBasicCachePath().'product/'.$productId;
+        return self::getBasicCachePath() . 'product/' . $productId;
     }
 
     /**
@@ -35,7 +35,7 @@ class Cache
      */
     public static function frontendProductCacheName($productId, $params = [])
     {
-        $general = 'quiqqer/product/frontend/'.$productId.'/';
+        $general = 'quiqqer/product/frontend/' . $productId . '/';
 
         if (!empty($params)) {
             $general .= \md5(\serialize($params));

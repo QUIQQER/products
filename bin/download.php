@@ -7,13 +7,15 @@
 define('QUIQQER_SYSTEM', true);
 define('QUIQQER_AJAX', true);
 
-if (empty($_REQUEST['fileId']) ||
+if (
+    empty($_REQUEST['fileId']) ||
     empty($_REQUEST['pid']) ||
-    empty($_REQUEST['fieldId'])) {
+    empty($_REQUEST['fieldId'])
+) {
     exit;
 }
 
-require_once dirname(__FILE__, 4).'/header.php';
+require_once dirname(__FILE__, 4) . '/header.php';
 
 try {
     $Product = \QUI\ERP\Products\Handler\Products::getProduct((int)$_REQUEST['pid']);

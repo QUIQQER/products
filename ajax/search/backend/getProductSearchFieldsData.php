@@ -16,13 +16,13 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_search_backend_getProductSearchFieldsData',
     function () {
         $BackEndSearch = SearchHandler::getBackendSearch();
-        $fields        = $BackEndSearch->getProductSearchFields();
-        $results       = [];
+        $fields = $BackEndSearch->getProductSearchFields();
+        $results = [];
 
         foreach ($fields as $fieldId => $val) {
             if ($val) {
-                $Field         = Fields::getField($fieldId);
-                $data          = $Field->getAttributes();
+                $Field = Fields::getField($fieldId);
+                $data = $Field->getAttributes();
                 $data['title'] = $Field->getTitle();
 
                 $results[] = $data;

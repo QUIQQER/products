@@ -195,9 +195,9 @@ class UniqueProductFrontendView extends UniqueProduct
 
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             $attributes['calculated_basisPrice'] = '';
-            $attributes['calculated_price']      = '';
-            $attributes['calculated_sum']        = '';
-            $attributes['calculated_nettoSum']   = '';
+            $attributes['calculated_price'] = '';
+            $attributes['calculated_sum'] = '';
+            $attributes['calculated_nettoSum'] = '';
         }
 
         return $attributes;

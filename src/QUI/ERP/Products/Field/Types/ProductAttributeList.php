@@ -65,11 +65,11 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
     public function __construct($fieldId, array $params)
     {
         $this->setOptions([
-            'entries'           => [],
-            'priority'          => 0,
+            'entries' => [],
+            'priority' => 0,
             'calculation_basis' => '',
             'display_discounts' => true,
-            'generate_tags'     => false
+            'generate_tags' => false
         ]);
 
         parent::__construct($fieldId, $params);
@@ -79,7 +79,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
 
         foreach ($options['entries'] as $key => $option) {
             if (isset($option['selected']) && $option['selected']) {
-                $this->value        = $key;
+                $this->value = $key;
                 $this->defaultValue = $key;
             }
         }
@@ -99,7 +99,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
             if (is_array($value)) {
                 foreach ($value as $key => $val) {
                     if (isset($val['selected']) && $val['selected']) {
-                        $this->value        = $key;
+                        $this->value = $key;
                         $this->defaultValue = $key;
                     }
                 }
@@ -135,7 +135,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
             return;
         }
 
-        $data      = [];
+        $data = [];
         $available = [
             'title',
             'sum',
@@ -150,22 +150,10 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
             }
         }
 
-        $entries   = $this->options['entries'];
+        $entries = $this->options['entries'];
         $entries[] = $data;
 
         $this->options['entries'] = $entries;
-    }
-
-    /**
-     * @return string
-     */
-    public function getValue()
-    {
-        if (!is_null($this->value)) {
-            return $this->value;
-        }
-
-        return $this->defaultValue;
     }
 
     /**
@@ -250,12 +238,12 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
             $options['entries'] = [];
         }
 
-        $entries   = $options['entries'];
-        $value     = $this->getValue();
+        $entries = $options['entries'];
+        $value = $this->getValue();
         $valueText = '';
-        $sum       = 0;
+        $sum = 0;
         $userInput = '';
-        $calcType  = ErpCalc::CALCULATION_COMPLEMENT;
+        $calcType = ErpCalc::CALCULATION_COMPLEMENT;
 
         if ($value && strpos($value, '[') !== false && strpos($value, ']') !== false) {
             $data = json_decode($value, true);
@@ -271,12 +259,12 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
 
         // @todo show amount
         if (isset($entries[$value])) {
-            $sum       = $entries[$value]['sum'];
-            $type      = $entries[$value]['type'];
+            $sum = $entries[$value]['sum'];
+            $type = $entries[$value]['type'];
             $valueText = $entries[$value]['title'];
 
             if (get_class($Locale) == QUI\Locale::class) {
-                $current     = $Locale->getCurrent();
+                $current = $Locale->getCurrent();
                 $currentCode = mb_strtolower($current) . '_' . mb_strtoupper($current);
 
                 if (isset($valueText[$current])) {
@@ -311,13 +299,25 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
         }
 
         return [
-            'priority'         => (int)$options['priority'],
-            'basis'            => $options['calculation_basis'],
-            'value'            => $sum,
-            'calculation'      => $calcType,
-            'valueText'        => $valueText,
+            'priority' => (int)$options['priority'],
+            'basis' => $options['calculation_basis'],
+            'value' => $sum,
+            'calculation' => $calcType,
+            'valueText' => $valueText,
             'displayDiscounts' => $options['display_discounts']
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        if (!is_null($this->value)) {
+            return $this->value;
+        }
+
+        return $this->defaultValue;
     }
 
     /**
@@ -335,9 +335,9 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
                     'quiqqer/products',
                     'exception.field.is.invalid',
                     [
-                        'fieldId'    => $this->getId(),
+                        'fieldId' => $this->getId(),
                         'fieldtitle' => $this->getTitle(),
-                        'fieldType'  => $this->getType()
+                        'fieldType' => $this->getType()
                     ]
                 ]);
             }
@@ -349,9 +349,9 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
             'quiqqer/products',
             'exception.field.invalid',
             [
-                'fieldId'    => $this->getId(),
+                'fieldId' => $this->getId(),
                 'fieldTitle' => $this->getTitle(),
-                'fieldType'  => $this->getType()
+                'fieldType' => $this->getType()
             ]
         ];
 
@@ -374,7 +374,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
             throw new QUI\ERP\Products\Field\Exception($invalidException);
         }
 
-        $value   = (int)$value;
+        $value = (int)$value;
         $options = $this->getOptions();
 
         if (!isset($options['entries'])) {
@@ -409,7 +409,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
             if ($check === null) {
                 $options = $this->getOptions();
                 $entries = $options['entries'];
-                $wanted  = (int)$value;
+                $wanted = (int)$value;
 
                 if (isset($entries[$wanted])) {
                     return $wanted;

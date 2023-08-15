@@ -23,16 +23,16 @@ class Suggest extends QUI\Control
     public function __construct($attributes = [])
     {
         $this->setAttributes([
-            'Site'                 => false,
-            'Project'              => false,
-            'data-qui'             => 'package/quiqqer/productsearch/bin/controls/frontend/search/Suggest',
-            'hideOnProductSearch'  => false,
-            'globalsearch'         => false,
-            'limit'                => false,
+            'Site' => false,
+            'Project' => false,
+            'data-qui' => 'package/quiqqer/productsearch/bin/controls/frontend/search/Suggest',
+            'hideOnProductSearch' => false,
+            'globalsearch' => false,
+            'limit' => false,
             'showLinkToSearchSite' => false
         ]);
 
-        $this->addCSSFile(\dirname(__FILE__).'/Suggest.css');
+        $this->addCSSFile(\dirname(__FILE__) . '/Suggest.css');
         $this->addCSSClass('quiqqer-products-search-suggest');
 
         parent::__construct($attributes);
@@ -70,7 +70,7 @@ class Suggest extends QUI\Control
             return '';
         }
 
-        $Site   = $this->getSite();
+        $Site = $this->getSite();
         $Search = $this->getSite();
         $Config = QUI::getPackage('quiqqer/productsearch')->getConfig();
 
@@ -101,12 +101,12 @@ class Suggest extends QUI\Control
         $this->setJavaScriptControlOption('showlinktosearchsite', $showLinkToSearchSite);
 
         $Engine->assign([
-            'this'   => $this,
-            'Site'   => $this->getSite(),
+            'this' => $this,
+            'Site' => $this->getSite(),
             'Search' => $Search
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/Suggest.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/Suggest.html');
     }
 
     /**

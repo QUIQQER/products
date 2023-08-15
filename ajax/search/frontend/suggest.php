@@ -51,7 +51,7 @@ QUI::$Ajax->registerFunction(
                 $Site = $siteList[0];
         }
 
-        $Search       = Search::getFrontendSearch($Site);
+        $Search = Search::getFrontendSearch($Site);
         $searchParams = \json_decode($searchParams, true);
 
         $searchParams['limit'] = '0,5';

@@ -23,10 +23,10 @@ QUI::$Ajax->registerFunction(
         );
 
         $Project = QUI::getProjectManager()->decode($project);
-        $Site    = $Project->get($siteId);
+        $Site = $Project->get($siteId);
 
         $FrontEndSearch = SearchHandler::getFrontendSearch($Site);
-        $searchFields   = QUI\Utils\Security\Orthos::clearArray(
+        $searchFields = QUI\Utils\Security\Orthos::clearArray(
             \json_decode($searchFields, true)
         );
 

@@ -6,7 +6,6 @@
 
 use QUI\ERP\Products\Handler\Search;
 use QUI\ERP\Products\Search\FrontendSearch;
-use QUI\ERP\Products\Handler\Products;
 
 /**
  * Get all fields that are available for search for a specific Site
@@ -81,9 +80,9 @@ QUI::$Ajax->registerFunction(
             }
         }
 
-        $Search       = Search::getFrontendSearch($Site);
+        $Search = Search::getFrontendSearch($Site);
         $searchParams = \json_decode($searchParams, true);
-        $active       = 1;
+        $active = 1;
 
         if (isset($searchParams['page'])) {
             $active = (int)$searchParams['page'];
@@ -94,15 +93,15 @@ QUI::$Ajax->registerFunction(
         }
 
         $searchParams['limitOffset'] = (($active - 1) * $limit);
-        $searchParams['limit']       = $limit;
+        $searchParams['limit'] = $limit;
 
         if (!isset($searchParams['freetext']) && !isset($searchParams['fields'])) {
             $searchParams['freetext'] = '';
         }
 
-        $html   = '';
+        $html = '';
         $result = $Search->search($searchParams);
-        $count  = $Search->search($searchParams, true);
+        $count = $Search->search($searchParams, true);
 
         if (!\count($result)) {
             return $html;
@@ -116,15 +115,15 @@ QUI::$Ajax->registerFunction(
             $Engine = QUI::getTemplateManager()->getEngine();
 
             $Engine->assign([
-                'result'                => $result,
-                'Locale'                => $User->getLocale(),
-                'pages'                 => $pages,
-                'active'                => $active,
+                'result' => $result,
+                'Locale' => $User->getLocale(),
+                'pages' => $pages,
+                'active' => $active,
                 'showLinkToSearchSite' => (bool)$showLinkToSearchSite,
-                'searchUrl'             => $searchUrl ?: ''
+                'searchUrl' => $searchUrl ?: ''
             ]);
 
-            return $Engine->fetch(OPT_DIR.'quiqqer/products/template/search/frontend/SuggestRendered.html');
+            return $Engine->fetch(OPT_DIR . 'quiqqer/products/template/search/frontend/SuggestRendered.html');
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 

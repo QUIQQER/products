@@ -78,7 +78,7 @@ class PriceByTimePeriod extends Price
         }
 
         $From = false;
-        $To   = false;
+        $To = false;
 
         if (!empty($value['from'])) {
             $From = date_create($value['from']);
@@ -125,13 +125,65 @@ class PriceByTimePeriod extends Price
         $valueText = $Price->getDisplayPrice();
 
         return new View([
-            'id'       => $this->getId(),
-            'value'    => $valueText,
-            'title'    => $this->getTitle(),
-            'prefix'   => $this->getAttribute('prefix'),
-            'suffix'   => $this->getAttribute('suffix'),
+            'id' => $this->getId(),
+            'value' => $valueText,
+            'title' => $this->getTitle(),
+            'prefix' => $this->getAttribute('prefix'),
+            'suffix' => $this->getAttribute('suffix'),
             'priority' => $this->getAttribute('priority')
         ]);
+    }
+
+    /**
+     * Cleanup the value, so the value is valid
+     *
+     * Precision: 8 (important for currencies like BitCoin)
+     *
+     * @param string|array $value
+     * @return array
+     */
+    public function cleanup($value): array
+    {
+        if (is_string($value)) {
+            $value = json_decode($value, true);
+        }
+
+        $defaultReturn = [
+            'price' => '',
+            'from' => false,
+            'to' => false
+        ];
+
+        if (!isset($value['price']) || !isset($value['from']) || !isset($value['to'])) {
+            return $defaultReturn;
+        }
+
+        $price = $value['price'];
+        $From = false;
+        $To = false;
+
+        if (!empty($value['from'])) {
+            $From = date_create($value['from']);
+        }
+
+        if (!empty($value['to'])) {
+            $To = date_create($value['to']);
+        }
+
+        if (!is_float($price)) {
+            $localeCode = QUI::getLocale()->getLocalesByLang(
+                QUI::getLocale()->getCurrent()
+            );
+
+            $Formatter = new NumberFormatter($localeCode[0], NumberFormatter::DECIMAL);
+            $price = $Formatter->parse($price);
+        }
+
+        return [
+            'price' => $price,
+            'from' => $From ? $From->format('Y-m-d H:i') : false,
+            'to' => $To ? $To->format('Y-m-d H:i') : false
+        ];
     }
 
     /**
@@ -171,9 +223,9 @@ class PriceByTimePeriod extends Price
                     'quiqqer/products',
                     'exception.field.invalid',
                     [
-                        'fieldId'    => $this->getId(),
+                        'fieldId' => $this->getId(),
                         'fieldTitle' => $this->getTitle(),
-                        'fieldType'  => $this->getType()
+                        'fieldType' => $this->getType()
                     ]
                 ]);
             }
@@ -184,9 +236,9 @@ class PriceByTimePeriod extends Price
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType'  => $this->getType()
+                    'fieldType' => $this->getType()
                 ]
             ]);
         }
@@ -196,64 +248,12 @@ class PriceByTimePeriod extends Price
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
-                    'fieldId'    => $this->getId(),
+                    'fieldId' => $this->getId(),
                     'fieldTitle' => $this->getTitle(),
-                    'fieldType'  => $this->getType()
+                    'fieldType' => $this->getType()
                 ]
             ]);
         }
-    }
-
-    /**
-     * Cleanup the value, so the value is valid
-     *
-     * Precision: 8 (important for currencies like BitCoin)
-     *
-     * @param string|array $value
-     * @return array
-     */
-    public function cleanup($value): array
-    {
-        if (is_string($value)) {
-            $value = json_decode($value, true);
-        }
-
-        $defaultReturn = [
-            'price' => '',
-            'from'  => false,
-            'to'    => false
-        ];
-
-        if (!isset($value['price']) || !isset($value['from']) || !isset($value['to'])) {
-            return $defaultReturn;
-        }
-
-        $price = $value['price'];
-        $From  = false;
-        $To    = false;
-
-        if (!empty($value['from'])) {
-            $From = date_create($value['from']);
-        }
-
-        if (!empty($value['to'])) {
-            $To = date_create($value['to']);
-        }
-
-        if (!is_float($price)) {
-            $localeCode = QUI::getLocale()->getLocalesByLang(
-                QUI::getLocale()->getCurrent()
-            );
-
-            $Formatter = new NumberFormatter($localeCode[0], NumberFormatter::DECIMAL);
-            $price     = $Formatter->parse($price);
-        }
-
-        return [
-            'price' => $price,
-            'from'  => $From ? $From->format('Y-m-d H:i') : false,
-            'to'    => $To ? $To->format('Y-m-d H:i') : false
-        ];
     }
 
     /**

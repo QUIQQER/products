@@ -14,7 +14,7 @@ use QUI\ERP\Products\Handler\Products;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_variant_generate_deactivate',
     function ($variantIds) {
-        $variantIds     = json_decode($variantIds, true);
+        $variantIds = json_decode($variantIds, true);
         $ExceptionStack = new QUI\ExceptionStack();
 
         foreach ($variantIds as $variantId) {

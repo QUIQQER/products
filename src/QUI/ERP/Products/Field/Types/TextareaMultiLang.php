@@ -59,7 +59,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
         }
 
         $current = $Locale->getCurrent();
-        $value   = $this->getValue();
+        $value = $this->getValue();
 
         if (\is_string($value)) {
             return $value;
@@ -91,9 +91,9 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
                     'quiqqer/products',
                     'exception.field.invalid',
                     [
-                        'fieldId'    => $this->getId(),
+                        'fieldId' => $this->getId(),
                         'fieldTitle' => $this->getTitle(),
-                        'fieldType'  => $this->getType()
+                        'fieldType' => $this->getType()
                     ]
                 ]);
             }
@@ -107,9 +107,9 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
                     'quiqqer/products',
                     'exception.field.invalid',
                     [
-                        'fieldId'    => $this->getId(),
+                        'fieldId' => $this->getId(),
                         'fieldTitle' => $this->getTitle(),
-                        'fieldType'  => $this->getType()
+                        'fieldType' => $this->getType()
                     ]
                 ]);
             }
@@ -123,9 +123,9 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
                     'quiqqer/products',
                     'exception.field.invalid',
                     [
-                        'fieldId'    => $this->getId(),
+                        'fieldId' => $this->getId(),
                         'fieldTitle' => $this->getTitle(),
-                        'fieldType'  => $this->getType()
+                        'fieldType' => $this->getType()
                     ]
                 ]);
             }

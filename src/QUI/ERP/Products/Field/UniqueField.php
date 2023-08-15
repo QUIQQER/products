@@ -7,7 +7,6 @@
 namespace QUI\ERP\Products\Field;
 
 use QUI;
-use QUI\ERP\Products\Field\CustomInputFieldInterface;
 
 /**
  * Class UniqueField
@@ -247,8 +246,8 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
     public function getFrontendView()
     {
-        $type      = $this->getType();
-        $viewClass = 'QUI\ERP\Products\Field\Types\\'.$type.'FrontendView';
+        $type = $this->getType();
+        $viewClass = 'QUI\ERP\Products\Field\Types\\' . $type . 'FrontendView';
 
         if (\class_exists($viewClass)) {
             return new $viewClass($this->getAttributes());
@@ -272,8 +271,8 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
     public function getBackendView()
     {
-        $type      = $this->getType();
-        $viewClass = 'QUI\ERP\Products\Field\Types\\'.$type.'BackendView';
+        $type = $this->getType();
+        $viewClass = 'QUI\ERP\Products\Field\Types\\' . $type . 'BackendView';
 
         if (\class_exists($viewClass)) {
             return new $viewClass($this->getAttributes());
@@ -446,13 +445,13 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
         if (!$Locale) {
             return QUI::getLocale()->get(
                 'quiqqer/products',
-                'products.field.'.$this->getId().'.title'
+                'products.field.' . $this->getId() . '.title'
             );
         }
 
         return $Locale->get(
             'quiqqer/products',
-            'products.field.'.$this->getId().'.title'
+            'products.field.' . $this->getId() . '.title'
         );
     }
 
@@ -464,7 +463,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     public function getAttributes()
     {
         $options = $this->getOptions();
-        $value   = $this->getValue();
+        $value = $this->getValue();
 
         /*
          * Auskommentiert, weil das ein sehr umständlicher Weg war, um dan die Benutzereingabe
@@ -486,33 +485,33 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
         $parentClass = $this->getParentClass();
 
         if (empty($parentClass)) {
-            $Field      = QUI\ERP\Products\Handler\Fields::getField($this->getId());
+            $Field = QUI\ERP\Products\Handler\Fields::getField($this->getId());
             $interfaces = \class_implements(\get_class($Field));
         } else {
             $interfaces = \class_implements($this->getParentClass());
         }
 
         return [
-            'id'         => $this->getId(),
-            'title'      => $this->getTitle(),
-            'type'       => $this->getType(),
-            'options'    => $options,
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
+            'type' => $this->getType(),
+            'options' => $options,
             'isRequired' => $this->isRequired(),
             'isStandard' => $this->isStandard(),
-            'isSystem'   => $this->isSystem(),
-            'isPublic'   => $this->isPublic(),
+            'isSystem' => $this->isSystem(),
+            'isPublic' => $this->isPublic(),
 
-            'prefix'           => $this->prefix,
-            'suffix'           => $this->suffix,
-            'priority'         => $this->priority,
-            'custom'           => $this->isCustomField(),
+            'prefix' => $this->prefix,
+            'suffix' => $this->suffix,
+            'priority' => $this->priority,
+            'custom' => $this->isCustomField(),
             'isUserInputField' => \in_array(CustomInputFieldInterface::class, $interfaces),
-            'custom_calc'      => $this->custom_calc,
-            'unassigned'       => $this->isUnassigned(),
-            'value'            => $value,
-            'valueText'        => $this->getValueText(),
-            'userInput'        => $this->userInput,
-            'showInDetails'    => $this->showInDetails()
+            'custom_calc' => $this->custom_calc,
+            'unassigned' => $this->isUnassigned(),
+            'value' => $value,
+            'valueText' => $this->getValueText(),
+            'userInput' => $this->userInput,
+            'showInDetails' => $this->showInDetails()
         ];
     }
 
@@ -562,8 +561,8 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
     protected function getValueTextProductAttributeList()
     {
-        $options   = $this->getOptions();
-        $value     = $this->getValue();
+        $options = $this->getOptions();
+        $value = $this->getValue();
         $valueText = '-';
 
         if (!empty($options) && isset($options['entries'])) {
@@ -604,8 +603,8 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                     }
 
                     $numCheck = \is_numeric($value)
-                                && \is_numeric($option['valueId'])
-                                && (int)$option['valueId'] === (int)$value;
+                        && \is_numeric($option['valueId'])
+                        && (int)$option['valueId'] === (int)$value;
 
                     if ($option['valueId'] !== $value && !$numCheck) {
                         continue;
@@ -631,8 +630,8 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
     protected function getValueTextAttributeGroup()
     {
-        $options   = $this->getOptions();
-        $value     = $this->getValue();
+        $options = $this->getOptions();
+        $value = $this->getValue();
         $valueText = '-';
 
         if (empty($options['entries'])) {

@@ -43,8 +43,8 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
                 ],
                 404,
                 [
-                    'id'     => $this->getId(),
-                    'view'   => 'frontend',
+                    'id' => $this->getId(),
+                    'view' => 'frontend',
                     'active' => 0
                 ]
             );
@@ -102,10 +102,10 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     public function getAttributes()
     {
         $attributes = [
-            'id'          => $this->getId(),
-            'title'       => $this->getTitle(),
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
             'description' => $this->getDescription(),
-            'image'       => false
+            'image' => false
         ];
 
         try {
@@ -121,7 +121,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         /* @var $Price QUI\ERP\Money\Price */
         $Price = $this->getPrice();
 
-        $attributes['price_netto']    = $Price->value();
+        $attributes['price_netto'] = $Price->value();
         $attributes['price_currency'] = $Price->getCurrency()->getCode();
 
         if ($this->getCategory()) {
@@ -129,7 +129,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         }
 
         // fields
-        $fields    = [];
+        $fields = [];
         $fieldList = $this->getFields(); // only public fields
 
         /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
@@ -165,7 +165,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
         // categories
         $categories = [];
-        $catList    = $this->getCategories();
+        $catList = $this->getCategories();
 
         /* @var $Category QUI\ERP\Products\Category\Category */
         foreach ($catList as $Category) {
@@ -221,7 +221,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
             );
         }
 
-        $User  = QUI::getUserBySession();
+        $User = QUI::getUserBySession();
         $price = $this->Product->getPrice()->getPrice();
 
         if ($price === null || $this->Product instanceof QUI\ERP\Products\Product\Types\VariantParent) {
@@ -236,7 +236,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
         // use search cache
         $minCache = 'quiqqer/products/' . $this->getId() . '/prices/min';
-        $maxName  = 'quiqqer/products/' . $this->getId() . '/prices/max';
+        $maxName = 'quiqqer/products/' . $this->getId() . '/prices/max';
 
         $min = null;
         $max = null;
@@ -256,11 +256,11 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         if ($min === null || $max === null) {
             $priceResult = QUI::getDataBase()->fetch([
                 'select' => 'id, minPrice, maxPrice',
-                'from'   => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
-                'where'  => [
+                'from' => QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
+                'where' => [
                     'id' => $this->getId()
                 ],
-                'limit'  => 1
+                'limit' => 1
             ]);
 
             if (isset($priceResult[0])) {
@@ -289,11 +289,11 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getPriceDisplay()
     {
-        $Price    = $this->getPrice();
+        $Price = $this->getPrice();
         $vatArray = [];
 
-        $User    = QUI::getUserBySession();
-        $Calc    = QUI\ERP\Products\Utils\Calc::getInstance($User);
+        $User = QUI::getUserBySession();
+        $Calc = QUI\ERP\Products\Utils\Calc::getInstance($User);
         $Product = $this->getProduct();
 
         if (!($Product instanceof UniqueProduct)) {
@@ -308,10 +308,10 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         }
 
         return new QUI\ERP\Products\Controls\Price([
-            'Price'       => $Price,
+            'Price' => $Price,
             'withVatText' => true,
-            'Calc'        => $Calc,
-            'vatArray'    => $vatArray
+            'Calc' => $Calc,
+            'vatArray' => $vatArray
         ]);
     }
 
@@ -528,8 +528,10 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     public function hasRequiredUserInputFields(): bool
     {
         foreach ($this->Product->getFields() as $Field) {
-            if ($Field instanceof QUI\ERP\Products\Field\CustomInputFieldInterface &&
-                $Field->isRequired()) {
+            if (
+                $Field instanceof QUI\ERP\Products\Field\CustomInputFieldInterface &&
+                $Field->isRequired()
+            ) {
                 return true;
             }
         }

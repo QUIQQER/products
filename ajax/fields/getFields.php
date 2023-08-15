@@ -16,11 +16,11 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_fields_getFields',
     function ($fieldIds) {
         $fieldIds = \json_decode($fieldIds, true);
-        $result   = [];
+        $result = [];
 
         foreach ($fieldIds as $fieldId) {
             try {
-                $Fields   = new Fields();
+                $Fields = new Fields();
                 $result[] = $Fields->getField($fieldId)->getAttributes();
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addDebug($Exception->getMessage());

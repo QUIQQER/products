@@ -20,7 +20,7 @@ QUI::$Ajax->registerFunction(
         );
 
         $Project = QUI\Projects\Manager::decode($project);
-        $Site    = $Project->get($siteId);
+        $Site = $Project->get($siteId);
 
         $Search = SearchHandler::getFrontendSearch($Site);
         $searchParams = json_decode($searchParams, true);

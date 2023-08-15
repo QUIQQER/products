@@ -13,7 +13,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_fields_deleteChild',
     function ($fieldId) {
         $Fields = new QUI\ERP\Products\Handler\Fields();
-        $Field  = $Fields->getField($fieldId);
+        $Field = $Fields->getField($fieldId);
 
         $Field->delete();
     },

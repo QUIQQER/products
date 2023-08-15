@@ -4,8 +4,6 @@
  * This file contains package_quiqqer_products_ajax_products_update
  */
 
-use QUI\ERP\Products\Utils\Products;
-
 /**
  * Update a product
  *
@@ -23,13 +21,13 @@ QUI::$Ajax->registerFunction(
             );
         } catch (QUI\Exception $Exception) {
             return [
-                'exists'  => true,
+                'exists' => true,
                 'message' => $Exception->getMessage()
             ];
         }
 
         return [
-            'exists'  => false,
+            'exists' => false,
             'message' => ''
         ];
     },

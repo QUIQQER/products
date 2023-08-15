@@ -3,6 +3,7 @@
 /**
  * This file contains QUITests\ERP\Products\CaseStudies\Classes
  */
+
 namespace QUITests\ERP\Products\CaseStudies\Classes;
 
 use QUI;
@@ -23,8 +24,8 @@ class ProductListHelper
     public static function getList($User)
     {
         $Products = new QUI\ERP\Products\Handler\Products();
-        $List     = new QUI\ERP\Products\Product\ProductList(
-            array('duplicate' => true)
+        $List = new QUI\ERP\Products\Product\ProductList(
+            ['duplicate' => true]
         );
 
         $List->setUser($User);
@@ -59,9 +60,9 @@ class ProductListHelper
      */
     public static function outputList(QUI\ERP\Products\Product\ProductList $List)
     {
-        $data     = $List->toArray();
-        $User     = $List->getUser();
-        $Locale   = $User->getLocale();
+        $data = $List->toArray();
+        $User = $List->getUser();
+        $Locale = $User->getLocale();
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
 
         writePhpUnitMessage('Preis Liste');

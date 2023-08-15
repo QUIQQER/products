@@ -6,10 +6,9 @@
 
 namespace QUI\ERP\Products;
 
-use QUI\ERP\Api\AbstractErpProvider;
-
-use QUI\Controls\Sitemap\Map;
 use QUI\Controls\Sitemap\Item;
+use QUI\Controls\Sitemap\Map;
+use QUI\ERP\Api\AbstractErpProvider;
 
 /**
  * Class ErpProvider
@@ -28,10 +27,10 @@ class ErpProvider extends AbstractErpProvider
 
         if ($Products === null) {
             $Products = new Item([
-                'icon'     => 'fa fa-shopping-bag',
-                'name'     => 'products',
-                'text'     => ['quiqqer/products', 'erp.panel.products.text'],
-                'opened'   => true,
+                'icon' => 'fa fa-shopping-bag',
+                'name' => 'products',
+                'text' => ['quiqqer/products', 'erp.panel.products.text'],
+                'opened' => true,
                 'priority' => 2
             ]);
 
@@ -40,18 +39,18 @@ class ErpProvider extends AbstractErpProvider
 
         $Products->appendChild(
             new Item([
-                'icon'    => 'fa fa-shopping-bag',
-                'name'    => 'products-products',
-                'text'    => ['quiqqer/products', 'menu.erp.products.products.title'],
+                'icon' => 'fa fa-shopping-bag',
+                'name' => 'products-products',
+                'text' => ['quiqqer/products', 'menu.erp.products.products.title'],
                 'require' => 'package/quiqqer/products/bin/controls/products/Panel'
             ])
         );
 
         $Products->appendChild(
             new Item([
-                'icon'    => 'fa fa-sitemap',
-                'name'    => 'products-categories',
-                'text'    => ['quiqqer/products', 'menu.erp.products.categories.title'],
+                'icon' => 'fa fa-sitemap',
+                'name' => 'products-categories',
+                'text' => ['quiqqer/products', 'menu.erp.products.categories.title'],
                 'require' => 'package/quiqqer/products/bin/controls/categories/Panel'
             ])
         );

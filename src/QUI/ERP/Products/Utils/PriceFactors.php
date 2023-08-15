@@ -149,8 +149,8 @@ class PriceFactors
     public function clear()
     {
         $this->listBeginning = [];
-        $this->list          = [];
-        $this->listEnd       = [];
+        $this->list = [];
+        $this->listEnd = [];
     }
 
     /**
@@ -171,8 +171,8 @@ class PriceFactors
     {
         $result = [
             'beginning' => [],
-            'middle'    => [],
-            'end'       => []
+            'middle' => [],
+            'end' => []
         ];
 
         foreach ($this->listBeginning as $PriceFactor) {
@@ -207,7 +207,8 @@ class PriceFactors
      */
     public function importList(array $list)
     {
-        if (!isset($list['beginning'])
+        if (
+            !isset($list['beginning'])
             && !isset($list['middle'])
             && !isset($list['end'])
         ) {
@@ -215,8 +216,8 @@ class PriceFactors
         }
 
         $beginning = [];
-        $middle    = [];
-        $end       = [];
+        $middle = [];
+        $end = [];
 
         if (isset($list['beginning'])) {
             $beginning = $list['beginning'];
@@ -262,7 +263,7 @@ class PriceFactors
      */
     public function toErpPriceFactorList(): QUI\ERP\Accounting\PriceFactors\FactorList
     {
-        $list   = [];
+        $list = [];
         $sorted = $this->sort();
 
         foreach ($sorted as $PriceFactor) {

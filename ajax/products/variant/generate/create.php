@@ -18,7 +18,7 @@ QUI::$Ajax->registerFunction(
     function ($productId, $fields) {
         try {
             $Product = Products::getProduct($productId);
-            $fields  = \json_decode($fields, true);
+            $fields = \json_decode($fields, true);
 
             if (!($Product instanceof VariantParent)) {
                 return false;

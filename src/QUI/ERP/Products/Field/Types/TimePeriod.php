@@ -13,11 +13,11 @@ class TimePeriod extends QUI\ERP\Products\Field\Field
 {
     const PERIOD_SECOND = 'second';
     const PERIOD_MINUTE = 'minute';
-    const PERIOD_HOUR   = 'hour';
-    const PERIOD_DAY    = 'day';
-    const PERIOD_WEEK   = 'week';
-    const PERIOD_MONTH  = 'month';
-    const PERIOD_YEAR   = 'year';
+    const PERIOD_HOUR = 'hour';
+    const PERIOD_DAY = 'day';
+    const PERIOD_WEEK = 'week';
+    const PERIOD_MONTH = 'month';
+    const PERIOD_YEAR = 'year';
 
     /**
      * @var bool
@@ -66,9 +66,9 @@ class TimePeriod extends QUI\ERP\Products\Field\Field
             'quiqqer/products',
             'exception.field.invalid',
             [
-                'fieldId'    => $this->getId(),
+                'fieldId' => $this->getId(),
                 'fieldTitle' => $this->getTitle(),
-                'fieldType'  => $this->getType()
+                'fieldType' => $this->getType()
             ]
         ];
 
@@ -136,7 +136,7 @@ class TimePeriod extends QUI\ERP\Products\Field\Field
         }
 
         $value['from'] = (int)$value['from'];
-        $value['to']   = (int)$value['to'];
+        $value['to'] = (int)$value['to'];
 
         return $value;
     }

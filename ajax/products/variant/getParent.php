@@ -5,8 +5,8 @@
  */
 
 use QUI\ERP\Products\Handler\Products;
-use QUI\ERP\Products\Product\Types\VariantParent;
 use QUI\ERP\Products\Product\Types\VariantChild;
+use QUI\ERP\Products\Product\Types\VariantParent;
 
 /**
  * R

@@ -27,17 +27,17 @@ class VatFrontendView extends View
             return '';
         }
 
-        $value    = $this->getValue();
+        $value = $this->getValue();
         $taxTitle = '---';
 
         if ($value >= 0) {
             try {
-                $Area    = QUI\ERP\Utils\User::getUserArea(QUI::getUserBySession());
+                $Area = QUI\ERP\Utils\User::getUserArea(QUI::getUserBySession());
                 $TaxType = QUI\ERP\Tax\Handler::getInstance()->getTaxType($value);
-                $Tax     = QUI\ERP\Tax\Utils::getTaxEntry($TaxType, $Area);
+                $Tax = QUI\ERP\Tax\Utils::getTaxEntry($TaxType, $Area);
 
                 $taxTitle = QUI::getLocale()->get('quiqqer/products', 'fieldtype.Tax.frontend.text', [
-                    'tax'   => $Tax->getValue(),
+                    'tax' => $Tax->getValue(),
                     'title' => $TaxType->getTitle()
                 ]);
             } catch (QUI\Exception $Exception) {

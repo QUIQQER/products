@@ -13,7 +13,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_setFieldsToAllProducts',
     function ($categoryId) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $Category   = $Categories->getCategory($categoryId);
+        $Category = $Categories->getCategory($categoryId);
 
         $Category->setFieldsToAllProducts();
     },

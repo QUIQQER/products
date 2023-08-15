@@ -16,7 +16,7 @@ use QUI\ERP\Products\Handler\Products;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_calc',
     function ($productId, $fields, $quantity) {
-        $fields  = \json_decode($fields, true);
+        $fields = \json_decode($fields, true);
         $Product = Products::getProduct($productId);
 
         if (!\is_array($fields)) {
@@ -29,7 +29,7 @@ QUI::$Ajax->registerFunction(
                     continue;
                 }
 
-                $fieldId    = $field['fieldId'];
+                $fieldId = $field['fieldId'];
                 $fieldValue = $field['value'];
 
                 $Field = $Product->getField($fieldId);

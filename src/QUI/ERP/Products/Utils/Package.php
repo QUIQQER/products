@@ -21,7 +21,7 @@ class Package
     /**
      * @var null
      */
-    static protected $hidePrice = null;
+    protected static $hidePrice = null;
 
     /**
      * Return config
@@ -61,8 +61,8 @@ class Package
         }
 
         $Package = QUI::getPackage('quiqqer/products');
-        $Config  = $Package->getConfig();
-        $User    = QUI::getUserBySession();
+        $Config = $Package->getConfig();
+        $User = QUI::getUserBySession();
 
         self::$hidePrice = (int)$Config->get('products', 'hidePrices');
 

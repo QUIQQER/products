@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_list',
     function ($params) {
         $Products = new QUI\ERP\Products\Handler\Products();
-        $result   = [];
+        $result = [];
 
         $Grid = new QUI\Utils\Grid();
 

@@ -518,8 +518,8 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
 
         try {
             $this->bruttoSum = $OldCurrency->convert($this->bruttoSum, $this->Currency);
-            $this->nettoSum  = $OldCurrency->convert($this->nettoSum, $this->Currency);
-            $this->sum       = $OldCurrency->convert($this->sum, $this->Currency);
+            $this->nettoSum = $OldCurrency->convert($this->nettoSum, $this->Currency);
+            $this->sum = $OldCurrency->convert($this->sum, $this->Currency);
         } catch (QUI\Exception $Exception) {
         }
     }
@@ -560,22 +560,22 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     public function toArray(): array
     {
         return [
-            'identifier'        => $this->identifier,
-            'title'             => $this->getTitle(),
-            'description'       => $this->getDescription(),
-            'calculation'       => $this->getCalculation(),
+            'identifier' => $this->identifier,
+            'title' => $this->getTitle(),
+            'description' => $this->getDescription(),
+            'calculation' => $this->getCalculation(),
             'calculation_basis' => $this->getCalculationBasis(),
-            'sum'               => $this->getSum(),
-            'sumFormatted'      => $this->getSumFormatted(),
-            'nettoSum'          => $this->getNettoSum(),
+            'sum' => $this->getSum(),
+            'sumFormatted' => $this->getSumFormatted(),
+            'nettoSum' => $this->getNettoSum(),
             'nettoSumFormatted' => $this->getNettoSumFormatted(),
-            'value'             => $this->getValue(),
-            'valueText'         => $this->getValueText(),
-            'priority'          => $this->getPriority(),
-            'visible'           => $this->isVisible(),
-            'class'             => get_class($this),
-            'vat'               => $this->getVat(),
-            'currency'          => $this->getCurrency()->getCode()
+            'value' => $this->getValue(),
+            'valueText' => $this->getValueText(),
+            'priority' => $this->getPriority(),
+            'visible' => $this->isVisible(),
+            'class' => get_class($this),
+            'vat' => $this->getVat(),
+            'currency' => $this->getCurrency()->getCode()
         ];
     }
 
@@ -590,19 +590,19 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     public function toErpPriceFactor(): QUI\ERP\Accounting\PriceFactors\Factor
     {
         return new QUI\ERP\Accounting\PriceFactors\Factor([
-            'identifier'        => $this->identifier,
-            'title'             => $this->getTitle(),
-            'description'       => $this->getDescription(),
-            'sum'               => $this->getSum(),
-            'sumFormatted'      => $this->getSumFormatted(),
-            'calculation'       => $this->getCalculation(),
+            'identifier' => $this->identifier,
+            'title' => $this->getTitle(),
+            'description' => $this->getDescription(),
+            'sum' => $this->getSum(),
+            'sumFormatted' => $this->getSumFormatted(),
+            'calculation' => $this->getCalculation(),
             'calculation_basis' => $this->getCalculationBasis(),
-            'nettoSum'          => $this->getNettoSum(),
+            'nettoSum' => $this->getNettoSum(),
             'nettoSumFormatted' => $this->getNettoSumFormatted(),
-            'visible'           => $this->isVisible(),
-            'vat'               => $this->getVat(),
-            'valueText'         => $this->getValueText(),
-            'value'             => $this->getValue()
+            'visible' => $this->isVisible(),
+            'vat' => $this->getVat(),
+            'valueText' => $this->getValueText(),
+            'value' => $this->getValue()
         ]);
     }
 }

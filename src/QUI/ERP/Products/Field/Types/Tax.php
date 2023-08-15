@@ -6,8 +6,6 @@
 
 namespace QUI\ERP\Products\Field\Types;
 
-use QUI;
-
 /**
  * Class FloatType
  * @package QUI\ERP\Products\Field

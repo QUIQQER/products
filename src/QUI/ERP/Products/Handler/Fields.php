@@ -226,7 +226,7 @@ class Fields
     {
         QUI\Permissions\Permission::checkPermission('field.create');
 
-        $data          = [];
+        $data = [];
         $allowedFields = self::getChildAttributes();
 
         foreach ($allowedFields as $allowed) {
@@ -266,7 +266,7 @@ class Fields
         // id checking
         if (isset($attributes['id'])) {
             $result = QUI::getDataBase()->fetch([
-                'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+                'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                 'where' => [
                     'id' => $attributes['id']
                 ]
@@ -283,10 +283,10 @@ class Fields
         } else {
             // exist an id with 1000? field-id begin at 1000
             $result = QUI::getDataBase()->fetch([
-                'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+                'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                 'where' => [
                     'id' => [
-                        'type'  => '>=',
+                        'type' => '>=',
                         'value' => 1000
                     ]
                 ],
@@ -341,22 +341,22 @@ class Fields
 
         // create view permission
         QUI::getPermissionManager()->addPermission([
-            'name'  => "permission.products.fields.field{$newId}.view",
+            'name' => "permission.products.fields.field{$newId}.view",
             'title' => "quiqqer/products permission.products.fields.field{$newId}.view.title",
-            'desc'  => "",
-            'type'  => 'bool',
-            'area'  => 'groups',
-            'src'   => 'user'
+            'desc' => "",
+            'type' => 'bool',
+            'area' => 'groups',
+            'src' => 'user'
         ]);
 
         // create edit permission
         QUI::getPermissionManager()->addPermission([
-            'name'  => "permission.products.fields.field{$newId}.edit",
+            'name' => "permission.products.fields.field{$newId}.edit",
             'title' => "quiqqer/products permission.products.fields.field{$newId}.edit.title",
-            'desc'  => "",
-            'type'  => 'bool',
-            'area'  => 'groups',
-            'src'   => 'user'
+            'desc' => "",
+            'type' => 'bool',
+            'area' => 'groups',
+            'src' => 'user'
         ]);
 
 
@@ -369,8 +369,8 @@ class Fields
 
         // vererbbar und editiert
         try {
-            $Config    = QUI::getPackage('quiqqer/products')->getConfig();
-            $editable  = $Config->getSection('editableFields');
+            $Config = QUI::getPackage('quiqqer/products')->getConfig();
+            $editable = $Config->getSection('editableFields');
             $inherited = $Config->getSection('inheritedFields');
 
             if (!isset($attributes['fieldEditable'])) {
@@ -428,7 +428,7 @@ class Fields
                 'quiqqer/products',
                 'exception.field.cache.column.not.allowed',
                 [
-                    'fieldId'    => $fieldId,
+                    'fieldId' => $fieldId,
                     'fieldTitle' => $Field->getTitle()
                 ]
             ]);
@@ -488,8 +488,8 @@ class Fields
         $languages = QUI\Translator::langs();
 
         $headerTranslations = [];
-        $viewTranslations   = [];
-        $editTranslations   = [];
+        $viewTranslations = [];
+        $editTranslations = [];
 
         foreach ($languages as $lang) {
             $title = $fieldId;
@@ -503,7 +503,7 @@ class Fields
                 'quiqqer/products',
                 'quiqqer.products.field.header.placeholder',
                 [
-                    'fielId'    => $fieldId,
+                    'fielId' => $fieldId,
                     'fieldname' => $title
                 ]
             );
@@ -513,7 +513,7 @@ class Fields
                 'quiqqer/products',
                 'quiqqer.products.field.view.placeholder',
                 [
-                    'fielId'    => $fieldId,
+                    'fielId' => $fieldId,
                     'fieldname' => $title
                 ]
             );
@@ -523,7 +523,7 @@ class Fields
                 'quiqqer/products',
                 'quiqqer.products.field.edit.placeholder',
                 [
-                    'fielId'    => $fieldId,
+                    'fielId' => $fieldId,
                     'fieldname' => $title
                 ]
             );
@@ -568,9 +568,9 @@ class Fields
                 $data = [];
             }
 
-            $data['package']  = 'quiqqer/products';
+            $data['package'] = 'quiqqer/products';
             $data['datatype'] = 'php,js';
-            $data['html']     = 1;
+            $data['html'] = 1;
 
             if (!isset($translations[0])) {
                 QUI\Translator::addUserVar($group, $var, $data);
@@ -616,8 +616,8 @@ class Fields
         }
 
         // exists the type?
-        $dir    = \dirname(\dirname(__FILE__)) . '/Field/Types/';
-        $files  = QUI\Utils\System\File::readDir($dir);
+        $dir = \dirname(\dirname(__FILE__)) . '/Field/Types/';
+        $files = QUI\Utils\System\File::readDir($dir);
         $result = [];
 
         foreach ($files as $file) {
@@ -628,11 +628,11 @@ class Fields
             $file = \pathinfo($file);
 
             $result[] = [
-                'plugin'   => 'quiqqer/products',
-                'src'      => 'QUI\ERP\Products\Field\Types\\' . $file['filename'],
+                'plugin' => 'quiqqer/products',
+                'src' => 'QUI\ERP\Products\Field\Types\\' . $file['filename'],
                 'category' => 0,
-                'locale'   => ['quiqqer/products', 'fieldtype.' . $file['filename']],
-                'name'     => $file['filename']
+                'locale' => ['quiqqer/products', 'fieldtype.' . $file['filename']],
+                'name' => $file['filename']
             ];
         }
 
@@ -645,17 +645,17 @@ class Fields
                 continue;
             }
 
-            $Dom  = QUI\Utils\Text\XML::getDomFromXml($xml);
+            $Dom = QUI\Utils\Text\XML::getDomFromXml($xml);
             $Path = new \DOMXPath($Dom);
 
             $fields = $Path->query("//quiqqer/products/fields/field");
 
             /* @var $Field \DOMElement */
             foreach ($fields as $Field) {
-                $src      = $Field->getAttribute('src');
+                $src = $Field->getAttribute('src');
                 $category = $Field->getAttribute('category');
-                $name     = $Field->getAttribute('name');
-                $help     = true;
+                $name = $Field->getAttribute('name');
+                $help = true;
 
                 if (!\class_exists($src)) {
                     continue;
@@ -669,12 +669,12 @@ class Fields
                 }
 
                 $result[] = [
-                    'plugin'   => $plugin['name'],
-                    'src'      => $src,
+                    'plugin' => $plugin['name'],
+                    'src' => $src,
                     'category' => $category,
-                    'locale'   => QUI\Utils\DOM::getTextFromNode($Field, false),
-                    'name'     => $name,
-                    'help'     => $help
+                    'locale' => QUI\Utils\DOM::getTextFromNode($Field, false),
+                    'name' => $name,
+                    'help' => $help
                 ];
             }
         }
@@ -750,7 +750,7 @@ class Fields
             'exception.field.type_not_found',
             [
                 'fieldType' => $type,
-                'fieldId'   => $fieldId
+                'fieldId' => $fieldId
             ]
         ]);
     }
@@ -781,7 +781,7 @@ class Fields
         } catch (QUI\Exception $Exception) {
             try {
                 $result = QUI::getDataBase()->fetch([
-                    'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+                    'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                     'where' => [
                         'id' => (int)$fieldId
                     ],
@@ -800,7 +800,7 @@ class Fields
                         'exception.field.id_not_found',
                         [
                             'fieldId' => $fieldId,
-                            'type'    => ''
+                            'type' => ''
                         ]
                     ],
                     404,
@@ -829,13 +829,13 @@ class Fields
                     'quiqqer/products',
                     'exception.field.type.not.found',
                     [
-                        'id'   => $fieldId,
+                        'id' => $fieldId,
                         'type' => ''
                     ]
                 ],
                 404,
                 [
-                    'id'   => (int)$fieldId,
+                    'id' => (int)$fieldId,
                     'type' => $data['type']
                 ]
             );
@@ -847,14 +847,14 @@ class Fields
                     'quiqqer/products',
                     'exception.field.class.not.found',
                     [
-                        'id'   => $fieldId,
+                        'id' => $fieldId,
                         'type' => ''
                     ]
                 ],
                 404,
                 [
-                    'id'    => (int)$fieldId,
-                    'type'  => $data['type'],
+                    'id' => (int)$fieldId,
+                    'type' => $data['type'],
                     'class' => $class
                 ]
             );
@@ -865,9 +865,9 @@ class Fields
         }
 
         $fieldData = [
-            'system'       => (int)$data['systemField'],
-            'required'     => (int)$data['requiredField'],
-            'standard'     => (int)$data['standardField'],
+            'system' => (int)$data['systemField'],
+            'required' => (int)$data['requiredField'],
+            'standard' => (int)$data['standardField'],
             'defaultValue' => \json_decode($data['defaultValue'], true)
         ];
 
@@ -880,14 +880,14 @@ class Fields
                     'quiqqer/products',
                     'exception.field.is.no.field',
                     [
-                        'id'   => $fieldId,
+                        'id' => $fieldId,
                         'type' => ''
                     ]
                 ],
                 404,
                 [
-                    'id'    => (int)$fieldId,
-                    'type'  => $data['type'],
+                    'id' => (int)$fieldId,
+                    'type' => $data['type'],
                     'class' => $class
                 ]
             );
@@ -936,7 +936,7 @@ class Fields
     {
         $query = [
             'select' => 'id',
-            'from'   => QUI\ERP\Products\Utils\Tables::getFieldTableName()
+            'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName()
         ];
 
         if (isset($queryParams['where'])) {
@@ -1021,7 +1021,7 @@ class Fields
     public static function getFields($queryParams = [])
     {
         $result = [];
-        $data   = self::getFieldIds($queryParams);
+        $data = self::getFieldIds($queryParams);
 
         foreach ($data as $entry) {
             try {
@@ -1072,10 +1072,10 @@ class Fields
     public static function countFields($queryParams = [])
     {
         $query = [
-            'from'  => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
+            'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
             'count' => [
                 'select' => 'id',
-                'as'     => 'count'
+                'as' => 'count'
             ]
         ];
 
@@ -1138,7 +1138,7 @@ class Fields
                 $Field = self::getField($fieldId);
 
                 $fieldAttributes[$fieldId] = [
-                    'isPublic'      => $Field->isPublic(),
+                    'isPublic' => $Field->isPublic(),
                     'showInDetails' => $Field->showInDetails()
                 ];
             } catch (\Exception $Exception) {
@@ -1214,7 +1214,7 @@ class Fields
         }
 
         try {
-            $Conf     = QUI::getPackage('quiqqer/products')->getConfig();
+            $Conf = QUI::getPackage('quiqqer/products')->getConfig();
             $settings = $Conf->get('products', 'priceFieldFactors');
 
             if (empty($settings)) {

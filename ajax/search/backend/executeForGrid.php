@@ -1,9 +1,5 @@
 <?php
 
-use QUI\ERP\Products\Handler\Fields;
-use QUI\ERP\Products\Handler\Search as SearchHandler;
-use QUI\ERP\Products\Utils\Tables;
-
 /**
  * Get all fields that are available for search for a specific Site
  * Return teh result for grid
@@ -11,6 +7,11 @@ use QUI\ERP\Products\Utils\Tables;
  * @param array $searchData
  * @return array - product list
  */
+
+use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Handler\Search as SearchHandler;
+use QUI\ERP\Products\Utils\Tables;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_search_backend_executeForGrid',
     function ($searchParams) {
@@ -24,32 +25,32 @@ QUI::$Ajax->registerFunction(
 
         if (empty($result) || empty($result['result'])) {
             return [
-                'data'  => [],
+                'data' => [],
                 'total' => 0,
-                'page'  => 1
+                'page' => 1
             ];
         }
 
-        $page       = 1;
+        $page = 1;
         $productIds = $result['result'];
-        $products   = [];
+        $products = [];
 
-        $BackEndSearch         = SearchHandler::getBackendSearch();
+        $BackEndSearch = SearchHandler::getBackendSearch();
         $productSearchFieldIds = $BackEndSearch->getProductSearchFields();
 
         // collect product data
         $fields = [
-            'active'      => 'active',
-            'id'          => 'id',
-            'productNo'   => 'productNo',
-            'title'       => 'title',
+            'active' => 'active',
+            'id' => 'id',
+            'productNo' => 'productNo',
+            'title' => 'title',
             'description' => 'description',
-            'type'        => 'type',
+            'type' => 'type',
             'price_netto' => 'F' . Fields::FIELD_PRICE,
             'price_offer' => 'F' . Fields::FIELD_PRICE_OFFER,
-            'c_date'      => 'c_date',
-            'e_date'      => 'e_date',
-            'priority'    => 'F' . Fields::FIELD_PRIORITY
+            'c_date' => 'c_date',
+            'e_date' => 'e_date',
+            'priority' => 'F' . Fields::FIELD_PRIORITY
         ];
 
 
@@ -72,10 +73,10 @@ QUI::$Ajax->registerFunction(
 
         if (!empty($productIds)) {
             $result = QUI::getDataBase()->fetch([
-                'from'  => Tables::getProductCacheTableName(),
+                'from' => Tables::getProductCacheTableName(),
                 'where' => [
-                    'id'   => [
-                        'type'  => 'IN',
+                    'id' => [
+                        'type' => 'IN',
                         'value' => $productIds
                     ],
                     'lang' => QUI::getLocale()->getCurrent()
@@ -130,7 +131,7 @@ QUI::$Ajax->registerFunction(
         }
 
         // count
-        $searchParams          = json_decode($searchParams, true);
+        $searchParams = json_decode($searchParams, true);
         $searchParams['count'] = 1;
 
         if (isset($searchParams['sheet'])) {
@@ -143,9 +144,9 @@ QUI::$Ajax->registerFunction(
         );
 
         return [
-            'data'  => $products,
+            'data' => $products,
             'total' => $count['result'],
-            'page'  => $page
+            'page' => $page
         ];
     },
     ['searchParams'],

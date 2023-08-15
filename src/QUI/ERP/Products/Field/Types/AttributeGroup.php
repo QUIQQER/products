@@ -54,10 +54,10 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     public function __construct($fieldId, array $params)
     {
         $this->setOptions([
-            'entries'            => [],
-            'priority'           => 0,
-            'generate_tags'      => false,
-            'entries_type'       => self::ENTRIES_TYPE_DEFAULT,
+            'entries' => [],
+            'priority' => 0,
+            'generate_tags' => false,
+            'entries_type' => self::ENTRIES_TYPE_DEFAULT,
             'is_image_attribute' => false
         ]);
 
@@ -68,7 +68,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
 
         foreach ($options['entries'] as $key => $option) {
             if (isset($option['selected']) && $option['selected']) {
-                $this->value        = $option['valueId'];
+                $this->value = $option['valueId'];
                 $this->defaultValue = $option['valueId'];
             }
         }
@@ -88,7 +88,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             if (is_array($value)) {
                 foreach ($value as $key => $val) {
                     if (isset($val['selected']) && $val['selected']) {
-                        $this->value        = $val['valueId'];
+                        $this->value = $val['valueId'];
                         $this->defaultValue = $val['valueId'];
                     }
                 }
@@ -131,7 +131,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             }
         }
 
-        $entries   = $this->options['entries'];
+        $entries = $this->options['entries'];
         $entries[] = $data;
 
         $this->options['entries'] = $entries;
@@ -188,18 +188,6 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     }
 
     /**
-     * @return string
-     */
-    public function getValue()
-    {
-        if ($this->value !== null) {
-            return $this->value;
-        }
-
-        return $this->defaultValue;
-    }
-
-    /**
      * @param QUI\Locale|null $Locale
      *
      * @return string
@@ -210,7 +198,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             $Locale = QUI::getLocale();
         }
 
-        $lang          = $Locale->getCurrent();
+        $lang = $Locale->getCurrent();
         $targetValueId = $this->getValue();
 
         foreach ($this->options['entries'] as $entry) {
@@ -220,6 +208,18 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
         }
 
         return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        if ($this->value !== null) {
+            return $this->value;
+        }
+
+        return $this->defaultValue;
     }
 
     /**
@@ -311,8 +311,10 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
         $entries = $options['entries'];
 
         foreach ($entries as $entry) {
-            if ($entry['valueId'] == $value
-                || is_numeric($value) && $entry['valueId'] == (int)$value) {
+            if (
+                $entry['valueId'] == $value
+                || is_numeric($value) && $entry['valueId'] == (int)$value
+            ) {
                 return;
             }
         }
@@ -321,9 +323,9 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             'quiqqer/products',
             'exception.field.invalid',
             [
-                'fieldId'    => $this->getId(),
+                'fieldId' => $this->getId(),
                 'fieldTitle' => $this->getTitle(),
-                'fieldType'  => $this->getType()
+                'fieldType' => $this->getType()
             ]
         ]);
     }

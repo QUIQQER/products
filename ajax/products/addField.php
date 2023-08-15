@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_addField',
     function ($productId, $fieldId) {
         $Products = new QUI\ERP\Products\Handler\Products();
-        $Fields   = new QUI\ERP\Products\Handler\Fields();
+        $Fields = new QUI\ERP\Products\Handler\Fields();
 
         $Product = $Products->getProduct($productId);
         $fieldId = \json_decode($fieldId, true);

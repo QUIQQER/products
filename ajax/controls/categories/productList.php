@@ -4,8 +4,8 @@
  * This file contains package_quiqqer_products_ajax_controls_categories_productList
  */
 
-use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Controls\Category\ProductList;
+use QUI\ERP\Products\Handler\Categories;
 
 /**
  * Return the html for a prduct list
@@ -24,13 +24,13 @@ QUI::$Ajax->registerFunction(
         }
 
         $Project = QUI\Projects\Manager::decode($project);
-        $Site    = $Project->get($siteId);
+        $Site = $Project->get($siteId);
 
         $Control = new ProductList([
-            'categoryId'        => $categoryId,
-            'view'              => $view,
-            'Site'              => $Site,
-            'searchParams'      => \json_decode($searchParams, true),
+            'categoryId' => $categoryId,
+            'view' => $view,
+            'Site' => $Site,
+            'searchParams' => \json_decode($searchParams, true),
             'productLoadNumber' => $productLoadNumber
         ]);
 

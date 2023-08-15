@@ -4,9 +4,6 @@
  * This file contains package_quiqqer_products_ajax_products_frontend_getProduct
  */
 
-use QUI\ERP\Products\Product\Product;
-use QUI\ERP\Products\Controls\Products\Product as ProductControl;
-
 /**
  * Return the product html
  *

@@ -47,8 +47,8 @@ class ProductListBackendView
     public function __construct(ProductList $ProductList, $Locale = null)
     {
         $this->ProductList = $ProductList;
-        $this->hidePrice   = $ProductList->isPriceHidden();
-        $this->Locale      = $Locale;
+        $this->hidePrice = $ProductList->isPriceHidden();
+        $this->Locale = $Locale;
 
         $this->parse();
     }
@@ -67,12 +67,12 @@ class ProductListBackendView
             $Locale = $this->ProductList->getUser()->getLocale();
         }
 
-        $list     = $this->ProductList->toArray($Locale);
+        $list = $this->ProductList->toArray($Locale);
         $products = $this->ProductList->getProducts();
 //        $User     = $this->ProductList->getUser();
 //        $isNetto  = QUI\ERP\Utils\User::isNettoUser($User);
 
-        $Locale   = $this->ProductList->getUser()->getLocale();
+        $Locale = $this->ProductList->getUser()->getLocale();
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
         $Currency->setLocale($Locale);
 
@@ -80,12 +80,12 @@ class ProductListBackendView
 
         /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
-            $attributes   = $Product->getAttributes();
-            $fields       = $Product->getFields();
+            $attributes = $Product->getAttributes();
+            $fields = $Product->getFields();
             $PriceFactors = $Product->getPriceFactors();
 
             $product = [
-                'fields'   => [],
+                'fields' => [],
                 'vatArray' => []
             ];
 
@@ -97,18 +97,18 @@ class ProductListBackendView
             }
 
             // format
-            $product['price']      = $Currency->format($attributes['calculated_price']);
-            $product['sum']        = $Currency->format($attributes['calculated_sum']);
-            $product['nettoSum']   = $Currency->format($attributes['calculated_nettoSum']);
+            $product['price'] = $Currency->format($attributes['calculated_price']);
+            $product['sum'] = $Currency->format($attributes['calculated_sum']);
+            $product['nettoSum'] = $Currency->format($attributes['calculated_nettoSum']);
             $product['basisPrice'] = $Currency->format($attributes['calculated_basisPrice']);
 
-            $product['id']          = $attributes['id'];
-            $product['category']    = $attributes['category'];
-            $product['title']       = $attributes['title'];
+            $product['id'] = $attributes['id'];
+            $product['category'] = $attributes['category'];
+            $product['title'] = $attributes['title'];
             $product['description'] = $attributes['description'];
-            $product['image']       = $attributes['image'];
-            $product['quantity']    = $attributes['quantity'];
-            $product['attributes']  = [];
+            $product['image'] = $attributes['image'];
+            $product['quantity'] = $attributes['quantity'];
+            $product['attributes'] = [];
 
             $calculatedSum = 0;
             $calculatedVat = 0;
@@ -136,8 +136,8 @@ class ProductListBackendView
                 }
 
                 $product['attributes'][] = [
-                    'title'     => $Factor->getTitle(),
-                    'value'     => $Factor->getSumFormatted(),
+                    'title' => $Factor->getTitle(),
+                    'value' => $Factor->getSumFormatted(),
                     'valueText' => $Factor->getValueText()
                 ];
             }
@@ -148,12 +148,12 @@ class ProductListBackendView
         // result
         $result = [
             'attributes' => [],
-            'vat'        => [],
+            'vat' => [],
         ];
 
         foreach ($list['vatArray'] as $key => $entry) {
             $result['vat'][] = [
-                'text'  => $list['vatText'][$key],
+                'text' => $list['vatText'][$key],
                 'value' => $Currency->format($entry['sum']),
             ];
         }
@@ -165,16 +165,16 @@ class ProductListBackendView
             }
 
             $result['attributes'][] = [
-                'title'     => $Factor->getTitle(),
-                'value'     => $Factor->getSumFormatted(),
+                'title' => $Factor->getTitle(),
+                'value' => $Factor->getSumFormatted(),
                 'valueText' => $Factor->getValueText()
             ];
         }
 
-        $result['products']    = $productList;
-        $result['sum']         = $Currency->format($list['sum']);
-        $result['subSum']      = $Currency->format($list['subSum']);
-        $result['nettoSum']    = $Currency->format($list['nettoSum']);
+        $result['products'] = $productList;
+        $result['sum'] = $Currency->format($list['sum']);
+        $result['subSum'] = $Currency->format($list['subSum']);
+        $result['nettoSum'] = $Currency->format($list['nettoSum']);
         $result['nettoSubSum'] = $Currency->format($list['nettoSubSum']);
 
         $this->data = $result;
@@ -291,21 +291,21 @@ class ProductListBackendView
     public function toHTML($css = true)
     {
         $Engine = QUI::getTemplateManager()->getEngine();
-        $style  = '';
+        $style = '';
 
         if ($css) {
             $style = '<style>';
-            $style .= \file_get_contents(\dirname(__FILE__).'/ProductListView.css');
+            $style .= \file_get_contents(\dirname(__FILE__) . '/ProductListView.css');
             $style .= '</style>';
         }
 
         $Engine->assign([
-            'this'      => $this,
-            'data'      => $this->data,
-            'style'     => $style,
+            'this' => $this,
+            'data' => $this->data,
+            'style' => $style,
             'hidePrice' => $this->isPriceHidden(),
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__).'/ProductListView.html');
+        return $Engine->fetch(\dirname(__FILE__) . '/ProductListView.html');
     }
 }

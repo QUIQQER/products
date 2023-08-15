@@ -16,6 +16,7 @@ use QUI\ERP\Products\Utils\Products as ProductUtils;
  *
  * @param string $productId - ID of a product
  */
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getVariant',
     function ($productId, $fields, $ignoreDefaultVariant) {
@@ -51,7 +52,7 @@ QUI::$Ajax->registerFunction(
         }
 
         $ExceptionStack = new QUI\ExceptionStack();
-        $fields         = json_decode($fields, true);
+        $fields = json_decode($fields, true);
 
         // json js <-> php
         if (count($fields) && is_array($fields[0])) {
@@ -72,10 +73,14 @@ QUI::$Ajax->registerFunction(
                 try {
                     $Field = $Product->getField($fieldId);
 
-                    if ($Field->getType() === Fields::TYPE_ATTRIBUTE_LIST
-                        || $Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS) {
-                        if ($ignoreDefaultVariant
-                            && PackageUtils::getConfig()->getValue('products', 'resetFieldsAction')) {
+                    if (
+                        $Field->getType() === Fields::TYPE_ATTRIBUTE_LIST
+                        || $Field->getType() === Fields::TYPE_ATTRIBUTE_GROUPS
+                    ) {
+                        if (
+                            $ignoreDefaultVariant
+                            && PackageUtils::getConfig()->getValue('products', 'resetFieldsAction')
+                        ) {
                             $Field->clearDefaultValue();
                         }
 
@@ -93,15 +98,15 @@ QUI::$Ajax->registerFunction(
             if (!$ExceptionStack->isEmpty()) {
                 $list = $ExceptionStack->getExceptionList();
 
-                throw new $list[0];
+                throw new $list[0]();
             }
 
             try {
                 /* @var $Product QUI\ERP\Products\Product\Types\VariantParent */
                 $fieldHash = QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($attributeGroups);
-                $Child     = $Product->getVariantByVariantHash($fieldHash);
+                $Child = $Product->getVariantByVariantHash($fieldHash);
             } catch (QUI\Exception $Exception) {
-                $Child           = $Product;
+                $Child = $Product;
                 $isVariantParent = true;
             }
         } else {
@@ -113,7 +118,7 @@ QUI::$Ajax->registerFunction(
                 if (isset($variants[0])) {
                     $childId = $variants[0]->getId();
                 } else {
-                    $childId         = $Product->getId();
+                    $childId = $Product->getId();
                     $isVariantParent = true;
                 }
             }
@@ -142,7 +147,7 @@ QUI::$Ajax->registerFunction(
 
         // render
         $Control = new ProductControl([
-            'Product'              => $Child,
+            'Product' => $Child,
             'ignoreDefaultVariant' => $ignoreDefaultVariant
         ]);
 
@@ -155,13 +160,13 @@ QUI::$Ajax->registerFunction(
         }
 
         $result = [
-            'variantId'       => $Child->getId(),
-            'control'         => QUI\Output::getInstance()->parse($Control->create()),
-            'css'             => QUI\Control\Manager::getCSS(),
-            'url'             => $url,
-            'title'           => $Child->getTitle(),
-            'category'        => $categoryId,
-            'fieldHashes'     => ProductUtils::getJsFieldHashArray($Product),
+            'variantId' => $Child->getId(),
+            'control' => QUI\Output::getInstance()->parse($Control->create()),
+            'css' => QUI\Control\Manager::getCSS(),
+            'url' => $url,
+            'title' => $Child->getTitle(),
+            'category' => $categoryId,
+            'fieldHashes' => ProductUtils::getJsFieldHashArray($Product),
             'availableHashes' => array_flip($Product->availableActiveFieldHashes()),
             'isVariantParent' => $isVariantParent
         ];

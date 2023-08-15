@@ -97,8 +97,8 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
 
         // Default options
         $options = [
-            'default'         => false,
-            'quantityInput'   => true,
+            'default' => false,
+            'quantityInput' => true,
             'defaultQuantity' => false
         ];
 
@@ -108,7 +108,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
             }
         }
 
-        $entries   = $this->options['entries'];
+        $entries = $this->options['entries'];
         $entries[] = $value;
 
         $this->options['entries'] = $entries;
@@ -124,6 +124,59 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
         }
 
         return $this->getDefaultValue();
+    }
+
+    /**
+     * Return the default value
+     *
+     * @return mixed|null
+     */
+    public function getDefaultValue()
+    {
+        $defaultValue = null;
+        $options = $this->getOptions();
+        $entries = $options['entries'];
+
+        foreach ($entries as $id => $entry) {
+            if ($entry['default']) {
+                if (!empty($entry['quantityInput'])) {
+                    if (!empty($entry['defaultQuantity'])) {
+                        return [
+                            'id' => $id,
+                            'quantity' => $entry['defaultQuantity']
+                        ];
+                    }
+                } else {
+                    return [
+                        'id' => $id,
+                        'quantity' => null
+                    ];
+                }
+            }
+        }
+
+//        if (isset($entries['piece']) && !empty($entries['piece']['defaultQuantity'])) {
+//            return [
+//                'id'       => 'piece',
+//                'quantity' => $entries['piece']['defaultQuantity']
+//            ];
+//        }
+//
+//        if (!empty($entries)) {
+//            \reset($entries);
+//
+//            $id    = \key($entries);
+//            $entry = $entries[$id];
+//
+//            if (!empty($entry['defaultQuantity'])) {
+//                return [
+//                    'id'       => $id,
+//                    'quantity' => $entry['defaultQuantity']
+//                ];
+//            }
+//        }
+
+        return null;
     }
 
     /**
@@ -189,9 +242,9 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
             'quiqqer/products',
             'exception.field.invalid',
             [
-                'fieldId'    => $this->getId(),
+                'fieldId' => $this->getId(),
                 'fieldTitle' => $this->getTitle(),
-                'fieldType'  => $this->getType()
+                'fieldType' => $this->getType()
             ]
         ];
 
@@ -221,8 +274,8 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
     public function cleanup($value)
     {
         $defaultValue = $this->getDefaultValue();
-        $options      = $this->getOptions();
-        $entries      = $options['entries'];
+        $options = $this->getOptions();
+        $entries = $options['entries'];
 
         if (empty($value)) {
             return $defaultValue;
@@ -240,8 +293,10 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
             }
         }
 
-        if (!\array_key_exists('id', $value) ||
-            !\array_key_exists('quantity', $value)) {
+        if (
+            !\array_key_exists('id', $value) ||
+            !\array_key_exists('quantity', $value)
+        ) {
             return $defaultValue;
         }
 
@@ -285,7 +340,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
 
         $options = $this->getOptions();
         $entries = $options['entries'];
-        $lang    = $Locale->getCurrent();
+        $lang = $Locale->getCurrent();
 
         if (empty($value['id']) || empty($entries[$value['id']])) {
             return '-';
@@ -296,58 +351,5 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
         }
 
         return $entries[$value['id']]['title'][$lang];
-    }
-
-    /**
-     * Return the default value
-     *
-     * @return mixed|null
-     */
-    public function getDefaultValue()
-    {
-        $defaultValue = null;
-        $options      = $this->getOptions();
-        $entries      = $options['entries'];
-
-        foreach ($entries as $id => $entry) {
-            if ($entry['default']) {
-                if (!empty($entry['quantityInput'])) {
-                    if (!empty($entry['defaultQuantity'])) {
-                        return [
-                            'id'       => $id,
-                            'quantity' => $entry['defaultQuantity']
-                        ];
-                    }
-                } else {
-                    return [
-                        'id'       => $id,
-                        'quantity' => null
-                    ];
-                }
-            }
-        }
-
-//        if (isset($entries['piece']) && !empty($entries['piece']['defaultQuantity'])) {
-//            return [
-//                'id'       => 'piece',
-//                'quantity' => $entries['piece']['defaultQuantity']
-//            ];
-//        }
-//
-//        if (!empty($entries)) {
-//            \reset($entries);
-//
-//            $id    = \key($entries);
-//            $entry = $entries[$id];
-//
-//            if (!empty($entry['defaultQuantity'])) {
-//                return [
-//                    'id'       => $id,
-//                    'quantity' => $entry['defaultQuantity']
-//                ];
-//            }
-//        }
-
-        return null;
     }
 }

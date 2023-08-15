@@ -30,13 +30,13 @@ class ImageFrontendView extends QUI\ERP\Products\Field\View
         $title = $this->getTitle();
         $title = \htmlspecialchars($title);
 
-        $link  = '';
+        $link = '';
         $value = $this->getValue();
 
         try {
             $Image = QUI\Projects\Media\Utils::getImageByUrl($value);
-            $url   = \htmlspecialchars($Image->getSizeCacheUrl());
-            $text  = \htmlspecialchars($Image->getAttribute('title'));
+            $url = \htmlspecialchars($Image->getSizeCacheUrl());
+            $text = \htmlspecialchars($Image->getAttribute('title'));
 
             $link = "<a href=\"{$url}\" 
                         target='\"_blank\"' 

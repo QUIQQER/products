@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_path',
     function ($categoryId) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $result     = [];
+        $result = [];
 
         $Category = $Categories->getCategory($categoryId);
         $result[] = $Category->getId();
@@ -26,7 +26,7 @@ QUI::$Ajax->registerFunction(
             /* @var $Parent \QUI\ERP\Products\Interfaces\CategoryInterface */
             try {
                 $result[] = $Parent->getId();
-                $Parent   = $Parent->getParent();
+                $Parent = $Parent->getParent();
             } catch (QUI\Exception $Exception) {
                 break;
             }

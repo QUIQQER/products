@@ -5,7 +5,6 @@
  */
 
 use QUI\ERP\Products\Handler\Fields;
-use QUI\ERP\Products\Handler\Products;
 
 /**
  * Set the product field array to all products

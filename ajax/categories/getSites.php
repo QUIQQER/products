@@ -13,16 +13,16 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_getSites',
     function ($categoryId) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $Category   = $Categories->getCategory($categoryId);
-        $sites      = $Category->getSites();
-        $result     = [];
+        $Category = $Categories->getCategory($categoryId);
+        $sites = $Category->getSites();
+        $result = [];
 
         /* @var $Site \QUI\Projects\Site */
         foreach ($sites as $Site) {
             $result[] = [
                 'project' => $Site->getProject()->getName(),
-                'lang'    => $Site->getProject()->getLang(),
-                'id'      => $Site->getId()
+                'lang' => $Site->getProject()->getLang(),
+                'id' => $Site->getId()
             ];
         }
 

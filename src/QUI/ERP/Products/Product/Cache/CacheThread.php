@@ -21,7 +21,7 @@ class CacheThread extends \Threaded
      */
     public function __construct($productId, $controlCache = false)
     {
-        $this->productId    = $productId;
+        $this->productId = $productId;
         $this->controlCache = $controlCache;
     }
 

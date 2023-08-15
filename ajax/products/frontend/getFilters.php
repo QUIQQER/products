@@ -15,16 +15,16 @@ QUI::$Ajax->registerFunction(
     function ($project, $siteId) {
         try {
             $Project = QUI::getProjectManager()->decode($project);
-            $Site    = $Project->get($siteId);
+            $Site = $Project->get($siteId);
 
             $Site->load();
 
             $ProductList = new QUI\ERP\Products\Controls\Category\ProductList([
-                'Site'                 => $Site,
-                'categoryId'           => $Site->getAttribute('quiqqer.products.settings.categoryId'),
+                'Site' => $Site,
+                'categoryId' => $Site->getAttribute('quiqqer.products.settings.categoryId'),
                 'hideEmptyProductList' => true,
-                'categoryStartNumber'  => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
-                'categoryView'         => $Site->getAttribute('quiqqer.products.settings.categoryDisplay')
+                'categoryStartNumber' => $Site->getAttribute('quiqqer.products.settings.categoryStartNumber'),
+                'categoryView' => $Site->getAttribute('quiqqer.products.settings.categoryDisplay')
             ]);
 
             // category menu
@@ -32,7 +32,8 @@ QUI::$Ajax->registerFunction(
                 $Parent = true;
 
                 while ($Parent) {
-                    if ($Site->getParent()
+                    if (
+                        $Site->getParent()
                         && $Site->getParent()->getAttribute('type') != 'quiqqer/products:types/category'
                     ) {
                         return $Site;
@@ -52,16 +53,16 @@ QUI::$Ajax->registerFunction(
             $Parent = $searchParentCategorySite();
 
             $CategoryMenu = new QUI\ERP\Products\Controls\Category\Menu([
-                'Site'              => $Parent,
+                'Site' => $Parent,
                 'disableCheckboxes' => false,
-                'breadcrumb'        => true
+                'breadcrumb' => true
             ]);
 
             $Output = new QUI\Output();
 
             if ($CategoryMenu->hasCategoryCheckBox($Site)) {
                 $result .= '<header>';
-                $result .= '<h2>'.QUI::getLocale()->get('quiqqer/products', 'type.category.categoryTitle').'</h2>';
+                $result .= '<h2>' . QUI::getLocale()->get('quiqqer/products', 'type.category.categoryTitle') . '</h2>';
                 $result .= '</header>';
                 $result .= $CategoryMenu->create();
             }
@@ -70,11 +71,11 @@ QUI::$Ajax->registerFunction(
                 $placeholder = QUI::getLocale()->get("quiqqer/products", "control.search.placeholder");
 
                 $result .= '<header>';
-                $result .= '<h2>'.QUI::getLocale()->get('quiqqer/products', 'type.category.freetextTitle').'</h2>';
+                $result .= '<h2>' . QUI::getLocale()->get('quiqqer/products', 'type.category.freetextTitle') . '</h2>';
                 $result .= '</header>';
                 $result .= '<label class="quiqqer-products-category-freetextSearch">';
                 $result .= '<input type="search" name="search"';
-                $result .= '    placeholder="'.$placeholder.'" />';
+                $result .= '    placeholder="' . $placeholder . '" />';
                 $result .= '</label>';
             }
 

@@ -50,7 +50,7 @@ class AssignProductsToParentCategories extends QUI\System\Console\Tool
         $SystemUser = QUI::getUsers()->getSystemUser();
 
         foreach ($productIds as $productId) {
-            $this->writeLn("Assigning categories to product #".$productId."...");
+            $this->writeLn("Assigning categories to product #" . $productId . "...");
 
             try {
                 $Product = Products::getProduct($productId);
@@ -58,7 +58,7 @@ class AssignProductsToParentCategories extends QUI\System\Console\Tool
 
                 $Product->save($SystemUser);
             } catch (\Exception $Exception) {
-                $this->write(" ERROR! -> ".$Exception->getMessage());
+                $this->write(" ERROR! -> " . $Exception->getMessage());
 
                 QUI\System\Log::writeException($Exception);
                 continue;

@@ -43,10 +43,10 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     public function getAttributes()
     {
         $attributes = [
-            'id'          => $this->getId(),
-            'title'       => $this->getTitle(),
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
             'description' => $this->getDescription(),
-            'image'       => false
+            'image' => false
         ];
 
         try {
@@ -58,7 +58,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
         /* @var $Price QUI\ERP\Money\Price */
         $Price = $this->getPrice();
 
-        $attributes['price_netto']    = $Price->value();
+        $attributes['price_netto'] = $Price->value();
         $attributes['price_currency'] = $Price->getCurrency()->getCode();
 
         if ($this->getCategory()) {
@@ -66,7 +66,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
         }
 
         // fields
-        $fields    = [];
+        $fields = [];
         $fieldList = $this->getFields();
 
         /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
@@ -83,7 +83,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
 
         // categories
         $categories = [];
-        $catList    = $this->getCategories();
+        $catList = $this->getCategories();
 
         /* @var $Category QUI\ERP\Products\Category\Category */
         foreach ($catList as $Category) {

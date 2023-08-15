@@ -15,9 +15,9 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_search',
     function ($fields, $params) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
-        $result     = [];
+        $result = [];
 
-        $query  = [];
+        $query = [];
         $params = \json_decode($params, true);
         $fields = \json_decode($fields, true);
 
@@ -44,18 +44,18 @@ QUI::$Ajax->registerFunction(
             }
 
             $query['where_or'][$field] = [
-                'type'  => '%LIKE%',
+                'type' => '%LIKE%',
                 'value' => $value
             ];
 
             if ($field === 'fields') {
                 $query['where_or']['title_cache'] = [
-                    'type'  => '%LIKE%',
+                    'type' => '%LIKE%',
                     'value' => $value
                 ];
 
                 $query['where_or']['description_cache'] = [
-                    'type'  => '%LIKE%',
+                    'type' => '%LIKE%',
                     'value' => $value
                 ];
 
@@ -68,7 +68,7 @@ QUI::$Ajax->registerFunction(
 
         /* @var $Category \QUI\ERP\Products\Category\Category */
         foreach ($data as $Category) {
-            $entry          = $Category->getAttributes();
+            $entry = $Category->getAttributes();
             $entry['title'] = $Category->getTitle();
 
             $result[] = $entry;
@@ -82,7 +82,7 @@ QUI::$Ajax->registerFunction(
         $AllProducts = new \QUI\ERP\Products\Category\AllProducts();
 
         if (!empty($searchString) && \stripos($AllProducts->getTitle(), $searchString) !== false) {
-            $allProducts          = $AllProducts->getAttributes();
+            $allProducts = $AllProducts->getAttributes();
             $allProducts['title'] = $AllProducts->getTitle();
 
             \array_unshift($result, $allProducts);

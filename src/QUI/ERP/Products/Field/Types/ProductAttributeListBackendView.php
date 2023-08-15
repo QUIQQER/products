@@ -49,11 +49,11 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
 
         $current = QUI::getLocale()->getCurrent();
 
-        $id      = $this->getId();
-        $value   = $this->getValue();
+        $id = $this->getId();
+        $value = $this->getValue();
         $options = $this->getOptions();
 
-        $name    = 'field-' . $id;
+        $name = 'field-' . $id;
         $entries = [];
 
         if (isset($options['entries'])) {
@@ -75,11 +75,11 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
         }
 
         $Engine->assign([
-            'this'          => $this,
-            'id'            => $id,
-            'title'         => $this->getTitle(),
-            'name'          => $name,
-            'value'         => $value,
+            'this' => $this,
+            'id' => $id,
+            'title' => $this->getTitle(),
+            'name' => $name,
+            'value' => $value,
             'requiredField' => $this->isRequired() ? ' required="required"' : ''
         ]);
 
@@ -90,7 +90,7 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
 
         if (!empty($entries[$value])) {
             $option = $entries[$value];
-            $title  = $option['title'];
+            $title = $option['title'];
 
 
             if (is_string($title)) {
@@ -114,20 +114,21 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
             $displayDiscounts = false;
         }
 
-        $Currency  = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
         $currentLC = strtolower($current) . '_' . strtoupper($current);
-        $Calc      = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
-        $options   = [];
+        $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
+        $options = [];
 
         foreach ($entries as $key => $option) {
             $title = $option['title'];
 
-            $text      = '';
-            $selected  = '';
-            $disabled  = '';
+            $text = '';
+            $selected = '';
+            $disabled = '';
             $userInput = '';
 
-            if (isset($option['selected']) && $option['selected']
+            if (
+                isset($option['selected']) && $option['selected']
                 || (int)$value === $key && $value !== ''
             ) {
                 $selected = 'selected="selected" ';
@@ -175,9 +176,9 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
             $options[] = [
                 'selected' => $selected,
                 'disabled' => $disabled,
-                'value'    => htmlspecialchars($key),
-                'text'     => htmlspecialchars($text),
-                'data'     => $userInput
+                'value' => htmlspecialchars($key),
+                'text' => htmlspecialchars($text),
+                'data' => $userInput
             ];
         }
 
