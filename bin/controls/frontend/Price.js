@@ -25,7 +25,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/frontend/Price',
+        Type: 'package/quiqqer/products/bin/controls/frontend/Price',
 
         Binds: [
             'refresh',
@@ -34,7 +34,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
         ],
 
         options: {
-            price   : 0, // float
+            price: 0, // float
             currency: false
         },
 
@@ -46,9 +46,9 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
             this.$Prefix = null;
 
             this.addEvents({
-                onImport : this.$onImport,
+                onImport: this.$onImport,
                 onReplace: this.$onImport,
-                onInject : this.$onInject
+                onInject: this.$onInject
             });
         },
 
@@ -57,9 +57,9 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          */
         create: function () {
             this.$Elm = new Element('span', {
-                'data-qui'  : 'package/quiqqer/products/bin/controls/frontend/Price',
+                'data-qui': 'package/quiqqer/products/bin/controls/frontend/Price',
                 'data-quiid': this.getId(),
-                'class'     : 'quiqqer-price'
+                'class': 'quiqqer-price'
             });
 
             this.$Price = this.$Elm;
@@ -123,7 +123,17 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
             this.$Vat = Elm.getElement('.qui-products-price-display-vat');
             this.$Prefix = Elm.getElement('.qui-products-price-display-prefix');
 
-            this.setPrice(Elm.get('data-qui-options-price'));
+            Currency.getCurrency().then((currency) => {
+                if (this.getAttribute('currency') !== currency) {
+                    this.setAttribute('price', Elm.get('data-qui-options-price'));
+                    this.setAttribute('currency', currency);
+                    this.refresh();
+                    return;
+                }
+
+                this.setPrice(Elm.get('data-qui-options-price'));
+            });
+
         },
 
         /**
