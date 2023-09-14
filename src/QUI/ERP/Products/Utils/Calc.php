@@ -669,6 +669,8 @@ class Calc
 
                     case ErpCalc::CALCULATION_COMPLETE:
                         $nettoPrice = $PriceFactor->getValue();
+                        $nettoPriceNotRounded = $PriceFactor->getValue();
+
                         $priceFactorSum = 0;
                         $factors[] = $PriceFactor->toArray();
                         break;
