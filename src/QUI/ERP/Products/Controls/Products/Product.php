@@ -28,11 +28,11 @@ class Product extends QUI\Control
     public function __construct($attributes = [])
     {
         $this->setAttributes([
-            'Product'  => false,
+            'Product' => false,
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/products/Product',
 
             'data-qui-option-show-price' => true,
-            'data-qui-option-available'  => true
+            'data-qui-option-available' => true
         ]);
 
         $this->addCSSClass('quiqqer-products-product');
@@ -51,20 +51,20 @@ class Product extends QUI\Control
     public function getBody()
     {
         /* @var $Product QUI\ERP\Products\Product\Product */
-        $Engine  = QUI::getTemplateManager()->getEngine();
+        $Engine = QUI::getTemplateManager()->getEngine();
         $Product = $this->getAttribute('Product');
         $Gallery = new QUI\Gallery\Controls\Slider();
-        $fields  = [];
-        $Calc    = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
+        $fields = [];
+        $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
         $typeVariantParent = \is_a($Product->getType(), QUI\ERP\Products\Product\Types\VariantParent::class, true);
-        $typeVariantChild  = \is_a($Product->getType(), QUI\ERP\Products\Product\Types\VariantChild::class, true);
+        $typeVariantChild = \is_a($Product->getType(), QUI\ERP\Products\Product\Types\VariantChild::class, true);
 
         if ($typeVariantParent) {
             /* @var $Product QUI\ERP\Products\Product\Types\VariantParent */
             $this->setAttributes([
                 'data-qui-option-show-price' => false,
-                'data-qui-option-available'  => false
+                'data-qui-option-available' => false
             ]);
 
             try {
@@ -82,10 +82,10 @@ class Product extends QUI\Control
 
                     $this->setAttributes([
                         'data-qui-option-show-price' => true,
-                        'data-qui-option-available'  => true
+                        'data-qui-option-available' => true
                     ]);
 
-                    $typeVariantChild  = true;
+                    $typeVariantChild = true;
                     $typeVariantParent = false;
                     break;
                 }
@@ -97,10 +97,10 @@ class Product extends QUI\Control
 
                         $this->setAttributes([
                             'data-qui-option-show-price' => true,
-                            'data-qui-option-available'  => true
+                            'data-qui-option-available' => true
                         ]);
 
-                        $typeVariantChild  = true;
+                        $typeVariantChild = true;
                         $typeVariantParent = false;
                     } catch (QUI\Exception $Exception) {
                         QUI\System\Log::addDebug($Exception);
@@ -112,7 +112,7 @@ class Product extends QUI\Control
         $User = QUI::getUserBySession();
 
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
-            $View   = $Product->getView();
+            $View = $Product->getView();
             $Unique = $Product->createUniqueProduct($User);
 
             if ($typeVariantParent) {
@@ -126,7 +126,7 @@ class Product extends QUI\Control
                 }
             }
         } else {
-            $View  = $Product;
+            $View = $Product;
             $Price = $Product->getPrice($User);
         }
 
@@ -204,10 +204,10 @@ class Product extends QUI\Control
 
         // pricedisplay
         $PriceDisplay = new QUI\ERP\Products\Controls\Price([
-            'Price'       => $Price,
+            'Price' => $Price,
             'withVatText' => true,
-            'Calc'        => $Calc,
-            'vatArray'    => $vatArray
+            'Calc' => $Calc,
+            'vatArray' => $vatArray
         ]);
 
         // retail price (UVP)
@@ -224,7 +224,7 @@ class Product extends QUI\Control
 
         if ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
             $PriceRetailDisplay = new QUI\ERP\Products\Controls\Price([
-                'Price'       => $PriceRetail,
+                'Price' => $PriceRetail,
                 'withVatText' => false
             ]);
         }
@@ -234,7 +234,7 @@ class Product extends QUI\Control
 
         if ($View->hasOfferPrice()) {
             $PriceOldDisplay = new QUI\ERP\Products\Controls\Price([
-                'Price'       => new QUI\ERP\Money\Price(
+                'Price' => new QUI\ERP\Money\Price(
                     $View->getOriginalPrice()->getValue(),
                     QUI\ERP\Currency\Handler::getDefaultCurrency()
                 ),
@@ -281,7 +281,7 @@ class Product extends QUI\Control
         }
 
         // product fields
-        $productFields    = [];
+        $productFields = [];
         $productFieldList = \array_filter($View->getFields(), function ($Field) {
             /* @var $Field QUI\ERP\Products\Field\View */
             if ($Field->getType() == Fields::TYPE_PRODCUCTS) {
@@ -305,7 +305,7 @@ class Product extends QUI\Control
             $Slider->addProducts($Field->getValue());
 
             $productFields[] = [
-                'Field'  => $Field,
+                'Field' => $Field,
                 'Slider' => $Slider
             ];
         }
@@ -319,10 +319,10 @@ class Product extends QUI\Control
 
         if (\count($Product->getFiles())) {
             $Files = new ProductFieldDetails([
-                'Field'   => $Product->getField(Fields::FIELD_FOLDER),
+                'Field' => $Product->getField(Fields::FIELD_FOLDER),
                 'Product' => $Product,
-                'files'   => true,
-                'images'  => false
+                'files' => true,
+                'images' => false
             ]);
         }
 
@@ -331,7 +331,7 @@ class Product extends QUI\Control
 
             QUI::getEvents()->addEvent(
                 'onQuiqqer::products::product::end',
-                function (\quiqqer\smarty4\src\QUI\Smarty\Collector $Collector) use ($Product) {
+                function (\Quiqqer\Engine\Collector $Collector) use ($Product) {
                     $fieldHashes = ProductUtils::getJsFieldHashArray($Product);
                     $fieldHashes = \json_encode($fieldHashes);
 
@@ -346,24 +346,24 @@ class Product extends QUI\Control
         }
 
         $Engine->assign([
-            'jsonLd'                 => JsonLd::getJsonLd($Product),
-            'Product'                => $View,
-            'Gallery'                => $Gallery,
-            'Files'                  => $Files,
-            'fields'                 => FieldUtils::sortFields($fields),
-            'details'                => FieldUtils::sortFields($details),
-            'detailFields'           => FieldUtils::sortFields($detailFields),
-            'productAttributeList'   => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
-            'userInputFields'        => $View->getFieldsByType(Fields::TYPE_USER_INPUT),
+            'jsonLd' => JsonLd::getJsonLd($Product),
+            'Product' => $View,
+            'Gallery' => $Gallery,
+            'Files' => $Files,
+            'fields' => FieldUtils::sortFields($fields),
+            'details' => FieldUtils::sortFields($details),
+            'detailFields' => FieldUtils::sortFields($detailFields),
+            'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
+            'userInputFields' => $View->getFieldsByType(Fields::TYPE_USER_INPUT),
             'productAttributeGroups' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS),
-            'Price'                  => $Price,
-            'PriceDisplay'           => $PriceDisplay,
-            'PriceRetailDisplay'     => $PriceRetailDisplay,
-            'PriceRetail'            => $PriceRetail,
-            'PriceOldDisplay'        => $PriceOldDisplay,
-            'VisitedProducts'        => new VisitedProducts(),
-            'MediaUtils'             => new QUI\Projects\Media\Utils(),
-            'Site'                   => $this->getSite()
+            'Price' => $Price,
+            'PriceDisplay' => $PriceDisplay,
+            'PriceRetailDisplay' => $PriceRetailDisplay,
+            'PriceRetail' => $PriceRetail,
+            'PriceOldDisplay' => $PriceOldDisplay,
+            'VisitedProducts' => new VisitedProducts(),
+            'MediaUtils' => new QUI\Projects\Media\Utils(),
+            'Site' => $this->getSite()
         ]);
 
         // button list
@@ -412,9 +412,9 @@ class Product extends QUI\Control
     {
         $controlSettings = [];
 
-        $Conf                   = QUI\ERP\Products\Utils\Package::getConfig();
+        $Conf = QUI\ERP\Products\Utils\Package::getConfig();
         $linkVariantsWithImages = !empty($Conf->getValue('variants', 'linkVariantChildrenWithImages'));
-        $images                 = $this->getVariantImages($this->getAttribute('Product'));
+        $images = $this->getVariantImages($this->getAttribute('Product'));
 
         if (!empty($images) && $linkVariantsWithImages) {
             $imageAttributeGroupsData = [];
@@ -449,8 +449,8 @@ class Product extends QUI\Control
         $images = $Product->getImages();
 
         try {
-            $MainImage    = $Product->getImage();
-            $mainImageId  = $MainImage->getId();
+            $MainImage = $Product->getImage();
+            $mainImageId = $MainImage->getId();
             $hasMainImage = false;
 
             foreach ($images as $Image) {
