@@ -19,6 +19,7 @@ use QUI\Projects\Media\Utils as MediaUtils;
 use function floatval;
 use function get_class;
 use function is_a;
+use function is_array;
 use function is_numeric;
 use function md5;
 use function serialize;
@@ -539,9 +540,15 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             }
 
             try {
-                $value = $this->Currency->convert($value, $Currency);
-                $value = $Calc->round($value);
-                $value = $Currency->amount($value);
+                if (is_array($value) && !empty($value['price'])) {
+                    $value['price'] = $this->Currency->convert($value['price'], $Currency);
+                    $value['price'] = $Calc->round($value['price']);
+                    $value['price'] = $Currency->amount($value['price']);
+                } elseif (!is_array($value)) {
+                    $value = $this->Currency->convert($value, $Currency);
+                    $value = $Calc->round($value);
+                    $value = $Currency->amount($value);
+                }
 
                 $OriginalField = Fields::getField($Field->getId());
                 $OriginalField->setValue($value);
