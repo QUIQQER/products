@@ -11,9 +11,9 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
     'package/quiqqer/currency/bin/Currency',
     'Locale'
 
-], function (QUI, QUIControl, Currency, QUILocale) {
+], function(QUI, QUIControl, Currency, QUILocale) {
 
-    "use strict";
+    'use strict';
 
     let hidePrice = false;
 
@@ -38,7 +38,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
             currency: false
         },
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.$Price = null;
@@ -55,7 +55,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
         /**
          * Refresh the display
          */
-        create: function () {
+        create: function() {
             this.$Elm = new Element('span', {
                 'data-qui': 'package/quiqqer/products/bin/controls/frontend/Price',
                 'data-quiid': this.getId(),
@@ -70,7 +70,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
         /**
          * Refresh the display
          */
-        refresh: function () {
+        refresh: function() {
             if (hidePrice) {
                 return;
             }
@@ -86,19 +86,22 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
                 this.getAttribute('price'),
                 this.getElm().get('data-qui-options-currency'),
                 this.getAttribute('currency')
-            ).then(function (result) {
-                    this.$Price.set('html', result);
+            ).then((result) => {
+                if (typeOf(result) === 'object') {
+                    this.$Price.set('title', result.converted);
+                    this.$Price.set('html', result.convertedRound);
+                } else {
                     this.$Price.set('title', result);
-                }.bind(this),
-                function () {
+                    this.$Price.set('html', result);
                 }
-            );
+            }, function() {
+            });
         },
 
         /**
          * event : on import
          */
-        $onImport: function (self, Elm) {
+        $onImport: function(self, Elm) {
             if (hidePrice) {
                 return;
             }
@@ -139,7 +142,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
         /**
          * event : on inject
          */
-        $onInject: function () {
+        $onInject: function() {
             if (hidePrice) {
                 return;
             }
@@ -153,7 +156,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          * @param {Number} price
          * @param {String} [CurrencyCode]
          */
-        setPrice: function (price, CurrencyCode) {
+        setPrice: function(price, CurrencyCode) {
             if (hidePrice) {
                 return;
             }
@@ -174,7 +177,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          *
          * @param priceDisplay
          */
-        setPriceDisplay: function (priceDisplay) {
+        setPriceDisplay: function(priceDisplay) {
             this.$Price.set('html', priceDisplay);
             this.$Price.set('title', priceDisplay);
         },
@@ -184,7 +187,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          *
          * @param {String} CurrencyCode
          */
-        setCurrency: function (CurrencyCode) {
+        setCurrency: function(CurrencyCode) {
             if (hidePrice) {
                 return;
             }
@@ -198,7 +201,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          *
          * @return bool
          */
-        isMinimalPrice: function () {
+        isMinimalPrice: function() {
             return this.$isMinimalPrice;
         },
 
@@ -207,7 +210,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          * -> price from
          * -> ab
          */
-        enableMinimalPrice: function () {
+        enableMinimalPrice: function() {
             this.$isMinimalPrice = true;
 
             if (this.$Prefix) {
@@ -220,7 +223,7 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
          * -> price from
          * -> ab
          */
-        disableMinimalPrice: function () {
+        disableMinimalPrice: function() {
             this.isMinimalPrice = false;
 
             if (this.$Prefix) {
