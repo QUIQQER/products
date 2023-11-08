@@ -331,7 +331,7 @@ class Product extends QUI\Control
 
             QUI::getEvents()->addEvent(
                 'onQuiqqer::products::product::end',
-                function (\Quiqqer\Engine\Collector $Collector) use ($Product) {
+                function (\quiqqer\smarty4\src\Quiqqer\Engine\Collector $Collector) use ($Product) {
                     $fieldHashes = ProductUtils::getJsFieldHashArray($Product);
                     $fieldHashes = \json_encode($fieldHashes);
 

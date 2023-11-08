@@ -8,6 +8,13 @@ namespace QUI\ERP\Products\Controls;
 
 use QUI;
 
+use function dirname;
+use function explode;
+use function is_array;
+use function round;
+use function strlen;
+use function strval;
+
 /**
  * Price display
  *
@@ -23,10 +30,10 @@ class Price extends QUI\Control
     public function __construct($attributes = [])
     {
         $this->setAttributes([
-            'data-qui'    => 'package/quiqqer/products/bin/controls/frontend/Price',
-            'Price'       => null,
+            'data-qui' => 'package/quiqqer/products/bin/controls/frontend/Price',
+            'Price' => null,
             'withVatText' => true,
-            'Calc'        => false
+            'Calc' => false
         ]);
 
         $this->addCSSClass('qui-products-price-display');
@@ -40,7 +47,7 @@ class Price extends QUI\Control
      * @throws QUI\Exception
      * @see \QUI\Control::create()
      */
-    public function getBody()
+    public function getBody(): string
     {
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
@@ -53,7 +60,7 @@ class Price extends QUI\Control
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             $this->setAttributes([
                 'data-qui' => '',
-                'Price'    => null
+                'Price' => null
             ]);
 
             return '';
@@ -66,6 +73,11 @@ class Price extends QUI\Control
             return '';
         }
 
+        if (!$Price->value()) {
+            return '';
+        }
+
+
         $this->setAttribute('data-qui-options-price', $Price->value());
         $this->setAttribute('data-qui-options-currency', $Price->getCurrency()->getCode());
 
@@ -74,7 +86,7 @@ class Price extends QUI\Control
         if ($this->getAttribute('withVatText')) {
             $vatArray = $this->getAttribute('vatArray');
 
-            if ($vatArray && \is_array($vatArray) && isset($vatArray['text'])) {
+            if ($vatArray && is_array($vatArray) && isset($vatArray['text'])) {
                 $vatText = $vatArray['text'];
             } else {
                 $Calc = $this->getAttribute('Calc');
@@ -93,13 +105,26 @@ class Price extends QUI\Control
             $pricePrefix = QUI::getLocale()->get('quiqqer/erp', 'price.starting.from');
         }
 
+        // price display
+        $numberAsString = strval($Price->getValue());
+        $exploded = explode('.', $numberAsString);
+        $numberOfDecimalPlaces = isset($exploded[1]) ? strlen($exploded[1]) : 0;
+        $displayPrice = $Price->getDisplayPrice();
+
+        if ($numberOfDecimalPlaces > 4) {
+            $priceRounded = round($Price->getValue(), 4);
+            $PriceDisplay = new QUI\ERP\Money\Price($priceRounded, $Price->getCurrency());
+            $displayPrice .= '~' . $PriceDisplay->getDisplayPrice();
+        }
+
         $Engine->assign([
-            'this'        => $this,
+            'this' => $this,
             'pricePrefix' => $pricePrefix,
-            'Price'       => $Price,
-            'vatText'     => $vatText
+            'Price' => $Price,
+            'displayPrice' => $displayPrice,
+            'vatText' => $vatText
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/Price.html');
+        return $Engine->fetch(dirname(__FILE__) . '/Price.html');
     }
 }
