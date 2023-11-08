@@ -9,12 +9,12 @@
 {template_event name="quiqqer::products::price::beforPrice"}
 
 <span class="qui-products-price-display-value">
-    {$Price->getDisplayPrice()}
+    {$displayPrice}
 </span>
 
 {template_event name="quiqqer::products::price::afterPrice"}
 
-<br />
+<br/>
 
 {if $vatText}
 <span class="qui-products-price-display-vat">
