@@ -14,6 +14,7 @@ use QUI\ERP\Products\Utils\Fields as FieldUtils;
 
 use function array_map;
 use function get_class;
+use function is_null;
 use function is_string;
 use function json_decode;
 
@@ -72,6 +73,12 @@ class Products
 
         $PriceField = $Product->getField(FieldHandler::FIELD_PRICE);
         $priceValue = $PriceField->getValue();
+
+        // $priceValue may be NULL or empty string; in these cases, consider the default price field value as not set.
+        if (empty($priceValue) && $priceValue != 0) {
+            $priceValue = null;
+        }
+
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
 
         // exists more price fields?
@@ -100,7 +107,7 @@ class Products
                 return false;
             }
 
-            if (!isset($options['groups'])) {
+            if (empty($options['groups'])) {
                 return true;
             }
 
@@ -140,7 +147,7 @@ class Products
                 continue;
             }
 
-            if ($value < $priceValue) {
+            if (is_null($priceValue) || $value < $priceValue) {
                 $priceValue = $value;
             }
         }
