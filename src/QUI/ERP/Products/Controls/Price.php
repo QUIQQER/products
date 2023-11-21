@@ -114,7 +114,7 @@ class Price extends QUI\Control
         if ($numberOfDecimalPlaces > 4) {
             $priceRounded = round($Price->getValue(), 4);
             $PriceDisplay = new QUI\ERP\Money\Price($priceRounded, $Price->getCurrency());
-            $displayPrice .= '~' . $PriceDisplay->getDisplayPrice();
+            $displayPrice = '~' . $PriceDisplay->getDisplayPrice();
         }
 
         $Engine->assign([
