@@ -127,6 +127,10 @@ define('package/quiqqer/products/bin/controls/frontend/Price', [
             this.$Prefix = Elm.getElement('.qui-products-price-display-prefix');
 
             Currency.getCurrency().then((currency) => {
+                if (typeof currency === 'object' && typeof currency.code !== 'undefined') {
+                    currency = currency.code;
+                }
+
                 if (this.getAttribute('currency') !== currency) {
                     this.setAttribute('price', Elm.get('data-qui-options-price'));
                     this.setAttribute('currency', currency);
