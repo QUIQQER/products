@@ -302,6 +302,30 @@
                 <![CDATA[The short description of variants is extended by a list of attribute list values that define this variant.]]></en>
         </locale>
 
+
+        <locale name="settings.window.products.onlyProductImageAtJsonLd.text">
+            <de><![CDATA[Einzelproduktbild in den strukturierte Daten]]></de>
+            <en><![CDATA[Single product image in the structured data]]></en>
+        </locale>
+        <locale name="settings.window.products.onlyProductImageAtJsonLd.description">
+            <de><![CDATA[
+            Diese Einstellung ermöglicht die ausschließliche Anzeige des Hauptproduktbildes in den JSON-LD-Daten Ihres Online-Shops.
+            Durch die Aktivierung dieser Funktion wird sichergestellt, dass Suchmaschinen lediglich das Hauptbild des Produkts erfassen und anzeigen.
+            Dies ist besonders nützlich, um die Sichtbarkeit des ausgewählten Hauptbildes in den Suchergebnissen
+            zu optimieren und gleichzeitig die Übermittlung zusätzlicher Produktbilder an Suchmaschinen zu verhindern.
+            Dadurch wird die Effizienz der Produktdarstellung in den Suchmaschinenergebnissen verbessert,
+            ohne die Vielfalt der verfügbaren Produktbilder auf Ihrer Website zu beeinträchtigen.
+            ]]></de>
+            <en><![CDATA[
+            This setting allows only the main product image to be displayed in the JSON-LD data of your online store.
+            Activating this feature ensures that search engines only capture and display the main product image.
+            This is particularly useful to optimize the visibility of the selected main image in the search results
+            while preventing the transmission of additional product images to search engines.
+            This improves the efficiency of product display in search engine results,
+            without compromising the variety of product images available on your website.
+            ]]></en>
+        </locale>
+
         <locale name="settings.window.sortFields.description">
             <de><![CDATA[Verfügbare Standardsortierungen]]></de>
             <en><![CDATA[Default available sortings]]></en>
