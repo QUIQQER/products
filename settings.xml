@@ -61,6 +61,10 @@
                 <conf name="priceFieldFactors">
                     <type><![CDATA[string]]></type>
                 </conf>
+                <conf name="onlyProductImageAtJsonLd">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
             </section>
             <section name="autoArticleNos">
                 <conf name="generate">
@@ -203,6 +207,17 @@
                                 />
                             </description>
                         </select>
+
+                        <input conf="products.onlyProductImageAtJsonLd" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.onlyProductImageAtJsonLd.text"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.products.onlyProductImageAtJsonLd.description"/>
+                            </description>
+                        </input>
                     </settings>
 
                     <settings title="autoArticleNos" name="autoArticleNos">
@@ -215,7 +230,8 @@
                                 <locale group="quiqqer/products" var="settings.window.autoArticleNos.generate"/>
                             </text>
                             <description>
-                                <locale group="quiqqer/products" var="settings.window.autoArticleNos.generate.description"/>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.autoArticleNos.generate.description"/>
                             </description>
                         </input>
 
@@ -224,7 +240,8 @@
                                 <locale group="quiqqer/products" var="settings.window.autoArticleNos.prefix"/>
                             </text>
                             <description>
-                                <locale group="quiqqer/products" var="settings.window.autoArticleNos.prefix.description"/>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.autoArticleNos.prefix.description"/>
                             </description>
                         </input>
 
@@ -233,7 +250,8 @@
                                 <locale group="quiqqer/products" var="settings.window.autoArticleNos.suffix"/>
                             </text>
                             <description>
-                                <locale group="quiqqer/products" var="settings.window.autoArticleNos.suffix.description"/>
+                                <locale group="quiqqer/products"
+                                        var="settings.window.autoArticleNos.suffix.description"/>
                             </description>
                         </input>
                     </settings>
