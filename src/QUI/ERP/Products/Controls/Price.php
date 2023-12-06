@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Controls;
 
 use QUI;
+use QUI\ERP\Currency\Handler;
 
 use function dirname;
 use function explode;
@@ -105,16 +106,19 @@ class Price extends QUI\Control
             $pricePrefix = QUI::getLocale()->get('quiqqer/erp', 'price.starting.from');
         }
 
-        // price display
-        $numberAsString = strval($Price->getValue());
-        $exploded = explode('.', $numberAsString);
-        $numberOfDecimalPlaces = isset($exploded[1]) ? strlen($exploded[1]) : 0;
         $displayPrice = $Price->getDisplayPrice();
 
-        if ($numberOfDecimalPlaces > 4) {
-            $priceRounded = round($Price->getValue(), 4);
-            $PriceDisplay = new QUI\ERP\Money\Price($priceRounded, $Price->getCurrency());
-            $displayPrice = '~' . $PriceDisplay->getDisplayPrice();
+        // price display
+        if ($Price->getCurrency()->getCurrencyType() !== Handler::CURRENCY_TYPE_DEFAULT) {
+            $numberAsString = strval($Price->getValue());
+            $exploded = explode('.', $numberAsString);
+            $numberOfDecimalPlaces = isset($exploded[1]) ? strlen($exploded[1]) : 0;
+
+            if ($numberOfDecimalPlaces > 4) {
+                $priceRounded = round($Price->getValue(), 4);
+                $PriceDisplay = new QUI\ERP\Money\Price($priceRounded, $Price->getCurrency());
+                $displayPrice = '~' . $PriceDisplay->getDisplayPrice();
+            }
         }
 
         $Engine->assign([
