@@ -16,6 +16,7 @@ use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Utils\PriceFactor;
 use QUI\Projects\Media\Utils as MediaUtils;
 
+use function array_merge;
 use function floatval;
 use function get_class;
 use function is_a;
@@ -180,6 +181,9 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     protected $Currency = null;
 
+    protected string $uuid;
+    protected ?string $productSetParentUuid = null;
+
     /**
      * UniqueProduct constructor.
      *
@@ -195,6 +199,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $this->id = $pid;
         $this->attributes = $attributes;
         $this->Currency = QUI\ERP\Defaults::getCurrency();
+
+        // UUID
+        if (empty($attributes['uuid'])) {
+            $this->uuid = QUI\Utils\Uuid::get();
+        } else {
+            $this->uuid = $attributes['uuid'];
+        }
 
         if (!isset($attributes['uid'])) {
             throw new QUI\ERP\Products\Product\Exception([
@@ -411,6 +422,34 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * Get the UUID of another UniqueProduct that acts as the parent of a "product set".
+     *
+     * @return string|null
+     */
+    public function getProductSetParentUuid(): ?string
+    {
+        return $this->productSetParentUuid;
+    }
+
+    /**
+     * Set the UUID of another UniqueProduct that acts as the parent of a "product set".
+     *
+     * @param string|null $productSetParentUuid
+     */
+    public function setProductSetParentUuid(?string $productSetParentUuid): void
+    {
+        $this->productSetParentUuid = $productSetParentUuid;
     }
 
     /**
@@ -1215,6 +1254,9 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $attributes['price_is_minimal'] = false;
         }
 
+        $attributes['uuid'] = $this->uuid;
+        $attributes['productSetParentUuid'] = $this->productSetParentUuid;
+
         return $attributes;
     }
 
@@ -1245,6 +1287,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $article = [
             'id' => $this->getId(),
+            'uuid' => $this->getUuid(),
+            'productSetParentUuid' => $this->getProductSetParentUuid(),
             'articleNo' => $this->getFieldValue(Fields::FIELD_PRODUCT_NO),
             'gtin' => $gtin,
             'title' => $this->getTitle($Locale),

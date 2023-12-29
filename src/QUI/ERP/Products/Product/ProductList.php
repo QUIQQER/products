@@ -432,6 +432,8 @@ class ProductList
 
         foreach ($this->products as $Product) {
             $attributes = $Product->getAttributes();
+            $attributes['uuid'] = $Product->getUuid();
+
             $fields = $Product->getFields();
 
             $attributes['fields'] = [];
