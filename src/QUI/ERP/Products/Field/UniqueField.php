@@ -8,6 +8,8 @@ namespace QUI\ERP\Products\Field;
 
 use QUI;
 
+use function is_string;
+
 /**
  * Class UniqueField
  * This field is a field for the view, unique fields are not editable
@@ -544,7 +546,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                     } else {
                         $value = $this->getValue();
 
-                        if (!empty($value)) {
+                        if (!empty($value) && is_string($value)) {
                             $valueText = $value;
                         }
                     }
