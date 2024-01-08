@@ -207,6 +207,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $this->uuid = $attributes['uuid'];
         }
 
+        // Parent set UUID
+        if (!empty($attributes['productSetParentUuid'])) {
+            $this->productSetParentUuid = $attributes['productSetParentUuid'];
+        }
+
         if (!isset($attributes['uid'])) {
             throw new QUI\ERP\Products\Product\Exception([
                 'quiqqer/products',
