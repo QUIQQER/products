@@ -554,7 +554,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                     } else {
                         $value = $this->getValue();
 
-                        if (!empty($value)) {
+                        if (!empty($value) && is_string($value)) {
                             $valueText = $value;
                         }
                     }
