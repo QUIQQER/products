@@ -8,7 +8,7 @@ namespace QUI\ERP\Products\Field;
 
 use QUI;
 
-use function is_string;
+use function class_exists;
 
 /**
  * Class UniqueField
@@ -218,6 +218,14 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
 
         if (isset($params['__class__']) && \class_exists($params['__class__'])) {
             $this->parentFieldClass = $params['__class__'];
+        }
+
+        if (empty($this->parentFieldClass) && isset($params['type'])) {
+            $class = 'QUI\ERP\Products\Field\Types\\' . $params['type'];
+
+            if (class_exists($class)) {
+                $this->parentFieldClass = $class;
+            }
         }
     }
 
