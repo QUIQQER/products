@@ -58,6 +58,11 @@ class EventHandling
         self::setDefaultProductFields();
         self::checkProductCacheTable();
 //        Crons::updateProductCache();
+
+        // Clear specific cache paths
+        QUI\Cache\LongTermCache::clear(
+            QUI\ERP\Products\Handler\Cache::getBasicCachePath() . 'price_field_types'
+        );
     }
 
     /**

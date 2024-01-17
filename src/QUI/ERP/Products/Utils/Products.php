@@ -1,9 +1,5 @@
 <?php
 
-/**
- * This file contains QUI\ERP\Products\Utils\Products
- */
-
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
@@ -11,8 +7,10 @@ use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Fields as FieldUtils;
+use QUI\ERP\Products\Field\UniqueField;
 
 use function array_map;
+use function array_merge;
 use function get_class;
 use function is_null;
 use function is_string;
@@ -83,17 +81,17 @@ class Products
 
         // exists more price fields?
         // is user in group filter
-        $priceList = \array_merge(
-            $Product->getFieldsByType(FieldHandler::TYPE_PRICE),
-            $Product->getFieldsByType(FieldHandler::TYPE_PRICE_BY_QUANTITY),
-            $Product->getFieldsByType(FieldHandler::TYPE_PRICE_BY_TIMEPERIOD)
-        );
+        $priceFields = [];
 
-        if (empty($priceList)) {
+        foreach (FieldHandler::getAllPriceFieldTypes() as $priceFieldType) {
+            $priceFields = array_merge($priceFields, $Product->getFieldsByType($priceFieldType));
+        }
+
+        if (empty($priceFields)) {
             return new QUI\ERP\Money\Price($PriceField->getValue(), $Currency);
         }
 
-        $priceFields = \array_filter($priceList, function ($Field) use ($User) {
+        $priceFieldsConsidered = \array_filter($priceFields, function ($Field) use ($User) {
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
 
             // ignore default main price
@@ -103,7 +101,7 @@ class Products
 
             $options = $Field->getOptions();
 
-            if (isset($options['ignoreForPriceCalculation']) && $options['ignoreForPriceCalculation'] == 1) {
+            if (!empty($options['ignoreForPriceCalculation'])) {
                 return false;
             }
 
@@ -128,19 +126,22 @@ class Products
 
         // use the lowest price?
         foreach ($priceFields as $Field) {
-            /* @var $Field QUI\ERP\Products\Field\UniqueField */
-            $type = 'QUI\\ERP\\Products\\Field\\Types\\' . $Field->getType();
+            $FieldClass = $Field;
 
-            if (\method_exists($type, 'onGetPriceFieldForProduct')) {
+            if ($Field instanceof UniqueField) {
+                $FieldClass = FieldHandler::getField($Field->getId());
+                $FieldClass->setValue($Field->getValue());
+            }
+
+            if (\method_exists($FieldClass, 'onGetPriceFieldForProduct')) {
                 try {
-                    $ParentField = FieldHandler::getField($Field->getId());
-                    $value = $ParentField->onGetPriceFieldForProduct($Product, $User);
+                    $value = $FieldClass->onGetPriceFieldForProduct($Product, $User);
                 } catch (QUI\Exception $Exception) {
                     QUI\System\Log::writeException($Exception);
                     continue;
                 }
             } else {
-                $value = $Field->getValue();
+                $value = $FieldClass->getValue();
             }
 
             if ($value === false || $value === '' || $value === null) {
