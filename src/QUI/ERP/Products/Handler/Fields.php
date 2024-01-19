@@ -7,8 +7,10 @@
 namespace QUI\ERP\Products\Handler;
 
 use QUI;
+use QUI\ERP\Products\Field\PriceFieldsProviderInterface;
 
 use function array_keys;
+use function array_merge;
 
 /**
  * Class Fields
@@ -1232,4 +1234,74 @@ class Fields
     }
 
     // endregion
+
+    /**
+     * Get all price field types.
+     *
+     * @return QUI\ERP\Products\Field\Types\Price[]
+     */
+    public static function getAllPriceFieldTypes(): array
+    {
+        return \array_merge(
+            [
+                self::TYPE_PRICE,
+                self::TYPE_PRICE_BY_QUANTITY,
+                self::TYPE_PRICE_BY_TIMEPERIOD
+            ],
+            self::getPriceFieldTypesByProviders()
+        );
+    }
+
+    /**
+     * Get all price field types provided by package providers
+     *
+     * @return QUI\ERP\Products\Field\Types\Price[]
+     */
+    public static function getPriceFieldTypesByProviders(): array
+    {
+        $cache = QUI\ERP\Products\Handler\Cache::getBasicCachePath() . 'price_field_types';
+
+        try {
+            return QUI\Cache\LongTermCache::get($cache);
+        } catch (QUI\Exception $Exception) {
+            QUI\System\Log::writeDebugException($Exception);
+        }
+
+        $packages = QUI::getPackageManager()->getInstalled();
+        $priceFieldTypes = [];
+
+        foreach ($packages as $package) {
+            try {
+                $Package = QUI::getPackage($package['name']);
+
+                if (!$Package->isQuiqqerPackage()) {
+                    continue;
+                }
+
+                $packageProvider = $Package->getProvider();
+
+                if (empty($packageProvider['productPriceFields'])) {
+                    continue;
+                }
+
+                foreach ($packageProvider['productPriceFields'] as $class) {
+                    if (!\class_exists($class)) {
+                        continue;
+                    }
+
+                    if (!\is_a($class, PriceFieldsProviderInterface::class, true)) {
+                        continue;
+                    }
+
+                    $priceFieldTypes = array_merge($priceFieldTypes, $class::getPriceFieldTypes());
+                }
+            } catch (QUI\Exception $Exception) {
+                QUI\System\Log::writeException($Exception);
+            }
+        }
+
+        QUI\Cache\LongTermCache::set($cache, $priceFieldTypes);
+
+        return $priceFieldTypes;
+    }
 }
