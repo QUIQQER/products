@@ -8,6 +8,8 @@ namespace QUI\ERP\Products\Field;
 
 use QUI;
 
+use function class_exists;
+
 /**
  * Class UniqueField
  * This field is a field for the view, unique fields are not editable
@@ -216,6 +218,14 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
 
         if (isset($params['__class__']) && \class_exists($params['__class__'])) {
             $this->parentFieldClass = $params['__class__'];
+        }
+
+        if (empty($this->parentFieldClass) && isset($params['type'])) {
+            $class = 'QUI\ERP\Products\Field\Types\\' . $params['type'];
+
+            if (class_exists($class)) {
+                $this->parentFieldClass = $class;
+            }
         }
     }
 
@@ -544,7 +554,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                     } else {
                         $value = $this->getValue();
 
-                        if (!empty($value)) {
+                        if (!empty($value) && is_string($value)) {
                             $valueText = $value;
                         }
                     }
