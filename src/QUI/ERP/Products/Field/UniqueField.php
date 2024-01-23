@@ -9,6 +9,7 @@ namespace QUI\ERP\Products\Field;
 use QUI;
 
 use function class_exists;
+use function is_string;
 
 /**
  * Class UniqueField
@@ -554,7 +555,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                     } else {
                         $value = $this->getValue();
 
-                        if (!empty($value)) {
+                        if (!empty($value) && is_string($value)) {
                             $valueText = $value;
                         }
                     }
