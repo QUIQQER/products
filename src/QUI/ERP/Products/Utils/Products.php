@@ -12,11 +12,22 @@ use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Fields as FieldUtils;
 
+use function array_filter;
+use function array_flip;
 use function array_map;
+use function array_merge;
+use function explode;
+use function fnmatch;
 use function get_class;
+use function implode;
 use function is_null;
+use function is_numeric;
 use function is_string;
 use function json_decode;
+use function method_exists;
+use function strlen;
+use function unpack;
+use function usort;
 
 /**
  * Class Products Helper
@@ -35,7 +46,7 @@ class Products
      * @param $mixed
      * @return bool
      */
-    public static function isProduct($mixed)
+    public static function isProduct($mixed): bool
     {
         if (get_class($mixed) == QUI\ERP\Products\Product\Model::class) {
             return true;
@@ -61,8 +72,10 @@ class Products
      *
      * @throws QUI\Exception
      */
-    public static function getPriceFieldForProduct($Product, $User = null)
-    {
+    public static function getPriceFieldForProduct(
+        QUI\ERP\Products\Interfaces\ProductInterface|QUI\ERP\Products\Product\Model $Product,
+        QUI\Interfaces\Users\User $User = null
+    ): QUI\ERP\Money\Price {
         if (!QUI::getUsers()->isUser($User)) {
             $User = QUI::getUsers()->getNobody();
         }
@@ -83,7 +96,7 @@ class Products
 
         // exists more price fields?
         // is user in group filter
-        $priceList = \array_merge(
+        $priceList = array_merge(
             $Product->getFieldsByType(FieldHandler::TYPE_PRICE),
             $Product->getFieldsByType(FieldHandler::TYPE_PRICE_BY_QUANTITY),
             $Product->getFieldsByType(FieldHandler::TYPE_PRICE_BY_TIMEPERIOD)
@@ -93,13 +106,13 @@ class Products
             return new QUI\ERP\Money\Price($PriceField->getValue(), $Currency);
         }
 
-        $priceFields = \array_filter($priceList, function ($Field) use ($User) {
+        $priceFields = array_filter($priceList, function ($Field) use ($User) {
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
 
             // ignore default main price
             if ($Field->getId() == FieldHandler::FIELD_PRICE) {
                 return false;
-            };
+            }
 
             $options = $Field->getOptions();
 
@@ -111,7 +124,7 @@ class Products
                 return true;
             }
 
-            $groups = \explode(',', $options['groups']);
+            $groups = explode(',', $options['groups']);
 
             if (empty($groups)) {
                 return true;
@@ -131,7 +144,7 @@ class Products
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
             $type = 'QUI\\ERP\\Products\\Field\\Types\\' . $Field->getType();
 
-            if (\method_exists($type, 'onGetPriceFieldForProduct')) {
+            if (method_exists($type, 'onGetPriceFieldForProduct')) {
                 try {
                     $ParentField = FieldHandler::getField($Field->getId());
                     $value = $ParentField->onGetPriceFieldForProduct($Product, $User);
@@ -162,7 +175,7 @@ class Products
      * @param null $Product
      * @return array
      */
-    public static function getEditableFieldIdsForProduct($Product = null)
+    public static function getEditableFieldIdsForProduct($Product = null): array
     {
         if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
             $Product = $Product->getParent();
@@ -205,7 +218,6 @@ class Products
 
         $fields = FieldHandler::getFields();
         $result = array_map(function ($Field) {
-            /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             return $Field->getId();
         }, $fields);
 
@@ -218,7 +230,7 @@ class Products
      * @param null $Product
      * @return array
      */
-    public static function getInheritedFieldIdsForProduct($Product = null)
+    public static function getInheritedFieldIdsForProduct($Product = null): array
     {
         if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
             $Product = $Product->getParent();
@@ -262,7 +274,6 @@ class Products
 
         $fields = FieldHandler::getFields();
         $result = array_map(function ($Field) {
-            /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             return $Field->getId();
         }, $fields);
 
@@ -276,7 +287,7 @@ class Products
      *                        or could be a field object list ['field-1':2, 'field-1':'value']
      * @return string
      */
-    public static function generateVariantHashFromFields($fields)
+    public static function generateVariantHashFromFields(array $fields): string
     {
         $hash = [];
 
@@ -285,30 +296,30 @@ class Products
             if ($fieldValue instanceof QUI\ERP\Products\Interfaces\FieldInterface) {
                 $fieldId = $fieldValue->getId();
                 $fieldValue = $fieldValue->getValue();
-            } elseif (is_string($Field) || \is_numeric($Field)) {
+            } elseif (is_string($Field) || is_numeric($Field)) {
                 $fieldId = $Field;
             } else {
                 continue;
             }
 
             // string to hex
-            if (!\is_numeric($fieldValue)) {
-                $fieldValue = \implode(\unpack("H*", $fieldValue));
+            if (!is_numeric($fieldValue)) {
+                $fieldValue = implode(unpack("H*", $fieldValue));
             }
 
             $hash[] = $fieldId . ':' . $fieldValue;
         }
 
         // sort fields
-        \usort($hash, function ($a, $b) {
-            $aId = (int)\explode(':', $a)[0];
-            $bId = (int)\explode(':', $b)[0];
+        usort($hash, function ($a, $b) {
+            $aId = (int)explode(':', $a)[0];
+            $bId = (int)explode(':', $b)[0];
 
             return $aId - $bId;
         });
 
         // generate hash
-        $generate = ';' . \implode(';', $hash) . ';';
+        $generate = ';' . implode(';', $hash) . ';';
 
         return $generate;
     }
@@ -316,7 +327,7 @@ class Products
     /**
      * @param QUI\ERP\Products\Product\Product $Product
      */
-    public static function setAvailableFieldOptions(QUI\ERP\Products\Product\Product $Product)
+    public static function setAvailableFieldOptions(QUI\ERP\Products\Product\Product $Product): void
     {
         if (
             !($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) &&
@@ -355,7 +366,7 @@ class Products
                 }
 
                 foreach ($searchHashes as $searchHash) {
-                    if (\fnmatch($searchHash, $hash)) {
+                    if (fnmatch($searchHash, $hash)) {
                         $availableEntries[$fieldId][$fieldValue] = true;
                         break;
                     }
@@ -379,14 +390,14 @@ class Products
             }
 
             $allowed = $available[$fieldId];
-            $allowed = \array_flip($allowed);
+            $allowed = array_flip($allowed);
 
             foreach ($entries as $key => $value) {
                 $valueId = $value['valueId'];
                 $hashedValueId = false;
 
-                if (!\is_numeric($valueId)) {
-                    $hashedValueId = \implode(\unpack("H*", $valueId));
+                if (!is_numeric($valueId)) {
+                    $hashedValueId = implode(unpack("H*", $valueId));
 
                     if (!isset($allowed[$valueId]) && !isset($allowed[$hashedValueId])) {
                         continue;
@@ -406,7 +417,6 @@ class Products
 
                 if ($hashedValueId && isset($availableEntries[$fieldId][$hashedValueId])) {
                     $Field->enableEntry($key);
-                    continue;
                 }
             }
         }
@@ -416,7 +426,7 @@ class Products
      * @param QUI\ERP\Products\Product\Product $Product
      * @return array
      */
-    public static function getJsFieldHashArray(QUI\ERP\Products\Product\Product $Product)
+    public static function getJsFieldHashArray(QUI\ERP\Products\Product\Product $Product): array
     {
         if (
             !($Product instanceof QUI\ERP\Products\Product\Types\VariantParent) &&
@@ -451,7 +461,7 @@ class Products
      * @param $Product
      * @return bool
      */
-    public static function isVariant($Product)
+    public static function isVariant($Product): bool
     {
         if ($Product instanceof QUI\ERP\Products\Product\ViewFrontend) {
             $Product = $Product->getProduct();
@@ -470,12 +480,15 @@ class Products
     /**
      * @param array $urlFieldValue
      * @param integer $categoryId
-     * @param integer|false $ignoreProductId - optional
+     * @param bool|integer $ignoreProductId - optional
      *
-     * @throws Exception
+     * @throws Exception|QUI\Exception
      */
-    public static function checkUrlByUrlFieldValue($urlFieldValue, $categoryId, $ignoreProductId = false)
-    {
+    public static function checkUrlByUrlFieldValue(
+        array $urlFieldValue,
+        int $categoryId,
+        bool|int $ignoreProductId = false
+    ): void {
         if (empty($urlFieldValue)) {
             return;
         }
@@ -494,12 +507,11 @@ class Products
 
             self::checkUrlLength($url, $lang, $categoryId);
 
-
             $binds[':lang' . $i] = $lang;
             $binds[':url' . $i] = $url;
             $binds[':category' . $i] = '%,' . $categoryId . ',%';
 
-            $where[] = "(F19 LIKE :url{$i} AND lang LIKE :lang{$i} AND category LIKE :category{$i})";
+            $where[] = "(F19 LIKE :url$i AND lang LIKE :lang$i AND category LIKE :category$i)";
             $i++;
         }
 
@@ -507,10 +519,10 @@ class Products
             return;
         }
 
-        $where = \implode(' OR ', $where);
+        $where = implode(' OR ', $where);
 
         $query = "
-            SELECT id, {$urlCacheField} 
+            SELECT id, $urlCacheField 
             FROM {$table}
             WHERE {$where}
         ";
@@ -519,7 +531,7 @@ class Products
         $Statement = $PDO->prepare($query);
 
         foreach ($binds as $bind => $value) {
-            $Statement->bindValue($bind, $value, \PDO::PARAM_STR);
+            $Statement->bindValue($bind, $value);
         }
 
         $Statement->execute();
@@ -550,14 +562,14 @@ class Products
      * @param string $lang
      * @param integer $categoryId
      *
-     * @throws Exception
+     * @throws Exception|QUI\Exception
      */
-    public static function checkUrlLength($url, $lang, $categoryId)
+    public static function checkUrlLength(string $url, string $lang, int $categoryId): void
     {
         try {
             $Category = Categories::getCategory($categoryId);
             $projects = QUI::getProjectManager()->getProjects(true);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return;
         }
 
@@ -569,7 +581,7 @@ class Products
 
             $categoryUrl = $Category->getUrl($Project);
 
-            if (!empty($categoryUrl) && \strlen($categoryUrl . '/' . $url) > 2000) {
+            if (!empty($categoryUrl) && strlen($categoryUrl . '/' . $url) > 2000) {
                 throw new Exception([
                     'quiqqer/products',
                     'exception.url.is.too.long'
