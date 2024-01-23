@@ -9,6 +9,7 @@ namespace QUI\ERP\Products\Field;
 use QUI;
 
 use function class_exists;
+use function is_string;
 
 /**
  * Class UniqueField
