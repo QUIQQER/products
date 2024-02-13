@@ -929,6 +929,10 @@ class Calc
      */
     public function getPrice($nettoPrice)
     {
+        if (empty($nettoPrice)) {
+            return 0;
+        }
+
         $isNetto = QUI\ERP\Utils\User::isNettoUser($this->getUser());
 
         if ($isNetto) {
