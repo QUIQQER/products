@@ -16,7 +16,6 @@ use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Utils\PriceFactor;
 use QUI\Projects\Media\Utils as MediaUtils;
 
-use function array_merge;
 use function floatval;
 use function get_class;
 use function is_a;
@@ -333,6 +332,22 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         }
 
         foreach ($fields as $field) {
+            // quiqqer/products#391
+            if (is_array($field) && isset($field['__class__']) && isset($field['id'])) {
+                $fieldClass = $field['__class__'];
+
+                if (is_subclass_of($fieldClass, QUI\ERP\Products\Field\Field::class)) {
+                    $Field = new $fieldClass($field['id'], $field);
+                    $FieldView = $Field->getView();
+
+                    if ($FieldView instanceof QUI\ERP\Products\Field\View) {
+                        $viewClass = get_class($FieldView);
+                        $this->fields[] = new $viewClass($field);
+                        continue;
+                    }
+                }
+            }
+
             if (!Fields::isField($field)) {
                 $this->fields[] = new UniqueField($field['id'], $field);
                 continue;

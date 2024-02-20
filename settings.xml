@@ -120,7 +120,7 @@
             </params>
 
             <categories>
-                <category name="products" index="2">
+                <category name="products">
                     <text>
                         <locale group="quiqqer/products" var="menu.erp.products.products.title"/>
                     </text>
@@ -449,7 +449,7 @@
                     </settings>
                 </category>
 
-                <category name="adminSearchFields" index="4">
+                <category name="adminSearchFields">
                     <text>
                         <locale group="quiqqer/products" var="menu.erp.products.fieldsearch.title"/>
                     </text>
