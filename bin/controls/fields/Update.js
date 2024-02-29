@@ -24,17 +24,18 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
     'text!package/quiqqer/products/bin/controls/fields/Create.html',
     'css!package/quiqqer/products/bin/controls/fields/Create.css'
 
-], function (QUI, QUIControl, QUIConfirm, QUIFormUtils, QUILocale, QUIAjax,
-             Mustache, InputMultiLang, Handler, FieldUtils, Translation, Products, template) {
-    "use strict";
+], function(QUI, QUIControl, QUIConfirm, QUIFormUtils, QUILocale, QUIAjax,
+    Mustache, InputMultiLang, Handler, FieldUtils, Translation, Products, template
+) {
+    'use strict';
 
-    var lg     = 'quiqqer/products',
+    var lg = 'quiqqer/products',
         Fields = new Handler();
 
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/Create',
+        Type: 'package/quiqqer/products/bin/controls/fields/Create',
 
         Binds: [
             '$onInject'
@@ -44,7 +45,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
             fieldId: false
         },
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.$Translation = null;
@@ -64,40 +65,40 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
          *
          * @return {HTMLDivElement}
          */
-        create: function () {
+        create: function() {
             var Elm = this.parent();
 
             Elm.set({
                 'class': 'field-create',
-                html   : Mustache.render(template, {
-                    contentText                  : '',
-                    tableHeader                  : QUILocale.get(lg, 'control.field.create.header'),
-                    fieldTitle                   : QUILocale.get('quiqqer/system', 'title'),
-                    fieldWorkingTitle            : QUILocale.get(lg, 'workingTitle'),
-                    fieldType                    : QUILocale.get(lg, 'fieldtype'),
-                    fieldOptions                 : QUILocale.get(lg, 'fieldoptions'),
-                    fieldPriority                : QUILocale.get(lg, 'priority'),
-                    fieldPrefix                  : QUILocale.get(lg, 'prefix'),
-                    fieldSuffix                  : QUILocale.get(lg, 'suffix'),
-                    fieldSearchtype              : QUILocale.get(lg, 'searchtype'),
-                    fieldRequired                : QUILocale.get(lg, 'requiredField'),
-                    fieldRequiredDesc            : QUILocale.get(lg, 'requiredFieldDesc'),
-                    fieldSystem                  : QUILocale.get(lg, 'systemField'),
-                    fieldSystemDesc              : QUILocale.get(lg, 'systemFieldDesc'),
-                    fieldStandard                : QUILocale.get(lg, 'standardField'),
-                    fieldStandardDesc            : QUILocale.get(lg, 'standardFieldDesc'),
-                    fieldPublic                  : QUILocale.get(lg, 'publicField'),
-                    fieldPublicDesc              : QUILocale.get(lg, 'publicFieldDesc'),
-                    fieldDefaultValue            : QUILocale.get(lg, 'fieldDefaultValue'),
-                    fieldShowInDetails           : QUILocale.get(lg, 'showInDetails'),
-                    fieldfieldShowInDetailsDesc  : QUILocale.get(lg, 'showInDetailsDesc'),
+                html: Mustache.render(template, {
+                    contentText: '',
+                    tableHeader: QUILocale.get(lg, 'control.field.create.header'),
+                    fieldTitle: QUILocale.get('quiqqer/system', 'title'),
+                    fieldWorkingTitle: QUILocale.get(lg, 'workingTitle'),
+                    fieldType: QUILocale.get(lg, 'fieldtype'),
+                    fieldOptions: QUILocale.get(lg, 'fieldoptions'),
+                    fieldPriority: QUILocale.get(lg, 'priority'),
+                    fieldPrefix: QUILocale.get(lg, 'prefix'),
+                    fieldSuffix: QUILocale.get(lg, 'suffix'),
+                    fieldSearchtype: QUILocale.get(lg, 'searchtype'),
+                    fieldRequired: QUILocale.get(lg, 'requiredField'),
+                    fieldRequiredDesc: QUILocale.get(lg, 'requiredFieldDesc'),
+                    fieldSystem: QUILocale.get(lg, 'systemField'),
+                    fieldSystemDesc: QUILocale.get(lg, 'systemFieldDesc'),
+                    fieldStandard: QUILocale.get(lg, 'standardField'),
+                    fieldStandardDesc: QUILocale.get(lg, 'standardFieldDesc'),
+                    fieldPublic: QUILocale.get(lg, 'publicField'),
+                    fieldPublicDesc: QUILocale.get(lg, 'publicFieldDesc'),
+                    fieldDefaultValue: QUILocale.get(lg, 'fieldDefaultValue'),
+                    fieldShowInDetails: QUILocale.get(lg, 'showInDetails'),
+                    fieldfieldShowInDetailsDesc: QUILocale.get(lg, 'showInDetailsDesc'),
                     fieldConsiderPriceCalculation: QUILocale.get(lg, 'fieldConsiderPriceCalculation'),
-                    fieldDescription             : QUILocale.get(lg, 'control.field.create.tpl.fieldDescription'),
-                    fieldDescriptionDesc         : QUILocale.get(lg, 'control.field.create.tpl.fieldDescriptionDesc'),
-                    fieldEditable                : QUILocale.get(lg, 'fieldEditable'),
-                    fieldEditableDesc            : QUILocale.get(lg, 'fieldEditableDesc'),
-                    fieldInherited               : QUILocale.get(lg, 'fieldInherited'),
-                    fieldInheritedDesc           : QUILocale.get(lg, 'fieldInheritedDesc'),
+                    fieldDescription: QUILocale.get(lg, 'control.field.create.tpl.fieldDescription'),
+                    fieldDescriptionDesc: QUILocale.get(lg, 'control.field.create.tpl.fieldDescriptionDesc'),
+                    fieldEditable: QUILocale.get(lg, 'fieldEditable'),
+                    fieldEditableDesc: QUILocale.get(lg, 'fieldEditableDesc'),
+                    fieldInherited: QUILocale.get(lg, 'fieldInherited'),
+                    fieldInheritedDesc: QUILocale.get(lg, 'fieldInheritedDesc')
                 })
             });
 
@@ -109,27 +110,27 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
         /**
          * event : on inject
          */
-        $onInject: function () {
+        $onInject: function() {
             const self = this,
-                  Elm  = self.getElm(),
-                  id   = this.getAttribute('fieldId');
+                Elm = self.getElm(),
+                id = this.getAttribute('fieldId');
 
             this.$Translation = new Translation({
-                'group'  : 'quiqqer/products',
-                'var'    : 'products.field.' + id + '.title',
+                'group': 'quiqqer/products',
+                'var': 'products.field.' + id + '.title',
                 'package': 'quiqqer/products'
             }).inject(Elm.getElement('.field-title'));
 
             this.$WorkingTitle = new Translation({
-                'group'  : 'quiqqer/products',
-                'var'    : 'products.field.' + id + '.workingtitle',
+                'group': 'quiqqer/products',
+                'var': 'products.field.' + id + '.workingtitle',
                 'package': 'quiqqer/products'
             }).inject(Elm.getElement('.field-workingtitle'));
 
             this.$Description = new Translation({
-                'group'          : 'quiqqer/products',
-                'var'            : 'products.field.' + id + '.description',
-                'package'        : 'quiqqer/products',
+                'group': 'quiqqer/products',
+                'var': 'products.field.' + id + '.description',
+                'package': 'quiqqer/products',
                 createIfNotExists: true
             }).inject(Elm.getElement('.field-description'));
 
@@ -138,25 +139,25 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 Fields.getFieldTypes(),
                 Fields.getFieldTypeSettings(),
                 Fields.getSearchTypesForField(id)
-            ]).then(function (result) {
+            ]).then(function(result) {
                 var i, len, settings;
 
-                var fieldTypes         = result[1],
-                    fieldData          = result[0],
-                    fieldSettings      = result[2],
-                    searchTypes        = result[3],
-                    FieldTypes         = Elm.getElement('[name="type"]'),
-                    FieldOptions       = Elm.getElement('[name="options"]'),
-                    FieldPriority      = Elm.getElement('[name="priority"]'),
-                    FieldPrefix        = Elm.getElement('[name="prefix"]'),
-                    FieldSuffix        = Elm.getElement('[name="suffix"]'),
-                    FieldRequired      = Elm.getElement('[name="requiredField"]'),
-                    FieldSystem        = Elm.getElement('[name="systemField"]'),
-                    FieldPublic        = Elm.getElement('[name="publicField"]'),
+                var fieldTypes = result[1],
+                    fieldData = result[0],
+                    fieldSettings = result[2],
+                    searchTypes = result[3],
+                    FieldTypes = Elm.getElement('[name="type"]'),
+                    FieldOptions = Elm.getElement('[name="options"]'),
+                    FieldPriority = Elm.getElement('[name="priority"]'),
+                    FieldPrefix = Elm.getElement('[name="prefix"]'),
+                    FieldSuffix = Elm.getElement('[name="suffix"]'),
+                    FieldRequired = Elm.getElement('[name="requiredField"]'),
+                    FieldSystem = Elm.getElement('[name="systemField"]'),
+                    FieldPublic = Elm.getElement('[name="publicField"]'),
                     FieldShowInDetails = Elm.getElement('[name="showInDetails"]'),
-                    FieldStandard      = Elm.getElement('[name="standardField"]');
+                    FieldStandard = Elm.getElement('[name="standardField"]');
 
-                fieldTypes.sort(function (a, b) {
+                fieldTypes.sort(function(a, b) {
                     var aField = QUILocale.get(a.locale[0], a.locale[1]);
                     var bField = QUILocale.get(b.locale[0], b.locale[1]);
 
@@ -175,8 +176,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     }
 
                     new Element('option', {
-                        html           : QUILocale.get(fieldTypes[i].locale[0], fieldTypes[i].locale[1]),
-                        value          : fieldTypes[i].name,
+                        html: QUILocale.get(fieldTypes[i].locale[0], fieldTypes[i].locale[1]),
+                        value: fieldTypes[i].name,
                         'data-settings': settings
                     }).inject(FieldTypes);
                 }
@@ -184,13 +185,13 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 if (!searchTypes.length) {
                     new Element('span', {
                         'class': 'field-container-field',
-                        html   : QUILocale.get(lg, 'fieldtype.not.searchable')
+                        html: QUILocale.get(lg, 'fieldtype.not.searchable')
                     }).replaces(Elm.getElement('.field-search_type'));
 
                 } else {
                     var FieldSearchType = new Element('select', {
-                        name  : 'search_type',
-                        value : fieldData.search_type,
+                        name: 'search_type',
+                        value: fieldData.search_type,
                         styles: {
                             width: '100%'
                         }
@@ -198,7 +199,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
                     for (i = 0, len = searchTypes.length; i < len; i++) {
                         new Element('option', {
-                            html : QUILocale.get(lg, 'searchtype.' + searchTypes[i] + '.title'),
+                            html: QUILocale.get(lg, 'searchtype.' + searchTypes[i] + '.title'),
                             value: searchTypes[i]
                         }).inject(FieldSearchType);
                     }
@@ -219,8 +220,8 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
 
                         new Element('input', {
                             'class': 'field-container-field field-defaultValue',
-                            value  : fieldData.defaultValue || '',
-                            name   : 'defaultValue'
+                            value: fieldData.defaultValue || '',
+                            name: 'defaultValue'
                         }).replaces(DefaultValue);
 
                         break;
@@ -247,7 +248,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 FieldPublic.checked = fieldData.isPublic;
                 FieldShowInDetails.checked = fieldData.showInDetails;
 
-                const loadSettings = function () {
+                const loadSettings = function() {
                     self.$loadSettings(this);
                 }.bind(FieldTypes);
 
@@ -265,9 +266,9 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 FieldTypes.disabled = true;
 
                 loadSettings();
-            }.bind(this)).then(function () {
+            }.bind(this)).then(function() {
                 return FieldUtils.canUsedAsDetailField(id);
-            }).then(function (canUsedAsDetail) {
+            }).then(function(canUsedAsDetail) {
                 if (!canUsedAsDetail) {
                     Elm.getElement('[name="showInDetails"]').checked = false;
                     Elm.getElement('[name="showInDetails"]').disabled = true;
@@ -277,12 +278,12 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 return FieldUtils.canUsedAsDetailField(
                     Elm.getElement('[name="type"]').value
                 );
-            }).then(function (canUsedAsDetail) {
+            }).then(function(canUsedAsDetail) {
                 if (!canUsedAsDetail) {
                     Elm.getElement('[name="showInDetails"]').checked = false;
                     Elm.getElement('[name="showInDetails"]').disabled = true;
                 }
-            }).then(function () {
+            }).then(function() {
                 // title description are always public
                 if (id === 4 || id === 5) {
                     Elm.getElement('[name="publicField"]').checked = true;
@@ -298,18 +299,18 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
          *
          * @returns {Promise}
          */
-        submit: function () {
+        submit: function() {
             var self = this,
-                Elm  = self.getElm();
+                Elm = self.getElm();
 
-            return new Promise(function (resolve, reject) {
+            return new Promise(function(resolve, reject) {
 
                 if (!self.$Translation) {
                     return reject('Translation not found');
                 }
 
-                var Form        = Elm.getElement('form'),
-                    fieldId     = self.getAttribute('fieldId'),
+                var Form = Elm.getElement('form'),
+                    fieldId = self.getAttribute('fieldId'),
                     search_type = '';
 
                 if (typeof Form.elements.search_type !== 'undefined') {
@@ -317,10 +318,10 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 }
 
                 // trigger update
-                QUI.getMessageHandler().then(function (MH) {
+                QUI.getMessageHandler().then(function(MH) {
                     MH.setAttribute('showMessages', false);
 
-                }).then(function () {
+                }).then(function() {
                     var defaultValue = null;
 
                     if (typeof Form.elements.defaultValue !== 'undefined') {
@@ -328,42 +329,42 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     }
 
                     return Fields.updateChild(fieldId, {
-                        type          : Form.elements.type.value,
-                        search_type   : search_type,
-                        prefix        : Form.elements.prefix.value,
-                        suffix        : Form.elements.suffix.value,
-                        priority      : Form.elements.priority.value,
-                        standardField : Form.elements.standardField.checked ? 1 : 0,
-                        requiredField : Form.elements.requiredField.checked ? 1 : 0,
-                        publicField   : Form.elements.publicField.checked ? 1 : 0,
-                        showInDetails : Form.elements.showInDetails.checked ? 1 : 0,
-                        options       : Form.elements.options.value,
-                        defaultValue  : defaultValue,
-                        fieldEditable : Form.elements.fieldEditable.checked ? 1 : 0,
+                        type: Form.elements.type.value,
+                        search_type: search_type,
+                        prefix: Form.elements.prefix.value,
+                        suffix: Form.elements.suffix.value,
+                        priority: Form.elements.priority.value,
+                        standardField: Form.elements.standardField.checked ? 1 : 0,
+                        requiredField: Form.elements.requiredField.checked ? 1 : 0,
+                        publicField: Form.elements.publicField.checked ? 1 : 0,
+                        showInDetails: Form.elements.showInDetails.checked ? 1 : 0,
+                        options: Form.elements.options.value,
+                        defaultValue: defaultValue,
+                        fieldEditable: Form.elements.fieldEditable.checked ? 1 : 0,
                         fieldInherited: Form.elements.fieldInherited.checked ? 1 : 0
                     });
-                }).then(function (PRODUCT_ARRAY_STATUS) {
+                }).then(function(PRODUCT_ARRAY_STATUS) {
                     if (PRODUCT_ARRAY_STATUS == Fields.PRODUCT_ARRAY_CHANGED) {
                         // product array changed,
                         return self.saveFieldToAllProducts();
                     }
-                }).then(function () {
+                }).then(function() {
                     return Promise.all([
                         self.$Translation.save(),
                         self.$WorkingTitle.save(),
                         self.$Description.save()
                     ]);
-                }).then(function () {
+                }).then(function() {
                     return QUI.getMessageHandler();
-                }).then(function (MH) {
+                }).then(function(MH) {
                     MH.setAttribute('showMessages', true);
 
                     MH.addSuccess(
                         QUILocale.get(lg, 'message.field.successfully.created')
                     );
 
-                }).then(resolve).catch(function (e) {
-                    QUI.getMessageHandler().then(function (MH) {
+                }).then(resolve).catch(function(e) {
+                    QUI.getMessageHandler().then(function(MH) {
                         MH.setAttribute('showMessages', true);
                         reject(e);
                     });
@@ -375,71 +376,75 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
          *
          * @returns {Promise}
          */
-        saveFieldToAllProducts: function () {
+        saveFieldToAllProducts: function() {
             var self = this;
 
-            return new Promise(function (resolve) {
+            return new Promise(function(resolve) {
                 new QUIConfirm({
-                    icon       : 'fa fa-file-text-o',
-                    title      : QUILocale.get('quiqqer/products', 'fields.window.productarray.changed.title'),
-                    text       : QUILocale.get('quiqqer/products', 'fields.window.productarray.changed.text', {
-                        fieldId  : self.getAttribute('fieldId'),
+                    icon: 'fa fa-file-text-o',
+                    title: QUILocale.get('quiqqer/products', 'fields.window.productarray.changed.title'),
+                    text: QUILocale.get('quiqqer/products', 'fields.window.productarray.changed.text', {
+                        fieldId: self.getAttribute('fieldId'),
                         fieldName: self.$Translation.getValue()
                     }),
-                    texticon   : 'fa fa-file-text-o',
+                    texticon: 'fa fa-file-text-o',
                     information: QUILocale.get('quiqqer/products', 'fields.window.productarray.changed.information', {
-                        fieldId  : self.getAttribute('fieldId'),
+                        fieldId: self.getAttribute('fieldId'),
                         fieldName: self.$Translation.getValue()
                     }),
-                    maxHeight  : 500,
-                    maxWidth   : 750,
-                    autoclose  : false,
-                    events     : {
-                        onOpen  : function (Win) {
+                    maxHeight: 500,
+                    maxWidth: 750,
+                    autoclose: false,
+                    events: {
+                        onOpen: function(Win) {
                             Win.Loader.show();
 
                             var SubmitBtn = Win.getButton('submit');
 
                             SubmitBtn.disable();
 
-                            Products.getProductCount().then(function (count) {
+                            Products.getProductCount().then(function(count) {
                                 if (count < 500) {
                                     SubmitBtn.enable();
                                     Win.Loader.hide();
                                     return;
                                 }
 
-                                QUIAjax.get('package_quiqqer_products_ajax_products_getSetFieldAttributesToProductsCmd', function (cmd) {
-                                    Win.Loader.hide();
+                                QUIAjax.get(
+                                    'package_quiqqer_products_ajax_products_getSetFieldAttributesToProductsCmd',
+                                    function(cmd) {
+                                        Win.Loader.hide();
 
-                                    Win.setAttribute(
-                                        'information',
-                                        QUILocale.get(
-                                            'quiqqer/products',
-                                            'fields.window.productarray.changed.information.console_tool',
-                                            {
-                                                cmd      : cmd,
-                                                fieldId  : self.getAttribute('fieldId'),
-                                                fieldName: self.$Translation.getValue()
-                                            }
-                                        )
-                                    );
+                                        Win.setAttribute(
+                                            'information',
+                                            QUILocale.get(
+                                                'quiqqer/products',
+                                                'fields.window.productarray.changed.information.console_tool',
+                                                {
+                                                    cmd: cmd,
+                                                    fieldId: self.getAttribute('fieldId'),
+                                                    fieldName: self.$Translation.getValue()
+                                                }
+                                            )
+                                        );
 
-                                    resolve();
-                                }, {
-                                    'package': 'quiqqer/products',
-                                    fieldId  : self.getAttribute('fieldId')
-                                });
+                                        resolve();
+                                    },
+                                    {
+                                        'package': 'quiqqer/products',
+                                        fieldId: self.getAttribute('fieldId')
+                                    }
+                                );
                             });
                         },
-                        onSubmit: function (Win) {
+                        onSubmit: function(Win) {
                             Win.Loader.show();
 
-                            QUIAjax.post('package_quiqqer_products_ajax_fields_setProductFieldArray', function () {
+                            QUIAjax.post('package_quiqqer_products_ajax_fields_setProductFieldArray', function() {
                                 Win.close();
                             }, {
                                 'package': 'quiqqer/products',
-                                fieldId  : self.getAttribute('fieldId')
+                                fieldId: self.getAttribute('fieldId')
                             });
                         },
 
@@ -454,24 +459,19 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
          *
          * @param {HTMLSelectElement} FieldTypes
          */
-        $loadSettings: function (FieldTypes) {
+        $loadSettings: function(FieldTypes) {
             if (FieldTypes.value === '') {
                 return;
             }
 
-            var self     = this,
-                Option   = FieldTypes.getElement('[value="' + FieldTypes.value + '"]'),
+            var self = this,
+                Option = FieldTypes.getElement('[value="' + FieldTypes.value + '"]'),
                 settings = Option.get('data-settings');
 
-            var Form        = FieldTypes.getParent('form'),
+            var Form = FieldTypes.getParent('form'),
                 FormOptions = Form.elements.options,
-                Container   = Form.getElement('.field-options'),
-                Cell        = Container.getParent('td'),
-                Label       = Cell.getElement('label');
-
-            if (!Label) {
-                Label = Cell.getElement('.field-container');
-            }
+                Container = Form.getElement('.field-options'),
+                Cell = Container.getParent('td');
 
             if (!FormOptions) {
                 FormOptions = new Element('input', {
@@ -483,119 +483,44 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
             //FieldTypes.disabled = true;
 
             if (settings === '') {
-                moofx([
-                    Container,
-                    Cell,
-                    Label
-                ]).animate({
-                    height : 0,
-                    opacity: 0,
-                    margin : 0,
-                    padding: 0
-                }, {
-                    duration: 200,
-                    callback: function () {
-                        Cell.setStyles({
-                            display: 'none',
-                            padding: null
-                        });
+                Cell.setStyles({
+                    display: 'none',
+                    padding: null
+                });
 
-                        Container.getChildren().each(function (Child) {
-                            if (Child != FormOptions) {
-                                Child.destroy();
-                            }
-                        });
-
-                        //FieldTypes.disabled = false;
-                        FieldTypes.focus();
+                Container.getChildren().each(function(Child) {
+                    if (Child != FormOptions) {
+                        Child.destroy();
                     }
                 });
 
+                //FieldTypes.disabled = false;
+                FieldTypes.focus();
                 return;
             }
 
             var Loader = new Element('span', {
                 'class': 'fa fa-spinner fa-spin',
-                styles : {
-                    left    : 10,
+                styles: {
+                    left: 10,
                     position: 'absolute',
-                    top     : 10
+                    top: 10
                 }
             }).inject(Container);
 
-            Label.setStyles({
-                display : null,
-                height  : 0,
-                overflow: 'hidden',
-                position: 'relative'
+            require([settings], function(Control) {
+                Loader.destroy();
+
+                new Control({
+                    fieldId: self.getAttribute('fieldId')
+                }).imports(FormOptions);
+
+                FieldTypes.focus();
+            }, function(err) {
+                console.error(err);
+                console.error(arguments);
+                //FieldTypes.disabled = false;
             });
-
-            Cell.setStyles({
-                display : null,
-                overflow: 'hidden',
-                padding : null
-            });
-
-            moofx([
-                Label,
-                Cell,
-                Container
-            ]).animate({
-                height : 40,
-                opacity: 1
-            }, {
-                duration: 200,
-                callback: function () {
-                    require([settings], function (Control) {
-
-                        Label.setStyles({
-                            height  : Label.getSize().y,
-                            position: null
-                        });
-
-                        Cell.setStyles({
-                            height: null
-                        });
-
-                        Container.setStyles({
-                            height : null,
-                            opacity: null,
-                            margin : null,
-                            padding: null,
-                            width  : Container.getSize().x
-                        });
-
-                        Loader.destroy();
-
-                        new Control({
-                            fieldId: self.getAttribute('fieldId')
-                        }).imports(FormOptions);
-
-                        var height   = Container.getScrollSize().y,
-                            computed = Container.getComputedSize();
-
-                        height = height +
-                                 computed['padding-top'] +
-                                 computed['padding-bottom'];
-
-                        moofx(Label).animate({
-                            height: height
-                        }, {
-                            duration: 200,
-                            callback: function () {
-                                //FieldTypes.disabled = false;
-                                FieldTypes.focus();
-                            }
-                        });
-
-                    }, function (err) {
-                        console.error(err);
-                        console.error(arguments);
-                        //FieldTypes.disabled = false;
-                    });
-                }
-            });
-
         }
     });
 });

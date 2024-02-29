@@ -11,15 +11,15 @@ define('package/quiqqer/products/bin/controls/fields/windows/Field', [
     'Ajax',
     'Locale'
 
-], function (QUI, QUIConfirm, QUIAjax, QUILocale) {
-    "use strict";
+], function(QUI, QUIConfirm, QUIAjax, QUILocale) {
+    'use strict';
 
     var lg = 'quiqqer/products';
 
     return new Class({
 
         Extends: QUIConfirm,
-        Type   : 'package/quiqqer/products/bin/controls/fields/windows/Field',
+        Type: 'package/quiqqer/products/bin/controls/fields/windows/Field',
 
         Binds: [
             '$onOpen',
@@ -27,13 +27,13 @@ define('package/quiqqer/products/bin/controls/fields/windows/Field', [
         ],
 
         options: {
-            fieldId  : false,
-            maxWidth : 600,
-            maxHeight: 600,
+            fieldId: false,
+            maxWidth: 800,
+            maxHeight: 800,
             autoclose: false
         },
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.$Field = null;
@@ -44,30 +44,30 @@ define('package/quiqqer/products/bin/controls/fields/windows/Field', [
             }));
 
             this.setAttribute('ok_button', {
-                text     : QUILocale.get('quiqqer/quiqqer', 'save'),
+                text: QUILocale.get('quiqqer/quiqqer', 'save'),
                 textimage: 'fa fa-check'
             });
 
             this.addEvents({
                 onSubmit: this.$onSubmit,
-                onOpen  : this.$onOpen
+                onOpen: this.$onOpen
             });
         },
 
         /**
          * event: on open
          */
-        $onOpen: function () {
+        $onOpen: function() {
             var self = this;
 
             this.getContent().set('html', '');
             this.Loader.show();
 
-            require(['package/quiqqer/products/bin/controls/fields/Update'], function (UpdateField) {
+            require(['package/quiqqer/products/bin/controls/fields/Update'], function(UpdateField) {
                 self.$Field = new UpdateField({
                     fieldId: self.getAttribute('fieldId'),
-                    events : {
-                        onLoaded: function () {
+                    events: {
+                        onLoaded: function() {
                             self.Loader.hide();
                         }
                     }
@@ -78,11 +78,11 @@ define('package/quiqqer/products/bin/controls/fields/windows/Field', [
         /**
          * event: on submit
          */
-        $onSubmit: function () {
+        $onSubmit: function() {
             var self = this;
 
             this.Loader.show();
-            this.$Field.submit().then(function () {
+            this.$Field.submit().then(function() {
                 self.fireEvent('save', [self]);
                 self.close();
             }, function() {
