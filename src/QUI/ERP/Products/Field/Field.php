@@ -149,9 +149,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * optional and only needed at the runtime instance
      * this is the product from which the field are
      *
-     * @var null
+     * @var QUI\ERP\Products\Interfaces\ProductInterface|null
      */
-    protected $Product = null;
+    protected ?QUI\ERP\Products\Interfaces\ProductInterface $Product = null;
 
     /**
      * Model constructor.
