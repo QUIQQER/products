@@ -177,12 +177,12 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     title    : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
                     dataIndex: 'selected',
                     dataType : 'node',
-                    width    : 30
+                    width    : 60
                 }, {
                     header   : QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
                     dataType : 'string',
-                    width    : 200
+                    width    : 180
                 }, {
                     header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.sum'),
                     dataIndex: 'sum',
@@ -192,13 +192,13 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.type'),
                     dataIndex: 'type',
                     dataType : 'node',
-                    width    : 60
+                    width    : 100
                 }, {
                     header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.userinput'),
                     title    : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.userinput'),
                     dataIndex: 'userinputIcon',
                     dataType : 'node',
-                    width    : 30
+                    width    : 80
                 }, {
                     dataIndex: 'userinput',
                     dataType : 'number',
