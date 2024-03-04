@@ -91,10 +91,8 @@ class VariantChild extends AbstractType
 
         foreach ($fields as $ParentField) {
             $fieldId = $ParentField->getId();
-
-            if (!isset($inheritedFields[$fieldId])) {
-                continue;
-            }
+            $isInherited = isset($inheritedFields[$fieldId]);
+            $isEditable = isset($editableFields[$fieldId]);
 
             try {
                 $Field = $this->getField($fieldId);
@@ -105,7 +103,8 @@ class VariantChild extends AbstractType
                 }
 
                 // If inherited field is not editable by children -> use parent value
-                if (!isset($editableFields[$fieldId])) {
+                // Therefore: If an inherited field IS editable -> do not use parent value and keep own value
+                if ($isInherited && !$isEditable) {
                     try {
                         $Field->setValue($ParentField->getValue());
                     } catch (QUI\Exception $Exception) {
@@ -115,7 +114,8 @@ class VariantChild extends AbstractType
                     continue;
                 }
 
-                // If inherited field is editable and has own value -> leave it as is
+                // If the short description of variant children shall be extended by variant defining
+                // attribute list field values, collect these values here.
                 if (!$Field->isEmpty()) {
                     if (Products::isExtendVariantChildShortDesc() && $Field instanceof AttributeGroup) {
                         $attributeListFieldValues[] = [
