@@ -96,22 +96,25 @@ class VariantChild extends AbstractType
 
             try {
                 $Field = $this->getField($fieldId);
-                $Field->setUnassignedStatus(false);
 
-                if ($ParentField->isOwnField()) {
-                    $Field->setOwnFieldStatus(true);
-                }
+                if ($isInherited) {
+                    $Field->setUnassignedStatus(false);
 
-                // If inherited field is not editable by children -> use parent value
-                // Therefore: If an inherited field IS editable -> do not use parent value and keep own value
-                if ($isInherited && !$isEditable) {
-                    try {
-                        $Field->setValue($ParentField->getValue());
-                    } catch (QUI\Exception $Exception) {
-                        QUI\System\Log::addDebug($Exception->getMessage());
+                    if ($ParentField->isOwnField()) {
+                        $Field->setOwnFieldStatus(true);
                     }
 
-                    continue;
+                    // If inherited field is not editable by children -> use parent value
+                    // Therefore: If an inherited field IS editable -> do not use parent value and keep own value
+                    if (!$isEditable) {
+                        try {
+                            $Field->setValue($ParentField->getValue());
+                        } catch (QUI\Exception $Exception) {
+                            QUI\System\Log::addDebug($Exception->getMessage());
+                        }
+
+                        continue;
+                    }
                 }
 
                 // If the short description of variant children shall be extended by variant defining
