@@ -21,6 +21,7 @@ use function get_class;
 use function is_a;
 use function is_array;
 use function is_numeric;
+use function is_subclass_of;
 use function md5;
 use function serialize;
 
@@ -338,18 +339,26 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
                 if (is_subclass_of($fieldClass, QUI\ERP\Products\Field\Field::class)) {
                     $Field = new $fieldClass($field['id'], $field);
+                    $Field->setProduct($this);
                     $FieldView = $Field->getView();
 
                     if ($FieldView instanceof QUI\ERP\Products\Field\View) {
                         $viewClass = get_class($FieldView);
-                        $this->fields[] = new $viewClass($field);
+
+                        $Instance = new $viewClass($field);
+                        $Instance->setProduct($this);
+
+                        $this->fields[] = $Instance;
                         continue;
                     }
                 }
             }
 
             if (!Fields::isField($field)) {
-                $this->fields[] = new UniqueField($field['id'], $field);
+                $Instance = new UniqueField($field['id'], $field);
+                $Instance->setProduct($this);
+
+                $this->fields[] = $Instance;
                 continue;
             }
 
@@ -358,6 +367,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
                 $field = $field->createUniqueField();
             }
 
+            $field->setProduct($this);
             $this->fields[] = $field;
         }
     }

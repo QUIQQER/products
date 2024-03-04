@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 use QUI\ERP\Products\Field\View;
+use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Handler\Search;
 
 use function floor;
@@ -16,6 +17,7 @@ use function is_float;
 use function is_numeric;
 use function is_string;
 use function mb_strlen;
+use function method_exists;
 use function round;
 use function trim;
 
@@ -58,8 +60,26 @@ class Price extends QUI\ERP\Products\Field\Field
     {
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
-        $value = $this->getValue();
-        $value = $this->cleanup($value);
+        if ($this->Product && method_exists($this, 'onGetPriceFieldForProduct')) {
+            $value = 0;
+
+            try {
+                $ParentField = FieldHandler::getField($this->getId());
+
+                if (method_exists($ParentField, 'onGetPriceFieldForProduct')) {
+                    $value = $ParentField->onGetPriceFieldForProduct($this->Product, QUI::getUserBySession());
+                }
+
+                if (empty($value)) {
+                    $value = 0;
+                }
+            } catch (QUI\Exception) {
+            }
+        } else {
+            $value = $this->getValue();
+            $value = $this->cleanup($value);
+        }
+
         $value = $Calc->getPrice($value);
 
         $Price = new QUI\ERP\Money\Price(
