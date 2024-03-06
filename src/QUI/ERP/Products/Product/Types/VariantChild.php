@@ -91,31 +91,34 @@ class VariantChild extends AbstractType
 
         foreach ($fields as $ParentField) {
             $fieldId = $ParentField->getId();
-
-            if (!isset($inheritedFields[$fieldId])) {
-                continue;
-            }
+            $isInherited = isset($inheritedFields[$fieldId]);
+            $isEditable = isset($editableFields[$fieldId]);
 
             try {
                 $Field = $this->getField($fieldId);
-                $Field->setUnassignedStatus(false);
 
-                if ($ParentField->isOwnField()) {
-                    $Field->setOwnFieldStatus(true);
-                }
+                if ($isInherited) {
+                    $Field->setUnassignedStatus(false);
 
-                // If inherited field is not editable by children -> use parent value
-                if (!isset($editableFields[$fieldId])) {
-                    try {
-                        $Field->setValue($ParentField->getValue());
-                    } catch (QUI\Exception $Exception) {
-                        QUI\System\Log::addDebug($Exception->getMessage());
+                    if ($ParentField->isOwnField()) {
+                        $Field->setOwnFieldStatus(true);
                     }
 
-                    continue;
+                    // If inherited field is not editable by children -> use parent value
+                    // Therefore: If an inherited field IS editable -> do not use parent value and keep own value
+                    if (!$isEditable) {
+                        try {
+                            $Field->setValue($ParentField->getValue());
+                        } catch (QUI\Exception $Exception) {
+                            QUI\System\Log::addDebug($Exception->getMessage());
+                        }
+
+                        continue;
+                    }
                 }
 
-                // If inherited field is editable and has own value -> leave it as is
+                // If the short description of variant children shall be extended by variant defining
+                // attribute list field values, collect these values here.
                 if (!$Field->isEmpty()) {
                     if (Products::isExtendVariantChildShortDesc() && $Field instanceof AttributeGroup) {
                         $attributeListFieldValues[] = [
