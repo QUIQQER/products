@@ -12,6 +12,7 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Utils\VariantGenerating;
 use QUI\Projects\Media\Utils as MediaUtils;
+use QUI\ERP\Products\Field\Types\Folder as FolderProductFieldType;
 
 use function array_flip;
 use function count;
@@ -91,6 +92,11 @@ class VariantChild extends AbstractType
 
         foreach ($fields as $ParentField) {
             $fieldId = $ParentField->getId();
+
+            if ($this->OwnMediaFolderField && $fieldId === $this->OwnMediaFolderField->getId()) {
+                continue;
+            }
+
             $isInherited = isset($inheritedFields[$fieldId]);
             $isEditable = isset($editableFields[$fieldId]);
 
@@ -117,9 +123,18 @@ class VariantChild extends AbstractType
                     }
                 }
 
+                $isEmpty = $Field->isEmpty();
+
+                // Media folders: isEmpty() of folder fields additionally checks if there are images in the folder.
+                // But at this point we are only interested if a field value is set.
+                // Therefore, media folder fields are treated special here.
+                if ($Field instanceof FolderProductFieldType) {
+                    $isEmpty = empty($Field->getValue());
+                }
+
                 // If the short description of variant children shall be extended by variant defining
                 // attribute list field values, collect these values here.
-                if (!$Field->isEmpty()) {
+                if (!$isEmpty) {
                     if (Products::isExtendVariantChildShortDesc() && $Field instanceof AttributeGroup) {
                         $attributeListFieldValues[] = [
                             'title' => $Field->getTitle(),
