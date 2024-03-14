@@ -7,11 +7,21 @@
 namespace QUI\ERP\Products\Controls\Products;
 
 use DusanKasan\Knapsack\Collection;
+use Exception;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Product\JsonLd;
 use QUI\ERP\Products\Utils\Fields as FieldUtils;
 use QUI\ERP\Products\Utils\Products as ProductUtils;
+
+use function array_filter;
+use function array_flip;
+use function array_merge;
+use function count;
+use function dirname;
+use function is_a;
+use function json_encode;
+use function usort;
 
 /**
  * Class Button
@@ -36,7 +46,7 @@ class Product extends QUI\Control
         ]);
 
         $this->addCSSClass('quiqqer-products-product');
-        $this->addCSSFile(\dirname(__FILE__) . '/Product.css');
+        $this->addCSSFile(dirname(__FILE__) . '/Product.css');
 
         parent::__construct($attributes);
     }
@@ -48,7 +58,7 @@ class Product extends QUI\Control
      * @see \QUI\Control::create()
      *
      */
-    public function getBody()
+    public function getBody(): string
     {
         /* @var $Product QUI\ERP\Products\Product\Product */
         $Engine = QUI::getTemplateManager()->getEngine();
@@ -57,8 +67,8 @@ class Product extends QUI\Control
         $fields = [];
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
-        $typeVariantParent = \is_a($Product->getType(), QUI\ERP\Products\Product\Types\VariantParent::class, true);
-        $typeVariantChild = \is_a($Product->getType(), QUI\ERP\Products\Product\Types\VariantChild::class, true);
+        $typeVariantParent = is_a($Product->getType(), QUI\ERP\Products\Product\Types\VariantParent::class, true);
+        $typeVariantChild = is_a($Product->getType(), QUI\ERP\Products\Product\Types\VariantChild::class, true);
 
         if ($typeVariantParent) {
             /* @var $Product QUI\ERP\Products\Product\Types\VariantParent */
@@ -89,7 +99,7 @@ class Product extends QUI\Control
                     $typeVariantParent = false;
                     break;
                 }
-            } catch (QUI\ERP\Products\Product\Exception $Exception) {
+            } catch (QUI\ERP\Products\Product\Exception) {
                 // use default variant, if a default variant exists
                 if (!$this->getAttribute('ignoreDefaultVariant') && $Product->getDefaultVariantId()) {
                     try {
@@ -153,7 +163,7 @@ class Product extends QUI\Control
 
         try {
             $Gallery->setAttribute('folderId', $Product->getFieldValue(Fields::FIELD_FOLDER));
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         if ($typeVariantParent || $typeVariantChild) {
@@ -187,7 +197,7 @@ class Product extends QUI\Control
         }
 
         // fields for the details
-        $details = \array_filter($View->getFields(), function ($Field) {
+        $details = array_filter($View->getFields(), function ($Field) {
             /* @var $Field QUI\ERP\Products\Field\View */
             if (!QUI\ERP\Products\Utils\Fields::showFieldInProductDetails($Field)) {
                 return false;
@@ -202,7 +212,6 @@ class Product extends QUI\Control
             $vatArray = $productAttributes['calculated_vatArray'];
         }
 
-        // pricedisplay
         $PriceDisplay = new QUI\ERP\Products\Controls\Price([
             'Price' => $Price,
             'withVatText' => true,
@@ -245,7 +254,7 @@ class Product extends QUI\Control
         // file / image folders
         $detailFields = [];
 
-        $fieldsList = \array_merge(
+        $fieldsList = array_merge(
             $Product->getFieldsByType(Fields::TYPE_FOLDER),
             $Product->getFieldsByType(Fields::TYPE_TEXTAREA),
             $Product->getFieldsByType(Fields::TYPE_TEXTAREA_MULTI_LANG),
@@ -282,7 +291,7 @@ class Product extends QUI\Control
 
         // product fields
         $productFields = [];
-        $productFieldList = \array_filter($View->getFields(), function ($Field) {
+        $productFieldList = array_filter($View->getFields(), function ($Field) {
             /* @var $Field QUI\ERP\Products\Field\View */
             if ($Field->getType() == Fields::TYPE_PRODCUCTS) {
                 return true;
@@ -317,7 +326,7 @@ class Product extends QUI\Control
         // Product File List
         $Files = null;
 
-        if (\count($Product->getFiles())) {
+        if (count($Product->getFiles())) {
             $Files = new ProductFieldDetails([
                 'Field' => $Product->getField(Fields::FIELD_FOLDER),
                 'Product' => $Product,
@@ -331,13 +340,13 @@ class Product extends QUI\Control
 
             QUI::getEvents()->addEvent(
                 'onQuiqqer::products::product::end',
-                function (\quiqqer\smarty4\src\Quiqqer\Engine\Collector $Collector) use ($Product) {
+                function (QUI\Smarty\Collector $Collector) use ($Product) {
                     $fieldHashes = ProductUtils::getJsFieldHashArray($Product);
-                    $fieldHashes = \json_encode($fieldHashes);
+                    $fieldHashes = json_encode($fieldHashes);
 
                     $availableHashes = $Product->availableActiveFieldHashes();
-                    $availableHashes = \array_flip($availableHashes);
-                    $availableHashes = \json_encode($availableHashes);
+                    $availableHashes = array_flip($availableHashes);
+                    $availableHashes = json_encode($availableHashes);
 
                     $Collector->append('<script>var fieldHashes = ' . $fieldHashes . '</script>');
                     $Collector->append('<script>var availableHashes = ' . $availableHashes . '</script>');
@@ -383,12 +392,12 @@ class Product extends QUI\Control
 
         $Engine->assign(
             'buttonsHtml',
-            $Engine->fetch(\dirname(__FILE__) . '/Product.Buttons.html')
+            $Engine->fetch(dirname(__FILE__) . '/Product.Buttons.html')
         );
 
         // normal product
         if (!$typeVariantParent && !$typeVariantChild) {
-            return $Engine->fetch(\dirname(__FILE__) . '/Product.html');
+            return $Engine->fetch(dirname(__FILE__) . '/Product.html');
         }
 
         // variant product
@@ -398,7 +407,7 @@ class Product extends QUI\Control
             $this->setAttribute('data-qui-options-' . $k, $v);
         }
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ProductVariant.html');
+        return $Engine->fetch(dirname(__FILE__) . '/ProductVariant.html');
     }
 
     /**
@@ -419,7 +428,6 @@ class Product extends QUI\Control
         if (!empty($images) && $linkVariantsWithImages) {
             $imageAttributeGroupsData = [];
 
-            /** @var QUI\Projects\Media\Image $Image */
             foreach ($images as $Image) {
                 $imageAttributeGroupData = $Image->getAttribute(
                     Fields::MEDIA_ATTR_IMAGE_ATTRIBUTE_GROUP_DATA
@@ -430,7 +438,7 @@ class Product extends QUI\Control
                 }
             }
 
-            $controlSettings['image_attribute_data'] = \json_encode($imageAttributeGroupsData);
+            $controlSettings['image_attribute_data'] = json_encode($imageAttributeGroupsData);
         }
 
         $controlSettings['link_images_and_attributes'] = $linkVariantsWithImages ? 1 : 0;
@@ -463,12 +471,12 @@ class Product extends QUI\Control
             if (!$hasMainImage) {
                 $images[] = $MainImage;
             }
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
             $mainImageId = false;
         }
 
-        \usort($images, function ($ImageA, $ImageB) use ($mainImageId) {
+        usort($images, function ($ImageA, $ImageB) use ($mainImageId) {
             /**
              * @var QUI\Projects\Media\Image $ImageA
              * @var QUI\Projects\Media\Image $ImageB
@@ -491,7 +499,7 @@ class Product extends QUI\Control
      * @return mixed|QUI\Projects\Site
      * @throws QUI\Exception
      */
-    protected function getSite()
+    protected function getSite(): mixed
     {
         if ($this->getAttribute('Site')) {
             return $this->getAttribute('Site');

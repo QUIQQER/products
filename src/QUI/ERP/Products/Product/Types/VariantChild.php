@@ -8,11 +8,11 @@ namespace QUI\ERP\Products\Product\Types;
 
 use QUI;
 use QUI\ERP\Products\Field\Types\AttributeGroup;
+use QUI\ERP\Products\Field\Types\Folder as FolderProductFieldType;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Utils\VariantGenerating;
 use QUI\Projects\Media\Utils as MediaUtils;
-use QUI\ERP\Products\Field\Types\Folder as FolderProductFieldType;
 
 use function array_flip;
 use function count;
@@ -233,9 +233,9 @@ class VariantChild extends AbstractType
     /**
      * Return the parent variant product
      *
-     * @return VariantParent
+     * @return VariantParent|null
      */
-    public function getParent()
+    public function getParent(): ?VariantParent
     {
         if ($this->Parent !== null) {
             return $this->Parent;
@@ -245,7 +245,7 @@ class VariantChild extends AbstractType
             $this->Parent = Products::getProduct(
                 $this->getAttribute('parent')
             );
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         return $this->Parent;

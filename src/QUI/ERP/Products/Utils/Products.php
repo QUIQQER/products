@@ -7,11 +7,11 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
+use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Fields as FieldUtils;
-use QUI\ERP\Products\Field\UniqueField;
 
 use function array_filter;
 use function array_flip;
@@ -27,6 +27,7 @@ use function is_string;
 use function json_decode;
 use function method_exists;
 use function strlen;
+use function trim;
 use function unpack;
 use function usort;
 
@@ -107,13 +108,13 @@ class Products
             return new QUI\ERP\Money\Price($PriceField->getValue(), $Currency);
         }
 
-        $priceFieldsConsidered = \array_filter($priceFields, function ($Field) use ($User) {
+        $priceFieldsConsidered = array_filter($priceFields, function ($Field) use ($User) {
             /* @var $Field QUI\ERP\Products\Field\UniqueField */
 
             // ignore default main price
             if ($Field->getId() == FieldHandler::FIELD_PRICE) {
                 return false;
-            };
+            }
 
             $options = $Field->getOptions();
 
@@ -125,11 +126,8 @@ class Products
                 return true;
             }
 
+            $options['groups'] = trim($options['groups'], ',');
             $groups = explode(',', $options['groups']);
-
-            if (empty($groups)) {
-                return true;
-            }
 
             foreach ($groups as $gid) {
                 if ($User->isInGroup($gid)) {
@@ -149,7 +147,7 @@ class Products
                 $FieldClass->setValue($Field->getValue());
             }
 
-            if (\method_exists($FieldClass, 'onGetPriceFieldForProduct')) {
+            if (method_exists($FieldClass, 'onGetPriceFieldForProduct')) {
                 try {
                     $value = $FieldClass->onGetPriceFieldForProduct($Product, $User);
                 } catch (QUI\Exception $Exception) {
@@ -181,11 +179,11 @@ class Products
      */
     public static function getEditableFieldIdsForProduct($Product = null): array
     {
-        if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+        if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
             $Product = $Product->getParent();
         }
 
-        if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Product) {
+        if ($Product instanceof QUI\ERP\Products\Product\Product) {
             if ($Product->getAttribute('editableVariantFields')) {
                 $editable = $Product->getAttribute('editableVariantFields');
 
@@ -221,11 +219,10 @@ class Products
         }
 
         $fields = FieldHandler::getFields();
-        $result = array_map(function ($Field) {
+
+        return array_map(function ($Field) {
             return $Field->getId();
         }, $fields);
-
-        return $result;
     }
 
     /**
@@ -236,11 +233,11 @@ class Products
      */
     public static function getInheritedFieldIdsForProduct($Product = null): array
     {
-        if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
+        if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
             $Product = $Product->getParent();
         }
 
-        if (!empty($Product) && $Product instanceof QUI\ERP\Products\Product\Product) {
+        if ($Product instanceof QUI\ERP\Products\Product\Product) {
             if ($Product->getAttribute('inheritedVariantFields')) {
                 $inherited = $Product->getAttribute('inheritedVariantFields');
 
@@ -277,11 +274,10 @@ class Products
 
 
         $fields = FieldHandler::getFields();
-        $result = array_map(function ($Field) {
+
+        return array_map(function ($Field) {
             return $Field->getId();
         }, $fields);
-
-        return $result;
     }
 
     /**
@@ -323,9 +319,7 @@ class Products
         });
 
         // generate hash
-        $generate = ';' . implode(';', $hash) . ';';
-
-        return $generate;
+        return ';' . implode(';', $hash) . ';';
     }
 
     /**

@@ -19,10 +19,11 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_variant_getVariants',
     function ($productId, $options) {
         $Product = Products::getProduct($productId);
-        $options = \json_decode($options, true);
+        $options = json_decode($options, true);
         $lang = QUI::getLocale()->getCurrent();
-
+        $Currency = QUI\ERP\Defaults::getCurrency();
         $page = 1;
+        $defaultVariantId = -1;
 
         if (isset($options['page']) && (int)$options['page']) {
             $page = (int)$options['page'];
@@ -49,7 +50,7 @@ QUI::$Ajax->registerFunction(
             ]
         ]);
 
-        $childrenIds = \array_column($children, 'id');
+        $childrenIds = array_column($children, 'id');
         $searchResultIds = [];
         $searchResult = [];
 
@@ -66,15 +67,10 @@ QUI::$Ajax->registerFunction(
 
             $defaultVariantId = $Product->getDefaultVariantId();
             $Currency = $Product->getCurrency();
-
-            if (!$Currency) {
-                $Currency = QUI\ERP\Defaults::getCurrency();
-            }
-
             $searchResult = QUI::getDataBase()->fetch($queryOptions);
 
             // get field data for AttributeGroup fields for every found VariantChild
-            $searchResultIds = \array_column($searchResult, 'id');
+            $searchResultIds = array_column($searchResult, 'id');
         }
 
         $childFieldData = [];
@@ -106,7 +102,7 @@ QUI::$Ajax->registerFunction(
             $parentAttributeGroupFieldOptions[$ParentAttributeGroupField->getId()] = $fieldTitlesByValue;
         }
 
-        $parentAttributeGroupFieldIds = \array_map(function ($AttributeGroupField) {
+        $parentAttributeGroupFieldIds = array_map(function ($AttributeGroupField) {
             /** @var \QUI\ERP\Products\Field\Types\AttributeGroup $AttributeGroupField */
             return $AttributeGroupField->getId();
         }, $parentAttributeGroupFields);
@@ -125,12 +121,12 @@ QUI::$Ajax->registerFunction(
 
             foreach ($result as $row) {
                 $childId = $row['id'];
-                $fieldData = \json_decode($row['fieldData'], true);
+                $fieldData = json_decode($row['fieldData'], true);
                 $attributeGroupTitlesByValue = [];
 
                 // AttributeGroup fields only!
-                $fieldData = \array_filter($fieldData, function ($entry) use ($parentAttributeGroupFieldIds) {
-                    return \in_array($entry['id'], $parentAttributeGroupFieldIds);
+                $fieldData = array_filter($fieldData, function ($entry) use ($parentAttributeGroupFieldIds) {
+                    return in_array($entry['id'], $parentAttributeGroupFieldIds);
                 });
 
                 foreach ($fieldData as $field) {
@@ -158,7 +154,7 @@ QUI::$Ajax->registerFunction(
         ];
 
         if (!empty($searchResult)) {
-            $variants = \array_map(function ($entry) use (
+            $variants = array_map(function ($entry) use (
                 $defaultVariantId,
                 $Currency,
                 $childFieldData,
@@ -169,11 +165,11 @@ QUI::$Ajax->registerFunction(
                 $addedFields = [];
 
                 foreach ($entry as $k => $v) {
-                    if (\strpos($k, 'F') !== 0) {
+                    if (!str_starts_with($k, 'F')) {
                         continue;
                     }
 
-                    $fieldId = (int)\mb_substr($k, 1);
+                    $fieldId = (int)mb_substr($k, 1);
 
                     if (isset($addedFields[$fieldId])) {
                         continue;
