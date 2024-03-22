@@ -13,6 +13,7 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Product\JsonLd;
 use QUI\ERP\Products\Utils\Fields as FieldUtils;
 use QUI\ERP\Products\Utils\Products as ProductUtils;
+use QUI\ERP\Products\Interfaces\ProductInterface;
 
 use function array_filter;
 use function array_flip;
@@ -335,16 +336,18 @@ class Product extends QUI\Control
             ]);
         }
 
+        $ControlProduct = $Product;
+
         if ($typeVariantParent || $typeVariantChild) {
             ProductUtils::setAvailableFieldOptions($Product);
 
             QUI::getEvents()->addEvent(
                 'onQuiqqer::products::product::end',
-                function (QUI\Smarty\Collector $Collector) use ($Product) {
-                    $fieldHashes = ProductUtils::getJsFieldHashArray($Product);
+                function (QUI\Smarty\Collector $Collector, ProductInterface $Product) use ($ControlProduct) {
+                    $fieldHashes = ProductUtils::getJsFieldHashArray($ControlProduct);
                     $fieldHashes = json_encode($fieldHashes);
 
-                    $availableHashes = $Product->availableActiveFieldHashes();
+                    $availableHashes = $ControlProduct->availableActiveFieldHashes();
                     $availableHashes = array_flip($availableHashes);
                     $availableHashes = json_encode($availableHashes);
 
