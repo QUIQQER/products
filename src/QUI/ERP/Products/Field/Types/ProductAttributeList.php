@@ -329,6 +329,10 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      */
     public function validate($value)
     {
+        if (is_array($value) && isset($value['value'])) {
+            $value = $value['value'];
+        }
+
         if (empty($value) && $value != '0') {
             if (QUI::isFrontend() && $this->isRequired()) {
                 throw new QUI\ERP\Products\Field\ExceptionRequired([
