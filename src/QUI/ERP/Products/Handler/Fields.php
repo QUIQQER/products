@@ -6,11 +6,28 @@
 
 namespace QUI\ERP\Products\Handler;
 
+use DOMElement;
+use DOMXPath;
+use Exception;
 use QUI;
 use QUI\ERP\Products\Field\PriceFieldsProviderInterface;
 
+use function array_filter;
 use function array_keys;
 use function array_merge;
+use function class_exists;
+use function count;
+use function dirname;
+use function file_exists;
+use function get_class;
+use function is_a;
+use function is_array;
+use function is_object;
+use function json_decode;
+use function json_encode;
+use function md5;
+use function pathinfo;
+use function reset;
 
 /**
  * Class Fields
@@ -96,7 +113,7 @@ class Fields
      *
      * @var array
      */
-    protected static $cacheNames = [
+    protected static array $cacheNames = [
         'quiqqer/products/fields',
         'quiqqer/products/fields/field/',
         'quiqqer/products/fields/query/'
@@ -105,31 +122,31 @@ class Fields
     /**
      * @var array
      */
-    protected static $list = [];
+    protected static array $list = [];
 
     /**
-     * @var null
+     * @var array|null
      */
-    protected static $fieldTypes = null;
+    protected static ?array $fieldTypes = null;
 
     /**
      * @var array
      */
-    protected static $fieldTypeData = [];
+    protected static array $fieldTypeData = [];
 
     /**
      * Runtime cache for price factor settings
      *
-     * @var array
+     * @var array|bool
      */
-    protected static $priceFactorSettings = false;
+    protected static array|bool $priceFactorSettings = false;
 
     /**
      * Return the child attributes
      *
      * @return array
      */
-    public static function getChildAttributes()
+    public static function getChildAttributes(): array
     {
         return [
             'name',
@@ -154,7 +171,7 @@ class Fields
      *
      * @return array
      */
-    public static function getStandardFields()
+    public static function getStandardFields(): array
     {
         return self::getFields([
             'where' => [
@@ -168,7 +185,7 @@ class Fields
      *
      * @return array
      */
-    public static function getSystemFields()
+    public static function getSystemFields(): array
     {
         return self::getFields([
             'where' => [
@@ -180,7 +197,7 @@ class Fields
     /**
      * Clear the field cache
      */
-    public static function clearCache()
+    public static function clearCache(): void
     {
         foreach (self::$cacheNames as $cache) {
             QUI\Cache\LongTermCache::clear($cache);
@@ -199,17 +216,17 @@ class Fields
      * @param mixed $mixed
      * @return bool
      */
-    public static function isField($mixed)
+    public static function isField(mixed $mixed): bool
     {
-        if (!\is_object($mixed)) {
+        if (!is_object($mixed)) {
             return false;
         }
 
-        if (\get_class($mixed) === QUI\ERP\Products\Field\Field::class) {
+        if (get_class($mixed) === QUI\ERP\Products\Field\Field::class) {
             return true;
         }
 
-        if (\get_class($mixed) === QUI\ERP\Products\Field\UniqueField::class) {
+        if (get_class($mixed) === QUI\ERP\Products\Field\UniqueField::class) {
             return true;
         }
 
@@ -222,9 +239,9 @@ class Fields
      * @param array $attributes - field attributes
      * @return QUI\ERP\Products\Field\Field
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public static function createField(array $attributes = [])
+    public static function createField(array $attributes = []): QUI\ERP\Products\Field\Field
     {
         QUI\Permissions\Permission::checkPermission('field.create');
 
@@ -258,7 +275,7 @@ class Fields
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName()
         );
 
-        if (\count($columns) > 1000) {
+        if (count($columns) > 1000) {
             throw new QUI\ERP\Products\Field\Exception([
                 'quiqqer/products',
                 'exception.products.column.maxSize'
@@ -300,15 +317,15 @@ class Fields
             }
         }
 
-        if (isset($data['options']) && \is_array($data['options'])) {
-            $data['options'] = \json_encode($data['options']);
+        if (isset($data['options']) && is_array($data['options'])) {
+            $data['options'] = json_encode($data['options']);
         }
 
-        if (!isset($data['priority']) || empty($data['priority'])) {
+        if (empty($data['priority'])) {
             $data['priority'] = 0;
         }
 
-        if (!isset($data['name']) || empty($data['name'])) {
+        if (empty($data['name'])) {
             $data['name'] = '';
         }
 
@@ -318,12 +335,7 @@ class Fields
             $data
         );
 
-        if (isset($data['id'])) {
-            $newId = $data['id'];
-        } else {
-            $newId = QUI::getDataBase()->getPDO()->lastInsertId();
-        }
-
+        $newId = $data['id'] ?? QUI::getDataBase()->getPDO()->lastInsertId();
 
         QUI\Watcher::addString(
             QUI::getLocale()->get('quiqqer/products', 'watcher.message.fields.create', [
@@ -343,8 +355,8 @@ class Fields
 
         // create view permission
         QUI::getPermissionManager()->addPermission([
-            'name' => "permission.products.fields.field{$newId}.view",
-            'title' => "quiqqer/products permission.products.fields.field{$newId}.view.title",
+            'name' => "permission.products.fields.field$newId.view",
+            'title' => "quiqqer/products permission.products.fields.field$newId.view.title",
             'desc' => "",
             'type' => 'bool',
             'area' => 'groups',
@@ -353,8 +365,8 @@ class Fields
 
         // create edit permission
         QUI::getPermissionManager()->addPermission([
-            'name' => "permission.products.fields.field{$newId}.edit",
-            'title' => "quiqqer/products permission.products.fields.field{$newId}.edit.title",
+            'name' => "permission.products.fields.field$newId.edit",
+            'title' => "quiqqer/products permission.products.fields.field$newId.edit.title",
             'desc' => "",
             'type' => 'bool',
             'area' => 'groups',
@@ -393,7 +405,7 @@ class Fields
                 $inherited[$Field->getId()] = 1;
                 Products::setGlobalInheritedVariantFields(array_keys($inherited));
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
 
@@ -405,9 +417,9 @@ class Fields
     /**
      * @param string $columnName
      * @param string $columnType - default = text
-     * @throws \Exception
+     * @throws Exception
      */
-    public static function createCacheColumn($columnName, $columnType = 'text')
+    public static function createCacheColumn(string $columnName, string $columnType = 'text'): void
     {
         QUI::getDataBase()->table()->addColumn(
             QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
@@ -419,9 +431,9 @@ class Fields
      * Create cache table column for a field
      *
      * @param integer $fieldId
-     * @throws \Exception
+     * @throws Exception
      */
-    public static function createFieldCacheColumn($fieldId)
+    public static function createFieldCacheColumn(int $fieldId): void
     {
         $Field = self::getField($fieldId);
 
@@ -449,7 +461,7 @@ class Fields
      * @param $fieldId
      * @param $attributes
      */
-    public static function setFieldTranslations($fieldId, $attributes)
+    public static function setFieldTranslations($fieldId, $attributes): void
     {
         $localeGroup = 'quiqqer/products';
 
@@ -534,14 +546,14 @@ class Fields
         // header
         self::insertTranslations(
             $localeGroup,
-            "permission.permission.products.fields.field{$fieldId}._header",
+            "permission.permission.products.fields.field$fieldId._header",
             $headerTranslations
         );
 
         // view permission
         self::insertTranslations(
             $localeGroup,
-            "permission.products.fields.field{$fieldId}.view.title",
+            "permission.products.fields.field$fieldId.view.title",
             $viewTranslations
         );
 
@@ -549,7 +561,7 @@ class Fields
         // edit permission
         self::insertTranslations(
             $localeGroup,
-            "permission.products.fields.field{$fieldId}.edit.title",
+            "permission.products.fields.field$fieldId.edit.title",
             $editTranslations
         );
     }
@@ -561,12 +573,12 @@ class Fields
      * @param string $var
      * @param array $data
      */
-    protected static function insertTranslations($group, $var, $data = [])
+    protected static function insertTranslations(string $group, string $var, array $data = []): void
     {
         try {
             $translations = QUI\Translator::get($group, $var);
 
-            if (!\is_array($data)) {
+            if (!is_array($data)) {
                 $data = [];
             }
 
@@ -614,20 +626,20 @@ class Fields
             self::$fieldTypes = QUI\Cache\LongTermCache::get($cacheName);
 
             return self::$fieldTypes;
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         // exists the type?
-        $dir = \dirname(\dirname(__FILE__)) . '/Field/Types/';
+        $dir = dirname(__FILE__, 2) . '/Field/Types/';
         $files = QUI\Utils\System\File::readDir($dir);
         $result = [];
 
         foreach ($files as $file) {
-            if (\strpos($file, 'View') !== false) {
+            if (str_contains($file, 'View')) {
                 continue;
             }
 
-            $file = \pathinfo($file);
+            $file = pathinfo($file);
 
             $result[] = [
                 'plugin' => 'quiqqer/products',
@@ -643,23 +655,23 @@ class Fields
         foreach ($plugins as $plugin) {
             $xml = OPT_DIR . $plugin['name'] . '/products.xml';
 
-            if (!\file_exists($xml)) {
+            if (!file_exists($xml)) {
                 continue;
             }
 
             $Dom = QUI\Utils\Text\XML::getDomFromXml($xml);
-            $Path = new \DOMXPath($Dom);
+            $Path = new DOMXPath($Dom);
 
             $fields = $Path->query("//quiqqer/products/fields/field");
 
-            /* @var $Field \DOMElement */
+            /* @var $Field DOMElement */
             foreach ($fields as $Field) {
                 $src = $Field->getAttribute('src');
                 $category = $Field->getAttribute('category');
                 $name = $Field->getAttribute('name');
                 $help = true;
 
-                if (!\class_exists($src)) {
+                if (!class_exists($src)) {
                     continue;
                 }
 
@@ -699,17 +711,17 @@ class Fields
             return self::$fieldTypeData[$type];
         }
 
-        $cacheName = Cache::getBasicCachePath() . 'fields/' . \md5($type);
+        $cacheName = Cache::getBasicCachePath() . 'fields/' . md5($type);
 
         try {
             self::$fieldTypeData[$type] = QUI\Cache\LongTermCache::get($cacheName);
 
             return self::$fieldTypeData[$type];
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         $types = self::getFieldTypes();
-        $found = \array_filter($types, function ($entry) use ($type) {
+        $found = array_filter($types, function ($entry) use ($type) {
             return $entry['name'] == $type;
         });
 
@@ -719,7 +731,7 @@ class Fields
             return [];
         }
 
-        self::$fieldTypeData[$type] = \reset($found);
+        self::$fieldTypeData[$type] = reset($found);
 
         QUI\Cache\LongTermCache::set($cacheName, self::$fieldTypeData[$type]);
 
@@ -737,13 +749,13 @@ class Fields
      * @throws QUI\Exception
      */
     public static function getFieldByType(
-        $type,
-        $fieldId,
-        $fieldParams = []
-    ) {
+        string $type,
+        int $fieldId,
+        array $fieldParams = []
+    ): QUI\ERP\Products\Field\Field {
         $class = 'QUI\ERP\Products\Field\Types\\' . $type;
 
-        if (\class_exists($class)) {
+        if (class_exists($class)) {
             return new $class($fieldId, $fieldParams);
         }
 
@@ -765,7 +777,7 @@ class Fields
      *
      * @throws QUI\ERP\Products\Field\Exception
      */
-    public static function getField($fieldId)
+    public static function getField(int $fieldId): QUI\ERP\Products\Field\Field
     {
         if (isset(self::$list[$fieldId])) {
             return clone self::$list[$fieldId];
@@ -780,12 +792,12 @@ class Fields
 
         try {
             $data = QUI\Cache\LongTermCache::get($cacheName);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             try {
                 $result = QUI::getDataBase()->fetch([
                     'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
                     'where' => [
-                        'id' => (int)$fieldId
+                        'id' => $fieldId
                     ],
                     'limit' => 1
                 ]);
@@ -806,7 +818,7 @@ class Fields
                         ]
                     ],
                     404,
-                    ['fieldId' => (int)$fieldId]
+                    ['fieldId' => $fieldId]
                 );
             }
 
@@ -825,25 +837,7 @@ class Fields
 
         $class = $fieldTypes['src'];
 
-        if (empty($fieldTypes)) {
-            throw new QUI\ERP\Products\Field\Exception(
-                [
-                    'quiqqer/products',
-                    'exception.field.type.not.found',
-                    [
-                        'id' => $fieldId,
-                        'type' => ''
-                    ]
-                ],
-                404,
-                [
-                    'id' => (int)$fieldId,
-                    'type' => $data['type']
-                ]
-            );
-        }
-
-        if (!\class_exists($class)) {
+        if (!class_exists($class)) {
             throw new QUI\ERP\Products\Field\Exception(
                 [
                     'quiqqer/products',
@@ -855,7 +849,7 @@ class Fields
                 ],
                 404,
                 [
-                    'id' => (int)$fieldId,
+                    'id' => $fieldId,
                     'type' => $data['type'],
                     'class' => $class
                 ]
@@ -870,7 +864,7 @@ class Fields
             'system' => (int)$data['systemField'],
             'required' => (int)$data['requiredField'],
             'standard' => (int)$data['standardField'],
-            'defaultValue' => \json_decode($data['defaultValue'], true)
+            'defaultValue' => json_decode($data['defaultValue'], true)
         ];
 
         /* @var $Field QUI\ERP\Products\Field\Field */
@@ -888,7 +882,7 @@ class Fields
                 ],
                 404,
                 [
-                    'id' => (int)$fieldId,
+                    'id' => $fieldId,
                     'type' => $data['type'],
                     'class' => $class
                 ]
@@ -934,7 +928,7 @@ class Fields
      *                              $queryParams['order']
      * @return array
      */
-    public static function getFieldIds($queryParams = [])
+    public static function getFieldIds(array $queryParams = []): array
     {
         $query = [
             'select' => 'id',
@@ -957,43 +951,10 @@ class Fields
             $queryParams['order'] = 'priority ASC';
         }
 
-        switch ($queryParams['order']) { // bad solution
-            case 'id':
-            case 'id ASC':
-            case 'id DESC':
-            case 'name':
-            case 'name ASC':
-            case 'name DESC':
-            case 'type':
-            case 'type ASC':
-            case 'type DESC':
-            case 'search_type':
-            case 'search_type ASC':
-            case 'search_type DESC':
-            case 'prefix':
-            case 'prefix ASC':
-            case 'prefix DESC':
-            case 'suffix':
-            case 'suffix ASC':
-            case 'suffix DESC':
-            case 'priority':
-            case 'priority ASC':
-            case 'priority DESC':
-            case 'standardField':
-            case 'standardField ASC':
-            case 'standardField DESC':
-            case 'systemField':
-            case 'systemField ASC':
-            case 'systemField DESC':
-            case 'requiredField':
-            case 'requiredField ASC':
-            case 'requiredField DESC':
-                $query['order'] = $queryParams['order'];
-                break;
-
-            default:
-                $query['order'] = 'priority ASC, id ASC';
-        }
+        $query['order'] = match ($queryParams['order']) {
+            'id', 'id ASC', 'id DESC', 'name', 'name ASC', 'name DESC', 'type', 'type ASC', 'type DESC', 'search_type', 'search_type ASC', 'search_type DESC', 'prefix', 'prefix ASC', 'prefix DESC', 'suffix', 'suffix ASC', 'suffix DESC', 'priority', 'priority ASC', 'priority DESC', 'standardField', 'standardField ASC', 'standardField DESC', 'systemField', 'systemField ASC', 'systemField DESC', 'requiredField', 'requiredField ASC', 'requiredField DESC' => $queryParams['order'],
+            default => 'priority ASC, id ASC',
+        };
 
         //$query['debug'] = true;
 
@@ -1020,7 +981,7 @@ class Fields
      *
      * @return QUI\ERP\Products\Interfaces\FieldInterface[]
      */
-    public static function getFields($queryParams = [])
+    public static function getFields(array $queryParams = []): array
     {
         $result = [];
         $data = self::getFieldIds($queryParams);
@@ -1050,7 +1011,7 @@ class Fields
      * @param $type
      * @return QUI\ERP\Products\Interfaces\FieldInterface[]
      */
-    public static function getFieldsByType($type)
+    public static function getFieldsByType($type): array
     {
         $result = [];
         $fields = self::getFields();
@@ -1071,7 +1032,7 @@ class Fields
      * @param array $queryParams - query params (where, where_or)
      * @return integer
      */
-    public static function countFields($queryParams = [])
+    public static function countFields(array $queryParams = []): int
     {
         $query = [
             'from' => QUI\ERP\Products\Utils\Tables::getFieldTableName(),
@@ -1097,7 +1058,7 @@ class Fields
             return 0;
         }
 
-        if (isset($data[0]) && isset($data[0]['count'])) {
+        if (isset($data[0]['count'])) {
             return (int)$data[0]['count'];
         }
 
@@ -1113,12 +1074,12 @@ class Fields
      * - isPublic
      * - showInDetails
      *
-     * @param int $fieldId (optional) - Restrict to one field [default: all fields]
+     * @param int|null $fieldId (optional) - Restrict to one field [default: all fields]
      * @param array $customaAttributes (optional) - Set custom attributes that are set to
      * every product field
      * @return void
      */
-    public static function setFieldAttributesToProducts($fieldId = null, $customaAttributes = [])
+    public static function setFieldAttributesToProducts(int $fieldId = null, array $customaAttributes = []): void
     {
         if (!empty($fieldId)) {
             $fieldIds = self::getFieldIds([
@@ -1143,7 +1104,7 @@ class Fields
                     'isPublic' => $Field->isPublic(),
                     'showInDetails' => $Field->showInDetails()
                 ];
-            } catch (\Exception $Exception) {
+            } catch (Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
             }
         }
@@ -1184,14 +1145,14 @@ class Fields
                         }
 
                         $Product->save();
-                    } catch (\Exception $Exception) {
+                    } catch (Exception $Exception) {
                         QUI\System\Log::writeException($Exception);
                         continue;
                     }
 
                     Products::cleanProductInstanceMemCache();
                 }
-            } catch (\Exception $Exception) {
+            } catch (Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
                 continue;
             }
@@ -1222,9 +1183,9 @@ class Fields
             if (empty($settings)) {
                 self::$priceFactorSettings = [];
             } else {
-                self::$priceFactorSettings = \json_decode($settings, true);
+                self::$priceFactorSettings = json_decode($settings, true);
             }
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
             return [];
@@ -1242,7 +1203,7 @@ class Fields
      */
     public static function getAllPriceFieldTypes(): array
     {
-        return \array_merge(
+        return array_merge(
             [
                 self::TYPE_PRICE,
                 self::TYPE_PRICE_BY_QUANTITY,
@@ -1285,11 +1246,11 @@ class Fields
                 }
 
                 foreach ($packageProvider['productPriceFields'] as $class) {
-                    if (!\class_exists($class)) {
+                    if (!class_exists($class)) {
                         continue;
                     }
 
-                    if (!\is_a($class, PriceFieldsProviderInterface::class, true)) {
+                    if (!is_a($class, PriceFieldsProviderInterface::class, true)) {
                         continue;
                     }
 

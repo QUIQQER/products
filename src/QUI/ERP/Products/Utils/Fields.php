@@ -6,11 +6,27 @@
 
 namespace QUI\ERP\Products\Utils;
 
+use DOMXPath;
 use QUI;
+use QUI\ERP\Products\Field\Field;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Interfaces\FieldInterface;
 use QUI\ERP\Products\Product\Model as ProductModel;
 use QUI\Utils\DOM;
+
+use function array_keys;
+use function array_map;
+use function explode;
+use function file_exists;
+use function floatval;
+use function implode;
+use function is_numeric;
+use function is_object;
+use function is_string;
+use function strnatcmp;
+use function trim;
+use function unpack;
+use function usort;
 
 /**
  * Class Fields
@@ -26,7 +42,7 @@ class Fields
      *
      * @todo wer hat diese methode gebaut? ToJson = return string, wieso array?
      */
-    public static function parseFieldsToJson($fields = [])
+    public static function parseFieldsToJson(array $fields = []): array
     {
         $result = [];
 
@@ -54,20 +70,16 @@ class Fields
     public static function parseFieldHashToArray($fieldHash): array
     {
         $result = [];
-        $fieldHash = \trim($fieldHash, ';');
+        $fieldHash = trim($fieldHash, ';');
 
         if (empty($fieldHash)) {
             return $result;
         }
 
-        $fieldHash = \explode(';', $fieldHash);
+        $fieldHash = explode(';', $fieldHash);
 
-        if (empty($fieldHash)) {
-            return $result;
-        }
-
-        foreach ($fieldHash as $key => $entry) {
-            $entry = \explode(':', $entry);
+        foreach ($fieldHash as $entry) {
+            $entry = explode(':', $entry);
             $entry[0] = (int)$entry[0];
 
             $result[$entry[0]] = $entry[1];
@@ -87,7 +99,7 @@ class Fields
         $hashes = self::parseFieldHashToArray($hash);
         $foundEmptyValues = false;
 
-        $hashes = \array_map(function ($entry) use (&$foundEmptyValues) {
+        $hashes = array_map(function ($entry) use (&$foundEmptyValues) {
             if ($entry === '') {
                 $foundEmptyValues = true;
 
@@ -126,8 +138,8 @@ class Fields
 
                     $searchHashes[$generatedHash] = true;
 
-                    if (!\is_numeric($option['valueId'])) {
-                        $clone[$fieldId] = \implode(\unpack("H*", $option['valueId']));
+                    if (!is_numeric($option['valueId'])) {
+                        $clone[$fieldId] = implode(unpack("H*", $option['valueId']));
                         $generatedHash = self::generateFieldHashFromArray($clone);
 
                         $searchHashes[$generatedHash] = true;
@@ -139,7 +151,7 @@ class Fields
         }
 
 
-        return \array_keys($searchHashes);
+        return array_keys($searchHashes);
     }
 
     /**
@@ -154,7 +166,7 @@ class Fields
             $result[] = $k . ':' . $ce;
         }
 
-        return ';' . \implode(';', $result) . ';';
+        return ';' . implode(';', $result) . ';';
     }
 
     /**
@@ -163,9 +175,9 @@ class Fields
      * @param mixed $object
      * @return boolean
      */
-    public static function isField($object): bool
+    public static function isField(mixed $object): bool
     {
-        if (!\is_object($object)) {
+        if (!is_object($object)) {
             return false;
         }
 
@@ -182,7 +194,7 @@ class Fields
      * @param QUI\ERP\Products\Interfaces\FieldInterface $Field
      * @throws QUI\Exception
      */
-    public static function validateField(QUI\ERP\Products\Interfaces\FieldInterface $Field)
+    public static function validateField(QUI\ERP\Products\Interfaces\FieldInterface $Field): void
     {
         $Field->validate($Field->getValue());
     }
@@ -230,7 +242,7 @@ class Fields
          */
         $getFieldSortValue = function (QUI\ERP\Products\Field\Field $Field, string $field) {
             if ($field === 'id') {
-                return (int)$Field->getId();
+                return $Field->getId();
             }
 
             if ($field === 'title') {
@@ -252,7 +264,7 @@ class Fields
             return (int)$Field->getAttribute($field);
         };
 
-        \usort($fields, function ($Field1, $Field2) use ($sort, $getFieldSortValue) {
+        usort($fields, function ($Field1, $Field2) use ($sort, $getFieldSortValue) {
             if (!self::isField($Field1)) {
                 return 1;
             }
@@ -266,8 +278,8 @@ class Fields
             $priority1 = $getFieldSortValue($Field1, $sort);
             $priority2 = $getFieldSortValue($Field2, $sort);
 
-            if (\is_string($priority1) || \is_string($priority2)) {
-                return \strnatcmp($priority1, $priority2);
+            if (is_string($priority1) || is_string($priority2)) {
+                return strnatcmp($priority1, $priority2);
             }
 
             // if sorting is priority, and both are equal, than use title
@@ -275,7 +287,7 @@ class Fields
                 $priority1 = $getFieldSortValue($Field1, 'title');
                 $priority2 = $getFieldSortValue($Field2, 'title');
 
-                return \strnatcmp($priority1, $priority2);
+                return strnatcmp($priority1, $priority2);
             }
 
             if ($priority1 === 0) {
@@ -316,7 +328,7 @@ class Fields
      * @param mixed $Field
      * @return bool
      */
-    public static function canUsedAsDetailField($Field): bool
+    public static function canUsedAsDetailField(mixed $Field): bool
     {
         /* @var $Field QUI\ERP\Products\Field\Field */
         if (!self::isField($Field)) {
@@ -351,7 +363,7 @@ class Fields
      * @param mixed $Field
      * @return bool
      */
-    public static function showFieldInProductDetails($Field): bool
+    public static function showFieldInProductDetails(mixed $Field): bool
     {
         /* @var $Field QUI\ERP\Products\Field\Field */
         if (!self::canUsedAsDetailField($Field)) {
@@ -364,10 +376,10 @@ class Fields
     /**
      * Returns the value from a Weight Field in Kilogram
      *
-     * @param $Field
-     * @return int
+     * @param Field $Field
+     * @return float|int
      */
-    public static function weightFieldToKilogram(QUI\ERP\Products\Field\Field $Field)
+    public static function weightFieldToKilogram(QUI\ERP\Products\Field\Field $Field): float|int
     {
         if ($Field->getId() !== QUI\ERP\Products\Handler\Fields::FIELD_WEIGHT) {
             return 0;
@@ -385,13 +397,13 @@ class Fields
     /**
      * Parses a weight value to kilogram
      *
-     * @param float|string|int $value
+     * @param float|int|string $value
      * @param string $unit - kg, g, t, tons, lbs, lb
-     * @return float
+     * @return float|int
      */
-    public static function weightToKilogram($value, string $unit)
+    public static function weightToKilogram(float|int|string $value, string $unit): float|int
     {
-        $value = \floatval($value);
+        $value = floatval($value);
 
         if ($unit === 'kg') {
             return $value;
@@ -401,20 +413,12 @@ class Fields
             return $value;
         }
 
-        switch ($unit) {
-            case 'g':
-                return $value / 1000;
-
-            case 't':
-            case 'tons':
-                return $value * 1000;
-
-            case 'lb':
-            case 'lbs':
-                return $value / 2.2046;
-        }
-
-        return $value;
+        return match ($unit) {
+            'g' => $value / 1000,
+            't', 'tons' => $value * 1000,
+            'lb', 'lbs' => $value / 2.2046,
+            default => $value,
+        };
     }
 
     /**
@@ -425,17 +429,10 @@ class Fields
      */
     public static function isWeight($weight): bool
     {
-        switch ($weight) {
-            case 'g':
-            case 'kg':
-            case 't':
-            case 'tons':
-            case 'lb':
-            case 'lbs':
-                return true;
-        }
-
-        return false;
+        return match ($weight) {
+            'g', 'kg', 't', 'tons', 'lb', 'lbs' => true,
+            default => false,
+        };
     }
 
     /**
@@ -520,18 +517,18 @@ class Fields
         foreach ($plugins as $plugin) {
             $xml = OPT_DIR . $plugin['name'] . '/products.xml';
 
-            if (!\file_exists($xml)) {
+            if (!file_exists($xml)) {
                 continue;
             }
 
             $Dom = QUI\Utils\Text\XML::getDomFromXml($xml);
-            $Path = new \DOMXPath($Dom);
+            $Path = new DOMXPath($Dom);
 
             $categoryList = $Path->query("//quiqqer/products/fieldCategories/fieldCategory");
 
             foreach ($categoryList as $Category) {
                 $name = $Category->getAttribute('name');
-                $name = \trim($name);
+                $name = trim($name);
 
                 $Title = $Category->getElementsByTagName('title');
                 $title = '';
@@ -617,7 +614,7 @@ class Fields
                     $fields[] = $Field->getAttributes();
 
                     $fieldIds[$fieldId] = true;
-                } catch (QUI\Exception $Exception) {
+                } catch (QUI\Exception) {
                 }
             }
         }
@@ -628,14 +625,14 @@ class Fields
         foreach ($plugins as $plugin) {
             $xml = OPT_DIR . $plugin['name'] . '/products.xml';
 
-            if (!\file_exists($xml)) {
+            if (!file_exists($xml)) {
                 continue;
             }
 
             $Dom = QUI\Utils\Text\XML::getDomFromXml($xml);
-            $Path = new \DOMXPath($Dom);
+            $Path = new DOMXPath($Dom);
 
-            $fieldList = $Path->query("//quiqqer/products/fields/field[@fieldCategory='{$category}']");
+            $fieldList = $Path->query("//quiqqer/products/fields/field[@fieldCategory='$category']");
 
             foreach ($fieldList as $NodeField) {
                 $fieldType = $NodeField->getAttribute('name');

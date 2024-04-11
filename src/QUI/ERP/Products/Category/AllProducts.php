@@ -20,10 +20,11 @@ class AllProducts extends Category
 {
     /**
      * AllProducts constructor.
+     *
      * @param int $categoryId - can't be used, id is always 0
      * @param array $data
      */
-    public function __construct($categoryId = 0, array $data = [])
+    public function __construct(protected int $categoryId = 0, array $data = [])
     {
         $data['parentId'] = 0;
 

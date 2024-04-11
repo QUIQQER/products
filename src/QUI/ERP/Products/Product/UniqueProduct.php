@@ -13,6 +13,7 @@ use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
+use QUI\ERP\Products\Interfaces\UniqueFieldInterface;
 use QUI\ERP\Products\Utils\PriceFactor;
 use QUI\Projects\Media\Utils as MediaUtils;
 
@@ -354,7 +355,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
                 }
             }
 
-            if (!Fields::isField($field)) {
+            if (!Fields::isField($field) && !is_a($field, UniqueFieldInterface::class)) {
                 $Instance = new UniqueField($field['id'], $field);
                 $Instance->setProduct($this);
 
@@ -362,8 +363,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
                 continue;
             }
 
-            if (get_class($field) != UniqueField::class) {
-                /* @var $field QUI\ERP\Products\Field\Field */
+            if ($field instanceof QUI\ERP\Products\Field\Field) {
                 $field = $field->createUniqueField();
             }
 

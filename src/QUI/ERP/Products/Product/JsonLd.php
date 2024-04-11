@@ -263,7 +263,7 @@ class JsonLd
             self::getMaxMin($Product, $Formatter)
         );
 
-        if (isset($prices['highPrice']) || isset($prices['lowPrice'])) {
+        if (isset($offers['highPrice']) || isset($offers['lowPrice'])) {
             unset($offers['price']);
         } elseif (isset($offers['price'])) {
             $offers['lowPrice'] = $offers['price'];
