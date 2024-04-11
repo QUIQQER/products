@@ -203,13 +203,11 @@ class VariantParent extends AbstractType
             $data['defaultVariantId'] = null;
         }
 
-        if (!empty($data)) {
-            QUI::getDataBase()->update(
-                QUI\ERP\Products\Utils\Tables::getProductTableName(),
-                $data,
-                ['id' => $this->getId()]
-            );
-        }
+        QUI::getDataBase()->update(
+            QUI\ERP\Products\Utils\Tables::getProductTableName(),
+            $data,
+            ['id' => $this->getId()]
+        );
 
         parent::productSave($fieldData, $EditUser);
 
@@ -217,7 +215,7 @@ class VariantParent extends AbstractType
         $categories = $this->getCategories();
         $MainCategory = $this->getCategory();
 
-        $mainCategoryValue = $MainCategory ? $MainCategory->getId() : null;
+        $mainCategoryValue = $MainCategory?->getId();
         $categoriesValue = null;
 
         if (!empty($categories)) {

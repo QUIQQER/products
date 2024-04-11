@@ -1722,7 +1722,7 @@ class Model extends QUI\QDOM
 
         // look if the product miss some category fields
         foreach ($categoryFields as $fieldId => $val) {
-            if ($isFieldIdInArray($fieldId, $fields) === false) {
+            if (isset($Category) && $isFieldIdInArray($fieldId, $fields) === false) {
                 $CategoryField = $Category->getField($fieldId);
 
                 if ($CategoryField) {

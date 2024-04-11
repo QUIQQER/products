@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Product\Types;
 
 use QUI;
 use QUI\ERP\Products\Field\Types\AttributeGroup;
+use QUI\ERP\Products\Field\Types\Folder as FolderProductFieldType;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Utils\VariantGenerating;
@@ -91,6 +92,11 @@ class VariantChild extends AbstractType
 
         foreach ($fields as $ParentField) {
             $fieldId = $ParentField->getId();
+
+            if ($this->OwnMediaFolderField && $fieldId === $this->OwnMediaFolderField->getId()) {
+                continue;
+            }
+
             $isInherited = isset($inheritedFields[$fieldId]);
             $isEditable = isset($editableFields[$fieldId]);
 
@@ -117,9 +123,18 @@ class VariantChild extends AbstractType
                     }
                 }
 
+                $isEmpty = $Field->isEmpty();
+
+                // Media folders: isEmpty() of folder fields additionally checks if there are images in the folder.
+                // But at this point we are only interested if a field value is set.
+                // Therefore, media folder fields are treated special here.
+                if ($Field instanceof FolderProductFieldType) {
+                    $isEmpty = empty($Field->getValue());
+                }
+
                 // If the short description of variant children shall be extended by variant defining
                 // attribute list field values, collect these values here.
-                if (!$Field->isEmpty()) {
+                if (!$isEmpty) {
                     if (Products::isExtendVariantChildShortDesc() && $Field instanceof AttributeGroup) {
                         $attributeListFieldValues[] = [
                             'title' => $Field->getTitle(),
@@ -218,9 +233,9 @@ class VariantChild extends AbstractType
     /**
      * Return the parent variant product
      *
-     * @return VariantParent
+     * @return VariantParent|null
      */
-    public function getParent()
+    public function getParent(): ?VariantParent
     {
         if ($this->Parent !== null) {
             return $this->Parent;
@@ -230,7 +245,7 @@ class VariantChild extends AbstractType
             $this->Parent = Products::getProduct(
                 $this->getAttribute('parent')
             );
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         return $this->Parent;

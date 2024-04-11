@@ -8,6 +8,7 @@ namespace QUI\ERP\Products;
 
 use QUI;
 use QUI\ERP\Products\Handler\Products;
+use QUI\Exception;
 use QUI\System\Log;
 
 use function count;
@@ -29,7 +30,7 @@ class Crons
     /**
      * Updates cache values for all products
      */
-    public static function updateProductCache()
+    public static function updateProductCache(): void
     {
         // global watcher disable
         QUI\Watcher::$globalWatcherDisable = true;
@@ -50,12 +51,12 @@ class Crons
                 $Product->updateCache();
                 $Product->buildCache();
                 Log::addDebug("update cache for product #" . $id . " | time: " . (microtime(true) - $t));
-            } catch (QUI\Exception $Exception) {
+            } catch (Exception $Exception) {
                 Log::writeException($Exception);
 
                 Log::addWarning(
                     'cron :: updateProductCache() :: Could not update cache'
-                    . ' for Product #' . $Product->getId() . ' -> '
+                    . ' for Product #' . $id . ' -> '
                     . $Exception->getMessage()
                 );
             }
@@ -69,9 +70,9 @@ class Crons
      * Go through all images and build the image cache
      * So the first call is faster
      *
-     * @throws \QUI\Exception
+     * @throws Exception
      */
-    public static function generateCacheImagesOfProducts()
+    public static function generateCacheImagesOfProducts(): void
     {
         $ids = Products::getProductIds();
         $count = count($ids);
