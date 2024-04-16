@@ -2,8 +2,14 @@
 
 namespace QUI\ERP\Products\Controls\ManufacturerList;
 
+use Exception;
 use QUI;
 use QUI\ERP\Products\Handler\Manufacturers as ManufacturersHandler;
+
+use function count;
+use function dirname;
+use function strnatcmp;
+use function usort;
 
 /**
  * Class ManufacturerList
@@ -17,7 +23,7 @@ class ManufacturerList extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         $this->setAttributes([
             'class' => 'quiqqer-product-list',
@@ -25,7 +31,7 @@ class ManufacturerList extends QUI\Control
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/manufacturerList/ManufacturerList',
         ]);
 
-        $this->addCSSFile(\dirname(__FILE__) . '/ManufacturerList.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ManufacturerList.css');
 
         parent::__construct($attributes);
     }
@@ -36,7 +42,7 @@ class ManufacturerList extends QUI\Control
      * @throws QUI\Exception
      * @see \QUI\Control::create()
      */
-    public function getBody()
+    public function getBody(): string
     {
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
@@ -64,7 +70,7 @@ class ManufacturerList extends QUI\Control
         $more = false;
 
         $manufacturerUsers = ManufacturersHandler::getManufacturerUsers(null, 0, true);
-        $count = \count($manufacturerUsers);
+        $count = count($manufacturerUsers);
 
         try {
             if (isset($_REQUEST['sheet'])) {
@@ -109,7 +115,7 @@ class ManufacturerList extends QUI\Control
             'placeholder' => $this->getProject()->getMedia()->getPlaceholder()
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ManufacturerList.html');
+        return $Engine->fetch(dirname(__FILE__) . '/ManufacturerList.html');
     }
 
     /**
@@ -120,7 +126,7 @@ class ManufacturerList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    public function getStart($count = false)
+    public function getStart(bool|int $count = false): array
     {
         return $this->renderData(0, $this->getMax(), $count);
     }
@@ -134,7 +140,7 @@ class ManufacturerList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    public function getNext($start = false, $count = false)
+    public function getNext(bool|int $start = false, bool|int $count = false): array
     {
         return $this->renderData($start, $this->getMax(), $count);
     }
@@ -149,7 +155,7 @@ class ManufacturerList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    protected function renderData($start, $max, $count = false)
+    protected function renderData(bool|int $start, bool|int $max, bool|int $count = false): array
     {
         $Engine = QUI::getTemplateManager()->getEngine();
 
@@ -183,10 +189,10 @@ class ManufacturerList extends QUI\Control
                 }
 
                 if ($count === false) {
-                    $count = \count($userIds);
+                    $count = count($userIds);
                 }
             }
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_NOTICE);
             $count = 0;
         }
@@ -196,12 +202,12 @@ class ManufacturerList extends QUI\Control
         }
 
         // sort alphabetically
-        \usort($manufacturerUserIds, function ($userIdA, $userIdB) {
+        usort($manufacturerUserIds, function ($userIdA, $userIdB) {
             /**
              * @var int $userIdA
              * @var int $userIdB
              */
-            return \strnatcmp(
+            return strnatcmp(
                 ManufacturersHandler::getManufacturerTitle($userIdA),
                 ManufacturersHandler::getManufacturerTitle($userIdB)
             );
@@ -218,10 +224,10 @@ class ManufacturerList extends QUI\Control
             'more' => $more
         ]);
 
-        $this->addCSSFile(\dirname(__FILE__) . '/ManufacturerList.Gallery.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ManufacturerList.Gallery.css');
 
         return [
-            'html' => $Engine->fetch(\dirname(__FILE__) . '/ManufacturerList.Gallery.html'),
+            'html' => $Engine->fetch(dirname(__FILE__) . '/ManufacturerList.Gallery.html'),
             'count' => $count,
             'more' => $more
         ];
@@ -232,7 +238,7 @@ class ManufacturerList extends QUI\Control
      *
      * @return int
      */
-    protected function getMax()
+    protected function getMax(): int
     {
         // settings
         if ($this->getAttribute('productLoadNumber')) {

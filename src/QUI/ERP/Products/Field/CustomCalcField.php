@@ -35,7 +35,7 @@ abstract class CustomCalcField extends QUI\ERP\Products\Field\Field implements C
     /**
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes                = parent::getAttributes();
         $attributes['custom_calc'] = $this->getCalculationData(Products::getLocale());

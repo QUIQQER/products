@@ -291,7 +291,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $cacheName = Categories::getCacheName($this->getId()) . '/attributes';
         $cacheFields = Categories::getCacheName($this->getId()) . '/fields';

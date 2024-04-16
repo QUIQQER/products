@@ -8,6 +8,8 @@ namespace QUI\ERP\Products\Controls\Search;
 
 use QUI;
 use QUI\ERP\Products\Search\FrontendSearch;
+use QUI\Exception;
+use QUI\Projects\Project;
 
 /**
  * Class Suggest
@@ -41,26 +43,11 @@ class Suggest extends QUI\Control
     /**
      * (non-PHPdoc)
      *
-     * @return string
-     */
-    public function create()
-    {
-//        $Site = $this->getSite();
-//        if ($Site->getAttribute('quiqqer.products.settings.showFreeTextSearch')) {
-//            return '';
-//        }
-
-        return parent::create();
-    }
-
-    /**
-     * (non-PHPdoc)
-     *
      * @throws QUI\Exception
      * @see \QUI\Control::create()
      *
      */
-    public function getBody()
+    public function getBody(): string
     {
         try {
             $Engine = QUI::getTemplateManager()->getEngine();
@@ -174,11 +161,11 @@ class Suggest extends QUI\Control
     /**
      * Return the current project
      *
-     * @return mixed|QUI\Projects\Project
+     * @return Project
      *
-     * @throws QUI\Exception
+     * @throws Exception
      */
-    protected function getProject()
+    protected function getProject(): QUI\Projects\Project
     {
         if ($this->getAttribute('Project')) {
             return $this->getAttribute('Project');

@@ -1162,7 +1162,7 @@ class Model extends QUI\QDOM
      *
      * @throws QUI\Exception
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = parent::getAttributes();
 

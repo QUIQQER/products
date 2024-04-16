@@ -134,7 +134,7 @@ interface ProductInterface
      * @param string $name - name of the attribute
      * @return mixed
      */
-    public function getAttribute($name);
+    public function getAttribute(string $name): mixed;
 
     /**
      * Return the main category

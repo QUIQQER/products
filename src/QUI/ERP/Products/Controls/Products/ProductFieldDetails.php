@@ -8,6 +8,9 @@ namespace QUI\ERP\Products\Controls\Products;
 
 use QUI;
 
+use function array_filter;
+use function dirname;
+
 /**
  * Class ProductFieldDetails
  * @package QUI\ERP\Products\Controls\Products
@@ -19,7 +22,7 @@ class ProductFieldDetails extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         $this->setAttributes([
             'Field' => false,
@@ -37,7 +40,7 @@ class ProductFieldDetails extends QUI\Control
      * @throws QUI\Exception
      * @see \QUI\Control::create()
      */
-    public function getBody()
+    public function getBody(): string
     {
         $Field = $this->getAttribute('Field');
 
@@ -50,12 +53,12 @@ class ProductFieldDetails extends QUI\Control
         /* @var $Field QUI\ERP\Products\Field\Field */
         switch ($Field->getType()) {
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA:
-                $template = \dirname(__FILE__) . '/ProductFieldDetails.Content.html';
+                $template = dirname(__FILE__) . '/ProductFieldDetails.Content.html';
                 $Engine->assign('content', $Field->getValue());
                 break;
 
             case QUI\ERP\Products\Handler\Fields::TYPE_TEXTAREA_MULTI_LANG:
-                $template = \dirname(__FILE__) . '/ProductFieldDetails.Content.html';
+                $template = dirname(__FILE__) . '/ProductFieldDetails.Content.html';
                 $lang = QUI::getLocale()->getCurrent();
                 $value = $Field->getValue();
 
@@ -63,7 +66,7 @@ class ProductFieldDetails extends QUI\Control
                 break;
 
             case QUI\ERP\Products\Handler\Fields::TYPE_PRODCUCTS:
-                $template = \dirname(__FILE__) . '/ProductFieldDetails.Products.html';
+                $template = dirname(__FILE__) . '/ProductFieldDetails.Products.html';
                 $productIds = $Field->getValue();
 
                 if (empty($productIds)) {
@@ -87,7 +90,7 @@ class ProductFieldDetails extends QUI\Control
 
             case QUI\ERP\Products\Handler\Fields::TYPE_FOLDER:
                 /* @var $Field QUI\ERP\Products\Field\Types\Folder */
-                $template = \dirname(__FILE__) . '/ProductFieldDetails.MediaFolder.html';
+                $template = dirname(__FILE__) . '/ProductFieldDetails.MediaFolder.html';
                 $Folder = $Field->getMediaFolder();
                 $files = [];
 
@@ -111,7 +114,7 @@ class ProductFieldDetails extends QUI\Control
                     $files = $Folder->getFiles();
                 }
 
-                $files = \array_filter($files, function ($File) {
+                $files = array_filter($files, function ($File) {
                     /* @var $File QUI\Projects\Media\Item $File */
                     return $File->isActive() && $File->hasPermission('quiqqer.projects.media.view');
                 });

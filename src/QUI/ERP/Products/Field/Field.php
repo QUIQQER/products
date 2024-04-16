@@ -781,10 +781,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * set an attribute
      *
      * @param string $name - name of the attribute
-     * @param string|boolean|array|object $val - value of the attribute
-     * @return Field
+     * @param mixed $val - value of the attribute
      */
-    public function setAttribute($name, $val)
+    public function setAttribute(string $name, mixed $val): void
     {
         switch ($name) {
             case 'name':
@@ -808,31 +807,29 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                     $this->standard = true;
                 }
 
-                return $this;
+                return;
 
             case 'systemField':
                 // system field type could not be changed
-                return $this;
+                return;
 
             case 'requiredField':
                 $this->require = $val ? true : false;
 
-                return $this;
+                return;
 
             case 'publicField':
                 $this->public = $val ? true : false;
 
-                return $this;
+                return;
 
             case 'showInDetails':
                 $this->showInDetails = $val ? true : false;
 
-                return $this;
+                return;
         }
 
         parent::setAttribute($name, $val);
-
-        return $this;
     }
 
     /**
@@ -1071,7 +1068,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return mixed|string
      */
-    public function getType()
+    public function getType(): string
     {
         if (!is_null($this->type)) {
             return $this->type;
@@ -1163,7 +1160,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = parent::getAttributes();
         $attributes['id'] = $this->getId();

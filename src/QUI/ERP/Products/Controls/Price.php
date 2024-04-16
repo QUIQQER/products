@@ -28,7 +28,7 @@ class Price extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         $this->setAttributes([
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/Price',
@@ -43,10 +43,7 @@ class Price extends QUI\Control
     }
 
     /**
-     * (non-PHPdoc)
-     *
      * @throws QUI\Exception
-     * @see \QUI\Control::create()
      */
     public function getBody(): string
     {

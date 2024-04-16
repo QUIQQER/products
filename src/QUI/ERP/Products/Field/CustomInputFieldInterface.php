@@ -14,5 +14,5 @@ interface CustomInputFieldInterface
      *
      * @return string|false
      */
-    public function getUserInput();
+    public function getUserInput(): bool|string;
 }

@@ -11,6 +11,8 @@ use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 
+use QUI\ERP\Products\Search\FrontendSearch;
+
 use function dirname;
 use function explode;
 use function get_class;
@@ -33,37 +35,37 @@ class ProductList extends QUI\Control
     /**
      * @var null|QUI\ERP\Products\Category\Category
      */
-    protected $Category = null;
+    protected ?QUI\ERP\Products\Category\Category $Category = null;
 
     /**
      * @var null|QUI\ERP\Products\Search\FrontendSearch
      */
-    protected $Search = null;
+    protected ?QUI\ERP\Products\Search\FrontendSearch $Search = null;
 
     /**
-     * @var null
+     * @var array|null
      */
-    protected $filter = null;
+    protected ?array $filter = null;
 
     /**
      * Sorting fields -> can be added via addSort
      * @var array
      */
-    protected $sort = [];
+    protected array $sort = [];
 
     /**
      * CID
      *
-     * @var null|QUI\Control
+     * @var string|null
      */
-    protected $id = null;
+    protected ?string $id = null;
 
     /**
      * constructor
      *
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         $this->setAttributes([
             'class' => 'quiqqer-product-list',
@@ -141,7 +143,7 @@ class ProductList extends QUI\Control
         }
 
         // global settings: product load number
-        if ($this->getAttribute('productLoadNumber') == '' || $this->getAttribute('productLoadNumber') == false) {
+        if ($this->getAttribute('productLoadNumber') == '' || !$this->getAttribute('productLoadNumber')) {
             $this->setAttribute('productLoadNumber', $Config->get('products', 'productLoadNumber'));
         }
 
@@ -337,7 +339,7 @@ class ProductList extends QUI\Control
             foreach ($tagGroups as $tagGroup) {
                 try {
                     $filter[] = QUI\Tags\Groups\Handler::get($this->getProject(), $tagGroup);
-                } catch (QUI\Tags\Exception $Exception) {
+                } catch (QUI\Tags\Exception) {
                 } catch (QUI\Exception $Exception) {
                     QUI\System\Log::writeDebugException($Exception);
                 }
@@ -761,9 +763,9 @@ class ProductList extends QUI\Control
     /**
      * Return the search
      *
-     * @return false|QUI\ERP\Products\Search\FrontendSearch
+     * @return bool|FrontendSearch|null
      */
-    protected function getSearch()
+    protected function getSearch(): bool|QUI\ERP\Products\Search\FrontendSearch|null
     {
         try {
             if ($this->Search === null) {
@@ -771,17 +773,17 @@ class ProductList extends QUI\Control
             }
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeException($Exception, QUI\System\Log::LEVEL_DEBUG);
-            $this->Search = false;
+            $this->Search = null;
         }
 
         return $this->Search;
     }
 
     /**
-     * @return mixed|QUI\Projects\Site
+     * @return QUI\Interfaces\Projects\Site
      * @throws QUI\Exception
      */
-    protected function getSite()
+    protected function getSite(): QUI\Interfaces\Projects\Site
     {
         if ($this->getAttribute('Site')) {
             return $this->getAttribute('Site');
