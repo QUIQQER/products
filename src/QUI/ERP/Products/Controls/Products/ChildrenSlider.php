@@ -131,7 +131,8 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
      *
      * @throws QUI\Exception
      */
-    public function getRetailPrice(QUI\ERP\Products\Interfaces\ProductInterface $Product
+    public function getRetailPrice(
+        QUI\ERP\Products\Interfaces\ProductInterface $Product
     ): ?QUI\ERP\Products\Controls\Price {
         if ($this->getAttribute('hideRetailPrice')) {
             return null;
