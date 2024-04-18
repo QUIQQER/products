@@ -9,7 +9,6 @@ namespace QUI\ERP\Products\Console;
 use QUI;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Cache\ProductCache;
-
 use QUI\Lock\Exception;
 
 use function count;
