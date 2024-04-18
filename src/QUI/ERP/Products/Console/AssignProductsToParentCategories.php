@@ -2,8 +2,12 @@
 
 namespace QUI\ERP\Products\Console;
 
+use Exception;
 use QUI;
 use QUI\ERP\Products\Handler\Products;
+
+use function array_map;
+use function explode;
 
 /**
  * Class AssignProductsToParentCategories
@@ -32,15 +36,15 @@ class AssignProductsToParentCategories extends QUI\System\Console\Tool
     /**
      * Execute the console tool
      */
-    public function execute()
+    public function execute(): void
     {
         // Fetch productIds
         $productIds = $this->getArgument('productIds');
 
         if (!empty($productIds)) {
-            $productIds = \explode(',', $productIds);
+            $productIds = explode(',', $productIds);
 
-            \array_map(function ($v) {
+            array_map(function ($v) {
                 return (int)$v;
             }, $productIds);
         } else {
@@ -57,7 +61,7 @@ class AssignProductsToParentCategories extends QUI\System\Console\Tool
                 $this->assignCategoriesToProduct($Product);
 
                 $Product->save($SystemUser);
-            } catch (\Exception $Exception) {
+            } catch (Exception $Exception) {
                 $this->write(" ERROR! -> " . $Exception->getMessage());
 
                 QUI\System\Log::writeException($Exception);
@@ -74,9 +78,9 @@ class AssignProductsToParentCategories extends QUI\System\Console\Tool
      * @param QUI\ERP\Products\Product\Product $Product
      * @return void
      */
-    protected function assignCategoriesToProduct(QUI\ERP\Products\Product\Product $Product)
+    protected function assignCategoriesToProduct(QUI\ERP\Products\Product\Product $Product): void
     {
-        $assign = function (QUI\ERP\Products\Category\Category $Category) use ($Product, &$assign) {
+        $assign = function (QUI\ERP\Products\Interfaces\CategoryInterface $Category) use ($Product, &$assign) {
             $Product->addCategory($Category);
 
             if ($Category->getParent()) {

@@ -1,12 +1,13 @@
 <?php
 
 /**
- * This file contains \Hklused\Machines\Patch
+ * This file contains QUI\ERP\Products\Console\GenerateProductAttributeListTags
  */
 
 namespace QUI\ERP\Products\Console;
 
 use QUI;
+use QUI\Exception;
 
 /**
  * Console tool for HKL used patches
@@ -16,7 +17,7 @@ use QUI;
 class GenerateProductAttributeListTags extends QUI\System\Console\Tool
 {
     /**
-     * Konstruktor
+     * Constructor
      */
     public function __construct()
     {
@@ -28,8 +29,9 @@ class GenerateProductAttributeListTags extends QUI\System\Console\Tool
 
     /**
      * Execute the console tool
+     * @throws Exception
      */
-    public function execute()
+    public function execute(): void
     {
         QUI\Permissions\Permission::isAdmin();
         QUI\ERP\Tags\Crons::generateProductAttributeListTags();
