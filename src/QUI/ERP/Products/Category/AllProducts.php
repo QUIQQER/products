@@ -144,7 +144,7 @@ class AllProducts extends Category
      *
      * @param bool|QUI\Interfaces\Users\User $User
      */
-    public function save($User = false)
+    public function save($User = false): void
     {
         // do nothing
     }
@@ -155,7 +155,7 @@ class AllProducts extends Category
      *
      * @param bool|QUI\Interfaces\Users\User $User
      */
-    public function delete($User = false)
+    public function delete($User = false): void
     {
         // do nothing
     }
@@ -166,7 +166,7 @@ class AllProducts extends Category
      *
      * @param int $parentId
      */
-    public function setParentId(int $parentId)
+    public function setParentId(int $parentId): void
     {
         // do nothing
     }
