@@ -7,6 +7,8 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
+use QUI\Database\Exception;
+use QUI\ERP\Money\Price;
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields;
@@ -15,8 +17,12 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
 use QUI\ERP\Products\Interfaces\FieldInterface;
 use QUI\ERP\Products\Product\Cache\ProductCache;
 use QUI\ERP\Products\Utils\Products as ProductUtils;
+use QUI\ExceptionStack;
+use QUI\Interfaces\Users\User;
+use QUI\Locale;
 use QUI\Projects\Media\Utils as MediaUtils;
 
+use function array_column;
 use function array_filter;
 use function array_flip;
 use function array_key_first;
@@ -26,20 +32,26 @@ use function array_reverse;
 use function array_unique;
 use function array_values;
 use function ceil;
+use function constant;
 use function count;
+use function current;
 use function date;
 use function defined;
 use function explode;
 use function floor;
 use function implode;
 use function is_array;
+use function is_null;
 use function is_string;
 use function json_decode;
 use function json_encode;
 use function md5;
+use function parse_url;
+use function reset;
 use function round;
 use function trim;
 use function urlencode;
+use function usort;
 
 /**
  * Class Controller
@@ -66,42 +78,42 @@ class Model extends QUI\QDOM
 {
     /**
      * Product-ID
-     * @var
+     * @var int
      */
-    protected $id;
+    protected int $id;
 
     /**
      * @var array
      */
-    protected $fields = [];
+    protected array $fields = [];
 
     /**
      * @var array
      */
-    protected $categories = [];
+    protected array $categories = [];
 
     /**
      * Permissions list
      * @var array
      */
-    protected $permissions = [];
+    protected mixed $permissions = [];
 
     /**
      * @var null
      */
-    protected $Category = null;
+    protected mixed $Category = null;
 
     /**
-     * @var QUI\ERP\Currency\Currency
+     * @var ?QUI\ERP\Currency\Currency
      */
-    protected $Currency = null;
+    protected ?QUI\ERP\Currency\Currency $Currency = null;
 
     /**
      * Activate / Deactivate status
      *
      * @var bool
      */
-    protected $active = false;
+    protected bool $active = false;
 
     /**
      * Force the application of all price factors on product save.
@@ -111,7 +123,7 @@ class Model extends QUI\QDOM
      *
      * @var bool
      */
-    protected $forcePriceFactorUse = false;
+    protected bool $forcePriceFactorUse = false;
 
     /**
      * Model constructor
@@ -122,7 +134,7 @@ class Model extends QUI\QDOM
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
      */
-    public function __construct($pid, $product = [])
+    public function __construct(int $pid, array $product = [])
     {
         if (empty($product)) {
             throw new QUI\ERP\Products\Product\Exception(
@@ -136,8 +148,8 @@ class Model extends QUI\QDOM
             );
         }
 
-        $this->id = (int)$pid;
-        $this->active = (int)$product['active'] ? true : false;
+        $this->id = $pid;
+        $this->active = (bool)((int)$product['active']);
 
         if (!empty($product['permissions']) && $product['permissions'] !== '[]') {
             $this->permissions = json_decode($product['permissions'], true);
@@ -164,7 +176,7 @@ class Model extends QUI\QDOM
                     foreach ($Category->getFields() as $CategoryField) {
                         $this->fields[$CategoryField->getId()] = clone $CategoryField;
                     }
-                } catch (QUI\Exception $Exception) {
+                } catch (QUI\Exception) {
                 }
             }
         }
@@ -180,7 +192,7 @@ class Model extends QUI\QDOM
         if ($mainCategory !== false && isset($this->categories[$mainCategory])) {
             try {
                 $this->Category = Categories::getCategory($mainCategory);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 
@@ -315,15 +327,12 @@ class Model extends QUI\QDOM
      * @throws QUI\Permissions\Exception
      * @throws QUI\ERP\Products\Product\Exception
      */
-    public function getView()
+    public function getView(): ViewBackend|ViewFrontend
     {
-        switch ($this->getAttribute('viewType')) {
-            case 'backend':
-                return $this->getViewBackend();
-
-            default:
-                return $this->getViewFrontend();
-        }
+        return match ($this->getAttribute('viewType')) {
+            'backend' => $this->getViewBackend(),
+            default => $this->getViewFrontend(),
+        };
     }
 
     /**
@@ -332,7 +341,7 @@ class Model extends QUI\QDOM
      * @throws QUI\Permissions\Exception
      * @throws QUI\ERP\Products\Product\Exception
      */
-    public function getViewFrontend()
+    public function getViewFrontend(): ViewFrontend
     {
         return new ViewFrontend($this);
     }
@@ -340,7 +349,7 @@ class Model extends QUI\QDOM
     /**
      * @return ViewBackend
      */
-    public function getViewBackend()
+    public function getViewBackend(): ViewBackend
     {
         return new ViewBackend($this);
     }
@@ -354,7 +363,7 @@ class Model extends QUI\QDOM
      * @throws QUI\Exception
      * @throws QUI\ERP\Products\Product\Exception
      */
-    public function createUniqueProduct($User = null)
+    public function createUniqueProduct(User $User = null): UniqueProduct
     {
         if (!QUI::getUsers()->isUser($User)) {
             $User = QUI::getUsers()->getNobody();
@@ -375,7 +384,7 @@ class Model extends QUI\QDOM
             $attributes = $this->getAttributes();
             $attributes['title'] = $this->getTitle($Locale);
             $attributes['description'] = $this->getDescription($Locale);
-            $attributes['uid'] = $User->getId();
+            $attributes['uid'] = $User->getUUID();
             $attributes['displayPrice'] = true;
             $attributes['maximumQuantity'] = $this->getMaximumQuantity();
 
@@ -433,7 +442,7 @@ class Model extends QUI\QDOM
      * @param QUI\Interfaces\Users\User $User
      * @return string
      */
-    protected function getUniqueProductCachePath(QUI\Interfaces\Users\User $User)
+    protected function getUniqueProductCachePath(QUI\Interfaces\Users\User $User): string
     {
         // $Locale = $User->getLocale(); // quiqqer/order#158
         $Locale = QUI\ERP\Products\Handler\Products::getLocale();
@@ -456,13 +465,13 @@ class Model extends QUI\QDOM
      * Create the media folder for the product
      * if the product has a folder, no folder would be created
      *
-     * @param integer|boolean $fieldId - optional, Media Folder Field id,
+     * @param boolean|integer $fieldId - optional, Media Folder Field id,
      *                                   if you want to create a media folder for a media folder field
      * @return QUI\Projects\Media\Folder
      *
      * @throws QUI\Exception
      */
-    public function createMediaFolder($fieldId = false)
+    public function createMediaFolder(bool|int $fieldId = false): QUI\Projects\Media\Folder
     {
         // create field folder
         if ($fieldId) {
@@ -484,7 +493,7 @@ class Model extends QUI\QDOM
                     /* @var $Folder QUI\Projects\Media\Folder */
                     return $Folder;
                 }
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
 
             $MainFolder = $this->createMediaFolder();
@@ -515,7 +524,7 @@ class Model extends QUI\QDOM
         // create main media folder
         try {
             return $this->getMediaFolder();
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         // create folder
@@ -552,7 +561,7 @@ class Model extends QUI\QDOM
     /**
      * @return integer
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -562,9 +571,9 @@ class Model extends QUI\QDOM
      *
      * @return int
      *
-     * @throws Exception
+     * @throws \QUI\ERP\Products\Product\Exception
      */
-    public function getPriority()
+    public function getPriority(): int
     {
         return $this->getFieldValue(Fields::FIELD_PRIORITY);
     }
@@ -574,9 +583,9 @@ class Model extends QUI\QDOM
      *
      * @return QUI\ERP\Products\Field\Field
      *
-     * @throws Exception
+     * @throws \QUI\ERP\Products\Product\Exception
      */
-    public function getPriorityField()
+    public function getPriorityField(): QUI\ERP\Products\Field\Field
     {
         return $this->getField(Fields::FIELD_PRIORITY);
     }
@@ -590,7 +599,7 @@ class Model extends QUI\QDOM
      *
      * @throws QUI\Exception
      */
-    public function getUrl($Project = null)
+    public function getUrl(QUI\Projects\Project $Project = null): string
     {
         if ($Project === null) {
             $Project = QUI::getRewrite()->getProject();
@@ -603,10 +612,8 @@ class Model extends QUI\QDOM
 
         try {
             $url = QUI\Cache\LongTermCache::get($cacheName);
-            $url = \parse_url($url, PHP_URL_PATH);
-
-            return $url;
-        } catch (QUI\Exception $Exception) {
+            return parse_url($url, PHP_URL_PATH);
+        } catch (QUI\Exception) {
         }
 
         // look if category is in product and it is the correct site
@@ -670,7 +677,7 @@ class Model extends QUI\QDOM
                 0 => $this->getUrlName(),
                 'paramAsSites' => true
             ]);
-        } catch (\Exception $Exception) {
+        } catch (\Exception) {
             return '/_p/' . $this->getUrlName();
         }
 
@@ -684,7 +691,7 @@ class Model extends QUI\QDOM
      * @return string
      * @throws QUI\Exception
      */
-    public function getUrlRewrittenWithHost($Project = null)
+    public function getUrlRewrittenWithHost($Project = null): string
     {
         if (!$Project) {
             $Project = QUI::getRewrite()->getProject();
@@ -718,7 +725,7 @@ class Model extends QUI\QDOM
                 0 => $this->getUrlName(),
                 'paramAsSites' => true
             ]);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             QUI\System\Log::addInfo(
                 QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', [
                     'productId' => $this->getId(),
@@ -739,7 +746,7 @@ class Model extends QUI\QDOM
      *
      * @return string
      */
-    public function getUrlName()
+    public function getUrlName(): string
     {
         $url = '';
         $useUrlField = false;
@@ -772,7 +779,7 @@ class Model extends QUI\QDOM
      * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getTitle($Locale = null)
+    public function getTitle(?QUI\Locale $Locale = null): string
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_TITLE, $Locale);
 
@@ -800,7 +807,7 @@ class Model extends QUI\QDOM
      * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getDescription($Locale = null)
+    public function getDescription(?QUI\Locale $Locale = null): string
     {
         $result = $this->getLanguageFieldValue(
             Fields::FIELD_SHORT_DESC,
@@ -820,7 +827,7 @@ class Model extends QUI\QDOM
      * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getContent($Locale = null)
+    public function getContent(?QUI\Locale $Locale = null): string
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_CONTENT, $Locale);
 
@@ -839,7 +846,7 @@ class Model extends QUI\QDOM
      *
      * @return string|boolean
      */
-    protected function getLanguageFieldValue($field, $Locale = null)
+    protected function getLanguageFieldValue(int $field, ?QUI\Locale $Locale = null): bool|string
     {
         if (!$Locale) {
             $Locale = Products::getLocale();
@@ -859,12 +866,12 @@ class Model extends QUI\QDOM
                 return $data;
             }
 
-            if (isset($data[$current]) && !empty($data[$current])) {
+            if (!empty($data[$current])) {
                 return $data[$current];
             }
 
             // search none empty
-            foreach ($data as $lang => $value) {
+            foreach ($data as $value) {
                 if (!empty($value)) {
                     return $value;
                 }
@@ -873,7 +880,7 @@ class Model extends QUI\QDOM
             if (isset($data[$current])) {
                 return $data[$current];
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         return false;
@@ -889,20 +896,19 @@ class Model extends QUI\QDOM
      *
      * @throws QUI\Exception
      */
-    public function getPrice($User = null)
+    public function getPrice(User $User = null): QUI\ERP\Money\Price
     {
         return ProductUtils::getPriceFieldForProduct($this, $User);
     }
 
     /**
      * @return bool
-     * @throws Exception
      */
-    public function hasOfferPrice()
+    public function hasOfferPrice(): bool
     {
-        $OfferPrice = $this->getField(Fields::FIELD_PRICE_OFFER);
-
-        if (!$OfferPrice) {
+        try {
+            $OfferPrice = $this->getField(Fields::FIELD_PRICE_OFFER);
+        } catch (QUI\Exception) {
             return false;
         }
 
@@ -924,7 +930,7 @@ class Model extends QUI\QDOM
      * @throws Exception
      * @throws QUI\Exception
      */
-    public function getOriginalPrice()
+    public function getOriginalPrice(): bool|QUI\ERP\Products\Field\UniqueField
     {
         return $this->createUniqueProduct()->getOriginalPrice();
     }
@@ -939,7 +945,7 @@ class Model extends QUI\QDOM
      * @throws Exception
      * @throws QUI\Exception
      */
-    public function getCalculatedPrice($FieldId)
+    public function getCalculatedPrice($FieldId): bool|QUI\ERP\Products\Field\UniqueField
     {
         return $this->createUniqueProduct()->getCalculatedPrice($FieldId);
     }
@@ -953,7 +959,7 @@ class Model extends QUI\QDOM
      *
      * @throws QUI\Exception
      */
-    public function getNettoPrice($User = null)
+    public function getNettoPrice(User $User = null): QUI\ERP\Money\Price
     {
         return $this->getPrice($User);
     }
@@ -964,12 +970,12 @@ class Model extends QUI\QDOM
      * This is the price displayed in the frontend to the user. In moste cases,
      * this is equal to the minimum price.
      *
-     * @param QUI\Interfaces\Users\User $User (optional)
+     * @param QUI\Interfaces\Users\User|null $User (optional)
      * @return QUI\ERP\Money\Price
      *
      * @throws QUI\Exception
      */
-    public function getCurrentPrice($User = null)
+    public function getCurrentPrice(User $User = null): QUI\ERP\Money\Price
     {
         return $this->getMinimumPrice($User);
     }
@@ -977,19 +983,19 @@ class Model extends QUI\QDOM
     /**
      * Return the minimum price
      *
-     * @param null $User
+     * @param User|null $User
      * @return QUI\ERP\Money\Price
      *
      * @throws QUI\Exception
      *
      * @todo we have maybe a bug here; in theory all field combinations would have to be tested
      */
-    public function getMinimumPrice($User = null)
+    public function getMinimumPrice(User|null $User = null): QUI\ERP\Money\Price
     {
         $baseCacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
         $cacheName = $baseCacheName . '/prices/min';
 
-        if ($User && $User instanceof QUI\Interfaces\Users\User && !QUI::getUsers()->isNobodyUser($User)) {
+        if ($User instanceof QUI\Interfaces\Users\User && !QUI::getUsers()->isNobodyUser($User)) {
             $cacheName = $baseCacheName . '/prices/' . $User->getId() . '/min';
         }
 
@@ -998,7 +1004,7 @@ class Model extends QUI\QDOM
             $Currency = QUI\ERP\Currency\Handler::getCurrency($data['currency']);
 
             return new QUI\ERP\Money\Price($data['price'], $Currency, $User);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         // search all custom fields, and set the minimum
@@ -1069,17 +1075,19 @@ class Model extends QUI\QDOM
     /**
      * Return the maximum price
      *
-     * @param null $User
-     * @return QUI\ERP\Money\Price
+     * @param User|null $User
+     * @return Price
      *
      * @throws QUI\Exception
+     * @throws QUI\Users\Exception
+     * @throws Exception
      */
-    public function getMaximumPrice($User = null)
+    public function getMaximumPrice(User|null $User = null): QUI\ERP\Money\Price
     {
         $baseCacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
         $cacheName = $baseCacheName . '/prices/max';
 
-        if ($User && $User instanceof QUI\Interfaces\Users\User && !QUI::getUsers()->isNobodyUser($User)) {
+        if ($User instanceof QUI\Interfaces\Users\User && !QUI::getUsers()->isNobodyUser($User)) {
             $cacheName = $baseCacheName . '/prices/' . $User->getId() . '/max';
         }
 
@@ -1088,7 +1096,7 @@ class Model extends QUI\QDOM
             $Currency = QUI\ERP\Currency\Handler::getCurrency($data['currency']);
 
             return new QUI\ERP\Money\Price($data['price'], $Currency, $User);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         $Clone = Products::getNewProductInstance($this->getId());
@@ -1142,7 +1150,7 @@ class Model extends QUI\QDOM
      *
      * @return bool|integer|float
      */
-    public function getMaximumQuantity()
+    public function getMaximumQuantity(): float|bool|int
     {
         $quantity = true;
 
@@ -1175,11 +1183,10 @@ class Model extends QUI\QDOM
 
         try {
             $attributes['image'] = $this->getImage()->getUrl(true);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
 
-        /* @var $Price QUI\ERP\Money\Price */
         $Price = $this->getPrice();
 
         $attributes['price_netto'] = $Price->value();
@@ -1228,12 +1235,14 @@ class Model extends QUI\QDOM
     /**
      * Alias for save()
      *
-     * @param QUI\Interfaces\Users\User $EditUser (optional) - The user that executes the operation
+     * @param User|null $EditUser (optional) - The user that executes the operation
      * @return void
      *
      * @throws QUI\Exception
+     * @throws QUI\Permissions\Exception
+     * @throws Exception
      */
-    public function update($EditUser = null)
+    public function update(User $EditUser = null): void
     {
         $this->save($EditUser);
     }
@@ -1241,14 +1250,14 @@ class Model extends QUI\QDOM
     /**
      * save / update the product data
      *
-     * @param QUI\Interfaces\Users\User $EditUser (optional) - The user that executes the operation
+     * @param User|null $EditUser (optional) - The user that executes the operation
      * @return void
      *
-     * @throws QUI\ERP\Products\Product\Exception
-     * @throws QUI\Permissions\Exception
+     * @throws Exception
      * @throws QUI\Exception
+     * @throws QUI\Permissions\Exception
      */
-    public function save($EditUser = null)
+    public function save(User $EditUser = null): void
     {
         $this->productSave($this->getFieldData(), $EditUser);
     }
@@ -1257,13 +1266,16 @@ class Model extends QUI\QDOM
      * Internal saving method
      *
      * @param array $fieldData - field data
-     * @param QUI\Interfaces\Users\User $EditUser (optional) - The user that executes the operation
+     * @param User|null $EditUser (optional) - The user that executes the operation
      *
-     * @throws QUI\Permissions\Exception
+     * @throws Exception
+     * @throws ExceptionStack
+     * @throws QUI\ERP\Products\Field\Exception
      * @throws QUI\Exception
+     * @throws QUI\Permissions\Exception
      * @throws Exception
      */
-    protected function productSave($fieldData, $EditUser = null)
+    protected function productSave(array $fieldData, User $EditUser = null): void
     {
         if (empty($EditUser)) {
             $EditUser = QUI::getUserBySession();
@@ -1276,7 +1288,7 @@ class Model extends QUI\QDOM
         }
 
         // cleanup fields
-        foreach ($fieldData as $key => $field) {
+        foreach ($fieldData as $field) {
             if ($field['id'] < 1000) {
                 continue;
             }
@@ -1455,7 +1467,7 @@ class Model extends QUI\QDOM
      * Build the mem cache for the product (not the db table cache)
      * its the faster cache
      */
-    public function buildCache()
+    public function buildCache(): void
     {
         try {
             // cache db attributes
@@ -1482,9 +1494,10 @@ class Model extends QUI\QDOM
      * Check if the product url already exists in the category
      *
      * @param array $fieldData
+     * @throws QUI\Exception
      * @throws Exception
      */
-    protected function checkProductUrl($fieldData)
+    protected function checkProductUrl(array $fieldData): void
     {
         // check url
         $urlField = array_filter($fieldData, function ($field) {
@@ -1512,7 +1525,7 @@ class Model extends QUI\QDOM
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
      */
-    public function userSave()
+    public function userSave(): void
     {
         if ($this->isActive()) {
             $fieldData = $this->validateFields();
@@ -1535,7 +1548,7 @@ class Model extends QUI\QDOM
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
      */
-    public function validateFields()
+    public function validateFields(): array
     {
         // Update price fields by factors
         $this->updateProductPricesByFactors();
@@ -1624,7 +1637,7 @@ class Model extends QUI\QDOM
      *
      * @return array
      */
-    protected function getFieldData()
+    protected function getFieldData(): array
     {
         // Update price fields by factors
         $this->updateProductPricesByFactors();
@@ -1632,7 +1645,6 @@ class Model extends QUI\QDOM
         $fields = $this->getAllProductFields();
         $fieldData = [];
 
-        /* @var QUI\ERP\Products\Field\Field $Field */
         foreach ($fields as $Field) {
             $this->setUnassignedStatusToField($Field);
 
@@ -1654,7 +1666,7 @@ class Model extends QUI\QDOM
      *
      * @param FieldInterface $Field
      */
-    protected function setUnassignedStatusToField($Field)
+    protected function setUnassignedStatusToField(FieldInterface $Field): void
     {
         if (
             $Field->isSystem()
@@ -1684,11 +1696,11 @@ class Model extends QUI\QDOM
 
     /**
      * Return all product fields
-     * looks at catgeories for missing fields
+     * looks at categories for missing fields
      *
      * @return QUI\ERP\Products\Field\Field[]
      */
-    protected function getAllProductFields()
+    protected function getAllProductFields(): array
     {
         $fields = $this->fields;
         $categories = $this->getCategories();
@@ -1740,7 +1752,7 @@ class Model extends QUI\QDOM
      * @return void
      * @throws QUI\Exception
      */
-    public function updateCache()
+    public function updateCache(): void
     {
         if (!Products::$updateProductSearchCache) {
             return;
@@ -1759,7 +1771,7 @@ class Model extends QUI\QDOM
      * @param string $lang
      * @throws QUI\Exception
      */
-    protected function writeCacheEntry($lang)
+    protected function writeCacheEntry(string $lang): void
     {
 //        $Locale = new QUI\Locale();
         $Locale = Products::getLocale();
@@ -1934,7 +1946,7 @@ class Model extends QUI\QDOM
      *
      * @throws QUI\Exception
      */
-    public function delete()
+    public function delete(): void
     {
         QUI\Permissions\Permission::checkPermission('product.delete');
 
@@ -1989,7 +2001,7 @@ class Model extends QUI\QDOM
      *
      * @return FieldInterface[]
      */
-    public function getFields()
+    public function getFields(): array
     {
         $fields = [];
 
@@ -2011,10 +2023,10 @@ class Model extends QUI\QDOM
     /**
      * Return all fields from the specific type
      *
-     * @param string|array $type - field type (eq: ProductAttributeList, Price ...) or list of field types
+     * @param array|string $type - field type (eq: ProductAttributeList, Price ...) or list of field types
      * @return FieldInterface[]
      */
-    public function getFieldsByType($type)
+    public function getFieldsByType(array|string $type): array
     {
         if (!is_array($type)) {
             $type = [$type];
@@ -2043,10 +2055,10 @@ class Model extends QUI\QDOM
      *
      * @throws QUI\ERP\Products\Product\Exception
      */
-    public function getField($fieldId)
+    public function getField(int|string $fieldId): QUI\ERP\Products\Field\Field
     {
         if (is_string($fieldId) && defined('QUI\ERP\Products\Handler\Fields::' . $fieldId)) {
-            $fieldId = \constant('QUI\ERP\Products\Handler\Fields::' . $fieldId);
+            $fieldId = constant('QUI\ERP\Products\Handler\Fields::' . $fieldId);
         }
 
         if (isset($this->fields[$fieldId])) {
@@ -2072,7 +2084,7 @@ class Model extends QUI\QDOM
      * @param Integer $fieldId
      * @return bool
      */
-    public function hasField($fieldId)
+    public function hasField(int $fieldId): bool
     {
         return isset($this->fields[$fieldId]);
     }
@@ -2081,10 +2093,10 @@ class Model extends QUI\QDOM
      * Return the field value
      *
      * @param integer|string $fieldId - Field ID or FIELD constant name -> FIELD_PRICE, FIELD_PRODUCT_NO ...
-     * @return mixed
+     * @return string|array|null
      * @throws QUI\ERP\Products\Product\Exception
      */
-    public function getFieldValue($fieldId)
+    public function getFieldValue(int|string $fieldId): string|array|null
     {
         return $this->getField($fieldId)->getValue();
     }
@@ -2093,11 +2105,11 @@ class Model extends QUI\QDOM
      * Return the field value
      *
      * @param integer $fieldId
-     * @param QUI\Locale $Locale (optional)
-     * @return mixed
-     * @throws QUI\ERP\Products\Product\Exception
+     * @param Locale|null $Locale (optional)
+     * @return string|array|null
+     * @throws \QUI\ERP\Products\Product\Exception
      */
-    public function getFieldValueByLocale($fieldId, $Locale = null)
+    public function getFieldValueByLocale(int $fieldId, ?QUI\Locale $Locale = null): string|array|null
     {
         return $this->getField($fieldId)->getValueByLocale($Locale);
     }
@@ -2109,7 +2121,7 @@ class Model extends QUI\QDOM
      * @throws Exception
      * @throws QUI\Exception
      */
-    public function getFieldSource($fieldId)
+    public function getFieldSource($fieldId): array
     {
         $sources = [];
         $Field = $this->getField($fieldId);
@@ -2165,7 +2177,7 @@ class Model extends QUI\QDOM
      *
      * @return array
      */
-    public function getCategories()
+    public function getCategories(): array
     {
         return $this->categories;
     }
@@ -2175,23 +2187,23 @@ class Model extends QUI\QDOM
      *
      * @return Category|null
      */
-    public function getCategory()
+    public function getCategory(): ?Category
     {
         // fallback, but never happen
-        if (\is_null($this->Category)) {
+        if (is_null($this->Category)) {
             $categories = $this->getCategories();
 
             if (count($categories)) {
-                \reset($categories);
-                $this->Category = \current($categories);
+                reset($categories);
+                $this->Category = current($categories);
             }
         }
 
         // fallback, but never happen
-        if (\is_null($this->Category)) {
+        if (is_null($this->Category)) {
             try {
                 $this->Category = Categories::getMainCategory();
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 
@@ -2201,7 +2213,7 @@ class Model extends QUI\QDOM
     /**
      * Remove the product from all categories
      */
-    public function clearCategories()
+    public function clearCategories(): void
     {
         $this->categories = [];
     }
@@ -2211,7 +2223,7 @@ class Model extends QUI\QDOM
      *
      * @param integer $categoryId
      */
-    public function removeCategory($categoryId)
+    public function removeCategory(int $categoryId): void
     {
         if (isset($this->categories[$categoryId])) {
             unset($this->categories[$categoryId]);
@@ -2228,7 +2240,7 @@ class Model extends QUI\QDOM
      * @return QUI\Projects\Media\Folder
      * @throws QUI\Exception|QUI\ERP\Products\Product\Exception
      */
-    public function getMediaFolder()
+    public function getMediaFolder(): QUI\Projects\Media\Folder
     {
         $folderUrl = $this->getFieldValue(Fields::FIELD_FOLDER);
         $Folder = MediaUtils::getMediaItemByUrl($folderUrl);
@@ -2250,14 +2262,13 @@ class Model extends QUI\QDOM
      * @return QUI\Projects\Media\Image
      * @throws QUI\Exception
      */
-    public function getImage()
+    public function getImage(): QUI\Projects\Media\Image
     {
         try {
             $value = $this->getFieldValue(Fields::FIELD_IMAGE);
-            $Image = MediaUtils::getImageByUrl($value);
 
-            return $Image;
-        } catch (QUI\Exception $Exception) {
+            return MediaUtils::getImageByUrl($value);
+        } catch (QUI\Exception) {
         }
 
         try {
@@ -2273,7 +2284,7 @@ class Model extends QUI\QDOM
                     return $images[0];
                 }
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         try {
@@ -2284,7 +2295,7 @@ class Model extends QUI\QDOM
             if ($Placeholder) {
                 return $Placeholder;
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         try {
@@ -2295,7 +2306,7 @@ class Model extends QUI\QDOM
             if ($Placeholder) {
                 return $Placeholder;
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         throw new QUI\ERP\Products\Product\Exception([
@@ -2312,11 +2323,11 @@ class Model extends QUI\QDOM
      *
      * @return bool
      */
-    public function hasImage()
+    public function hasImage(): bool
     {
         try {
             $this->getImage();
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return false;
         }
 
@@ -2329,11 +2340,11 @@ class Model extends QUI\QDOM
      * @param array $params - optional, select params
      * @return array
      */
-    public function getImages($params = [])
+    public function getImages(array $params = []): array
     {
         try {
             return $this->getMediaFolder()->getImages($params);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return [];
         }
     }
@@ -2344,11 +2355,11 @@ class Model extends QUI\QDOM
      * @param array $params - optional, select params
      * @return array
      */
-    public function getFiles($params = [])
+    public function getFiles(array $params = []): array
     {
         try {
             return $this->getMediaFolder()->getFiles($params);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return [];
         }
     }
@@ -2356,12 +2367,15 @@ class Model extends QUI\QDOM
     /**
      * Deactivate the product
      *
-     * @param QUI\Interfaces\Users\User $EditUser (optional) - The user that executes the operation
+     * @param User|null $EditUser (optional) - The user that executes the operation
      * @return void
      *
+     * @throws Exception
      * @throws QUI\Exception
+     * @throws ExceptionStack
+     * @throws QUI\Permissions\Exception
      */
-    public function deactivate($EditUser = null)
+    public function deactivate(?QUI\Interfaces\Users\User $EditUser = null): void
     {
         if (empty($EditUser)) {
             $EditUser = QUI::getUserBySession();
@@ -2392,14 +2406,16 @@ class Model extends QUI\QDOM
     /**
      * Activate the product
      *
-     * @param QUI\Interfaces\Users\User $EditUser (optional) - The user that executes the operation
+     * @param User|null $EditUser (optional) - The user that executes the operation
      * @return void
      *
-     * @throws QUI\ERP\Products\Product\Exception
-     * @throws QUI\Permissions\Exception
+     * @throws Exception
+     * @throws ExceptionStack
      * @throws QUI\Exception
+     * @throws QUI\Permissions\Exception
+     * @throws Exception
      */
-    public function activate($EditUser = null)
+    public function activate(?QUI\Interfaces\Users\User $EditUser = null): void
     {
         if (empty($EditUser)) {
             $EditUser = QUI::getUserBySession();
@@ -2454,7 +2470,7 @@ class Model extends QUI\QDOM
     /**
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->active;
     }
@@ -2467,10 +2483,10 @@ class Model extends QUI\QDOM
      * Has the user the product permission?
      *
      * @param string $permission - Permission name
-     * @param QUI\Interfaces\Users\User $User
+     * @param User|null $User
      * @return bool
      */
-    public function hasPermission($permission, $User = null)
+    public function hasPermission(string $permission, QUI\Interfaces\Users\User $User = null): bool
     {
         if (!Products::usePermissions()) {
             return true;
@@ -2497,11 +2513,11 @@ class Model extends QUI\QDOM
     /**
      * Check the user product permission
      *
-     * @param $permission
-     * @param null $User
+     * @param string $permission
+     * @param User|null $User
      * @throws QUI\Permissions\Exception
      */
-    public function checkPermission($permission, $User = null)
+    public function checkPermission(string $permission, QUI\Interfaces\Users\User $User = null): void
     {
         if (!$User) {
             $User = QUI::getUserBySession();
@@ -2525,7 +2541,7 @@ class Model extends QUI\QDOM
     /**
      * @return array|mixed
      */
-    public function getPermissions()
+    public function getPermissions(): mixed
     {
         return $this->permissions;
     }
@@ -2533,11 +2549,10 @@ class Model extends QUI\QDOM
     /**
      * Clear the complete own product permissions
      *
-     * @param QUI\Interfaces\Users\User $User - optional
-     *
+     * @param User|null $User - optional
      * @throws QUI\Permissions\Exception
      */
-    public function clearPermissions($User = null)
+    public function clearPermissions(QUI\Interfaces\Users\User $User = null): void
     {
         QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
 
@@ -2548,10 +2563,10 @@ class Model extends QUI\QDOM
      * Clear a product own permission
      *
      * @param string $permission - name of the product permission
-     * @param null $User
+     * @param User|null $User
      * @throws QUI\Permissions\Exception
      */
-    public function clearPermission($permission, $User = null)
+    public function clearPermission(string $permission, QUI\Interfaces\Users\User $User = null): void
     {
         QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
 
@@ -2565,7 +2580,7 @@ class Model extends QUI\QDOM
     /**
      * @param QUI\ERP\Currency\Currency $Currency
      */
-    public function setCurrency(QUI\ERP\Currency\Currency $Currency)
+    public function setCurrency(QUI\ERP\Currency\Currency $Currency): void
     {
         $this->Currency = $Currency;
     }
@@ -2573,7 +2588,7 @@ class Model extends QUI\QDOM
     /**
      * @return QUI\ERP\Currency\Currency|null
      */
-    public function getCurrency()
+    public function getCurrency(): ?QUI\ERP\Currency\Currency
     {
         return $this->Currency;
     }
@@ -2615,7 +2630,7 @@ class Model extends QUI\QDOM
             $categories = $this->getCategories();
 
             // sort by id ASC
-            \usort($categories, function ($CatA, $CatB) {
+            usort($categories, function ($CatA, $CatB) {
                 /**
                  * @var Category $CatA
                  * @var Category $CatB
@@ -2707,12 +2722,12 @@ class Model extends QUI\QDOM
                             break;
 
                         case 'commercial_decimals':
-                            $targetPrice = \round($targetPrice);
+                            $targetPrice = round($targetPrice);
                             $buildPriceByConcat = false;
                             break;
 
                         case 'commercial_decimals_single':
-                            $targetPrice = \round($targetPrice, 1);
+                            $targetPrice = round($targetPrice, 1);
                             $buildPriceByConcat = false;
                             break;
                     }
@@ -2758,7 +2773,7 @@ class Model extends QUI\QDOM
         $sql .= " AND `productNo` = '" . $articleNo . "'";
 
         $result = QUI::getDataBase()->fetchSQL($sql);
-        $duplicateArticleNoProductIds = array_unique(\array_column($result, 'id'));
+        $duplicateArticleNoProductIds = array_unique(array_column($result, 'id'));
 
         foreach ($duplicateArticleNoProductIds as $productId) {
             if (Products::existsProduct($productId)) {

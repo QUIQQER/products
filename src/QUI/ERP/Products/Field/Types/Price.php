@@ -11,6 +11,8 @@ use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Handler\Search;
 
+use QUI\Exception;
+
 use function floor;
 use function is_array;
 use function is_float;
@@ -47,16 +49,16 @@ class Price extends QUI\ERP\Products\Field\Field
     /**
      * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new View($this->getAttributes());
     }
 
     /**
      * @return View
-     * @throws \QUI\Exception
+     * @throws Exception
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
@@ -73,7 +75,7 @@ class Price extends QUI\ERP\Products\Field\Field
                 if (empty($value)) {
                     $value = 0;
                 }
-            } catch (QUI\Exception) {
+            } catch (Exception) {
             }
         } else {
             $value = $this->getValue();
@@ -105,7 +107,7 @@ class Price extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @return mixed
      */
-    public function cleanup($value)
+    public function cleanup($value): mixed
     {
         if (is_array($value)) {
             return null;
@@ -147,9 +149,9 @@ class Price extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws QUI\ERP\Products\Field\Exception
      */
-    public function validate($value)
+    public function validate($value): void
     {
         if (empty($value)) {
             return;

@@ -189,7 +189,7 @@ class UniqueProductFrontendView extends UniqueProduct
      *
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = parent::getAttributes();
 

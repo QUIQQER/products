@@ -89,7 +89,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      * @param bool $Locale
      * @return string
      */
-    public function getTitle($Locale = false)
+    public function getTitle(bool $Locale = false)
     {
         if (!$this->existsAttribute('title')) {
             return '';
@@ -157,7 +157,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      * @return QUI\ERP\Products\Interfaces\FieldInterface
      * @throws QUI\Exception
      */
-    public function getField($fieldId)
+    public function getField(int $fieldId)
     {
         switch ((int)$fieldId) {
             case Fields::FIELD_PRICE:
@@ -202,7 +202,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      * @return mixed
      * @throws QUI\ERP\Products\Product\Exception
      */
-    public function getFieldValue($fieldId)
+    public function getFieldValue(int $fieldId)
     {
         throw new QUI\ERP\Products\Product\Exception([
             'quiqqer/products',
@@ -220,7 +220,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      * @param string $type
      * @return array
      */
-    public function getFieldsByType($type)
+    public function getFieldsByType(string $type)
     {
         return [];
     }

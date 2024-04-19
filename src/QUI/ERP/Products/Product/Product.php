@@ -11,6 +11,8 @@ use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 
+use function is_array;
+
 /**
  * Class Product
  * - Controller
@@ -29,7 +31,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      *
      * @throws QUI\Exception
      */
-    public function addField(Field $Field)
+    public function addField(Field $Field): void
     {
         if (!isset($this->fields[$Field->getId()])) {
             $this->fields[$Field->getId()] = clone $Field;
@@ -65,7 +67,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      *
      * @throws QUI\Exception
      */
-    public function addOwnField(QUI\ERP\Products\Field\Field $Field)
+    public function addOwnField(QUI\ERP\Products\Field\Field $Field): void
     {
         $Field->setUnassignedStatus(false);
         $Field->setOwnFieldStatus(true);
@@ -79,7 +81,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      * @param Field $Field
      * @throws QUI\Exception
      */
-    public function removeField(Field $Field)
+    public function removeField(Field $Field): void
     {
         if (!$Field->isOwnField()) {
             throw new QUI\Exception([
@@ -98,7 +100,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      *
      * @param QUI\ERP\Products\Interfaces\CategoryInterface $Category
      */
-    public function addCategory(QUI\ERP\Products\Interfaces\CategoryInterface $Category)
+    public function addCategory(QUI\ERP\Products\Interfaces\CategoryInterface $Category): void
     {
         $this->categories[$Category->getId()] = $Category;
     }
@@ -106,10 +108,10 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
     /**
      * Set the main category
      *
-     * @param Category|integer $Category
+     * @param integer|Category $Category
      * @throws QUI\Exception
      */
-    public function setMainCategory($Category)
+    public function setMainCategory(Category|int $Category): void
     {
         if (!Categories::isCategory($Category)) {
             $Category = Categories::getCategory($Category);
@@ -126,7 +128,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
      */
-    public function setPriority($priority)
+    public function setPriority(int $priority): void
     {
         $this->getField(QUI\ERP\Products\Handler\Fields::FIELD_PRIORITY)->setValue($priority);
     }
@@ -136,11 +138,11 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      *
      * @param string $permission
      * @param string $ugString - user group string
-     * @param QUI\Interfaces\Users\User $User - optional
+     * @param QUI\Interfaces\Users\User|null $User - optional
      *
      * @throws QUI\Permissions\Exception
      */
-    public function setPermission($permission, $ugString = '', $User = null)
+    public function setPermission(string $permission, string $ugString = '', QUI\Interfaces\Users\User $User = null): void
     {
         if (!QUI\Utils\UserGroups::isUserGroupString($ugString)) {
             return;
@@ -160,16 +162,12 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      * Set multiple permissions
      *
      * @param array $permissions - ist of permissions
-     * @param QUI\Interfaces\Users\User $User - optional
+     * @param QUI\Interfaces\Users\User|null $User - optional
      *
      * @throws QUI\Permissions\Exception
      */
-    public function setPermissions($permissions, $User = null)
+    public function setPermissions(array $permissions, QUI\Interfaces\Users\User $User = null): void
     {
-        if (!\is_array($permissions)) {
-            return;
-        }
-
         foreach ($permissions as $permission => $data) {
             $this->setPermission($permission, $data, $User);
         }
@@ -179,7 +177,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
 
     /**
      * @param null $Calc
-     * @return $this|mixed
+     * @return $this
      */
     public function calc($Calc = null)
     {
@@ -187,7 +185,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
     }
 
     /**
-     * @return mixed|void
+     * @return void
      */
     public function resetCalculation()
     {

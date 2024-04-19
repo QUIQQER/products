@@ -10,6 +10,9 @@ use NumberFormatter;
 use QUI;
 use QUI\ERP\Products\Field\View;
 
+use QUI\ERP\Products\Product\Exception;
+
+use function is_array;
 use function is_float;
 use function is_string;
 use function json_decode;
@@ -30,26 +33,26 @@ class PriceByQuantity extends Price
     /**
      * Return the price value
      *
-     * @param QUI\ERP\Products\Product\UniqueProduct $Product
+     * @param QUI\ERP\Products\Interfaces\ProductInterface $Product
      * @param null $User
-     * @return integer|double|float|bool
+     * @return integer|double|bool
+     * @throws Exception
      */
-    public function onGetPriceFieldForProduct($Product, $User = null)
-    {
-        if (!QUI::getUsers()->isUser($User)) {
-            $User = QUI::getUsers()->getNobody();
-        }
-
+    public function onGetPriceFieldForProduct(
+        QUI\ERP\Products\Interfaces\ProductInterface $Product,
+        $User = null
+    ): float|bool|int {
         return $this->getValueDependendByProduct($Product);
     }
 
     /**
      * Return the price value
      *
-     * @param QUI\ERP\Products\Product\UniqueProduct $Product - optional
-     * @return integer|double|float|bool
+     * @param QUI\ERP\Products\Interfaces\ProductInterface $Product - optional
+     * @return integer|float|bool
+     * @throws Exception
      */
-    public function getValueDependendByProduct($Product)
+    public function getValueDependendByProduct(QUI\ERP\Products\Interfaces\ProductInterface $Product): float|bool|int
     {
         if (!QUI\ERP\Products\Utils\Products::isProduct($Product)) {
             return false;
@@ -74,7 +77,7 @@ class PriceByQuantity extends Price
             $value = json_decode($value, true);
         }
 
-        if (!\is_array($value)) {
+        if (!is_array($value)) {
             return false;
         }
 
@@ -92,16 +95,16 @@ class PriceByQuantity extends Price
     /**
      * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new View($this->getAttributes());
     }
 
     /**
      * @return View
-     * @throws \QUI\Exception
+     * @throws QUI\Exception
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
         $value = $this->cleanup($this->getValue());
@@ -197,12 +200,11 @@ class PriceByQuantity extends Price
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @return array
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @return void
      */
-    public function validate($value): array
+    public function validate($value): void
     {
-        return $this->cleanup($value);
+        $this->cleanup($value);
     }
 
     /**

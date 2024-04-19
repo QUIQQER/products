@@ -4,6 +4,13 @@ namespace QUI\ERP\Products\Controls\Search;
 
 use QUI;
 
+use QUI\ERP\Products\Search\FrontendSearch;
+
+use QUI\Exception;
+
+use function dirname;
+use function is_null;
+
 /**
  * Class Search
  * @package QUI\ERP\Products\Controls\Search
@@ -12,21 +19,21 @@ use QUI;
 class Search extends QUI\Control
 {
     /**
-     * @var null
+     * @var bool|FrontendSearch|null
      */
-    protected $Search = null;
+    protected bool|null|FrontendSearch $Search = null;
 
     /**
-     * @var array
+     * @var array|null
      */
-    protected $fields = null;
+    protected ?array $fields = null;
 
     /**
      * constructor
      *
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         $this->setAttributes([
             'categoryId' => false,
@@ -37,18 +44,14 @@ class Search extends QUI\Control
             'title' => true
         ]);
 
-        $this->addCSSFile(\dirname(__FILE__) . '/Search.css');
+        $this->addCSSFile(dirname(__FILE__) . '/Search.css');
         $this->addCSSClass('quiqqer-products-search');
 
         parent::__construct($attributes);
     }
 
     /**
-     * (non-PHPdoc)
-     *
      * @throws QUI\Exception
-     * @see \QUI\Control::create()
-     *
      */
     public function getBody(): string
     {
@@ -65,31 +68,32 @@ class Search extends QUI\Control
             'this' => $this
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/Search.html');
+        return $Engine->fetch(dirname(__FILE__) . '/Search.html');
     }
 
     /**
      * Has the search fields?
      *
      * @return boolean
+     * @throws Exception
      */
-    public function hasFields()
+    public function hasFields(): bool
     {
-        return count($this->getSearchFieldData()) ? true : false;
+        return (bool)count($this->getSearchFieldData());
     }
 
     /**
      * Return the search
      *
-     * @return false|QUI\ERP\Products\Search\FrontendSearch
+     * @return bool|FrontendSearch|null
      */
-    protected function getSearch()
+    protected function getSearch(): bool|QUI\ERP\Products\Search\FrontendSearch|null
     {
         try {
-            if (\is_null($this->Search)) {
+            if (is_null($this->Search)) {
                 $this->Search = new QUI\ERP\Products\Search\FrontendSearch($this->getSite());
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             $this->Search = false;
         }
 
@@ -100,10 +104,11 @@ class Search extends QUI\Control
      * Return the search field data
      *
      * @return array
+     * @throws Exception
      */
-    protected function getSearchFieldData()
+    protected function getSearchFieldData(): array
     {
-        if (\is_null($this->fields)) {
+        if (is_null($this->fields)) {
             $Search = $this->getSearch();
 
             if ($Search) {
@@ -119,11 +124,11 @@ class Search extends QUI\Control
     /**
      * Return the current site
      *
-     * @return mixed|QUI\Projects\Site
+     * @return QUI\Interfaces\Projects\Site
      *
      * @throws QUI\Exception
      */
-    protected function getSite()
+    protected function getSite(): QUI\Interfaces\Projects\Site
     {
         if ($this->getAttribute('Site')) {
             return $this->getAttribute('Site');

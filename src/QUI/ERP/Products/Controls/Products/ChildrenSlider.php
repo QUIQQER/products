@@ -31,7 +31,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
      * ChildrenSlider constructor.
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         // default options
         $this->setAttributes([
@@ -47,17 +47,12 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \QUI\Control::create()
+     * @return string
+     * @throws QUI\Exception
      */
     public function getBody(): string
     {
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception) {
-            return '';
-        }
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         $products = [];
 

@@ -47,13 +47,7 @@ class Price extends QUI\Control
      */
     public function getBody(): string
     {
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return '';
-        }
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             $this->setAttributes([

@@ -16,6 +16,8 @@ use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Tables;
 
+use QUI\Interfaces\Users\User;
+
 use function array_map;
 use function array_merge;
 use function array_search;
@@ -58,9 +60,9 @@ class VariantParent extends AbstractType
     const GENERATION_TYPE_ADD = 2;
 
     /**
-     * @var null
+     * @var ?array
      */
-    protected $children = null;
+    protected ?array $children = null;
 
     /**
      * @var array
@@ -154,7 +156,7 @@ class VariantParent extends AbstractType
      * @throws QUI\Exception
      * @throws Exception
      */
-    protected function productSave($fieldData, $EditUser = null)
+    protected function productSave(array $fieldData, User $EditUser = null): void
     {
         QUI\Permissions\Permission::checkPermission('product.edit', $EditUser);
 
@@ -244,11 +246,11 @@ class VariantParent extends AbstractType
     /**
      * Write cache entry for variant parent.
      *
-     * @param $lang
+     * @param string $lang
      * @return void
      * @throws QUI\Exception
      */
-    protected function writeCacheEntry($lang)
+    protected function writeCacheEntry(string $lang): void
     {
         parent::writeCacheEntry($lang);
 
@@ -285,7 +287,7 @@ class VariantParent extends AbstractType
      *
      * @throws QUI\Exception
      */
-    public function delete()
+    public function delete(): void
     {
         QUI\Permissions\Permission::checkPermission('product.delete');
 
@@ -310,12 +312,12 @@ class VariantParent extends AbstractType
      * This is the price displayed in the frontend to the user. In moste cases,
      * this is equal to the minimum price.
      *
-     * @param QUI\Interfaces\Users\User $User (optional)
+     * @param User|null $User (optional)
      * @return QUI\ERP\Money\Price
      *
      * @throws QUI\Exception
      */
-    public function getCurrentPrice($User = null)
+    public function getCurrentPrice(User $User = null): QUI\ERP\Money\Price
     {
         if ($this->getDefaultVariantId() === false) {
             return parent::getCurrentPrice($User);
@@ -332,7 +334,7 @@ class VariantParent extends AbstractType
      *
      * @throws QUI\Exception
      */
-    public function getMaximumPrice($User = null)
+    public function getMaximumPrice($User = null): QUI\ERP\Money\Price
     {
         // kinder ids
         $children = QUI::getDataBase()->fetch([
@@ -394,12 +396,12 @@ class VariantParent extends AbstractType
     }
 
     /**
-     * @param null $User
+     * @param User|null $User
      * @return QUI\ERP\Money\Price
      *
      * @throws QUI\Exception
      */
-    public function getMinimumPrice($User = null)
+    public function getMinimumPrice(User $User = null): QUI\ERP\Money\Price
     {
         // kinder ids
         $children = QUI::getDataBase()->fetch([
@@ -467,7 +469,7 @@ class VariantParent extends AbstractType
      * @param array $params - optional, select params
      * @return array
      */
-    public function getImages($params = [])
+    public function getImages(array $params = []): array
     {
         $cache = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()) . '/images';
 
@@ -544,7 +546,7 @@ class VariantParent extends AbstractType
      *
      * @throws QUI\Exception
      */
-    public function addField(Field $Field)
+    public function addField(Field $Field): void
     {
         $fieldId = $Field->getId();
 
@@ -581,7 +583,7 @@ class VariantParent extends AbstractType
      *
      * @throws QUI\Exception
      */
-    public function removeField(Field $Field)
+    public function removeField(Field $Field): void
     {
         parent::removeField($Field);
 
@@ -815,11 +817,11 @@ class VariantParent extends AbstractType
      * Return all variants
      *
      * @param array $params - query params
-     * @return QUI\ERP\Products\Product\Types\VariantChild[]|integer
+     * @return array|int
      *
      * @todo cache
      */
-    public function getVariants(array $params = [])
+    public function getVariants(array $params = []): array|int
     {
         if (!empty($this->children)) {
             if (isset($params['count'])) {

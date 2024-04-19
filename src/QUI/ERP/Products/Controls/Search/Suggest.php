@@ -11,6 +11,8 @@ use QUI\ERP\Products\Search\FrontendSearch;
 use QUI\Exception;
 use QUI\Projects\Project;
 
+use function dirname;
+
 /**
  * Class Suggest
  * @package QUI\ERP\Products\Controls\Search\Suggest
@@ -22,7 +24,7 @@ class Suggest extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         $this->setAttributes([
             'Site' => false,
@@ -34,7 +36,7 @@ class Suggest extends QUI\Control
             'showLinkToSearchSite' => false
         ]);
 
-        $this->addCSSFile(\dirname(__FILE__) . '/Suggest.css');
+        $this->addCSSFile(dirname(__FILE__) . '/Suggest.css');
         $this->addCSSClass('quiqqer-products-search-suggest');
 
         parent::__construct($attributes);
@@ -49,13 +51,7 @@ class Suggest extends QUI\Control
      */
     public function getBody(): string
     {
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return '';
-        }
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         $Site = $this->getSite();
         $Search = $this->getSite();
@@ -93,17 +89,17 @@ class Suggest extends QUI\Control
             'Search' => $Search
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/Suggest.html');
+        return $Engine->fetch(dirname(__FILE__) . '/Suggest.html');
     }
 
     /**
      * Return the current site
      *
-     * @return mixed|QUI\Projects\Site
+     * @return QUI\Interfaces\Projects\Site
      *
      * @throws QUI\Exception
      */
-    protected function getSite()
+    protected function getSite(): QUI\Interfaces\Projects\Site
     {
         $Site = $this->getAttribute('Site');
 
@@ -136,11 +132,11 @@ class Suggest extends QUI\Control
     /**
      * Return the global search
      *
-     * @return false|QUI\Projects\Site
+     * @return QUI\Interfaces\Projects\Site
      *
      * @throws QUI\Exception
      */
-    protected function getSearch()
+    protected function getSearch(): QUI\Interfaces\Projects\Site
     {
         $Project = $this->getProject();
 
