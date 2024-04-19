@@ -8,6 +8,8 @@ namespace QUI\ERP\Products\Field;
 
 use QUI;
 
+use QUI\Interfaces\Users\User;
+
 use function htmlspecialchars;
 use function is_numeric;
 use function is_string;
@@ -40,7 +42,7 @@ class View extends UniqueField
      *
      * @return string
      */
-    public function create()
+    public function create(): string
     {
         if (!$this->hasViewPermission()) {
             return '';
@@ -64,10 +66,10 @@ class View extends UniqueField
     /**
      * Has the user view permissions
      *
-     * @param QUI\Users\User $User
+     * @param User|null $User
      * @return bool
      */
-    public function hasViewPermission($User = null)
+    public function hasViewPermission(QUI\Interfaces\Users\User $User = null): bool
     {
         if ($this->isPublic()) {
             return true;
@@ -80,7 +82,7 @@ class View extends UniqueField
             );
 
             return true;
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         return false;
