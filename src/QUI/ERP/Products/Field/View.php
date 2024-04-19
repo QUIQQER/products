@@ -7,7 +7,6 @@
 namespace QUI\ERP\Products\Field;
 
 use QUI;
-
 use QUI\Interfaces\Users\User;
 
 use function htmlspecialchars;
