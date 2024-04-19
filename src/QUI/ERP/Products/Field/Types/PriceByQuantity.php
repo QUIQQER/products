@@ -9,7 +9,6 @@ namespace QUI\ERP\Products\Field\Types;
 use NumberFormatter;
 use QUI;
 use QUI\ERP\Products\Field\View;
-
 use QUI\ERP\Products\Product\Exception;
 
 use function is_array;
@@ -28,7 +27,7 @@ class PriceByQuantity extends Price
     /**
      * @var bool
      */
-    protected $searchable = false;
+    protected bool $searchable = false;
 
     /**
      * Return the price value
@@ -134,10 +133,10 @@ class PriceByQuantity extends Price
      *
      * Precision: 8 (important for currencies like BitCoin)
      *
-     * @param string|array $value
+     * @param mixed $value
      * @return array
      */
-    public function cleanup($value): array
+    public function cleanup(mixed $value): array
     {
         if (is_string($value)) {
             $value = json_decode($value, true);
@@ -202,7 +201,7 @@ class PriceByQuantity extends Price
      * @param mixed $value
      * @return void
      */
-    public function validate($value): void
+    public function validate(mixed $value): void
     {
         $this->cleanup($value);
     }

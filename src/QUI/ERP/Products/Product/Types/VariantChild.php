@@ -196,9 +196,9 @@ class VariantChild extends AbstractType
 
     /**
      * @param null $Locale
-     * @return array|string
+     * @return string
      */
-    public static function getTypeTitle($Locale = null): array|string
+    public static function getTypeTitle($Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -209,9 +209,9 @@ class VariantChild extends AbstractType
 
     /**
      * @param null $Locale
-     * @return array|string
+     * @return string
      */
-    public static function getTypeDescription($Locale = null): array|string
+    public static function getTypeDescription($Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -244,9 +244,18 @@ class VariantChild extends AbstractType
         }
 
         try {
-            $this->Parent = Products::getProduct(
-                $this->getAttribute('parent')
-            );
+            $Parent = Products::getProduct($this->getAttribute('parent'));
+
+            if (!($Parent instanceof VariantParent)) {
+                QUI\System\Log::addError('Child parent is no VariantParent', [
+                    'parentId' => $Parent->getId(),
+                    'childId' => $this->getId()
+                ]);
+
+                return null;
+            }
+
+            $this->Parent = $Parent;
         } catch (QUI\Exception) {
         }
 

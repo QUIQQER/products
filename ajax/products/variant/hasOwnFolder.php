@@ -5,6 +5,7 @@
  */
 
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Product\Types\VariantChild;
 
 /**
  * Has the variant its own media folder
@@ -15,7 +16,7 @@ use QUI\ERP\Products\Handler\Products;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_variant_hasOwnFolder',
     function ($productId) {
-        /* @var $Product \QUI\ERP\Products\Product\Types\VariantChild */
+        /* @var $Product VariantChild */
         $Product = Products::getProduct($productId);
 
         if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {

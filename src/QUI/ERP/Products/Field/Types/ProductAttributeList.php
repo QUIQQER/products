@@ -9,6 +9,9 @@ namespace QUI\ERP\Products\Field\Types;
 use QUI;
 use QUI\ERP\Accounting\Calc as ErpCalc;
 
+use QUI\ERP\Products\Field\Exception;
+use QUI\ERP\Products\Field\View;
+
 use function get_class;
 use function htmlspecialchars;
 use function is_array;
@@ -20,7 +23,6 @@ use function json_decode;
 use function json_encode;
 use function mb_strtolower;
 use function mb_strtoupper;
-use function strpos;
 
 /**
  * Class ProductAttributeList
@@ -44,12 +46,12 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
     /**
      * @var bool
      */
-    protected $searchable = false;
+    protected bool $searchable = false;
 
     /**
      * @var null
      */
-    protected $defaultValue = null;
+    protected mixed $defaultValue = null;
 
     /**
      * @var array
@@ -62,7 +64,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      * @param int $fieldId
      * @param array $params
      */
-    public function __construct($fieldId, array $params)
+    public function __construct(int $fieldId, array $params)
     {
         $this->setOptions([
             'entries' => [],
@@ -91,7 +93,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      * @param string $option - option name
      * @param mixed $value - option value
      */
-    public function setOption($option, $value)
+    public function setOption(string $option, mixed $value): void
     {
         parent::setOption($option, $value);
 
@@ -108,7 +110,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
     }
 
     /**
-     * Add an product attribute entry
+     * Add a product attribute entry
      *
      * @param array $entry - data entry
      *
@@ -121,7 +123,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      *       'userinput => ''' // optional
      * ));
      */
-    public function addEntry(array $entry = [])
+    public function addEntry(array $entry = []): void
     {
         if (empty($entry)) {
             return;
@@ -161,7 +163,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      *
      * @return string|false
      */
-    public function getUserInput()
+    public function getUserInput(): bool|string
     {
         if (!is_null($this->value)) {
             $value = json_decode($this->value, true);
@@ -179,7 +181,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      *
      * @return ProductAttributeListFrontendView
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         return new ProductAttributeListFrontendView(
             $this->getFieldDataForView()
@@ -189,9 +191,9 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
     /**
      * Return the view for the backend
      *
-     * @return \QUI\ERP\Products\Field\View
+     * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new ProductAttributeListBackendView($this->getFieldDataForView());
     }
@@ -199,7 +201,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/ProductAttributeList';
     }
@@ -207,7 +209,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
     /**
      * @return string
      */
-    public function getJavaScriptSettings()
+    public function getJavaScriptSettings(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings';
     }
@@ -218,7 +220,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      * @param null|QUI\Locale $Locale
      * @return array
      */
-    public function getCalculationData($Locale = null)
+    public function getCalculationData($Locale = null): array
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -245,7 +247,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
         $userInput = '';
         $calcType = ErpCalc::CALCULATION_COMPLEMENT;
 
-        if ($value && strpos($value, '[') !== false && strpos($value, ']') !== false) {
+        if ($value && str_contains($value, '[') && str_contains($value, ']')) {
             $data = json_decode($value, true);
 
             if (is_array($data)) {
@@ -311,7 +313,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
     /**
      * @return string
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         if (!is_null($this->value)) {
             return $this->value;
@@ -325,9 +327,9 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      * is the value valid for the field type?
      *
      * @param integer|string $value - User value = "[key, user value]"
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate($value): void
     {
         if (is_array($value) && isset($value['value'])) {
             $value = $value['value'];
@@ -367,7 +369,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
             $value = json_decode($value, true);
 
             if (!isset($value[0]) || !isset($value[1])) {
-                throw new QUI\ERP\Products\Field\Exception($invalidException);
+                throw new Exception($invalidException);
             }
 
             //$customValue = $value[1];
@@ -375,30 +377,30 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
         }
 
         if (!is_numeric($value)) {
-            throw new QUI\ERP\Products\Field\Exception($invalidException);
+            throw new Exception($invalidException);
         }
 
         $value = (int)$value;
         $options = $this->getOptions();
 
         if (!isset($options['entries'])) {
-            throw new QUI\ERP\Products\Field\Exception($invalidException);
+            throw new Exception($invalidException);
         }
 
         $entries = $options['entries'];
 
         if (!isset($entries[$value])) {
-            throw new QUI\ERP\Products\Field\Exception($invalidException);
+            throw new Exception($invalidException);
         }
     }
 
     /**
      * Cleanup the value, so the value is valid
      *
-     * @param integer $value
-     * @return int|null
+     * @param mixed $value
+     * @return string|array|int|null
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): string|array|int|null
     {
         if ($value === '') {
             return null;
@@ -458,7 +460,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
     /**
      * disable all entries
      */
-    public function disableEntries()
+    public function disableEntries(): void
     {
         foreach ($this->options['entries'] as $key => $option) {
             $this->options['entries'][$key]['disabled'] = true;
@@ -468,9 +470,9 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
     /**
      * Disable an option
      *
-     * @param string|integer $entry
+     * @param integer|string $entry
      */
-    public function disableEntry($entry)
+    public function disableEntry(int|string $entry): void
     {
         $this->options['entries'][$entry]['disabled'] = true;
     }
@@ -478,9 +480,9 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
     /**
      * Enable an option
      *
-     * @param string|integer $entry
+     * @param integer|string $entry
      */
-    public function enableEntry($entry)
+    public function enableEntry(int|string $entry): void
     {
         $this->options['entries'][$entry]['disabled'] = false;
     }

@@ -22,7 +22,7 @@ QUI::$Ajax->registerFunction(
             ]);
 
             return $Control->getVariantControlSettings();
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             return [];
         }

@@ -9,6 +9,11 @@ namespace QUI\ERP\Products;
 use QUI;
 use QUI\BackendSearch\ProviderInterface;
 
+use QUI\Exception;
+
+use function in_array;
+use function json_encode;
+
 /**
  * Class DesktopSearch
  *
@@ -33,7 +38,7 @@ class DesktopSearch implements ProviderInterface
     public function getEntry($id)
     {
         return [
-            'searchdata' => \json_encode([
+            'searchdata' => json_encode([
                 'require' => 'package/quiqqer/products/bin/controls/products/Product',
                 'params' => [
                     'productId' => (int)$id
@@ -48,12 +53,13 @@ class DesktopSearch implements ProviderInterface
      * @param string $search
      * @param array $params
      * @return array
+     * @throws Exception
      */
-    public function search($search, $params = [])
+    public function search($search, $params = []): array
     {
         if (
             isset($params['filterGroups'])
-            && !\in_array(self::TYPE, $params['filterGroups'])
+            && !in_array(self::TYPE, $params['filterGroups'])
         ) {
             return [];
         }
@@ -66,7 +72,7 @@ class DesktopSearch implements ProviderInterface
                 'freetext' => $search,
                 'limit' => 10
             ]);
-        } catch (QUI\Permissions\Exception $Exception) {
+        } catch (QUI\Permissions\Exception) {
             return [];
         }
 
@@ -101,7 +107,7 @@ class DesktopSearch implements ProviderInterface
      *
      * @return array
      */
-    public function getFilterGroups()
+    public function getFilterGroups(): array
     {
         return [
             [

@@ -10,7 +10,7 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
  * Set product search fields, which fields are shown at the product search
  *
  * @param array $searchFields
- * @return array - searchfields after set
+ * @return array - search fields after set
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_search_backend_setProductSearchFields',

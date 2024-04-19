@@ -9,6 +9,8 @@ namespace QUI\ERP\Products\Field\Types;
 use QUI;
 use QUI\ERP\Accounting\Calc as ErpCalc;
 
+use QUI\Exception;
+
 use function dirname;
 use function htmlspecialchars;
 use function is_numeric;
@@ -39,7 +41,7 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
      * Render the view, return the html
      *
      * @return string
-     * @throws \QUI\Exception
+     * @throws Exception
      */
     public function create(): string
     {
@@ -65,14 +67,7 @@ class ProductAttributeListBackendView extends QUI\ERP\Products\Field\View
         }
 
         $value = htmlspecialchars($value);
-
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return '';
-        }
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([
             'this' => $this,

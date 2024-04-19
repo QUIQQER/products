@@ -7,7 +7,10 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\Exception;
 use QUI\ERP\Products\Field\View;
+
+use function filter_var;
 
 /**
  * Class FloatType
@@ -19,17 +22,17 @@ class Url extends QUI\ERP\Products\Field\Field
     /**
      * @var string
      */
-    protected $columnType = 'TEXT';
+    protected string $columnType = 'TEXT';
 
     /**
      * @var bool
      */
-    protected $searchable = false;
+    protected bool $searchable = false;
 
     /**
      * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new View($this->getFieldDataForView());
     }
@@ -39,7 +42,7 @@ class Url extends QUI\ERP\Products\Field\Field
      *
      * @return UrlFrontendView
      */
-    public function getFrontendView()
+    public function getFrontendView(): UrlFrontendView
     {
         return new UrlFrontendView($this->getFieldDataForView());
     }
@@ -48,7 +51,7 @@ class Url extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/Url';
     }
@@ -58,16 +61,16 @@ class Url extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
         }
 
-        if (\filter_var($value, FILTER_VALIDATE_URL) === false) {
-            throw new QUI\ERP\Products\Field\Exception([
+        if (filter_var($value, FILTER_VALIDATE_URL) === false) {
+            throw new Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
@@ -85,9 +88,9 @@ class Url extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @return mixed
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): mixed
     {
-        if (\filter_var($value, FILTER_VALIDATE_URL) === false) {
+        if (filter_var($value, FILTER_VALIDATE_URL) === false) {
             return null;
         }
 

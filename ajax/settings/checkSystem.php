@@ -11,8 +11,8 @@ use QUI\ERP\Products\Handler\Products;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_settings_checkSystem',
     function () {
-        $maxExecTime = \ini_get('max_execution_time');
-        $estExecTime = \count(Products::getProductIds()) * 0.2;
+        $maxExecTime = ini_get('max_execution_time');
+        $estExecTime = count(Products::getProductIds()) * 0.2;
 
         return [
             'commands' => [

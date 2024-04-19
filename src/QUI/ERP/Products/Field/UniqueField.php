@@ -8,6 +8,8 @@ namespace QUI\ERP\Products\Field;
 
 use QUI;
 
+use QUI\Locale;
+
 use function class_exists;
 use function is_string;
 
@@ -419,10 +421,10 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * Return the value in dependence of a locale (language)
      *
-     * @param bool $Locale
+     * @param bool|Locale $Locale
      * @return array|string
      */
-    public function getValueByLocale($Locale = false)
+    public function getValueByLocale(bool|Locale $Locale = false)
     {
         return $this->getValue();
     }
@@ -451,7 +453,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      * @param QUI\Locale|Boolean $Locale - optional
      * @return string
      */
-    public function getTitle($Locale = false)
+    public function getTitle(bool|Locale $Locale = false)
     {
         if (!$Locale) {
             return QUI::getLocale()->get(

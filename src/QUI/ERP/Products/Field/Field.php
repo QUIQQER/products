@@ -10,12 +10,16 @@ use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Handler\Search;
+use QUI\Exception;
+use QUI\Interfaces\Users\User;
+use QUI\Locale;
 
 use function array_filter;
 use function floor;
 use function get_class;
 use function is_array;
 use function is_bool;
+use function is_int;
 use function is_null;
 use function is_string;
 use function json_decode;
@@ -25,7 +29,6 @@ use function method_exists;
 use function reset;
 use function round;
 use function str_replace;
-use function strpos;
 use function trim;
 
 /**
@@ -43,22 +46,22 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @var integer
      */
-    protected $id;
+    protected int $id;
 
     /**
      * @var bool
      */
-    protected $system = false;
+    protected bool $system = false;
 
     /**
      * @var bool
      */
-    protected $standard = false;
+    protected bool $standard = false;
 
     /**
      * @var bool
      */
-    protected $require = false;
+    protected bool $require = false;
 
     /**
      * unassigned = feld ist dem produkt nicht zugewiesen aber die daten soll das produkt trotzdem behalten
@@ -66,83 +69,83 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @var bool
      */
-    protected $unassigned = false;
+    protected bool $unassigned = false;
 
     /**
      * @var bool
      */
-    protected $ownField = false;
+    protected bool $ownField = false;
 
     /**
      * @var bool
      */
-    protected $public = true;
+    protected bool $public = true;
 
     /**
      * @var null
      */
-    protected $defaultValue = null;
+    protected mixed $defaultValue = null;
 
     /**
      * @var array
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * Is this Field searchable?
      *
      * @var bool
      */
-    protected $searchable = true;
+    protected bool $searchable = true;
 
     /**
      * Should the field be displayed in the details?
      * @var bool
      */
-    protected $showInDetails = false;
+    protected bool $showInDetails = false;
 
     /**
-     * @var string
+     * @var ?string
      */
-    protected $type = null;
+    protected ?string $type = null;
 
     /**
      * Field-Name
      *
      * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Field value
      *
      * @var mixed
      */
-    protected $value = null;
+    protected mixed $value = null;
 
     /**
      * Column type for database table (cache column)
      *
      * @var string
      */
-    protected $columnType = 'LONGTEXT';
+    protected string $columnType = 'LONGTEXT';
 
     /**
      * @var array
      */
-    protected $searchTypes = [];
+    protected array $searchTypes = [];
 
     /**
-     * Searchdata type for values of this field
+     * Search data type for values of this field
      *
-     * @var int
+     * @var int|bool
      */
-    protected $searchDataType = false;
+    protected int|bool $searchDataType = false;
 
     /**
      * @var array
      */
-    protected $titles = [];
+    protected array $titles = [];
 
     /**
      * Current instance of a product
@@ -159,9 +162,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param integer $fieldId
      * @param array $params - optional, field params (system, require, standard)
      */
-    public function __construct($fieldId, $params = [])
+    public function __construct(int $fieldId, array $params = [])
     {
-        $this->id = (int)$fieldId;
+        $this->id = $fieldId;
 
         if (QUI::isBackend()) {
             $this->setAttribute('viewType', 'backend');
@@ -170,9 +173,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         // field types
         if (
             isset($params['public'])
-            && (is_bool($params['public']) || \is_int($params['public']))
+            && (is_bool($params['public']) || is_int($params['public']))
         ) {
-            $this->public = $params['public'] ? true : false;
+            $this->public = (bool)$params['public'];
         }
 
         // title description are always public
@@ -183,30 +186,30 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         if (
             isset($params['system'])
-            && (is_bool($params['system']) || \is_int($params['system']))
+            && (is_bool($params['system']) || is_int($params['system']))
         ) {
-            $this->system = $params['system'] ? true : false;
+            $this->system = (bool)$params['system'];
         }
 
         if (
             isset($params['required'])
-            && (is_bool($params['required']) || \is_int($params['required']))
+            && (is_bool($params['required']) || is_int($params['required']))
         ) {
-            $this->require = $params['required'] ? true : false;
+            $this->require = (bool)$params['required'];
         }
 
         if (
             isset($params['standard'])
-            && (is_bool($params['standard']) || \is_int($params['standard']))
+            && (is_bool($params['standard']) || is_int($params['standard']))
         ) {
-            $this->standard = $params['standard'] ? true : false;
+            $this->standard = (bool)$params['standard'];
         }
 
         if (
             isset($params['showInDetails'])
-            && (is_bool($params['showInDetails']) || \is_int($params['showInDetails']))
+            && (is_bool($params['showInDetails']) || is_int($params['showInDetails']))
         ) {
-            $this->showInDetails = $params['showInDetails'] ? true : false;
+            $this->showInDetails = (bool)$params['showInDetails'];
         }
 
         if (isset($params['defaultValue'])) {
@@ -226,9 +229,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the view for the backend
      *
-     * @return \QUI\ERP\Products\Field\View
+     * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         $Field = new View($this->getFieldDataForView());
         $Field->setProduct($this->Product);
@@ -239,9 +242,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the view for the frontend
      *
-     * @return \QUI\ERP\Products\Field\View
+     * @return View
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         $Field = new View($this->getFieldDataForView());
         $Field->setProduct($this->Product);
@@ -254,7 +257,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return array
      */
-    protected function getFieldDataForView()
+    protected function getFieldDataForView(): array
     {
         $attributes = $this->getAttributes();
         $attributes['value'] = $this->getValue();
@@ -267,7 +270,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return UniqueField
      */
-    public function createUniqueField()
+    public function createUniqueField(): UniqueField
     {
         return new UniqueField($this->getId(), $this->getAttributesForUniqueField());
     }
@@ -279,22 +282,19 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return string
      */
-    abstract public function getJavaScriptControl();
+    abstract public function getJavaScriptControl(): string;
 
     /**
      * Return the view
      *
-     * @return \QUI\ERP\Products\Field\View
+     * @return View
      */
-    public function getView()
+    public function getView(): View
     {
-        switch ($this->getAttribute('viewType')) {
-            case 'backend':
-                return $this->getBackendView();
-
-            default:
-                return $this->getFrontendView();
-        }
+        return match ($this->getAttribute('viewType')) {
+            'backend' => $this->getBackendView(),
+            default => $this->getFrontendView(),
+        };
     }
 
     /**
@@ -318,7 +318,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -328,14 +328,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Returns the price object
      *
      * @return QUI\ERP\Money\Price
+     * @throws Exception
      * @deprecated ?
      */
-    public function getPrice()
+    public function getPrice(): QUI\ERP\Money\Price
     {
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
-        $Price = new QUI\ERP\Money\Price(0, $Currency);
 
-        return $Price;
+        return new QUI\ERP\Money\Price(0, $Currency);
     }
 
     /**
@@ -346,7 +346,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @todo value check
      *
      */
-    public function save()
+    public function save(): void
     {
         QUI\Permissions\Permission::checkPermission('field.edit');
 
@@ -429,7 +429,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @throws QUI\Permissions\Exception
      * @throws QUI\Exception
      */
-    public function delete()
+    public function delete(): void
     {
         QUI\Permissions\Permission::checkPermission('field.delete');
 
@@ -463,30 +463,30 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         // delete the locale
         QUI\Translator::delete(
             'quiqqer/products',
-            "products.field.{$fieldId}.title"
+            "products.field.$fieldId.title"
         );
 
         QUI\Translator::delete(
             'quiqqer/products',
-            "products.field.{$fieldId}.workingtitle"
+            "products.field.$fieldId.workingtitle"
         );
 
         // permission header locale
         QUI\Translator::delete(
             'quiqqer/products',
-            "permission.permission.products.fields.field{$fieldId}._header"
+            "permission.permission.products.fields.field$fieldId._header"
         );
 
         // view permission locale
         QUI\Translator::delete(
             'quiqqer/products',
-            "permission.products.fields.field{$fieldId}.view.title"
+            "permission.products.fields.field$fieldId.view.title"
         );
 
         // edit permission locale
         QUI\Translator::delete(
             'quiqqer/products',
-            "permission.products.fields.field{$fieldId}.edit.title"
+            "permission.products.fields.field$fieldId.edit.title"
         );
 
 
@@ -505,12 +505,12 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         // delete permission
         // delete view permission
         QUI::getPermissionManager()->deletePermission(
-            "permission.products.fields.field{$fieldId}.view"
+            "permission.products.fields.field$fieldId.view"
         );
 
         // delete edit permission
         QUI::getPermissionManager()->deletePermission(
-            "permission.products.fields.field{$fieldId}.edit"
+            "permission.products.fields.field$fieldId.edit"
         );
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsFieldDelete', [$this]);
@@ -521,7 +521,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @throws QUI\Exception
      */
-    public function deleteSystemField()
+    public function deleteSystemField(): void
     {
         QUI\Permissions\Permission::checkPermission('field.delete');
         QUI\Permissions\Permission::checkPermission('field.delete.systemfield');
@@ -536,30 +536,30 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         // delete the locale
         QUI\Translator::delete(
             'quiqqer/products',
-            "products.field.{$fieldId}.title"
+            "products.field.$fieldId.title"
         );
 
         QUI\Translator::delete(
             'quiqqer/products',
-            "products.field.{$fieldId}.workingtitle"
+            "products.field.$fieldId.workingtitle"
         );
 
         // permission header locale
         QUI\Translator::delete(
             'quiqqer/products',
-            "permission.permission.products.fields.field{$fieldId}._header"
+            "permission.permission.products.fields.field$fieldId._header"
         );
 
         // view permission locale
         QUI\Translator::delete(
             'quiqqer/products',
-            "permission.products.fields.field{$fieldId}.view.title"
+            "permission.products.fields.field$fieldId.view.title"
         );
 
         // edit permission locale
         QUI\Translator::delete(
             'quiqqer/products',
-            "permission.products.fields.field{$fieldId}.edit.title"
+            "permission.products.fields.field$fieldId.edit.title"
         );
 
         // delete column
@@ -583,7 +583,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return boolean
      */
-    public function isPublic()
+    public function isPublic(): bool
     {
         return $this->public;
     }
@@ -593,21 +593,17 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @param boolean $status
      */
-    public function setPublicStatus($status)
+    public function setPublicStatus(bool $status): void
     {
-        if (!is_bool($status)) {
-            $status = (bool)$status;
-        }
-
         $this->public = $status;
     }
 
     /**
-     * Is the field a own field from the product?
+     * Is the field an own field from the product?
      *
      * @return boolean
      */
-    public function isOwnField()
+    public function isOwnField(): bool
     {
         return $this->ownField;
     }
@@ -617,12 +613,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @param boolean $status
      */
-    public function setOwnFieldStatus($status)
+    public function setOwnFieldStatus(bool $status): void
     {
-        if (!is_bool($status)) {
-            $status = (bool)$status;
-        }
-
         $this->ownField = $status;
     }
 
@@ -631,7 +623,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return boolean
      */
-    public function isUnassigned()
+    public function isUnassigned(): bool
     {
         return $this->unassigned;
     }
@@ -642,12 +634,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @param boolean $status
      */
-    public function setShowInDetailsStatus($status)
+    public function setShowInDetailsStatus(bool $status): void
     {
-        if (!is_bool($status)) {
-            $status = (bool)$status;
-        }
-
         $this->showInDetails = $status;
     }
 
@@ -656,7 +644,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return bool
      */
-    public function showInDetails()
+    public function showInDetails(): bool
     {
         return $this->showInDetails;
     }
@@ -666,12 +654,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @param boolean $status
      */
-    public function setUnassignedStatus($status)
+    public function setUnassignedStatus(bool $status): void
     {
-        if (!is_bool($status)) {
-            $status = (bool)$status;
-        }
-
         $this->unassigned = $status;
     }
 
@@ -680,7 +664,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return mixed|null
      */
-    public function getDefaultValue()
+    public function getDefaultValue(): mixed
     {
         return $this->defaultValue;
     }
@@ -692,7 +676,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @throws QUI\Exception
      */
-    public function setDefaultValue($value)
+    public function setDefaultValue(mixed $value): void
     {
         $this->validate($value);
         $this->defaultValue = $this->cleanup($value);
@@ -701,7 +685,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Clears the default value
      */
-    public function clearDefaultValue()
+    public function clearDefaultValue(): void
     {
         $this->defaultValue = null;
     }
@@ -711,7 +695,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return boolean
      */
-    public function isCustomField()
+    public function isCustomField(): bool
     {
         return false;
     }
@@ -719,12 +703,12 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Set the field name
      *
-     * @param string $name
+     * @param mixed $value
      * @deprecated maybe? ... getTitle makes more sense
      */
-    public function setName($name)
+    public function setName(mixed $value): void
     {
-        $this->name = $name;
+        $this->name = $value;
     }
 
     /**
@@ -734,7 +718,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @throws QUI\Exception
      */
-    public function setValue($value)
+    public function setValue(mixed $value): void
     {
         $this->validate($value);
         $this->value = $this->cleanup($value);
@@ -743,7 +727,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * clears the current value of the field
      */
-    public function clearValue()
+    public function clearValue(): void
     {
         $this->value = null;
     }
@@ -751,7 +735,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * @param array|string $options - field options
      */
-    public function setOptions($options)
+    public function setOptions(array|string $options): void
     {
         if (is_string($options)) {
             $options = json_decode($options, true);
@@ -770,20 +754,18 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param string $option - option name
      * @param mixed $value - option value
      */
-    public function setOption($option, $value)
+    public function setOption(string $option, mixed $value): void
     {
-        if (is_string($option)) {
-            $this->options[$option] = $value;
-        }
+        $this->options[$option] = $value;
     }
 
     /**
      * set an attribute
      *
      * @param string $name - name of the attribute
-     * @param mixed $val - value of the attribute
+     * @param mixed $value - value of the attribute
      */
-    public function setAttribute(string $name, mixed $val): void
+    public function setAttribute(string $name, mixed $value): void
     {
         switch ($name) {
             case 'name':
@@ -791,18 +773,19 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             case 'search_type':
             case 'priority':
             case 'source':
-                $val = QUI\Utils\Security\Orthos::clear($val);
+                $value = QUI\Utils\Security\Orthos::clear($value);
                 break;
 
             case 'prefix':
             case 'suffix':
-                if (!empty($val)) {
-                    $val = json_encode(json_decode($val, true));
+                if (!empty($value)) {
+                    $value = json_encode(json_decode($value, true));
                 }
                 break;
 
             case 'standardField':
-                $this->standard = $val ? true : false;
+                $this->standard = (bool)$value;
+
                 if ($this->isSystem()) {
                     $this->standard = true;
                 }
@@ -814,22 +797,19 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
                 return;
 
             case 'requiredField':
-                $this->require = $val ? true : false;
-
+                $this->require = (bool)$value;
                 return;
 
             case 'publicField':
-                $this->public = $val ? true : false;
-
+                $this->public = (bool)$value;
                 return;
 
             case 'showInDetails':
-                $this->showInDetails = $val ? true : false;
-
+                $this->showInDetails = (bool)$value;
                 return;
         }
 
-        parent::setAttribute($name, $val);
+        parent::setAttribute($name, $value);
     }
 
     /**
@@ -837,7 +817,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -847,7 +827,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return string|array
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         if (is_null($this->value)) {
             return $this->getDefaultValue();
@@ -859,10 +839,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the value in dependence of a locale (language)
      *
-     * @param QUI\Locale $Locale (optional)
-     * @return array|string
+     * @param Locale|null $Locale (optional)
+     * @return string|array
      */
-    public function getValueByLocale($Locale = null)
+    public function getValueByLocale(?Locale $Locale = null): string|array
     {
         return $this->getValue();
     }
@@ -871,9 +851,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Return value for use in product search cache
      *
      * @param QUI\Locale|null $Locale
-     * @return string
+     * @return string|null
      */
-    public function getSearchCacheValue($Locale = null)
+    public function getSearchCacheValue(?Locale $Locale = null): ?string
     {
         if ($this->isEmpty()) {
             return null;
@@ -883,9 +863,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * @return array|string
+     * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -896,7 +876,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param string $option - option name
      * @return mixed
      */
-    public function getOption($option)
+    public function getOption(string $option): mixed
     {
         if (isset($this->options[$option])) {
             return $this->options[$option];
@@ -908,10 +888,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the suffix
      *
-     * @param QUI\Locale|bool $Locale
+     * @param Locale|null $Locale
      * @return string|bool
      */
-    public function getSuffix($Locale = false)
+    public function getSuffix(QUI\Locale $Locale = null): bool|string
     {
         if (!$Locale) {
             $Locale = QUI::getLocale();
@@ -935,10 +915,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the prefix
      *
-     * @param QUI\Locale|bool $Locale
+     * @param ?QUI\Locale $Locale
      * @return string|bool
      */
-    public function getPrefix($Locale = false)
+    public function getPrefix(Locale $Locale = null): bool|string
     {
         if (!$Locale) {
             $Locale = QUI::getLocale();
@@ -966,7 +946,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param QUI\Locale|bool $Locale - optional
      * @return string
      */
-    public function getTitle($Locale = false)
+    public function getTitle($Locale = false): string
     {
         if (!$Locale) {
             $Locale = QUI::getLocale();
@@ -992,7 +972,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getWorkingTitle($Locale = null)
+    public function getWorkingTitle(Locale $Locale = null): string
     {
         $var = 'products.field.' . $this->getId() . '.workingtitle';
         $group = 'quiqqer/products';
@@ -1036,7 +1016,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param null $Locale
      * @return string
      */
-    public function getHelp($Locale = null)
+    public function getHelp($Locale = null): string
     {
         if (!$Locale) {
             $Locale = QUI::getLocale();
@@ -1066,7 +1046,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the field type
      *
-     * @return mixed|string
+     * @return string
      */
     public function getType(): string
     {
@@ -1077,7 +1057,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         $class = parent::getType();
 
         // quiqqer/product fields
-        if (strpos($class, 'QUI\ERP\Products\Field\Types\\') !== false) {
+        if (str_contains($class, 'QUI\ERP\Products\Field\Types\\')) {
             $this->type = str_replace('QUI\ERP\Products\Field\Types\\', '', $class);
 
             return $this->type;
@@ -1106,7 +1086,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return string
      */
-    public function getColumnType()
+    public function getColumnType(): string
     {
         return $this->columnType;
     }
@@ -1116,7 +1096,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return integer|false - search type id oder false if none set
      */
-    public function getSearchType()
+    public function getSearchType(): bool|int
     {
         return $this->getAttribute('search_type');
     }
@@ -1126,7 +1106,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return string|null
      */
-    public function getDefaultSearchType()
+    public function getDefaultSearchType(): ?string
     {
         return null;
     }
@@ -1136,7 +1116,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return array
      */
-    public function getSearchTypes()
+    public function getSearchTypes(): array
     {
         if (!$this->isSearchable()) {
             return [];
@@ -1148,9 +1128,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the search type
      *
-     * @return string
+     * @return bool|int|string
      */
-    public function getSearchDataType()
+    public function getSearchDataType(): bool|int|string
     {
         return $this->searchDataType;
     }
@@ -1192,11 +1172,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     }
 
     /**
-     * Return the attributes for an unique field
+     * Return the attributes for a unique field
      *
      * @return array
      */
-    public function getAttributesForUniqueField()
+    public function getAttributesForUniqueField(): array
     {
         $attributes = $this->getAttributes();
         $attributes['id'] = $this->getId();
@@ -1215,7 +1195,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return QUI\ERP\Products\Product\Product[]
      */
-    public function getProducts()
+    public function getProducts(): array
     {
         return Products::getProducts([
             'where' => [
@@ -1232,7 +1212,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return int[]
      */
-    public function getProductIds()
+    public function getProductIds(): array
     {
         return Products::getProductIds([
             'where' => [
@@ -1249,7 +1229,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return array
      */
-    public function toProductArray()
+    public function toProductArray(): array
     {
         return [
             'id' => $this->getId(),
@@ -1269,7 +1249,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->value);
     }
@@ -1279,7 +1259,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return boolean
      */
-    public function isSystem()
+    public function isSystem(): bool
     {
         return $this->system;
     }
@@ -1289,9 +1269,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return bool
      */
-    public function isStandard()
+    public function isStandard(): bool
     {
-        // systemfields are always standardfields
         if ($this->isSystem()) {
             return true;
         }
@@ -1302,7 +1281,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * @return boolean
      */
-    public function isRequired()
+    public function isRequired(): bool
     {
         return $this->require;
     }
@@ -1312,7 +1291,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return bool
      */
-    public function isSearchable()
+    public function isSearchable(): bool
     {
         return $this->searchable;
     }
@@ -1320,11 +1299,11 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Calculates a range with individual steps between a min and a max number
      *
-     * @param integer|float $min
-     * @param integer|float $max
-     * @return array - contains values from min to max with calculated steps inbetween
+     * @param float|integer $min
+     * @param float|integer $max
+     * @return array - contains values from min to max with calculated steps in between
      */
-    public function calculateValueRange($min, $max)
+    public function calculateValueRange(float|int $min, float|int $max): array
     {
         if ($min < 1) {
             $start = 0.1;
@@ -1368,10 +1347,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Checks if a user has view permission for this field
      *
-     * @param QUI\Users\User $User
+     * @param User|null $User
      * @return bool
      */
-    public function hasViewPermission($User = null)
+    public function hasViewPermission(QUI\Interfaces\Users\User $User = null): bool
     {
         if ($this->isPublic()) {
             return true;
@@ -1384,7 +1363,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             );
 
             return true;
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         return false;
@@ -1393,7 +1372,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * @param $Product - Product instance
      */
-    public function setProduct($Product)
+    public function setProduct($Product): void
     {
         $this->Product = $Product;
     }

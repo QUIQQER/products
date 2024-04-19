@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
+use QUI\Exception;
 use QUI\Permissions\Permission;
 
 /**
@@ -19,16 +20,16 @@ class Package
     const PACKAGE = 'quiqqer/products';
 
     /**
-     * @var null
+     * @var null|bool
      */
-    protected static $hidePrice = null;
+    protected static ?bool $hidePrice = null;
 
     /**
      * Return config
      *
      * @return QUI\Config
      */
-    public static function getConfig()
+    public static function getConfig(): QUI\Config
     {
         return QUI::getPackage(self::PACKAGE)->getConfig();
     }
@@ -38,7 +39,7 @@ class Package
      *
      * @return string
      */
-    public static function getVarDir()
+    public static function getVarDir(): string
     {
         return QUI::getPackage(self::PACKAGE)->getVarDir();
     }
@@ -46,9 +47,10 @@ class Package
     /**
      * Hide price display?
      *
-     * @return bool|int
+     * @return bool
+     * @throws Exception
      */
-    public static function hidePrice()
+    public static function hidePrice(): bool
     {
         // Wenn in Session der Preis versteckt werden soll
         // Dann hat dies Vorrang

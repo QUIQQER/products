@@ -5,6 +5,7 @@
  */
 
 use QUI\ERP\Products\Handler\Products;
+use QUI\ExceptionStack;
 
 /**
  * Deactivate a product
@@ -14,14 +15,14 @@ use QUI\ERP\Products\Handler\Products;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_deactivate',
     function ($productId) {
-        if (\is_numeric($productId)) {
+        if (is_numeric($productId)) {
             $Product = Products::getProduct($productId);
             $Product->deactivate();
 
             return;
         }
 
-        $ExceptionStack = new \QUI\ExceptionStack();
+        $ExceptionStack = new ExceptionStack();
         $productIds = json_decode($productId, true);
 
         if (!$productIds) {

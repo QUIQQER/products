@@ -12,6 +12,8 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Search\FrontendSearch;
 
+use QUI\Exception;
+
 use function dirname;
 use function explode;
 use function get_class;
@@ -63,6 +65,7 @@ class ProductList extends QUI\Control
      * constructor
      *
      * @param array $attributes
+     * @throws Exception
      */
     public function __construct(array $attributes = [])
     {
@@ -114,18 +117,12 @@ class ProductList extends QUI\Control
      * (non-PHPdoc)
      *
      * @throws QUI\Exception
+     * @throws \Exception
      * @see \QUI\Control::create()
      */
     public function getBody(): string
     {
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return '';
-        }
-
+        $Engine = QUI::getTemplateManager()->getEngine();
         $Category = $this->getCategory();
         $searchParams = $this->getAttribute('searchParams');
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
@@ -290,13 +287,7 @@ class ProductList extends QUI\Control
      */
     public function createFilter(): string
     {
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return '';
-        }
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         if (class_exists('QUI\ERP\Tags\Manager')) {
             $Engine->assign(
@@ -317,9 +308,8 @@ class ProductList extends QUI\Control
     /**
      * Return the available filter in sorted sequence
      *
-     * @return array
-     *
-     * @throws QUI\Exception
+     * @return array|null
+     * @throws Exception
      */
     public function getFilter(): ?array
     {
@@ -339,7 +329,7 @@ class ProductList extends QUI\Control
                 try {
                     $filter[] = QUI\Tags\Groups\Handler::get($this->getProject(), $tagGroup);
                 } catch (QUI\Tags\Exception) {
-                } catch (QUI\Exception $Exception) {
+                } catch (\Exception $Exception) {
                     QUI\System\Log::writeDebugException($Exception);
                 }
             }
@@ -362,7 +352,7 @@ class ProductList extends QUI\Control
 
                     $filter[] = $field;
                 }
-            } catch (QUI\ERP\Products\Field\Exception $Exception) {
+            } catch (QUI\ERP\Products\Field\Exception) {
                 // nothing
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
@@ -420,7 +410,7 @@ class ProductList extends QUI\Control
      * @param string $title
      * @param string $value
      */
-    public function addSort(string $title, string $value)
+    public function addSort(string $title, string $value): void
     {
         $this->sort[] = [
             'title' => $title,
@@ -436,7 +426,7 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    public function getStart($count = false): array
+    public function getStart(bool|int $count = false): array
     {
         return $this->renderData(1, $this->getMax(), $count);
     }
@@ -450,7 +440,7 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    public function getNext($start = false, $count = false): array
+    public function getNext(bool|int $start = false, bool|int $count = false): array
     {
         return $this->renderData($start, $this->getMax(), $count);
     }
@@ -460,15 +450,15 @@ class ProductList extends QUI\Control
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         try {
             return $this->getSearch()->search(
                 $this->getCountParams(),
                 true
             );
-        } catch (QUI\Exception $Exception) {
-            return '';
+        } catch (QUI\Exception) {
+            return 0;
         }
     }
 
@@ -482,7 +472,7 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    protected function renderData($start, $max, $count = false): array
+    protected function renderData(bool|int $start, bool|int $max, bool|int $count = false): array
     {
         $Engine = QUI::getTemplateManager()->getEngine();
 
@@ -625,7 +615,7 @@ class ProductList extends QUI\Control
      * @param array $categories - list of site categories
      * @param string $categoryTpl - view type tpl
      * @return string
-     * @throws QUI\Exception
+     * @throws QUI\Exception|\Exception
      */
     public function renderCategories(array $categories, string $categoryTpl): string
     {
@@ -644,12 +634,12 @@ class ProductList extends QUI\Control
      * Return the default search params
      *
      * @param integer $start - start
-     * @param integer|bool $max - optional, ax
+     * @param bool|integer $max - optional, ax
      * @return array|mixed
      *
      * @throws QUI\Exception
      */
-    protected function getSearchParams(int $start = 0, $max = false)
+    protected function getSearchParams(int $start = 0, bool|int $max = false): mixed
     {
         $searchParams = $this->getAttribute('searchParams');
 
@@ -684,7 +674,7 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    protected function getCountParams()
+    protected function getCountParams(): mixed
     {
         $searchParams = $this->getAttribute('searchParams');
 
@@ -736,7 +726,7 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    public function getCategory()
+    public function getCategory(): QUI\ERP\Products\Category\ViewBackend|QUI\ERP\Products\Category\ViewFrontend|null
     {
         if ($this->Category) {
             return $this->Category->getView();

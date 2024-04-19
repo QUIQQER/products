@@ -94,14 +94,14 @@ class Calc
      *
      * @var bool
      */
-    protected $ignoreVatCalculation = false;
+    protected bool $ignoreVatCalculation = false;
 
     /**
      * Calc constructor.
      *
-     * @param UserInterface|bool $User - calculation user
+     * @param ?UserInterface $User - calculation user
      */
-    public function __construct($User = false)
+    public function __construct(UserInterface $User = null)
     {
         if (!QUI::getUsers()->isUser($User)) {
             $User = QUI::getUserBySession();
@@ -766,7 +766,7 @@ class Calc
                 if ($TaxEntry->isActive()) {
                     $Vat = $TaxEntry;
                 }
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 QUI\ERP\Debug::getInstance()->log(
                     'Product Vat ist nicht für den Benutzer gültig',
                     'quiqqer/products'

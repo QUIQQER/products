@@ -26,7 +26,7 @@ QUI::$Ajax->registerFunction(
         $searchParams = json_decode($searchParams, true);
 
         if (isset($searchParams['sortOn'])) {
-            if (strpos($searchParams['sortOn'], 'S') === 0) {
+            if (str_starts_with($searchParams['sortOn'], 'S')) {
                 $searchParams['sortOn'] = mb_substr($searchParams['sortOn'], 1);
             }
         }

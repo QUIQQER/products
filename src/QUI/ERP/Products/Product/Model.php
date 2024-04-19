@@ -15,6 +15,7 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Handler\Search as SearchHandler;
 use QUI\ERP\Products\Interfaces\FieldInterface;
+use QUI\ERP\Products\Interfaces\UniqueFieldInterface;
 use QUI\ERP\Products\Product\Cache\ProductCache;
 use QUI\ERP\Products\Utils\Products as ProductUtils;
 use QUI\ExceptionStack;
@@ -416,7 +417,7 @@ class Model extends QUI\QDOM
             }
         }
 
-        if (Products::$useRuntimeCacheForUniqueProducts) {
+        if (Products::$useRuntimeCacheForUniqueProducts && isset($cacheName)) {
             ProductCache::writeUniqueProductData($attributes, $cacheName);
         }
 
@@ -945,7 +946,7 @@ class Model extends QUI\QDOM
      * @throws Exception
      * @throws QUI\Exception
      */
-    public function getCalculatedPrice($FieldId): bool|QUI\ERP\Products\Field\UniqueField
+    public function getCalculatedPrice($FieldId): FieldInterface|UniqueFieldInterface
     {
         return $this->createUniqueProduct()->getCalculatedPrice($FieldId);
     }
@@ -1557,7 +1558,6 @@ class Model extends QUI\QDOM
         $fields = $this->getAllProductFields();
 
         // generate the product field data
-        /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($fields as $Field) {
             $value = $Field->getValue();
 
@@ -2273,16 +2273,13 @@ class Model extends QUI\QDOM
 
         try {
             $Folder = $this->getMediaFolder();
+            $images = $Folder->getImages([
+                'limit' => 1,
+                'order' => 'priority ASC'
+            ]);
 
-            if ($Folder) {
-                $images = $Folder->getImages([
-                    'limit' => 1,
-                    'order' => 'priority ASC'
-                ]);
-
-                if (isset($images[0])) {
-                    return $images[0];
-                }
+            if (isset($images[0])) {
+                return $images[0];
             }
         } catch (QUI\Exception) {
         }
@@ -2292,7 +2289,7 @@ class Model extends QUI\QDOM
             $Media = $Project->getMedia();
             $Placeholder = $Media->getPlaceholderImage();
 
-            if ($Placeholder) {
+            if ($Placeholder instanceof QUI\Projects\Media\Image) {
                 return $Placeholder;
             }
         } catch (QUI\Exception) {
@@ -2303,7 +2300,7 @@ class Model extends QUI\QDOM
             $Media = $Project->getMedia();
             $Placeholder = $Media->getPlaceholderImage();
 
-            if ($Placeholder) {
+            if ($Placeholder instanceof QUI\Projects\Media\Image) {
                 return $Placeholder;
             }
         } catch (QUI\Exception) {
@@ -2550,7 +2547,7 @@ class Model extends QUI\QDOM
      * Clear the complete own product permissions
      *
      * @param User|null $User - optional
-     * @throws QUI\Permissions\Exception
+     * @throws Exception
      */
     public function clearPermissions(QUI\Interfaces\Users\User $User = null): void
     {
@@ -2564,7 +2561,7 @@ class Model extends QUI\QDOM
      *
      * @param string $permission - name of the product permission
      * @param User|null $User
-     * @throws QUI\Permissions\Exception
+     * @throws Exception
      */
     public function clearPermission(string $permission, QUI\Interfaces\Users\User $User = null): void
     {

@@ -10,6 +10,9 @@ use QUI;
 use QUI\ERP\Products\Interfaces\FieldInterface;
 use QUI\Locale;
 
+use function array_merge;
+use function implode;
+
 /**
  * Product backend view
  *
@@ -72,7 +75,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
 
         /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
         foreach ($fieldList as $Field) {
-            $fields[] = \array_merge(
+            $fields[] = array_merge(
                 $Field->toProductArray(),
                 $Field->getAttributes()
             );
@@ -92,7 +95,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
         }
 
         if (!empty($categories)) {
-            $attributes['categories'] = \implode(',', $categories);
+            $attributes['categories'] = implode(',', $categories);
         }
 
         return $attributes;
@@ -101,7 +104,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * @return Model|Product
      */
-    public function getProduct()
+    public function getProduct(): Product|Model
     {
         return $this->Product;
     }
@@ -125,7 +128,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
-     * @param bool $Locale
+     * @param Locale|null $Locale
      * @return string
      */
     public function getContent(QUI\Locale|null $Locale = null): string
@@ -182,16 +185,16 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      *
      * @throws QUI\ERP\Products\Product\Exception
      */
-    public function getFieldView($fieldId)
+    public function getFieldView(int $fieldId): QUI\ERP\Products\Field\View
     {
         return $this->getProduct()->getField($fieldId)->getBackendView();
     }
 
     /**
-     * @param string $type
+     * @param string|array $type
      * @return array
      */
-    public function getFieldsByType(string $type): array
+    public function getFieldsByType(string|array $type): array
     {
         return $this->getProduct()->getFieldsByType($type);
     }

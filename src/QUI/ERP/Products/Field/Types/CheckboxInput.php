@@ -4,7 +4,10 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 
+use QUI\ERP\Products\Field\Exception;
+
 use function is_string;
+use function json_decode;
 use function json_last_error;
 
 /**
@@ -14,9 +17,9 @@ use function json_last_error;
  */
 class CheckboxInput extends QUI\ERP\Products\Field\Field
 {
-    protected $searchable = false;
+    protected bool $searchable = false;
 
-    protected $defaultValue = [
+    protected mixed $defaultValue = [
         'checked' => false,
         'value' => ''
     ];
@@ -24,7 +27,7 @@ class CheckboxInput extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/CheckboxInput';
     }
@@ -34,19 +37,19 @@ class CheckboxInput extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
         }
 
         if (is_string($value)) {
-            $value = \json_decode($value, true);
+            $value = json_decode($value, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new QUI\ERP\Products\Field\Exception([
+                throw new Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
                     [
@@ -63,7 +66,7 @@ class CheckboxInput extends QUI\ERP\Products\Field\Field
         }
 
         if (!isset($value['checked']) || !isset($value['value'])) {
-            throw new QUI\ERP\Products\Field\Exception([
+            throw new Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
@@ -81,10 +84,10 @@ class CheckboxInput extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @return array
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): mixed
     {
         if (is_string($value)) {
-            $value = \json_decode($value, true);
+            $value = json_decode($value, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
                 return $this->getDefaultValue();

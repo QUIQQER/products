@@ -18,7 +18,7 @@ QUI::$Ajax->registerFunction(
         if (empty($options)) {
             $options = [];
         } else {
-            $options = Orthos::clearArray(\json_decode($options, true));
+            $options = Orthos::clearArray(json_decode($options, true));
         }
 
         $Project = QUI::getProjectManager()->decode($project);

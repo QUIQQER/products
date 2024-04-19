@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use DateTime;
+use Exception;
 use QUI;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Search;
@@ -20,7 +21,7 @@ use function strtotime;
  */
 class Date extends QUI\ERP\Products\Field\Field
 {
-    protected $columnType = 'INT(11)';
+    protected string $columnType = 'INT(11)';
 
     /**
      * Validates a year value
@@ -28,7 +29,7 @@ class Date extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @throws QUI\ERP\Products\Field\Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
@@ -42,7 +43,7 @@ class Date extends QUI\ERP\Products\Field\Field
 
         try {
             new DateTime($value);
-        } catch (\Exception $Exception) {
+        } catch (Exception) {
             $dateTime = false;
         }
 
@@ -77,7 +78,7 @@ class Date extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @return int - timestamp
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): int
     {
         if (is_numeric($value)) {
             $value = strtotime($value);
@@ -85,7 +86,7 @@ class Date extends QUI\ERP\Products\Field\Field
 
         try {
             $Date = new DateTime($value);
-        } catch (\Exception $Exception) {
+        } catch (Exception) {
             $Date = new DateTime();
         }
 
@@ -95,7 +96,7 @@ class Date extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/Date';
     }
@@ -103,7 +104,7 @@ class Date extends QUI\ERP\Products\Field\Field
     /**
      * Return the Backend view
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new View($this->getFieldDataForView());
     }
@@ -111,7 +112,7 @@ class Date extends QUI\ERP\Products\Field\Field
     /**
      * Return the frontend view
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         return new DateFrontendView($this->getFieldDataForView());
     }
@@ -121,7 +122,7 @@ class Date extends QUI\ERP\Products\Field\Field
      *
      * @return array
      */
-    public function getSearchTypes()
+    public function getSearchTypes(): array
     {
         return [
             Search::SEARCHTYPE_DATE,
@@ -132,9 +133,9 @@ class Date extends QUI\ERP\Products\Field\Field
     /**
      * Get default search type
      *
-     * @return string
+     * @return string|null
      */
-    public function getDefaultSearchType()
+    public function getDefaultSearchType(): ?string
     {
         return Search::SEARCHTYPE_DATERANGE;
     }

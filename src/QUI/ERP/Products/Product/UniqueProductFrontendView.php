@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
+use QUI\Exception;
 
 /**
  * Class UniqueProductFrontendView
@@ -21,12 +22,12 @@ class UniqueProductFrontendView extends UniqueProduct
     /**
      * @var bool|mixed
      */
-    protected $hasOfferPrice = false;
+    protected mixed $hasOfferPrice = false;
 
     /**
      * @var float|bool
      */
-    protected $originalPrice = false;
+    protected mixed $originalPrice = false;
 
     /**
      * UniqueProductFrontendView constructor.
@@ -36,7 +37,7 @@ class UniqueProductFrontendView extends UniqueProduct
      *
      * @throws QUI\Exception
      */
-    public function __construct($pid, array $attributes)
+    public function __construct(int $pid, array $attributes)
     {
         parent::__construct($pid, $attributes);
 
@@ -90,7 +91,7 @@ class UniqueProductFrontendView extends UniqueProduct
      *
      * @return QUI\ERP\Money\Price
      */
-    public function getPrice()
+    public function getPrice(): QUI\ERP\Money\Price
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return new QUI\ERP\Money\Price(
@@ -101,7 +102,7 @@ class UniqueProductFrontendView extends UniqueProduct
 
         try {
             return parent::getPrice();
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return new QUI\ERP\Money\Price(
                 '',
                 QUI\ERP\Currency\Handler::getDefaultCurrency()
@@ -114,7 +115,7 @@ class UniqueProductFrontendView extends UniqueProduct
      *
      * @return QUI\ERP\Money\Price
      */
-    public function getUnitPrice()
+    public function getUnitPrice(): QUI\ERP\Money\Price
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return new QUI\ERP\Money\Price(
@@ -125,7 +126,7 @@ class UniqueProductFrontendView extends UniqueProduct
 
         try {
             return parent::getUnitPrice();
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return new QUI\ERP\Money\Price(
                 '',
                 QUI\ERP\Currency\Handler::getDefaultCurrency()
@@ -138,7 +139,7 @@ class UniqueProductFrontendView extends UniqueProduct
      *
      * @return bool
      */
-    public function hasOfferPrice()
+    public function hasOfferPrice(): bool
     {
         return $this->hasOfferPrice;
     }
@@ -146,9 +147,10 @@ class UniqueProductFrontendView extends UniqueProduct
     /**
      * Return the original price if an offer prices exists
      *
-     * @return QUI\ERP\Money\Price|QUI\ERP\Products\Field\UniqueField
+     * @return QUI\ERP\Money\Price
+     * @throws Exception
      */
-    public function getOriginalPrice()
+    public function getOriginalPrice(): QUI\ERP\Money\Price
     {
         if ($this->originalPrice) {
             return new QUI\ERP\Money\Price(
@@ -165,7 +167,7 @@ class UniqueProductFrontendView extends UniqueProduct
      *
      * @return QUI\ERP\Money\Price
      */
-    public function getNettoPrice()
+    public function getNettoPrice(): QUI\ERP\Money\Price
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return new QUI\ERP\Money\Price(
@@ -176,7 +178,7 @@ class UniqueProductFrontendView extends UniqueProduct
 
         try {
             return parent::getNettoPrice();
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return new QUI\ERP\Money\Price(
                 '',
                 QUI\ERP\Currency\Handler::getDefaultCurrency()

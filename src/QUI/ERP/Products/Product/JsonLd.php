@@ -73,9 +73,8 @@ class JsonLd
         $json = array_merge($json, self::getGTIN($Product));
         $json = array_merge($json, self::getBrand($Product));
         $json = array_merge($json, self::getImages($Product));
-        $json = array_merge($json, self::getOffer($Product, $Locale));
 
-        return $json;
+        return array_merge($json, self::getOffer($Product, $Locale));
     }
 
     /**
@@ -168,7 +167,7 @@ class JsonLd
                     $images[] = $url;
                 }
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             // nothing
         }
 
@@ -179,7 +178,7 @@ class JsonLd
                     'image' => $images
                 ];
             }
-        } catch (\QUI\Exception $exception) {
+        } catch (\QUI\Exception) {
         }
 
 
@@ -192,7 +191,7 @@ class JsonLd
                 if (!empty($url)) {
                     $images[] = $url;
                 }
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 // nothing
             }
         }
@@ -302,7 +301,7 @@ class JsonLd
 
     /**
      * @param ProductInterface $Product
-     * @param \NumberFormatter $Formatter
+     * @param NumberFormatter $Formatter
      *
      * @return array
      */
@@ -328,7 +327,7 @@ class JsonLd
 
     /**
      * @param ProductInterface $Product
-     * @param \NumberFormatter $Formatter
+     * @param NumberFormatter $Formatter
      * @return array
      */
     protected static function getOfferEntry(
@@ -342,7 +341,7 @@ class JsonLd
         if (!QUI\ERP\Utils\User::isNettoUser($User)) {
             try {
                 $price = $Calc->getPrice($price);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 
@@ -399,9 +398,9 @@ class JsonLd
     /**
      * @param string $name
      * @param array $arguments
-     * @return mixed
+     * @return void
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments)
     {
         // TODO: Implement __call() method.
     }

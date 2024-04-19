@@ -8,6 +8,8 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 
+use function htmlspecialchars;
+
 /**
  * Class UrlFrontendView
  * Frontend View for the Url Field
@@ -21,14 +23,14 @@ class UrlFrontendView extends QUI\ERP\Products\Field\View
      *
      * @return string
      */
-    public function create()
+    public function create(): string
     {
         if (!$this->hasViewPermission()) {
             return '';
         }
 
         $title = $this->getTitle();
-        $title = \htmlspecialchars($title);
+        $title = htmlspecialchars($title);
 
         $link = '';
         $value = $this->getValue();
@@ -38,8 +40,8 @@ class UrlFrontendView extends QUI\ERP\Products\Field\View
         }
 
         return "<div class=\"quiqqer-product-field\">
-            <div class=\"quiqqer-product-field-title\">{$title}</div>
-            <div class=\"quiqqer-product-field-value\">{$link}</div>
+            <div class=\"quiqqer-product-field-title\">$title</div>
+            <div class=\"quiqqer-product-field-value\">$link</div>
         </div>";
     }
 }

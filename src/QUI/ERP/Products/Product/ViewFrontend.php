@@ -7,7 +7,12 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
+use QUI\Database\Exception;
+use QUI\ERP\Products\Category\Category;
+use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Interfaces\FieldInterface;
+use QUI\ERP\Products\Interfaces\UniqueFieldInterface;
+use QUI\Locale;
 use Symfony\Component\HttpFoundation\Response;
 
 use function array_filter;
@@ -112,16 +117,11 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         ];
 
         try {
-            $Image = $this->getImage();
-
-            if ($Image) {
-                $attributes['image'] = $this->getImage()->getUrl(true);
-            }
-        } catch (QUI\Exception $Exception) {
+            $attributes['image'] = $this->getImage()->getUrl(true);
+        } catch (QUI\Exception) {
         }
 
 
-        /* @var $Price QUI\ERP\Money\Price */
         $Price = $this->getPrice();
 
         $attributes['price_netto'] = $Price->value();
@@ -186,25 +186,25 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * @param QUI\Locale|null $Locale
      * @return string
      */
-    public function getTitle(QUI\Locale|null $Locale = null): string
+    public function getTitle(QUI\Locale $Locale = null): string
     {
         return $this->Product->getTitle($Locale);
     }
 
     /**
-     * @param bool $Locale
+     * @param Locale|null $Locale
      * @return string
      */
-    public function getDescription($Locale = false): string
+    public function getDescription(QUI\Locale $Locale = null): string
     {
         return $this->Product->getDescription($Locale);
     }
 
     /**
-     * @param bool $Locale
+     * @param Locale|null $Locale
      * @return string
      */
-    public function getContent($Locale = false): string
+    public function getContent(QUI\Locale $Locale = null): string
     {
         return $this->Product->getContent($Locale);
     }
@@ -364,10 +364,10 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     /**
      * Return all fields from the wanted type
      *
-     * @param string $type
+     * @param string|array $type
      * @return array
      */
-    public function getFieldsByType(string $type): array
+    public function getFieldsByType(string|array $type): array
     {
         $types = $this->Product->getFieldsByType($type);
 
@@ -411,7 +411,6 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         $fields = $this->Product->getFields();
 
         return array_filter($fields, function ($Field) {
-            /* @var $Field QUI\ERP\Products\Interfaces\FieldInterface */
             return $Field->isPublic();
         });
     }
@@ -419,7 +418,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     /**
      * Return the main category
      *
-     * @return QUI\ERP\Products\Category\Category
+     * @return Category|null
      */
     public function getCategory(): ?QUI\ERP\Products\Category\Category
     {
@@ -440,7 +439,6 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * Return the product image
      *
      * @return QUI\Projects\Media\Image
-     *
      * @throws QUI\Exception
      */
     public function getImage(): QUI\Projects\Media\Image
@@ -456,21 +454,30 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
         try {
             $Folder = $this->Product->getMediaFolder();
+            $images = $Folder->getImages([
+                'limit' => 1,
+                'order' => 'priority ASC'
+            ]);
 
-            if ($Folder) {
-                $images = $Folder->getImages([
-                    'limit' => 1,
-                    'order' => 'priority ASC'
-                ]);
-
-                if (isset($images[0]) && $images[0]->isActive()) {
-                    return $images[0];
-                }
+            if (isset($images[0]) && $images[0]->isActive()) {
+                return $images[0];
             }
         } catch (QUI\Exception) {
         }
 
-        return QUI::getRewrite()->getProject()->getMedia()->getPlaceholderImage();
+        $Placeholder = QUI::getRewrite()->getProject()->getMedia()->getPlaceholderImage();
+
+        if ($Placeholder instanceof QUI\Projects\Media\Image) {
+            return $Placeholder;
+        }
+
+        throw new QUI\ERP\Products\Product\Exception([
+            'quiqqer/products',
+            'exception.product.no.image',
+            [
+                'productId' => $this->getId()
+            ]
+        ]);
     }
 
     /**
@@ -500,7 +507,9 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     }
 
     /**
-     * @return false|QUI\ERP\Products\Interfaces\UniqueFieldInterface
+     * @return false|UniqueFieldInterface
+     * @throws Exception
+     * @throws QUI\Exception
      */
     public function getOriginalPrice(): QUI\ERP\Products\Interfaces\UniqueFieldInterface|bool
     {
@@ -511,9 +520,11 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * Return a calculated price field
      *
      * @param integer $FieldId
-     * @return false|QUI\ERP\Products\Field\UniqueField
+     * @return false|UniqueField
+     * @throws Exception
+     * @throws QUI\Exception
      */
-    public function getCalculatedPrice($FieldId)
+    public function getCalculatedPrice(int $FieldId): bool|QUI\ERP\Products\Field\UniqueField
     {
         return $this->Product->getCalculatedPrice($FieldId);
     }
@@ -547,18 +558,17 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * @throws QUI\Exception
      * @throws QUI\Users\Exception
      */
-    public function calc($Calc = null)
+    public function calc($Calc = null): mixed
     {
         return $this->Product->calc($Calc);
     }
 
     /**
-     * @param null $Calc
-     * @return mixed
+     * @return void
      */
-    public function resetCalculation()
+    public function resetCalculation(): void
     {
-        return $this->Product->resetCalculation();
+        $this->Product->resetCalculation();
     }
 
     //endregion

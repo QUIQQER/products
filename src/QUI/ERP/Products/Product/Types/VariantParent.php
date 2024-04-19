@@ -15,8 +15,9 @@ use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Tables;
-
 use QUI\Interfaces\Users\User;
+
+use QUI\Locale;
 
 use function array_map;
 use function array_merge;
@@ -65,18 +66,19 @@ class VariantParent extends AbstractType
     protected ?array $children = null;
 
     /**
-     * @var array
+     * @var array|null
      */
-    protected $childFields = null;
+    protected ?array $childFields = null;
 
     /**
-     * @var array
+     * @var array|null
      */
-    protected $childFieldsActive = null;
+    protected ?array $childFieldsActive = null;
+
     /**
-     * @var array
+     * @var array|null
      */
-    protected $childFieldHashes = null;
+    protected ?array $childFieldHashes = null;
 
     /**
      * Model constructor
@@ -87,7 +89,7 @@ class VariantParent extends AbstractType
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
      */
-    public function __construct($pid, $product = [])
+    public function __construct(int $pid, array $product = [])
     {
         parent::__construct($pid, $product);
 
@@ -109,10 +111,10 @@ class VariantParent extends AbstractType
     //region abstract type methods
 
     /**
-     * @param null $Locale
+     * @param Locale|null $Locale
      * @return mixed
      */
-    public static function getTypeTitle($Locale = null)
+    public static function getTypeTitle(QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -122,10 +124,10 @@ class VariantParent extends AbstractType
     }
 
     /**
-     * @param null $Locale
+     * @param Locale|null $Locale
      * @return mixed
      */
-    public static function getTypeDescription($Locale = null)
+    public static function getTypeDescription(QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -137,7 +139,7 @@ class VariantParent extends AbstractType
     /**
      * Returns the backend panel control
      */
-    public static function getTypeBackendPanel()
+    public static function getTypeBackendPanel(): string
     {
         return 'package/quiqqer/products/bin/controls/products/ProductVariant';
     }
@@ -504,7 +506,7 @@ class VariantParent extends AbstractType
         try {
             $Config = QUI::getPackage('quiqqer/products')->getConfig();
             $parentHasChildImages = !!$Config->getValue('variants', 'parentHasChildImages');
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             $parentHasChildImages = true;
         }
 
@@ -937,7 +939,7 @@ class VariantParent extends AbstractType
                 ],
                 'limit' => 1
             ]);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             throw new QUI\ERP\Products\Product\Exception(
                 [
                     'quiqqer/products',
@@ -980,7 +982,7 @@ class VariantParent extends AbstractType
      *
      * @throws QUI\Exception
      */
-    public function generateVariants(array $fields = [], int $generationType = self::GENERATION_TYPE_RESET)
+    public function generateVariants(array $fields = [], int $generationType = self::GENERATION_TYPE_RESET): void
     {
         if (empty($fields)) {
             return;
@@ -1089,7 +1091,7 @@ class VariantParent extends AbstractType
                 try {
                     $this->getVariantByVariantHash($variantHash);
                     continue;
-                } catch (QUI\Exception $Exception) {
+                } catch (QUI\Exception) {
                     // doesnt exists
                 }
             }
@@ -1140,7 +1142,7 @@ class VariantParent extends AbstractType
      *
      * @throws QUI\Exception
      */
-    public function createVariant()
+    public function createVariant(): VariantChild
     {
         // set empty url, otherwise we'll have problems.
         $UrlField = $this->getField(FieldHandler::FIELD_URL);
@@ -1174,7 +1176,7 @@ class VariantParent extends AbstractType
     }
 
     /**
-     * Create a variant by an field array
+     * Create a variant by a field array
      * - the url will be adapted to the list fields under certain circumstances
      *
      * @param array $fields
@@ -1226,7 +1228,7 @@ class VariantParent extends AbstractType
                 }
 
                 $fieldList[$field] = $Field;
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 
@@ -1462,7 +1464,7 @@ class VariantParent extends AbstractType
     /**
      * Validate the fields and return the field data
      * - workaround for validation
-     * -> parent variant can have non valid attribute fields and non valid attribute groups.
+     * -> parent variant can have non-valid attribute fields and non-valid attribute groups.
      * -> the children have to validate them.
      *
      * @return array
@@ -1490,11 +1492,11 @@ class VariantParent extends AbstractType
 
             try {
                 $Field->validate($Field->getValue());
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 // if invalid, use the first option
                 $options = $Field->getOptions();
 
-                if (empty($options)) {
+                if (!empty($options)) {
                     $Field->setValue($options[0]);
                 }
             }
@@ -1507,7 +1509,7 @@ class VariantParent extends AbstractType
      * return all available fields from the variant children
      * this array contains all field ids and field values that are in use in the children
      *
-     * @return array
+     * @return array|null
      */
     public function availableChildFields(): ?array
     {
@@ -1523,7 +1525,7 @@ class VariantParent extends AbstractType
                     'parent' => $this->getId()
                 ]
             ]);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             $result = [];
         }
 
@@ -1535,7 +1537,7 @@ class VariantParent extends AbstractType
     /**
      * Get all field values of attribute groups and attribute lists of children products that are active
      *
-     * @return array
+     * @return array|null
      */
     public function availableActiveChildFields(): ?array
     {
@@ -1551,7 +1553,7 @@ class VariantParent extends AbstractType
     /**
      * Get all hashes of attribute groups and attribute lists of children products that are active
      *
-     * @return array
+     * @return array|null
      */
     public function availableActiveFieldHashes(): ?array
     {
@@ -1567,13 +1569,13 @@ class VariantParent extends AbstractType
     /**
      * Parse the database results from the active fields
      */
-    protected function parseActiveFieldsAndHashes()
+    protected function parseActiveFieldsAndHashes(): void
     {
         $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId()) . '/activeFieldHashes';
 
         try {
             $fieldHashes = QUI\Cache\LongTermCache::get($cacheName);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             try {
                 $result = QUI::getDataBase()->fetch([
                     'select' => 'id, parent, fieldData, variantHash',
@@ -1587,7 +1589,7 @@ class VariantParent extends AbstractType
                 $fieldHashes = $this->parseAvailableFields($result);
 
                 QUI\Cache\LongTermCache::set($cacheName, $fieldHashes);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 $result = [];
                 $fieldHashes = $this->parseAvailableFields($result);
             }
@@ -1645,12 +1647,12 @@ class VariantParent extends AbstractType
      * Return if the field is selectable / available
      * It will be checked if this field is present in a children
      *
-     * @param string|int $fieldId
-     * @param string|int $fieldValue
+     * @param int|string $fieldId
+     * @param int|string $fieldValue
      *
      * @return bool
      */
-    public function isFieldAvailable($fieldId, $fieldValue): bool
+    public function isFieldAvailable(int|string $fieldId, int|string $fieldValue): bool
     {
         $available = $this->availableChildFields();
 
@@ -1677,7 +1679,6 @@ class VariantParent extends AbstractType
      */
     public function hasVariantId(int $variantId): bool
     {
-        $variantId = (int)$variantId;
         $variants = $this->getVariants();
 
         foreach ($variants as $Variant) {
@@ -1698,7 +1699,7 @@ class VariantParent extends AbstractType
      *
      * @param integer $variantId - ID of the product / variant
      */
-    public function setDefaultVariant(int $variantId)
+    public function setDefaultVariant(int $variantId): void
     {
         if ($this->hasVariantId($variantId) === false) {
             return;
@@ -1711,7 +1712,7 @@ class VariantParent extends AbstractType
      * Unset the default variant
      * - no variant is the default variant anymore
      */
-    public function unsetDefaultVariant()
+    public function unsetDefaultVariant(): void
     {
         $this->setAttribute('defaultVariantId', null);
     }
@@ -1721,7 +1722,7 @@ class VariantParent extends AbstractType
      *
      * @throws Exception
      */
-    public function getDefaultVariant()
+    public function getDefaultVariant(): AbstractType
     {
         $variantId = $this->getAttribute('defaultVariantId');
 
@@ -1750,7 +1751,7 @@ class VariantParent extends AbstractType
      *
      * @return false|integer
      */
-    public function getDefaultVariantId()
+    public function getDefaultVariantId(): bool|int
     {
         $variantId = $this->getAttribute('defaultVariantId');
 

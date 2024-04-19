@@ -8,6 +8,9 @@ namespace QUI\ERP\Products\Utils;
 
 use QUI;
 
+use function implode;
+use function sort;
+
 /**
  * Class FieldSortCache
  *
@@ -18,7 +21,7 @@ class FieldSortCache
     /**
      * @var array
      */
-    protected static $fieldsCache = [];
+    protected static array $fieldsCache = [];
 
     /**
      * @param array $fields - FieldInterface[]
@@ -26,7 +29,7 @@ class FieldSortCache
      *
      * @return array|false
      */
-    public static function getFieldCache($fields, $sort)
+    public static function getFieldCache(array $fields, string $sort): bool|array
     {
         /* @param QUI\ERP\Products\Field\Field $Field */
         $fieldCache = [];
@@ -37,8 +40,8 @@ class FieldSortCache
             $fieldIdTemp[$Field->getId()] = $Field;          // collect fields by ids
         }
 
-        \sort($fieldCache);
-        $fieldCache = \implode('-', $fieldCache);
+        sort($fieldCache);
+        $fieldCache = implode('-', $fieldCache);
 
         if (!empty(self::$fieldsCache[$sort][$fieldCache])) {
             $fieldIds = self::$fieldsCache[$sort][$fieldCache];
@@ -61,7 +64,7 @@ class FieldSortCache
      * @param string $sort
      * @param array $cache
      */
-    public static function setFieldCache($fields, $sort, $cache)
+    public static function setFieldCache(array $fields, string $sort, array $cache): void
     {
         /* @param QUI\ERP\Products\Field\Field $Field */
         $fieldCache = [];
@@ -70,8 +73,8 @@ class FieldSortCache
             $fieldCache[] = $Field->getId(); // collect ids
         }
 
-        \sort($fieldCache);
-        $fieldCache = \implode('-', $fieldCache);
+        sort($fieldCache);
+        $fieldCache = implode('-', $fieldCache);
 
         self::$fieldsCache[$sort][$fieldCache] = $cache;
     }

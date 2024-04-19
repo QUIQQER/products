@@ -7,15 +7,34 @@
 namespace QUI\ERP\Products\Category;
 
 use QUI;
+use QUI\Database\Exception;
+use QUI\ERP\Products\Field\Field;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 
+use QUI\ExceptionStack;
+use QUI\Interfaces\Users\User;
+use QUI\Projects\Project;
+
 use function array_column;
+use function array_key_exists;
+use function array_merge;
+use function array_reverse;
+use function array_shift;
+use function defined;
+use function ini_get;
+use function is_array;
+use function is_numeric;
+use function is_string;
+use function json_decode;
+use function json_encode;
+use function set_time_limit;
+use function usort;
 
 /**
  * Class Category
- * Category Model
+ * - Category Model
  *
  * @package QUI\ERP\Products\Category
  *
@@ -29,45 +48,45 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *
      * @var integer
      */
-    protected $id;
+    protected int $id;
 
     /**
      * Parent-ID
      *
      * @var integer
      */
-    protected $parentId;
+    protected int $parentId;
 
     /**
-     * @var array
+     * @var ?array
      */
-    protected $fields = null;
+    protected ?array $fields = null;
 
     /**
-     * @var array
+     * @var ?array
      */
-    protected $sites = null;
+    protected ?array $sites = null;
 
     /**
-     * @var null|QUI\Projects\Site
+     * @var array|null
      */
-    protected $defaultSites = [];
+    protected array|null $defaultSites = [];
 
     /**
      * db data
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * @var array
      */
-    protected $caches = [];
+    protected array $caches = [];
 
     /**
      * @var array
      */
-    protected $customData = [];
+    protected mixed $customData = [];
 
     /**
      * Model constructor.
@@ -75,10 +94,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * @param integer $categoryId
      * @param array $data - optional, category data
      */
-    public function __construct($categoryId, $data)
+    public function __construct(int $categoryId, array $data)
     {
         $this->parentId = 0;
-        $this->id = (int)$categoryId;
+        $this->id = $categoryId;
         $this->data = $data;
 
         $this->caches = [
@@ -89,12 +108,12 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             $this->parentId = (int)$data['parentId'];
         }
 
-        if (\defined('QUIQQER_BACKEND')) {
+        if (defined('QUIQQER_BACKEND')) {
             $this->setAttribute('viewType', 'backend');
         }
 
         if (!empty($data['custom_data'])) {
-            $this->customData = \json_decode($data['custom_data'], true);
+            $this->customData = json_decode($data['custom_data'], true);
         }
     }
 
@@ -104,7 +123,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getTitle($Locale = null)
+    public function getTitle($Locale = null): string
     {
         if (!$Locale) {
             return QUI::getLocale()->get(
@@ -125,7 +144,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getDescription($Locale = null)
+    public function getDescription($Locale = null): string
     {
         if (!$Locale) {
             return QUI::getLocale()->get(
@@ -145,21 +164,21 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
      * Return category url
-     * Return the category url of a binded site from the project
+     * Return the category url of a bound site from the project
      *
-     * @param QUI\Projects\Project|null $Project - optional, default = global project
+     * @param Project|null $Project - optional, default = global project
      * @return string
      *
      * @throws QUI\Exception
      */
-    public function getUrl($Project = null)
+    public function getUrl(Project $Project = null): string
     {
         if (!$Project) {
             $Project = QUI::getRewrite()->getProject();
@@ -180,17 +199,17 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * @param null $Locale
      * @return string
      */
-    public function getPath($Locale = null)
+    public function getPath($Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
         }
 
         $parents = $this->getParents();
-        $parents = \array_reverse($parents);
+        $parents = array_reverse($parents);
         $path = '/';
 
-        \array_shift($parents);
+        array_shift($parents);
 
         foreach ($parents as $Parent) {
             $path .= $Parent->getTitle($Locale) . '/';
@@ -202,7 +221,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * @return QUI\ERP\Products\Interfaces\CategoryInterface[]
      */
-    public function getParents()
+    public function getParents(): array
     {
         $parents = [];
 
@@ -212,7 +231,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             if ($Parent) {
                 $parents[] = $Parent;
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return $parents;
         }
 
@@ -225,7 +244,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                 }
 
                 $parents[] = $Parent;
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 break;
             }
         }
@@ -234,12 +253,12 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     }
 
     /**
-     * Return the Id of the parent category
-     * Category 0 has no parent => returns false
+     * Return the ID of the parent category
+     * - Category 0 has no parent => returns false
      *
      * @return integer|boolean
      */
-    public function getParentId()
+    public function getParentId(): bool|int
     {
         if ($this->getId() === 0) {
             return false;
@@ -254,10 +273,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * @param integer $parentId
      * @throws QUI\Exception
      */
-    public function setParentId($parentId)
+    public function setParentId(int $parentId): void
     {
-        $parentId = (int)$parentId;
-
         if ($parentId == $this->getId()) {
             return;
         }
@@ -271,13 +288,13 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     }
 
     /**
-     * Return the the parent category
-     * Category 0 has no parent => returns false
+     * Return the parent category
+     * - Category 0 has no parent => returns false
      *
      * @return bool|QUI\ERP\Products\Interfaces\CategoryInterface
      * @throws QUI\Exception
      */
-    public function getParent()
+    public function getParent(): bool|QUI\ERP\Products\Interfaces\CategoryInterface
     {
         if ($this->getId() === 0) {
             return false;
@@ -298,7 +315,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         try {
             $fields = QUI\Cache\LongTermCache::get($cacheFields);
-        } catch (QUI\Cache\Exception $Exception) {
+        } catch (QUI\Cache\Exception) {
             $fields = [];
             $fieldList = $this->getFields();
 
@@ -312,12 +329,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         try {
             $attributes = QUI\Cache\LongTermCache::get($cacheName);
-        } catch (QUI\Cache\Exception $Exception) {
+        } catch (QUI\Cache\Exception) {
             $attributes = parent::getAttributes();
             $attributes['id'] = $this->getId();
-
-            //$attributes['countChildren'] = $this->countChildren();
-            //$attributes['sites']         = $this->getSites();
             $attributes['parent'] = $this->getParentId();
 
             QUI\Cache\LongTermCache::set($cacheName, $attributes);
@@ -334,7 +348,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * @return ViewFrontend|ViewBackend
      */
-    public function getView()
+    public function getView(): ViewBackend|ViewFrontend
     {
         switch ($this->getAttribute('viewType')) {
             case 'backend':
@@ -348,7 +362,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * @return ViewFrontend
      */
-    public function getViewFrontend()
+    public function getViewFrontend(): ViewFrontend
     {
         return new ViewFrontend($this);
     }
@@ -356,7 +370,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * @return ViewBackend
      */
-    public function getViewBackend()
+    public function getViewBackend(): ViewBackend
     {
         return new ViewBackend($this);
     }
@@ -364,7 +378,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * @return array
      */
-    public function getChildren()
+    public function getChildren(): array
     {
         return Categories::getCategories([
             'where' => [
@@ -378,7 +392,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *
      * @return integer
      */
-    public function countChildren()
+    public function countChildren(): int
     {
         try {
             $data = QUI::getDataBase()->fetch([
@@ -391,11 +405,11 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                     'parentId' => $this->getId()
                 ]
             ]);
-        } catch (QUI\Database\Exception $Exception) {
+        } catch (QUI\Database\Exception) {
             return 0;
         }
 
-        if (isset($data[0]) && isset($data[0]['id'])) {
+        if (isset($data[0]['id'])) {
             return (int)$data[0]['id'];
         }
 
@@ -406,11 +420,11 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * Return the category site
      *
      * @param QUI\Projects\Project|null $Project
-     * @return QUI\Projects\Site
+     * @return QUI\Interfaces\Projects\Site
      *
      * @throws QUI\Exception
      */
-    public function getSite($Project = null)
+    public function getSite(Project $Project = null): QUI\Interfaces\Projects\Site
     {
         if (!$Project) {
             $Project = QUI::getRewrite()->getProject();
@@ -420,12 +434,11 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         $name = $Project->getName();
         $lang = $Project->getLang();
 
-        if (isset($defaults[$name]) && isset($defaults[$name][$lang])) {
+        if (isset($defaults[$name][$lang])) {
             return $defaults[$name][$lang];
         }
 
         $cacheName = 'products/category/' . $this->getId();
-//        $cacheName = QUI\ERP\Products\Handler\Cache::getProductCachePath($this->getId());
         $cacheName .= '/site';
         $cacheName .= '/' . $Project->getName();
         $cacheName .= '/' . $Project->getLang();
@@ -433,7 +446,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         try {
             $siteParams = QUI\Cache\LongTermCache::get($cacheName);
             $Site = $Project->get($siteParams['id']);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             $sites = $this->getSites($Project);
 
             if (isset($sites[0])) {
@@ -467,15 +480,11 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *
      * @throws QUI\Exception
      */
-    public function getSites($Project = null)
+    public function getSites($Project = null): array
     {
         if ($this->sites !== null && !$Project) {
             return $this->sites;
         }
-
-//        if (isset($this->data['sites'])) {
-//            // @todo load from data
-//        }
 
         if ($this->sites == null) {
             $this->refreshSiteBinds();
@@ -510,7 +519,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             }
         }
 
-        \usort($sites, function ($SiteA, $SiteB) {
+        usort($sites, function ($SiteA, $SiteB) {
             /* @var $SiteA QUI\Projects\Site */
             /* @var $SiteB QUI\Projects\Site */
             $a = $SiteA->getAttribute('quiqqer.products.settings.categoryId');
@@ -529,11 +538,12 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * refresh the internal sites bind
      *
-     * @return array
+     * @return array|null
      *
+     * @throws Exception
      * @throws QUI\Exception
      */
-    public function refreshSiteBinds()
+    public function refreshSiteBinds(): ?array
     {
         try {
             $result = [];
@@ -542,7 +552,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             foreach ($cache as $siteUrl) {
                 try {
                     $result[] = QUI\Projects\Site\Utils::getSiteByLink($siteUrl);
-                } catch (QUI\Exception $Exception) {
+                } catch (QUI\Exception) {
                 }
             }
 
@@ -576,7 +586,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                 $sites[] = $Project->get($siteId);
             }
 
-            if (!isset($this->data['sites']) || \is_string($this->data['sites'])) {
+            if (!isset($this->data['sites']) || is_string($this->data['sites'])) {
                 $this->data['sites'] = [];
             }
 
@@ -612,7 +622,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *                              $queryParams['debug']
      * @return array
      */
-    public function getProducts($params = [])
+    public function getProducts(array $params = []): array
     {
         $query = [
             'limit' => 20
@@ -626,7 +636,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         ];
 
         if (isset($params['where'])) {
-            $where = \array_merge($where, $params['where']);
+            $where = array_merge($where, $params['where']);
         }
 
         $query['where'] = $where;
@@ -656,7 +666,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *                              $queryParams['debug']
      * @return array
      */
-    public function getProductIds($params = [])
+    public function getProductIds(array $params = []): array
     {
         $query = [];
 
@@ -668,7 +678,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         ];
 
         if (isset($params['where'])) {
-            $where = \array_merge($where, $params['where']);
+            $where = array_merge($where, $params['where']);
         }
 
         $query['where'] = $where;
@@ -696,9 +706,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *                              $queryParams['debug']
      * @return integer
      */
-    public function countProducts($params = [])
+    public function countProducts(array $params = []): int
     {
-        if (!\is_array($params)) {
+        if (!is_array($params)) {
             $params = [];
         }
 
@@ -712,7 +722,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         ];
 
         if (isset($params['where'])) {
-            $where = \array_merge($where, $params['where']);
+            $where = array_merge($where, $params['where']);
         }
 
         $query['where'] = $where;
@@ -734,7 +744,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * @todo ansonsten über junks aufbauen
      * @todo vorsicht wegen timeouts bei 10.000 produkten
      */
-    public function setFieldsToAllProducts()
+    public function setFieldsToAllProducts(): void
     {
         $productIds = $this->getProductIds();
         $fields = $this->getFields();
@@ -742,7 +752,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         foreach ($productIds as $productId) {
             if (!DEVELOPMENT) {
-                \set_time_limit(3);
+                set_time_limit(3);
             }
 
             try {
@@ -759,7 +769,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         }
 
         // reset time limit
-        \set_time_limit(\ini_get('max_execution_time'));
+        set_time_limit(ini_get('max_execution_time'));
 
         QUI::getEvents()->fireEvent(
             'onQuiqqerProductsCategorySetFieldsToAllProducts',
@@ -780,7 +790,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *
      * @return array
      */
-    public function getFields()
+    public function getFields(): array
     {
         if ($this->fields !== null) {
             return $this->fields;
@@ -806,9 +816,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 //        };
 
         if (isset($data['fields'])) {
-            $jsonData = \json_decode($data['fields'], true);
+            $jsonData = json_decode($data['fields'], true);
 
-            if (!\is_array($jsonData)) {
+            if (!is_array($jsonData)) {
                 $jsonData = [];
             }
 
@@ -818,7 +828,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
                     $Field->setAttribute('publicStatus', $field['publicStatus']);
                     $Field->setAttribute('searchStatus', $field['searchStatus']);
 
-                    if (isset($field['options']) && !empty($field['options'])) {
+                    if (!empty($field['options'])) {
                         $Field->setOptions($field['options']);
                     }
 
@@ -856,7 +866,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *
      * @throws QUI\Exception
      */
-    public function addField(QUI\ERP\Products\Field\Field $Field)
+    public function addField(QUI\ERP\Products\Field\Field $Field): void
     {
         if ($this->fields === null) {
             $this->getFields();
@@ -878,9 +888,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * Return a category field
      *
      * @param integer $fieldId - Field-ID
-     * @return QUI\ERP\Products\Field\Field|bool
+     * @return Field
      */
-    public function getField($fieldId)
+    public function getField(int $fieldId): QUI\ERP\Products\Field\Field
     {
         $fields = $this->getFields();
 
@@ -899,7 +909,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *
      * @throws QUI\Exception
      */
-    public function clearFields()
+    public function clearFields(): void
     {
         $this->fields = [];
 
@@ -909,12 +919,13 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * saves the field
      *
-     * @param boolean|QUI\Interfaces\Users\User $User
+     * @param User|null $User
      *
-     * @throws QUI\Exception
+     * @throws Exception
+     * @throws ExceptionStack
      * @throws QUI\Permissions\Exception
      */
-    public function save($User = false)
+    public function save(QUI\Interfaces\Users\User $User = null): void
     {
         QUI\Permissions\Permission::checkPermission('category.edit', $User);
 
@@ -944,9 +955,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
             [
-                'fields' => \json_encode($fields),
+                'fields' => json_encode($fields),
                 'parentId' => $this->getParentId(),
-                'custom_data' => \json_encode($this->getCustomData())
+                'custom_data' => json_encode($this->getCustomData())
             ],
             ['id' => $this->getId()]
         );
@@ -964,12 +975,8 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * @throws QUI\Permissions\Exception
      * @throws QUI\Exception
      */
-    public function delete($User = false)
+    public function delete($User = false): void
     {
-        if ($this->getId() === 0) {
-            return;
-        }
-
         if ($this->getId() === 0) {
             return;
         }
@@ -995,10 +1002,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
                 /* @var $Child QUI\ERP\Products\Category\Category */
                 foreach ($children as $Child) {
-                    // $recursiveHelper($Child->getId(), $ids, $recursiveHelper);
                     $recursiveHelper($Child->getId());
                 }
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         };
 
@@ -1037,7 +1043,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *
      * @return array
      */
-    public function getSearchFields()
+    public function getSearchFields(): array
     {
         $searchFields = [];
         $fields = $this->getFields();
@@ -1057,7 +1063,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * @return string
      */
-    protected function getSiteCacheName()
+    protected function getSiteCacheName(): string
     {
         return QUI\ERP\Products\Handler\Cache::getBasicCachePath() . 'category/' . $this->getId() . '/sites';
     }
@@ -1068,11 +1074,11 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
     /**
      * @param string $key
-     * @param string|numeric|array $value - Must be serializable
+     * @param array|numeric|string $value - Must be serializable
      */
-    public function setCustomDataEntry(string $key, $value)
+    public function setCustomDataEntry(string $key, float|array|int|string $value): void
     {
-        if (!\is_string($value) && !\is_numeric($value) && !\is_array($value)) {
+        if (!is_string($value) && !is_numeric($value) && !is_array($value)) {
             return;
         }
 
@@ -1083,9 +1089,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * @param string $key
      * @return mixed|null - Custom entry value or NULL if it does not exist
      */
-    public function getCustomDataEntry(string $key)
+    public function getCustomDataEntry(string $key): mixed
     {
-        if (\array_key_exists($key, $this->customData)) {
+        if (array_key_exists($key, $this->customData)) {
             return $this->customData[$key];
         }
 

@@ -8,6 +8,9 @@ use QUI\ERP\Products\Interfaces\FieldInterface;
 use QUI\ERP\Products\Product\Types\VariantParent;
 use QUI\Utils\Singleton;
 
+use function array_map;
+use function array_merge;
+
 /**
  * Class VariantGenerating
  * - Helper to generate children for the variant parent
@@ -23,7 +26,7 @@ class VariantGenerating extends Singleton
      * @param VariantParent $Product
      * @return FieldInterface[]
      */
-    public function getFieldsForGeneration(VariantParent $Product)
+    public function getFieldsForGeneration(VariantParent $Product): array
     {
         $attributes = $Product->getFieldsByType(Fields::TYPE_ATTRIBUTES);
 
@@ -38,11 +41,11 @@ class VariantGenerating extends Singleton
      *
      * @return FieldInterface[]
      */
-    public function getAvailableFieldsForGeneration()
+    public function getAvailableFieldsForGeneration(): array
     {
         $attributeList = Fields::getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST);
         $attributes = Fields::getFieldsByType(Fields::TYPE_ATTRIBUTES);
-        $fields = \array_merge($attributes, $attributeList);
+        $fields = array_merge($attributes, $attributeList);
 
         return QUI\ERP\Products\Utils\Fields::sortFields($fields, 'id');
     }
@@ -50,13 +53,14 @@ class VariantGenerating extends Singleton
     /**
      * @param VariantParent $Product
      * @return array
+     * @todo was ist hiermit?
      */
-    public function getMissingVariantsList(VariantParent $Product)
+    public function getMissingVariantsList(VariantParent $Product): array
     {
         $result = [];
 
         $children = $Product->getVariants();
-        $exists = \array_map(function ($Variant) {
+        $exists = array_map(function ($Variant) {
             return $Variant->getAttribute('variantHash');
         }, $children);
 

@@ -22,7 +22,7 @@ QUI::$Ajax->registerFunction(
         if (!empty($variantId)) {
             try {
                 $Variant = ProductHandler::getNewProductInstance($variantId);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 return [];
             }
         }
@@ -44,12 +44,12 @@ QUI::$Ajax->registerFunction(
                 return [];
             }
 
-            $variantUrl = \trim($variantUrl, '/');
+            $variantUrl = trim($variantUrl, '/');
             $categoryId = $Product->getCategory()->getId();
 
             try {
                 $Variant = ProductHandler::getProductByUrl($variantUrl, $categoryId);
-            } catch (Products\Product\Exception $Exception) {
+            } catch (Products\Product\Exception) {
                 $Variant = $Product;
             }
         }

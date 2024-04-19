@@ -40,6 +40,7 @@ class GenerateProductCache extends QUI\System\Console\Tool
     /**
      * Execute the console tool
      * @throws Exception
+     * @throws \Exception
      */
     public function execute(): void
     {

@@ -420,9 +420,9 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
      * The value for the calculation
      * 10 -> 10%, 10€, 10$
      *
-     * @param integer|float $value - value to calc
+     * @param float|integer $value - value to calc
      */
-    public function setValue($value)
+    public function setValue(float|int $value)
     {
         if (is_numeric($value)) {
             $this->value = $value;
@@ -531,9 +531,9 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * Set the sum for the display
      *
-     * @param int|float $sum - sum
+     * @param float|int $sum - sum
      */
-    public function setSum($sum)
+    public function setSum(float|int $sum)
     {
         if (is_numeric($sum)) {
             $this->sum = $sum;
@@ -543,9 +543,9 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
     /**
      * Set the netto sum
      *
-     * @param int|float $sum - sum
+     * @param float|int $sum - sum
      */
-    public function setNettoSum($sum)
+    public function setNettoSum(float|int $sum)
     {
         if (is_numeric($sum)) {
             $this->nettoSum = $sum;

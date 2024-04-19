@@ -56,14 +56,7 @@ class Menu extends QUI\Control
             QUI\System\Log::writeDebugException($Exception);
         }
 
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return '';
-        }
-
+        $Engine = QUI::getTemplateManager()->getEngine();
         $children = $this->getChildren($this->getSite());
 
         $Engine->assign([

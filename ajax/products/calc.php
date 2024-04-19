@@ -4,6 +4,7 @@
  * This file contains package_quiqqer_products_ajax_products_calc
  */
 
+use QUI\ERP\Products\Field\CustomCalcFieldInterface;
 use QUI\ERP\Products\Handler\Products;
 
 /**
@@ -16,10 +17,10 @@ use QUI\ERP\Products\Handler\Products;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_calc',
     function ($productId, $fields, $quantity) {
-        $fields = \json_decode($fields, true);
+        $fields = json_decode($fields, true);
         $Product = Products::getProduct($productId);
 
-        if (!\is_array($fields)) {
+        if (!is_array($fields)) {
             $fields = [];
         }
 
@@ -34,7 +35,7 @@ QUI::$Ajax->registerFunction(
 
                 $Field = $Product->getField($fieldId);
 
-                if (!($Field instanceof \QUI\ERP\Products\Field\CustomCalcFieldInterface)) {
+                if (!($Field instanceof CustomCalcFieldInterface)) {
                     continue;
                 }
 
@@ -45,7 +46,7 @@ QUI::$Ajax->registerFunction(
         }
 
         $Unique = $Product->createUniqueProduct(QUI::getUserBySession());
-        $Unique->setQuantity(isset($quantity) ? $quantity : 1);
+        $Unique->setQuantity($quantity ?? 1);
 
         return $Unique->getView()->toArray();
     },

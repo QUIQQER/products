@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\Exception;
 use QUI\ERP\Products\Field\View;
 use QUI\Projects\Media\Utils as MediaUtils;
 
@@ -16,13 +17,13 @@ use QUI\Projects\Media\Utils as MediaUtils;
  */
 class Image extends QUI\ERP\Products\Field\Field
 {
-    protected $columnType = 'BIGINT(20)';
-    protected $searchable = false;
+    protected string $columnType = 'BIGINT(20)';
+    protected bool $searchable = false;
 
     /**
      * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new View($this->getFieldDataForView());
     }
@@ -30,7 +31,7 @@ class Image extends QUI\ERP\Products\Field\Field
     /**
      * @return View
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         return new ImageFrontendView($this->getFieldDataForView());
     }
@@ -38,7 +39,7 @@ class Image extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/Image';
     }
@@ -48,9 +49,9 @@ class Image extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
@@ -62,8 +63,8 @@ class Image extends QUI\ERP\Products\Field\Field
             if (!MediaUtils::isImage($MediaItem)) {
                 throw new QUI\Exception();
             }
-        } catch (QUI\Exception $Exception) {
-            throw new QUI\ERP\Products\Field\Exception([
+        } catch (QUI\Exception) {
+            throw new Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
@@ -79,13 +80,13 @@ class Image extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return mixed
+     * @return string|null
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): ?string
     {
         try {
             $MediaItem = MediaUtils::getMediaItemByUrl($value);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return null;
         }
 

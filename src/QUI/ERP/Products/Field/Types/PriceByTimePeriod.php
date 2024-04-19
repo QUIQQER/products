@@ -26,7 +26,7 @@ class PriceByTimePeriod extends Price
     /**
      * @var bool
      */
-    protected $searchable = false;
+    protected bool $searchable = false;
 
     /**
      * Return the price value
@@ -143,10 +143,10 @@ class PriceByTimePeriod extends Price
      *
      * Precision: 8 (important for currencies like BitCoin)
      *
-     * @param string|array $value
+     * @param mixed $value
      * @return array
      */
-    public function cleanup($value): array
+    public function cleanup(mixed $value): array
     {
         if (is_string($value)) {
             $value = json_decode($value, true);
@@ -213,7 +213,7 @@ class PriceByTimePeriod extends Price
      * @param mixed $value
      * @throws Exception
      */
-    public function validate($value): void
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;

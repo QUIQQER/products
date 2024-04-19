@@ -77,6 +77,7 @@ class AssignProductsToParentCategories extends QUI\System\Console\Tool
     /**
      * @param QUI\ERP\Products\Product\Product $Product
      * @return void
+     * @throws QUI\Exception
      */
     protected function assignCategoriesToProduct(QUI\ERP\Products\Product\Product $Product): void
     {

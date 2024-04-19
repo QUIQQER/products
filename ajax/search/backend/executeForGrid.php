@@ -140,7 +140,7 @@ QUI::$Ajax->registerFunction(
 
         $count = QUI::$Ajax->callRequestFunction(
             'package_quiqqer_products_ajax_search_backend_execute',
-            ['searchParams' => \json_encode($searchParams)]
+            ['searchParams' => json_encode($searchParams)]
         );
 
         return [

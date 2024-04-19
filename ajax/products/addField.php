@@ -18,14 +18,14 @@ QUI::$Ajax->registerFunction(
         $Fields = new QUI\ERP\Products\Handler\Fields();
 
         $Product = $Products->getProduct($productId);
-        $fieldId = \json_decode($fieldId, true);
+        $fieldId = json_decode($fieldId, true);
 
-        if (\is_numeric($fieldId)) {
+        if (is_numeric($fieldId)) {
             $fieldId = [$fieldId];
         }
 
         try {
-            if (\is_array($fieldId)) {
+            if (is_array($fieldId)) {
                 foreach ($fieldId as $fid) {
                     $Field = $Fields->getField($fid);
                     $Product->addOwnField($Field);
@@ -33,7 +33,7 @@ QUI::$Ajax->registerFunction(
             }
 
             $Product->save();
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
     },

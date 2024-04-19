@@ -2,6 +2,8 @@
 
 namespace QUI\ERP\Products\Field;
 
+use QUI\Locale;
+
 /**
  * Interface CustomCalcFieldInterface
  *
@@ -14,14 +16,14 @@ interface CustomCalcFieldInterface
      *
      * return array(
      *     priority      // the priority of the calculation
-     *     basis         // from which price should calculated - netto or calculated
+     *     basis         // from which price should calculate - netto or calculated
      *     value
      *     calculation
      *     valueText     // text for value presentation (optional)
      * );
      *
-     * @param \QUI\Locale|null $Locale
+     * @param Locale|null $Locale
      * @return array
      */
-    public function getCalculationData($Locale = null);
+    public function getCalculationData(Locale $Locale = null): array;
 }

@@ -11,6 +11,10 @@
  *
  * @return array
  */
+
+use QUI\ERP\Products\Category\AllProducts;
+use QUI\ERP\Products\Category\Category;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_search',
     function ($fields, $params) {
@@ -18,23 +22,19 @@ QUI::$Ajax->registerFunction(
         $result = [];
 
         $query = [];
-        $params = \json_decode($params, true);
-        $fields = \json_decode($fields, true);
+        $params = json_decode($params, true);
+        $fields = json_decode($fields, true);
 
-        if (!\is_array($fields)) {
+        if (!is_array($fields)) {
             $fields = [];
         }
-
-        //if (isset($fields['order'])) {
-        //    $query['order'] = $fields['order'];
-        //}
 
         if (isset($fields['limit'])) {
             $query['limit'] = $fields['limit'];
         }
 
         $allowedFields = $Categories->getChildAttributes();
-        $allowedFields = \array_flip($allowedFields);
+        $allowedFields = array_flip($allowedFields);
 
         $searchString = '';
 
@@ -66,7 +66,7 @@ QUI::$Ajax->registerFunction(
         // search
         $data = $Categories->getCategories($query);
 
-        /* @var $Category \QUI\ERP\Products\Category\Category */
+        /* @var $Category Category */
         foreach ($data as $Category) {
             $entry = $Category->getAttributes();
             $entry['title'] = $Category->getTitle();
@@ -74,18 +74,18 @@ QUI::$Ajax->registerFunction(
             $result[] = $entry;
         }
 
-        \usort($result, function ($a, $b) {
+        usort($result, function ($a, $b) {
             return $a['title'] > $b['title'];
         });
 
         // all products at the beginning
-        $AllProducts = new \QUI\ERP\Products\Category\AllProducts();
+        $AllProducts = new AllProducts();
 
-        if (!empty($searchString) && \stripos($AllProducts->getTitle(), $searchString) !== false) {
+        if (!empty($searchString) && stripos($AllProducts->getTitle(), $searchString) !== false) {
             $allProducts = $AllProducts->getAttributes();
             $allProducts['title'] = $AllProducts->getTitle();
 
-            \array_unshift($result, $allProducts);
+            array_unshift($result, $allProducts);
         }
 
         return $result;

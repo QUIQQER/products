@@ -7,8 +7,23 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\Exception;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Search;
+use QUI\Locale;
+
+use function array_fill_keys;
+use function array_keys;
+use function current;
+use function explode;
+use function is_array;
+use function is_string;
+use function json_decode;
+use function json_last_error;
+use function mb_strtolower;
+use function mb_strtoupper;
+use function reset;
+use function strlen;
 
 /**
  * Class InputMultiLang
@@ -16,13 +31,13 @@ use QUI\ERP\Products\Handler\Search;
  */
 class InputMultiLang extends QUI\ERP\Products\Field\Field
 {
-    protected $columnType = 'TEXT';
-    protected $searchDataType = Search::SEARCHDATATYPE_TEXT;
+    protected string $columnType = 'TEXT';
+    protected int|bool $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
     /**
      * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new View($this->getFieldDataForView());
     }
@@ -30,7 +45,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
     /**
      * @return MultilangFrontendView
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         return new MultilangFrontendView($this->getFieldDataForView());
     }
@@ -38,10 +53,10 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
     /**
      * Return the field value by a locale language
      *
-     * @param bool|QUI\Locale $Locale
-     * @return mixed
+     * @param Locale|null $Locale $Locale
+     * @return string
      */
-    public function getValueByLocale($Locale = false)
+    public function getValueByLocale(?Locale $Locale = null): string
     {
         if (!$Locale) {
             $Locale = QUI::getLocale();
@@ -50,38 +65,35 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
         $current = $Locale->getCurrent();
         $value = $this->getValue();
 
-        try {
-            if (\is_string($value)) {
-                return $value;
-            }
-
-            // standard validate
-            if (isset($value[$current])) {
-                return $value[$current];
-            }
-
-            // lang validate
-            if (\strpos($current, '_') !== false) {
-                $current = \explode('_', $current);
-                $current = $current[0];
-
-                if (isset($value[$current])) {
-                    return $value[$current];
-                }
-            }
-
-            $current = \mb_strtolower($current) . '_' . \mb_strtoupper($current);
-
-            if (isset($value[$current])) {
-                return $value[$current];
-            }
-        } catch (QUI\Exception $Exception) {
+        if (is_string($value)) {
+            return $value;
         }
 
-        if (\is_array($value)) {
-            \reset($value);
+        // standard validate
+        if (isset($value[$current])) {
+            return $value[$current];
+        }
 
-            return \current($value);
+        // lang validate
+        if (str_contains($current, '_')) {
+            $current = explode('_', $current);
+            $current = $current[0];
+
+            if (isset($value[$current])) {
+                return $value[$current];
+            }
+        }
+
+        $current = mb_strtolower($current) . '_' . mb_strtoupper($current);
+
+        if (isset($value[$current])) {
+            return $value[$current];
+        }
+
+        if (is_array($value)) {
+            reset($value);
+
+            return current($value);
         }
 
         return $value;
@@ -90,7 +102,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/InputMultiLang';
     }
@@ -111,8 +123,8 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
         $lang = $Locale->getCurrent();
         $value = $this->getValue();
 
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
+        if (is_string($value)) {
+            $value = json_decode($value, true);
         }
 
         $value[$lang] = $langValue;
@@ -125,10 +137,10 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      *
      * @throws QUI\Exception
      */
-    public function setValue($value)
+    public function setValue(mixed $value): void
     {
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
+        if (is_string($value)) {
+            $value = json_decode($value, true);
         }
 
         parent::setValue($value);
@@ -139,17 +151,17 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
         }
 
-        if (!\is_string($value) && !\is_array($value)) {
-            if (\json_last_error() !== JSON_ERROR_NONE) {
-                throw new QUI\ERP\Products\Field\Exception([
+        if (!is_string($value) && !is_array($value)) {
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
                     [
@@ -161,11 +173,11 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
             }
         }
 
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
+        if (is_string($value)) {
+            $value = json_decode($value, true);
 
-            if (\json_last_error() !== JSON_ERROR_NONE) {
-                throw new QUI\ERP\Products\Field\Exception([
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
                     [
@@ -181,11 +193,11 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
             return;
         }
 
-        $keys = \array_keys($value);
+        $keys = array_keys($value);
 
         foreach ($keys as $lang) {
-            if (!\is_string($lang) || \strlen($lang) != 2) {
-                throw new QUI\ERP\Products\Field\Exception([
+            if (!is_string($lang) || strlen($lang) != 2) {
+                throw new Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
                     [
@@ -204,25 +216,18 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @return array
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): array
     {
-        try {
-            $languages = QUI\Translator::getAvailableLanguages();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
+        $languages = QUI\Translator::getAvailableLanguages();
 
-            return [];
-        }
-
-
-        if (!\is_array($value)) {
-            return \array_fill_keys($languages, '');
+        if (!is_array($value)) {
+            return array_fill_keys($languages, '');
         }
 
         $result = [];
 
         foreach ($value as $key => $val) {
-            if (!\is_string($key) || \strlen($key) != 2) {
+            if (!is_string($key) || strlen($key) != 2) {
                 continue;
             }
 
@@ -241,13 +246,13 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
     /**
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         if (empty($this->value)) {
             return true;
         }
 
-        foreach ($this->value as $l => $v) {
+        foreach ($this->value as $v) {
             if (!empty($v)) {
                 return false;
             }
@@ -261,7 +266,7 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
      *
      * @return array
      */
-    public function getSearchTypes()
+    public function getSearchTypes(): array
     {
         return [
             Search::SEARCHTYPE_TEXT,
@@ -275,9 +280,9 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
     /**
      * Get default search type
      *
-     * @return string
+     * @return string|null
      */
-    public function getDefaultSearchType()
+    public function getDefaultSearchType(): ?string
     {
         return Search::SEARCHTYPE_TEXT;
     }

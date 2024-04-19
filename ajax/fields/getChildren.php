@@ -15,10 +15,10 @@ QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_fields_getChildren',
     function ($fieldIds) {
         $Fields = new QUI\ERP\Products\Handler\Fields();
-        $fieldIds = \json_decode($fieldIds, true);
+        $fieldIds = json_decode($fieldIds, true);
         $result = [];
 
-        if (!\is_array($fieldIds)) {
+        if (!is_array($fieldIds)) {
             $fieldIds = [];
         }
 
@@ -26,7 +26,7 @@ QUI::$Ajax->registerFunction(
             try {
                 $Field = $Fields->getField($fieldId);
                 $result[] = $Field->getAttributes();
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 

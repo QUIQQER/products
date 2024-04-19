@@ -3,9 +3,7 @@
 namespace QUI\ERP\Products\Controls\Search;
 
 use QUI;
-
 use QUI\ERP\Products\Search\FrontendSearch;
-
 use QUI\Exception;
 
 use function dirname;

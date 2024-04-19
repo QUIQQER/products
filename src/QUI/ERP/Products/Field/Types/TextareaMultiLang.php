@@ -9,6 +9,16 @@ namespace QUI\ERP\Products\Field\Types;
 use QUI;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Search;
+use QUI\Exception;
+use QUI\Locale;
+
+use function array_fill_keys;
+use function array_keys;
+use function is_array;
+use function is_string;
+use function json_decode;
+use function json_last_error;
+use function strlen;
 
 /**
  * Class TextareaMultiLang
@@ -17,14 +27,14 @@ use QUI\ERP\Products\Handler\Search;
 class TextareaMultiLang extends QUI\ERP\Products\Field\Field
 {
     /**
-     * @var int
+     * @var int|bool
      */
-    protected $searchDataType = Search::SEARCHDATATYPE_TEXT;
+    protected int|bool $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
     /**
      * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new View($this->getFieldDataForView());
     }
@@ -32,7 +42,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
     /**
      * @return View
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         return new View($this->getFieldDataForView());
     }
@@ -40,7 +50,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang';
     }
@@ -49,10 +59,10 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
      * Return the field value by a locale language
      *
      *
-     * @param bool|QUI\Locale $Locale
-     * @return mixed
+     * @param Locale|null $Locale $Locale
+     * @return string
      */
-    public function getValueByLocale($Locale = false)
+    public function getValueByLocale(QUI\Locale $Locale = null): string
     {
         if (!$Locale) {
             $Locale = QUI::getLocale();
@@ -61,7 +71,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
         $current = $Locale->getCurrent();
         $value = $this->getValue();
 
-        if (\is_string($value)) {
+        if (is_string($value)) {
             return $value;
         }
 
@@ -77,16 +87,16 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
         }
 
-        if (!\is_string($value) && !\is_array($value)) {
-            if (\json_last_error() !== JSON_ERROR_NONE) {
+        if (!is_string($value) && !is_array($value)) {
+            if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
@@ -99,10 +109,10 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
             }
         }
 
-        if (\is_string($value)) {
+        if (is_string($value)) {
             $value = json_decode($value, true);
 
-            if (\json_last_error() !== JSON_ERROR_NONE) {
+            if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
@@ -115,10 +125,10 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
             }
         }
 
-        $keys = \array_keys($value);
+        $keys = array_keys($value);
 
         foreach ($keys as $lang) {
-            if (!\is_string($lang) || \strlen($lang) != 2) {
+            if (!is_string($lang) || strlen($lang) != 2) {
                 throw new QUI\ERP\Products\Field\Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
@@ -136,39 +146,32 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return string|array
+     * @return array|null
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): ?array
     {
         if (empty($value)) {
             return null;
         }
 
-        try {
-            $languages = QUI\Translator::getAvailableLanguages();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
+        $languages = QUI\Translator::getAvailableLanguages();
 
-            return [];
+        if (!is_string($value) && !is_array($value)) {
+            return array_fill_keys($languages, '');
         }
 
+        if (is_string($value)) {
+            $value = json_decode($value, true);
 
-        if (!\is_string($value) && !\is_array($value)) {
-            return \array_fill_keys($languages, '');
-        }
-
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
-
-            if (\json_last_error() !== JSON_ERROR_NONE) {
-                return \array_fill_keys($languages, '');
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return array_fill_keys($languages, '');
             }
         }
 
         $result = [];
 
         foreach ($value as $key => $val) {
-            if (!\is_string($key) || \strlen($key) != 2) {
+            if (!is_string($key) || strlen($key) != 2) {
                 continue;
             }
 
@@ -191,13 +194,13 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
     /**
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         if (empty($this->value)) {
             return true;
         }
 
-        foreach ($this->value as $l => $v) {
+        foreach ($this->value as $v) {
             if (!empty($v)) {
                 return false;
             }
@@ -211,7 +214,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
      *
      * @return array
      */
-    public function getSearchTypes()
+    public function getSearchTypes(): array
     {
         return [
             Search::SEARCHTYPE_TEXT,
@@ -225,9 +228,9 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
     /**
      * Get default search type
      *
-     * @return string
+     * @return string|null
      */
-    public function getDefaultSearchType()
+    public function getDefaultSearchType(): ?string
     {
         return Search::SEARCHTYPE_TEXT;
     }

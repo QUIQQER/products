@@ -3,6 +3,17 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\Exception;
+
+use function array_key_exists;
+use function is_array;
+use function is_null;
+use function is_numeric;
+use function is_string;
+use function json_decode;
+use function json_last_error;
+
+use const JSON_ERROR_NONE;
 
 /**
  * Class UnitSelect
@@ -15,12 +26,12 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
     /**
      * @var bool
      */
-    protected $searchable = false;
+    protected bool $searchable = false;
 
     /**
      * @var null
      */
-    protected $defaultValue = null;
+    protected mixed $defaultValue = null;
 
     /**
      * ProductAttributeList constructor.
@@ -28,7 +39,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
      * @param int $fieldId
      * @param array $params
      */
-    public function __construct($fieldId, array $params)
+    public function __construct(int $fieldId, array $params)
     {
         $this->setOptions([
             'entries' => []
@@ -42,7 +53,6 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
         foreach ($options['entries'] as $key => $option) {
             if (isset($option['selected']) && $option['selected']) {
                 $this->value = $key;
-//                $this->defaultValue = $key;
             }
         }
     }
@@ -53,16 +63,15 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
      * @param string $option - option name
      * @param mixed $value - option value
      */
-    public function setOption($option, $value)
+    public function setOption(string $option, mixed $value): void
     {
         parent::setOption($option, $value);
 
         if ($option == 'entries') {
-            if (\is_array($value)) {
+            if (is_array($value)) {
                 foreach ($value as $key => $val) {
                     if (isset($val['selected']) && $val['selected']) {
                         $this->value = $key;
-//                        $this->defaultValue = $key;
                     }
                 }
             }
@@ -81,7 +90,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
      *       'defaultQuantity' => false / int,    // false or integer - default quantity value
      * ));
      */
-    public function addEntry($entry = [])
+    public function addEntry(array $entry = []): void
     {
         if (empty($entry)) {
             return;
@@ -115,11 +124,11 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
     }
 
     /**
-     * @return string
+     * @return array|string|null
      */
-    public function getValue()
+    public function getValue(): array|string|null
     {
-        if (!\is_null($this->value)) {
+        if (!is_null($this->value)) {
             return $this->value;
         }
 
@@ -129,11 +138,10 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
     /**
      * Return the default value
      *
-     * @return mixed|null
+     * @return array|null
      */
-    public function getDefaultValue()
+    public function getDefaultValue(): ?array
     {
-        $defaultValue = null;
         $options = $this->getOptions();
         $entries = $options['entries'];
 
@@ -155,27 +163,6 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
             }
         }
 
-//        if (isset($entries['piece']) && !empty($entries['piece']['defaultQuantity'])) {
-//            return [
-//                'id'       => 'piece',
-//                'quantity' => $entries['piece']['defaultQuantity']
-//            ];
-//        }
-//
-//        if (!empty($entries)) {
-//            \reset($entries);
-//
-//            $id    = \key($entries);
-//            $entry = $entries[$id];
-//
-//            if (!empty($entry['defaultQuantity'])) {
-//                return [
-//                    'id'       => $id,
-//                    'quantity' => $entry['defaultQuantity']
-//                ];
-//            }
-//        }
-
         return null;
     }
 
@@ -184,10 +171,10 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
      *
      * @return string|false
      */
-    public function getUserInput()
+    public function getUserInput(): bool|string
     {
-        if (!\is_null($this->value)) {
-            $value = \json_decode($this->value, true);
+        if (!is_null($this->value)) {
+            $value = json_decode($this->value, true);
 
             if (isset($value[1])) {
                 return $value[1];
@@ -202,7 +189,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
      *
      * @return UnitSelectFrontendView
      */
-    public function getFrontendView()
+    public function getFrontendView(): UnitSelectFrontendView
     {
         return new UnitSelectFrontendView(
             $this->getFieldDataForView()
@@ -212,7 +199,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/UnitSelect';
     }
@@ -220,7 +207,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptSettings()
+    public function getJavaScriptSettings(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/UnitSelectSettings';
     }
@@ -229,10 +216,10 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
      * Check the value
      * is the value valid for the field type?
      *
-     * @param array
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @param mixed $value
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
@@ -248,30 +235,30 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
             ]
         ];
 
-        if (!\is_string($value) && !\is_array($value)) {
-            throw new QUI\ERP\Products\Field\Exception($invalidException);
+        if (!is_string($value) && !is_array($value)) {
+            throw new Exception($invalidException);
         }
 
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
+        if (is_string($value)) {
+            $value = json_decode($value, true);
 
-            if (\json_last_error() !== \JSON_ERROR_NONE) {
-                throw new QUI\ERP\Products\Field\Exception($invalidException);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception($invalidException);
             }
         }
 
-        if (!\array_key_exists('id', $value) || !\array_key_exists('quantity', $value)) {
-            throw new QUI\ERP\Products\Field\Exception($invalidException);
+        if (!array_key_exists('id', $value) || !array_key_exists('quantity', $value)) {
+            throw new Exception($invalidException);
         }
     }
 
     /**
      * Cleanup the value, so the value is valid
      *
-     * @param string|array $value
+     * @param mixed $value
      * @return array|null
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): mixed
     {
         $defaultValue = $this->getDefaultValue();
         $options = $this->getOptions();
@@ -281,21 +268,21 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
             return $defaultValue;
         }
 
-        if (!\is_string($value) && !\is_array($value)) {
+        if (!is_string($value) && !is_array($value)) {
             return $defaultValue;
         }
 
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
+        if (is_string($value)) {
+            $value = json_decode($value, true);
 
-            if (\json_last_error() !== \JSON_ERROR_NONE) {
+            if (json_last_error() !== JSON_ERROR_NONE) {
                 return $defaultValue;
             }
         }
 
         if (
-            !\array_key_exists('id', $value) ||
-            !\array_key_exists('quantity', $value)
+            !array_key_exists('id', $value) ||
+            !array_key_exists('quantity', $value)
         ) {
             return $defaultValue;
         }
@@ -305,7 +292,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
         }
 
         if ($entries[$value['id']]['quantityInput']) {
-            if (empty($value['quantity']) && !\is_numeric($value['quantity'])) {
+            if (empty($value['quantity']) && !is_numeric($value['quantity'])) {
                 if (!empty($value['defaultQuantity'])) {
                     $value['quantity'] = $value['defaultQuantity'];
                 } else {
@@ -324,11 +311,11 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
     /**
      * Get field value title by value
      *
-     * @param int $value
+     * @param mixed $value
      * @param QUI\Locale|null $Locale (optional) - default: QUI::getLocale()
      * @return string
      */
-    public function getTitleByValue($value, QUI\Locale $Locale = null)
+    public function getTitleByValue(mixed $value, QUI\Locale $Locale = null): string
     {
         if (empty($value)) {
             return '-';

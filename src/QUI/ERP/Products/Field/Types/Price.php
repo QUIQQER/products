@@ -10,7 +10,6 @@ use QUI;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Handler\Search;
-
 use QUI\Exception;
 
 use function floor;
@@ -32,12 +31,12 @@ class Price extends QUI\ERP\Products\Field\Field
     /**
      * @var string
      */
-    protected $columnType = 'DOUBLE';
+    protected string $columnType = 'DOUBLE';
 
     /**
-     * @var int
+     * @var int|bool
      */
-    protected $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
+    protected int|bool $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
 
     /**
      * Official currency code (i.e. EUR)
@@ -107,7 +106,7 @@ class Price extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @return mixed
      */
-    public function cleanup($value): mixed
+    public function cleanup(mixed $value): mixed
     {
         if (is_array($value)) {
             return null;
@@ -151,7 +150,7 @@ class Price extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @throws QUI\ERP\Products\Field\Exception
      */
-    public function validate($value): void
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
@@ -208,11 +207,11 @@ class Price extends QUI\ERP\Products\Field\Field
     /**
      * Calculates a range with individual steps between a min and a max number
      *
-     * @param integer|float $min
-     * @param integer|float $max
+     * @param float|integer $min
+     * @param float|integer $max
      * @return array - contains values from min to max with calculated steps inbetween
      */
-    public function calculateValueRange($min, $max): array
+    public function calculateValueRange(float|int $min, float|int $max): array
     {
         // add tax to max value
         $maxTaxValue = (100 + QUI\ERP\Tax\Utils::getMaxTax()) / 100;

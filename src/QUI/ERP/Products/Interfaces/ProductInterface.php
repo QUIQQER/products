@@ -43,7 +43,7 @@ interface ProductInterface
     /**
      * Return the translated description
      *
-     * @param bool $Locale
+     * @param Locale|null $Locale
      * @return string
      */
     public function getDescription(?Locale $Locale = null): string;
@@ -82,10 +82,10 @@ interface ProductInterface
     /**
      * Return all fields from the wanted type
      *
-     * @param string $type
+     * @param array|string $type
      * @return array
      */
-    public function getFieldsByType(string $type): array;
+    public function getFieldsByType(array|string $type): array;
 
     /**
      * Return the main product image
@@ -162,7 +162,7 @@ interface ProductInterface
     /**
      * Return the original price, not the offer price
      *
-     * @return false|UniqueFieldInterface
+     * @return false|UniqueFieldInterface|Price
      */
-    public function getOriginalPrice(): UniqueFieldInterface|bool;
+    public function getOriginalPrice(): UniqueFieldInterface|Price|bool;
 }

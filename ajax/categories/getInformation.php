@@ -7,7 +7,7 @@
 /**
  * Return all information about the category
  *
- * @param string $categoryIds - JSON list of categorie ids
+ * @param string $categoryIds - JSON list of categories ids
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_getInformation',

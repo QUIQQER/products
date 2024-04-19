@@ -14,7 +14,7 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_fields_create',
     function ($params) {
-        $params = \json_decode($params, true);
+        $params = json_decode($params, true);
         $Categories = new QUI\ERP\Products\Handler\Fields();
 
         $Field = $Categories->createField($params);

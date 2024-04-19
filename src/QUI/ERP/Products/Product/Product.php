@@ -11,8 +11,6 @@ use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 
-use function is_array;
-
 /**
  * Class Product
  * - Controller
@@ -142,11 +140,14 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      *
      * @throws QUI\Permissions\Exception
      */
-    public function setPermission(string $permission, string $ugString = '', QUI\Interfaces\Users\User $User = null): void
-    {
+    public function setPermission(
+        string $permission,
+        string $ugString = '',
+        QUI\Interfaces\Users\User $User = null
+    ): void {
         if (!QUI\Utils\UserGroups::isUserGroupString($ugString)) {
             return;
-        };
+        }
 
         QUI\Permissions\Permission::checkPermission('product.setPermissions', $User);
 
@@ -179,7 +180,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      * @param null $Calc
      * @return $this
      */
-    public function calc($Calc = null)
+    public function calc($Calc = null): static
     {
         return $this;
     }

@@ -40,18 +40,12 @@ class ManufacturerList extends QUI\Control
      * (non-PHPdoc)
      *
      * @throws QUI\Exception
+     * @throws Exception
      * @see \QUI\Control::create()
      */
     public function getBody(): string
     {
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return '';
-        }
-
+        $Engine = QUI::getTemplateManager()->getEngine();
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
 
         // global settings: product autoload after x clicks
@@ -123,8 +117,6 @@ class ManufacturerList extends QUI\Control
      *
      * @param boolean|integer $count - (optional) count of the children
      * @return array [html, count, more]
-     *
-     * @throws QUI\Exception
      */
     public function getStart(bool|int $count = false): array
     {
@@ -137,8 +129,6 @@ class ManufacturerList extends QUI\Control
      * @param boolean|integer $start - (optional) start position
      * @param boolean|integer $count - (optional) count of the children
      * @return array [html, count, more]
-     *
-     * @throws QUI\Exception
      */
     public function getNext(bool|int $start = false, bool|int $count = false): array
     {
@@ -152,8 +142,6 @@ class ManufacturerList extends QUI\Control
      * @param boolean|integer $max - (optional) max children
      * @param boolean|integer $count - (optional) count of the children
      * @return array [html, count, more]
-     *
-     * @throws QUI\Exception
      */
     protected function renderData(bool|int $start, bool|int $max, bool|int $count = false): array
     {
@@ -258,10 +246,10 @@ class ManufacturerList extends QUI\Control
     }
 
     /**
-     * @return mixed|QUI\Projects\Site
+     * @return QUI\Interfaces\Projects\Site
      * @throws QUI\Exception
      */
-    protected function getSite()
+    protected function getSite(): QUI\Interfaces\Projects\Site
     {
         if ($this->getAttribute('Site')) {
             return $this->getAttribute('Site');

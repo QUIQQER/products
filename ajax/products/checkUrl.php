@@ -16,7 +16,7 @@ QUI::$Ajax->registerFunction(
     function ($urls, $category) {
         try {
             QUI\ERP\Products\Utils\Products::checkUrlByUrlFieldValue(
-                \json_decode($urls, true),
+                json_decode($urls, true),
                 $category
             );
         } catch (QUI\Exception $Exception) {
