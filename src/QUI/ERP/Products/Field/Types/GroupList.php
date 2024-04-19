@@ -367,13 +367,13 @@ class GroupList extends QUI\ERP\Products\Field\Field
      * Return value for use in product search cache
      *
      * @param Locale|null $Locale
-     * @return string|null
+     * @return string|array|null
      *
+     * @throws ExceptionStack
      * @throws QUI\Database\Exception
      * @throws QUI\Exception
-     * @throws ExceptionStack
      */
-    public function getSearchCacheValue(QUI\Locale $Locale = null): ?string
+    public function getSearchCacheValue(QUI\Locale $Locale = null): null|string|array
     {
         if ($this->isEmpty()) {
             return null;

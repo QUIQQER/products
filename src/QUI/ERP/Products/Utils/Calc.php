@@ -9,9 +9,11 @@ namespace QUI\ERP\Products\Utils;
 use QUI;
 use QUI\ERP\Accounting\Calc as ErpCalc;
 use QUI\ERP\Currency\Currency;
+use QUI\ERP\Products\Field\Types\Price;
 use QUI\ERP\Products\Field\Types\Vat;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Interfaces\UniqueFieldInterface;
 use QUI\ERP\Products\Product\ProductList;
 use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\ERP\Tax\TaxEntry;
@@ -593,18 +595,18 @@ class Calc
      *
      * @param UniqueProduct $Product
      * @param callable|boolean $callback - optional, callback function for the calculated data array
-     * @param null|QUI\ERP\Products\Field\Types\Price $Price - optional, price object to calc with
+     * @param Price|UniqueFieldInterface|null $Price - optional, price object to calc with
      * @param bool $ignorePriceFactors - ignore price factors, default = false
      *
      * @return QUI\ERP\Money\Price
      *
+     * @throws Exception
      * @throws QUI\Users\Exception
-     * @throws QUI\Exception
      */
     public function getProductPrice(
         UniqueProduct $Product,
         callable|bool $callback = false,
-        QUI\ERP\Products\Field\Types\Price $Price = null,
+        Price|UniqueFieldInterface $Price = null,
         bool $ignorePriceFactors = false
     ): QUI\ERP\Money\Price {
         // calc data

@@ -850,10 +850,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return value for use in product search cache
      *
-     * @param QUI\Locale|null $Locale
-     * @return string|null
+     * @param Locale|null $Locale
+     * @return string|array|null
      */
-    public function getSearchCacheValue(?Locale $Locale = null): ?string
+    public function getSearchCacheValue(?Locale $Locale = null): null|string|array
     {
         if ($this->isEmpty()) {
             return null;

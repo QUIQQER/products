@@ -67,9 +67,9 @@ interface ProductInterface
      * Return the field
      *
      * @param integer $fieldId
-     * @return FieldInterface|null
+     * @return FieldInterface|UniqueFieldInterface|null
      */
-    public function getField(int $fieldId): ?FieldInterface;
+    public function getField(int $fieldId): null|FieldInterface|UniqueFieldInterface;
 
     /**
      * Return the field attribute / value of the product

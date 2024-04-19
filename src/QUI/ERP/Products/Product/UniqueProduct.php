@@ -828,7 +828,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * @param int $fieldId
      * @return FieldInterface|null
      */
-    public function getField(int $fieldId): ?QUI\ERP\Products\Interfaces\FieldInterface
+    public function getField(int $fieldId): ?UniqueFieldInterface
     {
         $fields = $this->getFields();
 
@@ -844,7 +844,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     /**
      * Return all fields
      *
-     * @return QUI\ERP\Products\Interfaces\FieldInterface[]
+     * @return UniqueFieldInterface[]
      */
     public function getFields(): array
     {
@@ -860,7 +860,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $fields = $this->getFields();
         $result = [];
 
-        /* @var $Field QUI\ERP\Products\Field\UniqueField */
+        /* @var $Field UniqueFieldInterface */
         foreach ($fields as $Field) {
             if ($Field && $Field->getType() == $type) {
                 $result[] = $Field;

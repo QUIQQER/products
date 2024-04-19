@@ -89,14 +89,14 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      * custom field calculation data
      * @var array
      */
-    protected array $custom_calc;
+    protected array $custom_calc = [];
 
     /**
      * search cache value
      *
-     * @var string
+     * @var string|array|null
      */
-    protected string $searchvalue;
+    protected string|array|null $searchvalue;
 
     /**
      * is field public
@@ -445,9 +445,9 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
 
     /**
      * @param Locale|null $Locale
-     * @return string|null
+     * @return string|array|null
      */
-    public function getSearchCacheValue(QUI\Locale $Locale = null): ?string
+    public function getSearchCacheValue(QUI\Locale $Locale = null): null|string|array
     {
         return $this->searchvalue;
     }

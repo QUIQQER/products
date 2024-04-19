@@ -35,9 +35,9 @@ class VariantGenerating extends Singleton
 
     /**
      * Return all relevant fields for the variants generation
-     * The are all available fields, the fields dont need to be assigned to the product
+     * They are all available fields, the fields don't need to be assigned to the product
      *
-     * This fields are mostly needed for variant generation
+     * These fields are mostly needed for variant generation
      *
      * @return FieldInterface[]
      */
