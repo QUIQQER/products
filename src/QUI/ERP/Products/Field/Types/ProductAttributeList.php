@@ -8,7 +8,6 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 use QUI\ERP\Accounting\Calc as ErpCalc;
-
 use QUI\ERP\Products\Field\Exception;
 use QUI\ERP\Products\Field\View;
 

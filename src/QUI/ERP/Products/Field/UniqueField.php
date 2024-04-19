@@ -7,7 +7,6 @@
 namespace QUI\ERP\Products\Field;
 
 use QUI;
-
 use QUI\Locale;
 
 use function class_exists;

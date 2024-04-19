@@ -3,7 +3,6 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
-
 use QUI\ERP\Products\Field\Exception;
 
 use function is_string;

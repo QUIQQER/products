@@ -12,7 +12,6 @@ use QUI\ERP\Products\Field\Field;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
-
 use QUI\ExceptionStack;
 use QUI\Interfaces\Users\User;
 use QUI\Projects\Project;

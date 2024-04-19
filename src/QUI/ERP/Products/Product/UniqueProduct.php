@@ -21,9 +21,7 @@ use QUI\ExceptionStack;
 use QUI\Locale;
 use QUI\Projects\Media\Folder;
 use QUI\Projects\Media\Utils as MediaUtils;
-
 use QUI\Users\Exception;
-
 use QUI\Users\User;
 
 use function class_exists;

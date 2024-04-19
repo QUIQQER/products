@@ -7,12 +7,9 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
-
 use QUI\ERP\Currency\Currency;
 use QUI\ERP\Products\Utils\PriceFactors;
-
 use QUI\Exception;
-
 use QUI\Interfaces\Users\User;
 
 use function count;

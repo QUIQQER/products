@@ -3,7 +3,6 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
-
 use QUI\Exception;
 use QUI\Projects\Site;
 

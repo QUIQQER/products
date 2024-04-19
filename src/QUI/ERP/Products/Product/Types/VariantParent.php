@@ -16,7 +16,6 @@ use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\Interfaces\Users\User;
-
 use QUI\Locale;
 
 use function array_map;

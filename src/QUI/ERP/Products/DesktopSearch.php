@@ -8,7 +8,6 @@ namespace QUI\ERP\Products;
 
 use QUI;
 use QUI\BackendSearch\ProviderInterface;
-
 use QUI\Exception;
 
 use function in_array;

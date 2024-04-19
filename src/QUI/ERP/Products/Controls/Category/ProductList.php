@@ -11,7 +11,6 @@ use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Search\FrontendSearch;
-
 use QUI\Exception;
 
 use function dirname;

@@ -8,7 +8,6 @@ namespace QUI\ERP\Products\Category;
 
 use QUI;
 use QUI\ERP\Products\Handler\Products;
-
 use QUI\Exception;
 
 use function is_array;
