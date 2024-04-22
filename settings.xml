@@ -65,6 +65,10 @@
                     <type><![CDATA[bool]]></type>
                     <defaultvalue>0</defaultvalue>
                 </conf>
+                <conf name="checkDuplicateArticleNo">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>1</defaultvalue>
+                </conf>
             </section>
             <section name="autoArticleNos">
                 <conf name="generate">

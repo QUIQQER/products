@@ -120,6 +120,13 @@ class Products
     private static ?bool $extendVariantChildShortDesc = null;
 
     /**
+     * Runtime cache for "check duplicate article no" flag
+     *
+     * @var bool|null
+     */
+    private static ?bool $checkDuplicateArticleNo = null;
+
+    /**
      * Return the main media folder
      *
      * @return QUI\Projects\Media\Folder
@@ -1274,5 +1281,29 @@ class Products
         }
 
         return false;
+    }
+
+    /**
+     * Shall the check for duplicate article nos be executed on product save?
+     *
+     * @return bool
+     */
+    public static function isCheckDuplicteArticleNo(): bool
+    {
+        if (!is_null(self::$checkDuplicateArticleNo)) {
+            return self::$checkDuplicateArticleNo;
+        }
+
+        try {
+            $Conf = QUI::getPackage('quiqqer/products')->getConfig();
+
+            self::$checkDuplicateArticleNo = !empty($Conf->get('products', 'checkDuplicateArticleNo'));
+
+            return self::$checkDuplicateArticleNo;
+        } catch (Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+        }
+
+        return true;
     }
 }
