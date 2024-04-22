@@ -1339,7 +1339,7 @@ class Model extends QUI\QDOM
         $this->getField(Fields::FIELD_URL)->setValue($urls);
 
         // Check if article no. is unique
-        if ($this->isActive()) {
+        if ($this->isActive() && Products::isCheckDuplicteArticleNo()) {
             foreach ($fieldData as $field) {
                 if ($field['id'] !== Fields::FIELD_PRODUCT_NO) {
                     continue;
@@ -2430,7 +2430,7 @@ class Model extends QUI\QDOM
         // duplicate article no. check
         $articleNo = $this->getFieldValue(Fields::FIELD_PRODUCT_NO);
 
-        if (!empty($articleNo)) {
+        if (!empty($articleNo) && Products::isCheckDuplicteArticleNo()) {
             $this->checkDuplicateArticleNo($articleNo);
         }
 
