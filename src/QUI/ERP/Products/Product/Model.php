@@ -2678,8 +2678,10 @@ class Model extends QUI\QDOM
                 $fixedSurcharge = !empty($settings['fixedSurchargeAmount']) ?
                     (float)$settings['fixedSurchargeAmount'] : 0;
 
-                if (!empty($settings['fixedSurchargePriority']) &&
-                    $settings['fixedSurchargePriority'] === 'beforeRounding') {
+                if (
+                    !empty($settings['fixedSurchargePriority']) &&
+                    $settings['fixedSurchargePriority'] === 'beforeRounding'
+                ) {
                     $price += $fixedSurcharge;
                 }
 
@@ -2749,8 +2751,10 @@ class Model extends QUI\QDOM
                         }
                     }
 
-                    if (!empty($settings['fixedSurchargePriority']) &&
-                        $settings['fixedSurchargePriority'] === 'afterRounding') {
+                    if (
+                        !empty($settings['fixedSurchargePriority']) &&
+                        $settings['fixedSurchargePriority'] === 'afterRounding'
+                    ) {
                         $targetPrice += $fixedSurcharge;
                     }
 
