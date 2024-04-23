@@ -2,9 +2,21 @@
     width: 100%;
 }
 
+.quiqqer-products-settings-pricefieldfactors__hidden {
+    display: none !important;
+}
+
 .quiqqer-products-settings-pricefieldfactors-entry {
     margin-bottom: 10px;
     padding: 5px 10px;
+}
+
+.quiqqer-products-settings-pricefieldfactors-entry-header {
+    border-bottom: 1px dotted #dedede;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
 }
 
 .quiqqer-products-settings-pricefieldfactors-entry:nth-child(2n+1) {
@@ -60,6 +72,7 @@
     /*display: none;*/
     border-top: 1px dotted #dedede;
     padding-top: 10px;
+    margin-top: 10px;
 }
 
 .quiqqer-products-settings-pricefieldfactors-entry-rounding table {
@@ -70,4 +83,27 @@
     display: flex;
     text-align: left !important;
     width: 100% !important;
+}
+
+.quiqqer-products-settings-pricefieldfactors-entry-fixedSurcharge {
+    display: block;
+    margin-top: 15px;
+}
+
+.quiqqer-products-settings-pricefieldfactors-entry-fixedSurcharge > span {
+    display: block;
+}
+
+.quiqqer-products-settings-pricefieldfactors-options {
+    border-bottom: 1px dotted #dedede;
+    margin-bottom: 45px;
+    padding: 10px;
+}
+
+.quiqqer-products-settings-pricefieldfactors-options input {
+    display: block;
+}
+
+.quiqqer-products-settings-pricefieldfactors-options .field-container-item-desc {
+    float: none !important;
 }
