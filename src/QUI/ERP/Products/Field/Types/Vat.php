@@ -112,7 +112,7 @@ class Vat extends QUI\ERP\Products\Field\Field
      */
     public function cleanup(mixed $value): int
     {
-        if ($value === '') {
+        if (empty($value)) {
             return -1;
         }
 
