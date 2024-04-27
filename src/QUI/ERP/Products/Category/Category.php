@@ -887,9 +887,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * Return a category field
      *
      * @param integer $fieldId - Field-ID
-     * @return Field
+     * @return ?Field
      */
-    public function getField(int $fieldId): QUI\ERP\Products\Field\Field
+    public function getField(int $fieldId): ?QUI\ERP\Products\Field\Field
     {
         $fields = $this->getFields();
 
@@ -900,7 +900,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             }
         }
 
-        return false;
+        return null;
     }
 
     /**

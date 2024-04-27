@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Category;
 
 use QUI;
+use QUI\ERP\Products\Field\Field;
 use QUI\Exception;
 use QUI\Locale;
 use QUI\Projects\Project;
@@ -92,9 +93,9 @@ class ViewFrontend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
 
     /**
      * @param int $fieldId
-     * @return QUI\ERP\Products\Field\Field
+     * @return Field|null
      */
-    public function getField(int $fieldId): QUI\ERP\Products\Field\Field
+    public function getField(int $fieldId): ?Field
     {
         return $this->Category->getField($fieldId);
     }

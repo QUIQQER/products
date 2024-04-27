@@ -153,9 +153,9 @@ interface CategoryViewInterface
      * Return a category field
      *
      * @param integer $fieldId - Field-ID
-     * @return Field
+     * @return Field|null
      */
-    public function getField(int $fieldId): Field;
+    public function getField(int $fieldId): ?Field;
 
     /**
      * Get all fields that are set as searchable for this category
