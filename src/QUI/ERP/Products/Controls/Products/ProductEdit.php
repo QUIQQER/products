@@ -37,10 +37,7 @@ class ProductEdit extends QUI\Control
     }
 
     /**
-     * (non-PHPdoc)
-     *
      * @throws QUI\Exception
-     * @see \QUI\Control::create()
      */
     public function getBody(): string
     {
@@ -51,7 +48,9 @@ class ProductEdit extends QUI\Control
 
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
             $View = $Product->getView();
-            $Price = $Calc->getProductPrice($Product->createUniqueProduct($Calc));
+            $Price = $Calc->getProductPrice(
+                $Product->createUniqueProduct($Calc->getUser())
+            );
         } else {
             $View = $Product;
             $Price = $Product->getPrice();
