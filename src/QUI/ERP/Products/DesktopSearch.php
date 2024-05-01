@@ -25,7 +25,7 @@ class DesktopSearch implements ProviderInterface
     /**
      * @inheritdoc
      */
-    public function buildCache()
+    public function buildCache(): void
     {
         // placeholder, not needed
     }
@@ -34,13 +34,13 @@ class DesktopSearch implements ProviderInterface
      * @param int $id
      * @inheritdoc
      */
-    public function getEntry(int $id)
+    public function getEntry(int $id): array
     {
         return [
             'searchdata' => json_encode([
                 'require' => 'package/quiqqer/products/bin/controls/products/Product',
                 'params' => [
-                    'productId' => (int)$id
+                    'productId' => $id
                 ]
             ])
         ];
