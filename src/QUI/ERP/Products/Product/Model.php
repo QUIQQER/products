@@ -417,7 +417,7 @@ class Model extends QUI\QDOM
             }
         }
 
-        if (Products::$useRuntimeCacheForUniqueProducts && isset($cacheName)) {
+        if (Products::$useRuntimeCacheForUniqueProducts) {
             ProductCache::writeUniqueProductData($attributes, $cacheName);
         }
 
@@ -840,7 +840,7 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * Return the value of an language field
+     * Return the value of a language field
      *
      * @param integer $field - optional
      * @param QUI\Locale|null $Locale - optional
@@ -1369,7 +1369,7 @@ class Model extends QUI\QDOM
         }
 
         // if variant child
-        // only save non inherited fields
+        // only save non-inherited fields
         if ($this instanceof QUI\ERP\Products\Product\Types\VariantChild) {
             $inheritedFields = ProductUtils::getInheritedFieldIdsForProduct($this);
             $inheritedFields = array_flip($inheritedFields);
@@ -1466,7 +1466,7 @@ class Model extends QUI\QDOM
 
     /**
      * Build the mem cache for the product (not the db table cache)
-     * its the faster cache
+     * it's the faster cache
      */
     public function buildCache(): void
     {
@@ -2547,7 +2547,7 @@ class Model extends QUI\QDOM
      * Clear the complete own product permissions
      *
      * @param User|null $User - optional
-     * @throws Exception
+     * @throws QUI\Permissions\Exception
      */
     public function clearPermissions(QUI\Interfaces\Users\User $User = null): void
     {

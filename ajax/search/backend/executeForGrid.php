@@ -71,7 +71,7 @@ QUI::$Ajax->registerFunction(
             $fields['F' . $fieldId] = 'F' . $fieldId;
         }
 
-        if (!empty($productIds)) {
+        if (is_array($productIds) && count($productIds)) {
             $result = QUI::getDataBase()->fetch([
                 'from' => Tables::getProductCacheTableName(),
                 'where' => [
