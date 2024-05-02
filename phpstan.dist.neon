@@ -6,5 +6,6 @@ parameters:
     paths:
         - src
         - ajax
+        - types
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
