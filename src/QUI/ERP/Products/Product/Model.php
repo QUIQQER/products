@@ -452,7 +452,7 @@ class Model extends QUI\QDOM
 
         $uniqueCacheParts = [
             $Locale->getCurrent(),
-            $User->getId()
+            $User->getUUID()
         ];
 
         foreach ($fieldList as $Field) {
@@ -997,7 +997,7 @@ class Model extends QUI\QDOM
         $cacheName = $baseCacheName . '/prices/min';
 
         if ($User instanceof QUI\Interfaces\Users\User && !QUI::getUsers()->isNobodyUser($User)) {
-            $cacheName = $baseCacheName . '/prices/' . $User->getId() . '/min';
+            $cacheName = $baseCacheName . '/prices/' . $User->getUUID() . '/min';
         }
 
         try {
@@ -1089,7 +1089,7 @@ class Model extends QUI\QDOM
         $cacheName = $baseCacheName . '/prices/max';
 
         if ($User instanceof QUI\Interfaces\Users\User && !QUI::getUsers()->isNobodyUser($User)) {
-            $cacheName = $baseCacheName . '/prices/' . $User->getId() . '/max';
+            $cacheName = $baseCacheName . '/prices/' . $User->getUUID() . '/max';
         }
 
         try {
@@ -1440,7 +1440,7 @@ class Model extends QUI\QDOM
                     'category' => $mainCategory,
                     'fieldData' => json_encode($fieldData),
                     'permissions' => json_encode($this->permissions),
-                    'e_user' => $EditUser->getId(),
+                    'e_user' => $EditUser->getUUID(),
                     'e_date' => $this->getAttribute('e_date')
                 ],
                 ['id' => $this->getId()]
@@ -2528,7 +2528,7 @@ class Model extends QUI\QDOM
                 ),
                 403,
                 [
-                    'userid' => $User->getId(),
+                    'userid' => $User->getUUID(),
                     'username' => $User->getName()
                 ]
             );

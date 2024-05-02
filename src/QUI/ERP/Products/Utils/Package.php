@@ -68,7 +68,7 @@ class Package
 
         self::$hidePrice = (int)$Config->get('products', 'hidePrices');
 
-        if ($User->getId() && Permission::hasPermission('product.view.prices')) {
+        if ($User->getUUID() && Permission::hasPermission('product.view.prices')) {
             self::$hidePrice = false;
         }
 

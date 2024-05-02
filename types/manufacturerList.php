@@ -21,7 +21,7 @@ if ($siteUrl !== $requestUrl) {
     try {
         $ManufacturerUser = QUI::getUsers()->getUserByName($manufacturerUsername);
 
-        if (!Manufacturers::isManufacturer($ManufacturerUser->getId())) {
+        if (!Manufacturers::isManufacturer($ManufacturerUser->getUUID())) {
             $ManufacturerUser = false;
         }
 
@@ -93,7 +93,7 @@ if ($siteUrl !== $requestUrl) {
             }
         }
 
-        $Engine->assign('manufacturerTitle', Manufacturers::getManufacturerTitle($ManufacturerUser->getId()));
+        $Engine->assign('manufacturerTitle', Manufacturers::getManufacturerTitle($ManufacturerUser->getUUID()));
     } catch (\Exception $Exception) {
         QUI\System\Log::writeDebugException($Exception);
     }
