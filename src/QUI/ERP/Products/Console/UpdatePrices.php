@@ -25,7 +25,14 @@ class UpdatePrices extends QUI\System\Console\Tool
 
         $this->addArgument(
             'activeOnly',
-            'Only update prices of active products',
+            'Only update prices of active products.',
+            false,
+            true
+        );
+
+        $this->addArgument(
+            'categoryId',
+            'Only update prices of products in the given category.',
             false,
             true
         );
@@ -36,7 +43,7 @@ class UpdatePrices extends QUI\System\Console\Tool
      */
     public function execute()
     {
-        $this->updateProductPrices(!empty($this->getArgument('activeOnly')));
+        $this->updateProductPrices(!empty($this->getArgument('activeOnly')), $this->getArgument('categoryId'));
     }
 
     /**
@@ -45,14 +52,22 @@ class UpdatePrices extends QUI\System\Console\Tool
      * A price field is relevant if a mulitplier is configured for it.
      *
      * @param bool $activeOnly (optional) - Only update active products
+     * @param int|null $categoryId (optional) - Only update prices for products in given category
      * @return int - Number of updated products
      */
-    public function updateProductPrices(bool $activeOnly = false): int
+    public function updateProductPrices(bool $activeOnly = false, ?int $categoryId = null): int
     {
         $where = [];
 
         if (!empty($activeOnly)) {
             $where['active'] = 1;
+        }
+
+        if ($categoryId) {
+            $where['categories'] = [
+                'type' => '%LIKE%',
+                'value' => '%,' . (int)$categoryId . ',%'
+            ];
         }
 
         $productIds = Products::getProductIds([

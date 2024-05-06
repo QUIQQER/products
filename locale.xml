@@ -1668,6 +1668,10 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[Internal description / help text for this field. Only visible for administrators.]]></en>
         </locale>
 
+        <locale name="categories.grid.priceFieldFactorFields">
+            <de><![CDATA[Felder mit Preisfeld-Faktoren]]></de>
+            <en><![CDATA[Fields with price field factors]]></en>
+        </locale>
         <locale name="categories.create.title">
             <de><![CDATA[Neue Kategorie anlegen]]></de>
             <en><![CDATA[Create a new category]]></en>
@@ -2611,6 +2615,14 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[beim Speichern von Produkten anwenden]]></de>
             <en><![CDATA[apply on product save]]></en>
         </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelCategoryPriority">
+            <de><![CDATA[Preisfeld-Faktoren Priorität]]></de>
+            <en><![CDATA[Price field factors priority]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.descCategoryPriority" html="true">
+            <de><![CDATA[Auf Produkte, die mehreren Kategorien zugeordnet sind, die Preisfeld-Faktoren konfiguriert haben, werden die Preisfeld-Faktoren der Kategorie mit der höchstens Priorität angewandt. Die Hauptkategorie eines Produkts hat <b>immer</b> Vorrang.]]></de>
+            <en><![CDATA[The price field factors of the category with the highest priority is applied to products that are assigned to several categories that have configured price field factors. The main category of a product is <b>always</b> applied first.]]></en>
+        </locale>
         <locale name="controls.settings.PriceFieldFactors.info_cli">
             <de><![CDATA[</p>In Ihrem Shop existieren sehr viele Produkte. Die Ausführungszeit Ihres Web-Servers i.V.m. PHP wird wahrscheinlich nicht reichen, um die Preise aller Produkte zu aktualisieren.</p><br/>
 <p>Sie können die Aktualisierung der Produkt-Preise auch per Konsolenbefehl durchführen. Führen Sie bitte einen der folgende Befehle aus, um die Aktualisierung durchzuführen (alle Produkte bzw. nur aktive Produkte):</p>]]></de>
@@ -2692,6 +2704,30 @@ For a newly created product the article number should be generated automatically
                 <![CDATA[kaufmännisch runden (Einer-Dezimalstellen) -> z.B.: "22,34" => "22,30"; "22,65" => "22,70"]]></de>
             <en><![CDATA[]]></en>
         </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelType">
+            <de><![CDATA[Preisaufschlag-Typ]]></de>
+            <en><![CDATA[Surcharge type]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelTypeOptionMultiplier">
+            <de><![CDATA[Multiplikator]]></de>
+            <en><![CDATA[multiplier]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelTypeOptionFixed">
+            <de><![CDATA[fester Aufschlag]]></de>
+            <en><![CDATA[fixed surcharge]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelFixedSurchargeAmount">
+            <de><![CDATA[(optional) zusätzlicher absoluter Aufschlag (netto)]]></de>
+            <en><![CDATA[(optional) additional absolute surcharge amount (net; VAT excl.)]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelFixedSurchargePriorityBeforeRounding">
+            <de><![CDATA[vor dem Runden aufschlagen]]></de>
+            <en><![CDATA[apply before rounding]]></en>
+        </locale>
+        <locale name="controls.settings.PriceFieldFactors.tpl.labelFixedSurchargePriorityAfterRounding">
+            <de><![CDATA[nach dem Runden aufschlagen]]></de>
+            <en><![CDATA[apply after rounding]]></en>
+        </locale>
 
         <locale name="controls.products.search">
             <de><![CDATA[Produkte durchsuchen...]]></de>
@@ -2723,6 +2759,10 @@ For a newly created product the article number should be generated automatically
 
     <groups name="quiqqer/products" datatype="php">
 
+        <locale name="categories.list.priceFieldFactorFields">
+            <de><![CDATA[Priorität: [priority] | Felder: [fields]]]></de>
+            <en><![CDATA[Priority: [priority] | Fields: [fields]]]></en>
+        </locale>
         <locale name="exception.duplicate_article_no">
             <de><![CDATA[
             Die Artikel-Nr. "[articleNo]" ist bereits vergeben (bei Produkt #[otherProductId]). Bitte wähle eine eindeutige Artikel-Nr. für das Produkt.

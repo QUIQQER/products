@@ -66,7 +66,11 @@ QUI::$Ajax->registerFunction(
             ];
 
             $defaultVariantId = $Product->getDefaultVariantId();
-            $Currency = $Product->getCurrency();
+
+            if ($Product->getCurrency()) {
+                $Currency = $Product->getCurrency();
+            }
+
             $searchResult = QUI::getDataBase()->fetch($queryOptions);
 
             // get field data for AttributeGroup fields for every found VariantChild
