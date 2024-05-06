@@ -5,6 +5,7 @@
  */
 
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
+use QUI\ERP\Products\Handler\Cache;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Types\VariantChild;
@@ -20,7 +21,7 @@ use QUI\ERP\Products\Utils\Products as ProductUtils;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getVariant',
     function ($productId, $fields, $ignoreDefaultVariant) {
-        $cacheName = \QUI\ERP\Products\Handler\Cache::frontendProductCacheName(
+        $cacheName = Cache::frontendProductCacheName(
             $productId,
             [$fields, $ignoreDefaultVariant]
         );
@@ -29,7 +30,7 @@ QUI::$Ajax->registerFunction(
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             try {
                 return QUI\Cache\LongTermCache::get($cacheName);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 
@@ -105,7 +106,7 @@ QUI::$Ajax->registerFunction(
                 /* @var $Product QUI\ERP\Products\Product\Types\VariantParent */
                 $fieldHash = QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($attributeGroups);
                 $Child = $Product->getVariantByVariantHash($fieldHash);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 $Child = $Product;
                 $isVariantParent = true;
             }

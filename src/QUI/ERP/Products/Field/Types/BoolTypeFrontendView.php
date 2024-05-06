@@ -23,7 +23,7 @@ class BoolTypeFrontendView extends QUI\ERP\Products\Field\View
      *
      * @return string
      */
-    public function create()
+    public function create(): string
     {
         if (!$this->hasViewPermission()) {
             return '';
@@ -39,8 +39,8 @@ class BoolTypeFrontendView extends QUI\ERP\Products\Field\View
         }
 
         return "<div class=\"quiqqer-product-field\">
-            <div class=\"quiqqer-product-field-title\">{$title}</div>
-            <div class=\"quiqqer-product-field-value\">{$html}</div>
+            <div class=\"quiqqer-product-field-title\">$title</div>
+            <div class=\"quiqqer-product-field-value\">$html</div>
         </div>";
     }
 }

@@ -2,6 +2,7 @@
 
 namespace QUI\ERP\Products\Product\Cache;
 
+use Exception;
 use QUI;
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
 use QUI\ERP\Products\Handler\Products;
@@ -54,10 +55,11 @@ class ProductCache
     }
 
     /**
-     * @param $productId
-     * @param $createControlCache
+     * @param int $productId
+     * @param bool $createControlCache
+     * @throws Exception
      */
-    public static function create($productId, $createControlCache = false)
+    public static function create(int $productId, bool $createControlCache = false): void
     {
         try {
             $Product = Products::getNewProductInstance($productId);

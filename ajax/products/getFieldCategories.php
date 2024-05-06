@@ -8,6 +8,8 @@
  * @return array
  */
 
+use QUI\ERP\Products\Handler\Products;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_getFieldCategories',
     function ($productId) {
@@ -15,8 +17,8 @@ QUI::$Ajax->registerFunction(
 
         if (!empty($productId)) {
             try {
-                $Product = \QUI\ERP\Products\Handler\Products::getProduct((int)$productId);
-            } catch (\Exception $Exception) {
+                $Product = Products::getProduct((int)$productId);
+            } catch (Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
             }
         }

@@ -24,7 +24,7 @@ QUI::$Ajax->registerFunction(
 
         try {
             $Site = $Project->get($siteId);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             $Site = $Project->firstChild();
         }
 
@@ -52,7 +52,7 @@ QUI::$Ajax->registerFunction(
         }
 
         $Search = Search::getFrontendSearch($Site);
-        $searchParams = \json_decode($searchParams, true);
+        $searchParams = json_decode($searchParams, true);
 
         $searchParams['limit'] = '0,5';
 

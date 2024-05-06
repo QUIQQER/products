@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\Exception;
 use QUI\ERP\Products\Field\View;
 use QUI\Projects\Media\Utils as MediaUtils;
 
@@ -21,19 +22,19 @@ class Folder extends QUI\ERP\Products\Field\Field
     /**
      * @var string
      */
-    protected $columnType = 'BIGINT(20)';
+    protected string $columnType = 'BIGINT(20)';
 
     /**
      * @var bool
      */
-    protected $searchable = false;
+    protected bool $searchable = false;
 
     /**
      * GroupList constructor.
      * @param int $fieldId
      * @param array $params
      */
-    public function __construct($fieldId, array $params)
+    public function __construct(int $fieldId, array $params)
     {
         $this->setOptions([
             'autoActivateItems' => true,
@@ -47,7 +48,7 @@ class Folder extends QUI\ERP\Products\Field\Field
     /**
      * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new View($this->getFieldDataForView());
     }
@@ -55,7 +56,7 @@ class Folder extends QUI\ERP\Products\Field\Field
     /**
      * @return View
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         return new View($this->getFieldDataForView());
     }
@@ -63,7 +64,7 @@ class Folder extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/Folder';
     }
@@ -71,7 +72,7 @@ class Folder extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptSettings()
+    public function getJavaScriptSettings(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/FolderSettings';
     }
@@ -81,9 +82,9 @@ class Folder extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
@@ -95,8 +96,8 @@ class Folder extends QUI\ERP\Products\Field\Field
             if (!MediaUtils::isFolder($MediaItem)) {
                 throw new QUI\Exception();
             }
-        } catch (QUI\Exception $Exception) {
-            throw new QUI\ERP\Products\Field\Exception([
+        } catch (QUI\Exception) {
+            throw new Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
@@ -112,13 +113,13 @@ class Folder extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return string
+     * @return string|null
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): ?string
     {
         try {
             $MediaItem = MediaUtils::getMediaItemByUrl($value);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return null;
         }
 
@@ -134,7 +135,7 @@ class Folder extends QUI\ERP\Products\Field\Field
      *
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         $MediaFolder = $this->getMediaFolder();
 
@@ -150,7 +151,7 @@ class Folder extends QUI\ERP\Products\Field\Field
      *
      * @return QUI\Projects\Media\Folder|false
      */
-    public function getMediaFolder()
+    public function getMediaFolder(): bool|QUI\Projects\Media\Folder
     {
         try {
             if (!$this->getValue()) {
@@ -175,7 +176,7 @@ class Folder extends QUI\ERP\Products\Field\Field
      *
      * @return string|array
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         if (!empty($this->getOption('mediaFolder'))) {
             return $this->getOption('mediaFolder');

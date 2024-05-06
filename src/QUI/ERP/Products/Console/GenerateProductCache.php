@@ -9,6 +9,14 @@ namespace QUI\ERP\Products\Console;
 use QUI;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Cache\ProductCache;
+use QUI\Lock\Exception;
+
+use function count;
+use function date;
+use function mb_strlen;
+use function str_pad;
+
+use const STR_PAD_LEFT;
 
 /**
  * Console tool for HKL used patches
@@ -31,8 +39,10 @@ class GenerateProductCache extends QUI\System\Console\Tool
 
     /**
      * Execute the console tool
+     * @throws Exception
+     * @throws \Exception
      */
-    public function execute()
+    public function execute(): void
     {
         Products::$createFrontendCache = true;
 
@@ -71,7 +81,7 @@ class GenerateProductCache extends QUI\System\Console\Tool
             ]
         ]);
 
-        $count = \count($productIds);
+        $count = count($productIds);
         $i = 0;
 
         foreach ($productIds as $productId) {
@@ -80,7 +90,7 @@ class GenerateProductCache extends QUI\System\Console\Tool
                 try {
                     QUI\Cache\LongTermCache::get(QUI\ERP\Products\Handler\Cache::getProductCachePath($productId));
                     continue;
-                } catch (QUI\Exception $Exception) {
+                } catch (QUI\Exception) {
                 }
             }
 
@@ -88,15 +98,15 @@ class GenerateProductCache extends QUI\System\Console\Tool
             Products::cleanProductInstanceMemCache();
 
 
-            $out = \str_pad($i, \mb_strlen($count), '0', \STR_PAD_LEFT);
-            $time = \date('H:i:s');
+            $out = str_pad($i, mb_strlen($count), '0', STR_PAD_LEFT);
+            $time = date('H:i:s');
             $this->writeLn('- ' . $time . ' :: ' . $out . ' of ' . $count);
 
             $i++;
         }
 
         $this->writeLn('Cache is successfully build');
-        $this->writeLn('');
+        $this->writeLn();
 
         QUI\Lock\Locker::unlock($Package, $lockKey);
         Products::$createFrontendCache = false;

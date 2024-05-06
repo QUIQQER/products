@@ -30,7 +30,7 @@ QUI::$Ajax->registerFunction(
             try {
                 $fieldId = (int)str_replace('field-', '', $fieldId);
                 $Field = $Fields->getField($fieldId);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 QUI\System\Log::addNotice('Field not found #' . $fieldId);
                 continue;
             }
@@ -101,13 +101,13 @@ QUI::$Ajax->registerFunction(
             try {
                 $Category = $Categories->getCategory($category);
                 $Product->addCategory($Category);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 
         try {
             $Product->setMainCategory($categoryId);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             QUI::getMessagesHandler()->addAttention(
                 QUI::getLocale()->get(
                     'quiqqer/products',

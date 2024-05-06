@@ -8,6 +8,10 @@ namespace QUI\ERP\Products\Product;
 
 use QUI;
 
+use function dirname;
+use function file_get_contents;
+use function json_encode;
+
 /**
  * Class ProductListBackendView.
  * FrontendView for a product list
@@ -19,22 +23,22 @@ class ProductListBackendView
     /**
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
-     * @var ProductList
+     * @var ?ProductList
      */
-    protected $ProductList = null;
+    protected ?ProductList $ProductList = null;
 
     /**
      * @var bool
      */
-    protected $hidePrice;
+    protected int|bool|null $hidePrice;
 
     /**
      * @var null|QUI\Locale
      */
-    protected $Locale = null;
+    protected ?QUI\Locale $Locale = null;
 
     /**
      * ProductListView constructor.
@@ -44,7 +48,7 @@ class ProductListBackendView
      *
      * @throws QUI\Exception
      */
-    public function __construct(ProductList $ProductList, $Locale = null)
+    public function __construct(ProductList $ProductList, QUI\Locale $Locale = null)
     {
         $this->ProductList = $ProductList;
         $this->hidePrice = $ProductList->isPriceHidden();
@@ -59,7 +63,7 @@ class ProductListBackendView
      *
      * @throws QUI\Exception
      */
-    protected function parse()
+    protected function parse(): void
     {
         $Locale = $this->Locale;
 
@@ -69,8 +73,6 @@ class ProductListBackendView
 
         $list = $this->ProductList->toArray($Locale);
         $products = $this->ProductList->getProducts();
-//        $User     = $this->ProductList->getUser();
-//        $isNetto  = QUI\ERP\Utils\User::isNettoUser($User);
 
         $Locale = $this->ProductList->getUser()->getLocale();
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
@@ -185,7 +187,7 @@ class ProductListBackendView
     /**
      * Set the price to hidden
      */
-    public function hidePrices()
+    public function hidePrices(): void
     {
         $this->hidePrice = true;
     }
@@ -193,7 +195,7 @@ class ProductListBackendView
     /**
      * Set the price to visible
      */
-    public function showPrices()
+    public function showPrices(): void
     {
         $this->hidePrice = false;
     }
@@ -201,9 +203,9 @@ class ProductListBackendView
     /**
      * Return if prices are hidden or not
      *
-     * @return bool|int
+     * @return bool|int|null
      */
-    public function isPriceHidden()
+    public function isPriceHidden(): bool|int|null
     {
         return $this->hidePrice;
     }
@@ -215,7 +217,7 @@ class ProductListBackendView
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->data;
     }
@@ -225,9 +227,9 @@ class ProductListBackendView
      *
      * @return string
      */
-    public function toJSON()
+    public function toJSON(): string
     {
-        return \json_encode($this->toArray());
+        return json_encode($this->toArray());
     }
 
     /**
@@ -235,7 +237,7 @@ class ProductListBackendView
      *
      * @return string
      */
-    public function getSum()
+    public function getSum(): string
     {
         return $this->data['sum'];
     }
@@ -245,7 +247,7 @@ class ProductListBackendView
      *
      * @return string
      */
-    public function getSubSum()
+    public function getSubSum(): string
     {
         return $this->data['subSum'];
     }
@@ -255,7 +257,7 @@ class ProductListBackendView
      *
      * @return string
      */
-    public function getNettoSum()
+    public function getNettoSum(): string
     {
         return $this->data['nettoSum'];
     }
@@ -265,7 +267,7 @@ class ProductListBackendView
      *
      * @return string
      */
-    public function getNettoSubSum()
+    public function getNettoSubSum(): string
     {
         return $this->data['nettoSubSum'];
     }
@@ -275,7 +277,7 @@ class ProductListBackendView
      *
      * @return array
      */
-    public function getProducts()
+    public function getProducts(): array
     {
         return $this->data['products'];
     }
@@ -286,16 +288,15 @@ class ProductListBackendView
      * @param bool $css - optional, with inline style, default = true
      * @return string
      *
-     * @throws QUI\Exception
      */
-    public function toHTML($css = true)
+    public function toHTML($css = true): string
     {
         $Engine = QUI::getTemplateManager()->getEngine();
         $style = '';
 
         if ($css) {
             $style = '<style>';
-            $style .= \file_get_contents(\dirname(__FILE__) . '/ProductListView.css');
+            $style .= file_get_contents(dirname(__FILE__) . '/ProductListView.css');
             $style .= '</style>';
         }
 
@@ -306,6 +307,6 @@ class ProductListBackendView
             'hidePrice' => $this->isPriceHidden(),
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ProductListView.html');
+        return $Engine->fetch(dirname(__FILE__) . '/ProductListView.html');
     }
 }

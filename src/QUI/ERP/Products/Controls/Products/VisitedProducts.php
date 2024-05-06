@@ -6,6 +6,7 @@
 
 namespace QUI\ERP\Products\Controls\Products;
 
+use Exception;
 use QUI;
 
 /**
@@ -22,7 +23,7 @@ class VisitedProducts extends QUI\Control
      * ChildrenSlider constructor.
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
 
@@ -40,8 +41,9 @@ class VisitedProducts extends QUI\Control
 
     /**
      * @return string
+     * @throws Exception
      */
-    public function getBody()
+    public function getBody(): string
     {
         return $this->Slider->create();
     }
@@ -51,7 +53,7 @@ class VisitedProducts extends QUI\Control
      *
      * @param QUI\ERP\Products\Interfaces\ProductInterface|integer $Product
      */
-    public function addProduct($Product)
+    public function addProduct(QUI\ERP\Products\Interfaces\ProductInterface|int $Product): void
     {
         $this->Slider->addProduct($Product);
     }

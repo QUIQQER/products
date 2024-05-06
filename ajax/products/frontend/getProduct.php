@@ -5,6 +5,7 @@
  */
 
 use QUI\ERP\Products\Controls\Products\Product as ProductControl;
+use QUI\ERP\Products\Handler\Cache;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Utils\Products as ProductUtils;
 
@@ -16,7 +17,7 @@ use QUI\ERP\Products\Utils\Products as ProductUtils;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getProduct',
     function ($productId, $project, $siteId) {
-        $cacheName = \QUI\ERP\Products\Handler\Cache::frontendProductCacheName(
+        $cacheName = Cache::frontendProductCacheName(
             $productId,
             [$project, $siteId]
         );
@@ -25,7 +26,7 @@ QUI::$Ajax->registerFunction(
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             try {
                 return QUI\Cache\LongTermCache::get($cacheName);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 
@@ -37,13 +38,13 @@ QUI::$Ajax->registerFunction(
 
         try {
             $Product = Products::getNewProductInstance($productId);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return '';
         }
 
         $availableHashes = [];
 
-        if (\method_exists($Product, 'availableActiveFieldHashes')) {
+        if (method_exists($Product, 'availableActiveFieldHashes')) {
             $availableHashes = $Product->availableActiveFieldHashes();
         }
 
@@ -79,7 +80,7 @@ QUI::$Ajax->registerFunction(
             'html' => QUI\Output::getInstance()->parse($control),
             'title' => $title,
             'fieldHashes' => ProductUtils::getJsFieldHashArray($Product),
-            'availableHashes' => \array_flip($availableHashes)
+            'availableHashes' => array_flip($availableHashes)
         ];
 
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {

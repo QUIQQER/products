@@ -10,6 +10,9 @@ use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 
+use function dirname;
+use function is_numeric;
+
 /**
  * Class ChildrenSlider
  *
@@ -22,39 +25,34 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
      *
      * @var array
      */
-    protected $products = [];
+    protected array $products = [];
 
     /**
      * ChildrenSlider constructor.
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         // default options
         $this->setAttributes([
-            'showPrices'   => true,
+            'showPrices' => true,
             'buttonAction' => 'addToBasket' // addToBasket / showProduct
         ]);
 
         parent::__construct($attributes);
 
         $this->addCSSFile(
-            \dirname(__FILE__) . '/ChildrenSlider.css'
+            dirname(__FILE__) . '/ChildrenSlider.css'
         );
     }
 
     /**
-     * (non-PHPdoc)
-     *
-     * @see \QUI\Control::create()
+     * @return string
+     * @throws QUI\Exception
      */
-    public function getBody()
+    public function getBody(): string
     {
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            return '';
-        }
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         $products = [];
 
@@ -80,11 +78,11 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
         }
 
         $Engine->assign([
-            'this'     => $this,
+            'this' => $this,
             'products' => $products
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ChildrenSlider.html');
+        return $Engine->fetch(dirname(__FILE__) . '/ChildrenSlider.html');
     }
 
     /**
@@ -92,12 +90,12 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
      *
      * @param QUI\ERP\Products\Interfaces\ProductInterface|integer $Product
      */
-    public function addProduct($Product)
+    public function addProduct(QUI\ERP\Products\Interfaces\ProductInterface|int $Product): void
     {
-        if (\is_numeric($Product)) {
+        if (is_numeric($Product)) {
             try {
                 $this->products[] = Products::getProduct($Product)->getView();
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
 
             return;
@@ -113,12 +111,8 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
      *
      * @param array $products
      */
-    public function addProducts($products)
+    public function addProducts(array $products): void
     {
-        if (!\is_array($products)) {
-            return;
-        }
-
         foreach ($products as $Product) {
             $this->addProduct($Product);
         }
@@ -127,25 +121,26 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
     /**
      * Get retail price object
      *
-     * @param $Product QUI\ERP\Products\Product\ViewFrontend
+     * @param QUI\ERP\Products\Interfaces\ProductInterface $Product
      * @return QUI\ERP\Products\Controls\Price | null
      *
      * @throws QUI\Exception
      */
-    public function getRetailPrice($Product)
-    {
+    public function getRetailPrice(
+        QUI\ERP\Products\Interfaces\ProductInterface $Product
+    ): ?QUI\ERP\Products\Controls\Price {
         if ($this->getAttribute('hideRetailPrice')) {
             return null;
         }
 
         $CrossedOutPrice = null;
-        $Price           = $Product->getPrice();
+        $Price = $Product->getPrice();
 
         try {
             // Offer price (Angebotspreis) - it has higher priority than retail price
             if ($Product->hasOfferPrice()) {
                 $CrossedOutPrice = new QUI\ERP\Products\Controls\Price([
-                    'Price'       => new QUI\ERP\Money\Price(
+                    'Price' => new QUI\ERP\Money\Price(
                         $Product->getOriginalPrice()->getValue(),
                         QUI\ERP\Currency\Handler::getDefaultCurrency()
                     ),
@@ -158,7 +153,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
 
                     if ($Price->getPrice() < $PriceRetail->getPrice()) {
                         $CrossedOutPrice = new QUI\ERP\Products\Controls\Price([
-                            'Price'       => $PriceRetail,
+                            'Price' => $PriceRetail,
                             'withVatText' => false
                         ]);
                     }
@@ -169,5 +164,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
         } catch (QUI\Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
         }
+
+        return null;
     }
 }

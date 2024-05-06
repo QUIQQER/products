@@ -24,7 +24,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
      *
      * @return string
      */
-    public function create()
+    public function create(): string
     {
         if (!$this->hasViewPermission()) {
             return '';
@@ -62,14 +62,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         }
 
         $value = htmlspecialchars($value);
-
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return '';
-        }
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([
             'this' => $this,
@@ -194,7 +187,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
     /**
      * @return string
      */
-    protected function notChangeableDisplay()
+    protected function notChangeableDisplay(): string
     {
         $current = QUI::getLocale()->getCurrent();
 
@@ -214,15 +207,7 @@ class AttributeGroupFrontendView extends QUI\ERP\Products\Field\View
         }
 
         $value = htmlspecialchars($value);
-
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return '';
-        }
-
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([
             'this' => $this,

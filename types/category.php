@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file contains the category site type
+ *
+ * @var QUI\Projects\Project $Project
+ * @var QUI\Projects\Site $Site
+ * @var QUI\Interfaces\Template\EngineInterface $Engine
+ * @var QUI\Template $Template
+ **/
+
 use QUI\ERP\Products;
 use QUI\ERP\Products\Controls\Category\ProductList;
 use QUI\System\Log;

@@ -10,7 +10,6 @@ use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Handler\Search;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\Package\Package;
-use QUI\Projects\Site;
 use QUI\Projects\Site\Edit;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,7 +43,7 @@ class EventHandling
      *
      * @throws QUI\Exception
      */
-    public static function onPackageSetup(Package $Package)
+    public static function onPackageSetup(Package $Package): void
     {
         if ($Package->getName() != 'quiqqer/products') {
             return;
@@ -71,11 +70,11 @@ class EventHandling
      * @return void
      * @throws QUI\Exception
      */
-    protected static function setDefaultMediaFolder()
+    protected static function setDefaultMediaFolder(): void
     {
         try {
             Products::getParentMediaFolder();
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             // no produkt folder, we create one
             $Project = QUI::getProjectManager()->getStandard();
             $Media = $Project->getMedia();
@@ -96,11 +95,11 @@ class EventHandling
     }
 
     /**
-     * Set default editable and inhertiable fields for product variants
+     * Set default editable and inheritable fields for product variants
      *
      * @return void
      */
-    protected static function setDefaultVariantFields()
+    protected static function setDefaultVariantFields(): void
     {
         try {
             $Config = QUI::getPackage('quiqqer/products')->getConfig();
@@ -215,7 +214,7 @@ class EventHandling
      * @return void
      * @throws QUI\Database\Exception
      */
-    protected static function setDefaultProductFields()
+    protected static function setDefaultProductFields(): void
     {
         $standardFields = [
             // Preis
@@ -872,7 +871,7 @@ class EventHandling
 
             try {
                 Fields::createFieldCacheColumn($fieldId);
-            } catch (Exception $Exception) {
+            } catch (Exception) {
             }
         }
     }
@@ -885,7 +884,7 @@ class EventHandling
      *
      * @return void
      */
-    public static function patchProductTypes()
+    public static function patchProductTypes(): void
     {
         try {
             $result = QUI::getDataBase()->fetch([
@@ -919,7 +918,7 @@ class EventHandling
      *
      * @return void
      */
-    public static function checkProductCacheTable()
+    public static function checkProductCacheTable(): void
     {
         $DB = QUI::getDataBase();
         $categoryColumn = $DB->table()->getColumn('products_cache', 'category');
@@ -983,9 +982,9 @@ class EventHandling
     /**
      * Event on site load
      *
-     * @param Site|Edit $Site
+     * @param QUI\Interfaces\Projects\Site $Site
      */
-    public static function onSiteLoad($Site)
+    public static function onSiteLoad(QUI\Interfaces\Projects\Site $Site): void
     {
         $type = $Site->getAttribute('type');
 
@@ -997,10 +996,10 @@ class EventHandling
     /**
      * Event on product category site save
      *
-     * @param Edit $Site
+     * @param QUI\Interfaces\Projects\Site $Site
      * @throws QUI\Exception
      */
-    public static function onSiteSave(Edit $Site)
+    public static function onSiteSave(QUI\Interfaces\Projects\Site $Site): void
     {
         $Project = $Site->getProject();
 
@@ -1036,13 +1035,10 @@ class EventHandling
         $categoryId = $Site->getAttribute('quiqqer.products.settings.categoryId');
 
         if ($categoryId) {
-            try {
-                QUI\ERP\Products\Handler\Categories::clearCache($categoryId);
-            } catch (QUI\Cache\Exception $Exception) {
-            }
+            QUI\ERP\Products\Handler\Categories::clearCache($categoryId);
         }
 
-        // the searchfield ids were initially saved
+        // the search field ids were initially saved
         $Site->setAttribute('quiqqer.products.settings.searchFieldIds.edited', true);
     }
 
@@ -1050,11 +1046,11 @@ class EventHandling
      * Event on child create
      *
      * @param integer $newId
-     * @param Edit|Site $Parent
+     * @param QUI\Interfaces\Projects\Site $Parent
      *
      * @throws QUI\Exception
      */
-    public static function onSiteCreateChild(int $newId, $Parent)
+    public static function onSiteCreateChild(int $newId, QUI\Interfaces\Projects\Site $Parent): void
     {
         $type = $Parent->getAttribute('type');
 
@@ -1087,11 +1083,10 @@ class EventHandling
     /**
      * Event on product category site save
      *
-     * @param Edit|Site $Site
-     *
+     * @param QUI\Interfaces\Projects\Site $Site $Site
      * @throws QUI\Exception
      */
-    public static function onSiteSaveBefore($Site)
+    public static function onSiteSaveBefore(QUI\Interfaces\Projects\Site $Site): void
     {
         // default fields ids
         $searchFieldIds = $Site->getAttribute('quiqqer.products.settings.searchFieldIds');
@@ -1134,10 +1129,8 @@ class EventHandling
      * event: onPackageInstallAfter
      *
      * @param Package $Package
-     *
-     * @throws QUI\Exception
      */
-    public static function onPackageInstallAfter(Package $Package)
+    public static function onPackageInstallAfter(Package $Package): void
     {
         // Clear some cache paths if any new package is installed
         $clearCachePaths = [
@@ -1154,8 +1147,9 @@ class EventHandling
      *
      * @param Package $Package
      * @param array $params
+     * @throws QUI\Exception
      */
-    public static function onPackageConfigSave(Package $Package, array $params)
+    public static function onPackageConfigSave(Package $Package, array $params): void
     {
         if ($Package->getName() != 'quiqqer/products') {
             return;
@@ -1169,7 +1163,7 @@ class EventHandling
      *
      * @param QUI\Template $TemplateManager
      */
-    public static function onTemplateGetHeader(QUI\Template $TemplateManager)
+    public static function onTemplateGetHeader(QUI\Template $TemplateManager): void
     {
         $hide = 0;
 
@@ -1197,8 +1191,9 @@ class EventHandling
      * @param QUI\Users\User|QUI\Groups\Group|QUI\Projects\Project|QUI\Projects\Site|QUI\Projects\Site\Edit $Obj
      * @param array $permissions
      *
+     * @throws QUI\Exception
      */
-    public static function onPermissionsSet($Obj, array $permissions)
+    public static function onPermissionsSet(mixed $Obj, array $permissions): void
     {
         if ($Obj instanceof QUI\Groups\Group) {
             QUI\ERP\Products\Search\Cache::clear('products/search/userfieldids/');
@@ -1211,7 +1206,7 @@ class EventHandling
      * @param QUI\Rewrite $Rewrite
      * @param $url
      */
-    public static function onRequest(QUI\Rewrite $Rewrite, $url)
+    public static function onRequest(QUI\Rewrite $Rewrite, $url): void
     {
         if (!isset($_GET['_url'])) {
             return;
@@ -1240,7 +1235,7 @@ class EventHandling
             $Project = $Rewrite->getProject();
             $productUrl = $Product->getUrl();
 
-            if (strpos($productUrl, '/_p/') === false) {
+            if (!str_contains($productUrl, '/_p/')) {
                 $Redirect = new RedirectResponse($Product->getUrl());
                 $Redirect->setStatusCode(Response::HTTP_MOVED_PERMANENTLY);
 
@@ -1263,14 +1258,14 @@ class EventHandling
             $_REQUEST['_url'] = '';
 
             $Rewrite->setSite($Site);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
     }
 
     /**
      * events: frontend cache clearing
      */
-    public static function onFrontendCacheClear()
+    public static function onFrontendCacheClear(): void
     {
         QUI\Cache\LongTermCache::clear('quiqqer/product/frontend');
     }
@@ -1278,7 +1273,7 @@ class EventHandling
     /**
      * @param QUI\ERP\Order\AbstractOrder $Order
      */
-    public static function onQuiqqerOrderSuccessful(QUI\ERP\Order\AbstractOrder $Order)
+    public static function onQuiqqerOrderSuccessful(QUI\ERP\Order\AbstractOrder $Order): void
     {
         $Articles = $Order->getArticles();
 
@@ -1306,28 +1301,28 @@ class EventHandling
                         ['id' => $productId]
                     );
                 }
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
     }
 
     /**
-     * @param $group
-     * @param $var
-     * @param $packageName
-     * @param $data
+     * @param string $group
+     * @param string $var
+     * @param string $packageName
+     * @param array $data
      */
     public static function onQuiqqerTranslatorEdit(
-        $group,
-        $var,
-        $packageName,
-        $data
-    ) {
+        string $group,
+        string $var,
+        string $packageName,
+        array $data
+    ): void {
         if ($group !== 'quiqqer/products') {
             return;
         }
 
-        if (\strpos($var, 'products.category.') === false) {
+        if (!str_contains($var, 'products.category.')) {
             return;
         }
 
@@ -1392,7 +1387,7 @@ class EventHandling
      * @param $id
      * @param $data
      */
-    public static function onQuiqqerTranslatorEditById($id, $data)
+    public static function onQuiqqerTranslatorEditById($id, $data): void
     {
         $group = $data['groups'];
         $var = $data['var'];

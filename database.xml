@@ -18,8 +18,8 @@
 
             <field type="timestamp NULL default NULL">c_date</field>
             <field type="timestamp NULL default NULL">e_date</field>
-            <field type="INT(11) NULL">c_user</field>
-            <field type="INT(11) NULL">e_user</field>
+            <field type="VARCHAR(50) NULL">c_user</field>
+            <field type="VARCHAR(50) NULL">e_user</field>
             <field type="INT(11) DEFAULT 0">orderCount</field>
 
             <primary>id</primary>

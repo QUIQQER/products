@@ -3,7 +3,10 @@
 namespace QUI\ERP\Products;
 
 use QUI;
+use QUI\Database\Exception;
 use QUI\ERP\Api\NumberRangeInterface;
+
+use function is_numeric;
 
 /**
  * Class Order
@@ -18,7 +21,7 @@ class NumberRange implements NumberRangeInterface
      *
      * @return string
      */
-    public function getTitle($Locale = null)
+    public function getTitle(QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -31,8 +34,9 @@ class NumberRange implements NumberRangeInterface
      * Return the current start range value
      *
      * @return int
+     * @throws Exception
      */
-    public function getRange()
+    public function getRange(): int
     {
         $Table = QUI::getDataBase()->table();
 
@@ -42,9 +46,9 @@ class NumberRange implements NumberRangeInterface
     /**
      * @param int $range
      */
-    public function setRange($range)
+    public function setRange(int $range): void
     {
-        if (!\is_numeric($range)) {
+        if (!is_numeric($range)) {
             return;
         }
 
@@ -52,7 +56,7 @@ class NumberRange implements NumberRangeInterface
         $tableName = QUI\ERP\Products\Utils\Tables::getProductTableName();
 
         $Statement = $PDO->prepare(
-            "ALTER TABLE {$tableName} AUTO_INCREMENT = " . (int)$range
+            "ALTER TABLE $tableName AUTO_INCREMENT = " . (int)$range
         );
 
         $Statement->execute();

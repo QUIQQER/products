@@ -7,10 +7,12 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\Exception;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Search;
 
 use function is_array;
+use function is_int;
 use function is_numeric;
 use function is_string;
 use function json_decode;
@@ -31,19 +33,19 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     const ENTRIES_TYPE_MATERIAL = 4;
 
     /**
-     * @var int
+     * @var int|bool
      */
-    protected $searchDataType = Search::SEARCHDATATYPE_TEXT;
+    protected int|bool $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
     /**
      * @var null
      */
-    protected $defaultValue = null;
+    protected mixed $defaultValue = null;
 
     /**
      * @var array
      */
-    protected $disabled = [];
+    protected array $disabled = [];
 
     /**
      * Attribute group constructor.
@@ -51,7 +53,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      * @param int $fieldId
      * @param array $params
      */
-    public function __construct($fieldId, array $params)
+    public function __construct(int $fieldId, array $params)
     {
         $this->setOptions([
             'entries' => [],
@@ -66,7 +68,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
         // set default, if one are set
         $options = $this->getOptions();
 
-        foreach ($options['entries'] as $key => $option) {
+        foreach ($options['entries'] as $option) {
             if (isset($option['selected']) && $option['selected']) {
                 $this->value = $option['valueId'];
                 $this->defaultValue = $option['valueId'];
@@ -80,13 +82,13 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      * @param string $option - option name
      * @param mixed $value - option value
      */
-    public function setOption($option, $value)
+    public function setOption(string $option, mixed $value): void
     {
         parent::setOption($option, $value);
 
         if ($option == 'entries') {
             if (is_array($value)) {
-                foreach ($value as $key => $val) {
+                foreach ($value as $val) {
                     if (isset($val['selected']) && $val['selected']) {
                         $this->value = $val['valueId'];
                         $this->defaultValue = $val['valueId'];
@@ -105,7 +107,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      *       'title' => '',    // translation json string {de: "", en: ""}
      * ));
      */
-    public function addEntry($entry = [])
+    public function addEntry(array $entry = []): void
     {
         if (empty($entry)) {
             return;
@@ -140,7 +142,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * disable all entries
      */
-    public function disableEntries()
+    public function disableEntries(): void
     {
         foreach ($this->options['entries'] as $key => $option) {
             $this->options['entries'][$key]['disabled'] = true;
@@ -150,7 +152,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * hide all entries
      */
-    public function hideEntries()
+    public function hideEntries(): void
     {
         foreach ($this->options['entries'] as $key => $option) {
             $this->options['entries'][$key]['hide'] = true;
@@ -160,9 +162,9 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * Disable an option
      *
-     * @param string|integer $entry
+     * @param integer|string $entry
      */
-    public function disableEntry($entry)
+    public function disableEntry(int|string $entry): void
     {
         $this->options['entries'][$entry]['disabled'] = true;
     }
@@ -170,9 +172,9 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * Enable an option
      *
-     * @param string|integer $entry
+     * @param integer|string $entry
      */
-    public function enableEntry($entry)
+    public function enableEntry(int|string $entry): void
     {
         $this->options['entries'][$entry]['disabled'] = false;
     }
@@ -180,9 +182,9 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * Enable an option
      *
-     * @param string|integer $entry
+     * @param integer|string $entry
      */
-    public function showEntry($entry)
+    public function showEntry(int|string $entry): void
     {
         $this->options['entries'][$entry]['hide'] = false;
     }
@@ -213,7 +215,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         if ($this->value !== null) {
             return $this->value;
@@ -225,7 +227,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * clears the current value of the field
      */
-    public function clearValue()
+    public function clearValue(): void
     {
         parent::clearValue();
 
@@ -237,7 +239,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return $this->getValue() === null;
     }
@@ -247,7 +249,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      *
      * @return AttributeGroupFrontendView
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         $View = new AttributeGroupFrontendView(
             $this->getFieldDataForView()
@@ -280,7 +282,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/AttributeGroup';
     }
@@ -288,7 +290,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptSettings()
+    public function getJavaScriptSettings(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettings';
     }
@@ -299,9 +301,9 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param integer|string $value - User value = "[key, user value]"
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate($value): void
     {
         if (empty($value)) {
             return;
@@ -319,7 +321,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             }
         }
 
-        throw new QUI\ERP\Products\Field\Exception([
+        throw new Exception([
             'quiqqer/products',
             'exception.field.invalid',
             [
@@ -333,10 +335,10 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * Cleanup the value, so the value is valid
      *
-     * @param integer|string $value
+     * @param mixed $value
      * @return int|null
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): mixed
     {
         $check = [];
 
@@ -348,7 +350,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
                 $options = $this->getOptions();
                 $entries = $options['entries'];
 
-                foreach ($entries as $key => $entry) {
+                foreach ($entries as $entry) {
                     if ($entry['valueId'] == $value) {
                         return $value;
                     }
@@ -356,12 +358,11 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             }
 
             if (is_numeric($value)) {
-//                $value   = (int)$value;
                 $options = $this->getOptions();
                 $entries = $options['entries'];
 
                 // first check if a value id exists with this value
-                foreach ($entries as $key => $entry) {
+                foreach ($entries as $entry) {
                     if ($entry['valueId'] == $value) {
                         return $value;
                     }
@@ -397,7 +398,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
         }
 
 
-        if (empty($value) && !\is_int($value) && $value != 0) {
+        if (empty($value) && !is_int($value) && $value != 0) {
             return null;
         }
 
@@ -413,7 +414,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      *
      * @return array
      */
-    public function getSearchTypes()
+    public function getSearchTypes(): array
     {
         return [
             Search::SEARCHTYPE_TEXT,
@@ -426,9 +427,9 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * Get default search type
      *
-     * @return string
+     * @return string|null
      */
-    public function getDefaultSearchType()
+    public function getDefaultSearchType(): ?string
     {
         return Search::SEARCHTYPE_SELECTMULTI;
     }

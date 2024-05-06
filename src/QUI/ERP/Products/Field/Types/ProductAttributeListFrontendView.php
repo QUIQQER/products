@@ -8,6 +8,16 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 use QUI\ERP\Accounting\Calc as ErpCalc;
+use QUI\Exception;
+
+use function dirname;
+use function htmlspecialchars;
+use function is_array;
+use function is_numeric;
+use function is_string;
+use function json_decode;
+use function strtolower;
+use function strtoupper;
 
 /**
  * Class ProductAttributeList - Frontend VIEW
@@ -32,8 +42,9 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
      * Render the view, return the html
      *
      * @return string
+     * @throws Exception
      */
-    public function create()
+    public function create(): string
     {
         if (!$this->hasViewPermission()) {
             return '';
@@ -72,29 +83,22 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $requiredField = ' required="required"';
         }
 
-        if (\is_string($value)) {
-            $json = \json_decode($value, true);
+        if (is_string($value)) {
+            $json = json_decode($value, true);
 
-            if (\is_array($json)) {
+            if (is_array($json)) {
                 $value = $json[0];
             }
         }
 
-        if (!\is_string($value) && !\is_numeric($value)) {
+        if (!is_string($value) && !is_numeric($value)) {
             $value = '';
-        } elseif (\is_numeric($value)) {
+        } elseif (is_numeric($value)) {
             $value = (int)$value;
         }
 
-        $value = \htmlspecialchars($value);
-
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return '';
-        }
+        $value = htmlspecialchars($value);
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([
             'this' => $this,
@@ -107,30 +111,8 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
         // options
         $options = [];
-//
-//        $hasDefault = function () use ($entries) {
-//            foreach ($entries as $key => $option) {
-//                if (isset($option['selected']) && $option['selected']) {
-//                    return true;
-//                }
-//            }
-//
-//            return false;
-//        };
 
-//        if ($value === '' && !$hasDefault()) {
-//            $options[] = [
-//                'value'    => '',
-//                'text'     => QUI::getLocale()->get(
-//                    'quiqqer/products',
-//                    'fieldtype.ProductAttributeList.select.emptyvalue'
-//                ),
-//                'selected' => '',
-//                'data'     => ''
-//            ];
-//        }
-
-        $currentLC = \strtolower($current) . '_' . \strtoupper($current);
+        $currentLC = strtolower($current) . '_' . strtoupper($current);
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
         foreach ($entries as $key => $option) {
@@ -153,7 +135,7 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
                 $selected = '';
             }
 
-            if (\is_string($title)) {
+            if (is_string($title)) {
                 $text = $title;
             } elseif (isset($title[$current])) {
                 $text = $title[$current];
@@ -190,8 +172,8 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $options[] = [
                 'selected' => $selected,
                 'disabled' => $disabled,
-                'value' => \htmlspecialchars($key),
-                'text' => \htmlspecialchars($text),
+                'value' => htmlspecialchars($key),
+                'text' => htmlspecialchars($text),
                 'data' => $userInput
             ];
         }
@@ -199,13 +181,13 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
         $Engine->assign('options', $options);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ProductAttributeListFrontendView.html');
+        return $Engine->fetch(dirname(__FILE__) . '/ProductAttributeListFrontendView.html');
     }
 
     /**
      * @return string
      */
-    protected function notChangeableDisplay()
+    protected function notChangeableDisplay(): string
     {
         $current = QUI::getLocale()->getCurrent();
 
@@ -220,20 +202,12 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
             $entries = $options['entries'];
         }
 
-        if (!\is_string($value) && !\is_numeric($value)) {
+        if (!is_string($value) && !is_numeric($value)) {
             $value = '';
         }
 
-        $value = \htmlspecialchars($value);
-
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return '';
-        }
-
+        $value = htmlspecialchars($value);
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([
             'this' => $this,
@@ -244,13 +218,13 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
         ]);
 
         // options
-        $currentLC = \strtolower($current) . '_' . \strtoupper($current);
+        $currentLC = strtolower($current) . '_' . strtoupper($current);
 
         $option = $entries[$value];
         $title = $option['title'];
         $text = '';
 
-        if (\is_string($title)) {
+        if (is_string($title)) {
             $text = $title;
         } elseif (isset($title[$current])) {
             $text = $title[$current];
@@ -260,6 +234,6 @@ class ProductAttributeListFrontendView extends QUI\ERP\Products\Field\View
 
         $Engine->assign('valueText', $text);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ProductAttributeListFrontendViewNotChangeable.html');
+        return $Engine->fetch(dirname(__FILE__) . '/ProductAttributeListFrontendViewNotChangeable.html');
     }
 }

@@ -7,6 +7,9 @@
 namespace QUI\ERP\Products\Interfaces;
 
 use QUI;
+use QUI\ERP\Products\Field\Field;
+use QUI\Exception;
+use QUI\Interfaces\Users\User;
 
 /**
  * Interface Category
@@ -18,40 +21,40 @@ interface CategoryInterface extends QUI\QDOMInterface, CategoryViewInterface
      * Set a new parent to the category
      *
      * @param integer $parentId
-     * @throws \QUI\Exception
+     * @throws Exception
      */
-    public function setParentId($parentId);
+    public function setParentId(int $parentId): void;
 
     /**
      * Add a field to the category
      *
-     * @param \QUI\ERP\Products\Field\Field $Field
+     * @param Field $Field
      */
-    public function addField(QUI\ERP\Products\Field\Field $Field);
+    public function addField(Field $Field): void;
 
     /**
      * Set all field settings to all products in the category
      *
-     * @return mixed
+     * @return void
      */
-    public function setFieldsToAllProducts();
+    public function setFieldsToAllProducts(): void;
 
     /**
      * Clear the fields in the category
      */
-    public function clearFields();
+    public function clearFields(): void;
 
     /**
      * Delete the category
      *
-     * @param bool|\QUI\Interfaces\Users\User $User
+     * @param User|null $User $User
      */
-    public function delete($User = false);
+    public function delete(User $User = null): void;
 
     /**
      * Save the category
      *
-     * @param bool|\QUI\Interfaces\Users\User $User
+     * @param User|null $User $User
      */
-    public function save($User = false);
+    public function save(User $User = null): void;
 }

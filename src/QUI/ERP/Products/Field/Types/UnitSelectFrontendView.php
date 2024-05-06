@@ -4,6 +4,8 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 
+use function dirname;
+
 /**
  * Class UnitSelectFrontendView
  *
@@ -17,7 +19,7 @@ class UnitSelectFrontendView extends QUI\ERP\Products\Field\View
      * @return string
      * @throws QUI\Exception
      */
-    public function create()
+    public function create(): string
     {
         if (!$this->hasViewPermission()) {
             return '';
@@ -35,6 +37,6 @@ class UnitSelectFrontendView extends QUI\ERP\Products\Field\View
             'unitTitle' => $Field->getTitleByValue($value)
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/UnitSelectFrontendView.html');
+        return $Engine->fetch(dirname(__FILE__) . '/UnitSelectFrontendView.html');
     }
 }

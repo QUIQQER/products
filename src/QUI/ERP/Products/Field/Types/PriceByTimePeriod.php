@@ -4,6 +4,7 @@ namespace QUI\ERP\Products\Field\Types;
 
 use NumberFormatter;
 use QUI;
+use QUI\ERP\Products\Field\Exception;
 use QUI\ERP\Products\Field\View;
 
 use function date_create;
@@ -25,18 +26,20 @@ class PriceByTimePeriod extends Price
     /**
      * @var bool
      */
-    protected $searchable = false;
+    protected bool $searchable = false;
 
     /**
      * Return the price value
      *
      * @param QUI\ERP\Products\Interfaces\ProductInterface $Product
      * @param null $User
-     * @return integer|double|float|bool
+     * @return integer|float|bool
      * @throws QUI\Exception
      */
-    public function onGetPriceFieldForProduct($Product, $User = null)
-    {
+    public function onGetPriceFieldForProduct(
+        QUI\ERP\Products\Interfaces\ProductInterface $Product,
+        $User = null
+    ): float|bool|int {
         if (!QUI::getUsers()->isUser($User)) {
             $User = QUI::getUsers()->getNobody();
         }
@@ -48,10 +51,10 @@ class PriceByTimePeriod extends Price
      * Return the price value
      *
      * @param QUI\ERP\Products\Interfaces\ProductInterface $Product - optional
-     * @return integer|double|float|bool
+     * @return integer|float|bool
      * @throws QUI\Exception
      */
-    public function getValueDependendByProduct(QUI\ERP\Products\Interfaces\ProductInterface $Product)
+    public function getValueDependendByProduct(QUI\ERP\Products\Interfaces\ProductInterface $Product): float|bool|int
     {
         if (!QUI\ERP\Products\Utils\Products::isProduct($Product)) {
             return false;
@@ -89,7 +92,7 @@ class PriceByTimePeriod extends Price
         }
 
         $Now = date_create();
-        $Now->setTime(0, 0, 0);
+        $Now->setTime(0, 0);
 
         if ($From !== false && $From > $Now) {
             return false;
@@ -105,15 +108,16 @@ class PriceByTimePeriod extends Price
     /**
      * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new View($this->getAttributes());
     }
 
     /**
      * @return View
+     * @throws QUI\Exception
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         $value = $this->cleanup($this->getValue());
 
@@ -139,10 +143,10 @@ class PriceByTimePeriod extends Price
      *
      * Precision: 8 (important for currencies like BitCoin)
      *
-     * @param string|array $value
+     * @param mixed $value
      * @return array
      */
-    public function cleanup($value): array
+    public function cleanup(mixed $value): array
     {
         if (is_string($value)) {
             $value = json_decode($value, true);
@@ -207,9 +211,9 @@ class PriceByTimePeriod extends Price
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
@@ -219,7 +223,7 @@ class PriceByTimePeriod extends Price
             $value = json_decode($value, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new QUI\ERP\Products\Field\Exception([
+                throw new Exception([
                     'quiqqer/products',
                     'exception.field.invalid',
                     [
@@ -232,7 +236,7 @@ class PriceByTimePeriod extends Price
         }
 
         if (!is_array($value)) {
-            throw new QUI\ERP\Products\Field\Exception([
+            throw new Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
@@ -244,7 +248,7 @@ class PriceByTimePeriod extends Price
         }
 
         if (!isset($value['price']) || !isset($value['from']) || !isset($value['to'])) {
-            throw new QUI\ERP\Products\Field\Exception([
+            throw new Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
                 [

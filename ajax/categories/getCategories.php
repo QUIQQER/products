@@ -16,13 +16,13 @@ QUI::$Ajax->registerFunction(
     function ($categoryIds) {
         $Categories = new QUI\ERP\Products\Handler\Categories();
         $result = [];
-        $categoryIds = \json_decode($categoryIds, true);
+        $categoryIds = json_decode($categoryIds, true);
 
         foreach ($categoryIds as $categoryId) {
             try {
                 $Category = $Categories->getCategory($categoryId);
                 $result[] = $Category->getAttributes();
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 

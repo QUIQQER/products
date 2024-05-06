@@ -4,6 +4,8 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 
+use function dirname;
+
 /**
  * Class MultilangFrontendView
  *
@@ -15,9 +17,8 @@ class MultilangFrontendView extends QUI\ERP\Products\Field\View
      * Render the view, return the html
      *
      * @return string
-     * @throws QUI\Exception
      */
-    public function create()
+    public function create(): string
     {
         if (!$this->hasViewPermission()) {
             return '';
@@ -28,18 +29,13 @@ class MultilangFrontendView extends QUI\ERP\Products\Field\View
         /** @var UnitSelect $Field */
         $value = $this->getValue();
         $current = QUI::getLocale()->getCurrent();
-
-        if (isset($value[$current])) {
-            $value = $value[$current];
-        } else {
-            $value = $value[0];
-        }
+        $value = $value[$current] ?? $value[0];
 
         $Engine->assign([
             'title' => $this->getTitle(),
             'value' => $value
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/MultilangFrontendView.html');
+        return $Engine->fetch(dirname(__FILE__) . '/MultilangFrontendView.html');
     }
 }

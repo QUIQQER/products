@@ -48,7 +48,7 @@ interface PriceFactorInterface
     /**
      * @return integer|float
      */
-    public function getValue();
+    public function getValue(): float|int;
 
     /**
      * @return string
@@ -67,22 +67,22 @@ interface PriceFactorInterface
      *
      * @param string $title
      */
-    public function setTitle(string $title);
+    public function setTitle(string $title): void;
 
     /**
      * Set the title
      *
      * @param string $description
      */
-    public function setDescription(string $description);
+    public function setDescription(string $description): void;
 
     /**
-     * The the value for the calculation
+     * The value for the calculation
      * 10 -> 10%, 10€, 10$
      *
-     * @param integer|float $value - value to calc
+     * @param float|integer $value - value to calc
      */
-    public function setValue($value);
+    public function setValue(float|int $value): void;
 
     /**
      * The text for the value presentation
@@ -90,21 +90,21 @@ interface PriceFactorInterface
      *
      * @param string $value
      */
-    public function setValueText(string $value);
+    public function setValueText(string $value): void;
 
     /**
      * Set the priority of the calculation
      *
      * @param int $priority
      */
-    public function setPriority(int $priority);
+    public function setPriority(int $priority): void;
 
     /**
      * Set the calculation type / method
      *
      * @param int $calculation - Calc::CALCULATION_COMPLEMENT, Calc::CALCULATION_PERCENTAGE
      */
-    public function setCalculation(int $calculation);
+    public function setCalculation(int $calculation): void;
 
     /**
      * Set the calculation basis
@@ -113,19 +113,19 @@ interface PriceFactorInterface
      *
      * @param int $basis -  Calc::CALCULATION_BASIS_NETTO, Calc::CALCULATION_BASIS_CURRENTPRICE
      */
-    public function setCalculationBasis(int $basis);
+    public function setCalculationBasis(int $basis): void;
 
     /**
      * Set the netto sum
      *
-     * @param int|float $sum - sum
+     * @param float|int $sum - sum
      */
-    public function setNettoSum($sum);
+    public function setNettoSum(float|int $sum): void;
 
     /**
      * @return bool|int|float
      */
-    public function getNettoSum();
+    public function getNettoSum(): float|bool|int;
 
     /**
      * @return string
@@ -135,19 +135,19 @@ interface PriceFactorInterface
     /**
      * Set the calculated sum
      *
-     * @param int|float $sum - sum
+     * @param float|int $sum - sum
      */
-    public function setSum($sum);
+    public function setSum(float|int $sum): void;
 
     /**
      * @return bool|int|float
      */
-    public function getSum();
+    public function getSum(): float|bool|int;
 
     /**
      * @param string $currencyCode
      */
-    public function setCurrency(string $currencyCode);
+    public function setCurrency(string $currencyCode): void;
 
     /**
      * @return QUI\ERP\Currency\Currency

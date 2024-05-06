@@ -13,7 +13,7 @@ use QUI\ERP\Products\Handler\Search as SearchHandler;
  * @param integer $siteId
  * @param string $project
  *
- * @return array - searchfields after set
+ * @return array - search fields after set
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_search_frontend_setSearchFields',
@@ -27,7 +27,7 @@ QUI::$Ajax->registerFunction(
 
         $FrontEndSearch = SearchHandler::getFrontendSearch($Site);
         $searchFields = QUI\Utils\Security\Orthos::clearArray(
-            \json_decode($searchFields, true)
+            json_decode($searchFields, true)
         );
 
         return $FrontEndSearch->setSearchFields($searchFields);

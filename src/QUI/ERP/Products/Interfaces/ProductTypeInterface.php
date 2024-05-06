@@ -6,6 +6,8 @@
 
 namespace QUI\ERP\Products\Interfaces;
 
+use QUI\Locale;
+
 /**
  * Interface ProductTypeInterface
  *
@@ -16,28 +18,28 @@ interface ProductTypeInterface
     /**
      * Return the title of the product type
      *
-     * @param null $Locale
-     * @return mixed
+     * @param Locale|null $Locale
+     * @return string
      */
-    public static function getTypeTitle($Locale = null);
+    public static function getTypeTitle(Locale $Locale = null): string;
 
     /**
      * Return the description of the product type
      *
-     * @param null $Locale
-     * @return mixed
+     * @param Locale|null $Locale
+     * @return string
      */
-    public static function getTypeDescription($Locale = null);
+    public static function getTypeDescription(?Locale $Locale = null): string;
 
     /**
      * Return the backend panel
      *
      * @return string
      */
-    public static function getTypeBackendPanel();
+    public static function getTypeBackendPanel(): string;
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public static function isTypeSelectable();
+    public static function isTypeSelectable(): bool;
 }

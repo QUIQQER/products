@@ -4,6 +4,7 @@
  * This file contains package_quiqqer_products_ajax_products_variant_getVariantFields
  */
 
+use QUI\ERP\Products\Field\Field;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Types\VariantParent;
@@ -24,12 +25,11 @@ QUI::$Ajax->registerFunction(
         }
 
         $fields = $Product->getFieldsByType(Fields::TYPE_ATTRIBUTES);
-        $fields = \array_map(function ($Field) {
-            /* @var $Field \QUI\ERP\Products\Field\Field */
+
+        return array_map(function ($Field) {
+            /* @var $Field Field */
             return $Field->getAttributes();
         }, $fields);
-
-        return $fields;
     },
     ['productId'],
     'Permission::checkAdminUser'

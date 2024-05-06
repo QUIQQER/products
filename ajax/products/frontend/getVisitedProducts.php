@@ -13,7 +13,7 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getVisitedProducts',
     function ($productIds, $currentProductId) {
-        $productIds = \json_decode($productIds, true);
+        $productIds = json_decode($productIds, true);
         $Products = new QUI\ERP\Products\Handler\Products();
         $Control = new QUI\ERP\Products\Controls\Products\VisitedProducts();
 
@@ -22,7 +22,7 @@ QUI::$Ajax->registerFunction(
         }
 
         foreach ($productIds as $productId) {
-            if (empty($productId) || !\is_numeric($productId)) {
+            if (empty($productId) || !is_numeric($productId)) {
                 continue;
             }
 
@@ -44,7 +44,7 @@ QUI::$Ajax->registerFunction(
                 $View->getMinimumPrice();
 
                 $Control->addProduct($View);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 

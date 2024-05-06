@@ -23,7 +23,7 @@ class DateFrontendView extends View
      *
      * @return string
      */
-    public function create()
+    public function create(): string
     {
         if (!$this->hasViewPermission()) {
             return '';
@@ -34,8 +34,8 @@ class DateFrontendView extends View
         $date = QUI::getLocale()->formatDate($this->getValue());
 
         return "<div class=\"quiqqer-product-field\">
-            <div class=\"quiqqer-product-field-title\">{$title}</div>
-            <div class=\"quiqqer-product-field-value\">{$date}</div>
+            <div class=\"quiqqer-product-field-title\">$title</div>
+            <div class=\"quiqqer-product-field-value\">$date</div>
         </div>";
     }
 }
