@@ -79,7 +79,7 @@ QUI::$Ajax->registerFunction(
                 $result .= '</label>';
             }
 
-            if (\count($ProductList->getFilter())) {
+            if (count($ProductList->getFilter())) {
                 if ($result !== '') {
                     $result .= '<header>';
                     $result .= '<h2>';

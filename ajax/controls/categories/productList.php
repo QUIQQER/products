@@ -19,7 +19,7 @@ QUI::$Ajax->registerFunction(
     function ($project, $siteId, $categoryId, $productLoadNumber, $view, $searchParams, $next, $articles) {
         try {
             Categories::getCategory($categoryId);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             $categoryId = false;
         }
 
@@ -30,7 +30,7 @@ QUI::$Ajax->registerFunction(
             'categoryId' => $categoryId,
             'view' => $view,
             'Site' => $Site,
-            'searchParams' => \json_decode($searchParams, true),
+            'searchParams' => json_decode($searchParams, true),
             'productLoadNumber' => $productLoadNumber
         ]);
 
@@ -40,6 +40,5 @@ QUI::$Ajax->registerFunction(
 
         return $Control->getStart();
     },
-    ['project', 'siteId', 'categoryId', 'productLoadNumber', 'view', 'searchParams', 'next', 'articles'],
-    false
+    ['project', 'siteId', 'categoryId', 'productLoadNumber', 'view', 'searchParams', 'next', 'articles']
 );

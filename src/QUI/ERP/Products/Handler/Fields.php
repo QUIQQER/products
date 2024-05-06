@@ -1199,7 +1199,7 @@ class Fields
     /**
      * Get all price field types.
      *
-     * @return QUI\ERP\Products\Field\Types\Price[]
+     * @return array
      */
     public static function getAllPriceFieldTypes(): array
     {

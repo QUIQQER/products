@@ -7,6 +7,10 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\Exception;
+
+use function explode;
+use function is_numeric;
 
 /**
  * Class FloatType
@@ -17,17 +21,17 @@ class Vat extends QUI\ERP\Products\Field\Field
     /**
      * @var string
      */
-    protected $columnType = 'SMALLINT';
+    protected string $columnType = 'SMALLINT';
 
     /**
      * @var bool
      */
-    protected $searchable = false;
+    protected bool $searchable = false;
 
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/Vat';
     }
@@ -35,7 +39,7 @@ class Vat extends QUI\ERP\Products\Field\Field
     /**
      * Return the frontend view
      */
-    public function getFrontendView()
+    public function getFrontendView(): VatFrontendView
     {
         return new VatFrontendView($this->getFieldDataForView());
     }
@@ -45,16 +49,16 @@ class Vat extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
         }
 
-        if (\strpos($value, ':') !== false) {
-            $value = \explode(':', $value);
+        if (str_contains($value, ':')) {
+            $value = explode(':', $value);
 
             if (isset($value[1])) {
                 $value = (int)$value[1];
@@ -63,8 +67,8 @@ class Vat extends QUI\ERP\Products\Field\Field
             }
         }
 
-        if (!\is_numeric($value)) {
-            throw new QUI\ERP\Products\Field\Exception([
+        if (!is_numeric($value)) {
+            throw new Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
@@ -87,8 +91,8 @@ class Vat extends QUI\ERP\Products\Field\Field
 
         try {
             $Taxes->getTaxType($value);
-        } catch (QUI\Exception $Exception) {
-            throw new QUI\ERP\Products\Field\Exception([
+        } catch (QUI\Exception) {
+            throw new Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
@@ -106,20 +110,15 @@ class Vat extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @return integer
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): int
     {
-        if ($value === '') {
+        if (empty($value)) {
             return -1;
         }
 
-        if (\strpos($value, ':') !== false) {
-            $value = \explode(':', $value);
-
-            if (isset($value[1])) {
-                $value = $value[1];
-            } else {
-                $value = -1;
-            }
+        if (str_contains($value, ':')) {
+            $value = explode(':', $value);
+            $value = $value[1] ?? -1;
         }
 
         return (int)$value;

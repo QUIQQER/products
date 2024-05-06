@@ -28,7 +28,7 @@ class Price extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         $this->setAttributes([
             'data-qui' => 'package/quiqqer/products/bin/controls/frontend/Price',
@@ -43,20 +43,11 @@ class Price extends QUI\Control
     }
 
     /**
-     * (non-PHPdoc)
-     *
      * @throws QUI\Exception
-     * @see \QUI\Control::create()
      */
     public function getBody(): string
     {
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return '';
-        }
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             $this->setAttributes([

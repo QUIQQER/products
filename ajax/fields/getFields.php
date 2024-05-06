@@ -15,7 +15,7 @@ use QUI\ERP\Products\Handler\Fields;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_fields_getFields',
     function ($fieldIds) {
-        $fieldIds = \json_decode($fieldIds, true);
+        $fieldIds = json_decode($fieldIds, true);
         $result = [];
 
         foreach ($fieldIds as $fieldId) {

@@ -5,9 +5,9 @@
  */
 
 /**
- * Delete a Produkt
+ * Delete a Product
  *
- * @param string $productId - Produkt-ID
+ * @param string $productId - Product-ID
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_deleteChild',

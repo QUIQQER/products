@@ -11,6 +11,9 @@
  *
  * @return array
  */
+
+use QUI\ERP\Products\Product\Product;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_list',
     function ($params) {
@@ -20,32 +23,32 @@ QUI::$Ajax->registerFunction(
         $Grid = new QUI\Utils\Grid();
 
         $data = $Products->getProducts(
-            $Grid->parseDBParams(\json_decode($params, true))
+            $Grid->parseDBParams(json_decode($params, true))
         );
 
-        /* @var $Product \QUI\ERP\Products\Product\Product */
+        /* @var $Product Product */
         foreach ($data as $Product) {
             $attributes = $Product->getAttributes();
 
             try {
                 $attributes['title'] = $Product->getTitle();
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
 
             try {
                 $attributes['description'] = $Product->getDescription();
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
 
             try {
                 $attributes['price'] = $Product->getPrice()->value();
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
 
             $result[] = $attributes;
         }
 
-        \usort($result, function ($a, $b) {
+        usort($result, function ($a, $b) {
             return $a['title'] > $b['title'];
         });
 

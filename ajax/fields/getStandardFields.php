@@ -9,6 +9,9 @@
  *
  * @return array
  */
+
+use QUI\ERP\Products\Field\Field;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_fields_getStandardFields',
     function () {
@@ -16,7 +19,7 @@ QUI::$Ajax->registerFunction(
         $fields = $Fields->getStandardFields();
         $result = [];
 
-        /* @var $Field \QUI\ERP\Products\Field\Field */
+        /* @var $Field Field */
         foreach ($fields as $Field) {
             $result[] = $Field->getAttributes();
         }

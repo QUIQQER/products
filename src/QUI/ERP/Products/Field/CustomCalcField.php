@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Field;
 
 use QUI;
 use QUI\ERP\Products\Handler\Products;
+use QUI\Locale;
 
 /**
  * Class CustomField
@@ -21,23 +22,23 @@ abstract class CustomCalcField extends QUI\ERP\Products\Field\Field implements C
      *
      * return array(
      *     priority      // the priority of the calculation
-     *     basis         // from which price should calculated - netto or calculated
+     *     basis         // from which price should calculate - netto or calculated
      *     value
      *     calculation
      *     valueText     // text for value presentation (optional)
      * );
      *
-     * @param \QUI\Locale|null $Locale
+     * @param Locale|null $Locale
      * @return array
      */
-    abstract public function getCalculationData($Locale = null);
+    abstract public function getCalculationData(Locale $Locale = null): array;
 
     /**
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
-        $attributes                = parent::getAttributes();
+        $attributes = parent::getAttributes();
         $attributes['custom_calc'] = $this->getCalculationData(Products::getLocale());
 
         if (isset($attributes['custom_calc']['valueText'])) {
@@ -52,7 +53,7 @@ abstract class CustomCalcField extends QUI\ERP\Products\Field\Field implements C
      *
      * @return boolean
      */
-    public function isCustomField()
+    public function isCustomField(): bool
     {
         return true;
     }

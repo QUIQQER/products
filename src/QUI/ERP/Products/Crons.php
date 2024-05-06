@@ -29,6 +29,7 @@ class Crons
 
     /**
      * Updates cache values for all products
+     * @throws Exception
      */
     public static function updateProductCache(): void
     {

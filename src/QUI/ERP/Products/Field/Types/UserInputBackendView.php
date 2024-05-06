@@ -4,6 +4,9 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 
+use function dirname;
+use function file_get_contents;
+
 /**
  * Class UserInputBackendView - Backend VIEW
  */
@@ -14,22 +17,16 @@ class UserInputBackendView extends QUI\ERP\Products\Field\View
      *
      * @return string
      */
-    public function create()
+    public function create(): string
     {
         $id = $this->getId();
         $options = $this->getOptions();
-
         $name = 'field-' . $id;
 
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-            return '';
-        }
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([
-            'css' => \file_get_contents(\dirname(__FILE__) . '/UserInputBackendView.css'),
+            'css' => file_get_contents(dirname(__FILE__) . '/UserInputBackendView.css'),
             'this' => $this,
             'id' => $id,
             'title' => $this->getTitle(),
@@ -38,6 +35,6 @@ class UserInputBackendView extends QUI\ERP\Products\Field\View
             'options' => $options
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/UserInputBackendView.html');
+        return $Engine->fetch(dirname(__FILE__) . '/UserInputBackendView.html');
     }
 }

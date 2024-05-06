@@ -34,7 +34,7 @@ QUI::$Ajax->registerFunction(
             }
 
             return $attributes;
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             throw $Exception;
         }

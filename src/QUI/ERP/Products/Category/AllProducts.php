@@ -8,11 +8,14 @@ namespace QUI\ERP\Products\Category;
 
 use QUI;
 use QUI\ERP\Products\Handler\Products;
+use QUI\Exception;
+
+use function is_array;
 
 /**
  * Class AllProducts
  * This category is to access all products
- * Its a virtual category
+ * It's a virtual category
  *
  * @package QUI\ERP\Products\Category
  */
@@ -41,7 +44,7 @@ class AllProducts extends Category
      *                              $queryParams['debug']
      * @return array
      */
-    public function getProducts($params = [])
+    public function getProducts(array $params = []): array
     {
         $query = [
             'limit' => 20
@@ -76,7 +79,7 @@ class AllProducts extends Category
      *                              $queryParams['debug']
      * @return array
      */
-    public function getProductIds($params = [])
+    public function getProductIds(array $params = []): array
     {
         $query = [];
 
@@ -107,9 +110,9 @@ class AllProducts extends Category
      *                              $queryParams['debug']
      * @return integer
      */
-    public function countProducts($params = [])
+    public function countProducts(array $params = []): int
     {
-        if (!\is_array($params)) {
+        if (!is_array($params)) {
             $params = [];
         }
 
@@ -128,8 +131,9 @@ class AllProducts extends Category
 
     /**
      * @return array
+     * @throws Exception
      */
-    public function getFields()
+    public function getFields(): array
     {
         return QUI\ERP\Products\Search\Utils::getDefaultFrontendFields();
     }
@@ -140,7 +144,7 @@ class AllProducts extends Category
      *
      * @param bool|QUI\Interfaces\Users\User $User
      */
-    public function save($User = false)
+    public function save($User = false): void
     {
         // do nothing
     }
@@ -151,7 +155,7 @@ class AllProducts extends Category
      *
      * @param bool|QUI\Interfaces\Users\User $User
      */
-    public function delete($User = false)
+    public function delete($User = false): void
     {
         // do nothing
     }
@@ -162,7 +166,7 @@ class AllProducts extends Category
      *
      * @param int $parentId
      */
-    public function setParentId($parentId)
+    public function setParentId(int $parentId): void
     {
         // do nothing
     }

@@ -19,7 +19,7 @@ QUI::$Ajax->registerFunction(
             try {
                 QUI::getPackage($pkg);
                 $packages[$pkg] = true;
-            } catch (\Exception $Exception) {
+            } catch (Exception) {
                 // nothing, package is not installed
             }
         }

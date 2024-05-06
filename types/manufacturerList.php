@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file contains the manufacturer site type
+ *
+ * @var QUI\Projects\Project $Project
+ * @var QUI\Projects\Site $Site
+ * @var QUI\Interfaces\Template\EngineInterface $Engine
+ * @var QUI\Template $Template
+ **/
+
 use QUI\ERP\Products\Controls\Category\ProductList;
 use QUI\ERP\Products\Controls\ManufacturerList\ManufacturerList;
 use QUI\ERP\Products\Handler\Fields;
@@ -21,7 +30,7 @@ if ($siteUrl !== $requestUrl) {
     try {
         $ManufacturerUser = QUI::getUsers()->getUserByName($manufacturerUsername);
 
-        if (!Manufacturers::isManufacturer($ManufacturerUser->getId())) {
+        if (!Manufacturers::isManufacturer($ManufacturerUser->getUUID())) {
             $ManufacturerUser = false;
         }
 
@@ -93,7 +102,7 @@ if ($siteUrl !== $requestUrl) {
             }
         }
 
-        $Engine->assign('manufacturerTitle', Manufacturers::getManufacturerTitle($ManufacturerUser->getId()));
+        $Engine->assign('manufacturerTitle', Manufacturers::getManufacturerTitle($ManufacturerUser->getUUID()));
     } catch (\Exception $Exception) {
         QUI\System\Log::writeDebugException($Exception);
     }

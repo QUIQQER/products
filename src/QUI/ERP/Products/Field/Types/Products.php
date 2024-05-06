@@ -7,8 +7,11 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\Exception;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Products as ProductHandler;
+
+use function is_array;
 
 /**
  * Class Products
@@ -19,17 +22,17 @@ class Products extends QUI\ERP\Products\Field\Field
     /**
      * @var bool
      */
-    protected $searchable = false;
+    protected bool $searchable = false;
 
     /**
      * @var bool
      */
-    protected $showInDetails = true;
+    protected bool $showInDetails = true;
 
     /**
      * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new View($this->getFieldDataForView());
     }
@@ -37,7 +40,7 @@ class Products extends QUI\ERP\Products\Field\Field
     /**
      * @return View
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         return new View($this->getFieldDataForView());
     }
@@ -45,7 +48,7 @@ class Products extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/Products';
     }
@@ -55,16 +58,16 @@ class Products extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param array $value
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate($value): void
     {
         if (empty($value)) {
             return;
         }
 
-        if (!\is_array($value)) {
-            throw new QUI\ERP\Products\Field\Exception([
+        if (!is_array($value)) {
+            throw new Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
@@ -79,12 +82,12 @@ class Products extends QUI\ERP\Products\Field\Field
     /**
      * Clean up the product ids
      *
-     * @param array $value - [productId, productId, productId]
+     * @param mixed $value - [productId, productId, productId]
      * @return array
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): array
     {
-        if (!\is_array($value)) {
+        if (!is_array($value)) {
             return [];
         }
 
@@ -102,7 +105,7 @@ class Products extends QUI\ERP\Products\Field\Field
     /**
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return true;
     }

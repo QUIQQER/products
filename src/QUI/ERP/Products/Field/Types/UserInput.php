@@ -3,6 +3,18 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\Exception;
+use QUI\ERP\Products\Field\View;
+
+use function is_numeric;
+use function is_string;
+use function json_decode;
+use function json_last_error;
+use function mb_substr;
+use function preg_replace;
+use function strip_tags;
+
+use const JSON_ERROR_NONE;
 
 /**
  * Class UserInput
@@ -14,17 +26,17 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
     /**
      * @var bool
      */
-    protected $searchable = false;
+    protected bool $searchable = false;
 
     /**
      * @var null
      */
-    protected $defaultValue = null;
+    protected mixed $defaultValue = null;
 
     /**
      * @var array
      */
-    protected $disabled = [];
+    protected array $disabled = [];
 
     /**
      * Attribute group constructor.
@@ -32,7 +44,7 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
      * @param int $fieldId
      * @param array $params
      */
-    public function __construct($fieldId, array $params)
+    public function __construct(int $fieldId, array $params)
     {
         $this->setOptions([
             'inputType' => 'input', // "input", "input_inline", "textarea"
@@ -47,7 +59,7 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
      *
      * @return UserInputFrontendView
      */
-    public function getFrontendView()
+    public function getFrontendView(): UserInputFrontendView
     {
         $View = new UserInputFrontendView(
             $this->getFieldDataForView()
@@ -61,9 +73,9 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
     /**
      * Return the view for the backend
      *
-     * @return \QUI\ERP\Products\Field\View
+     * @return UserInputBackendView|View
      */
-    public function getBackendView()
+    public function getBackendView(): UserInputBackendView|View
     {
         $View = new UserInputBackendView(
             $this->getFieldDataForView()
@@ -77,7 +89,7 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/UserInput';
     }
@@ -85,30 +97,29 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
     /**
      * @return string
      */
-    public function getJavaScriptSettings()
+    public function getJavaScriptSettings(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/UserInputSettings';
     }
-
 
     /**
      * Check the value
      * is the value valid for the field type?
      *
      * @param integer|string $value - User value = "[key, user value]"
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate($value): void
     {
         if (empty($value)) {
             return;
         }
 
-        if (\is_string($value) || \is_numeric($value)) {
+        if (is_string($value) || is_numeric($value)) {
             return;
         }
 
-        throw new QUI\ERP\Products\Field\Exception([
+        throw new Exception([
             'quiqqer/products',
             'exception.field.invalid',
             [
@@ -122,33 +133,32 @@ class UserInput extends QUI\ERP\Products\Field\CustomInputField
     /**
      * Cleanup the value, so the value is valid
      *
-     * @param integer|string $value
-     * @return int|null
+     * @param mixed $value
+     * @return string|null
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): ?string
     {
         if (empty($value)) {
             return null;
         }
 
-        if (!\is_string($value) && !\is_numeric($value)) {
+        if (!is_string($value) && !is_numeric($value)) {
             return null;
         }
 
-        if (\is_string($value)) {
-            $valueJsonDecoded = \json_decode($value, true);
+        if (is_string($value)) {
+            $valueJsonDecoded = json_decode($value, true);
 
-            if (\json_last_error() === \JSON_ERROR_NONE) {
+            if (json_last_error() === JSON_ERROR_NONE) {
                 $value = $valueJsonDecoded;
             }
         }
 
         // Remove everything that could be dangerous.
-        $value = \preg_replace("/[^\p{L}\p{N}\p{M}\n ]/ui", '', $value);
-        $value = \strip_tags($value);
-        $value = \mb_substr($value, 0, (int)$this->getOption('maxCharacters'));
+        $value = preg_replace("/[^\p{L}\p{N}\p{M}\n ]/ui", '', $value);
+        $value = strip_tags($value);
 
-        return $value;
+        return mb_substr($value, 0, (int)$this->getOption('maxCharacters'));
     }
 
     /**

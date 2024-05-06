@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Return the html for a prduct list
+ * Return the html for a product list
  *
  * @param string $project - JSON project params
  *
@@ -19,7 +19,7 @@ QUI::$Ajax->registerFunction(
         $Control = new ManufacturerList([
             'view' => $view,
             'Site' => $Site,
-            'searchParams' => \json_decode($searchParams, true)
+            'searchParams' => json_decode($searchParams, true)
         ]);
 
         if ($next) {
@@ -28,6 +28,5 @@ QUI::$Ajax->registerFunction(
 
         return $Control->getStart();
     },
-    ['project', 'siteId', 'view', 'searchParams', 'next', 'articles'],
-    false
+    ['project', 'siteId', 'view', 'searchParams', 'next', 'articles']
 );

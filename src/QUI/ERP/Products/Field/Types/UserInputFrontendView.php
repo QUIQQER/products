@@ -4,6 +4,9 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 
+use function dirname;
+use function file_get_contents;
+
 /**
  * Class UserInputFrontendView - Frontend VIEW
  *
@@ -18,7 +21,7 @@ class UserInputFrontendView extends QUI\ERP\Products\Field\View
      *
      * @return string
      */
-    public function create()
+    public function create(): string
     {
         if (!$this->hasViewPermission()) {
             return '';
@@ -26,18 +29,12 @@ class UserInputFrontendView extends QUI\ERP\Products\Field\View
 
         $id = $this->getId();
         $options = $this->getOptions();
-
         $name = 'field-' . $id;
 
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-            return '';
-        }
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         $Engine->assign([
-            'css' => \file_get_contents(\dirname(__FILE__) . '/UserInputFrontendView.css'),
+            'css' => file_get_contents(dirname(__FILE__) . '/UserInputFrontendView.css'),
             'this' => $this,
             'id' => $id,
             'title' => $this->getTitle(),
@@ -46,6 +43,6 @@ class UserInputFrontendView extends QUI\ERP\Products\Field\View
             'options' => $options
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/UserInputFrontendView.html');
+        return $Engine->fetch(dirname(__FILE__) . '/UserInputFrontendView.html');
     }
 }

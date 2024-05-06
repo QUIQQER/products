@@ -11,17 +11,20 @@
  *
  * @return array
  */
+
+use QUI\ERP\Products\Field\Field;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_fields_list',
     function ($params) {
         $Fields = new QUI\ERP\Products\Handler\Fields();
         $result = [];
-        $params = \json_decode($params, true);
+        $params = json_decode($params, true);
 
         $Grid = new QUI\Utils\Grid();
         $query = $Grid->parseDBParams($params);
 
-        if (isset($params['type']) && !empty($params['type'])) {
+        if (!empty($params['type'])) {
             $query['where']['type'] = $params['type'];
         }
 
@@ -34,7 +37,7 @@ QUI::$Ajax->registerFunction(
 
         $data = $Fields->getFields($query);
 
-        /* @var $Field \QUI\ERP\Products\Field\Field */
+        /* @var $Field Field */
         foreach ($data as $Field) {
             $attributes = $Field->getAttributes();
 

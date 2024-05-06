@@ -9,6 +9,8 @@ namespace QUI\ERP\Products\Field\Types;
 use QUI;
 use QUI\ERP\Products\Field\View;
 
+use function htmlspecialchars;
+
 /**
  * Class DateFrontendView
  *
@@ -21,7 +23,7 @@ class VatFrontendView extends View
      *
      * @return string
      */
-    public function create()
+    public function create(): string
     {
         if (!$this->hasViewPermission()) {
             return '';
@@ -40,16 +42,16 @@ class VatFrontendView extends View
                     'tax' => $Tax->getValue(),
                     'title' => $TaxType->getTitle()
                 ]);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 
-        $title = \htmlspecialchars($this->getTitle());
-        $title = \htmlspecialchars($title);
+        $title = htmlspecialchars($this->getTitle());
+        $title = htmlspecialchars($title);
 
         return "<div class=\"quiqqer-product-field\">
-            <div class=\"quiqqer-product-field-title\">{$title}</div>
-            <div class=\"quiqqer-product-field-value\">{$taxTitle}</div>
+            <div class=\"quiqqer-product-field-title\">$title</div>
+            <div class=\"quiqqer-product-field-value\">$taxTitle</div>
         </div>";
     }
 }

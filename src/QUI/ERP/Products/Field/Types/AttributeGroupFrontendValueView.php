@@ -20,7 +20,7 @@ class AttributeGroupFrontendValueView extends QUI\ERP\Products\Field\View
      *
      * @return string
      */
-    public function create()
+    public function create(): string
     {
         if (!$this->hasViewPermission()) {
             return '';
@@ -42,13 +42,7 @@ class AttributeGroupFrontendValueView extends QUI\ERP\Products\Field\View
             $value = '';
         }
 
-        try {
-            $Engine = QUI::getTemplateManager()->getEngine();
-        } catch (QUI\Exception $Exception) {
-            QUI\System\Log::writeDebugException($Exception);
-
-            return '';
-        }
+        $Engine = QUI::getTemplateManager()->getEngine();
 
         foreach ($entries as $entry) {
             if ($entry['valueId'] !== $value) {

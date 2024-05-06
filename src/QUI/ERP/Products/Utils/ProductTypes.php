@@ -9,6 +9,10 @@ namespace QUI\ERP\Products\Utils;
 use QUI;
 use QUI\Utils\Singleton;
 
+use function array_filter;
+use function array_merge;
+use function is_a;
+
 /**
  * Class ProductTypes
  *
@@ -21,7 +25,7 @@ class ProductTypes extends Singleton
      *
      * @return array
      */
-    public function getProductTypes()
+    public function getProductTypes(): array
     {
         $cache = QUI\ERP\Products\Handler\Cache::getBasicCachePath() . 'types';
 
@@ -45,7 +49,7 @@ class ProductTypes extends Singleton
                 $packageProvider = $Package->getProvider();
 
                 if (isset($packageProvider['productType'])) {
-                    $provider = \array_merge($provider, $packageProvider['productType']);
+                    $provider = array_merge($provider, $packageProvider['productType']);
                 }
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
@@ -73,8 +77,8 @@ class ProductTypes extends Singleton
             QUI\System\Log::writeDebugException($Exception);
         }
 
-        $variantParentTypes = \array_filter($this->getProductTypes(), function ($productType) {
-            return \is_a($productType, QUI\ERP\Products\Product\Types\VariantParent::class, true);
+        $variantParentTypes = array_filter($this->getProductTypes(), function ($productType) {
+            return is_a($productType, QUI\ERP\Products\Product\Types\VariantParent::class, true);
         });
 
         QUI\Cache\LongTermCache::set($cache, $variantParentTypes);
@@ -97,8 +101,8 @@ class ProductTypes extends Singleton
             QUI\System\Log::writeDebugException($Exception);
         }
 
-        $variantChildTypes = \array_filter($this->getProductTypes(), function ($productType) {
-            return \is_a($productType, QUI\ERP\Products\Product\Types\VariantChild::class, true);
+        $variantChildTypes = array_filter($this->getProductTypes(), function ($productType) {
+            return is_a($productType, QUI\ERP\Products\Product\Types\VariantChild::class, true);
         });
 
         QUI\Cache\LongTermCache::set($cache, $variantChildTypes);
@@ -112,7 +116,7 @@ class ProductTypes extends Singleton
      * @param string $productType
      * @return bool
      */
-    public function exists($productType)
+    public function exists(string $productType): bool
     {
         $productTypes = $this->getProductTypes();
         $productType = trim($productType, '\\');

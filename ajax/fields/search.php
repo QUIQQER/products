@@ -11,6 +11,9 @@
  *
  * @return array
  */
+
+use QUI\ERP\Products\Field\Field;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_fields_search',
     function ($fields, $params) {
@@ -18,10 +21,10 @@ QUI::$Ajax->registerFunction(
         $result = [];
 
         $query = [];
-        $params = \json_decode($params, true);
-        $fields = \json_decode($fields, true);
+        $params = json_decode($params, true);
+        $fields = json_decode($fields, true);
 
-        if (!\is_array($fields)) {
+        if (!is_array($fields)) {
             $fields = [];
         }
 
@@ -34,7 +37,7 @@ QUI::$Ajax->registerFunction(
         }
 
         $allowedFields = $Fields->getChildAttributes();
-        $allowedFields = \array_flip($allowedFields);
+        $allowedFields = array_flip($allowedFields);
 
         foreach ($fields as $field => $value) {
             if (!isset($allowedFields[$field]) && $field != 'id') {
@@ -50,7 +53,7 @@ QUI::$Ajax->registerFunction(
         // search
         $data = $Fields->getFields($query);
 
-        /* @var $Field \QUI\ERP\Products\Field\Field */
+        /* @var $Field Field */
         foreach ($data as $Field) {
             $entry = $Field->getAttributes();
             $entry['title'] = $Field->getTitle();
@@ -58,7 +61,7 @@ QUI::$Ajax->registerFunction(
             $result[] = $entry;
         }
 
-        \usort($result, function ($a, $b) {
+        usort($result, function ($a, $b) {
             return $a['title'] > $b['title'];
         });
 

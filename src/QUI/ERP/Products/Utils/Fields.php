@@ -56,7 +56,7 @@ class Fields
                 self::validateField($Field);
 
                 $result[] = $Field->toProductArray();
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 
@@ -238,7 +238,7 @@ class Fields
         /**
          * @param QUI\ERP\Products\Field\Field $Field
          * @param string $field
-         * @return mixed
+         * @return int|string
          */
         $getFieldSortValue = function (QUI\ERP\Products\Field\Field $Field, string $field) {
             if ($field === 'id') {
@@ -470,7 +470,7 @@ class Fields
     }
 
     /**
-     * Parses the term unit to human readable term
+     * Parses the term unit to human-readable term
      *
      * egt = >=
      *

@@ -39,7 +39,7 @@ class Tables
      *
      * @return string
      */
-    public static function getProductTableName()
+    public static function getProductTableName(): string
     {
         return QUI::getDBTableName(self::PRODUCTS);
     }
@@ -47,7 +47,7 @@ class Tables
     /**
      * @return string
      */
-    public static function getProductCacheTableName()
+    public static function getProductCacheTableName(): string
     {
         return QUI::getDBTableName(self::PRODUCTS_CACHE);
     }
@@ -57,7 +57,7 @@ class Tables
      *
      * @return string
      */
-    public static function getFieldTableName()
+    public static function getFieldTableName(): string
     {
         return QUI::getDBTableName(self::FIELDS);
     }
@@ -67,7 +67,7 @@ class Tables
      *
      * @return string
      */
-    public static function getCategoryTableName()
+    public static function getCategoryTableName(): string
     {
         return QUI::getDBTableName(self::CATEGORIES);
     }

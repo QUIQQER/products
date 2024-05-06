@@ -5,6 +5,7 @@
  */
 
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Product\Types\VariantChild;
 
 /**
  * Save editable fields
@@ -17,12 +18,12 @@ QUI::$Ajax->registerFunction(
     function ($productId, $editable, $inherited) {
         $Product = Products::getProduct($productId);
 
-        if ($Product instanceof \QUI\ERP\Products\Product\Types\VariantChild) {
+        if ($Product instanceof VariantChild) {
             $Product = $Product->getParent();
         }
 
-        $Product->setAttribute('editableVariantFields', \json_decode($editable, true));
-        $Product->setAttribute('inheritedVariantFields', \json_decode($inherited, true));
+        $Product->setAttribute('editableVariantFields', json_decode($editable, true));
+        $Product->setAttribute('inheritedVariantFields', json_decode($inherited, true));
 
         $Product->save();
     },

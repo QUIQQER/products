@@ -7,8 +7,12 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\Exception;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Search;
+
+use function is_numeric;
+use function is_string;
 
 /**
  * Class Textarea
@@ -17,14 +21,14 @@ use QUI\ERP\Products\Handler\Search;
 class Textarea extends QUI\ERP\Products\Field\Field
 {
     /**
-     * @var int
+     * @var int|bool
      */
-    protected $searchDataType = Search::SEARCHDATATYPE_TEXT;
+    protected int|bool $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
     /**
      * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new View($this->getFieldDataForView());
     }
@@ -32,7 +36,7 @@ class Textarea extends QUI\ERP\Products\Field\Field
     /**
      * @return View
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         return new View($this->getFieldDataForView());
     }
@@ -40,7 +44,7 @@ class Textarea extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/Textarea';
     }
@@ -50,16 +54,16 @@ class Textarea extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
         }
 
-        if (!\is_string($value) && !\is_numeric($value)) {
-            throw new QUI\ERP\Products\Field\Exception([
+        if (!is_string($value) && !is_numeric($value)) {
+            throw new Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
@@ -75,11 +79,11 @@ class Textarea extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return string
+     * @return string|null
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): ?string
     {
-        if (!\is_string($value) && !\is_numeric($value)) {
+        if (!is_string($value) && !is_numeric($value)) {
             return null;
         }
 
@@ -91,7 +95,7 @@ class Textarea extends QUI\ERP\Products\Field\Field
      *
      * @return array
      */
-    public function getSearchTypes()
+    public function getSearchTypes(): array
     {
         return [
             Search::SEARCHTYPE_TEXT,
@@ -105,9 +109,9 @@ class Textarea extends QUI\ERP\Products\Field\Field
     /**
      * Get default search type
      *
-     * @return string
+     * @return string|null
      */
-    public function getDefaultSearchType()
+    public function getDefaultSearchType(): ?string
     {
         return Search::SEARCHTYPE_TEXT;
     }

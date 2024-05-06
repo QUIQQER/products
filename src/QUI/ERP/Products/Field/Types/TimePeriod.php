@@ -3,6 +3,15 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\Exception;
+
+use function array_key_exists;
+use function is_array;
+use function is_string;
+use function json_decode;
+use function json_last_error;
+
+use const JSON_ERROR_NONE;
 
 /**
  * Class TimePeriod
@@ -22,19 +31,19 @@ class TimePeriod extends QUI\ERP\Products\Field\Field
     /**
      * @var bool
      */
-    protected $searchable = false;
+    protected bool $searchable = false;
 
     /**
      * @var null
      */
-    protected $defaultValue = null;
+    protected mixed $defaultValue = null;
 
     /**
      * Return the FrontendView
      *
      * @return UnitSelectFrontendView
      */
-    public function getFrontendView()
+    public function getFrontendView(): QUI\ERP\Products\Field\View
     {
         return new UnitSelectFrontendView(
             $this->getFieldDataForView()
@@ -44,7 +53,7 @@ class TimePeriod extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/TimePeriod';
     }
@@ -53,10 +62,10 @@ class TimePeriod extends QUI\ERP\Products\Field\Field
      * Check the value
      * is the value valid for the field type?
      *
-     * @param array
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @param mixed< $value
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
@@ -72,15 +81,15 @@ class TimePeriod extends QUI\ERP\Products\Field\Field
             ]
         ];
 
-        if (!\is_string($value) && !\is_array($value)) {
-            throw new QUI\ERP\Products\Field\Exception($invalidException);
+        if (!is_string($value) && !is_array($value)) {
+            throw new Exception($invalidException);
         }
 
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
+        if (is_string($value)) {
+            $value = json_decode($value, true);
 
-            if (\json_last_error() !== \JSON_ERROR_NONE) {
-                throw new QUI\ERP\Products\Field\Exception($invalidException);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception($invalidException);
             }
         }
 
@@ -91,8 +100,8 @@ class TimePeriod extends QUI\ERP\Products\Field\Field
         ];
 
         foreach ($needles as $needle) {
-            if (!\array_key_exists($needle, $value)) {
-                throw new QUI\ERP\Products\Field\Exception($invalidException);
+            if (!array_key_exists($needle, $value)) {
+                throw new Exception($invalidException);
             }
         }
     }
@@ -100,23 +109,23 @@ class TimePeriod extends QUI\ERP\Products\Field\Field
     /**
      * Cleanup the value, so the value is valid
      *
-     * @param string|array $value
+     * @param mixed $value
      * @return array|null
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): mixed
     {
         if (empty($value)) {
             return $this->defaultValue;
         }
 
-        if (!\is_string($value) && !\is_array($value)) {
+        if (!is_string($value) && !is_array($value)) {
             return $this->defaultValue;
         }
 
-        if (\is_string($value)) {
-            $value = \json_decode($value, true);
+        if (is_string($value)) {
+            $value = json_decode($value, true);
 
-            if (\json_last_error() !== \JSON_ERROR_NONE) {
+            if (json_last_error() !== JSON_ERROR_NONE) {
                 return $this->defaultValue;
             }
         }

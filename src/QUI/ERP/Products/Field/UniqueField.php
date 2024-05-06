@@ -7,9 +7,17 @@
 namespace QUI\ERP\Products\Field;
 
 use QUI;
+use QUI\Locale;
 
 use function class_exists;
+use function class_implements;
+use function defined;
+use function get_class;
+use function in_array;
+use function is_numeric;
 use function is_string;
+use function property_exists;
+use function reset;
 
 /**
  * Class UniqueField
@@ -27,145 +35,145 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @var integer
      */
-    protected $id;
+    protected int $id;
 
     /**
      * Field name
      *
      * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Field title
      * @var string|array
      */
-    protected $title;
+    protected string|array $title;
 
     /**
      * @var string
      */
-    protected $prefix = '';
+    protected string $prefix = '';
 
     /**
      * @var string
      */
-    protected $suffix = '';
+    protected string $suffix = '';
 
     /**
      * @var integer
      */
-    protected $priority;
+    protected int $priority;
 
     /**
      * Field value
      *
      * @var mixed
      */
-    protected $value = '';
+    protected mixed $value = '';
 
     /**
      * @var string
      */
-    protected $type;
+    protected string $type;
 
     /**
-     * is customfield?
+     * is custom field?
      * Custom field is a field, which can be filled by the visitors
      *
      * @var boolean
      */
-    protected $custom;
+    protected bool $custom;
 
     /**
      * custom field calculation data
      * @var array
      */
-    protected $custom_calc;
+    protected array $custom_calc = [];
 
     /**
      * search cache value
      *
-     * @var string
+     * @var string|array|null
      */
-    protected $searchvalue;
+    protected string|array|null $searchvalue;
 
     /**
      * is field public
-     * field which is visble by the visitors, too
+     * field which is visible by the visitors, too
      *
      * @var boolean
      */
-    protected $isPublic = false;
+    protected bool $isPublic = false;
 
     /**
      * Field from the system, like price
      * @var bool
      */
-    protected $isSystem = false;
+    protected bool $isSystem = false;
 
     /**
      * @var boolean
      */
-    protected $isStandard = false;
+    protected bool $isStandard = false;
 
     /**
      * @var boolean
      */
-    protected $isRequired = false;
+    protected bool $isRequired = false;
 
     /**
      * @var bool
      */
-    protected $showInDetails = false;
+    protected bool $showInDetails = false;
 
     /**
      * a field in the product, but not in any category from the product
      *
      * @var boolean
      */
-    protected $unassigned = false;
+    protected bool $unassigned = false;
 
     /**
      * Is the field a product own field
      * @var boolean
      */
-    protected $ownField = false;
+    protected bool $ownField = false;
 
     /**
      * @var array
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * Is the field in the frontend currently changeable
      *
      * @var bool
      */
-    protected $changeable = true;
+    protected bool $changeable = true;
 
     /**
      * The parent field class
      *
      * @var string
      */
-    protected $parentFieldClass = '';
+    protected string $parentFieldClass = '';
 
     /**
      * Current instance of a product
      * optional and only needed at the runtime instance
      * this is the product from which the field are
      *
-     * @var null
+     * @var null|QUI\ERP\Products\Interfaces\ProductInterface
      */
-    protected $Product = null;
+    protected ?QUI\ERP\Products\Interfaces\ProductInterface $Product = null;
 
     /**
      * User input from custom input fields
      *
      * @var string
      */
-    protected $userInput = '';
+    protected string $userInput = '';
 
     /**
      * Model constructor.
@@ -173,9 +181,9 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      * @param integer $fieldId
      * @param array $params - optional, field params (system, require, standard)
      */
-    public function __construct($fieldId, $params = [])
+    public function __construct(int $fieldId, array $params = [])
     {
-        $this->id = (int)$fieldId;
+        $this->id = $fieldId;
 
         $attributes = [
             'title',
@@ -212,12 +220,12 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                 continue;
             }
 
-            if (\property_exists($this, $attribute)) {
+            if (property_exists($this, $attribute)) {
                 $this->$attribute = $params[$attribute];
             }
         }
 
-        if (isset($params['__class__']) && \class_exists($params['__class__'])) {
+        if (isset($params['__class__']) && class_exists($params['__class__'])) {
             $this->parentFieldClass = $params['__class__'];
         }
 
@@ -235,9 +243,9 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return View
      */
-    public function getView()
+    public function getView(): View
     {
-        if (\defined('QUIQQER_BACKEND')) {
+        if (defined('QUIQQER_BACKEND')) {
             $View = $this->getBackendView();
         } else {
             $View = $this->getFrontendView();
@@ -255,16 +263,16 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return View
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         $type = $this->getType();
         $viewClass = 'QUI\ERP\Products\Field\Types\\' . $type . 'FrontendView';
 
-        if (\class_exists($viewClass)) {
+        if (class_exists($viewClass)) {
             return new $viewClass($this->getAttributes());
         }
 
-        if ($this->parentFieldClass && \class_exists($this->parentFieldClass)) {
+        if ($this->parentFieldClass && class_exists($this->parentFieldClass)) {
             $Field = new $this->parentFieldClass($this->getId(), $this->getAttributes());
 
             if ($Field instanceof Field) {
@@ -280,16 +288,16 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         $type = $this->getType();
         $viewClass = 'QUI\ERP\Products\Field\Types\\' . $type . 'BackendView';
 
-        if (\class_exists($viewClass)) {
+        if (class_exists($viewClass)) {
             return new $viewClass($this->getAttributes());
         }
 
-        if ($this->parentFieldClass && \class_exists($this->parentFieldClass)) {
+        if ($this->parentFieldClass && class_exists($this->parentFieldClass)) {
             $Field = new $this->parentFieldClass($this->getId(), $this->getAttributes());
 
             if ($Field instanceof Field) {
@@ -305,7 +313,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -316,11 +324,11 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return QUI\ERP\Money\Price
      */
-    public function getPrice()
+    public function getPrice(): QUI\ERP\Money\Price
     {
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
 
-        if (\is_numeric($this->value)) {
+        if (is_numeric($this->value)) {
             $Price = new QUI\ERP\Money\Price($this->value, $Currency);
         } else {
             $Price = new QUI\ERP\Money\Price(0, $Currency);
@@ -334,7 +342,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -344,7 +352,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return bool
      */
-    public function isUnassigned()
+    public function isUnassigned(): bool
     {
         return $this->unassigned;
     }
@@ -352,9 +360,9 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * @return bool
      */
-    public function isCustomField()
+    public function isCustomField(): bool
     {
-        return $this->custom ? true : false;
+        return $this->custom;
     }
 
     /**
@@ -363,7 +371,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return bool
      */
-    public function isChangeable()
+    public function isChangeable(): bool
     {
         return $this->changeable;
     }
@@ -373,7 +381,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -381,7 +389,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * @return string|array
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
@@ -391,7 +399,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return bool
      */
-    public function hasDefaultEntry()
+    public function hasDefaultEntry(): bool
     {
         $options = $this->getOptions();
         $entries = $options['entries'];
@@ -411,7 +419,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return string
      */
-    public function getParentClass()
+    public function getParentClass(): string
     {
         return $this->parentFieldClass;
     }
@@ -419,27 +427,27 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * Return the value in dependence of a locale (language)
      *
-     * @param bool $Locale
+     * @param Locale|null $Locale $Locale
      * @return array|string
      */
-    public function getValueByLocale($Locale = false)
+    public function getValueByLocale(?Locale $Locale = null): mixed
     {
         return $this->getValue();
     }
 
     /**
-     * @return array|string
+     * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
 
     /**
-     * @param QUI\Locale $Locale
-     * @return string
+     * @param Locale|null $Locale
+     * @return string|array|null
      */
-    public function getSearchCacheValue($Locale = null)
+    public function getSearchCacheValue(QUI\Locale $Locale = null): null|string|array
     {
         return $this->searchvalue;
     }
@@ -448,10 +456,10 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      * Return the title of the field
      * The title are from the user and translated
      *
-     * @param QUI\Locale|Boolean $Locale - optional
+     * @param Locale|null $Locale - optional
      * @return string
      */
-    public function getTitle($Locale = false)
+    public function getTitle(QUI\Locale $Locale = null): string
     {
         if (!$Locale) {
             return QUI::getLocale()->get(
@@ -471,7 +479,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $options = $this->getOptions();
         $value = $this->getValue();
@@ -494,12 +502,16 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
 //        }
 
         $parentClass = $this->getParentClass();
+        $interfaces = [];
 
-        if (empty($parentClass)) {
-            $Field = QUI\ERP\Products\Handler\Fields::getField($this->getId());
-            $interfaces = \class_implements(\get_class($Field));
-        } else {
-            $interfaces = \class_implements($this->getParentClass());
+        try {
+            if (empty($parentClass)) {
+                $Field = QUI\ERP\Products\Handler\Fields::getField($this->getId());
+                $interfaces = class_implements(get_class($Field));
+            } else {
+                $interfaces = class_implements($this->getParentClass());
+            }
+        } catch (\QUI\Exception) {
         }
 
         return [
@@ -516,7 +528,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             'suffix' => $this->suffix,
             'priority' => $this->priority,
             'custom' => $this->isCustomField(),
-            'isUserInputField' => \in_array(CustomInputFieldInterface::class, $interfaces),
+            'isUserInputField' => in_array(CustomInputFieldInterface::class, $interfaces),
             'custom_calc' => $this->custom_calc,
             'unassigned' => $this->isUnassigned(),
             'value' => $value,
@@ -531,7 +543,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return string
      */
-    protected function getValueText()
+    protected function getValueText(): string
     {
         if (isset($this->custom_calc['valueText'])) {
             return $this->custom_calc['valueText'];
@@ -570,7 +582,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return string
      */
-    protected function getValueTextProductAttributeList()
+    protected function getValueTextProductAttributeList(): string
     {
         $options = $this->getOptions();
         $value = $this->getValue();
@@ -589,7 +601,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                     break;
                 }
 
-                $valueText = \reset($option['title']);
+                $valueText = reset($option['title']);
             }
 
             if ($valueText === '-') {
@@ -603,7 +615,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                         break;
                     }
 
-                    $valueText = \reset($option['title']);
+                    $valueText = reset($option['title']);
                 }
             }
 
@@ -613,8 +625,8 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                         continue;
                     }
 
-                    $numCheck = \is_numeric($value)
-                        && \is_numeric($option['valueId'])
+                    $numCheck = is_numeric($value)
+                        && is_numeric($option['valueId'])
                         && (int)$option['valueId'] === (int)$value;
 
                     if ($option['valueId'] !== $value && !$numCheck) {
@@ -626,7 +638,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
                         break;
                     }
 
-                    $valueText = \reset($option['title']);
+                    $valueText = reset($option['title']);
                 }
             }
         }
@@ -639,7 +651,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return string
      */
-    protected function getValueTextAttributeGroup()
+    protected function getValueTextAttributeGroup(): string
     {
         $options = $this->getOptions();
         $value = $this->getValue();
@@ -661,7 +673,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             }
 
             // fallback to default title (first language)
-            return \reset($option['title']);
+            return reset($option['title']);
         }
 
         // Get default value
@@ -675,7 +687,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
             }
 
             // fallback to default title (first language)
-            return \reset($option['title']);
+            return reset($option['title']);
         }
 
         return $valueText;
@@ -687,9 +699,9 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @param bool $status
      */
-    public function setChangeableStatus($status)
+    public function setChangeableStatus(bool $status): void
     {
-        $this->changeable = (bool)$status;
+        $this->changeable = $status;
     }
 
     /**
@@ -697,7 +709,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return boolean
      */
-    public function isSystem()
+    public function isSystem(): bool
     {
         return $this->isSystem;
     }
@@ -705,7 +717,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * @return boolean
      */
-    public function isStandard()
+    public function isStandard(): bool
     {
         return $this->isStandard;
     }
@@ -713,7 +725,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * @return boolean
      */
-    public function isRequired()
+    public function isRequired(): bool
     {
         return $this->isRequired;
     }
@@ -721,7 +733,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * @return boolean
      */
-    public function isOwnField()
+    public function isOwnField(): bool
     {
         return $this->ownField;
     }
@@ -729,7 +741,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * @return boolean
      */
-    public function isPublic()
+    public function isPublic(): bool
     {
         return $this->isPublic;
     }
@@ -739,7 +751,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @return boolean
      */
-    public function showInDetails()
+    public function showInDetails(): bool
     {
         return $this->showInDetails;
     }
@@ -747,7 +759,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * @param $Product - Product instance
      */
-    public function setProduct($Product)
+    public function setProduct($Product): void
     {
         $this->Product = $Product;
     }

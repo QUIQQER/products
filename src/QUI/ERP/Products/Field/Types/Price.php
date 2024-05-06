@@ -10,6 +10,7 @@ use QUI;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Handler\Search;
+use QUI\Exception;
 
 use function floor;
 use function is_array;
@@ -30,12 +31,12 @@ class Price extends QUI\ERP\Products\Field\Field
     /**
      * @var string
      */
-    protected $columnType = 'DOUBLE';
+    protected string $columnType = 'DOUBLE';
 
     /**
-     * @var int
+     * @var int|bool
      */
-    protected $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
+    protected int|bool $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
 
     /**
      * Official currency code (i.e. EUR)
@@ -47,16 +48,16 @@ class Price extends QUI\ERP\Products\Field\Field
     /**
      * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new View($this->getAttributes());
     }
 
     /**
      * @return View
-     * @throws \QUI\Exception
+     * @throws Exception
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance(QUI::getUserBySession());
 
@@ -73,7 +74,7 @@ class Price extends QUI\ERP\Products\Field\Field
                 if (empty($value)) {
                     $value = 0;
                 }
-            } catch (QUI\Exception) {
+            } catch (Exception) {
             }
         } else {
             $value = $this->getValue();
@@ -105,7 +106,7 @@ class Price extends QUI\ERP\Products\Field\Field
      * @param mixed $value
      * @return mixed
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): mixed
     {
         if (is_array($value)) {
             return null;
@@ -147,9 +148,9 @@ class Price extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws QUI\ERP\Products\Field\Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
@@ -206,11 +207,11 @@ class Price extends QUI\ERP\Products\Field\Field
     /**
      * Calculates a range with individual steps between a min and a max number
      *
-     * @param integer|float $min
-     * @param integer|float $max
+     * @param float|integer $min
+     * @param float|integer $max
      * @return array - contains values from min to max with calculated steps inbetween
      */
-    public function calculateValueRange($min, $max): array
+    public function calculateValueRange(float|int $min, float|int $max): array
     {
         // add tax to max value
         $maxTaxValue = (100 + QUI\ERP\Tax\Utils::getMaxTax()) / 100;

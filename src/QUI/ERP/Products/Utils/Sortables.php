@@ -3,23 +3,34 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
+use QUI\Exception;
+use QUI\Projects\Site;
+
+use function array_filter;
+use function array_flip;
+use function array_map;
+use function array_unshift;
+use function explode;
+use function trim;
+use function usort;
 
 class Sortables
 {
     /**
-     * @param QUI\Projects\Site $Site
-     * @return array
+     * @param Site $Site
+     * @return array|bool
+     * @throws Exception
      */
-    public static function getSortableFieldsForSite(QUI\Projects\Site $Site)
+    public static function getSortableFieldsForSite(QUI\Projects\Site $Site): array|bool
     {
         $useOwnSorting = $Site->getAttribute('quiqqer.products.settings.useOwnSorting');
 
         if ($useOwnSorting) {
             $fields = $Site->getAttribute('quiqqer.products.settings.availableSorting');
-            $fields = \trim($fields);
+            $fields = trim($fields);
 
             if (!empty($fields)) {
-                $fields = \explode(',', $fields);
+                $fields = explode(',', $fields);
             }
 
             if (!is_array($fields)) {
@@ -33,10 +44,11 @@ class Sortables
     }
 
     /**
-     * @param QUI\Projects\Site $Site
-     * @throws QUI\Exception
+     * @param Site $Site
+     * @return array
+     * @throws Exception
      */
-    public static function getFieldSettingsForSite(QUI\Projects\Site $Site)
+    public static function getFieldSettingsForSite(QUI\Projects\Site $Site): array
     {
         $useOwnSorting = $Site->getAttribute('quiqqer.products.settings.useOwnSorting');
         $result = self::getFieldSettings();
@@ -47,14 +59,14 @@ class Sortables
             $fields = $Site->getAttribute('quiqqer.products.settings.availableSorting');
 
             if ($fields !== false) {
-                $fields = \trim($fields, ',');
+                $fields = trim($fields, ',');
 
                 if (!empty($fields)) {
-                    $fields = \explode(',', \trim($fields, ','));
+                    $fields = explode(',', trim($fields, ','));
                 }
 
                 if (!empty($fields)) {
-                    $fields = \array_flip($fields);
+                    $fields = array_flip($fields);
                 }
 
                 if (!is_array($fields)) {
@@ -75,16 +87,15 @@ class Sortables
     }
 
     /**
-     * @return false|string[]
+     * @return string[]
      * @throws QUI\Exception
      */
-    public static function getDefaultFields()
+    public static function getDefaultFields(): array
     {
         $Package = QUI::getPackage('quiqqer/products')->getConfig();
         $sortingFields = $Package->getValue('products', 'sortFields');
-        $sortingFields = \explode(',', $sortingFields);
 
-        return $sortingFields;
+        return explode(',', $sortingFields);
     }
 
     /**
@@ -92,13 +103,13 @@ class Sortables
      *
      * @throws QUI\Exception
      */
-    public static function getFieldSettings()
+    public static function getFieldSettings(): array
     {
         // config
         $Package = QUI::getPackage('quiqqer/products')->getConfig();
         $sortingFields = $Package->getValue('products', 'sortFields');
-        $sortingFields = \explode(',', $sortingFields);
-        $sortingFields = \array_flip($sortingFields);
+        $sortingFields = explode(',', $sortingFields);
+        $sortingFields = array_flip($sortingFields);
 
         // field sortables
         $Fields = new QUI\ERP\Products\Handler\Fields();
@@ -111,10 +122,10 @@ class Sortables
             ]
         ]);
 
-        $result = \array_map(function ($field) use ($Fields, $sortingFields) {
+        $result = array_map(function ($field) use ($Fields, $sortingFields) {
             try {
                 $Field = $Fields->getField($field['id']);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 return null;
             }
 
@@ -126,9 +137,9 @@ class Sortables
             ];
         }, $fields);
 
-        $result = \array_filter($result);
+        $result = array_filter($result);
 
-        \usort($result, function ($a, $b) {
+        usort($result, function ($a, $b) {
             if ($a['idDisplay'] === $b['idDisplay']) {
                 return 0;
             }
@@ -140,7 +151,7 @@ class Sortables
         $special = ['c_date', 'e_date'];
 
         foreach ($special as $s) {
-            \array_unshift($result, [
+            array_unshift($result, [
                 'id' => 'S' . $s,
                 'idDisplay' => $s,
                 'title' => QUI::getLocale()->get('quiqqer/products', 'sortable.' . $s),

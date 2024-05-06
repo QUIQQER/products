@@ -6,6 +6,8 @@
 
 namespace QUI\ERP\Products\Interfaces;
 
+use QUI\Exception;
+
 /**
  * Interface Field
  * @package QUI\ERP\Products\Interfaces
@@ -17,38 +19,38 @@ interface FieldInterface extends UniqueFieldInterface
      *
      * @return array
      */
-    public function toProductArray();
+    public function toProductArray(): array;
 
     /**
      * Is the field empty?
      *
      * @return bool
      */
-    public function isEmpty();
+    public function isEmpty(): bool;
 
     /**
      * Set the field name
      *
      * @param mixed $value
      */
-    public function setName($value);
+    public function setName(mixed $value): void;
 
     /**
      * Set the field value
      *
      * @param mixed $value
-     * @throws \QUI\Exception;
+     * @throws Exception;
      */
-    public function setValue($value);
+    public function setValue(mixed $value): void;
 
     /**
      * Check the value
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\Exception
+     * @throws Exception
      */
-    public function validate($value);
+    public function validate(mixed $value): void;
 
     /**
      * Cleanup the value, so the value is valid
@@ -56,7 +58,7 @@ interface FieldInterface extends UniqueFieldInterface
      * @param mixed $value
      * @return mixed
      */
-    public function cleanup($value);
+    public function cleanup(mixed $value): mixed;
 
     /**
      * Deleted
@@ -67,5 +69,5 @@ interface FieldInterface extends UniqueFieldInterface
      *
      * @param boolean $status
      */
-    public function setUnassignedStatus($status);
+    public function setUnassignedStatus(bool $status): void;
 }

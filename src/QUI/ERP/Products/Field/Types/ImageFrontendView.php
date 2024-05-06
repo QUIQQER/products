@@ -8,6 +8,8 @@ namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
 
+use function htmlspecialchars;
+
 /**
  * Class ImageFrontendView
  * Frontend View for the Image Field
@@ -21,28 +23,28 @@ class ImageFrontendView extends QUI\ERP\Products\Field\View
      *
      * @return string
      */
-    public function create()
+    public function create(): string
     {
         if (!$this->hasViewPermission()) {
             return '';
         }
 
         $title = $this->getTitle();
-        $title = \htmlspecialchars($title);
+        $title = htmlspecialchars($title);
 
         $link = '';
         $value = $this->getValue();
 
         try {
             $Image = QUI\Projects\Media\Utils::getImageByUrl($value);
-            $url = \htmlspecialchars($Image->getSizeCacheUrl());
-            $text = \htmlspecialchars($Image->getAttribute('title'));
+            $url = htmlspecialchars($Image->getSizeCacheUrl());
+            $text = htmlspecialchars($Image->getAttribute('title'));
 
-            $link = "<a href=\"{$url}\" 
+            $link = "<a href=\"$url\" 
                         target='\"_blank\"' 
                         data-zoom=\"1\" 
-                        data-src=\"{$url}\"
-                        alt=\"{$text}\"
+                        data-src=\"$url\"
+                        alt=\"$text\"
                      >
                             {$text}
                      </a>";
@@ -51,8 +53,8 @@ class ImageFrontendView extends QUI\ERP\Products\Field\View
         }
 
         return "<div class=\"quiqqer-product-field\">
-            <div class=\"quiqqer-product-field-title\">{$title}</div>
-            <div class=\"quiqqer-product-field-value\">{$link}</div>
+            <div class=\"quiqqer-product-field-title\">$title</div>
+            <div class=\"quiqqer-product-field-value\">$link</div>
         </div>";
     }
 }

@@ -22,7 +22,7 @@ class PDF
      * @param QUI\Projects\Project|null $Project - optional, Project object
      * @return string
      */
-    public static function getHeader($Project = null)
+    public static function getHeader(QUI\Projects\Project $Project = null): string
     {
         $Engine = self::getEngine($Project);
 
@@ -35,7 +35,7 @@ class PDF
      * @param QUI\Projects\Project|null $Project - optional, Project object
      * @return string
      */
-    public static function getFooter($Project = null)
+    public static function getFooter(QUI\Projects\Project $Project = null): string
     {
         $Engine = self::getEngine($Project);
 
@@ -52,7 +52,7 @@ class PDF
      * @param QUI\Projects\Project|null $Project - optional, Project object
      * @return QUI\Interfaces\Template\EngineInterface
      */
-    protected static function getEngine($Project = null)
+    protected static function getEngine(QUI\Projects\Project $Project = null): QUI\Interfaces\Template\EngineInterface
     {
         $Engine = QUI::getTemplateManager()->getEngine();
 
