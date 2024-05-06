@@ -1352,7 +1352,7 @@ class Model extends QUI\QDOM
         $this->getField(Fields::FIELD_URL)->setValue($urls);
 
         // Check if article no. is unique
-        if ($this->isActive()) {
+        if ($this->isActive() && Products::isCheckDuplicteArticleNo()) {
             foreach ($fieldData as $field) {
                 if ($field['id'] !== Fields::FIELD_PRODUCT_NO) {
                     continue;
@@ -2443,7 +2443,7 @@ class Model extends QUI\QDOM
         // duplicate article no. check
         $articleNo = $this->getFieldValue(Fields::FIELD_PRODUCT_NO);
 
-        if (!empty($articleNo)) {
+        if (!empty($articleNo) && Products::isCheckDuplicteArticleNo()) {
             $this->checkDuplicateArticleNo($articleNo);
         }
 
@@ -2607,15 +2607,14 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * Update all price fields by a factor (if set in global settings)
+     * Get price field factors that apply to this product.
      *
-     * @return void
+     * @return array
      */
-    protected function updateProductPricesByFactors(): void
+    protected function getApplicableProductPriceFactors(): array
     {
         // Check if main category of product has own price factor settings
         $MainCategory = $this->getCategory();
-
         $priceFactors = false;
 
         if ($MainCategory instanceof Category) {
@@ -2624,7 +2623,9 @@ class Model extends QUI\QDOM
 
         // Check if any other category of this product has own price factor settings
         if (empty($priceFactors)) {
-            $categories = $this->getCategories();
+            $categories = array_filter($this->getCategories(), function ($Category) {
+                return $Category instanceof Category;
+            });
 
             // sort by id ASC
             usort($categories, function ($CatA, $CatB) {
@@ -2632,24 +2633,39 @@ class Model extends QUI\QDOM
                  * @var Category $CatA
                  * @var Category $CatB
                  */
-                return $CatA->getId() - $CatB->getId();
+                $priceFactorsA = $CatA->getCustomDataEntry('priceFieldFactors');
+                $priorityA = !empty($priceFactorsA['categoryPriority']) ? (int)$priceFactorsA['categoryPriority'] : 0;
+                $priceFactorsB = $CatB->getCustomDataEntry('priceFieldFactors');
+                $priorityB = !empty($priceFactorsB['categoryPriority']) ? (int)$priceFactorsB['categoryPriority'] : 0;
+
+                if ($priorityA === $priorityB) {
+                    return $CatA->getId() - $CatB->getId();
+                }
+
+                return $priorityB - $priorityA;
             });
 
             foreach ($categories as $Category) {
-                if ($Category instanceof Category) {
-                    $priceFactors = $Category->getCustomDataEntry('priceFieldFactors');
+                $priceFactors = $Category->getCustomDataEntry('priceFieldFactors');
 
-                    if (!empty($priceFactors)) {
-                        break;
-                    }
+                if (!empty($priceFactors)) {
+                    return $priceFactors;
                 }
             }
         }
 
         // If no category has price factor settings -> use global settings
-        if (empty($priceFactors)) {
-            $priceFactors = Fields::getPriceFactorSettings();
-        }
+        return Fields::getPriceFactorSettings();
+    }
+
+    /**
+     * Update all price fields by a factor (if set in global settings)
+     *
+     * @return void
+     */
+    protected function updateProductPricesByFactors(): void
+    {
+        $priceFactors = $this->getApplicableProductPriceFactors();
 
         foreach ($priceFactors as $priceFieldId => $settings) {
             if (!$this->hasField($priceFieldId) || !$this->hasField($settings['sourceFieldId'])) {
@@ -2662,6 +2678,7 @@ class Model extends QUI\QDOM
 
             try {
                 $PriceField = $this->getField($priceFieldId);
+
                 $SourceField = $this->getField($settings['sourceFieldId']);
                 $multiplier = (float)$settings['multiplier'];
 
@@ -2670,6 +2687,15 @@ class Model extends QUI\QDOM
                 }
 
                 $price = $SourceField->getValue() * $multiplier;
+                $fixedSurcharge = !empty($settings['fixedSurchargeAmount']) ?
+                    (float)$settings['fixedSurchargeAmount'] : 0;
+
+                if (
+                    !empty($settings['fixedSurchargePriority']) &&
+                    $settings['fixedSurchargePriority'] === 'beforeRounding'
+                ) {
+                    $price += $fixedSurcharge;
+                }
 
                 // Rounding
                 if (!empty($settings['rounding']['type'])) {
@@ -2735,6 +2761,13 @@ class Model extends QUI\QDOM
                         } else {
                             $targetPrice = $targetPriceInt . '.' . $targetPriceDecimals;
                         }
+                    }
+
+                    if (
+                        !empty($settings['fixedSurchargePriority']) &&
+                        $settings['fixedSurchargePriority'] === 'afterRounding'
+                    ) {
+                        $targetPrice += $fixedSurcharge;
                     }
 
                     $price = (float)$targetPrice / $vat;

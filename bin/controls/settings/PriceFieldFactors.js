@@ -22,10 +22,11 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
     'css!package/quiqqer/products/bin/controls/settings/PriceFieldFactors.css'
 
 ], function (QUIControl, QUIConfirm, QUILoader, QUIButton, QUIElements, TaxListWindow, QUILocale, Mustache, QUIAjax,
-             template) {
+    template) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg             = 'quiqqer/products';
+    const cssClassHidden = 'quiqqer-products-settings-pricefieldfactors__hidden';
 
     return new Class({
 
@@ -40,8 +41,13 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
             '$onUpdatePricesClick',
             '$onClickRoundingVatSelect',
             '$onChangeRoundingType',
-            '$getVatEntries'
+            '$getVatEntries',
+            '$onEntryTypeChange'
         ],
+
+        options: {
+            category_id: null
+        },
 
         initialize: function (options) {
             this.parent(options);
@@ -59,8 +65,6 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
          * event: on import
          */
         $onImport: function () {
-            var self = this;
-
             this.$Input      = this.getElm();
             this.$Input.type = 'hidden';
 
@@ -71,7 +75,7 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
             this.Loader.inject(this.$Elm);
             this.Loader.show();
 
-            var Value = {};
+            let Value = {};
 
             if (this.$Input.value !== '') {
                 Value = JSON.decode(this.$Input.value);
@@ -80,16 +84,20 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
             Promise.all([
                 this.$getPriceFields(),
                 this.$getVatEntries()
-            ]).then(function (result) {
+            ]).then((result) => {
                 const priceFields = result[0];
                 const vatEntries  = result[1];
+                const isCategory  = !!this.getAttribute('category_id');
 
-                self.$Elm.set('html', Mustache.render(template, {
+                this.$Elm.set('html', Mustache.render(template, {
                     priceFields: priceFields,
                     vatEntries : vatEntries,
 
-                    labelMultiplier  : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelMultiplier'),
-                    labelUpdateOnSave: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave'),
+                    labelMultiplier      : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelMultiplier'),
+                    labelUpdateOnSave    : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelUpdateOnSave'),
+                    labelCategoryPriority: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelCategoryPriority'),
+                    descCategoryPriority : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.descCategoryPriority'),
+                    isCategory           : isCategory,
 
                     labelRoundingVat          : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingVat'),
                     labelRoundingVatOptionNone: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingVatOptionNone'),
@@ -106,21 +114,40 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                     labelRoundingTypeDecimalCustomValue      : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeDecimalCustomValue'),
                     labelRoundingTypeCommercialDecimals      : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercialDecimals'),
                     labelRoundingTypeCommercialDecimalsSingle: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelRoundingTypeCommercialDecimalsSingle'),
-                    descRoundingVat                          : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.descRoundingVat')
+                    descRoundingVat                          : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.descRoundingVat'),
+
+                    labelType                : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelType'),
+                    labelTypeOptionMultiplier: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelTypeOptionMultiplier'),
+                    labelTypeOptionFixed     : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelTypeOptionFixed'),
+                    labelFixedSurchargeAmount: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelFixedSurchargeAmount'),
+
+                    labelFixedSurchargePriorityBeforeRounding: QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelFixedSurchargePriorityBeforeRounding'),
+                    labelFixedSurchargePriorityAfterRounding : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.tpl.labelFixedSurchargePriorityAfterRounding'),
                 }));
 
                 new QUIButton({
                     text     : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.btn.update'),
                     textimage: 'fa fa-asterisk',
                     events   : {
-                        onClick: self.$onUpdatePricesClick
+                        onClick: this.$onUpdatePricesClick
                     }
-                }).inject(self.$Elm.getElement('.quiqqer-products-settings-pricefieldfactors-buttons'));
+                }).inject(this.$Elm.getElement('.quiqqer-products-settings-pricefieldfactors-buttons'));
 
-                var entries = self.$Elm.getElements('.quiqqer-products-settings-pricefieldfactors-entry');
+                const CategoryPriorityInput = this.$Elm.getElement('input[name="categoryPriority"]');
 
-                entries.forEach(function (Entry) {
-                    Entry.getElement('input[name="active"]').addEvent('change', self.$onEntryActivateClick);
+                if (CategoryPriorityInput) {
+                    if ('categoryPriority' in Value) {
+                        CategoryPriorityInput.value = Value.categoryPriority;
+                    }
+
+                    CategoryPriorityInput.addEvent('change', this.$updateValue);
+                    CategoryPriorityInput.addEvent('keyup', this.$updateValue);
+                }
+
+                const entries = this.$Elm.getElements('.quiqqer-products-settings-pricefieldfactors-entry');
+
+                entries.forEach((Entry) => {
+                    Entry.getElement('input[name="active"]').addEvent('change', this.$onEntryActivateClick);
 
                     const fieldId                  = Entry.get('data-id');
                     const ActiveCheckbox           = Entry.getElement('input[name="active"]');
@@ -130,19 +157,32 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                     const RoundingVatSelect        = Entry.getElement('select[name="rounding_vat"]');
                     const RoundingTypeSelect       = Entry.getElement('select[name="rounding_type"]');
                     const RoundingCustomValueInput = Entry.getElement('input[name="decimal_custom_value"]');
+                    const SurchargeAmountInput     = Entry.getElement('input[name="fixedSurchargeAmount"]');
+                    const SurchargePriorityInput   = Entry.getElement('select[name="fixedSurchargePriority"]');
 
-                    MultiplierInput.addEvent('change', self.$updateValue);
-                    MultiplierInput.addEvent('keyup', self.$updateValue);
-                    SourceFieldSelect.addEvent('change', self.$updateValue);
-                    UpdateOnSaveCheckbox.addEvent('change', self.$updateValue);
+                    MultiplierInput.addEvent('change', this.$updateValue);
+                    MultiplierInput.addEvent('keyup', this.$updateValue);
+                    SourceFieldSelect.addEvent('change', this.$updateValue);
+                    UpdateOnSaveCheckbox.addEvent('change', this.$updateValue);
+                    SurchargeAmountInput.addEvent('change', this.$updateValue);
+                    SurchargePriorityInput.addEvent('change', this.$updateValue);
 
-                    RoundingTypeSelect.addEvent('change', self.$updateValue);
-                    RoundingVatSelect.addEvent('change', self.$updateValue);
-                    RoundingCustomValueInput.addEvent('change', self.$updateValue);
-                    //RoundingVatSelect.addEventListener('click', self.$onClickRoundingVatSelect);
+                    RoundingTypeSelect.addEvent('change', this.$updateValue);
+                    RoundingVatSelect.addEvent('change', this.$updateValue);
+                    RoundingCustomValueInput.addEvent('change', this.$updateValue);
+                    //RoundingVatSelect.addEventListener('click', this.$onClickRoundingVatSelect);
 
                     if (fieldId in Value) {
-                        const FieldSettings = Value[fieldId];
+                        const ConfigContainer = Entry.getElement('.quiqqer-products-settings-pricefieldfactors-entry-multiplier');
+                        const FieldSettings   = Value[fieldId];
+
+                        if ('fixedSurchargeAmount' in FieldSettings) {
+                            SurchargeAmountInput.value = FieldSettings.fixedSurchargeAmount;
+                        }
+
+                        if ('fixedSurchargePriority' in FieldSettings) {
+                            SurchargePriorityInput.value = FieldSettings.fixedSurchargePriority;
+                        }
 
                         ActiveCheckbox.checked = true;
 
@@ -158,6 +198,8 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                         RoundingTypeSelect.value       = FieldSettings.rounding.type;
                         RoundingVatSelect.value        = FieldSettings.rounding.vat;
                         RoundingCustomValueInput.value = FieldSettings.rounding.custom;
+
+                        ConfigContainer.removeClass(cssClassHidden);
                     }
                 });
             });
@@ -209,10 +251,11 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
          * @param {DocumentEvent} event
          */
         $onEntryActivateClick: function (event) {
-            var Entry                = event.target.getParent(),
-                MultiplierInput      = Entry.getElement('input[name="multiplier"]'),
-                SourceFieldSelect    = Entry.getElement('select[name="sourceFieldId"]'),
-                UpdateOnSaveCheckbox = Entry.getElement('input[name="update_on_save"]');
+            const Entry                = event.target.getParent('.quiqqer-products-settings-pricefieldfactors-entry');
+            const MultiplierInput      = Entry.getElement('input[name="multiplier"]');
+            const SourceFieldSelect    = Entry.getElement('select[name="sourceFieldId"]');
+            const UpdateOnSaveCheckbox = Entry.getElement('input[name="update_on_save"]');
+            const ConfigContainer      = Entry.getElement('.quiqqer-products-settings-pricefieldfactors-entry-multiplier');
 
             MultiplierInput.disabled      = !event.target.checked;
             SourceFieldSelect.disabled    = !event.target.checked;
@@ -220,6 +263,9 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
 
             if (event.target.checked) {
                 MultiplierInput.focus();
+                ConfigContainer.removeClass(cssClassHidden);
+            } else {
+                ConfigContainer.addClass(cssClassHidden);
             }
 
             this.$updateValue();
@@ -229,8 +275,6 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
          * If user clicks "update prices now" button
          */
         $onUpdatePricesClick: function () {
-            var self = this;
-
             new QUIConfirm({
                 maxHeight: 300,
                 autoclose: false,
@@ -247,31 +291,31 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                 },
                 ok_button    : false,
                 events       : {
-                    onOpen: function (Win) {
-                        var BtnAll = new QUIButton({
+                    onOpen: (Win) => {
+                        const BtnAll = new QUIButton({
                             text     : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.btn.confirm_all'),
                             textimage: 'fa fa-asterisk',
                             disabled : true,
                             events   : {
-                                onClick: function () {
+                                onClick: () => {
                                     Win.Loader.show();
 
-                                    self.$updatePrices().then(function () {
+                                    this.$updatePrices().then(() => {
                                         Win.close();
                                     });
                                 }
                             }
                         });
 
-                        var BtnActiveOnly = new QUIButton({
+                        const BtnActiveOnly = new QUIButton({
                             text     : QUILocale.get(lg, 'controls.settings.PriceFieldFactors.btn.confirm_active'),
                             textimage: 'fa fa-asterisk',
                             disabled : true,
                             events   : {
-                                onClick: function () {
+                                onClick: () => {
                                     Win.Loader.show();
 
-                                    self.$updatePrices(true).then(function () {
+                                    this.$updatePrices(true).then(() => {
                                         Win.close();
                                     });
                                 }
@@ -283,7 +327,7 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
 
                         Win.Loader.show();
 
-                        self.$checkSystem().then(function (Data) {
+                        this.$checkSystem().then(function (Data) {
                             Win.Loader.hide();
 
                             BtnAll.enable();
@@ -293,7 +337,7 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                                 return;
                             }
 
-                            var Content = Win.getContent();
+                            const Content = Win.getContent();
 
                             new Element('p', {
                                 'class': 'message-attention quiqqer-products-settings-pricefieldfactors-warning',
@@ -317,10 +361,11 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
          * Update current price factors
          */
         $updateValue: function () {
-            var entries = this.$Elm.getElements('.quiqqer-products-settings-pricefieldfactors-entry');
-            var Value   = {};
+            const entries               = this.$Elm.getElements('.quiqqer-products-settings-pricefieldfactors-entry');
+            const Value                 = {};
+            const CategoryPriorityInput = this.$Elm.getElement('input[name="categoryPriority"]');
 
-            entries.forEach(function (Entry) {
+            entries.forEach((Entry) => {
                 const ActiveCheckbox               = Entry.getElement('input[name="active"]');
                 const MultiplierInput              = Entry.getElement('input[name="multiplier"]');
                 const SourceFieldSelect            = Entry.getElement('select[name="sourceFieldId"]');
@@ -328,22 +373,30 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
                 const RoundingVatSelect            = Entry.getElement('select[name="rounding_vat"]');
                 const RoundingTypeSelect           = Entry.getElement('select[name="rounding_type"]');
                 const RoundingTypeCustomValueInput = Entry.getElement('input[name="decimal_custom_value"]');
+                const SurchargeAmountInput         = Entry.getElement('input[name="fixedSurchargeAmount"]');
+                const SurchargePriorityInput       = Entry.getElement('select[name="fixedSurchargePriority"]');
 
                 if (!ActiveCheckbox.checked) {
                     return;
                 }
 
                 Value[Entry.get('data-id')] = {
-                    multiplier   : parseFloat(MultiplierInput.value),
-                    sourceFieldId: parseInt(SourceFieldSelect.value),
-                    updateOnSave : UpdateOnSaveCheckbox.checked,
-                    rounding     : {
+                    fixedSurchargeAmount  : parseFloat(SurchargeAmountInput.value),
+                    fixedSurchargePriority: SurchargePriorityInput.value,
+                    multiplier            : parseFloat(MultiplierInput.value),
+                    sourceFieldId         : parseInt(SourceFieldSelect.value),
+                    updateOnSave          : UpdateOnSaveCheckbox.checked,
+                    rounding              : {
                         vat   : RoundingVatSelect.value,
                         type  : RoundingTypeSelect.value,
                         custom: RoundingTypeCustomValueInput.value.trim()
                     }
                 };
             });
+
+            if (CategoryPriorityInput) {
+                Value.categoryPriority = parseInt(CategoryPriorityInput.value);
+            }
 
             this.$Input.value = JSON.encode(Value);
         },
@@ -357,10 +410,11 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
         $updatePrices: function (activeOnly) {
             activeOnly = activeOnly || false;
 
-            return new Promise(function (resolve, reject) {
+            return new Promise((resolve, reject) => {
                 QUIAjax.post('package_quiqqer_products_ajax_settings_updatePrices', resolve, {
                     'package' : 'quiqqer/products',
                     activeOnly: activeOnly ? 1 : 0,
+                    categoryId: this.getAttribute('category_id'),
                     onError   : reject
                 });
             });
@@ -388,10 +442,11 @@ define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
          * @return {Promise}
          */
         $checkSystem: function () {
-            return new Promise(function (resolve, reject) {
+            return new Promise((resolve, reject) => {
                 QUIAjax.get('package_quiqqer_products_ajax_settings_checkSystem', resolve, {
-                    'package': 'quiqqer/products',
-                    onError  : reject
+                    'package' : 'quiqqer/products',
+                    categoryId: this.getAttribute('category_id'),
+                    onError   : reject
                 });
             });
         },

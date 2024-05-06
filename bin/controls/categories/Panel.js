@@ -275,6 +275,12 @@ define('package/quiqqer/products/bin/controls/categories/Panel', [
                         dataIndex: 'path',
                         dataType : 'text',
                         width    : 300
+                    },
+                    {
+                        header   : QUILocale.get(lg, 'categories.grid.priceFieldFactorFields'),
+                        dataIndex: 'priceFieldFactorFields',
+                        dataType : 'text',
+                        width    : 300
                     }
                 ]
             });
