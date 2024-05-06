@@ -10,9 +10,9 @@ use QUI\ERP\Products\Console\UpdatePrices;
 
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_settings_updatePrices',
-    function ($activeOnly) {
+    function ($activeOnly, $categoryId = null) {
         $UpdateTool = new UpdatePrices();
-        $updateCount = $UpdateTool->updateProductPrices(!empty($activeOnly));
+        $updateCount = $UpdateTool->updateProductPrices(!empty($activeOnly), $categoryId ? (int)$categoryId : null);
 
         QUI::getMessagesHandler()->addSuccess(
             QUI::getLocale()->get(
@@ -24,6 +24,6 @@ QUI::$Ajax->registerFunction(
             )
         );
     },
-    ['activeOnly'],
+    ['activeOnly', 'categoryId'],
     ['Permission::checkAdminUser', 'product.edit']
 );

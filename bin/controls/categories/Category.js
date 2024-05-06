@@ -165,6 +165,7 @@ define('package/quiqqer/products/bin/controls/categories/Category', [
                     textFieldCount       : QUILocale.get(lg, 'control.category.update.title.countFields'),
                     textCategoriesCount  : QUILocale.get(lg, 'control.category.update.title.countCategories'),
                     infoPriceFieldFactors: QUILocale.get(lg, 'control.category.update.textCategoriesCount'),
+                    categoryId           : this.getAttribute('categoryId')
                 })
             });
 

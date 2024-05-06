@@ -10,18 +10,35 @@ use QUI\ERP\Products\Handler\Products;
 
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_settings_checkSystem',
-    function () {
+    function ($categoryId = null) {
         $maxExecTime = \ini_get('max_execution_time');
-        $estExecTime = \count(Products::getProductIds()) * 0.2;
+
+        $where = [];
+
+        if (!empty($categoryId)) {
+            $categoryId = (int)$categoryId;
+
+            $where['categories'] = [
+                'type' => '%LIKE%',
+                'value' => '%,' . $categoryId . ',%'
+            ];
+        }
+
+        $productIds = Products::getProductIds(['where' => $where]);
+        $estExecTime = \count($productIds) * 0.2;
 
         return [
             'commands' => [
-                'all' => 'cd ' . CMS_DIR . ' && ./console products:update-prices',
+                'all' => 'cd ' . CMS_DIR . ' && ./console products:update-prices'
+                    . ($categoryId ? ' --categoryId=' . $categoryId : ''),
                 'active' => 'cd ' . CMS_DIR . ' && ./console products:update-prices --activeOnly'
+                    . ($categoryId ? ' --categoryId=' . $categoryId : '')
             ],
             'timeSufficient' => $estExecTime < $maxExecTime
         ];
     },
-    [],
+    [
+        'categoryId'
+    ],
     ['Permission::checkAdminUser', 'product.edit']
 );
