@@ -10,7 +10,6 @@ use QUI\ERP\Products\Handler\Products;
 
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_settings_checkSystem',
-
     function ($categoryId = null) {
         $maxExecTime = ini_get('max_execution_time');
         $where = [];
