@@ -6,6 +6,8 @@
 
 namespace QUI\ERP\Products\Interfaces;
 
+use QUI\ERP\Tax\TaxType;
+
 /**
  * Interface PriceFactorWithVatInterface
  * @package QUI\ERP\Products\Interfaces
@@ -13,7 +15,7 @@ namespace QUI\ERP\Products\Interfaces;
 interface PriceFactorWithVatInterface extends PriceFactorInterface
 {
     /**
-     * @return \QUI\ERP\Tax\TaxType
+     * @return TaxType
      */
-    public function getVatType();
+    public function getVatType(): TaxType;
 }

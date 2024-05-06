@@ -32,12 +32,12 @@ QUI::$Ajax->registerFunction(
                 try {
                     $Field = $Fields->getField($fieldData['id']);
                     $Category->addField($Field);
-                } catch (QUI\Exception $Exception) {
+                } catch (QUI\Exception) {
                 }
             }
         }
 
-        if (!empty($params['custom_data']) && \is_array($params['custom_data'])) {
+        if (!empty($params['custom_data']) && is_array($params['custom_data'])) {
             foreach ($params['custom_data'] as $k => $v) {
                 switch ($k) {
                     // Only allow certain custom data keys

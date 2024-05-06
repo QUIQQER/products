@@ -9,7 +9,10 @@ namespace QUI\ERP\Products\Utils;
 use QUI;
 
 use function array_merge;
+use function class_exists;
+use function count;
 use function json_encode;
+use function strnatcmp;
 use function usort;
 
 /**
@@ -72,11 +75,10 @@ class PriceFactors
     public function count(): int
     {
         $count = 0;
-        $count = $count + \count($this->listBeginning);
-        $count = $count + \count($this->list);
-        $count = $count + \count($this->listEnd);
+        $count = $count + count($this->listBeginning);
+        $count = $count + count($this->list);
 
-        return $count;
+        return $count + count($this->listEnd);
     }
 
     /**
@@ -84,7 +86,7 @@ class PriceFactors
      *
      * @param QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor
      */
-    public function add(QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor)
+    public function add(QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor): void
     {
         $this->list[] = $PriceFactor;
     }
@@ -94,7 +96,7 @@ class PriceFactors
      *
      * @param QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor
      */
-    public function addToBeginning(QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor)
+    public function addToBeginning(QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor): void
     {
         $this->listBeginning[] = $PriceFactor;
     }
@@ -104,7 +106,7 @@ class PriceFactors
      *
      * @param QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor
      */
-    public function addToEnd(QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor)
+    public function addToEnd(QUI\ERP\Products\Interfaces\PriceFactorInterface $PriceFactor): void
     {
         $this->listEnd[] = $PriceFactor;
     }
@@ -113,7 +115,7 @@ class PriceFactors
      * @param QUI\ERP\Currency\Currency $Currency
      * @return void
      */
-    public function setCurrency(QUI\ERP\Currency\Currency $Currency)
+    public function setCurrency(QUI\ERP\Currency\Currency $Currency): void
     {
         $this->Currency = $Currency;
     }
@@ -130,7 +132,7 @@ class PriceFactors
             /* @var PriceFactor $a */
             /* @var PriceFactor $b */
             if ($a->getPriority() == $b->getPriority()) {
-                return \strnatcmp($a->getTitle(), $b->getTitle());
+                return strnatcmp($a->getTitle(), $b->getTitle());
             }
 
             return $a->getPriority() > $b->getPriority() ? 1 : -1;
@@ -146,7 +148,7 @@ class PriceFactors
     /**
      * Clear the price factors
      */
-    public function clear()
+    public function clear(): void
     {
         $this->listBeginning = [];
         $this->list = [];
@@ -205,7 +207,7 @@ class PriceFactors
      *
      * @param array $list
      */
-    public function importList(array $list)
+    public function importList(array $list): void
     {
         if (
             !isset($list['beginning'])
@@ -232,7 +234,7 @@ class PriceFactors
         }
 
         $getFactor = function ($attributes) {
-            if (isset($attributes['class']) && \class_exists($attributes['class'])) {
+            if (isset($attributes['class']) && class_exists($attributes['class'])) {
                 return new $attributes['class']($attributes);
             }
 

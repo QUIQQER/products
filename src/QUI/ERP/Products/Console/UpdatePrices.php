@@ -2,6 +2,7 @@
 
 namespace QUI\ERP\Products\Console;
 
+use Exception;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
@@ -41,7 +42,7 @@ class UpdatePrices extends QUI\System\Console\Tool
     /**
      * Execute the console tool
      */
-    public function execute()
+    public function execute(): void
     {
         $this->updateProductPrices(!empty($this->getArgument('activeOnly')), $this->getArgument('categoryId'));
     }
@@ -49,7 +50,7 @@ class UpdatePrices extends QUI\System\Console\Tool
     /**
      * Update all product prices of products that have relevant price fields.
      *
-     * A price field is relevant if a mulitplier is configured for it.
+     * A price field is relevant if a multiplier is configured for it.
      *
      * @param bool $activeOnly (optional) - Only update active products
      * @param int|null $categoryId (optional) - Only update prices for products in given category
@@ -125,7 +126,7 @@ class UpdatePrices extends QUI\System\Console\Tool
                 } else {
                     $this->writeLn(" -> Product does not contain relevant price fields. Skipping product.");
                 }
-            } catch (\Exception $Exception) {
+            } catch (Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
                 $this->writeLn(" -> ERROR: " . $Exception->getMessage());
             }

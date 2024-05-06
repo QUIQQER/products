@@ -13,7 +13,7 @@ QUI::$Ajax->registerFunction(
     function ($fieldId) {
         try {
             return Fields::getField($fieldId)->getOptions();
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             return false;
         }

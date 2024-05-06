@@ -8,7 +8,14 @@ namespace QUI\ERP\Products\Product;
 
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
+use QUI\ERP\Products\Interfaces\FieldInterface;
+use QUI\ERP\Products\Interfaces\UniqueFieldInterface;
+use QUI\Exception;
+use QUI\Locale;
 use QUI\Projects\Media\Image;
+
+use function array_map;
+use function array_merge;
 
 /**
  * Class TextProduct
@@ -22,7 +29,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      *
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         $this->setAttributes([
             'displayPrice' => false
@@ -37,12 +44,13 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * @param null $User
      * @return UniqueProduct
+     *
      * @throws Exception
-     * @throws QUI\Exception
+     * @throws Exception
      * @throws QUI\ExceptionStack
      * @throws QUI\Users\Exception
      */
-    public function createUniqueProduct($User = null)
+    public function createUniqueProduct($User = null): UniqueProduct
     {
         if (!QUI::getUsers()->isUser($User)) {
             $User = QUI::getUsers()->getNobody();
@@ -51,13 +59,13 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
         $attributes = $this->getAttributes();
         $attributes['title'] = $this->getTitle();
         $attributes['description'] = $this->getDescription();
-        $attributes['uid'] = $User->getId();
+        $attributes['uid'] = $User->getUUID();
         $attributes['displayPrice'] = false;
         $attributes['maximumQuantity'] = $this->getMaximumQuantity();
 
-        $attributes['fields'] = \array_map(function ($Field) {
+        $attributes['fields'] = array_map(function ($Field) {
             /* @var $Field QUI\ERP\Products\Field\Field */
-            return \array_merge(
+            return array_merge(
                 $Field->toProductArray(),
                 $Field->getAttributes()
             );
@@ -76,20 +84,20 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * Return the Product-ID
      *
-     * @return integer|string
+     * @return int
      */
-    public function getId()
+    public function getId(): int
     {
-        return '-';
+        return -1;
     }
 
     /**
      * Return the translated title
      *
-     * @param bool $Locale
+     * @param Locale|null $Locale
      * @return string
      */
-    public function getTitle($Locale = false)
+    public function getTitle(QUI\Locale $Locale = null): string
     {
         if (!$this->existsAttribute('title')) {
             return '';
@@ -101,10 +109,10 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * Return the translated description
      *
-     * @param bool $Locale
+     * @param Locale|null $Locale
      * @return string
      */
-    public function getDescription($Locale = false)
+    public function getDescription(QUI\Locale $Locale = null): string
     {
         if (!$this->existsAttribute('description')) {
             return '';
@@ -116,10 +124,10 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * Return the translated content
      *
-     * @param bool $Locale
+     * @param Locale|null $Locale
      * @return string
      */
-    public function getContent($Locale = false)
+    public function getContent(QUI\Locale $Locale = null): string
     {
         return '';
     }
@@ -129,14 +137,14 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      *
      * @return array
      */
-    public function getFields()
+    public function getFields(): array
     {
         $fields = [];
 
         $addField = function ($fieldId) use (&$fields) {
             try {
                 $fields[] = $this->getField($fieldId);
-            } catch (QUI\Exception $Exception) {
+            } catch (Exception $Exception) {
                 QUI\System\Log::addError($Exception->getMessage(), $Exception->getContext());
             }
         };
@@ -154,12 +162,12 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      * Return the field
      *
      * @param integer $fieldId
-     * @return QUI\ERP\Products\Interfaces\FieldInterface
-     * @throws QUI\Exception
+     * @return FieldInterface|null
+     * @throws Exception
      */
-    public function getField($fieldId)
+    public function getField(int $fieldId): ?QUI\ERP\Products\Interfaces\FieldInterface
     {
-        switch ((int)$fieldId) {
+        switch ($fieldId) {
             case Fields::FIELD_PRICE:
                 return new QUI\ERP\Products\Field\Types\Price($fieldId, [
                     'value' => $this->getPrice()
@@ -180,7 +188,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
 
         $Field = new QUI\ERP\Products\Field\Types\Input($fieldId);
 
-        switch ((int)$fieldId) {
+        switch ($fieldId) {
             case Fields::FIELD_PRODUCT_NO:
                 $Field->setDefaultValue($this->getAttribute('articleNo'));
                 $Field->setValue($this->getAttribute('articleNo'));
@@ -202,7 +210,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      * @return mixed
      * @throws QUI\ERP\Products\Product\Exception
      */
-    public function getFieldValue($fieldId)
+    public function getFieldValue(int $fieldId): mixed
     {
         throw new QUI\ERP\Products\Product\Exception([
             'quiqqer/products',
@@ -217,10 +225,10 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * Return all fields from the wanted type
      *
-     * @param string $type
+     * @param string|array $type
      * @return array
      */
-    public function getFieldsByType($type)
+    public function getFieldsByType(string|array $type): array
     {
         return [];
     }
@@ -228,12 +236,24 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * Return the main product image
      *
-     * @return \QUI\Projects\Media\Image
-     * @throws \QUI\Exception
+     * @return Image
+     * @throws Exception
      */
-    public function getImage()
+    public function getImage(): Image
     {
-        return QUI::getRewrite()->getProject()->getMedia()->getPlaceholderImage();
+        $Placeholder = QUI::getRewrite()->getProject()->getMedia()->getPlaceholderImage();
+
+        if ($Placeholder instanceof Image) {
+            return $Placeholder;
+        }
+
+        throw new QUI\ERP\Products\Product\Exception([
+            'quiqqer/products',
+            'exception.product.no.image',
+            [
+                'productId' => $this->getId()
+            ]
+        ]);
     }
 
     /**
@@ -241,7 +261,15 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      *
      * @return QUI\ERP\Money\Price
      */
-    public function getPrice()
+    public function getPrice(): QUI\ERP\Money\Price
+    {
+        return new QUI\ERP\Money\Price(0, QUI\ERP\Defaults::getCurrency());
+    }
+
+    /**
+     * @return QUI\ERP\Money\Price
+     */
+    public function getOriginalPrice(): QUI\ERP\Money\Price
     {
         return new QUI\ERP\Money\Price(0, QUI\ERP\Defaults::getCurrency());
     }
@@ -249,15 +277,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * @return false|QUI\ERP\Money\Price|QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
-    public function getOriginalPrice()
-    {
-        return new QUI\ERP\Money\Price(0, QUI\ERP\Defaults::getCurrency());
-    }
-
-    /**
-     * @return false|QUI\ERP\Money\Price|QUI\ERP\Products\Interfaces\UniqueFieldInterface
-     */
-    public function getOfferPrice()
+    public function getOfferPrice(): UniqueFieldInterface|bool|QUI\ERP\Money\Price
     {
         return new QUI\ERP\Money\Price(0, QUI\ERP\Defaults::getCurrency());
     }
@@ -267,7 +287,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      *
      * @return QUI\ERP\Money\Price
      */
-    public function getMinimumPrice()
+    public function getMinimumPrice(): QUI\ERP\Money\Price
     {
         return new QUI\ERP\Money\Price(0, QUI\ERP\Defaults::getCurrency());
     }
@@ -277,7 +297,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      *
      * @return QUI\ERP\Money\Price
      */
-    public function getMaximumPrice()
+    public function getMaximumPrice(): QUI\ERP\Money\Price
     {
         return new QUI\ERP\Money\Price(0, QUI\ERP\Defaults::getCurrency());
     }
@@ -285,7 +305,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * @return bool|float|int
      */
-    public function getMaximumQuantity()
+    public function getMaximumQuantity(): float|bool|int
     {
         return 1;
     }
@@ -295,7 +315,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      *
      * @return QUI\ERP\Products\Category\Category|null
      */
-    public function getCategory()
+    public function getCategory(): ?QUI\ERP\Products\Category\Category
     {
         return null;
     }
@@ -305,7 +325,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      *
      * @return array
      */
-    public function getCategories()
+    public function getCategories(): array
     {
         return [];
     }
@@ -313,7 +333,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * @return bool
      */
-    public function hasOfferPrice()
+    public function hasOfferPrice(): bool
     {
         return false;
     }
@@ -323,14 +343,14 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      *
      * @return Image[]
      */
-    public function getImages()
+    public function getImages(): array
     {
         return [];
     }
 
     //region calc
 
-    public function calc($Calc = null)
+    public function calc($Calc = null): static
     {
         return $this;
     }

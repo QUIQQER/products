@@ -564,7 +564,7 @@ class Products
                 'category' => $categoryIds[0],
                 'categories' => ',' . implode(',', $categoryIds) . ',',
                 'type' => $type,
-                'c_user' => QUI::getUserBySession()->getId(),
+                'c_user' => QUI::getUserBySession()->getUUID(),
                 'c_date' => date('Y-m-d H:i:s'),
                 'parent' => $parent
             ]

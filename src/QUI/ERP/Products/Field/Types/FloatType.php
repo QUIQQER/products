@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\Exception;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Search;
 
@@ -29,17 +30,17 @@ class FloatType extends QUI\ERP\Products\Field\Field
     /**
      * @var string
      */
-    protected $columnType = 'DOUBLE';
+    protected string $columnType = 'DOUBLE';
 
     /**
-     * @var int
+     * @var int|bool
      */
-    protected $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
+    protected int|bool $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
 
     /**
      * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new View($this->getFieldDataForView());
     }
@@ -49,7 +50,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
      *
      * @return View
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         $attributes = $this->getFieldDataForView();
         $value = $this->getValue();
@@ -62,7 +63,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/FloatType';
     }
@@ -72,16 +73,16 @@ class FloatType extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
         }
 
         if (!is_numeric($value)) {
-            throw new QUI\ERP\Products\Field\Exception([
+            throw new Exception([
                 'quiqqer/products',
                 'exception.field.invalid',
                 [
@@ -97,9 +98,9 @@ class FloatType extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return mixed
+     * @return float|null
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): ?float
     {
         // @TODO diese beiden Werte aus Settings nehmen (s. Price)
         $decimalSeparator = '.';
@@ -148,7 +149,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
     /**
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return !is_float($this->value);
     }
@@ -158,7 +159,7 @@ class FloatType extends QUI\ERP\Products\Field\Field
      *
      * @return array
      */
-    public function getSearchTypes()
+    public function getSearchTypes(): array
     {
         return [
             Search::SEARCHTYPE_TEXT,
@@ -171,9 +172,9 @@ class FloatType extends QUI\ERP\Products\Field\Field
     /**
      * Get default search type
      *
-     * @return string
+     * @return string|null
      */
-    public function getDefaultSearchType()
+    public function getDefaultSearchType(): ?string
     {
         return Search::SEARCHTYPE_SELECTRANGE;
     }

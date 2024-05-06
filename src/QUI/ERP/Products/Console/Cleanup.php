@@ -16,7 +16,7 @@ use QUI;
 class Cleanup extends QUI\System\Console\Tool
 {
     /**
-     * Konstruktor
+     * Constructor
      */
     public function __construct()
     {
@@ -29,7 +29,7 @@ class Cleanup extends QUI\System\Console\Tool
     /**
      * Execute the console tool
      */
-    public function execute()
+    public function execute(): void
     {
         QUI\ERP\Products\Handler\Products::cleanup();
     }

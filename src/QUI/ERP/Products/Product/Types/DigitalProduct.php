@@ -3,6 +3,7 @@
 namespace QUI\ERP\Products\Product\Types;
 
 use QUI;
+use QUI\Locale;
 
 /**
  * Class DigitalProduct
@@ -12,10 +13,10 @@ use QUI;
 class DigitalProduct extends AbstractType
 {
     /**
-     * @param QUI\Locale $Locale
+     * @param Locale|null $Locale
      * @return string
      */
-    public static function getTypeTitle($Locale = null)
+    public static function getTypeTitle(QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -25,10 +26,10 @@ class DigitalProduct extends AbstractType
     }
 
     /**
-     * @param QUI\Locale $Locale
+     * @param Locale|null $Locale
      * @return string
      */
-    public static function getTypeDescription($Locale = null)
+    public static function getTypeDescription(QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();

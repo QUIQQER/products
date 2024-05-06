@@ -4,6 +4,7 @@
  * This file contains package_quiqqer_products_ajax_products_variant_getEditableFieldList
  */
 
+use QUI\ERP\Products\Field\Field;
 use QUI\ERP\Products\Handler\Products;
 
 /**
@@ -33,14 +34,12 @@ QUI::$Ajax->registerFunction(
         // editable product fields
         $editable = Products::getGlobalEditableVariantFields();
         $editable = array_map(function ($Field) {
-            /* @var $Field \QUI\ERP\Products\Field\Field */
             return $Field->getId();
         }, $editable);
 
         // inherited product fields
         $inherited = Products::getGlobalInheritedVariantFields();
         $inherited = array_map(function ($Field) {
-            /* @var $Field \QUI\ERP\Products\Field\Field */
             return $Field->getId();
         }, $inherited);
 
@@ -88,7 +87,7 @@ QUI::$Ajax->registerFunction(
 
         // data
         $fields = array_map(function ($Field) {
-            /* @var $Field \QUI\ERP\Products\Field\Field */
+            /* @var $Field Field */
             return $Field->getAttributes();
         }, $fields);
 

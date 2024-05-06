@@ -52,7 +52,7 @@ QUI::$Ajax->registerFunction(
         } else {
             try {
                 $Site = $Project->get($siteId);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 $Site = $Project->firstChild();
             }
 
@@ -81,7 +81,7 @@ QUI::$Ajax->registerFunction(
         }
 
         $Search = Search::getFrontendSearch($Site);
-        $searchParams = \json_decode($searchParams, true);
+        $searchParams = json_decode($searchParams, true);
         $active = 1;
 
         if (isset($searchParams['page'])) {
@@ -103,11 +103,11 @@ QUI::$Ajax->registerFunction(
         $result = $Search->search($searchParams);
         $count = $Search->search($searchParams, true);
 
-        if (!\count($result)) {
+        if (!count($result)) {
             return $html;
         }
 
-        $pages = \ceil($count / $limit);
+        $pages = ceil($count / $limit);
 
         $User = QUI::getUserBySession();
 
@@ -124,7 +124,7 @@ QUI::$Ajax->registerFunction(
             ]);
 
             return $Engine->fetch(OPT_DIR . 'quiqqer/products/template/search/frontend/SuggestRendered.html');
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
             return '';

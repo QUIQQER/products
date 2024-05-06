@@ -11,6 +11,9 @@
  *
  * @return array
  */
+
+use QUI\ERP\Products\Interfaces\CategoryInterface;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_path',
     function ($categoryId) {
@@ -23,18 +26,16 @@ QUI::$Ajax->registerFunction(
         $Parent = $Category->getParent();
 
         while ($Parent) {
-            /* @var $Parent \QUI\ERP\Products\Interfaces\CategoryInterface */
+            /* @var $Parent CategoryInterface */
             try {
                 $result[] = $Parent->getId();
                 $Parent = $Parent->getParent();
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 break;
             }
         }
 
-        $result = \array_reverse($result);
-
-        return $result;
+        return array_reverse($result);
     },
     ['categoryId'],
     'Permission::checkAdminUser'

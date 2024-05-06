@@ -9,6 +9,9 @@ namespace QUI\ERP\Products\Controls\Products;
 use QUI;
 use QUI\ERP\Products\Handler\Fields;
 
+use function dirname;
+use function method_exists;
+
 /**
  * Class ProductEdit
  *
@@ -21,25 +24,22 @@ class ProductEdit extends QUI\Control
      *
      * @param array $attributes
      */
-    public function __construct($attributes = [])
+    public function __construct(array $attributes = [])
     {
         $this->setAttributes([
             'Product' => false
         ]);
 
         $this->addCSSClass('quiqqer-products-productEdit');
-        $this->addCSSFile(\dirname(__FILE__) . '/ProductEdit.css');
+        $this->addCSSFile(dirname(__FILE__) . '/ProductEdit.css');
 
         parent::__construct($attributes);
     }
 
     /**
-     * (non-PHPdoc)
-     *
      * @throws QUI\Exception
-     * @see \QUI\Control::create()
      */
-    public function getBody()
+    public function getBody(): string
     {
         /* @var $Product QUI\ERP\Products\Product\Product */
         $Engine = QUI::getTemplateManager()->getEngine();
@@ -48,7 +48,9 @@ class ProductEdit extends QUI\Control
 
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
             $View = $Product->getView();
-            $Price = $Calc->getProductPrice($Product->createUniqueProduct($Calc));
+            $Price = $Calc->getProductPrice(
+                $Product->createUniqueProduct($Calc->getUser())
+            );
         } else {
             $View = $Product;
             $Price = $Product->getPrice();
@@ -57,7 +59,7 @@ class ProductEdit extends QUI\Control
         $customFields = [];
 
         foreach ($Product->getFields() as $Field) {
-            if (\method_exists($Field, 'isCustomField') && $Field->isCustomField()) {
+            if (method_exists($Field, 'isCustomField') && $Field->isCustomField()) {
                 $customFields[] = $Field;
             }
         }
@@ -65,12 +67,10 @@ class ProductEdit extends QUI\Control
         $Engine->assign([
             'Product' => $View,
             'Price' => $Price,
-
             'customFields' => $customFields,
-
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST)
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ProductEdit.html');
+        return $Engine->fetch(dirname(__FILE__) . '/ProductEdit.html');
     }
 }

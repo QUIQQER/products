@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
     function ($productId, $permissions) {
         $Products = new QUI\ERP\Products\Handler\Products();
         $Product = $Products->getProduct($productId);
-        $permissions = \json_decode($permissions, true);
+        $permissions = json_decode($permissions, true);
 
         $Product->clearPermissions();
         $Product->setPermissions($permissions);

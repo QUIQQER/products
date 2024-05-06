@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Product\Types;
 
 use QUI\ERP\Products\Interfaces\ProductTypeInterface;
 use QUI\ERP\Products\Product\Product;
+use QUI\Locale;
 
 /**
  * Class AbstractType
@@ -17,28 +18,28 @@ abstract class AbstractType extends Product implements ProductTypeInterface
     /**
      * Returns the backend panel control
      */
-    public static function getTypeBackendPanel()
+    public static function getTypeBackendPanel(): string
     {
         return 'package/quiqqer/products/bin/controls/products/Product';
     }
 
     /**
-     * @return bool|mixed
+     * @return bool
      */
-    public static function isTypeSelectable()
+    public static function isTypeSelectable(): bool
     {
         return true;
     }
 
     /**
-     * @param null $Locale
-     * @return mixed
+     * @param Locale|null $Locale
+     * @return string
      */
-    abstract public static function getTypeTitle($Locale = null);
+    abstract public static function getTypeTitle(Locale $Locale = null): string;
 
     /**
-     * @param null $Locale
-     * @return mixed
+     * @param Locale|null $Locale
+     * @return string
      */
-    abstract public static function getTypeDescription($Locale = null);
+    abstract public static function getTypeDescription(Locale $Locale = null): string;
 }

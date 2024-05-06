@@ -6,6 +6,12 @@
 
 namespace QUI\ERP\Products\Interfaces;
 
+use QUI\ERP\Products\Field\Field;
+use QUI\Exception;
+use QUI\Locale;
+use QUI\Projects\Project;
+use QUI\Interfaces\Projects\Site;
+
 /**
  * Interface Category for the view
  * has only getter methods
@@ -19,88 +25,88 @@ interface CategoryViewInterface
      *
      * @return integer
      */
-    public function getId();
+    public function getId(): int;
 
     /**
      * Return the translated title
      *
-     * @param null|\QUI\Locale $Locale
+     * @param null|Locale $Locale
      * @return string
      */
-    public function getTitle($Locale = null);
+    public function getTitle(Locale $Locale = null): string;
 
     /**
      * Return the translated description
      *
-     * @param null|\QUI\Locale $Locale
+     * @param null|Locale $Locale
      * @return string
      */
-    public function getDescription($Locale = null);
+    public function getDescription(Locale $Locale = null): string;
 
     /**
-     * Return the to the category
+     * Return the category
      *
-     * @param null|\QUI\Projects\Project $Project
+     * @param Project|null $Project
      * @return string
      */
-    public function getUrl($Project = null);
+    public function getUrl(Project $Project = null): string;
 
     /**
-     * Return the Id of the parent category
-     * Category 0 has no parent => returns false
+     * Return the ID of the parent category
+     * - false has no parent => returns false
      *
      * @return integer|boolean
-     * @throws \QUI\Exception
+     * @throws Exception
      */
-    public function getParentId();
+    public function getParentId(): bool|int;
 
     /**
-     * Return the the parent category
-     * Category 0 has no parent => returns false
+     * Return the parent category
+     * - false has no parent => returns false
      *
      * @return bool|CategoryInterface
-     * @throws \QUI\Exception
+     * @throws Exception
      */
-    public function getParent();
+    public function getParent(): bool|CategoryInterface;
 
     /**
      * Return the attributes
      *
      * @return array
      */
-    public function getAttributes();
+    public function getAttributes(): array;
 
     /**
      * Return the sub categories
      *
      * @return array
      */
-    public function getChildren();
+    public function getChildren(): array;
 
     /**
      * Count the subcategories
      *
      * @return integer
      */
-    public function countChildren();
+    public function countChildren(): int;
 
     /**
      * Return the category site
      *
-     * @param \QUI\Projects\Project|null $Project
-     * @return \QUI\Projects\Site
+     * @param Project|null $Project
+     * @return Site
      *
-     * @throws \QUI\Exception
+     * @throws Exception
      */
-    public function getSite($Project = null);
+    public function getSite(Project $Project = null): Site;
 
     /**
      * Return all sites which assigned the category
      *
-     * @param \QUI\Projects\Project|null $Project
+     * @param Project|null $Project
      * @return array
      */
-    public function getSites($Project = null);
+    public function getSites(Project $Project = null): array;
 
     /**
      * Return all products from the category
@@ -112,7 +118,7 @@ interface CategoryViewInterface
      *                              $queryParams['debug']
      * @return array
      */
-    public function getProducts($params = []);
+    public function getProducts(array $params = []): array;
 
     /**
      * Return all product ids from the category
@@ -124,7 +130,7 @@ interface CategoryViewInterface
      *                              $queryParams['debug']
      * @return array
      */
-    public function getProductIds($params = []);
+    public function getProductIds(array $params = []): array;
 
     /**
      * Return the number of the products in the category
@@ -134,27 +140,27 @@ interface CategoryViewInterface
      *                              $queryParams['debug']
      * @return integer
      */
-    public function countProducts($params = []);
+    public function countProducts(array $params = []): int;
 
     /**
      * Return the category fields
      *
      * @return array
      */
-    public function getFields();
+    public function getFields(): array;
 
     /**
      * Return a category field
      *
      * @param integer $fieldId - Field-ID
-     * @return \QUI\ERP\Products\Field\Field
+     * @return Field|null
      */
-    public function getField($fieldId);
+    public function getField(int $fieldId): ?Field;
 
     /**
      * Get all fields that are set as searchable for this category
      *
      * @return array
      */
-    public function getSearchFields();
+    public function getSearchFields(): array;
 }

@@ -7,8 +7,11 @@
 namespace QUI\ERP\Products\Field\Types;
 
 use QUI;
+use QUI\ERP\Products\Field\Exception;
 use QUI\ERP\Products\Field\View;
 use QUI\ERP\Products\Handler\Search;
+use QUI\ExceptionStack;
+use QUI\Locale;
 
 use function count;
 use function implode;
@@ -18,6 +21,8 @@ use function is_numeric;
 use function is_string;
 use function json_decode;
 use function json_last_error;
+
+use const JSON_ERROR_NONE;
 
 /**
  * Class GroupList
@@ -36,14 +41,14 @@ use function json_last_error;
  */
 class GroupList extends QUI\ERP\Products\Field\Field
 {
-    protected $searchDataType = Search::SEARCHDATATYPE_TEXT;
+    protected int|bool $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
     /**
      * GroupList constructor.
      * @param int $fieldId
      * @param array $params
      */
-    public function __construct($fieldId, array $params)
+    public function __construct(int $fieldId, array $params)
     {
         $this->setOptions([
             'groupIds' => false,
@@ -56,7 +61,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
     /**
      * @return View
      */
-    public function getBackendView()
+    public function getBackendView(): View
     {
         return new View($this->getFieldDataForView());
     }
@@ -64,20 +69,20 @@ class GroupList extends QUI\ERP\Products\Field\Field
     /**
      * @return View
      */
-    public function getFrontendView()
+    public function getFrontendView(): View
     {
         $params = $this->getFieldDataForView();
         $users = $this->getUsers();
 
-        if (is_array($users)) {
-            $value = [];
+        $value = [];
 
-            foreach ($users as $User) {
-                if ($User->isActive()) {
-                    $value[] = $User->getName();
-                }
+        foreach ($users as $User) {
+            if ($User->isActive()) {
+                $value[] = $User->getName();
             }
+        }
 
+        if (empty($value)) {
             $params['value'] = implode(', ', $value);
         }
 
@@ -89,14 +94,14 @@ class GroupList extends QUI\ERP\Products\Field\Field
      *
      * @return QUI\Interfaces\Users\User[]
      */
-    public function getUsers()
+    public function getUsers(): array
     {
         $result = [];
 
         foreach ($this->getUserIds() as $userId) {
             try {
                 $result[$userId] = QUI::getUsers()->get($userId);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 continue;
             }
         }
@@ -109,7 +114,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
      *
      * @return int[]
      */
-    public function getUserIds()
+    public function getUserIds(): array
     {
         $groups = $this->getGroups();
         $result = [];
@@ -134,7 +139,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
      *
      * @return array
      */
-    public function getGroups()
+    public function getGroups(): array
     {
         $Groups = QUI::getGroups();
         $groupIds = $this->getOption('groupIds');
@@ -161,7 +166,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/GroupList';
     }
@@ -169,7 +174,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
     /**
      * @return string
      */
-    public function getJavaScriptSettings()
+    public function getJavaScriptSettings(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/GroupListSettings';
     }
@@ -179,9 +184,9 @@ class GroupList extends QUI\ERP\Products\Field\Field
      * is the value valid for the field type?
      *
      * @param mixed $value
-     * @throws \QUI\ERP\Products\Field\Exception
+     * @throws Exception
      */
-    public function validate($value)
+    public function validate(mixed $value): void
     {
         if (empty($value)) {
             return;
@@ -197,7 +202,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
             // Check if string is username
             try {
                 $User = QUI::getUsers()->getUserByName($value);
-                $userIds[] = $User->getId();
+                $userIds[] = $User->getUUID();
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeDebugException($Exception);
 
@@ -205,7 +210,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 $userIds = json_decode($value, true);
 
                 // Check if string was username
-                if (json_last_error() !== \JSON_ERROR_NONE) {
+                if (json_last_error() !== JSON_ERROR_NONE) {
                     $userIds = [];
                 }
             }
@@ -218,7 +223,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
         }
 
         if (count($userIds) > 1 && !$multipleUsers) {
-            throw new QUI\ERP\Products\Field\Exception([
+            throw new Exception([
                 'quiqqer/products',
                 'exception.field.grouplist.user.limit.reached',
                 [
@@ -227,17 +232,6 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 ]
             ]);
         }
-
-//        if (empty($userIds)) {
-//            throw new QUI\ERP\Products\Field\Exception(array(
-//                'quiqqer/products',
-//                'exception.field.invalid',
-//                array(
-//                    'fieldId'    => $this->getId(),
-//                    'fieldTitle' => $this->getTitle()
-//                )
-//            ));
-//        }
 
         $isUserInGroups = function ($userGroups) use ($groupIds) {
             if (empty($groupIds)) {
@@ -257,7 +251,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
         try {
             foreach ($userIds as $userId) {
                 if (!is_numeric($userId)) {
-                    throw new QUI\ERP\Products\Field\Exception([
+                    throw new Exception([
                         'quiqqer/products',
                         'exception.field.grouplist.invalid.userId'
                     ]);
@@ -267,11 +261,11 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 $userGroups = $User->getGroups(false);
 
                 if (!$isUserInGroups($userGroups)) {
-                    throw new QUI\ERP\Products\Field\Exception([
+                    throw new Exception([
                         'quiqqer/products',
                         'exception.field.grouplist.user.not.in.group',
                         [
-                            'userId' => $User->getId(),
+                            'userId' => $User->getUUID(),
                             'username' => $User->getUsername(),
                             'groups' => implode(',', $groupIds)
                         ]
@@ -279,7 +273,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 }
             }
         } catch (QUI\Exception $Exception) {
-            throw new QUI\ERP\Products\Field\Exception([
+            throw new Exception([
                 'quiqqer/products',
                 'exception.field.unexptected.error',
                 [
@@ -295,9 +289,9 @@ class GroupList extends QUI\ERP\Products\Field\Field
      * Cleanup the value, so the value is valid
      *
      * @param mixed $value
-     * @return mixed
+     * @return array
      */
-    public function cleanup($value)
+    public function cleanup(mixed $value): array
     {
         $groupIds = $this->getOption('groupIds');
         $multipleUsers = $this->getOption('multipleUsers');
@@ -310,7 +304,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
             // Check if string is username
             try {
                 $User = QUI::getUsers()->getUserByName($value);
-                $userIds[] = $User->getId();
+                $userIds[] = $User->getUUID();
             } catch (\Exception $Exception) {
                 QUI\System\Log::writeDebugException($Exception);
 
@@ -318,7 +312,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 $userIds = json_decode($value, true);
 
                 // Check if string was username
-                if (json_last_error() !== \JSON_ERROR_NONE) {
+                if (json_last_error() !== JSON_ERROR_NONE) {
                     $userIds = [];
                 }
             }
@@ -359,10 +353,10 @@ class GroupList extends QUI\ERP\Products\Field\Field
                 $userGroups = $User->getGroups(false);
 
                 if ($isUserInGroups($userGroups)) {
-                    $result[] = $User->getId();
+                    $result[] = $User->getUUID();
                 }
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return [];
         }
 
@@ -372,12 +366,14 @@ class GroupList extends QUI\ERP\Products\Field\Field
     /**
      * Return value for use in product search cache
      *
-     * @param QUI\Locale $Locale
-     * @return string
+     * @param Locale|null $Locale
+     * @return string|array|null
      *
+     * @throws ExceptionStack
+     * @throws QUI\Database\Exception
      * @throws QUI\Exception
      */
-    public function getSearchCacheValue($Locale = null)
+    public function getSearchCacheValue(QUI\Locale $Locale = null): null|string|array
     {
         if ($this->isEmpty()) {
             return null;
@@ -402,7 +398,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
      *
      * @return array
      */
-    public function getSearchTypes()
+    public function getSearchTypes(): array
     {
         return [
             Search::SEARCHTYPE_TEXT,
@@ -416,9 +412,9 @@ class GroupList extends QUI\ERP\Products\Field\Field
     /**
      * Get default search type
      *
-     * @return string
+     * @return string|null
      */
-    public function getDefaultSearchType()
+    public function getDefaultSearchType(): ?string
     {
         return Search::SEARCHTYPE_INPUTSELECTSINGLE;
     }
@@ -426,18 +422,18 @@ class GroupList extends QUI\ERP\Products\Field\Field
     /**
      * Return the value in dependence of a locale (language)
      *
-     * @param QUI\Locale $Locale (optional)
-     * @return array|string
+     * @param bool|Locale|null $Locale (optional)
+     * @return string
      */
-    public function getValueByLocale($Locale = null)
+    public function getValueByLocale(bool|Locale $Locale = null): string|array
     {
         $Users = QUI::getUsers();
 
         /**
-         * @param QUI\Users\User $User
+         * @param QUI\Interfaces\Users\User $User
          * @return string
          */
-        $getName = function ($User) {
+        $getName = function (QUI\Interfaces\Users\User $User) {
             $parts = [];
 
             if (!empty($User->getAttribute('firstname'))) {

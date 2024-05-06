@@ -23,7 +23,7 @@ abstract class CustomInputField extends QUI\ERP\Products\Field\Field implements 
      *
      * @return boolean
      */
-    public function isCustomField()
+    public function isCustomField(): bool
     {
         return true;
     }

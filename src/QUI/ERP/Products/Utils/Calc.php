@@ -8,18 +8,24 @@ namespace QUI\ERP\Products\Utils;
 
 use QUI;
 use QUI\ERP\Accounting\Calc as ErpCalc;
+use QUI\ERP\Currency\Currency;
+use QUI\ERP\Products\Field\Types\Price;
 use QUI\ERP\Products\Field\Types\Vat;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Interfaces\UniqueFieldInterface;
 use QUI\ERP\Products\Product\ProductList;
 use QUI\ERP\Products\Product\UniqueProduct;
 use QUI\ERP\Tax\TaxEntry;
 use QUI\ERP\Tax\TaxType;
 use QUI\ERP\Tax\Utils as TaxUtils;
+use QUI\Exception;
 use QUI\Interfaces\Users\User as UserInterface;
 
 use function count;
 use function floatval;
+use function is_callable;
+use function is_null;
 use function key;
 use function round;
 
@@ -76,28 +82,28 @@ class Calc
     const CALCULATION_BASIS_BRUTTO = ErpCalc::CALCULATION_BASIS_BRUTTO;
 
     /**
-     * @var UserInterface
+     * @var ?UserInterface
      */
-    protected $User = null;
+    protected ?UserInterface $User = null;
 
     /**
      * @var null|QUI\ERP\Currency\Currency
      */
-    protected $Currency = null;
+    protected ?Currency $Currency = null;
 
     /**
      * Flag for ignore vat calculation (force ignore VAT)
      *
      * @var bool
      */
-    protected $ignoreVatCalculation = false;
+    protected bool $ignoreVatCalculation = false;
 
     /**
      * Calc constructor.
      *
-     * @param UserInterface|bool $User - calculation user
+     * @param ?UserInterface $User - calculation user
      */
-    public function __construct($User = false)
+    public function __construct(UserInterface $User = null)
     {
         if (!QUI::getUsers()->isUser($User)) {
             $User = QUI::getUserBySession();
@@ -109,10 +115,10 @@ class Calc
     /**
      * Static instance create
      *
-     * @param UserInterface|bool $User - optional
+     * @param UserInterface|null $User - optional
      * @return Calc
      */
-    public static function getInstance($User = false)
+    public static function getInstance(?UserInterface $User = null): Calc
     {
         if (!$User && QUI::isBackend()) {
             $User = QUI::getUsers()->getSystemUser();
@@ -134,7 +140,7 @@ class Calc
     /**
      * Static instance create
      */
-    public function ignoreVatCalculation()
+    public function ignoreVatCalculation(): void
     {
         $this->ignoreVatCalculation = true;
     }
@@ -145,7 +151,7 @@ class Calc
      *
      * @param UserInterface $User
      */
-    public function setUser(UserInterface $User)
+    public function setUser(UserInterface $User): void
     {
         $this->User = $User;
     }
@@ -153,9 +159,9 @@ class Calc
     /**
      * Return the calc user
      *
-     * @return UserInterface
+     * @return ?UserInterface
      */
-    public function getUser()
+    public function getUser(): UserInterface|null
     {
         return $this->User;
     }
@@ -165,7 +171,7 @@ class Calc
      *
      * @param QUI\ERP\Currency\Currency $Currency
      */
-    public function setCurrency(QUI\ERP\Currency\Currency $Currency)
+    public function setCurrency(QUI\ERP\Currency\Currency $Currency): void
     {
         $this->Currency = $Currency;
     }
@@ -173,11 +179,12 @@ class Calc
     /**
      * Return the currency
      *
-     * @return QUI\ERP\Currency\Currency
+     * @return Currency|null
+     * @throws Exception
      */
     public function getCurrency(): ?QUI\ERP\Currency\Currency
     {
-        if (\is_null($this->Currency)) {
+        if (is_null($this->Currency)) {
             $this->Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
         }
 
@@ -193,10 +200,10 @@ class Calc
      *
      * @throws QUI\Exception
      */
-    public function calcProductList(ProductList $List, $callback = false): ProductList
+    public function calcProductList(ProductList $List, callable|bool $callback = false): ProductList
     {
         // calc data
-        if (!\is_callable($callback)) {
+        if (!is_callable($callback)) {
             return $List->calc();
         }
 
@@ -208,13 +215,11 @@ class Calc
         if ($Order) {
             $DeliveryAddress = $Order->getDeliveryAddress();
 
-
-            if ($DeliveryAddress->getId() && $Order->getDeliveryAddress() !== $CurrentAddress) {
+            if ($DeliveryAddress->getUUID() && $Order->getDeliveryAddress() !== $CurrentAddress) {
                 $recalculateProducts = true;
             }
 
-
-            if ($DeliveryAddress->getId()) {
+            if ($DeliveryAddress->getUUID()) {
                 QUI\ERP\Utils\User::setUserCurrentAddress(
                     $this->getUser(),
                     $DeliveryAddress
@@ -243,7 +248,7 @@ class Calc
                 } else {
                     $Area = $DefaultArea;
                 }
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 
@@ -352,13 +357,8 @@ class Calc
             } else {
                 try {
                     $VatType = $PriceFactor->getVatType();
-
-                    if (!$VatType) {
-                        throw new QUI\Exception('placeholder exception');
-                    }
-
                     $Vat = QUI\ERP\Tax\Utils::getTaxEntry($VatType, $Area);
-                } catch (QUI\Exception $Exception) {
+                } catch (QUI\Exception) {
                     $Vat = QUI\ERP\Tax\Utils::getTaxByUser($this->getUser());
                 }
 
@@ -595,22 +595,22 @@ class Calc
      *
      * @param UniqueProduct $Product
      * @param callable|boolean $callback - optional, callback function for the calculated data array
-     * @param null|QUI\ERP\Products\Field\Types\Price $Price - optional, price object to calc with
+     * @param Price|UniqueFieldInterface|null $Price - optional, price object to calc with
      * @param bool $ignorePriceFactors - ignore price factors, default = false
      *
      * @return QUI\ERP\Money\Price
      *
+     * @throws Exception
      * @throws QUI\Users\Exception
-     * @throws QUI\Exception
      */
     public function getProductPrice(
         UniqueProduct $Product,
-        $callback = false,
-        $Price = null,
+        callable|bool $callback = false,
+        Price|UniqueFieldInterface $Price = null,
         bool $ignorePriceFactors = false
     ): QUI\ERP\Money\Price {
         // calc data
-        if (!\is_callable($callback)) {
+        if (!is_callable($callback)) {
             $Product->calc($this);
 
             return $Product->getPrice();
@@ -768,7 +768,7 @@ class Calc
                 if ($TaxEntry->isActive()) {
                     $Vat = $TaxEntry;
                 }
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 QUI\ERP\Debug::getInstance()->log(
                     'Product Vat ist nicht für den Benutzer gültig',
                     'quiqqer/products'
@@ -829,7 +829,7 @@ class Calc
                 $bruttoPrice = $checkVatBrutto;
             }
 
-            // if the user is brutto
+            // if the user is brutto,
             // and we have a quantity
             // we need to calc first the brutto product price of one product
             // -> because of 1 cent rounding error
@@ -912,7 +912,7 @@ class Calc
      * Rounds the value via shop config
      *
      * @param string $value
-     * @return float|mixed
+     * @return float
      */
     public function round(string $value): float
     {
@@ -922,12 +922,12 @@ class Calc
     /**
      * Calc the price in dependence of the user
      *
-     * @param int|float $nettoPrice - netto price
+     * @param float|int $nettoPrice - netto price
      * @return int|float
      *
      * @throws QUI\Exception
      */
-    public function getPrice($nettoPrice)
+    public function getPrice(float|int $nettoPrice): float|int
     {
         if (empty($nettoPrice)) {
             return 0;
@@ -946,16 +946,19 @@ class Calc
     }
 
     /**
-     * @param $price
-     * @param $formatted
-     * @param $productId - optional, id of the product
-     *
+     * @param float|int|string $price
+     * @param bool $formatted
+     * @param bool|int|string $productId - optional, id of the product
      * @return float|int|string|null
      *
-     * @throws QUI\Exception
+     * @throws Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
-    public static function calcBruttoPrice($price, $formatted, $productId = false)
-    {
+    public static function calcBruttoPrice(
+        float|int|string $price,
+        bool $formatted = false,
+        bool|int|string $productId = false
+    ): float|int|string|null {
         $price = QUI\ERP\Money\Price::validatePrice($price);
         $Area = QUI\ERP\Defaults::getArea();
         $TaxEntry = null;
@@ -970,7 +973,7 @@ class Calc
             try {
                 $TaxType = new QUI\ERP\Tax\TaxType($Vat->getValue());
                 $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 
@@ -982,7 +985,7 @@ class Calc
             } elseif ($TaxType instanceof TaxEntry) {
                 $TaxEntry = $TaxType;
             } else {
-                if (isset($formatted) && $formatted) {
+                if ($formatted) {
                     return $Currency->format($price);
                 }
 
@@ -996,7 +999,7 @@ class Calc
         $price = $price * $vat;
         $price = round($price, $Currency->getPrecision());
 
-        if (isset($formatted) && $formatted) {
+        if ($formatted) {
             return $Currency->format($price);
         }
 
@@ -1004,16 +1007,20 @@ class Calc
     }
 
     /**
-     * @param $price
-     * @param $formatted
+     * @param float|int|string $price
+     * @param bool $formatted
      * @param $productId - optional, id of the product
      *
      * @return float|int|string|null
      *
-     * @throws QUI\Exception
+     * @throws Exception
+     * @throws QUI\ERP\Products\Product\Exception
      */
-    public static function calcNettoPrice($price, $formatted, $productId)
-    {
+    public static function calcNettoPrice(
+        float|int|string $price,
+        bool $formatted = false,
+        int|string|bool $productId = false
+    ): float|int|string|null {
         $price = QUI\ERP\Money\Price::validatePrice($price);
         $Area = QUI\ERP\Defaults::getArea();
         $TaxEntry = null;
@@ -1027,7 +1034,7 @@ class Calc
             try {
                 $TaxType = new QUI\ERP\Tax\TaxType($Vat->getValue());
                 $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 
@@ -1039,7 +1046,7 @@ class Calc
             } elseif ($TaxType instanceof TaxEntry) {
                 $TaxEntry = $TaxType;
             } else {
-                if (isset($formatted) && $formatted) {
+                if ($formatted) {
                     return QUI\ERP\Defaults::getCurrency()->format($price);
                 }
 
@@ -1052,7 +1059,7 @@ class Calc
 
         $price = $price / $vat;
 
-        if (isset($formatted) && $formatted) {
+        if ($formatted) {
             return QUI\ERP\Defaults::getCurrency()->format($price);
         }
 
@@ -1064,7 +1071,7 @@ class Calc
      */
 
     /**
-     * Return the tax message for an user
+     * Return the tax message for a user
      *
      * @return string
      *

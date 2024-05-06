@@ -9,6 +9,11 @@ namespace QUI\ERP\Products\Product;
 use QUI;
 use QUI\ERP\Products\Field\View;
 
+use function dirname;
+use function file_get_contents;
+use function is_a;
+use function json_encode;
+
 /**
  * Class ProductListView
  * FrontendView for a product list
@@ -20,27 +25,27 @@ class ProductListFrontendView
     /**
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
-     * @var ProductList
+     * @var ?ProductList
      */
-    protected $ProductList = null;
+    protected ?ProductList $ProductList = null;
 
     /**
      * @var bool
      */
-    protected $hidePrice;
+    protected int|bool|null $hidePrice;
 
     /**
      * @var null|QUI\Locale
      */
-    protected $Locale = null;
+    protected ?QUI\Locale $Locale = null;
 
     /**
      * @var null|QUI\ERP\Currency\Currency
      */
-    protected $Currency = null;
+    protected ?QUI\ERP\Currency\Currency $Currency = null;
 
     /**
      * ProductListView constructor.
@@ -49,7 +54,7 @@ class ProductListFrontendView
      * @param null|QUI\Locale $Locale
      * @throws QUI\Exception
      */
-    public function __construct(ProductList $ProductList, $Locale = null)
+    public function __construct(ProductList $ProductList, QUI\Locale $Locale = null)
     {
         $this->ProductList = $ProductList;
         $this->Currency = $ProductList->getCurrency();
@@ -65,7 +70,7 @@ class ProductListFrontendView
      *
      * @throws QUI\Exception
      */
-    protected function parse()
+    protected function parse(): void
     {
         $Locale = $this->Locale;
 
@@ -199,7 +204,7 @@ class ProductListFrontendView
                     continue;
                 }
 
-                if (!\is_a($Field->getParentClass(), QUI\ERP\Products\Field\CustomInputFieldInterface::class, true)) {
+                if (!is_a($Field->getParentClass(), QUI\ERP\Products\Field\CustomInputFieldInterface::class, true)) {
                     continue;
                 }
 
@@ -272,10 +277,10 @@ class ProductListFrontendView
      * Format the currency
      * - or recalculate it into another currency
      *
-     * @param int|float $price
+     * @param float|int $price
      * @return string
      */
-    protected function formatPrice($price): string
+    protected function formatPrice(float|int $price): string
     {
         return $this->Currency->format($price);
     }
@@ -285,7 +290,7 @@ class ProductListFrontendView
     /**
      * Set the price to hidden
      */
-    public function hidePrices()
+    public function hidePrices(): void
     {
         $this->hidePrice = true;
     }
@@ -293,7 +298,7 @@ class ProductListFrontendView
     /**
      * Set the price to visible
      */
-    public function showPrices()
+    public function showPrices(): void
     {
         $this->hidePrice = false;
     }
@@ -301,9 +306,9 @@ class ProductListFrontendView
     /**
      * Return if prices are hidden or not
      *
-     * @return bool|int
+     * @return bool|int|null
      */
-    public function isPriceHidden()
+    public function isPriceHidden(): bool|int|null
     {
         return $this->hidePrice;
     }
@@ -336,7 +341,7 @@ class ProductListFrontendView
      */
     public function toJSON(): string
     {
-        return \json_encode($this->toArray());
+        return json_encode($this->toArray());
     }
 
     /**
@@ -364,7 +369,7 @@ class ProductListFrontendView
     }
 
     /**
-     * Return the subsum
+     * Return the sub sum
      *
      * @return string
      */
@@ -420,8 +425,6 @@ class ProductListFrontendView
      *
      * @param bool $css - optional, with inline style, default = true
      * @return string
-     *
-     * @throws QUI\Exception
      */
     public function toHTML(bool $css = true): string
     {
@@ -430,7 +433,7 @@ class ProductListFrontendView
 
         if ($css) {
             $style = '<style>';
-            $style .= \file_get_contents(\dirname(__FILE__) . '/ProductListView.css');
+            $style .= file_get_contents(dirname(__FILE__) . '/ProductListView.css');
             $style .= '</style>';
         }
 
@@ -441,6 +444,6 @@ class ProductListFrontendView
             'hidePrice' => $this->isPriceHidden(),
         ]);
 
-        return $Engine->fetch(\dirname(__FILE__) . '/ProductListView.html');
+        return $Engine->fetch(dirname(__FILE__) . '/ProductListView.html');
     }
 }

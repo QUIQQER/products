@@ -15,7 +15,7 @@ class Tax extends Vat
     /**
      * @return string
      */
-    public function getJavaScriptControl()
+    public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/Tax';
     }
@@ -23,7 +23,7 @@ class Tax extends Vat
     /**
      * Return the frontend view
      */
-    public function getFrontendView()
+    public function getFrontendView(): VatFrontendView
     {
         return new TaxFrontendView($this->getFieldDataForView());
     }

@@ -5,6 +5,7 @@
  */
 
 use QUI\ERP\Products\Handler\Products;
+use QUI\ERP\Products\Product\Types\VariantChild;
 
 /**
  * Reset inherited fields
@@ -16,7 +17,7 @@ QUI::$Ajax->registerFunction(
     function ($productId) {
         $Product = Products::getProduct($productId);
 
-        if ($Product instanceof \QUI\ERP\Products\Product\Types\VariantChild) {
+        if ($Product instanceof VariantChild) {
             $Product = $Product->getParent();
         }
 

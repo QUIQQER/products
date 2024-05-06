@@ -12,6 +12,9 @@ use QUI\ERP\Products\Field\Types\Folder as FolderProductFieldType;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Utils\VariantGenerating;
+use QUI\Exception;
+use QUI\Locale;
+use QUI\Projects\Media\Image;
 use QUI\Projects\Media\Utils as MediaUtils;
 
 use function array_flip;
@@ -20,7 +23,6 @@ use function implode;
 use function in_array;
 use function is_null;
 use function str_replace;
-use function strpos;
 
 /**
  * Class VariantChild
@@ -38,7 +40,7 @@ class VariantChild extends AbstractType
     /**
      * @var null|QUI\ERP\Products\Field\Field
      */
-    protected $OwnMediaFolderField = null;
+    protected mixed $OwnMediaFolderField = null;
 
     protected ?array $shortDescAddition = null;
 
@@ -50,7 +52,7 @@ class VariantChild extends AbstractType
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
      */
-    public function __construct($pid, $product = [])
+    public function __construct($pid, array $product = [])
     {
         parent::__construct($pid, $product);
 
@@ -144,7 +146,7 @@ class VariantChild extends AbstractType
 
                     continue;
                 }
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 $this->addField($ParentField);
 
                 $Field = $this->getField($fieldId);
@@ -170,7 +172,7 @@ class VariantChild extends AbstractType
             foreach ($attributeListFieldValues as $field) {
                 $extend = $field['title'] . ': ' . $field['valueTitle'];
 
-                if (strpos($shortDesc, $extend) === false) {
+                if (!str_contains($shortDesc, $extend)) {
                     $shortDescLines[] = $extend;
                 }
             }
@@ -194,9 +196,9 @@ class VariantChild extends AbstractType
 
     /**
      * @param null $Locale
-     * @return array|string
+     * @return string
      */
-    public static function getTypeTitle($Locale = null)
+    public static function getTypeTitle($Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -207,9 +209,9 @@ class VariantChild extends AbstractType
 
     /**
      * @param null $Locale
-     * @return array|string
+     * @return string
      */
-    public static function getTypeDescription($Locale = null)
+    public static function getTypeDescription($Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -221,7 +223,7 @@ class VariantChild extends AbstractType
     /**
      * @return bool
      */
-    public static function isTypeSelectable()
+    public static function isTypeSelectable(): bool
     {
         return false;
     }
@@ -242,9 +244,18 @@ class VariantChild extends AbstractType
         }
 
         try {
-            $this->Parent = Products::getProduct(
-                $this->getAttribute('parent')
-            );
+            $Parent = Products::getProduct($this->getAttribute('parent'));
+
+            if (!($Parent instanceof VariantParent)) {
+                QUI\System\Log::addError('Child parent is no VariantParent', [
+                    'parentId' => $Parent->getId(),
+                    'childId' => $this->getId()
+                ]);
+
+                return null;
+            }
+
+            $this->Parent = $Parent;
         } catch (QUI\Exception) {
         }
 
@@ -254,10 +265,10 @@ class VariantChild extends AbstractType
     /**
      * Return the title
      *
-     * @param null $Locale
+     * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getTitle($Locale = null)
+    public function getTitle(QUI\Locale $Locale = null): string
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_TITLE, $Locale);
 
@@ -271,10 +282,10 @@ class VariantChild extends AbstractType
     /**
      * Return the title
      *
-     * @param null $Locale
+     * @param Locale|null $Locale
      * @return string
      */
-    public function getDescription($Locale = null)
+    public function getDescription(QUI\Locale $Locale = null): string
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_SHORT_DESC, $Locale);
 
@@ -294,7 +305,7 @@ class VariantChild extends AbstractType
      * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getContent($Locale = null)
+    public function getContent(QUI\Locale $Locale = null): string
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_CONTENT, $Locale);
 
@@ -309,9 +320,9 @@ class VariantChild extends AbstractType
     }
 
     /**
-     * @return array|string
+     * @return array
      */
-    public function getCategories()
+    public function getCategories(): array
     {
         return $this->getParent()->getCategories();
     }
@@ -319,20 +330,20 @@ class VariantChild extends AbstractType
     /**
      * @return QUI\ERP\Products\Category\Category|null
      */
-    public function getCategory()
+    public function getCategory(): ?QUI\ERP\Products\Category\Category
     {
         return $this->getParent()->getCategory();
     }
 
     /**
-     * @return QUI\Projects\Media\Image|void
-     * @throws QUI\Exception
+     * @return Image
+     * @throws Exception
      */
-    public function getImage()
+    public function getImage(): QUI\Projects\Media\Image
     {
         try {
             $Image = parent::getImage();
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             return $this->getParent()->getImage();
         }
 
@@ -341,18 +352,12 @@ class VariantChild extends AbstractType
             $Media = $Project->getMedia();
             $Placeholder = $Media->getPlaceholderImage();
 
-            if ($Placeholder) {
-                if ($Image && $Placeholder->getId() !== $Image->getId()) {
-                    return $Image;
-                }
-            } elseif ($Image) {
+            if ($Placeholder && $Placeholder->getId() !== $Image->getId()) {
                 return $Image;
             }
 
-//            if ($Placeholder && $Image && $Placeholder->getId() !== $Image->getId()) {
-//                return $Image;
-//            }
-        } catch (QUI\Exception $Exception) {
+            return $Image;
+        } catch (QUI\Exception) {
         }
 
         return $this->getParent()->getImage();
@@ -364,7 +369,7 @@ class VariantChild extends AbstractType
      * @return QUI\Projects\Media\Folder
      * @throws QUI\Exception|QUI\ERP\Products\Product\Exception
      */
-    public function getMediaFolder()
+    public function getMediaFolder(): QUI\Projects\Media\Folder
     {
         try {
             if ($this->OwnMediaFolderField) {
@@ -391,7 +396,7 @@ class VariantChild extends AbstractType
      *
      * @return bool
      */
-    public function hasOwnMediaFolder()
+    public function hasOwnMediaFolder(): bool
     {
         if ($this->OwnMediaFolderField) {
             return true;
@@ -406,7 +411,7 @@ class VariantChild extends AbstractType
      *
      * @throws QUI\Exception
      */
-    public function createOwnMediaFolder()
+    public function createOwnMediaFolder(): QUI\Projects\Media\Folder
     {
         if (!$this->OwnMediaFolderField) {
             $this->OwnMediaFolderField = $this->getField(Fields::FIELD_FOLDER);
@@ -432,7 +437,7 @@ class VariantChild extends AbstractType
                 /* @var $Folder QUI\Projects\Media\Folder */
                 return $Folder;
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
 
@@ -474,7 +479,7 @@ class VariantChild extends AbstractType
      * @param array $params - optional, select params
      * @return array
      */
-    public function getImages($params = [])
+    public function getImages(array $params = []): array
     {
         try {
             $images = $this->getMediaFolder()->getImages($params);
@@ -498,7 +503,7 @@ class VariantChild extends AbstractType
      *
      * @throws QUI\ERP\Products\Product\Exception
      */
-    public function getVariantByVariantHash($hash)
+    public function getVariantByVariantHash(string $hash): AbstractType
     {
         return $this->getParent()->getVariantByVariantHash($hash);
     }
@@ -506,7 +511,7 @@ class VariantChild extends AbstractType
     /**
      * Returns the backend panel control
      */
-    public static function getTypeBackendPanel()
+    public static function getTypeBackendPanel(): string
     {
         return 'package/quiqqer/products/bin/controls/products/ProductVariant';
     }
@@ -519,7 +524,7 @@ class VariantChild extends AbstractType
      *
      * @return string
      */
-    public function generateVariantHash()
+    public function generateVariantHash(): string
     {
         $Parent = $this->getParent();
         $fields = VariantGenerating::getInstance()->getFieldsForGeneration($Parent);
@@ -541,7 +546,7 @@ class VariantChild extends AbstractType
     /**
      * @return array
      */
-    public function availableActiveChildFields()
+    public function availableActiveChildFields(): array
     {
         return $this->getParent()->availableActiveChildFields();
     }
@@ -549,21 +554,21 @@ class VariantChild extends AbstractType
     /**
      * @return array
      */
-    public function availableActiveFieldHashes()
+    public function availableActiveFieldHashes(): array
     {
         return $this->getParent()->availableActiveFieldHashes();
     }
 
     /**
      * @param array $fieldData
-     * @param null|QUI\Interfaces\Users\User $EditUser
+     * @param QUI\Interfaces\Users\User|null $EditUser
      *
      * @throws QUI\Database\Exception
      * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
      * @throws QUI\Permissions\Exception
      */
-    protected function productSave($fieldData, $EditUser = null)
+    protected function productSave(array $fieldData, QUI\Interfaces\Users\User $EditUser = null): void
     {
         // check fields with parent fields
         $Parent = $this->getParent();
@@ -654,7 +659,7 @@ class VariantChild extends AbstractType
      *
      * @return array
      */
-    public function availableChildFields()
+    public function availableChildFields(): array
     {
         return $this->getParent()->availableChildFields();
     }

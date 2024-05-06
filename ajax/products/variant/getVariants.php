@@ -4,6 +4,7 @@
  * This file contains package_quiqqer_products_ajax_products_variant_getVariants
  */
 
+use QUI\ERP\Products\Field\Types\AttributeGroup;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ERP\Products\Product\Types\VariantParent;
@@ -83,7 +84,7 @@ QUI::$Ajax->registerFunction(
         ]);
         $parentAttributeGroupFieldOptions = [];
 
-        /** @var \QUI\ERP\Products\Field\Types\AttributeGroup $ParentAttributeGroupField */
+        /** @var AttributeGroup $ParentAttributeGroupField */
         foreach ($parentAttributeGroupFields as $ParentAttributeGroupField) {
             $fieldOptions = $ParentAttributeGroupField->getOptions();
 
@@ -107,7 +108,7 @@ QUI::$Ajax->registerFunction(
         }
 
         $parentAttributeGroupFieldIds = array_map(function ($AttributeGroupField) {
-            /** @var \QUI\ERP\Products\Field\Types\AttributeGroup $AttributeGroupField */
+            /** @var AttributeGroup $AttributeGroupField */
             return $AttributeGroupField->getId();
         }, $parentAttributeGroupFields);
 

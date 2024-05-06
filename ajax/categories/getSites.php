@@ -9,6 +9,9 @@
  *
  * @param string $categoryId - Category-ID
  */
+
+use QUI\Projects\Site;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_categories_getSites',
     function ($categoryId) {
@@ -17,7 +20,7 @@ QUI::$Ajax->registerFunction(
         $sites = $Category->getSites();
         $result = [];
 
-        /* @var $Site \QUI\Projects\Site */
+        /* @var $Site Site */
         foreach ($sites as $Site) {
             $result[] = [
                 'project' => $Site->getProject()->getName(),

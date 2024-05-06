@@ -12,13 +12,16 @@
  *
  * @return string
  */
+
+use QUI\ERP\Products\Controls\Search\Suggest;
+
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_controls_search_suggestTemplate',
     function ($project, $siteId) {
         $Project = QUI::getProjectManager()->decode($project);
         $Site = $Project->get($siteId);
 
-        $Control = new \QUI\ERP\Products\Controls\Search\Suggest([
+        $Control = new Suggest([
             'Site' => $Site,
             'Project' => $Project
         ]);
@@ -28,6 +31,5 @@ QUI::$Ajax->registerFunction(
 
         return $result;
     },
-    ['project', 'siteId'],
-    false
+    ['project', 'siteId']
 );
