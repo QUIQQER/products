@@ -18,7 +18,7 @@
   "require": {
     "php": "^8.0",
     "quiqqer/core": "^2",
-    "quiqqer/erp": "^3",
+    "quiqqer/erp": "^3.2",
     "quiqqer/areas": "^2",
     "quiqqer/bricks": "^2",
     "quiqqer/currency": "^2",
