@@ -25,7 +25,7 @@
     "quiqqer/discount": "^2",
     "quiqqer/pace": "^2",
     "quiqqer/product-bricks": "^2",
-    "quiqqer/productsearch": "^2",
+    "quiqqer/productsearch": "^1.1",
     "quiqqer/slider": "^2",
     "quiqqer/tags": "^2",
     "quiqqer/utils": "^2",
