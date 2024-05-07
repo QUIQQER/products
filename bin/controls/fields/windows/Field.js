@@ -44,7 +44,7 @@ define('package/quiqqer/products/bin/controls/fields/windows/Field', [
             }));
 
             this.setAttribute('ok_button', {
-                text: QUILocale.get('quiqqer/quiqqer', 'save'),
+                text: QUILocale.get('quiqqer/core', 'save'),
                 textimage: 'fa fa-check'
             });
 

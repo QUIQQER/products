@@ -544,7 +544,7 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                 const Button = this.getButtons('status');
                 const Save = this.getButtons('update');
 
-                Save.setAttribute('text', QUILocale.get('quiqqer/quiqqer', 'save'));
+                Save.setAttribute('text', QUILocale.get('quiqqer/core', 'save'));
 
                 // product is active
                 if (status) {

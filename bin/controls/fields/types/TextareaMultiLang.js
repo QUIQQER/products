@@ -86,7 +86,7 @@ define('package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang', [
             QUIQQER.getAvailableLanguages().then(function (languages) {
                 for (let i = 0, len = languages.length; i < len; i++) {
                     this.$Select.appendChild(
-                        QUILocale.get('quiqqer/quiqqer', 'language.' + languages[i]),
+                        QUILocale.get('quiqqer/core', 'language.' + languages[i]),
                         languages[i],
                         URL_BIN_DIR + '16x16/flags/' + languages[i] + '.png'
                     );
