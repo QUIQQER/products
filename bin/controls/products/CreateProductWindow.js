@@ -42,7 +42,7 @@ define('package/quiqqer/products/bin/controls/products/CreateProductWindow', [
                     textimage: 'fa fa-plus'
                 },
                 cancel_button: {
-                    text     : QUILocale.get('quiqqer/quiqqer', 'cancel'),
+                    text     : QUILocale.get('quiqqer/core', 'cancel'),
                     textimage: false
                 }
             });
