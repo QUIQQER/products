@@ -123,7 +123,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
             // buttons
             this.$ButtonAdd = new QUIButton({
                 name     : 'add',
-                text     : QUILocale.get('quiqqer/quiqqer', 'add'),
+                text     : QUILocale.get('quiqqer/core', 'add'),
                 textimage: 'fa fa-plus',
                 events   : {
                     onClick: this.createChild
@@ -144,7 +144,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             Actions.appendChild({
                 name    : 'edit',
-                text    : QUILocale.get('quiqqer/quiqqer', 'edit'),
+                text    : QUILocale.get('quiqqer/core', 'edit'),
                 icon    : 'fa fa-edit',
                 disabled: true,
                 events  : {
@@ -158,7 +158,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             Actions.appendChild({
                 name    : 'copy',
-                text    : QUILocale.get('quiqqer/quiqqer', 'copy'),
+                text    : QUILocale.get('quiqqer/core', 'copy'),
                 icon    : 'fa fa-copy',
                 disabled: true,
                 events  : {
@@ -176,7 +176,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             Actions.appendChild({
                 name    : 'activate',
-                text    : QUILocale.get('quiqqer/quiqqer', 'activate'),
+                text    : QUILocale.get('quiqqer/core', 'activate'),
                 icon    : 'fa fa-check',
                 disabled: true,
                 events  : {
@@ -188,7 +188,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             Actions.appendChild({
                 name    : 'deactivate',
-                text    : QUILocale.get('quiqqer/quiqqer', 'deactivate'),
+                text    : QUILocale.get('quiqqer/core', 'deactivate'),
                 icon    : 'fa fa-remove',
                 disabled: true,
                 events  : {
@@ -204,7 +204,7 @@ define('package/quiqqer/products/bin/controls/products/Panel', [
 
             Actions.appendChild({
                 name    : 'delete',
-                text    : QUILocale.get('quiqqer/quiqqer', 'delete'),
+                text    : QUILocale.get('quiqqer/core', 'delete'),
                 icon    : 'fa fa-trash',
                 disabled: true,
                 events  : {
