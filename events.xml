@@ -24,4 +24,6 @@
 
     <!-- order events -->
     <event on="onQuiqqerOrderSuccessful" fire="\QUI\ERP\Products\EventHandling::onQuiqqerOrderSuccessful"/>
+
+    <event on="onQuiqqerMigrationV2" fire="\QUI\ERP\Products\EventHandling::onQuiqqerMigrationV2"/>
 </events>

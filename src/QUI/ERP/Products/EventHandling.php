@@ -11,6 +11,7 @@ use QUI\ERP\Products\Handler\Search;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\Package\Package;
 use QUI\Projects\Site\Edit;
+use QUI\System\Console\Tools\MigrationV2;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -1403,5 +1404,16 @@ class EventHandling
      */
     public static function onQuiqqerTranslatorPublish()
     {
+    }
+
+    public static function onQuiqqerMigrationV2(MigrationV2 $Console): void
+    {
+        $Console->writeLn('- Migrate products');
+        $table = QUI::getDBTableName('products');
+
+        QUI\Utils\MigrationV1ToV2::migrateUsers($table, [
+            'c_user',
+            'e_user'
+        ]);
     }
 }
