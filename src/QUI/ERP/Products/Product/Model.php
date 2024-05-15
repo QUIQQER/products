@@ -570,11 +570,10 @@ class Model extends QUI\QDOM
     /**
      * Return the product priority
      *
-     * @return int
-     *
-     * @throws \QUI\ERP\Products\Product\Exception
+     * @return int|null
+     * @throws QUI\ERP\Products\Product\Exception
      */
-    public function getPriority(): int
+    public function getPriority(): ?int
     {
         return $this->getFieldValue(Fields::FIELD_PRIORITY);
     }
