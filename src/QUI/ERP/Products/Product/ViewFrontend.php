@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use function array_filter;
 use function array_merge;
+use function get_class;
 use function implode;
 
 /**
@@ -393,6 +394,17 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
             return null;
         }
 
+        if (!($Field instanceof QUI\ERP\Products\Interfaces\FieldInterface)) {
+            QUI\System\Log::addError(
+                'Wrong instance return at QUI\ERP\Products\Product\ViewFrontend',
+                [
+                    'return type' => get_class($Field),
+                    'line' => 402
+                ]
+            );
+
+            return null;
+        }
 
         if ($Field->getId() === QUI\ERP\Products\Handler\Fields::FIELD_CONTENT) {
             return $Field;
@@ -524,7 +536,21 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      */
     public function getCalculatedPrice(int $FieldId): ?QUI\ERP\Products\Field\UniqueField
     {
-        return $this->Product->getCalculatedPrice($FieldId);
+        $Field = $this->Product->getCalculatedPrice($FieldId);
+
+        if ($Field instanceof QUI\ERP\Products\Field\UniqueField) {
+            return $Field;
+        }
+
+        QUI\System\Log::addError(
+            'Wring return value at getCalculatedPrice()',
+            [
+                'class' => ViewFrontend::class,
+                'line' => 545
+            ]
+        );
+
+        return null;
     }
 
     /**

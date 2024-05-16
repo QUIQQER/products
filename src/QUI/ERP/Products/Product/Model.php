@@ -947,11 +947,10 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * @return false|QUI\ERP\Products\Field\UniqueField
      * @throws Exception
      * @throws QUI\Exception
      */
-    public function getOriginalPrice(): bool|QUI\ERP\Products\Field\UniqueField
+    public function getOriginalPrice(): bool|QUI\ERP\Products\Field\UniqueField|QUI\ERP\Money\Price
     {
         return $this->createUniqueProduct()->getOriginalPrice();
     }
