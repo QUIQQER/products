@@ -141,9 +141,9 @@ interface ProductInterface
     /**
      * Return the main category
      *
-     * @return Category|null
+     * @return CategoryInterface|null
      */
-    public function getCategory(): ?Category;
+    public function getCategory(): ?CategoryInterface;
 
     /**
      * Return the product categories

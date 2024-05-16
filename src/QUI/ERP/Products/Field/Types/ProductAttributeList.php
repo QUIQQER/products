@@ -42,19 +42,10 @@ use function mb_strtoupper;
  */
 class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
 {
-    /**
-     * @var bool
-     */
     protected bool $searchable = false;
 
-    /**
-     * @var null
-     */
     protected mixed $defaultValue = null;
 
-    /**
-     * @var array
-     */
     protected array $disabled = [];
 
     /**

@@ -417,10 +417,8 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
 
     /**
      * Return the main category
-     *
-     * @return Category|null
      */
-    public function getCategory(): ?QUI\ERP\Products\Category\Category
+    public function getCategory(): ?QUI\ERP\Products\Interfaces\CategoryInterface
     {
         return $this->Product->getCategory();
     }
@@ -520,11 +518,11 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * Return a calculated price field
      *
      * @param integer $FieldId
-     * @return false|UniqueField
+     * @return ?UniqueField
      * @throws Exception
      * @throws QUI\Exception
      */
-    public function getCalculatedPrice(int $FieldId): bool|QUI\ERP\Products\Field\UniqueField
+    public function getCalculatedPrice(int $FieldId): ?QUI\ERP\Products\Field\UniqueField
     {
         return $this->Product->getCalculatedPrice($FieldId);
     }

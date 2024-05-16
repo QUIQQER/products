@@ -150,7 +150,7 @@ class JsonLd
      * Return the image array
      *
      * @param ProductInterface $Product
-     * @return array|QUI\Projects\Media\Image[]
+     * @return array
      */
     protected static function getImages(ProductInterface $Product): array
     {

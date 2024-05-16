@@ -9,6 +9,7 @@ parameters:
         - types
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
+    treatPhpDocTypesAsCertain: false
     customRulesetUsed: true
 services:
     -

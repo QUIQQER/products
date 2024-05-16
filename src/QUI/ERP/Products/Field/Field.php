@@ -43,102 +43,60 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 {
     /**
      * Field-ID
-     *
-     * @var integer
      */
     protected int $id;
 
-    /**
-     * @var bool
-     */
     protected bool $system = false;
 
-    /**
-     * @var bool
-     */
     protected bool $standard = false;
 
-    /**
-     * @var bool
-     */
     protected bool $require = false;
 
     /**
      * unassigned = feld ist dem produkt nicht zugewiesen aber die daten soll das produkt trotzdem behalten
      * unassigned ist also ein nicht zugewiesenes feld welches das produkt als daten trotzdem hat
-     *
-     * @var bool
      */
     protected bool $unassigned = false;
 
-    /**
-     * @var bool
-     */
     protected bool $ownField = false;
 
-    /**
-     * @var bool
-     */
     protected bool $public = true;
 
-    /**
-     * @var null
-     */
     protected mixed $defaultValue = null;
 
-    /**
-     * @var array
-     */
     protected array $options = [];
 
     /**
      * Is this Field searchable?
-     *
-     * @var bool
      */
     protected bool $searchable = true;
 
     /**
      * Should the field be displayed in the details?
-     * @var bool
      */
     protected bool $showInDetails = false;
 
-    /**
-     * @var ?string
-     */
     protected ?string $type = null;
 
     /**
      * Field-Name
-     *
-     * @var string
      */
     protected string $name;
 
     /**
      * Field value
-     *
-     * @var mixed
      */
     protected mixed $value = null;
 
     /**
      * Column type for database table (cache column)
-     *
-     * @var string
      */
     protected string $columnType = 'LONGTEXT';
 
-    /**
-     * @var array
-     */
     protected array $searchTypes = [];
 
     /**
      * Search data type for values of this field
-     *
-     * @var int|bool
      */
     protected int|bool $searchDataType = false;
 
@@ -215,7 +173,6 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
         if (isset($params['defaultValue'])) {
             $this->defaultValue = $params['defaultValue'];
         }
-
 
         if ($this->isSystem()) {
             $this->standard = true;

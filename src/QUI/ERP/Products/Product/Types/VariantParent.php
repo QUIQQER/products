@@ -1138,7 +1138,6 @@ class VariantParent extends AbstractType
      * Create a new variant
      *
      * @return VariantChild
-     *
      * @throws QUI\Exception
      */
     public function createVariant(): VariantChild
@@ -1156,6 +1155,10 @@ class VariantParent extends AbstractType
             VariantChild::class,
             $this->getId()
         );
+
+        if (!($Variant instanceof VariantChild)) {
+            throw new QUI\Exception('No VariantChild was created!');
+        }
 
         $this->children[] = $Variant;
 

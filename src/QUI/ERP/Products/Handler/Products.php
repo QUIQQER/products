@@ -10,9 +10,10 @@ use Exception;
 use QUI;
 use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Field\Field;
+use QUI\ERP\Products\Interfaces\ProductTypeInterface;
 use QUI\ERP\Products\Product\Types\VariantChild;
-use QUI\ERP\Products\Product\Types\VariantParent;
 use QUI\ERP\Products\Utils\Tables as TablesUtils;
+use QUI\Locale;
 use QUI\Projects\Media\Utils;
 use QUI\Projects\Media\Utils as FolderUtils;
 
@@ -108,9 +109,9 @@ class Products
     /**
      * Global Product Locale
      *
-     * @var \QUI\Locale|null
+     * @var Locale|null
      */
-    private static ?QUI\Locale $Locale = null;
+    private static ?Locale $Locale = null;
 
     /**
      * Runtime cache for "extend variant child short description" flag
@@ -147,11 +148,10 @@ class Products
         try {
             $Folder = FolderUtils::getMediaItemByUrl($folderUrl);
 
-            /* @var $Folder QUI\Projects\Media\Folder */
-            if (FolderUtils::isFolder($Folder)) {
+            if ($Folder instanceof QUI\Projects\Media\Folder) {
                 return $Folder;
             }
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
         }
 
         throw new QUI\Exception([
@@ -236,8 +236,10 @@ class Products
      *
      * @throws QUI\ERP\Products\Product\Exception
      */
-    public static function getProductByUrl(string $url, int $category)
-    {
+    public static function getProductByUrl(
+        string $url,
+        int $category
+    ): QUI\ERP\Products\Product\Types\AbstractType {
         $field = 'F' . QUI\ERP\Products\Handler\Fields::FIELD_URL;
 
         try {
@@ -278,12 +280,9 @@ class Products
      * Return a new product instance
      * this function does not look into the instance cache
      *
-     * @param $pid
-     * @return QUI\ERP\Products\Product\Types\AbstractType
-     *
      * @throws QUI\ERP\Products\Product\Exception
      */
-    public static function getNewProductInstance($pid)
+    public static function getNewProductInstance($pid): QUI\ERP\Products\Product\Types\AbstractType
     {
         if (!is_numeric($pid)) {
             throw new QUI\ERP\Products\Product\Exception(
@@ -305,7 +304,7 @@ class Products
                 ],
                 'limit' => 1
             ]);
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             throw new QUI\ERP\Products\Product\Exception(
                 [
                     'quiqqer/products',
@@ -320,7 +319,7 @@ class Products
 
         if (!isset($result[0])) {
             try {
-                // if not exists, so we cleanup the cache table, too
+                // if not exists, so we clean up the cache table, too
                 QUI::getDataBase()->delete(
                     QUI\ERP\Products\Utils\Tables::getProductCacheTableName(),
                     ['id' => $pid]
@@ -347,7 +346,7 @@ class Products
 
             try {
                 QUI\Cache\LongTermCache::get($cachePath);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
                 QUI\Cache\LongTermCache::set($cachePath, $productData);
             }
         }
@@ -366,7 +365,7 @@ class Products
      *
      * // @todo interface check
      */
-    protected static function getProductByDataResult($pid, $result)
+    protected static function getProductByDataResult($pid, $result): QUI\ERP\Products\Product\Types\AbstractType
     {
         $type = $result['type'];
 
@@ -397,7 +396,7 @@ class Products
                 ],
                 'limit' => 1
             ]);
-        } catch (Exception $Exception) {
+        } catch (Exception) {
             return false;
         }
 
@@ -408,10 +407,11 @@ class Products
      * Get product by product no
      *
      * @param string $productNo - Product-No
-     * @return QUI\ERP\Products\Product\Product
+     * @return ProductTypeInterface
+     * @throws QUI\ERP\Products\Product\Exception
      * @throws QUI\Exception
      */
-    public static function getProductByProductNo(string $productNo)
+    public static function getProductByProductNo(string $productNo): ProductTypeInterface
     {
         try {
             $result = QUI::getDataBase()->fetch([
@@ -454,7 +454,7 @@ class Products
      * @param integer|null $parent - optional, parent product
      * @param bool $validation - optional, should a validation executed? (default=true)
      *
-     * @return QUI\ERP\Products\Product\Product|VariantChild|VariantParent
+     * @return QUI\ERP\Products\Product\Types\AbstractType
      *
      * @throws QUI\Exception
      */
@@ -464,7 +464,7 @@ class Products
         string $productType = '',
         int $parent = null,
         bool $validation = true
-    ) {
+    ): QUI\ERP\Products\Product\Types\AbstractType {
         QUI\Permissions\Permission::checkPermission('product.create');
 
         // product type
@@ -612,11 +612,11 @@ class Products
      * Copy a product
      *
      * @param integer $productId
-     * @return QUI\ERP\Products\Product\Product
+     * @return QUI\ERP\Products\Product\Types\AbstractType
      *
      * @throws QUI\Exception
      */
-    public static function copyProduct(int $productId)
+    public static function copyProduct(int $productId): QUI\ERP\Products\Product\Types\AbstractType
     {
         $Product = self::getProduct($productId);
         $fields = $Product->getFields();
@@ -685,7 +685,7 @@ class Products
         foreach ($data as $id) {
             try {
                 $result[] = self::getProduct($id);
-            } catch (QUI\Exception $Exception) {
+            } catch (QUI\Exception) {
             }
         }
 
@@ -778,7 +778,7 @@ class Products
      * @param integer $pid
      * @throws QUI\Exception
      */
-    public static function deleteProduct(int $pid)
+    public static function deleteProduct(int $pid): void
     {
         self::getProduct($pid)->delete();
     }
@@ -825,8 +825,9 @@ class Products
 
     /**
      * Cleanup all products
+     * @throws QUI\Exception
      */
-    public static function cleanup()
+    public static function cleanup(): void
     {
         if (class_exists('\\QUI\\Watcher')) {
             QUI\Watcher::$globalWatcherDisable = true;
@@ -863,7 +864,7 @@ class Products
         // media cleanup
         try {
             $MainFolder = Products::getParentMediaFolder();
-        } catch (QUI\Exception $Exception) {
+        } catch (QUI\Exception) {
             $MainFolder = QUI::getProjectManager()->getStandard()->getMedia();
         }
 
@@ -915,7 +916,7 @@ class Products
      * Permission using?
      * Is permission using active?
      *
-     * @return boolean
+     * @return bool|null
      */
     public static function usePermissions(): ?bool
     {
@@ -941,9 +942,9 @@ class Products
     /**
      * Set global projects locale
      *
-     * @param QUI\Locale $Locale
+     * @param Locale $Locale
      */
-    public static function setLocale(QUI\Locale $Locale)
+    public static function setLocale(Locale $Locale): void
     {
         self::$Locale = $Locale;
     }
@@ -951,12 +952,12 @@ class Products
     /**
      * Return global projects locale
      *
-     * @return QUI\Locale
+     * @return Locale|null
      */
-    public static function getLocale(): ?QUI\Locale
+    public static function getLocale(): ?Locale
     {
         if (!self::$Locale) {
-            self::$Locale = new QUI\Locale();
+            self::$Locale = new Locale();
             self::$Locale->setCurrent(QUI::getLocale()->getCurrent());
         }
 
@@ -1009,10 +1010,10 @@ class Products
      *
      * @throws QUI\Exception
      */
-    public static function setGlobalEditableVariantFields(array $fieldIds)
+    public static function setGlobalEditableVariantFields(array $fieldIds): void
     {
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
-        $Config->setSection('editableFields', []);
+        $Config->setSection('editableFields');
 
         foreach ($fieldIds as $field) {
             $Config->setValue('editableFields', $field, 1);
@@ -1070,10 +1071,10 @@ class Products
      *
      * @throws QUI\Exception
      */
-    public static function setGlobalInheritedVariantFields(array $fieldIds)
+    public static function setGlobalInheritedVariantFields(array $fieldIds): void
     {
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
-        $Config->setSection('inheritedFields', []);
+        $Config->setSection('inheritedFields');
 
         foreach ($fieldIds as $field) {
             $Config->setValue('inheritedFields', $field, 1);
@@ -1093,7 +1094,7 @@ class Products
      *
      * @return void
      */
-    public static function enableGlobalWriteProductDataToDb()
+    public static function enableGlobalWriteProductDataToDb(): void
     {
         self::$writeProductDataToDb = true;
     }
@@ -1105,7 +1106,7 @@ class Products
      *
      * @return void
      */
-    public static function disableGlobalWriteProductDataToDb()
+    public static function disableGlobalWriteProductDataToDb(): void
     {
         self::$writeProductDataToDb = false;
     }
@@ -1117,7 +1118,7 @@ class Products
      *
      * @return void
      */
-    public static function enableGlobalFireEventsOnProductSave()
+    public static function enableGlobalFireEventsOnProductSave(): void
     {
         self::$fireEventsOnProductSave = true;
     }
@@ -1129,7 +1130,7 @@ class Products
      *
      * @return void
      */
-    public static function disableGlobalFireEventsOnProductSave()
+    public static function disableGlobalFireEventsOnProductSave(): void
     {
         self::$fireEventsOnProductSave = false;
     }
@@ -1141,7 +1142,7 @@ class Products
      *
      * @return void
      */
-    public static function enableGlobalProductSearchCacheUpdate()
+    public static function enableGlobalProductSearchCacheUpdate(): void
     {
         self::$updateProductSearchCache = true;
     }
@@ -1153,7 +1154,7 @@ class Products
      *
      * @return void
      */
-    public static function disableGlobalProductSearchCacheUpdate()
+    public static function disableGlobalProductSearchCacheUpdate(): void
     {
         self::$updateProductSearchCache = false;
     }
@@ -1165,7 +1166,7 @@ class Products
      *
      * @return void
      */
-    public static function enableRuntimeCacheForUniqueProducts()
+    public static function enableRuntimeCacheForUniqueProducts(): void
     {
         self::$useRuntimeCacheForUniqueProducts = true;
     }
@@ -1177,7 +1178,7 @@ class Products
      *
      * @return void
      */
-    public static function disableRuntimeCacheForUniqueProducts()
+    public static function disableRuntimeCacheForUniqueProducts(): void
     {
         self::$useRuntimeCacheForUniqueProducts = false;
     }
@@ -1191,6 +1192,7 @@ class Products
      *
      * @param QUI\ERP\Products\Product\Product $Product
      * @return string
+     * @throws QUI\Database\Exception
      */
     public static function generateArticleNo(QUI\ERP\Products\Product\Product $Product): string
     {
@@ -1201,7 +1203,7 @@ class Products
             $Conf = QUI::getPackage('quiqqer/products')->getConfig();
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
-            return $nextId;
+            return (string)$nextId;
         }
 
         $articleNoConf = $Conf->getSection('autoArticleNos');

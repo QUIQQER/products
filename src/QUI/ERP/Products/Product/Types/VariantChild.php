@@ -328,9 +328,9 @@ class VariantChild extends AbstractType
     }
 
     /**
-     * @return QUI\ERP\Products\Category\Category|null
+     * @return QUI\ERP\Products\Interfaces\CategoryInterface|null
      */
-    public function getCategory(): ?QUI\ERP\Products\Category\Category
+    public function getCategory(): ?QUI\ERP\Products\Interfaces\CategoryInterface
     {
         return $this->getParent()->getCategory();
     }
@@ -380,8 +380,7 @@ class VariantChild extends AbstractType
 
             $Folder = MediaUtils::getMediaItemByUrl($folderUrl);
 
-            if (MediaUtils::isFolder($Folder)) {
-                /* @var $Folder QUI\Projects\Media\Folder */
+            if ($Folder instanceof QUI\Projects\Media\Folder) {
                 return $Folder;
             }
         } catch (QUI\Exception $Exception) {
@@ -433,8 +432,7 @@ class VariantChild extends AbstractType
             $folderUrl = $this->getFieldValue($fieldId);
             $Folder = MediaUtils::getMediaItemByUrl($folderUrl);
 
-            if (MediaUtils::isFolder($Folder)) {
-                /* @var $Folder QUI\Projects\Media\Folder */
+            if ($Folder instanceof QUI\Projects\Media\Folder) {
                 return $Folder;
             }
         } catch (QUI\Exception) {
@@ -460,6 +458,12 @@ class VariantChild extends AbstractType
             }
 
             $Folder = $Parent->getChildByName($this->getId());
+        }
+
+        if (!$Folder instanceof QUI\Projects\Media\Folder) {
+            throw new QUI\ERP\Products\Product\Exception(
+                'Could not find a media folder'
+            );
         }
 
         $Field = $this->getField(Fields::FIELD_FOLDER);

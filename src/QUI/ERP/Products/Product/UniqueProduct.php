@@ -13,6 +13,7 @@ use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
+use QUI\ERP\Products\Interfaces\CategoryInterface;
 use QUI\ERP\Products\Interfaces\FieldInterface;
 use QUI\ERP\Products\Interfaces\UniqueFieldInterface;
 use QUI\ERP\Products\Utils\Calc;
@@ -83,9 +84,9 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     protected array $categories = [];
 
     /**
-     * @var null|QUI\ERP\Products\Category\Category
+     * @var null|QUI\ERP\Products\Interfaces\CategoryInterface
      */
-    protected ?QUI\ERP\Products\Category\Category $Category = null;
+    protected ?QUI\ERP\Products\Interfaces\CategoryInterface $Category = null;
 
     /**
      * @var QUI\ERP\Products\Interfaces\FieldInterface[]
@@ -428,8 +429,6 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
     /**
      * Return the user for the unique product
-     *
-     * @return User
      */
     public function getUser(): QUI\Interfaces\Users\User
     {
@@ -826,7 +825,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * Return the wanted field
      *
      * @param int $fieldId
-     * @return FieldInterface|null
+     * @return UniqueFieldInterface|null
      */
     public function getField(int $fieldId): ?UniqueFieldInterface
     {
@@ -1118,14 +1117,13 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     /**
      * Return the main category
      *
-     * @return QUI\ERP\Products\Category\Category|null
+     * @return ?QUI\ERP\Products\Interfaces\CategoryInterface
      */
-    public function getCategory(): ?QUI\ERP\Products\Category\Category
+    public function getCategory(): ?QUI\ERP\Products\Interfaces\CategoryInterface
     {
         if ($this->Category) {
             return $this->Category;
         }
-
         if (!isset($this->attributes['category'])) {
             return $this->Category;
         }

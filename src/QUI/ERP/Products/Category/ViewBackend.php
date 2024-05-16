@@ -10,7 +10,7 @@ use QUI;
 use QUI\ERP\Products\Field\Field;
 use QUI\Exception;
 use QUI\Projects\Project;
-use QUI\Projects\Site;
+use QUI\Interfaces\Projects\Site;
 
 /**
  * Class ViewFrontend
