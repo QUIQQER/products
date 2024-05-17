@@ -42,7 +42,10 @@ use function explode;
 use function floor;
 use function implode;
 use function is_array;
+use function is_int;
+use function is_integer;
 use function is_null;
+use function is_numeric;
 use function is_string;
 use function json_decode;
 use function json_encode;
@@ -100,9 +103,9 @@ class Model extends QUI\QDOM
     protected mixed $permissions = [];
 
     /**
-     * @var null
+     * @var ?QUI\ERP\Products\Interfaces\CategoryInterface
      */
-    protected mixed $Category = null;
+    protected ?QUI\ERP\Products\Interfaces\CategoryInterface $Category = null;
 
     /**
      * @var ?QUI\ERP\Currency\Currency
@@ -490,8 +493,7 @@ class Model extends QUI\QDOM
                 $folderUrl = $this->getFieldValue($fieldId);
                 $Folder = MediaUtils::getMediaItemByUrl($folderUrl);
 
-                if (MediaUtils::isFolder($Folder)) {
-                    /* @var $Folder QUI\Projects\Media\Folder */
+                if ($Folder instanceof QUI\Projects\Media\Folder) {
                     return $Folder;
                 }
             } catch (QUI\Exception) {
@@ -513,6 +515,13 @@ class Model extends QUI\QDOM
                 }
 
                 $Folder = $MainFolder->getChildByName($fieldId);
+            }
+
+            if (!($Folder instanceof QUI\Projects\Media\Folder)) {
+                throw new QUI\ERP\Products\Product\Exception([
+                    'quiqqer/products',
+                    'exception.product.field.is.no.media.folder'
+                ]);
             }
 
             $Field = $this->getField($fieldId);
@@ -549,9 +558,15 @@ class Model extends QUI\QDOM
             $Folder = $Parent->getChildByName($this->getId());
         }
 
+        if (!($Folder instanceof QUI\Projects\Media\Folder)) {
+            throw new QUI\ERP\Products\Product\Exception([
+                'quiqqer/products',
+                'exception.product.field.is.no.media.folder'
+            ]);
+        }
+
         $Field = $this->getField(Fields::FIELD_FOLDER);
         $Field->setValue($Folder->getUrl());
-
         $this->update();
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsProductCreateMediaFolder', [$this]);
@@ -570,13 +585,18 @@ class Model extends QUI\QDOM
     /**
      * Return the product priority
      *
-     * @return int
-     *
-     * @throws \QUI\ERP\Products\Product\Exception
+     * @return int|null
+     * @throws QUI\ERP\Products\Product\Exception
      */
-    public function getPriority(): int
+    public function getPriority(): ?int
     {
-        return $this->getFieldValue(Fields::FIELD_PRIORITY);
+        $priority = $this->getFieldValue(Fields::FIELD_PRIORITY);
+
+        if (is_numeric($priority)) {
+            return (int)$priority;
+        }
+
+        return null;
     }
 
     /**
@@ -927,11 +947,10 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * @return false|QUI\ERP\Products\Field\UniqueField
      * @throws Exception
      * @throws QUI\Exception
      */
-    public function getOriginalPrice(): bool|QUI\ERP\Products\Field\UniqueField
+    public function getOriginalPrice(): bool|QUI\ERP\Products\Field\UniqueField|QUI\ERP\Money\Price
     {
         return $this->createUniqueProduct()->getOriginalPrice();
     }
@@ -2185,9 +2204,9 @@ class Model extends QUI\QDOM
     /**
      * Return the main category
      *
-     * @return Category|null
+     * @return QUI\ERP\Products\Interfaces\CategoryInterface|null
      */
-    public function getCategory(): ?Category
+    public function getCategory(): ?QUI\ERP\Products\Interfaces\CategoryInterface
     {
         // fallback, but never happen
         if (is_null($this->Category)) {
@@ -2245,8 +2264,7 @@ class Model extends QUI\QDOM
         $folderUrl = $this->getFieldValue(Fields::FIELD_FOLDER);
         $Folder = MediaUtils::getMediaItemByUrl($folderUrl);
 
-        if (MediaUtils::isFolder($Folder)) {
-            /* @var $Folder QUI\Projects\Media\Folder */
+        if ($Folder instanceof QUI\Projects\Media\Folder) {
             return $Folder;
         }
 

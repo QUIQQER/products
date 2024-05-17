@@ -9,6 +9,8 @@ namespace QUI\ERP\Products\Console;
 use QUI;
 use QUI\Exception;
 
+use function class_exists;
+
 /**
  * Console tool for HKL used patches
  *
@@ -34,6 +36,9 @@ class GenerateProductAttributeListTags extends QUI\System\Console\Tool
     public function execute(): void
     {
         QUI\Permissions\Permission::isAdmin();
-        QUI\ERP\Tags\Crons::generateProductAttributeListTags();
+
+        if (class_exists('QUI\ERP\Tags\Crons')) {
+            QUI\ERP\Tags\Crons::generateProductAttributeListTags();
+        }
     }
 }

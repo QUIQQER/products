@@ -33,9 +33,9 @@ use function usort;
 class ProductList extends QUI\Control
 {
     /**
-     * @var null|QUI\ERP\Products\Category\Category
+     * @var null|QUI\ERP\Products\Interfaces\CategoryInterface
      */
-    protected ?QUI\ERP\Products\Category\Category $Category = null;
+    protected ?QUI\ERP\Products\Interfaces\CategoryInterface $Category = null;
 
     /**
      * @var null|QUI\ERP\Products\Search\FrontendSearch

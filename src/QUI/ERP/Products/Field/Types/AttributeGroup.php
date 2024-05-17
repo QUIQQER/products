@@ -37,9 +37,6 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      */
     protected int|bool $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
-    /**
-     * @var null
-     */
     protected mixed $defaultValue = null;
 
     /**
@@ -212,9 +209,6 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
         return '';
     }
 
-    /**
-     * @return string
-     */
     public function getValue(): mixed
     {
         if ($this->value !== null) {
@@ -334,9 +328,6 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
 
     /**
      * Cleanup the value, so the value is valid
-     *
-     * @param mixed $value
-     * @return int|null
      */
     public function cleanup(mixed $value): mixed
     {
@@ -411,8 +402,6 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
 
     /**
      * Get all available search types
-     *
-     * @return array
      */
     public function getSearchTypes(): array
     {
@@ -426,8 +415,6 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
 
     /**
      * Get default search type
-     *
-     * @return string|null
      */
     public function getDefaultSearchType(): ?string
     {
