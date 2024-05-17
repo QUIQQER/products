@@ -10,6 +10,8 @@ use QUI;
 use QUI\Exception;
 use QUI\Permissions\Permission;
 
+use function is_null;
+
 /**
  * Class Package
  *
@@ -58,7 +60,7 @@ class Package
             return true;
         }
 
-        if (!\is_null(self::$hidePrice)) {
+        if (!is_null(self::$hidePrice)) {
             return self::$hidePrice;
         }
 
@@ -66,7 +68,7 @@ class Package
         $Config = $Package->getConfig();
         $User = QUI::getUserBySession();
 
-        self::$hidePrice = (int)$Config->get('products', 'hidePrices');
+        self::$hidePrice = (bool)((int)$Config->get('products', 'hidePrices'));
 
         if ($User->getUUID() && Permission::hasPermission('product.view.prices')) {
             self::$hidePrice = false;

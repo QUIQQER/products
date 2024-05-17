@@ -2,9 +2,17 @@
 
 namespace QUI\ERP\Products\Handler;
 
+use Exception;
 use QUI;
 use QUI\Projects\Media\Utils as QUIMediaUtils;
+use QUI\Projects\Project;
 use QUI\Utils\StringHelper;
+
+use function array_column;
+use function array_map;
+use function array_slice;
+use function implode;
+use function in_array;
 
 /**
  * Class Manufacturers
@@ -18,7 +26,7 @@ class Manufacturers
     /**
      * @var array
      */
-    protected static $manufacturerData = [];
+    protected static array $manufacturerData = [];
 
     /**
      * Get QUIQQER user IDs of all manufacturers
@@ -26,7 +34,7 @@ class Manufacturers
      * @param bool $activeOnly (optional) - Only return IDs of active users
      * @return int[]
      */
-    public static function getManufacturerUserIds(bool $activeOnly = false)
+    public static function getManufacturerUserIds(bool $activeOnly = false): array
     {
         try {
             /** @var QUI\ERP\Products\Field\Types\GroupList $ManufacturerField */
@@ -49,12 +57,12 @@ class Manufacturers
                 ]
             ]);
 
-            $userIds = \array_column($result, 'id');
+            $userIds = array_column($result, 'id');
 
-            return \array_map(function ($v) {
+            return array_map(function ($v) {
                 return (int)$v;
             }, $userIds);
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             return [];
         }
@@ -63,23 +71,23 @@ class Manufacturers
     /**
      * Get QUIQQER users of all manufacturers
      *
-     * @param int $limit (optional) - [default: all]
+     * @param int|null $limit (optional) - [default: all]
      * @param int $offset (optional) [default: 0]
      * @param bool $activeOnly (optional) - [default: get all users (active and inactive)]
      * @return QUI\Interfaces\Users\User[]
      */
-    public static function getManufacturerUsers($limit = null, $offset = 0, $activeOnly = false)
+    public static function getManufacturerUsers(int $limit = null, int $offset = 0, bool $activeOnly = false): array
     {
         $users = [];
 
         try {
             $userIds = self::getManufacturerUserIds($activeOnly);
-            $userIds = \array_slice($userIds, $offset, $limit);
+            $userIds = array_slice($userIds, $offset, $limit);
 
             foreach ($userIds as $userId) {
                 $users[] = QUI::getUsers()->get($userId);
             }
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
 
@@ -92,9 +100,9 @@ class Manufacturers
      * @param int $userId - QUIQQER User ID of manufacturer user
      * @return bool
      */
-    public static function isManufacturer(int $userId)
+    public static function isManufacturer(int $userId): bool
     {
-        return \in_array($userId, self::getManufacturerUserIds());
+        return in_array($userId, self::getManufacturerUserIds());
     }
 
     /**
@@ -103,13 +111,13 @@ class Manufacturers
      * @param int $userId - QUIQQER User ID of manufacturer user
      * @return string
      */
-    public static function getManufacturerTitle(int $userId)
+    public static function getManufacturerTitle(int $userId): string
     {
         $parts = [];
 
         try {
             $User = QUI::getUsers()->get($userId);
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             return '';
         }
@@ -121,7 +129,7 @@ class Manufacturers
             if (!empty($company)) {
                 return $company;
             }
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeDebugException($Exception);
         }
 
@@ -137,23 +145,28 @@ class Manufacturers
             return $User->getUsername();
         }
 
-        return \implode(' ', $parts);
+        return implode(' ', $parts);
     }
 
     /**
      * Get image of manufacturer
      *
      * @param int $userId - QUIQQER User ID of manufacturer user
-     * @return QUI\Projects\Media\Image|false
+     * @return ?QUI\Projects\Media\Image
+     * @throws QUI\Exception
      */
-    public static function getManufacturerImage(int $userId)
+    public static function getManufacturerImage(int $userId): ?QUI\Projects\Media\Image
     {
         $manufacturer = self::getManufacturerData($userId);
 
         if (!empty($manufacturer['avatar'])) {
             try {
-                return QUIMediaUtils::getMediaItemByUrl($manufacturer['avatar']);
-            } catch (\Exception $Exception) {
+                $Avatar = QUIMediaUtils::getMediaItemByUrl($manufacturer['avatar']);
+
+                if ($Avatar instanceof QUI\Projects\Media\Image) {
+                    return $Avatar;
+                }
+            } catch (Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
             }
         }
@@ -164,23 +177,24 @@ class Manufacturers
             return $Image;
         }
 
-        return false;
+        return null;
     }
 
     /**
      * Get virtual URL for manufacturer product "site"
      *
      * @param int $userId - QUIQQER User ID of manufacturer user
-     * @param QUI\Projects\Project $Project (optional) - [default: get project by rewrite]
+     * @param Project|null $Project (optional) - [default: get project by rewrite]
      *
      * @return string|false - URL or false if not available
+     * @throws QUI\Database\Exception
      */
-    public static function getManufacturerUrl(int $userId, QUI\Projects\Project $Project = null)
+    public static function getManufacturerUrl(int $userId, QUI\Projects\Project $Project = null): bool|string
     {
         if (empty($Project)) {
             try {
                 $Project = QUI::getRewrite()->getProject();
-            } catch (\Exception $Exception) {
+            } catch (Exception $Exception) {
                 QUI\System\Log::writeException($Exception);
                 return false;
             }
@@ -203,7 +217,7 @@ class Manufacturers
         try {
             $manufacturer = self::getManufacturerData($userId);
             return $Site->getUrlRewrittenWithHost() . '/' . $manufacturer['username'];
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             return false;
         }
@@ -214,8 +228,9 @@ class Manufacturers
      *
      * @param int $userId - QUIQQER User ID of manufacturer user
      * @return array
+     * @throws QUI\Database\Exception
      */
-    protected static function getManufacturerData(int $userId)
+    protected static function getManufacturerData(int $userId): array
     {
         if (!empty(self::$manufacturerData[$userId])) {
             return self::$manufacturerData[$userId];
@@ -239,22 +254,22 @@ class Manufacturers
      *
      * @return void
      */
-    public static function registerManufacturerUrlPaths()
+    public static function registerManufacturerUrlPaths(): void
     {
         // Loop through all projects
         $Projects = QUI::getProjectManager();
 
         try {
             $projects = $Projects->getProjects();
-        } catch (\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             return;
         }
 
-        $langs = QUI::availableLanguages();
+        $languages = QUI::availableLanguages();
 
         foreach ($projects as $project) {
-            foreach ($langs as $lang) {
+            foreach ($languages as $lang) {
                 try {
                     $Project = $Projects->getProject($project, $lang);
                     $manufacturerListSites = $Project->getSites([
@@ -271,7 +286,7 @@ class Manufacturers
 
                         QUI::getRewrite()->registerPath($url . '/*', $Site);
                     }
-                } catch (\Exception $Exception) {
+                } catch (Exception $Exception) {
                     // project does probably not exist in given language
                     QUI\System\Log::writeDebugException($Exception);
                 }

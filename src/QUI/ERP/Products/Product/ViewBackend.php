@@ -228,10 +228,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
         return $this->getProduct()->getFieldValue($fieldId);
     }
 
-    /**
-     * @return null|QUI\ERP\Products\Category\Category
-     */
-    public function getCategory(): ?QUI\ERP\Products\Category\Category
+    public function getCategory(): ?QUI\ERP\Products\Interfaces\CategoryInterface
     {
         return $this->getProduct()->getCategory();
     }

@@ -1215,8 +1215,6 @@ class Fields
 
     /**
      * Get all price field types provided by package providers
-     *
-     * @return QUI\ERP\Products\Field\Types\Price[]
      */
     public static function getPriceFieldTypesByProviders(): array
     {

@@ -26,30 +26,18 @@ use function strlen;
  */
 class TextareaMultiLang extends QUI\ERP\Products\Field\Field
 {
-    /**
-     * @var int|bool
-     */
     protected int|bool $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
-    /**
-     * @return View
-     */
     public function getBackendView(): View
     {
         return new View($this->getFieldDataForView());
     }
 
-    /**
-     * @return View
-     */
     public function getFrontendView(): View
     {
         return new View($this->getFieldDataForView());
     }
 
-    /**
-     * @return string
-     */
     public function getJavaScriptControl(): string
     {
         return 'package/quiqqer/products/bin/controls/fields/types/TextareaMultiLang';
@@ -57,10 +45,6 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
 
     /**
      * Return the field value by a locale language
-     *
-     *
-     * @param Locale|null $Locale $Locale
-     * @return string
      */
     public function getValueByLocale(QUI\Locale $Locale = null): string
     {
@@ -75,11 +59,11 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
             return $value;
         }
 
-        if (isset($value[$current])) {
+        if (is_array($value) && isset($value[$current])) {
             return $value[$current];
         }
 
-        return $value;
+        return '';
     }
 
     /**

@@ -109,7 +109,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      * @param integer|Category $Category
      * @throws QUI\Exception
      */
-    public function setMainCategory(Category|int $Category): void
+    public function setMainCategory(QUI\ERP\Products\Interfaces\CategoryInterface|int $Category): void
     {
         if (!Categories::isCategory($Category)) {
             $Category = Categories::getCategory($Category);

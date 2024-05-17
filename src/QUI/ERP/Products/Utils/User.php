@@ -36,10 +36,10 @@ class User
      * is the user a netto or brutto user
      *
      * @param UserInterface $User
-     * @return bool
+     * @return int
      * @deprecated
      */
-    public static function getBruttoNettoUserStatus(UserInterface $User)
+    public static function getBruttoNettoUserStatus(UserInterface $User): int
     {
         return Utils::getBruttoNettoUserStatus($User);
     }
@@ -51,7 +51,7 @@ class User
      * @return bool
      * @deprecated
      */
-    public static function isNettoUser(UserInterface $User)
+    public static function isNettoUser(UserInterface $User): bool
     {
         return Utils::isNettoUser($User);
     }
@@ -64,7 +64,7 @@ class User
      * @return bool|QUI\ERP\Areas\Area
      * @deprecated
      */
-    public static function getUserArea(UserInterface $User)
+    public static function getUserArea(UserInterface $User): bool|QUI\ERP\Areas\Area
     {
         return Utils::getUserArea($User);
     }
@@ -77,7 +77,7 @@ class User
      * @throws QUI\Exception
      * @deprecated
      */
-    public static function getUserERPAddress(UserInterface $User)
+    public static function getUserERPAddress(UserInterface $User): bool|QUI\Users\Address
     {
         return Utils::getUserERPAddress($User);
     }
@@ -89,7 +89,7 @@ class User
      * @throws QUI\Exception
      * @deprecated use QUI\ERP\Defaults::getShopArea()
      */
-    public static function getShopArea()
+    public static function getShopArea(): QUI\ERP\Areas\Area
     {
         return QUI\ERP\Defaults::getArea();
     }

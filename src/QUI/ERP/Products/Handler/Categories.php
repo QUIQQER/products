@@ -31,7 +31,7 @@ class Categories
      * @param bool|integer $categoryId - optional, Category-ID,
      *                                   if false => complete categories cache is cleared
      */
-    public static function clearCache($categoryId = false)
+    public static function clearCache(bool|int|string $categoryId = false): void
     {
         if ($categoryId === false) {
             QUI\Cache\LongTermCache::clear('quiqqer/products/categories/');
@@ -115,7 +115,7 @@ class Categories
      *
      * @throws QUI\Exception
      */
-    public static function getCategory($id)
+    public static function getCategory(int|string $id): QUI\ERP\Products\Interfaces\CategoryInterface
     {
         $id = (int)$id;
 
