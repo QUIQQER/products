@@ -782,7 +782,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the current value
      *
-     * @return string|array
+     * @return mixed
      */
     public function getValue(): mixed
     {
@@ -797,9 +797,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Return the value in dependence of a locale (language)
      *
      * @param Locale|null $Locale (optional)
-     * @return string|array
+     * @return mixed
      */
-    public function getValueByLocale(?Locale $Locale = null): string|array
+    public function getValueByLocale(?Locale $Locale = null): mixed
     {
         return $this->getValue();
     }

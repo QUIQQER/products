@@ -81,7 +81,7 @@ class Price extends QUI\ERP\Products\Field\Field
             $value = $this->cleanup($value);
         }
 
-        if (!is_numeric($value)) {
+        if ($value === null) {
             $value = 0;
         }
 
