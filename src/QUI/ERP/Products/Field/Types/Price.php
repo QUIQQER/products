@@ -81,6 +81,10 @@ class Price extends QUI\ERP\Products\Field\Field
             $value = $this->cleanup($value);
         }
 
+        if ($value === null) {
+            $value = 0;
+        }
+
         $value = $Calc->getPrice($value);
 
         $Price = new QUI\ERP\Money\Price(
