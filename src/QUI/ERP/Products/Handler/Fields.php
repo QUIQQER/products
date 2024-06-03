@@ -66,6 +66,8 @@ class Fields
     const FIELD_DOWNLOAD_FILES = 24;
 
     const FIELD_VARIANT_DEFAULT_ATTRIBUTES = 23;
+    const FIELD_SEO_TITLE = 25;
+    const FIELD_SEO_DESCRIPTION = 26;
 
     /**
      * Types

@@ -768,6 +768,48 @@ class EventHandling
                     'de' => 'Produktvarianten',
                     'en' => 'Product variants'
                 ]
+            ],
+            // Title SEO
+            [
+                'id' => Fields::FIELD_SEO_TITLE,
+                'type' => 'InputMultiLang',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 11,
+                'systemField' => 1,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField' => 0,
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'options' => [
+                    'maxLength' => 255,
+                    'minLength' => 3
+                ],
+                'titles' => [
+                    'de' => 'SEO Titel',
+                    'en' => 'SEO Title'
+                ]
+            ],
+            // Short Desc SEO
+            [
+                'id' => Fields::FIELD_SEO_DESCRIPTION,
+                'type' => 'InputMultiLang',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 11,
+                'systemField' => 1,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField' => 0,
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'options' => [
+                    'maxLength' => 255,
+                    'minLength' => 3
+                ],
+                'titles' => [
+                    'de' => 'SEO Kurzbeschreibung',
+                    'en' => 'SEO Short description'
+                ]
             ]
         ];
 
