@@ -424,6 +424,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 self.$isVariantParent = !!result.isVariantParent;
 
                 document.title = result.title;
+
+                if (result.seoTitle) {
+                    document.title = result.seoTitle;
+                }
+
                 //self.$fieldHashes     = result.fieldHashes;
                 //self.$availableHashes = result.availableHashes;
 
