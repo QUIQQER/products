@@ -159,6 +159,9 @@ QUI::$Ajax->registerFunction(
             QUI\System\Log::writeException($Exception);
         }
 
+        $seoTitle = $Child->getField(Fields::FIELD_SEO_TITLE)->getValueByLocale(QUI::getLocale());
+        $seoDescription = $Child->getField(Fields::FIELD_SEO_DESCRIPTION)->getValueByLocale(QUI::getLocale());
+
         $result = [
             'variantId' => $Child->getId(),
             'control' => QUI\Output::getInstance()->parse($Control->create()),
@@ -168,7 +171,9 @@ QUI::$Ajax->registerFunction(
             'category' => $categoryId,
             'fieldHashes' => ProductUtils::getJsFieldHashArray($Product),
             'availableHashes' => array_flip($Product->availableActiveFieldHashes()),
-            'isVariantParent' => $isVariantParent
+            'isVariantParent' => $isVariantParent,
+            'seoTitle' => $seoTitle,
+            'seoDescription' => $seoDescription
         ];
 
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
