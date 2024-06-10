@@ -14,6 +14,7 @@ use function class_implements;
 use function defined;
 use function get_class;
 use function in_array;
+use function is_array;
 use function is_numeric;
 use function is_string;
 use function property_exists;
@@ -63,7 +64,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * @var integer
      */
-    protected int $priority;
+    protected int $priority = 0;
 
     /**
      * Field value
@@ -75,7 +76,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * @var string
      */
-    protected string $type;
+    protected string $type = '';
 
     /**
      * is custom field?
@@ -83,7 +84,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @var boolean
      */
-    protected bool $custom;
+    protected bool $custom = false;
 
     /**
      * custom field calculation data
@@ -546,7 +547,24 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     protected function getValueText(): string
     {
         if (isset($this->custom_calc['valueText'])) {
-            return $this->custom_calc['valueText'];
+            if (!is_string($this->custom_calc['valueText'])) {
+                return $this->custom_calc['valueText'];
+            }
+
+            $current = QUI::getLocale()->getCurrent();
+
+            if (
+                is_array($this->custom_calc['valueText'])
+                && isset($this->custom_calc['valueText'][$current])
+            ) {
+                return $this->custom_calc['valueText'][$current];
+            }
+
+            if (is_array($this->custom_calc['valueText'])) {
+                return reset($this->custom_calc['valueText']);
+            }
+
+            return '';
         }
 
         $valueText = '-';
