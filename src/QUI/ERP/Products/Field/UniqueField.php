@@ -63,7 +63,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * @var integer
      */
-    protected int $priority;
+    protected int $priority = 0;
 
     /**
      * Field value
@@ -75,7 +75,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     /**
      * @var string
      */
-    protected string $type;
+    protected string $type = '';
 
     /**
      * is custom field?
@@ -83,7 +83,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @var boolean
      */
-    protected bool $custom;
+    protected bool $custom = false;
 
     /**
      * custom field calculation data
