@@ -55,6 +55,10 @@ class FloatType extends QUI\ERP\Products\Field\Field
         $attributes = $this->getFieldDataForView();
         $value = $this->getValue();
 
+        if (!$value) {
+            $value = 0;
+        }
+
         $attributes['value'] = QUI::getLocale()->formatNumber($value);
 
         return new View($attributes);
