@@ -96,7 +96,11 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
             return current($value);
         }
 
-        return $value;
+        if (is_string($value)) {
+            return $value;
+        }
+
+        return '';
     }
 
     /**
