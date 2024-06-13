@@ -58,6 +58,31 @@ class GroupList extends QUI\ERP\Products\Field\Field
         parent::__construct($fieldId, $params);
     }
 
+    public function setOptions(array|string $options): void
+    {
+        if (is_string($options)) {
+            $options = json_decode($options, true);
+        }
+
+        // group ids to group hashes / uuids
+        if (
+            is_array($options)
+            && isset($options['groupIds'])
+            && is_array($options['groupIds'])
+        ) {
+            foreach ($options['groupIds'] as $k => $groupId) {
+                if (is_numeric($groupId)) {
+                    try {
+                        $options['groupIds'][$k] = QUI::getGroups()->get($groupId)->getUUID();
+                    } catch (QUI\Exception) {
+                    }
+                }
+            }
+        }
+
+        parent::setOptions($options);
+    }
+
     /**
      * @return View
      */
@@ -71,22 +96,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function getFrontendView(): View
     {
-        $params = $this->getFieldDataForView();
-        $users = $this->getUsers();
-
-        $value = [];
-
-        foreach ($users as $User) {
-            if ($User->isActive()) {
-                $value[] = $User->getName();
-            }
-        }
-
-        if (empty($value)) {
-            $params['value'] = implode(', ', $value);
-        }
-
-        return new View($params);
+        return new View($this->getFieldDataForView());
     }
 
     /**
@@ -196,9 +206,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
         $multipleUsers = $this->getOption('multipleUsers');
         $userIds = [];
 
-        if (is_numeric($value)) {
-            $userIds = [(int)$value];
-        } elseif (is_string($value)) {
+        if (is_string($value) || is_numeric($value)) {
             // Check if string is username
             try {
                 $User = QUI::getUsers()->getUserByName($value);
@@ -250,15 +258,12 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         try {
             foreach ($userIds as $userId) {
-                if (!is_numeric($userId)) {
-                    throw new Exception([
-                        'quiqqer/products',
-                        'exception.field.grouplist.invalid.userId'
-                    ]);
+                try {
+                    $User = QUI::getUsers()->get($userId);
+                    $userGroups = $User->getGroups(false);
+                } catch (QUI\Exception) {
+                    continue;
                 }
-
-                $User = QUI::getUsers()->get($userId);
-                $userGroups = $User->getGroups(false);
 
                 if (!$isUserInGroups($userGroups)) {
                     throw new Exception([
@@ -298,9 +303,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
         $userIds = [];
         $result = [];
 
-        if (is_numeric($value)) {
-            $userIds = [(int)$value];
-        } elseif (is_string($value)) {
+        if (is_string($value) || is_numeric($value)) {
             // Check if string is username
             try {
                 $User = QUI::getUsers()->getUserByName($value);
@@ -345,10 +348,6 @@ class GroupList extends QUI\ERP\Products\Field\Field
 
         try {
             foreach ($userIds as $userId) {
-                if (!is_numeric($userId)) {
-                    continue;
-                }
-
                 $User = QUI::getUsers()->get($userId);
                 $userGroups = $User->getGroups(false);
 
@@ -423,7 +422,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
      * Return the value in dependence of a locale (language)
      *
      * @param bool|Locale|null $Locale (optional)
-     * @return string
+     * @return string|array
      */
     public function getValueByLocale(bool|Locale $Locale = null): string|array
     {
