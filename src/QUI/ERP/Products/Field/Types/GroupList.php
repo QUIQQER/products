@@ -66,22 +66,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
      */
     public function getFrontendView()
     {
-        $params = $this->getFieldDataForView();
-        $users = $this->getUsers();
-
-        if (is_array($users)) {
-            $value = [];
-
-            foreach ($users as $User) {
-                if ($User->isActive()) {
-                    $value[] = $User->getName();
-                }
-            }
-
-            $params['value'] = implode(', ', $value);
-        }
-
-        return new View($params);
+        return new View($this->getFieldDataForView());
     }
 
     /**
