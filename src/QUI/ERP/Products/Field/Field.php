@@ -213,6 +213,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $this->defaultValue = $params['defaultValue'];
         }
 
+        if (isset($params['value'])) {
+            $this->value = $params['value'];
+        }
 
         if ($this->isSystem()) {
             $this->standard = true;
