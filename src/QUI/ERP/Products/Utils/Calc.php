@@ -1007,20 +1007,18 @@ class Calc
     }
 
     /**
-     * @param float|int|string $price
-     * @param bool $formatted
-     * @param $productId - optional, id of the product
-     *
-     * @return float|int|string|null
-     *
      * @throws Exception
      * @throws QUI\ERP\Products\Product\Exception
      */
     public static function calcNettoPrice(
-        float|int|string $price,
+        null|float|int|string $price,
         bool $formatted = false,
         int|string|bool $productId = false
     ): float|int|string|null {
+        if (empty($price)) {
+            return 0;
+        }
+
         $price = QUI\ERP\Money\Price::validatePrice($price);
         $Area = QUI\ERP\Defaults::getArea();
         $TaxEntry = null;
