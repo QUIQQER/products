@@ -352,6 +352,9 @@ class Fields
 
         // clear the field cache
         QUI\Cache\LongTermCache::clear(Cache::getBasicCachePath() . 'fields');
+        self::$fieldTypes = [];
+        self::$fieldTypeData = [];
+        self::$list = [];
 
         $Field = self::getField($newId);
 
