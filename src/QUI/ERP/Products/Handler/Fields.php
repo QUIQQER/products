@@ -631,6 +631,24 @@ class Fields
         } catch (QUI\Exception) {
         }
 
+        $result = self::getFieldTypesFromDisk();
+
+        QUI\Cache\LongTermCache::set($cacheName, $result);
+        self::$fieldTypes = $result;
+
+        return $result;
+    }
+
+    /**
+     * Return all available Fields from disk.
+     * This iterates through all packages and reads their files from disk.
+     * Therefore, this is slow  and should only be used when you know that it's necessary.
+     * You would generally want to use @see self::getFieldTypes()
+     *
+     * @return array
+     */
+    private static function getFieldTypesFromDisk(): array
+    {
         // exists the type?
         $dir = dirname(__FILE__, 2) . '/Field/Types/';
         $files = QUI\Utils\System\File::readDir($dir);
@@ -695,9 +713,6 @@ class Fields
             }
         }
 
-        QUI\Cache\LongTermCache::set($cacheName, $result);
-        self::$fieldTypes = $result;
-
         return $result;
     }
 
@@ -722,22 +737,35 @@ class Fields
         } catch (QUI\Exception) {
         }
 
-        $types = self::getFieldTypes();
+        self::$fieldTypeData[$type] = self::getFieldTypeDataFromDisk($type);
+
+        QUI\Cache\LongTermCache::set($cacheName, self::$fieldTypeData[$type]);
+
+        return self::$fieldTypeData[$type];
+    }
+
+    /**
+     * Return internal field init data for a field type from disk.
+     * This iterates through all packages and reads their files from disk.
+     * Therefore, this is slow and should only be used when you know that it's necessary.
+     * You would generally want to use @see self::getFieldTypeData()
+     *
+     * @param string $type - field type
+     * @return array
+     */
+    private static function getFieldTypeDataFromDisk(string $type): array
+    {
+        $types = self::getFieldTypesFromDisk();
+
         $found = array_filter($types, function ($entry) use ($type) {
             return $entry['name'] == $type;
         });
 
         if (empty($found)) {
-            self::$fieldTypeData[$type] = [];
-
             return [];
         }
 
-        self::$fieldTypeData[$type] = reset($found);
-
-        QUI\Cache\LongTermCache::set($cacheName, self::$fieldTypeData[$type]);
-
-        return self::$fieldTypeData[$type];
+        return reset($found);
     }
 
     /**
