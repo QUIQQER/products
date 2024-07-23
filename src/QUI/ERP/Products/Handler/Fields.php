@@ -266,10 +266,13 @@ class Fields
         $isAllowed = self::getFieldTypeDataFromDisk($data['type']);
 
         if (empty($isAllowed)) {
-            throw new QUI\ERP\Products\Field\Exception([
-                'quiqqer/products',
-                'exception.fields.type.not.allowed'
-            ]);
+            throw new QUI\ERP\Products\Field\Exception(
+                message: [
+                    'quiqqer/products',
+                    'exception.fields.type.not.allowed'
+                ],
+                context: $data
+            );
         }
 
         // cache colum check
