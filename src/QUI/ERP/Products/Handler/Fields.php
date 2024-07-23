@@ -263,7 +263,7 @@ class Fields
             ]);
         }
 
-        $isAllowed = self::getFieldTypeData($data['type']);
+        $isAllowed = self::getFieldTypeDataFromDisk($data['type']);
 
         if (empty($isAllowed)) {
             throw new QUI\ERP\Products\Field\Exception([
