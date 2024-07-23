@@ -676,12 +676,25 @@ class Fields
             ];
         }
 
-        $plugins = QUI::getPackageManager()->getInstalled();
+        // The files cannot be read from QUI package manager as it is missing new packages on updates
+        // As this method is called on updates, setups, etc. regularly, it has to be done "manually"
+        // @todo use package manager when it can handle new packages (see quiqqer/core#1383)
+        $productsXmls = glob(OPT_DIR . '*/*/products.xml');
 
-        foreach ($plugins as $plugin) {
-            $xml = OPT_DIR . $plugin['name'] . '/products.xml';
-
+        foreach ($productsXmls as $xml) {
             if (!file_exists($xml)) {
+                continue;
+            }
+
+            // Use the two parent directories of the XML file as the plugin name
+            $pluginDirectory = dirname($xml);
+            $plugin = str_replace(dirname($pluginDirectory, 2).'/', '', $pluginDirectory);
+
+            try {
+                // Check if it's a valid plugin name
+                new QUI\Package\Package($plugin);
+            } catch (QUI\Exception) {
+                // Not a valid plugin, so ignore it's XML file
                 continue;
             }
 
@@ -709,7 +722,7 @@ class Fields
                 }
 
                 $result[] = [
-                    'plugin' => $plugin['name'],
+                    'plugin' => $plugin,
                     'src' => $src,
                     'category' => $category,
                     'locale' => QUI\Utils\DOM::getTextFromNode($Field, false),
@@ -768,6 +781,8 @@ class Fields
         });
 
         if (empty($found)) {
+            QUI\System\Log::addError("Type '$type' not found");
+
             return [];
         }
 
