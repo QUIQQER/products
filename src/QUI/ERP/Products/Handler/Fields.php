@@ -263,13 +263,16 @@ class Fields
             ]);
         }
 
-        $isAllowed = self::getFieldTypeData($data['type']);
+        $isAllowed = self::getFieldTypeDataFromDisk($data['type']);
 
         if (empty($isAllowed)) {
-            throw new QUI\ERP\Products\Field\Exception([
-                'quiqqer/products',
-                'exception.fields.type.not.allowed'
-            ]);
+            throw new QUI\ERP\Products\Field\Exception(
+                message: [
+                    'quiqqer/products',
+                    'exception.fields.type.not.allowed'
+                ],
+                context: $data
+            );
         }
 
         // cache colum check
@@ -352,6 +355,9 @@ class Fields
 
         // clear the field cache
         QUI\Cache\LongTermCache::clear(Cache::getBasicCachePath() . 'fields');
+        self::$fieldTypes = [];
+        self::$fieldTypeData = [];
+        self::$list = [];
 
         $Field = self::getField($newId);
 
@@ -631,6 +637,24 @@ class Fields
         } catch (QUI\Exception) {
         }
 
+        $result = self::getFieldTypesFromDisk();
+
+        QUI\Cache\LongTermCache::set($cacheName, $result);
+        self::$fieldTypes = $result;
+
+        return $result;
+    }
+
+    /**
+     * Return all available Fields from disk.
+     * This iterates through all packages and reads their files from disk.
+     * Therefore, this is slow  and should only be used when you know that it's necessary.
+     * You would generally want to use @see self::getFieldTypes()
+     *
+     * @return array
+     */
+    private static function getFieldTypesFromDisk(): array
+    {
         // exists the type?
         $dir = dirname(__FILE__, 2) . '/Field/Types/';
         $files = QUI\Utils\System\File::readDir($dir);
@@ -652,12 +676,25 @@ class Fields
             ];
         }
 
-        $plugins = QUI::getPackageManager()->getInstalled();
+        // The files cannot be read from QUI package manager as it is missing new packages on updates
+        // As this method is called on updates, setups, etc. regularly, it has to be done "manually"
+        // @todo use package manager when it can handle new packages (see quiqqer/core#1383)
+        $productsXmls = glob(OPT_DIR . '*/*/products.xml');
 
-        foreach ($plugins as $plugin) {
-            $xml = OPT_DIR . $plugin['name'] . '/products.xml';
-
+        foreach ($productsXmls as $xml) {
             if (!file_exists($xml)) {
+                continue;
+            }
+
+            // Use the two parent directories of the XML file as the plugin name
+            $pluginDirectory = dirname($xml);
+            $plugin = str_replace(dirname($pluginDirectory, 2).'/', '', $pluginDirectory);
+
+            try {
+                // Check if it's a valid plugin name
+                new QUI\Package\Package($plugin);
+            } catch (QUI\Exception) {
+                // Not a valid plugin, so ignore it's XML file
                 continue;
             }
 
@@ -685,7 +722,7 @@ class Fields
                 }
 
                 $result[] = [
-                    'plugin' => $plugin['name'],
+                    'plugin' => $plugin,
                     'src' => $src,
                     'category' => $category,
                     'locale' => QUI\Utils\DOM::getTextFromNode($Field, false),
@@ -694,9 +731,6 @@ class Fields
                 ];
             }
         }
-
-        QUI\Cache\LongTermCache::set($cacheName, $result);
-        self::$fieldTypes = $result;
 
         return $result;
     }
@@ -722,22 +756,37 @@ class Fields
         } catch (QUI\Exception) {
         }
 
-        $types = self::getFieldTypes();
+        self::$fieldTypeData[$type] = self::getFieldTypeDataFromDisk($type);
+
+        QUI\Cache\LongTermCache::set($cacheName, self::$fieldTypeData[$type]);
+
+        return self::$fieldTypeData[$type];
+    }
+
+    /**
+     * Return internal field init data for a field type from disk.
+     * This iterates through all packages and reads their files from disk.
+     * Therefore, this is slow and should only be used when you know that it's necessary.
+     * You would generally want to use @see self::getFieldTypeData()
+     *
+     * @param string $type - field type
+     * @return array
+     */
+    private static function getFieldTypeDataFromDisk(string $type): array
+    {
+        $types = self::getFieldTypesFromDisk();
+
         $found = array_filter($types, function ($entry) use ($type) {
             return $entry['name'] == $type;
         });
 
         if (empty($found)) {
-            self::$fieldTypeData[$type] = [];
+            QUI\System\Log::addError("Type '$type' not found");
 
             return [];
         }
 
-        self::$fieldTypeData[$type] = reset($found);
-
-        QUI\Cache\LongTermCache::set($cacheName, self::$fieldTypeData[$type]);
-
-        return self::$fieldTypeData[$type];
+        return reset($found);
     }
 
     /**
