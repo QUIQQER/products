@@ -602,7 +602,12 @@ parameters:
 
 		-
 			message: "#^Offset 0 on array\\<string, mixed\\> in isset\\(\\) does not exist\\.$#"
-			count: 2
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Offset 0 on array\\<string, string\\> in isset\\(\\) does not exist\\.$#"
+			count: 1
 			path: src/QUI/ERP/Products/Utils/Calc.php
 
 		-
@@ -621,7 +626,7 @@ parameters:
 			path: src/QUI/ERP/Products/Utils/Calc.php
 
 		-
-			message: "#^Parameter \\#1 \\$vat of static method QUI\\\\ERP\\\\Accounting\\\\Calc\\:\\:getVatText\\(\\) expects float, string given\\.$#"
+			message: "#^Parameter \\#1 \\$vat of static method QUI\\\\ERP\\\\Accounting\\\\Calc\\:\\:getVatText\\(\\) expects float\\|int, string given\\.$#"
 			count: 1
 			path: src/QUI/ERP/Products/Utils/Calc.php
 
