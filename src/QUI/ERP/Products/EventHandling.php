@@ -14,6 +14,7 @@ use QUI\Projects\Site\Edit;
 use QUI\System\Console\Tools\MigrationV2;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use QUI\ERP\Products\Field\Types\AttributeGroup;
 
 use function count;
 use function explode;
@@ -27,7 +28,6 @@ use function mb_substr;
 use function preg_replace;
 use function str_replace;
 use function trim;
-use QUI\ERP\Products\Field\Types\AttributeGroup;
 
 /**
  * Class EventHandling
