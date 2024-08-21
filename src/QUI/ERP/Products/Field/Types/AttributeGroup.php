@@ -29,6 +29,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     const ENTRIES_TYPE_SIZE = 2;
     const ENTRIES_TYPE_COLOR = 3;
     const ENTRIES_TYPE_MATERIAL = 4;
+    const ENTRIES_TYPE_CONDITION = 5;
 
     /**
      * @var int
