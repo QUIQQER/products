@@ -27,6 +27,7 @@ use function mb_substr;
 use function preg_replace;
 use function str_replace;
 use function trim;
+use QUI\ERP\Products\Field\Types\AttributeGroup;
 
 /**
  * Class EventHandling
@@ -810,7 +811,51 @@ class EventHandling
                     'de' => 'SEO Kurzbeschreibung',
                     'en' => 'SEO Short description'
                 ]
-            ]
+            ],
+            // Condition
+            [
+                'id' => Fields::FIELD_CONDITION,
+                'type' => Fields::TYPE_ATTRIBUTE_GROUPS,
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 1,
+                'systemField' => 0,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField' => 1,
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'titles' => [
+                    'de' => 'Zustand',
+                    'en' => 'Condition'
+                ],
+                'options' => [
+                    'entries_type' => AttributeGroup::ENTRIES_TYPE_CONDITION,
+                    'entries' => [
+                        [
+                            'title' => [
+                                'de' => 'neu',
+                                'en' => 'new'
+                            ],
+                            'valueId' => 'new',
+                            'selected' => true
+                        ],
+                        [
+                            'title' => [
+                                'de' => 'generalüberholt',
+                                'en' => 'refurbished'
+                            ],
+                            'valueId' => 'refurbished'
+                        ],
+                        [
+                            'title' => [
+                                'de' => 'gebraucht',
+                                'en' => 'used'
+                            ],
+                            'valueId' => 'used'
+                        ]
+                    ]
+                ]
+            ],
         ];
 
         foreach ($standardFields as $field) {

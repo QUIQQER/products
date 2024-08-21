@@ -2083,6 +2083,10 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Attribut ist relevant für Produktbild]]></de>
             <en><![CDATA[Attribute is relevant for product image]]></en>
         </locale>
+        <locale name="product.fields.attributeList.labelTypeOptionCondition">
+            <de><![CDATA[Zustand]]></de>
+            <en><![CDATA[Condition]]></en>
+        </locale>
 
         <locale name="product.fields.remove.field">
             <de><![CDATA[Feld entfernen]]></de>
