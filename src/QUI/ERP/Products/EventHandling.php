@@ -14,6 +14,7 @@ use QUI\Projects\Site\Edit;
 use QUI\System\Console\Tools\MigrationV2;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use QUI\ERP\Products\Field\Types\AttributeGroup;
 
 use function count;
 use function explode;
@@ -810,7 +811,51 @@ class EventHandling
                     'de' => 'SEO Kurzbeschreibung',
                     'en' => 'SEO Short description'
                 ]
-            ]
+            ],
+            // Condition
+            [
+                'id' => Fields::FIELD_CONDITION,
+                'type' => Fields::TYPE_ATTRIBUTE_GROUPS,
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 1,
+                'systemField' => 0,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField' => 1,
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'titles' => [
+                    'de' => 'Zustand',
+                    'en' => 'Condition'
+                ],
+                'options' => [
+                    'entries_type' => AttributeGroup::ENTRIES_TYPE_CONDITION,
+                    'entries' => [
+                        [
+                            'title' => [
+                                'de' => 'neu',
+                                'en' => 'new'
+                            ],
+                            'valueId' => 'new',
+                            'selected' => true
+                        ],
+                        [
+                            'title' => [
+                                'de' => 'generalüberholt',
+                                'en' => 'refurbished'
+                            ],
+                            'valueId' => 'refurbished'
+                        ],
+                        [
+                            'title' => [
+                                'de' => 'gebraucht',
+                                'en' => 'used'
+                            ],
+                            'valueId' => 'used'
+                        ]
+                    ]
+                ]
+            ],
         ];
 
         foreach ($standardFields as $field) {

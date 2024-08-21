@@ -69,6 +69,8 @@ class Fields
     const FIELD_SEO_TITLE = 25;
     const FIELD_SEO_DESCRIPTION = 26;
 
+    const FIELD_CONDITION = 27;
+
     /**
      * Types
      */
