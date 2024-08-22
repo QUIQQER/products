@@ -156,11 +156,6 @@ parameters:
 			path: src/QUI/ERP/Products/EventHandling.php
 
 		-
-			message: "#^Comparison operation \"\\>\" between \\(0\\|1\\|11\\|26\\|''\\|'InputMultiLang'\\|'text'\\|array\\{de\\: 'SEO Kurzbeschreibung', en\\: 'SEO Short…'\\}\\|array\\{maxLength\\: 255, minLength\\: 3\\}\\) and 1000 results in an error\\.$#"
-			count: 1
-			path: src/QUI/ERP/Products/EventHandling.php
-
-		-
 			message: "#^Dead catch \\- Exception is never thrown in the try block\\.$#"
 			count: 2
 			path: src/QUI/ERP/Products/EventHandling.php
