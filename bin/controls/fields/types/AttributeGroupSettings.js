@@ -228,6 +228,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                     labelTypeOptionSize    : QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionSize'),
                     labelTypeOptionColor   : QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionColor'),
                     labelTypeOptionMaterial: QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionMaterial'),
+                    labelTypeOptionCondition: QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionCondition'),
                     labelIsImageAttribute  : QUILocale.get(lg, 'product.fields.attributeList.labelIsImageAttribute')
                 })
             }).inject(this.$Elm, 'top');
@@ -721,7 +722,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
             if (entryFound > 1) {
                 return false;
             }
-            
+
             if (entryFound === 1 && this.$data[index].valueId != valueId) {
                 return false;
             }

@@ -69,6 +69,8 @@ class Fields
     const FIELD_SEO_TITLE = 25;
     const FIELD_SEO_DESCRIPTION = 26;
 
+    const FIELD_CONDITION = 27;
+
     /**
      * Types
      */
@@ -688,7 +690,7 @@ class Fields
 
             // Use the two parent directories of the XML file as the plugin name
             $pluginDirectory = dirname($xml);
-            $plugin = str_replace(dirname($pluginDirectory, 2).'/', '', $pluginDirectory);
+            $plugin = str_replace(dirname($pluginDirectory, 2) . '/', '', $pluginDirectory);
 
             try {
                 // Check if it's a valid plugin name
