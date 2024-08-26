@@ -4,6 +4,7 @@ namespace QUI\ERP\Products\Handler;
 
 use Exception;
 use QUI;
+use QUI\Projects\Media\Image;
 use QUI\Projects\Media\Utils as QUIMediaUtils;
 use QUI\Projects\Project;
 use QUI\Utils\StringHelper;
@@ -59,9 +60,7 @@ class Manufacturers
 
             $userIds = array_column($result, 'id');
 
-            return array_map(function ($v) {
-                return (int)$v;
-            }, $userIds);
+            return $userIds;
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             return [];
@@ -97,10 +96,10 @@ class Manufacturers
     /**
      * Check if a user is a manufacturer
      *
-     * @param int $userId - QUIQQER User ID of manufacturer user
+     * @param int|string $userId - QUIQQER User ID of manufacturer user
      * @return bool
      */
-    public static function isManufacturer(int $userId): bool
+    public static function isManufacturer(int|string $userId): bool
     {
         return in_array($userId, self::getManufacturerUserIds());
     }
@@ -108,10 +107,10 @@ class Manufacturers
     /**
      * Get title of manufacturer (name)
      *
-     * @param int $userId - QUIQQER User ID of manufacturer user
+     * @param string|int $userId - QUIQQER User ID of manufacturer user
      * @return string
      */
-    public static function getManufacturerTitle(int $userId): string
+    public static function getManufacturerTitle(string|int $userId): string
     {
         $parts = [];
 
@@ -151,11 +150,12 @@ class Manufacturers
     /**
      * Get image of manufacturer
      *
-     * @param int $userId - QUIQQER User ID of manufacturer user
-     * @return ?QUI\Projects\Media\Image
+     * @param int|string $userId - QUIQQER User ID of manufacturer user
+     * @return ?Image
+     * @throws QUI\Database\Exception
      * @throws QUI\Exception
      */
-    public static function getManufacturerImage(int $userId): ?QUI\Projects\Media\Image
+    public static function getManufacturerImage(int|string $userId): ?QUI\Projects\Media\Image
     {
         $manufacturer = self::getManufacturerData($userId);
 
@@ -183,13 +183,13 @@ class Manufacturers
     /**
      * Get virtual URL for manufacturer product "site"
      *
-     * @param int $userId - QUIQQER User ID of manufacturer user
+     * @param int|string $userId - QUIQQER User ID of manufacturer user
      * @param Project|null $Project (optional) - [default: get project by rewrite]
      *
      * @return string|false - URL or false if not available
      * @throws QUI\Database\Exception
      */
-    public static function getManufacturerUrl(int $userId, QUI\Projects\Project $Project = null): bool|string
+    public static function getManufacturerUrl(int|string $userId, QUI\Projects\Project $Project = null): bool|string
     {
         if (empty($Project)) {
             try {
@@ -226,11 +226,11 @@ class Manufacturers
     /**
      * Get manufacturer data
      *
-     * @param int $userId - QUIQQER User ID of manufacturer user
+     * @param int|string $userId - QUIQQER User ID of manufacturer user
      * @return array
      * @throws QUI\Database\Exception
      */
-    protected static function getManufacturerData(int $userId): array
+    protected static function getManufacturerData(int|string $userId): array
     {
         if (!empty(self::$manufacturerData[$userId])) {
             return self::$manufacturerData[$userId];
