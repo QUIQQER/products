@@ -820,9 +820,9 @@ class EventHandling
                 'suffix' => '',
                 'priority' => 1,
                 'systemField' => 0,
-                'standardField' => 1,
+                'standardField' => 0,
                 'requiredField' => 0,
-                'publicField' => 1,
+                'publicField' => 0,
                 'search_type' => Search::SEARCHTYPE_TEXT,
                 'titles' => [
                     'de' => 'Zustand',
