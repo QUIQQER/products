@@ -18,15 +18,15 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
     'text!package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettingsCreate.html',
     'css!package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettings.css'
 
-], function (QUI, QUIControl, QUIConfirm, QUILocale, Grid, Mustache, template, templateCreate) {
-    "use strict";
+], function(QUI, QUIControl, QUIConfirm, QUILocale, Grid, Mustache, template, templateCreate) {
+    'use strict';
 
     const lg = 'quiqqer/products';
 
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettings',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/AttributeGroupSettings',
 
         Binds: [
             'update',
@@ -42,7 +42,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
             fieldId: false
         },
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.$Input = null;
@@ -50,6 +50,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
             this.$GenerateTags = null;
             this.$EntriesType = null;
             this.$IsImageAttribute = null;
+            this.$ExcludeVariantGen = null;
 
             this.$data = [];
 
@@ -64,11 +65,11 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          *
          * @return {HTMLDivElement}
          */
-        create: function () {
+        create: function() {
             this.$Elm = new Element('div', {
                 styles: {
                     'float': 'left',
-                    width  : '100%'
+                    width: '100%'
                 }
             });
 
@@ -78,8 +79,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
         /**
          * event : on inject
          */
-        $onInject: function () {
-            var Parent = this.$Elm.getParent('.field-options');
+        $onInject: function() {
+            const Parent = this.$Elm.getParent('.field-options');
 
             if (Parent) {
                 Parent.setStyle('padding', 0);
@@ -87,50 +88,50 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
 
             new Element('div', {
                 'class': 'quiqqer-products-attributeList-settings-title',
-                html   : QUILocale.get(lg, 'product.fields.attributeList.entry.title'),
-                styles : {
+                html: QUILocale.get(lg, 'product.fields.attributeList.entry.title'),
+                styles: {
                     marginTop: 20
                 }
             }).inject(this.$Elm);
 
-            var Width = new Element('div', {
+            const Width = new Element('div', {
                 styles: {
                     'float': 'left',
-                    margin : 10,
-                    width  : 'calc(100% - 20px)'
+                    margin: 10,
+                    width: 'calc(100% - 20px)'
                 }
             }).inject(this.$Elm);
 
-            var Container = new Element('div', {
+            const Container = new Element('div', {
                 styles: {
                     'float': 'left',
-                    height : 300,
-                    width  : '100%'
+                    height: 300,
+                    width: '100%'
                 }
             }).inject(Width);
 
-            var self = this,
+            const self = this,
                 size = Width.getSize();
 
             this.$Grid = new Grid(Container, {
-                perPage    : 150,
-                buttons    : [
+                perPage: 150,
+                buttons: [
                     {
-                        name    : 'up',
-                        icon    : 'fa fa-angle-up',
+                        name: 'up',
+                        icon: 'fa fa-angle-up',
                         disabled: true,
-                        events  : {
-                            onClick: function () {
+                        events: {
+                            onClick: function() {
                                 this.$moveup();
                             }.bind(this)
                         }
                     },
                     {
-                        name    : 'down',
-                        icon    : 'fa fa-angle-down',
+                        name: 'down',
+                        icon: 'fa fa-angle-down',
                         disabled: true,
-                        events  : {
-                            onClick: function () {
+                        events: {
+                            onClick: function() {
                                 this.$movedown();
                             }.bind(this)
                         }
@@ -139,21 +140,21 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                         type: 'separator'
                     },
                     {
-                        name     : 'add',
+                        name: 'add',
                         textimage: 'fa fa-plus',
-                        text     : QUILocale.get('quiqqer/system', 'add'),
-                        events   : {
+                        text: QUILocale.get('quiqqer/system', 'add'),
+                        events: {
                             onClick: this.openAddDialog
                         }
                     },
                     {
-                        name     : 'edit',
+                        name: 'edit',
                         textimage: 'fa fa-edit',
-                        text     : QUILocale.get('quiqqer/system', 'edit'),
-                        disabled : true,
-                        events   : {
-                            onClick: function () {
-                                var selected = self.$Grid.getSelectedIndices();
+                        text: QUILocale.get('quiqqer/system', 'edit'),
+                        disabled: true,
+                        events: {
+                            onClick: function() {
+                                const selected = self.$Grid.getSelectedIndices();
 
                                 if (selected.length) {
                                     self.openEditDialog(selected[0]);
@@ -165,41 +166,44 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                         type: 'separator'
                     },
                     {
-                        name     : 'delete',
+                        name: 'delete',
                         textimage: 'fa fa-trash',
-                        text     : QUILocale.get('quiqqer/system', 'delete'),
-                        disabled : true,
-                        events   : {
+                        text: QUILocale.get('quiqqer/system', 'delete'),
+                        disabled: true,
+                        events: {
                             onClick: this.openRemoveDialog
                         }
                     }
                 ],
                 columnModel: [
                     {
-                        header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
-                        title    : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
+                        header: QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
+                        title: QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
                         dataIndex: 'selected',
-                        dataType : 'node',
-                        width    : 30
+                        dataType: 'node',
+                        width: 30
                     },
                     {
-                        header   : QUILocale.get('quiqqer/system', 'title'),
+                        header: QUILocale.get('quiqqer/system', 'title'),
                         dataIndex: 'title',
-                        dataType : 'string',
-                        width    : 200
+                        dataType: 'string',
+                        width: 200
                     },
                     {
-                        header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.valueId'),
-                        title    : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.valueId.description'),
+                        header: QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.valueId'),
+                        title: QUILocale.get(
+                            lg,
+                            'fields.control.productAttributeListSettings.grid.valueId.description'
+                        ),
                         dataIndex: 'valueId',
-                        dataType : 'string',
-                        width    : 75
+                        dataType: 'string',
+                        width: 75
                     },
                     {
-                        header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.image'),
+                        header: QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.image'),
                         dataIndex: 'imagePreview',
-                        dataType : 'node',
-                        width    : 75
+                        dataType: 'node',
+                        width: 75
                     }
                 ]
             });
@@ -208,8 +212,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
             this.$Grid.setWidth(size.x);
 
             this.$Grid.addEvents({
-                onClick   : this.$buttonReset,
-                onDblClick: function () {
+                onClick: this.$buttonReset,
+                onDblClick: function() {
                     self.$buttonReset();
 
                     self.openEditDialog(
@@ -220,22 +224,32 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
 
             this.$PriceCalc = new Element('div', {
                 'class': 'quiqqer-products-attributeList-settings',
-                html   : Mustache.render(template, {
-                    title                  : QUILocale.get(lg, 'product.fields.attribute.group.attributeList.title'),
-                    generateTags           : QUILocale.get(lg, 'product.fields.attributeList.generateTags'),
-                    labelType              : QUILocale.get(lg, 'product.fields.attributeList.labelType'),
-                    labelTypeOptionDefault : QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionDefault'),
-                    labelTypeOptionSize    : QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionSize'),
-                    labelTypeOptionColor   : QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionColor'),
+                html: Mustache.render(template, {
+                    title: QUILocale.get(lg, 'product.fields.attribute.group.attributeList.title'),
+                    generateTags: QUILocale.get(lg, 'product.fields.attributeList.generateTags'),
+                    labelType: QUILocale.get(lg, 'product.fields.attributeList.labelType'),
+                    labelTypeOptionDefault: QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionDefault'),
+                    labelTypeOptionSize: QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionSize'),
+                    labelTypeOptionColor: QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionColor'),
                     labelTypeOptionMaterial: QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionMaterial'),
-                    labelTypeOptionCondition: QUILocale.get(lg, 'product.fields.attributeList.labelTypeOptionCondition'),
-                    labelIsImageAttribute  : QUILocale.get(lg, 'product.fields.attributeList.labelIsImageAttribute')
+                    labelIsImageAttribute: QUILocale.get(lg, 'product.fields.attributeList.labelIsImageAttribute'),
+
+                    isUsedForVariantGeneration: QUILocale.get(
+                        lg,
+                        'product.fields.attributeList.isUsedForVariantGeneration'
+                    ),
+                    isUsedForVariantGenerationDescription: QUILocale.get(
+                        lg,
+                        'product.fields.attributeList.isUsedForVariantGenerationDescription'
+                    )
+
                 })
             }).inject(this.$Elm, 'top');
 
             this.$GenerateTags = this.$PriceCalc.getElement('[name="generate_tags"]');
             this.$EntriesType = this.$PriceCalc.getElement('[name="entries_type"]');
             this.$IsImageAttribute = this.$PriceCalc.getElement('[name="is_image_attribute"]');
+            this.$ExcludeVariantGen = this.$PriceCalc.getElement('[name="exclude_from_variant_generation"]');
 
             this.refresh();
         },
@@ -246,20 +260,20 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          * @param self
          * @param {HTMLInputElement} Node
          */
-        $onImport: function (self, Node) {
+        $onImport: function(self, Node) {
             this.$Input = Node;
             this.$Elm = this.create();
 
-            var data   = {},
+            let data = {},
                 result = [];
 
             try {
                 data = JSON.decode(this.$Input.value);
 
                 // parse data
-                if ("entries" in data) {
-                    for (var i = 0, len = data.entries.length; i < len; i++) {
-                        if (!("title" in data.entries[i])) {
+                if ('entries' in data) {
+                    for (let i = 0, len = data.entries.length; i < len; i++) {
+                        if (!('title' in data.entries[i])) {
                             continue;
                         }
 
@@ -281,48 +295,55 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
             this.$Elm.wraps(this.$Input);
             this.$onInject();
 
-            if ("generate_tags" in data) {
+            if ('generate_tags' in data) {
                 this.$GenerateTags.checked = data.generate_tags;
             } else {
                 this.$GenerateTags.checked = false;
             }
 
-            if ("entries_type" in data) {
+            if ('entries_type' in data) {
                 this.$EntriesType.value = data.entries_type;
             }
 
-            if ("is_image_attribute" in data) {
+            if ('is_image_attribute' in data) {
                 this.$IsImageAttribute.checked = data.is_image_attribute;
             } else {
                 this.$IsImageAttribute.checked = false;
             }
 
+            if ('is_image_attribute' in data) {
+                this.$ExcludeVariantGen.checked = data.exclude_from_variant_generation;
+            } else {
+                this.$ExcludeVariantGen.checked = false;
+            }
+
             this.$GenerateTags.addEvent('change', this.update);
             this.$EntriesType.addEvent('change', this.update);
             this.$IsImageAttribute.addEvent('change', this.update);
+            this.$ExcludeVariantGen.addEvent('change', this.update);
         },
 
         /**
          * reset the buttons from the grid
          * disable or enable the buttons dependent on selected indices
          */
-        $buttonReset: function () {
-            var selected = this.$Grid.getSelectedIndices(),
-                buttons  = this.$Grid.getButtons();
+        $buttonReset: function() {
+            const selected = this.$Grid.getSelectedIndices(),
+                buttons = this.$Grid.getButtons();
 
-            var Up = buttons.filter(function (Button) {
+            const Up = buttons.filter(function(Button) {
                 return Button.getAttribute('name') === 'up';
             })[0];
 
-            var Down = buttons.filter(function (Button) {
+            const Down = buttons.filter(function(Button) {
                 return Button.getAttribute('name') === 'down';
             })[0];
 
-            var Edit = buttons.filter(function (Button) {
+            const Edit = buttons.filter(function(Button) {
                 return Button.getAttribute('name') === 'edit';
             })[0];
 
-            var Delete = buttons.filter(function (Button) {
+            const Delete = buttons.filter(function(Button) {
                 return Button.getAttribute('name') === 'delete';
             })[0];
 
@@ -350,24 +371,24 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
         /**
          * refresh the grid data display
          */
-        refresh: function () {
-            var i, len, entry, langTitle, Selected;
-            var data = [];
+        refresh: function() {
+            let i, len, entry, langTitle, Selected;
+            const data = [];
 
-            var currentLang = QUILocale.getCurrent();
+            const currentLang = QUILocale.getCurrent();
 
-            var IsSelected = new Element('span', {
+            const IsSelected = new Element('span', {
                 'class': 'fa fa-check'
             });
 
-            var IsNotSelected = new Element('span', {
+            const IsNotSelected = new Element('span', {
                 'class': 'fa fa-minus'
             });
 
             for (i = 0, len = this.$data.length; i < len; i++) {
                 entry = this.$data[i];
 
-                if (!("title" in entry)) {
+                if (!('title' in entry)) {
                     continue;
                 }
 
@@ -389,14 +410,14 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                 if ('image' in entry && entry.image) {
                     imagePreview = new Element('img', {
                         'class': 'quiqqer-products-AttributeGroupSettings-img-preview',
-                        src    : entry.image
+                        src: entry.image
                     });
                 }
 
                 data.push({
-                    selected    : Selected,
-                    title       : langTitle,
-                    valueId     : entry.valueId,
+                    selected: Selected,
+                    title: langTitle,
+                    valueId: entry.valueId,
                     imagePreview: imagePreview
                 });
             }
@@ -413,23 +434,23 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
         /**
          * Opens the add dialog
          */
-        openAddDialog: function () {
-            var self = this;
+        openAddDialog: function() {
+            const self = this;
 
             new QUIConfirm({
-                title    : QUILocale.get(lg, 'fields.control.attributeGroup.create.add.window.title'),
-                icon     : 'fa fa-plus',
-                texticon : false,
+                title: QUILocale.get(lg, 'fields.control.attributeGroup.create.add.window.title'),
+                icon: 'fa fa-plus',
+                texticon: false,
                 maxHeight: 400,
-                maxWidth : 600,
+                maxWidth: 600,
                 autoclose: false,
-                events   : {
-                    onOpen  : function (Win) {
+                events: {
+                    onOpen: function(Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            title        : QUILocale.get('quiqqer/system', 'title'),
-                            valueId      : QUILocale.get(lg, 'fields.control.attributeGroup.create.valueId'),
+                            title: QUILocale.get('quiqqer/system', 'title'),
+                            valueId: QUILocale.get(lg, 'fields.control.attributeGroup.create.valueId'),
                             selectedTitle: QUILocale.get(lg, 'fields.control.attributeGroup.create.selected'),
-                            labelImage   : QUILocale.get(lg, 'fields.control.attributeGroup.create.labelImage')
+                            labelImage: QUILocale.get(lg, 'fields.control.attributeGroup.create.labelImage')
                         }));
 
                         Win.Loader.show();
@@ -438,8 +459,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                             Win.Loader.hide();
                         });
                     },
-                    onSubmit: function (Win) {
-                        var Form  = Win.getContent().getElement('form'),
+                    onSubmit: function(Win) {
+                        const Form = Win.getContent().getElement('form'),
                             Title = QUI.Controls.getById(
                                 Form.elements.title.get('data-quiid')
                             );
@@ -450,7 +471,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                             return;
                         }
 
-                        var edit = self.add(
+                        const edit = self.add(
                             Title.getData(),
                             Form.elements.valueId.value,
                             Form.elements.selected.checked,
@@ -460,7 +481,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                         if (edit) {
                             Win.close();
                         } else {
-                            QUI.getMessageHandler().then(function (MH) {
+                            QUI.getMessageHandler().then(function(MH) {
                                 MH.addError(QUILocale.get(lg, 'fields.control.attributeGroup.create.already.exist'));
                             });
                         }
@@ -474,7 +495,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          *
          * @param {Number} index - row index
          */
-        openEditDialog: function (index) {
+        openEditDialog: function(index) {
             if (typeof index === 'undefined') {
                 return;
             }
@@ -483,25 +504,25 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                 return;
             }
 
-            var self = this,
+            const self = this,
                 data = this.$data[index];
 
             new QUIConfirm({
-                title    : QUILocale.get(lg, 'fields.control.attributeGroup.edit.window.title'),
-                icon     : 'fa fa-edit',
+                title: QUILocale.get(lg, 'fields.control.attributeGroup.edit.window.title'),
+                icon: 'fa fa-edit',
                 maxHeight: 400,
-                maxWidth : 600,
+                maxWidth: 600,
                 autoclose: false,
-                events   : {
-                    onOpen  : function (Win) {
+                events: {
+                    onOpen: function(Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            title        : QUILocale.get('quiqqer/system', 'title'),
-                            valueId      : QUILocale.get(lg, 'fields.control.attributeGroup.create.valueId'),
+                            title: QUILocale.get('quiqqer/system', 'title'),
+                            valueId: QUILocale.get(lg, 'fields.control.attributeGroup.create.valueId'),
                             selectedTitle: QUILocale.get(lg, 'fields.control.attributeGroup.create.selected'),
-                            labelImage   : QUILocale.get(lg, 'fields.control.attributeGroup.create.labelImage')
+                            labelImage: QUILocale.get(lg, 'fields.control.attributeGroup.create.labelImage')
                         }));
 
-                        var Form = Win.getContent().getElement('form');
+                        const Form = Win.getContent().getElement('form');
 
                         Form.elements.title.value = JSON.encode(data.title);
                         Form.elements.valueId.value = data.valueId;
@@ -517,8 +538,8 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                             Win.Loader.hide();
                         });
                     },
-                    onSubmit: function (Win) {
-                        var Form  = Win.getContent().getElement('form'),
+                    onSubmit: function(Win) {
+                        const Form = Win.getContent().getElement('form'),
                             Title = QUI.Controls.getById(
                                 Form.elements.title.get('data-quiid')
                             );
@@ -529,7 +550,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                             return;
                         }
 
-                        var edit = self.edit(
+                        const edit = self.edit(
                             index,
                             Title.getData(),
                             Form.elements.valueId.value,
@@ -540,7 +561,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                         if (edit) {
                             Win.close();
                         } else {
-                            QUI.getMessageHandler().then(function (MH) {
+                            QUI.getMessageHandler().then(function(MH) {
                                 MH.addError(QUILocale.get(lg, 'fields.control.attributeGroup.create.already.exist'));
                             });
                         }
@@ -552,12 +573,12 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
         /**
          * open remove dialog
          */
-        openRemoveDialog: function () {
-            var self    = this,
-                data    = this.$Grid.getSelectedData(),
+        openRemoveDialog: function() {
+            const self = this,
+                data = this.$Grid.getSelectedData(),
                 indices = this.$Grid.getSelectedIndices();
 
-            var titles = data.map(function (Entry) {
+            const titles = data.map(function(Entry) {
                 return Entry.title;
             });
 
@@ -566,15 +587,15 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
             }
 
             new QUIConfirm({
-                title      : QUILocale.get(lg, 'fields.control.attributeGroup.remove.window.title'),
-                icon       : 'fa fa-trash',
-                texticon   : 'fa fa-trash',
-                text       : QUILocale.get(lg, 'fields.control.attributeGroup.remove.window.text'),
+                title: QUILocale.get(lg, 'fields.control.attributeGroup.remove.window.title'),
+                icon: 'fa fa-trash',
+                texticon: 'fa fa-trash',
+                text: QUILocale.get(lg, 'fields.control.attributeGroup.remove.window.text'),
                 information: titles.join(','),
-                maxHeight  : 300,
-                maxWidth   : 450,
-                events     : {
-                    onSubmit: function () {
+                maxHeight: 300,
+                maxWidth: 450,
+                events: {
+                    onSubmit: function() {
                         self.remove(indices);
                     }
                 }
@@ -584,14 +605,14 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
         /**
          * entry move up
          */
-        $moveup: function () {
-            var from = this.$Grid.getSelectedIndices();
+        $moveup: function() {
+            const from = this.$Grid.getSelectedIndices();
 
             if (from === 0) {
                 return;
             }
 
-            var to = from - 1;
+            const to = from - 1;
 
             this.$data.splice(to, 0, this.$data.splice(from, 1)[0]);
             this.$Grid.moveup();
@@ -601,14 +622,14 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
         /**
          * entry move down
          */
-        $movedown: function () {
-            var from = this.$Grid.getSelectedIndices();
+        $movedown: function() {
+            const from = this.$Grid.getSelectedIndices();
 
             if (from === this.$data.length - 1) {
                 return;
             }
 
-            var to = from + 1;
+            const to = from + 1;
 
             this.$data.splice(to, 0, this.$data.splice(from, 1)[0]);
             this.$Grid.movedown();
@@ -618,12 +639,13 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
         /**
          * Set the data to the input
          */
-        update: function () {
+        update: function() {
             this.$Input.value = JSON.encode({
-                entries           : this.$data,
-                generate_tags     : this.$GenerateTags.checked,
-                entries_type      : this.$EntriesType.value,
-                is_image_attribute: this.$IsImageAttribute.checked
+                entries: this.$data,
+                generate_tags: this.$GenerateTags.checked,
+                entries_type: this.$EntriesType.value,
+                is_image_attribute: this.$IsImageAttribute.checked,
+                exclude_from_variant_generation: this.$ExcludeVariantGen.checked
             });
         },
 
@@ -635,22 +657,22 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          * @param {Boolean}  [selected]
          * @param {String} [image]
          */
-        add: function (title, valueId, selected, image) {
+        add: function(title, valueId, selected, image) {
             selected = selected || false;
             image = image || false;
             valueId = valueId.trim();
 
-            for (var i = 0, len = this.$data.length; i < len; i++) {
+            for (let i = 0, len = this.$data.length; i < len; i++) {
                 if (this.$data[i].valueId === valueId) {
                     return false;
                 }
             }
 
             this.$data.push({
-                title   : title,
-                valueId : valueId,
+                title: title,
+                valueId: valueId,
                 selected: selected,
-                image   : image
+                image: image
             });
 
             this.refresh();
@@ -664,20 +686,20 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          *
          * @param {Number|Array} index - Row number(s)
          */
-        remove: function (index) {
+        remove: function(index) {
             if (!this.$Grid) {
                 return;
             }
 
-            var newData = [];
+            const newData = [];
 
-            var mustBeDeleted = function (wanted) {
+            const mustBeDeleted = function(wanted) {
                 if ((typeOf(index) === 'string' || typeOf(index) === 'number') && index === wanted) {
                     return true;
                 }
 
                 if (typeOf(index) === 'array') {
-                    for (var i = 0, len = index.length; i < len; i++) {
+                    for (let i = 0, len = index.length; i < len; i++) {
                         if (index[i] === wanted) {
                             return true;
                         }
@@ -687,7 +709,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                 return false;
             };
 
-            for (var i = 0, len = this.$data.length; i < len; i++) {
+            for (let i = 0, len = this.$data.length; i < len; i++) {
                 if (mustBeDeleted(i) === false) {
                     newData.push(this.$data[i]);
                 }
@@ -708,7 +730,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
          * @param {Boolean} [selected]
          * @param {String} [image]
          */
-        edit: function (index, title, valueId, selected, image) {
+        edit: function(index, title, valueId, selected, image) {
             valueId = valueId.trim();
 
             let entryFound = 0;
@@ -728,10 +750,10 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
             }
 
             this.$data[index] = {
-                title   : title,
-                valueId : valueId,
+                title: title,
+                valueId: valueId,
                 selected: selected || false,
-                image   : image || false
+                image: image || false
             };
 
             this.refresh();

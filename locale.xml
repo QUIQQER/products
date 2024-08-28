@@ -2083,11 +2083,11 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Attribut ist relevant für Produktbild]]></de>
             <en><![CDATA[Attribute is relevant for product image]]></en>
         </locale>
-        <locale name="product.fields.attributeList.labelTypeOptionCondition">
-            <de><![CDATA[Zustand]]></de>
-            <en><![CDATA[Condition]]></en>
-        </locale>
 
+        <locale name="product.fields.attributeList.isUsedForVariantGeneration">
+            <de><![CDATA[Soll nicht zur Variantengenerierung genutzt werden]]></de>
+            <en><![CDATA[Should not be used for variant generation]]></en>
+        </locale>
         <locale name="product.fields.remove.field">
             <de><![CDATA[Feld entfernen]]></de>
             <en><![CDATA[Remove field]]></en>
@@ -2624,8 +2624,10 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[Price field factors priority]]></en>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.descCategoryPriority" html="true">
-            <de><![CDATA[Auf Produkte, die mehreren Kategorien zugeordnet sind, die Preisfeld-Faktoren konfiguriert haben, werden die Preisfeld-Faktoren der Kategorie mit der höchstens Priorität angewandt. Die Hauptkategorie eines Produkts hat <b>immer</b> Vorrang.]]></de>
-            <en><![CDATA[The price field factors of the category with the highest priority is applied to products that are assigned to several categories that have configured price field factors. The main category of a product is <b>always</b> applied first.]]></en>
+            <de>
+                <![CDATA[Auf Produkte, die mehreren Kategorien zugeordnet sind, die Preisfeld-Faktoren konfiguriert haben, werden die Preisfeld-Faktoren der Kategorie mit der höchstens Priorität angewandt. Die Hauptkategorie eines Produkts hat <b>immer</b> Vorrang.]]></de>
+            <en>
+                <![CDATA[The price field factors of the category with the highest priority is applied to products that are assigned to several categories that have configured price field factors. The main category of a product is <b>always</b> applied first.]]></en>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.info_cli">
             <de><![CDATA[</p>In Ihrem Shop existieren sehr viele Produkte. Die Ausführungszeit Ihres Web-Servers i.V.m. PHP wird wahrscheinlich nicht reichen, um die Preise aller Produkte zu aktualisieren.</p><br/>
