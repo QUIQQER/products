@@ -311,7 +311,7 @@ define('package/quiqqer/products/bin/controls/fields/types/AttributeGroupSetting
                 this.$IsImageAttribute.checked = false;
             }
 
-            if ('is_image_attribute' in data) {
+            if ('exclude_from_variant_generation' in data) {
                 this.$ExcludeVariantGen.checked = data.exclude_from_variant_generation;
             } else {
                 this.$ExcludeVariantGen.checked = false;
