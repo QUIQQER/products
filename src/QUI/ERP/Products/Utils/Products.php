@@ -294,7 +294,10 @@ class Products
         // get hash values
         foreach ($fields as $Field => $fieldValue) {
             if ($fieldValue instanceof QUI\ERP\Products\Interfaces\FieldInterface) {
-                if ($fieldValue->getOption('exclude_from_variant_generation')) {
+                if (
+                    method_exists($fieldValue, 'getOption')
+                    && $fieldValue->getOption('exclude_from_variant_generation')
+                ) {
                     continue;
                 }
 
