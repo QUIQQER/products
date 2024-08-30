@@ -4,27 +4,38 @@
 
 <div class="quiqqer-products-attributeList-settings-generateTags">
     <label>
-        <span class="quiqqer-products-attributeList-settings-text">
+        <input type="checkbox" name="generate_tags"/>
+        <span class="quiqqer-products-attributeList-settings-text"
+              style="width: initial; padding: 4px 10px 10px">
             {{generateTags}}
         </span>
-        <input type="checkbox" name="generate_tags"/>
     </label>
+
     <label>
-        <span class="quiqqer-products-attributeList-settings-text">
+        <input type="checkbox" name="is_image_attribute"/>
+        <span class="quiqqer-products-attributeList-settings-text"
+              style="width: initial; padding: 4px 10px 10px">
             {{labelIsImageAttribute}}
         </span>
-        <input type="checkbox" name="is_image_attribute"/>
     </label>
+
     <label>
-        <span class="quiqqer-products-attributeList-settings-text">
+        <input type="checkbox" name="exclude_from_variant_generation"/>
+        <span class="quiqqer-products-attributeList-settings-text"
+              style="width: initial; padding: 4px 10px 10px">
+            {{isUsedForVariantGeneration}}
+        </span>
+    </label>
+
+    <label style="margin-top: 0.5rem">
+        <span style="width: 100%; display: inline-block; margin: 5px;">
             {{labelType}}
         </span>
-        <select name="entries_type">
+        <select name="entries_type" style="width: 100%;">
             <option value="1">{{labelTypeOptionDefault}}</option>
             <option value="2">{{labelTypeOptionSize}}</option>
             <option value="3">{{labelTypeOptionColor}}</option>
             <option value="4">{{labelTypeOptionMaterial}}</option>
-            <option value="5">{{labelTypeOptionCondition}}</option>
         </select>
     </label>
 </div>

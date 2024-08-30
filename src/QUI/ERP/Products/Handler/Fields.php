@@ -336,6 +336,22 @@ class Fields
             $data['name'] = '';
         }
 
+        // attributelisten options 'exclude_from_variant_generation' immer auf true
+        if ($data['type'] === 'AttributeGroup') {
+            $options = $data['options'] ?? '';
+            $options = json_decode($options, true);
+
+            if (!is_array($options)) {
+                $options = [];
+            }
+
+            if (!isset($options['exclude_from_variant_generation'])) {
+                $options['exclude_from_variant_generation'] = true;
+            }
+
+            $data['options'] = json_encode($options);
+        }
+
         // insert field data
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
@@ -651,9 +667,9 @@ class Fields
      * Return all available Fields from disk.
      * This iterates through all packages and reads their files from disk.
      * Therefore, this is slow  and should only be used when you know that it's necessary.
-     * You would generally want to use @see self::getFieldTypes()
+     * You would generally want to use @return array
+     * @see self::getFieldTypes()
      *
-     * @return array
      */
     private static function getFieldTypesFromDisk(): array
     {
@@ -769,10 +785,10 @@ class Fields
      * Return internal field init data for a field type from disk.
      * This iterates through all packages and reads their files from disk.
      * Therefore, this is slow and should only be used when you know that it's necessary.
-     * You would generally want to use @see self::getFieldTypeData()
-     *
-     * @param string $type - field type
+     * You would generally want to use @param string $type - field type
      * @return array
+     * @see self::getFieldTypeData()
+     *
      */
     private static function getFieldTypeDataFromDisk(string $type): array
     {

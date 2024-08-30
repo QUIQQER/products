@@ -357,6 +357,15 @@ class Product extends QUI\Control
             );
         }
 
+        $attributeGroups = $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS);
+        $attributeGroups = array_filter($attributeGroups, function ($Field) {
+            if ($Field->getOption('exclude_from_variant_generation')) {
+                return false;
+            }
+
+            return true;
+        });
+
         $Engine->assign([
             'jsonLd' => JsonLd::getJsonLd($Product),
             'Product' => $View,
@@ -367,7 +376,7 @@ class Product extends QUI\Control
             'detailFields' => FieldUtils::sortFields($detailFields),
             'productAttributeList' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_LIST),
             'userInputFields' => $View->getFieldsByType(Fields::TYPE_USER_INPUT),
-            'productAttributeGroups' => $View->getFieldsByType(Fields::TYPE_ATTRIBUTE_GROUPS),
+            'productAttributeGroups' => $attributeGroups,
             'Price' => $Price,
             'PriceDisplay' => $PriceDisplay,
             'PriceRetailDisplay' => $PriceRetailDisplay,
