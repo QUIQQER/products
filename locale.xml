@@ -2159,17 +2159,21 @@ For a newly created product the article number should be generated automatically
             <br/><br/>
             <span style="font-size: 80%;">
                 Ausgenommen hiervon sind Felder vom Typ Attributliste, da diese für die Variantengenerierung genutzt werden.
-                Wenn ein Feld vom Typ Attribuliste editierbar ist, kann dieses Feld im Eltern-Produkt verändert werden.
-                In einer Variante kann eine Attributliste nicht verändert werden.
+                In diesem Fall verhält es sich folgendermaßen: Wenn ein Feld vom Typ Attributliste editierbar ist,
+                kann es im Eltern-Produkt bearbeitet werden. In einer Variante kann eine Attributliste nicht bearbeitet werden,
+                es sei denn, diese Attributliste wird nicht zur Variantengenerierung genutzt.
             </span>
             ]]></de>
             <en><![CDATA[
-            Specify which fields can be editable by the variants.
-            All fields that cannot be editable by the variants will be taken from the parent product.
-
-            Exceptions to this are fields of type Attribute List. Because these are used for variant generation.
-            Here it behaves as follows: If a field of type Attribute List is editable,
-            this field can be edited in the parent product. In a variant, an attribute list cannot be edited.
+            <b>Specify which fields can be edited by variants.</b><br/>
+            All fields that cannot be edited in variants are taken from the parent product.
+            <br/><br/>
+            <span style="font-size: 80%;">
+                Exceptions to this are fields of type attribute list, as these are used for variant generation.
+                In this case, the situation is as follows: If a field of type attribute list is editable,
+                it can be edited in the parent product. An attribute list cannot be edited in a variant,
+                unless this attribute list is not used for variant generation.
+            </span>
             ]]></en>
         </locale>
         <locale name="variants.EditableFieldList.window.reset.to.global">
