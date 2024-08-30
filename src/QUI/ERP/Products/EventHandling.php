@@ -28,6 +28,7 @@ use function mb_substr;
 use function preg_replace;
 use function str_replace;
 use function trim;
+use QUI\ERP\Products\Field\Types\AttributeGroup;
 
 /**
  * Class EventHandling
