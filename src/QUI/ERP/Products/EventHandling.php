@@ -768,7 +768,18 @@ class EventHandling
                 'titles' => [
                     'de' => 'Produktvarianten',
                     'en' => 'Product variants'
-                ]
+                ],
+                'description' => [
+                    'de' => 'Dieses Feld wird benötigt, wenn manuell Varianten nicht aus Attributelisten angelegt werden. Damit diese im Shopfrontend auswählbar sind',
+                    'en' => 'This field is required if variants are not created manually from attribute lists. So that these can be selected in the store frontend'
+                ],
+                'workingtitles' => [
+                    'de' => 'Produktvarianten - Hilfsfeld',
+                    'en' => 'Product variants - Auxiliary field'
+                ],
+                'options' => [
+                    'exclude_from_variant_generation' => false
+                ],
             ],
             // Title SEO
             [
