@@ -16,14 +16,19 @@ use QUI\ERP\Products\Handler\Manufacturers;
 use QUI\ERP\Products\Utils\Sortables;
 
 $Request = QUI::getRequest();
-$siteUrl = $Site->getLocation();
 $requestUrl = $_REQUEST['_url'];
-$ManufacturerUser = false;
+$ManufacturerUser = null;
 $ProductList = false;
+
+try {
+    $siteUrl = $Site->getLocation();
+} catch (QUI\Exception) {
+    $siteUrl = '';
+}
 
 // Check if a special manufacturer URL was called
 if ($siteUrl !== $requestUrl) {
-    $urlInfo = \pathinfo($requestUrl);
+    $urlInfo = pathinfo($requestUrl);
     $manufacturerUsername = $urlInfo['basename'];
 
     // Check if manufacturer user exists
@@ -31,12 +36,12 @@ if ($siteUrl !== $requestUrl) {
         $ManufacturerUser = QUI::getUsers()->getUserByName($manufacturerUsername);
 
         if (!Manufacturers::isManufacturer($ManufacturerUser->getUUID())) {
-            $ManufacturerUser = false;
+            $ManufacturerUser = null;
         }
 
         $searchParams = [
             'fields' => [
-                Fields::FIELD_MANUFACTURER => $ManufacturerUser->getName()
+                Fields::FIELD_MANUFACTURER => $ManufacturerUser?->getName()
             ]
         ];
 
@@ -44,7 +49,7 @@ if ($siteUrl !== $requestUrl) {
         $defaultSorting = $Site->getAttribute('quiqqer.products.settings.defaultSorting');
 
         if (!empty($defaultSorting)) {
-            $defaultSorting = \explode(' ', $defaultSorting);
+            $defaultSorting = explode(' ', $defaultSorting);
             $searchParams['sortOn'] = $defaultSorting[0];
 
             if (!empty($defaultSorting[1])) {
@@ -65,8 +70,8 @@ if ($siteUrl !== $requestUrl) {
         $fields = Sortables::getSortableFieldsForSite($Site);
 
         foreach ($fields as $fieldId) {
-            if (\strpos($fieldId, 'S') === 0) {
-                $title = QUI::getLocale()->get('quiqqer/products', 'sortable.' . \mb_substr($fieldId, 1));
+            if (str_starts_with($fieldId, 'S')) {
+                $title = QUI::getLocale()->get('quiqqer/products', 'sortable.' . mb_substr($fieldId, 1));
 
                 $ProductList->addSort(
                     $title . ' ' . QUI::getLocale()->get('quiqqer/products', 'sortASC'),
@@ -81,7 +86,7 @@ if ($siteUrl !== $requestUrl) {
                 continue;
             }
 
-            if (\strpos($fieldId, 'F') === 0) {
+            if (str_starts_with($fieldId, 'F')) {
                 try {
                     $fieldId = str_replace('F', '', $fieldId);
                     $Field = Fields::getField((int)$fieldId);
@@ -102,14 +107,20 @@ if ($siteUrl !== $requestUrl) {
             }
         }
 
-        $Engine->assign('manufacturerTitle', Manufacturers::getManufacturerTitle($ManufacturerUser->getUUID()));
-    } catch (\Exception $Exception) {
+        $Engine->assign('manufacturerTitle', Manufacturers::getManufacturerTitle($ManufacturerUser?->getUUID()));
+    } catch (Exception $Exception) {
         QUI\System\Log::writeDebugException($Exception);
     }
 }
 
+try {
+    $siteHost = $Site->getUrlRewrittenWithHost();
+} catch (QUI\Exception) {
+    $siteHost = '';
+}
+
 $Engine->assign([
-    'url' => $Site->getUrlRewrittenWithHost(),
+    'url' => $siteHost,
     'ProductList' => $ProductList,
     'ManufacturerUser' => $ManufacturerUser,
     'ManufacturerList' => new ManufacturerList()
