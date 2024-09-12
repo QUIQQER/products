@@ -18,7 +18,7 @@ use QUI\ERP\Products\Utils\Sortables;
 $Request = QUI::getRequest();
 $siteUrl = $Site->getLocation();
 $requestUrl = $_REQUEST['_url'];
-$ManufacturerUser = false;
+$ManufacturerUser = null;
 $ProductList = false;
 
 // Check if a special manufacturer URL was called
@@ -31,12 +31,12 @@ if ($siteUrl !== $requestUrl) {
         $ManufacturerUser = QUI::getUsers()->getUserByName($manufacturerUsername);
 
         if (!Manufacturers::isManufacturer($ManufacturerUser->getUUID())) {
-            $ManufacturerUser = false;
+            $ManufacturerUser = null;
         }
 
         $searchParams = [
             'fields' => [
-                Fields::FIELD_MANUFACTURER => $ManufacturerUser->getName()
+                Fields::FIELD_MANUFACTURER => $ManufacturerUser?->getName()
             ]
         ];
 
@@ -102,7 +102,7 @@ if ($siteUrl !== $requestUrl) {
             }
         }
 
-        $Engine->assign('manufacturerTitle', Manufacturers::getManufacturerTitle($ManufacturerUser->getUUID()));
+        $Engine->assign('manufacturerTitle', Manufacturers::getManufacturerTitle($ManufacturerUser?->getUUID()));
     } catch (\Exception $Exception) {
         QUI\System\Log::writeDebugException($Exception);
     }
