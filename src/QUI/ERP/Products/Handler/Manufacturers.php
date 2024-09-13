@@ -107,11 +107,15 @@ class Manufacturers
     /**
      * Get title of manufacturer (name)
      *
-     * @param string|int $userId - QUIQQER User ID of manufacturer user
+     * @param string|int|null $userId - QUIQQER User ID of manufacturer user
      * @return string
      */
-    public static function getManufacturerTitle(string|int $userId): string
+    public static function getManufacturerTitle(string|int|null $userId): string
     {
+        if ($userId === null) {
+            return '';
+        }
+
         $parts = [];
 
         try {
