@@ -639,6 +639,10 @@ class Calc
 
         if ($Price) {
             $nettoPrice = $Price->getValue();
+
+            if ($nettoPrice instanceof QUI\ERP\Money\Price) {
+                $nettoPrice = $nettoPrice->getPrice();
+            }
         }
 
         if (empty($nettoPrice)) {
