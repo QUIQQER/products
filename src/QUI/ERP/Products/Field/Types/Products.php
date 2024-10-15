@@ -17,7 +17,7 @@ use function is_array;
  * Class Products
  * @package QUI\ERP\Products\Field
  */
-class Products extends QUI\ERP\Products\Field\Field
+class Products extends QUI\ERP\Product\Field\Field
 {
     /**
      * @var bool
@@ -94,7 +94,7 @@ class Products extends QUI\ERP\Products\Field\Field
         $result = [];
 
         foreach ($value as $productId) {
-            if (ProductHandler::existsProduct($productId)) {
+            if (ProductHandler::existsProduct((int)$productId)) {
                 $result[] = $productId;
             }
         }
