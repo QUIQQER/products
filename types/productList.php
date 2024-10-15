@@ -18,7 +18,7 @@ $products = [];
 
 foreach ($productIds as $productId) {
     try {
-        $Product = Products::getProduct($productId);
+        $Product = Products::getProduct((int)$productId);
         $products[] = $Product->getView();
     } catch (QUI\Exception $Exception) {
         QUI\System\Log::writeException($Exception);
