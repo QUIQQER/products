@@ -311,6 +311,10 @@ class Products
 
             // string to hex
             if (!is_numeric($fieldValue)) {
+                if (empty($fieldValue)) {
+                    $fieldValue = '';
+                }
+
                 $fieldValue = implode(unpack("H*", $fieldValue));
             }
 
