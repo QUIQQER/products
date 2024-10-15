@@ -17,7 +17,7 @@ use function is_array;
  * Class Products
  * @package QUI\ERP\Products\Field
  */
-class Products extends QUI\ERP\Product\Field\Field
+class Products extends QUI\ERP\Products\Field\Field
 {
     /**
      * @var bool
