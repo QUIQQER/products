@@ -2824,7 +2824,7 @@ class Model extends QUI\QDOM
         $duplicateArticleNoProductIds = array_unique(array_column($result, 'id'));
 
         foreach ($duplicateArticleNoProductIds as $productId) {
-            if (Products::existsProduct($productId)) {
+            if (Products::existsProduct((int)$productId)) {
                 throw new QUI\ERP\Products\Product\Exception(
                     [
                         'quiqqer/products',
