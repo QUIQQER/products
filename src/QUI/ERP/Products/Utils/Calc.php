@@ -21,7 +21,6 @@ use QUI\ERP\Tax\TaxType;
 use QUI\ERP\Tax\Utils as TaxUtils;
 use QUI\Exception;
 use QUI\Interfaces\Users\User as UserInterface;
-
 use QUI\Locale;
 
 use function count;
