@@ -679,8 +679,3 @@ parameters:
 			message: "#^Parameter \\#1 \\$Project of method QUI\\\\ERP\\\\Products\\\\Product\\\\Model\\:\\:getUrlRewrittenWithHost\\(\\) expects null, QUI\\\\Projects\\\\Project given\\.$#"
 			count: 1
 			path: types/category.php
-
-		-
-			message: "#^Parameter \\#1 \\$pid of static method QUI\\\\ERP\\\\Products\\\\Handler\\\\Products\\:\\:getProduct\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: types/productList.php
