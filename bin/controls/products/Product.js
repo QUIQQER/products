@@ -911,6 +911,8 @@ define('package/quiqqer/products/bin/controls/products/Product', [
 
                 const image = data[2] ? URL_DIR + data[2] : false;
 
+                console.log(data);
+
                 Container.set({
                     html: Mustache.render(informationTemplate, {
                         id: productId,
@@ -928,7 +930,10 @@ define('package/quiqqer/products/bin/controls/products/Product', [
                         productEDate: QUILocale.get('quiqqer/system', 'editdate'),
                         productEUser: QUILocale.get('quiqqer/system', 'edituser'),
                         productCDate: QUILocale.get('quiqqer/system', 'createdate'),
-                        productCUser: QUILocale.get('quiqqer/system', 'createuser')
+                        productCUser: QUILocale.get('quiqqer/system', 'createuser'),
+                        productType: QUILocale.get(lg, 'productType'),
+                        productTypeTitle: data[4].typeTitle,
+                        productTypeClass: data[4].type
                     })
                 });
 
