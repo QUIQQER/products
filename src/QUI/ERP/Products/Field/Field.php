@@ -15,6 +15,7 @@ use QUI\Interfaces\Users\User;
 use QUI\Locale;
 
 use function array_filter;
+use function class_exists;
 use function floor;
 use function get_class;
 use function is_array;
@@ -358,14 +359,15 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $data['options'] = json_encode($options);
         }
 
-
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.save', [
-                'id' => $this->getId()
-            ]),
-            '',
-            $data
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.save', [
+                    'id' => $this->getId()
+                ]),
+                '',
+                $data
+            );
+        }
 
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
@@ -407,12 +409,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsFieldDeleteBefore', [$this]);
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.delete', [
-                'id' => $this->getId(),
-                'title' => $this->getTitle()
-            ])
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.delete', [
+                    'id' => $this->getId(),
+                    'title' => $this->getTitle()
+                ])
+            );
+        }
 
         $fieldId = $this->getId();
 

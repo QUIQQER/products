@@ -33,6 +33,7 @@ use function array_reverse;
 use function array_unique;
 use function array_values;
 use function ceil;
+use function class_exists;
 use function constant;
 use function count;
 use function current;
@@ -1437,19 +1438,21 @@ class Model extends QUI\QDOM
 
         // update
         if (Products::$writeProductDataToDb) {
-            QUI\Watcher::addString(
-                QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.save', [
-                    'id' => $this->getId()
-                ]),
-                '',
-                [
-                    'categories' => ',' . implode(',', $categoryIds) . ',',
-                    'category' => $mainCategory,
-                    'fieldData' => json_encode($fieldData),
-                    'permissions' => json_encode($this->permissions),
-                    'priority' => $this->getPriority()
-                ]
-            );
+            if (class_exists('\QUI\Watcher')) {
+                QUI\Watcher::addString(
+                    QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.save', [
+                        'id' => $this->getId()
+                    ]),
+                    '',
+                    [
+                        'categories' => ',' . implode(',', $categoryIds) . ',',
+                        'category' => $mainCategory,
+                        'fieldData' => json_encode($fieldData),
+                        'permissions' => json_encode($this->permissions),
+                        'priority' => $this->getPriority()
+                    ]
+                );
+            }
 
             QUI::getDataBase()->update(
                 QUI\ERP\Products\Utils\Tables::getProductTableName(),
@@ -1969,12 +1972,14 @@ class Model extends QUI\QDOM
     {
         QUI\Permissions\Permission::checkPermission('product.delete');
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.delete', [
-                'id' => $this->getId(),
-                'title' => $this->getTitle(),
-            ])
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.delete', [
+                    'id' => $this->getId(),
+                    'title' => $this->getTitle(),
+                ])
+            );
+        }
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsProductDeleteBegin', [$this]);
 
@@ -2400,11 +2405,13 @@ class Model extends QUI\QDOM
 
         $this->active = false;
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.deactivate', [
-                'id' => $this->getId()
-            ])
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.deactivate', [
+                    'id' => $this->getId()
+                ])
+            );
+        }
 
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
@@ -2452,11 +2459,13 @@ class Model extends QUI\QDOM
             ]);
         }
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.activate', [
-                'id' => $this->getId()
-            ])
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.activate', [
+                    'id' => $this->getId()
+                ])
+            );
+        }
 
         // duplicate article no. check
         $articleNo = $this->getFieldValue(Fields::FIELD_PRODUCT_NO);
