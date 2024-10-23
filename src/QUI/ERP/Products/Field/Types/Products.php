@@ -91,7 +91,7 @@ class Products extends QUI\ERP\Products\Field\Field
         $result = [];
 
         foreach ($value as $productId) {
-            if (ProductHandler::existsProduct($productId)) {
+            if (ProductHandler::existsProduct((int)$productId)) {
                 $result[] = $productId;
             }
         }
