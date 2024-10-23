@@ -46,7 +46,7 @@ QUI::$Ajax->registerFunction(
         }
 
         $Unique = $Product->createUniqueProduct(QUI::getUserBySession());
-        $Unique->setQuantity($quantity ?? 1);
+        $Unique->setQuantity(!empty($quantity) ? (float)$quantity : 1);
 
         return $Unique->getView()->toArray();
     },
