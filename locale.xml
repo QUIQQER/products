@@ -580,6 +580,10 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Standardfelder sind jedem Produkt automatisch zugewiesen.]]></de>
             <en><![CDATA[Standard fields are automatically assigned to each product.]]></en>
         </locale>
+        <locale name="standardProduct">
+            <de><![CDATA[Normales Produkt]]></de>
+            <en><![CDATA[Regular product]]></en>
+        </locale>
 
         <locale name="productMasterData">
             <de><![CDATA[Stammdaten]]></de>
