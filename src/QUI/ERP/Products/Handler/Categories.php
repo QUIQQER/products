@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Handler;
 
 use QUI;
 
+use function class_exists;
 use function get_class;
 use function is_null;
 use function is_object;
@@ -255,11 +256,13 @@ class Categories
             'limit' => 1
         ]);
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.category.create', [
-                'title' => $title
-            ])
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.category.create', [
+                    'title' => $title
+                ])
+            );
+        }
 
         if (empty($result)) {
             QUI::getDataBase()->insert(

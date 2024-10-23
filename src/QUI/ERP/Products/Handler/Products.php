@@ -572,16 +572,18 @@ class Products
 
         $newId = QUI::getDataBase()->getPDO()->lastInsertId();
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.create', [
-                'id' => $newId
-            ]),
-            '',
-            [
-                'fieldData' => $fieldData,
-                'categories' => ',' . implode(',', $categoryIds) . ','
-            ]
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.create', [
+                    'id' => $newId
+                ]),
+                '',
+                [
+                    'fieldData' => $fieldData,
+                    'categories' => ',' . implode(',', $categoryIds) . ','
+                ]
+            );
+        }
 
         $Product = self::getNewProductInstance($newId);
 
@@ -829,7 +831,7 @@ class Products
      */
     public static function cleanup(): void
     {
-        if (class_exists('\\QUI\\Watcher')) {
+        if (class_exists('\QUI\Watcher')) {
             QUI\Watcher::$globalWatcherDisable = true;
         }
 

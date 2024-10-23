@@ -360,13 +360,15 @@ class Fields
 
         $newId = $data['id'] ?? QUI::getDataBase()->getPDO()->lastInsertId();
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.fields.create', [
-                'id' => $newId
-            ]),
-            '',
-            $data
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.fields.create', [
+                    'id' => $newId
+                ]),
+                '',
+                $data
+            );
+        }
 
         // add language var, if not exists
         self::setFieldTranslations($newId, $attributes);
