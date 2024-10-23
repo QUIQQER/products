@@ -1073,9 +1073,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
     /**
      * @param string $key
-     * @param array|numeric|string $value - Must be serializable
+     * @param float|array|int|string|null $value - Must be serializable
      */
-    public function setCustomDataEntry(string $key, float|array|int|string $value): void
+    public function setCustomDataEntry(string $key, float|array|int|string|null $value): void
     {
         if (!is_string($value) && !is_numeric($value) && !is_array($value)) {
             return;
