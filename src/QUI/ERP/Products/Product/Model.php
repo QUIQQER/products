@@ -348,7 +348,15 @@ class Model extends QUI\QDOM
      */
     public function getViewFrontend(): ViewFrontend
     {
-        return new ViewFrontend($this);
+        try {
+            return new ViewFrontend($this);
+        } catch (\Exception $Exception) {
+            QUI\System\Log::addError($Exception->getMessage(), [
+                'extra-message' => 'product frontend view error'
+            ]);
+
+            throw $Exception;
+        }
     }
 
     /**
