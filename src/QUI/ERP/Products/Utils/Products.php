@@ -167,6 +167,10 @@ class Products
             }
         }
 
+        if ($priceValue instanceof QUI\ERP\Money\Price) {
+            $priceValue = $priceValue->getValue();
+        }
+
         return new QUI\ERP\Money\Price($priceValue, $Currency);
     }
 
