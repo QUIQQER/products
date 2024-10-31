@@ -652,7 +652,11 @@ class Calc
         $priceFactors = $Product->getPriceFactors()->sort();
 
         if ($Price) {
-            $nettoPrice = $Price->getValue();
+            if ($Price->getValue() instanceof QUI\ERP\Money\Price) {
+                $nettoPrice = $Price->getValue()->getPrice();
+            } else {
+                $nettoPrice = $Price->getValue();
+            }
         }
 
         if (empty($nettoPrice)) {
