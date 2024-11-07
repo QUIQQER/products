@@ -412,14 +412,7 @@ define('package/quiqqer/products/bin/controls/products/Create', [
 
 
             let category = Form.getElement('[name="product-category"]').value;
-            let productType = '\\QUI\\ERP\\Products\\Product\\Types\\Product';
-            let productTypes = Form.getElements('[name="productType"]').filter(function(Input) {
-                return Input.checked;
-            });
-
-            if (productTypes.length) {
-                productType = productTypes[0].value;
-            }
+            let productType = Form.getElement('[name="product-types"]').value;
 
             return Products.createChild(
                 category,
