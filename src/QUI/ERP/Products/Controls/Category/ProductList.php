@@ -92,6 +92,7 @@ class ProductList extends QUI\Control
             'forceMobileFilter' => false,
             'autoload' => false,
             'autoloadAfter' => 3,
+            'openProductMode' => '', // 'async', 'normal'. Empty value means take the value from config
 
             'categoryProductSearchType' => 'OR',
 
@@ -147,6 +148,13 @@ class ProductList extends QUI\Control
             $this->setAttribute('autoloadAfter', $Config->get('products', 'autoloadAfter'));
         }
 
+        // global settings: open product mode (normal or asynchronously)
+        $openProductMode = match ($this->getAttribute('openProductMode')) {
+            'async' => 1,
+            'normal' => 0,
+            default => $Config->get('products', 'openProductAsync')
+        };
+
         $this->setAttribute('data-project', $this->getSite()->getProject()->getName());
         $this->setAttribute('data-lang', $this->getSite()->getProject()->getLang());
         $this->setAttribute('data-siteid', $this->getSite()->getId());
@@ -154,6 +162,7 @@ class ProductList extends QUI\Control
         $this->setAttribute('data-autoload', $this->getAttribute('autoload') ? 1 : 0);
         $this->setAttribute('data-autoloadAfter', $this->getAttribute('autoloadAfter'));
         $this->setAttribute('data-productLoadNumber', $this->getAttribute('productLoadNumber'));
+        $this->setAttribute('data-openproductasync', $openProductMode);
 
         $products = '';
         $more = false;
