@@ -296,6 +296,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         'autoload' => 1,
         'autoloadAfter' => $Site->getAttribute('quiqqer.products.settings.autoloadAfter'),
         'productLoadNumber' => $Site->getAttribute('quiqqer.products.settings.productLoadNumber'),
+        'openProductMode' => $Site->getAttribute('quiqqer.products.settings.openProductMode'),
         'view' => Products\Search\Utils::getViewParameterFromRequest(),
     ]);
 

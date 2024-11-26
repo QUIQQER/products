@@ -64,6 +64,7 @@ if ($siteUrl !== $requestUrl) {
             'autoload' => 1,
             'autoloadAfter' => $Site->getAttribute('quiqqer.products.settings.autoloadAfter'),
             'productLoadNumber' => $Site->getAttribute('quiqqer.products.settings.productLoadNumber'),
+            'openProductMode' => $Site->getAttribute('quiqqer.products.settings.openProductMode'),
         ]);
 
         // Assign sort fields

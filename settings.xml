@@ -44,6 +44,10 @@
                     <type><![CDATA[number]]></type>
                     <defaultvalue>3</defaultvalue>
                 </conf>
+                <conf name="openProductAsync">
+                    <type><![CDATA[bool]]></type>
+                    <defaultvalue>0</defaultvalue>
+                </conf>
                 <conf name="useAttributeListsForMinMaxPriceCalculation">
                     <type><![CDATA[bool]]></type>
                     <defaultvalue>0</defaultvalue>
@@ -343,6 +347,17 @@
                             <option value="5">5</option>
                             <option value="6">6</option>
                         </select>
+
+                        <input conf="products.openProductAsync" type="checkbox">
+                            <text>
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.openProductAsync"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/products"
+                                        var="quiqqer.products.settings.openProductAsync.desc"/>
+                            </description>
+                        </input>
 
                     </settings>
 

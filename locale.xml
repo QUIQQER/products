@@ -2888,6 +2888,37 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Ausgeschaltet - Produkte werden nicht automatsich geladen]]></de>
             <en><![CDATA[Disable - products are not loaded automatically]]></en>
         </locale>
+
+        <locale name="site.settings.openProductMode">
+            <de><![CDATA[Verhalten beim Öffnen von Produkt]]></de>
+            <en><![CDATA[Behavior when opening product]]></en>
+        </locale>
+        <locale name="site.settings.openProductMode.desc">
+            <de><![CDATA[Definiert, was passiert, wenn ein Produkt angeklickt wird. "Asynchrones Laden" bedeutet, dass das Produkt geöffnet wird, ohne dass die komplette Seite neu geladen werden muss.]]></de>
+            <en><![CDATA[Defines what happens when a product is clicked. "Asynchronous loading" means that the product is opened without the entire page having to be reloaded.]]></en>
+        </locale>
+        <locale name="site.settings.openProductMode.default">
+            <de><![CDATA[Standard Einstellung übernehmen]]></de>
+            <en><![CDATA[Use default setting]]></en>
+        </locale>
+        <locale name="site.settings.openProductMode.normal">
+            <de><![CDATA[Normal - die Seite wird neu geladen]]></de>
+            <en><![CDATA[Normal - the page will be reloaded]]></en>
+        </locale>
+        <locale name="site.settings.openProductMode.async">
+            <de><![CDATA[Asynchronous - nur das Produkt wird geladen]]></de>
+            <en><![CDATA[Asynchronous - only the product will be loaded]]></en>
+        </locale>
+
+        <locale name="quiqqer.products.settings.openProductAsync">
+            <de><![CDATA[Produkte asynchron öffnen]]></de>
+            <en><![CDATA[Open product asynchronously]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.openProductAsync.desc">
+            <de><![CDATA[Wenn die Option aktiviert ist, wird das geklickte Produkt geöffnet, ohne dass die komplette Seite neu geladen werden muss.]]></de>
+            <en><![CDATA[If the option is enabled, the clicked product will be opened without needing to reload the entire page.]]></en>
+        </locale>
+
         <locale name="quiqqer.products.settings.categoryStartNumber">
             <de><![CDATA[Anzahl angezeigter Kategorien]]></de>
             <en><![CDATA[Limit of displayed categories]]></en>

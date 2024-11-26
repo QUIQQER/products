@@ -86,6 +86,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             autoload: true,
             autoloadAfter: 3, // After how many clicks are further products loaded automatically? (false | number)
             productLoadNumber: 9,
+            openproductasync: false, // true / false
             searchfields: {}
         },
 
@@ -135,6 +136,7 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             this.$moreButtonIsVisible = false;
             this.$moreButtonClicked = 0;
             this.$loadingMore = false;
+            this.openProductAsync = false;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -185,6 +187,8 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
             if (this.getAttribute('searchfields')) {
                 this.setAttribute('searchfields', JSON.decode(this.getAttribute('searchfields')));
             }
+
+            this.openProductAsync = parseInt(Elm.get('data-openproductasync'));
 
             this.$productLoadNumber = parseInt(Elm.get('data-productLoadNumber'));
             this.$autoloadAfter = parseInt(Elm.get('data-autoloadAfter'));
@@ -271,10 +275,12 @@ define('package/quiqqer/products/bin/controls/frontend/category/ProductList', [
                 event.stop();
             });
 
-            Elm.getElements('article').addEvent('click', function (event) {
-                event.stop();
-                self.openProduct(parseInt(this.get('data-pid')));
-            });
+            if (this.openProductAsync) {
+                Elm.getElements('article').addEvent('click', function (event) {
+                    event.stop();
+                    self.openProduct(parseInt(this.get('data-pid')));
+                });
+            }
 
             // filter
             if (this.$FilterContainer) {
