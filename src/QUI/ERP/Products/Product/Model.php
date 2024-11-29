@@ -692,7 +692,7 @@ class Model extends QUI\QDOM
             || $Site->getAttribute('type') !== 'quiqqer/products:types/category'
             && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
         ) {
-            QUI\System\Log::addWarning(
+            QUI\System\Log::addInfo(
                 QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', [
                     'productId' => $this->getId(),
                     'title' => $this->getTitle()
