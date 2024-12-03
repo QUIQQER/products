@@ -2703,6 +2703,12 @@ class Model extends QUI\QDOM
         $priceFactors = $this->getApplicableProductPriceFactors();
 
         foreach ($priceFactors as $priceFieldId => $settings) {
+            $priceFieldId = (int)$priceFieldId;
+
+            if (isset($settings['sourceFieldId'])) {
+                $settings['sourceFieldId'] = (int)$settings['sourceFieldId'];
+            }
+
             if (!$this->hasField($priceFieldId) || !$this->hasField($settings['sourceFieldId'])) {
                 continue;
             }
