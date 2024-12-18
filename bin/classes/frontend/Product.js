@@ -14,9 +14,22 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
 ], function (QUI, QUIDOM, Ajax, QUILocale) {
     "use strict";
 
+    const generateFieldHash = (fieldList) => {
+        let hash = 0;
+        for (const {fieldId, value} of fieldList) {
+            const str = `${fieldId}:${value}`;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = (hash << 5) - hash + char;
+                hash |= 0; // Convert to 32bit integer
+            }
+        }
+        return hash.toString();
+    };
+
     return new Class({
         Extends: QUIDOM,
-        Type   : 'package/quiqqer/products/bin/classes/Product',
+        Type: 'package/quiqqer/products/bin/classes/Product',
 
         options: {
             id: false
@@ -24,6 +37,10 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
 
         initialize: function (options) {
             this.parent(options);
+
+            this.$fieldPriceHash = null;
+            this.$currentPrice = null;
+            this.$priceRequest = null;
 
             this.$data = null;
             this.$loaded = false;
@@ -38,19 +55,17 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          * @param {String} value - field value
          */
         setFieldValue: function (fieldId, value) {
-            return new Promise(function (resolve, reject) {
-                Ajax.post('package_quiqqer_products_ajax_products_setCustomFieldValue', function (result) {
-
+            return new Promise((resolve, reject) => {
+                Ajax.post('package_quiqqer_products_ajax_products_setCustomFieldValue', (result) => {
                     this.$fields[fieldId] = result;
                     this.fireEvent('change', [this]);
-
                     resolve(this);
-                }.bind(this), {
+                }, {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    fieldId  : fieldId,
-                    value    : value,
-                    onError  : reject
+                    fieldId: fieldId,
+                    value: value,
+                    onError: reject
                 });
             });
         },
@@ -66,9 +81,9 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                 return Promise.resolve(this);
             }
 
-            return new Promise(function (resolve, reject) {
-                Ajax.post('package_quiqqer_products_ajax_products_frontend_setCustomFieldValues', function (result) {
-                    for (var fieldId in result) {
+            return new Promise((resolve, reject) => {
+                Ajax.post('package_quiqqer_products_ajax_products_frontend_setCustomFieldValues', (result) => {
+                    for (let fieldId in result) {
                         if (result.hasOwnProperty(fieldId)) {
                             this.$fields[fieldId] = result[fieldId];
                         }
@@ -76,13 +91,13 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
 
                     this.fireEvent('change', [this]);
                     resolve(this);
-                }.bind(this), {
+                }, {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    fields   : JSON.encode(fields),
-                    onError  : reject
+                    fields: JSON.encode(fields),
+                    onError: reject
                 });
-            }.bind(this));
+            });
         },
 
         /**
@@ -92,19 +107,25 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          * @return {Promise}
          */
         setQuantity: function (quantity) {
-            return new Promise(function (resolve, reject) {
-                Ajax.post('package_quiqqer_products_ajax_products_setQuantity', function (result) {
+            console.log('set quantity', this.$quantity, quantity);
+            if (this.$quantity === quantity) {
+                return Promise.resolve(this.$quantity);
+            }
+
+            return new Promise((resolve, reject) => {
+                Ajax.post('package_quiqqer_products_ajax_products_setQuantity', (result) => {
+                    this.$currentPrice = null;
                     this.$quantity = parseInt(result);
                     this.fireEvent('change', [this]);
 
                     resolve(result);
-                }.bind(this), {
+                }, {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    quantity : quantity,
-                    onError  : reject
+                    quantity: quantity,
+                    onError: reject
                 });
-            }.bind(this));
+            });
         },
 
         /**
@@ -134,7 +155,7 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                     }
                 }
 
-                var title   = '',
+                let title = '',
                     current = Locale.getCurrent();
 
                 if (current in field) {
@@ -168,15 +189,15 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          * @returns {Promise}
          */
         isActive: function () {
-            return new Promise(function (resolve, reject) {
+            return new Promise((resolve, reject) => {
                 if (this.$loaded) {
                     return resolve(!!this.$data.active);
                 }
 
-                this.refresh().then(function () {
+                this.refresh().then(() => {
                     resolve(!!this.$data.active);
-                }.bind(this)).catch(reject);
-            }.bind(this));
+                }).catch(reject);
+            });
         },
 
         /**
@@ -201,12 +222,12 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                     ).then((data) => {
                         this.$loaded = true;
                         this.$data = data;
-                        
-                        this.$data.fields.each(function (Field) {
+
+                        this.$data.fields.each((Field) => {
                             if (typeof this.$fields[Field.id] !== 'undefined') {
                                 Field.value = this.$fields[Field.id];
                             }
-                        }.bind(this));
+                        });
 
                         resolve(this);
 
@@ -232,14 +253,14 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          * @returns {Promise}
          */
         getField: function (fieldId) {
-            return new Promise(function (resolve, reject) {
+            return new Promise((resolve, reject) => {
                 if (typeof this.$fields[fieldId] !== 'undefined') {
                     resolve(this.$fields[fieldId]);
                     return;
                 }
 
                 reject();
-            }.bind(this));
+            });
         },
 
         /**
@@ -260,11 +281,9 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          * @returns {Promise}
          */
         getCategories: function () {
-            var self = this;
-
-            return new Promise(function (resolve, reject) {
-                if (self.$loaded) {
-                    var categories = self.$data.categories.split(',').filter(function (entry) {
+            return new Promise((resolve, reject) => {
+                if (this.$loaded) {
+                    let categories = this.$data.categories.split(',').filter(function (entry) {
                         return entry !== '';
                     });
 
@@ -273,16 +292,16 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
                         categories[index] = parseInt(value);
                     });
 
-                    if (self.$data.category !== 0 &&
-                        self.$data.category && !categories.contains(parseInt(self.$data.category))) {
-                        categories.push(parseInt(self.$data.category));
+                    if (this.$data.category !== 0 &&
+                        this.$data.category && !categories.contains(parseInt(this.$data.category))) {
+                        categories.push(parseInt(this.$data.category));
                     }
 
                     return resolve(categories);
                 }
 
-                self.refresh().then(function () {
-                    self.getCategories().then(resolve);
+                this.refresh().then(() => {
+                    this.getCategories().then(resolve);
                 }).catch(reject);
             });
         },
@@ -293,16 +312,15 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          * @returns {Promise}
          */
         getCategory: function () {
-            return new Promise(function (resolve, reject) {
-
+            return new Promise((resolve, reject) => {
                 if (this.$loaded) {
                     return resolve(this.$data.category);
                 }
 
-                this.refresh().then(function () {
+                this.refresh().then(() => {
                     resolve(this.$data.category);
-                }.bind(this)).catch(reject);
-            }.bind(this));
+                }).catch(reject);
+            });
         },
 
         /**
@@ -314,26 +332,45 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
         getPrice: function (quantity) {
             quantity = quantity || this.getQuantity();
 
-            var fields    = this.getFields(),
+            const fields = this.getFields(),
                 fieldList = [];
 
-            for (var fieldId in fields) {
+            for (let fieldId in fields) {
                 if (fields.hasOwnProperty(fieldId)) {
                     fieldList.push({
                         fieldId: fieldId,
-                        value  : fields[fieldId]
+                        value: fields[fieldId]
                     });
                 }
             }
 
-            return new Promise(function (resolve) {
-                Ajax.get('package_quiqqer_products_ajax_products_calc', resolve, {
+            let fieldPriceHash = generateFieldHash(fieldList);
+
+            if (this.$fieldPriceHash === fieldPriceHash && this.$currentPrice) {
+                return Promise.resolve(this.$currentPrice);
+            }
+
+            this.$fieldPriceHash = fieldPriceHash;
+
+            if (this.$fieldPriceHash === fieldPriceHash && this.$priceRequest) {
+                return this.$priceRequest;
+            }
+
+            this.$priceRequest = new Promise((resolve) => {
+                console.log('frontend product getPrice', this.getId());
+                Ajax.get('package_quiqqer_products_ajax_products_calc', (result) => {
+                    this.$currentPrice = result;
+                    this.$priceRequest = null;
+                    resolve(this.$currentPrice);
+                }, {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    fields   : JSON.encode(fieldList),
-                    quantity : quantity
+                    fields: JSON.encode(fieldList),
+                    quantity: quantity
                 });
-            }.bind(this));
+            });
+
+            return this.$priceRequest;
         },
 
         /**
