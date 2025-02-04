@@ -717,11 +717,11 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * @param null $Project
+     * @param QUI\Projects\Project|null $Project
      * @return string
      * @throws QUI\Exception
      */
-    public function getUrlRewrittenWithHost($Project = null): string
+    public function getUrlRewrittenWithHost(?QUI\Projects\Project $Project = null): string
     {
         if (!$Project) {
             $Project = QUI::getRewrite()->getProject();
