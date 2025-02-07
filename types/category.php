@@ -11,6 +11,7 @@
 
 use QUI\ERP\Products;
 use QUI\ERP\Products\Controls\Category\ProductList;
+use QUI\ERP\Products\Handler\Fields;
 use QUI\System\Log;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -166,7 +167,6 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         $Site->setAttribute('meta.seotitle', $Product->getTitle($Locale));
         $Site->setAttribute('meta.description', $Product->getDescription($Locale));
         $Site->setAttribute('quiqqer.meta.site.title', false);
-
         $Site->setAttribute('quiqqer.socialshare.image', $Product->getImage()->getUrl(true));
         $Site->setAttribute('quiqqer.socialshare.type', 'product');
         $Site->setAttribute('quiqqer.socialshare.url', $Product->getUrlRewrittenWithHost());
@@ -188,6 +188,30 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         }
 
         $Site->setAttribute('quiqqer.socialshare.description', $description);
+
+        // check seo title
+        $seoTitle = $Product->getField(Fields::FIELD_SEO_TITLE)->getValueByLocale(QUI::getLocale());
+        $seoDescription = $Product->getField(Fields::FIELD_SEO_DESCRIPTION)->getValueByLocale(QUI::getLocale());
+
+        if ($Product instanceof Products\Product\Types\VariantParent) {
+            try {
+                $DefaultChild = $Product->getDefaultVariant();
+                $seoTitle = $DefaultChild->getField(Fields::FIELD_SEO_TITLE)
+                    ->getValueByLocale(QUI::getLocale());
+
+                $seoDescription = $DefaultChild->getField(Fields::FIELD_SEO_DESCRIPTION)
+                    ->getValueByLocale(QUI::getLocale());
+            } catch (QUI\Exception) {
+            }
+        }
+
+        if (!empty($seoTitle)) {
+            $Site->setAttribute('meta.seotitle', $seoTitle);
+        }
+
+        if (!empty($seoDescription)) {
+            $Site->setAttribute('meta.description', $seoDescription);
+        }
 
 
         $Keywords = $Product->getField(Products\Handler\Fields::FIELD_KEYWORDS);
@@ -272,6 +296,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         'autoload' => 1,
         'autoloadAfter' => $Site->getAttribute('quiqqer.products.settings.autoloadAfter'),
         'productLoadNumber' => $Site->getAttribute('quiqqer.products.settings.productLoadNumber'),
+        'openProductMode' => $Site->getAttribute('quiqqer.products.settings.openProductMode'),
         'view' => Products\Search\Utils::getViewParameterFromRequest(),
     ]);
 

@@ -61,6 +61,10 @@ QUI::$Ajax->registerFunction(
                     $ProductField instanceof QUI\ERP\Products\Field\Types\AttributeGroup
                     && ($Product instanceof VariantParent || $Product instanceof VariantChild)
                 ) {
+                    if ($ProductField->getOption('exclude_from_variant_generation')) {
+                        $ProductField->setValue($field);
+                    }
+
                     continue;
                 }
 

@@ -81,6 +81,10 @@ class Price extends QUI\ERP\Products\Field\Field
             $value = $this->cleanup($value);
         }
 
+        if ($value === null) {
+            $value = 0;
+        }
+
         $value = $Calc->getPrice($value);
 
         $Price = new QUI\ERP\Money\Price(
@@ -211,8 +215,16 @@ class Price extends QUI\ERP\Products\Field\Field
      * @param float|integer $max
      * @return array - contains values from min to max with calculated steps inbetween
      */
-    public function calculateValueRange(float|int $min, float|int $max): array
+    public function calculateValueRange(null|float|int $min, null|float|int $max): array
     {
+        if (!$min) {
+            $min = 0;
+        }
+
+        if (!$max) {
+            $max = 0;
+        }
+
         // add tax to max value
         $maxTaxValue = (100 + QUI\ERP\Tax\Utils::getMaxTax()) / 100;
         $max *= $maxTaxValue;

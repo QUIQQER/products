@@ -21,6 +21,7 @@ use function array_key_exists;
 use function array_merge;
 use function array_reverse;
 use function array_shift;
+use function class_exists;
 use function defined;
 use function ini_get;
 use function is_array;
@@ -943,13 +944,15 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
             $fields[] = $attributes;
         }
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.category.save', [
-                'id' => $this->getId()
-            ]),
-            'Category->save',
-            $fields
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.category.save', [
+                    'id' => $this->getId()
+                ]),
+                'Category->save',
+                $fields
+            );
+        }
 
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
@@ -982,12 +985,14 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
         QUI\Permissions\Permission::checkPermission('category.delete', $User);
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.category.delete', [
-                'id' => $this->getId(),
-                'title' => $this->getTitle()
-            ])
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.category.delete', [
+                    'id' => $this->getId(),
+                    'title' => $this->getTitle()
+                ])
+            );
+        }
 
         // get children ids
         $ids = [];
@@ -1073,9 +1078,9 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
 
     /**
      * @param string $key
-     * @param array|numeric|string $value - Must be serializable
+     * @param float|array|int|string|null $value - Must be serializable
      */
-    public function setCustomDataEntry(string $key, float|array|int|string $value): void
+    public function setCustomDataEntry(string $key, float|array|int|string|null $value): void
     {
         if (!is_string($value) && !is_numeric($value) && !is_array($value)) {
             return;

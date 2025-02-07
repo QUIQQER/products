@@ -1,0 +1,676 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method QUI\\\\Projects\\\\Site\\:\\:createChild\\(\\)\\.$#"
+			count: 1
+			path: ajax/categories/createProjectSite.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\Projects\\\\Site\\:\\:save\\(\\)\\.$#"
+			count: 1
+			path: ajax/categories/createProjectSite.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\CategoryInterface\\:\\:getCustomDataEntry\\(\\)\\.$#"
+			count: 1
+			path: ajax/categories/list.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\CategoryInterface\\:\\:getPath\\(\\)\\.$#"
+			count: 1
+			path: ajax/categories/list.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function usort expects callable\\(non\\-empty\\-array, non\\-empty\\-array\\)\\: int, Closure\\(mixed, mixed\\)\\: bool given\\.$#"
+			count: 1
+			path: ajax/categories/search.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\CategoryInterface\\:\\:setCustomDataEntry\\(\\)\\.$#"
+			count: 1
+			path: ajax/categories/update.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\FieldInterface\\:\\:getPrefix\\(\\)\\.$#"
+			count: 1
+			path: ajax/fields/list.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\FieldInterface\\:\\:getSuffix\\(\\)\\.$#"
+			count: 1
+			path: ajax/fields/list.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function usort expects callable\\(non\\-empty\\-array, non\\-empty\\-array\\)\\: int, Closure\\(mixed, mixed\\)\\: bool given\\.$#"
+			count: 1
+			path: ajax/fields/search.php
+
+		-
+			message: "#^Parameter \\#1 \\$package of static method QUI\\:\\:getPackage\\(\\) expects string, false given\\.$#"
+			count: 1
+			path: ajax/getInstalledProductPackages.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\ProductTypeInterface\\:\\:getView\\(\\)\\.$#"
+			count: 1
+			path: ajax/products/frontend/getProductByProductNo.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Product\\\\Types\\\\AbstractType\\:\\:availableActiveFieldHashes\\(\\)\\.$#"
+			count: 1
+			path: ajax/products/frontend/getVariant.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Product\\\\Types\\\\AbstractType\\:\\:getVariantByVariantHash\\(\\)\\.$#"
+			count: 1
+			path: ajax/products/frontend/getVariant.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Product\\\\Types\\\\AbstractType\\:\\:getVariants\\(\\)\\.$#"
+			count: 1
+			path: ajax/products/frontend/getVariant.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function usort expects callable\\(mixed, mixed\\)\\: int, Closure\\(mixed, mixed\\)\\: bool given\\.$#"
+			count: 1
+			path: ajax/products/list.php
+
+		-
+			message: "#^Dead catch \\- Exception is never thrown in the try block\\.$#"
+			count: 1
+			path: ajax/products/update.php
+
+		-
+			message: "#^Negated boolean expression is always true\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Category/Category.php
+
+		-
+			message: "#^Parameter \\#1 \\$seconds of function set_time_limit expects int, string given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Category/Category.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function mb_strlen expects string, int\\<0, max\\> given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Console/GenerateProductCache.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function str_pad expects string, int\\<0, max\\> given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Console/GenerateProductCache.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\CategoryInterface\\:\\:getCustomDataEntry\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Console/UpdatePrices.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\CategoryInterface\\:\\:getView\\(\\)\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Controls/Category/ProductList.php
+
+		-
+			message: "#^Parameter \\#1 \\$Site of class QUI\\\\ERP\\\\Products\\\\Search\\\\FrontendSearch constructor expects QUI\\\\Projects\\\\Site\\|null, QUI\\\\Interfaces\\\\Projects\\\\Site given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Controls/Category/ProductList.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\ProductInterface\\:\\:getCalculatedPrice\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Controls/Products/ChildrenSlider.php
+
+		-
+			message: "#^Parameter \\#1 \\$fieldId of method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\ProductInterface\\:\\:getFieldValue\\(\\) expects int, string given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Controls/Products/ChildrenSlider.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\UniqueFieldInterface\\:\\:getPrice\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Controls/Products/Product.php
+
+		-
+			message: "#^Parameter \\#1 \\$Site of class QUI\\\\ERP\\\\Products\\\\Search\\\\FrontendSearch constructor expects QUI\\\\Projects\\\\Site\\|null, QUI\\\\Interfaces\\\\Projects\\\\Site given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Controls/Search/Search.php
+
+		-
+			message: "#^Parameter \\#1 \\$seconds of function set_time_limit expects int, string given\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Crons.php
+
+		-
+			message: "#^Variable \\$Product in PHPDoc tag @var does not match any variable in the foreach loop\\: \\$ids, \\$id$#"
+			count: 2
+			path: src/QUI/ERP/Products/Crons.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\Interfaces\\\\Projects\\\\Site\\:\\:getLocation\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/EventHandling.php
+
+		-
+			message: "#^Call to method getArticles\\(\\) on an unknown class QUI\\\\ERP\\\\Order\\\\AbstractOrder\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/EventHandling.php
+
+		-
+			message: "#^Dead catch \\- Exception is never thrown in the try block\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/EventHandling.php
+
+		-
+			message: "#^Parameter \\#2 \\$key of method QUI\\\\Config\\:\\:set\\(\\) expects array\\|string\\|null, int given\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/EventHandling.php
+
+		-
+			message: "#^Parameter \\$Order of method QUI\\\\ERP\\\\Products\\\\EventHandling\\:\\:onQuiqqerOrderSuccessful\\(\\) has invalid type QUI\\\\ERP\\\\Order\\\\AbstractOrder\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/EventHandling.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function mb_strlen expects string, int given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Field.php
+
+		-
+			message: "#^Offset 0 on array\\{\\} in isset\\(\\) does not exist\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/AttributeGroup.php
+
+		-
+			message: "#^Offset 1 on \\*NEVER\\* in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/AttributeGroup.php
+
+		-
+			message: "#^Result of \\|\\| is always true\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/AttributeGroup.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/AttributeGroup.php
+
+		-
+			message: "#^Result of && is always false\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Field/Types/AttributeGroupFrontendView.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between int\\|string and null will always evaluate to false\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/AttributeGroupFrontendView.php
+
+		-
+			message: "#^Comparison operation \"\\<\" between array\\|int and 1 results in an error\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/Folder.php
+
+		-
+			message: "#^Call to function is_string\\(\\) with mixed will always evaluate to false\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/InputMultiLang.php
+
+		-
+			message: "#^Variable \\$Field in PHPDoc tag @var does not match assigned variable \\$value\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/MultilangFrontendView.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function mb_strlen expects string, int given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/Price.php
+
+		-
+			message: "#^Offset 0 on array\\{\\} in isset\\(\\) does not exist\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/ProductAttributeList.php
+
+		-
+			message: "#^Offset 1 on \\*NEVER\\* in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/ProductAttributeList.php
+
+		-
+			message: "#^Result of \\|\\| is always true\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/ProductAttributeList.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/ProductAttributeList.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(mixed\\< \\$value\\)\\: Unexpected token \"\\$value\", expected type at offset 101$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/TimePeriod.php
+
+		-
+			message: "#^Comparison operation \"\\>\\=\" between array\\|string and 0 results in an error\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/Types/VatFrontendView.php
+
+		-
+			message: "#^Method QUI\\\\ERP\\\\Products\\\\Field\\\\UniqueField\\:\\:getValueText\\(\\) should return string but returns false\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Field/UniqueField.php
+
+		-
+			message: "#^Method QUI\\\\ERP\\\\Products\\\\Field\\\\UniqueField\\:\\:getValueText\\(\\) should return string but returns mixed\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Field/UniqueField.php
+
+		-
+			message: "#^Offset string on \\*NEVER\\* in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Field/UniqueField.php
+
+		-
+			message: "#^Class QUI\\\\Database\\\\Exception referenced with incorrect case\\: QUI\\\\DataBase\\\\Exception\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Handler/Categories.php
+
+		-
+			message: "#^Call to an undefined method DOMNode\\:\\:getAttribute\\(\\)\\.$#"
+			count: 3
+			path: src/QUI/ERP/Products/Handler/Fields.php
+
+		-
+			message: "#^Call to an undefined method DOMNode\\:\\:getElementsByTagName\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Handler/Fields.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\FieldInterface\\:\\:getType\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Handler/Fields.php
+
+		-
+			message: "#^Left side of \\|\\| is always false\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Handler/Fields.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Handler/Fields.php
+
+		-
+			message: "#^Parameter \\#1 \\$Category of method QUI\\\\ERP\\\\Products\\\\Product\\\\Product\\:\\:setMainCategory\\(\\) expects int\\|QUI\\\\ERP\\\\Products\\\\Category\\\\Category, QUI\\\\ERP\\\\Products\\\\Interfaces\\\\CategoryInterface\\|null given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Handler/Products.php
+
+		-
+			message: "#^Static property QUI\\\\ERP\\\\Products\\\\Handler\\\\Products\\:\\:\\$productUrls is never read, only written\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Handler/Products.php
+
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/JsonLd.php
+
+		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Product/JsonLd.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\FieldInterface\\:\\:getType\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Model.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\Interfaces\\\\Projects\\\\Site\\:\\:getUrlRewrittenWithHost\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Model.php
+
+		-
+			message: "#^PHPDoc tag @return with type QUI\\\\ERP\\\\Products\\\\Field\\\\UniqueField\\|false is not subtype of native type QUI\\\\ERP\\\\Products\\\\Interfaces\\\\UniqueFieldInterface\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Model.php
+
+		-
+			message: "#^Parameter \\#1 \\$Product of static method QUI\\\\ERP\\\\Products\\\\Utils\\\\Products\\:\\:getEditableFieldIdsForProduct\\(\\) expects null, \\$this\\(QUI\\\\ERP\\\\Products\\\\Product\\\\Model\\)&QUI\\\\ERP\\\\Products\\\\Product\\\\Types\\\\VariantChild given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Model.php
+
+		-
+			message: "#^Parameter \\#1 \\$Product of static method QUI\\\\ERP\\\\Products\\\\Utils\\\\Products\\:\\:getInheritedFieldIdsForProduct\\(\\) expects null, \\$this\\(QUI\\\\ERP\\\\Products\\\\Product\\\\Model\\)&QUI\\\\ERP\\\\Products\\\\Product\\\\Types\\\\VariantChild given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Model.php
+
+		-
+			message: "#^Parameter \\#1 \\$filename of method QUI\\\\Projects\\\\Media\\\\Folder\\:\\:getChildByName\\(\\) expects string, int given\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Product/Model.php
+
+		-
+			message: "#^Parameter \\#1 \\$filename of method QUI\\\\Projects\\\\Media\\\\Folder\\:\\:getChildByName\\(\\) expects string, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true given\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Product/Model.php
+
+		-
+			message: "#^Parameter \\#1 \\$foldername of method QUI\\\\Projects\\\\Media\\\\Folder\\:\\:createFolder\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Model.php
+
+		-
+			message: "#^Parameter \\#1 \\$foldername of method QUI\\\\Projects\\\\Media\\\\Folder\\:\\:createFolder\\(\\) expects string, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Model.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method QUI\\\\Projects\\\\Media\\\\Folder\\:\\:childWithNameExists\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Model.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method QUI\\\\Projects\\\\Media\\\\Folder\\:\\:childWithNameExists\\(\\) expects string, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|true given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Model.php
+
+		-
+			message: "#^Parameter \\#2 \\$string of function explode expects string, float given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Model.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\ProductInterface\\:\\:createUniqueProduct\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/ProductList.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\ProductInterface\\:\\:getQuantity\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/ProductList.php
+
+		-
+			message: "#^Method QUI\\\\ERP\\\\Products\\\\Product\\\\ProductList\\:\\:getOrder\\(\\) has invalid return type QUI\\\\ERP\\\\Order\\\\AbstractOrder\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Product/ProductList.php
+
+		-
+			message: "#^Parameter \\$Order of method QUI\\\\ERP\\\\Products\\\\Product\\\\ProductList\\:\\:setOrder\\(\\) has invalid type QUI\\\\ERP\\\\Order\\\\AbstractOrder\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Product/ProductList.php
+
+		-
+			message: "#^Property QUI\\\\ERP\\\\Products\\\\Product\\\\ProductList\\:\\:\\$Order has unknown class QUI\\\\ERP\\\\Order\\\\AbstractOrder as its type\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Product/ProductList.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\ProductInterface\\:\\:getPriceFactors\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/ProductListBackendView.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\ProductInterface\\:\\:getPriceFactors\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/ProductListFrontendView.php
+
+		-
+			message: "#^PHPDoc tag @return with type mixed is not subtype of native type string\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Product/Types/Product.php
+
+		-
+			message: "#^Parameter \\#1 \\$Product of static method QUI\\\\ERP\\\\Products\\\\Utils\\\\Products\\:\\:getEditableFieldIdsForProduct\\(\\) expects null, \\$this\\(QUI\\\\ERP\\\\Products\\\\Product\\\\Types\\\\VariantChild\\) given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Types/VariantChild.php
+
+		-
+			message: "#^Parameter \\#1 \\$Product of static method QUI\\\\ERP\\\\Products\\\\Utils\\\\Products\\:\\:getInheritedFieldIdsForProduct\\(\\) expects null, \\$this\\(QUI\\\\ERP\\\\Products\\\\Product\\\\Types\\\\VariantChild\\) given\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Product/Types/VariantChild.php
+
+		-
+			message: "#^Parameter \\#1 \\$filename of method QUI\\\\Projects\\\\Media\\\\Folder\\:\\:getChildByName\\(\\) expects string, int given\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Product/Types/VariantChild.php
+
+		-
+			message: "#^Parameter \\#1 \\$foldername of method QUI\\\\Projects\\\\Media\\\\Folder\\:\\:createFolder\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Types/VariantChild.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method QUI\\\\Projects\\\\Media\\\\Folder\\:\\:childWithNameExists\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Types/VariantChild.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Field\\\\Field\\:\\:getCalculationData\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Types/VariantParent.php
+
+		-
+			message: "#^PHPDoc tag @return with type mixed is not subtype of native type string\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Product/Types/VariantParent.php
+
+		-
+			message: "#^Parameter \\#1 \\$Product of static method QUI\\\\ERP\\\\Products\\\\Utils\\\\Products\\:\\:getEditableFieldIdsForProduct\\(\\) expects null, \\$this\\(QUI\\\\ERP\\\\Products\\\\Product\\\\Types\\\\VariantParent\\) given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Types/VariantParent.php
+
+		-
+			message: "#^Parameter \\#1 \\$Product of static method QUI\\\\ERP\\\\Products\\\\Utils\\\\Products\\:\\:getInheritedFieldIdsForProduct\\(\\) expects null, \\$this\\(QUI\\\\ERP\\\\Products\\\\Product\\\\Types\\\\VariantParent\\) given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Types/VariantParent.php
+
+		-
+			message: "#^Strict comparison using \\!\\=\\= between 'AttributeGroup' and 'AttributeGroup' will always evaluate to false\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/Types/VariantParent.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Field\\\\Field\\:\\:getTitleByValue\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/UniqueProduct.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\FieldInterface\\:\\:getType\\(\\)\\.$#"
+			count: 3
+			path: src/QUI/ERP/Products/Product/UniqueProduct.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\FieldInterface\\:\\:isCustomField\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/UniqueProduct.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\UniqueFieldInterface\\:\\:getOptions\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/UniqueProduct.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\UniqueFieldInterface\\:\\:getParentClass\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/UniqueProduct.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\UniqueFieldInterface\\:\\:getPrice\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/UniqueProduct.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\UniqueFieldInterface\\:\\:getType\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/UniqueProduct.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\Interfaces\\\\Projects\\\\Media\\\\File\\:\\:getImages\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/UniqueProduct.php
+
+		-
+			message: "#^PHPDoc tag @return with type QUI\\\\ERP\\\\Products\\\\Product\\\\UniqueProduct is not subtype of native type static\\(QUI\\\\ERP\\\\Products\\\\Product\\\\UniqueProduct\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/UniqueProduct.php
+
+		-
+			message: "#^PHPDoc tag @var has invalid value \\(\\)\\: Unexpected token \"\\\\n     \", expected type at offset 73$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/UniqueProduct.php
+
+		-
+			message: "#^Parameter \\#1 \\$price of class QUI\\\\ERP\\\\Money\\\\Price constructor expects float\\|int\\|null, string given\\.$#"
+			count: 6
+			path: src/QUI/ERP/Products/Product/UniqueProductFrontendView.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Product\\\\Model\\:\\:calc\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/ViewBackend.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Product\\\\Model\\:\\:resetCalculation\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/ViewBackend.php
+
+		-
+			message: "#^PHPDoc tag @var has invalid value \\(Model\\|Product\\<\\)\\: Unexpected token \"\\*/\", expected type at offset 36$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/ViewBackend.php
+
+		-
+			message: "#^Parameter \\#1 \\$price of class QUI\\\\ERP\\\\Money\\\\Price constructor expects float\\|int\\|null, string given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Product/ViewFrontend.php
+
+		-
+			message: "#^Binary operation \"/\" between string and 100 results in an error\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\PriceFactorInterface\\:\\:getVat\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\PriceFactorInterface\\:\\:hasValueText\\(\\)\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\PriceFactorInterface\\:\\:setVat\\(\\)\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\ProductInterface\\:\\:recalculation\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Call to method getDeliveryAddress\\(\\) on an unknown class QUI\\\\ERP\\\\Order\\\\AbstractOrder\\.$#"
+			count: 3
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Elseif branch is unreachable because previous condition is always true\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Instanceof between \\*NEVER\\* and QUI\\\\ERP\\\\Tax\\\\TaxEntry will always evaluate to false\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Offset 0 on array\\<string, mixed\\> in isset\\(\\) does not exist\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Offset 0 on array\\<string, string\\> in isset\\(\\) does not exist\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Parameter \\#1 \\$Product of method QUI\\\\ERP\\\\Products\\\\Utils\\\\Calc\\:\\:getProductPrice\\(\\) expects QUI\\\\ERP\\\\Products\\\\Product\\\\UniqueProduct, QUI\\\\ERP\\\\Products\\\\Interfaces\\\\ProductInterface given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\PriceFactorInterface\\:\\:setValueText\\(\\) expects string, int given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of method QUI\\\\ERP\\\\Products\\\\Utils\\\\Calc\\:\\:round\\(\\) expects string, float given\\.$#"
+			count: 6
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Parameter \\#1 \\$vat of static method QUI\\\\ERP\\\\Accounting\\\\Calc\\:\\:getVatText\\(\\) expects float\\|int, string given\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Right side of && is always true\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Calc.php
+
+		-
+			message: "#^Call to an undefined method DOMNode\\:\\:getAttribute\\(\\)\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Utils/Fields.php
+
+		-
+			message: "#^Call to an undefined method DOMNode\\:\\:getElementsByTagName\\(\\)\\.$#"
+			count: 3
+			path: src/QUI/ERP/Products/Utils/Fields.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$value with type mixed is not subtype of native type float\\|int\\|string\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/PriceFactor.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\FieldInterface\\:\\:disableEntries\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Products.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\FieldInterface\\:\\:enableEntry\\(\\)\\.$#"
+			count: 2
+			path: src/QUI/ERP/Products/Utils/Products.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\FieldInterface\\:\\:getOptions\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Products.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\FieldInterface\\:\\:hideEntries\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Products.php
+
+		-
+			message: "#^Call to an undefined method QUI\\\\ERP\\\\Products\\\\Interfaces\\\\FieldInterface\\:\\:showEntry\\(\\)\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Products.php
+
+		-
+			message: "#^Comparison operation \"\\!\\=\" between 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null and 0 results in an error\\.$#"
+			count: 1
+			path: src/QUI/ERP/Products/Utils/Products.php

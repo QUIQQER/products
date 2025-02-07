@@ -15,6 +15,7 @@ use QUI\Interfaces\Users\User;
 use QUI\Locale;
 
 use function array_filter;
+use function class_exists;
 use function floor;
 use function get_class;
 use function is_array;
@@ -172,6 +173,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         if (isset($params['defaultValue'])) {
             $this->defaultValue = $params['defaultValue'];
+        }
+
+        if (isset($params['value'])) {
+            $this->value = $params['value'];
         }
 
         if ($this->isSystem()) {
@@ -354,14 +359,15 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             $data['options'] = json_encode($options);
         }
 
-
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.save', [
-                'id' => $this->getId()
-            ]),
-            '',
-            $data
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.save', [
+                    'id' => $this->getId()
+                ]),
+                '',
+                $data
+            );
+        }
 
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
@@ -403,12 +409,14 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsFieldDeleteBefore', [$this]);
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.delete', [
-                'id' => $this->getId(),
-                'title' => $this->getTitle()
-            ])
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.field.delete', [
+                    'id' => $this->getId(),
+                    'title' => $this->getTitle()
+                ])
+            );
+        }
 
         $fieldId = $this->getId();
 
@@ -782,7 +790,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Return the current value
      *
-     * @return string|array
+     * @return mixed
      */
     public function getValue(): mixed
     {
@@ -797,9 +805,9 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Return the value in dependence of a locale (language)
      *
      * @param Locale|null $Locale (optional)
-     * @return string|array
+     * @return mixed
      */
-    public function getValueByLocale(?Locale $Locale = null): string|array
+    public function getValueByLocale(?Locale $Locale = null): mixed
     {
         return $this->getValue();
     }
@@ -1050,10 +1058,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
 
     /**
      * Get search type of this field
-     *
-     * @return integer|false - search type id oder false if none set
      */
-    public function getSearchType(): bool|int
+    public function getSearchType(): bool|int|string
     {
         return $this->getAttribute('search_type');
     }

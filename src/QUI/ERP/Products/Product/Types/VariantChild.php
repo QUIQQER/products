@@ -538,6 +538,11 @@ class VariantChild extends AbstractType
         foreach ($fields as $Field) {
             try {
                 $VariantField = $this->getField($Field->getId());
+
+                if ($VariantField->getOption('exclude_from_variant_generation')) {
+                    continue;
+                }
+
                 $hashFields[] = $VariantField;
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::writeDebugException($Exception);

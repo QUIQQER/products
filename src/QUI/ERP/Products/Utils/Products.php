@@ -167,6 +167,10 @@ class Products
             }
         }
 
+        if ($priceValue instanceof QUI\ERP\Money\Price) {
+            $priceValue = $priceValue->getValue();
+        }
+
         return new QUI\ERP\Money\Price($priceValue, $Currency);
     }
 
@@ -294,6 +298,13 @@ class Products
         // get hash values
         foreach ($fields as $Field => $fieldValue) {
             if ($fieldValue instanceof QUI\ERP\Products\Interfaces\FieldInterface) {
+                if (
+                    method_exists($fieldValue, 'getOption')
+                    && $fieldValue->getOption('exclude_from_variant_generation')
+                ) {
+                    continue;
+                }
+
                 $fieldId = $fieldValue->getId();
                 $fieldValue = $fieldValue->getValue();
             } elseif (is_string($Field) || is_numeric($Field)) {
@@ -304,6 +315,10 @@ class Products
 
             // string to hex
             if (!is_numeric($fieldValue)) {
+                if (empty($fieldValue)) {
+                    $fieldValue = '';
+                }
+
                 $fieldValue = implode(unpack("H*", $fieldValue));
             }
 

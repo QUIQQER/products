@@ -11,28 +11,28 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
     'package/quiqqer/products/bin/Fields',
     'Users'
 
-], function (QUI, QUIControl, UserDisplay, UserSearch, Fields, Users) {
-    "use strict";
+], function(QUI, QUIControl, UserDisplay, UserSearch, Fields, Users) {
+    'use strict';
 
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/GroupList',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/GroupList',
 
         Binds: [
             '$onImport',
             'openUserSearch'
         ],
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
-            this.$Button  = null;
-            this.$Input   = null;
+            this.$Button = null;
+            this.$Input = null;
             this.$Display = null;
 
-            this.$uids          = [];
-            this.$fieldId       = false;
+            this.$uids = [];
+            this.$fieldId = false;
             this.$allowedGroups = null;
 
             this.addEvents({
@@ -43,21 +43,21 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
         /**
          * event : on import
          */
-        $onImport: function () {
-            var Elm = this.getElm();
+        $onImport: function() {
+            const Elm = this.getElm();
 
             Elm.type = 'hidden';
 
             this.$Button = new Element('span', {
                 'class': 'field-container-item',
-                html   : '<span class="fa fa-user"></span>',
-                styles : {
-                    cursor    : 'pointer',
+                html: '<span class="fa fa-user"></span>',
+                styles: {
+                    cursor: 'pointer',
                     lineHeight: 30,
-                    textAlign : 'center',
-                    width     : 50
+                    textAlign: 'center',
+                    width: 50
                 },
-                events : {
+                events: {
                     click: this.openUserSearch
                 }
             }).inject(Elm, 'after');
@@ -65,24 +65,20 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
 
             this.$Display = new Element('div', {
                 'class': 'field-container-field',
-                styles : {
+                styles: {
                     padding: 0
                 }
             }).wraps(Elm);
 
-            this.$Input   = Elm;
+            this.$Input = Elm;
             this.$fieldId = this.$Input.get('name').replace('field-', '').toInt();
 
             // get field settings
-            Fields.getChild(this.$fieldId).then(function (fieldData) {
+            Fields.getChild(this.$fieldId).then((fieldData) => {
                 this.$allowedGroups = [];
 
-                if ("groupIds" in fieldData.options && fieldData.options.groupIds) {
+                if ('groupIds' in fieldData.options && fieldData.options.groupIds) {
                     this.$allowedGroups = fieldData.options.groupIds;
-
-                    this.$allowedGroups = this.$allowedGroups.map(function (g) {
-                        return parseInt(g);
-                    });
                 }
 
                 if (!this.$allowedGroups || !this.$allowedGroups.length) {
@@ -90,7 +86,7 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
                 }
 
                 try {
-                    var data = JSON.decode(Elm.value);
+                    let data = JSON.decode(Elm.value);
 
                     Elm.value = '';
 
@@ -102,14 +98,12 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
                         return;
                     }
 
-                    data.each(function (uid) {
+                    data.each((uid) => {
                         this.addUser(uid);
-                    }.bind(this));
-
+                    });
                 } catch (e) {
                 }
-
-            }.bind(this));
+            });
         },
 
         /**
@@ -117,38 +111,35 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
          *
          * @param {Number} userId - User-ID
          */
-        addUser: function (userId) {
-            userId = parseInt(userId);
-
-            for (var i = 0, len = this.$uids.length; i < len; i++) {
+        addUser: function(userId) {
+            for (let i = 0, len = this.$uids.length; i < len; i++) {
                 if (this.$uids[i] === userId) {
                     return;
                 }
             }
 
             // check if user is allowed
-            var self  = this,
-                Check = Promise.resolve(true);
+            let Check = Promise.resolve(true);
 
             if (this.$allowedGroups && this.$allowedGroups.length) {
                 Check = this.$isAllowed(userId);
             }
 
-            Check.then(function (isAllowed) {
+            Check.then((isAllowed) => {
                 if (isAllowed === false) {
                     return;
                 }
 
-                self.$uids.push(userId);
-                self.$updateInput();
+                this.$uids.push(userId);
+                this.$updateInput();
 
                 new UserDisplay(userId, {
                     events: {
-                        onDestroy: function (UD) {
-                            self.removeUser(UD.getUser().getId());
+                        onDestroy: (UD) => {
+                            this.removeUser(UD.getUser().getId());
                         }
                     }
-                }).inject(self.$Display);
+                }).inject(this.$Display);
             });
         },
 
@@ -158,31 +149,31 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
          * @param {Number} userId
          * @return {Promise}
          */
-        $isAllowed: function (userId) {
-            var allowed = this.$allowedGroups;
+        $isAllowed: function(userId) {
+            const allowed = this.$allowedGroups;
 
             if (!allowed.length) {
                 return Promise.resolve(true);
             }
 
-            return new Promise(function (resolve) {
-                var User = Users.get(userId);
+            return new Promise(function(resolve) {
+                const User = Users.get(userId);
 
                 if (User.isLoaded()) {
                     return resolve(User);
                 }
 
                 User.load().then(resolve);
-            }).then(function (User) {
-                var i, len, groupId;
-                var groups = User.getAttribute('usergroup');
+            }).then(function(User) {
+                let i, len, groupId;
+                const groups = User.getAttribute('usergroup');
 
                 if (!groups || !groups.length) {
                     return false;
                 }
 
                 for (i = 0, len = groups.length; i < len; i++) {
-                    groupId = parseInt(groups[i]);
+                    groupId = groups[i];
 
                     if (allowed.indexOf(groupId) !== -1) {
                         return true;
@@ -198,9 +189,8 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
          *
          * @param {Number} uid
          */
-        removeUser: function (uid) {
-
-            this.$uids = this.$uids.filter(function (entry) {
+        removeUser: function(uid) {
+            this.$uids = this.$uids.filter(function(entry) {
                 return entry !== uid;
             });
 
@@ -210,9 +200,8 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
         /**
          * Opens the user search
          */
-        openUserSearch: function () {
-            var self           = this,
-                searchSettings = false;
+        openUserSearch: function() {
+            let searchSettings = false;
 
             if (this.$allowedGroups) {
                 searchSettings = {
@@ -223,12 +212,12 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
             }
 
             new UserSearch({
-                search        : true,
+                search: true,
                 searchSettings: searchSettings,
-                events        : {
-                    onSubmit: function (Win, values) {
-                        values.each(function (Entry) {
-                            self.addUser(Entry.id);
+                events: {
+                    onSubmit: (Win, values) => {
+                        values.each((Entry) => {
+                            this.addUser(Entry.id);
                         });
                     }
                 }
@@ -238,7 +227,7 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
         /**
          * Update the input node value
          */
-        $updateInput: function () {
+        $updateInput: function() {
             this.$Input.value = JSON.encode(this.$uids);
         },
 
@@ -247,7 +236,7 @@ define('package/quiqqer/products/bin/controls/fields/types/GroupList', [
          *
          * @returns {String}
          */
-        getValue: function () {
+        getValue: function() {
             return this.$Input.value;
         }
     });

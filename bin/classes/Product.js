@@ -15,13 +15,13 @@ define('package/quiqqer/products/bin/classes/Product', [
     'package/quiqqer/products/bin/Fields',
     'qui/utils/String'
 
-], function (QUI, QUIDOM, Ajax, QUILocale, Fields, StringUtils) {
-    "use strict";
+], function(QUI, QUIDOM, Ajax, QUILocale, Fields, StringUtils) {
+    'use strict';
 
     return new Class({
 
         Extends: QUIDOM,
-        Type   : 'package/quiqqer/products/bin/classes/Product',
+        Type: 'package/quiqqer/products/bin/classes/Product',
 
         options: {
             id: false
@@ -31,7 +31,7 @@ define('package/quiqqer/products/bin/classes/Product', [
             'refresh'
         ],
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.$uid = String.uniqueID();
@@ -45,7 +45,7 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @return {boolean}
          */
-        isLoaded: function () {
+        isLoaded: function() {
             return this.$loaded;
         },
 
@@ -54,7 +54,7 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @returns {Promise<unknown>|*}
          */
-        load: function () {
+        load: function() {
             if (this.$loaded) {
                 return Promise.resolve(this);
             }
@@ -70,12 +70,12 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param {Number|Array}  fieldId
          * @return {Promise}
          */
-        addField: function (fieldId) {
-            return new Promise(function (resolve) {
+        addField: function(fieldId) {
+            return new Promise(function(resolve) {
                 Ajax.get('package_quiqqer_products_ajax_products_addField', resolve, {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    fieldId  : JSON.encode(fieldId)
+                    fieldId: JSON.encode(fieldId)
                 });
             }.bind(this));
         },
@@ -86,12 +86,12 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param {Number}  fieldId
          * @return {Promise}
          */
-        removeField: function (fieldId) {
-            return new Promise(function (resolve) {
+        removeField: function(fieldId) {
+            return new Promise(function(resolve) {
                 Ajax.get('package_quiqqer_products_ajax_products_removeField', resolve, {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    fieldId  : fieldId
+                    fieldId: fieldId
                 });
             }.bind(this));
         },
@@ -102,17 +102,17 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param {Number|Boolean}  [fieldId]
          * @returns {Promise}
          */
-        createMediaFolder: function (fieldId) {
+        createMediaFolder: function(fieldId) {
             fieldId = fieldId || false;
 
-            return new Promise(function (resolve, reject) {
-                Ajax.get('package_quiqqer_products_ajax_products_createMediaFolder', function () {
+            return new Promise(function(resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_createMediaFolder', function() {
                     this.refresh().then(resolve, reject);
                 }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    onError  : reject,
-                    fieldId  : fieldId
+                    onError: reject,
+                    fieldId: fieldId
                 });
             }.bind(this));
         },
@@ -124,16 +124,16 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param {Boolean}  status
          * @return {Promise}
          */
-        setPublicStatusFromField: function (fieldId, status) {
-            return new Promise(function (resolve, reject) {
-                Ajax.get('package_quiqqer_products_ajax_products_setPublicStatusFromField', function () {
+        setPublicStatusFromField: function(fieldId, status) {
+            return new Promise(function(resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_setPublicStatusFromField', function() {
                     this.refresh().then(resolve, reject);
                 }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    fieldId  : fieldId,
-                    status   : status ? 1 : 0,
-                    onError  : reject
+                    fieldId: fieldId,
+                    status: status ? 1 : 0,
+                    onError: reject
                 });
             }.bind(this));
         },
@@ -144,15 +144,15 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param {Object} permissions - list of permissions
          * @returns {Promise}
          */
-        setPermissions: function (permissions) {
-            return new Promise(function (resolve, reject) {
-                Ajax.get('package_quiqqer_products_ajax_products_setPermissions', function () {
+        setPermissions: function(permissions) {
+            return new Promise(function(resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_setPermissions', function() {
                     this.refresh().then(resolve, reject);
                 }.bind(this), {
-                    'package'  : 'quiqqer/products',
-                    productId  : this.getId(),
+                    'package': 'quiqqer/products',
+                    productId: this.getId(),
                     permissions: JSON.encode(permissions),
-                    onError    : reject
+                    onError: reject
                 });
             }.bind(this));
         },
@@ -163,9 +163,9 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param {Number} quantity
          * @return {Promise}
          */
-        setQuantity: function (quantity) {
-            return new Promise(function (resolve, reject) {
-                Ajax.post('package_quiqqer_products_ajax_products_setQuantity', function (result) {
+        setQuantity: function(quantity) {
+            return new Promise(function(resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_products_setQuantity', function(result) {
                     this.$quantity = parseInt(result);
                     this.fireEvent('change', [this]);
 
@@ -173,8 +173,8 @@ define('package/quiqqer/products/bin/classes/Product', [
                 }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    quantity : quantity,
-                    onError  : reject
+                    quantity: quantity,
+                    onError: reject
                 });
             }.bind(this));
         },
@@ -186,13 +186,13 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param {String|Number} variantId
          * @return {Promise}
          */
-        setDefaultVariantId: function (variantId) {
-            return new Promise(function (resolve, reject) {
+        setDefaultVariantId: function(variantId) {
+            return new Promise(function(resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_variant_setDefaultVariant', resolve, {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
                     variantId: variantId,
-                    onError  : reject
+                    onError: reject
                 });
             }.bind(this));
         },
@@ -202,7 +202,7 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @returns {Number|Boolean}
          */
-        getId: function () {
+        getId: function() {
             return this.getAttribute('id');
         },
 
@@ -212,10 +212,10 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param {Object} [Locale] - optional, QUI Locale object
          * @returns {Promise}
          */
-        getTitle: function (Locale) {
+        getTitle: function(Locale) {
             Locale = Locale || QUILocale;
 
-            return this.getFieldValue(Fields.FIELD_TITLE).then(function (field) {
+            return this.getFieldValue(Fields.FIELD_TITLE).then(function(field) {
                 if (typeOf(field) === 'string') {
                     try {
                         field = JSON.decode(field);
@@ -224,7 +224,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                     }
                 }
 
-                let title   = '',
+                let title = '',
                     current = Locale.getCurrent();
 
                 if (current in field) {
@@ -241,10 +241,10 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param {Object} [Locale] - optional, QUI Locale object
          * @returns {Promise}
          */
-        getWorkingTitle: function (Locale) {
+        getWorkingTitle: function(Locale) {
             Locale = Locale || QUILocale;
 
-            return this.getFieldValue(Fields.FIELD_WORKING_TITLE).then(function (field) {
+            return this.getFieldValue(Fields.FIELD_WORKING_TITLE).then(function(field) {
                 if (typeOf(field) === 'string') {
                     try {
                         field = JSON.decode(field);
@@ -253,7 +253,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                     }
                 }
 
-                let title   = '',
+                let title = '',
                     current = Locale.getCurrent();
 
                 if (current in field) {
@@ -270,10 +270,10 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param {Object} [Locale] - optional, QUI Locale object
          * @returns {Promise}
          */
-        getDescription: function (Locale) {
+        getDescription: function(Locale) {
             Locale = Locale || QUILocale;
 
-            return this.getFieldValue(Fields.FIELD_SHORT_DESC).then(function (field) {
+            return this.getFieldValue(Fields.FIELD_SHORT_DESC).then(function(field) {
                 if (typeOf(field) === 'string') {
                     try {
                         field = JSON.decode(field);
@@ -282,7 +282,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                     }
                 }
 
-                let title   = '',
+                let title = '',
                     current = Locale.getCurrent();
 
                 if (current in field) {
@@ -298,26 +298,26 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @returns {Promise}
          */
-        getImage: function () {
-            return new Promise(function (resolve, reject) {
-                this.getFieldValue(Fields.FIELD_IMAGE).then(function (result) {
+        getImage: function() {
+            return new Promise(function(resolve, reject) {
+                this.getFieldValue(Fields.FIELD_IMAGE).then(function(result) {
                     if (result !== '' && result) {
                         return resolve(result);
                     }
 
-                    this.getFolder().then(function (folder) {
+                    this.getFolder().then(function(folder) {
                         if (!folder) {
                             return reject('Product has no media folder.');
                         }
 
                         const params = StringUtils.getUrlParams(folder);
 
-                        if (!("id" in params) || !("project" in params)) {
+                        if (!('id' in params) || !('project' in params)) {
                             return reject('Product media folder is no QUIQQER media url.');
                         }
 
                         // get first folder image
-                        Ajax.get('ajax_media_folder_firstImage', function (file) {
+                        Ajax.get('ajax_media_folder_firstImage', function(file) {
                             if (!file.length) {
                                 resolve(false);
                                 return;
@@ -325,10 +325,10 @@ define('package/quiqqer/products/bin/classes/Product', [
 
                             resolve(file.url);
                         }, {
-                            project  : params.project,
-                            folderId : params.id,
+                            project: params.project,
+                            folderId: params.id,
                             showError: false,
-                            onError  : reject
+                            onError: reject
                         });
                     });
                 }.bind(this));
@@ -340,7 +340,7 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @returns {Promise}
          */
-        getFolder: function () {
+        getFolder: function() {
             return this.getFieldValue(Fields.FIELD_FOLDER);
         },
 
@@ -349,7 +349,7 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @returns {Object}
          */
-        getAttributes: function () {
+        getAttributes: function() {
             if (!this.$data) {
                 this.$data = {};
             }
@@ -365,13 +365,13 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @returns {Promise}
          */
-        isActive: function () {
-            return new Promise(function (resolve, reject) {
+        isActive: function() {
+            return new Promise(function(resolve, reject) {
                 if (this.$loaded) {
                     return resolve(!!this.$data.active);
                 }
 
-                this.refresh().then(function () {
+                this.refresh().then(function() {
                     resolve(!!this.$data.active);
                 }.bind(this)).catch(reject);
 
@@ -383,14 +383,14 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @returns {Promise}
          */
-        activate: function () {
-            return new Promise(function (resolve, reject) {
-                Ajax.get('package_quiqqer_products_ajax_products_activate', function () {
+        activate: function() {
+            return new Promise(function(resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_activate', function() {
                     this.refresh().then(resolve, reject);
                 }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    onError  : reject
+                    onError: reject
                 });
             }.bind(this));
         },
@@ -400,14 +400,14 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @returns {Promise}
          */
-        deactivate: function () {
-            return new Promise(function (resolve, reject) {
-                Ajax.get('package_quiqqer_products_ajax_products_deactivate', function () {
+        deactivate: function() {
+            return new Promise(function(resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_products_deactivate', function() {
                     this.refresh().then(resolve, reject);
                 }.bind(this), {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    onError  : reject
+                    onError: reject
                 });
             }.bind(this));
         },
@@ -417,7 +417,7 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @returns {Promise}
          */
-        refresh: function () {
+        refresh: function() {
             return new Promise((resolve, reject) => {
                 require(['package/quiqqer/products/bin/Products'], (Products) => {
                     Products.getChild(this.getId()).then((data) => {
@@ -437,13 +437,13 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @returns {Promise}
          */
-        getFields: function () {
-            return new Promise(function (resolve, reject) {
+        getFields: function() {
+            return new Promise(function(resolve, reject) {
                 if (this.$loaded) {
                     return resolve(this.$data.fields);
                 }
 
-                this.refresh().then(function () {
+                this.refresh().then(function() {
                     resolve(this.$data.fields);
                 }.bind(this)).catch(reject);
             }.bind(this));
@@ -455,9 +455,9 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param {String} type
          * @return {Array}
          */
-        getFieldsByType: function (type) {
-            return this.getFields().then(function (fields) {
-                return fields.filter(function (Field) {
+        getFieldsByType: function(type) {
+            return this.getFields().then(function(fields) {
+                return fields.filter(function(Field) {
                     return Field.type === type;
                 });
             });
@@ -469,14 +469,14 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param {Number} fieldId - ID of the field
          * @returns {Promise}
          */
-        getField: function (fieldId) {
-            return new Promise(function (resolve, reject) {
+        getField: function(fieldId) {
+            return new Promise(function(resolve, reject) {
                 if (typeof fieldId === 'undefined') {
                     return reject('No field given');
                 }
 
                 if (this.$loaded) {
-                    var field = this.$data.fields.filter(function (item) {
+                    var field = this.$data.fields.filter(function(item) {
                         return (item.id === fieldId);
                     });
 
@@ -487,7 +487,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                     return reject('Field #' + fieldId + ' not found');
                 }
 
-                this.refresh().then(function () {
+                this.refresh().then(function() {
                     this.getField(fieldId).then(resolve);
                 }.bind(this)).catch(reject);
             }.bind(this));
@@ -499,13 +499,13 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param {Number} fieldId - ID of the field
          * @returns {Promise}
          */
-        getFieldValue: function (fieldId) {
-            return this.getField(fieldId).then(function (field) {
+        getFieldValue: function(fieldId) {
+            return this.getField(fieldId).then(function(field) {
                 return field.value;
             });
         },
 
-        setFieldValue: function (fieldId, value) {
+        setFieldValue: function(fieldId, value) {
             fieldId = parseInt(fieldId);
 
             for (let i = 0, len = this.$data.fields.length; i < len; i++) {
@@ -521,8 +521,8 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @return {Promise}
          */
-        getEditableFields: function () {
-            return new Promise(function (resolve) {
+        getEditableFields: function() {
+            return new Promise(function(resolve) {
                 Ajax.get('package_quiqqer_products_ajax_products_variant_getEditableInheritedFieldList', resolve, {
                     'package': 'quiqqer/products',
                     productId: this.getId()
@@ -535,16 +535,16 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @returns {Promise}
          */
-        getCategories: function () {
+        getCategories: function() {
             const self = this;
 
-            return new Promise(function (resolve, reject) {
+            return new Promise(function(resolve, reject) {
                 if (self.$loaded) {
-                    const categories = self.$data.categories.split(',').filter(function (entry) {
+                    const categories = self.$data.categories.split(',').filter(function(entry) {
                         return entry !== '';
                     });
 
-                    categories.each(function (value, index) {
+                    categories.each(function(value, index) {
                         categories[index] = parseInt(value);
                     });
 
@@ -556,7 +556,7 @@ define('package/quiqqer/products/bin/classes/Product', [
                     return resolve(categories);
                 }
 
-                self.refresh().then(function () {
+                self.refresh().then(function() {
                     self.getCategories().then(resolve);
                 }).catch(reject);
 
@@ -568,13 +568,13 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @returns {Promise}
          */
-        getCategory: function () {
-            return new Promise(function (resolve, reject) {
+        getCategory: function() {
+            return new Promise(function(resolve, reject) {
                 if (this.$loaded) {
                     return resolve(this.$data.category);
                 }
 
-                this.refresh().then(function () {
+                this.refresh().then(function() {
                     resolve(this.$data.category);
                 }.bind(this)).catch(reject);
 
@@ -587,15 +587,15 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param {Number} [quantity] - price of a wanted quantity
          * @returns {Promise}
          */
-        getPrice: function (quantity) {
+        getPrice: function(quantity) {
             quantity = quantity || this.getQuantity();
 
-            return new Promise(function (resolve) {
+            return new Promise(function(resolve) {
                 Ajax.get('package_quiqqer_products_ajax_products_calc', resolve, {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    fields   : JSON.encode(this.$data.fields),
-                    quantity : quantity
+                    fields: JSON.encode(this.$data.fields),
+                    quantity: quantity
                 });
             }.bind(this));
         },
@@ -605,7 +605,7 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @returns {Number}
          */
-        getQuantity: function () {
+        getQuantity: function() {
             return this.$quantity;
         },
 
@@ -616,12 +616,12 @@ define('package/quiqqer/products/bin/classes/Product', [
          * @param [options]
          * @return {Promise}
          */
-        getVariants: function (options) {
-            return new Promise(function (resolve) {
+        getVariants: function(options) {
+            return new Promise(function(resolve) {
                 Ajax.get('package_quiqqer_products_ajax_products_variant_getVariants', resolve, {
                     'package': 'quiqqer/products',
                     productId: this.getId(),
-                    options  : JSON.encode(options)
+                    options: JSON.encode(options)
                 });
             }.bind(this));
         },
@@ -631,8 +631,8 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @return {Promise}
          */
-        getVariantFields: function () {
-            return new Promise(function (resolve) {
+        getVariantFields: function() {
+            return new Promise(function(resolve) {
                 Ajax.get('package_quiqqer_products_ajax_products_variant_getVariantFields', resolve, {
                     'package': 'quiqqer/products',
                     productId: this.getId()
@@ -645,7 +645,7 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @return {Promise}
          */
-        resetInheritedFields: function () {
+        resetInheritedFields: function() {
             return new Promise((resolve) => {
                 Ajax.post('package_quiqqer_products_ajax_products_variant_resetEditableInheritedFields', () => {
                     this.refresh().then(resolve);
@@ -661,8 +661,8 @@ define('package/quiqqer/products/bin/classes/Product', [
          *
          * @return {Promise}
          */
-        hasOwnMediaFolder: function () {
-            return new Promise(function (resolve) {
+        hasOwnMediaFolder: function() {
+            return new Promise(function(resolve) {
                 Ajax.post('package_quiqqer_products_ajax_products_variant_hasOwnFolder', resolve, {
                     'package': 'quiqqer/products',
                     productId: this.getId()

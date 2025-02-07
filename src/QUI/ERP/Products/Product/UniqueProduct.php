@@ -254,7 +254,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             }
         }
 
-        $this->uid = (int)$attributes['uid'];
+        $this->uid = $attributes['uid'];
 
 
         // fields

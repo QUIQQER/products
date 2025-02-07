@@ -580,6 +580,10 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Standardfelder sind jedem Produkt automatisch zugewiesen.]]></de>
             <en><![CDATA[Standard fields are automatically assigned to each product.]]></en>
         </locale>
+        <locale name="standardProduct">
+            <de><![CDATA[Normales Produkt]]></de>
+            <en><![CDATA[Regular product]]></en>
+        </locale>
 
         <locale name="productMasterData">
             <de><![CDATA[Stammdaten]]></de>
@@ -2084,6 +2088,10 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[Attribute is relevant for product image]]></en>
         </locale>
 
+        <locale name="product.fields.attributeList.isUsedForVariantGeneration">
+            <de><![CDATA[Soll nicht zur Variantengenerierung genutzt werden]]></de>
+            <en><![CDATA[Should not be used for variant generation]]></en>
+        </locale>
         <locale name="product.fields.remove.field">
             <de><![CDATA[Feld entfernen]]></de>
             <en><![CDATA[Remove field]]></en>
@@ -2155,17 +2163,21 @@ For a newly created product the article number should be generated automatically
             <br/><br/>
             <span style="font-size: 80%;">
                 Ausgenommen hiervon sind Felder vom Typ Attributliste, da diese für die Variantengenerierung genutzt werden.
-                Wenn ein Feld vom Typ Attribuliste editierbar ist, kann dieses Feld im Eltern-Produkt verändert werden.
-                In einer Variante kann eine Attributliste nicht verändert werden.
+                In diesem Fall verhält es sich folgendermaßen: Wenn ein Feld vom Typ Attributliste editierbar ist,
+                kann es im Eltern-Produkt bearbeitet werden. In einer Variante kann eine Attributliste nicht bearbeitet werden,
+                es sei denn, diese Attributliste wird nicht zur Variantengenerierung genutzt.
             </span>
             ]]></de>
             <en><![CDATA[
-            Specify which fields can be editable by the variants.
-            All fields that cannot be editable by the variants will be taken from the parent product.
-
-            Exceptions to this are fields of type Attribute List. Because these are used for variant generation.
-            Here it behaves as follows: If a field of type Attribute List is editable,
-            this field can be edited in the parent product. In a variant, an attribute list cannot be edited.
+            <b>Specify which fields can be edited by variants.</b><br/>
+            All fields that cannot be edited in variants are taken from the parent product.
+            <br/><br/>
+            <span style="font-size: 80%;">
+                Exceptions to this are fields of type attribute list, as these are used for variant generation.
+                In this case, the situation is as follows: If a field of type attribute list is editable,
+                it can be edited in the parent product. An attribute list cannot be edited in a variant,
+                unless this attribute list is not used for variant generation.
+            </span>
             ]]></en>
         </locale>
         <locale name="variants.EditableFieldList.window.reset.to.global">
@@ -2620,8 +2632,10 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[Price field factors priority]]></en>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.tpl.descCategoryPriority" html="true">
-            <de><![CDATA[Auf Produkte, die mehreren Kategorien zugeordnet sind, die Preisfeld-Faktoren konfiguriert haben, werden die Preisfeld-Faktoren der Kategorie mit der höchstens Priorität angewandt. Die Hauptkategorie eines Produkts hat <b>immer</b> Vorrang.]]></de>
-            <en><![CDATA[The price field factors of the category with the highest priority is applied to products that are assigned to several categories that have configured price field factors. The main category of a product is <b>always</b> applied first.]]></en>
+            <de>
+                <![CDATA[Auf Produkte, die mehreren Kategorien zugeordnet sind, die Preisfeld-Faktoren konfiguriert haben, werden die Preisfeld-Faktoren der Kategorie mit der höchstens Priorität angewandt. Die Hauptkategorie eines Produkts hat <b>immer</b> Vorrang.]]></de>
+            <en>
+                <![CDATA[The price field factors of the category with the highest priority is applied to products that are assigned to several categories that have configured price field factors. The main category of a product is <b>always</b> applied first.]]></en>
         </locale>
         <locale name="controls.settings.PriceFieldFactors.info_cli">
             <de><![CDATA[</p>In Ihrem Shop existieren sehr viele Produkte. Die Ausführungszeit Ihres Web-Servers i.V.m. PHP wird wahrscheinlich nicht reichen, um die Preise aller Produkte zu aktualisieren.</p><br/>
@@ -2874,6 +2888,37 @@ For a newly created product the article number should be generated automatically
             <de><![CDATA[Ausgeschaltet - Produkte werden nicht automatsich geladen]]></de>
             <en><![CDATA[Disable - products are not loaded automatically]]></en>
         </locale>
+
+        <locale name="site.settings.openProductMode">
+            <de><![CDATA[Verhalten beim Öffnen von Produkt]]></de>
+            <en><![CDATA[Behavior when opening product]]></en>
+        </locale>
+        <locale name="site.settings.openProductMode.desc">
+            <de><![CDATA[Definiert, was passiert, wenn ein Produkt angeklickt wird. "Asynchrones Laden" bedeutet, dass das Produkt geöffnet wird, ohne dass die komplette Seite neu geladen werden muss.]]></de>
+            <en><![CDATA[Defines what happens when a product is clicked. "Asynchronous loading" means that the product is opened without the entire page having to be reloaded.]]></en>
+        </locale>
+        <locale name="site.settings.openProductMode.default">
+            <de><![CDATA[Standard Einstellung übernehmen]]></de>
+            <en><![CDATA[Use default setting]]></en>
+        </locale>
+        <locale name="site.settings.openProductMode.normal">
+            <de><![CDATA[Normal - die Seite wird neu geladen]]></de>
+            <en><![CDATA[Normal - the page will be reloaded]]></en>
+        </locale>
+        <locale name="site.settings.openProductMode.async">
+            <de><![CDATA[Asynchronous - nur das Produkt wird geladen]]></de>
+            <en><![CDATA[Asynchronous - only the product will be loaded]]></en>
+        </locale>
+
+        <locale name="quiqqer.products.settings.openProductAsync">
+            <de><![CDATA[Produkte asynchron öffnen]]></de>
+            <en><![CDATA[Open product asynchronously]]></en>
+        </locale>
+        <locale name="quiqqer.products.settings.openProductAsync.desc">
+            <de><![CDATA[Wenn die Option aktiviert ist, wird das geklickte Produkt geöffnet, ohne dass die komplette Seite neu geladen werden muss.]]></de>
+            <en><![CDATA[If the option is enabled, the clicked product will be opened without needing to reload the entire page.]]></en>
+        </locale>
+
         <locale name="quiqqer.products.settings.categoryStartNumber">
             <de><![CDATA[Anzahl angezeigter Kategorien]]></de>
             <en><![CDATA[Limit of displayed categories]]></en>

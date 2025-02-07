@@ -118,6 +118,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/Product', [
 
                         document.title = result.title;
 
+                        if (result.seoTitle) {
+                            document.title = result.seoTitle;
+                        }
+
                         Container.set(
                             'html',
                             result.css +

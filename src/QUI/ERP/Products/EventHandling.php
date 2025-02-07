@@ -14,6 +14,7 @@ use QUI\Projects\Site\Edit;
 use QUI\System\Console\Tools\MigrationV2;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use QUI\ERP\Products\Field\Types\AttributeGroup;
 
 use function count;
 use function explode;
@@ -767,8 +768,105 @@ class EventHandling
                 'titles' => [
                     'de' => 'Produktvarianten',
                     'en' => 'Product variants'
+                ],
+                'description' => [
+                    'de' => 'Dieses Feld wird benötigt, wenn manuell Varianten nicht aus Attributelisten angelegt werden. Damit diese im Shopfrontend auswählbar sind',
+                    'en' => 'This field is required if variants are not created manually from attribute lists. So that these can be selected in the store frontend'
+                ],
+                'workingtitles' => [
+                    'de' => 'Produktvarianten - Hilfsfeld',
+                    'en' => 'Product variants - Auxiliary field'
+                ],
+                'options' => [
+                    'exclude_from_variant_generation' => false
+                ],
+            ],
+            // Title SEO
+            [
+                'id' => Fields::FIELD_SEO_TITLE,
+                'type' => 'InputMultiLang',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 11,
+                'systemField' => 1,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField' => 0,
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'options' => [
+                    'maxLength' => 255,
+                    'minLength' => 3
+                ],
+                'titles' => [
+                    'de' => 'SEO Titel',
+                    'en' => 'SEO Title'
                 ]
-            ]
+            ],
+            // Short Desc SEO
+            [
+                'id' => Fields::FIELD_SEO_DESCRIPTION,
+                'type' => 'InputMultiLang',
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 11,
+                'systemField' => 1,
+                'standardField' => 1,
+                'requiredField' => 0,
+                'publicField' => 0,
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'options' => [
+                    'maxLength' => 255,
+                    'minLength' => 3
+                ],
+                'titles' => [
+                    'de' => 'SEO Kurzbeschreibung',
+                    'en' => 'SEO Short description'
+                ]
+            ],
+            // Condition
+            [
+                'id' => Fields::FIELD_CONDITION,
+                'type' => Fields::TYPE_ATTRIBUTE_GROUPS,
+                'prefix' => '',
+                'suffix' => '',
+                'priority' => 1,
+                'systemField' => 0,
+                'standardField' => 0,
+                'requiredField' => 0,
+                'publicField' => 0,
+                'search_type' => Search::SEARCHTYPE_TEXT,
+                'titles' => [
+                    'de' => 'Zustand',
+                    'en' => 'Condition'
+                ],
+                'options' => [
+                    'entries_type' => AttributeGroup::ENTRIES_TYPE_CONDITION,
+                    'entries' => [
+                        [
+                            'title' => [
+                                'de' => 'neu',
+                                'en' => 'new'
+                            ],
+                            'valueId' => 'new',
+                            'selected' => true
+                        ],
+                        [
+                            'title' => [
+                                'de' => 'generalüberholt',
+                                'en' => 'refurbished'
+                            ],
+                            'valueId' => 'refurbished'
+                        ],
+                        [
+                            'title' => [
+                                'de' => 'gebraucht',
+                                'en' => 'used'
+                            ],
+                            'valueId' => 'used'
+                        ]
+                    ]
+                ]
+            ],
         ];
 
         foreach ($standardFields as $field) {
@@ -781,7 +879,8 @@ class EventHandling
 
             // update system fields
             if (isset($result[0])) {
-                if ($field['id'] > 1000) {
+                // @phpstan-ignore-next-line
+                if ((int)$field['id'] > 1000) {
                     continue;
                 }
 

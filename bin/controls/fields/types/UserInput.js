@@ -7,18 +7,19 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInput', [
     'Locale',
     'qui/controls/Control'
 
-], function (QUILocale, QUIControl) {
-    "use strict";
+], function(QUILocale, QUIControl) {
+    'use strict';
 
     return new Class({
+
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/UserInput',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/UserInput',
 
         Binds: [
             '$onImport'
         ],
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.addEvents({
@@ -29,14 +30,14 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInput', [
         /**
          * event : on import
          */
-        $onImport: function () {
+        $onImport: function() {
             var Elm = this.getElm();
 
             Elm.type = 'hidden';
 
             new Element('span', {
                 'class': 'field-container-field',
-                html   : QUILocale.get('quiqqer/products', 'controls.UserInput.info')
+                html: QUILocale.get('quiqqer/products', 'controls.UserInput.info')
             }).inject(Elm, 'after');
         },
 
@@ -45,7 +46,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInput', [
          *
          * @returns {String}
          */
-        getValue: function () {
+        getValue: function() {
             return null;
         }
     });

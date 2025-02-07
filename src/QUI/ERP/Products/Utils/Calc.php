@@ -21,6 +21,7 @@ use QUI\ERP\Tax\TaxType;
 use QUI\ERP\Tax\Utils as TaxUtils;
 use QUI\Exception;
 use QUI\Interfaces\Users\User as UserInterface;
+use QUI\Locale;
 
 use function count;
 use function floatval;
@@ -81,20 +82,14 @@ class Calc
      */
     const CALCULATION_BASIS_BRUTTO = ErpCalc::CALCULATION_BASIS_BRUTTO;
 
-    /**
-     * @var ?UserInterface
-     */
     protected ?UserInterface $User = null;
 
-    /**
-     * @var null|QUI\ERP\Currency\Currency
-     */
     protected ?Currency $Currency = null;
+
+    protected ?QUI\Locale $Locale = null;
 
     /**
      * Flag for ignore vat calculation (force ignore VAT)
-     *
-     * @var bool
      */
     protected bool $ignoreVatCalculation = false;
 
@@ -165,6 +160,25 @@ class Calc
     {
         return $this->User;
     }
+
+    //region locale
+
+    public function getLocale(): ?Locale
+    {
+        return $this->Locale;
+    }
+
+    public function setLocale(QUI\Locale $Locale): void
+    {
+        $this->Locale = $Locale;
+    }
+
+    public function resetLocale(): void
+    {
+        $this->Locale = QUI::getLocale();
+    }
+
+    //endregion
 
     /**
      * Set the currency for the calculation
@@ -469,7 +483,7 @@ class Calc
             if (!isset($vatArray[(string)$vatValue]) && $Vat) {
                 $vatArray[(string)$vatValue] = [
                     'vat' => $vatValue,
-                    'text' => ErpCalc::getVatText($Vat->getValue(), $this->getUser(), $Locale),
+                    'text' => ErpCalc::getVatText($Vat->getValue(), $this->getUser(), $this->Locale),
                     'visible' => $Vat->isVisible()
                 ];
 
@@ -497,7 +511,7 @@ class Calc
         $bruttoSum = round($bruttoSum, $Currency->getPrecision());
 
         foreach ($vatLists as $vat => $bool) {
-            $vatText[$vat] = ErpCalc::getVatText($vat, $this->getUser(), $Locale);
+            $vatText[$vat] = ErpCalc::getVatText($vat, $this->getUser(), $this->Locale);
         }
 
         if ($this->ignoreVatCalculation) {
@@ -638,7 +652,11 @@ class Calc
         $priceFactors = $Product->getPriceFactors()->sort();
 
         if ($Price) {
-            $nettoPrice = $Price->getValue();
+            if ($Price->getValue() instanceof QUI\ERP\Money\Price) {
+                $nettoPrice = $Price->getValue()->getPrice();
+            } else {
+                $nettoPrice = $Price->getValue();
+            }
         }
 
         if (empty($nettoPrice)) {
@@ -859,7 +877,7 @@ class Calc
         $vatArray = [
             'vat' => $Vat->getValue(),
             'sum' => $vatSum,
-            'text' => ErpCalc::getVatText($Vat->getValue(), $this->getUser())
+            'text' => ErpCalc::getVatText($Vat->getValue(), $this->getUser(), $this->Locale)
         ];
 
         if (!$Vat->isVisible()) {
@@ -1007,20 +1025,18 @@ class Calc
     }
 
     /**
-     * @param float|int|string $price
-     * @param bool $formatted
-     * @param $productId - optional, id of the product
-     *
-     * @return float|int|string|null
-     *
      * @throws Exception
      * @throws QUI\ERP\Products\Product\Exception
      */
     public static function calcNettoPrice(
-        float|int|string $price,
+        null|float|int|string $price,
         bool $formatted = false,
         int|string|bool $productId = false
     ): float|int|string|null {
+        if (empty($price)) {
+            return 0;
+        }
+
         $price = QUI\ERP\Money\Price::validatePrice($price);
         $Area = QUI\ERP\Defaults::getArea();
         $TaxEntry = null;
@@ -1081,7 +1097,8 @@ class Calc
     {
         return ErpCalc::getVatText(
             QUI\ERP\Tax\Utils::getTaxByUser($this->getUser())->getValue(),
-            $this->getUser()
+            $this->getUser(),
+            $this->Locale
         );
     }
 }

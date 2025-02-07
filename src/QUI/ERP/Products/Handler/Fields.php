@@ -66,6 +66,10 @@ class Fields
     const FIELD_DOWNLOAD_FILES = 24;
 
     const FIELD_VARIANT_DEFAULT_ATTRIBUTES = 23;
+    const FIELD_SEO_TITLE = 25;
+    const FIELD_SEO_DESCRIPTION = 26;
+
+    const FIELD_CONDITION = 27;
 
     /**
      * Types
@@ -261,13 +265,16 @@ class Fields
             ]);
         }
 
-        $isAllowed = self::getFieldTypeData($data['type']);
+        $isAllowed = self::getFieldTypeDataFromDisk($data['type']);
 
         if (empty($isAllowed)) {
-            throw new QUI\ERP\Products\Field\Exception([
-                'quiqqer/products',
-                'exception.fields.type.not.allowed'
-            ]);
+            throw new QUI\ERP\Products\Field\Exception(
+                message: [
+                    'quiqqer/products',
+                    'exception.fields.type.not.allowed'
+                ],
+                context: $data
+            );
         }
 
         // cache colum check
@@ -329,6 +336,22 @@ class Fields
             $data['name'] = '';
         }
 
+        // attributelisten options 'exclude_from_variant_generation' immer auf true
+        if ($data['type'] === 'AttributeGroup') {
+            $options = $data['options'] ?? '';
+            $options = json_decode($options, true);
+
+            if (!is_array($options)) {
+                $options = [];
+            }
+
+            if (!isset($options['exclude_from_variant_generation'])) {
+                $options['exclude_from_variant_generation'] = true;
+            }
+
+            $data['options'] = json_encode($options);
+        }
+
         // insert field data
         QUI::getDataBase()->insert(
             QUI\ERP\Products\Utils\Tables::getFieldTableName(),
@@ -337,19 +360,24 @@ class Fields
 
         $newId = $data['id'] ?? QUI::getDataBase()->getPDO()->lastInsertId();
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.fields.create', [
-                'id' => $newId
-            ]),
-            '',
-            $data
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.fields.create', [
+                    'id' => $newId
+                ]),
+                '',
+                $data
+            );
+        }
 
         // add language var, if not exists
         self::setFieldTranslations($newId, $attributes);
 
         // clear the field cache
         QUI\Cache\LongTermCache::clear(Cache::getBasicCachePath() . 'fields');
+        self::$fieldTypes = [];
+        self::$fieldTypeData = [];
+        self::$list = [];
 
         $Field = self::getField($newId);
 
@@ -629,6 +657,24 @@ class Fields
         } catch (QUI\Exception) {
         }
 
+        $result = self::getFieldTypesFromDisk();
+
+        QUI\Cache\LongTermCache::set($cacheName, $result);
+        self::$fieldTypes = $result;
+
+        return $result;
+    }
+
+    /**
+     * Return all available Fields from disk.
+     * This iterates through all packages and reads their files from disk.
+     * Therefore, this is slow  and should only be used when you know that it's necessary.
+     * You would generally want to use @return array
+     * @see self::getFieldTypes()
+     *
+     */
+    private static function getFieldTypesFromDisk(): array
+    {
         // exists the type?
         $dir = dirname(__FILE__, 2) . '/Field/Types/';
         $files = QUI\Utils\System\File::readDir($dir);
@@ -650,12 +696,25 @@ class Fields
             ];
         }
 
-        $plugins = QUI::getPackageManager()->getInstalled();
+        // The files cannot be read from QUI package manager as it is missing new packages on updates
+        // As this method is called on updates, setups, etc. regularly, it has to be done "manually"
+        // @todo use package manager when it can handle new packages (see quiqqer/core#1383)
+        $productsXmls = glob(OPT_DIR . '*/*/products.xml');
 
-        foreach ($plugins as $plugin) {
-            $xml = OPT_DIR . $plugin['name'] . '/products.xml';
-
+        foreach ($productsXmls as $xml) {
             if (!file_exists($xml)) {
+                continue;
+            }
+
+            // Use the two parent directories of the XML file as the plugin name
+            $pluginDirectory = dirname($xml);
+            $plugin = str_replace(dirname($pluginDirectory, 2) . '/', '', $pluginDirectory);
+
+            try {
+                // Check if it's a valid plugin name
+                new QUI\Package\Package($plugin);
+            } catch (QUI\Exception) {
+                // Not a valid plugin, so ignore it's XML file
                 continue;
             }
 
@@ -683,7 +742,7 @@ class Fields
                 }
 
                 $result[] = [
-                    'plugin' => $plugin['name'],
+                    'plugin' => $plugin,
                     'src' => $src,
                     'category' => $category,
                     'locale' => QUI\Utils\DOM::getTextFromNode($Field, false),
@@ -692,9 +751,6 @@ class Fields
                 ];
             }
         }
-
-        QUI\Cache\LongTermCache::set($cacheName, $result);
-        self::$fieldTypes = $result;
 
         return $result;
     }
@@ -720,22 +776,37 @@ class Fields
         } catch (QUI\Exception) {
         }
 
-        $types = self::getFieldTypes();
+        self::$fieldTypeData[$type] = self::getFieldTypeDataFromDisk($type);
+
+        QUI\Cache\LongTermCache::set($cacheName, self::$fieldTypeData[$type]);
+
+        return self::$fieldTypeData[$type];
+    }
+
+    /**
+     * Return internal field init data for a field type from disk.
+     * This iterates through all packages and reads their files from disk.
+     * Therefore, this is slow and should only be used when you know that it's necessary.
+     * You would generally want to use @param string $type - field type
+     * @return array
+     * @see self::getFieldTypeData()
+     *
+     */
+    private static function getFieldTypeDataFromDisk(string $type): array
+    {
+        $types = self::getFieldTypesFromDisk();
+
         $found = array_filter($types, function ($entry) use ($type) {
             return $entry['name'] == $type;
         });
 
         if (empty($found)) {
-            self::$fieldTypeData[$type] = [];
+            QUI\System\Log::addError("Type '$type' not found");
 
             return [];
         }
 
-        self::$fieldTypeData[$type] = reset($found);
-
-        QUI\Cache\LongTermCache::set($cacheName, self::$fieldTypeData[$type]);
-
-        return self::$fieldTypeData[$type];
+        return reset($found);
     }
 
     /**

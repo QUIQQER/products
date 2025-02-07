@@ -11,6 +11,7 @@ use QUI\ERP\Products\Handler\Products;
 use QUI\Exception;
 use QUI\System\Log;
 
+use function class_exists;
 use function count;
 use function ini_get;
 use function set_time_limit;
@@ -34,7 +35,9 @@ class Crons
     public static function updateProductCache(): void
     {
         // global watcher disable
-        QUI\Watcher::$globalWatcherDisable = true;
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::$globalWatcherDisable = true;
+        }
 
         // clear search cache
         QUI\ERP\Products\Search\Cache::clear();

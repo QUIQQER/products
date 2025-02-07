@@ -54,6 +54,11 @@ class AttributeGroupFrontendValueView extends QUI\ERP\Products\Field\View
                 break;
             }
 
+            if (isset($entry['title'][$current])) {
+                $value = $entry['title'][$current];
+                break;
+            }
+
             break;
         }
 

@@ -216,6 +216,7 @@ class ProductList
         if (!$Calc) {
             $Calc = QUI\ERP\Products\Utils\Calc::getInstance();
             $Calc->setUser($this->User);
+            $Calc->setLocale(QUI\ERP\Products\Handler\Products::getLocale());
         }
 
         $Calc->setCurrency($this->getCurrency());

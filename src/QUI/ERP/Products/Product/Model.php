@@ -33,6 +33,7 @@ use function array_reverse;
 use function array_unique;
 use function array_values;
 use function ceil;
+use function class_exists;
 use function constant;
 use function count;
 use function current;
@@ -347,7 +348,15 @@ class Model extends QUI\QDOM
      */
     public function getViewFrontend(): ViewFrontend
     {
-        return new ViewFrontend($this);
+        try {
+            return new ViewFrontend($this);
+        } catch (\Exception $Exception) {
+            QUI\System\Log::addError($Exception->getMessage(), [
+                'extra-message' => 'product frontend view error'
+            ]);
+
+            throw $Exception;
+        }
     }
 
     /**
@@ -683,7 +692,7 @@ class Model extends QUI\QDOM
             || $Site->getAttribute('type') !== 'quiqqer/products:types/category'
             && $Site->getAttribute('type') !== 'quiqqer/products:types/search'
         ) {
-            QUI\System\Log::addWarning(
+            QUI\System\Log::addInfo(
                 QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', [
                     'productId' => $this->getId(),
                     'title' => $this->getTitle()
@@ -708,11 +717,11 @@ class Model extends QUI\QDOM
     }
 
     /**
-     * @param null $Project
+     * @param QUI\Projects\Project|null $Project
      * @return string
      * @throws QUI\Exception
      */
-    public function getUrlRewrittenWithHost($Project = null): string
+    public function getUrlRewrittenWithHost(?QUI\Projects\Project $Project = null): string
     {
         if (!$Project) {
             $Project = QUI::getRewrite()->getProject();
@@ -1437,19 +1446,21 @@ class Model extends QUI\QDOM
 
         // update
         if (Products::$writeProductDataToDb) {
-            QUI\Watcher::addString(
-                QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.save', [
-                    'id' => $this->getId()
-                ]),
-                '',
-                [
-                    'categories' => ',' . implode(',', $categoryIds) . ',',
-                    'category' => $mainCategory,
-                    'fieldData' => json_encode($fieldData),
-                    'permissions' => json_encode($this->permissions),
-                    'priority' => $this->getPriority()
-                ]
-            );
+            if (class_exists('\QUI\Watcher')) {
+                QUI\Watcher::addString(
+                    QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.save', [
+                        'id' => $this->getId()
+                    ]),
+                    '',
+                    [
+                        'categories' => ',' . implode(',', $categoryIds) . ',',
+                        'category' => $mainCategory,
+                        'fieldData' => json_encode($fieldData),
+                        'permissions' => json_encode($this->permissions),
+                        'priority' => $this->getPriority()
+                    ]
+                );
+            }
 
             QUI::getDataBase()->update(
                 QUI\ERP\Products\Utils\Tables::getProductTableName(),
@@ -1969,12 +1980,14 @@ class Model extends QUI\QDOM
     {
         QUI\Permissions\Permission::checkPermission('product.delete');
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.delete', [
-                'id' => $this->getId(),
-                'title' => $this->getTitle(),
-            ])
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.delete', [
+                    'id' => $this->getId(),
+                    'title' => $this->getTitle(),
+                ])
+            );
+        }
 
         QUI::getEvents()->fireEvent('onQuiqqerProductsProductDeleteBegin', [$this]);
 
@@ -2400,11 +2413,13 @@ class Model extends QUI\QDOM
 
         $this->active = false;
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.deactivate', [
-                'id' => $this->getId()
-            ])
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.deactivate', [
+                    'id' => $this->getId()
+                ])
+            );
+        }
 
         QUI::getDataBase()->update(
             QUI\ERP\Products\Utils\Tables::getProductTableName(),
@@ -2452,11 +2467,13 @@ class Model extends QUI\QDOM
             ]);
         }
 
-        QUI\Watcher::addString(
-            QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.activate', [
-                'id' => $this->getId()
-            ])
-        );
+        if (class_exists('\QUI\Watcher')) {
+            QUI\Watcher::addString(
+                QUI::getLocale()->get('quiqqer/products', 'watcher.message.product.activate', [
+                    'id' => $this->getId()
+                ])
+            );
+        }
 
         // duplicate article no. check
         $articleNo = $this->getFieldValue(Fields::FIELD_PRODUCT_NO);
@@ -2686,6 +2703,12 @@ class Model extends QUI\QDOM
         $priceFactors = $this->getApplicableProductPriceFactors();
 
         foreach ($priceFactors as $priceFieldId => $settings) {
+            $priceFieldId = (int)$priceFieldId;
+
+            if (isset($settings['sourceFieldId'])) {
+                $settings['sourceFieldId'] = (int)$settings['sourceFieldId'];
+            }
+
             if (!$this->hasField($priceFieldId) || !$this->hasField($settings['sourceFieldId'])) {
                 continue;
             }
@@ -2824,7 +2847,7 @@ class Model extends QUI\QDOM
         $duplicateArticleNoProductIds = array_unique(array_column($result, 'id'));
 
         foreach ($duplicateArticleNoProductIds as $productId) {
-            if (Products::existsProduct($productId)) {
+            if (Products::existsProduct((int)$productId)) {
                 throw new QUI\ERP\Products\Product\Exception(
                     [
                         'quiqqer/products',

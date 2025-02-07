@@ -17,7 +17,7 @@ use QUI\ERP\Products\Product\Types\VariantParent;
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getProductControlClass',
     function ($productId) {
-        $Product = Products::getProduct($productId);
+        $Product = Products::getProduct((int)$productId);
 
         if (
             $Product instanceof VariantParent ||

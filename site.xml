@@ -25,6 +25,7 @@
                 <attribute>quiqqer.products.settings.categoryStartNumber</attribute>
                 <attribute>quiqqer.products.settings.categoryProductSearchType</attribute>
                 <attribute>quiqqer.products.settings.autoloadAfter</attribute>
+                <attribute>quiqqer.products.settings.openProductMode</attribute>
                 <attribute default="1">quiqqer.products.settings.showCategories</attribute>
                 <attribute>quiqqer.products.settings.categoryDisplay</attribute>
                 <attribute>quiqqer.products.settings.categoryPos</attribute>
@@ -126,6 +127,10 @@
                                 <text>
                                     <locale group="quiqqer/products" var="quiqqer.products.settings.autoloadAfter"/>
                                 </text>
+                                <description>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.autoloadAfter.description"/>
+                                </description>
 
                                 <option value=""></option>
                                 <option value="0">
@@ -139,10 +144,31 @@
                                 <option value="5">5</option>
                                 <option value="6">6</option>
                             </select>
-                            <text>
-                                <locale group="quiqqer/products"
-                                        var="quiqqer.products.settings.autoloadAfter.description"/>
-                            </text>
+
+
+                            <select conf="quiqqer.products.settings.openProductMode">
+                                <text>
+                                    <locale group="quiqqer/products"
+                                            var="site.settings.openProductMode"/>
+                                </text>
+                                <description>
+                                    <locale group="quiqqer/products"
+                                            var="site.settings.openProductMode.desc"/>
+                                </description>
+
+                                <option value="">
+                                    <locale group="quiqqer/products"
+                                            var="site.settings.openProductMode.default"/>
+                                </option>
+                                <option value="normal">
+                                    <locale group="quiqqer/products"
+                                            var="site.settings.openProductMode.normal"/>
+                                </option>
+                                <option value="async">
+                                    <locale group="quiqqer/products"
+                                            var="site.settings.openProductMode.async"/>
+                                </option>
+                            </select>
 
                             <input conf="quiqqer.products.settings.categoryStartNumber" type="number">
                                 <text>
@@ -321,6 +347,7 @@
                 <attribute>quiqqer.products.settings.productLoadNumber</attribute>
                 <attribute>quiqqer.products.settings.categoryStartNumber</attribute>
                 <attribute>quiqqer.products.settings.autoloadAfter</attribute>
+                <attribute>quiqqer.products.settings.openProductMode</attribute>
                 <attribute>quiqqer.products.settings.defaultSorting</attribute>
                 <attribute>quiqqer.products.settings.tags</attribute>
                 <attribute>quiqqer.products.settings.categoryDisplay</attribute>
@@ -375,6 +402,10 @@
                                 <text>
                                     <locale group="quiqqer/products" var="quiqqer.products.settings.autoloadAfter"/>
                                 </text>
+                                <description>
+                                    <locale group="quiqqer/products"
+                                            var="quiqqer.products.settings.autoloadAfter.description"/>
+                                </description>
 
                                 <option value=""></option>
                                 <option value="0">
@@ -388,10 +419,30 @@
                                 <option value="5">5</option>
                                 <option value="6">6</option>
                             </select>
-                            <text>
-                                <locale group="quiqqer/products"
-                                        var="quiqqer.products.settings.autoloadAfter.description"/>
-                            </text>
+
+                            <select conf="quiqqer.products.settings.openProductMode">
+                                <text>
+                                    <locale group="quiqqer/products"
+                                            var="site.settings.openProductMode"/>
+                                </text>
+                                <description>
+                                    <locale group="quiqqer/products"
+                                            var="site.settings.openProductMode.desc"/>
+                                </description>
+
+                                <option value="">
+                                    <locale group="quiqqer/products"
+                                            var="site.settings.openProductMode.default"/>
+                                </option>
+                                <option value="normal">
+                                    <locale group="quiqqer/products"
+                                            var="site.settings.openProductMode.normal"/>
+                                </option>
+                                <option value="async">
+                                    <locale group="quiqqer/products"
+                                            var="site.settings.openProductMode.async"/>
+                                </option>
+                            </select>
 
                             <select conf="quiqqer.products.settings.categoryDisplay">
                                 <text>

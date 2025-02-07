@@ -15,14 +15,15 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInputSettings', [
     'text!package/quiqqer/products/bin/controls/fields/types/UserInputSettings.html',
     'css!package/quiqqer/products/bin/controls/fields/types/UserInputSettings.css'
 
-], function (QUIControl, QUILocale, QUIFormUtils, Mustache, template) {
-    "use strict";
+], function(QUIControl, QUILocale, QUIFormUtils, Mustache, template) {
+    'use strict';
 
     var lg = 'quiqqer/products';
 
     return new Class({
+
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/UserInputSettings',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/UserInputSettings',
 
         Binds: [
             'create',
@@ -33,12 +34,12 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInputSettings', [
 
         options: {
             fieldId: false,
-            groups : [],
+            groups: [],
 
             autoActivateItems: false
         },
 
-        initialize: function (options) {
+        initialize: function(options) {
             this.parent(options);
 
             this.$CheckboxAutoActivate = null;
@@ -54,19 +55,28 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInputSettings', [
          *
          * @return {HTMLDivElement}
          */
-        create: function () {
+        create: function() {
             this.$Elm = new Element('div', {
                 'class': 'quiqqer-products-userinput-settings',
-                html   : Mustache.render(template, {
-                    labelInputType                 : QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelInputType'),
-                    labelInputTypeOptionInput      : QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelInputTypeOptionInput'),
-                    labelInputTypeOptionInputInline: QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelInputTypeOptionInputInline'),
-                    labelInputTypeOptionTextarea   : QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelInputTypeOptionTextarea'),
-                    labelMaxCharacters             : QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelMaxCharacters')
+                html: Mustache.render(template, {
+                    labelInputType: QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelInputType'),
+                    labelInputTypeOptionInput: QUILocale.get(
+                        lg,
+                        'controls.UserInputSettings.tpl.labelInputTypeOptionInput'
+                    ),
+                    labelInputTypeOptionInputInline: QUILocale.get(
+                        lg,
+                        'controls.UserInputSettings.tpl.labelInputTypeOptionInputInline'
+                    ),
+                    labelInputTypeOptionTextarea: QUILocale.get(
+                        lg,
+                        'controls.UserInputSettings.tpl.labelInputTypeOptionTextarea'
+                    ),
+                    labelMaxCharacters: QUILocale.get(lg, 'controls.UserInputSettings.tpl.labelMaxCharacters')
                 }),
-                styles : {
+                styles: {
                     'float': 'left',
-                    width  : '100%'
+                    width: '100%'
                 }
             });
 
@@ -79,7 +89,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInputSettings', [
         /**
          * event : on import
          */
-        $onInject: function () {
+        $onInject: function() {
             //var Parent = this.$Elm.getParent('.field-options');
             //
             //if (Parent) {
@@ -106,9 +116,9 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInputSettings', [
          * @param self
          * @param {HTMLInputElement} Node
          */
-        $onImport: function (self, Node) {
+        $onImport: function(self, Node) {
             this.$Input = Node;
-            this.$Elm   = this.create();
+            this.$Elm = this.create();
 
             var data = {};
 
@@ -116,11 +126,11 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInputSettings', [
                 data = JSON.decode(this.$Input.value);
 
                 // parse data
-                if ("inputType" in data) {
+                if ('inputType' in data) {
                     this.setAttribute('inputType', data.inputType);
                 }
 
-                if ("maxCharacters" in data) {
+                if ('maxCharacters' in data) {
                     this.setAttribute('maxCharacters', data.inputType);
                 }
             } catch (e) {
@@ -142,7 +152,7 @@ define('package/quiqqer/products/bin/controls/fields/types/UserInputSettings', [
         /**
          * Set the data to the input
          */
-        update: function () {
+        update: function() {
             this.$Input.value = JSON.encode(QUIFormUtils.getDataFromNode(this.$Elm));
         }
     });
