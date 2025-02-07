@@ -132,7 +132,9 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
          * Return the current value
          */
         setValue: function (value) {
-            if (value === '' || !value || value === 'false') {
+            if (typeof value !== 'number' &&
+                (value === '' || !value || value === 'false')
+            ) {
                 this.getElm().value = '';
                 this.$calcBruttoPrice();
                 return;
