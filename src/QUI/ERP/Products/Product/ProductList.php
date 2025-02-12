@@ -45,7 +45,7 @@ class ProductList
     /**
      * @var ?QUI\Interfaces\Users\User
      */
-    protected QUI\Interfaces\Users\User|null $User = null;
+    protected QUI\Interfaces\Users\User | null $User = null;
 
     /**
      * @var int|float
@@ -133,7 +133,7 @@ class ProductList
     /**
      * @var bool
      */
-    protected int|bool|null $hidePrice;
+    protected int | bool | null $hidePrice;
 
     /**
      * ProductList constructor.
@@ -195,7 +195,7 @@ class ProductList
      *
      * @return ?QUI\Interfaces\Users\User
      */
-    public function getUser(): QUI\Interfaces\Users\User|null
+    public function getUser(): QUI\Interfaces\Users\User | null
     {
         return $this->User;
     }
@@ -267,7 +267,7 @@ class ProductList
      * @return ProductList
      * @throws Exception
      */
-    public function recalculate(null | QUI\ERP\Products\Utils\Calc$Calc = null): ProductList
+    public function recalculate(null | QUI\ERP\Products\Utils\Calc $Calc = null): ProductList
     {
         return $this->recalculation($Calc);
     }
@@ -528,7 +528,7 @@ class ProductList
      *
      * @return bool|int|null
      */
-    public function isPriceHidden(): bool|int|null
+    public function isPriceHidden(): bool | int | null
     {
         return $this->hidePrice;
     }
@@ -542,7 +542,7 @@ class ProductList
      * @return ProductListFrontendView|ProductListBackendView
      * @throws QUI\Exception
      */
-    public function getView(null | QUI\Locale $Locale = null): ProductListBackendView|ProductListFrontendView
+    public function getView(null | QUI\Locale $Locale = null): ProductListBackendView | ProductListFrontendView
     {
         if (!$this->calculated) {
             $this->calc();
