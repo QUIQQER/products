@@ -268,7 +268,7 @@ class VariantChild extends AbstractType
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getTitle(QUI\Locale $Locale = null): string
+    public function getTitle(null | QUI\Locale $Locale = null): string
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_TITLE, $Locale);
 
@@ -285,7 +285,7 @@ class VariantChild extends AbstractType
      * @param Locale|null $Locale
      * @return string
      */
-    public function getDescription(QUI\Locale $Locale = null): string
+    public function getDescription(null | QUI\Locale $Locale = null): string
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_SHORT_DESC, $Locale);
 
@@ -305,7 +305,7 @@ class VariantChild extends AbstractType
      * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getContent(QUI\Locale $Locale = null): string
+    public function getContent(null | QUI\Locale $Locale = null): string
     {
         $result = $this->getLanguageFieldValue(Fields::FIELD_CONTENT, $Locale);
 
@@ -577,7 +577,7 @@ class VariantChild extends AbstractType
      * @throws QUI\Exception
      * @throws QUI\Permissions\Exception
      */
-    protected function productSave(array $fieldData, QUI\Interfaces\Users\User $EditUser = null): void
+    protected function productSave(array $fieldData, null | QUI\Interfaces\Users\User $EditUser = null): void
     {
         // check fields with parent fields
         $Parent = $this->getParent();

@@ -21,7 +21,7 @@ class NumberRange implements NumberRangeInterface
      *
      * @return string
      */
-    public function getTitle(QUI\Locale $Locale = null): string
+    public function getTitle(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();

@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Product;
 
 use QUI;
 use QUI\ERP\Currency\Currency;
+use QUI\ERP\Products\Utils\Calc;
 use QUI\ERP\Products\Utils\PriceFactors;
 use QUI\Exception;
 use QUI\Interfaces\Users\User;
@@ -44,7 +45,7 @@ class ProductList
     /**
      * @var ?QUI\Interfaces\Users\User
      */
-    protected QUI\Interfaces\Users\User|null $User = null;
+    protected QUI\Interfaces\Users\User | null $User = null;
 
     /**
      * @var int|float
@@ -132,7 +133,7 @@ class ProductList
     /**
      * @var bool
      */
-    protected int|bool|null $hidePrice;
+    protected int | bool | null $hidePrice;
 
     /**
      * ProductList constructor.
@@ -140,7 +141,7 @@ class ProductList
      * @param array $params - optional, list settings
      * @param User|null $User - optional, User for calculation
      */
-    public function __construct(array $params = [], QUI\Interfaces\Users\User $User = null)
+    public function __construct(array $params = [], null | QUI\Interfaces\Users\User $User = null)
     {
         if (isset($params['duplicate'])) {
             $this->duplicate = (bool)$params['duplicate'];
@@ -182,7 +183,7 @@ class ProductList
      *
      * @param QUI\Interfaces\Users\User $User
      */
-    public function setUser(QUI\Interfaces\Users\User $User): void
+    public function setUser(null | QUI\Interfaces\Users\User $User): void
     {
         if (QUI::getUsers()->isUser($User)) {
             $this->User = $User;
@@ -194,7 +195,7 @@ class ProductList
      *
      * @return ?QUI\Interfaces\Users\User
      */
-    public function getUser(): QUI\Interfaces\Users\User|null
+    public function getUser(): QUI\Interfaces\Users\User | null
     {
         return $this->User;
     }
@@ -207,7 +208,7 @@ class ProductList
      *
      * @throws QUI\Exception
      */
-    public function calc(QUI\ERP\Products\Utils\Calc $Calc = null): ProductList
+    public function calc(null | QUI\ERP\Products\Utils\Calc $Calc = null): ProductList
     {
         if ($this->calculated) {
             return $this;
@@ -248,7 +249,7 @@ class ProductList
      *
      * @throws QUI\Exception
      */
-    public function recalculation(QUI\ERP\Products\Utils\Calc $Calc = null): ProductList
+    public function recalculation(null | QUI\ERP\Products\Utils\Calc $Calc = null): ProductList
     {
         $this->calculated = false;
 
@@ -262,11 +263,11 @@ class ProductList
     /**
      * Alias for recalculation()
      *
-     * @param null $Calc
+     * @param Calc|null $Calc
      * @return ProductList
-     * @throws QUI\Exception
+     * @throws Exception
      */
-    public function recalculate($Calc = null): ProductList
+    public function recalculate(null | QUI\ERP\Products\Utils\Calc $Calc = null): ProductList
     {
         return $this->recalculation($Calc);
     }
@@ -426,7 +427,7 @@ class ProductList
      *
      * @throws QUI\Exception
      */
-    public function toArray(QUI\Locale $Locale = null): array
+    public function toArray(null | QUI\Locale $Locale = null): array
     {
         if ($Locale === null) {
             $Locale = $this->User->getLocale();
@@ -527,7 +528,7 @@ class ProductList
      *
      * @return bool|int|null
      */
-    public function isPriceHidden(): bool|int|null
+    public function isPriceHidden(): bool | int | null
     {
         return $this->hidePrice;
     }
@@ -541,7 +542,7 @@ class ProductList
      * @return ProductListFrontendView|ProductListBackendView
      * @throws QUI\Exception
      */
-    public function getView(QUI\Locale $Locale = null): ProductListBackendView|ProductListFrontendView
+    public function getView(null | QUI\Locale $Locale = null): ProductListBackendView | ProductListFrontendView
     {
         if (!$this->calculated) {
             $this->calc();
@@ -560,7 +561,7 @@ class ProductList
      *
      * @param QUI\ERP\Currency\Currency|null $Currency
      */
-    public function setCurrency(QUI\ERP\Currency\Currency $Currency = null): void
+    public function setCurrency(null | QUI\ERP\Currency\Currency $Currency = null): void
     {
         if (!($Currency instanceof QUI\ERP\Currency\Currency)) {
             $Currency = QUI\ERP\Defaults::getCurrency();
@@ -617,7 +618,7 @@ class ProductList
      * @return ProductListFrontendView
      * @throws QUI\Exception
      */
-    public function getFrontendView(QUI\Locale $Locale = null): ProductListFrontendView
+    public function getFrontendView(null | QUI\Locale $Locale = null): ProductListFrontendView
     {
         return new ProductListFrontendView($this, $Locale);
     }
@@ -627,7 +628,7 @@ class ProductList
      * @return ProductListBackendView
      * @throws QUI\Exception
      */
-    public function getBackendView(QUI\Locale $Locale = null): ProductListBackendView
+    public function getBackendView(null | QUI\Locale $Locale = null): ProductListBackendView
     {
         return new ProductListBackendView($this, $Locale);
     }

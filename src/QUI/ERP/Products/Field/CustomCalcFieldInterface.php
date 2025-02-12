@@ -25,5 +25,5 @@ interface CustomCalcFieldInterface
      * @param Locale|null $Locale
      * @return array
      */
-    public function getCalculationData(Locale $Locale = null): array;
+    public function getCalculationData(null | Locale $Locale = null): array;
 }

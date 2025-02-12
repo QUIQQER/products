@@ -68,7 +68,7 @@ class View extends UniqueField
      * @param User|null $User
      * @return bool
      */
-    public function hasViewPermission(QUI\Interfaces\Users\User $User = null): bool
+    public function hasViewPermission(null | QUI\Interfaces\Users\User $User = null): bool
     {
         if ($this->isPublic()) {
             return true;

@@ -98,7 +98,7 @@ class Calc
      *
      * @param ?UserInterface $User - calculation user
      */
-    public function __construct(UserInterface $User = null)
+    public function __construct(null | UserInterface $User = null)
     {
         if (!QUI::getUsers()->isUser($User)) {
             $User = QUI::getUserBySession();
@@ -113,7 +113,7 @@ class Calc
      * @param UserInterface|null $User - optional
      * @return Calc
      */
-    public static function getInstance(?UserInterface $User = null): Calc
+    public static function getInstance(null | UserInterface $User = null): Calc
     {
         if (!$User && QUI::isBackend()) {
             $User = QUI::getUsers()->getSystemUser();
@@ -156,7 +156,7 @@ class Calc
      *
      * @return ?UserInterface
      */
-    public function getUser(): UserInterface|null
+    public function getUser(): UserInterface | null
     {
         return $this->User;
     }
@@ -214,7 +214,7 @@ class Calc
      *
      * @throws QUI\Exception
      */
-    public function calcProductList(ProductList $List, callable|bool $callback = false): ProductList
+    public function calcProductList(ProductList $List, callable | bool $callback = false): ProductList
     {
         // calc data
         if (!is_callable($callback)) {
@@ -619,8 +619,8 @@ class Calc
      */
     public function getProductPrice(
         UniqueProduct $Product,
-        callable|bool $callback = false,
-        Price|UniqueFieldInterface $Price = null,
+        callable | bool $callback = false,
+        null | Price | UniqueFieldInterface $Price = null,
         bool $ignorePriceFactors = false
     ): QUI\ERP\Money\Price {
         // calc data
@@ -945,7 +945,7 @@ class Calc
      *
      * @throws QUI\Exception
      */
-    public function getPrice(float|int $nettoPrice): float|int
+    public function getPrice(float | int $nettoPrice): float | int
     {
         if (empty($nettoPrice)) {
             return 0;
@@ -973,10 +973,10 @@ class Calc
      * @throws QUI\ERP\Products\Product\Exception
      */
     public static function calcBruttoPrice(
-        float|int|string $price,
+        float | int | string $price,
         bool $formatted = false,
-        bool|int|string $productId = false
-    ): float|int|string|null {
+        bool | int | string $productId = false
+    ): float | int | string | null {
         $price = QUI\ERP\Money\Price::validatePrice($price);
         $Area = QUI\ERP\Defaults::getArea();
         $TaxEntry = null;
@@ -1029,10 +1029,10 @@ class Calc
      * @throws QUI\ERP\Products\Product\Exception
      */
     public static function calcNettoPrice(
-        null|float|int|string $price,
+        null | float | int | string $price,
         bool $formatted = false,
-        int|string|bool $productId = false
-    ): float|int|string|null {
+        int | string | bool $productId = false
+    ): float | int | string | null {
         if (empty($price)) {
             return 0;
         }

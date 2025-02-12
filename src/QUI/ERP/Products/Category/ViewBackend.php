@@ -9,6 +9,7 @@ namespace QUI\ERP\Products\Category;
 use QUI;
 use QUI\ERP\Products\Field\Field;
 use QUI\Exception;
+use QUI\Locale;
 use QUI\Projects\Project;
 use QUI\Interfaces\Projects\Site;
 
@@ -82,10 +83,10 @@ class ViewBackend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
     /**
      * Return the translated description
      *
-     * @param null $Locale
+     * @param Locale|null $Locale
      * @return string
      */
-    public function getDescription($Locale = null): string
+    public function getDescription(null | QUI\Locale $Locale = null): string
     {
         return $this->Category->getDescription($Locale);
     }
@@ -126,7 +127,7 @@ class ViewBackend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
      * @return bool|Category
      * @throws Exception
      */
-    public function getParent(): bool|QUI\ERP\Products\Interfaces\CategoryInterface
+    public function getParent(): bool | QUI\ERP\Products\Interfaces\CategoryInterface
     {
         return $this->Category->getParent();
     }
@@ -137,7 +138,7 @@ class ViewBackend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
      *
      * @return bool|int
      */
-    public function getParentId(): bool|int
+    public function getParentId(): bool | int
     {
         return $this->Category->getParentId();
     }
@@ -186,7 +187,7 @@ class ViewBackend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
      *
      * @throws Exception
      */
-    public function getSite($Project = null): QUI\Interfaces\Projects\Site
+    public function getSite(null | Project $Project = null): QUI\Interfaces\Projects\Site
     {
         return $this->Category->getSite($Project);
     }
@@ -198,7 +199,7 @@ class ViewBackend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
      * @return array
      * @throws Exception
      */
-    public function getSites($Project = null): array
+    public function getSites(null | Project $Project = null): array
     {
         return $this->Category->getSites($Project);
     }
@@ -209,7 +210,7 @@ class ViewBackend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
      * @param null|QUI\Locale $Locale
      * @return string
      */
-    public function getTitle($Locale = null): string
+    public function getTitle(null | QUI\Locale $Locale = null): string
     {
         return $this->Category->getTitle($Locale);
     }
@@ -219,9 +220,10 @@ class ViewBackend implements QUI\ERP\Products\Interfaces\CategoryViewInterface
      *
      * @param Project|null $Project
      * @return string
+     * @throws Exception
      */
-    public function getUrl(Project $Project = null): string
+    public function getUrl(null | Project $Project = null): string
     {
-        return $this->getUrl($Project);
+        return $this->Category->getUrl($Project);
     }
 }

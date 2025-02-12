@@ -21,7 +21,7 @@ class Product extends AbstractType
      * @param Locale|null $Locale
      * @return mixed
      */
-    public static function getTypeTitle(QUI\Locale $Locale = null): string
+    public static function getTypeTitle(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -34,7 +34,7 @@ class Product extends AbstractType
      * @param Locale|null $Locale
      * @return mixed
      */
-    public static function getTypeDescription(QUI\Locale $Locale = null): string
+    public static function getTypeDescription(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();

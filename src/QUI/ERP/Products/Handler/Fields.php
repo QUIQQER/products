@@ -143,7 +143,7 @@ class Fields
      *
      * @var array|bool
      */
-    protected static array|bool $priceFactorSettings = false;
+    protected static array | bool $priceFactorSettings = false;
 
     /**
      * Return the child attributes
@@ -1146,11 +1146,11 @@ class Fields
      * - showInDetails
      *
      * @param int|null $fieldId (optional) - Restrict to one field [default: all fields]
-     * @param array $customaAttributes (optional) - Set custom attributes that are set to
+     * @param array $customAttributes (optional) - Set custom attributes that are set to
      * every product field
      * @return void
      */
-    public static function setFieldAttributesToProducts(int $fieldId = null, array $customaAttributes = []): void
+    public static function setFieldAttributesToProducts(null | int $fieldId = null, array $customAttributes = []): void
     {
         if (!empty($fieldId)) {
             $fieldIds = self::getFieldIds([
@@ -1200,7 +1200,7 @@ class Fields
                         $ProductField->setPublicStatus($attributes['isPublic']);
                         $ProductField->setShowInDetailsStatus($attributes['showInDetails']);
 
-                        foreach ($customaAttributes as $k => $v) {
+                        foreach ($customAttributes as $k => $v) {
                             switch ($k) {
                                 case 'ownField':
                                     $ProductField->setOwnFieldStatus($v);

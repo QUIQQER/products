@@ -130,7 +130,7 @@ class Menu extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    public function getChildren(QUI\Interfaces\Projects\Site $Site = null): array
+    public function getChildren(null | QUI\Interfaces\Projects\Site $Site = null): array
     {
         if (!$Site) {
             $Site = $this->getSite();
@@ -149,7 +149,7 @@ class Menu extends QUI\Control
      * @param null|QUI\Interfaces\Projects\Site $Site
      * @return integer
      */
-    public function countChildren(QUI\Interfaces\Projects\Site $Site = null): int
+    public function countChildren(null | QUI\Interfaces\Projects\Site $Site = null): int
     {
         try {
             if (!$Site) {

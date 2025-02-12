@@ -33,7 +33,7 @@ interface CategoryViewInterface
      * @param null|Locale $Locale
      * @return string
      */
-    public function getTitle(Locale $Locale = null): string;
+    public function getTitle(null | Locale $Locale = null): string;
 
     /**
      * Return the translated description
@@ -41,7 +41,7 @@ interface CategoryViewInterface
      * @param null|Locale $Locale
      * @return string
      */
-    public function getDescription(Locale $Locale = null): string;
+    public function getDescription(null | Locale $Locale = null): string;
 
     /**
      * Return the category
@@ -49,7 +49,7 @@ interface CategoryViewInterface
      * @param Project|null $Project
      * @return string
      */
-    public function getUrl(Project $Project = null): string;
+    public function getUrl(null | Project $Project = null): string;
 
     /**
      * Return the ID of the parent category
@@ -98,7 +98,7 @@ interface CategoryViewInterface
      *
      * @throws Exception
      */
-    public function getSite(Project $Project = null): Site;
+    public function getSite(null | Project $Project = null): Site;
 
     /**
      * Return all sites which assigned the category
@@ -106,7 +106,7 @@ interface CategoryViewInterface
      * @param Project|null $Project
      * @return array
      */
-    public function getSites(Project $Project = null): array;
+    public function getSites(null | Project $Project = null): array;
 
     /**
      * Return all products from the category
