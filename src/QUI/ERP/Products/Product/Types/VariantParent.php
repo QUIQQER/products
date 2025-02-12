@@ -113,7 +113,7 @@ class VariantParent extends AbstractType
      * @param Locale|null $Locale
      * @return mixed
      */
-    public static function getTypeTitle(QUI\Locale $Locale = null): string
+    public static function getTypeTitle(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -126,7 +126,7 @@ class VariantParent extends AbstractType
      * @param Locale|null $Locale
      * @return mixed
      */
-    public static function getTypeDescription(QUI\Locale $Locale = null): string
+    public static function getTypeDescription(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -157,7 +157,7 @@ class VariantParent extends AbstractType
      * @throws QUI\Exception
      * @throws Exception
      */
-    protected function productSave(array $fieldData, User $EditUser = null): void
+    protected function productSave(array $fieldData, null | User $EditUser = null): void
     {
         QUI\Permissions\Permission::checkPermission('product.edit', $EditUser);
 
@@ -318,7 +318,7 @@ class VariantParent extends AbstractType
      *
      * @throws QUI\Exception
      */
-    public function getCurrentPrice(User $User = null): QUI\ERP\Money\Price
+    public function getCurrentPrice(null | User $User = null): QUI\ERP\Money\Price
     {
         if ($this->getDefaultVariantId() === false) {
             return parent::getCurrentPrice($User);
@@ -330,12 +330,12 @@ class VariantParent extends AbstractType
     /**
      * Return the maximum price
      *
-     * @param null $User
+     * @param User|null $User
      * @return QUI\ERP\Money\Price
      *
      * @throws QUI\Exception
      */
-    public function getMaximumPrice($User = null): QUI\ERP\Money\Price
+    public function getMaximumPrice(null | User $User = null): QUI\ERP\Money\Price
     {
         // kinder ids
         $children = QUI::getDataBase()->fetch([
@@ -402,7 +402,7 @@ class VariantParent extends AbstractType
      *
      * @throws QUI\Exception
      */
-    public function getMinimumPrice(User $User = null): QUI\ERP\Money\Price
+    public function getMinimumPrice(null | User $User = null): QUI\ERP\Money\Price
     {
         // kinder ids
         $children = QUI::getDataBase()->fetch([

@@ -48,7 +48,7 @@ class ProductListBackendView
      *
      * @throws QUI\Exception
      */
-    public function __construct(ProductList $ProductList, QUI\Locale $Locale = null)
+    public function __construct(ProductList $ProductList, null | QUI\Locale $Locale = null)
     {
         $this->ProductList = $ProductList;
         $this->hidePrice = $ProductList->isPriceHidden();

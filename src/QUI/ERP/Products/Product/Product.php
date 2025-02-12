@@ -143,7 +143,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
     public function setPermission(
         string $permission,
         string $ugString = '',
-        QUI\Interfaces\Users\User $User = null
+        null | QUI\Interfaces\Users\User $User = null
     ): void {
         if (!QUI\Utils\UserGroups::isUserGroupString($ugString)) {
             return;
@@ -167,7 +167,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
      *
      * @throws QUI\Permissions\Exception
      */
-    public function setPermissions(array $permissions, QUI\Interfaces\Users\User $User = null): void
+    public function setPermissions(array $permissions, null | QUI\Interfaces\Users\User $User = null): void
     {
         foreach ($permissions as $permission => $data) {
             $this->setPermission($permission, $data, $User);

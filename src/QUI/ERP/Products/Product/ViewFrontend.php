@@ -187,7 +187,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * @param QUI\Locale|null $Locale
      * @return string
      */
-    public function getTitle(QUI\Locale $Locale = null): string
+    public function getTitle(null | QUI\Locale $Locale = null): string
     {
         return $this->Product->getTitle($Locale);
     }
@@ -196,7 +196,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * @param Locale|null $Locale
      * @return string
      */
-    public function getDescription(QUI\Locale $Locale = null): string
+    public function getDescription(null | QUI\Locale $Locale = null): string
     {
         return $this->Product->getDescription($Locale);
     }
@@ -205,7 +205,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * @param Locale|null $Locale
      * @return string
      */
-    public function getContent(QUI\Locale $Locale = null): string
+    public function getContent(null | QUI\Locale $Locale = null): string
     {
         return $this->Product->getContent($Locale);
     }

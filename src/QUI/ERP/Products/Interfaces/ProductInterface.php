@@ -38,7 +38,7 @@ interface ProductInterface
      * @param ?Locale $Locale
      * @return string
      */
-    public function getTitle(?Locale $Locale = null): string;
+    public function getTitle(null | Locale $Locale = null): string;
 
     /**
      * Return the translated description
@@ -46,7 +46,7 @@ interface ProductInterface
      * @param Locale|null $Locale
      * @return string
      */
-    public function getDescription(?Locale $Locale = null): string;
+    public function getDescription(null | Locale $Locale = null): string;
 
     /**
      * Return the translated content
@@ -54,7 +54,7 @@ interface ProductInterface
      * @param Locale|null $Locale
      * @return string
      */
-    public function getContent(?Locale $Locale = null): string;
+    public function getContent(null | Locale $Locale = null): string;
 
     /**
      * Return all fields

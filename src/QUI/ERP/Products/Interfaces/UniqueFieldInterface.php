@@ -36,7 +36,7 @@ interface UniqueFieldInterface
      * @param Locale|null $Locale - optional
      * @return string
      */
-    public function getTitle(Locale $Locale = null): string;
+    public function getTitle(null | Locale $Locale = null): string;
 
     /**
      * Return the current value
@@ -51,7 +51,7 @@ interface UniqueFieldInterface
      * @param Locale|null $Locale $Locale - optional
      * @return mixed
      */
-    public function getValueByLocale(Locale $Locale = null): mixed;
+    public function getValueByLocale(null | Locale $Locale = null): mixed;
 
     /**
      * Return value for use in product search cache
@@ -59,7 +59,7 @@ interface UniqueFieldInterface
      * @param Locale|null $Locale
      * @return string|array|null
      */
-    public function getSearchCacheValue(Locale $Locale = null): null|string|array;
+    public function getSearchCacheValue(null | Locale $Locale = null): null|string|array;
 
     /**
      * Return the view

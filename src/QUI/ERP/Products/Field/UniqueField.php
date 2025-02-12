@@ -448,7 +448,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      * @param Locale|null $Locale
      * @return string|array|null
      */
-    public function getSearchCacheValue(QUI\Locale $Locale = null): null|string|array
+    public function getSearchCacheValue(null | QUI\Locale $Locale = null): null|string|array
     {
         return $this->searchvalue;
     }
@@ -460,7 +460,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      * @param Locale|null $Locale - optional
      * @return string
      */
-    public function getTitle(QUI\Locale $Locale = null): string
+    public function getTitle(null | QUI\Locale $Locale = null): string
     {
         if (!$Locale) {
             return QUI::getLocale()->get(

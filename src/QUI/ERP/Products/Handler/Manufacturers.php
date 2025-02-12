@@ -75,8 +75,11 @@ class Manufacturers
      * @param bool $activeOnly (optional) - [default: get all users (active and inactive)]
      * @return QUI\Interfaces\Users\User[]
      */
-    public static function getManufacturerUsers(int $limit = null, int $offset = 0, bool $activeOnly = false): array
-    {
+    public static function getManufacturerUsers(
+        null | int $limit = null,
+        int $offset = 0,
+        bool $activeOnly = false
+    ): array {
         $users = [];
 
         try {
@@ -99,7 +102,7 @@ class Manufacturers
      * @param int|string $userId - QUIQQER User ID of manufacturer user
      * @return bool
      */
-    public static function isManufacturer(int|string $userId): bool
+    public static function isManufacturer(int | string $userId): bool
     {
         return in_array($userId, self::getManufacturerUserIds());
     }
@@ -110,7 +113,7 @@ class Manufacturers
      * @param string|int|null $userId - QUIQQER User ID of manufacturer user
      * @return string
      */
-    public static function getManufacturerTitle(string|int|null $userId): string
+    public static function getManufacturerTitle(string | int | null $userId): string
     {
         if ($userId === null) {
             return '';
@@ -159,7 +162,7 @@ class Manufacturers
      * @throws QUI\Database\Exception
      * @throws QUI\Exception
      */
-    public static function getManufacturerImage(int|string $userId): ?QUI\Projects\Media\Image
+    public static function getManufacturerImage(int | string $userId): ?QUI\Projects\Media\Image
     {
         $manufacturer = self::getManufacturerData($userId);
 
@@ -193,7 +196,7 @@ class Manufacturers
      * @return string|false - URL or false if not available
      * @throws QUI\Database\Exception
      */
-    public static function getManufacturerUrl(int|string $userId, QUI\Projects\Project $Project = null): bool|string
+    public static function getManufacturerUrl(int | string $userId, null | QUI\Projects\Project $Project = null): bool | string
     {
         if (empty($Project)) {
             try {
@@ -234,7 +237,7 @@ class Manufacturers
      * @return array
      * @throws QUI\Database\Exception
      */
-    protected static function getManufacturerData(int|string $userId): array
+    protected static function getManufacturerData(int | string $userId): array
     {
         if (!empty(self::$manufacturerData[$userId])) {
             return self::$manufacturerData[$userId];

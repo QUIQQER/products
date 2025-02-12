@@ -76,7 +76,7 @@ class Products
      */
     public static function getPriceFieldForProduct(
         QUI\ERP\Products\Interfaces\ProductInterface|QUI\ERP\Products\Product\Model $Product,
-        QUI\Interfaces\Users\User $User = null
+        null | QUI\Interfaces\Users\User $User = null
     ): QUI\ERP\Money\Price {
         if (!QUI::getUsers()->isUser($User)) {
             $User = QUI::getUsers()->getNobody();

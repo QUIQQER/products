@@ -528,7 +528,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * @throws QUI\Users\Exception
      * @throws QUI\Exception
      */
-    public function calc(QUI\ERP\Products\Utils\Calc $Calc = null): static
+    public function calc(null | QUI\ERP\Products\Utils\Calc $Calc = null): static
     {
         if ($this->calculated) {
             return $this;
@@ -575,7 +575,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * @throws ExceptionStack
      * @throws QUI\Exception
      */
-    public function recalculation(QUI\ERP\Products\Utils\Calc $Calc = null): UniqueProduct|static
+    public function recalculation(null | QUI\ERP\Products\Utils\Calc $Calc = null): UniqueProduct|static
     {
         QUI::getEvents()->fireEvent('quiqqerProductsUniqueProductRecalculation', [$this]);
 
@@ -1302,7 +1302,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      * @throws QUI\Users\Exception
      * @throws QUI\Exception
      */
-    public function toArticle(QUI\Locale $Locale = null, bool $fieldsAreChangeable = true): QUI\ERP\Accounting\Article
+    public function toArticle(null | QUI\Locale $Locale = null, bool $fieldsAreChangeable = true): QUI\ERP\Accounting\Article
     {
         if (!$Locale) {
             $Locale = QUI\ERP\Products\Handler\Products::getLocale();

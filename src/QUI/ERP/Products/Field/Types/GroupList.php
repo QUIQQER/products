@@ -41,7 +41,7 @@ use const JSON_ERROR_NONE;
  */
 class GroupList extends QUI\ERP\Products\Field\Field
 {
-    protected int|bool $searchDataType = Search::SEARCHDATATYPE_TEXT;
+    protected int | bool $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
     /**
      * GroupList constructor.
@@ -58,7 +58,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
         parent::__construct($fieldId, $params);
     }
 
-    public function setOptions(array|string $options): void
+    public function setOptions(array | string $options): void
     {
         if (is_string($options)) {
             $options = json_decode($options, true);
@@ -372,7 +372,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
      * @throws QUI\Database\Exception
      * @throws QUI\Exception
      */
-    public function getSearchCacheValue(QUI\Locale $Locale = null): null|string|array
+    public function getSearchCacheValue(null | QUI\Locale $Locale = null): null | string | array
     {
         if ($this->isEmpty()) {
             return null;
@@ -424,7 +424,7 @@ class GroupList extends QUI\ERP\Products\Field\Field
      * @param bool|Locale|null $Locale (optional)
      * @return string|array
      */
-    public function getValueByLocale(bool|Locale $Locale = null): string|array
+    public function getValueByLocale(null | bool | Locale $Locale = null): string | array
     {
         $Users = QUI::getUsers();
 

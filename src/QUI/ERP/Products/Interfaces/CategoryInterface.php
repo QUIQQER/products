@@ -49,12 +49,12 @@ interface CategoryInterface extends QUI\QDOMInterface, CategoryViewInterface
      *
      * @param User|null $User $User
      */
-    public function delete(User $User = null): void;
+    public function delete(null | User $User = null): void;
 
     /**
      * Save the category
      *
      * @param User|null $User $User
      */
-    public function save(User $User = null): void;
+    public function save(null | User $User = null): void;
 }

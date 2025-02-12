@@ -107,7 +107,6 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
          * @return {Promise}
          */
         setQuantity: function (quantity) {
-            console.log('set quantity', this.$quantity, quantity);
             if (this.$quantity === quantity) {
                 return Promise.resolve(this.$quantity);
             }
@@ -357,7 +356,6 @@ define('package/quiqqer/products/bin/classes/frontend/Product', [
             }
 
             this.$priceRequest = new Promise((resolve) => {
-                console.log('frontend product getPrice', this.getId());
                 Ajax.get('package_quiqqer_products_ajax_products_calc', (result) => {
                     this.$currentPrice = result;
                     this.$priceRequest = null;
