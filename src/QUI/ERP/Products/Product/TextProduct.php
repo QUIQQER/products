@@ -50,7 +50,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      * @throws QUI\ExceptionStack
      * @throws QUI\Users\Exception
      */
-    public function createUniqueProduct($User = null): UniqueProduct
+    public function createUniqueProduct(null | QUI\Interfaces\Users\User $User = null): UniqueProduct
     {
         if (!QUI::getUsers()->isUser($User)) {
             $User = QUI::getUsers()->getNobody();
@@ -97,7 +97,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      * @param Locale|null $Locale
      * @return string
      */
-    public function getTitle(QUI\Locale $Locale = null): string
+    public function getTitle(null | QUI\Locale $Locale = null): string
     {
         if (!$this->existsAttribute('title')) {
             return '';
@@ -112,7 +112,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      * @param Locale|null $Locale
      * @return string
      */
-    public function getDescription(QUI\Locale $Locale = null): string
+    public function getDescription(null | QUI\Locale $Locale = null): string
     {
         if (!$this->existsAttribute('description')) {
             return '';
@@ -127,7 +127,7 @@ class TextProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      * @param Locale|null $Locale
      * @return string
      */
-    public function getContent(QUI\Locale $Locale = null): string
+    public function getContent(null | QUI\Locale $Locale = null): string
     {
         return '';
     }

@@ -315,7 +315,7 @@ class UnitSelect extends QUI\ERP\Products\Field\Field
      * @param QUI\Locale|null $Locale (optional) - default: QUI::getLocale()
      * @return string
      */
-    public function getTitleByValue(mixed $value, QUI\Locale $Locale = null): string
+    public function getTitleByValue(mixed $value, null | QUI\Locale $Locale = null): string
     {
         if (empty($value)) {
             return '-';

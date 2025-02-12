@@ -21,7 +21,7 @@ interface ProductTypeInterface
      * @param Locale|null $Locale
      * @return string
      */
-    public static function getTypeTitle(Locale $Locale = null): string;
+    public static function getTypeTitle(null | Locale $Locale = null): string;
 
     /**
      * Return the description of the product type
@@ -29,7 +29,7 @@ interface ProductTypeInterface
      * @param Locale|null $Locale
      * @return string
      */
-    public static function getTypeDescription(?Locale $Locale = null): string;
+    public static function getTypeDescription(null | Locale $Locale = null): string;
 
     /**
      * Return the backend panel

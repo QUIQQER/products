@@ -462,7 +462,7 @@ class Products
         array $categories = [],
         array $fields = [],
         string $productType = '',
-        int $parent = null,
+        null | int $parent = null,
         bool $validation = true
     ): QUI\ERP\Products\Product\Types\AbstractType {
         QUI\Permissions\Permission::checkPermission('product.create');

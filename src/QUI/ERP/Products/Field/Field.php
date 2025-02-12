@@ -856,7 +856,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param Locale|null $Locale
      * @return string|bool
      */
-    public function getSuffix(QUI\Locale $Locale = null): bool|string
+    public function getSuffix(null | Locale $Locale = null): bool|string
     {
         if (!$Locale) {
             $Locale = QUI::getLocale();
@@ -883,7 +883,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param ?QUI\Locale $Locale
      * @return string|bool
      */
-    public function getPrefix(Locale $Locale = null): bool|string
+    public function getPrefix(null | Locale $Locale = null): bool|string
     {
         if (!$Locale) {
             $Locale = QUI::getLocale();
@@ -908,10 +908,10 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * Return the title of the field
      * The title are from the user and translated
      *
-     * @param QUI\Locale|bool $Locale - optional
+     * @param Locale|null $Locale - optional
      * @return string
      */
-    public function getTitle($Locale = false): string
+    public function getTitle(null | Locale $Locale = null): string
     {
         if (!$Locale) {
             $Locale = QUI::getLocale();
@@ -937,7 +937,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getWorkingTitle(Locale $Locale = null): string
+    public function getWorkingTitle(null | Locale $Locale = null): string
     {
         $var = 'products.field.' . $this->getId() . '.workingtitle';
         $group = 'quiqqer/products';
@@ -959,7 +959,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getDescription(?QUI\Locale $Locale): string
+    public function getDescription(null | Locale $Locale): string
     {
         $var = 'products.field.' . $this->getId() . '.description';
         $group = 'quiqqer/products';
@@ -981,7 +981,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param null $Locale
      * @return string
      */
-    public function getHelp($Locale = null): string
+    public function getHelp(null | Locale $Locale = null): string
     {
         if (!$Locale) {
             $Locale = QUI::getLocale();
@@ -1313,7 +1313,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param User|null $User
      * @return bool
      */
-    public function hasViewPermission(QUI\Interfaces\Users\User $User = null): bool
+    public function hasViewPermission(null | QUI\Interfaces\Users\User $User = null): bool
     {
         if ($this->isPublic()) {
             return true;

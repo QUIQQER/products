@@ -35,11 +35,11 @@ abstract class AbstractType extends Product implements ProductTypeInterface
      * @param Locale|null $Locale
      * @return string
      */
-    abstract public static function getTypeTitle(Locale $Locale = null): string;
+    abstract public static function getTypeTitle(null | Locale $Locale = null): string;
 
     /**
      * @param Locale|null $Locale
      * @return string
      */
-    abstract public static function getTypeDescription(Locale $Locale = null): string;
+    abstract public static function getTypeDescription(null | Locale $Locale = null): string;
 }

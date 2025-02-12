@@ -46,7 +46,7 @@ class TextareaMultiLang extends QUI\ERP\Products\Field\Field
     /**
      * Return the field value by a locale language
      */
-    public function getValueByLocale(QUI\Locale $Locale = null): string
+    public function getValueByLocale(null | QUI\Locale $Locale = null): string
     {
         if (!$Locale) {
             $Locale = QUI::getLocale();

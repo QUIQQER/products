@@ -31,7 +31,7 @@ abstract class CustomCalcField extends QUI\ERP\Products\Field\Field implements C
      * @param Locale|null $Locale
      * @return array
      */
-    abstract public function getCalculationData(Locale $Locale = null): array;
+    abstract public function getCalculationData(null | Locale $Locale = null): array;
 
     /**
      * @return array

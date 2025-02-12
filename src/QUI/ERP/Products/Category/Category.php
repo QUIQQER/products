@@ -14,6 +14,7 @@ use QUI\ERP\Products\Handler\Fields;
 use QUI\ERP\Products\Handler\Products;
 use QUI\ExceptionStack;
 use QUI\Interfaces\Users\User;
+use QUI\Locale;
 use QUI\Projects\Project;
 
 use function array_column;
@@ -144,7 +145,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * @param QUI\Locale|null $Locale - optional
      * @return string
      */
-    public function getDescription($Locale = null): string
+    public function getDescription(null | QUI\Locale $Locale = null): string
     {
         if (!$Locale) {
             return QUI::getLocale()->get(
@@ -178,7 +179,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *
      * @throws QUI\Exception
      */
-    public function getUrl(Project $Project = null): string
+    public function getUrl(null | Project $Project = null): string
     {
         if (!$Project) {
             $Project = QUI::getRewrite()->getProject();
@@ -196,10 +197,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     }
 
     /**
-     * @param null $Locale
+     * @param Locale|null $Locale
      * @return string
      */
-    public function getPath($Locale = null): string
+    public function getPath(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
             $Locale = QUI::getLocale();
@@ -424,7 +425,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *
      * @throws QUI\Exception
      */
-    public function getSite(Project $Project = null): QUI\Interfaces\Projects\Site
+    public function getSite(null | Project $Project = null): QUI\Interfaces\Projects\Site
     {
         if (!$Project) {
             $Project = QUI::getRewrite()->getProject();
@@ -923,9 +924,10 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *
      * @throws Exception
      * @throws ExceptionStack
+     * @throws QUI\Exception
      * @throws QUI\Permissions\Exception
      */
-    public function save(QUI\Interfaces\Users\User $User = null): void
+    public function save(null | User $User = null): void
     {
         QUI\Permissions\Permission::checkPermission('category.edit', $User);
 
@@ -972,12 +974,14 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * delete the complete category
      *
-     * @param boolean|QUI\Interfaces\Users\User $User
+     * @param User|null $User
      *
-     * @throws QUI\Permissions\Exception
+     * @throws Exception
+     * @throws ExceptionStack
      * @throws QUI\Exception
+     * @throws QUI\Permissions\Exception
      */
-    public function delete($User = false): void
+    public function delete(null | User $User = null): void
     {
         if ($this->getId() === 0) {
             return;
