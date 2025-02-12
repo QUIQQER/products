@@ -12,15 +12,17 @@ define('package/quiqqer/products/bin/classes/Products', [
     'Ajax',
     'package/quiqqer/products/bin/classes/Product'
 
-], function(QUI, QUIDOM, Ajax, Product) {
+], function (QUI, QUIDOM, Ajax, Product) {
     'use strict';
+
+    const requestCache = {};
 
     return new Class({
 
         Extends: QUIDOM,
         Type: 'package/quiqqer/products/bin/classes/Products',
 
-        initialize: function() {
+        initialize: function () {
             this.$products = {};
         },
 
@@ -30,7 +32,7 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Number} productId - Product ID
          * @return {Object} package/quiqqer/products/bin/classes/Product
          */
-        get: function(productId) {
+        get: function (productId) {
             return new Product({
                 id: productId
             });
@@ -45,7 +47,7 @@ define('package/quiqqer/products/bin/classes/Products', [
             */
         },
 
-        getProducts: function(productIds) {
+        getProducts: function (productIds) {
             let products = [];
 
             for (let i = 0, len = productIds.length; i < len; i++) {
@@ -65,8 +67,8 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param productId
          * @return {Promise}
          */
-        getProductControlClass: function(productId) {
-            return new Promise(function(resolve, reject) {
+        getProductControlClass: function (productId) {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_products_frontend_getProductControlClass', resolve, {
                     'package': 'quiqqer/products',
                     productId: productId,
@@ -80,25 +82,25 @@ define('package/quiqqer/products/bin/classes/Products', [
          *
          * @param productId
          */
-        openProduct: function(productId) {
-            return this.getChild(productId).then(function(attributes) {
+        openProduct: function (productId) {
+            return this.getChild(productId).then(function (attributes) {
                 var panel = attributes.typePanel;
 
                 if (panel === '' || typeof panel === 'undefined') {
                     panel = 'package/quiqqer/products/bin/controls/products/Product';
                 }
 
-                return new Promise(function(resolve) {
+                return new Promise(function (resolve) {
                     var needles = [];
                     needles.push(panel);
                     needles.push('utils/Panels');
 
-                    require(needles, function(Panel, Utils) {
+                    require(needles, function (Panel, Utils) {
                         var Control = new Panel({
                             productId: productId
                         });
 
-                        Utils.openPanelInTasks(Control).then(function() {
+                        Utils.openPanelInTasks(Control).then(function () {
                             resolve(Control);
                         });
                     });
@@ -112,7 +114,7 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Number} productId - Product ID
          * @returns {Promise}
          */
-        activate: function(productId) {
+        activate: function (productId) {
             return this.get(productId).activate();
         },
 
@@ -122,7 +124,7 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Number} productId - Product ID
          * @returns {Promise}
          */
-        deactivate: function(productId) {
+        deactivate: function (productId) {
             return this.get(productId).deactivate();
         },
 
@@ -132,8 +134,8 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Number} productId - Product ID
          * @returns {Promise}
          */
-        copy: function(productId) {
-            return new Promise(function(resolve, reject) {
+        copy: function (productId) {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_products_copy', resolve, {
                     'package': 'quiqqer/products',
                     productId: productId,
@@ -149,8 +151,8 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Object} fields - Fields with values {field: value, field: value ..., field: value}
          * @returns {Promise}
          */
-        calcPrice: function(productId, fields) {
-            return new Promise(function(resolve, reject) {
+        calcPrice: function (productId, fields) {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_products_calc', resolve, {
                     'package': 'quiqqer/products',
                     productId: productId,
@@ -164,27 +166,27 @@ define('package/quiqqer/products/bin/classes/Products', [
          * Return the parent media folder for the products
          * @returns {Promise}
          */
-        getParentFolder: function() {
-            return new Promise(function(resolve) {
-                Ajax.get('package_quiqqer_products_ajax_products_getParentFolder', function(result) {
+        getParentFolder: function () {
+            return new Promise(function (resolve) {
+                Ajax.get('package_quiqqer_products_ajax_products_getParentFolder', function (result) {
 
                     if (!result) {
                         return resolve(false);
                     }
 
-                    require(['Projects'], function(Projects) {
+                    require(['Projects'], function (Projects) {
                         var Project = Projects.get(result.project),
                             Media = Project.getMedia();
 
-                        Media.get(result.id).then(resolve).catch(function() {
+                        Media.get(result.id).then(resolve).catch(function () {
                             resolve(false);
                         });
-                    }, function() {
+                    }, function () {
                         resolve(false);
                     });
                 }, {
                     'package': 'quiqqer/products',
-                    onError: function() {
+                    onError: function () {
                         resolve(false);
                     }
                 });
@@ -197,11 +199,11 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Object} [params] - query params
          * @returns {Promise}
          */
-        search: function(params) {
+        search: function (params) {
             params = params || {};
 
-            return new Promise(function(resolve, reject) {
-                Ajax.get('package_quiqqer_products_ajax_search_backend_executeForGrid', function(result) {
+            return new Promise(function (resolve, reject) {
+                Ajax.get('package_quiqqer_products_ajax_search_backend_executeForGrid', function (result) {
                     resolve(result.data);
                 }, {
                     'package': 'quiqqer/products',
@@ -216,13 +218,31 @@ define('package/quiqqer/products/bin/classes/Products', [
          *
          * @param {Number} productId
          * @param {Object} [fields] - optional, {fieldID: fieldValue, fieldID: fieldValue}
+         * @param {Boolean} forceCache - disabled frontend cache, force ajax call
          * @returns {Promise}
          */
-        getChild: function(productId, fields) {
+        getChild: function (productId, fields, forceCache) {
             fields = fields || {};
 
-            return new Promise(function(resolve, reject) {
-                Ajax.get('package_quiqqer_products_ajax_products_get', resolve, {
+            if (typeof forceCache === 'undefined') {
+                forceCache = false;
+            }
+
+            const jsonData = JSON.stringify({productId, fields});
+            const key = btoa(String.fromCharCode(...new TextEncoder().encode(jsonData))).slice(0, 32);
+
+            return new Promise(function (resolve, reject) {
+                if (!forceCache && typeof requestCache[key] !== 'undefined') {
+                    // JSON.parse(JSON.stringify because JS reference usage
+                    return resolve(JSON.parse(JSON.stringify(requestCache[key])));
+                }
+
+                Ajax.get('package_quiqqer_products_ajax_products_get', (result) => {
+                    requestCache[key] = result;
+
+                    // JSON.parse(JSON.stringify because JS reference usage
+                    resolve(JSON.parse(JSON.stringify(result)));
+                }, {
                     'package': 'quiqqer/products',
                     onError: reject,
                     productId: productId,
@@ -237,8 +257,8 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {number} productIds
          * @returns {Promise}
          */
-        getChildren: function(productIds) {
-            return new Promise(function(resolve, reject) {
+        getChildren: function (productIds) {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_products_getChildren', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -253,10 +273,10 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Object} params - Grid params
          * @returns {Promise}
          */
-        getList: function(params) {
+        getList: function (params) {
             params = params || {};
 
-            return new Promise(function(resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_products_list', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -271,10 +291,10 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Object} params - Grid params
          * @returns {Promise}
          */
-        getTypes: function(params) {
+        getTypes: function (params) {
             params = params || {};
 
-            return new Promise(function(resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_products_getProductTypes', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -292,14 +312,14 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @params {String} [productType] - product type
          * @returns {Promise}
          */
-        createChild: function(category, categories, fields, productType) {
+        createChild: function (category, categories, fields, productType) {
             fields = fields || {};
             productType = productType || '';
 
-            return new Promise(function(resolve, reject) {
-                Ajax.post('package_quiqqer_products_ajax_products_create', function(result) {
-                    require(['package/quiqqer/translator/bin/classes/Translator'], function(Translator) {
-                        new Translator().refreshLocale().then(function() {
+            return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_products_create', function (result) {
+                    require(['package/quiqqer/translator/bin/classes/Translator'], function (Translator) {
+                        new Translator().refreshLocale().then(function () {
                             resolve(result);
                         });
                     });
@@ -320,8 +340,8 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Number} productId - Product-ID
          * @returns {Promise}
          */
-        deleteChild: function(productId) {
-            return new Promise(function(resolve, reject) {
+        deleteChild: function (productId) {
+            return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_deleteChild', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -336,8 +356,8 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Array} productIds - array of Product-IDs
          * @returns {Promise}
          */
-        deleteChildren: function(productIds) {
-            return new Promise(function(resolve, reject) {
+        deleteChildren: function (productIds) {
+            return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_deleteChildren', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -355,8 +375,8 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Object} fields - Product field data {field-ID : value, field-ID : value}
          * @return {Promise}
          */
-        updateChild: function(productId, categories, categoryId, fields) {
-            return new Promise(function(resolve, reject) {
+        updateChild: function (productId, categories, categoryId, fields) {
+            return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_update', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -374,8 +394,8 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Array} productIds - array of Product-IDs
          * @returns {Promise}
          */
-        activateChildren: function(productIds) {
-            return new Promise(function(resolve, reject) {
+        activateChildren: function (productIds) {
+            return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_activate', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -390,8 +410,8 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Array} productIds - array of Product-IDs
          * @returns {Promise}
          */
-        deactivateChildren: function(productIds) {
-            return new Promise(function(resolve, reject) {
+        deactivateChildren: function (productIds) {
+            return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_deactivate', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -406,8 +426,8 @@ define('package/quiqqer/products/bin/classes/Products', [
          *
          * @return {Promise}
          */
-        getInstalledProductPackages: function() {
-            return new Promise(function(resolve, reject) {
+        getInstalledProductPackages: function () {
+            return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_getInstalledProductPackages', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject
@@ -420,8 +440,8 @@ define('package/quiqqer/products/bin/classes/Products', [
          *
          * @return {Promise}
          */
-        getProductCount: function() {
-            return new Promise(function(resolve, reject) {
+        getProductCount: function () {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_products_getCount', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject
@@ -434,8 +454,8 @@ define('package/quiqqer/products/bin/classes/Products', [
          *
          * @return {Promise}
          */
-        isAutoGenerateNextArticleNo: function() {
-            return new Promise(function(resolve, reject) {
+        isAutoGenerateNextArticleNo: function () {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_settings_isAutoGenerateNextArticleNo', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject
@@ -449,8 +469,8 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {Number} productId
          * @return {Promise}
          */
-        getDataForSelectItem: function(productId) {
-            return new Promise(function(resolve, reject) {
+        getDataForSelectItem: function (productId) {
+            return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_products_getDataForSelectItem', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -464,11 +484,11 @@ define('package/quiqqer/products/bin/classes/Products', [
          *
          * @param {number} productId
          */
-        openPanel: function(productId) {
+        openPanel: function (productId) {
             require([
                 'package/quiqqer/products/bin/controls/products/Product',
                 'utils/Panels'
-            ], function(ProductPanel, Panels) {
+            ], function (ProductPanel, Panels) {
                 var PPanel = new ProductPanel({
                     productId: productId,
                     '#id': productId
@@ -483,7 +503,7 @@ define('package/quiqqer/products/bin/classes/Products', [
          *
          * @param {number} pid
          */
-        addToVisited: function(pid) {
+        addToVisited: function (pid) {
             var visited = this.getVisitedProductIds();
 
             visited.push(pid);
@@ -501,7 +521,7 @@ define('package/quiqqer/products/bin/classes/Products', [
          *
          * @returns {Array}
          */
-        getVisitedProductIds: function() {
+        getVisitedProductIds: function () {
             var visited = QUI.Storage.get('quiqqer-products-visited');
 
             if (!visited) {
