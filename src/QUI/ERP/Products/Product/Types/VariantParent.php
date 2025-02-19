@@ -16,7 +16,6 @@ use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\Interfaces\Users\User;
-use QUI\Locale;
 
 use function array_map;
 use function array_merge;
@@ -1333,7 +1332,7 @@ class VariantParent extends AbstractType
                 } else {
                     $fieldPrice = 0;
                 }
-               
+
                 $Price->setValue($Price->getValue() + $fieldPrice);
                 continue;
             }

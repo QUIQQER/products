@@ -38,7 +38,7 @@ QUI::$Ajax->registerFunction(
         if (method_exists($NewChild, 'save')) {
             $NewChild->save();
         }
-        
+
         return $NewChild->getId();
     },
     ['project', 'siteId', 'title', 'createCategory', 'parentCategory'],

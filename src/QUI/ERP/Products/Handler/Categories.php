@@ -7,7 +7,6 @@
 namespace QUI\ERP\Products\Handler;
 
 use QUI;
-
 use QUI\Exception;
 
 use function class_exists;
