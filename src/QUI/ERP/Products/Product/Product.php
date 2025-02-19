@@ -7,9 +7,9 @@
 namespace QUI\ERP\Products\Product;
 
 use QUI;
-use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Interfaces\FieldInterface as Field;
+use QUI\ERP\Products\Interfaces\CategoryInterface;
 
 /**
  * Class Product
@@ -58,7 +58,7 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
     }
 
     /**
-     * Add a own product field
+     * Add an own product field
      * This field is explicit added to the product
      *
      * @param QUI\ERP\Products\Field\Field $Field
@@ -96,9 +96,9 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
     /**
      * Add the product to a category
      *
-     * @param QUI\ERP\Products\Interfaces\CategoryInterface $Category
+     * @param CategoryInterface $Category
      */
-    public function addCategory(QUI\ERP\Products\Interfaces\CategoryInterface $Category): void
+    public function addCategory(CategoryInterface $Category): void
     {
         $this->categories[$Category->getId()] = $Category;
     }
@@ -106,10 +106,10 @@ class Product extends Model implements QUI\ERP\Products\Interfaces\ProductInterf
     /**
      * Set the main category
      *
-     * @param integer|Category $Category
+     * @param integer|string|CategoryInterface $Category
      * @throws QUI\Exception
      */
-    public function setMainCategory(QUI\ERP\Products\Interfaces\CategoryInterface|int $Category): void
+    public function setMainCategory(CategoryInterface | int | string $Category): void
     {
         if (!Categories::isCategory($Category)) {
             $Category = Categories::getCategory($Category);

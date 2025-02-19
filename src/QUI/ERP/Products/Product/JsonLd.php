@@ -159,13 +159,10 @@ class JsonLd
 
         try {
             $Image = $Product->getImage();
+            $url = $Image->getSizeCacheUrl();
 
-            if ($Image) {
-                $url = $Image->getSizeCacheUrl();
-
-                if (!empty($url)) {
-                    $images[] = $url;
-                }
+            if (!empty($url)) {
+                $images[] = $url;
             }
         } catch (QUI\Exception) {
             // nothing
@@ -314,11 +311,11 @@ class JsonLd
 
         $offers = [];
 
-        if ($MinPrice && $MinPrice->getValue()) {
+        if ($MinPrice->getValue()) {
             $offers['lowPrice'] = $Formatter->format($MinPrice->getValue());
         }
 
-        if ($MaxPrice && $MaxPrice->getValue()) {
+        if ($MaxPrice->getValue()) {
             $offers['highPrice'] = $Formatter->format($MaxPrice->getValue());
         }
 

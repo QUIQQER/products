@@ -8,6 +8,8 @@ namespace QUI\ERP\Products\Handler;
 
 use QUI;
 
+use QUI\Exception;
+
 use function class_exists;
 use function get_class;
 use function is_null;
@@ -32,7 +34,7 @@ class Categories
      * @param bool|integer $categoryId - optional, Category-ID,
      *                                   if false => complete categories cache is cleared
      */
-    public static function clearCache(bool|int|string $categoryId = false): void
+    public static function clearCache(bool | int | string $categoryId = false): void
     {
         if ($categoryId === false) {
             QUI\Cache\LongTermCache::clear('quiqqer/products/categories/');
@@ -42,7 +44,7 @@ class Categories
 
         try {
             QUI::getEvents()->fireEvent('onQuiqqerProductsCategoriesClearCache');
-        } catch (QUI\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
         }
     }
@@ -53,7 +55,7 @@ class Categories
      * @param integer|string $categoryId
      * @return string
      */
-    public static function getCacheName($categoryId): string
+    public static function getCacheName(int | string $categoryId): string
     {
         return Cache::getBasicCachePath() . 'categories/' . (int)$categoryId;
     }
@@ -84,14 +86,14 @@ class Categories
 
         try {
             $data = QUI::getDataBase()->fetch($query);
-        } catch (QUI\DataBase\Exception $Exception) {
+        } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
             return 0;
         }
 
 
-        if (isset($data[0]) && isset($data[0]['count'])) {
+        if (isset($data[0]['count'])) {
             return (int)$data[0]['count'];
         }
 
@@ -114,9 +116,9 @@ class Categories
      * @param integer|string $id
      * @return QUI\ERP\Products\Interfaces\CategoryInterface
      *
-     * @throws QUI\Exception
+     * @throws Exception
      */
-    public static function getCategory(int|string $id): QUI\ERP\Products\Interfaces\CategoryInterface
+    public static function getCategory(int | string $id): QUI\ERP\Products\Interfaces\CategoryInterface
     {
         $id = (int)$id;
 
@@ -137,7 +139,7 @@ class Categories
 
         try {
             $categoryData = QUI\Cache\LongTermCache::get(self::getCacheName($id));
-        } catch (QUI\Exception $Exception) {
+        } catch (Exception) {
             $data = QUI::getDataBase()->fetch([
                 'from' => QUI\ERP\Products\Utils\Tables::getCategoryTableName(),
                 'where' => [
@@ -146,7 +148,7 @@ class Categories
             ]);
 
             if (!isset($data[0])) {
-                throw new QUI\Exception(
+                throw new Exception(
                     ['quiqqer/products', 'exception.category.not.found'],
                     404,
                     ['categoryId' => $id]
@@ -171,9 +173,9 @@ class Categories
      * New products are created automatically in this category.
      *
      * @return QUI\ERP\Products\Interfaces\CategoryInterface
-     * @throws QUI\Exception
+     * @throws Exception
      */
-    public static function getMainCategory()
+    public static function getMainCategory(): QUI\ERP\Products\Interfaces\CategoryInterface
     {
         $Config = QUI::getPackage('quiqqer/products')->getConfig();
         $mainCategory = $Config->get('products', 'mainCategory');
@@ -190,13 +192,13 @@ class Categories
      *
      * @param integer|string $categoryId - category id
      * @return bool
-     * @throws QUI\Exception
+     * @throws Exception
      */
-    public static function existsCategory($categoryId): bool
+    public static function existsCategory(int | string $categoryId): bool
     {
         try {
             self::getCategory($categoryId);
-        } catch (QUI\Exception $Exception) {
+        } catch (Exception $Exception) {
             if ($Exception->getCode() === 404) {
                 return false;
             }
@@ -213,7 +215,7 @@ class Categories
      * @param mixed $Category
      * @return boolean
      */
-    public static function isCategory($Category): bool
+    public static function isCategory(mixed $Category): bool
     {
         if (!is_object($Category)) {
             return false;
@@ -233,16 +235,18 @@ class Categories
     /**
      * Create a new category
      *
-     * @param integer|null|string $parentId - optional, ID of the parent
+     * @param integer|string|null $parentId - optional, ID of the parent
      * @param string $title - optional, translation text for current language
      *
      * @return QUI\ERP\Products\Interfaces\CategoryInterface
      *
-     * @throws \QUI\Exception
-     * @throws \QUI\Permissions\Exception
+     * @throws Exception
+     * @throws QUI\Permissions\Exception
      */
-    public static function createCategory($parentId = null, string $title = '')
-    {
+    public static function createCategory(
+        null | int | string $parentId = null,
+        string $title = ''
+    ): QUI\ERP\Products\Interfaces\CategoryInterface {
         QUI\Permissions\Permission::checkPermission('category.create');
 
         if (is_null($parentId)) {
@@ -302,7 +306,7 @@ class Categories
                 'products.category.' . $newId . '.title',
                 $languageData
             );
-        } catch (QUI\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::addInfo($Exception->getMessage());
 
             QUI::getMessagesHandler()->addAttention(
@@ -326,7 +330,7 @@ class Categories
                 'products.category.' . $newId . '.description',
                 $languageData
             );
-        } catch (QUI\Exception $Exception) {
+        } catch (Exception $Exception) {
             QUI\System\Log::addInfo($Exception->getMessage());
 
             QUI::getMessagesHandler()->addAttention(
@@ -361,7 +365,7 @@ class Categories
         foreach ($ids as $id) {
             try {
                 $result[] = self::getCategory($id);
-            } catch (QUI\Exception $Exception) {
+            } catch (Exception $Exception) {
                 QUI\System\Log::writeDebugException($Exception);
             }
         }
@@ -401,7 +405,7 @@ class Categories
 
         try {
             $data = QUI::getDataBase()->fetch($query);
-        } catch (QUI\DataBase\Exception $Exception) {
+        } catch (QUI\Database\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
 
             return [];
@@ -417,9 +421,9 @@ class Categories
 
     /**
      * @param integer|string $id
-     * @throws QUI\Exception
+     * @throws Exception
      */
-    public static function deleteCategory($id)
+    public static function deleteCategory(int | string $id): void
     {
         self::getCategory($id)->delete();
     }
