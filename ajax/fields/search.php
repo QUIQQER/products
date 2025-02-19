@@ -53,7 +53,6 @@ QUI::$Ajax->registerFunction(
         // search
         $data = $Fields->getFields($query);
 
-        /* @var $Field Field */
         foreach ($data as $Field) {
             $entry = $Field->getAttributes();
             $entry['title'] = $Field->getTitle();
@@ -62,7 +61,7 @@ QUI::$Ajax->registerFunction(
         }
 
         usort($result, function ($a, $b) {
-            return $a['title'] > $b['title'];
+            return strcmp($a['title'], $b['title']);
         });
 
         return $result;

@@ -67,6 +67,7 @@ QUI::$Ajax->registerFunction(
         }
 
         $isVariantParent = false;
+        $Child = $Product;
 
         if (!isset($_fields[Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES])) {
             // set variant field values
@@ -103,9 +104,11 @@ QUI::$Ajax->registerFunction(
             }
 
             try {
-                /* @var $Product QUI\ERP\Products\Product\Types\VariantParent */
                 $fieldHash = QUI\ERP\Products\Utils\Products::generateVariantHashFromFields($attributeGroups);
-                $Child = $Product->getVariantByVariantHash($fieldHash);
+
+                if (method_exists($Product, 'getVariantByVariantHash')) {
+                    $Child = $Product->getVariantByVariantHash($fieldHash);
+                }
             } catch (QUI\Exception) {
                 $Child = $Product;
                 $isVariantParent = true;
@@ -114,7 +117,11 @@ QUI::$Ajax->registerFunction(
             $childId = (int)$_fields[Fields::FIELD_VARIANT_DEFAULT_ATTRIBUTES];
 
             if (!$childId) {
-                $variants = $Product->getVariants();
+                $variants = [];
+
+                if (method_exists($Product, 'getVariants')) {
+                    $variants = $Product->getVariants();
+                }
 
                 if (isset($variants[0])) {
                     $childId = $variants[0]->getId();
@@ -171,7 +178,8 @@ QUI::$Ajax->registerFunction(
             'title' => $Child->getTitle(),
             'category' => $categoryId,
             'fieldHashes' => ProductUtils::getJsFieldHashArray($Product),
-            'availableHashes' => array_flip($Product->availableActiveFieldHashes()),
+            'availableHashes' => method_exists($Product, 'availableActiveFieldHashes')
+                ? array_flip($Product->availableActiveFieldHashes()) : [],
             'isVariantParent' => $isVariantParent,
             'seoTitle' => $seoTitle,
             'seoDescription' => $seoDescription

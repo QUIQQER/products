@@ -48,7 +48,9 @@ QUI::$Ajax->registerFunction(
                         continue 2;
                 }
 
-                $Category->setCustomDataEntry($k, $v);
+                if (method_exists($Category, 'setCustomDataEntry')) {
+                    $Category->setCustomDataEntry($k, $v);
+                }
             }
         }
 
