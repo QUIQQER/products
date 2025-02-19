@@ -226,7 +226,7 @@ class Calc
         $CurrentAddress = $this->getUser()->getAttribute('CurrentAddress');
         $recalculateProducts = false;
 
-        if ($Order) {
+        if ($Order && class_exists('QUI\ERP\Order\AbstractOrder')) {
             $DeliveryAddress = $Order->getDeliveryAddress();
 
             if ($DeliveryAddress->getUUID() && $Order->getDeliveryAddress() !== $CurrentAddress) {
@@ -252,7 +252,7 @@ class Calc
         // user order address
         $Order = $List->getOrder();
 
-        if ($Order) {
+        if ($Order && class_exists('QUI\ERP\Order\AbstractOrder')) {
             try {
                 $DeliveryAddress = $Order->getDeliveryAddress();
                 $DeliveryArea = QUI\ERP\Areas\Utils::getAreaByCountry($DeliveryAddress->getCountry());
