@@ -75,7 +75,7 @@ class Products
      * @throws QUI\Exception
      */
     public static function getPriceFieldForProduct(
-        QUI\ERP\Products\Interfaces\ProductInterface|QUI\ERP\Products\Product\Model $Product,
+        QUI\ERP\Products\Interfaces\ProductInterface | QUI\ERP\Products\Product\Model $Product,
         null | QUI\Interfaces\Users\User $User = null
     ): QUI\ERP\Money\Price {
         if (!QUI::getUsers()->isUser($User)) {
@@ -90,6 +90,7 @@ class Products
         $priceValue = $PriceField->getValue();
 
         // $priceValue may be NULL or empty string; in these cases, consider the default price field value as not set.
+        // @phpstan-ignore-next-line
         if (empty($priceValue) && $priceValue != 0) {
             $priceValue = null;
         }
@@ -390,13 +391,22 @@ class Products
 
         // set field option status
         foreach ($groupList as $Field) {
-            /* @var $Field QUI\ERP\Products\Field\Types\AttributeGroup */
             $fieldId = $Field->getId();
-            $Field->hideEntries();
-            $Field->disableEntries();
 
-            $options = $Field->getOptions();
-            $entries = $options['entries'];
+            if (method_exists($Field, 'hideEntries')) {
+                $Field->hideEntries();
+            }
+
+            if (method_exists($Field, 'disableEntries')) {
+                $Field->disableEntries();
+            }
+
+            if (!method_exists($Field, 'getOptions')) {
+                $entries = [];
+            } else {
+                $options = $Field->getOptions();
+                $entries = $options['entries'];
+            }
 
             if (!isset($available[$fieldId])) {
                 continue;
@@ -421,14 +431,20 @@ class Products
                     continue;
                 }
 
-                $Field->showEntry($key);
+                if (method_exists($Field, 'showEntry')) {
+                    $Field->showEntry($key);
+                }
 
-                if (isset($availableEntries[$fieldId][$valueId])) {
+                if (isset($availableEntries[$fieldId][$valueId]) && method_exists($Field, 'enableEntry')) {
                     $Field->enableEntry($key);
                     continue;
                 }
 
-                if ($hashedValueId && isset($availableEntries[$fieldId][$hashedValueId])) {
+                if (
+                    $hashedValueId
+                    && isset($availableEntries[$fieldId][$hashedValueId])
+                    && method_exists($Field, 'enableEntry')
+                ) {
                     $Field->enableEntry($key);
                 }
             }
@@ -500,7 +516,7 @@ class Products
     public static function checkUrlByUrlFieldValue(
         array $urlFieldValue,
         int $categoryId,
-        bool|int $ignoreProductId = false
+        bool | int $ignoreProductId = false
     ): void {
         if (empty($urlFieldValue)) {
             return;
