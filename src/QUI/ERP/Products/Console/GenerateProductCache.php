@@ -98,7 +98,7 @@ class GenerateProductCache extends QUI\System\Console\Tool
             Products::cleanProductInstanceMemCache();
 
 
-            $out = str_pad($i, mb_strlen($count), '0', STR_PAD_LEFT);
+            $out = str_pad((string)$i, mb_strlen((string)$count), '0', STR_PAD_LEFT);
             $time = date('H:i:s');
             $this->writeLn('- ' . $time . ' :: ' . $out . ' of ' . $count);
 
