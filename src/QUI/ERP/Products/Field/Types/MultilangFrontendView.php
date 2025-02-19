@@ -26,7 +26,6 @@ class MultilangFrontendView extends QUI\ERP\Products\Field\View
 
         $Engine = QUI::getTemplateManager()->getEngine();
 
-        /** @var UnitSelect $Field */
         $value = $this->getValue();
         $current = QUI::getLocale()->getCurrent();
         $value = $value[$current] ?? $value[0];

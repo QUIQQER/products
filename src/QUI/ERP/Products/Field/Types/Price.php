@@ -36,7 +36,7 @@ class Price extends QUI\ERP\Products\Field\Field
     /**
      * @var int|bool
      */
-    protected int|bool $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
+    protected int | bool $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
 
     /**
      * Official currency code (i.e. EUR)
@@ -215,7 +215,7 @@ class Price extends QUI\ERP\Products\Field\Field
      * @param float|integer $max
      * @return array - contains values from min to max with calculated steps inbetween
      */
-    public function calculateValueRange(null|float|int $min, null|float|int $max): array
+    public function calculateValueRange(null | float | int $min, null | float | int $max): array
     {
         if (!$min) {
             $min = 0;
@@ -235,7 +235,7 @@ class Price extends QUI\ERP\Products\Field\Field
             // round down to lowest 10 (e.g.: 144 = 140; 2554 = 2550)
             $floorPrecision = 1;
 
-            if ((string)mb_strlen((int)$min) > 1) {
+            if (mb_strlen((string)$min) > 1) {
                 $floorPrecision = 10;
             }
 

@@ -62,7 +62,7 @@ class TimePeriod extends QUI\ERP\Products\Field\Field
      * Check the value
      * is the value valid for the field type?
      *
-     * @param mixed< $value
+     * @param mixed $value
      * @throws Exception
      */
     public function validate(mixed $value): void
