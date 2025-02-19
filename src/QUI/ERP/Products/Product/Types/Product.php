@@ -17,10 +17,6 @@ use QUI\Locale;
  */
 class Product extends AbstractType
 {
-    /**
-     * @param Locale|null $Locale
-     * @return mixed
-     */
     public static function getTypeTitle(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
@@ -30,10 +26,6 @@ class Product extends AbstractType
         return $Locale->get('quiqqer/products', 'product.type.standard.title');
     }
 
-    /**
-     * @param Locale|null $Locale
-     * @return mixed
-     */
     public static function getTypeDescription(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {

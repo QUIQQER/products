@@ -10,6 +10,7 @@ use QUI;
 use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
+use QUI\ERP\Products\Interfaces\ProductTypeInterface;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Fields as FieldUtils;
 
@@ -179,10 +180,10 @@ class Products
      * Return the editable fields for the project
      * editable fields can be changed by the user via the GUI
      *
-     * @param null $Product
+     * @param ProductTypeInterface|null $Product
      * @return array
      */
-    public static function getEditableFieldIdsForProduct($Product = null): array
+    public static function getEditableFieldIdsForProduct(null | ProductTypeInterface $Product = null): array
     {
         if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
             $Product = $Product->getParent();
@@ -233,10 +234,10 @@ class Products
     /**
      * Return the inherited fields for the project
      *
-     * @param null $Product
+     * @param ProductTypeInterface|null $Product
      * @return array
      */
-    public static function getInheritedFieldIdsForProduct($Product = null): array
+    public static function getInheritedFieldIdsForProduct(null | ProductTypeInterface $Product = null): array
     {
         if ($Product instanceof QUI\ERP\Products\Product\Types\VariantChild) {
             $Product = $Product->getParent();

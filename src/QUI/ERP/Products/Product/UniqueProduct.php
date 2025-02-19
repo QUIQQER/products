@@ -953,18 +953,18 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
     }
 
     /**
-     * @param $FieldId
+     * @param int $fieldId
      * @param bool $ignorePriceFactors - default false
      * @return FieldInterface|UniqueFieldInterface
      */
     public function getCalculatedPrice(
-        $FieldId,
+        int $fieldId,
         bool $ignorePriceFactors = false
     ): FieldInterface | UniqueFieldInterface {
         $Calc = QUI\ERP\Products\Utils\Calc::getInstance($this->getUser());
         $calculations = [];
 
-        $Field = $this->getField($FieldId);
+        $Field = $this->getField($fieldId);
 
         try {
             $Calc->getProductPrice(
@@ -972,7 +972,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
                 function ($calcResult) use (&$calculations) {
                     $calculations = $calcResult;
                 },
-                $this->getField($FieldId),
+                $this->getField($fieldId),
                 $ignorePriceFactors
             );
         } catch (QUI\Exception $Exception) {
