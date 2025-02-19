@@ -95,7 +95,7 @@ class UniqueProductFrontendView extends UniqueProduct
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return new QUI\ERP\Money\Price(
-                '',
+                null,
                 QUI\ERP\Currency\Handler::getDefaultCurrency()
             );
         }
@@ -104,7 +104,7 @@ class UniqueProductFrontendView extends UniqueProduct
             return parent::getPrice();
         } catch (QUI\Exception) {
             return new QUI\ERP\Money\Price(
-                '',
+                null,
                 QUI\ERP\Currency\Handler::getDefaultCurrency()
             );
         }
@@ -119,7 +119,7 @@ class UniqueProductFrontendView extends UniqueProduct
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return new QUI\ERP\Money\Price(
-                '',
+                null,
                 QUI\ERP\Currency\Handler::getDefaultCurrency()
             );
         }
@@ -128,7 +128,7 @@ class UniqueProductFrontendView extends UniqueProduct
             return parent::getUnitPrice();
         } catch (QUI\Exception) {
             return new QUI\ERP\Money\Price(
-                '',
+                null,
                 QUI\ERP\Currency\Handler::getDefaultCurrency()
             );
         }
@@ -171,7 +171,7 @@ class UniqueProductFrontendView extends UniqueProduct
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return new QUI\ERP\Money\Price(
-                '',
+                null,
                 QUI\ERP\Currency\Handler::getDefaultCurrency()
             );
         }
@@ -180,7 +180,7 @@ class UniqueProductFrontendView extends UniqueProduct
             return parent::getNettoPrice();
         } catch (QUI\Exception) {
             return new QUI\ERP\Money\Price(
-                '',
+                null,
                 QUI\ERP\Currency\Handler::getDefaultCurrency()
             );
         }
