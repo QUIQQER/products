@@ -127,7 +127,7 @@ class EventHandling
 
                         unset($editableFields[$fieldId]);
                     }
-                } catch (Exception $Exception) {
+                } catch (Exception $Exception) { // @phpstan-ignore-line
                     QUI\System\Log::writeException($Exception);
                 }
             }
@@ -150,7 +150,7 @@ class EventHandling
 
                         unset($inheritedFields[$fieldId]);
                     }
-                } catch (Exception $Exception) {
+                } catch (Exception $Exception) { // @phpstan-ignore-line
                     QUI\System\Log::writeException($Exception);
                 }
             }
@@ -197,11 +197,11 @@ class EventHandling
 
         try {
             foreach ($defaultEditableFields as $fieldId) {
-                $Config->set('editableFields', $fieldId, 1);
+                $Config->set('editableFields', (string)$fieldId, 1);
             }
 
             foreach ($defaultInheritedFields as $fieldId) {
-                $Config->set('inheritedFields', $fieldId, 1);
+                $Config->set('inheritedFields', (string)$fieldId, 1);
             }
 
             $Config->save();
@@ -1104,7 +1104,11 @@ class EventHandling
         $Project = $Site->getProject();
 
         // register path
-        if ($Site->getAttribute('active') && $Site->getAttribute('type') == 'quiqqer/products:types/category') {
+        if (
+            $Site->getAttribute('active')
+            && $Site->getAttribute('type') == 'quiqqer/products:types/category'
+            && method_exists($Site, 'getLocation')
+        ) {
             $url = $Site->getLocation();
             $url = str_replace(QUI\Rewrite::URL_DEFAULT_SUFFIX, '', $url);
 

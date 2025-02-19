@@ -222,10 +222,17 @@ class Product extends QUI\Control
 
         // retail price (UVP)
         $PriceRetailDisplay = false;
+        $PriceRetail = null;
 
         if (isset($Unique)) {
-            $PriceRetail = $Unique->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL)->getPrice();
-        } else {
+            $Price = $Unique->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL);
+
+            if (method_exists($Price, 'getPrice')) {
+                $PriceRetail = $Price->getPrice();
+            }
+        }
+
+        if (!$PriceRetail) {
             $PriceRetail = $Product->createUniqueProduct()
                 ->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL)
                 ->getPrice();
