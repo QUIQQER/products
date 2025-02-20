@@ -12,11 +12,13 @@
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_frontend_getProductByProductNo',
     function ($productNo) {
-        $Product = QUI\ERP\Products\Handler\Products::getProductByProductNo(
-            $productNo
-        );
+        $Product = QUI\ERP\Products\Handler\Products::getProductByProductNo($productNo);
 
-        return $Product->getView()->getAttributes();
+        if (method_exists($Product, 'getView')) {
+            return $Product->getView()->getAttributes();
+        }
+
+        return [];
     },
     ['productNo']
 );

@@ -143,7 +143,10 @@ class Folder extends QUI\ERP\Products\Field\Field
             return true;
         }
 
-        return ($MediaFolder->getFiles(['count' => true]) + $MediaFolder->getImages(['count' => true])) < 1;
+        $filesCount = (int)$MediaFolder->getFiles(['count' => true]);
+        $imagesCount = (int)$MediaFolder->getImages(['count' => true]);
+
+        return ($filesCount + $imagesCount) < 1;
     }
 
     /**

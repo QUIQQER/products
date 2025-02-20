@@ -100,13 +100,6 @@ class Products
     private static array $list = [];
 
     /**
-     * List of internal products, via its own urls
-     *
-     * @var array
-     */
-    private static array $productUrls = [];
-
-    /**
      * Global Product Locale
      *
      * @var Locale|null
@@ -650,7 +643,6 @@ class Products
         // @todo sub media folder kopieren wäre sinnvoller.
         // vorerst leer machen, so wird dann ein neuer ordner erstellt
 
-        /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($folders as $Field) {
             $Field->setValue('');
         }

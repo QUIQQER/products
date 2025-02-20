@@ -294,8 +294,9 @@ class ProductList
         $products = $this->getProducts();
 
         foreach ($products as $Products) {
-            /* @var $Products UniqueProduct */
-            $quantity = $quantity + $Products->getQuantity();
+            if (method_exists($Products, 'getQuantity')) {
+                $quantity = $quantity + $Products->getQuantity();
+            }
         }
 
         return $quantity;
@@ -332,9 +333,7 @@ class ProductList
     public function addProduct(QUI\ERP\Products\Interfaces\ProductInterface $Product): void
     {
         // only UniqueProduct can be calculated
-
-        /* @var $Product QUI\ERP\Products\Product\Model */
-        if (!($Product instanceof UniqueProduct)) {
+        if (!($Product instanceof UniqueProduct) && method_exists($Product, 'createUniqueProduct')) {
             $Product = $Product->createUniqueProduct($this->User);
         }
 

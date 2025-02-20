@@ -37,12 +37,11 @@ QUI::$Ajax->registerFunction(
 
         $data = $Fields->getFields($query);
 
-        /* @var $Field Field */
         foreach ($data as $Field) {
             $attributes = $Field->getAttributes();
 
-            $attributes['suffix'] = $Field->getSuffix();
-            $attributes['prefix'] = $Field->getPrefix();
+            $attributes['suffix'] = method_exists($Field, 'getSuffix') ? $Field->getSuffix() : '';
+            $attributes['prefix'] = method_exists($Field, 'getPrefix') ? $Field->getPrefix() : '';
 
             $result[] = $attributes;
         }

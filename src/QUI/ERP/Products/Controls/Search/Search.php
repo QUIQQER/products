@@ -19,7 +19,7 @@ class Search extends QUI\Control
     /**
      * @var bool|FrontendSearch|null
      */
-    protected bool|null|FrontendSearch $Search = null;
+    protected bool | null | FrontendSearch $Search = null;
 
     /**
      * @var array|null
@@ -85,7 +85,7 @@ class Search extends QUI\Control
      *
      * @return bool|FrontendSearch|null
      */
-    protected function getSearch(): bool|QUI\ERP\Products\Search\FrontendSearch|null
+    protected function getSearch(): bool | QUI\ERP\Products\Search\FrontendSearch | null
     {
         try {
             if (is_null($this->Search)) {

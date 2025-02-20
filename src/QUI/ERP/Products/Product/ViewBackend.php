@@ -8,6 +8,7 @@ namespace QUI\ERP\Products\Product;
 
 use QUI;
 use QUI\ERP\Products\Interfaces\FieldInterface;
+use QUI\Exception;
 use QUI\Locale;
 
 use function array_merge;
@@ -21,9 +22,9 @@ use function implode;
 class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\ProductInterface
 {
     /**
-     * @var Model|Product<
+     * @var Model|Product
      */
-    protected Model|Product $Product;
+    protected Model | Product $Product;
 
     /**
      * View constructor.
@@ -102,18 +103,22 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     }
 
     /**
-     * @return Model|Product
+     * @return Product
      */
-    public function getProduct(): Product|Model
+    public function getProduct(): Product
     {
-        return $this->Product;
+        if ($this->Product instanceof Product) {
+            return $this->Product;
+        }
+
+        return QUI\ERP\Products\Handler\Products::getProduct($this->Product->getId());
     }
 
     /**
      * @param Locale|null $Locale
      * @return string
      */
-    public function getTitle(QUI\Locale|null $Locale = null): string
+    public function getTitle(QUI\Locale | null $Locale = null): string
     {
         return $this->Product->getTitle($Locale);
     }
@@ -122,7 +127,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      * @param Locale|null $Locale
      * @return string
      */
-    public function getDescription(QUI\Locale|null $Locale = null): string
+    public function getDescription(QUI\Locale | null $Locale = null): string
     {
         return $this->Product->getDescription($Locale);
     }
@@ -131,7 +136,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      * @param Locale|null $Locale
      * @return string
      */
-    public function getContent(QUI\Locale|null $Locale = null): string
+    public function getContent(QUI\Locale | null $Locale = null): string
     {
         return $this->Product->getContent($Locale);
     }
@@ -172,7 +177,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * @return bool|float|int
      */
-    public function getMaximumQuantity(): float|bool|int
+    public function getMaximumQuantity(): float | bool | int
     {
         return $this->Product->getMaximumQuantity();
     }
@@ -194,7 +199,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      * @param string|array $type
      * @return array
      */
-    public function getFieldsByType(string|array $type): array
+    public function getFieldsByType(string | array $type): array
     {
         return $this->getProduct()->getFieldsByType($type);
     }
@@ -223,7 +228,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
      *
      * @throws Exception
      */
-    public function getFieldValue(int|string $fieldId): string|array|null
+    public function getFieldValue(int | string $fieldId): string | array | null
     {
         return $this->getProduct()->getFieldValue($fieldId);
     }
@@ -273,7 +278,7 @@ class ViewBackend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produc
     /**
      * @return false|QUI\ERP\Products\Interfaces\UniqueFieldInterface
      */
-    public function getOriginalPrice(): QUI\ERP\Products\Interfaces\UniqueFieldInterface|bool
+    public function getOriginalPrice(): QUI\ERP\Products\Interfaces\UniqueFieldInterface | bool
     {
         try {
             return $this->getProduct()->getOriginalPrice();

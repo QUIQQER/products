@@ -714,7 +714,7 @@ class Fields
                 // Check if it's a valid plugin name
                 new QUI\Package\Package($plugin);
             } catch (QUI\Exception) {
-                // Not a valid plugin, so ignore it's XML file
+                // Not a valid plugin, so ignore its XML file
                 continue;
             }
 
@@ -723,8 +723,14 @@ class Fields
 
             $fields = $Path->query("//quiqqer/products/fields/field");
 
-            /* @var $Field DOMElement */
             foreach ($fields as $Field) {
+                if (
+                    !method_exists($Field, 'getAttribute')
+                    || !method_exists($Field, 'getElementsByTagName')
+                ) {
+                    continue;
+                }
+
                 $src = $Field->getAttribute('src');
                 $category = $Field->getAttribute('category');
                 $name = $Field->getAttribute('name');
@@ -1063,6 +1069,7 @@ class Fields
             } catch (QUI\Exception $Exception) {
                 QUI\System\Log::addNotice($Exception->getMessage());
 
+                // @phpstan-ignore-next-line
                 if (DEVELOPMENT || DEBUG_MODE) {
                     QUI\System\Log::writeDebugException(
                         $Exception,
@@ -1087,9 +1094,8 @@ class Fields
         $result = [];
         $fields = self::getFields();
 
-        /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($fields as $Field) {
-            if ($Field->getType() == $type) {
+            if (method_exists($Field, 'getType') && $Field->getType() == $type) {
                 $result[] = $Field;
             }
         }

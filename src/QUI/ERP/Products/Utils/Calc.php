@@ -226,7 +226,7 @@ class Calc
         $CurrentAddress = $this->getUser()->getAttribute('CurrentAddress');
         $recalculateProducts = false;
 
-        if ($Order) {
+        if ($Order && class_exists('QUI\ERP\Order\AbstractOrder')) {
             $DeliveryAddress = $Order->getDeliveryAddress();
 
             if ($DeliveryAddress->getUUID() && $Order->getDeliveryAddress() !== $CurrentAddress) {
@@ -252,7 +252,7 @@ class Calc
         // user order address
         $Order = $List->getOrder();
 
-        if ($Order) {
+        if ($Order && class_exists('QUI\ERP\Order\AbstractOrder')) {
             try {
                 $DeliveryAddress = $Order->getDeliveryAddress();
                 $DeliveryArea = QUI\ERP\Areas\Utils::getAreaByCountry($DeliveryAddress->getCountry());
@@ -294,11 +294,13 @@ class Calc
                 );
             }
 
-            if ($recalculateProducts) {
-                $Product->recalculation();
-            }
+            if ($Product instanceof UniqueProduct) {
+                if ($recalculateProducts) {
+                    $Product->recalculation();
+                }
 
-            $this->getProductPrice($Product);
+                $this->getProductPrice($Product);
+            }
 
             $productAttributes = $Product->getAttributes();
 
@@ -348,11 +350,22 @@ class Calc
 
         /* @var $PriceFactor PriceFactor */
         foreach ($priceFactors as $PriceFactor) {
+            if (!($PriceFactor instanceof PriceFactor)) {
+                try {
+                    throw new Exception('PriceFactor exception');
+                } catch (Exception $e) {
+                    QUI\System\Log::addError('wrong price factor type!!!!');
+                    QUI\System\Log::addError($e->getTraceAsString());
+                }
+
+                continue;
+            }
+
             if ($PriceFactor->getCalculationBasis() === ErpCalc::CALCULATION_GRAND_TOTAL) {
                 $PriceFactor->setNettoSum($PriceFactor->getValue());
                 $PriceFactor->setSum($PriceFactor->getValue());
                 $PriceFactor->setValue($PriceFactor->getValue());
-                $PriceFactor->setValueText(0);
+                $PriceFactor->setValueText('0');
                 $PriceFactor->setVat(0);
                 continue;
             }
@@ -476,11 +489,11 @@ class Calc
                 $PriceFactor->setSum($vatBruttoSum);
             }
 
-            if ($Vat && !$Vat->isVisible()) {
+            if (!$Vat->isVisible()) {
                 continue;
             }
 
-            if (!isset($vatArray[(string)$vatValue]) && $Vat) {
+            if (!isset($vatArray[(string)$vatValue])) {
                 $vatArray[(string)$vatValue] = [
                     'vat' => $vatValue,
                     'text' => ErpCalc::getVatText($Vat->getValue(), $this->getUser(), $this->Locale),
@@ -511,7 +524,7 @@ class Calc
         $bruttoSum = round($bruttoSum, $Currency->getPrecision());
 
         foreach ($vatLists as $vat => $bool) {
-            $vatText[$vat] = ErpCalc::getVatText($vat, $this->getUser(), $this->Locale);
+            $vatText[$vat] = ErpCalc::getVatText((float)$vat, $this->getUser(), $this->Locale);
         }
 
         if ($this->ignoreVatCalculation) {
@@ -525,6 +538,7 @@ class Calc
 
 
         // delete 0 % vat, 0% vat is allowed to calculate more easily
+        // @phpstan-ignore-next-line
         if (isset($vatText[0])) {
             unset($vatText[0]);
         }
@@ -809,7 +823,7 @@ class Calc
         // for brutto user -> brutto display values
         if (!$isNetto) {
             foreach ($priceFactors as $PriceFactor) {
-                if ($PriceFactor->hasValueText()) {
+                if (method_exists($PriceFactor, 'hasValueText') && $PriceFactor->hasValueText()) {
                     continue;
                 }
 
@@ -929,10 +943,10 @@ class Calc
     /**
      * Rounds the value via shop config
      *
-     * @param string $value
+     * @param string|int|float $value
      * @return float
      */
-    public function round(string $value): float
+    public function round(string | int | float $value): float
     {
         return QUI\ERP\Accounting\Calc::getInstance($this->getUser())->round($value);
     }
@@ -984,8 +998,6 @@ class Calc
 
         if (!empty($productId)) {
             $Product = Products::getProduct((int)$productId);
-
-            /* @var $Field Vat */
             $Vat = $Product->getField(FieldHandler::FIELD_VAT);
 
             try {
@@ -996,13 +1008,15 @@ class Calc
         }
 
         if (!$TaxEntry) {
-            $TaxType = TaxUtils::getTaxTypeByArea($Area);
-
-            if ($TaxType instanceof TaxType) {
+            try {
+                $TaxType = TaxUtils::getTaxTypeByArea($Area);
                 $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
-            } elseif ($TaxType instanceof TaxEntry) {
-                $TaxEntry = $TaxType;
-            } else {
+            } catch (QUI\Exception $e) {
+                QUI\System\Log::addError($e->getMessage(), [
+                    'area' => $Area->getId(),
+                    'method' => __METHOD__,
+                ]);
+
                 if ($formatted) {
                     return $Currency->format($price);
                 }
@@ -1043,8 +1057,6 @@ class Calc
 
         if (!empty($productId)) {
             $Product = Products::getProduct((int)$productId);
-
-            /* @var $Field Vat */
             $Vat = $Product->getField(FieldHandler::FIELD_VAT);
 
             try {
@@ -1055,13 +1067,15 @@ class Calc
         }
 
         if (!$TaxEntry) {
-            $TaxType = TaxUtils::getTaxTypeByArea($Area);
-
-            if ($TaxType instanceof TaxType) {
+            try {
+                $TaxType = TaxUtils::getTaxTypeByArea($Area);
                 $TaxEntry = TaxUtils::getTaxEntry($TaxType, $Area);
-            } elseif ($TaxType instanceof TaxEntry) {
-                $TaxEntry = $TaxType;
-            } else {
+            } catch (QUI\Exception $e) {
+                QUI\System\Log::addError($e->getMessage(), [
+                    'area' => $Area->getId(),
+                    'method' => __METHOD__,
+                ]);
+
                 if ($formatted) {
                     return QUI\ERP\Defaults::getCurrency()->format($price);
                 }

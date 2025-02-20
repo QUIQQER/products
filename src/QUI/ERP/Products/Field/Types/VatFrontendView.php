@@ -29,7 +29,7 @@ class VatFrontendView extends View
             return '';
         }
 
-        $value = $this->getValue();
+        $value = (int)$this->getValue();
         $taxTitle = '---';
 
         if ($value >= 0) {

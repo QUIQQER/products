@@ -445,10 +445,10 @@ class VariantChild extends AbstractType
         try {
             $productId = $this->getId();
 
-            if ($Parent->childWithNameExists($productId)) {
-                $Folder = $Parent->getChildByName($productId);
+            if ($Parent->childWithNameExists((string)$productId)) {
+                $Folder = $Parent->getChildByName((string)$productId);
             } else {
-                $Folder = $Parent->createFolder($this->getId());
+                $Folder = $Parent->createFolder((string)$this->getId());
                 $Folder->setAttribute('order', 'priority ASC');
                 $Folder->save();
             }
@@ -457,7 +457,7 @@ class VariantChild extends AbstractType
                 throw $Exception;
             }
 
-            $Folder = $Parent->getChildByName($this->getId());
+            $Folder = $Parent->getChildByName((string)$this->getId());
         }
 
         if (!$Folder instanceof QUI\Projects\Media\Folder) {

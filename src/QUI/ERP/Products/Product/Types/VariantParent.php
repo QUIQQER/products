@@ -16,7 +16,6 @@ use QUI\ERP\Products\Interfaces\FieldInterface as Field;
 use QUI\ERP\Products\Product\Exception;
 use QUI\ERP\Products\Utils\Tables;
 use QUI\Interfaces\Users\User;
-use QUI\Locale;
 
 use function array_map;
 use function array_merge;
@@ -109,10 +108,6 @@ class VariantParent extends AbstractType
 
     //region abstract type methods
 
-    /**
-     * @param Locale|null $Locale
-     * @return mixed
-     */
     public static function getTypeTitle(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
@@ -122,10 +117,6 @@ class VariantParent extends AbstractType
         return $Locale->get('quiqqer/products', 'product.type.variant.parent.title');
     }
 
-    /**
-     * @param Locale|null $Locale
-     * @return mixed
-     */
     public static function getTypeDescription(null | QUI\Locale $Locale = null): string
     {
         if ($Locale === null) {
@@ -822,7 +813,7 @@ class VariantParent extends AbstractType
      *
      * @todo cache
      */
-    public function getVariants(array $params = []): array|int
+    public function getVariants(array $params = []): array | int
     {
         if (!empty($this->children)) {
             if (isset($params['count'])) {
@@ -1046,6 +1037,7 @@ class VariantParent extends AbstractType
                         continue;
                     }
 
+                    // @phpstan-ignore-next-line
                     if ($Field->getType() !== FieldHandler::TYPE_ATTRIBUTES) {
                         continue;
                     }
@@ -1333,8 +1325,13 @@ class VariantParent extends AbstractType
                 $value = $fields[$k];
 
                 $Field->setValue($value);
-                $calc = $Field->getCalculationData();
-                $fieldPrice = QUI\ERP\Money\Price::validatePrice($calc['value']);
+
+                if (method_exists($Field, 'getCalculationData')) {
+                    $calc = $Field->getCalculationData();
+                    $fieldPrice = QUI\ERP\Money\Price::validatePrice($calc['value']);
+                } else {
+                    $fieldPrice = 0;
+                }
 
                 $Price->setValue($Price->getValue() + $fieldPrice);
                 continue;
@@ -1654,7 +1651,7 @@ class VariantParent extends AbstractType
      *
      * @return bool
      */
-    public function isFieldAvailable(int|string $fieldId, int|string $fieldValue): bool
+    public function isFieldAvailable(int | string $fieldId, int | string $fieldValue): bool
     {
         $available = $this->availableChildFields();
 
@@ -1753,7 +1750,7 @@ class VariantParent extends AbstractType
      *
      * @return false|integer
      */
-    public function getDefaultVariantId(): bool|int
+    public function getDefaultVariantId(): bool | int
     {
         $variantId = $this->getAttribute('defaultVariantId');
 
