@@ -153,7 +153,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      *
      * @return string|false
      */
-    public function getUserInput(): bool|string
+    public function getUserInput(): bool | string
     {
         if (!is_null($this->value)) {
             $value = json_decode($this->value, true);
@@ -390,7 +390,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      * @param mixed $value
      * @return string|array|int|null
      */
-    public function cleanup(mixed $value): string|array|int|null
+    public function cleanup(mixed $value): string | array | int | null
     {
         if ($value === '') {
             return null;
@@ -424,6 +424,8 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
         }
 
         if (is_array($value)) {
+            $check = $value;
+
             if (!isset($check[0]) || !isset($check[1])) {
                 return null;
             }
@@ -462,7 +464,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      *
      * @param integer|string $entry
      */
-    public function disableEntry(int|string $entry): void
+    public function disableEntry(int | string $entry): void
     {
         $this->options['entries'][$entry]['disabled'] = true;
     }
@@ -472,7 +474,7 @@ class ProductAttributeList extends QUI\ERP\Products\Field\CustomCalcField
      *
      * @param integer|string $entry
      */
-    public function enableEntry(int|string $entry): void
+    public function enableEntry(int | string $entry): void
     {
         $this->options['entries'][$entry]['disabled'] = false;
     }

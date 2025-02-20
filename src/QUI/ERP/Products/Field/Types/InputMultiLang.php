@@ -32,7 +32,7 @@ use function strlen;
 class InputMultiLang extends QUI\ERP\Products\Field\Field
 {
     protected string $columnType = 'TEXT';
-    protected int|bool $searchDataType = Search::SEARCHDATATYPE_TEXT;
+    protected int | bool $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
     /**
      * @return View
@@ -94,10 +94,6 @@ class InputMultiLang extends QUI\ERP\Products\Field\Field
             reset($value);
 
             return current($value);
-        }
-
-        if (is_string($value)) {
-            return $value;
         }
 
         return '';

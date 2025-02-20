@@ -511,10 +511,10 @@ class Model extends QUI\QDOM
             $MainFolder = $this->createMediaFolder();
 
             try {
-                if ($MainFolder->childWithNameExists($fieldId)) {
-                    $Folder = $MainFolder->getChildByName($fieldId);
+                if ($MainFolder->childWithNameExists((string)$fieldId)) {
+                    $Folder = $MainFolder->getChildByName((string)$fieldId);
                 } else {
-                    $Folder = $MainFolder->createFolder($fieldId);
+                    $Folder = $MainFolder->createFolder((string)$fieldId);
                     $Folder->setAttribute('order', 'priority ASC');
                     $Folder->save();
                 }
@@ -523,7 +523,7 @@ class Model extends QUI\QDOM
                     throw $Exception;
                 }
 
-                $Folder = $MainFolder->getChildByName($fieldId);
+                $Folder = $MainFolder->getChildByName((string)$fieldId);
             }
 
             if (!($Folder instanceof QUI\Projects\Media\Folder)) {
@@ -552,10 +552,10 @@ class Model extends QUI\QDOM
         try {
             $productId = $this->getId();
 
-            if ($Parent->childWithNameExists($productId)) {
-                $Folder = $Parent->getChildByName($productId);
+            if ($Parent->childWithNameExists((string)$productId)) {
+                $Folder = $Parent->getChildByName((string)$productId);
             } else {
-                $Folder = $Parent->createFolder($this->getId());
+                $Folder = $Parent->createFolder((string)$this->getId());
                 $Folder->setAttribute('order', 'priority ASC');
                 $Folder->save();
             }
@@ -564,7 +564,7 @@ class Model extends QUI\QDOM
                 throw $Exception;
             }
 
-            $Folder = $Parent->getChildByName($this->getId());
+            $Folder = $Parent->getChildByName((string)$this->getId());
         }
 
         if (!($Folder instanceof QUI\Projects\Media\Folder)) {
@@ -751,10 +751,12 @@ class Model extends QUI\QDOM
         }
 
         try {
-            return $Site->getUrlRewrittenWithHost([
-                0 => $this->getUrlName(),
-                'paramAsSites' => true
-            ]);
+            if (method_exists($Site, 'getUrlRewrittenWithHost')) {
+                return $Site->getUrlRewrittenWithHost([
+                    0 => $this->getUrlName(),
+                    'paramAsSites' => true
+                ]);
+            }
         } catch (QUI\Exception) {
             QUI\System\Log::addInfo(
                 QUI::getLocale()->get('quiqqer/products', 'exception.product.url.missing', [
@@ -766,9 +768,9 @@ class Model extends QUI\QDOM
                     'wantedProject' => $Project->getName()
                 ]
             );
-
-            return $Project->getVHost(true, true) . '/_p/' . $this->getUrlName();
         }
+
+        return $Project->getVHost(true, true) . '/_p/' . $this->getUrlName();
     }
 
     /**
@@ -966,17 +968,10 @@ class Model extends QUI\QDOM
 
     /**
      * Return a calculated price field
-     *
-     * @param $FieldId
-     *
-     * @return false|QUI\ERP\Products\Field\UniqueField
-     *
-     * @throws Exception
-     * @throws QUI\Exception
      */
-    public function getCalculatedPrice($FieldId): FieldInterface | UniqueFieldInterface
+    public function getCalculatedPrice(int $fieldId): FieldInterface | UniqueFieldInterface
     {
-        return $this->createUniqueProduct()->getCalculatedPrice($FieldId);
+        return $this->createUniqueProduct()->getCalculatedPrice($fieldId);
     }
 
     /**
@@ -2069,9 +2064,8 @@ class Model extends QUI\QDOM
         $result = [];
         $fields = $this->getFields();
 
-        /* @var $Field QUI\ERP\Products\Field\Field */
         foreach ($fields as $Field) {
-            if (isset($type[$Field->getType()])) {
+            if (method_exists($Field, 'getType') && isset($type[$Field->getType()])) {
                 $result[] = $Field;
             }
         }
@@ -2748,7 +2742,7 @@ class Model extends QUI\QDOM
 
                     $vat = (100 + $vatPercent) / 100;
                     $targetPrice = $price * $vat;
-                    $targetPriceParts = explode('.', $targetPrice);
+                    $targetPriceParts = explode('.', (string)$targetPrice);
 
                     $targetPriceInt = (int)$targetPriceParts[0];
 

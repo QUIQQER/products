@@ -75,7 +75,7 @@ QUI::$Ajax->registerFunction(
         }
 
         usort($result, function ($a, $b) {
-            return $a['title'] > $b['title'];
+            return strcmp($a['title'], $b['title']);
         });
 
         // all products at the beginning

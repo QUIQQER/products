@@ -379,7 +379,7 @@ class Fields
      * @param Field $Field
      * @return float|int
      */
-    public static function weightFieldToKilogram(QUI\ERP\Products\Field\Field $Field): float|int
+    public static function weightFieldToKilogram(QUI\ERP\Products\Field\Field $Field): float | int
     {
         if ($Field->getId() !== QUI\ERP\Products\Handler\Fields::FIELD_WEIGHT) {
             return 0;
@@ -401,7 +401,7 @@ class Fields
      * @param string $unit - kg, g, t, tons, lbs, lb
      * @return float|int
      */
-    public static function weightToKilogram(float|int|string $value, string $unit): float|int
+    public static function weightToKilogram(float | int | string $value, string $unit): float | int
     {
         $value = floatval($value);
 
@@ -527,6 +527,13 @@ class Fields
             $categoryList = $Path->query("//quiqqer/products/fieldCategories/fieldCategory");
 
             foreach ($categoryList as $Category) {
+                if (
+                    !method_exists($Category, 'getAttribute')
+                    || !method_exists($Category, 'getElementsByTagName')
+                ) {
+                    continue;
+                }
+
                 $name = $Category->getAttribute('name');
                 $name = trim($name);
 
@@ -635,6 +642,10 @@ class Fields
             $fieldList = $Path->query("//quiqqer/products/fields/field[@fieldCategory='$category']");
 
             foreach ($fieldList as $NodeField) {
+                if (!method_exists($NodeField, 'getAttribute')) {
+                    continue;
+                }
+
                 $fieldType = $NodeField->getAttribute('name');
                 $list = QUI\ERP\Products\Handler\Fields::getFieldsByType($fieldType);
 

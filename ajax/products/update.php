@@ -125,7 +125,7 @@ QUI::$Ajax->registerFunction(
         } catch (QUI\Exception $Exception) {
             QUI::getMessagesHandler()->addAttention($Exception->getMessage());
             return;
-        } catch (Exception $Exception) {
+        } catch (Exception $Exception) { // @phpstan-ignore-line
             QUI\System\Log::writeException($Exception);
 
             QUI\System\Log::addError(

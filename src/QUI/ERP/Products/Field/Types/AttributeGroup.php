@@ -36,7 +36,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
     /**
      * @var int|bool
      */
-    protected int|bool $searchDataType = Search::SEARCHDATATYPE_TEXT;
+    protected int | bool $searchDataType = Search::SEARCHDATATYPE_TEXT;
 
     protected mixed $defaultValue = null;
 
@@ -162,7 +162,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      *
      * @param integer|string $entry
      */
-    public function disableEntry(int|string $entry): void
+    public function disableEntry(int | string $entry): void
     {
         $this->options['entries'][$entry]['disabled'] = true;
     }
@@ -172,7 +172,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      *
      * @param integer|string $entry
      */
-    public function enableEntry(int|string $entry): void
+    public function enableEntry(int | string $entry): void
     {
         $this->options['entries'][$entry]['disabled'] = false;
     }
@@ -182,7 +182,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      *
      * @param integer|string $entry
      */
-    public function showEntry(int|string $entry): void
+    public function showEntry(int | string $entry): void
     {
         $this->options['entries'][$entry]['hide'] = false;
     }
@@ -378,6 +378,8 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
         }
 
         if (is_array($value)) {
+            $check = $value;
+
             if (!isset($check[0]) || !isset($check[1])) {
                 return null;
             }

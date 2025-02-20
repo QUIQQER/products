@@ -434,7 +434,7 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    public function getStart(bool|int $count = false): array
+    public function getStart(bool | int $count = false): array
     {
         return $this->renderData(1, $this->getMax(), $count);
     }
@@ -448,7 +448,7 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    public function getNext(bool|int $start = false, bool|int $count = false): array
+    public function getNext(bool | int $start = false, bool | int $count = false): array
     {
         return $this->renderData($start, $this->getMax(), $count);
     }
@@ -480,7 +480,7 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    protected function renderData(bool|int $start, bool|int $max, bool|int $count = false): array
+    protected function renderData(bool | int $start, bool | int $max, bool | int $count = false): array
     {
         $Engine = QUI::getTemplateManager()->getEngine();
 
@@ -647,7 +647,7 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    protected function getSearchParams(int $start = 0, bool|int $max = false): mixed
+    protected function getSearchParams(int $start = 0, bool | int $max = false): mixed
     {
         $searchParams = $this->getAttribute('searchParams');
 
@@ -734,9 +734,9 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    public function getCategory(): QUI\ERP\Products\Category\ViewBackend|QUI\ERP\Products\Category\ViewFrontend|null
+    public function getCategory(): QUI\ERP\Products\Category\ViewBackend | QUI\ERP\Products\Category\ViewFrontend | null
     {
-        if ($this->Category) {
+        if ($this->Category && method_exists($this->Category, 'getView')) {
             return $this->Category->getView();
         }
 
@@ -754,7 +754,11 @@ class ProductList extends QUI\Control
             return null;
         }
 
-        return $this->Category->getView();
+        if (method_exists($this->Category, 'getView')) {
+            return $this->Category->getView();
+        }
+
+        return null;
     }
 
     /**
@@ -762,7 +766,7 @@ class ProductList extends QUI\Control
      *
      * @return bool|FrontendSearch|null
      */
-    protected function getSearch(): bool|QUI\ERP\Products\Search\FrontendSearch|null
+    protected function getSearch(): bool | QUI\ERP\Products\Search\FrontendSearch | null
     {
         try {
             if ($this->Search === null) {

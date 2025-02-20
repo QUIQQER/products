@@ -99,7 +99,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Search data type for values of this field
      */
-    protected int|bool $searchDataType = false;
+    protected int | bool $searchDataType = false;
 
     /**
      * @var array
@@ -700,7 +700,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * @param array|string $options - field options
      */
-    public function setOptions(array|string $options): void
+    public function setOptions(array | string $options): void
     {
         if (is_string($options)) {
             $options = json_decode($options, true);
@@ -818,7 +818,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param Locale|null $Locale
      * @return string|array|null
      */
-    public function getSearchCacheValue(?Locale $Locale = null): null|string|array
+    public function getSearchCacheValue(?Locale $Locale = null): null | string | array
     {
         if ($this->isEmpty()) {
             return null;
@@ -856,7 +856,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param Locale|null $Locale
      * @return string|bool
      */
-    public function getSuffix(null | Locale $Locale = null): bool|string
+    public function getSuffix(null | Locale $Locale = null): bool | string
     {
         if (!$Locale) {
             $Locale = QUI::getLocale();
@@ -883,7 +883,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param ?QUI\Locale $Locale
      * @return string|bool
      */
-    public function getPrefix(null | Locale $Locale = null): bool|string
+    public function getPrefix(null | Locale $Locale = null): bool | string
     {
         if (!$Locale) {
             $Locale = QUI::getLocale();
@@ -1059,7 +1059,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
     /**
      * Get search type of this field
      */
-    public function getSearchType(): bool|int|string
+    public function getSearchType(): bool | int | string
     {
         return $this->getAttribute('search_type');
     }
@@ -1093,7 +1093,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      *
      * @return bool|int|string
      */
-    public function getSearchDataType(): bool|int|string
+    public function getSearchDataType(): bool | int | string
     {
         return $this->searchDataType;
     }
@@ -1266,7 +1266,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
      * @param float|integer $max
      * @return array - contains values from min to max with calculated steps in between
      */
-    public function calculateValueRange(float|int $min, float|int $max): array
+    public function calculateValueRange(float | int $min, float | int $max): array
     {
         if ($min < 1) {
             $start = 0.1;
@@ -1274,7 +1274,7 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             // round down to lowest 10 (e.g.: 144 = 140; 2554 = 2550)
             $floorPrecision = 1;
 
-            if ((string)mb_strlen((int)$min) > 1) {
+            if (mb_strlen((string)$min) > 1) {
                 $floorPrecision = 10;
             }
 

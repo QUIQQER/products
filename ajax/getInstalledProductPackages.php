@@ -15,7 +15,7 @@ QUI::$Ajax->registerFunction(
             'quiqqer/productsimportexport' => false
         ];
 
-        foreach ($packages as $pkg) {
+        foreach ($packages as $pkg => $value) {
             try {
                 QUI::getPackage($pkg);
                 $packages[$pkg] = true;

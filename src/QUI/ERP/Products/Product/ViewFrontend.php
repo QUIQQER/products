@@ -30,7 +30,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     /**
      * @var Model|UniqueProduct
      */
-    protected Model|UniqueProduct $Product;
+    protected Model | UniqueProduct $Product;
 
     /**
      * View constructor.
@@ -89,7 +89,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     /**
      * @return Model|UniqueProduct
      */
-    public function getProduct(): UniqueProduct|Model
+    public function getProduct(): UniqueProduct | Model
     {
         return $this->Product;
     }
@@ -220,7 +220,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     {
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return new QUI\ERP\Money\Price(
-                '',
+                null,
                 QUI\ERP\Currency\Handler::getDefaultCurrency()
             );
         }
@@ -344,7 +344,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     /**
      * @return float|bool|int
      */
-    public function getMaximumQuantity(): float|bool|int
+    public function getMaximumQuantity(): float | bool | int
     {
         return $this->Product->getMaximumQuantity();
     }
@@ -355,7 +355,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * @param int|string $fieldId
      * @return mixed - formatted field value
      */
-    public function getFieldValue(int|string $fieldId): mixed
+    public function getFieldValue(int | string $fieldId): mixed
     {
         $Field = $this->getField($fieldId);
 
@@ -368,7 +368,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * @param string|array $type
      * @return array
      */
-    public function getFieldsByType(string|array $type): array
+    public function getFieldsByType(string | array $type): array
     {
         $types = $this->Product->getFieldsByType($type);
 
@@ -384,7 +384,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * @param int|string $fieldId
      * @return FieldInterface|null
      */
-    public function getField(int|string $fieldId): ?QUI\ERP\Products\Interfaces\FieldInterface
+    public function getField(int | string $fieldId): ?QUI\ERP\Products\Interfaces\FieldInterface
     {
         try {
             $Field = $this->Product->getField($fieldId);
@@ -521,7 +521,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
      * @throws Exception
      * @throws QUI\Exception
      */
-    public function getOriginalPrice(): QUI\ERP\Products\Interfaces\UniqueFieldInterface|bool
+    public function getOriginalPrice(): QUI\ERP\Products\Interfaces\UniqueFieldInterface | bool
     {
         return $this->Product->getOriginalPrice();
     }

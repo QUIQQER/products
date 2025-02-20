@@ -87,11 +87,14 @@ class ProductListFrontendView
         $productList = [];
         $hidePrice = $this->hidePrice;
 
-        /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
             $attributes = $Product->getAttributes();
             $fields = $Product->getFields();
-            $PriceFactors = $Product->getPriceFactors();
+            $PriceFactors = new QUI\ERP\Products\Utils\PriceFactor();
+
+            if (method_exists($Product, 'getPriceFactors')) {
+                $PriceFactors = $Product->getPriceFactors();
+            }
 
             $product = [
                 'productNo' => '',
@@ -103,7 +106,6 @@ class ProductListFrontendView
                 'originalPrice' => $this->formatPrice($Product->getOriginalPrice()->getValue())
             ];
 
-            /* @var $Field QUI\ERP\Products\Field\UniqueField */
             foreach ($fields as $Field) {
                 if (!$Field->isPublic()) {
                     continue;

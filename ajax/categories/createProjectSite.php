@@ -17,6 +17,10 @@ QUI::$Ajax->registerFunction(
         $Project = QUI::getProjectManager()->decode($project);
         $Site = $Project->get($siteId);
 
+        if (!method_exists($Site, 'createChild')) {
+            throw new QUI\Exception('Could not create child.');
+        }
+
         $newChildId = $Site->createChild([
             'name' => QUI\Projects\Site\Utils::clearUrl($title, $Project),
             'title' => $title
@@ -30,7 +34,10 @@ QUI::$Ajax->registerFunction(
 
         $NewChild = $Project->get($newChildId);
         $NewChild->setAttribute('quiqqer.products.settings.categoryId', $Category->getId());
-        $NewChild->save();
+
+        if (method_exists($NewChild, 'save')) {
+            $NewChild->save();
+        }
 
         return $NewChild->getId();
     },

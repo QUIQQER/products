@@ -83,6 +83,10 @@ class UpdatePrices extends QUI\System\Console\Tool
         $categories = QUI\ERP\Products\Handler\Categories::getCategories();
 
         foreach ($categories as $Category) {
+            if (!method_exists($Category, 'getCustomDataEntry')) {
+                continue;
+            }
+
             $priceFieldFactors = $Category->getCustomDataEntry('priceFieldFactors');
 
             if (empty($priceFieldFactors)) {

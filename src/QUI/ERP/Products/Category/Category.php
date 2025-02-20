@@ -71,7 +71,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * @var array|null
      */
-    protected array|null $defaultSites = [];
+    protected array | null $defaultSites = [];
 
     /**
      * db data
@@ -259,7 +259,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      *
      * @return integer|boolean
      */
-    public function getParentId(): bool|int
+    public function getParentId(): bool | int
     {
         if ($this->getId() === 0) {
             return false;
@@ -295,7 +295,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * @return bool|QUI\ERP\Products\Interfaces\CategoryInterface
      * @throws QUI\Exception
      */
-    public function getParent(): bool|QUI\ERP\Products\Interfaces\CategoryInterface
+    public function getParent(): bool | QUI\ERP\Products\Interfaces\CategoryInterface
     {
         if ($this->getId() === 0) {
             return false;
@@ -349,7 +349,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
     /**
      * @return ViewFrontend|ViewBackend
      */
-    public function getView(): ViewBackend|ViewFrontend
+    public function getView(): ViewBackend | ViewFrontend
     {
         switch ($this->getAttribute('viewType')) {
             case 'backend':
@@ -752,7 +752,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         $ExceptionStack = new QUI\ExceptionStack();
 
         foreach ($productIds as $productId) {
-            if (!DEVELOPMENT) {
+            if (!DEVELOPMENT) { // @phpstan-ignore-line
                 set_time_limit(3);
             }
 
@@ -770,7 +770,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
         }
 
         // reset time limit
-        set_time_limit(ini_get('max_execution_time'));
+        set_time_limit((int)ini_get('max_execution_time'));
 
         QUI::getEvents()->fireEvent(
             'onQuiqqerProductsCategorySetFieldsToAllProducts',
@@ -1084,7 +1084,7 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      * @param string $key
      * @param float|array|int|string|null $value - Must be serializable
      */
-    public function setCustomDataEntry(string $key, float|array|int|string|null $value): void
+    public function setCustomDataEntry(string $key, float | array | int | string | null $value): void
     {
         if (!is_string($value) && !is_numeric($value) && !is_array($value)) {
             return;

@@ -49,7 +49,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      * Field title
      * @var string|array
      */
-    protected string|array $title;
+    protected string | array $title;
 
     /**
      * @var string
@@ -97,7 +97,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      *
      * @var string|array|null
      */
-    protected string|array|null $searchvalue;
+    protected string | array | null $searchvalue;
 
     /**
      * is field public
@@ -388,7 +388,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     }
 
     /**
-     * @return string|array
+     * @return mixed
      */
     public function getValue(): mixed
     {
@@ -448,7 +448,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
      * @param Locale|null $Locale
      * @return string|array|null
      */
-    public function getSearchCacheValue(null | QUI\Locale $Locale = null): null|string|array
+    public function getSearchCacheValue(null | QUI\Locale $Locale = null): null | string | array
     {
         return $this->searchvalue;
     }
@@ -547,7 +547,7 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     protected function getValueText(): string
     {
         if (isset($this->custom_calc['valueText'])) {
-            if (!is_string($this->custom_calc['valueText'])) {
+            if (is_string($this->custom_calc['valueText'])) {
                 return $this->custom_calc['valueText'];
             }
 

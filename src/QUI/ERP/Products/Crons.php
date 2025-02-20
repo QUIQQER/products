@@ -44,7 +44,6 @@ class Crons
 
         $ids = Products::getProductIds();
 
-        /** @var QUI\ERP\Products\Product\Model $Product */
         foreach ($ids as $id) {
             set_time_limit(self::PRODUCT_CACHE_UPDATE_TIME);
 
@@ -67,7 +66,7 @@ class Crons
         }
 
         // reset time limit
-        set_time_limit(ini_get('max_execution_time'));
+        set_time_limit((int)ini_get('max_execution_time'));
     }
 
     /**
@@ -82,7 +81,6 @@ class Crons
         $count = count($ids);
         $current = 0;
 
-        /** @var QUI\ERP\Products\Product\Model $Product */
         foreach ($ids as $id) {
             QUI::getEvents()->fireEvent('generateCacheImagesOfProductsBegin', [$id, $current, $count]);
 
@@ -117,6 +115,6 @@ class Crons
         }
 
         // reset time limit
-        set_time_limit(ini_get('max_execution_time'));
+        set_time_limit((int)ini_get('max_execution_time'));
     }
 }

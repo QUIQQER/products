@@ -31,8 +31,12 @@ QUI::$Ajax->registerFunction(
             $Category = Categories::getCategory($categoryId);
 
             $priceFieldFactorFields = [];
-            $priceFieldFactors = $Category->getCustomDataEntry('priceFieldFactors');
+            $priceFieldFactors = [];
             $priceFieldFactorPriority = 0;
+
+            if (method_exists($Category, 'getCustomDataEntry')) {
+                $priceFieldFactors = $Category->getCustomDataEntry('priceFieldFactors');
+            }
 
             if (!empty($priceFieldFactors)) {
                 foreach (array_keys($priceFieldFactors) as $priceFieldFactorFieldId) {
@@ -63,7 +67,7 @@ QUI::$Ajax->registerFunction(
                 'id' => $Category->getId(),
                 'title' => $Category->getTitle($Locale),
                 'description' => $Category->getDescription($Locale),
-                'path' => $Category->getPath($Locale),
+                'path' => method_exists($Category, 'getPath') ? $Category->getPath($Locale) : '',
                 'priceFieldFactorFields' => $priceFieldFactorFieldsInfo
             ];
         }

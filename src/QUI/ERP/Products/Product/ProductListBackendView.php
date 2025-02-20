@@ -80,18 +80,20 @@ class ProductListBackendView
 
         $productList = [];
 
-        /* @var $Product UniqueProduct */
         foreach ($products as $Product) {
             $attributes = $Product->getAttributes();
             $fields = $Product->getFields();
-            $PriceFactors = $Product->getPriceFactors();
+            $PriceFactors = new QUI\ERP\Products\Utils\PriceFactor();
+
+            if (method_exists($Product, 'getPriceFactors')) {
+                $PriceFactors = $Product->getPriceFactors();
+            }
 
             $product = [
                 'fields' => [],
                 'vatArray' => []
             ];
 
-            /* @var $Field QUI\ERP\Products\Field\UniqueField */
             foreach ($fields as $Field) {
                 if ($Field->isPublic()) {
                     $product['fields'][] = $Field->getBackendView();
@@ -131,7 +133,6 @@ class ProductListBackendView
 
             $product['vatArray'][$calculatedVat]['sum'] = $calculatedSum;
 
-            /* @var QUI\ERP\Products\Utils\PriceFactor $Factor */
             foreach ($PriceFactors->sort() as $Factor) {
                 if (!$Factor->isVisible()) {
                     continue;

@@ -90,7 +90,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
      *
      * @param QUI\ERP\Products\Interfaces\ProductInterface|integer $Product
      */
-    public function addProduct(QUI\ERP\Products\Interfaces\ProductInterface|int $Product): void
+    public function addProduct(QUI\ERP\Products\Interfaces\ProductInterface | int $Product): void
     {
         if (is_numeric($Product)) {
             try {
@@ -148,7 +148,10 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
                 ]);
             } else {
                 // retail price (UVP)
-                if ($Product->getFieldValue('FIELD_PRICE_RETAIL')) {
+                if (
+                    $Product->getFieldValue(Fields::FIELD_PRICE_RETAIL)
+                    && method_exists($Product, 'getCalculatedPrice')
+                ) {
                     $PriceRetail = $Product->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL)->getPrice();
 
                     if ($Price->getPrice() < $PriceRetail->getPrice()) {
