@@ -1,5 +1,5 @@
 parameters:
-	ignoreErrors:
+    ignoreErrors:
         - message: '#Parameter \$Order of method .* has invalid type QUI\\ERP\\Order\\AbstractOrder#'
           path: src/QUI/ERP/Products/EventHandling.php
 
