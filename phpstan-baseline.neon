@@ -1,2 +1,16 @@
 parameters:
 	ignoreErrors:
+        - message: '#Parameter \$Order of method .* has invalid type QUI\\ERP\\Order\\AbstractOrder#'
+          path: src/QUI/ERP/Products/EventHandling.php
+
+        - message: '#Call to method getArticles\(\) on an unknown class QUI\\ERP\\Order\\AbstractOrder#'
+          path: src/QUI/ERP/Products/EventHandling.php
+
+        - message: '#Property .* has unknown class QUI\\ERP\\Order\\AbstractOrder as its type#'
+          path: src/QUI/ERP/Products/Product/ProductList.php
+
+        - message: '#Parameter \$Order of method .* has invalid type QUI\\ERP\\Order\\AbstractOrder#'
+          path: src/QUI/ERP/Products/Product/ProductList.php
+
+        - message: '#Method .* has invalid return type QUI\\ERP\\Order\\AbstractOrder#'
+          path: src/QUI/ERP/Products/Product/ProductList.php
