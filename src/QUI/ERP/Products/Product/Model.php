@@ -2119,10 +2119,10 @@ class Model extends QUI\QDOM
      * Return the field value
      *
      * @param integer|string $fieldId - Field ID or FIELD constant name -> FIELD_PRICE, FIELD_PRODUCT_NO ...
-     * @return string|array|null
-     * @throws QUI\ERP\Products\Product\Exception
+     * @return int|float|string|array|null
+     * @throws Exception
      */
-    public function getFieldValue(int | string $fieldId): string | array | null
+    public function getFieldValue(int | string $fieldId): int | float | string | array | null
     {
         return $this->getField($fieldId)->getValue();
     }
@@ -2132,10 +2132,10 @@ class Model extends QUI\QDOM
      *
      * @param integer $fieldId
      * @param Locale|null $Locale (optional)
-     * @return string|array|null
-     * @throws \QUI\ERP\Products\Product\Exception
+     * @return int|float|string|array|null
+     * @throws Exception
      */
-    public function getFieldValueByLocale(int $fieldId, ?QUI\Locale $Locale = null): string | array | null
+    public function getFieldValueByLocale(int $fieldId, ?QUI\Locale $Locale = null): int | float | string | array | null
     {
         return $this->getField($fieldId)->getValueByLocale($Locale);
     }
