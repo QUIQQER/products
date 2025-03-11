@@ -84,19 +84,19 @@ define('package/quiqqer/products/bin/classes/Products', [
          */
         openProduct: function (productId) {
             return this.getChild(productId).then(function (attributes) {
-                var panel = attributes.typePanel;
+                let panel = attributes.typePanel;
 
                 if (panel === '' || typeof panel === 'undefined') {
                     panel = 'package/quiqqer/products/bin/controls/products/Product';
                 }
 
                 return new Promise(function (resolve) {
-                    var needles = [];
+                    let needles = [];
                     needles.push(panel);
                     needles.push('utils/Panels');
 
                     require(needles, function (Panel, Utils) {
-                        var Control = new Panel({
+                        const Control = new Panel({
                             productId: productId
                         });
 
@@ -175,7 +175,7 @@ define('package/quiqqer/products/bin/classes/Products', [
                     }
 
                     require(['Projects'], function (Projects) {
-                        var Project = Projects.get(result.project),
+                        const Project = Projects.get(result.project),
                             Media = Project.getMedia();
 
                         Media.get(result.id).then(resolve).catch(function () {
@@ -231,8 +231,13 @@ define('package/quiqqer/products/bin/classes/Products', [
             const jsonData = JSON.stringify({productId, fields});
             const key = btoa(String.fromCharCode(...new TextEncoder().encode(jsonData))).slice(0, 32);
 
+            let inAdministration = false;
+            if (typeof QUIQQER.inAdministration !== 'undefined' && QUIQQER.inAdministration) {
+                inAdministration = !!QUIQQER.inAdministration;
+            }
+
             return new Promise(function (resolve, reject) {
-                if (!forceCache && typeof requestCache[key] !== 'undefined') {
+                if (!forceCache && typeof requestCache[key] !== 'undefined' && !inAdministration) {
                     // JSON.parse(JSON.stringify because JS reference usage
                     return resolve(JSON.parse(JSON.stringify(requestCache[key])));
                 }
@@ -489,7 +494,7 @@ define('package/quiqqer/products/bin/classes/Products', [
                 'package/quiqqer/products/bin/controls/products/Product',
                 'utils/Panels'
             ], function (ProductPanel, Panels) {
-                var PPanel = new ProductPanel({
+                const PPanel = new ProductPanel({
                     productId: productId,
                     '#id': productId
                 });
@@ -504,7 +509,7 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @param {number} pid
          */
         addToVisited: function (pid) {
-            var visited = this.getVisitedProductIds();
+            let visited = this.getVisitedProductIds();
 
             visited.push(pid);
             visited = visited.unique();
@@ -522,7 +527,7 @@ define('package/quiqqer/products/bin/classes/Products', [
          * @returns {Array}
          */
         getVisitedProductIds: function () {
-            var visited = QUI.Storage.get('quiqqer-products-visited');
+            let visited = QUI.Storage.get('quiqqer-products-visited');
 
             if (!visited) {
                 return [];
