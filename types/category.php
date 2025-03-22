@@ -29,7 +29,7 @@ $url = pathinfo($url);
 
 // fallback url for a product, with NO category
 // this should never happen and is a configuration error
-if (strpos(QUI::getRequest()->getPathInfo(), '_p/') !== false) {
+if (str_contains(QUI::getRequest()->getPathInfo(), '_p/')) {
     $_REQUEST['_url'] = QUI::getRequest()->getPathInfo();
 
     if (strlen(URL_DIR) == 1) {
@@ -133,7 +133,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
         }
 
         // if product url is with lang flag /en/
-        if (strpos($productUrl, '/', 1) === 3 && strpos($productUrl, '/_p/') === false) {
+        if (strpos($productUrl, '/', 1) === 3 && !str_contains($productUrl, '/_p/')) {
             $productUrl = mb_substr($productUrl, 3);
         }
 
@@ -304,7 +304,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     $fields = Products\Utils\Sortables::getSortableFieldsForSite($Site);
 
     foreach ($fields as $fieldId) {
-        if (strpos($fieldId, 'S') === 0) {
+        if (str_starts_with($fieldId, 'S')) {
             $title = QUI::getLocale()->get('quiqqer/products', 'sortable.' . mb_substr($fieldId, 1));
 
             $ProductList->addSort(
@@ -320,7 +320,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
             continue;
         }
 
-        if (strpos($fieldId, 'F') === 0) {
+        if (str_starts_with($fieldId, 'F')) {
             try {
                 $fieldId = str_replace('F', '', $fieldId);
 
@@ -361,7 +361,7 @@ if ($siteUrl != $_REQUEST['_url'] || isset($_GET['variant']) || isset($_GET['p']
     }
 
     if ($hasFilter && !$ProductList->count()) {
-        // keine produkte -> weiterleitung zu main
+        // keine produkte → weiterleitung zu main
         $Redirect = new RedirectResponse($Site->getUrlRewritten());
         $Redirect->setStatusCode(Response::HTTP_SEE_OTHER);
 
