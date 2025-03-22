@@ -12,7 +12,7 @@
 use QUI\ERP\Products\Handler\Products;
 
 $productIds = $Site->getAttribute('quiqqer.products.settings.productIds');
-$productIds = \explode(',', $productIds);
+$productIds = explode(',', $productIds);
 
 $products = [];
 
