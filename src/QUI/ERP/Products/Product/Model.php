@@ -351,9 +351,21 @@ class Model extends QUI\QDOM
         try {
             return new ViewFrontend($this);
         } catch (\Exception $Exception) {
-            QUI\System\Log::addError($Exception->getMessage(), [
-                'extra-message' => 'product frontend view error'
-            ]);
+            if ($Exception->getCode() === 404) {
+                // log products not found
+                // these are often products that are called up but are deactivated and still exist
+                // e.g. when search engines still direct users to it
+                QUI\System\Log::addError(
+                    $Exception->getMessage(),
+                    ['extra-message' => 'product frontend view error'],
+                    'products_not_found'
+                );
+            } else {
+                QUI\System\Log::addError(
+                    $Exception->getMessage(),
+                    ['extra-message' => 'product frontend view error']
+                );
+            }
 
             throw $Exception;
         }
