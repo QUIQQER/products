@@ -1203,7 +1203,8 @@ abstract class Field extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Fie
             'isRequired' => $this->isRequired(),
             'showInDetails' => $this->showInDetails(),
             'type' => $this->getType(),
-            'search_type' => $this->getSearchType()
+            'search_type' => $this->getSearchType(),
+            'options' => $this->getOptions()
         ];
     }
 

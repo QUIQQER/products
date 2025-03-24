@@ -39,13 +39,6 @@ class Price extends QUI\ERP\Products\Field\Field
     protected int | bool $searchDataType = Search::SEARCHDATATYPE_NUMERIC;
 
     /**
-     * Official currency code (i.e. EUR)
-     *
-     * @var string|null
-     */
-    protected ?string $currencyCode = null;
-
-    /**
      * @return View
      */
     public function getBackendView(): View
@@ -211,9 +204,9 @@ class Price extends QUI\ERP\Products\Field\Field
     /**
      * Calculates a range with individual steps between a min and a max number
      *
-     * @param float|integer $min
-     * @param float|integer $max
-     * @return array - contains values from min to max with calculated steps inbetween
+     * @param float|int|null $min
+     * @param float|int|null $max
+     * @return array - contains values from min to max with calculated steps in between
      */
     public function calculateValueRange(null | float | int $min, null | float | int $max): array
     {

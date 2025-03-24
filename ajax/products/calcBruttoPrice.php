@@ -17,23 +17,30 @@ use QUI\ERP\Products\Utils\Calc;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_calcBruttoPrice',
-    function ($price, $formatted, $productId) {
+    function ($price, $formatted, $productId, $currency) {
+        $Currency = QUI\ERP\Defaults::getCurrency();
+
+        if (!empty($currency)) {
+            try {
+                $Currency = QUI\ERP\Currency\Handler::getCurrency($currency);
+            } catch (QUI\Exception) {
+                $Currency = QUI\ERP\Defaults::getCurrency();
+            }
+        }
+
         try {
             $price = QUI\ERP\Money\Price::validatePrice($price);
-            $baseFormatted = QUI\ERP\Defaults::getCurrency()->format($price);
+            $priceResult = Calc::calcBruttoPrice($price, false, $productId);
 
-            $bruttoPrice = Calc::calcBruttoPrice($price, false, $productId);
-            $nettoPriceFormatted = Calc::calcNettoPrice($bruttoPrice, true, $productId);
-
-            if ($baseFormatted === $nettoPriceFormatted) {
-                return Calc::calcBruttoPrice($price, $formatted, $productId);
+            if ($formatted) {
+                return $Currency->format($priceResult);
             }
 
-            return Calc::calcBruttoPrice($price, $formatted, $productId);
+            return $priceResult;
         } catch (Exception $Exception) {
             QUI\System\Log::writeException($Exception);
-            throw new \QUI\ERP\Exception(['quiqqer/products', 'ajax.general_error']);
+            throw new QUI\ERP\Exception(['quiqqer/products', 'ajax.general_error']);
         }
     },
-    ['price', 'formatted', 'productId']
+    ['price', 'formatted', 'productId', 'currency']
 );

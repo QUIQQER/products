@@ -26,7 +26,7 @@ QUI::$Ajax->registerFunction(
         $fields = json_decode($fields, true);
 
         // fields
-        foreach ($fields as $fieldId => $field) {
+        foreach ($fields as $fieldId => $fieldValue) {
             try {
                 $fieldId = (int)str_replace('field-', '', $fieldId);
                 $Field = $Fields->getField($fieldId);
@@ -44,6 +44,18 @@ QUI::$Ajax->registerFunction(
                     continue;
                 }
 
+                // price options -> like other currencies
+                if (
+                    $fieldId === QUI\ERP\Products\Handler\Fields::FIELD_PRICE
+                    && is_string($fieldValue)
+                    && str_contains($fieldValue, '{')
+                ) {
+                    // price value is json string
+                    $json = json_decode($fieldValue, true);
+                    $fieldValue = $json['value'];
+                    $ProductField->setOption('currencies', $json['currencies']);
+                }
+
                 // pcsg-projects/demo-shop/-/issues/9#note_152341
                 if (
                     $Product instanceof VariantParent
@@ -52,7 +64,7 @@ QUI::$Ajax->registerFunction(
                     $editable = $Product->getAttribute('editableVariantFields');
 
                     if (is_array($editable) && in_array($ProductField->getId(), $editable)) {
-                        $ProductField->setValue($field);
+                        $ProductField->setValue($fieldValue);
                         continue;
                     }
                 }
@@ -62,13 +74,13 @@ QUI::$Ajax->registerFunction(
                     && ($Product instanceof VariantParent || $Product instanceof VariantChild)
                 ) {
                     if ($ProductField->getOption('exclude_from_variant_generation')) {
-                        $ProductField->setValue($field);
+                        $ProductField->setValue($fieldValue);
                     }
 
                     continue;
                 }
 
-                $ProductField->setValue($field);
+                $ProductField->setValue($fieldValue);
             } catch (QUI\ERP\Products\Product\Exception $Exception) {
                 if ($Exception->getCode() === 1002) {
                     continue;
@@ -79,7 +91,7 @@ QUI::$Ajax->registerFunction(
                     [
                         'id' => $Field->getId(),
                         'title' => $Field->getTitle(),
-                        'data' => $field
+                        'data' => $fieldValue
                     ]
                 );
 
@@ -90,7 +102,7 @@ QUI::$Ajax->registerFunction(
                     [
                         'id' => $Field->getId(),
                         'title' => $Field->getTitle(),
-                        'data' => $field
+                        'data' => $fieldValue
                     ]
                 );
 

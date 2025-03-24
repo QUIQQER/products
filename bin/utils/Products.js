@@ -19,9 +19,9 @@ define('package/quiqqer/products/bin/utils/Products', [
     return {
 
         renderDataField: function (field) {
-            let help  = false,
+            let help = false,
                 title = QUILocale.get(lg, 'products.field.' + field.id + '.title');
-            
+
             if (QUILocale.exists(lg, 'products.field.' + field.id + '.workingtitle')) {
                 title = QUILocale.get(lg, 'products.field.' + field.id + '.workingtitle');
             }
@@ -33,12 +33,12 @@ define('package/quiqqer/products/bin/utils/Products', [
             }
 
             const FieldElm = new Element('tr', {
-                'class'       : 'field',
-                html          : Mustache.render(templateField, {
+                'class': 'field',
+                html: Mustache.render(templateField, {
                     fieldTitle: title,
-                    fieldHelp : help,
-                    fieldName : 'field-' + field.id,
-                    control   : field.jsControl
+                    fieldHelp: help,
+                    fieldName: 'field-' + field.id,
+                    control: field.jsControl
                 }),
                 'data-fieldid': field.id
             });

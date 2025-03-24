@@ -244,6 +244,10 @@ class Model extends QUI\QDOM
                 $field['value'] = $Field->cleanup($field['value']);
             }
 
+            if (isset($field['options'])) {
+                $Field->setOptions($field['options']);
+            }
+
             try {
                 $Field->setValue($field['value']);
 //            } catch (QUI\ERP\Products\Field\ExceptionRequired $Exception) {
