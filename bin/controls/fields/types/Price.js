@@ -108,10 +108,12 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
             require(['package/quiqqer/currency/bin/Currency'], (Currencies) => {
                 Promise.all([
                     Currencies.getCurrencies(),
+                    Currencies.getDefaultCurrency(),
                     this.getFormatter()
                 ]).then((r) => {
                     const currencies = r[0];
-                    const Formatter = r[1];
+                    const defaultCurrency = r[1];
+                    const Formatter = r[2];
 
                     if (currencies.length <= 1) {
                         return;
@@ -163,6 +165,21 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
 
                         const displayNode = container.querySelector('.displayNode');
                         const input = container.querySelector('input');
+
+                        if (defaultCurrency === currency.code) {
+                            input.disabled = true;
+                            input.value = this.$Input.value;
+
+                            this.$Input.addEvent('change', () => {
+                                input.value = this.$Input.value;
+
+                                this.$calcBruttoPriceForCurrency(
+                                    input.value,
+                                    currency.code,
+                                    displayNode
+                                );
+                            });
+                        }
 
                         container.querySelector('button')
                             .addEventListener('click', this.openBruttoInputForCurrencies);
@@ -277,6 +294,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
             ) {
                 this.getElm().value = '';
                 this.$Input.value = '';
+                this.$Input.fireEvent('change');
                 this.$calcBruttoPrice();
                 return;
             }
@@ -290,12 +308,14 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
             if ((foundGroupSeparator || foundDecimalSeparator) && !(foundGroupSeparator && !foundDecimalSeparator)) {
                 this.getElm().value = value;
                 this.$Input.value = value;
+                this.$Input.fireEvent('change');
                 return;
             }
 
             this.getFormatter().then((Formatter) => {
                 this.getElm().value = Formatter.format(parseFloat(value));
                 this.$Input.value = Formatter.format(parseFloat(value));
+                this.$Input.fireEvent('change');
             });
 
             this.$calcBruttoPrice();
@@ -408,7 +428,10 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
                 productId: this.$productId,
                 events: {
                     onSubmit: (Win, value) => {
-                        e.target.getParent('label').querySelector('input').value = value;
+                        const input = e.target.getParent('label').querySelector('input');
+
+                        input.value = value;
+                        input.dispatchEvent(new Event('blur', {bubbles: false}));
                     }
                 }
             }).open();
