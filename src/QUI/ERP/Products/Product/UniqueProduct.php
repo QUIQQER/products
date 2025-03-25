@@ -1336,7 +1336,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             'quantity' => $this->getQuantity(),
             'customFields' => $this->getCustomFieldsData(),
             'customData' => $this->getCustomData(),
-            'displayPrice' => true
+            'displayPrice' => true,
+            'currency' => $this->getCurrency()?->getCode()
         ];
 
         if (!$initialCalcStatus) {

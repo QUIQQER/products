@@ -43,6 +43,21 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
     {
         $this->Product = $Product;
 
+        if (!$this->Product->getCurrency()) {
+            $currency = QUI::getUserBySession()->getAttribute('quiqqer.erp.currency');
+            $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+
+            if (!empty($currency)) {
+                try {
+                    $Currency = QUI\ERP\Currency\Handler::getCurrency($currency);
+                } catch (QUI\Exception) {
+                }
+            }
+
+            $this->Product->setCurrency($Currency);
+        }
+
+
         if (!$Product->isActive()) {
             throw new QUI\ERP\Products\Product\Exception(
                 [

@@ -595,7 +595,8 @@ define('package/quiqqer/products/bin/classes/Product', [
                     'package': 'quiqqer/products',
                     productId: this.getId(),
                     fields: JSON.encode(this.$data.fields),
-                    quantity: quantity
+                    quantity: quantity,
+                    currency: window.DEFAULT_USER_CURRENCY.code
                 });
             }.bind(this));
         },

@@ -157,6 +157,7 @@ define('package/quiqqer/products/bin/classes/Products', [
                     'package': 'quiqqer/products',
                     productId: productId,
                     fields: JSON.encode(fields),
+                    currency: window.DEFAULT_USER_CURRENCY.code,
                     onError: reject
                 });
             });

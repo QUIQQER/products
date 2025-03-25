@@ -4,6 +4,7 @@
  * This file contains package_quiqqer_products_ajax_products_calc
  */
 
+use QUI\ERP\Currency\Handler;
 use QUI\ERP\Products\Field\CustomCalcFieldInterface;
 use QUI\ERP\Products\Handler\Products;
 
@@ -16,9 +17,16 @@ use QUI\ERP\Products\Handler\Products;
  */
 QUI::$Ajax->registerFunction(
     'package_quiqqer_products_ajax_products_calc',
-    function ($productId, $fields, $quantity) {
+    function ($productId, $fields, $quantity, $currency) {
         $fields = json_decode($fields, true);
         $Product = Products::getProduct($productId);
+
+        if (!empty($currency)) {
+            try {
+                $Product->setCurrency(Handler::getCurrency($currency));
+            } catch (QUI\Exception) {
+            }
+        }
 
         if (!is_array($fields)) {
             $fields = [];
@@ -50,5 +58,5 @@ QUI::$Ajax->registerFunction(
 
         return $Unique->getView()->toArray();
     },
-    ['productId', 'fields', 'quantity']
+    ['productId', 'fields', 'quantity', 'currency']
 );
