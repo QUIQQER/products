@@ -403,6 +403,7 @@ class Model extends QUI\QDOM
 
         $fieldList = $this->getFields();
         $attributes = null;
+        $cacheName = false;
 
         if (Products::$useRuntimeCacheForUniqueProducts) {
             $cacheName = self::getUniqueProductCachePath($User);
@@ -452,7 +453,7 @@ class Model extends QUI\QDOM
         }
 
 
-        if (Products::$useRuntimeCacheForUniqueProducts && isset($cacheName)) {
+        if (Products::$useRuntimeCacheForUniqueProducts && $cacheName) {
             ProductCache::writeUniqueProductData($attributes, $cacheName);
         }
 

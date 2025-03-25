@@ -190,7 +190,11 @@ class Products
 
             if (is_null($priceValue) || $value < $priceValue) {
                 $priceValue = $value;
-                $currencyPrices = $PriceField->getOption('currencies');
+                $currencyPrices = [];
+
+                if (method_exists($PriceField, 'getOption')) {
+                    $currencyPrices = $PriceField->getOption('currencies');
+                }
 
                 if (!empty($currencyPrices[$Currency->getCode()])) {
                     $priceValue = $currencyPrices[$Currency->getCode()];
@@ -203,7 +207,7 @@ class Products
             $priceValue = $priceValue->getValue();
         }
 
-        return new QUI\ERP\Money\Price($priceValue, $Currency, null, $currencyPrices);
+        return new QUI\ERP\Money\Price($priceValue, $Currency);
     }
 
     /**
