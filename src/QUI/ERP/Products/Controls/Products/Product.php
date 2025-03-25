@@ -121,6 +121,17 @@ class Product extends QUI\Control
         }
 
         $User = QUI::getUserBySession();
+        $currency = $User->getAttribute('quiqqer.erp.currency');
+        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+
+        if (!empty($currency)) {
+            try {
+                $Currency = QUI\ERP\Currency\Handler::getCurrency($currency);
+            } catch (QUI\Exception) {
+            }
+        }
+
+        $Product->setCurrency($Currency);
 
         if ($Product instanceof QUI\ERP\Products\Product\Product) {
             $View = $Product->getView();

@@ -7,6 +7,7 @@
 namespace QUI\ERP\Products\Utils;
 
 use QUI;
+use QUI\ERP\Currency\Currency;
 use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Handler\Categories;
 use QUI\ERP\Products\Handler\Fields as FieldHandler;
@@ -87,8 +88,25 @@ class Products
             throw new QUI\Exception('No Product given');
         }
 
+        $Currency = $Product->getCurrency();
+
+        if (!$Currency) {
+            $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
+        }
+
         $PriceField = $Product->getField(FieldHandler::FIELD_PRICE);
         $priceValue = $PriceField->getValue();
+        $currencyPrices = [];
+
+        // multi currencies
+        if (method_exists($PriceField, 'getOption')) {
+            $currencyPrices = $PriceField->getOption('currencies');
+
+            if (!empty($currencyPrices[$Currency->getCode()])) {
+                $priceValue = $currencyPrices[$Currency->getCode()];
+                $priceValue = QUI\ERP\Money\Price::validatePrice($priceValue);
+            }
+        }
 
         // $priceValue may be NULL or empty string; in these cases, consider the default price field value as not set.
         // @phpstan-ignore-next-line
@@ -96,7 +114,6 @@ class Products
             $priceValue = null;
         }
 
-        $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
 
         // exists more price fields?
         // is user in group filter
@@ -107,7 +124,14 @@ class Products
         }
 
         if (empty($priceFields)) {
-            return new QUI\ERP\Money\Price($PriceField->getValue(), $Currency);
+            $value = $PriceField->getValue();
+
+            if (!empty($currencyPrices[$Currency->getCode()])) {
+                $value = $currencyPrices[$Currency->getCode()];
+                $value = QUI\ERP\Money\Price::validatePrice($value);
+            }
+
+            return new QUI\ERP\Money\Price($value, $Currency);
         }
 
         $priceFieldsConsidered = array_filter($priceFields, function ($Field) use ($User) {
@@ -166,6 +190,12 @@ class Products
 
             if (is_null($priceValue) || $value < $priceValue) {
                 $priceValue = $value;
+                $currencyPrices = $PriceField->getOption('currencies');
+
+                if (!empty($currencyPrices[$Currency->getCode()])) {
+                    $priceValue = $currencyPrices[$Currency->getCode()];
+                    $priceValue = QUI\ERP\Money\Price::validatePrice($priceValue);
+                }
             }
         }
 
@@ -173,7 +203,7 @@ class Products
             $priceValue = $priceValue->getValue();
         }
 
-        return new QUI\ERP\Money\Price($priceValue, $Currency);
+        return new QUI\ERP\Money\Price($priceValue, $Currency, null, $currencyPrices);
     }
 
     /**

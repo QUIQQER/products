@@ -329,6 +329,14 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     {
         $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
 
+        if (
+            $this->Product
+            && method_exists($this->Product, 'getCurrency')
+            && $this->Product->getCurrency()
+        ) {
+            $Currency = $this->Product->getCurrency();
+        }
+
         if (is_numeric($this->value)) {
             $Price = new QUI\ERP\Money\Price($this->value, $Currency);
         } else {
@@ -442,6 +450,15 @@ class UniqueField implements QUI\ERP\Products\Interfaces\UniqueFieldInterface
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    public function getOption(string $option): mixed
+    {
+        if (isset($this->options[$option])) {
+            return $this->options[$option];
+        }
+
+        return false;
     }
 
     /**

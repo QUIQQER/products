@@ -888,7 +888,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         $Price = new QUI\ERP\Money\Price(
             $this->sum,
-            QUI\ERP\Currency\Handler::getDefaultCurrency(),
+            $this->Currency,
             $this->getUser()
         );
 
@@ -984,10 +984,14 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         $priceAttributes = $Field->getAttributes();
         $priceAttributes['value'] = $calculations['sum'];
 
-        return new UniqueField(
+        $UniqueField = new UniqueField(
             $Field->getId(),
             $priceAttributes
         );
+
+        $UniqueField->setProduct($this);
+
+        return $UniqueField;
     }
 
     /**
@@ -1001,7 +1005,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         if ($this->minimumPrice !== null) {
             return new QUI\ERP\Money\Price(
                 $this->minimumPrice,
-                QUI\ERP\Currency\Handler::getDefaultCurrency()
+                $this->Currency
             );
         }
 
@@ -1019,7 +1023,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
         if ($this->maximumPrice !== null) {
             return new QUI\ERP\Money\Price(
                 $this->maximumPrice,
-                QUI\ERP\Currency\Handler::getDefaultCurrency()
+                $this->Currency
             );
         }
 
@@ -1048,7 +1052,7 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         return new QUI\ERP\Money\Price(
             $this->nettoPrice,
-            QUI\ERP\Currency\Handler::getDefaultCurrency()
+            $this->Currency
         );
     }
 

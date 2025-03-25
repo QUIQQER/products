@@ -445,7 +445,14 @@ class Model extends QUI\QDOM
             }
         }
 
-        if (Products::$useRuntimeCacheForUniqueProducts) {
+        if ($this->Currency) {
+            $attributes['price_currency'] = $this->Currency->getCode();
+        } else {
+            $attributes['price_currency'] = QUI\ERP\Defaults::getCurrency();
+        }
+
+
+        if (Products::$useRuntimeCacheForUniqueProducts && isset($cacheName)) {
             ProductCache::writeUniqueProductData($attributes, $cacheName);
         }
 
@@ -1350,9 +1357,9 @@ class Model extends QUI\QDOM
             /* @var $Category Category */
             foreach ($categories as $Category) {
                 $CatField = $Category->getField($Field->getId());
-
                 if ($CatField) {
                     $catHasField = true;
+
                     break;
                 }
             }
