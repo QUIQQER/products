@@ -8,7 +8,6 @@ namespace QUI\ERP\Products\Product;
 
 use QUI;
 use QUI\Database\Exception;
-use QUI\ERP\Products\Category\Category;
 use QUI\ERP\Products\Field\UniqueField;
 use QUI\ERP\Products\Interfaces\FieldInterface;
 use QUI\ERP\Products\Interfaces\UniqueFieldInterface;
@@ -44,19 +43,8 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         $this->Product = $Product;
 
         if (!$this->Product->getCurrency()) {
-            $currency = QUI::getUserBySession()->getAttribute('quiqqer.erp.currency');
-            $Currency = QUI\ERP\Currency\Handler::getDefaultCurrency();
-
-            if (!empty($currency)) {
-                try {
-                    $Currency = QUI\ERP\Currency\Handler::getCurrency($currency);
-                } catch (QUI\Exception) {
-                }
-            }
-
-            $this->Product->setCurrency($Currency);
+            $this->Product->setCurrency(QUI\ERP\Currency\Handler::getRuntimeCurrency());
         }
-
 
         if (!$Product->isActive()) {
             throw new QUI\ERP\Products\Product\Exception(
@@ -236,7 +224,7 @@ class ViewFrontend extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Produ
         if (QUI\ERP\Products\Utils\Package::hidePrice()) {
             return new QUI\ERP\Money\Price(
                 null,
-                QUI\ERP\Currency\Handler::getDefaultCurrency()
+                QUI\ERP\Currency\Handler::getRuntimeCurrency()
             );
         }
 
