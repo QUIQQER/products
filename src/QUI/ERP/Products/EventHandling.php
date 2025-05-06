@@ -879,7 +879,6 @@ class EventHandling
 
             // update system fields
             if (isset($result[0])) {
-                // @phpstan-ignore-next-line
                 if ((int)$field['id'] > 1000) {
                     continue;
                 }
