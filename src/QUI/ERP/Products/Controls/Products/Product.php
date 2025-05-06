@@ -225,10 +225,10 @@ class Product extends QUI\Control
         $PriceRetail = null;
 
         if (isset($Unique)) {
-            $Price = $Unique->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL);
+            $CalculatedPrice = $Unique->getCalculatedPrice(Fields::FIELD_PRICE_RETAIL);
 
-            if (method_exists($Price, 'getPrice')) {
-                $PriceRetail = $Price->getPrice();
+            if (method_exists($CalculatedPrice, 'getPrice')) {
+                $PriceRetail = $CalculatedPrice->getPrice();
             }
         }
 
