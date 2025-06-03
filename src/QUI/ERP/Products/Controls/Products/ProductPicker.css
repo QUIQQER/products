@@ -1,0 +1,44 @@
+
+[data-name="product-picker"] .product-picker {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 24px 0;
+}
+
+[data-name="product-picker"] .product-sheet {
+    background: #fff;
+    border: 2px solid #222;
+    border-radius: 20px;
+    width: 220px;
+    padding: 24px 16px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: box-shadow 0.2s;
+}
+
+[data-name="product-picker"] .product-sheet.highlighted {
+    border-color: #0066ff;
+    box-shadow: 0 0 16px #0066ff22;
+}
+
+[data-name="product-picker"] .product-sheet-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+[data-name="product-picker"] .product-sheet-price {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin: 18px 0;
+    text-align: center;
+}
+
+[data-name="product-picker"] [data-name="product-sheet-product"] {
+    flex-direction: column;
+}

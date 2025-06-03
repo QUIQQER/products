@@ -1,0 +1,54 @@
+<form data-name="product-picker-options" class="product-options">
+    {if $sheetOptionsStyle === 'select'}
+    <label>
+        <select name="interval">
+            {foreach $sheetOptions as $option}
+            <option value="{$option.id}">{$option.label}</option>
+            {/foreach}
+        </select>
+    </label>
+    {else}
+    {foreach $sheetOptions as $option}
+    <label>
+        <input type="radio" name="interval" value="{$option.id}" />
+        <span>{$option.label}</span>
+    </label>
+    {/foreach}
+    {/if}
+</form>
+
+<div data-name="product-picker-slides" class="product-picker">
+    {foreach $sheets as $sheet}
+    <div class="product-sheet{if $sheet.highlighted} highlighted{/if}">
+        <div class="product-sheet-inner">
+            <div class="product-sheet-title"><b>{$sheet.title}</b></div>
+
+            {if !empty($sheet.content)}
+            <div class="product-sheet-content">
+                {$sheet.content}
+            </div>
+            {/if}
+
+            {foreach $sheet.options as $interval => $entry}
+            <article data-name="product-sheet-product"
+                     data-product-id="{$entry.Product->getId()}"
+                     data-interval="{$interval}"
+                     style="display: none;"
+            >
+                {$entry.Product->getTitle()}
+                <div class="product-sheet-price">
+                    {$entry.Price->getDisplayPrice()}
+                </div>
+                <div>
+                    <button data-name="product-sheet-product-select" class="btn btn-primary">
+                        <span class="fa fa-basket-shopping"></span>
+                        <span>Auswählen</span>
+                    </button>
+                </div>
+            </article>
+            {/foreach}
+
+        </div>
+    </div>
+    {/foreach}
+</div>
