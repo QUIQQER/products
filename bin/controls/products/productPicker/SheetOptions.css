@@ -28,8 +28,13 @@
 }
 
 .quiqqer-products-productPicker-sheetOptions-option label span {
-    background-color: #dedede;
     line-height: 2.5rem;
     text-align: center;
     padding: 0 10px;
+
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(217, 213, 254, 1);
+    background-color: rgba(243, 243, 255, 1);
+    color: rgba(89, 37, 219, 1);
 }
