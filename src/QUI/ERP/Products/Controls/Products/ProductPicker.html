@@ -30,17 +30,30 @@
             {/if}
 
             {foreach $sheet.options as $interval => $entry}
+            {assign var="Product" value=$entry.Product}
+            {assign var="Price" value=$entry.Price}
             <article data-name="product-sheet-product"
-                     data-product-id="{$entry.Product->getId()}"
+                     data-product-id="{$Product->getId()}"
                      data-interval="{$interval}"
                      style="display: none;"
             >
-                {$entry.Product->getTitle()}
-                <div class="product-sheet-price">
-                    {$entry.Price->getDisplayPrice()}
-                </div>
                 <div>
-                    <button data-name="product-sheet-product-select" class="btn btn-primary">
+                    {image image=$Product->getImage()}
+                </div>
+
+                <div>
+                    {$Product->getTitle()}
+                </div>
+
+                <div class="product-sheet-content mt-4 mb-4">
+                    {$Product->getContent()}
+                </div>
+
+                <div class="product-sheet-price">
+                    {$Price->getDisplayPrice()}
+                </div>
+                <div class="w-full">
+                    <button data-name="product-sheet-product-select" class="btn btn-primary w-full">
                         <span class="fa fa-basket-shopping"></span>
                         <span>Auswählen</span>
                     </button>

@@ -19,6 +19,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductPicker', 
         ],
 
         options: {
+
+            forwardToBasket: true,
             sheetOptionsStyle: 'select', // select | radio
             sheetOptions: [
                 /*
@@ -96,7 +98,23 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductPicker', 
                 optionNode.addEventListener('change', this.refresh);
             });
 
+            const buttons = Array.from(
+                container.querySelectorAll('button[data-name="product-sheet-product-select"]')
+            );
 
+            buttons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    const article = button.closest('article');
+                    const productId = article.getAttribute('data-product-id');
+
+                    if (this.getAttribute('forwardToBasket')) {
+                        // @todo TODO
+                        return;
+                    }
+
+                    this.fireEvent('onProductSelected', [this, productId]);
+                });
+            });
 
             this.refresh();
         },

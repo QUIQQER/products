@@ -42,18 +42,16 @@ class ProductPicker extends QUI\Control
         // products
         foreach ($sheets as $k => $sheet) {
             foreach ($sheet['options'] as $interval => $productId) {
-                    $Product = QUI\ERP\Products\Handler\Products::getProduct($productId);
-                    $Price = $Product->getPrice($SessionUser);
+                $Product = QUI\ERP\Products\Handler\Products::getProduct($productId);
+                $Price = $Product->getPrice($SessionUser);
 
-                    $sheets[$k]['options'][$interval] = [
-                        'id' => $productId,
-                        'Product' => $Product,
-                        'Price' => $Price
-                    ];
+                $sheets[$k]['options'][$interval] = [
+                    'id' => $productId,
+                    'Product' => $Product->getView(),
+                    'Price' => $Price
+                ];
             }
         }
-
-
 
         $Engine->assign([
             'this' => $this,
