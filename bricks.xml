@@ -20,5 +20,45 @@
             </description>
         </brick>
 
+        <brick control="QUI\ERP\Products\Controls\Products\ProductPicker">
+            <title>
+                <locale group="quiqqer/products" var="brick.productPicker.title"/>
+            </title>
+            <description>
+                <locale group="quiqqer/products" var="brick.productPicker.description"/>
+            </description>
+
+            <settings>
+                <setting name="sheetOptionsStyle" type="select">
+                    <locale group="quiqqer/products" var="brick.productPicker.sheetOptionsStyle"/>
+
+                    <option value="select" selected="selected">
+                        <locale group="quiqqer/products"
+                                var="brick.productPicker.sheetOptionsStyle.select"
+                        />
+                    </option>
+                    <option value="select" selected="radio">
+                        <locale group="quiqqer/products"
+                                var="brick.productPicker.sheetOptionsStyle.radio"
+                        />
+                    </option>
+                </setting>
+
+                <setting name="sheetOptions"
+                         type="hidden"
+                         data-qui="package/quiqqer/products/bin/controls/products/productPicker/SheetOptions"
+                >
+                    <locale group="quiqqer/products" var="brick.productPicker.sheetOptions"/>
+                </setting>
+
+                <setting name="sheets"
+                         type="hidden"
+                         data-qui="package/quiqqer/products/bin/controls/products/productPicker/Sheets"
+                >
+                    <locale group="quiqqer/products" var="brick.productPicker.sheets"/>
+                </setting>
+            </settings>
+        </brick>
+
     </bricks>
 </quiqqer>

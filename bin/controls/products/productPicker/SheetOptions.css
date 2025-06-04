@@ -1,0 +1,35 @@
+
+.quiqqer-products-productPicker-sheetOptions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.quiqqer-products-productPicker-sheetOptions-option {
+    display: flex;
+    gap: 0.5rem;
+    max-width: 500px;
+    width: 100%;
+}
+
+.quiqqer-products-productPicker-sheetOptions label {
+    display: flex;
+    border-radius: 5px;
+    border: 1px solid #dedede;
+}
+
+.quiqqer-products-productPicker-sheetOptions-option label {
+    border: none;
+    display: flex;
+    flex-grow: 1;
+    width: initial !important;
+    float: initial !important;
+}
+
+.quiqqer-products-productPicker-sheetOptions-option label span {
+    background-color: #dedede;
+    line-height: 2.5rem;
+    text-align: center;
+    padding: 0 10px;
+}
