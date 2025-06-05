@@ -2323,6 +2323,11 @@ class Model extends QUI\QDOM
 
         try {
             $Project = QUI::getRewrite()->getProject();
+
+            if (!$Project) {
+                $Project = QUI::getProjectManager()->getStandard();
+            }
+
             $Media = $Project->getMedia();
             $Placeholder = $Media->getPlaceholderImage();
 
