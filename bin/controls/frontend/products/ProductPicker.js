@@ -79,6 +79,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductPicker', 
                 'package': 'quiqqer/core',
                 control: '\\QUI\\ERP\\Products\\Controls\\Products\\ProductPicker',
                 params: JSON.encode({
+                    frontendTitle: this.getAttribute('frontendTitle'),
+                    content: this.getAttribute('content'),
                     sheetOptionsStyle: this.getAttribute('sheetOptionsStyle'),
                     sheetOptions: this.getAttribute('sheetOptions'),
                     sheets: this.getAttribute('sheets')
@@ -129,7 +131,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductPicker', 
             );
 
             articles.forEach((article) => {
-                article.style.display = article.getAttribute('data-interval') === interval ? 'flex' : 'none';
+                article.style.display = article.getAttribute('data-interval') === interval ? null : 'none';
             });
         }
     });

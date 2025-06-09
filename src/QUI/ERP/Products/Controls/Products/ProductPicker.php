@@ -11,9 +11,12 @@ class ProductPicker extends QUI\Control
         parent::__construct($params);
 
         $this->setAttributes([
+            'nodeName' => 'section',
+            'class' => 'quiqqer-products-controls-product-productPicker',
             'sheetOptionsStyle' => 'select', // select, radio
             'sheetOptions' => [],
-            'sheets' => []
+            'sheets' => [],
+            'showProductDetails' => true
         ]);
 
         $this->setJavaScriptControl(
@@ -57,7 +60,8 @@ class ProductPicker extends QUI\Control
             'this' => $this,
             'sheetOptionsStyle' => $this->getAttribute('sheetOptionsStyle'),
             'sheetOptions' => $sheetOptions,
-            'sheets' => $sheets
+            'sheets' => $sheets,
+            'showProductDetails' => $this->getAttribute('showProductDetails')
         ]);
 
         return $Engine->fetch(dirname(__FILE__) . '/ProductPicker.html');
