@@ -786,6 +786,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
 
         try {
             $Project = QUI::getRewrite()->getProject();
+
+            if (!$Project) {
+                $Project = QUI::getProjectManager()->getStandard();
+            }
+
             $Media = $Project->getMedia();
             $Placeholder = $Media->getPlaceholderImage();
 

@@ -99,9 +99,14 @@
     width: 100%;
 }
 
+/**
+ * With this css properties the image is always centered and not stretched ig image is smaller than container
+ */
 .quiqqer-products-control-product-childrenslider-entry-image a img {
     max-height: 100%;
     max-width: 100%;
+    height: 100%; /* 1 */
+    object-fit: contain; /* 1 */
 }
 
 /* header */
