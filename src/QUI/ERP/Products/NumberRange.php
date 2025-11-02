@@ -34,7 +34,8 @@ class NumberRange implements NumberRangeInterface
      * Return the current start range value
      *
      * @return int
-     * @throws Exception
+     * @throws QUI\Exception
+     * @throws \Doctrine\DBAL\Exception
      */
     public function getRange(): int
     {
@@ -48,10 +49,6 @@ class NumberRange implements NumberRangeInterface
      */
     public function setRange(int $range): void
     {
-        if (!is_numeric($range)) {
-            return;
-        }
-
         $PDO = QUI::getDataBase()->getPDO();
         $tableName = QUI\ERP\Products\Utils\Tables::getProductTableName();
 

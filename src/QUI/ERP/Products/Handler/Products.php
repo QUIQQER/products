@@ -163,18 +163,6 @@ class Products
      */
     public static function getProduct(int $pid): QUI\ERP\Products\Product\Types\AbstractType
     {
-        if (!is_numeric($pid)) {
-            throw new QUI\ERP\Products\Product\Exception(
-                [
-                    'quiqqer/products',
-                    'exception.product.not.found',
-                    ['productId' => $pid]
-                ],
-                404,
-                ['id' => $pid]
-            );
-        }
-
         if (isset(self::$list[$pid])) {
             return self::$list[$pid];
         }

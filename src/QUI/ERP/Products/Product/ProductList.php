@@ -75,7 +75,7 @@ class ProductList
 
     /**
      * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
-     * @var array()
+     * @var array<string, array<string, string>>
      */
     protected mixed $vatText;
 

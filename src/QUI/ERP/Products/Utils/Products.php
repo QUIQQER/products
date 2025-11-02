@@ -309,7 +309,7 @@ class Products
 
                 $fieldId = $fieldValue->getId();
                 $fieldValue = $fieldValue->getValue();
-            } elseif (is_string($Field) || is_numeric($Field)) {
+            } elseif (is_string($Field) || is_numeric($Field)) { // @phpstan-ignore-line
                 $fieldId = $Field;
             } else {
                 continue;

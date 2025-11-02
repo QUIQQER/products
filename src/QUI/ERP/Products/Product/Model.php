@@ -170,19 +170,17 @@ class Model extends QUI\QDOM
         // categories
         $categories = explode(',', trim($product['categories'], ','));
 
-        if (is_array($categories)) {
-            foreach ($categories as $categoryId) {
-                try {
-                    $Category = QUI\ERP\Products\Handler\Categories::getCategory($categoryId);
+        foreach ($categories as $categoryId) {
+            try {
+                $Category = QUI\ERP\Products\Handler\Categories::getCategory($categoryId);
 
-                    $this->categories[$Category->getId()] = $Category;
+                $this->categories[$Category->getId()] = $Category;
 
-                    /** @var QUI\ERP\Products\Field\Field $CategoryField */
-                    foreach ($Category->getFields() as $CategoryField) {
-                        $this->fields[$CategoryField->getId()] = clone $CategoryField;
-                    }
-                } catch (QUI\Exception) {
+                /** @var QUI\ERP\Products\Field\Field $CategoryField */
+                foreach ($Category->getFields() as $CategoryField) {
+                    $this->fields[$CategoryField->getId()] = clone $CategoryField;
                 }
+            } catch (QUI\Exception) {
             }
         }
 

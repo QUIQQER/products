@@ -606,10 +606,6 @@ class Fields
         try {
             $translations = QUI\Translator::get($group, $var);
 
-            if (!is_array($data)) {
-                $data = [];
-            }
-
             $data['package'] = 'quiqqer/products';
             $data['datatype'] = 'php,js';
             $data['html'] = 1;

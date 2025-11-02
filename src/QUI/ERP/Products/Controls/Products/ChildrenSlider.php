@@ -23,7 +23,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
     /**
      * List of products
      *
-     * @var array
+     * @var QUI\ERP\Products\Interfaces\ProductInterface[]
      */
     protected array $products = [];
 
@@ -101,9 +101,7 @@ class ChildrenSlider extends QUI\Bricks\Controls\Children\Slider
             return;
         }
 
-        if ($Product instanceof QUI\ERP\Products\Interfaces\ProductInterface) {
-            $this->products[] = $Product;
-        }
+        $this->products[] = $Product;
     }
 
     /**
