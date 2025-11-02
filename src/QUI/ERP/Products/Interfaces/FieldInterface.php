@@ -39,7 +39,7 @@ interface FieldInterface extends UniqueFieldInterface
      * Set the field value
      *
      * @param mixed $value
-     * @throws Exception;
+     * @throws Exception
      */
     public function setValue(mixed $value): void;
 

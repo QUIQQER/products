@@ -480,8 +480,11 @@ class ProductList extends QUI\Control
      *
      * @throws QUI\Exception
      */
-    protected function renderData(bool | int $start, bool | int $max, bool | int $count = false): array
-    {
+    protected function renderData(
+        bool | int $start,
+        bool | int $max,
+        bool | int $count = false
+    ): array {
         $Engine = QUI::getTemplateManager()->getEngine();
 
         switch ($this->getAttribute('view')) {
@@ -525,7 +528,11 @@ class ProductList extends QUI\Control
             $result = [];
         }
 
-        if ($start + $max > $count) {
+        if (
+            !is_numeric($count)
+            || !is_numeric($max)
+            || $start + $max > $count
+        ) {
             $more = false;
         }
 

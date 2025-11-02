@@ -317,8 +317,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $this->PriceFactors->add($Factor);
         }
 
-        if (isset($attributes['quantity']) && (int)$attributes['quantity']) {
-            $this->setQuantity((int)$attributes['quantity']);
+        if (isset($attributes['quantity']) && (float)$attributes['quantity']) {
+            $this->setQuantity((float)$attributes['quantity']);
         }
 
         QUI::getEvents()->fireEvent(
@@ -361,15 +361,11 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
                     $Field->setProduct($this);
                     $FieldView = $Field->getView();
 
-                    if ($FieldView instanceof QUI\ERP\Products\Field\View) {
-                        $viewClass = get_class($FieldView);
-
-                        $Instance = new $viewClass($field);
-                        $Instance->setProduct($this);
-
-                        $this->fields[] = $Instance;
-                        continue;
-                    }
+                    $viewClass = get_class($FieldView);
+                    $Instance = new $viewClass($field);
+                    $Instance->setProduct($this);
+                    $this->fields[] = $Instance;
+                    continue;
                 }
             }
 
@@ -1164,10 +1160,6 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
      */
     public function setQuantity(float | int $quantity): void
     {
-        if (!is_numeric($quantity)) {
-            return;
-        }
-
         $quantity = floatval($quantity);
         $max = $this->getMaximumQuantity();
 

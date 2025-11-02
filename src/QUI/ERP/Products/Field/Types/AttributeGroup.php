@@ -332,8 +332,6 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
      */
     public function cleanup(mixed $value): mixed
     {
-        $check = [];
-
         if (is_string($value)) {
             $check = json_decode($value, true);
 
@@ -391,8 +389,7 @@ class AttributeGroup extends QUI\ERP\Products\Field\Field
             return $value;
         }
 
-
-        if (empty($value) && !is_int($value) && $value != 0) {
+        if ($value === null || $value === false) {
             return null;
         }
 

@@ -75,7 +75,7 @@ class ProductList
 
     /**
      * key 19% value[sum] = sum value[text] = text value[display_sum] formatiert
-     * @var array()
+     * @var array<string, array<string, string>>
      */
     protected mixed $vatText;
 
@@ -286,9 +286,9 @@ class ProductList
      * Return the product count of the list
      * it includes the quantity of each product
      *
-     * @return int
+     * @return int|float
      */
-    public function getQuantity(): int
+    public function getQuantity(): int | float
     {
         $quantity = 0;
         $products = $this->getProducts();

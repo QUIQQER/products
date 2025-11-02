@@ -31,7 +31,7 @@ QUI::$Ajax->registerFunction(
         }
 
         if (is_string($quantity)) {
-            $quantity = str_contains($quantity, '.') ? (float) $quantity : (int) $quantity;
+            $quantity = str_contains($quantity, '.') ? (float)$quantity : (int)$quantity;
         }
 
         $Unique = $Product->createUniqueProduct(QUI::getUserBySession());

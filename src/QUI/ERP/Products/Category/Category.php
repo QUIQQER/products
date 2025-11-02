@@ -709,10 +709,6 @@ class Category extends QUI\QDOM implements QUI\ERP\Products\Interfaces\CategoryI
      */
     public function countProducts(array $params = []): int
     {
-        if (!is_array($params)) {
-            $params = [];
-        }
-
         $query = [];
 
         $where = [
