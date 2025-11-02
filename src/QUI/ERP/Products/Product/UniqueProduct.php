@@ -317,8 +317,8 @@ class UniqueProduct extends QUI\QDOM implements QUI\ERP\Products\Interfaces\Prod
             $this->PriceFactors->add($Factor);
         }
 
-        if (isset($attributes['quantity']) && (int)$attributes['quantity']) {
-            $this->setQuantity((int)$attributes['quantity']);
+        if (isset($attributes['quantity']) && (float)$attributes['quantity']) {
+            $this->setQuantity((float)$attributes['quantity']);
         }
 
         QUI::getEvents()->fireEvent(

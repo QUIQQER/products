@@ -286,9 +286,9 @@ class ProductList
      * Return the product count of the list
      * it includes the quantity of each product
      *
-     * @return int
+     * @return int|float
      */
-    public function getQuantity(): int
+    public function getQuantity(): int | float
     {
         $quantity = 0;
         $products = $this->getProducts();

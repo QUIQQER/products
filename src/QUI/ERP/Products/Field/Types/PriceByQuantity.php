@@ -84,7 +84,7 @@ class PriceByQuantity extends Price
             return false;
         }
 
-        if ((int)$value['quantity'] > $Product->getQuantity()) {
+        if ((float)$value['quantity'] > $Product->getQuantity()) {
             return false;
         }
 
@@ -115,7 +115,7 @@ class PriceByQuantity extends Price
 
         $valueText = QUI::getLocale()->get('quiqqer/products', 'fieldtype.PriceByQuantity.frontend.text', [
             'price' => $Price->getDisplayPrice(),
-            'quantity' => (int)$value['quantity']
+            'quantity' => (float)$value['quantity']
         ]);
 
         return new View([
@@ -161,7 +161,7 @@ class PriceByQuantity extends Price
         if (is_float($price)) {
             return [
                 'price' => $price,
-                'quantity' => (int)$quantity
+                'quantity' => (float)$quantity
             ];
         }
 
@@ -174,7 +174,7 @@ class PriceByQuantity extends Price
 
         return [
             'price' => round(floatval($price), QUI\ERP\Defaults::getPrecision()),
-            'quantity' => (int)$quantity,
+            'quantity' => (float)$quantity,
         ];
     }
 
