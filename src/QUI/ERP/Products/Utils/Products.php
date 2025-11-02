@@ -91,7 +91,6 @@ class Products
         $priceValue = $PriceField->getValue();
 
         // $priceValue may be NULL or empty string; in these cases, consider the default price field value as not set.
-        // @phpstan-ignore-next-line
         if (empty($priceValue) && $priceValue != 0) {
             $priceValue = null;
         }
