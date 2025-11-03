@@ -112,10 +112,6 @@ class AllProducts extends Category
      */
     public function countProducts(array $params = []): int
     {
-        if (!is_array($params)) {
-            $params = [];
-        }
-
         $query = [];
 
         if (isset($params['where'])) {
