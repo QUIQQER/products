@@ -26,4 +26,5 @@
     <event on="onQuiqqerOrderSuccessful" fire="\QUI\ERP\Products\EventHandling::onQuiqqerOrderSuccessful"/>
 
     <event on="onQuiqqerMigrationV2" fire="\QUI\ERP\Products\EventHandling::onQuiqqerMigrationV2"/>
+    <event on="onSmartyInit" fire="\QUI\ERP\Products\EventHandling::onSmartyInit"/>
 </events>
