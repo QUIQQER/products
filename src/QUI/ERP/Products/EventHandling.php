@@ -2,6 +2,7 @@
 
 namespace QUI\ERP\Products;
 
+use Smarty;
 use Exception;
 use QUI;
 use QUI\ERP\Products\Handler\Cache;
@@ -1517,5 +1518,16 @@ class EventHandling
             'c_user',
             'e_user'
         ]);
+    }
+
+    /**
+     * Event: on smarty init
+     *
+     * @param Smarty $Smarty
+     * @return void
+     */
+    public static function onSmartyInit(Smarty $Smarty): void
+    {
+        $Smarty->registerClass('QUI\ERP\Products\Utils\Products', '\QUI\ERP\Products\Utils\Products');
     }
 }
