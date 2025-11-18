@@ -1529,5 +1529,7 @@ class EventHandling
     public static function onSmartyInit(Smarty $Smarty): void
     {
         $Smarty->registerClass('QUI\ERP\Products\Utils\Products', '\QUI\ERP\Products\Utils\Products');
+        $Smarty->registerClass('QUI\ERP\Products\Handler\Fields', '\QUI\ERP\Products\Handler\Fields');
+        $Smarty->registerClass('QUI\ERP\Products\Handler\Products', '\QUI\ERP\Products\Handler\Products');
     }
 }
