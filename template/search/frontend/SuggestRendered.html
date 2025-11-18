@@ -1,7 +1,7 @@
 <div class="quiqqer-products-mobileSuggest-results-list">
     <ul>
         {foreach $result as $productId}
-        {assign var=Product value=\QUI\ERP\Products\Handler\Products::getProduct($productId)}
+        {assign var=Product value=QUI\ERP\Products\Handler\Products::getProduct($productId)}
 
         <li data-url="{$Product->getUrl()}">
             <div class="quiqqer-products-search-suggest-dropdown-icon">
@@ -20,7 +20,7 @@
             </div>
 
             {assign var=articleNo
-            value=$Product->getFieldValueByLocale(\QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO, $Locale)
+            value=$Product->getFieldValueByLocale(QUI\ERP\Products\Handler\Fields::FIELD_PRODUCT_NO, $Locale)
             }
 
             {if !empty($articleNo)}
