@@ -31,10 +31,10 @@ class DesktopSearch implements ProviderInterface
     }
 
     /**
-     * @param int $id
+     * @param int|string $id
      * @inheritdoc
      */
-    public function getEntry(int $id): array
+    public function getEntry(int | string $id): array
     {
         return [
             'searchdata' => json_encode([
