@@ -155,7 +155,17 @@ class PriceFactor implements QUI\ERP\Products\Interfaces\PriceFactorInterface
         }
 
         if (isset($params['valueText'])) {
-            $this->setValueText($params['valueText']);
+            if (is_array($params['valueText'])) {
+                $language = QUI::getLocale()->getCurrent();
+
+                if (isset($params['valueText'][$language])) {
+                    $this->setValueText($params['valueText'][$language]);
+                } else {
+                    $this->setValueText(reset($params['valueText']));
+                }
+            } elseif (is_string($params['valueText'])) {
+                $this->setValueText($params['valueText']);
+            }
         }
 
         if (isset($params['vat'])) {
