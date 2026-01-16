@@ -75,6 +75,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductPicker', 
                 container.setAttribute('data-name', 'product-picker');
 
                 this.$onImport();
+                this.fireEvent('load', [this]);
             }, {
                 'package': 'quiqqer/core',
                 control: '\\QUI\\ERP\\Products\\Controls\\Products\\ProductPicker',
