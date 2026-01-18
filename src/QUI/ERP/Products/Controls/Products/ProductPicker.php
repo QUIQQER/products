@@ -40,7 +40,7 @@ class ProductPicker extends QUI\Control
             $sheets = [];
         }
 
-        $sheetOptionsStyle = match($this->getAttribute('sheetOptionsStyle')) {
+        $sheetOptionsStyle = match ($this->getAttribute('sheetOptionsStyle')) {
             'select', 'radio', 'button-style1' => $this->getAttribute('sheetOptionsStyle'),
             default => 'select'
         };
@@ -82,12 +82,12 @@ class ProductPicker extends QUI\Control
      *     --_q-conf--countSheets: var(--q-products-productPicker, 3);
      *
      * @param string $name
-     * @param string $value
+     * @param string|int $value
      *
      * @return void
      */
 
-    private function setCustomVariable(string $name, string $value): void
+    private function setCustomVariable(string $name, string|int $value): void
     {
         if (!$name || !$value) {
             return;
@@ -98,5 +98,4 @@ class ProductPicker extends QUI\Control
             'var(--q-products-productPicker-' . $name . ', ' . $value . ')'
         );
     }
-
 }
