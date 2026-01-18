@@ -11,37 +11,43 @@
 {/if}
 
 <div class="control-template">
-    <form data-name="product-picker-options" class="quiqqer-products-controls-product-productPicker__options">
-        {if $sheetOptionsStyle === 'select'}
-            <label class="visually-hidden" for="interval">
-                Zeitraum auswählen:
-            </label>
+    <form data-name="product-picker-options"
+          class="quiqqer-products-controls-product-productPicker__options quiqqer-products-controls-product-productPicker__options--{$sheetOptionsStyle}"
+    >
+        <div class="inner">
+            {if $sheetOptionsStyle === 'select'}
+                <label class="visually-hidden" for="interval">
+                    {locale group='quiqqer/products' var='frontend.productPicker.sheetOptionsStyle.select.text'}
+                </label>
 
-            <select name="interval" id="interval">
+                <select name="interval" id="interval">
+                    {foreach $sheetOptions as $option}
+                    <option value="{$option.id}">{$option.label}</option>
+                    {/foreach}
+                </select>
+            {elseif $sheetOptionsStyle === 'button-style1'}
                 {foreach $sheetOptions as $option}
-                <option value="{$option.id}">{$option.label}</option>
+                <label>
+                    <input type="radio" name="interval" value="{$option.id}" />
+                    <span class="btn">{$option.label}</span>
+                </label>
                 {/foreach}
-            </select>
-        {else}
-        {foreach $sheetOptions as $option}
-        <label>
-            <input type="radio" name="interval" value="{$option.id}" />
-            <span>{$option.label}</span>
-        </label>
-        {/foreach}
-        {/if}
+            {else}
+            {foreach $sheetOptions as $option}
+            <label>
+                <input type="radio" name="interval" value="{$option.id}" />
+                <span>{$option.label}</span>
+            </label>
+            {/foreach}
+            {/if}
+        </div>
+
     </form>
 
     <div data-name="product-picker-slides" class="quiqqer-products-controls-product-productPicker__sheets">
         {foreach $sheets as $sheet}
         <div class="quiqqer-products-controls-product-productPicker__sheet {if $sheet.highlighted}highlighted{/if} quiqqer-productPicker-sheet">
             <div class="quiqqer-productPicker-sheet__inner">
-{*                {if $sheet.image}*}
-{*                    <div class="quiqqer-productPicker-sheet__image">*}
-{*                        {image src=$sheet.image}*}
-{*                    </div>*}
-{*                {/if}*}
-
                 <div class="quiqqer-productPicker-sheet__title">
                     {$sheet.title}
                 </div>
@@ -53,43 +59,43 @@
                 {/if}
 
                 {foreach $sheet.options as $interval => $entry}
-                {assign var="Product" value=$entry.Product}
-                {assign var="Price" value=$entry.Price}
-                <article data-name="product-sheet-product"
-                         data-product-id="{$Product->getId()}"
-                         data-interval="{$interval}"
-                         style="display: none;"
-                         class="quiqqer-productPicker-sheet-product"
-                >
-                    {if $showProductDetails}
-                    <div class="quiqqer-productPicker-sheet-product__image">
-                        {image image=$Product->getImage()}
-                    </div>
-                    {/if}
+                    {assign var="Product" value=$entry.Product}
+                    {assign var="Price" value=$entry.Price}
+                    <article data-name="product-sheet-product"
+                             data-product-id="{$Product->getId()}"
+                             data-interval="{$interval}"
+                             style="display: none;"
+                             class="quiqqer-productPicker-sheet-product"
+                    >
+                        {if $showProductDetails}
+                        <div class="quiqqer-productPicker-sheet-product__image">
+                            {image image=$Product->getImage()}
+                        </div>
+                        {/if}
 
-                    {if $showProductDetails}
-                    <div class="quiqqer-productPicker-sheet-product__title">
-                        {$Product->getTitle()}
-                    </div>
-                    {/if}
+                        {if $showProductDetails}
+                        <div class="quiqqer-productPicker-sheet-product__title">
+                            {$Product->getTitle()}
+                        </div>
+                        {/if}
 
-                    {if $showProductDetails && $Product->getContent()}
-                    <div class="quiqqer-productPicker-sheet-product__content">
-                        {$Product->getContent()}
-                    </div>
-                    {/if}
+                        {if $showProductDetails && $Product->getContent()}
+                        <div class="quiqqer-productPicker-sheet-product__content">
+                            {$Product->getContent()}
+                        </div>
+                        {/if}
 
-                    <div class="quiqqer-productPicker-sheet-product__price">
-                        {$Price->getDisplayPrice()}
-                    </div>
+                        <div class="quiqqer-productPicker-sheet-product__price">
+                            {$Price->getDisplayPrice()}
+                        </div>
 
-                    <div class="quiqqer-productPicker-sheet-product__actions">
-                        <button data-name="product-sheet-product-select" class="btn btn-primary w-full">
-                            <span class="fa fa-basket-shopping"></span>
-                            <span>Auswählen</span>
-                        </button>
-                    </div>
-                </article>
+                        <div class="quiqqer-productPicker-sheet-product__actions">
+                            <button data-name="product-sheet-product-select" class="btn btn-primary w-full">
+                                <span class="fa fa-basket-shopping"></span>
+                                <span>{locale group='quiqqer/products' var='frontend.productPicker.article.btn.text'}</span>
+                            </button>
+                        </div>
+                    </article>
                 {/foreach}
 
             </div>

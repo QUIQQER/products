@@ -1290,6 +1290,15 @@ For a newly created product the article number should be generated automatically
             <en><![CDATA[Add sheet options]]></en>
         </locale>
 
+        <locale name="frontend.productPicker.sheetOptionsStyle.select.text">
+            <de><![CDATA[Zeitraum auswählen:]]></de>
+            <en><![CDATA[Select interval:]]></en>
+        </locale>
+        <locale name="frontend.productPicker.article.btn.text">
+            <de><![CDATA[Auswählen]]></de>
+            <en><![CDATA[Select]]></en>
+        </locale>
+
 
         <locale name="user.profile.title">
             <de><![CDATA[Persönliche Produkteinstellungen]]></de>
