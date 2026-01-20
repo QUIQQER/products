@@ -3,7 +3,7 @@
     --_sheet-maxWidth--desktop: var(--sheet-maxWidth--desktop, 20rem);
     --_sheet-maxWidth--mobile: var(--sheet-maxWidth--mobile, 30rem);
     --_sheet-maxWidth: var(--_sheet-maxWidth--desktop);
-    --_max-sheets: var(--max-sheets, 3);
+    --_max-sheets: var(--max-sheets, var(--_q-conf--countSheets, 3));
     --_sheet-column--desktop: var(--sheet-column, repeat(var(--_max-sheets), minmax(0, var(--_sheet-maxWidth))));
     --_sheet-column--mobile: var(--sheet-column--mobile, repeat(1, minmax(0, var(--_sheet-maxWidth))));
     --_sheet-column: var(--_sheet-column--desktop);
@@ -24,6 +24,63 @@
     margin-bottom: 2rem;
 }
 
+.quiqqer-products-controls-product-productPicker__options--button-style1 {
+    --_options-bgColor: var(--q-products-productPicker-options-bgColor, #f2f2f2);
+    --_options-padding: var(--q-products-productPicker-options-padding, 0.25em);
+    --_options-gap: var(--q-products-productPicker-options-gap, 0.5em);
+    --_options-radius: var(--q-products-productPicker-options-radius, 1rem);
+    --_options-borderColor: var(--q-products-productPicker-options-borderColor, #222);
+    --_options-borderWidth: var(--q-products-productPicker-options-borderWidth, 2px);
+    --_options-btn-color: var(--q-products-productPicker-options-btn-color, color-mix(in hsl, currentColor, transparent 30%));
+    --_options-btn-bgColor: var(--q-products-productPicker-options-btn-bgColor, transparent);
+    --_options-btn-borderColor: var(--q-products-productPicker-options-btn-borderColor, transparent);
+    --_options-btn-borderRadius: var(--q-products-productPicker-options-btn-borderRadius, calc(var(--_options-radius) - var(--_options-padding)));
+    --_options-btn-selected-color: var(--q-products-productPicker-options-btn-selected-color, inherit);
+    --_options-btn-selected-bgColor: var(--q-products-productPicker-options-btn-selected-bgColor, #fff);
+    --_options-btn-selected-borderColor: var(--q-products-productPicker-options-btn-selected-borderColor, #fff);
+
+    display: flex;
+    justify-content: center;
+}
+
+.quiqqer-products-controls-product-productPicker__options--button-style1 .inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--_options-gap);
+    background-color: var(--_options-bgColor);
+    padding: var(--_options-padding);
+    border-radius: var(--_options-radius);
+}
+
+.quiqqer-products-controls-product-productPicker__options--button-style1 .inner label {
+    flex-grow: 1;
+}
+
+/* visually hidden */
+.quiqqer-products-controls-product-productPicker__options--button-style1 [type="radio"] {
+    appearance: none;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.quiqqer-products-controls-product-productPicker__options--button-style1 .btn {
+    border-radius: var(--_options-btn-borderRadius);
+    color: var(--_options-btn-color);
+    background-color: var(--_options-btn-bgColor);
+    border-color: var(--_options-btn-borderColor);
+}
+
+.quiqqer-products-controls-product-productPicker__options--button-style1 [type="radio"]:checked + .btn {
+    background-color: var(--_options-btn-selected-bgColor);
+    color: var(--_options-btn-selected-color);
+    border-color: var(--_options-btn-selected-borderColor);
+    width: 100%;
+}
+
+
+
 /**********/
 /* sheets */
 /**********/
@@ -32,7 +89,7 @@
     grid-template-columns: var(--_sheet-column);
     gap: 1rem;
     justify-content: center;
-    margin-block: 2rem;
+    margin-top: 2rem;
 }
 
 .quiqqer-products-controls-product-productPicker__sheet {
@@ -43,7 +100,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-block: 1rem;
 }
 
 .quiqqer-products-controls-product-productPicker__sheet.highlighted {
@@ -60,14 +116,12 @@
 }
 
 .quiqqer-productPicker-sheet__title {
-    font-size: 1.5em;
+    font-size: 1.25em;
     font-weight: bold;
     margin-bottom: 0.25em;
-    text-align: center;
 }
 
 .quiqqer-productPicker-sheet__content {
-    text-align: center;
     margin-bottom: 1rem;
 }
 
