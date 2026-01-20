@@ -13,7 +13,7 @@ class ProductPicker extends QUI\Control
         $this->setAttributes([
             'nodeName' => 'section',
             'class' => 'quiqqer-products-controls-product-productPicker',
-            'sheetOptionsStyle' => 'select', // select, radio
+            'sheetOptionsStyle' => 'select', // select, radio, button-style1
             'sheetOptions' => [],
             'sheets' => [],
             'showProductDetails' => true
@@ -40,6 +40,11 @@ class ProductPicker extends QUI\Control
             $sheets = [];
         }
 
+        $sheetOptionsStyle = match ($this->getAttribute('sheetOptionsStyle')) {
+            'select', 'radio', 'button-style1' => $this->getAttribute('sheetOptionsStyle'),
+            default => 'select'
+        };
+
         $SessionUser = QUI::getUserBySession();
 
         // products
@@ -56,14 +61,41 @@ class ProductPicker extends QUI\Control
             }
         }
 
+        $this->setCustomVariable('countSheets', count($sheets));
+
         $Engine->assign([
             'this' => $this,
-            'sheetOptionsStyle' => $this->getAttribute('sheetOptionsStyle'),
+            'sheetOptionsStyle' => $sheetOptionsStyle,
             'sheetOptions' => $sheetOptions,
             'sheets' => $sheets,
             'showProductDetails' => $this->getAttribute('showProductDetails')
         ]);
 
         return $Engine->fetch(dirname(__FILE__) . '/ProductPicker.html');
+    }
+
+    /**
+     * Set custom css variable to the control as inline style
+     * --_q-conf--$name: var(--q-products-productPicker-$name, $value);
+     *
+     * Example:
+     *     --_q-conf--countSheets: var(--q-products-productPicker, 3);
+     *
+     * @param string $name
+     * @param string|int $value
+     *
+     * @return void
+     */
+
+    private function setCustomVariable(string $name, string|int $value): void
+    {
+        if (!$name || !$value) {
+            return;
+        }
+
+        $this->setStyle(
+            '--_q-conf--' . $name,
+            'var(--q-products-productPicker-' . $name . ', ' . $value . ')'
+        );
     }
 }
