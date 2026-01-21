@@ -19,7 +19,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductPicker', 
         ],
 
         options: {
-
             forwardToBasket: true,
             sheetOptionsStyle: 'select', // select | radio
             sheetOptions: [
@@ -55,8 +54,6 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductPicker', 
         },
 
         $onInject: function () {
-            console.log('on inject');
-
             const container = this.getElm();
 
             QUIAjax.get('ajax_controls_get', (result) => {
