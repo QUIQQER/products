@@ -1,9 +1,6 @@
 /**
  * Fields handler
  * Create and edit fields
- *
- * @module package/quiqqer/products/bin/classes/Fields
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/classes/Fields', [
 
@@ -11,7 +8,7 @@ define('package/quiqqer/products/bin/classes/Fields', [
     'qui/classes/DOM',
     'Ajax'
 
-], function(QUI, QUIDOM, Ajax) {
+], function (QUI, QUIDOM, Ajax) {
     'use strict';
 
     return new Class({
@@ -78,7 +75,7 @@ define('package/quiqqer/products/bin/classes/Fields', [
          *
          * @returns {Array}
          */
-        getChildAttributes: function() {
+        getChildAttributes: function () {
             return [
                 'name',
                 'type',
@@ -99,14 +96,14 @@ define('package/quiqqer/products/bin/classes/Fields', [
          * @param {Object} [fields] - field list
          * @returns {Promise}
          */
-        search: function(params, fields) {
+        search: function (params, fields) {
             params = params || {};
             fields = fields || {};
 
             // check if fields are allowed
-            var i, len, field;
+            let i, len, field;
 
-            var fieldList = {},
+            let fieldList = {},
                 allowed = this.getChildAttributes();
 
             for (i = 0, len = allowed.length; i < len; i++) {
@@ -117,7 +114,7 @@ define('package/quiqqer/products/bin/classes/Fields', [
                 }
             }
 
-            return new Promise(function(resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_fields_search', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -133,8 +130,8 @@ define('package/quiqqer/products/bin/classes/Fields', [
          * @param {number} fieldId
          * @returns {Promise}
          */
-        getChild: function(fieldId) {
-            return new Promise(function(resolve, reject) {
+        getChild: function (fieldId) {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_fields_get', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -149,8 +146,8 @@ define('package/quiqqer/products/bin/classes/Fields', [
          * @param {array} fieldIds - list of field IDs
          * @returns {Promise}
          */
-        getChildren: function(fieldIds) {
-            return new Promise(function(resolve, reject) {
+        getChildren: function (fieldIds) {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_fields_getChildren', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -165,10 +162,10 @@ define('package/quiqqer/products/bin/classes/Fields', [
          * @param {String} params - Grid params
          * @returns {Promise}
          */
-        getList: function(params) {
+        getList: function (params) {
             params = params || {};
 
-            return new Promise(function(resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_fields_list', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -182,8 +179,8 @@ define('package/quiqqer/products/bin/classes/Fields', [
          *
          * @returns {Promise}
          */
-        getFieldTypes: function() {
-            return new Promise(function(resolve, reject) {
+        getFieldTypes: function () {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_fields_getFieldTypes', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject
@@ -197,8 +194,8 @@ define('package/quiqqer/products/bin/classes/Fields', [
          * @param {number} fieldId
          * @returns {Promise}
          */
-        getSearchTypesForField: function(fieldId) {
-            return new Promise(function(resolve, reject) {
+        getSearchTypesForField: function (fieldId) {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_fields_getSearchTypesForField', resolve, {
                     'package': 'quiqqer/products',
                     fieldId: fieldId,
@@ -212,8 +209,8 @@ define('package/quiqqer/products/bin/classes/Fields', [
          *
          * @returns {Promise}
          */
-        getSystemFields: function() {
-            return new Promise(function(resolve, reject) {
+        getSystemFields: function () {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_fields_getSystemFields', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject
@@ -226,8 +223,8 @@ define('package/quiqqer/products/bin/classes/Fields', [
          *
          * @returns {Promise}
          */
-        getStandardFields: function() {
-            return new Promise(function(resolve, reject) {
+        getStandardFields: function () {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_fields_getStandardFields', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject
@@ -240,8 +237,8 @@ define('package/quiqqer/products/bin/classes/Fields', [
          *
          * @returns {Promise}
          */
-        getPublicFields: function() {
-            return new Promise(function(resolve, reject) {
+        getPublicFields: function () {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_fields_getPublicFields', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject
@@ -254,8 +251,8 @@ define('package/quiqqer/products/bin/classes/Fields', [
          *
          * @returns {Promise}
          */
-        getFieldTypeSettings: function() {
-            return new Promise(function(resolve, reject) {
+        getFieldTypeSettings: function () {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_fields_getFieldTypeSettings', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject
@@ -269,8 +266,8 @@ define('package/quiqqer/products/bin/classes/Fields', [
          * @param {Number} fieldId
          * @returns {Promise}
          */
-        getFieldOptions: function(fieldId) {
-            return new Promise(function(resolve, reject) {
+        getFieldOptions: function (fieldId) {
+            return new Promise(function (resolve, reject) {
                 Ajax.get('package_quiqqer_products_ajax_fields_getFieldOptions', resolve, {
                     'package': 'quiqqer/products',
                     fieldId: fieldId,
@@ -285,14 +282,14 @@ define('package/quiqqer/products/bin/classes/Fields', [
          * @params {Array} [params] - field attributes
          * @returns {Promise}
          */
-        createChild: function(params) {
-            return new Promise(function(resolve, reject) {
-                Ajax.post('package_quiqqer_products_ajax_fields_create', function(result) {
+        createChild: function (params) {
+            return new Promise(function (resolve, reject) {
+                Ajax.post('package_quiqqer_products_ajax_fields_create', function (result) {
 
                     require([
                         'package/quiqqer/translator/bin/classes/Translator'
-                    ], function(Translator) {
-                        new Translator().refreshLocale().then(function() {
+                    ], function (Translator) {
+                        new Translator().refreshLocale().then(function () {
                             resolve(result);
                         });
                     });
@@ -311,8 +308,8 @@ define('package/quiqqer/products/bin/classes/Fields', [
          * @param {Number} fieldId - Field-ID
          * @returns {Promise}
          */
-        deleteChild: function(fieldId) {
-            return new Promise(function(resolve, reject) {
+        deleteChild: function (fieldId) {
+            return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_fields_deleteChild', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -327,8 +324,8 @@ define('package/quiqqer/products/bin/classes/Fields', [
          * @param {Array} fieldIds - array of Field-IDs
          * @returns {Promise}
          */
-        deleteChildren: function(fieldIds) {
-            return new Promise(function(resolve, reject) {
+        deleteChildren: function (fieldIds) {
+            return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_fields_deleteChildren', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,
@@ -343,8 +340,8 @@ define('package/quiqqer/products/bin/classes/Fields', [
          * @param {Number} fieldId
          * @param {Object} params - Field attributes
          */
-        updateChild: function(fieldId, params) {
-            return new Promise(function(resolve, reject) {
+        updateChild: function (fieldId, params) {
+            return new Promise(function (resolve, reject) {
                 Ajax.post('package_quiqqer_products_ajax_fields_update', resolve, {
                     'package': 'quiqqer/products',
                     onError: reject,

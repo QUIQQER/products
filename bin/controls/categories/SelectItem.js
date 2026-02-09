@@ -1,9 +1,6 @@
 /**
  * Country select item
  *
- * @module package/quiqqer/products/bin/controls/categories/SelectItem
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onClick
  * @event onDestroy
  * @event onChange [self, value]
@@ -20,7 +17,7 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
 ], function (QUIControl, QUILocale, CategorySearch, Handler) {
     "use strict";
 
-    var Categories = new Handler();
+    const Categories = new Handler();
 
     return new Class({
         Extends: QUIControl,
@@ -54,7 +51,7 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
          * @returns {HTMLElement}
          */
         create: function () {
-            var self = this,
+            const self = this,
                 Elm  = this.parent();
 
             Elm.set({
@@ -101,7 +98,7 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
          * Refresh the display
          */
         refresh: function () {
-            var self = this;
+            const self = this;
 
             this.loading();
 
@@ -119,7 +116,7 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
                 this.getAttribute('categoryId')
             ).then(function (data) {
 
-                var locale = QUILocale.get(
+                const locale = QUILocale.get(
                     'quiqqer/products',
                     'products.category.' + data.id + '.title'
                 );
@@ -150,7 +147,7 @@ define('package/quiqqer/products/bin/controls/categories/SelectItem', [
                 return;
             }
 
-            var categoryId = this.getAttribute('categoryId');
+            const categoryId = this.getAttribute('categoryId');
 
             new CategorySearch({
                 events: {

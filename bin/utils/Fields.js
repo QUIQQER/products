@@ -1,9 +1,6 @@
 /**
  * Field utils
  * Helper for fields
- *
- * @module package/quiqqer/products/bin/utils/Fields
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/utils/Fields', {
 
@@ -17,8 +14,8 @@ define('package/quiqqer/products/bin/utils/Fields', {
         "use strict";
 
         return fields.clean().sort(function (a, b) {
-            var ap = parseInt(a.priority);
-            var bp = parseInt(b.priority);
+            const ap = parseInt(a.priority);
+            const bp = parseInt(b.priority);
 
             if (ap === 0) {
                 return 1;
@@ -51,7 +48,7 @@ define('package/quiqqer/products/bin/utils/Fields', {
         "use strict";
         return new Promise(function (resolve) {
             require(['package/quiqqer/products/bin/Fields'], function (FieldHandler) {
-                var fieldId = parseInt(field);
+                const fieldId = parseInt(field);
 
                 if (fieldId === FieldHandler.FIELD_TITLE ||
                     fieldId === FieldHandler.FIELD_CONTENT ||
@@ -92,12 +89,12 @@ define('package/quiqqer/products/bin/utils/Fields', {
                 const lg = 'quiqqer/products';
 
                 const Container = new Element('div', {
-                          'class': 'quiqqer-products-variant-generate-tableBody'
-                      }),
-                      current   = QUILocale.getCurrent();
+                        'class': 'quiqqer-products-variant-generate-tableBody'
+                    }),
+                    current = QUILocale.getCurrent();
 
-                const fieldList            = [],
-                      productAttributeList = [];
+                const fieldList = [],
+                    productAttributeList = [];
 
                 const filterValues = function (entry, key) {
                     if ("valueId" in entry) {
@@ -106,7 +103,7 @@ define('package/quiqqer/products/bin/utils/Fields', {
 
                     return {
                         fieldId: field.id,
-                        title  : entry.title[current],
+                        title: entry.title[current],
                         valueId: key
                     };
                 };
@@ -128,7 +125,7 @@ define('package/quiqqer/products/bin/utils/Fields', {
                     if (onlyAttributeGroups === false && field.type === "ProductAttributeList") {
                         productAttributeList.push({
                             fieldId: field.id,
-                            title  : field.title
+                            title: field.title
                         });
 
                         continue;
@@ -138,15 +135,15 @@ define('package/quiqqer/products/bin/utils/Fields', {
 
                     fieldList.push({
                         fieldId: field.id,
-                        title  : field.title,
-                        values : values
+                        title: field.title,
+                        values: values
                     });
                 }
 
                 Container.set('html', Mustache.render(template, {
-                    fields              : fieldList,
+                    fields: fieldList,
                     productAttributeList: productAttributeList,
-                    message_no_values   : QUILocale.get(lg, 'variants.generating.window.message.no.values')
+                    message_no_values: QUILocale.get(lg, 'variants.generating.window.message.no.values')
                 }));
 
                 Container.getElements('[name="all"]').addEvent('change', function (event) {

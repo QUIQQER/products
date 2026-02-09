@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/categories/search/Window
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/categories/search/Window', [
 
     'qui/QUI',
@@ -19,7 +15,7 @@ define('package/quiqqer/products/bin/controls/categories/search/Window', [
     return new Class({
 
         Extends: QUIConfirm,
-        Type   : 'package/quiqqer/products/bin/controls/categories/search/Window',
+        Type: 'package/quiqqer/products/bin/controls/categories/search/Window',
 
         Binds: [
             '$onOpen'
@@ -27,19 +23,19 @@ define('package/quiqqer/products/bin/controls/categories/search/Window', [
 
         options: {
             maxHeight: 600,
-            maxWidth : 400,
-            icon     : 'fa fa-shopping-basket',
-            title    : 'Kategorie-Auswahl',
+            maxWidth: 400,
+            icon: 'fa fa-shopping-basket',
+            title: 'Kategorie-Auswahl',
             autoclose: false,
-            multiple : false,
-            message  : false,
+            multiple: false,
+            message: false,
 
             cancel_button: {
-                text     : QUILocale.get('quiqqer/system', 'cancel'),
+                text: QUILocale.get('quiqqer/system', 'cancel'),
                 textimage: 'fa fa-remove'
             },
-            ok_button    : {
-                text     : QUILocale.get('quiqqer/system', 'accept'),
+            ok_button: {
+                text: QUILocale.get('quiqqer/system', 'accept'),
                 textimage: 'fa fa-search'
             }
         },
@@ -63,7 +59,7 @@ define('package/quiqqer/products/bin/controls/categories/search/Window', [
          * @returns {HTMLDivElement}
          */
         $onOpen: function (Win) {
-            var Content = Win.getContent();
+            const Content = Win.getContent();
 
             Content.set('html', '');
             Content.addClass('discount-search');
@@ -87,7 +83,7 @@ define('package/quiqqer/products/bin/controls/categories/search/Window', [
                 return;
             }
 
-            var values = this.$Sitemap.getSelected().map(function (Item) {
+            const values = this.$Sitemap.getSelected().map(function (Item) {
                 return Item.getAttribute('value');
             });
 

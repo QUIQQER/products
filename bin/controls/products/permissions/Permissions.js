@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/products/permissions/Permissions
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/products/permissions/Permissions', [
 
     'qui/QUI',
@@ -15,7 +11,7 @@ define('package/quiqqer/products/bin/controls/products/permissions/Permissions',
     return new Class({
 
         Extends: QUIControl,
-        Type   : '',
+        Type: '',
 
         Binds: [
             '$onInject'
@@ -29,7 +25,7 @@ define('package/quiqqer/products/bin/controls/products/permissions/Permissions',
             this.parent(options);
 
             this.$Viewable = null;
-            this.$Buyable  = null;
+            this.$Buyable = null;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -44,7 +40,7 @@ define('package/quiqqer/products/bin/controls/products/permissions/Permissions',
         create: function () {
             this.$Elm = new Element('div', {
                 'class': 'quiqqer-products-permissions',
-                styles : {
+                styles: {
                     padding: 20
                 }
             });
@@ -61,7 +57,7 @@ define('package/quiqqer/products/bin/controls/products/permissions/Permissions',
                 if (typeOf(productData.permissions) !== 'object') {
                     productData.permissions = {
                         'permission.viewable': '',
-                        'permission.buyable' : ''
+                        'permission.buyable': ''
                     };
                 }
 
@@ -74,16 +70,16 @@ define('package/quiqqer/products/bin/controls/products/permissions/Permissions',
                 }
 
                 this.$Viewable = new Permission({
-                    value     : productData.permissions['permission.viewable'] || false,
+                    value: productData.permissions['permission.viewable'] || false,
                     permission: 'permission.viewable',
-                    title     : 'Darf Produkt sehen'
+                    title: 'Darf Produkt sehen'
                 }).inject(this.getElm());
 
 
                 this.$Buyable = new Permission({
-                    value     : productData.permissions['permission.buyable'] || false,
+                    value: productData.permissions['permission.buyable'] || false,
                     permission: 'permission.buyable',
-                    title     : 'Darf Produkt kaufen'
+                    title: 'Darf Produkt kaufen'
                 }).inject(this.getElm());
 
             }.bind(this));
@@ -97,7 +93,7 @@ define('package/quiqqer/products/bin/controls/products/permissions/Permissions',
         getValue: function () {
             return {
                 'permission.viewable': this.$Viewable.getValue(),
-                'permission.buyable' : this.$Buyable.getValue()
+                'permission.buyable': this.$Buyable.getValue()
             };
         },
 
@@ -108,7 +104,7 @@ define('package/quiqqer/products/bin/controls/products/permissions/Permissions',
          */
         save: function () {
             return new Promise(function (resolve, reject) {
-                var Product = Products.get(this.getAttribute('productId'));
+                const Product = Products.get(this.getAttribute('productId'));
 
                 Product.setPermissions(this.getValue()).then(resolve, reject);
             }.bind(this));

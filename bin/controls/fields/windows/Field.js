@@ -1,7 +1,4 @@
 /**
- * @module package/quiqqer/products/bin/controls/fields/windows/Field
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onSave [self]
  */
 define('package/quiqqer/products/bin/controls/fields/windows/Field', [
@@ -11,10 +8,10 @@ define('package/quiqqer/products/bin/controls/fields/windows/Field', [
     'Ajax',
     'Locale'
 
-], function(QUI, QUIConfirm, QUIAjax, QUILocale) {
+], function (QUI, QUIConfirm, QUIAjax, QUILocale) {
     'use strict';
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
@@ -33,7 +30,7 @@ define('package/quiqqer/products/bin/controls/fields/windows/Field', [
             autoclose: false
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.parent(options);
 
             this.$Field = null;
@@ -57,17 +54,17 @@ define('package/quiqqer/products/bin/controls/fields/windows/Field', [
         /**
          * event: on open
          */
-        $onOpen: function() {
-            var self = this;
+        $onOpen: function () {
+            const self = this;
 
             this.getContent().set('html', '');
             this.Loader.show();
 
-            require(['package/quiqqer/products/bin/controls/fields/Update'], function(UpdateField) {
+            require(['package/quiqqer/products/bin/controls/fields/Update'], function (UpdateField) {
                 self.$Field = new UpdateField({
                     fieldId: self.getAttribute('fieldId'),
                     events: {
-                        onLoaded: function() {
+                        onLoaded: function () {
                             self.Loader.hide();
                         }
                     }
@@ -78,14 +75,14 @@ define('package/quiqqer/products/bin/controls/fields/windows/Field', [
         /**
          * event: on submit
          */
-        $onSubmit: function() {
-            var self = this;
+        $onSubmit: function () {
+            const self = this;
 
             this.Loader.show();
-            this.$Field.submit().then(function() {
+            this.$Field.submit().then(function () {
                 self.fireEvent('save', [self]);
                 self.close();
-            }, function() {
+            }, function () {
                 self.Loader.hide();
             });
         }
