@@ -1,9 +1,6 @@
 /**
  * Parent Klasse für ein field control
  *
- * @module package/quiqqer/products/bin/controls/frontend/fields/Field
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onChange [{Object} self, {Number} fieldId]
  */
 define('package/quiqqer/products/bin/controls/frontend/fields/Field', [

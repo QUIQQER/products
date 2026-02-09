@@ -1,7 +1,4 @@
 /**
- * @module package/quiqqer/products/bin/classes/frontend/Product
- * @author www.pcsg.de (henning Leutz)
- *
  * @event onRefresh [this]
  */
 define('package/quiqqer/products/bin/classes/frontend/Product', [

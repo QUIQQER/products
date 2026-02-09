@@ -1,8 +1,5 @@
 /**
  * Products utils
- *
- * @module package/quiqqer/products/bin/utils/Products
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/utils/Products', [
 

@@ -1,7 +1,4 @@
 /**
- * @module package/quiqqer/products/bin/controls/fields/types/PriceByQuantity
- * @author www.pcsg.de (Henning Leutz)
- *
  * new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(1000)
  */
 define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantity', [

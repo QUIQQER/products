@@ -137,7 +137,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 Fields.getFieldTypeSettings(),
                 Fields.getSearchTypesForField(id)
             ]).then(function (result) {
-                const i, len, settings;
+                let i, len, settings;
 
                 const fieldTypes = result[1],
                     fieldData = result[0],
@@ -306,7 +306,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     return reject('Translation not found');
                 }
 
-                const Form = Elm.getElement('form'),
+                let Form = Elm.getElement('form'),
                     fieldId = self.getAttribute('fieldId'),
                     search_type = '';
 
@@ -319,7 +319,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                     MH.setAttribute('showMessages', false);
 
                 }).then(function () {
-                    const defaultValue = null;
+                    let defaultValue = null;
 
                     if (typeof Form.elements.defaultValue !== 'undefined') {
                         defaultValue = Form.elements.defaultValue.value;
@@ -465,7 +465,7 @@ define('package/quiqqer/products/bin/controls/fields/Update', [
                 Option = FieldTypes.getElement('[value="' + FieldTypes.value + '"]'),
                 settings = Option.get('data-settings');
 
-            const Form = FieldTypes.getParent('form'),
+            let Form = FieldTypes.getParent('form'),
                 FormOptions = Form.elements.options,
                 Container = Form.getElement('.field-options'),
                 Cell = Container.getParent('td');

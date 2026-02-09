@@ -1,8 +1,5 @@
 /**
  * Manage individual multipliers for price fields
- *
- * @module package/quiqqer/products/bin/controls/settings/PriceFieldFactors
- * @author www.pcsg.de (Patrick Müller)
  */
 define('package/quiqqer/products/bin/controls/settings/PriceFieldFactors', [
 

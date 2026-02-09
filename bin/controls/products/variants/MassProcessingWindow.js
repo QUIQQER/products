@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/products/variants/MassProcessingWindow
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/products/variants/MassProcessingWindow', [
 
     'qui/QUI',

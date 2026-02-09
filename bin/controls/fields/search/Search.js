@@ -1,7 +1,4 @@
 /**
- * @module package/quiqqer/products/bin/controls/fields/search/Search
- * @author www.pcsg.de (Henning Leutz)
- *
  * Felder suche
  */
 define('package/quiqqer/products/bin/controls/fields/search/Search', [

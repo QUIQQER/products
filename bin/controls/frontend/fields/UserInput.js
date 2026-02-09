@@ -1,9 +1,6 @@
 /**
  * Frontend control for fields of type "UserInput"
  *
- * @module package/quiqqer/products/bin/controls/frontend/fields/UserInput
- * @author www.pcsg.de (Patrick Müller)
- *
  * @event onChange [{Object} self, {Number} fieldId]
  */
 define('package/quiqqer/products/bin/controls/frontend/fields/UserInput', [

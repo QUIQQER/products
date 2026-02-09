@@ -1,9 +1,6 @@
 /**
  * Category Site Wizard
  *
- * @module package/quiqqer/products/bin/CategorySiteWizard
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onCategorySelect
  */
 define('package/quiqqer/products/bin/controls/categories/CategorySiteWizard', [

@@ -143,7 +143,7 @@ define('package/quiqqer/products/bin/controls/fields/Create', [
                     return aField < bField ? -1 : 1;
                 });
 
-                for (const i = 0, len = fieldTypes.length; i < len; i++) {
+                for (let i = 0, len = fieldTypes.length; i < len; i++) {
                     if (fieldTypes[i].name === 'Vat') {
                         continue;
                     }

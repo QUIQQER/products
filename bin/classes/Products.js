@@ -1,9 +1,6 @@
 /**
  * Products handler
  * Create and edit products
- *
- * @module package/quiqqer/products/bin/classes/Products
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/classes/Products', [
 

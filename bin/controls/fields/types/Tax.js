@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/Vat
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/types/Tax', [
 
     'qui/QUI',
