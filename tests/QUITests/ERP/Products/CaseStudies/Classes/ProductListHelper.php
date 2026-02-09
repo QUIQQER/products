@@ -7,6 +7,7 @@
 namespace QUITests\ERP\Products\CaseStudies\Classes;
 
 use QUI;
+use QUI\Exception;
 
 /**
  * Class ProductListHelper
@@ -19,9 +20,9 @@ class ProductListHelper
      *
      * @param QUI\Interfaces\Users\User $User
      * @return QUI\ERP\Products\Product\ProductList
-     * @throws QUI\ERP\Products\Product\Exception
+     * @throws QUI\ERP\Products\Product\Exception|QUI\Exception
      */
-    public static function getList($User)
+    public static function getList(QUI\Interfaces\Users\User $User): QUI\ERP\Products\Product\ProductList
     {
         $Products = new QUI\ERP\Products\Handler\Products();
         $List = new QUI\ERP\Products\Product\ProductList(
@@ -57,8 +58,9 @@ class ProductListHelper
      * Ausgabe einer produkt liste für phpunit
      *
      * @param QUI\ERP\Products\Product\ProductList $List
+     * @throws Exception
      */
-    public static function outputList(QUI\ERP\Products\Product\ProductList $List)
+    public static function outputList(QUI\ERP\Products\Product\ProductList $List): void
     {
         $data = $List->toArray();
         $User = $List->getUser();
@@ -118,10 +120,10 @@ class ProductListHelper
         writePhpUnitMessage('------');
         writePhpUnitMessage();
 
-        $priceFactore = $List->getPriceFactors()->sort();
+        $priceFactors = $List->getPriceFactors()->sort();
 
         /* @var QUI\ERP\Products\Utils\PriceFactor $PriceFactor */
-        foreach ($priceFactore as $PriceFactor) {
+        foreach ($priceFactors as $PriceFactor) {
             writePhpUnitMessage('    ' . $PriceFactor->getTitle() . ': ' . $PriceFactor->getValueFormated());
         }
 
