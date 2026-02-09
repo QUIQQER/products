@@ -3,9 +3,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductPicker', 
     'qui/QUI',
     'qui/controls/Control',
     'Ajax',
-    'Locale'
+    'Locale',
+    'package/quiqqer/currency/bin/Currency'
 
-], function (QUI, QUIControl, QUIAjax, QUILocale) {
+], function (QUI, QUIControl, QUIAjax, QUILocale, Currency) {
     "use strict";
 
     return new Class({
@@ -42,7 +43,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductPicker', 
                     }
                 }
                 */
-            ]
+            ],
+            zeroProduct: false
         },
 
         initialize: function (options) {
@@ -81,17 +83,15 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductPicker', 
                     content: this.getAttribute('content'),
                     sheetOptionsStyle: this.getAttribute('sheetOptionsStyle'),
                     sheetOptions: this.getAttribute('sheetOptions'),
-                    sheets: this.getAttribute('sheets')
+                    sheets: this.getAttribute('sheets'),
+                    zeroProduct: this.getAttribute('zeroProduct')
                 })
             });
         },
 
         $onImport: function () {
-            console.log('on import');
-
             const container = this.getElm();
             const options = container.querySelector('[data-name="product-picker-options"]');
-
             const optionNodes = Array.from(options.querySelectorAll('select,input'));
 
             optionNodes.forEach((optionNode) => {
@@ -115,6 +115,52 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductPicker', 
                     this.fireEvent('onProductSelected', [this, productId]);
                 });
             });
+
+            if (this.getAttribute('zeroProduct') && this.getAttribute('zeroProductData')) {
+                const productData = this.getAttribute('zeroProductData');
+
+                if (typeof productData.title !== 'undefined' && productData.title !== false) {
+                    this.getElm().querySelector(
+                        '[data-name="zero-product-title"]'
+                    ).innerHTML = productData.title;
+                }
+
+                if (typeof productData.image !== 'undefined' && productData.image !== false) {
+                    this.getElm().querySelector(
+                        '[data-name="zero-product-image"]'
+                    ).setAttribute('src', productData.image);
+                }
+
+                if (typeof productData.description !== 'undefined' && productData.description !== false) {
+                    this.getElm().querySelector(
+                        '[data-name="zero-product-description"]'
+                    ).innerHTML = productData.description;
+                }
+
+                if (typeof productData.content !== 'undefined' && productData.content !== false) {
+                    this.getElm().querySelector(
+                        '[data-name="zero-product-content"]'
+                    ).innerHTML = productData.content;
+                }
+
+                if (typeof productData.price !== 'undefined' && productData.price !== false) {
+                    const fmt = QUILocale.getNumberFormatter({
+                        style: 'currency',
+                        currency: window.RUNTIME_CURRENCY,
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+
+                    const price = fmt.format(productData.price);
+                    this.getElm().querySelector('[data-name="zero-product-price"]').innerHTML = price;
+                }
+
+                if (typeof productData.button !== 'undefined' && productData.button !== false) {
+                    this.getElm().querySelector(
+                        '[data-name="zero-button-text"]'
+                    ).innerHTML = productData.button;
+                }
+            }
 
             this.refresh();
         },
