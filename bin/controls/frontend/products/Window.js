@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/frontend/products/Window
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/frontend/products/Window', [
 
     'qui/QUI',
@@ -12,7 +8,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Window', [
 
     return new Class({
 
-        Type   : 'package/quiqqer/products/bin/controls/frontend/products/Window',
+        Type: 'package/quiqqer/products/bin/controls/frontend/products/Window',
         Extends: QUIWindow,
 
         Binds: [
@@ -21,13 +17,13 @@ define('package/quiqqer/products/bin/controls/frontend/products/Window', [
 
         options: {
             productId: false,
-            buttons  : false
+            buttons: false
         },
 
         initialize: function (options) {
             this.setAttributes({
                 maxHeight: '100%',
-                maxWidth : '100%'
+                maxWidth: '100%'
             });
 
             this.parent(options);
@@ -45,7 +41,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/Window', [
         $onOpen: function () {
             this.Loader.show();
 
-            var self    = this,
+            const self = this,
                 Content = this.getContent();
 
             Content.set('html', '');
@@ -53,20 +49,20 @@ define('package/quiqqer/products/bin/controls/frontend/products/Window', [
             require([
                 'package/quiqqer/products/bin/controls/frontend/products/Product'
             ], function (Product) {
-                var Container = new Element('div', {
+                const Container = new Element('div', {
                     styles: {
-                        margin  : '0 auto',
+                        margin: '0 auto',
                         maxWidth: 1200
                     }
                 }).inject(Content);
 
                 self.$Product = new Product({
                     productId: self.getAttribute('productId'),
-                    events   : {
+                    events: {
                         onClose: function () {
                             self.close();
                         },
-                        onLoad : function () {
+                        onLoad: function () {
                             self.Loader.hide();
                         }
                     }

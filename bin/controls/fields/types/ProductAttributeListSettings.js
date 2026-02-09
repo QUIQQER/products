@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/ProductAttributeList
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings', [
 
     'qui/QUI',
@@ -20,11 +16,12 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
 ], function (QUI, QUIControl, QUIConfirm, QUILocale, Grid, InputMultiLang, Calc, Mustache, template, templateCreate) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
+
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/ProductAttributeListSettings',
 
         Binds: [
             'update',
@@ -44,17 +41,17 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             this.parent(options);
 
             this.$Input = null;
-            this.$data  = [];
+            this.$data = [];
 
-            this.$Grid      = null;
-            this.$Priority  = null;
+            this.$Grid = null;
+            this.$Priority = null;
             this.$CalcBasis = null;
 
             // price container
-            this.$PriceCalc        = null;
+            this.$PriceCalc = null;
             this.$DisplayDiscounts = null;
-            this.$GenerateTags     = null;
-            this.$UserInput        = null;
+            this.$GenerateTags = null;
+            this.$UserInput = null;
 
             this.addEvents({
                 onInject: this.$onInject,
@@ -71,7 +68,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             this.$Elm = new Element('div', {
                 styles: {
                     'float': 'left',
-                    width  : '100%'
+                    width: '100%'
                 }
             });
 
@@ -82,7 +79,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * event : on inject
          */
         $onInject: function () {
-            var Parent = this.$Elm.getParent('.field-options');
+            const Parent = this.$Elm.getParent('.field-options');
 
             if (Parent) {
                 Parent.setStyle('padding', 0);
@@ -90,48 +87,48 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
 
             new Element('div', {
                 'class': 'quiqqer-products-attributeList-settings-title',
-                html   : QUILocale.get(lg, 'product.fields.attributeList.entry.title'),
-                styles : {
+                html: QUILocale.get(lg, 'product.fields.attributeList.entry.title'),
+                styles: {
                     marginTop: 20
                 }
             }).inject(this.$Elm);
 
-            var Width = new Element('div', {
+            const Width = new Element('div', {
                 styles: {
                     'float': 'left',
-                    margin : 10,
-                    width  : 'calc(100% - 20px)'
+                    margin: 10,
+                    width: 'calc(100% - 20px)'
                 }
             }).inject(this.$Elm);
 
-            var Container = new Element('div', {
+            const Container = new Element('div', {
                 styles: {
                     'float': 'left',
-                    height : 300,
-                    width  : '100%'
+                    height: 300,
+                    width: '100%'
                 }
             }).inject(Width);
 
-            var self = this,
+            const self = this,
                 size = Width.getSize();
 
             this.$Grid = new Grid(Container, {
-                perPage    : 150,
-                buttons    : [{
-                    name    : 'up',
-                    icon    : 'fa fa-angle-up',
+                perPage: 150,
+                buttons: [{
+                    name: 'up',
+                    icon: 'fa fa-angle-up',
                     disabled: true,
-                    events  : {
+                    events: {
                         onClick: function () {
                             this.$moveup();
                             // this.$refreshSorting();
                         }.bind(this)
                     }
                 }, {
-                    name    : 'down',
-                    icon    : 'fa fa-angle-down',
+                    name: 'down',
+                    icon: 'fa fa-angle-down',
                     disabled: true,
-                    events  : {
+                    events: {
                         onClick: function () {
                             this.$movedown();
                             // this.$Grid.movedown();
@@ -141,20 +138,20 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 }, {
                     type: 'separator'
                 }, {
-                    name     : 'add',
+                    name: 'add',
                     textimage: 'fa fa-plus',
-                    text     : QUILocale.get('quiqqer/system', 'add'),
-                    events   : {
+                    text: QUILocale.get('quiqqer/system', 'add'),
+                    events: {
                         onClick: this.openAddDialog
                     }
                 }, {
-                    name     : 'edit',
+                    name: 'edit',
                     textimage: 'fa fa-edit',
-                    text     : QUILocale.get('quiqqer/system', 'edit'),
-                    disabled : true,
-                    events   : {
+                    text: QUILocale.get('quiqqer/system', 'edit'),
+                    disabled: true,
+                    events: {
                         onClick: function () {
-                            var selected = self.$Grid.getSelectedIndices();
+                            const selected = self.$Grid.getSelectedIndices();
 
                             if (selected.length) {
                                 self.openEditDialog(selected[0]);
@@ -164,45 +161,45 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 }, {
                     type: 'separator'
                 }, {
-                    name     : 'delete',
+                    name: 'delete',
                     textimage: 'fa fa-trash',
-                    text     : QUILocale.get('quiqqer/system', 'delete'),
-                    disabled : true,
-                    events   : {
+                    text: QUILocale.get('quiqqer/system', 'delete'),
+                    disabled: true,
+                    events: {
                         onClick: this.openRemoveDialog
                     }
                 }],
                 columnModel: [{
-                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
-                    title    : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
+                    header: QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
+                    title: QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.selected'),
                     dataIndex: 'selected',
-                    dataType : 'node',
-                    width    : 60
+                    dataType: 'node',
+                    width: 60
                 }, {
-                    header   : QUILocale.get('quiqqer/system', 'title'),
+                    header: QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
-                    dataType : 'string',
-                    width    : 180
+                    dataType: 'string',
+                    width: 180
                 }, {
-                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.sum'),
+                    header: QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.sum'),
                     dataIndex: 'sum',
-                    dataType : 'number',
-                    width    : 100
+                    dataType: 'number',
+                    width: 100
                 }, {
-                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.type'),
+                    header: QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.type'),
                     dataIndex: 'type',
-                    dataType : 'node',
-                    width    : 100
+                    dataType: 'node',
+                    width: 100
                 }, {
-                    header   : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.userinput'),
-                    title    : QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.userinput'),
+                    header: QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.userinput'),
+                    title: QUILocale.get(lg, 'fields.control.productAttributeListSettings.grid.userinput'),
                     dataIndex: 'userinputIcon',
-                    dataType : 'node',
-                    width    : 80
+                    dataType: 'node',
+                    width: 80
                 }, {
                     dataIndex: 'userinput',
-                    dataType : 'number',
-                    hidden   : true
+                    dataType: 'number',
+                    hidden: true
                 }]
             });
 
@@ -210,7 +207,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             this.$Grid.setWidth(size.x);
 
             this.$Grid.addEvents({
-                onClick   : this.$buttonReset,
+                onClick: this.$buttonReset,
                 onDblClick: function () {
                     self.$buttonReset();
 
@@ -222,24 +219,24 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
 
             this.$PriceCalc = new Element('div', {
                 'class': 'quiqqer-products-attributeList-settings',
-                html   : Mustache.render(template, {
-                    title       : QUILocale.get(lg, 'product.fields.attributeList.title'),
-                    priority    : QUILocale.get(lg, 'product.fields.attributeList.priority'),
-                    discounts   : QUILocale.get(lg, 'product.fields.attributeList.discounts'),
-                    userInput   : QUILocale.get(lg, 'product.fields.attributeList.userInput'),
+                html: Mustache.render(template, {
+                    title: QUILocale.get(lg, 'product.fields.attributeList.title'),
+                    priority: QUILocale.get(lg, 'product.fields.attributeList.priority'),
+                    discounts: QUILocale.get(lg, 'product.fields.attributeList.discounts'),
+                    userInput: QUILocale.get(lg, 'product.fields.attributeList.userInput'),
                     generateTags: QUILocale.get(lg, 'product.fields.attributeList.generateTags'),
 
-                    calcBasis         : QUILocale.get(lg, 'product.fields.attributeList.calcBasis'),
-                    calcBasisNetto    : QUILocale.get(lg, 'product.fields.attributeList.calcBasis.netto'),
+                    calcBasis: QUILocale.get(lg, 'product.fields.attributeList.calcBasis'),
+                    calcBasisNetto: QUILocale.get(lg, 'product.fields.attributeList.calcBasis.netto'),
                     calcBasisCalcPrice: QUILocale.get(lg, 'product.fields.grid.calcBasis.calculationBasisCalcPrice')
                 })
             }).inject(this.$Elm, 'top');
 
-            this.$Priority         = this.$PriceCalc.getElement('[name="price_priority"]');
-            this.$CalcBasis        = this.$PriceCalc.getElement('[name="price_calculation_basis"]');
+            this.$Priority = this.$PriceCalc.getElement('[name="price_priority"]');
+            this.$CalcBasis = this.$PriceCalc.getElement('[name="price_calculation_basis"]');
             this.$DisplayDiscounts = this.$PriceCalc.getElement('[name="display_discounts"]');
-            this.$GenerateTags     = this.$PriceCalc.getElement('[name="generate_tags"]');
-            this.$UserInput        = this.$PriceCalc.getElement('[name="userinput"]');
+            this.$GenerateTags = this.$PriceCalc.getElement('[name="generate_tags"]');
+            this.$UserInput = this.$PriceCalc.getElement('[name="userinput"]');
 
             this.refresh();
         },
@@ -252,9 +249,9 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          */
         $onImport: function (self, Node) {
             this.$Input = Node;
-            this.$Elm   = this.create();
+            this.$Elm = this.create();
 
-            var data   = {},
+            let data = {},
                 result = [];
 
             try {
@@ -262,7 +259,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
 
                 // parse data
                 if ("entries" in data) {
-                    for (var i = 0, len = data.entries.length; i < len; i++) {
+                    for (let i = 0, len = data.entries.length; i < len; i++) {
                         if (!("title" in data.entries[i])) {
                             continue;
                         }
@@ -332,22 +329,22 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * disable or enable the buttons dependent on selected indices
          */
         $buttonReset: function () {
-            var selected = this.$Grid.getSelectedIndices(),
-                buttons  = this.$Grid.getButtons();
+            const selected = this.$Grid.getSelectedIndices(),
+                buttons = this.$Grid.getButtons();
 
-            var Up = buttons.filter(function (Button) {
+            const Up = buttons.filter(function (Button) {
                 return Button.getAttribute('name') === 'up';
             })[0];
 
-            var Down = buttons.filter(function (Button) {
+            const Down = buttons.filter(function (Button) {
                 return Button.getAttribute('name') === 'down';
             })[0];
 
-            var Edit = buttons.filter(function (Button) {
+            const Edit = buttons.filter(function (Button) {
                 return Button.getAttribute('name') === 'edit';
             })[0];
 
-            var Delete = buttons.filter(function (Button) {
+            const Delete = buttons.filter(function (Button) {
                 return Button.getAttribute('name') === 'delete';
             })[0];
 
@@ -376,10 +373,10 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * refresh the grid data dispaly
          */
         refresh: function () {
-            var i, len, entry, langTitle, type, userInputIcon;
-            var data = [];
+            let i, len, entry, langTitle, type, userInputIcon;
+            const data = [];
 
-            var currentLang = QUILocale.getCurrent();
+            const currentLang = QUILocale.getCurrent();
 
             for (i = 0, len = this.$data.length; i < len; i++) {
                 entry = this.$data[i];
@@ -400,7 +397,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                     entry.userinput = false;
                 }
 
-                langTitle     = '---';
+                langTitle = '---';
                 userInputIcon = new Element('span', {
                     html: '&nbsp;'
                 });
@@ -431,13 +428,13 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 }
 
                 data.push({
-                    title        : langTitle,
-                    sum          : entry.sum,
-                    type         : type,
-                    selected     : new Element('span', {
+                    title: langTitle,
+                    sum: entry.sum,
+                    type: type,
+                    selected: new Element('span', {
                         'class': entry.selected ? 'fa fa-check-square-o' : 'fa fa-square-o'
                     }),
-                    userinput    : entry.userinput,
+                    userinput: entry.userinput,
                     userinputIcon: userInputIcon
                 });
             }
@@ -455,30 +452,30 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * Opens the add dialog
          */
         openAddDialog: function () {
-            var self = this;
+            const self = this;
 
             new QUIConfirm({
-                title    : QUILocale.get(lg, 'fields.control.productAttributeList.add.window.title'),
-                icon     : 'fa fa-plus',
-                texticon : false,
+                title: QUILocale.get(lg, 'fields.control.productAttributeList.add.window.title'),
+                icon: 'fa fa-plus',
+                texticon: false,
                 maxHeight: 400,
-                maxWidth : 600,
-                events   : {
-                    onOpen  : function (Win) {
+                maxWidth: 600,
+                events: {
+                    onOpen: function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            title         : QUILocale.get('quiqqer/system', 'title'),
-                            priceTitle    : QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
-                            deduction     : QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction'),
-                            selectedTitle : QUILocale.get(lg, 'fields.control.productAttributeList.create.selected'),
+                            title: QUILocale.get('quiqqer/system', 'title'),
+                            priceTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
+                            deduction: QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction'),
+                            selectedTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.selected'),
                             userInputTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.userinput')
                         }));
 
-                        var Form = Win.getContent().getElement('form');
+                        const Form = Win.getContent().getElement('form');
 
                         new InputMultiLang().imports(Form.elements.title);
                     },
                     onSubmit: function (Win) {
-                        var Form  = Win.getContent().getElement('form'),
+                        const Form = Win.getContent().getElement('form'),
                             Title = QUI.Controls.getById(
                                 Form.elements.title.get('data-quiid')
                             );
@@ -509,36 +506,36 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 return;
             }
 
-            var self = this,
+            const self = this,
                 data = this.$data[index];
 
             new QUIConfirm({
-                title    : QUILocale.get(lg, 'fields.control.productAttributeList.edit.window.title'),
-                icon     : 'fa fa-edit',
+                title: QUILocale.get(lg, 'fields.control.productAttributeList.edit.window.title'),
+                icon: 'fa fa-edit',
                 maxHeight: 400,
-                maxWidth : 600,
-                events   : {
-                    onOpen  : function (Win) {
+                maxWidth: 600,
+                events: {
+                    onOpen: function (Win) {
                         Win.getContent().set('html', Mustache.render(templateCreate, {
-                            title         : QUILocale.get('quiqqer/system', 'title'),
-                            priceTitle    : QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
-                            deduction     : QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction'),
-                            selectedTitle : QUILocale.get(lg, 'fields.control.productAttributeList.create.selected'),
+                            title: QUILocale.get('quiqqer/system', 'title'),
+                            priceTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.priceTitle'),
+                            deduction: QUILocale.get(lg, 'fields.control.productAttributeList.create.deduction'),
+                            selectedTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.selected'),
                             userInputTitle: QUILocale.get(lg, 'fields.control.productAttributeList.create.userinput')
                         }));
 
-                        var Form = Win.getContent().getElement('form');
+                        const Form = Win.getContent().getElement('form');
 
-                        Form.elements.title.value       = JSON.encode(data.title);
-                        Form.elements.sum.value         = data.sum;
-                        Form.elements.type.value        = data.type;
-                        Form.elements.selected.checked  = data.selected;
+                        Form.elements.title.value = JSON.encode(data.title);
+                        Form.elements.sum.value = data.sum;
+                        Form.elements.type.value = data.type;
+                        Form.elements.selected.checked = data.selected;
                         Form.elements.userinput.checked = data.userinput;
 
                         new InputMultiLang().imports(Form.elements.title);
                     },
                     onSubmit: function (Win) {
-                        var Form  = Win.getContent().getElement('form'),
+                        const Form = Win.getContent().getElement('form'),
                             Title = QUI.Controls.getById(
                                 Form.elements.title.get('data-quiid')
                             );
@@ -560,11 +557,11 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * open remove dialog
          */
         openRemoveDialog: function () {
-            var self    = this,
-                data    = this.$Grid.getSelectedData(),
+            const self = this,
+                data = this.$Grid.getSelectedData(),
                 indices = this.$Grid.getSelectedIndices();
 
-            var titles = data.map(function (Entry) {
+            const titles = data.map(function (Entry) {
                 return Entry.title;
             });
 
@@ -573,14 +570,14 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             }
 
             new QUIConfirm({
-                title      : QUILocale.get(lg, 'fields.control.productAttributeList.remove.window.title'),
-                icon       : 'fa fa-trash',
-                texticon   : 'fa fa-trash',
-                text       : QUILocale.get(lg, 'fields.control.productAttributeList.remove.window.text'),
+                title: QUILocale.get(lg, 'fields.control.productAttributeList.remove.window.title'),
+                icon: 'fa fa-trash',
+                texticon: 'fa fa-trash',
+                text: QUILocale.get(lg, 'fields.control.productAttributeList.remove.window.text'),
                 information: titles.join(','),
-                maxHeight  : 300,
-                maxWidth   : 450,
-                events     : {
+                maxHeight: 300,
+                maxWidth: 450,
+                events: {
                     onSubmit: function () {
                         self.remove(indices);
                     }
@@ -592,13 +589,13 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * entry move up
          */
         $moveup: function () {
-            var from = this.$Grid.getSelectedIndices();
+            const from = this.$Grid.getSelectedIndices();
 
             if (from === 0) {
                 return;
             }
 
-            var to = from - 1;
+            const to = from - 1;
 
             this.$data.splice(to, 0, this.$data.splice(from, 1)[0]);
             this.$Grid.moveup();
@@ -609,13 +606,13 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          * entry move down
          */
         $movedown: function () {
-            var from = this.$Grid.getSelectedIndices();
+            const from = this.$Grid.getSelectedIndices();
 
             if (from === this.$data.length - 1) {
                 return;
             }
 
-            var to = from + 1;
+            const to = from + 1;
 
             this.$data.splice(to, 0, this.$data.splice(from, 1)[0]);
             this.$Grid.movedown();
@@ -627,12 +624,12 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
          */
         update: function () {
             this.$Input.value = JSON.encode({
-                entries          : this.$data,
-                priority         : this.$Priority.value,
+                entries: this.$data,
+                priority: this.$Priority.value,
                 calculation_basis: this.$CalcBasis.value,
                 display_discounts: this.$DisplayDiscounts.checked,
-                generate_tags    : this.$GenerateTags.checked,
-                userinput        : this.$UserInput.checked
+                generate_tags: this.$GenerateTags.checked,
+                userinput: this.$UserInput.checked
             });
         },
 
@@ -659,16 +656,16 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
 
             // if this is selected, the orthers must be deselected
             if (Boolean(selected)) {
-                for (var i = 0, len = this.$data.length; i < len; i++) {
+                for (let i = 0, len = this.$data.length; i < len; i++) {
                     this.$data[i].selected = false;
                 }
             }
 
             this.$data.push({
-                title    : title,
-                sum      : sum,
-                type     : type,
-                selected : Boolean(selected),
+                title: title,
+                sum: sum,
+                type: type,
+                selected: Boolean(selected),
                 userinput: Boolean(userinput)
             });
 
@@ -686,16 +683,16 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 return;
             }
 
-            var newData = [];
+            const newData = [];
 
-            var mustBeDeleted = function (wanted) {
+            const mustBeDeleted = function (wanted) {
                 if ((typeOf(index) === 'string' || typeOf(index) === 'number') &&
                     index == wanted) {
                     return true;
                 }
 
                 if (typeOf(index) === 'array') {
-                    for (var i = 0, len = index.length; i < len; i++) {
+                    for (let i = 0, len = index.length; i < len; i++) {
                         if (index[i] == wanted) {
                             return true;
                         }
@@ -705,7 +702,7 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
                 return false;
             };
 
-            for (var i = 0, len = this.$data.length; i < len; i++) {
+            for (let i = 0, len = this.$data.length; i < len; i++) {
                 if (mustBeDeleted(i) === false) {
                     newData.push(this.$data[i]);
                 }
@@ -735,10 +732,10 @@ define('package/quiqqer/products/bin/controls/fields/types/ProductAttributeListS
             }
 
             this.$data[index] = {
-                title    : title,
-                sum      : sum,
-                type     : type,
-                selected : selected,
+                title: title,
+                sum: sum,
+                type: type,
+                selected: selected,
                 userinput: userinput
             };
 

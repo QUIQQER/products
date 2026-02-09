@@ -1,7 +1,4 @@
 /**
- * @module package/quiqqer/products/bin/controls/fields/types/PriceSettings
- * @author www.pcsg.de (Henning Leutz)
- *
  * @todo not finish
  * @todo #locale
  * @todo locale
@@ -19,7 +16,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantitySettin
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/PriceByQuantitySettings',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/PriceByQuantitySettings',
 
         Binds: [
             'update',
@@ -29,7 +26,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantitySettin
 
         options: {
             fieldId: false,
-            groups : []
+            groups: []
         },
 
         initialize: function (options) {
@@ -52,7 +49,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantitySettin
             this.$Elm = new Element('div', {
                 styles: {
                     'float': 'left',
-                    width  : '100%'
+                    width: '100%'
                 }
             });
 
@@ -63,7 +60,7 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantitySettin
          * event : on import
          */
         $onInject: function () {
-            var Parent = this.$Elm.getParent('.field-options');
+            const Parent = this.$Elm.getParent('.field-options');
 
             if (Parent) {
                 Parent.setStyle('padding', 0);
@@ -71,14 +68,14 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantitySettin
 
             new Element('div', {
                 'class': 'quiqqer-products-priceByQuantity-settings',
-                html   : '<div class="quiqqer-products-priceByQuantity-settings-groups">' +
-                '    <label>' +
-                '        <span class="quiqqer-products-priceByQuantity-settings-groups-text">' +
-                '            Gruppenzuweisung:' +
-                '        </span>' +
-                '        <div class="quiqqer-products-priceByQuantity-settings-groups-values"></div>' +
-                '    </label>' +
-                '</div>'
+                html: '<div class="quiqqer-products-priceByQuantity-settings-groups">' +
+                    '    <label>' +
+                    '        <span class="quiqqer-products-priceByQuantity-settings-groups-text">' +
+                    '            Gruppenzuweisung:' +
+                    '        </span>' +
+                    '        <div class="quiqqer-products-priceByQuantity-settings-groups-values"></div>' +
+                    '    </label>' +
+                    '</div>'
             }).inject(this.$Elm);
 
             this.$Groups = new GroupSelect({
@@ -101,16 +98,16 @@ define('package/quiqqer/products/bin/controls/fields/types/PriceByQuantitySettin
         },
 
         /**
-         * event : on import
+         * event: on import
          *
          * @param self
          * @param {HTMLInputElement} Node
          */
         $onImport: function (self, Node) {
             this.$Input = Node;
-            this.$Elm   = this.create();
+            this.$Elm = this.create();
 
-            var data = {};
+            let data = {};
 
             try {
                 data = JSON.decode(this.$Input.value);

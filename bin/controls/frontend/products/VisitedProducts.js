@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/frontend/products/VisitedProducts
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/frontend/products/VisitedProducts', [
 
     'qui/QUI',
@@ -13,12 +9,12 @@ define('package/quiqqer/products/bin/controls/frontend/products/VisitedProducts'
 ], function (QUI, QUIControl, QUIAjax, QUILocale, Products) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/frontend/products/VisitedProducts',
+        Type: 'package/quiqqer/products/bin/controls/frontend/products/VisitedProducts',
 
         Binds: [
             '$onImport'
@@ -27,7 +23,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/VisitedProducts'
         initialize: function (options) {
             this.parent(options);
 
-            this.$List   = null;
+            this.$List = null;
             this.$Slider = null;
 
             this.addEvents({
@@ -39,8 +35,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/VisitedProducts'
          * event : on import
          */
         $onImport: function () {
-            var SliderNode = this.getElm().getElement('.quiqqer-bricks-children-slider'),
-                Parse      = Promise.resolve();
+            let SliderNode = this.getElm().getElement('.quiqqer-bricks-children-slider'),
+                Parse = Promise.resolve();
 
             if (!SliderNode.get('data-quiid')) {
                 Parse = QUI.parse(this.getElm());
@@ -54,22 +50,22 @@ define('package/quiqqer/products/bin/controls/frontend/products/VisitedProducts'
                 );
 
                 // load products
-                var visited = Products.getVisitedProductIds();
+                const visited = Products.getVisitedProductIds();
 
                 if (!visited.length) {
                     new Element('div', {
                         'class': 'quiqqer-products-control-visitedProducts-empty text-muted',
-                        html   : QUILocale.get(lg, 'brick.control.VisitedProducts.empty')
+                        html: QUILocale.get(lg, 'brick.control.VisitedProducts.empty')
                     }).replaces(this.$List);
                     return;
                 }
 
                 QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getVisitedProducts', function (result) {
-                    var Ghost = new Element('div', {
+                    const Ghost = new Element('div', {
                         html: result
                     });
 
-                    var List = Ghost.getElement(
+                    let List = Ghost.getElement(
                         'ul.quiqqer-bricks-children-slider-container-slide'
                     );
 
@@ -77,12 +73,12 @@ define('package/quiqqer/products/bin/controls/frontend/products/VisitedProducts'
                         List = new Element('ul');
                     }
 
-                    var Result = List.getElements('li');
+                    const Result = List.getElements('li');
 
                     if (!Result.length) {
                         new Element('div', {
                             'class': 'quiqqer-products-control-visitedProducts-empty text-muted',
-                            html   : QUILocale.get(lg, 'brick.control.VisitedProducts.empty')
+                            html: QUILocale.get(lg, 'brick.control.VisitedProducts.empty')
                         }).replaces(this.$List);
                         return;
                     }
@@ -90,13 +86,13 @@ define('package/quiqqer/products/bin/controls/frontend/products/VisitedProducts'
                     this.$List.set('html', List.get('html'));
                     this.$List.getElements('a').addEvents({
                         click: function (event) {
-                            var Target = event.target;
+                            let Target = event.target;
 
                             if (Target.nodeName !== 'A') {
                                 Target = Target.getParent('a');
                             }
 
-                            var List = document.getElement(
+                            let List = document.getElement(
                                 '[data-qui="package/quiqqer/products/bin/controls/frontend/category/ProductList"]'
                             );
 
@@ -115,8 +111,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/VisitedProducts'
                         this.$Slider.resize();
                     }.bind(this));
                 }.bind(this), {
-                    'package'       : 'quiqqer/products',
-                    productIds      : JSON.encode(visited),
+                    'package': 'quiqqer/products',
+                    productIds: JSON.encode(visited),
                     currentProductId: window.QUIQQER_PRODUCT_ID || 0
                 });
 

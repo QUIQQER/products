@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/fields/types/TimePeriod
- * @author www.pcsg.de (Patrick Müller)
- */
 define('package/quiqqer/products/bin/controls/fields/types/TimePeriod', [
 
     'qui/QUI',
@@ -16,11 +12,11 @@ define('package/quiqqer/products/bin/controls/fields/types/TimePeriod', [
 ], function (QUI, QUIControl, QUILocale, Mustache, template) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/TimePeriod',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/TimePeriod',
 
         Binds: [
             '$onImport',
@@ -33,10 +29,10 @@ define('package/quiqqer/products/bin/controls/fields/types/TimePeriod', [
             this.parent(options);
 
             this.$UnitSelect = null;
-            this.$fieldId    = null;
-            this.$FromInput  = null;
-            this.$ToInput    = null;
-            this.$Content    = null;
+            this.$fieldId = null;
+            this.$FromInput = null;
+            this.$ToInput = null;
+            this.$Content = null;
 
             this.addEvents({
                 onImport: this.$onImport
@@ -47,27 +43,27 @@ define('package/quiqqer/products/bin/controls/fields/types/TimePeriod', [
          * Event: onImport
          */
         $onImport: function () {
-            var self  = this,
-                Elm   = this.getElm(),
-                Value = false;
+            const self = this,
+                Elm = this.getElm();
+            let Value = false;
 
             this.$fieldId = Elm.get('name').split('-')[1];
 
-            var lgPrefix = 'controls.fields.types.TimePeriod.template.';
+            const lgPrefix = 'controls.fields.types.TimePeriod.template.';
 
             this.$Content = new Element('div', {
                 'class': 'quiqqer-products-fields-types-timeperiod field-container-field',
-                html   : Mustache.render(template, {
-                    labelFrom      : QUILocale.get(lg, lgPrefix + 'labelFrom'),
-                    labelTo        : QUILocale.get(lg, lgPrefix + 'labelTo'),
-                    labelUnit      : QUILocale.get(lg, lgPrefix + 'labelUnit'),
+                html: Mustache.render(template, {
+                    labelFrom: QUILocale.get(lg, lgPrefix + 'labelFrom'),
+                    labelTo: QUILocale.get(lg, lgPrefix + 'labelTo'),
+                    labelUnit: QUILocale.get(lg, lgPrefix + 'labelUnit'),
                     labelUnitSecond: QUILocale.get(lg, lgPrefix + 'labelUnitSecond'),
                     labelUnitMinute: QUILocale.get(lg, lgPrefix + 'labelUnitMinute'),
-                    labelUnitHour  : QUILocale.get(lg, lgPrefix + 'labelUnitHour'),
-                    labelUnitDay   : QUILocale.get(lg, lgPrefix + 'labelUnitDay'),
-                    labelUnitWeek  : QUILocale.get(lg, lgPrefix + 'labelUnitWeek'),
-                    labelUnitMonth : QUILocale.get(lg, lgPrefix + 'labelUnitMonth'),
-                    labelUnitYear  : QUILocale.get(lg, lgPrefix + 'labelUnitYear')
+                    labelUnitHour: QUILocale.get(lg, lgPrefix + 'labelUnitHour'),
+                    labelUnitDay: QUILocale.get(lg, lgPrefix + 'labelUnitDay'),
+                    labelUnitWeek: QUILocale.get(lg, lgPrefix + 'labelUnitWeek'),
+                    labelUnitMonth: QUILocale.get(lg, lgPrefix + 'labelUnitMonth'),
+                    labelUnitYear: QUILocale.get(lg, lgPrefix + 'labelUnitYear')
                 })
             }).inject(Elm, 'after');
 
@@ -91,8 +87,8 @@ define('package/quiqqer/products/bin/controls/fields/types/TimePeriod', [
                 Value = JSON.decode(Elm.value);
 
                 self.$UnitSelect.value = Value.unit;
-                self.$FromInput.value  = Value.from;
-                self.$ToInput.value    = Value.to;
+                self.$FromInput.value = Value.from;
+                self.$ToInput.value = Value.to;
             }).delay(200);
         },
 
@@ -102,7 +98,7 @@ define('package/quiqqer/products/bin/controls/fields/types/TimePeriod', [
         $setValue: function () {
             this.getElm().value = JSON.encode({
                 from: this.$FromInput.value.trim(),
-                to  : this.$ToInput.value.trim(),
+                to: this.$ToInput.value.trim(),
                 unit: this.$UnitSelect.value
             });
         },
@@ -115,7 +111,7 @@ define('package/quiqqer/products/bin/controls/fields/types/TimePeriod', [
         getValue: function () {
             return {
                 from: this.$FromInput.value.trim(),
-                to  : this.$ToInput.value.trim(),
+                to: this.$ToInput.value.trim(),
                 unit: this.$UnitSelect.value
             };
         }

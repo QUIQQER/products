@@ -1,7 +1,4 @@
 /**
- * @module package/quiqqer/products/bin/controls/fields/types/Price
- * @author www.pcsg.de (Henning Leutz)
- *
  * new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(1000)
  */
 define('package/quiqqer/products/bin/controls/fields/types/Price', [
@@ -15,12 +12,12 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
 ], function (QUI, QUIControl, PriceBruttoWindow, QUILocale, QUIAjax) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/types/Price',
+        Type: 'package/quiqqer/products/bin/controls/fields/types/Price',
 
         Binds: [
             '$onImport',
@@ -31,9 +28,9 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Button       = null;
+            this.$Button = null;
             this.$$BruttoInput = null;
-            this.$Formatter    = null;
+            this.$Formatter = null;
 
             this.$calcTimer = null;
             this.$productId = null;
@@ -47,8 +44,8 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
          * event : on import
          */
         $onImport: function () {
-            var self = this,
-                Elm  = this.getElm();
+            const self = this,
+                Elm = this.getElm();
 
             this.$Elm.addClass('field-container-field');
             this.$Elm.type = 'text';
@@ -59,31 +56,31 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
 
             this.$Button = new Element('button', {
                 'class': 'field-container-item',
-                html   : '<span class="fa fa-calculator"></span>',
-                title  : QUILocale.get('quiqqer/products', 'fields.control.price.brutto'),
-                styles : {
-                    cursor    : 'pointer',
+                html: '<span class="fa fa-calculator"></span>',
+                title: QUILocale.get('quiqqer/products', 'fields.control.price.brutto'),
+                styles: {
+                    cursor: 'pointer',
                     lineHeight: 30,
-                    textAlign : 'center',
-                    width     : 50
+                    textAlign: 'center',
+                    width: 50
                 },
-                events : {
+                events: {
                     click: this.openBruttoInput
                 }
             }).inject(Elm, 'after');
 
             this.$BruttoInput = new Element('span', {
                 'class': 'field-container-item',
-                html   : '<span class="fa fa-spinner fa-spin"></span>',
-                styles : {
+                html: '<span class="fa fa-spinner fa-spin"></span>',
+                styles: {
                     borderRight: 0,
-                    lineHeight : 30,
-                    maxWidth   : 100
+                    lineHeight: 30,
+                    maxWidth: 100
                 }
             }).inject(Elm, 'after');
 
             if (Elm.getParent('.qui-panel')) {
-                var Panel = QUI.Controls.getById(Elm.getParent('.qui-panel').get('data-quiid'));
+                const Panel = QUI.Controls.getById(Elm.getParent('.qui-panel').get('data-quiid'));
 
                 if (Panel.getAttribute('productId')) {
                     this.$productId = Panel.getAttribute('productId');
@@ -105,7 +102,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
          * disable this control
          */
         disable: function () {
-            this.$Elm.disabled    = true;
+            this.$Elm.disabled = true;
             this.$Button.disabled = true;
             this.$Button.setStyle('cursor', 'not-allowed');
         },
@@ -114,7 +111,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
          * enable this control
          */
         enable: function () {
-            this.$Elm.disabled    = false;
+            this.$Elm.disabled = false;
             this.$Button.disabled = false;
             this.$Button.setStyle('cursor', 'pointer');
         },
@@ -140,11 +137,11 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
                 return;
             }
 
-            var groupingSeparator = QUILocale.getGroupingSeparator();
-            var decimalSeparator  = QUILocale.getDecimalSeparator();
+            const groupingSeparator = QUILocale.getGroupingSeparator();
+            const decimalSeparator = QUILocale.getDecimalSeparator();
 
-            var foundGroupSeparator   = typeOf(value) === 'string' && value.indexOf(groupingSeparator) >= 0;
-            var foundDecimalSeparator = typeOf(value) === 'string' && value.indexOf(decimalSeparator) >= 0;
+            const foundGroupSeparator = typeOf(value) === 'string' && value.indexOf(groupingSeparator) >= 0;
+            const foundDecimalSeparator = typeOf(value) === 'string' && value.indexOf(decimalSeparator) >= 0;
 
             if ((foundGroupSeparator || foundDecimalSeparator) && !(foundGroupSeparator && !foundDecimalSeparator)) {
                 this.getElm().value = value;
@@ -164,7 +161,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
          * @return {String|Boolean|Number}
          */
         getFieldId: function () {
-            var name = this.getElm().name;
+            let name = this.getElm().name;
 
             name = name.replace('field-', '');
             name = parseInt(name);
@@ -176,13 +173,13 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
          * Opens the brutto / gross input
          */
         openBruttoInput: function (e) {
-            var self = this;
+            const self = this;
 
             e.stop();
 
             new PriceBruttoWindow({
                 productId: this.$productId,
-                events   : {
+                events: {
                     onOpen: function (Win) {
                         Win.getContent().set('html', '');
                     },
@@ -209,7 +206,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
 
             if (this.$Elm.value === '') {
                 this.$BruttoInput.innerHTML = '---';
-                this.$BruttoInput.title     = QUILocale.get(lg, 'fields.control.price.quantity.title', {
+                this.$BruttoInput.title = QUILocale.get(lg, 'fields.control.price.quantity.title', {
                     price: '---'
                 });
                 return;
@@ -218,7 +215,7 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
             this.$BruttoInput.innerHTML = '<span class="fa fa-spinner fa-spin"></span>';
 
             this.$calcTimer = (function () {
-                var self = this;
+                const self = this;
 
                 if (!self.$Elm) {
                     return;
@@ -226,12 +223,12 @@ define('package/quiqqer/products/bin/controls/fields/types/Price', [
 
                 QUIAjax.get('package_quiqqer_products_ajax_products_calcBruttoPrice', function (price) {
                     self.$BruttoInput.innerHTML = price;
-                    self.$BruttoInput.title     = QUILocale.get(lg, 'fields.control.price.quantity.title', {
+                    self.$BruttoInput.title = QUILocale.get(lg, 'fields.control.price.quantity.title', {
                         price: price
                     });
                 }, {
                     'package': 'quiqqer/products',
-                    price    : self.$Elm.value,
+                    price: self.$Elm.value,
                     formatted: 1,
                     productId: self.$productId
                 });

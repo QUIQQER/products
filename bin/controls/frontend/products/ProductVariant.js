@@ -1,9 +1,6 @@
 /**
  * Product Variant view
  * Display a product variant in the content
- *
- * @module package/quiqqer/products/bin/controls/frontend/products/ProductVariant
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant', [
 
@@ -25,7 +22,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
     return new Class({
 
         Extends: Product,
-        Type   : 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
+        Type: 'package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
         Binds: [
             '$onInject',
@@ -39,12 +36,12 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
         ],
 
         options: {
-            productId                 : false,
-            galleryLoader             : true,
-            closeable                 : false,
-            image_attribute_data      : false, // Special attribute group fields data from product images (set by PHP control)
+            productId: false,
+            galleryLoader: true,
+            closeable: false,
+            image_attribute_data: false, // Special attribute group fields data from product images (set by PHP control)
             link_images_and_attributes: false,
-            loadControlSettingsAsync  : false   // Load settings for this control asynchronously on init
+            loadControlSettingsAsync: false   // Load settings for this control asynchronously on init
         },
 
         initialize: function (options) {
@@ -65,7 +62,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             this.addEvents({
                 onInject: this.$onInject,
                 onImport: this.$onImport,
-                onClose : function () {
+                onClose: function () {
                     window.removeEvent('popstate', this.$onPopstateChange);
                 }.bind(this)
             });
@@ -107,7 +104,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     }, {
                         'package': 'quiqqer/products',
                         productId: this.getAttribute('productId'),
-                        siteId   : QUIQQER_SITE.id
+                        siteId: QUIQQER_SITE.id
                     });
                 });
             }).then(this.$init);
@@ -122,11 +119,11 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             }
 
             const self = this,
-                  url  = QUIQQER_SITE.url,
-                  URL  = URI(window.location),
-                  path = window.location.pathname;
+                url = QUIQQER_SITE.url,
+                URL = URI(window.location),
+                path = window.location.pathname;
 
-            let variantId  = '',
+            let variantId = '',
                 variantUrl = path.substring(
                     path.lastIndexOf(url) + url.length
                 );
@@ -160,10 +157,10 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
                 self.Loader.hide();
             }, {
-                'package' : 'quiqqer/products',
+                'package': 'quiqqer/products',
                 variantUrl: variantUrl,
-                variantId : variantId,
-                productId : this.getAttribute('productId')
+                variantId: variantId,
+                productId: this.getAttribute('productId')
             });
         },
 
@@ -306,8 +303,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
 
             if (Elm.getElement('.product-data-fieldlist')) {
                 new Element('div', {
-                    class : 'product-data-fieldlist-reset',
-                    html  : QUILocale.get('quiqqer/products', 'control.variant.reset.fields'),
+                    class: 'product-data-fieldlist-reset',
+                    html: QUILocale.get('quiqqer/products', 'control.variant.reset.fields'),
                     events: {
                         click: function () {
                             fieldLists.set('value', '');
@@ -438,7 +435,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     //window.history.pushState({}, "", result.url.toString());
                 } else {
                     const Url = URI(window.location);
-                    var url = Url.setSearch('variant', result.variantId).toString();
+                    const url = Url.setSearch('variant', result.variantId).toString();
                     //window.history.pushState({}, "", url);
                 }
 
@@ -460,8 +457,8 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 if (!self.getElm().getElement('.product-close-button') && self.getAttribute('closeable')) {
                     new Element('div', {
                         'class': 'product-close-button',
-                        html   : '<span class="fa fa-close"></span>',
-                        events : {
+                        html: '<span class="fa fa-close"></span>',
+                        events: {
                             click: function () {
                                 document.title = QUIQQER.title;
                                 self.fireEvent('close');
@@ -477,9 +474,9 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                     self.Loader.hide();
                 });
             }, {
-                'package'           : 'quiqqer/products',
-                productId           : this.getAttribute('productId'),
-                fields              : JSON.encode(fieldLists),
+                'package': 'quiqqer/products',
+                productId: this.getAttribute('productId'),
+                fields: JSON.encode(fieldLists),
                 ignoreDefaultVariant: 1
             });
         },
@@ -594,7 +591,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
             }
 
             moofx(PriceContainer).animate({
-                height : 0,
+                height: 0,
                 opacity: 0
             }, {
                 duration: 200
@@ -855,7 +852,7 @@ define('package/quiqqer/products/bin/controls/frontend/products/ProductVariant',
                 QUIAjax.get('package_quiqqer_products_ajax_products_frontend_getVariantControlSettings', resolve, {
                     'package': 'quiqqer/products',
                     productId: this.getAttribute('productId'),
-                    onError  : reject
+                    onError: reject
                 });
             });
         }
