@@ -24,5 +24,6 @@ QUI::$Ajax->registerFunction(
 
         return QUI\Projects\Media\Utils::parseForMediaCenter($Folder);
     },
-    ['productId', 'fieldId']
+    ['productId', 'fieldId'],
+    'Permission::checkAdminUser'
 );
