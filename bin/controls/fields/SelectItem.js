@@ -1,8 +1,5 @@
 /**
  * Field select item
- *
- * @module package/quiqqer/products/bin/controls/fields/SelectItem
- * @author www.pcsg.de (Henning Leutz)
  */
 define('package/quiqqer/products/bin/controls/fields/SelectItem', [
 
@@ -16,7 +13,7 @@ define('package/quiqqer/products/bin/controls/fields/SelectItem', [
 
     return new Class({
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/SelectItem',
+        Type: 'package/quiqqer/products/bin/controls/fields/SelectItem',
 
         Binds: [
             '$onInject'
@@ -29,8 +26,8 @@ define('package/quiqqer/products/bin/controls/fields/SelectItem', [
         initialize: function (options) {
             this.parent(options);
 
-            this.$Icon    = null;
-            this.$Text    = null;
+            this.$Icon = null;
+            this.$Text = null;
             this.$Destroy = null;
 
             this.addEvents({
@@ -44,18 +41,18 @@ define('package/quiqqer/products/bin/controls/fields/SelectItem', [
          * @returns {HTMLElement}
          */
         create: function () {
-            var self = this,
-                Elm  = this.parent();
+            const self = this,
+                Elm = this.parent();
 
             Elm.set({
                 'class': 'quiqqer-fields-selectItem smooth',
-                html   : '<span class="quiqqer-fields-selectItem-icon fa fa-file-text-o"></span>' +
+                html: '<span class="quiqqer-fields-selectItem-icon fa fa-file-text-o"></span>' +
                     '<span class="quiqqer-fields-selectItem-text">&nbsp;</span>' +
                     '<span class="quiqqer-fields-selectItem-destroy fa fa-remove"></span>'
             });
 
-            this.$Icon    = Elm.getElement('.quiqqer-fields-selectItem-icon');
-            this.$Text    = Elm.getElement('.quiqqer-fields-selectItem-text');
+            this.$Icon = Elm.getElement('.quiqqer-fields-selectItem-icon');
+            this.$Text = Elm.getElement('.quiqqer-fields-selectItem-text');
             this.$Destroy = Elm.getElement('.quiqqer-fields-selectItem-destroy');
 
             this.$Destroy.addEvent('click', function (e) {
@@ -67,10 +64,10 @@ define('package/quiqqer/products/bin/controls/fields/SelectItem', [
         },
 
         /**
-         * event : on inject
+         * event: on inject
          */
         $onInject: function () {
-            var self = this;
+            const self = this;
 
             this.$Text.set({
                 html: '<span class="fa fa-spinner fa-spin"></span>'

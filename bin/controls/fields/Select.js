@@ -1,9 +1,6 @@
 /**
  * Makes an input field to a field selection field
  *
- * @module package/quiqqer/products/bin/controls/fields/Select
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onAddField [ this, id ]
  * @event onChange [ this ]
  */
@@ -23,20 +20,16 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 ], function (QUI, QUIControl, QUIButton, QUIElementUtils, SelectItem, Fields, Ajax, QUILocale) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     /**
-     * @class package/quiqqer/products/bin/controls/fields/Select
-     *
      * @param {Object} options
      * @param {HTMLInputElement} [Input]  - (optional), if no input given, one would be created
-     *
-     * @memberof! <global>
      */
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/fields/Select',
+        Type: 'package/quiqqer/products/bin/controls/fields/Select',
 
         Binds: [
             'close',
@@ -51,11 +44,11 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
         options: {
             disabled: false,
-            max     : false, // max entries
+            max: false, // max entries
             multiple: true,  // select more than one entry?
-            name    : '',    // string
-            styles  : false, // object
-            label   : false, // text string or a <label> DOMNode Element
+            name: '',    // string
+            styles: false, // object
+            label: false, // text string or a <label> DOMNode Element
 
             // search function function(value, params) @return Promise;
             // resolve( [fieldData, fieldData, fieldData] )
@@ -67,10 +60,10 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
         initialize: function (options, Input) {
             this.parent(options);
 
-            this.$Input    = Input || null;
-            this.$Elm      = null;
-            this.$List     = null;
-            this.$Search   = null;
+            this.$Input = Input || null;
+            this.$Elm = null;
+            this.$List = null;
+            this.$Search = null;
             this.$DropDown = null;
 
             this.$SearchButton = null;
@@ -88,7 +81,6 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
         /**
          * Return the DOMNode Element
          *
-         * @method package/quiqqer/products/bin/controls/fields/Select#create
          * @return {HTMLElement|Element} The main DOM-Node Element
          */
         create: function () {
@@ -96,10 +88,10 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 return this.$Elm;
             }
 
-            var self = this;
+            const self = this;
 
             this.$Elm = new Element('div', {
-                'class'     : 'qui-fields-list',
+                'class': 'qui-fields-list',
                 'data-quiid': this.getId()
             });
 
@@ -122,12 +114,12 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
             this.$Input.set({
                 styles: {
-                    opacity : 0,
+                    opacity: 0,
                     position: 'absolute',
-                    zIndex  : 1,
-                    left    : 5,
-                    top     : 5,
-                    cursor  : 'pointer'
+                    zIndex: 1,
+                    left: 5,
+                    top: 5,
+                    cursor: 'pointer'
                 },
                 events: {
                     focus: this.$onInputFocus
@@ -140,9 +132,9 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
             }).inject(this.$Elm);
 
             this.$Search = new Element('input', {
-                'class'    : 'qui-fields-list-search',
+                'class': 'qui-fields-list-search',
                 placeholder: QUILocale.get(lg, 'control.select.search.field.placeholder'),
-                events     : {
+                events: {
                     keyup: function (event) {
                         if (event.key === 'down') {
                             this.down();
@@ -162,13 +154,13 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                         this.fireSearch();
                     }.bind(this),
 
-                    blur : this.close,
+                    blur: this.close,
                     focus: this.fireSearch
                 }
             }).inject(this.$Elm);
 
             this.$SearchButton = new QUIButton({
-                icon  : 'fa fa-search',
+                icon: 'fa fa-search',
                 styles: {
                     width: 50
                 },
@@ -181,11 +173,11 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                             'package/quiqqer/products/bin/controls/fields/search/Window'
                         ], function (Window) {
                             new Window({
-                                autoclose         : true,
-                                multiple          : self.getAttribute('multiple'),
-                                search            : self.getAttribute('search'),
+                                autoclose: true,
+                                multiple: self.getAttribute('multiple'),
+                                search: self.getAttribute('search'),
                                 showsearchableonly: self.getAttribute('showsearchableonly'),
-                                events            : {
+                                events: {
                                     onSubmit: function (Win, fieldIds) {
                                         self.addFields(fieldIds);
                                     }
@@ -200,15 +192,15 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
             this.$DropDown = new Element('div', {
                 'class': 'qui-fields-list-dropdown',
-                styles : {
+                styles: {
                     display: 'none',
-                    top    : this.$Search.getPosition().y + this.$Search.getSize().y,
-                    left   : this.$Search.getPosition().x
+                    top: this.$Search.getPosition().y + this.$Search.getSize().y,
+                    left: this.$Search.getPosition().x
                 }
             }).inject(document.body);
 
             if (this.getAttribute('label')) {
-                var Label = this.getAttribute('label');
+                let Label = this.getAttribute('label');
 
                 if (typeof this.getAttribute('label').nodeName === 'undefined') {
                     Label = new Element('label', {
@@ -221,8 +213,8 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 if (Label.get('data-desc') && Label.get('data-desc') !== '&nbsp;') {
                     new Element('div', {
                         'class': 'description',
-                        html   : Label.get('data-desc'),
-                        styles : {
+                        html: Label.get('data-desc'),
+                        styles: {
                             marginBottom: 10
                         }
                     }).inject(Label, 'after');
@@ -235,7 +227,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 this.$List.setStyles({
                     border: 'none',
                     height: 31,
-                    width : 'calc(100% - 50px)'
+                    width: 'calc(100% - 50px)'
                 });
             }
 
@@ -258,7 +250,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
          * event: on inject
          */
         $onImport: function () {
-            var Elm = this.getElm();
+            const Elm = this.getElm();
 
             if (Elm.nodeName === 'INPUT') {
                 this.$Input = Elm;
@@ -271,9 +263,9 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 this.$Input.value !== 0 &&
                 this.$Input.value !== "0"
             ) {
-                var fields = this.$Input.value.split(',');
+                let fields = this.$Input.value.split(',');
 
-                for (var i = 0, len = fields.length; i < len; i++) {
+                for (let i = 0, len = fields.length; i < len; i++) {
                     this.addField(fields[i]);
                 }
             }
@@ -329,9 +321,9 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
          * @param {Number} fieldId
          */
         removeField: function (fieldId) {
-            var newValues = [];
+            const newValues = [];
 
-            for (var i = 0, len = this.$values.length; i < len; i++) {
+            for (let i = 0, len = this.$values.length; i < len; i++) {
                 if (this.$values[i] != fieldId) {
                     newValues.push(this.$values[i]);
                 }
@@ -353,8 +345,6 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
         /**
          * fire the search
-         *
-         * @method package/quiqqer/products/bin/controls/fields/Select#fireSearch
          */
         fireSearch: function () {
             if (this.$Search.value === '') {
@@ -364,12 +354,12 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
             this.cancelSearch();
 
             this.$DropDown.set({
-                html  : '<span class="fa fa-spinner fa-spin"></span>',
+                html: '<span class="fa fa-spinner fa-spin"></span>',
                 styles: {
                     display: '',
-                    top    : this.$Search.getPosition().y + this.$Search.getSize().y,
-                    left   : this.$Search.getPosition().x,
-                    zIndex : QUIElementUtils.getComputedZIndex(this.$Input)
+                    top: this.$Search.getPosition().y + this.$Search.getSize().y,
+                    left: this.$Search.getPosition().x,
+                    zIndex: QUIElementUtils.getComputedZIndex(this.$Input)
                 }
             });
 
@@ -378,8 +368,6 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
         /**
          * cancel the search timeout
-         *
-         * @method package/quiqqer/products/bin/controls/fields/Select#cancelSearch
          */
         cancelSearch: function () {
             if (this.$search) {
@@ -389,8 +377,6 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
         /**
          * close the users search
-         *
-         * @method package/quiqqer/products/bin/controls/fields/Select#close
          */
         close: function () {
             this.cancelSearch();
@@ -409,14 +395,12 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
         /**
          * trigger a users search and open a field dropdown for selection
-         *
-         * @method package/quiqqer/products/bin/controls/fields/Select#search
          */
         search: function () {
-            var self  = this,
+            const self = this,
                 value = this.$Search.value;
 
-            var Search = Promise.resolve(false);
+            let Search;
 
             if (typeof this.getAttribute('search') === 'function') {
                 Search = this.getAttribute('search')(value, {
@@ -435,7 +419,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
             }
 
             Search.then(function (result) {
-                var i, id, len, nam, entry, Entry,
+                let i, id, len, nam, entry, Entry,
                     func_mousedown, func_mouseover,
 
                     DropDown = self.$DropDown;
@@ -445,12 +429,12 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
                 if (!result || !result.length) {
                     new Element('div', {
-                        html  : QUILocale.get(lg, 'control.select.no.results'),
+                        html: QUILocale.get(lg, 'control.select.no.results'),
                         styles: {
                             'float': 'left',
                             'clear': 'both',
                             padding: 5,
-                            margin : 5
+                            margin: 5
                         }
                     }).inject(DropDown);
 
@@ -459,7 +443,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
                 // events
                 func_mousedown = function (event) {
-                    var Elm = event.target;
+                    let Elm = event.target;
 
                     if (!Elm.hasClass('qui-fields-list-dropdown-entry')) {
                         Elm = Elm.getParent('.qui-fields-list-dropdown-entry');
@@ -482,7 +466,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 for (i = 0, len = result.length; i < len; i++) {
 
                     entry = result[i];
-                    id    = entry.id;
+                    id = entry.id;
 
                     nam = '#' + id + ' - ';
                     nam = nam + entry.title;
@@ -495,12 +479,12 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                     }
 
                     Entry = new Element('div', {
-                        html     : '<span class="fa fa-percent"></span>' +
+                        html: '<span class="fa fa-percent"></span>' +
                             '<span>' + nam + ' (' + id + ')</span>',
-                        'class'  : 'box-sizing qui-fields-list-dropdown-entry',
+                        'class': 'box-sizing qui-fields-list-dropdown-entry',
                         'data-id': id,
-                        events   : {
-                            mousedown : func_mousedown,
+                        events: {
+                            mousedown: func_mousedown,
                             mouseenter: func_mouseover
                         }
                     }).inject(DropDown);
@@ -511,7 +495,6 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
         /**
          * Add a user to the input
          *
-         * @method package/quiqqer/products/bin/controls/fields/Select#addUser
          * @param {Number|String} id - id of the user
          * @return {Object} this (package/quiqqer/products/bin/controls/field/Select)
          */
@@ -520,7 +503,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 return this;
             }
 
-            var max = parseInt(this.getAttribute('max'));
+            const max = parseInt(this.getAttribute('max'));
 
             if (max === 1) {
                 // max = 1 -> overwrites the old
@@ -536,7 +519,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
             }
 
             new SelectItem({
-                id    : id,
+                id: id,
                 events: {
                     onDestroy: this.$onSelectDestroy
                 }
@@ -561,7 +544,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 return this;
             }
 
-            var max = parseInt(this.getAttribute('max'));
+            const max = parseInt(this.getAttribute('max'));
 
             if (max === 1) {
                 // max = 1 -> overwrites the old
@@ -578,7 +561,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 }
 
                 new SelectItem({
-                    id    : id,
+                    id: id,
                     events: {
                         onDestroy: this.$onSelectDestroy
                     }
@@ -596,7 +579,6 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
         /**
          * keyup - users dropdown selection one step up
          *
-         * @method package/quiqqer/products/bin/controls/fields/Select#up
          * @return {Object} this (package/quiqqer/products/bin/controls/fields/Select)
          */
         up: function () {
@@ -604,7 +586,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 return this;
             }
 
-            var Active = this.$DropDown.getElement(
+            const Active = this.$DropDown.getElement(
                 '.qui-fields-list-dropdown-entry-hover'
             );
 
@@ -634,7 +616,6 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
         /**
          * keydown - users dropdown selection one step down
          *
-         * @method package/quiqqer/products/bin/controls/fields/Select#down
          * @return {Object} this (package/quiqqer/products/bin/controls/fields/Select)
          */
         down: function () {
@@ -642,7 +623,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
                 return this;
             }
 
-            var Active = this.$DropDown.getElement(
+            const Active = this.$DropDown.getElement(
                 '.qui-fields-list-dropdown-entry-hover'
             );
 
@@ -673,15 +654,13 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
         /**
          * select the selected user / group
-         *
-         * @method package/quiqqer/products/bin/controls/fields/Select#submit
          */
         submit: function () {
             if (!this.$DropDown) {
                 return;
             }
 
-            var Active = this.$DropDown.getElement(
+            const Active = this.$DropDown.getElement(
                 '.qui-fields-list-dropdown-entry-hover'
             );
 
@@ -696,7 +675,6 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
         /**
          * Set the focus to the input field
          *
-         * @method package/quiqqer/products/bin/controls/fields/Select#focus
          * @return {Object} this (package/quiqqer/products/bin/controls/fields/Select)
          */
         focus: function () {
@@ -713,8 +691,6 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
 
         /**
          * Write the ids to the real input field
-         *
-         * @method package/quiqqer/products/bin/controls/fields/Select#$refreshValues
          */
         $refreshValues: function () {
             this.$Input.value = this.$values.join(',');
@@ -731,9 +707,8 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
         },
 
         /**
-         * event : if a user or a groupd would be destroyed
+         * event: if a user or a groupd would be destroyed
          *
-         * @method package/quiqqer/products/bin/controls/fields/Select#$onSelectDestroy
          * @param {Object} Item - package/quiqqer/products/bin/controls/fields/SelectItem
          */
         $onSelectDestroy: function (Item) {
@@ -742,7 +717,7 @@ define('package/quiqqer/products/bin/controls/fields/Select', [
         },
 
         /**
-         * event : on input focus, if the real input field get the focus
+         * event: on input focus, if the real input field get the focus
          *
          * @param {DOMEvent} event
          */

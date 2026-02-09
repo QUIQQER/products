@@ -1,6 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/products/settings/OwnFieldsSettings
- */
 define('package/quiqqer/products/bin/controls/products/settings/OwnFieldsSettings', [
 
     'qui/QUI',
@@ -12,7 +9,7 @@ define('package/quiqqer/products/bin/controls/products/settings/OwnFieldsSetting
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/products/settings/OwnFieldsSettings',
+        Type: 'package/quiqqer/products/bin/controls/products/settings/OwnFieldsSettings',
 
         Binds: [
             '$onImport'
@@ -30,12 +27,10 @@ define('package/quiqqer/products/bin/controls/products/settings/OwnFieldsSetting
          * event: on import
          */
         $onImport: function () {
-            var self  = this;
-            var Table = this.$Elm.getParent('table');
-
-            var AvailableSorting = Table.getElement('[name="quiqqer.products.settings.availableSorting"]');
-
-            var Row = AvailableSorting.getParent('tr');
+            const self = this;
+            const Table = this.$Elm.getParent('table');
+            const AvailableSorting = Table.getElement('[name="quiqqer.products.settings.availableSorting"]');
+            const Row = AvailableSorting.getParent('tr');
 
             if (!this.$Elm.checked) {
                 Row.setStyle('display', 'none');
@@ -49,7 +44,7 @@ define('package/quiqqer/products/bin/controls/products/settings/OwnFieldsSetting
 
                 Row.setStyle('display', null);
 
-                var SortingInstance = QUI.Controls.getById(AvailableSorting.get('data-quiid'));
+                const SortingInstance = QUI.Controls.getById(AvailableSorting.get('data-quiid'));
 
                 if (SortingInstance) {
                     SortingInstance.resize();

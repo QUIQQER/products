@@ -1,9 +1,6 @@
 /**
  * Feld-Type Auswahl
  *
- * @module package/quiqqer/products/bin/controls/fields/FieldTypeSelect
- * @author www.pcsg.de (Henning Leutz)
- *
  * @event onFilterChange [self, filter]
  */
 define('package/quiqqer/products/bin/controls/fields/FieldTypeSelect', [
@@ -16,12 +13,12 @@ define('package/quiqqer/products/bin/controls/fields/FieldTypeSelect', [
 ], function (QUI, QUIButton, Fields, QUILocale) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
         Extends: QUIButton,
-        Type   : 'package/quiqqer/products/bin/controls/fields/FieldTypeSelect',
+        Type: 'package/quiqqer/products/bin/controls/fields/FieldTypeSelect',
 
         Binds: [
             '$onInject',
@@ -30,10 +27,10 @@ define('package/quiqqer/products/bin/controls/fields/FieldTypeSelect', [
 
         initialize: function (options) {
             this.setAttributes({
-                text        : QUILocale.get(lg, 'categories.window.fieldtype.filter'),
-                textimage   : 'fa fa-filter',
-                name        : 'select',
-                showIcons   : false,
+                text: QUILocale.get(lg, 'categories.window.fieldtype.filter'),
+                textimage: 'fa fa-filter',
+                name: 'select',
+                showIcons: false,
                 dropDownIcon: false
             });
 
@@ -47,14 +44,14 @@ define('package/quiqqer/products/bin/controls/fields/FieldTypeSelect', [
         },
 
         /**
-         * event : on inject
+         * event: on inject
          */
         $onInject: function () {
             Fields.getFieldTypes().then(function (fieldTypes) {
 
                 fieldTypes.sort(function (a, b) {
-                    var aText = QUILocale.get(a.locale[0], a.locale[1]);
-                    var bText = QUILocale.get(b.locale[0], a.locale[1]);
+                    const aText = QUILocale.get(a.locale[0], a.locale[1]);
+                    const bText = QUILocale.get(b.locale[0], a.locale[1]);
 
                     if (aText > bText) {
                         return 1;
@@ -74,13 +71,13 @@ define('package/quiqqer/products/bin/controls/fields/FieldTypeSelect', [
                 });
 
                 this.appendChild({
-                    text : QUILocale.get(lg, 'categories.window.fieldtype.filter.showAll'),
+                    text: QUILocale.get(lg, 'categories.window.fieldtype.filter.showAll'),
                     value: ''
                 });
 
-                for (var i = 0, len = fieldTypes.length; i < len; i++) {
+                for (let i = 0, len = fieldTypes.length; i < len; i++) {
                     this.appendChild({
-                        text : QUILocale.get(fieldTypes[i].locale[0], fieldTypes[i].locale[1]),
+                        text: QUILocale.get(fieldTypes[i].locale[0], fieldTypes[i].locale[1]),
                         value: fieldTypes[i].name
                     });
                 }
@@ -89,13 +86,13 @@ define('package/quiqqer/products/bin/controls/fields/FieldTypeSelect', [
         },
 
         /**
-         * event : on change
+         * event: on change
          *
          * @param {Object} self
          * @param {Object} ContextItem
          */
         $onChange: function (self, ContextItem) {
-            var value = ContextItem.getAttribute('value');
+            const value = ContextItem.getAttribute('value');
 
             if (value === '') {
                 this.setAttribute('text', QUILocale.get(lg, 'categories.window.fieldtype.filter'));

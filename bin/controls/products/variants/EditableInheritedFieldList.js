@@ -1,7 +1,3 @@
-/**
- * @module package/quiqqer/products/bin/controls/products/EditableFieldList
- * @author www.pcsg.de (Henning Leutz)
- */
 define('package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldList', [
 
     'qui/QUI',
@@ -14,12 +10,12 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
 ], function (QUI, QUIControl, QUISwitch, Grid, QUIAjax, QUILocale) {
     "use strict";
 
-    var lg = 'quiqqer/products';
+    const lg = 'quiqqer/products';
 
     return new Class({
 
         Extends: QUIControl,
-        Type   : 'package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldList',
+        Type: 'package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldList',
 
         Binds: [
             '$onInject',
@@ -36,9 +32,9 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
 
             this.$Grid = null;
 
-            this.$editable  = [];
+            this.$editable = [];
             this.$inherited = [];
-            this.$disabled  = false;
+            this.$disabled = false;
 
             this.addEvents({
                 onInject: this.$onInject
@@ -54,60 +50,60 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
             this.parent();
 
             this.$Elm = new Element('div', {
-                'class'   : 'quiqqer-products-variant-editable-fields',
-                id        : this.getId(),
+                'class': 'quiqqer-products-variant-editable-fields',
+                id: this.getId(),
                 'data-qui': 'package/quiqqer/products/bin/controls/products/variants/EditableInheritedFieldList',
-                styles    : {
+                styles: {
                     height: '100%'
                 }
             });
 
 
-            var Container = new Element('div').inject(this.$Elm);
+            const Container = new Element('div').inject(this.$Elm);
 
             this.$Grid = new Grid(Container, {
-                pagination : true,
-                width      : Container.getSize().x,
-                height     : Container.getSize().y,
-                perPage    : 20,
-                page       : 1,
-                serverSort : true,
+                pagination: true,
+                width: Container.getSize().x,
+                height: Container.getSize().y,
+                perPage: 20,
+                page: 1,
+                serverSort: true,
                 columnModel: [{
-                    header   : QUILocale.get(lg, 'inherited'),
+                    header: QUILocale.get(lg, 'inherited'),
                     dataIndex: 'inherited',
-                    dataType : 'QUI',
-                    width    : 80,
-                    sortable : false
+                    dataType: 'QUI',
+                    width: 80,
+                    sortable: false
                 }, {
-                    header   : QUILocale.get(lg, 'editable'),
+                    header: QUILocale.get(lg, 'editable'),
                     dataIndex: 'editable',
-                    dataType : 'QUI',
-                    width    : 80,
-                    sortable : false
+                    dataType: 'QUI',
+                    width: 80,
+                    sortable: false
                 }, {
-                    header   : QUILocale.get('quiqqer/system', 'id'),
+                    header: QUILocale.get('quiqqer/system', 'id'),
                     dataIndex: 'id',
-                    dataType : 'number',
-                    width    : 60,
-                    sortable : true
+                    dataType: 'number',
+                    width: 60,
+                    sortable: true
                 }, {
-                    header   : QUILocale.get('quiqqer/system', 'title'),
+                    header: QUILocale.get('quiqqer/system', 'title'),
                     dataIndex: 'title',
-                    dataType : 'text',
-                    width    : 200,
-                    sortable : true
+                    dataType: 'text',
+                    width: 200,
+                    sortable: true
                 }, {
-                    header   : QUILocale.get(lg, 'workingTitle'),
+                    header: QUILocale.get(lg, 'workingTitle'),
                     dataIndex: 'workingtitle',
-                    dataType : 'text',
-                    width    : 200,
-                    sortable : true
+                    dataType: 'text',
+                    width: 200,
+                    sortable: true
                 }, {
-                    header   : QUILocale.get(lg, 'fieldtype'),
+                    header: QUILocale.get(lg, 'fieldtype'),
                     dataIndex: 'fieldtype',
-                    dataType : 'text',
-                    width    : 200,
-                    sortable : true
+                    dataType: 'text',
+                    width: 200,
+                    sortable: true
                 }]
             });
 
@@ -126,7 +122,7 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
                 return;
             }
 
-            var size = this.$Elm.getSize();
+            const size = this.$Elm.getSize();
 
             return Promise.all([
                 this.$Grid.setHeight(size.y),
@@ -140,7 +136,7 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
          * @return {Promise}
          */
         save: function () {
-            var self = this;
+            const self = this;
 
             if (this.$disabled) {
                 return Promise.resolve();
@@ -151,14 +147,14 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
             }
 
             return new Promise(function (resolve) {
-                QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveEditableInheritedFields', function() {
-                    require(['package/quiqqer/products/bin/Products'], function(Products) {
+                QUIAjax.post('package_quiqqer_products_ajax_products_variant_saveEditableInheritedFields', function () {
+                    require(['package/quiqqer/products/bin/Products'], function (Products) {
                         Products.get(self.getAttribute('productId')).refresh().then(resolve);
                     });
                 }, {
                     'package': 'quiqqer/products',
                     productId: self.getAttribute('productId'),
-                    editable : JSON.encode(self.getEditableFields()),
+                    editable: JSON.encode(self.getEditableFields()),
                     inherited: JSON.encode(self.getInheritedFields())
                 });
             });
@@ -186,7 +182,7 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
          * event: on inject
          */
         $onInject: function () {
-            var self = this;
+            const self = this;
 
             self.$loadFields().then(function () {
                 return self.refresh();
@@ -201,16 +197,16 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
          * @return {Promise}
          */
         refresh: function () {
-            var self    = this,
+            const self = this,
                 options = this.$Grid.options;
 
             return new Promise(function (resolve) {
                 QUIAjax.get('package_quiqqer_products_ajax_products_variant_getEditableInheritedFieldList', function (result) {
-                    var i, len, entry, Editable, Inherited;
-                    var data = [];
+                    let i, len, entry, Editable, Inherited;
+                    const data = [];
 
-                    var editable  = self.$editable;
-                    var inherited = self.$inherited;
+                    const editable = self.$editable;
+                    const inherited = self.$inherited;
 
                     for (i = 0, len = result.fields.length; i < len; i++) {
                         entry = result.fields[i];
@@ -218,18 +214,18 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
                         if (!editable.length || editable.indexOf(entry.id) === -1) {
                             Editable = new QUISwitch({
                                 editType: 'editable',
-                                status  : false,
-                                fieldId : parseInt(entry.id),
-                                events  : {
+                                status: false,
+                                fieldId: parseInt(entry.id),
+                                events: {
                                     onChange: self.$onStatusChange
                                 }
                             });
                         } else {
                             Editable = new QUISwitch({
                                 editType: 'editable',
-                                status  : true,
-                                fieldId : parseInt(entry.id),
-                                events  : {
+                                status: true,
+                                fieldId: parseInt(entry.id),
+                                events: {
                                     onChange: self.$onStatusChange
                                 }
                             });
@@ -238,48 +234,48 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
                         if (!inherited.length || inherited.indexOf(entry.id) === -1) {
                             Inherited = new QUISwitch({
                                 editType: 'inherited',
-                                status  : false,
-                                fieldId : parseInt(entry.id),
-                                events  : {
+                                status: false,
+                                fieldId: parseInt(entry.id),
+                                events: {
                                     onChange: self.$onStatusChange
                                 }
                             });
                         } else {
                             Inherited = new QUISwitch({
                                 editType: 'inherited',
-                                status  : true,
-                                fieldId : parseInt(entry.id),
-                                events  : {
+                                status: true,
+                                fieldId: parseInt(entry.id),
+                                events: {
                                     onChange: self.$onStatusChange
                                 }
                             });
                         }
 
                         data.push({
-                            editable    : Editable,
-                            inherited   : Inherited,
-                            id          : parseInt(entry.id),
-                            title       : entry.title,
+                            editable: Editable,
+                            inherited: Inherited,
+                            id: parseInt(entry.id),
+                            title: entry.title,
                             workingtitle: entry.workingtitle,
-                            fieldtype   : entry.type
+                            fieldtype: entry.type
                         });
                     }
 
                     self.$Grid.setData({
-                        data : data,
+                        data: data,
                         total: result.total,
-                        page : result.page
+                        page: result.page
                     });
 
                     resolve();
                 }, {
                     'package': 'quiqqer/products',
                     productId: self.getAttribute('productId'),
-                    options  : JSON.encode({
+                    options: JSON.encode({
                         perPage: options.perPage,
-                        page   : options.page,
-                        sortOn : options.sortOn,
-                        sortBy : options.sortBy
+                        page: options.page,
+                        sortOn: options.sortOn,
+                        sortBy: options.sortBy
                     })
                 });
             });
@@ -317,11 +313,11 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
          * @return {Promise}
          */
         $loadFields: function () {
-            var self = this;
+            const self = this;
 
             return new Promise(function (resolve) {
                 QUIAjax.get('package_quiqqer_products_ajax_products_variant_getEditableInheritedFieldList', function (result) {
-                    self.$editable  = result.editable;
+                    self.$editable = result.editable;
                     self.$inherited = result.inherited;
                     resolve();
                 }, {
@@ -340,9 +336,9 @@ define('package/quiqqer/products/bin/controls/products/variants/EditableInherite
                 return;
             }
 
-            var index;
-            var fieldId = Switch.getAttribute('fieldId'),
-                status  = Switch.getStatus();
+            let index;
+            const fieldId = Switch.getAttribute('fieldId'),
+                status = Switch.getStatus();
 
             if (Switch.getAttribute('editType') === 'editable') {
                 if (status) {
